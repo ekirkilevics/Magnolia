@@ -70,14 +70,14 @@ public class ActionListViewImpl implements ActionListView {
         });
     }
 
-    public void showActions(List<MenuItemDefinition> contextMenuItems) {
-        clearCommands();
+    public void show(List<MenuItemDefinition> contextMenuItems) {
+        clear();
         for (MenuItemDefinition menuItem : contextMenuItems) {
             addAction(menuItem);
         }
     }
 
-    public void clearCommands() {
+    public void clear() {
         table.removeAllItems();
     }
 

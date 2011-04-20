@@ -45,7 +45,7 @@ import java.util.List;
  *
  */
 public interface ActionListView extends IsVaadinComponent{
-    void showActions(List<MenuItemDefinition> contextMenuItems);
-    void clearCommands();
+    void show(List<MenuItemDefinition> contextMenuItems);
+    void clear();
     void setPresenter(Presenter presenter);
 }

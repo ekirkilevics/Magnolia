@@ -43,5 +43,5 @@ import javax.jcr.Item;
  *
  */
 public interface DetailView extends IsVaadinComponent{
-    void showDetails(Item item);
+    void show(Item item);
 }

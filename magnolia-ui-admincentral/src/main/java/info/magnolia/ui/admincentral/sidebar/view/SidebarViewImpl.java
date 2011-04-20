@@ -81,7 +81,7 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
     }
 
     public void showDetails(Item item) {
-        detailView.showDetails(item);
+        detailView.show(item);
     }
 
     public Component asVaadinComponent() {

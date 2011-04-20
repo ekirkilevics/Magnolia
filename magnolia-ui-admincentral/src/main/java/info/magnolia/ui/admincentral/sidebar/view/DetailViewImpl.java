@@ -86,7 +86,7 @@ public class DetailViewImpl implements DetailView {
         form.addField(STATUS, statusField);
     }
 
-    public void showDetails(Item item) {
+    public void show(Item item) {
         try {
             form.getField(PATH).setValue(item.getPath());
             if (item.isNode()) {
