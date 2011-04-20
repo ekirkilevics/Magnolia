@@ -91,7 +91,7 @@ public class SidebarViewActivity extends AbstractActivity implements SidebarView
             this.path = path;
             // FIXME should be dependent on the item type
             sidebarView.getActionList().showActions(workbenchDefinition.getMenuItems());
-            sidebarView.showDetails(item);
+            sidebarView.getDetailView().showDetails(item);
         }
     }
 

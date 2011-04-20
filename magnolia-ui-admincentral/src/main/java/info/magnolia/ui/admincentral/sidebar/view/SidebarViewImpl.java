@@ -71,6 +71,10 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
         return actionListView;
     }
 
+    public DetailView getDetailView() {
+        return detailView;
+    }
+
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
         actionListView.setPresenter(this.presenter);

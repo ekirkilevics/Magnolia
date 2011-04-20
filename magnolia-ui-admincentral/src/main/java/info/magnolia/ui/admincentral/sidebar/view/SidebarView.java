@@ -34,8 +34,6 @@
 package info.magnolia.ui.admincentral.sidebar.view;
 
 import info.magnolia.ui.framework.view.View;
-
-import javax.jcr.Item;
 /**
  * The sidebar view showing the list of available actions and some detail information about the selected item.
  */
@@ -49,7 +47,7 @@ public interface SidebarView extends View {
 
     ActionListView getActionList();
 
-    void showDetails(Item item);
+    DetailView getDetailView();
 
     void setPresenter(Presenter presenter);
 }
