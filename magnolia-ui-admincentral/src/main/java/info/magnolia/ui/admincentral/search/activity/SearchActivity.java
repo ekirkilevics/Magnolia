@@ -89,7 +89,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             final String stmt = "//*[jcr:contains(@*,'*"+params.getQuery()+"*') and @jcr:primaryType='mgnl:content']";
             final QueryImpl query = (QueryImpl) jcrQueryManager.createQuery(stmt , Query.XPATH);
 
-            log.debug("executing query against searching workspace [{}] with statement [{}] ", place.getWorkspace(), stmt);
+            log.debug("executing query against workspace [{}] with statement [{}] ", place.getWorkspace(), stmt);
             final QueryResult queryResult = query.execute();
             foundItems = queryResult.getRows().getSize();
 
