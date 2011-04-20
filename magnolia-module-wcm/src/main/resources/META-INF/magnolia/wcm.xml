@@ -38,7 +38,7 @@
          </param>
          <param>
            <name>widgetset</name>
-           <value>info.magnolia.ui.vaadin.widgetset.MagnoliaWidgetset</value>
+           <value>info.magnolia.module.wcm.widgetset.PageEditorWidgetset</value>
          </param>
        </params>
     </servlet>
