@@ -58,7 +58,7 @@ import org.junit.Test;
  *
  * @version $Id$
  */
-public class AbstractContentComponentTest extends AbstractAuthoringUiComponentTest {
+public class AbstractContentComponentTest extends AbstractAuthoringUiComponentTest{
     @Test
     public void testGetTargetContent() throws Exception {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
