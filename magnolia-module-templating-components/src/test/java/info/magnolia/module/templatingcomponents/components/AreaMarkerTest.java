@@ -94,17 +94,34 @@ public class AreaMarkerTest {
         area.setName("test");
         marker.setArea(area);
 
-        final StringWriter out = new StringWriter();
+        StringWriter out = new StringWriter();
         marker.doRender(out);
 
-        String outString = out.toString();
+        assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
+                + EditMarker.LINEBREAK
+                + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\">"
+                + EditMarker.LINEBREAK, out.toString());
 
-        // Locale is US so we expect e.g. the message "buttons.edit" to be translated to Edit
-        assertEquals(outString,
+        // with paragraph set
+        out = new StringWriter();
+        marker.setParagraphs("myParagraph");
+        marker.doRender(out);
+
+        assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
+                + EditMarker.LINEBREAK
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"myParagraph\">"
+                + EditMarker.LINEBREAK, out.toString());
+
+        // with isSingleton set
+        out = new StringWriter();
+        marker.setSingleton(Boolean.TRUE);
+        marker.doRender(out);
+
+        assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + EditMarker.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\">"
-                        + EditMarker.LINEBREAK, outString);
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"myParagraph\" singleton=\"true\">"
+                        + EditMarker.LINEBREAK, out.toString());
     }
 
     @Test
