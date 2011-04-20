@@ -33,18 +33,20 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
-import java.io.IOException;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+
+import java.io.IOException;
+
+import javax.jcr.RepositoryException;
 
 /**
  * Sets a context attribute, used as a sub to ui:render.
  *
  * @version $Id$
  */
+// TODO naming - ContextMarker seams to be the better fit...
 public class ContextAttributeMarker extends AbstractAuthoringUiComponent {
 
     private String name;
@@ -57,6 +59,7 @@ public class ContextAttributeMarker extends AbstractAuthoringUiComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         MgnlContext.setAttribute(name, value);
+        // TODO: nothing to render here?
     }
 
     public String getName() {
