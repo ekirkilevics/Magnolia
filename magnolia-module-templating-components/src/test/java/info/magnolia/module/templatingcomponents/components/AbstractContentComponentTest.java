@@ -37,11 +37,6 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -57,15 +52,11 @@ import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -78,20 +69,30 @@ import org.junit.Test;
  * 
  * @version $Id$
  */
-public class AbstractAuthoringUiComponentTest {
-    private static final String CONTENT = StringUtils.join(Arrays.asList("/foo/bar@type=mgnl:content",
-            "/foo/bar/MetaData@type=mgnl:metadata", "/foo/bar/MetaData/mgnl\\:template=testPageTemplate0",
-            "/foo/bar/paragraphs@type=mgnl:contentNode", "/foo/bar/paragraphs/0@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/0/text=hello 0", "/foo/bar/paragraphs/0/MetaData@type=mgnl:metadata",
+public class AbstractContentComponentTest {
+    private static final String CONTENT = StringUtils.join(Arrays.asList(
+            "/foo/bar@type=mgnl:content",
+            "/foo/bar/MetaData@type=mgnl:metadata",
+            "/foo/bar/MetaData/mgnl\\:template=testPageTemplate0",
+            "/foo/bar/paragraphs@type=mgnl:contentNode",
+            "/foo/bar/paragraphs/0@type=mgnl:contentNode",
+            "/foo/bar/paragraphs/0/text=hello 0",
+            "/foo/bar/paragraphs/0/MetaData@type=mgnl:metadata",
             "/foo/bar/paragraphs/0/MetaData/mgnl\\:template=testParagraph0",
-            "/foo/bar/paragraphs/1@type=mgnl:contentNode", "/foo/bar/paragraphs/1/text=hello 1",
+            "/foo/bar/paragraphs/1@type=mgnl:contentNode",
+            "/foo/bar/paragraphs/1/text=hello 1",
             "/foo/bar/paragraphs/1/MetaData@type=mgnl:metadata",
             "/foo/bar/paragraphs/1/MetaData/mgnl\\:template=testParagraph1",
-            "/foo/bar/paragraphs/2@type=mgnl:contentNode", "/foo/bar/paragraphs/2/text=hello 2",
+            "/foo/bar/paragraphs/2@type=mgnl:contentNode",
+            "/foo/bar/paragraphs/2/text=hello 2",
             "/foo/bar/paragraphs/2/MetaData@type=mgnl:metadata",
-            "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2", "/pouet/lol@type=mgnl:content",
-            "/pouet/lol/MetaData@type=mgnl:metadata", "/pouet/lol/MetaData/mgnl\\:template=testPageTemplate1",
-            "/no/metadata/here@type=mgnl:content", ""), "\n");
+            "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2",
+            "/pouet/lol@type=mgnl:content",
+            "/pouet/lol/MetaData@type=mgnl:metadata",
+            "/pouet/lol/MetaData/mgnl\\:template=testPageTemplate1",
+            "/no/metadata/here@type=mgnl:content",
+            ""
+    ), "\n");
     private MockHierarchyManager hm;
 
     @After
@@ -138,97 +139,6 @@ public class AbstractAuthoringUiComponentTest {
     public void testGetsCustomMessageCustomBundleWithPageTemplate() throws Exception {
         doTestMessage("Incredibly custom Foo label", "/pouet/lol", "custom.foo.label");
     }
-
-    @Test
-    public void testDefaultMessageFromCustomBundleWithPageTemplate() throws Exception {
-        // the template's i18nBasename overrides a key from the the default bundle
-        doTestMessage("Customized edit button", "/pouet/lol", "buttons.edit");
-    }
-
-    @Test
-    public void testGetsCustomMessageCustomBundleWithParagraph() throws Exception {
-        doTestMessage("Incredibly custom Foo label", "/foo/bar/paragraphs/1", "custom.foo.label");
-    }
-
-    @Test
-    public void testDefaultMessageFromCustomBundleWithParagraph() throws Exception {
-        doTestMessage("Customized edit button", "/foo/bar/paragraphs/1", "buttons.edit");
-    }
-
-    @Test
-    public void testUsesDefaultBundleIfNotSpecified() throws Exception {
-        doTestMessage("Edit", "/foo/bar/paragraphs/0", "buttons.edit");
-    }
-
-    @Test
-    public void testUsesDefaultBundleIfNotRenderableDefinition() throws Exception {
-        // testParagraph2 is not known by ParagraphManager
-        doTestMessage("Edit", "/foo/bar/paragraphs/2", "buttons.edit");
-    }
-
-    @Test
-    public void testUsesDefaultBundleIfNoMetadata() throws Exception {
-        doTestMessage("Edit", "/no/metadata/here", "buttons.edit");
-    }
-
-    @Test
-    public void testParam() throws IOException {
-        final AbstractAuthoringUiComponent compo = new DummyComponent();
-        final StringWriter out = new StringWriter();
-        final String paramName = "param1";
-        final String paramValue = "value1";
-        compo.param(out, paramName, paramValue);
-        assertEquals(out.toString(), " param1=\"value1\"", out.toString());
-    }
-
-    @Test
-    public void testAsList() {
-        final AbstractAuthoringUiComponent compo = new DummyComponent();
-        List<String> strings = new ArrayList<String>();
-        strings.add("one");
-        strings.add("two");
-        String listAsString = compo.asString(strings);
-        assertEquals("one,two", listAsString);
-    }
-
-    @Test
-    public void testRender() throws IOException {
-        final AbstractAuthoringUiComponent compo = new DummyComponent();
-        final StringWriter out = new StringWriter();
-        compo.render(out);
-        // per default it's no Admin-ServerConfig and we won't render anything
-        assertEquals("", out.toString());
-
-        compo.getServer().setAdmin(true);
-        compo.render(out);
-        assertEquals("hello world", out.toString());
-    }
-
-    @Test
-    public void testCurrentContent() throws Exception {
-
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
-
-        final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
-
-        final AbstractAuthoringUiComponent compo = new DummyComponent(null, aggregationState);
-        try {
-            compo.currentContent();
-            fail("Expceted IllegalStateException here");
-        } catch (IllegalStateException e) {
-            assertTrue(true);
-        }
-
-        final Content content = hm.getContent("/foo/bar/baz/paragraphs/01");
-        final Node expectedNode = content.getJCRNode();
-
-        aggregationState.setCurrentContent(content);
-
-        Node current = compo.currentContent();
-        assertEquals(expectedNode, current);
-    }
-
     private void doTestMessage(String expected, String contentPath, String key) throws RepositoryException {
         final AbstractAuthoringUiComponent compo = new DummyComponent();
         assertEquals(expected, compo.getMessage(hm.getContent(contentPath).getJCRNode(), key));
@@ -246,13 +156,9 @@ public class AbstractAuthoringUiComponentTest {
         }
     }
 
-    private static class DummyComponent extends AbstractAuthoringUiComponent {
+    private static class DummyComponent extends AbstractContentComponent {
         public DummyComponent() {
-            super(new ServerConfiguration(), null);
-        }
-
-        public DummyComponent(ServerConfiguration serverConfig, AggregationState aggregationState) {
-            super(serverConfig, aggregationState);
+            super(null, null);
         }
 
         protected void doRender(Appendable out) throws IOException, RepositoryException {

@@ -46,15 +46,14 @@ import org.apache.commons.lang.StringUtils;
  * Abstract base class for components that operate on a specified piece of content.
  * 
  * @version $Id$
+ * 
+ *          TODO Should be renamed: AbstractNodeComponent?
  */
 public abstract class AbstractContentComponent extends AbstractAuthoringUiComponent {
 
     public static final String LINEBREAK = "\r\n";
     public static final String GREATER_THAN = ">";
     public static final String LESS_THAN = "<";
-    public static final String EQUALS = "=";
-    public static final String SPACE = " ";
-    public static final String QUOTE = "\"";
 
     public static final String XML_BEGINN_COMMENT = LESS_THAN + "!--" + SPACE;
     public static final String XML_END_COMMENT = SPACE + "--" + GREATER_THAN;
@@ -70,7 +69,7 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
     public static final String DIALOG = SPACE + "dialog";
 
     // TODO should also support a JSP ContentMap
-    private Node content;
+    private Node node;
     private String workspace;
     private String uuid;
     private String path;
@@ -79,8 +78,8 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
         super(server, aggregationState);
     }
 
-    protected String getNodePath(Node content) throws RepositoryException {
-        return content.getSession().getWorkspace().getName() + ":" + content.getPath();
+    protected String getNodePath(Node node) throws RepositoryException {
+        return node.getSession().getWorkspace().getName() + ":" + node.getPath();
     }
 
     protected Node getTargetContent() throws RepositoryException {
@@ -90,8 +89,8 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
 
         // TODO we can safely keep the node around after we've resolved it
 
-        if (content != null) {
-            return content;
+        if (node != null) {
+            return node;
         }
         if (StringUtils.isNotEmpty(workspace)) {
             if (StringUtils.isNotEmpty(uuid)) {
@@ -108,12 +107,14 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
         return currentContent();
     }
 
+    // TODO rename to getNode()
     public Node getContent() {
-        return content;
+        return node;
     }
 
-    public void setContent(Node content) {
-        this.content = content;
+    // TODO rename to setNode()
+    public void setContent(Node node) {
+        this.node = node;
     }
 
     public String getWorkspace() {

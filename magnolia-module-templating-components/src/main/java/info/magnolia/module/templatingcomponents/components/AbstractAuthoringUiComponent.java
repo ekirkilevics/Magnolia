@@ -33,13 +33,6 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
-import java.io.IOException;
-import java.util.List;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -50,6 +43,14 @@ import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.TemplateManager;
 
+import java.io.IOException;
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Common superclass for ui components, provides utility methods and defaults. Implementations should expose setter
  * methods for their specific parameters (so that template-specific wrappers can set parameters). (no need to clutter
@@ -59,6 +60,10 @@ import info.magnolia.module.templating.TemplateManager;
  * @version $Id$
  */
 public abstract class AbstractAuthoringUiComponent implements AuthoringUiComponent {
+
+    public static final String EQUALS = "=";
+    public static final String SPACE = " ";
+    public static final String QUOTE = "\"";
 
     private static final String DEFAULT_I18N_BASENAME = "info.magnolia.module.templatingcomponents.messages";
 
@@ -106,6 +111,7 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
      * Returns the "current content" from the aggregation state. Override this method if your component needs a
      * different target node.
      */
+    // TODO rename to currentNode()
     protected Node currentContent() {
         final Content currentContent = aggregationState.getCurrentContent();
         if (currentContent == null) {
@@ -133,10 +139,10 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
         return getMessage(i18Basename, key);
     }
 
-    protected String getI18BasenameFor(Node content) throws RepositoryException {
-        final String templateName = JCRMetadataUtil.getMetaData(content).getTemplate();
+    protected String getI18BasenameFor(Node node) throws RepositoryException {
+        final String templateName = JCRMetadataUtil.getMetaData(node).getTemplate();
         final RenderableDefinition renderable;
-        if (content.isNodeType(ItemType.CONTENT.getSystemName())) {
+        if (node.isNodeType(ItemType.CONTENT.getSystemName())) {
             renderable = templateManager.getTemplateDefinition(templateName);
         } else {
             renderable = paragraphManagerManager.getParagraphDefinition(templateName);
@@ -165,6 +171,6 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
     }
 
     protected void param(Appendable out, String name, String value) throws IOException {
-        out.append(" ").append(name).append("=\"").append(value).append("\"");
+        out.append(SPACE).append(name).append(EQUALS).append(QUOTE).append(value).append(QUOTE);
     }
 }
