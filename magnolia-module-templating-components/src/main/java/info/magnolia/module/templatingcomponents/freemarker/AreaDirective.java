@@ -50,7 +50,7 @@ import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent
 /**
  * A freemarker directive for rendering an area.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class AreaDirective extends AbstractDirective {
 

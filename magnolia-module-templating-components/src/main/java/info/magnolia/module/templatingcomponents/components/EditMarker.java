@@ -45,7 +45,7 @@ import info.magnolia.cms.core.AggregationState;
 /**
  * Outputs an edit bar.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class EditMarker extends AbstractContentComponent {
 

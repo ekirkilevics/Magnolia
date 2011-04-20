@@ -64,7 +64,7 @@ import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent
  * A base class for freemarker directives used in Magnolia.
  * Subclasses need to implement the {@link info.magnolia.module.templatingcomponents.freemarker.AbstractDirective#prepareUIComponent(info.magnolia.cms.beans.config.ServerConfiguration, info.magnolia.cms.core.AggregationState, freemarker.core.Environment, java.util.Map, freemarker.template.TemplateModel[], freemarker.template.TemplateDirectiveBody)} method.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public abstract class AbstractDirective implements TemplateDirectiveModel {
 

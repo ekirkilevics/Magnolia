@@ -48,7 +48,7 @@ import info.magnolia.module.templatingcomponents.components.ContextAttributeMark
 /**
  * A freemarker directive for setting a context attribute.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class ContextAttributeDirective extends AbstractDirective {
 

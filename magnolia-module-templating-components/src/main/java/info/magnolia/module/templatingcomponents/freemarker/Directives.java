@@ -42,7 +42,7 @@ import freemarker.template.TemplateModel;
  *
  * TODO should be renamed since its no longer just directives
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class Directives extends HashMap<String, TemplateModel> {
     public Directives() {

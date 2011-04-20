@@ -43,7 +43,7 @@ import info.magnolia.cms.core.AggregationState;
 /**
  * Renders a paragraph and outputs the associated edit bar.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class ParagraphMarker extends AbstractContentComponent {
 

@@ -43,7 +43,7 @@ import info.magnolia.cms.core.AggregationState;
 /**
  * Renders a piece of content.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class RenderMarker extends AbstractContentComponent {
 

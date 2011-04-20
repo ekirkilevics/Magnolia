@@ -43,7 +43,7 @@ import info.magnolia.context.MgnlContext;
 /**
  * Sets a context attribute, used as a sub to ui:render.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class ContextAttributeMarker extends AbstractAuthoringUiComponent {
 

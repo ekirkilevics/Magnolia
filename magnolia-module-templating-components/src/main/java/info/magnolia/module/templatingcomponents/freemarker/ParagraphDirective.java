@@ -49,7 +49,7 @@ import info.magnolia.module.templatingcomponents.components.ParagraphMarker;
 /**
  * A freemarker directive for rendering a paragraph.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class ParagraphDirective extends AbstractDirective {
 

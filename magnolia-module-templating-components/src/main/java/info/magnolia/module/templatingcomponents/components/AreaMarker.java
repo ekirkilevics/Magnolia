@@ -33,20 +33,21 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.module.templating.Area;
+
 import java.io.IOException;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.module.templating.Area;
-
 /**
  * Outputs an area.
- *
- * @version $Id: $
+ * 
+ * @version $Id$
  */
 public class AreaMarker extends AbstractContentComponent {
 

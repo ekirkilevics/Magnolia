@@ -49,7 +49,7 @@ import info.magnolia.module.templatingcomponents.components.RenderMarker;
 /**
  * A freemarker directive for rendering an arbitrary piece of content.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class RenderDirective extends AbstractDirective {
 

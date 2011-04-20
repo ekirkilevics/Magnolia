@@ -49,7 +49,7 @@ import info.magnolia.module.templatingcomponents.components.EditMarker;
 /**
  * A freemarker directive for the edit bar UI component.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class EditDirective extends AbstractDirective {
 

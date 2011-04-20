@@ -33,19 +33,19 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.MgnlContext;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
-
 /**
  * Abstract base class for components that operate on a specified piece of content.
- *
- * @version $Id: $
+ * 
+ * @version $Id$
  */
 public abstract class AbstractContentComponent extends AbstractAuthoringUiComponent {
 
