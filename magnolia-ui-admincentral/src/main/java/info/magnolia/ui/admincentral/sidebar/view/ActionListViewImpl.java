@@ -77,7 +77,7 @@ public class ActionListViewImpl implements ActionListView {
         }
     }
 
-    public void clear() {
+    protected void clear() {
         table.removeAllItems();
     }
 
