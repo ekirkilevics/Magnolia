@@ -33,115 +33,56 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.i18n.DefaultMessagesManager;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Tests for AbstractAuthoringUiComponent.
- * 
+ *
  * @version $Id$
  */
-public class AbstractContentComponentTest {
-    private static final String CONTENT = StringUtils.join(Arrays.asList(
-            "/foo/bar@type=mgnl:content",
-            "/foo/bar/MetaData@type=mgnl:metadata",
-            "/foo/bar/MetaData/mgnl\\:template=testPageTemplate0",
-            "/foo/bar/paragraphs@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/0@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/0/text=hello 0",
-            "/foo/bar/paragraphs/0/MetaData@type=mgnl:metadata",
-            "/foo/bar/paragraphs/0/MetaData/mgnl\\:template=testParagraph0",
-            "/foo/bar/paragraphs/1@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/1/text=hello 1",
-            "/foo/bar/paragraphs/1/MetaData@type=mgnl:metadata",
-            "/foo/bar/paragraphs/1/MetaData/mgnl\\:template=testParagraph1",
-            "/foo/bar/paragraphs/2@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/2/text=hello 2",
-            "/foo/bar/paragraphs/2/MetaData@type=mgnl:metadata",
-            "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2",
-            "/pouet/lol@type=mgnl:content",
-            "/pouet/lol/MetaData@type=mgnl:metadata",
-            "/pouet/lol/MetaData/mgnl\\:template=testPageTemplate1",
-            "/no/metadata/here@type=mgnl:content",
-            ""
-    ), "\n");
-    private MockHierarchyManager hm;
-
-    @After
-    public void tearDown() throws Exception {
-        ComponentsTestUtil.clear();
-        MgnlContext.setInstance(null);
-        SystemProperty.clear();
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
-
-        final Context ctx = createMock(WebContext.class);
-        expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
-        replay(ctx); // no need to verify this so far
-        MgnlContext.setInstance(ctx);
-
-        final Paragraph p0 = new Paragraph();
-        p0.setName("testParagraph0");
-        final Paragraph p1 = new Paragraph();
-        p1.setName("testParagraph1");
-        p1.setI18nBasename("info.magnolia.module.templatingcomponents.test_messages");
-        final ParagraphManager pman = new ParagraphManager();
-        pman.addParagraphToCache(p0);
-        pman.addParagraphToCache(p1);
-        ComponentsTestUtil.setInstance(ParagraphManager.class, pman);
-
-        final Template t0 = new Template();
-        t0.setName("testPageTemplate0");
-        final Template t1 = new Template();
-        t1.setName("testPageTemplate1");
-        t1.setI18nBasename("info.magnolia.module.templatingcomponents.test_messages");
-
-        final TestableTemplateManager tman = new TestableTemplateManager();
-        tman.register(t0);
-        tman.register(t1);
-        ComponentsTestUtil.setInstance(TemplateManager.class, tman);
-
-        hm = MockUtil.createHierarchyManager(CONTENT);
-    }
-
+public class AbstractContentComponentTest extends AbstractAuthoringUiComponentTest {
     @Test
-    public void testGetsCustomMessageCustomBundleWithPageTemplate() throws Exception {
-        doTestMessage("Incredibly custom Foo label", "/pouet/lol", "custom.foo.label");
-    }
-    private void doTestMessage(String expected, String contentPath, String key) throws RepositoryException {
-        final AbstractAuthoringUiComponent compo = new DummyComponent();
-        assertEquals(expected, compo.getMessage(hm.getContent(contentPath).getJCRNode(), key));
+    public void testGetTargetContent() throws Exception {
+        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
+
+        final AggregationState aggregationState = new AggregationState();
+        aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
+
+        final AbstractContentComponent compo = new DummyComponent(null, aggregationState);
+        final Content content = hm.getContent("/foo/bar/baz/paragraphs/01");
+        final Node expectedNode = content.getJCRNode();
+
+        aggregationState.setCurrentContent(content);
+
+        Node node = compo.getTargetContent();
+        assertEquals(expectedNode, node);
+
+        compo.setWorkspace("workspace");
+
+        try {
+            compo.getTargetContent();
+            fail("Expceted IllegalArguementException as workspace is set but not uuid or path");
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }
     }
 
     public static class TestableTemplateManager extends TemplateManager {
@@ -157,8 +98,8 @@ public class AbstractContentComponentTest {
     }
 
     private static class DummyComponent extends AbstractContentComponent {
-        public DummyComponent() {
-            super(null, null);
+        public DummyComponent(ServerConfiguration serverConfiguration, AggregationState aggregationState) {
+            super(serverConfiguration, aggregationState);
         }
 
         protected void doRender(Appendable out) throws IOException, RepositoryException {
