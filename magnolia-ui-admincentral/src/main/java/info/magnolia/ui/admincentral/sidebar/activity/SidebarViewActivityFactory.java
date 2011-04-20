@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.activity;
+package info.magnolia.ui.admincentral.sidebar.activity;
 
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
@@ -46,11 +46,11 @@ import info.magnolia.ui.model.builder.FactoryBase;
  * @author fgrilli
  *
  */
-public class DetailViewActivityFactory extends FactoryBase<Place, Activity> implements ActivityMapper {
+public class SidebarViewActivityFactory extends FactoryBase<Place, Activity> implements ActivityMapper {
 
-    public DetailViewActivityFactory(ComponentProvider componentProvider) {
+    public SidebarViewActivityFactory(ComponentProvider componentProvider) {
         super(componentProvider);
-        addMapping(ItemSelectedPlace.class, DetailViewActivity.class);
+        addMapping(ItemSelectedPlace.class, SidebarViewActivity.class);
     }
 
     public Activity getActivity(final Place place) {

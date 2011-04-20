@@ -10,7 +10,7 @@
     <sv:value>e8549356-4b42-4218-a607-cdcb786b71ab</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactoryImpl</sv:value>
+    <sv:value>info.magnolia.ui.admincentral.workbench.action.WorkbenchActionFactoryImpl</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>

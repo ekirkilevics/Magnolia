@@ -31,24 +31,56 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.admincentral.sidebar.view;
 
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
+import javax.jcr.Item;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vaadin.ui.Component;
+import com.vaadin.ui.VerticalSplitPanel;
 
 /**
- * The view to edit a workspace. Provides slots for the tree/list view, detail view, search view and function toolbar.
+ * Displays commands and details about the currently selected item.
+ *
+ * @author fgrilli
+ * @author tmattsson
  */
-public interface WorkbenchView extends View, IsVaadinComponent{
+public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
 
-    ViewPort getItemListViewPort();
+    private static final Logger log = LoggerFactory.getLogger(SidebarViewImpl.class);
+    private VerticalSplitPanel panel;
+    private ActionListView actionListView;
+    private DetailView detailView;
+    private Presenter presenter;
 
-    ViewPort getSidebarViewPort();
+    public SidebarViewImpl(ActionListView actionListView, DetailView detailView) {
+        this.actionListView = actionListView;
+        this.detailView = detailView;
+        panel = new VerticalSplitPanel();
+        panel.setSizeFull();
 
-    ViewPort getFunctionToolbarViewPort();
+        panel.setFirstComponent(actionListView.asVaadinComponent());
+        panel.setSecondComponent(detailView.asVaadinComponent());
+    }
 
-    ViewPort getSearchViewPort();
+    public ActionListView getActionList() {
+        return actionListView;
+    }
 
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
+        actionListView.setPresenter(this.presenter);
+    }
+
+    public void showDetails(Item item) {
+        detailView.showDetails(item);
+    }
+
+    public Component asVaadinComponent() {
+        return panel;
+    }
 }

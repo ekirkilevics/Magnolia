@@ -31,29 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.activity;
+package info.magnolia.ui.admincentral.sidebar.view;
 
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
-import info.magnolia.ui.framework.activity.Activity;
-import info.magnolia.ui.framework.activity.ActivityMapper;
-import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.model.builder.FactoryBase;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+
+import javax.jcr.Item;
 
 /**
- *
- * Returns the {@link Activity} to perform when the current selected item on a tree or list has changed.
+ * UI component that displays details about the selected tree or list item.
  * @author fgrilli
  *
  */
-public class DetailViewActivityMapper extends FactoryBase<Place, Activity> implements ActivityMapper {
-
-    public DetailViewActivityMapper(ComponentProvider componentProvider) {
-        super(componentProvider);
-        addMapping(ItemSelectedPlace.class, DetailViewActivity.class);
-    }
-
-    public Activity getActivity(final Place place) {
-        return this.create(place);
-    }
+public interface DetailView extends IsVaadinComponent{
+    void showDetails(Item item);
 }

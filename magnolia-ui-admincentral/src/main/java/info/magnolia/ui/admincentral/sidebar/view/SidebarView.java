@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,23 +25,31 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.action;
+package info.magnolia.ui.admincentral.sidebar.view;
+
+import info.magnolia.ui.framework.view.View;
 
 import javax.jcr.Item;
-
-import info.magnolia.ui.model.action.Action;
-import info.magnolia.ui.model.action.ActionDefinition;
-
 /**
- * Creates an action based on an {@link ActionDefinition}.
+ * The sidebar view showing the list of available actions and some detail information about the selected item.
  */
-public interface WorkbenchActionFactory {
+public interface SidebarView extends View {
+    /**
+     * Presenter that is called when the user selects a command.
+     */
+    public interface Presenter {
+        void onMenuItemSelected(String menuItemName);
+    }
 
-    Action createAction(ActionDefinition actionDefinition, Item item);
+    ActionListView getActionList();
+
+    void showDetails(Item item);
+
+    void setPresenter(Presenter presenter);
 }

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.action;
+package info.magnolia.ui.admincentral.workbench.action;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -31,24 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.admincentral.sidebar.activity;
 
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
-
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
+import info.magnolia.ui.framework.activity.Activity;
+import info.magnolia.ui.framework.activity.ActivityMapper;
+import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.model.builder.FactoryBase;
 
 /**
- * The view to edit a workspace. Provides slots for the tree/list view, detail view, search view and function toolbar.
+ *
+ * Returns the {@link Activity} to perform when the current selected item on a tree or list has changed.
+ * @author fgrilli
+ *
  */
-public interface WorkbenchView extends View, IsVaadinComponent{
+public class SidebarViewActivityMapper extends FactoryBase<Place, Activity> implements ActivityMapper {
 
-    ViewPort getItemListViewPort();
+    public SidebarViewActivityMapper(ComponentProvider componentProvider) {
+        super(componentProvider);
+        addMapping(ItemSelectedPlace.class, SidebarViewActivity.class);
+    }
 
-    ViewPort getSidebarViewPort();
-
-    ViewPort getFunctionToolbarViewPort();
-
-    ViewPort getSearchViewPort();
-
+    public Activity getActivity(final Place place) {
+        return this.create(place);
+    }
 }

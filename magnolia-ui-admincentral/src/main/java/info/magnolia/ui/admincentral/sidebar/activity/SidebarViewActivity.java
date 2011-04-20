@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.activity;
+package info.magnolia.ui.admincentral.sidebar.activity;
 
 import java.util.List;
 import javax.jcr.Item;
@@ -39,9 +39,9 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory;
+import info.magnolia.ui.admincentral.sidebar.view.SidebarView;
+import info.magnolia.ui.admincentral.workbench.action.WorkbenchActionFactory;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
-import info.magnolia.ui.admincentral.workbench.view.DetailView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.shell.Shell;
@@ -54,25 +54,25 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 /**
  * Shows the detail view and command list.
  */
-public class DetailViewActivity extends AbstractActivity implements DetailView.Presenter {
+public class SidebarViewActivity extends AbstractActivity implements SidebarView.Presenter {
 
     private String path;
-    private DetailView detailView;
+    private SidebarView sidebarView;
     private WorkbenchActionFactory actionFactory;
     private Shell shell;
     private WorkbenchDefinition workbenchDefinition;
 
-    public DetailViewActivity(ComponentProvider componentProvider, ItemSelectedPlace place, WorkbenchDefinition workbenchDefinition,
-                              WorkbenchActionFactory actionFactory, Shell shell) {
+    public SidebarViewActivity(ComponentProvider componentProvider, ItemSelectedPlace place, WorkbenchDefinition workbenchDefinition, WorkbenchActionFactory actionFactory, Shell shell) {
         this.actionFactory = actionFactory;
         this.shell = shell;
         this.workbenchDefinition = workbenchDefinition;
-        detailView = componentProvider.newInstance(DetailView.class, this);
+        sidebarView = componentProvider.newInstance(SidebarView.class, this);
+        sidebarView.setPresenter(this);
         showItem(place);
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {
-        viewPort.setView(detailView);
+        viewPort.setView(sidebarView);
     }
 
     private void showItem(ItemSelectedPlace place) {
@@ -90,8 +90,8 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
         if (!"/".equals(path)) {
             this.path = path;
             // FIXME should be dependent on the item type
-            detailView.showActions(workbenchDefinition.getMenuItems());
-            detailView.showDetails(item);
+            sidebarView.getActionList().showActions(workbenchDefinition.getMenuItems());
+            sidebarView.showDetails(item);
         }
     }
 

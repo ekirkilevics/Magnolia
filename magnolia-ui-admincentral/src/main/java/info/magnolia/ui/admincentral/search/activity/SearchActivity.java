@@ -96,9 +96,12 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             log.debug("query returned {} rows", foundItems);
         } catch (LoginException e) {
             log.error(e.getMessage());
-            shell.showError(e.getMessage(), e);
+            shell.showError("An error occurred", e);
         } catch (RepositoryException e) {
-            shell.showError(e.getMessage(), e);
+            shell.showError("An error occurred", e);
+            log.error(e.getMessage());
+        } catch (RuntimeException e ){
+            shell.showError("An error occurred", e);
             log.error(e.getMessage());
         }
         return new SearchResult(params.getQuery(), foundItems);

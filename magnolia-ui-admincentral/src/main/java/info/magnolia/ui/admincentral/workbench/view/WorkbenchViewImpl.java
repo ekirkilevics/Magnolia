@@ -102,7 +102,7 @@ public class WorkbenchViewImpl implements WorkbenchView{
         return itemListViewPort;
     }
 
-    public ViewPort getDetailViewPort() {
+    public ViewPort getSidebarViewPort() {
         return detailViewPort;
     }
 

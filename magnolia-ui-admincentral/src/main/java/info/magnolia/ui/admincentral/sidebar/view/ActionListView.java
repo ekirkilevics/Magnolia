@@ -31,27 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.admincentral.sidebar.view;
 
-import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.admincentral.sidebar.view.SidebarView.Presenter;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import java.util.List;
 
-import javax.jcr.Item;
 /**
- * The detail view showing the list of available actions and some detail information.
+ * UI component that displays a list of actions available for the selected tree or list item.
+ * @author fgrilli
+ *
  */
-public interface DetailView extends View {
-    /**
-     * Presenter that is called when the user selects a command.
-     */
-    public interface Presenter {
-
-        void onMenuItemSelected(String menuItemName);
-    }
-
+public interface ActionListView extends IsVaadinComponent{
     void showActions(List<MenuItemDefinition> contextMenuItems);
-
-    void showDetails(Item item);
+    void clearCommands();
+    void setPresenter(Presenter presenter);
 }

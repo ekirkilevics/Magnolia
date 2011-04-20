@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,30 +25,23 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.admincentral.workbench.action;
 
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+import javax.jcr.Item;
 
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionDefinition;
 
 /**
- * The view to edit a workspace. Provides slots for the tree/list view, detail view, search view and function toolbar.
+ * Creates an action based on an {@link ActionDefinition}.
  */
-public interface WorkbenchView extends View, IsVaadinComponent{
+public interface WorkbenchActionFactory {
 
-    ViewPort getItemListViewPort();
-
-    ViewPort getSidebarViewPort();
-
-    ViewPort getFunctionToolbarViewPort();
-
-    ViewPort getSearchViewPort();
-
+    Action createAction(ActionDefinition actionDefinition, Item item);
 }

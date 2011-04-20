@@ -255,7 +255,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="DetailViewActivityMapper">
+      <sv:node sv:name="SidebarViewActivityMapper">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -266,13 +266,13 @@
           <sv:value>1c6fdd02-86a5-4c2a-bc56-01befd870e53</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.workbench.activity.DetailViewActivityMapper</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarViewActivityMapper</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="type" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.workbench.activity.DetailViewActivityMapper</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarViewActivityMapper</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -291,11 +291,11 @@
             <sv:value>2011-03-31T14:37:29.560+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2011-04-01T13:05:03.454+02:00</sv:value>
+            <sv:value>2011-04-20T15:09:21.156+02:00</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="DetailViewActivity">
+      <sv:node sv:name="SidebarViewActivity">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -306,13 +306,13 @@
           <sv:value>34770cce-11f6-4a0a-aeb3-87bea1c8ceb3</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.workbench.activity.DetailViewActivity</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarViewActivity</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="type" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.workbench.activity.DetailViewActivity</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarViewActivity</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -331,11 +331,11 @@
             <sv:value>2011-03-31T14:37:29.560+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2011-04-01T13:05:11.843+02:00</sv:value>
+            <sv:value>2011-04-20T15:09:13.405+02:00</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="DetailView">
+      <sv:node sv:name="SidebarView">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -346,13 +346,13 @@
           <sv:value>23947ec1-73ec-48ed-954d-3e5753f1ebf9</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.workbench.view.DetailViewImpl</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.view.SidebarViewImpl</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="type" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.workbench.view.DetailView</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.view.SidebarView</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -371,7 +371,7 @@
             <sv:value>2011-03-31T14:37:29.560+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2011-04-05T14:54:35.919+02:00</sv:value>
+            <sv:value>2011-04-20T15:09:04.642+02:00</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
@@ -775,6 +775,86 @@
           </sv:property>
         </sv:node>
       </sv:node>
+      <sv:node sv:name="DetailView">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
+          <sv:value>mix:lockable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>e903a480-6666-4b55-ab42-db4c84955587</sv:value>
+        </sv:property>
+        <sv:property sv:name="implementation" sv:type="String">
+          <sv:value>info.magnolia.ui.admincentral.sidebar.view.DetailViewImpl</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
+        </sv:property>
+        <sv:property sv:name="type" sv:type="String">
+          <sv:value>info.magnolia.ui.admincentral.sidebar.view.DetailView</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+            <sv:value>false</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2011-03-31T14:37:29.560+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2011-04-20T15:10:47.313+02:00</sv:value>
+          </sv:property>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="ActionListView">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
+          <sv:value>mix:lockable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>80797f5a-7e15-47f7-84ad-ff960cde8479</sv:value>
+        </sv:property>
+        <sv:property sv:name="implementation" sv:type="String">
+          <sv:value>info.magnolia.ui.admincentral.sidebar.view.ActionListViewImpl</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
+        </sv:property>
+        <sv:property sv:name="type" sv:type="String">
+          <sv:value>info.magnolia.ui.admincentral.sidebar.view.ActionListView</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+            <sv:value>false</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2011-03-31T14:37:29.560+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2011-04-20T15:08:07.463+02:00</sv:value>
+          </sv:property>
+        </sv:node>
+      </sv:node>
     </sv:node>
     <sv:node sv:name="configured">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -823,7 +903,7 @@
           <sv:value>/modules/admin-central/components/default/WorkbenchActionFactory</sv:value>
         </sv:property>
         <sv:property sv:name="type" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.workbench.action.WorkbenchActionFactory</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
