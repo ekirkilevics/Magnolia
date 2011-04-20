@@ -77,8 +77,9 @@ public class EditMarker extends AbstractContentComponent {
     @Override
     public void postRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append(XML_BEGINN_COMMENT).append(CMS_EDIT_CONTENT).append(QUOTE).append(getNodePath(content)).append(QUOTE)
-                .append(XML_END_COMMENT).append(LINEBREAK);
+
+        out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
+                .append(LINEBREAK);
     }
 
     public String getDialog() {
