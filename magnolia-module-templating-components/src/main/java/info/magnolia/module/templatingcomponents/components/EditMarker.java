@@ -66,10 +66,10 @@ public class EditMarker extends AbstractContentComponent {
                 .append(XML_END_COMMENT).append(LINEBREAK);
         out.append(CMS_EDIT_CONTENT).append(QUOTE).append(getNodePath(content)).append(QUOTE);
         if (StringUtils.isNotEmpty(format)) {
-            out.append(" format=").append(QUOTE).append(getFormat()).append(QUOTE);
+            out.append(" format=").append(QUOTE).append(format).append(QUOTE);
         }
         if (StringUtils.isNotEmpty(dialog)) {
-            out.append(" dialog=").append(QUOTE).append(getDialog()).append(QUOTE);
+            out.append(" dialog=").append(QUOTE).append(dialog).append(QUOTE);
         }
         out.append(GREATER_THAN).append(LINEBREAK);
     }
