@@ -33,39 +33,22 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
-import freemarker.template.TemplateModelException;
 import info.magnolia.module.templatingcomponents.components.AbstractContentComponent;
 
 /**
- * Tests for EditDirective.
+ * Tests for AreaDirective.
  * 
  * $Id$
  */
-public class EditDirectiveTest extends AbstractDirectiveTestCase {
+public class AreaDirectiveTest extends AbstractDirectiveTestCase {
 
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@ui.edit /]");
+        final String result = renderForTest("[@ui.area name=\"stage\" /]");
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK
-                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\">"
+                + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" singleton=\"false\">"
                 + AbstractContentComponent.LINEBREAK
                 + "<!-- cms:end cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK, result);
     }
-
-    public void testRenderWithSpecificDialog() throws Exception {
-        final String result = renderForTest("[@ui.edit dialog='myDialog' /]");
-
-        // TODO assertEquals("..not testing yet..", result);
-    }
-
-    public void testThrowsExceptionForUnknownParameters() throws Exception {
-        try {
-            renderForTest("[@ui.edit fake='lol' /]");
-            fail("should have failed");
-        } catch (TemplateModelException e) {
-            assertEquals("Unsupported parameter(s): {fake=lol}", e.getMessage());
-        }
-    }
-
 }

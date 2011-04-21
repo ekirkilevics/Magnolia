@@ -66,10 +66,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Provides setup/teardown for testing Directives.
- * 
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * Provides setup/teardown for testing Directives. Has to be Junit3-style for now as AbstractFreemarkerTestCase is not
+ * yet migrated to JUnit4.
+ *
+ * @version $Id$
  */
 public abstract class AbstractDirectiveTestCase extends AbstractFreemarkerTestCase {
     private WebContext ctx;
@@ -134,7 +134,11 @@ public abstract class AbstractDirectiveTestCase extends AbstractFreemarkerTestCa
         replay(ctx, req);
     }
 
-    protected abstract void setupExpectations(WebContext ctx, HttpServletRequest req);
+    /**
+     * Hook method - overwrite if you want to set up special expectations.
+     */
+    protected void setupExpectations(WebContext ctx, HttpServletRequest req) {
+    }
 
     @Override
     public void tearDown() throws Exception {

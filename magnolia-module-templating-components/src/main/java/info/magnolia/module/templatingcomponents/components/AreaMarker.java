@@ -74,8 +74,10 @@ public class AreaMarker extends AbstractContentComponent {
                 .append(LINEBREAK);
         out.append(CMS_AREA);
         param(out, "content", getNodePath(content));
-        // TODO NPE when area == null - something we should take care of?
-        param(out, "name", name != null ? name : area.getName());
+        // TODO should area == null be allowed?
+        if (area != null) {
+            param(out, "name", name != null ? name : area.getName());
+        }
         if (StringUtils.isNotEmpty(paragraphs)) {
             param(out, "paragraphs", paragraphs);
         }
