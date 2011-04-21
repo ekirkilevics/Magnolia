@@ -76,10 +76,13 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         this.treeModel = treeModel;
         table = new Table();
         table.setSizeFull();
+
+        // sorting
+        table.setSortDisabled(false);
         // next two lines are required to make the browser (Table) react on selection change via mouse
         table.setImmediate(true);
         table.setNullSelectionAllowed(false);
-        
+
         table.addListener(new ItemClickEvent.ItemClickListener() {
 
             public void itemClick(ItemClickEvent event) {
