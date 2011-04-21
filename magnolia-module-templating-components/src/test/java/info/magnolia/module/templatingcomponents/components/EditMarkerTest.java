@@ -92,13 +92,11 @@ public class EditMarkerTest {
         StringWriter out = new StringWriter();
         marker.doRender(out);
 
-        String outString = out.toString();
-
-        assertEquals(outString,
+        assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + AbstractContentComponent.LINEBREAK
                         + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\">"
-                        + AbstractContentComponent.LINEBREAK, outString);
+                + AbstractContentComponent.LINEBREAK, out.toString());
 
         // now with format & dialog
         marker.setFormat("testFormat");
@@ -107,11 +105,11 @@ public class EditMarkerTest {
         out = new StringWriter();
         marker.doRender(out);
 
-        assertEquals(outString,
+        assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + AbstractContentComponent.LINEBREAK
-                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\">"
-                        + AbstractContentComponent.LINEBREAK, outString);
+                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" format=\"testFormat\" dialog=\"testDialog\">"
+                + AbstractContentComponent.LINEBREAK, out.toString());
 
     }
 
