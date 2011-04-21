@@ -49,7 +49,7 @@ public class ParagraphDirectiveTest extends AbstractDirectiveTestCase {
     }
 
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@ui.paragraph /]");
+        final String result = renderForTest("[@cms.paragraph /]");
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK
                 + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\">"

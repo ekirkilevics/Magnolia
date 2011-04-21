@@ -38,13 +38,13 @@ import info.magnolia.module.templatingcomponents.components.AbstractContentCompo
 
 /**
  * Tests for EditDirective.
- * 
+ *
  * $Id$
  */
 public class EditDirectiveTest extends AbstractDirectiveTestCase {
 
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@ui.edit /]");
+        String result = renderForTest("[@cms.edit /]");
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK
                 + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\">"
@@ -53,15 +53,19 @@ public class EditDirectiveTest extends AbstractDirectiveTestCase {
                 + AbstractContentComponent.LINEBREAK, result);
     }
 
-    public void testRenderWithSpecificDialog() throws Exception {
-        final String result = renderForTest("[@ui.edit dialog='myDialog' /]");
-
-        // TODO assertEquals("..not testing yet..", result);
+    public void testRenderWithDialog() throws Exception {
+        final String result = renderForTest("[@cms.edit dialog='testDialog' /]");
+        assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
+                + AbstractContentComponent.LINEBREAK
+                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" dialog=\"testDialog\">"
+                + AbstractContentComponent.LINEBREAK
+                + "<!-- cms:end cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
+                + AbstractContentComponent.LINEBREAK, result);
     }
 
     public void testThrowsExceptionForUnknownParameters() throws Exception {
         try {
-            renderForTest("[@ui.edit fake='lol' /]");
+            renderForTest("[@cms.edit fake='lol' /]");
             fail("should have failed");
         } catch (TemplateModelException e) {
             assertEquals("Unsupported parameter(s): {fake=lol}", e.getMessage());

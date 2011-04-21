@@ -49,7 +49,7 @@ public class ContextAttributeDirectiveTest extends AbstractDirectiveTestCase {
     }
 
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@ui.contextAttribute name=\"shoeSize\" value=\"213\" /]");
+        final String result = renderForTest("[@cms.contextAttribute name=\"shoeSize\" value=\"213\" /]");
         // TODO result is empty - how to verify everything worked as expected?
         assertEquals("", result);
     }

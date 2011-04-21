@@ -43,7 +43,7 @@ import info.magnolia.module.templatingcomponents.components.AbstractContentCompo
 public class AreaDirectiveTest extends AbstractDirectiveTestCase {
 
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@ui.area name=\"stage\" /]");
+        final String result = renderForTest("[@cms.area name=\"stage\" /]");
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK
                 + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" singleton=\"false\">"

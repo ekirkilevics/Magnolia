@@ -162,8 +162,9 @@ public abstract class AbstractDirectiveTestCase extends AbstractFreemarkerTestCa
     }
 
     protected Map<String, Object> contextWithDirectives() {
-        // this is the only thing we expect rendering engines to do: added the directives to the rendering context
-        return createSingleValueMap("ui", new Directives());
+        // this is the only thing we expect rendering engines to do: added the directives to the rendering context so
+        // they can be refered to via "@cms"
+        return createSingleValueMap("cms", new Directives());
     }
 
 }
