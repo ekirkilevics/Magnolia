@@ -33,19 +33,19 @@
  */
 package info.magnolia.module.templatingcomponents.setup;
 
+import static info.magnolia.nodebuilder.Ops.addNode;
+import static info.magnolia.nodebuilder.Ops.addProperty;
+import static info.magnolia.nodebuilder.Ops.getNode;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.Task;
-import info.magnolia.module.templatingcomponents.freemarkerx.Directives;
 import info.magnolia.nodebuilder.task.ErrorHandling;
 import info.magnolia.nodebuilder.task.NodeBuilderTask;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static info.magnolia.nodebuilder.Ops.*;
 
 /**
  * The module's version handler.
@@ -63,9 +63,6 @@ public class TemplatingComponentsModuleVersionHandler extends DefaultModuleVersi
         tasks.add(new NodeBuilderTask("New templating UI components", "Registers new UI components for templating.", ErrorHandling.strict,
                 ContentRepository.CONFIG, "/server/rendering/freemarker",
                 getNode("sharedVariables").then(
-                        addNode("ui", ItemType.CONTENTNODE).then(
-                                addProperty("class", Directives.class.getName())
-                        ),
                         addNode("cms", ItemType.CONTENTNODE).then(
                                 addProperty("class", info.magnolia.module.templatingcomponents.freemarker.Directives.class.getName())
                         )
