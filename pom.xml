@@ -252,7 +252,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin</artifactId>
-        <version>6.5.3</version>
+        <version>6.5.6</version>
       </dependency>
       <dependency>
         <groupId>org.vaadin.addons</groupId>
@@ -263,6 +263,11 @@ for Java Content Repositories (JCR).
 	    <groupId>org.vaadin.addons</groupId>
 	    <artifactId>confirmdialog</artifactId>
 	    <version>1.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.vaadin.addons</groupId>
+        <artifactId>lazyloadwrapper</artifactId>
+        <version>1.0.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.gwt</groupId>
