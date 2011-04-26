@@ -51,11 +51,11 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.TextField;
 
 /**
- * Implementation for {@link DetailView}.
+ * Implementation for {@link PreviewView}.
  *
  * @author fgrilli
  */
-public class DetailViewImpl implements DetailView {
+public class PreviewViewImpl implements PreviewView {
 
     private static final String STATUS = "Status";
     private static final int DEFAULT_FIELD_WIDTH = 250;
@@ -64,7 +64,7 @@ public class DetailViewImpl implements DetailView {
     private static final String LAST_MOD = "LastMod";
     private Form form = new Form();
 
-    public DetailViewImpl() {
+    public PreviewViewImpl() {
         TextField pathField = new TextField(PATH);
         pathField.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
         pathField.setEnabled(false);

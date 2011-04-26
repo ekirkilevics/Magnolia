@@ -44,7 +44,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalSplitPanel;
 
 /**
- * Displays commands and details about the currently selected item.
+ * The sidebar view showing the list of available actions and a preview of the selected item.
  *
  * @author fgrilli
  * @author tmattsson
@@ -54,25 +54,25 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
     private static final Logger log = LoggerFactory.getLogger(SidebarViewImpl.class);
     private VerticalSplitPanel panel;
     private ActionListView actionListView;
-    private DetailView detailView;
+    private PreviewView previewView;
     private Presenter presenter;
 
-    public SidebarViewImpl(ActionListView actionListView, DetailView detailView) {
+    public SidebarViewImpl(ActionListView actionListView, PreviewView previewView) {
         this.actionListView = actionListView;
-        this.detailView = detailView;
+        this.previewView = previewView;
         panel = new VerticalSplitPanel();
         panel.setSizeFull();
 
         panel.setFirstComponent(actionListView.asVaadinComponent());
-        panel.setSecondComponent(detailView.asVaadinComponent());
+        panel.setSecondComponent(previewView.asVaadinComponent());
     }
 
     public ActionListView getActionList() {
         return actionListView;
     }
 
-    public DetailView getDetailView() {
-        return detailView;
+    public PreviewView getDetailView() {
+        return previewView;
     }
 
     public void setPresenter(Presenter presenter) {
@@ -81,7 +81,7 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
     }
 
     public void showDetails(Item item) {
-        detailView.show(item);
+        previewView.show(item);
     }
 
     public Component asVaadinComponent() {

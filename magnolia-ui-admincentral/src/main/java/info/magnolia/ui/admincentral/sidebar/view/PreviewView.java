@@ -42,6 +42,6 @@ import javax.jcr.Item;
  * @author fgrilli
  *
  */
-public interface DetailView extends IsVaadinComponent{
+public interface PreviewView extends IsVaadinComponent{
     void show(Item item);
 }

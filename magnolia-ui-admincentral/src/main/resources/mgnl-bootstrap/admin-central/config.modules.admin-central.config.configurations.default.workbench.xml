@@ -786,13 +786,13 @@
           <sv:value>e903a480-6666-4b55-ab42-db4c84955587</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.sidebar.view.DetailViewImpl</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.view.PreviewViewImpl</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="type" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.sidebar.view.DetailView</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.view.PreviewView</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
