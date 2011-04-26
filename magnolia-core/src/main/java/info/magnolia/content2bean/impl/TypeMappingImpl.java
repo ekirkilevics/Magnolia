@@ -38,6 +38,8 @@ import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
+import info.magnolia.objectfactory.ClassFactory;
+import info.magnolia.objectfactory.Classes;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
@@ -45,8 +47,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.magnolia.objectfactory.ClassFactory;
-import info.magnolia.objectfactory.Classes;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -238,6 +238,7 @@ public class TypeMappingImpl implements TypeMapping {
 
     /**
      * Find a method.
+     * 
      * @param numberOfParameters
      */
     protected Method getExactMethod(Class<?> type, String name, int numberOfParameters) {
@@ -245,7 +246,10 @@ public class TypeMappingImpl implements TypeMapping {
         for (int i = 0; i < methods.length; i++) {
             Method method = methods[i];
             if (method.getName().equals(name)) {
-                if(method.getParameterTypes().length == numberOfParameters){
+                // TODO - CAUTION: in case there's several methods with the same name and the same numberOfParameters
+                // this method might pick the "wrong" one. We should think about adding a check and throw an exceptions
+                // if there's more than one match!
+                if (method.getParameterTypes().length == numberOfParameters) {
                     return method;
                 }
             }

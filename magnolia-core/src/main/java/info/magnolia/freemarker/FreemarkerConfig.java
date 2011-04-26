@@ -131,11 +131,7 @@ public class FreemarkerConfig {
     }
 
     public void addSharedVariable(String name, Object value) throws TemplateModelException {
-        addSharedVariable(name, getObjectWrapper().wrap(value));
-    }
-
-    public void addSharedVariable(String name, TemplateModel value) {
-        sharedVariables.put(name, value);
+        sharedVariables.put(name, getObjectWrapper().wrap(value));
     }
 
     public TemplateExceptionHandler getTemplateExceptionHandler() {
