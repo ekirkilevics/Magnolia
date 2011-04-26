@@ -50,6 +50,10 @@ public class Classes {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Classes.class);
 
     public static boolean isConcrete(Class<?> clazz) {
+        if (clazz == null) {
+            // null class is not concrete .... ever
+            return false;
+        }
         return !Modifier.isAbstract(clazz.getModifiers());
     }
 

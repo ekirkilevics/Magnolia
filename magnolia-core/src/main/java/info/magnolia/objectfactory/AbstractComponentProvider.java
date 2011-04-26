@@ -196,6 +196,11 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void configure(ComponentProviderConfiguration configuration) {
         for (ImplementationConfiguration config : configuration.getImplementations()) {
+            if (config.getImplementation() == null && config.getType() == null) {
+                // do not fail when configuration is bogged, try to get server running anyway
+                log.error("Can't instantiate factory, implementation and type are not set: " + config);
+                continue;
+            }
             registerImplementation(config.getType(), config.getImplementation());
         }
         for (InstanceConfiguration config : configuration.getInstances()) {
@@ -212,6 +217,10 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
             }
         }
         for (ConfiguredComponentConfiguration config : configuration.getConfigured()) {
+            if (config.getType() == null) {
+                log.error("Type definitions contain invalid configuration. " + config.getWorkspace() + ":" + config.getPath() + (config.isObserved() ? " [observed]": ""));
+                continue;
+            }
             registerConfiguredComponent(config.getType(), config.getWorkspace(), config.getPath(), config.isObserved());
         }
 
@@ -235,9 +244,11 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
 //      Allow changing implementations TODO this should work for all register- methods.
 //        if (definitions.containsKey(type))
 //            throw new MgnlInstantiationException("Component already registered for type " + type.getName());
-
+        if (implementationType == null) {
+            throw new MgnlInstantiationException("ImplementationConfiguration type is not set a for type " + type);
+        }
         if (!Classes.isConcrete(implementationType)) {
-            throw new MgnlInstantiationException("ImplementationConfiguration type is not a concrete class for type" + type);
+            throw new MgnlInstantiationException("ImplementationConfiguration type is not a concrete class for type " + type);
         }
         if (ComponentFactory.class.isAssignableFrom(implementationType)) {
             ComponentDefinition<T> definition = new ComponentDefinition<T>();
@@ -253,6 +264,9 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
     }
 
     public synchronized <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory) {
+        if (type == null) {
+            throw new NullPointerException("Null type is not allowed. Please check your type definition and classes on the classpath.");
+        }
         if (definitions.containsKey(type))
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
         ComponentDefinition<T> definition = new ComponentDefinition<T>();
