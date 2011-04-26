@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2003-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,26 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.freemarker;
+package info.magnolia.module.templatingcomponents.functions;
 
-import java.util.HashMap;
+import static org.junit.Assert.assertEquals;
+import info.magnolia.test.mock.MockContent;
 
-import freemarker.template.TemplateDirectiveModel;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.junit.Test;
 
 /**
- * A map with freemarker directives specific to Magnolia.
- *
- * TODO should be renamed since its no longer just directives
- *
+ * Tests.
+ * 
  * @version $Id$
  */
-public class Directives extends HashMap<String, TemplateDirectiveModel> {
-    public Directives() {
-        super();
-        put("edit", new EditDirective());
-        put("contextAttribute", new ContextAttributeDirective());
-        put("paragraph", new ParagraphDirective());
-        put("render", new RenderDirective());
-        put("area", new AreaDirective());
+public class TemplatingFunctionsTest {
+
+    @Test
+    public void testAsJCRNode() throws RepositoryException {
+        TemplatingFunctions functions = new TemplatingFunctions();
+        String name = "test";
+        MockContent content = new MockContent(name);
+        Node node = functions.asJCRNode(content);
+        assertEquals(name, node.getName());
     }
 }

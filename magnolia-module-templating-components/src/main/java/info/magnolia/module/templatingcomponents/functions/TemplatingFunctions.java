@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2003-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,36 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.freemarker;
+package info.magnolia.module.templatingcomponents.functions;
 
-import java.util.List;
-
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import freemarker.template.utility.DeepUnwrap;
 import info.magnolia.cms.core.Content;
 
+import javax.jcr.Node;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * Freemarker method for converting a content object to a node object.
+ * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "mgnl".
+ * 
+ * @version $Id$
  */
-public class AsJcrNodeMethod implements TemplateMethodModelEx {
+public class TemplatingFunctions {
 
-    public Object exec(List arguments) throws TemplateModelException {
-        if (arguments.isEmpty()) {
-            throw new TemplateModelException("Must supply an argument of type Content");
-        }
-        if (arguments.size() != 1) {
-            throw new TemplateModelException("Must supply exactly one argument of type Content");
-        }
-        TemplateModel argument = (TemplateModel) arguments.get(0);
-        Object object = DeepUnwrap.unwrap(argument);
-        if (!(object instanceof Content)) {
-            throw new TemplateModelException("Argument must be of type Content");
-        }
+    private static final Logger log = LoggerFactory.getLogger(TemplatingFunctions.class);
 
-        // TODO we should wrap this node in a TemplateModel wrapper
-
-        return ((Content) object).getJCRNode();
+    public Node asJCRNode(Content content) {
+        return (content == null) ? null : content.getJCRNode();
     }
+
 }

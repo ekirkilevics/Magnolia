@@ -49,6 +49,7 @@ import java.util.List;
 
 /**
  * The module's version handler.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -60,14 +61,21 @@ public class TemplatingComponentsModuleVersionHandler extends DefaultModuleVersi
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final ArrayList<Task> tasks = new ArrayList<Task>();
         // templating components were added with 4.3
-        tasks.add(new NodeBuilderTask("New templating UI components", "Registers new UI components for templating.", ErrorHandling.strict,
-                ContentRepository.CONFIG, "/server/rendering/freemarker",
-                getNode("sharedVariables").then(
-                        addNode("cms", ItemType.CONTENTNODE).then(
-                                addProperty("class", info.magnolia.module.templatingcomponents.freemarker.Directives.class.getName())
-                        )
-                )
-        ));
+        tasks.add(new NodeBuilderTask(
+                "New templating UI components",
+                "Registers new UI components for templating.",
+                ErrorHandling.strict,
+                ContentRepository.CONFIG,
+                "/server/rendering/freemarker",
+                getNode("sharedVariables")
+                        .then(addNode("cms", ItemType.CONTENTNODE)
+                                .then(addProperty("class",
+                                        info.magnolia.module.templatingcomponents.freemarker.Directives.class.getName())),
+                                addNode("cmsfn", ItemType.CONTENTNODE)
+                                        .then(addProperty(
+                                                "class",
+                                                info.magnolia.module.templatingcomponents.functions.TemplatingFunctions.class
+                                                        .getName())))));
         return tasks;
     }
 }

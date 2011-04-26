@@ -21,7 +21,7 @@
 
 	[@cms.render /]
 
-	${cms.asJcrNode(content)}
+	${cmsfn.asJCRNode(content)}
 
 	</body>
 </html>
