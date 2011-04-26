@@ -39,7 +39,7 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 
 /**
- * The view to edit a workspace. Provides slots for the tree/list view, detail view, search view and function toolbar.
+ * The view to edit a workspace. Provides slots for the tree/list view, sidebar view (with actions and preview), search view and function toolbar.
  */
 public interface WorkbenchView extends View, IsVaadinComponent{
 
