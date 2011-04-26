@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>info.magnolia</groupId>
@@ -9,10 +10,16 @@
   </parent>
   <artifactId>magnolia-ui-vaadin-widgetset</artifactId>
   <name>magnolia-ui-vaadin-widgetset</name>
+  <description>Takes care of all gwt compilation for client side widgets.</description>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-core</artifactId>
+      <artifactId>magnolia-ui-vaadin-integration</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-wcm</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -29,20 +36,19 @@
       <artifactId>vaadin-treetable</artifactId>
     </dependency>
     <dependency>
-	  <groupId>org.vaadin.addons</groupId>
-	  <artifactId>confirmdialog</artifactId>
-     </dependency>
+      <groupId>org.vaadin.addons</groupId>
+      <artifactId>confirmdialog</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.vaadin.addons</groupId>
       <artifactId>lazyloadwrapper</artifactId>
     </dependency>
      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <scope>provided</scope>
-      </dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
-  <description>Takes care of all gwt compilation for client side widgets.</description>
   <build>
     <plugins>
       <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
@@ -67,10 +73,10 @@
             <goals>
               <goal>resources</goal>
               <goal>compile</goal>
-             </goals>
+            </goals>
           </execution>
         </executions>
       </plugin>
     </plugins>
-</build>
+  </build>
 </project>
