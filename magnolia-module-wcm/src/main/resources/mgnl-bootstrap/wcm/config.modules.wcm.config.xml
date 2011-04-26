@@ -580,7 +580,7 @@
             <sv:value>84a13605-2e89-4ab7-8c58-d4546ef3a282</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.ui.admincentral.tree.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
