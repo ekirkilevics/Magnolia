@@ -66,6 +66,11 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-ui-vaadin-widgetset</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
       <version>${project.version}</version>
     </dependency>

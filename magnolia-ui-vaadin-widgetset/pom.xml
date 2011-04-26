@@ -29,13 +29,13 @@
       <artifactId>vaadin-treetable</artifactId>
     </dependency>
     <dependency>
+	  <groupId>org.vaadin.addons</groupId>
+	  <artifactId>confirmdialog</artifactId>
+     </dependency>
+    <dependency>
       <groupId>org.vaadin.addons</groupId>
-      <artifactId>confirmdialog</artifactId>
-     </dependency>
-     <dependency>
-       <groupId>org.vaadin.addons</groupId>
-       <artifactId>lazyloadwrapper</artifactId>
-     </dependency>
+      <artifactId>lazyloadwrapper</artifactId>
+    </dependency>
      <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>

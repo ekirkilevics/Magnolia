@@ -34,7 +34,7 @@
 package info.magnolia.ui.vaadin.integration.shell;
 
 import info.magnolia.ui.framework.shell.ConfirmationHandler;
-import info.magnolia.ui.vaadin.widgetset.Historian;
+import info.magnolia.ui.vaadin.integration.widget.historian.Historian;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

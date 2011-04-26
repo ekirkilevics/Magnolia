@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.vaadin.widgetset.client;
+package info.magnolia.ui.vaadin.integration.widget.historian.client;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.user.client.History;

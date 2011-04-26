@@ -9,11 +9,32 @@
   </parent>
   <artifactId>magnolia-ui-vaadin-integration</artifactId>
   <name>magnolia-ui-vaadin-integration</name>
+  <description>The vaadin integration into Magnolia CMS.</description>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-ui-framework</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- needed to run in dev mode -->
+    <!-- TODO should probably go into a profile -->
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
@@ -24,51 +45,40 @@
 	  <artifactId>confirmdialog</artifactId>
      </dependency>
      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <scope>provided</scope>
-      </dependency>
-     <dependency>
-     	<groupId>info.magnolia</groupId>
-     	<artifactId>magnolia-ui-framework</artifactId>
-     	<version>5.0-SNAPSHOT</version>
-     	<type>jar</type>
-     	<scope>compile</scope>
-     </dependency>
-     <dependency>
-     	<groupId>info.magnolia</groupId>
-     	<artifactId>magnolia-ui-vaadin-widgetset</artifactId>
-     	<version>5.0-SNAPSHOT</version>
-     </dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
-  <description>The vaadin integration into Magnolia CMS.</description>
   <build>
     <plugins>
-     <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-dependency-plugin</artifactId>
-         <version>2.1</version>
-         <executions>
-           <execution>
-             <id>unpack</id>
-             <phase>process-resources</phase>
-             <goals>
-               <goal>unpack</goal>
-             </goals>
-             <configuration>
-               <artifactItems>
-                 <artifactItem>
-                    <groupId>com.vaadin</groupId>
-                    <artifactId>vaadin</artifactId>
-                 </artifactItem>
-               </artifactItems>
-               <outputDirectory>${project.build.directory}/classes/mgnl-resources</outputDirectory>
-               <includes>VAADIN/themes/**</includes>
-             </configuration>
-           </execution>
-         </executions>
-       </plugin>
-      <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.1</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <!-- Package format version - do not change -->
+              <Vaadin-Package-Version>1</Vaadin-Package-Version>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
     </plugins>
-</build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.java</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
 </project>

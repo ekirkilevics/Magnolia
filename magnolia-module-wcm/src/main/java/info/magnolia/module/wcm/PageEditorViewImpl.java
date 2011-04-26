@@ -39,6 +39,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import info.magnolia.module.wcm.editor.PageEditor;
 import info.magnolia.module.wcm.toolbox.ToolboxViewImpl;
 
 /**
@@ -65,6 +66,7 @@ public class PageEditorViewImpl implements PageEditorView {
         toolboxLayout = new VerticalLayout();
         toolboxLayout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
         toolboxLayout.addComponent(new ToolboxViewImpl(wcmModule).asVaadinComponent());
+        toolboxLayout.addComponent(new PageEditor());
 
         layout = new HorizontalLayout();
         layout.setSizeFull();
