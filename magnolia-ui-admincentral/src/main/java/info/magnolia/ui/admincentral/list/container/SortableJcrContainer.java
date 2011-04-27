@@ -33,73 +33,185 @@
  */
 package info.magnolia.ui.admincentral.list.container;
 
+import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
+import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.admincentral.tree.container.JcrContainerSource;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.jcr.RepositoryException;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.util.ContainerOrderedWrapper;
+import com.vaadin.data.util.DefaultItemSorter;
+import com.vaadin.data.util.ItemSorter;
 
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
-import info.magnolia.ui.admincentral.tree.container.JcrContainerSource;
 /**
- *
+ * TODO: review.
  * Sortable jcr container.
  * @author had
  *
  */
-public class SortableJcrContainer extends JcrContainer implements Container.Sortable {
+public class SortableJcrContainer implements Container.Sortable {
+
+    private ContainerOrderedWrapper wrappedJcrContainer;
+    private JcrContainer internalJcrContainer;
+    //FIXME DefaultItemSorter wants also inner classes to be comparable?
+    private ItemSorter itemSorter = new DefaultItemSorter();
 
     public SortableJcrContainer(JcrContainerSource jcrContainerSource) {
-        super(jcrContainerSource);
+        internalJcrContainer = new JcrContainer(jcrContainerSource, true);
+        wrappedJcrContainer = new ContainerOrderedWrapper(internalJcrContainer);
     }
 
-    public Object nextItemId(Object itemId) {
-        // TODO Auto-generated method stub
-        return null;
+    public ItemSorter getItemSorter() {
+        return itemSorter;
     }
 
-    public Object prevItemId(Object itemId) {
-        // TODO Auto-generated method stub
-        return null;
+    public void setItemSorter(ItemSorter itemSorter) {
+        this.itemSorter = itemSorter;
     }
 
-    public Object firstItemId() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public Object lastItemId() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public boolean isFirstId(Object itemId) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public boolean isLastId(Object itemId) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public Object addItemAfter(Object previousItemId) throws UnsupportedOperationException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public Item addItemAfter(Object previousItemId, Object newItemId) throws UnsupportedOperationException {
-        // TODO Auto-generated method stub
-        return null;
+    public String toString() {
+        return wrappedJcrContainer.toString();
     }
 
     public void sort(Object[] propertyId, boolean[] ascending) {
-        // TODO Auto-generated method stub
+        // Set up the item sorter for the sort operation
+        itemSorter.setSortProperties(this, propertyId, ascending);
 
+        // Perform the actual sort
+        doSort();
     }
 
     public Collection<?> getSortableContainerPropertyIds() {
-        // TODO Auto-generated method stub
-        return null;
+        final List<Object> list = new LinkedList<Object>();
+        for (final Iterator<?> i = getContainerPropertyIds().iterator(); i.hasNext();) {
+            final Object id = i.next();
+            //FIXME always return Component which can not be cast to Comparable hence no cols are sortable.
+            //See ListViewImpl line 111. Assigning there the correct class implementing the column type causes the values being displayed as classname@hashcode (Vaadin evidently uses toString())
+            final Class<?> type = getType(id);
+            if (type != null && Comparable.class.isAssignableFrom(type)) {
+                list.add(id);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Perform the sorting of the data structures in the container. This is
+     * invoked when the <code>itemSorter</code> has been prepared for the sort
+     * operation. Typically this method calls
+     * <code>Collections.sort(aCollection, getItemSorter())</code> on all arrays
+     * (containing item ids) that need to be sorted.
+     *
+     */
+    @SuppressWarnings("unchecked")
+    protected void doSort() {
+        Collections.sort(new ArrayList(getItemIds()), getItemSorter());
+    }
+
+    public Object nextItemId(Object itemId) {
+        return wrappedJcrContainer.nextItemId(itemId);
+    }
+
+    public Object prevItemId(Object itemId) {
+        return wrappedJcrContainer.prevItemId(itemId);
+    }
+
+    public Object firstItemId() {
+        return wrappedJcrContainer.firstItemId();
+    }
+
+    public Object lastItemId() {
+        return wrappedJcrContainer.lastItemId();
+    }
+
+    public boolean isFirstId(Object itemId) {
+        return wrappedJcrContainer.isFirstId(itemId);
+    }
+
+    public boolean isLastId(Object itemId) {
+        return wrappedJcrContainer.isLastId(itemId);
+    }
+
+    public Object addItemAfter(Object previousItemId) throws UnsupportedOperationException {
+        return wrappedJcrContainer.addItemAfter(previousItemId);
+    }
+
+    public Item addItemAfter(Object previousItemId, Object newItemId) throws UnsupportedOperationException {
+        return wrappedJcrContainer.addItemAfter(previousItemId, newItemId);
+    }
+
+    public Item getItem(Object itemId) {
+        return wrappedJcrContainer.getItem(itemId);
+    }
+
+    public Collection<?> getContainerPropertyIds() {
+        return wrappedJcrContainer.getContainerPropertyIds();
+    }
+
+    public Collection<ContainerItemId> getItemIds() {
+        return (Collection<ContainerItemId>) wrappedJcrContainer.getItemIds();
+    }
+
+    public Property getContainerProperty(Object itemId, Object propertyId) {
+        return wrappedJcrContainer.getContainerProperty(itemId, propertyId);
+    }
+
+    public Class<?> getType(Object propertyId) {
+        return wrappedJcrContainer.getType(propertyId);
+    }
+
+    public int size() {
+        return wrappedJcrContainer.size();
+    }
+
+    public boolean containsId(Object itemId) {
+        return wrappedJcrContainer.containsId(itemId);
+    }
+
+    public Item addItem(Object itemId) throws UnsupportedOperationException {
+        return wrappedJcrContainer.addItem(itemId);
+    }
+
+    public Object addItem() throws UnsupportedOperationException {
+        return wrappedJcrContainer.addItem();
+    }
+
+    public boolean removeItem(Object itemId) throws UnsupportedOperationException {
+        return wrappedJcrContainer.removeItem(itemId);
+    }
+
+    public boolean addContainerProperty(Object propertyId, Class<?> type, Object defaultValue) throws UnsupportedOperationException {
+        return wrappedJcrContainer.addContainerProperty(propertyId, type, defaultValue);
+    }
+
+    public boolean removeContainerProperty(Object propertyId) throws UnsupportedOperationException {
+        return wrappedJcrContainer.removeContainerProperty(propertyId);
+    }
+
+    public boolean removeAllItems() throws UnsupportedOperationException {
+        return wrappedJcrContainer.removeAllItems();
+    }
+
+    public ContainerItemId getItemByPath(String path) {
+        return internalJcrContainer.getItemByPath(path);
+    }
+
+    public void fireItemSetChange() {
+        internalJcrContainer.fireItemSetChange();
+    }
+
+    public javax.jcr.Item getJcrItem(ContainerItemId id) throws RepositoryException {
+        return internalJcrContainer.getJcrItem(id);
     }
 
 }

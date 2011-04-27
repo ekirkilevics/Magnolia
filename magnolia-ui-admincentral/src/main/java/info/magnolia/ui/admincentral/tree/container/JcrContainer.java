@@ -36,9 +36,11 @@ package info.magnolia.ui.admincentral.tree.container;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.util.TraversingItemVisitor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +48,8 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 import info.magnolia.exception.RuntimeRepositoryException;
 
 /**
@@ -61,8 +65,11 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     private final JcrContainerSource jcrContainerSource;
 
-    public JcrContainer(JcrContainerSource jcrContainerSource) {
+    private boolean flat = false;
+
+    public JcrContainer(JcrContainerSource jcrContainerSource, boolean flat) {
         this.jcrContainerSource = jcrContainerSource;
+        this.flat = flat;
     }
 
     public void addListener(ItemSetChangeListener listener) {
@@ -241,17 +248,62 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
         }
     }
 
-    // Private
+    public boolean isFlat(){
+        return flat;
+    }
 
+    // Private
     private Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException {
-        ArrayList<ContainerItemId> ids = new ArrayList<ContainerItemId>();
+        MagnoliaContentTraversingItemVisitor visitor = new MagnoliaContentTraversingItemVisitor(false, isFlat() ? -1 : 0);
         for (javax.jcr.Item child : children) {
-            ids.add(createContainerId(child));
+            child.accept(visitor);
         }
-        return ids;
+        return visitor.getIds();
     }
 
     private ContainerItemId createContainerId(javax.jcr.Item item) throws RepositoryException {
         return new ContainerItemId(item);
+    }
+
+    /**
+     * Creates a list of {@link ContainerItemId} for all <code>magnolia:content</code> node types in a given item hierarchy.
+     * The list of item ids can be retrived with {@link MagnoliaContentTraversingItemVisitor#getIds()}.
+     * TODO: make it protected?
+     */
+    private class MagnoliaContentTraversingItemVisitor extends TraversingItemVisitor {
+        private ArrayList<ContainerItemId> ids = new ArrayList<ContainerItemId>();
+
+        public MagnoliaContentTraversingItemVisitor(boolean breadthFirst, int level){
+            super(breadthFirst, level);
+        }
+        @Override
+        protected void entering(javax.jcr.Property property, int level) throws RepositoryException {
+            //do nothing
+        }
+
+        @Override
+        protected void entering(Node node, int level) throws RepositoryException {
+           //do nothing
+        }
+
+        @Override
+        protected void leaving(javax.jcr.Property property, int level) throws RepositoryException {
+            if(this.maxLevel > -1 && !property.getName().startsWith("jcr:") && !property.getName().startsWith("mgnl:")){
+                log.debug("adding property {}", property.getName());
+                ids.add(createContainerId(property));
+            }
+        }
+
+        @Override
+        protected void leaving(Node node, int level) throws RepositoryException {
+            if(node.getPrimaryNodeType().isNodeType("mgnl:content") || (this.maxLevel > -1 && node.getPrimaryNodeType().isNodeType("mgnl:contentNode")) ){
+                log.debug("adding node {}", node.getName());
+                ids.add(createContainerId(node));
+            }
+        }
+
+        public List<ContainerItemId> getIds(){
+            return Collections.unmodifiableList(ids);
+        }
     }
 }

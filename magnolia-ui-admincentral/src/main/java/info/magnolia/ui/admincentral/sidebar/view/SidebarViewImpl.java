@@ -40,6 +40,7 @@ import javax.jcr.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.lazyloadwrapper.LazyLoadWrapper;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalSplitPanel;
 
@@ -64,7 +65,8 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
         panel.setSizeFull();
 
         panel.setFirstComponent(actionListView.asVaadinComponent());
-        panel.setSecondComponent(previewView.asVaadinComponent());
+        LazyLoadWrapper lazyPreview = new LazyLoadWrapper(previewView.asVaadinComponent());
+        panel.setSecondComponent(lazyPreview);
     }
 
     public ActionListView getActionList() {

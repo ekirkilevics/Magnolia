@@ -65,6 +65,7 @@ public class PreviewViewImpl implements PreviewView {
     private Form form = new Form();
 
     public PreviewViewImpl() {
+        form.setSizeFull();
         TextField pathField = new TextField(PATH);
         pathField.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
         pathField.setEnabled(false);
