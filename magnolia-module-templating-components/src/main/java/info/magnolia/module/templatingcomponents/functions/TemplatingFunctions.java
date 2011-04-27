@@ -36,6 +36,7 @@ package info.magnolia.module.templatingcomponents.functions;
 import info.magnolia.cms.core.Content;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,10 @@ public class TemplatingFunctions {
     private static final Logger log = LoggerFactory.getLogger(TemplatingFunctions.class);
 
     public Node asJCRNode(Content content) {
-        return (content == null) ? null : content.getJCRNode();
+        return content == null ? null : content.getJCRNode();
     }
 
+    public Content parent(Content content) throws RepositoryException {
+        return content == null ? null : content.getParent();
+    }
 }
