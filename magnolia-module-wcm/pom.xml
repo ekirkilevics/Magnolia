@@ -61,6 +61,7 @@
             <manifestEntries>
               <!-- Package format version - do not change -->
               <Vaadin-Package-Version>1</Vaadin-Package-Version>
+              <Vaadin-Widgetsets>info.magnolia.module.wcm.editor.PageEditorWidgetset</Vaadin-Widgetsets>
             </manifestEntries>
           </archive>
         </configuration>
