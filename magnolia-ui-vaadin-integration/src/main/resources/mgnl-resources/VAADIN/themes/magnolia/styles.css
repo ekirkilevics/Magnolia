@@ -92,3 +92,7 @@
 .m-inline-div {
 	display: inline-block;
 }
+
+.v-splitpanel-second-container {
+	overflow: hidden !important; /* remove scrollbars added by lazy load wrapper*/
+}
