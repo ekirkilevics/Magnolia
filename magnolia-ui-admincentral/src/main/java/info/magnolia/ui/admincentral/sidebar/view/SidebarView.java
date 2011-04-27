@@ -47,7 +47,7 @@ public interface SidebarView extends View {
 
     ActionListView getActionList();
 
-    PreviewView getDetailView();
+    PreviewView getPreviewView();
 
     void setPresenter(Presenter presenter);
 }

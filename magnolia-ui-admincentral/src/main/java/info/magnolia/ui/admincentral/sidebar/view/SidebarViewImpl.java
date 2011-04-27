@@ -35,8 +35,6 @@ package info.magnolia.ui.admincentral.sidebar.view;
 
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
-import javax.jcr.Item;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,17 +71,13 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
         return actionListView;
     }
 
-    public PreviewView getDetailView() {
+    public PreviewView getPreviewView() {
         return previewView;
     }
 
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
         actionListView.setPresenter(this.presenter);
-    }
-
-    public void showDetails(Item item) {
-        previewView.show(item);
     }
 
     public Component asVaadinComponent() {
