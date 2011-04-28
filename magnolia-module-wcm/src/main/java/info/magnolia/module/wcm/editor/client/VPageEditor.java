@@ -33,12 +33,13 @@
  */
 package info.magnolia.module.wcm.editor.client;
 
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -90,7 +91,24 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
     }-*/;
 
     public void onFrameLoad() {
-        Window.alert("Bingo");
-        Window.alert(iFrameElement.getContentDocument().getDocumentElement().getInnerHTML());
+        Element documentElement = iFrameElement.getContentDocument().getDocumentElement();
+        detectCmsTag(documentElement);
+    }
+
+    private void detectCmsTag(Element element) {
+        if (element.getTagName().equalsIgnoreCase("cms:edit")) {
+            DivElement placeholder = element.getOwnerDocument().createDivElement();
+            placeholder.setInnerText("Edit; content=" + element.getAttribute("content"));
+            element.appendChild(placeholder);
+        } else if (element.getTagName().equalsIgnoreCase("cms:area")) {
+            DivElement placeholder = element.getOwnerDocument().createDivElement();
+            placeholder.setInnerText("Area; name=" + element.getAttribute("name") + " content=" + element.getAttribute("content"));
+            element.appendChild(placeholder);
+        }
+        for (int i=0;i<element.getChildCount();i++) {
+            Node child = element.getChild(i);
+            if (child.getNodeType() == Element.ELEMENT_NODE)
+                detectCmsTag((Element)child);
+        }
     }
 }
