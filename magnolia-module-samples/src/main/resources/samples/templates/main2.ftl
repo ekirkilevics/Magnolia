@@ -17,8 +17,6 @@
 
 	[@cms.area name="stage" /]
 
-	[@cms.paragraph /]
-
 	[@cms.render /]
 
 	${cmsfn.asJCRNode(content)}
