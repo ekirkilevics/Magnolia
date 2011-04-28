@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.tree.container;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +50,6 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import info.magnolia.exception.RuntimeRepositoryException;
 
 /**
