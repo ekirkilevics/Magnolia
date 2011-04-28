@@ -34,29 +34,63 @@
 package info.magnolia.module.wcm.editor.client;
 
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.PreElement;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.VCustomComponent;
 
 /**
  * TODO: Add javadoc.
  */
-public class VPageEditor extends VCustomComponent {
+public class VPageEditor extends HTML implements Paintable, EventListener {
 
-    private ApplicationConnection client;
+    private IFrameElement iFrameElement;
 
-    @Override
+    public VPageEditor() {
+        iFrameElement = Document.get().createIFrameElement();
+        iFrameElement.setAttribute("width", "100%");
+        iFrameElement.setAttribute("height", "100%");
+        iFrameElement.setFrameBorder(0);
+        getElement().appendChild(iFrameElement);
+
+        hookEvents(iFrameElement, this);
+    }
+
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+        String url = uidl.getStringAttribute("url");
 
-        PreElement preElement = Document.get().createPreElement();
-        preElement.setInnerText("TEST");
-        getElement().appendChild(preElement);
+        iFrameElement.setSrc(url);
+    }
 
-        this.client = client;
+    @Override
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+    }
+
+    /**
+     * Inspired by {@link com.google.gwt.user.client.ui.impl.FormPanelImpl}.
+     *
+     * TODO probably doesn't work in IE6 as FormPanelImpl has a special impl for it.
+     */
+    public native void hookEvents(Element iframe, VPageEditor listener) /*-{
+        if (iframe) {
+            iframe.onload = $entry(function() {
+                listener.@info.magnolia.module.wcm.editor.client.VPageEditor::onFrameLoad()();
+            });
+        }
+    }-*/;
+
+    public void onFrameLoad() {
+        Window.alert("Bingo");
+        Window.alert(iFrameElement.getContentDocument().getDocumentElement().getInnerHTML());
     }
 }

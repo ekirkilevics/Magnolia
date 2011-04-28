@@ -33,19 +33,28 @@
  */
 package info.magnolia.module.wcm.editor;
 
+import com.vaadin.terminal.PaintException;
+import com.vaadin.terminal.PaintTarget;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.ClientWidget;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Label;
 import info.magnolia.module.wcm.editor.client.VPageEditor;
 
 /**
  * TODO: Add javadoc.
  */
 @ClientWidget(VPageEditor.class)
-public class PageEditor extends CustomComponent {
+public class PageEditor extends AbstractComponent {
 
-    public PageEditor() {
-        setCompositionRoot(new Label("QWE"));
+    private String url;
+
+    public PageEditor(String url) {
+        this.url = url;
+        setSizeFull();
     }
 
+    @Override
+    public void paintContent(PaintTarget target) throws PaintException {
+        super.paintContent(target);
+        target.addAttribute("url", url);
+    }
 }
