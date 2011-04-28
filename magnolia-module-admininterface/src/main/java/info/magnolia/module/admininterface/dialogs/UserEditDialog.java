@@ -139,6 +139,7 @@ public class UserEditDialog extends ConfiguredDialog {
             catch (ItemNotFoundException e) {
                 // remove invalid ID
                 values.remove(index);
+                index--;
             }
         }
 
@@ -158,6 +159,7 @@ public class UserEditDialog extends ConfiguredDialog {
             catch (ItemNotFoundException e) {
                 // remove invalid ID
                 values.remove(index);
+                index--;
             }
         }
         return dialog;
