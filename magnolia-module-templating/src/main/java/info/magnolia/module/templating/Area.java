@@ -33,10 +33,50 @@
  */
 package info.magnolia.module.templating;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * Represents an area definition.
  */
 public class Area extends AbstractRenderable {
 
-    // TODO add list of available paragraphs
+    // TODO: remove no-args constructor - just for debugging purposes
+    public Area() {
+        super();
+    }
+
+    private Map<String, Paragraph> paragraphs = new LinkedHashMap<String, Paragraph>();
+
+    private Boolean enabled;
+
+    private String template;
+
+    public Map<String, Paragraph> getParagraphs() {
+        return paragraphs;
+    }
+
+    public void setParagraphs(Map<String, Paragraph> paragraphs) {
+        this.paragraphs = paragraphs;
+    }
+
+    public void addParagraph(String name, Paragraph paragraph) {
+        this.paragraphs.put(name, paragraph);
+    }
+
+    public Boolean getEnabled() {
+        return this.enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getTemplate() {
+        return this.template;
+    }
+
+    public void setTemplate(String tempate) {
+        this.template = tempate;
+    }
 }

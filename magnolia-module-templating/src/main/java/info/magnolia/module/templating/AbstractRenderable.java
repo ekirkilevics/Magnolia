@@ -33,6 +33,11 @@
  */
 package info.magnolia.module.templating;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.MgnlInstantiationException;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,11 +45,6 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.objectfactory.MgnlInstantiationException;
 
 
 /**
@@ -63,7 +63,10 @@ public class AbstractRenderable implements RenderableDefinition {
     private String description;
     private String i18nBasename;
     private Class<? extends RenderingModel> modelClass = RenderingModelImpl.class;
+
+    // TODO: check whether we shouldn't use LinkedHashMap here - would preserve order!
     private Map parameters = new HashMap();
+    private Map areas = new HashMap();
 
     /**
      * Return always the {@link #templatePath} property.
@@ -152,6 +155,14 @@ public class AbstractRenderable implements RenderableDefinition {
 
     public void setParameters(Map params) {
         this.parameters = params;
+    }
+
+    public Map getAreas() {
+        return this.areas;
+    }
+
+    public void setAreas(Map params) {
+        this.areas = areas;
     }
 
     public Class<? extends RenderingModel> getModelClass() {
