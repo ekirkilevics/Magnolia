@@ -6,20 +6,25 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title>${content.title!content.@name}</title>
-        <link rel="stylesheet" type="text/css" href="${contextPath}/docroot/samples/samples.css"/>
     </head>
 
-    <body>
+    <body style="background-color:#bbb">
 
+	<h1>This page is: ${cmsfn.asJCRNode(content).path} (${cmsfn.asJCRNode(content).identifier})</h1>
+
+	<div id="main" style="padding:15px;">
+
+	<h2>Editbar</h2>
 	[@cms.edit /]
 
-	[@cms.contextAttribute name="shoeSize" value="213" /]
-
+	<h2>Area</h2>
 	[@cms.area name="stage" /]
 
 	[@cms.render /]
 
-	${cmsfn.asJCRNode(content)}
+	[@cms.contextAttribute name="shoeSize" value="213" /]
+
+	</div>
 
 	</body>
 </html>
