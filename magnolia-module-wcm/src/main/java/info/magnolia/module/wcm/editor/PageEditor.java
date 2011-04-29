@@ -33,28 +33,55 @@
  */
 package info.magnolia.module.wcm.editor;
 
+import java.util.Map;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.ClientWidget;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.wcm.editor.client.VPageEditor;
+import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 
 /**
- * TODO: Add javadoc.
+ * Server side vaadin component for the page editor.
  */
 @ClientWidget(VPageEditor.class)
 public class PageEditor extends AbstractComponent {
 
+    private DialogPresenter dialogPresenter;
     private String url;
 
-    public PageEditor(String url) {
+    public PageEditor(DialogPresenter dialogPresenter, String url) {
+        this.dialogPresenter = dialogPresenter;
         this.url = url;
         setSizeFull();
+    }
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        super.changeVariables(source, variables);
+        if (variables.containsKey("open-dialog")) {
+            String dialog = (String) variables.get("open-dialog");
+            openDialog(dialog);
+        }
     }
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
         target.addAttribute("url", url);
+    }
+
+    private void openDialog(String dialog) {
+        try {
+            Node node = MgnlContext.getJCRSession("website").getNode("/howTo-freemarker2");
+            dialogPresenter.showDialog(node, dialog);
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 }

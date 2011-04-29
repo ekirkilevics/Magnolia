@@ -162,7 +162,7 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
             return String.class;
         if ("checkboxSwitch".equals(fieldDefinition.getControlType()))
             return Boolean.class;
-        return null;
+        return String.class;
 //        throw new IllegalArgumentException("Unsupported type " + dialogControl.getClass());
     }
 

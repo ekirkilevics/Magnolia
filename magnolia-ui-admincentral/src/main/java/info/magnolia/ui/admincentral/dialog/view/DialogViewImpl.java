@@ -100,7 +100,7 @@ public class DialogViewImpl extends Window implements DialogView {
 
         setModal(true);
         setResizable(true);
-        setScrollable(false);
+//        setScrollable(false); // TODO this is commented out because it doesnt work with dialogs in page editor
         setClosable(false);
         setWidth("800px");
 

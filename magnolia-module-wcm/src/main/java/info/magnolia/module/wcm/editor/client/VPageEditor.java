@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.wcm.editor.client;
 
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
@@ -46,11 +45,13 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 /**
- * TODO: Add javadoc.
+ * Client side implementation of the page editor. Outputs an iframe and injects ui widgets inside its content.
  */
 public class VPageEditor extends HTML implements Paintable, EventListener {
 
     private IFrameElement iFrameElement;
+    private ApplicationConnection client;
+    private String id;
 
     public VPageEditor() {
         iFrameElement = Document.get().createIFrameElement();
@@ -64,7 +65,11 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-        if (client.updateComponent(this, uidl, true)) {
+        // Save details
+        this.client = client;
+        id = uidl.getId();
+
+        if (this.client.updateComponent(this, uidl, true)) {
             return;
         }
         String url = uidl.getStringAttribute("url");
@@ -79,7 +84,7 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
 
     /**
      * Inspired by {@link com.google.gwt.user.client.ui.impl.FormPanelImpl}.
-     *
+     * <p/>
      * TODO probably doesn't work in IE6 as FormPanelImpl has a special impl for it.
      */
     public native void hookEvents(Element iframe, VPageEditor listener) /*-{
@@ -91,37 +96,31 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
     }-*/;
 
     public void onFrameLoad() {
+        // TODO when the user navigates in the iframe we need to respond accordingly
         Element documentElement = iFrameElement.getContentDocument().getDocumentElement();
         detectCmsTag(documentElement);
     }
 
     private void detectCmsTag(Element element) {
+
         if (element.getTagName().equalsIgnoreCase("cms:edit")) {
-            DivElement placeholder = createBar(element);
-            placeholder.setInnerText("Edit; content=" + element.getAttribute("content"));
-            element.appendChild(placeholder);
+            EditBarWidget editBarWidget = new EditBarWidget(this);
+            editBarWidget.attach(element);
         } else if (element.getTagName().equalsIgnoreCase("cms:area")) {
-            DivElement placeholder = createBar(element);
-            placeholder.setInnerText("Area; name=" + element.getAttribute("name") + " content=" + element.getAttribute("content"));
-            element.appendChild(placeholder);
+            AreaBarWidget areaBarWidget = new AreaBarWidget(this);
+            areaBarWidget.attach(element);
         }
-        for (int i=0;i<element.getChildCount();i++) {
+
+        for (int i = 0; i < element.getChildCount(); i++) {
             Node child = element.getChild(i);
-            if (child.getNodeType() == Element.ELEMENT_NODE)
-                detectCmsTag((Element)child);
+            if (child.getNodeType() == Element.ELEMENT_NODE) {
+                detectCmsTag((Element) child);
+            }
         }
     }
 
-    private DivElement createBar(Element element) {
-        DivElement placeholder = element.getOwnerDocument().createDivElement();
-        placeholder.setAttribute("style",
-                "background-image:url('/.resources/admin-images/mgnl-bar.png');" +
-                "background-position:repeat;" +
-                "border-top: 1px solid #ADC97B !important;" +
-                "border-left: 1px solid #ADC97B !important;" +
-                "border-bottom: 1px solid #396101 !important;" +
-                "border-right: 1px solid #396101 !important;"
-        );
-        return placeholder;
+    public void openDialog(String dialog) {
+        client.updateVariable(id, "open-dialog", dialog, true);
+        client.sendPendingVariableChanges();
     }
 }

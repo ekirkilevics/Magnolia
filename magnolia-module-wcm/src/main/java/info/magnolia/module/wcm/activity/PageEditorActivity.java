@@ -37,6 +37,7 @@ import com.vaadin.ui.Component;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.wcm.editor.PageEditor;
 import info.magnolia.module.wcm.place.PageEditorPlace;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.View;
@@ -48,9 +49,11 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
  */
 public class PageEditorActivity extends AbstractActivity {
 
+    private ComponentProvider componentProvider;
     private PageEditorPlace place;
 
-    public PageEditorActivity(PageEditorPlace place) {
+    public PageEditorActivity(ComponentProvider componentProvider, PageEditorPlace place) {
+        this.componentProvider = componentProvider;
         this.place = place;
     }
 
@@ -58,14 +61,14 @@ public class PageEditorActivity extends AbstractActivity {
         viewPort.setView(new EditorView(place.getPath()));
     }
 
-    private static class EditorView implements View, IsVaadinComponent {
+    private class EditorView implements View, IsVaadinComponent {
 
         private String path;
         private Component component;
 
         private EditorView(String path) {
             this.path = path;
-            PageEditor pageEditor = new PageEditor(MgnlContext.getContextPath() + path);
+            PageEditor pageEditor = componentProvider.newInstance(PageEditor.class, MgnlContext.getContextPath() + path);
             pageEditor.setSizeFull();
             component = pageEditor;
         }
