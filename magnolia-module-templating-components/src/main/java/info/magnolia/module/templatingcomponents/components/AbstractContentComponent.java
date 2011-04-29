@@ -54,6 +54,7 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
     public static final String LINEBREAK = "\r\n";
     public static final String GREATER_THAN = ">";
     public static final String LESS_THAN = "<";
+    public static final String SLASH = "/";
 
     public static final String XML_BEGINN_COMMENT = LESS_THAN + "!--" + SPACE;
     public static final String XML_END_COMMENT = SPACE + "--" + GREATER_THAN;

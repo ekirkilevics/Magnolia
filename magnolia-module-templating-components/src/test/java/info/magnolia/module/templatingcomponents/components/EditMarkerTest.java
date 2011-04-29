@@ -95,7 +95,7 @@ public class EditMarkerTest {
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + AbstractContentComponent.LINEBREAK
-                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\">"
+                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK, out.toString());
 
         // now with format & dialog
@@ -108,7 +108,7 @@ public class EditMarkerTest {
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + AbstractContentComponent.LINEBREAK
-                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" format=\"testFormat\" dialog=\"testDialog\">"
+                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" format=\"testFormat\" dialog=\"testDialog\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK, out.toString());
 
     }

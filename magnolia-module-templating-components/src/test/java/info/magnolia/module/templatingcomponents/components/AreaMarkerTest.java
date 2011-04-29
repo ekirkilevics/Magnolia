@@ -99,7 +99,7 @@ public class AreaMarkerTest {
 
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + EditMarker.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" collection=\"true\">"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" collection=\"true\"></cms:area>"
                 + EditMarker.LINEBREAK, out.toString());
 
         // with paragraph set
@@ -109,7 +109,7 @@ public class AreaMarkerTest {
 
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + EditMarker.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" collection=\"true\">"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" collection=\"true\"></cms:area>"
                 + EditMarker.LINEBREAK, out.toString());
 
         // as collection == false (= singleton)
@@ -120,7 +120,7 @@ public class AreaMarkerTest {
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + EditMarker.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" collection=\"false\">"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" collection=\"false\"></cms:area>"
                         + EditMarker.LINEBREAK, out.toString());
     }
 

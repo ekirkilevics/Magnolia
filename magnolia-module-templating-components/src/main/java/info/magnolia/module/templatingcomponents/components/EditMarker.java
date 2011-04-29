@@ -50,7 +50,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class EditMarker extends AbstractContentComponent {
 
-    public static final String CMS_EDIT_CONTENT = LESS_THAN + "cms:edit content=";
+    public static final String CMS_EDIT = "cms:edit";
 
     private String dialog;
     private String format;
@@ -62,16 +62,19 @@ public class EditMarker extends AbstractContentComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE)
-                .append(XML_END_COMMENT).append(LINEBREAK);
-        out.append(CMS_EDIT_CONTENT).append(QUOTE).append(getNodePath(content)).append(QUOTE);
+        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
+                .append(LINEBREAK);
+        out.append(LESS_THAN).append(CMS_EDIT).append(" content=").append(QUOTE).append(getNodePath(content))
+                .append(QUOTE);
         if (StringUtils.isNotEmpty(format)) {
             out.append(" format=").append(QUOTE).append(format).append(QUOTE);
         }
         if (StringUtils.isNotEmpty(dialog)) {
             out.append(" dialog=").append(QUOTE).append(dialog).append(QUOTE);
         }
-        out.append(GREATER_THAN).append(LINEBREAK);
+        out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_EDIT).append(GREATER_THAN)
+                .append(LINEBREAK);
+
     }
 
     @Override

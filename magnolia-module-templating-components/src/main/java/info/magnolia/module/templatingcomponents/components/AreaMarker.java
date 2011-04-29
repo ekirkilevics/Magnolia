@@ -52,7 +52,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class AreaMarker extends AbstractContentComponent {
 
-    public static final String CMS_AREA = LESS_THAN + "cms:area";
+    public static final String CMS_AREA = "cms:area";
 
     private String name;
     private Area area;
@@ -76,7 +76,7 @@ public class AreaMarker extends AbstractContentComponent {
         Node content = getTargetContent();
         out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
                 .append(LINEBREAK);
-        out.append(CMS_AREA);
+        out.append(LESS_THAN).append(CMS_AREA);
         param(out, "content", getNodePath(content));
 
         /**
@@ -99,7 +99,8 @@ public class AreaMarker extends AbstractContentComponent {
             // TODO list paragraphs...
         }
 
-        out.append(GREATER_THAN).append(LINEBREAK);
+        out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_AREA).append(GREATER_THAN)
+                .append(LINEBREAK);
     }
 
     @Override
