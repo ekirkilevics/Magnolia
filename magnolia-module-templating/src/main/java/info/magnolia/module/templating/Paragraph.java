@@ -33,16 +33,15 @@
  */
 package info.magnolia.module.templating;
 
-import javax.jcr.RepositoryException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.DeprecationUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
 
 /**
  * Represents a paragraph definition. Following are most of the properties you can use
@@ -66,8 +65,7 @@ import info.magnolia.context.MgnlContext;
  * </tr>
  * <tr>
  * <td>type</td>
- * <td><code>jsp</code></td>
- * <td><code>jsp</code>,<code>freemarker</code>,É</td>
+ * <td><code>jsp</code>,<code>freemarker</code>, ...</td>
  * <td>Determines which <code>ParagraphRenderer</code> to use. Out of the box,
  * Magnolia provides support for JSP and FreeMarker.</td>
  * </tr>
