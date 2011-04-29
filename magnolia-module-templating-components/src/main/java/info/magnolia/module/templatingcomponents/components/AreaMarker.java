@@ -57,7 +57,7 @@ public class AreaMarker extends AbstractContentComponent {
     private String name;
     private Area area;
     /**
-     * comma separated list of paragraphs
+     * Comma separated list of paragraphs.
      */
     private String paragraphs;
     private Boolean collection = Boolean.TRUE;
