@@ -97,11 +97,11 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
 
     private void detectCmsTag(Element element) {
         if (element.getTagName().equalsIgnoreCase("cms:edit")) {
-            DivElement placeholder = element.getOwnerDocument().createDivElement();
+            DivElement placeholder = createBar(element);
             placeholder.setInnerText("Edit; content=" + element.getAttribute("content"));
             element.appendChild(placeholder);
         } else if (element.getTagName().equalsIgnoreCase("cms:area")) {
-            DivElement placeholder = element.getOwnerDocument().createDivElement();
+            DivElement placeholder = createBar(element);
             placeholder.setInnerText("Area; name=" + element.getAttribute("name") + " content=" + element.getAttribute("content"));
             element.appendChild(placeholder);
         }
@@ -110,5 +110,18 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
             if (child.getNodeType() == Element.ELEMENT_NODE)
                 detectCmsTag((Element)child);
         }
+    }
+
+    private DivElement createBar(Element element) {
+        DivElement placeholder = element.getOwnerDocument().createDivElement();
+        placeholder.setAttribute("style",
+                "background-image:url('/.resources/admin-images/mgnl-bar.png');" +
+                "background-position:repeat;" +
+                "border-top: 1px solid #ADC97B !important;" +
+                "border-left: 1px solid #ADC97B !important;" +
+                "border-bottom: 1px solid #396101 !important;" +
+                "border-right: 1px solid #396101 !important;"
+        );
+        return placeholder;
     }
 }
