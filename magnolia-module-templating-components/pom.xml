@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>5.0-SNAPSHOT</version>
+    <version>5.0-m4-s1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>info.magnolia</groupId>
@@ -44,12 +43,12 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m4-s1</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m4-s1</version>
     </dependency>
     <!-- dependency TODO needed for ParagraphSelectDialog - but currently
       circular, so see note in info.magnolia.module.templatingcomponentsomponents.EditBar
@@ -58,7 +57,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-templating</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m4-s1</version>
     </dependency>
     <dependency>
       <groupId>org.freemarker</groupId>
@@ -85,7 +84,7 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <type>test-jar</type>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m4-s1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
