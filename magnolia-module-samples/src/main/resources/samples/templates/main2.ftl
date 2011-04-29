@@ -8,7 +8,7 @@
         <title>${content.title!content.@name}</title>
     </head>
 
-    <body style="background-color:#bbb">
+    <body style="background-color:#ccb">
 
 	<h1>This page is: ${cmsfn.asJCRNode(content).path} (${cmsfn.asJCRNode(content).identifier})</h1>
 
