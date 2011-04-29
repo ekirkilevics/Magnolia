@@ -33,10 +33,6 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
-import java.io.IOException;
-import java.util.Map;
-import javax.jcr.Node;
-
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
@@ -46,6 +42,11 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templating.Area;
 import info.magnolia.module.templatingcomponents.components.AreaMarker;
 import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
+
+import java.io.IOException;
+import java.util.Map;
+
+import javax.jcr.Node;
 
 /**
  * A freemarker directive for rendering an area.
@@ -65,7 +66,7 @@ public class AreaDirective extends AbstractDirective {
         String name = string(params, "name", null);
         String paragraphs = string(params, "paragraphs", null);
         String dialog = string(params, "dialog", null);
-        boolean singleton = bool(params, "singleton", false); // TODO this will need to be Boolean instead as it needs to be nullable
+        boolean collection = bool(params, "collection", true);
 
         AreaMarker marker = new AreaMarker(serverCfg, aggState);
         marker.setContent(content);
@@ -76,7 +77,7 @@ public class AreaDirective extends AbstractDirective {
         marker.setName(name);
         marker.setParagraphs(paragraphs);
         marker.setDialog(dialog);
-        marker.setSingleton(singleton);
+        marker.setCollection(collection);
 
         return marker;
     }

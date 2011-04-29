@@ -38,6 +38,7 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templating.Area;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -55,8 +56,11 @@ public class AreaMarker extends AbstractContentComponent {
 
     private String name;
     private Area area;
+    /**
+     * comma separated list of paragraphs
+     */
     private String paragraphs;
-    private Boolean singleton;
+    private Boolean collection = Boolean.TRUE;
     private String dialog;
 
     // TODO implement support for script and placeholderScript
@@ -74,19 +78,27 @@ public class AreaMarker extends AbstractContentComponent {
                 .append(LINEBREAK);
         out.append(CMS_AREA);
         param(out, "content", getNodePath(content));
-        // TODO should area == null be allowed?
-        if (area != null) {
-            param(out, "name", name != null ? name : area.getName());
+
+        /**
+         * Can already be set - or not. If not, we set it in order to avoid tons of if statements in the beyond code...
+         */
+        if (area == null) {
+            area = new Area();
         }
+        param(out, "name", name != null ? name : area.getName());
         if (StringUtils.isNotEmpty(paragraphs)) {
             param(out, "paragraphs", paragraphs);
         }
-        if (singleton != null) {
-            param(out, "singleton", String.valueOf(singleton));
-        }
+        param(out, "collection", String.valueOf(collection));
         if (StringUtils.isNotEmpty(dialog)) {
             param(out, "dialog", dialog);
         }
+
+        // Paragraphs may be set in area or in comma separated list
+        if (area.getParagraphs().size() > 0) {
+            // TODO list paragraphs...
+        }
+
         out.append(GREATER_THAN).append(LINEBREAK);
     }
 
@@ -123,12 +135,12 @@ public class AreaMarker extends AbstractContentComponent {
         this.paragraphs = paragraphs;
     }
 
-    public boolean isSingleton() {
-        return singleton;
+    public boolean isCollection() {
+        return collection;
     }
 
-    public void setSingleton(Boolean singleton) {
-        this.singleton = singleton;
+    public void setCollection(boolean collection) {
+        this.collection = collection;
     }
 
     public String getDialog() {
@@ -137,5 +149,17 @@ public class AreaMarker extends AbstractContentComponent {
 
     public void setDialog(String dialog) {
         this.dialog = dialog;
+    }
+
+    protected String getParagraphNames() {
+        if (StringUtils.isEmpty(getParagraphs()) && area != null && area.getParagraphs().size() > 0) {
+            StringBuilder builder = new StringBuilder();
+            Set<String> paragraphNames = area.getParagraphs().keySet();
+            for (String string : paragraphNames) {
+                // TODO - implement after the royal wedding...
+            }
+            return builder.toString();
+        }
+        return getParagraphs();
     }
 }

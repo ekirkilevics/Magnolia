@@ -99,28 +99,28 @@ public class AreaMarkerTest {
 
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + EditMarker.LINEBREAK
-                + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\">"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" collection=\"true\">"
                 + EditMarker.LINEBREAK, out.toString());
 
         // with paragraph set
         out = new StringWriter();
-        marker.setParagraphs("myParagraph");
+        marker.setParagraphs("paragraphs/myParagraph");
         marker.doRender(out);
 
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + EditMarker.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"myParagraph\">"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" collection=\"true\">"
                 + EditMarker.LINEBREAK, out.toString());
 
-        // with isSingleton set
+        // as collection == false (= singleton)
         out = new StringWriter();
-        marker.setSingleton(Boolean.TRUE);
+        marker.setCollection(false);
         marker.doRender(out);
 
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + EditMarker.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"myParagraph\" singleton=\"true\">"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" collection=\"false\">"
                         + EditMarker.LINEBREAK, out.toString());
     }
 
