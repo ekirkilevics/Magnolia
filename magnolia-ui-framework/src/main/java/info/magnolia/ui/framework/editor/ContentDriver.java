@@ -124,7 +124,7 @@ public class ContentDriver extends AbstractDriver<Node> {
             else if (item instanceof Property)
                 renameProperty((Property) item, (String) value);
         } else if (value instanceof String) {
-            node.getProperty(path).setValue((String) value);
+            node.setProperty(path, (String) value);
         } else if (value instanceof Calendar) {
             node.setProperty(path, (Calendar) value);
         }
