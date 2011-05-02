@@ -155,6 +155,9 @@
       <sv:property sv:name="label" sv:type="String">
         <sv:value>Page</sv:value>
       </sv:property>
+      <sv:property sv:name="sortable" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
@@ -169,7 +172,7 @@
           <sv:value>2010-09-08T11:44:25.527+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-03-14T08:20:42.673+01:00</sv:value>
+          <sv:value>2011-04-29T18:00:30.570+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -215,7 +218,7 @@
           <sv:value>2010-09-08T11:44:25.527+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-03-14T09:32:45.911+01:00</sv:value>
+          <sv:value>2011-04-29T18:00:48.098+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -255,7 +258,7 @@
           <sv:value>2010-09-08T11:44:25.527+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-03-14T09:32:57.964+01:00</sv:value>
+          <sv:value>2011-04-29T17:53:48.434+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -295,7 +298,7 @@
           <sv:value>2010-09-08T11:44:25.527+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-03-14T09:33:07.901+01:00</sv:value>
+          <sv:value>2011-05-02T12:42:54.477+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -335,7 +338,7 @@
           <sv:value>2010-09-08T11:44:25.527+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-03-14T09:33:20.292+01:00</sv:value>
+          <sv:value>2011-05-02T12:42:33.711+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
