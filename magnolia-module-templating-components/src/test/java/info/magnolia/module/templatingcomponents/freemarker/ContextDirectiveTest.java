@@ -42,14 +42,14 @@ import javax.servlet.http.HttpServletRequest;
  * 
  * $Id$
  */
-public class ContextAttributeDirectiveTest extends AbstractDirectiveTestCase {
+public class ContextDirectiveTest extends AbstractDirectiveTestCase {
     @Override
     protected void setupExpectations(WebContext ctx, HttpServletRequest req) {
         ctx.setAttribute("shoeSize", "213", 1);
     }
 
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@cms.contextAttribute name=\"shoeSize\" value=\"213\" /]");
+        final String result = renderForTest("[@cms.context name=\"shoeSize\" value=\"213\" /]");
         // TODO result is empty - how to verify everything worked as expected?
         assertEquals("", result);
     }
