@@ -35,69 +35,46 @@ package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
- * Outputs an edit bar.
+ * Sets a context attribute, used as a sub to ui:render.
  *
  * @version $Id$
  */
-public class EditMarker extends AbstractContentComponent {
+// TODO naming - ContextMarker seams to be the better fit...
+public class ContextComponent extends AbstractAuthoringUiComponent {
 
-    public static final String CMS_EDIT = "cms:edit";
+    private String name;
+    private Object value;
 
-    private String dialog;
-    private String format;
-
-    public EditMarker(ServerConfiguration server, AggregationState aggregationState) {
+    public ContextComponent(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
     }
 
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
-        Node content = getTargetContent();
-        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
-                .append(LINEBREAK);
-        out.append(LESS_THAN).append(CMS_EDIT).append(" content=").append(QUOTE).append(getNodePath(content))
-                .append(QUOTE);
-        if (StringUtils.isNotEmpty(format)) {
-            out.append(" format=").append(QUOTE).append(format).append(QUOTE);
-        }
-        if (StringUtils.isNotEmpty(dialog)) {
-            out.append(" dialog=").append(QUOTE).append(dialog).append(QUOTE);
-        }
-        out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_EDIT).append(GREATER_THAN)
-                .append(LINEBREAK);
-
+        MgnlContext.setAttribute(name, value);
+        // TODO: nothing to render here?
     }
 
-    @Override
-    public void postRender(Appendable out) throws IOException, RepositoryException {
-        Node content = getTargetContent();
-
-        out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
-                .append(LINEBREAK);
+    public String getName() {
+        return name;
     }
 
-    public String getDialog() {
-        return dialog;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
+    public Object getValue() {
+        return value;
     }
 
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
+    public void setValue(Object value) {
+        this.value = value;
     }
 }

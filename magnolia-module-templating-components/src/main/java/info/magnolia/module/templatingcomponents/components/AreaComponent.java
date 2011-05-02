@@ -50,7 +50,7 @@ import org.apache.commons.lang.StringUtils;
  * 
  * @version $Id$
  */
-public class AreaMarker extends AbstractContentComponent {
+public class AreaComponent extends AbstractContentComponent {
 
     public static final String CMS_AREA = "cms:area";
 
@@ -67,7 +67,7 @@ public class AreaMarker extends AbstractContentComponent {
     // private String script;
     // private String placeholderScript;
 
-    public AreaMarker(ServerConfiguration server, AggregationState aggregationState) {
+    public AreaComponent(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
     }
 

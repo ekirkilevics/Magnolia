@@ -45,12 +45,12 @@ import info.magnolia.cms.core.AggregationState;
  *
  * @version $Id$
  */
-public class RenderMarker extends AbstractContentComponent {
+public class RenderComponent extends AbstractContentComponent {
 
     private boolean editable;
     private String template;
 
-    public RenderMarker(ServerConfiguration server, AggregationState aggregationState) {
+    public RenderComponent(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
     }
 
