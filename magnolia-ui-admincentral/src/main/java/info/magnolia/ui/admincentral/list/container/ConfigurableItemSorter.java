@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.util.DefaultItemSorter;
-import com.vaadin.data.util.ItemSorter;
 
 
 /**
