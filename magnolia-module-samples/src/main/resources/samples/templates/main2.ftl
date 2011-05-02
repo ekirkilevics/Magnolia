@@ -22,7 +22,7 @@
 
 	[@cms.render /]
 
-	[@cms.contextAttribute name="shoeSize" value="213" /]
+	[@cms.context name="shoeSize" value="213" /]
 
 	</div>
 
