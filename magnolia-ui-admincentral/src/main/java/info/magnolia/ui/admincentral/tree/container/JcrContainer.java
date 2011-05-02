@@ -67,6 +67,8 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     private boolean flat = false;
 
+    private int size = 0;
+
     public JcrContainer(JcrContainerSource jcrContainerSource, boolean flat) {
         this.jcrContainerSource = jcrContainerSource;
         this.flat = flat;
@@ -114,7 +116,9 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public Collection<ContainerItemId> getItemIds() {
         try {
-            return createContainerIds(jcrContainerSource.getRootItemIds());
+            Collection<ContainerItemId> collection = Collections.unmodifiableCollection(createContainerIds(jcrContainerSource.getRootItemIds()));
+            size = collection.size();
+            return collection;
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -125,8 +129,8 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public int size() {
-        // cache the value if this gets too slow
-        return getItemIds().size();
+        log.debug("jcr container size is {}", size);
+        return size;
     }
 
     public boolean containsId(Object itemId) {
@@ -303,7 +307,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
         }
 
         public List<ContainerItemId> getIds(){
-            return Collections.unmodifiableList(ids);
+            return ids;
         }
     }
 }
