@@ -61,11 +61,11 @@ import org.junit.After;
 import org.junit.Test;
 
 /**
- * Tests for ContextAttributeMarker.
+ * Tests for ParagraphMarker.
  * 
  * @version $Id$
  */
-public class ContextAttributeMarkerTest {
+public class RenderComponentTest {
     @Test
     public void testDoRender() throws Exception {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
@@ -77,9 +77,6 @@ public class ContextAttributeMarkerTest {
         expect(ctx.getAggregationState()).andReturn(aggregationState).anyTimes();
         expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
         expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).anyTimes();
-        final String name = "name1";
-        final String value = "value1";
-        ctx.setAttribute(name, value, 1);
         MgnlContext.setInstance(ctx);
         replay(ctx);
 
@@ -91,15 +88,47 @@ public class ContextAttributeMarkerTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        final ContextAttributeMarker marker = new ContextAttributeMarker(serverCfg, aggregationState);
-        marker.setName(name);
-        marker.setValue(value);
-
+        final RenderComponent marker = new RenderComponent(serverCfg, aggregationState);
         final StringWriter out = new StringWriter();
         marker.doRender(out);
 
-        // TODO - string is empty: what can we test in addition?
-        assertEquals("", out.toString());
+        String outString = out.toString();
+
+        // TODO - fit in proper asserts as implementation advances...
+        assertEquals("", outString);
+    }
+
+    @Test
+    public void testPostRender() throws Exception {
+        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
+
+        final AggregationState aggregationState = new AggregationState();
+        aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
+        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
+        final WebContext ctx = createMock(WebContext.class);
+        expect(ctx.getAggregationState()).andReturn(aggregationState).anyTimes();
+        expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
+        expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).anyTimes();
+        MgnlContext.setInstance(ctx);
+        replay(ctx);
+
+        final ServerConfiguration serverCfg = new ServerConfiguration();
+        serverCfg.setAdmin(true);
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
+        // register some default components used internally
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
+
+        final RenderComponent marker = new RenderComponent(serverCfg, aggregationState);
+
+        final StringWriter out = new StringWriter();
+        marker.postRender(out);
+
+        String outString = out.toString();
+
+        // TODO - fit in proper asserts as implementation advances...
+        assertEquals("", outString);
     }
 
     @After

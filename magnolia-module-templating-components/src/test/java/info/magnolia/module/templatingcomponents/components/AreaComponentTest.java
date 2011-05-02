@@ -49,6 +49,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.module.templating.Area;
 import info.magnolia.module.templatingcomponents.componentsx.SingletonParagraphBar;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
@@ -61,11 +62,11 @@ import org.junit.After;
 import org.junit.Test;
 
 /**
- * Tests for ParagraphMarker.
- * 
+ * Tests for AreaMarker.
+ *
  * @version $Id$
  */
-public class RenderMarkerTest {
+public class AreaComponentTest {
     @Test
     public void testDoRender() throws Exception {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
@@ -88,14 +89,39 @@ public class RenderMarkerTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        final RenderMarker marker = new RenderMarker(serverCfg, aggregationState);
-        final StringWriter out = new StringWriter();
+        final AreaComponent marker = new AreaComponent(serverCfg, aggregationState);
+        final Area area = new Area();
+        area.setName("test");
+        marker.setArea(area);
+
+        StringWriter out = new StringWriter();
         marker.doRender(out);
 
-        String outString = out.toString();
+        assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
+                + EditComponent.LINEBREAK
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" collection=\"true\"></cms:area>"
+                + EditComponent.LINEBREAK, out.toString());
 
-        // TODO - fit in proper asserts as implementation advances...
-        assertEquals("", outString);
+        // with paragraph set
+        out = new StringWriter();
+        marker.setParagraphs("paragraphs/myParagraph");
+        marker.doRender(out);
+
+        assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
+                + EditComponent.LINEBREAK
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" collection=\"true\"></cms:area>"
+                + EditComponent.LINEBREAK, out.toString());
+
+        // as collection == false (= singleton)
+        out = new StringWriter();
+        marker.setCollection(false);
+        marker.doRender(out);
+
+        assertEquals(
+                "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
+                        + EditComponent.LINEBREAK
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" collection=\"false\"></cms:area>"
+                        + EditComponent.LINEBREAK, out.toString());
     }
 
     @Test
@@ -120,15 +146,15 @@ public class RenderMarkerTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        final RenderMarker marker = new RenderMarker(serverCfg, aggregationState);
+        final AreaComponent marker = new AreaComponent(serverCfg, aggregationState);
 
         final StringWriter out = new StringWriter();
         marker.postRender(out);
 
         String outString = out.toString();
 
-        // TODO - fit in proper asserts as implementation advances...
-        assertEquals("", outString);
+        assertEquals(outString, "<!-- cms:end cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
+                + AbstractContentComponent.LINEBREAK, outString);
     }
 
     @After
