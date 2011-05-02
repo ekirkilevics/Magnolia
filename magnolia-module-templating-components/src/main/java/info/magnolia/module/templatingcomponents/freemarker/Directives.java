@@ -40,8 +40,6 @@ import freemarker.template.TemplateDirectiveModel;
 /**
  * A map with freemarker directives specific to Magnolia.
  *
- * TODO should be renamed since its no longer just directives
- *
  * @version $Id$
  */
 public class Directives extends HashMap<String, TemplateDirectiveModel> {
