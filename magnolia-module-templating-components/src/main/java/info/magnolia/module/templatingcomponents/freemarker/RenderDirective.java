@@ -44,7 +44,7 @@ import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
-import info.magnolia.module.templatingcomponents.components.RenderMarker;
+import info.magnolia.module.templatingcomponents.components.RenderComponent;
 
 /**
  * A freemarker directive for rendering an arbitrary piece of content.
@@ -63,7 +63,7 @@ public class RenderDirective extends AbstractDirective {
         boolean editable = bool(params, "editable", false);
         String template = string(params, "template", null);
 
-        RenderMarker marker = new RenderMarker(serverCfg, aggState);
+        RenderComponent marker = new RenderComponent(serverCfg, aggState);
         marker.setContent(target);
         marker.setWorkspace(workspace);
         marker.setUuid(uuid);

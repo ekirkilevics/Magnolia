@@ -40,7 +40,7 @@ import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templating.Area;
-import info.magnolia.module.templatingcomponents.components.AreaMarker;
+import info.magnolia.module.templatingcomponents.components.AreaComponent;
 import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
 
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class AreaDirective extends AbstractDirective {
         String dialog = string(params, "dialog", null);
         boolean collection = bool(params, "collection", true);
 
-        AreaMarker marker = new AreaMarker(serverCfg, aggState);
+        AreaComponent marker = new AreaComponent(serverCfg, aggState);
         marker.setContent(content);
         marker.setWorkspace(workspace);
         marker.setUuid(uuid);

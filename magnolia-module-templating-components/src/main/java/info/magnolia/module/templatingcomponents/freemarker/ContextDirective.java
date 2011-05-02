@@ -43,14 +43,14 @@ import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
-import info.magnolia.module.templatingcomponents.components.ContextAttributeMarker;
+import info.magnolia.module.templatingcomponents.components.ContextComponent;
 
 /**
  * A freemarker directive for setting a context attribute.
  *
  * @version $Id$
  */
-public class ContextAttributeDirective extends AbstractDirective {
+public class ContextDirective extends AbstractDirective {
 
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
@@ -59,7 +59,7 @@ public class ContextAttributeDirective extends AbstractDirective {
         String name = mandatoryString(params, "name");
         Object value = mandatoryObject(params, "value");
 
-        ContextAttributeMarker marker = new ContextAttributeMarker(serverCfg, aggState);
+        ContextComponent marker = new ContextComponent(serverCfg, aggState);
         marker.setName(name);
         marker.setValue(value);
 

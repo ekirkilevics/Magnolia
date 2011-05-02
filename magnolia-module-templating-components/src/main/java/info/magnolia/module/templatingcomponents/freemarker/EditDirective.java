@@ -44,7 +44,7 @@ import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
-import info.magnolia.module.templatingcomponents.components.EditMarker;
+import info.magnolia.module.templatingcomponents.components.EditComponent;
 
 /**
  * A freemarker directive for the edit bar UI component.
@@ -64,7 +64,7 @@ public class EditDirective extends AbstractDirective {
         String format = string(params, "format", null);
         String dialog = string(params, "dialog", null);
 
-        EditMarker marker = new EditMarker(serverCfg, aggState);
+        EditComponent marker = new EditComponent(serverCfg, aggState);
         marker.setContent(content);
         marker.setWorkspace(workspace);
         marker.setUuid(uuid);
