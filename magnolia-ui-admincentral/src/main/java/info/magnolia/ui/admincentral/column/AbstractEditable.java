@@ -52,7 +52,7 @@ import com.vaadin.ui.Label;
  *
  * @author tmattsson
  */
-public abstract class AbstractEditable extends CustomComponent {
+public abstract class AbstractEditable extends CustomComponent implements Comparable<AbstractEditable>{
 
     /**
      * Presenter for AbstractEditable.
@@ -157,6 +157,14 @@ public abstract class AbstractEditable extends CustomComponent {
         }
     }
 
+    public int compareTo(AbstractEditable o) {
+        try {
+            System.out.println("comparing "+ this.getItem().getName() + " and "+ o.getItem().getName());
+            return this.getItem().getName().compareTo(o.getItem().getName());
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+    }
     protected abstract String getLabelText(Item item) throws RepositoryException;
 
     protected abstract ComponentAndEditor getComponentAndEditor(Item item) throws RepositoryException;

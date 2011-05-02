@@ -37,7 +37,7 @@ package info.magnolia.ui.model.column.definition;
  * Base implementation for all special ColumnDefinitions. Some subclass do not add additional behavior but still are
  * required because in jcr we configure ColumnDefinition to Column mappings and only with specific Definitions we know
  * what Column-Type to map to.
- * 
+ *
  * @author dlipp
  */
 public abstract class AbstractColumnDefinition {
@@ -45,6 +45,7 @@ public abstract class AbstractColumnDefinition {
     private String name;
     private String label;
     private int width = 1;
+    private boolean sortable = false;
 
     public String getName() {
         return name;
@@ -68,5 +69,13 @@ public abstract class AbstractColumnDefinition {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public boolean isSortable() {
+        return sortable;
+    }
+
+    public void setSortable(boolean sortable) {
+        this.sortable = sortable;
     }
 }
