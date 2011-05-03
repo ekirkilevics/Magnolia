@@ -66,7 +66,7 @@ public class MetaDataColumn extends AbstractColumn<MetaDataColumnDefinition> imp
     public Component getComponent(Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
-            Calendar date = JCRMetadataUtil.getMetaData(node).getCreationDate();
+            Calendar date = JCRMetadataUtil.getMetaData(node).getModificationDate();
             final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : UIUtil.DEFAULT_DATE_PATTERN;
             final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance(pattern);
             return  new Label( date != null ? DATE_FORMAT.format(date.getTime()) : "");
