@@ -34,12 +34,14 @@
 package info.magnolia.ui.admincentral.list.container;
 
 
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.container.JcrContainerSource;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.jcr.Item;
@@ -50,22 +52,34 @@ import javax.jcr.util.TraversingItemVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.data.Container.Sortable;
+import com.vaadin.data.util.ItemSorter;
+
 /**
+ * FIXME: adding/deleting new items is not reflected by the container.
  * A flat implementation of {@link JcrContainer} where relationships are not taken into account.
  * @author fgrilli
  *
  */
-public class FlatJcrContainer extends JcrContainer {
+public class FlatJcrContainer extends JcrContainer implements Sortable {
 
     private static final Logger log = LoggerFactory.getLogger(FlatJcrContainer.class);
+    private List<ContainerItemId> itemIds = new ArrayList<ContainerItemId>();
     private int level = 0;
+    private ItemSorter itemSorter;
     /**
      * Constructor for {@link FlatJcrContainer}.
      * @param maxLevel the 0-based level up to which the hierarchy should be traversed (if it's -1, the hierarchy will be traversed until there are no more children of the current item).
      */
-    public FlatJcrContainer(JcrContainerSource jcrContainerSource, int maxLevel) {
+    public FlatJcrContainer(JcrContainerSource jcrContainerSource, ItemSorter itemSorter, int maxLevel) {
         super(jcrContainerSource);
         this.level = maxLevel;
+        this.itemSorter = itemSorter;
+        try {
+            itemIds.addAll(createContainerIds(getJcrContainerSource().getRootItemIds()));
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
 
@@ -75,11 +89,18 @@ public class FlatJcrContainer extends JcrContainer {
         for (javax.jcr.Item child : children) {
             child.accept(visitor);
         }
-        return visitor.getIds();
+        itemIds = visitor.getIds();
+        return itemIds;
     }
 
     public int getLevel() {
         return level;
+    }
+
+    @Override
+    public int size() {
+        log.debug("itemIds size is " + itemIds.size());
+        return itemIds.size();
     }
 
     /**
@@ -121,5 +142,74 @@ public class FlatJcrContainer extends JcrContainer {
         public List<ContainerItemId> getIds(){
             return ids;
         }
+    }
+
+    public Object nextItemId(Object itemId) {
+        int idx = itemIds.indexOf((ContainerItemId)itemId);
+        if(idx < 0 || idx == itemIds.size()-1){
+            return null;
+        }
+        return itemIds.get(++idx);
+    }
+
+    public Object prevItemId(Object itemId) {
+        int idx = itemIds.indexOf((ContainerItemId)itemId);
+        if(idx==0){
+            return null;
+        }
+        return itemIds.get(--idx);
+    }
+
+    public Object firstItemId() {
+        if(itemIds.size() == 0){
+            return null;
+        }
+        return itemIds.get(0);
+    }
+
+
+    public Object lastItemId() {
+        if(itemIds.size() == 0){
+            return null;
+        }
+        return itemIds.get(itemIds.size()-1);
+    }
+
+
+    public boolean isFirstId(Object itemId) {
+        return ((ContainerItemId)itemId).equals(firstItemId());
+    }
+
+
+    public boolean isLastId(Object itemId) {
+        return  ((ContainerItemId)itemId).equals(lastItemId());
+    }
+
+    public Object addItemAfter(Object previousItemId) throws UnsupportedOperationException {
+       throw new UnsupportedOperationException(getClass().getName() + " currently does not support this operation.");
+    }
+
+
+    public com.vaadin.data.Item addItemAfter(Object previousItemId, Object newItemId) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(getClass().getName() + " currently does not support this operation.");
+    }
+
+
+    public void sort(Object[] propertyId, boolean[] ascending) {
+        // Set up the item sorter for the sort operation
+        itemSorter.setSortProperties(this, propertyId, ascending);
+
+        // Perform the actual sort
+        doSort();
+    }
+
+    public Collection<?> getSortableContainerPropertyIds() {
+        //delegate determining the actual sortable properties to a custom ItemSorter
+        //TODO should we pass directly ConfigurableItemSorter to the constructor?
+        return ((ConfigurableItemSorter)itemSorter).getSortablePropertyIds();
+    }
+
+    protected void doSort() {
+        Collections.sort(itemIds, itemSorter);
     }
 }

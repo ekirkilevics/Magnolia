@@ -250,4 +250,8 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
     protected ContainerItemId createContainerId(javax.jcr.Item item) throws RepositoryException {
         return new ContainerItemId(item);
     }
+
+    protected JcrContainerSource getJcrContainerSource() {
+        return jcrContainerSource;
+    }
 }
