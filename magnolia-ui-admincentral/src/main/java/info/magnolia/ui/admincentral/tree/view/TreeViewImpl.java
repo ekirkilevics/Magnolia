@@ -33,8 +33,8 @@
  */
 package info.magnolia.ui.admincentral.tree.view;
 
+import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.jcr.view.JcrView;
-import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;

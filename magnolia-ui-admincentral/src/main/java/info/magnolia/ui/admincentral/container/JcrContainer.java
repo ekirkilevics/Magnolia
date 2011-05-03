@@ -31,17 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.container;
+package info.magnolia.ui.admincentral.container;
 
-import java.util.ArrayList;
+import info.magnolia.exception.RuntimeRepositoryException;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.util.TraversingItemVisitor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,14 +50,12 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
-import info.magnolia.exception.RuntimeRepositoryException;
-
 /**
- * Vaadin container that reads its items from a JCR repository.
+ * Vaadin container that reads its items from a JCR repository. Subclasses need to implement {@link JcrContainer#createContainerIds(Collection)}.
  *
  * @author tmattsson
  */
-public class JcrContainer extends AbstractHierarchicalContainer implements Container.ItemSetChangeNotifier {
+public abstract class JcrContainer extends AbstractHierarchicalContainer implements Container.ItemSetChangeNotifier {
 
     private static final Logger log = LoggerFactory.getLogger(JcrContainer.class);
 
@@ -65,13 +63,10 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     private final JcrContainerSource jcrContainerSource;
 
-    private boolean flat = false;
-
     private int size = 0;
 
-    public JcrContainer(JcrContainerSource jcrContainerSource, boolean flat) {
+    public JcrContainer(JcrContainerSource jcrContainerSource) {
         this.jcrContainerSource = jcrContainerSource;
-        this.flat = flat;
     }
 
     public void addListener(ItemSetChangeListener listener) {
@@ -242,8 +237,6 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
         return node;
     }
 
-    // Used by JcrBrowser
-
     public ContainerItemId getItemByPath(String path) {
         try {
             return createContainerId(jcrContainerSource.getItemByPath(path));
@@ -252,62 +245,9 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
         }
     }
 
-    public boolean isFlat(){
-        return flat;
-    }
+    protected abstract Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException;
 
-    // Private
-    private Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException {
-        MagnoliaContentTraversingItemVisitor visitor = new MagnoliaContentTraversingItemVisitor(false, isFlat() ? -1 : 0);
-        for (javax.jcr.Item child : children) {
-            child.accept(visitor);
-        }
-        return visitor.getIds();
-    }
-
-    private ContainerItemId createContainerId(javax.jcr.Item item) throws RepositoryException {
+    protected ContainerItemId createContainerId(javax.jcr.Item item) throws RepositoryException {
         return new ContainerItemId(item);
-    }
-
-    /**
-     * Creates a list of {@link ContainerItemId} for all <code>magnolia:content</code> node types in a given item hierarchy.
-     * The list of item ids can be retrived with {@link MagnoliaContentTraversingItemVisitor#getIds()}.
-     * TODO: make it protected?
-     */
-    private class MagnoliaContentTraversingItemVisitor extends TraversingItemVisitor {
-        private ArrayList<ContainerItemId> ids = new ArrayList<ContainerItemId>();
-
-        public MagnoliaContentTraversingItemVisitor(boolean breadthFirst, int level){
-            super(breadthFirst, level);
-        }
-        @Override
-        protected void entering(javax.jcr.Property property, int level) throws RepositoryException {
-            //do nothing
-        }
-
-        @Override
-        protected void entering(Node node, int level) throws RepositoryException {
-           //do nothing
-        }
-
-        @Override
-        protected void leaving(javax.jcr.Property property, int level) throws RepositoryException {
-            if(this.maxLevel > -1 && !property.getName().startsWith("jcr:") && !property.getName().startsWith("mgnl:")){
-                log.debug("adding property {}", property.getName());
-                ids.add(createContainerId(property));
-            }
-        }
-
-        @Override
-        protected void leaving(Node node, int level) throws RepositoryException {
-            if(node.getPrimaryNodeType().isNodeType("mgnl:content") || (this.maxLevel > -1 && node.getPrimaryNodeType().isNodeType("mgnl:contentNode")) ){
-                log.debug("adding node {}", node.getName());
-                ids.add(createContainerId(node));
-            }
-        }
-
-        public List<ContainerItemId> getIds(){
-            return ids;
-        }
     }
 }

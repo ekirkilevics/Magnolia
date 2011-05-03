@@ -35,11 +35,11 @@ package info.magnolia.ui.admincentral.list.view;
 
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.jcr.view.JcrView;
 import info.magnolia.ui.admincentral.list.container.ConfigurableItemSorter;
+import info.magnolia.ui.admincentral.list.container.FlatJcrContainer;
 import info.magnolia.ui.admincentral.list.container.SortableJcrContainerWrapper;
-import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
@@ -105,7 +105,7 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         // TODO: check Ticket http://dev.vaadin.com/ticket/5453
         table.setColumnReorderingAllowed(true);
 
-        this.container = new SortableJcrContainerWrapper(new JcrContainer(treeModel, true), new ConfigurableItemSorter(treeModel));
+        this.container = new SortableJcrContainerWrapper(new FlatJcrContainer(treeModel, -1), new ConfigurableItemSorter(treeModel));
 
         for (Column<?> treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();

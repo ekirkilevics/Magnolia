@@ -33,8 +33,8 @@
  */
 package info.magnolia.ui.admincentral.list.container;
 
-import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.admincentral.container.ContainerItemId;
+import info.magnolia.ui.admincentral.container.JcrContainer;
 
 import java.util.ArrayList;
 import java.util.Collection;

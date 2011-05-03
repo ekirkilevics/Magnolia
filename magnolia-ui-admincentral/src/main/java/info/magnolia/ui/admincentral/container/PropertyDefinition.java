@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,41 +31,48 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.container;
+package info.magnolia.ui.admincentral.container;
 
-import java.util.Collection;
-
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 
 /**
- * Item as held by JcrContainer. Does not support modifications and delegates to JcrContainer for everything else.
+ * Definition for Properties.
  *
- * @author tmattsson
+ * @author dlipp
+ * @version $Id$
  */
-public class ContainerItem implements Item {
+public class PropertyDefinition {
+    private Object defaultValue;
+    private String propertyId;
+    private Class<?> type;
 
-    private ContainerItemId itemId;
-    private JcrContainer jcrContainer;
-
-    public ContainerItem(ContainerItemId itemId, JcrContainer jcrContainer) {
-        this.itemId = itemId;
-        this.jcrContainer = jcrContainer;
+    public PropertyDefinition(String propertyId, Class<?> type,
+            Object defaultValue) {
+        setPropertyId(propertyId);
+        setType(type);
+        setDefaultValue(defaultValue);
     }
 
-    public Property getItemProperty(Object id) {
-        return jcrContainer.getContainerProperty(itemId, id);
+    public Object getDefaultValue() {
+        return defaultValue;
     }
 
-    public Collection<?> getItemPropertyIds() {
-        return jcrContainer.getContainerPropertyIds();
+    public String getPropertyId() {
+        return propertyId;
     }
 
-    public boolean addItemProperty(Object id, Property property) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
+    public Class<?> getType() {
+        return type;
     }
 
-    public boolean removeItemProperty(Object id) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
+    public void setDefaultValue(Object defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public void setPropertyId(String propertyId) {
+        this.propertyId = propertyId;
+    }
+
+    public void setType(Class<?> type) {
+        this.type = type;
     }
 }

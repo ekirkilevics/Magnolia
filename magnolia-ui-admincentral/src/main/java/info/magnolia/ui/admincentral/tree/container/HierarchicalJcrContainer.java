@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,46 +33,37 @@
  */
 package info.magnolia.ui.admincentral.tree.container;
 
+import info.magnolia.ui.admincentral.container.ContainerItemId;
+import info.magnolia.ui.admincentral.container.JcrContainer;
+import info.magnolia.ui.admincentral.container.JcrContainerSource;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Definition for Properties.
+ * Hierarchical implementation of {@link JcrContainer}.
+ * @author fgrilli
  *
- * @author dlipp
- * @version $Id$
  */
-public class PropertyDefinition {
-    private Object defaultValue;
-    private String propertyId;
-    private Class<?> type;
+public class HierarchicalJcrContainer extends JcrContainer {
 
-    public PropertyDefinition(String propertyId, Class<?> type,
-            Object defaultValue) {
-        setPropertyId(propertyId);
-        setType(type);
-        setDefaultValue(defaultValue);
+    private static final Logger log = LoggerFactory.getLogger(HierarchicalJcrContainer.class);
+
+    public HierarchicalJcrContainer(JcrContainerSource jcrContainerSource) {
+        super(jcrContainerSource);
     }
 
-    public Object getDefaultValue() {
-        return defaultValue;
-    }
-
-    public String getPropertyId() {
-        return propertyId;
-    }
-
-    public Class<?> getType() {
-        return type;
-    }
-
-    public void setDefaultValue(Object defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public void setPropertyId(String propertyId) {
-        this.propertyId = propertyId;
-    }
-
-    public void setType(Class<?> type) {
-        this.type = type;
+    protected Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException {
+        ArrayList<ContainerItemId> ids = new ArrayList<ContainerItemId>();
+        for (javax.jcr.Item child : children) {
+            log.debug("adding {}", child.getName());
+            ids.add(createContainerId(child));
+        }
+        return ids;
     }
 }

@@ -31,52 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.container;
+package info.magnolia.ui.admincentral.container;
 
+import java.util.Collection;
+
+import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
 /**
- * Represents a property on an item in JcrContainer. Think of this as a cell in a table.
- *
- * Note: Vaadin calls the toString() method to get the value to display in the TreeTable.
+ * Item as held by JcrContainer. Does not support modifications and delegates to JcrContainer for everything else.
  *
  * @author tmattsson
  */
-public class JcrContainerProperty implements Property {
+public class ContainerItem implements Item {
 
-    private String propertyId;
-    private Object itemId;
-    private JcrContainer container;
-    private boolean readOnly = false;
+    private ContainerItemId itemId;
+    private JcrContainer jcrContainer;
 
-    public JcrContainerProperty(String propertyId, Object itemId, JcrContainer container) {
-        this.propertyId = propertyId;
+    public ContainerItem(ContainerItemId itemId, JcrContainer jcrContainer) {
         this.itemId = itemId;
-        this.container = container;
+        this.jcrContainer = jcrContainer;
     }
 
-    public Object getValue() {
-        return container.getColumnValue(propertyId, itemId);
+    public Property getItemProperty(Object id) {
+        return jcrContainer.getContainerProperty(itemId, id);
     }
 
-    public void setValue(Object newValue) throws ReadOnlyException, ConversionException {
+    public Collection<?> getItemPropertyIds() {
+        return jcrContainer.getContainerPropertyIds();
     }
 
-    public Class<?> getType() {
-        return container.getType(propertyId);
+    public boolean addItemProperty(Object id, Property property) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-    public void setReadOnly(boolean newStatus) {
-        readOnly = newStatus;
-    }
-
-    @Override
-    public String toString() {
-        Object value = getValue();
-        return value != null ? value.toString() : "";
+    public boolean removeItemProperty(Object id) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 }

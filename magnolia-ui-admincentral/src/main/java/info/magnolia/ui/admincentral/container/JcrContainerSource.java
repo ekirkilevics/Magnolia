@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.container;
+package info.magnolia.ui.admincentral.container;
 
 import java.util.Collection;
 import javax.jcr.Item;

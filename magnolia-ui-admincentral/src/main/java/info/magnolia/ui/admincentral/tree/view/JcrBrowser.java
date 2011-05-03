@@ -56,9 +56,10 @@ import com.vaadin.ui.Component;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.container.ContainerItemId;
+import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
-import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.admincentral.tree.container.HierarchicalJcrContainer;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.action.ActionDefinition;
@@ -97,7 +98,7 @@ public class JcrBrowser extends TreeTable {
 
         addDragAndDrop();
 
-        this.container = new JcrContainer(treeModel, false);
+        this.container = new HierarchicalJcrContainer(treeModel);
 
         for (Column<?> treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();
