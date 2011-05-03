@@ -37,7 +37,7 @@ import info.magnolia.ui.model.action.ActionDefinition;
 
 
 /**
- * Opens a page to edit i.
+ * Opens a page to edit it.
  */
 public class OpenPageActionDefinition implements ActionDefinition {
     private String windowName;
