@@ -108,12 +108,10 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
         return currentContent();
     }
 
-    // TODO rename to getNode()
     public Node getContent() {
         return node;
     }
 
-    // TODO rename to setNode()
     public void setContent(Node node) {
         this.node = node;
     }
