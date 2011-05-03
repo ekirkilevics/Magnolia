@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,35 +25,20 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.wcm.toolbox;
+package info.magnolia.module.wcm.editor;
 
-import com.vaadin.ui.Component;
+import info.magnolia.ui.framework.event.EventHandler;
 
 /**
- * View for the page editor toolbox.
+ * Handler for {@link SelectionChangedEvent}.
  */
-public interface ToolboxView {
+public interface SelectionChangedHandler extends EventHandler {
 
-    void showPageRack();
-
-    void showAreaRack();
-
-    void showParagraphRack();
-
-    void setPresenter(Presenter presenter);
-
-    Component asVaadinComponent();
-
-    /**
-     * Presenter for toolbox.
-     */
-    public interface Presenter {
-
-    }
+    void onSelectionChanged(SelectionChangedEvent event);
 }

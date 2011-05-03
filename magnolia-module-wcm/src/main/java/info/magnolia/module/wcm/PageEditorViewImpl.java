@@ -39,6 +39,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import info.magnolia.module.wcm.toolbox.ToolboxView;
 import info.magnolia.module.wcm.toolbox.ToolboxViewImpl;
 
 /**
@@ -51,6 +52,7 @@ public class PageEditorViewImpl implements PageEditorView {
     private VerticalLayout pageLayout;
     private VerticalLayout toolboxLayout;
     private WcmModule wcmModule;
+    private ToolboxView toolboxView;
 
     public PageEditorViewImpl(Application application, WcmModule wcmModule) {
         this.application = application;
@@ -62,9 +64,14 @@ public class PageEditorViewImpl implements PageEditorView {
         pageLayout = new VerticalLayout();
         pageLayout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
 
+        ToolboxView.Presenter presenter = new ToolboxView.Presenter() {};
+
+        toolboxView = new ToolboxViewImpl(wcmModule);
+        toolboxView.setPresenter(presenter);
+
         toolboxLayout = new VerticalLayout();
         toolboxLayout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
-        toolboxLayout.addComponent(new ToolboxViewImpl(wcmModule).asVaadinComponent());
+        toolboxLayout.addComponent(toolboxView.asVaadinComponent());
 
         layout = new HorizontalLayout();
         layout.setSizeFull();
@@ -77,7 +84,16 @@ public class PageEditorViewImpl implements PageEditorView {
         this.application.setMainWindow(window);
     }
 
-    public ComponentContainer getMainContainer() {
+    @Override
+    public ToolboxView getToolboxView() {
+        return toolboxView;
+    }
+
+    public ComponentContainer getEditorContainer() {
         return pageLayout;
+    }
+
+    public VerticalLayout getToolboxContainer() {
+        return toolboxLayout;
     }
 }

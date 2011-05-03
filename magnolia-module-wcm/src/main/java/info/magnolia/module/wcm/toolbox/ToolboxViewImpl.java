@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.wcm.toolbox;
 
+import java.util.List;
+
 import com.vaadin.data.Item;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
@@ -48,15 +50,40 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 public class ToolboxViewImpl implements ToolboxView, IsVaadinComponent {
 
     private Table table;
+    private Presenter presenter;
+    private WcmModule wcmModule;
+
+    // TODO should not depend on wcmModule but rather on a configuration provider
 
     public ToolboxViewImpl(WcmModule wcmModule) {
+        this.wcmModule = wcmModule;
         this.table = new Table();
         this.table.setRowHeaderMode(Table.ROW_HEADER_MODE_ICON_ONLY);
         this.table.addContainerProperty("Command", String.class, "");
         this.table.setSizeFull();
         this.table.setSelectable(true);
 
-        for (MenuItemDefinition menuItem : wcmModule.getToolboxConfiguration().getPage()) {
+        showPageRack();
+    }
+
+    @Override
+    public void showPageRack() {
+        showRack(wcmModule.getToolboxConfiguration().getPage());
+    }
+
+    @Override
+    public void showAreaRack() {
+        showRack(wcmModule.getToolboxConfiguration().getArea());
+    }
+
+    @Override
+    public void showParagraphRack() {
+        showRack(wcmModule.getToolboxConfiguration().getParagraph());
+    }
+
+    private void showRack(List<MenuItemDefinition> page) {
+        table.removeAllItems();
+        for (MenuItemDefinition menuItem : page) {
             Object itemId = menuItem.getName();
             table.addItem(itemId);
             Item commandItem = table.getItem(itemId);
@@ -65,6 +92,12 @@ public class ToolboxViewImpl implements ToolboxView, IsVaadinComponent {
         }
     }
 
+    @Override
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
     public Component asVaadinComponent() {
         return table;
     }

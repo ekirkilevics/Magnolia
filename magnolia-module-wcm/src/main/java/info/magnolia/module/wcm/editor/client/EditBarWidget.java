@@ -36,6 +36,7 @@ package info.magnolia.module.wcm.editor.client;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 
 /**
@@ -43,16 +44,45 @@ import com.google.gwt.user.client.ui.Button;
  */
 public class EditBarWidget extends AbstractBarWidget {
 
-    public EditBarWidget(final VPageEditor pageEditor) {
+    private VPageEditor pageEditor;
+
+    private String workspace;
+    private String uuid;
+    private String path;
+
+    private String label;
+    private String dialog;
+    private String format; // bar or button (its likely too late to make a decision here)
+
+    public EditBarWidget(final VPageEditor pageEditor, Element element) {
         super();
+        this.pageEditor = pageEditor;
+
+        String content = element.getAttribute("content");
+        int i = content.indexOf(':');
+        this.workspace = content.substring(0, i);
+        this.path = content.substring(i + 1);
+        Window.alert(this.workspace + "  /  " + this.path);
+
+        this.label = element.getAttribute("label");
+        this.dialog = element.getAttribute("dialog");
+        this.format = element.getAttribute("format");
+
+        setStyle("rgb(116, 173, 59)");
         setLabel("Paragraph");
         Button button = new Button("Edit&nbsp;paragraph");
         button.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                pageEditor.openDialog("mainProperties");
+                pageEditor.openDialog(dialog, workspace, path);
             }
         });
         addButton(button);
+    }
+
+    @Override
+    protected void onSelect() {
+        super.onSelect();
+        pageEditor.updateSelection("paragraph", workspace, path, null, null);
     }
 
     public void attach(Element element) {

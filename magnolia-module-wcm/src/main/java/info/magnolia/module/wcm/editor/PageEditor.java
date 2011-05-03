@@ -45,6 +45,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.wcm.editor.client.VPageEditor;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
+import info.magnolia.ui.framework.event.EventBus;
 
 /**
  * Server side vaadin component for the page editor.
@@ -52,10 +53,12 @@ import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 @ClientWidget(VPageEditor.class)
 public class PageEditor extends AbstractComponent {
 
+    private EventBus eventBus;
     private DialogPresenter dialogPresenter;
     private String url;
 
-    public PageEditor(DialogPresenter dialogPresenter, String url) {
+    public PageEditor(EventBus eventBus, DialogPresenter dialogPresenter, String url) {
+        this.eventBus = eventBus;
         this.dialogPresenter = dialogPresenter;
         this.url = url;
         setSizeFull();
@@ -64,9 +67,19 @@ public class PageEditor extends AbstractComponent {
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
-        if (variables.containsKey("open-dialog")) {
-            String dialog = (String) variables.get("open-dialog");
-            openDialog(dialog);
+        if (variables.containsKey(VPageEditor.OPEN_DIALOG)) {
+            String dialog = (String) variables.get(VPageEditor.OPEN_DIALOG);
+            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
+            String path = (String) variables.get(VPageEditor.SELECTED_PATH);
+            openDialog(dialog, workspace, path);
+        }
+        if (variables.containsKey(VPageEditor.UPDATE_SELECTION)) {
+            String type = (String) variables.get(VPageEditor.UPDATE_SELECTION);
+            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
+            String path = (String) variables.get(VPageEditor.SELECTED_PATH);
+            String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
+            String nodeName = (String) variables.get(VPageEditor.SELECTED_NODE_NAME);
+            eventBus.fireEvent(new SelectionChangedEvent(type));
         }
     }
 
@@ -76,12 +89,16 @@ public class PageEditor extends AbstractComponent {
         target.addAttribute("url", url);
     }
 
-    private void openDialog(String dialog) {
+    private void openDialog(String dialog, String workspace, String path) {
         try {
-            Node node = MgnlContext.getJCRSession("website").getNode("/howTo-freemarker2");
+            Node node = MgnlContext.getJCRSession(workspace).getNode(path);
             dialogPresenter.showDialog(node, dialog);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
+    }
+
+    private void addParagraph(String workspace, String path, String paragraphs) {
+
     }
 }

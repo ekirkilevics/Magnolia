@@ -34,6 +34,8 @@
 package info.magnolia.module.wcm.editor.client;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -51,15 +53,6 @@ public class AbstractBarWidget extends SimplePanel {
 
     public AbstractBarWidget() {
 
-        // TODO we need to add the context path
-        getElement().setAttribute("style",
-                "background-image:url('/.resources/admin-images/mgnl-bar.png');" +
-                        "background-position:repeat;" +
-                        "border-top: 1px solid #ADC97B !important;" +
-                        "border-left: 1px solid #ADC97B !important;" +
-                        "border-bottom: 1px solid #396101 !important;" +
-                        "border-right: 1px solid #396101 !important;");
-
         label = new Label("");
 
         horizontalPanel = new HorizontalPanel();
@@ -67,7 +60,33 @@ public class AbstractBarWidget extends SimplePanel {
         horizontalPanel.add(label);
         horizontalPanel.setCellWidth(label, "100%");
 
+        horizontalPanel.addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                onSelect();
+            }
+        }, ClickEvent.getType());
+
         add(horizontalPanel);
+    }
+
+    protected void onSelect() {
+
+        // TODO: it needs to be deselected when something else is selected
+
+        setStyle("rgb(255, 255, 255)");
+    }
+
+    protected void setStyle(String color) {
+        getElement().setAttribute("style",
+                "background-color:" +
+                        color +
+                        ";" +
+                        "background-position:repeat;" +
+                        "border-top: 1px solid #ADC97B !important;" +
+                        "border-left: 1px solid #ADC97B !important;" +
+                        "border-bottom: 1px solid #396101 !important;" +
+                        "border-right: 1px solid #396101 !important;");
     }
 
     protected void setLabel(String label) {

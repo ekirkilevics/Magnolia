@@ -43,17 +43,58 @@ import com.google.gwt.user.client.ui.Button;
  */
 public class AreaBarWidget extends AbstractBarWidget {
 
-    public AreaBarWidget(final VPageEditor pageEditor) {
+    private VPageEditor pageEditor;
+
+    private String workspace;
+    private String path;
+
+    private String label;
+    private String name;
+    private String[] paragraphs;
+    private boolean collection;
+    private String dialog;
+
+    public AreaBarWidget(final VPageEditor pageEditor, Element element) {
         super();
+        this.pageEditor = pageEditor;
+
+        // TODO we should get the label from the templating component
+
+        // TODO uuid vs nodeIdentifier ?
+
+        String content = element.getAttribute("content");
+        int i = content.indexOf(':');
+        this.workspace = content.substring(0, i);
+        this.path = content.substring(i + 1);
+
+        this.label = element.getAttribute("label");
+        this.name = element.getAttribute("name");
+        this.paragraphs = element.getAttribute("paragraphs").split("\\,\\s");
+        this.collection = Boolean.parseBoolean(element.getAttribute("collection"));
+        this.dialog = element.getAttribute("dialog");
+
+        setStyle("rgb(107, 171, 251)");
         setLabel("Area");
         Button button = new Button("Edit&nbsp;area");
         button.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                pageEditor.openDialog("mainProperties");
+                pageEditor.openDialog(dialog, workspace, path);
             }
         });
         addButton(button);
-        addButton(new Button("Add&nbsp;paragraph"));
+        Button addButton = new Button("Add&nbsp;paragraph");
+        addButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                pageEditor.addParagraph(workspace, path, name, paragraphs);
+            }
+        });
+        addButton(addButton);
+    }
+
+    @Override
+    protected void onSelect() {
+        super.onSelect();
+        pageEditor.updateSelection("area", workspace, path, name, null);
     }
 
     public void attach(Element element) {

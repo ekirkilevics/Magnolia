@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.wcm;
 
+import info.magnolia.module.wcm.editor.SelectionChangedEvent;
+import info.magnolia.module.wcm.editor.SelectionChangedHandler;
 import info.magnolia.module.wcm.place.PageEditorPlace;
 import info.magnolia.ui.admincentral.MainActivityMapper;
 import info.magnolia.ui.framework.activity.ActivityManager;
@@ -48,7 +50,7 @@ import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
 /**
  * Presenter logic for page editor.
  */
-public class PageEditorPresenter {
+public class PageEditorPresenter implements SelectionChangedHandler {
 
     private Shell shell;
     private EventBus eventBus;
@@ -72,8 +74,21 @@ public class PageEditorPresenter {
         historyHandler.register(placeController, eventBus, defaultPlace);
 
         ActivityManager activityManager = new ActivityManager(mainActivityMapper, eventBus);
-        activityManager.setViewPort(new ComponentContainerBasedViewPort("main", pageEditorView.getMainContainer()));
+        activityManager.setViewPort(new ComponentContainerBasedViewPort("main", pageEditorView.getEditorContainer()));
 
         historyHandler.handleCurrentHistory();
+
+        eventBus.addHandler(SelectionChangedEvent.class, this);
+    }
+
+    @Override
+    public void onSelectionChanged(SelectionChangedEvent event) {
+        if ("page".equals(event.getType())) {
+            pageEditorView.getToolboxView().showPageRack();
+        } else if ("area".equals(event.getType())) {
+            pageEditorView.getToolboxView().showAreaRack();
+        } else if ("paragraph".equals(event.getType())) {
+            pageEditorView.getToolboxView().showParagraphRack();
+        }
     }
 }

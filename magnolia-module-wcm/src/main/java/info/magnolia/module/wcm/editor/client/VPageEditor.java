@@ -49,6 +49,13 @@ import com.vaadin.terminal.gwt.client.UIDL;
  */
 public class VPageEditor extends HTML implements Paintable, EventListener {
 
+    public static final String SELECTED_WORKSPACE = "selectedWorkspace";
+    public static final String SELECTED_PATH = "selectedPath";
+    public static final String SELECTED_COLLECTION_NAME = "selectedCollectionName";
+    public static final String SELECTED_NODE_NAME = "selectedNodeName";
+    public static final String OPEN_DIALOG = "open-dialog";
+    public static final String UPDATE_SELECTION = "update-selection";
+
     private IFrameElement iFrameElement;
     private ApplicationConnection client;
     private String id;
@@ -104,10 +111,10 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
     private void detectCmsTag(Element element) {
 
         if (element.getTagName().equalsIgnoreCase("cms:edit")) {
-            EditBarWidget editBarWidget = new EditBarWidget(this);
+            EditBarWidget editBarWidget = new EditBarWidget(this, element);
             editBarWidget.attach(element);
         } else if (element.getTagName().equalsIgnoreCase("cms:area")) {
-            AreaBarWidget areaBarWidget = new AreaBarWidget(this);
+            AreaBarWidget areaBarWidget = new AreaBarWidget(this, element);
             areaBarWidget.attach(element);
         }
 
@@ -119,8 +126,23 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
         }
     }
 
-    public void openDialog(String dialog) {
-        client.updateVariable(id, "open-dialog", dialog, true);
+    public void openDialog(String dialog, String workspace, String path) {
+        client.updateVariable(id, OPEN_DIALOG, dialog, false);
+        client.updateVariable(id, SELECTED_WORKSPACE, workspace, false);
+        client.updateVariable(id, SELECTED_PATH, path, false);
         client.sendPendingVariableChanges();
+    }
+
+    public void updateSelection(String type, String workspace, String path, String collectionName, String nodeName) {
+        client.updateVariable(id, UPDATE_SELECTION, type, false);
+        client.updateVariable(id, SELECTED_WORKSPACE, workspace, false);
+        client.updateVariable(id, SELECTED_PATH, path, false);
+        client.updateVariable(id, SELECTED_COLLECTION_NAME, collectionName, false);
+        client.updateVariable(id, SELECTED_NODE_NAME, nodeName, false);
+        client.sendPendingVariableChanges();
+    }
+
+    public void addParagraph(String workspace, String path, String collectionName, String[] paragraphs) {
+
     }
 }

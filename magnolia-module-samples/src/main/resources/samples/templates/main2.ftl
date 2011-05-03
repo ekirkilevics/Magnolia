@@ -15,10 +15,10 @@
 	<div id="main" style="padding:15px;">
 
 	<h2>Editbar</h2>
-	[@cms.edit /]
+	[@cms.edit dialog="mainProperties" /]
 
 	<h2>Area</h2>
-	[@cms.area name="stage" /]
+	[@cms.area name="stage" dialog="mainProperties" /]
 
 	[@cms.render /]
 

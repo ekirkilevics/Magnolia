@@ -34,6 +34,7 @@
 package info.magnolia.module.wcm;
 
 import com.vaadin.ui.ComponentContainer;
+import info.magnolia.module.wcm.toolbox.ToolboxView;
 
 /**
  * Main page editor view.
@@ -42,5 +43,7 @@ public interface PageEditorView {
 
     void init();
 
-    ComponentContainer getMainContainer();
+    ComponentContainer getEditorContainer();
+
+    ToolboxView getToolboxView();
 }
