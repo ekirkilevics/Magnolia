@@ -41,6 +41,9 @@ import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
@@ -49,11 +52,14 @@ import com.vaadin.ui.Label;
 
 /**
  * UI component that displays a label and on double click opens it for editing by switching the label to save text field.
+ * Implements {@link Comparable} to allow sorting of columns holding this component with Vaadin. Default implementation for
+ * <code>compareTo(..),</code> method uses jcr's item name for comparison. Subclasses may use more specific properties.
  *
  * @author tmattsson
  */
 public abstract class AbstractEditable extends CustomComponent implements Comparable<AbstractEditable>{
 
+    private static final Logger log = LoggerFactory.getLogger(AbstractEditable.class);
     /**
      * Presenter for AbstractEditable.
      */
@@ -159,7 +165,7 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
 
     public int compareTo(AbstractEditable o) {
         try {
-            System.out.println("comparing "+ this.getItem().getName() + " and "+ o.getItem().getName());
+            log.debug("comparing "+ this.getItem().getName() + " and "+ o.getItem().getName());
             return this.getItem().getName().compareTo(o.getItem().getName());
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
