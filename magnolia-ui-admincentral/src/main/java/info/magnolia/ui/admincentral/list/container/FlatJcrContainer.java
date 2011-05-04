@@ -56,7 +56,6 @@ import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.util.ItemSorter;
 
 /**
- * FIXME: adding/deleting new items is not reflected by the container.
  * A flat implementation of {@link JcrContainer} where relationships are not taken into account.
  * @author fgrilli
  *
@@ -75,11 +74,7 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
         super(jcrContainerSource);
         this.level = maxLevel;
         this.itemSorter = itemSorter;
-        try {
-            itemIds.addAll(createContainerIds(getJcrContainerSource().getRootItemIds()));
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+        createOrUpdateItemIds();
     }
 
 
@@ -153,7 +148,7 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
 
     public Object prevItemId(Object itemId) {
         int idx = itemIds.indexOf((ContainerItemId)itemId);
-        if(idx==0){
+        if(idx <= 0){
             return null;
         }
         return itemIds.get(--idx);
@@ -193,13 +188,18 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
         throw new UnsupportedOperationException(getClass().getName() + " currently does not support this operation.");
     }
 
-
     public void sort(Object[] propertyId, boolean[] ascending) {
         // Set up the item sorter for the sort operation
         itemSorter.setSortProperties(this, propertyId, ascending);
 
         // Perform the actual sort
         doSort();
+    }
+
+    @Override
+    public void fireItemSetChange() {
+        createOrUpdateItemIds();
+        super.fireItemSetChange();
     }
 
     public Collection<?> getSortableContainerPropertyIds() {
@@ -210,5 +210,14 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
 
     protected void doSort() {
         Collections.sort(itemIds, itemSorter);
+    }
+
+    private void createOrUpdateItemIds() {
+        itemIds.clear();
+        try {
+            itemIds.addAll(createContainerIds(getJcrContainerSource().getRootItemIds()));
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 }
