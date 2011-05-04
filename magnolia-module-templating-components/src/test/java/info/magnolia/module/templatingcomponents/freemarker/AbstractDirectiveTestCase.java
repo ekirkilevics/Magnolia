@@ -48,6 +48,8 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.AbstractFreemarkerTestCase;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -58,6 +60,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -68,33 +71,39 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public abstract class AbstractDirectiveTestCase extends AbstractFreemarkerTestCase {
+
     private WebContext ctx;
     protected MockHierarchyManager hm;
     private HttpServletRequest req;
+    private HttpServletResponse res;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
 
-        hm = MockUtil.createHierarchyManager(StringUtils.join(Arrays.asList(
-                "/foo/bar@type=mgnl:content",
-                "/foo/bar/MetaData@type=mgnl:metadata",
-                "/foo/bar/MetaData/mgnl\\:template=testPageTemplate",
-                "/foo/bar/paragraphs@type=mgnl:contentNode",
-                "/foo/bar/paragraphs/0@type=mgnl:contentNode",
-                "/foo/bar/paragraphs/0/text=hello 0",
-                "/foo/bar/paragraphs/0/MetaData@type=mgnl:metadata",
-                "/foo/bar/paragraphs/0/MetaData/mgnl\\:template=testParagraph0",
-                "/foo/bar/paragraphs/1@type=mgnl:contentNode",
-                "/foo/bar/paragraphs/1/text=hello 1",
-                "/foo/bar/paragraphs/1/MetaData@type=mgnl:metadata",
-                "/foo/bar/paragraphs/1/MetaData/mgnl\\:template=testParagraph1",
-                "/foo/bar/paragraphs/2@type=mgnl:contentNode",
-                "/foo/bar/paragraphs/2/text=hello 2",
-                "/foo/bar/paragraphs/2/MetaData@type=mgnl:metadata",
-                "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2",
-                ""
-        ), "\n"));
+        hm = MockUtil.createHierarchyManager(
+                StringUtils.join(Arrays.asList(
+                        "/foo/bar@type=mgnl:content",
+                        "/foo/bar/MetaData@type=mgnl:metadata",
+                        "/foo/bar/MetaData/mgnl\\:template=testPageTemplate",
+                        "/foo/bar/paragraphs@type=mgnl:contentNode",
+                        "/foo/bar/paragraphs/0@type=mgnl:contentNode",
+                        "/foo/bar/paragraphs/0@uuid=100",
+                        "/foo/bar/paragraphs/0/text=hello 0",
+                        "/foo/bar/paragraphs/0/MetaData@type=mgnl:metadata",
+                        "/foo/bar/paragraphs/0/MetaData/mgnl\\:template=testParagraph0",
+                        "/foo/bar/paragraphs/1@type=mgnl:contentNode",
+                        "/foo/bar/paragraphs/1@uuid=101",
+                        "/foo/bar/paragraphs/1/text=hello 1",
+                        "/foo/bar/paragraphs/1/MetaData@type=mgnl:metadata",
+                        "/foo/bar/paragraphs/1/MetaData/mgnl\\:template=testParagraph1",
+                        "/foo/bar/paragraphs/2@type=mgnl:contentNode",
+                        "/foo/bar/paragraphs/2@uuid=102",
+                        "/foo/bar/paragraphs/2/text=hello 2",
+                        "/foo/bar/paragraphs/2/MetaData@type=mgnl:metadata",
+                        "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2",
+                        ""
+                ), "\n"));
 
         final AggregationState aggState = new AggregationState();
         // depending on tests, we'll set the main content and current content to the same or a different node
@@ -111,11 +120,34 @@ public abstract class AbstractDirectiveTestCase extends AbstractFreemarkerTestCa
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
+        Paragraph testParagraph0 = new Paragraph();
+        testParagraph0.setName("testParagraph0");
+        testParagraph0.setTitle("Test Paragraph 0");
+        Paragraph testParagraph1 = new Paragraph();
+        testParagraph1.setName("testParagraph1");
+        testParagraph1.setTitle("Test Paragraph 1");
+        Paragraph testParagraph2 = new Paragraph();
+        testParagraph2.setName("testParagraph2");
+        testParagraph2.setTitle("Test Paragraph 2");
+
+        ParagraphManager paragraphManager = mock(ParagraphManager.class);
+        when(paragraphManager.getParagraphDefinition("testParagraph0")).thenReturn(testParagraph0);
+        when(paragraphManager.getParagraphDefinition("testParagraph1")).thenReturn(testParagraph1);
+        when(paragraphManager.getParagraphDefinition("testParagraph2")).thenReturn(testParagraph2);
+        ComponentsTestUtil.setInstance(ParagraphManager.class, paragraphManager);
+
+        req = mock(HttpServletRequest.class);
+        req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
+
+        res = mock(HttpServletResponse.class);
+        when(res.getWriter()).thenReturn(null);
+
         ctx = mock(WebContext.class);
         when(ctx.getAggregationState()).thenReturn(aggState);
         when(ctx.getLocale()).thenReturn(Locale.US);
-        req = mock(HttpServletRequest.class);
-        req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
+        when(ctx.getHierarchyManager(hm.getName())).thenReturn(hm);
+        when(ctx.getResponse()).thenReturn(res);
+        when(ctx.getRequest()).thenReturn(req);
 
         setupExpectations(ctx, req);
 

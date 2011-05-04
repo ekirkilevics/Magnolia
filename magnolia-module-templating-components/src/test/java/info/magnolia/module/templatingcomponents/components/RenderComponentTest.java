@@ -35,22 +35,31 @@ package info.magnolia.module.templatingcomponents.components;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.gui.i18n.DefaultI18nAuthoringSupport;
 import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
+import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.module.templating.RenderException;
+import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.StringWriter;
+import java.io.Writer;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.junit.After;
 import org.junit.Test;
@@ -91,13 +100,26 @@ public class RenderComponentTest {
 
     @Test
     public void testPostRender() throws Exception {
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
+        final MockHierarchyManager hm = MockUtil.createHierarchyManager(
+                "/foo/bar/baz/paragraphs/01.text=dummy\n" +
+                "/foo/bar/baz/paragraphs/01@uuid=100");
 
         final AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
         aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
+
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
+
+        HttpServletResponse res = mock(HttpServletResponse.class);
+        when(res.getWriter()).thenReturn(null);
+
         final WebContext ctx = mock(WebContext.class);
+        when(ctx.getHierarchyManager(hm.getName())).thenReturn(hm);
         MgnlContext.setInstance(ctx);
+        when(ctx.getResponse()).thenReturn(res);
+        when(ctx.getRequest()).thenReturn(req);
+
 
         final ServerConfiguration serverCfg = new ServerConfiguration();
         serverCfg.setAdmin(true);
@@ -106,6 +128,16 @@ public class RenderComponentTest {
         ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
+
+        ComponentsTestUtil.setInstance(RenderingEngine.class, new RenderingEngine() {
+            @Override
+            public void render(Content content, Writer out) throws RenderException {
+
+            }
+            @Override
+            public void render(Content content, String definitionName, Writer out) throws RenderException {
+            }
+        });
 
         final RenderComponent marker = new RenderComponent(serverCfg, aggregationState);
 

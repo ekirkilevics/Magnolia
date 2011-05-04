@@ -33,7 +33,13 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
+import java.io.Writer;
+
+import info.magnolia.cms.core.Content;
 import info.magnolia.context.WebContext;
+import info.magnolia.module.templating.RenderException;
+import info.magnolia.module.templating.engine.RenderingEngine;
+import info.magnolia.test.ComponentsTestUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,8 +49,23 @@ import javax.servlet.http.HttpServletRequest;
  * $Id$
  */
 public class RenderDirectiveTest extends AbstractDirectiveTestCase {
+
     @Override
     protected void setupExpectations(WebContext ctx, HttpServletRequest req) {
+    }
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        ComponentsTestUtil.setInstance(RenderingEngine.class, new RenderingEngine() {
+            @Override
+            public void render(Content content, Writer out) throws RenderException {
+
+            }
+            @Override
+            public void render(Content content, String definitionName, Writer out) throws RenderException {
+            }
+        });
     }
 
     public void testRenderSimpleBar() throws Exception {
