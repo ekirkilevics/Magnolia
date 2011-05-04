@@ -34,7 +34,7 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -46,6 +46,8 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -63,7 +65,10 @@ import org.junit.Test;
 public class EditComponentTest {
     @Test
     public void testDoRender() throws Exception {
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
+        final MockHierarchyManager hm = MockUtil.createHierarchyManager(
+                "/foo/bar/baz/paragraphs/01.text=dummy\n" +
+                "/foo/bar/baz/paragraphs/01/MetaData/mgnl\\:template=testParagraph0"
+        );
 
         final AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
@@ -79,6 +84,14 @@ public class EditComponentTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
+        Paragraph testParagraph0 = new Paragraph();
+        testParagraph0.setName("testParagraph0");
+        testParagraph0.setTitle("Test Paragraph 0");
+
+        ParagraphManager paragraphManager = mock(ParagraphManager.class);
+        when(paragraphManager.getParagraphDefinition("testParagraph0")).thenReturn(testParagraph0);
+        ComponentsTestUtil.setInstance(ParagraphManager.class, paragraphManager);
+
         final EditComponent marker = new EditComponent(serverCfg, aggregationState);
         StringWriter out = new StringWriter();
         marker.doRender(out);
@@ -86,7 +99,7 @@ public class EditComponentTest {
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + AbstractContentComponent.LINEBREAK
-                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\"></cms:edit>"
+                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" dialog=\"testParagraph0\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK, out.toString());
 
         // now with format & dialog
@@ -99,7 +112,7 @@ public class EditComponentTest {
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + AbstractContentComponent.LINEBREAK
-                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" format=\"testFormat\" dialog=\"testDialog\"></cms:edit>"
+                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" format=\"testFormat\" label=\"Test Paragraph 0\" dialog=\"testDialog\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK, out.toString());
 
     }

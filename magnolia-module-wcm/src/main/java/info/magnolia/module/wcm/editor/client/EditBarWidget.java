@@ -36,7 +36,6 @@ package info.magnolia.module.wcm.editor.client;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 
 /**
@@ -47,7 +46,6 @@ public class EditBarWidget extends AbstractBarWidget {
     private VPageEditor pageEditor;
 
     private String workspace;
-    private String uuid;
     private String path;
 
     private String label;
@@ -62,14 +60,13 @@ public class EditBarWidget extends AbstractBarWidget {
         int i = content.indexOf(':');
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
-        Window.alert(this.workspace + "  /  " + this.path);
 
         this.label = element.getAttribute("label");
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
 
         setStyle("rgb(116, 173, 59)");
-        setLabel("Paragraph");
+        setLabel(label);
         Button button = new Button("Edit&nbsp;paragraph");
         button.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {

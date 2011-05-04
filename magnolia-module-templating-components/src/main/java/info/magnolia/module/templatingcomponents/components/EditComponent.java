@@ -35,6 +35,9 @@ package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
 
 import java.io.IOException;
 
@@ -62,27 +65,32 @@ public class EditComponent extends AbstractContentComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
-                .append(LINEBREAK);
-        out.append(LESS_THAN).append(CMS_EDIT).append(" content=").append(QUOTE).append(getNodePath(content))
-                .append(QUOTE);
+        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
+        out.append(LESS_THAN).append(CMS_EDIT).append(" content=").append(QUOTE).append(getNodePath(content)).append(QUOTE);
         if (StringUtils.isNotEmpty(format)) {
             out.append(" format=").append(QUOTE).append(format).append(QUOTE);
         }
-        if (StringUtils.isNotEmpty(dialog)) {
-            out.append(" dialog=").append(QUOTE).append(dialog).append(QUOTE);
-        }
-        out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_EDIT).append(GREATER_THAN)
-                .append(LINEBREAK);
+        Paragraph paragraph = ParagraphManager.getInstance().getParagraphDefinition(JCRMetadataUtil.getMetaData(content).getTemplate());
+        out.append(" label=").append(QUOTE).append(paragraph.getTitle()).append(QUOTE);
 
+        out.append(" dialog=").append(QUOTE).append(resolveDialog(paragraph)).append(QUOTE);
+        out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_EDIT).append(GREATER_THAN).append(LINEBREAK);
+    }
+
+    private String resolveDialog(Paragraph paragraph) {
+        if (this.dialog != null)
+            return this.dialog;
+        String dialogToUse = paragraph.getDialog();
+        if (dialogToUse == null)
+            return paragraph.getName();
+        return dialogToUse;
     }
 
     @Override
     public void postRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
 
-        out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
-                .append(LINEBREAK);
+        out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
     }
 
     public String getDialog() {
