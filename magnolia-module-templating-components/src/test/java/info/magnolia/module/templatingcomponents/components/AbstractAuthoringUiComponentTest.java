@@ -33,12 +33,11 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -75,7 +74,7 @@ import org.junit.Test;
 
 /**
  * Tests for AbstractAuthoringUiComponent.
- * 
+ *
  * @version $Id$
  */
 public class AbstractAuthoringUiComponentTest {
@@ -105,11 +104,10 @@ public class AbstractAuthoringUiComponentTest {
     public void setUp() throws Exception {
         ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
 
-        final Context ctx = createMock(WebContext.class);
-        expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
-        replay(ctx); // no need to verify this so far
-        MgnlContext.setInstance(ctx);
+        final Context ctx = mock(WebContext.class);
+        when(ctx.getLocale()).thenReturn(Locale.US);
 
+        MgnlContext.setInstance(ctx);
         final Paragraph p0 = new Paragraph();
         p0.setName("testParagraph0");
         final Paragraph p1 = new Paragraph();

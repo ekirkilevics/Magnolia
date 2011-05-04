@@ -33,10 +33,9 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -46,23 +45,20 @@ import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.module.templatingcomponents.componentsx.SingletonParagraphBar;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.StringWriter;
-import java.util.Locale;
 
 import org.junit.After;
 import org.junit.Test;
 
 /**
  * Tests for ContextAttributeMarker.
- * 
+ *
  * @version $Id$
  */
 public class ContextComponentTest {
@@ -73,15 +69,10 @@ public class ContextComponentTest {
         final AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
         aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
-        final WebContext ctx = createMock(WebContext.class);
-        expect(ctx.getAggregationState()).andReturn(aggregationState).anyTimes();
-        expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
-        expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).anyTimes();
+        final WebContext ctx = mock(WebContext.class);
         final String name = "name1";
         final String value = "value1";
-        ctx.setAttribute(name, value, 1);
         MgnlContext.setInstance(ctx);
-        replay(ctx);
 
         final ServerConfiguration serverCfg = new ServerConfiguration();
         serverCfg.setAdmin(true);
@@ -100,6 +91,7 @@ public class ContextComponentTest {
 
         // TODO - string is empty: what can we test in addition?
         assertEquals("", out.toString());
+        verify(ctx).setAttribute(name, value, 1);
     }
 
     @After
