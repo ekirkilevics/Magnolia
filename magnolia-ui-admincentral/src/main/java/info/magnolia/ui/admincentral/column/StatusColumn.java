@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.column.definition.StatusColumnDefinition;
 
@@ -89,7 +90,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
             Node node = (Node) item;
             Component component = null;
             if (activation) {
-                component = createIcon(UIUtil.getActivationStatusIconURL(node));
+                component = new Status(node);
             }
 
             if (permissions) {
@@ -104,8 +105,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
                     // in a layout for being displayed...
                     HorizontalLayout horizontal = new HorizontalLayout();
                     horizontal.addComponent(component);
-                    component =
-                            createIcon(MgnlContext.getContextPath() + UIUtil.RESOURCES_ICONS_16_PATH + "pen_blue_canceled.gif");
+                    component = createIcon(MgnlContext.getContextPath() + UIUtil.RESOURCES_ICONS_16_PATH + "pen_blue_canceled.gif");
                     horizontal.addComponent(component);
                     component = horizontal;
                 }
@@ -113,6 +113,32 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
             return component;
         }
         return null;
+    }
+
+    /**
+     * A comparable component which embeds an icon.
+     * TODO: extract it as a top-level class.
+     * @author fgrilli
+     *
+     */
+    protected class Status extends Embedded implements Comparable<Status>{
+        private int status;
+
+        public Status(final Node node) {
+            this.status = JCRMetadataUtil.getMetaData(node).getActivationStatus();
+            setType(Embedded.TYPE_IMAGE);
+            setSource(new ExternalResource(UIUtil.getActivationStatusIconURL(node)));
+            setWidth(16, Sizeable.UNITS_PIXELS);
+            setHeight(16, Sizeable.UNITS_PIXELS);
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public int compareTo(Status o) {
+            return Integer.valueOf(status).compareTo(Integer.valueOf(o.getStatus()));
+        }
     }
 
     private Embedded createIcon(String path) {
@@ -124,5 +150,4 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
 
         return embedded;
     }
-
 }
