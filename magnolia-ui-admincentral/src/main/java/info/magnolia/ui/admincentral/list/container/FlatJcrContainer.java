@@ -89,8 +89,7 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
         for (javax.jcr.Item child : children) {
             child.accept(visitor);
         }
-        itemIds = visitor.getIds();
-        return itemIds;
+        return visitor.getIds();
     }
 
     public int getLevel() {
@@ -99,7 +98,7 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
 
     @Override
     public int size() {
-        log.debug("itemIds size is " + itemIds.size());
+        log.debug("itemIds size is {}", itemIds.size());
         return itemIds.size();
     }
 
