@@ -33,11 +33,8 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -60,7 +57,6 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -115,23 +111,15 @@ public abstract class AbstractDirectiveTestCase extends AbstractFreemarkerTestCa
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        ctx = createMock(WebContext.class);
-        expect(ctx.getAggregationState()).andReturn(aggState).anyTimes();
-        expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
-        expect(ctx.getContextPath()).andReturn("/lol").anyTimes();
-        expect(ctx.getServletContext()).andStubReturn(createMock(ServletContext.class));
-        req = createMock(HttpServletRequest.class);
-        expect(ctx.getRequest()).andReturn(req).anyTimes();
-        expect(ctx.getResponse()).andReturn(null).anyTimes();
-        expect(req.getAttribute(Sources.REQUEST_LINKS_DRAWN)).andReturn(Boolean.FALSE).times(0, 1);
+        ctx = mock(WebContext.class);
+        when(ctx.getAggregationState()).thenReturn(aggState);
+        when(ctx.getLocale()).thenReturn(Locale.US);
+        req = mock(HttpServletRequest.class);
         req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
-        expectLastCall().times(0, 1);
-        expect(req.getContextPath()).andReturn("/ctx-path-from-req").anyTimes();
 
         setupExpectations(ctx, req);
 
         MgnlContext.setInstance(ctx);
-        replay(ctx, req);
     }
 
     /**
@@ -142,7 +130,6 @@ public abstract class AbstractDirectiveTestCase extends AbstractFreemarkerTestCa
 
     @Override
     public void tearDown() throws Exception {
-        verify(ctx, req);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         SystemProperty.clear();
