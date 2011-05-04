@@ -14,13 +14,12 @@
 
 	<div id="main" style="padding:15px;">
 
-	<h2>Editbar</h2>
-	[@cms.edit dialog="mainProperties" /]
+	[#list (content.main)?children as paragraph]
+		[@cms.render content=paragraph /]
+	[/#list]
 
 	<h2>Area</h2>
 	[@cms.area name="stage" dialog="mainProperties" /]
-
-	[@cms.render /]
 
 	[@cms.context name="shoeSize" value="213" /]
 

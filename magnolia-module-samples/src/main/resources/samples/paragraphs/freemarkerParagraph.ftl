@@ -1,0 +1,2 @@
+[@cms.edit /]
+FREEMARKER PARAGRAPH
