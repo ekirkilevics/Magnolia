@@ -67,7 +67,7 @@ public class PropertyColumn extends AbstractEditableColumn<PropertyColumnDefinit
     }
 
     @Override
-    public Component getComponent(final Item item) throws RepositoryException {
+    public Component getComponent(Item item) throws RepositoryException {
 
         if (!item.isNode()) {
             return new Label();
