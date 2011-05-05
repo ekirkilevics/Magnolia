@@ -136,7 +136,7 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
     }
 
     public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName) {
-        if (this.selectedBar != null)
+        if (this.selectedBar != null && (this.selectedBar != selectedBar))
             this.selectedBar.deselect();
         this.selectedBar = selectedBar;
         client.updateVariable(id, UPDATE_SELECTION, type, false);
@@ -151,6 +151,7 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
         client.updateVariable(id, ADD_PARAGRAPH, paragraphs, false);
         client.updateVariable(id, SELECTED_WORKSPACE, workspace, false);
         client.updateVariable(id, SELECTED_PATH, path, false);
+        client.updateVariable(id, SELECTED_COLLECTION_NAME, collectionName, false);
         client.sendPendingVariableChanges();
     }
 }

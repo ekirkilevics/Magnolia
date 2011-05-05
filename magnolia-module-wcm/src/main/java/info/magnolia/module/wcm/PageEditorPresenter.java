@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.wcm;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -45,7 +44,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
@@ -139,26 +137,31 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         System.out.println("Command clicked " + menuItem);
     }
 
-    public void openDialog(String dialog, String workspace, String path) {
+    public void openDialog(String dialog, String workspace, String path, String collectionName) {
         try {
-            Node node = MgnlContext.getJCRSession(workspace).getNode(path);
-            dialogPresenter.showDialog(node, dialog);
+            dialogPresenter.showDialog(workspace, path, collectionName, dialog);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
-    public void addParagraph(String workspace, String path, String paragraphs) {
-        application.getMainWindow().addWindow(new ParagraphSelectionDialog(StringUtils.split(paragraphs, ", \t\n")));
+    public void addParagraph(String workspace, String path, String collectionName, String paragraphs) {
+        application.getMainWindow().addWindow(new ParagraphSelectionDialog(StringUtils.split(paragraphs, ", \t\n"), workspace, path, collectionName));
     }
 
     public void selectionChanged(String type, String workspace, String path, String collectionName, String nodeName) {
+        // TODO we fire the event from this class and receives it in this class, not really necessary
         eventBus.fireEvent(new SelectionChangedEvent(type, workspace, path, collectionName, nodeName));
     }
 
-    private static class ParagraphSelectionDialog extends Window {
+    /**
+     * Dialog for selecting a paragraph to add.
+     */
+    private class ParagraphSelectionDialog extends Window {
 
-        private ParagraphSelectionDialog(String[] paragraphs) {
+        private OptionGroup optionGroup;
+
+        private ParagraphSelectionDialog(String[] paragraphs, final String workspace, final String path, final String collectionName) {
 
             setCaption("Select paragraph");
             setModal(true);
@@ -172,7 +175,26 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
 
                 public void buttonClick(Button.ClickEvent event) {
 
+                    String paragraphName = (String) optionGroup.getValue();
 
+                    // TODO validate that something is selected
+
+                    Paragraph paragraph = ParagraphManager.getInstance().getParagraphDefinition(paragraphName);
+
+                    if (paragraph != null) {
+
+                        close();
+
+                        String dialog = resolveDialog(paragraph);
+
+                        if (dialog != null) {
+                            try {
+                                dialogPresenter.showDialog(workspace, path, collectionName, dialog);
+                            } catch (RepositoryException e) {
+                                throw new RuntimeRepositoryException(e);
+                            }
+                        }
+                    }
                 }
             });
             save.addStyleName("primary");
@@ -195,33 +217,39 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
             layout.setSpacing(true);
             layout.setSizeFull();
 
-            addParagraphs(layout, paragraphs);
+            // TODO use IoC
+            ParagraphManager paragraphManager = ParagraphManager.getInstance();
+
+            optionGroup = new OptionGroup();
+
+            for (String paragraph : paragraphs) {
+                Paragraph paragraphDefinition = paragraphManager.getParagraphDefinition(paragraph);
+                if (paragraphDefinition == null) {
+                    continue;
+                }
+
+                optionGroup.addItem(paragraph);
+                // TODO i18n
+                optionGroup.setItemCaption(paragraph, paragraphDefinition.getTitle());
+            }
+
+            HorizontalLayout horizontalLayout = new HorizontalLayout();
+            horizontalLayout.addComponent(optionGroup);
+            layout.addComponent(horizontalLayout);
 
             layout.addComponent(buttons);
             layout.setComponentAlignment(buttons, "right");
 
             super.getContent().addComponent(layout);
         }
+    }
 
-        private void addParagraphs(VerticalLayout layout, String[] paragraphs) {
-            // TODO use IoC
-
-            ParagraphManager paragraphManager = ParagraphManager.getInstance();
-
-            HorizontalLayout horizontalLayout = new HorizontalLayout();
-            OptionGroup optionGroup = new OptionGroup();
-
-            for (String paragraph : paragraphs) {
-                Paragraph paragraphDefinition = paragraphManager.getParagraphDefinition(paragraph);
-                if (paragraphDefinition == null)
-                    continue;
-
-                Object itemId = optionGroup.addItem();
-                optionGroup.setItemCaption(itemId, paragraphDefinition.getTitle());
-            }
-
-            horizontalLayout.addComponent(optionGroup);
-            layout.addComponent(horizontalLayout);
+    // TODO this is duplicated in a few more places
+    private String resolveDialog(Paragraph paragraph) {
+        String dialogToUse = paragraph.getDialog();
+        if (dialogToUse == null) {
+            return paragraph.getName();
         }
+        return dialogToUse;
     }
 }

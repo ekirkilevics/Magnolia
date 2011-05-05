@@ -64,7 +64,7 @@ public class PageEditor extends AbstractComponent {
             String dialog = (String) variables.get(VPageEditor.OPEN_DIALOG);
             String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
             String path = (String) variables.get(VPageEditor.SELECTED_PATH);
-            pageEditorPresenter.openDialog(dialog, workspace, path);
+            pageEditorPresenter.openDialog(dialog, workspace, path, null);
         }
         if (variables.containsKey(VPageEditor.UPDATE_SELECTION)) {
             String type = (String) variables.get(VPageEditor.UPDATE_SELECTION);
@@ -78,7 +78,8 @@ public class PageEditor extends AbstractComponent {
             String paragraphs = (String) variables.get(VPageEditor.ADD_PARAGRAPH);
             String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
             String path = (String) variables.get(VPageEditor.SELECTED_PATH);
-            pageEditorPresenter.addParagraph(workspace, path, paragraphs);
+            String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
+            pageEditorPresenter.addParagraph(workspace, path, collectionName, paragraphs);
         }
     }
 

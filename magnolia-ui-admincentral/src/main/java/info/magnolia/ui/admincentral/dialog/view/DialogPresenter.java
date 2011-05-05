@@ -34,17 +34,19 @@
 package info.magnolia.ui.admincentral.dialog.view;
 
 import java.io.Serializable;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
+import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.registry.DialogRegistry;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 /**
  * Window for creating or editing content using a dialog.
@@ -57,6 +59,7 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
 
     private String workspace;
     private String path;
+    private String collectionName;
     private ContentDriver driver;
     private DialogView dialogView;
 
@@ -66,21 +69,24 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
     }
 
     public void showDialog(Node userNode, String dialogName) throws RepositoryException {
-        showDialog(userNode, dialogRegistry.getDialog(dialogName));
+        showDialog(userNode.getSession().getWorkspace().getName(), userNode.getPath(), null, dialogRegistry.getDialog(dialogName));
     }
 
     public void showDialog(Node node, DialogDefinition dialogDefinition) throws RepositoryException {
-        showDialog(node.getSession().getWorkspace().getName(), node.getPath(), dialogDefinition);
+        showDialog(node.getSession().getWorkspace().getName(), node.getPath(), null, dialogDefinition);
     }
 
-    public void showDialog(String workspace, String path, DialogDefinition dialogDefinition) {
+    public void showDialog(String workspace, String path, String collectionName, String dialogName) throws RepositoryException {
+        showDialog(workspace, path, collectionName, dialogRegistry.getDialog(dialogName));
+    }
+
+    public void showDialog(String workspace, String path, String collectionName, DialogDefinition dialogDefinition) {
         this.workspace = workspace;
         this.path = path;
+        this.collectionName = collectionName;
 
         try {
             //            setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
-
-            Node node = getNode();
 
             DialogBuilder builder = componentProvider.newInstance(DialogBuilder.class);
             dialogView = builder.build(dialogDefinition);
@@ -88,7 +94,11 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
 
             driver = new ContentDriver();
             driver.initialize(dialogView);
-            driver.edit(node);
+
+            Node node = getNode();
+            if (node != null) {
+                driver.edit(node);
+            }
 
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
@@ -97,7 +107,8 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
 
     public void onSave() {
         try {
-            driver.flush(getNode());
+            Node node = getOrCreateNode();
+            driver.flush(node);
 
             if (driver.hasErrors()) {
                 // TODO should check if there are unconsumed errors and display them
@@ -112,8 +123,32 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
         }
     }
 
+    private Node getOrCreateNode() throws RepositoryException {
+        try {
+            Node node = MgnlContext.getJCRSession(workspace).getNode(path);
+            if (collectionName != null) {
+                if (node.hasNode(collectionName)) {
+                    node = node.getNode(collectionName);
+                } else {
+                    node = node.addNode(collectionName, ItemType.CONTENTNODE.getSystemName());
+                }
+                node = node.addNode(JCRUtil.getUniqueLabel(node, "0"), ItemType.CONTENTNODE.getSystemName());
+            }
+            return node;
+        } catch (PathNotFoundException e) {
+            return null;
+        }
+    }
+
     private Node getNode() throws RepositoryException {
-        return MgnlContext.getJCRSession(workspace).getNode(path);
+        if (collectionName != null) {
+            return null;
+        }
+        try {
+            return MgnlContext.getJCRSession(workspace).getNode(path);
+        } catch (PathNotFoundException e) {
+            return null;
+        }
     }
 
     public void onCancel() {
