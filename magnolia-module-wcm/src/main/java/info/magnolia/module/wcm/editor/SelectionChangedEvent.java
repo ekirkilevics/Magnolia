@@ -41,13 +41,37 @@ import info.magnolia.ui.framework.event.Event;
 public class SelectionChangedEvent implements Event<SelectionChangedHandler> {
 
     private String type;
+    private String workspace;
+    private String path;
+    private String collectionName;
+    private String nodeName;
 
-    public SelectionChangedEvent(String type) {
+    public SelectionChangedEvent(String type, String workspace, String path, String collectionName, String nodeName) {
         this.type = type;
+        this.workspace = workspace;
+        this.path = path;
+        this.collectionName = collectionName;
+        this.nodeName = nodeName;
     }
 
     public String getType() {
         return type;
+    }
+
+    public String getWorkspace() {
+        return workspace;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getCollectionName() {
+        return collectionName;
+    }
+
+    public String getNodeName() {
+        return nodeName;
     }
 
     @Override

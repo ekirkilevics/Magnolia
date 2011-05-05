@@ -34,18 +34,13 @@
 package info.magnolia.module.wcm.editor;
 
 import java.util.Map;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.ClientWidget;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.module.wcm.PageEditorPresenter;
 import info.magnolia.module.wcm.editor.client.VPageEditor;
-import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
-import info.magnolia.ui.framework.event.EventBus;
 
 /**
  * Server side vaadin component for the page editor.
@@ -53,13 +48,11 @@ import info.magnolia.ui.framework.event.EventBus;
 @ClientWidget(VPageEditor.class)
 public class PageEditor extends AbstractComponent {
 
-    private EventBus eventBus;
-    private DialogPresenter dialogPresenter;
     private String url;
+    private PageEditorPresenter pageEditorPresenter;
 
-    public PageEditor(EventBus eventBus, DialogPresenter dialogPresenter, String url) {
-        this.eventBus = eventBus;
-        this.dialogPresenter = dialogPresenter;
+    public PageEditor(PageEditorPresenter pageEditorPresenter, String url) {
+        this.pageEditorPresenter = pageEditorPresenter;
         this.url = url;
         setSizeFull();
     }
@@ -71,7 +64,7 @@ public class PageEditor extends AbstractComponent {
             String dialog = (String) variables.get(VPageEditor.OPEN_DIALOG);
             String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
             String path = (String) variables.get(VPageEditor.SELECTED_PATH);
-            openDialog(dialog, workspace, path);
+            pageEditorPresenter.openDialog(dialog, workspace, path);
         }
         if (variables.containsKey(VPageEditor.UPDATE_SELECTION)) {
             String type = (String) variables.get(VPageEditor.UPDATE_SELECTION);
@@ -79,7 +72,13 @@ public class PageEditor extends AbstractComponent {
             String path = (String) variables.get(VPageEditor.SELECTED_PATH);
             String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
             String nodeName = (String) variables.get(VPageEditor.SELECTED_NODE_NAME);
-            eventBus.fireEvent(new SelectionChangedEvent(type));
+            pageEditorPresenter.selectionChanged(type, workspace, path, collectionName, nodeName);
+        }
+        if (variables.containsKey(VPageEditor.ADD_PARAGRAPH)) {
+            String paragraphs = (String) variables.get(VPageEditor.ADD_PARAGRAPH);
+            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
+            String path = (String) variables.get(VPageEditor.SELECTED_PATH);
+            pageEditorPresenter.addParagraph(workspace, path, paragraphs);
         }
     }
 
@@ -87,18 +86,5 @@ public class PageEditor extends AbstractComponent {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
         target.addAttribute("url", url);
-    }
-
-    private void openDialog(String dialog, String workspace, String path) {
-        try {
-            Node node = MgnlContext.getJCRSession(workspace).getNode(path);
-            dialogPresenter.showDialog(node, dialog);
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
-    }
-
-    private void addParagraph(String workspace, String path, String paragraphs) {
-
     }
 }

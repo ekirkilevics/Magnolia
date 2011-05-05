@@ -50,12 +50,12 @@ public class AreaBarWidget extends AbstractBarWidget {
 
     private String label;
     private String name;
-    private String[] paragraphs;
+    private String paragraphs;
     private boolean collection;
     private String dialog;
 
     public AreaBarWidget(final VPageEditor pageEditor, Element element) {
-        super();
+        super("rgb(107, 171, 251)");
         this.pageEditor = pageEditor;
 
         // TODO we should get the label from the templating component
@@ -69,11 +69,10 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         this.label = element.getAttribute("label");
         this.name = element.getAttribute("name");
-        this.paragraphs = element.getAttribute("paragraphs").split("\\,\\s");
+        this.paragraphs = element.getAttribute("paragraphs");
         this.collection = Boolean.parseBoolean(element.getAttribute("collection"));
         this.dialog = element.getAttribute("dialog");
 
-        setStyle("rgb(107, 171, 251)");
         setLabel("Area");
         Button button = new Button("Edit&nbsp;area");
         button.addClickHandler(new ClickHandler() {
@@ -94,7 +93,7 @@ public class AreaBarWidget extends AbstractBarWidget {
     @Override
     protected void onSelect() {
         super.onSelect();
-        pageEditor.updateSelection("area", workspace, path, name, null);
+        pageEditor.updateSelection(this, "area", workspace, path, name, null);
     }
 
     public void attach(Element element) {

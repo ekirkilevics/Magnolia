@@ -50,9 +50,10 @@ public class AbstractBarWidget extends SimplePanel {
 
     private HorizontalPanel horizontalPanel;
     private Label label;
+    private String color;
 
-    public AbstractBarWidget() {
-
+    public AbstractBarWidget(String color) {
+        this.color = color;
         label = new Label("");
 
         horizontalPanel = new HorizontalPanel();
@@ -68,6 +69,11 @@ public class AbstractBarWidget extends SimplePanel {
         }, ClickEvent.getType());
 
         add(horizontalPanel);
+        setStyle(color);
+    }
+
+    public void deselect() {
+        setStyle(this.color);
     }
 
     protected void onSelect() {
@@ -77,7 +83,7 @@ public class AbstractBarWidget extends SimplePanel {
         setStyle("rgb(255, 255, 255)");
     }
 
-    protected void setStyle(String color) {
+    private void setStyle(String color) {
         getElement().setAttribute("style",
                 "background-color:" +
                         color +

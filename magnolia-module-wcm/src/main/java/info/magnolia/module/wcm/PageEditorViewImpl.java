@@ -64,10 +64,7 @@ public class PageEditorViewImpl implements PageEditorView {
         pageLayout = new VerticalLayout();
         pageLayout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
 
-        ToolboxView.Presenter presenter = new ToolboxView.Presenter() {};
-
-        toolboxView = new ToolboxViewImpl(wcmModule);
-        toolboxView.setPresenter(presenter);
+        toolboxView = new ToolboxViewImpl();
 
         toolboxLayout = new VerticalLayout();
         toolboxLayout.setHeight(100, Sizeable.UNITS_PERCENTAGE);

@@ -55,10 +55,12 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
     public static final String SELECTED_NODE_NAME = "selectedNodeName";
     public static final String OPEN_DIALOG = "open-dialog";
     public static final String UPDATE_SELECTION = "update-selection";
+    public static final String ADD_PARAGRAPH = "addParagraph";
 
     private IFrameElement iFrameElement;
     private ApplicationConnection client;
     private String id;
+    private AbstractBarWidget selectedBar;
 
     public VPageEditor() {
         iFrameElement = Document.get().createIFrameElement();
@@ -133,7 +135,10 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
         client.sendPendingVariableChanges();
     }
 
-    public void updateSelection(String type, String workspace, String path, String collectionName, String nodeName) {
+    public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName) {
+        if (this.selectedBar != null)
+            this.selectedBar.deselect();
+        this.selectedBar = selectedBar;
         client.updateVariable(id, UPDATE_SELECTION, type, false);
         client.updateVariable(id, SELECTED_WORKSPACE, workspace, false);
         client.updateVariable(id, SELECTED_PATH, path, false);
@@ -142,7 +147,10 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
         client.sendPendingVariableChanges();
     }
 
-    public void addParagraph(String workspace, String path, String collectionName, String[] paragraphs) {
-
+    public void addParagraph(String workspace, String path, String collectionName, String paragraphs) {
+        client.updateVariable(id, ADD_PARAGRAPH, paragraphs, false);
+        client.updateVariable(id, SELECTED_WORKSPACE, workspace, false);
+        client.updateVariable(id, SELECTED_PATH, path, false);
+        client.sendPendingVariableChanges();
     }
 }

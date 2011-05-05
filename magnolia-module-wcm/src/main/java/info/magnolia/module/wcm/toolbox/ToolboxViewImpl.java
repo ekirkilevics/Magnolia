@@ -36,11 +36,11 @@ package info.magnolia.module.wcm.toolbox;
 import java.util.List;
 
 import com.vaadin.data.Item;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.wcm.WcmModule;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
@@ -51,39 +51,39 @@ public class ToolboxViewImpl implements ToolboxView, IsVaadinComponent {
 
     private Table table;
     private Presenter presenter;
-    private WcmModule wcmModule;
+    private List<MenuItemDefinition> actions;
 
-    // TODO should not depend on wcmModule but rather on a configuration provider
-
-    public ToolboxViewImpl(WcmModule wcmModule) {
-        this.wcmModule = wcmModule;
+    public ToolboxViewImpl() {
         this.table = new Table();
         this.table.setRowHeaderMode(Table.ROW_HEADER_MODE_ICON_ONLY);
         this.table.addContainerProperty("Command", String.class, "");
         this.table.setSizeFull();
         this.table.setSelectable(true);
+        table.addListener(new ItemClickEvent.ItemClickListener() {
 
-        showPageRack();
+            public void itemClick(ItemClickEvent event) {
+                if (!event.isDoubleClick()) {
+                    String name = (String) event.getItemId();
+                    MenuItemDefinition menuItem = findMenuItemByName(name);
+                    presenter.onMenuItemSelected(menuItem);
+                }
+            }
+        });
+    }
+
+    private MenuItemDefinition findMenuItemByName(String name) {
+        for (MenuItemDefinition action : actions) {
+            if (action.getName().equals(name))
+                return action;
+        }
+        return null;
     }
 
     @Override
-    public void showPageRack() {
-        showRack(wcmModule.getToolboxConfiguration().getPage());
-    }
-
-    @Override
-    public void showAreaRack() {
-        showRack(wcmModule.getToolboxConfiguration().getArea());
-    }
-
-    @Override
-    public void showParagraphRack() {
-        showRack(wcmModule.getToolboxConfiguration().getParagraph());
-    }
-
-    private void showRack(List<MenuItemDefinition> page) {
+    public void showRack(List<MenuItemDefinition> actions) {
         table.removeAllItems();
-        for (MenuItemDefinition menuItem : page) {
+        this.actions = actions;
+        for (MenuItemDefinition menuItem : actions) {
             Object itemId = menuItem.getName();
             table.addItem(itemId);
             Item commandItem = table.getItem(itemId);

@@ -53,7 +53,7 @@ public class EditBarWidget extends AbstractBarWidget {
     private String format; // bar or button (its likely too late to make a decision here)
 
     public EditBarWidget(final VPageEditor pageEditor, Element element) {
-        super();
+        super("rgb(116, 173, 59)");
         this.pageEditor = pageEditor;
 
         String content = element.getAttribute("content");
@@ -65,7 +65,6 @@ public class EditBarWidget extends AbstractBarWidget {
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
 
-        setStyle("rgb(116, 173, 59)");
         setLabel(label);
         Button button = new Button("Edit&nbsp;paragraph");
         button.addClickHandler(new ClickHandler() {
@@ -79,7 +78,7 @@ public class EditBarWidget extends AbstractBarWidget {
     @Override
     protected void onSelect() {
         super.onSelect();
-        pageEditor.updateSelection("paragraph", workspace, path, null, null);
+        pageEditor.updateSelection(this, "paragraph", workspace, path, null, null);
     }
 
     public void attach(Element element) {

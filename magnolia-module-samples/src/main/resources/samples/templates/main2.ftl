@@ -19,7 +19,7 @@
 	[/#list]
 
 	<h2>Area</h2>
-	[@cms.area name="stage" dialog="mainProperties" /]
+	[@cms.area name="stage" dialog="mainProperties" paragraphs="samplesHowToFTL,samplesFreemarkerParagraph"/]
 
 	[@cms.context name="shoeSize" value="213" /]
 

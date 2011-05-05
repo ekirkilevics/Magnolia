@@ -33,27 +33,27 @@
  */
 package info.magnolia.module.wcm.toolbox;
 
+import java.util.List;
+
 import com.vaadin.ui.Component;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 /**
  * View for the page editor toolbox.
  */
 public interface ToolboxView {
 
-    void showPageRack();
-
-    void showAreaRack();
-
-    void showParagraphRack();
-
     void setPresenter(Presenter presenter);
 
     Component asVaadinComponent();
+
+    void showRack(List<MenuItemDefinition> page);
 
     /**
      * Presenter for toolbox.
      */
     public interface Presenter {
 
+        void onMenuItemSelected(MenuItemDefinition menuItem);
     }
 }
