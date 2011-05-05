@@ -35,11 +35,15 @@ package info.magnolia.ui.admincentral.column;
 
 import java.io.Serializable;
 import javax.jcr.Item;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+import javax.jcr.ValueFormatException;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
@@ -66,6 +70,26 @@ public class PropertyValueColumn extends AbstractEditableColumn<PropertyValueCol
                 protected String getLabelText(Item item) throws RepositoryException {
                     Property property = (Property) item;
                     return property.getString();
+                }
+
+                @Override
+                public int compareTo(AbstractEditable o) {
+                    try {
+                        Property property = (Property) getItem();
+                        String thisObjectProperty = property.getString();
+
+                        Property otherProperty = (Property) o.getItem();
+                        String otherObjectProperty = otherProperty.getString();
+
+                        return thisObjectProperty.compareTo(otherObjectProperty);
+
+                    } catch (ValueFormatException e) {
+                        throw new RuntimeRepositoryException(e);
+                    } catch (PathNotFoundException e) {
+                        throw new RuntimeRepositoryException(e);
+                    } catch (RepositoryException e) {
+                        throw new RuntimeRepositoryException(e);
+                    }
                 }
             };
         }

@@ -36,10 +36,14 @@ package info.magnolia.ui.admincentral.column;
 import java.io.Serializable;
 import javax.jcr.Item;
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.ValueFormatException;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
@@ -63,7 +67,7 @@ public class PropertyColumn extends AbstractEditableColumn<PropertyColumnDefinit
     }
 
     @Override
-    public Component getComponent(Item item) throws RepositoryException {
+    public Component getComponent(final Item item) throws RepositoryException {
 
         if (!item.isNode()) {
             return new Label();
@@ -74,6 +78,26 @@ public class PropertyColumn extends AbstractEditableColumn<PropertyColumnDefinit
             protected String getLabelText(Item item) throws RepositoryException {
                 Node node = (Node) item;
                 return node.hasProperty(getPropertyName()) ? node.getProperty(getPropertyName()).getString() : "";
+            }
+
+            @Override
+            public int compareTo(AbstractEditable o) {
+                try {
+                    Node node = (Node) getItem();
+                    String thisObjectProperty = node.hasProperty(getPropertyName()) ? node.getProperty(getPropertyName()).getString() : "";
+
+                    Node otherNode = (Node) o.getItem();
+                    String otherObjectProperty = otherNode.hasProperty(getPropertyName()) ? otherNode.getProperty(getPropertyName()).getString() : "";
+
+                    return thisObjectProperty.compareTo(otherObjectProperty);
+
+                } catch (ValueFormatException e) {
+                    throw new RuntimeRepositoryException(e);
+                } catch (PathNotFoundException e) {
+                    throw new RuntimeRepositoryException(e);
+                } catch (RepositoryException e) {
+                    throw new RuntimeRepositoryException(e);
+                }
             }
         };
     }

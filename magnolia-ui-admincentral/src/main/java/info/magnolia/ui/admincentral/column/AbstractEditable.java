@@ -165,8 +165,8 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
 
     public int compareTo(AbstractEditable o) {
         try {
-            log.debug("comparing "+ this.getItem().getName() + " and "+ o.getItem().getName());
-            return this.getItem().getName().compareTo(o.getItem().getName());
+            log.debug("comparing {} and {}", this.getItem().getName().toLowerCase(), o.getItem().getName().toLowerCase());
+            return this.getItem().getName().toLowerCase().compareTo(o.getItem().getName().toLowerCase());
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -175,7 +175,7 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
 
     protected abstract ComponentAndEditor getComponentAndEditor(Item item) throws RepositoryException;
 
-    private Item getItem() throws RepositoryException {
+    protected Item getItem() throws RepositoryException {
         Node node = MgnlContext.getJCRSession(workspace).getNodeByIdentifier(nodeIdentifier);
         return propertyName == null ? node : node.getProperty(propertyName);
     }
