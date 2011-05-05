@@ -49,6 +49,7 @@ import javax.jcr.Session;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 
@@ -88,11 +89,33 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
     public Component getComponent(Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
-            Component component = null;
-            if (activation) {
-                component = new Status(node);
-            }
+            return new ActivationStatus(node, activation, permissions);
+        }
+        return null;
+    }
 
+    /**
+     * A comparable component which embeds an icon.
+     * TODO: extract it as a top-level class?
+     * @author fgrilli
+     *
+     */
+    protected class ActivationStatus extends CustomComponent implements Comparable<ActivationStatus>{
+
+        private int status;
+        private HorizontalLayout root = new HorizontalLayout();
+
+        public ActivationStatus(final Node node, boolean activation, boolean permissions) throws RepositoryException {
+            setCompositionRoot(root);
+            if(activation) {
+                this.status = JCRMetadataUtil.getMetaData(node).getActivationStatus();
+                Embedded activationStatus = new Embedded();
+                activationStatus.setType(Embedded.TYPE_IMAGE);
+                activationStatus.setSource(new ExternalResource(UIUtil.getActivationStatusIconURL(node)));
+                activationStatus.setWidth(16, Sizeable.UNITS_PIXELS);
+                activationStatus.setHeight(16, Sizeable.UNITS_PIXELS);
+                root.addComponent(activationStatus);
+            }
             if (permissions) {
                 try {
                     // TODO dlipp: verify, this shows the same behavior as old Content-API based
@@ -103,51 +126,22 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
                 } catch (AccessControlException e) {
                     // does not have permission to set properties - in that case will return two Icons
                     // in a layout for being displayed...
-                    HorizontalLayout horizontal = new HorizontalLayout();
-                    horizontal.addComponent(component);
-                    component = createIcon(MgnlContext.getContextPath() + UIUtil.RESOURCES_ICONS_16_PATH + "pen_blue_canceled.gif");
-                    horizontal.addComponent(component);
-                    component = horizontal;
+                    Embedded permissionStatus = new Embedded();
+                    permissionStatus.setType(Embedded.TYPE_IMAGE);
+                    permissionStatus.setSource(new ExternalResource(MgnlContext.getContextPath() + UIUtil.RESOURCES_ICONS_16_PATH + "pen_blue_canceled.gif"));
+                    permissionStatus.setWidth(16, Sizeable.UNITS_PIXELS);
+                    permissionStatus.setHeight(16, Sizeable.UNITS_PIXELS);
+                    root.addComponent(permissionStatus);
                 }
             }
-            return component;
-        }
-        return null;
-    }
-
-    /**
-     * A comparable component which embeds an icon.
-     * TODO: extract it as a top-level class.
-     * @author fgrilli
-     *
-     */
-    protected class Status extends Embedded implements Comparable<Status>{
-        private int status;
-
-        public Status(final Node node) {
-            this.status = JCRMetadataUtil.getMetaData(node).getActivationStatus();
-            setType(Embedded.TYPE_IMAGE);
-            setSource(new ExternalResource(UIUtil.getActivationStatusIconURL(node)));
-            setWidth(16, Sizeable.UNITS_PIXELS);
-            setHeight(16, Sizeable.UNITS_PIXELS);
         }
 
         public int getStatus() {
             return status;
         }
 
-        public int compareTo(Status o) {
+        public int compareTo(ActivationStatus o) {
             return Integer.valueOf(status).compareTo(Integer.valueOf(o.getStatus()));
         }
-    }
-
-    private Embedded createIcon(String path) {
-        Embedded embedded = new Embedded();
-        embedded.setType(Embedded.TYPE_IMAGE);
-        embedded.setSource(new ExternalResource(path));
-        embedded.setWidth(16, Sizeable.UNITS_PIXELS);
-        embedded.setHeight(16, Sizeable.UNITS_PIXELS);
-
-        return embedded;
     }
 }
