@@ -102,7 +102,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
      */
     protected class ActivationStatus extends CustomComponent implements Comparable<ActivationStatus>{
 
-        private int status;
+        private Integer status;
         private HorizontalLayout root = new HorizontalLayout();
 
         public ActivationStatus(final Node node, boolean activation, boolean permissions) throws RepositoryException {
@@ -136,12 +136,12 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
             }
         }
 
-        public int getStatus() {
+        public Integer getStatus() {
             return status;
         }
 
         public int compareTo(ActivationStatus o) {
-            return Integer.valueOf(status).compareTo(Integer.valueOf(o.getStatus()));
+            return status.compareTo(o.getStatus());
         }
     }
 }
