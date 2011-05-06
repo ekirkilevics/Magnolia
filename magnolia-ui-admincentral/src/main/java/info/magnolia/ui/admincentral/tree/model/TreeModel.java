@@ -106,6 +106,7 @@ public class TreeModel implements JcrContainerSource {
                     }
                 }
             });
+            //TODO is addAll() more efficient?
             for (Node n : nodes) {
                 c.add(n);
             }
@@ -137,6 +138,7 @@ public class TreeModel implements JcrContainerSource {
                     }
                 }
             });
+            //TODO is addAll() more efficient?
             for (Property p : properties) {
                 c.add(p);
             }
