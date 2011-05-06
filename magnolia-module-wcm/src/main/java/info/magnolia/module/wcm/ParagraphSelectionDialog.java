@@ -49,7 +49,7 @@ import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 /**
  * Dialog for selecting a paragraph to add.
  */
-class ParagraphSelectionDialog extends Window {
+public class ParagraphSelectionDialog extends Window {
 
     private DialogPresenter dialogPresenter;
     private OptionGroup optionGroup;
