@@ -67,27 +67,27 @@ public class PreviewViewImpl implements PreviewView {
     private Label uuid = new Label();
     private Label lastModField = new Label();
     private Label statusField = new Label();
-    private GridLayout form = new GridLayout(2,4);
+    private GridLayout grid = new GridLayout(2,4);
 
     public PreviewViewImpl() {
-        form.setSizeFull();
-        form.setMargin(true);
+        grid.setSizeFull();
+        grid.setMargin(true);
 
         pathField.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
-        form.addComponent(new Label(PATH),0,0);
-        form.addComponent(pathField,1,0);
+        grid.addComponent(new Label(PATH),0,0);
+        grid.addComponent(pathField,1,0);
 
         uuid.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
-        form.addComponent(new Label(UUID),0,1);
-        form.addComponent(uuid,1,1);
+        grid.addComponent(new Label(UUID),0,1);
+        grid.addComponent(uuid,1,1);
 
         lastModField.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
-        form.addComponent(new Label(LAST_MOD),0,2);
-        form.addComponent(lastModField,1,2);
+        grid.addComponent(new Label(LAST_MOD),0,2);
+        grid.addComponent(lastModField,1,2);
 
         statusField.setWidth(25, Sizeable.UNITS_PIXELS);
-        form.addComponent(new Label(STATUS),0,3);
-        form.addComponent(statusField,1,3);
+        grid.addComponent(new Label(STATUS),0,3);
+        grid.addComponent(statusField,1,3);
     }
 
     public void show(Item item) {
@@ -110,6 +110,6 @@ public class PreviewViewImpl implements PreviewView {
     }
 
     public Component asVaadinComponent() {
-        return form;
+        return grid;
     }
 }
