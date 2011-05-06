@@ -81,7 +81,7 @@ public class PropertyValueColumn extends AbstractEditableColumn<PropertyValueCol
                         Property otherProperty = (Property) o.getItem();
                         String otherObjectProperty = otherProperty.getString();
 
-                        return thisObjectProperty.compareTo(otherObjectProperty);
+                        return thisObjectProperty.toLowerCase().compareTo(otherObjectProperty.toLowerCase());
 
                     } catch (ValueFormatException e) {
                         throw new RuntimeRepositoryException(e);
