@@ -43,12 +43,13 @@ import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.time.DateFormatUtils;
+
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Form;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Label;
 
 /**
  * Implementation for {@link PreviewView}.
@@ -58,49 +59,50 @@ import com.vaadin.ui.TextField;
 public class PreviewViewImpl implements PreviewView {
 
     private static final String STATUS = "Status";
-    private static final int DEFAULT_FIELD_WIDTH = 250;
+    private static final int DEFAULT_FIELD_WIDTH = 150;
     private static final String UUID = "UUID";
     private static final String PATH = "Path";
     private static final String LAST_MOD = "LastMod";
-    private Form form = new Form();
+    private Label pathField = new Label();
+    private Label uuid = new Label();
+    private Label lastModField = new Label();
+    private Label statusField = new Label();
+    private GridLayout form = new GridLayout(2,4);
 
     public PreviewViewImpl() {
         form.setSizeFull();
-        TextField pathField = new TextField(PATH);
+        form.setMargin(true);
+
         pathField.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
-        pathField.setEnabled(false);
-        form.addField(PATH, pathField);
+        form.addComponent(new Label(PATH),0,0);
+        form.addComponent(pathField,1,0);
 
-        TextField uuid = new TextField(UUID);
         uuid.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
-        uuid.setEnabled(false);
-        form.addField(UUID, uuid);
+        form.addComponent(new Label(UUID),0,1);
+        form.addComponent(uuid,1,1);
 
-        DateField lastMod = new DateField(LAST_MOD);
-        lastMod.setDateFormat(UIUtil.DEFAULT_DATE_PATTERN);
-        lastMod.setEnabled(false);
-        form.addField(LAST_MOD, lastMod);
+        lastModField.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
+        form.addComponent(new Label(LAST_MOD),0,2);
+        form.addComponent(lastModField,1,2);
 
-        TextField statusField = new TextField(STATUS);
         statusField.setWidth(25, Sizeable.UNITS_PIXELS);
-        statusField.setEnabled(false);
-        form.addField(STATUS, statusField);
+        form.addComponent(new Label(STATUS),0,3);
+        form.addComponent(statusField,1,3);
     }
 
     public void show(Item item) {
         try {
-            form.getField(PATH).setValue(item.getPath());
+            pathField.setValue(item.getPath());
             if (item.isNode()) {
                 Node node = (Node) item;
-                form.getField(UUID).setValue(node.getIdentifier());
+                uuid.setValue(node.getIdentifier());
 
                 Calendar lastMod = JCRMetadataUtil.getLastModification(node);
                 if (lastMod != null) {
-                    form.getField(LAST_MOD).setValue(JCRMetadataUtil.getLastModification(node).getTime());
+                    lastModField.setValue(DateFormatUtils.format(JCRMetadataUtil.getLastModification(node).getTime(),UIUtil.DEFAULT_DATE_PATTERN));
                 }
 
-                form.getField(STATUS).setIcon(new ExternalResource(UIUtil.getActivationStatusIconURL(node)));
-                form. getField(STATUS).setValue(JCRMetadataUtil.getMetaData(node).getActivationStatus());
+                statusField.setIcon(new ExternalResource(UIUtil.getActivationStatusIconURL(node)));
             }
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
