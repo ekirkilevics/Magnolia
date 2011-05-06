@@ -37,7 +37,9 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.ui.admincentral.tree.action.AddNodeActionDefinition;
 
 /**
- * Adds a page (node).
+ * Action definiton for {@link AddPageAction}.
+ *
+ * @version $Id$
  */
 public class AddPageActionDefinition extends AddNodeActionDefinition {
 

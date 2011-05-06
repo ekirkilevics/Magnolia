@@ -33,23 +33,18 @@
  */
 package info.magnolia.module.wcm;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.vaadin.Application;
-import com.vaadin.event.ShortcutAction;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.module.wcm.editor.SelectionChangedEvent;
 import info.magnolia.module.wcm.editor.SelectionChangedHandler;
 import info.magnolia.module.wcm.place.PageEditorPlace;
+import info.magnolia.module.wcm.toolbox.ToolboxActionFactory;
 import info.magnolia.module.wcm.toolbox.ToolboxView;
 import info.magnolia.ui.admincentral.MainActivityMapper;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
@@ -61,6 +56,8 @@ import info.magnolia.ui.framework.place.PlaceHistoryHandler;
 import info.magnolia.ui.framework.place.PlaceHistoryMapper;
 import info.magnolia.ui.framework.place.PlaceHistoryMapperImpl;
 import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
 
@@ -78,10 +75,11 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
     private WcmModule wcmModule;
     private Application application;
     private DialogPresenter dialogPresenter;
+    private ToolboxActionFactory toolboxActionFactory;
 
     // TODO should not depend on wcmModule but rather on a configuration provider
 
-    public PageEditorPresenter(Shell shell, EventBus eventBus, PlaceController placeController, MainActivityMapper mainActivityMapper, PageEditorView pageEditorView, Application application, DialogPresenter dialogPresenter, WcmModule wcmModule) {
+    public PageEditorPresenter(Shell shell, EventBus eventBus, PlaceController placeController, MainActivityMapper mainActivityMapper, PageEditorView pageEditorView, Application application, DialogPresenter dialogPresenter, WcmModule wcmModule, ToolboxActionFactory toolboxActionFactory) {
         this.shell = shell;
         this.eventBus = eventBus;
         this.placeController = placeController;
@@ -90,6 +88,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         this.wcmModule = wcmModule;
         this.application = application;
         this.dialogPresenter = dialogPresenter;
+        this.toolboxActionFactory = toolboxActionFactory;
     }
 
     public void init() {
@@ -112,17 +111,20 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         toolboxView.showRack(wcmModule.getToolboxConfiguration().getPage());
     }
 
-    private String type;
-    private String workspace;
-    private String collectionName;
-    private String nodeName;
+    private String type; // "page" "area" "paragraph"
+    private ContentSelection contentSelection;
 
     @Override
     public void onSelectionChanged(SelectionChangedEvent event) {
+
         this.type = event.getType();
-        this.workspace = event.getWorkspace();
-        this.collectionName = event.getCollectionName();
-        this.nodeName = event.getNodeName();
+
+        this.contentSelection = new ContentSelection();
+        this.contentSelection.setWorkspace(event.getWorkspace());
+        this.contentSelection.setPath(event.getPath());
+        this.contentSelection.setCollectionName(event.getCollectionName());
+        this.contentSelection.setNodeName(event.getNodeName());
+
         if ("page".equals(event.getType())) {
             toolboxView.showRack(wcmModule.getToolboxConfiguration().getPage());
         } else if ("area".equals(event.getType())) {
@@ -135,6 +137,27 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
     @Override
     public void onMenuItemSelected(MenuItemDefinition menuItem) {
         System.out.println("Command clicked " + menuItem);
+
+        Node node = null;
+        try {
+            ContentSelection selection = this.contentSelection;
+            if (selection == null) {
+                // TODO this should mean the page itself, but only the activity knows about the page...
+                return;
+            }
+            node = MgnlContext.getJCRSession(selection.getWorkspace()).getNode(selection.getPath());
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+
+        Action action = toolboxActionFactory.createAction(menuItem.getActionDefinition(), node);
+        System.out.println("Executing " + action.getClass());
+        try {
+            action.execute();
+        } catch (ActionExecutionException e) {
+            // TODO present error to user
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     public void openDialog(String dialog, String workspace, String path, String collectionName) {
@@ -146,7 +169,11 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
     }
 
     public void addParagraph(String workspace, String path, String collectionName, String paragraphs) {
-        application.getMainWindow().addWindow(new ParagraphSelectionDialog(StringUtils.split(paragraphs, ", \t\n"), workspace, path, collectionName));
+        ContentSelection selection = new ContentSelection();
+        selection.setWorkspace(workspace);
+        selection.setPath(path);
+        selection.setCollectionName(collectionName);
+        application.getMainWindow().addWindow(new ParagraphSelectionDialog(dialogPresenter, StringUtils.split(paragraphs, ", \t\n"), selection));
     }
 
     public void selectionChanged(String type, String workspace, String path, String collectionName, String nodeName) {
@@ -154,102 +181,4 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         eventBus.fireEvent(new SelectionChangedEvent(type, workspace, path, collectionName, nodeName));
     }
 
-    /**
-     * Dialog for selecting a paragraph to add.
-     */
-    private class ParagraphSelectionDialog extends Window {
-
-        private OptionGroup optionGroup;
-
-        private ParagraphSelectionDialog(String[] paragraphs, final String workspace, final String path, final String collectionName) {
-
-            setCaption("Select paragraph");
-            setModal(true);
-            setResizable(true);
-            setClosable(false);
-            setWidth("800px");
-
-            HorizontalLayout buttons = new HorizontalLayout();
-            buttons.setSpacing(true);
-            Button save = new Button("Save", new Button.ClickListener() {
-
-                public void buttonClick(Button.ClickEvent event) {
-
-                    String paragraphName = (String) optionGroup.getValue();
-
-                    // TODO validate that something is selected
-
-                    Paragraph paragraph = ParagraphManager.getInstance().getParagraphDefinition(paragraphName);
-
-                    if (paragraph != null) {
-
-                        close();
-
-                        String dialog = resolveDialog(paragraph);
-
-                        if (dialog != null) {
-                            try {
-                                dialogPresenter.showDialog(workspace, path, collectionName, dialog);
-                            } catch (RepositoryException e) {
-                                throw new RuntimeRepositoryException(e);
-                            }
-                        }
-                    }
-                }
-            });
-            save.addStyleName("primary");
-            save.setClickShortcut(ShortcutAction.KeyCode.ENTER, ShortcutAction.ModifierKey.CTRL);
-            buttons.addComponent(save);
-            buttons.setComponentAlignment(save, "right");
-
-            Button cancel = new Button("Cancel", new Button.ClickListener() {
-
-                public void buttonClick(Button.ClickEvent event) {
-                    close();
-                }
-            });
-            cancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
-            buttons.addComponent(cancel);
-            buttons.setComponentAlignment(cancel, "right");
-
-            VerticalLayout layout = new VerticalLayout();
-            layout.setMargin(true);
-            layout.setSpacing(true);
-            layout.setSizeFull();
-
-            // TODO use IoC
-            ParagraphManager paragraphManager = ParagraphManager.getInstance();
-
-            optionGroup = new OptionGroup();
-
-            for (String paragraph : paragraphs) {
-                Paragraph paragraphDefinition = paragraphManager.getParagraphDefinition(paragraph);
-                if (paragraphDefinition == null) {
-                    continue;
-                }
-
-                optionGroup.addItem(paragraph);
-                // TODO i18n
-                optionGroup.setItemCaption(paragraph, paragraphDefinition.getTitle());
-            }
-
-            HorizontalLayout horizontalLayout = new HorizontalLayout();
-            horizontalLayout.addComponent(optionGroup);
-            layout.addComponent(horizontalLayout);
-
-            layout.addComponent(buttons);
-            layout.setComponentAlignment(buttons, "right");
-
-            super.getContent().addComponent(layout);
-        }
-    }
-
-    // TODO this is duplicated in a few more places
-    private String resolveDialog(Paragraph paragraph) {
-        String dialogToUse = paragraph.getDialog();
-        if (dialogToUse == null) {
-            return paragraph.getName();
-        }
-        return dialogToUse;
-    }
 }

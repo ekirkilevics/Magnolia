@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.wcm.toolbox;
 
-import javax.jcr.Item;
-
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
 
@@ -43,5 +41,5 @@ import info.magnolia.ui.model.action.ActionDefinition;
  */
 public interface ToolboxActionFactory {
 
-    Action createAction(ActionDefinition actionDefinition, Item item);
+    Action createAction(ActionDefinition actionDefinition, Object... args);
 }

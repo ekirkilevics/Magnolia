@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,22 +33,25 @@
  */
 package info.magnolia.module.wcm.action;
 
-import info.magnolia.ui.model.action.ActionDefinition;
+import javax.jcr.Node;
 
+import info.magnolia.ui.model.action.ActionBase;
+import info.magnolia.ui.model.action.ActionExecutionException;
 
 /**
- * Action definition for {@link OpenPageAction}.
+ * Deactivates a page.
  *
  * @version $Id$
  */
-public class OpenPageActionDefinition implements ActionDefinition {
-    private String windowName;
+public class DeactivatePageAction extends ActionBase<DeactivatePageActionDefinition> {
 
-    public String getWindowName() {
-        return windowName;
+    private Node node;
+
+    public DeactivatePageAction(DeactivatePageActionDefinition definition, Node node) {
+        super(definition);
+        this.node = node;
     }
 
-    public void setWindowName(String windowName) {
-        this.windowName = windowName;
+    public void execute() throws ActionExecutionException {
     }
 }

@@ -41,9 +41,10 @@ import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
 
-
 /**
- * Opens the selected pageNode for pageNode editing.
+ * Opens the selected pageNode for page editing.
+ *
+ * @version $Id$
  */
 public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
 
@@ -53,7 +54,7 @@ public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
 
     public OpenPageAction(OpenPageActionDefinition definition, Shell shell, Node pageNode) {
         super(definition);
-        this.shell =  shell;
+        this.shell = shell;
         this.pageNode = pageNode;
     }
 
@@ -61,8 +62,7 @@ public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
         try {
             String uri = MgnlContext.getContextPath() + "/.magnolia/page-editor#app:page:" + pageNode.getPath() + ".html";
             shell.openWindow(uri, getDefinition().getWindowName());
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             throw new ActionExecutionException("Can't open page.", e);
         }
     }

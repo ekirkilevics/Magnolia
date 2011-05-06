@@ -35,20 +35,11 @@ package info.magnolia.module.wcm.action;
 
 import info.magnolia.ui.model.action.ActionDefinition;
 
-
 /**
- * Action definition for {@link OpenPageAction}.
+ * Action definition for {@link AddParagraphBeforeAction}.
  *
  * @version $Id$
  */
-public class OpenPageActionDefinition implements ActionDefinition {
-    private String windowName;
+public class AddParagraphBeforeActionDefinition implements ActionDefinition {
 
-    public String getWindowName() {
-        return windowName;
-    }
-
-    public void setWindowName(String windowName) {
-        this.windowName = windowName;
-    }
 }

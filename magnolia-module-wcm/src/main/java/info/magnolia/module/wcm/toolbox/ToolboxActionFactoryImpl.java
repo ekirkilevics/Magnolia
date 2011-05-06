@@ -35,7 +35,6 @@ package info.magnolia.module.wcm.toolbox;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.jcr.Item;
 
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.jcr.view.builder.DefinitionToImplementationMapping;
@@ -46,7 +45,7 @@ import info.magnolia.ui.model.builder.FactoryBase;
 /**
  * Creates actions for items defined in the toolbox.
  */
-public class ToolboxActionFactoryImpl extends FactoryBase<ActionDefinition, Action> {
+public class ToolboxActionFactoryImpl extends FactoryBase<ActionDefinition, Action> implements ToolboxActionFactory {
 
     private List<DefinitionToImplementationMapping<ActionDefinition, Action>> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping<ActionDefinition, Action>>();
 
@@ -69,7 +68,7 @@ public class ToolboxActionFactoryImpl extends FactoryBase<ActionDefinition, Acti
         addMapping(mapping.getDefinition(), mapping.getImplementation());
     }
 
-    public Action createAction(ActionDefinition actionDefinition, Item item) {
-        return create(actionDefinition, item);
+    public Action createAction(ActionDefinition actionDefinition, Object... args) {
+        return create(actionDefinition, args);
     }
 }

@@ -45,9 +45,10 @@ import info.magnolia.ui.admincentral.tree.action.AddNodeAction;
 import info.magnolia.ui.admincentral.tree.action.AddNodeActionDefinition;
 import info.magnolia.ui.framework.event.EventBus;
 
-
 /**
  * Tree action for adding a page to the website repository.
+ *
+ * @version $Id$
  */
 public class AddPageAction extends AddNodeAction {
 

@@ -700,7 +700,7 @@
             <sv:value>84a13605-2e89-4ab7-8c58-d4546ef3a282</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.AddParagraphActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -722,7 +722,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T14:45:29.966+02:00</sv:value>
+              <sv:value>2011-05-06T14:22:30.880+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -777,7 +777,7 @@
             <sv:value>fd6a5301-c518-4d21-815c-af1046f46a1b</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.EditPagePropertiesActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -799,7 +799,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:05:38.754+02:00</sv:value>
+              <sv:value>2011-05-06T14:22:43.882+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -854,7 +854,7 @@
             <sv:value>b03f02a4-9120-46dd-be13-d42bd8016b45</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.ActivatePageActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -876,7 +876,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:06:08.863+02:00</sv:value>
+              <sv:value>2011-05-06T14:22:53.881+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -931,7 +931,7 @@
             <sv:value>b34ae4e2-56d5-4da7-ba51-4e2582a0bd85</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.DeactivatePageActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -953,7 +953,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:06:13.049+02:00</sv:value>
+              <sv:value>2011-05-06T14:23:06.725+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1039,7 +1039,7 @@
             <sv:value>482a99a5-2bf9-4561-b464-b4ea776d1c58</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.AddParagraphBeforeActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1061,7 +1061,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:10:46.991+02:00</sv:value>
+              <sv:value>2011-05-06T14:23:20.220+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1116,7 +1116,7 @@
             <sv:value>add70554-b304-4e74-af0f-59de392ea29d</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.AddParagraphAfterActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1138,7 +1138,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:10:56.092+02:00</sv:value>
+              <sv:value>2011-05-06T14:23:37.740+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1193,7 +1193,7 @@
             <sv:value>277a8287-210c-4ecc-943a-3e02aa4d4a1c</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.EditParagraphActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1215,7 +1215,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:11:40.219+02:00</sv:value>
+              <sv:value>2011-05-06T14:23:49.917+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1270,7 +1270,7 @@
             <sv:value>033ca7e0-f7ef-4499-8185-0ad92994b726</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.DeleteParagraphActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1292,7 +1292,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:12:04.462+02:00</sv:value>
+              <sv:value>2011-05-06T14:24:07.804+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1347,7 +1347,7 @@
             <sv:value>74763e9b-aed6-4496-9a74-b697ca7edf5a</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.MoveParagraphUpActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1369,7 +1369,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:16:20.817+02:00</sv:value>
+              <sv:value>2011-05-06T14:24:26.941+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1424,7 +1424,7 @@
             <sv:value>1b5e05bb-8099-49d0-bede-56af88036a67</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.MoveParagraphDownActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1446,7 +1446,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:16:44.602+02:00</sv:value>
+              <sv:value>2011-05-06T14:24:35.171+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1535,7 +1535,7 @@
             <sv:value>47c5676a-847f-4c39-88f8-67056cb84000</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.AddParagraphAtTopActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1557,7 +1557,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:17:24.252+02:00</sv:value>
+              <sv:value>2011-05-06T14:24:52.049+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1612,7 +1612,7 @@
             <sv:value>a0f88d78-6645-4b29-ab8f-b518c81fa973</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.AddParagraphAtBottomActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1634,7 +1634,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:17:24.253+02:00</sv:value>
+              <sv:value>2011-05-06T14:25:00.996+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1689,7 +1689,7 @@
             <sv:value>e2fb3f02-556b-455d-a14f-a3bc6c46dea9</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.EditAreaActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1711,7 +1711,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:17:24.254+02:00</sv:value>
+              <sv:value>2011-05-06T14:26:14.172+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1766,7 +1766,7 @@
             <sv:value>24f3d137-ec3b-43de-9e6f-a146e78335d9</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.DeleteAreaActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1788,7 +1788,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:17:24.256+02:00</sv:value>
+              <sv:value>2011-05-06T14:27:57.459+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1843,7 +1843,7 @@
             <sv:value>e4ce1d1b-96ee-41de-8641-b32afff3a9ba</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.MoveParagraphUpActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1865,7 +1865,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:17:24.257+02:00</sv:value>
+              <sv:value>2011-05-06T14:28:10.792+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -1920,7 +1920,7 @@
             <sv:value>c684bc84-0878-4b99-b245-c6234bb2abfc</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+            <sv:value>info.magnolia.module.wcm.action.MoveParagraphDownActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -1942,7 +1942,7 @@
               <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-04-18T18:17:24.258+02:00</sv:value>
+              <sv:value>2011-05-06T14:28:21.553+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>

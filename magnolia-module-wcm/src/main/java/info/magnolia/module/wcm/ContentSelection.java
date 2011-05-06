@@ -31,24 +31,47 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm.action;
-
-import info.magnolia.ui.model.action.ActionDefinition;
-
+package info.magnolia.module.wcm;
 
 /**
- * Action definition for {@link OpenPageAction}.
- *
- * @version $Id$
+ * Parameter object representing the selection in the page editor.
  */
-public class OpenPageActionDefinition implements ActionDefinition {
-    private String windowName;
+public class ContentSelection {
 
-    public String getWindowName() {
-        return windowName;
+    private String workspace;
+    private String path;
+    private String collectionName;
+    private String nodeName;
+
+    public String getWorkspace() {
+        return workspace;
     }
 
-    public void setWindowName(String windowName) {
-        this.windowName = windowName;
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getCollectionName() {
+        return collectionName;
+    }
+
+    public void setCollectionName(String collectionName) {
+        this.collectionName = collectionName;
+    }
+
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
     }
 }

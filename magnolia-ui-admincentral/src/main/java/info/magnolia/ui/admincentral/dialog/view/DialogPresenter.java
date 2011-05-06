@@ -107,6 +107,9 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
 
     public void onSave() {
         try {
+
+            // TODO we create the node before we know that validation succeeded...
+
             Node node = getOrCreateNode();
             driver.flush(node);
 
@@ -117,6 +120,8 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
                 dialogView.close();
                 // TODO we should fire a tree update event so changes are reflected in the tree view
                 // eventBus.fireEvent(new ContentChangedEvent(treeName, path));
+
+                // TODO we need to have a callback so that the caller can set extra things, like for instance the template
             }
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
