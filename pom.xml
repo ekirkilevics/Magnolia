@@ -700,13 +700,13 @@ for Java Content Repositories (JCR).
     <module>magnolia-ui-admincentral</module>
     <module>magnolia-module-wcm</module>
 
-	<!-- Templating -->
+    <!-- Templating -->
     <module>magnolia-module-templating-components</module>
     <module>magnolia-taglib-cms</module>
     <module>magnolia-taglib-utility</module>
     <module>magnolia-module-templating</module>
 
-	<!-- Modules -->
+    <!-- Modules -->
     <module>magnolia-module-cache</module>
     <module>magnolia-module-mail</module>
     <module>magnolia-module-workflow</module>
