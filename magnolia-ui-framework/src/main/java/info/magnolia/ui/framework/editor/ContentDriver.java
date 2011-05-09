@@ -97,6 +97,9 @@ public class ContentDriver extends AbstractDriver<Node> {
                 }
             });
             if (!hasErrors()) {
+
+                // TODO it's probably not a good idea to always force this behaviour here
+
                 JCRMetadataUtil.updateMetaData(node);
                 node.getSession().save();
             } else {

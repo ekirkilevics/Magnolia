@@ -39,14 +39,19 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 
 import com.vaadin.Application;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.editor.SelectionChangedEvent;
 import info.magnolia.module.wcm.editor.SelectionChangedHandler;
 import info.magnolia.module.wcm.place.PageEditorPlace;
 import info.magnolia.module.wcm.toolbox.ToolboxActionFactory;
 import info.magnolia.module.wcm.toolbox.ToolboxView;
 import info.magnolia.ui.admincentral.MainActivityMapper;
+import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
+import info.magnolia.ui.admincentral.dialog.DialogSaveCallback;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.ui.framework.activity.ActivityManager;
 import info.magnolia.ui.framework.event.EventBus;
@@ -74,12 +79,12 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
     private ToolboxView toolboxView;
     private WcmModule wcmModule;
     private Application application;
-    private DialogPresenter dialogPresenter;
+    private DialogPresenterFactory dialogPresenterFactory;
     private ToolboxActionFactory toolboxActionFactory;
 
     // TODO should not depend on wcmModule but rather on a configuration provider
 
-    public PageEditorPresenter(Shell shell, EventBus eventBus, PlaceController placeController, MainActivityMapper mainActivityMapper, PageEditorView pageEditorView, Application application, DialogPresenter dialogPresenter, WcmModule wcmModule, ToolboxActionFactory toolboxActionFactory) {
+    public PageEditorPresenter(Shell shell, EventBus eventBus, PlaceController placeController, MainActivityMapper mainActivityMapper, PageEditorView pageEditorView, Application application, DialogPresenterFactory dialogPresenterFactory, WcmModule wcmModule, ToolboxActionFactory toolboxActionFactory) {
         this.shell = shell;
         this.eventBus = eventBus;
         this.placeController = placeController;
@@ -87,7 +92,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         this.pageEditorView = pageEditorView;
         this.wcmModule = wcmModule;
         this.application = application;
-        this.dialogPresenter = dialogPresenter;
+        this.dialogPresenterFactory = dialogPresenterFactory;
         this.toolboxActionFactory = toolboxActionFactory;
     }
 
@@ -138,19 +143,20 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
     public void onMenuItemSelected(MenuItemDefinition menuItem) {
         System.out.println("Command clicked " + menuItem);
 
+        ContentSelection selection = this.contentSelection;
+        if (selection == null) {
+            // TODO this should mean the page itself, but only the activity knows about the page...
+            return;
+        }
+
         Node node = null;
         try {
-            ContentSelection selection = this.contentSelection;
-            if (selection == null) {
-                // TODO this should mean the page itself, but only the activity knows about the page...
-                return;
-            }
             node = MgnlContext.getJCRSession(selection.getWorkspace()).getNode(selection.getPath());
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
 
-        Action action = toolboxActionFactory.createAction(menuItem.getActionDefinition(), node);
+        Action action = toolboxActionFactory.createAction(menuItem.getActionDefinition(), node, selection);
         System.out.println("Executing " + action.getClass());
         try {
             action.execute();
@@ -160,20 +166,47 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         }
     }
 
-    public void openDialog(String dialog, String workspace, String path, String collectionName) {
-        try {
-            dialogPresenter.showDialog(workspace, path, collectionName, dialog);
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+    public void openDialog(String dialogName, String workspace, String path, String collectionName) {
+        DialogPresenter dialogPresenter = dialogPresenterFactory.createDialog(dialogName);
+        dialogPresenter.setWorkspace(workspace);
+        dialogPresenter.setPath(path);
+        dialogPresenter.setCollectionName(collectionName);
+        dialogPresenter.showDialog();
     }
 
-    public void addParagraph(String workspace, String path, String collectionName, String paragraphs) {
-        ContentSelection selection = new ContentSelection();
+    public void addParagraph(final String workspace, final String path, final String collectionName, String paragraphs) {
+        final ContentSelection selection = new ContentSelection();
         selection.setWorkspace(workspace);
         selection.setPath(path);
         selection.setCollectionName(collectionName);
-        application.getMainWindow().addWindow(new ParagraphSelectionDialog(dialogPresenter, StringUtils.split(paragraphs, ", \t\n"), selection));
+        ParagraphSelectionDialog paragraphSelectionDialog = new ParagraphSelectionDialog(StringUtils.split(paragraphs, ", \t\n")) {
+            @Override
+            protected void onClosed(final Paragraph paragraph) {
+                String dialogName = PageEditorHacks.getDialogUsedByParagraph(paragraph);
+                if (dialogName != null) {
+
+                    DialogPresenter dialogPresenter = dialogPresenterFactory.createDialog(dialogName);
+                    dialogPresenter.setWorkspace(selection.getWorkspace());
+                    dialogPresenter.setPath(selection.getPath());
+                    dialogPresenter.setCollectionName(selection.getCollectionName());
+                    dialogPresenter.setDialogSaveCallback(new DialogSaveCallback() {
+                        @Override
+                        public void onSave(Node node) {
+                            try {
+                                MetaData metaData = JCRMetadataUtil.getMetaData(node);
+                                metaData.setTemplate(paragraph.getName());
+                                node.getSession().save();
+                            } catch (RepositoryException e) {
+                                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                            }
+                        }
+                    });
+                    dialogPresenter.showDialog();
+                }
+            }
+        };
+
+        application.getMainWindow().addWindow(paragraphSelectionDialog);
     }
 
     public void selectionChanged(String type, String workspace, String path, String collectionName, String nodeName) {

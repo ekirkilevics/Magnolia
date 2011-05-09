@@ -53,6 +53,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 
 /**
@@ -61,14 +62,14 @@ import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 public class AdminCentralViewImpl implements AdminCentralView {
 
     private Application application;
-    private DialogPresenter dialogPresenter;
+    private DialogPresenterFactory dialogPresenterFactory;
 
     private VerticalLayout mainContainer;
     private VerticalLayout menuDisplay;
 
-    public AdminCentralViewImpl(Application application, DialogPresenter dialogPresenter) {
+    public AdminCentralViewImpl(Application application, DialogPresenterFactory dialogPresenterFactory) {
         this.application = application;
-        this.dialogPresenter = dialogPresenter;
+        this.dialogPresenterFactory = dialogPresenterFactory;
     }
 
     public void init() {
@@ -138,7 +139,10 @@ public class AdminCentralViewImpl implements AdminCentralView {
                 try {
                     if (user instanceof MgnlUser) {
                         Node userNode = ((MgnlUser) user).getUserNode().getJCRNode();
-                        dialogPresenter.showDialog(userNode, "userpreferences");
+
+                        DialogPresenter dialogPresenter = dialogPresenterFactory.createDialog("userpreferences");
+                        dialogPresenter.setNode(userNode);
+                        dialogPresenter.showDialog();
                     }
                 } catch (RepositoryException e) {
                     e.printStackTrace();

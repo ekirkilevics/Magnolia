@@ -33,30 +33,23 @@
  */
 package info.magnolia.module.wcm;
 
-import javax.jcr.RepositoryException;
-
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
-import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 
 /**
  * Dialog for selecting a paragraph to add.
  */
 public class ParagraphSelectionDialog extends Window {
 
-    private DialogPresenter dialogPresenter;
     private OptionGroup optionGroup;
 
-    public ParagraphSelectionDialog(final DialogPresenter dialogPresenter, String[] paragraphs, final ContentSelection contentSelection) {
-
-        this.dialogPresenter = dialogPresenter;
+    public ParagraphSelectionDialog(String[] paragraphs) {
 
         setCaption("Select paragraph");
         setModal(true);
@@ -80,15 +73,7 @@ public class ParagraphSelectionDialog extends Window {
 
                     close();
 
-                    String dialog = resolveDialog(paragraph);
-
-                    if (dialog != null) {
-                        try {
-                            dialogPresenter.showDialog(contentSelection.getWorkspace(), contentSelection.getPath(), contentSelection.getCollectionName(), dialog);
-                        } catch (RepositoryException e) {
-                            throw new RuntimeRepositoryException(e);
-                        }
-                    }
+                    onClosed(paragraph);
                 }
             }
         });
@@ -138,12 +123,6 @@ public class ParagraphSelectionDialog extends Window {
         super.getContent().addComponent(layout);
     }
 
-    // TODO this is duplicated in a few more places (might be a good candidate to add to ParagraphManager)
-    private String resolveDialog(Paragraph paragraph) {
-        String dialogToUse = paragraph.getDialog();
-        if (dialogToUse == null) {
-            return paragraph.getName();
-        }
-        return dialogToUse;
+    protected void onClosed(Paragraph paragraph) {
     }
 }

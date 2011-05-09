@@ -41,55 +41,69 @@ import javax.jcr.RepositoryException;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.admincentral.dialog.DialogSaveCallback;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
-import info.magnolia.ui.model.dialog.registry.DialogRegistry;
 
 /**
  * Window for creating or editing content using a dialog.
+ *
+ * Note: This is a use-once object.
+ *
  * TODO should this be merged with {@link info.magnolia.ui.admincentral.dialog.activity.DialogActivity}
  */
 public class DialogPresenter implements DialogView.Presenter, Serializable {
 
-    private final DialogRegistry dialogRegistry;
-    private final ComponentProvider componentProvider;
+    private DialogBuilder dialogBuilder;
+    private DialogDefinition dialogDefinition;
+    private ContentDriver driver;
+    private DialogView dialogView;
 
     private String workspace;
     private String path;
     private String collectionName;
-    private ContentDriver driver;
-    private DialogView dialogView;
+    private DialogSaveCallback dialogSaveCallback;
+    private String label;
 
-    public DialogPresenter(DialogRegistry dialogRegistry, ComponentProvider componentProvider) {
-        this.dialogRegistry = dialogRegistry;
-        this.componentProvider = componentProvider;
+    public DialogPresenter(DialogBuilder dialogBuilder, DialogDefinition dialogDefinition) {
+        this.dialogBuilder = dialogBuilder;
+        this.dialogDefinition = dialogDefinition;
     }
 
-    public void showDialog(Node userNode, String dialogName) throws RepositoryException {
-        showDialog(userNode.getSession().getWorkspace().getName(), userNode.getPath(), null, dialogRegistry.getDialog(dialogName));
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public void showDialog(Node node, DialogDefinition dialogDefinition) throws RepositoryException {
-        showDialog(node.getSession().getWorkspace().getName(), node.getPath(), null, dialogDefinition);
-    }
-
-    public void showDialog(String workspace, String path, String collectionName, String dialogName) throws RepositoryException {
-        showDialog(workspace, path, collectionName, dialogRegistry.getDialog(dialogName));
-    }
-
-    public void showDialog(String workspace, String path, String collectionName, DialogDefinition dialogDefinition) {
+    public void setWorkspace(String workspace) {
         this.workspace = workspace;
+    }
+
+    public void setPath(String path) {
         this.path = path;
+    }
+
+    public void setCollectionName(String collectionName) {
         this.collectionName = collectionName;
+    }
+
+    public void setDialogSaveCallback(DialogSaveCallback dialogSaveCallback) {
+        this.dialogSaveCallback = dialogSaveCallback;
+    }
+
+    public void setNode(Node node) throws RepositoryException {
+        this.workspace = node.getSession().getWorkspace().getName();
+        this.path = node.getPath();
+        this.collectionName = null;
+    }
+
+    public void showDialog() {
 
         try {
-            //            setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
+            // TODO we should be able to set the label/caption of the dialog here
 
-            DialogBuilder builder = componentProvider.newInstance(DialogBuilder.class);
-            dialogView = builder.build(dialogDefinition);
+            dialogView = dialogBuilder.build(dialogDefinition);
             dialogView.setPresenter(this);
 
             driver = new ContentDriver();
@@ -108,7 +122,7 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
     public void onSave() {
         try {
 
-            // TODO we create the node before we know that validation succeeded...
+            // TODO we create the node before we know that validation succeeded... not so good
 
             Node node = getOrCreateNode();
             driver.flush(node);
@@ -121,7 +135,8 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
                 // TODO we should fire a tree update event so changes are reflected in the tree view
                 // eventBus.fireEvent(new ContentChangedEvent(treeName, path));
 
-                // TODO we need to have a callback so that the caller can set extra things, like for instance the template
+                if (dialogSaveCallback != null)
+                    dialogSaveCallback.onSave(node);
             }
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
