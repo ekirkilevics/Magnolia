@@ -33,21 +33,28 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.module.templating.Area;
-
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Set;
-
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.templating.Area;
+import info.magnolia.module.templating.RenderException;
+import info.magnolia.module.templating.engine.RenderingEngine;
+import info.magnolia.objectfactory.Components;
+
 /**
  * Outputs an area.
- * 
+ *
  * @version $Id$
  */
 public class AreaComponent extends AbstractContentComponent {
@@ -105,11 +112,34 @@ public class AreaComponent extends AbstractContentComponent {
 
     @Override
     public void postRender(Appendable out) throws IOException, RepositoryException {
-        Node content = getTargetContent();
+        Node content = currentContent();
 
-        // TODO call RenderingEngine and render the area
-        out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
-                .append(LINEBREAK);
+        if (content.hasNode(name)) {
+
+            // TODO IoC
+            RenderingEngine renderingEngine = Components.getComponent(RenderingEngine.class);
+
+            // TODO need to get writer some other way
+            PrintWriter writer = MgnlContext.getWebContext().getResponse().getWriter();
+
+            Node areaNode = content.getNode(name);
+            NodeIterator nodeIterator = areaNode.getNodes();
+            while (nodeIterator.hasNext()) {
+                Node node = (Node) nodeIterator.next();
+                if (node.getPrimaryNodeType().getName().equals(ItemType.CONTENTNODE.getSystemName())) {
+
+                    // TODO RenderingEngine should use Node instead of Content
+                    Content wrappedContent = MgnlContext.getHierarchyManager(node.getSession().getWorkspace().getName()).getContentByUUID(node.getUUID());
+                    try {
+                        renderingEngine.render(wrappedContent, writer);
+                    } catch (RenderException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
+                }
+            }
+        }
+
+        out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
     }
 
     public String getName() {
