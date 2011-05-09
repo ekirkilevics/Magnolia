@@ -33,19 +33,17 @@
  */
 package info.magnolia.cms.security;
 
+import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
+import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.context.MgnlContext;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.context.MgnlContext;
-import static info.magnolia.cms.security.SecurityConstants.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -55,6 +53,8 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.query.Query;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Group manager working directly with JCR API and returning simple groups (no JCR node aware).

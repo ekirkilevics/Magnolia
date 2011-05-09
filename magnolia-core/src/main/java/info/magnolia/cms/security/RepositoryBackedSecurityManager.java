@@ -33,13 +33,13 @@
  */
 package info.magnolia.cms.security;
 
+import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
-import static info.magnolia.cms.security.SecurityConstants.*;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.MgnlContext.VoidOp;
 

@@ -33,6 +33,10 @@
  */
 package info.magnolia.setup;
 
+import static info.magnolia.nodebuilder.Ops.addNode;
+import static info.magnolia.nodebuilder.Ops.addProperty;
+import static info.magnolia.nodebuilder.Ops.getNode;
+import static info.magnolia.nodebuilder.Ops.remove;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.AbstractModuleVersionHandler;
@@ -65,7 +69,6 @@ import info.magnolia.setup.for3_6_2.UpdateGroups;
 import info.magnolia.setup.for3_6_2.UpdateRoles;
 import info.magnolia.setup.for3_6_2.UpdateUsers;
 import info.magnolia.setup.for4_3.UpdateUserPermissions;
-import static info.magnolia.nodebuilder.Ops.*;
 
 import java.util.ArrayList;
 import java.util.List;

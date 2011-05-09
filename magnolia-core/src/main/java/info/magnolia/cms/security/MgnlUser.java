@@ -33,9 +33,10 @@
  */
 package info.magnolia.cms.security;
 
+import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
+import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import static info.magnolia.cms.security.SecurityConstants.*;
 import info.magnolia.context.MgnlContext;
 
 import java.io.Serializable;
