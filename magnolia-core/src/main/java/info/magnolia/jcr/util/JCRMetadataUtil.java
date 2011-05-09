@@ -57,17 +57,9 @@ import org.apache.commons.lang.UnhandledException;
 public class JCRMetadataUtil {
 
 
-    private static class JCRMetaData extends MetaData {
-
-        public JCRMetaData(Node node) throws RepositoryException {
-            // do not use AccessManager for now
-            super(node, node.getSession());
-        }
-    }
-
     public static MetaData getMetaData(Node node) {
         try {
-            return new JCRMetaData(node);
+            return new MetaData(node, node.getSession());
         } catch (RepositoryException e) {
             throw new UnhandledException(e);
         }
