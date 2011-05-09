@@ -33,18 +33,13 @@
  */
 package info.magnolia.jcr.util;
 
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.JCRSessionOp;
-import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
-import info.magnolia.context.MgnlContext;
-
 import java.util.Collection;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
@@ -56,8 +51,14 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.JCRSessionOp;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
+import info.magnolia.context.MgnlContext;
+
 /**
  * Various utility methods to collect data from JCR repository.
+ *
  * @author had
  * @version $Id: $
  */
@@ -74,7 +75,8 @@ public class JCRUtil {
         try {
             path = rootNode.getPath();
             final Node node = rootNode.getNode(subnodeName);
-            collectUniquePropertyNames(node, repositoryName, subnodeName, set, isDeep);collectUniquePropertyNames(rootNode.getNode(subnodeName), repositoryName, subnodeName, set, isDeep);
+            collectUniquePropertyNames(node, repositoryName, subnodeName, set, isDeep);
+            collectUniquePropertyNames(rootNode.getNode(subnodeName), repositoryName, subnodeName, set, isDeep);
         } catch (PathNotFoundException e) {
             log.debug("{} does not have any {}", path, repositoryName);
         } catch (Throwable t) {
@@ -100,8 +102,7 @@ public class JCRUtil {
                         if (isDeep && targetNode.hasNode(subnodeName)) {
                             collectUniquePropertyNames(targetNode.getNode(subnodeName), repositoryName, subnodeName, set, true);
                         }
-                    }
-                    catch (ItemNotFoundException t) {
+                    } catch (ItemNotFoundException t) {
                         final String path = property.getPath();
                         // TODO: why we are using UUIDs here? shouldn't be better to use group names, since uuids can change???
                         log.warn("Can't find {} node by UUID {} referred by node {}", new Object[]{repositoryName, t.getMessage(), path});
@@ -111,7 +112,8 @@ public class JCRUtil {
                     }
                 }
                 return null;
-            }});
+            }
+        });
     }
 
     /**
@@ -143,4 +145,87 @@ public class JCRUtil {
         return node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
     }
 
+    public static void orderBefore(Node node, String siblingName) throws RepositoryException {
+
+        if (siblingName == null) {
+            orderFirst(node);
+            return;
+        }
+
+        Node parent = node.getParent();
+        Node sibling = parent.getNode(siblingName);
+        parent.orderBefore(node.getName(), sibling.getName());
+    }
+
+    public static void orderAfter(Node node, String siblingName) throws RepositoryException {
+
+        if (siblingName == null) {
+            orderLast(node);
+            return;
+        }
+
+        Node parent = node.getParent();
+        NodeIterator siblings = parent.getNodes();
+
+        // Advance iterator to target sibling
+        while (siblings.hasNext()) {
+            Node sibling = siblings.nextNode();
+            if (sibling.getName().equals(siblingName)) {
+                break;
+            }
+        }
+
+        // If there's no sibling after the target sibling we move the node to the end
+        if (!siblings.hasNext()) {
+            parent.orderBefore(node.getName(), null);
+            return;
+        }
+
+        // Move the node before the sibling directly after the target sibling
+        Node siblingAfterTarget = siblings.nextNode();
+        parent.orderBefore(node.getName(), siblingAfterTarget.getName());
+    }
+
+    public static void orderFirst(Node node) throws RepositoryException {
+        node.getParent().orderBefore(node.getName(), node.getParent().getNodes().nextNode().getName());
+    }
+
+    public static void orderLast(Node node) throws RepositoryException {
+        node.getParent().orderBefore(node.getName(), null);
+    }
+
+    public static void moveNodeUp(Node node) throws RepositoryException {
+        Node parent = node.getParent();
+        NodeIterator siblings = parent.getNodes();
+        Node previousSibling = null;
+        while (siblings.hasNext()) {
+            Node sibling = siblings.nextNode();
+            if (sibling.getName().equals(node.getName())) {
+                break;
+            }
+            previousSibling = sibling;
+        }
+        // If this is the first node then do nothing
+        if (previousSibling == null) {
+            return;
+        }
+        parent.orderBefore(node.getName(), previousSibling.getName());
+    }
+
+    public static void moveNodeDown(Node node) throws RepositoryException {
+        Node parent = node.getParent();
+        NodeIterator siblings = parent.getNodes();
+        while (siblings.hasNext()) {
+            Node sibling = siblings.nextNode();
+            if (sibling.getName().equals(node.getName())) {
+                break;
+            }
+        }
+        // If this is the last node then do nothing
+        if (!siblings.hasNext()) {
+            return;
+        }
+        Node nextSibling = siblings.nextNode();
+        parent.orderBefore(nextSibling.getName(), node.getName());
+    }
 }

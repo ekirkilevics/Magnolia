@@ -149,7 +149,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
             return;
         }
 
-        Node node = null;
+        Node node;
         try {
             node = MgnlContext.getJCRSession(selection.getWorkspace()).getNode(selection.getPath());
         } catch (RepositoryException e) {

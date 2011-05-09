@@ -35,23 +35,18 @@ package info.magnolia.module.wcm.action;
 
 import javax.jcr.Node;
 
-import info.magnolia.ui.model.action.ActionBase;
-import info.magnolia.ui.model.action.ActionExecutionException;
+import com.vaadin.Application;
+import info.magnolia.module.wcm.ContentSelection;
+import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 
 /**
  * Opens a dialog for adding a paragraph.
  *
  * @version $Id$
  */
-public class AddParagraphAction extends ActionBase<AddParagraphActionDefinition> {
+public class AddParagraphAction extends AbstractAddParagraphAction<AddParagraphActionDefinition> {
 
-    private Node node;
-
-    public AddParagraphAction(AddParagraphActionDefinition definition, Node node) {
-        super(definition);
-        this.node = node;
-    }
-
-    public void execute() throws ActionExecutionException {
+    public AddParagraphAction(AddParagraphActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node) {
+        super(definition, application, dialogPresenterFactory, selection, node);
     }
 }

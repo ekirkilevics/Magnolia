@@ -34,24 +34,42 @@
 package info.magnolia.module.wcm.action;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
-import info.magnolia.ui.model.action.ActionBase;
-import info.magnolia.ui.model.action.ActionExecutionException;
+import com.vaadin.Application;
+import info.magnolia.cms.util.PathUtil;
+import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.wcm.ContentSelection;
+import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 
 /**
  * Opens a dialog for adding a paragraph before another paragraph.
  *
  * @version $Id$
  */
-public class AddParagraphBeforeAction extends ActionBase<AddParagraphBeforeActionDefinition> {
+public class AddParagraphBeforeAction extends AbstractAddParagraphAction<AddParagraphBeforeActionDefinition> {
 
-    private Node node;
+    private ContentSelection selection;
 
-    public AddParagraphBeforeAction(AddParagraphBeforeActionDefinition definition, Node node) {
-        super(definition);
-        this.node = node;
+    public AddParagraphBeforeAction(AddParagraphBeforeActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node) {
+        super(definition, application, dialogPresenterFactory, selection, node);
+        this.selection = selection;
+
+        String collectionPath = PathUtil.getFolder(selection.getPath());
+        String collectionName = PathUtil.getFileName(collectionPath);
+        String path = PathUtil.getFolder(collectionPath);
+
+        ContentSelection contentSelection = new ContentSelection();
+        contentSelection.setWorkspace(selection.getWorkspace());
+        contentSelection.setPath(path);
+        contentSelection.setCollectionName(collectionName);
+        super.setSelection(contentSelection);
     }
 
-    public void execute() throws ActionExecutionException {
+    @Override
+    protected void onPreSave(Node node, Paragraph paragraph) throws RepositoryException {
+        JCRUtil.orderBefore(node, PathUtil.getFileName(selection.getPath()));
+        super.onPreSave(node, paragraph);
     }
 }

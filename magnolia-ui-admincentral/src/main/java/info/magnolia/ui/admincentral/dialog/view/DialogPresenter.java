@@ -38,6 +38,8 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
@@ -146,7 +148,7 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
     private Node getOrCreateNode() throws RepositoryException {
         try {
             Node node = MgnlContext.getJCRSession(workspace).getNode(path);
-            if (collectionName != null) {
+            if (StringUtils.isNotEmpty(collectionName)) {
                 if (node.hasNode(collectionName)) {
                     node = node.getNode(collectionName);
                 } else {
@@ -161,7 +163,7 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
     }
 
     private Node getNode() throws RepositoryException {
-        if (collectionName != null) {
+        if (StringUtils.isNotEmpty(collectionName)) {
             return null;
         }
         try {

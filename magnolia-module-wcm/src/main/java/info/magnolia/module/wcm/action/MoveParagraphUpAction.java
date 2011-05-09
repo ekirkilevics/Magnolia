@@ -34,7 +34,9 @@
 package info.magnolia.module.wcm.action;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
+import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
 
@@ -53,5 +55,11 @@ public class MoveParagraphUpAction extends ActionBase<MoveParagraphUpActionDefin
     }
 
     public void execute() throws ActionExecutionException {
+        try {
+            JCRUtil.moveNodeUp(node);
+            node.getSession().save();
+        } catch (RepositoryException e) {
+            throw new ActionExecutionException(e);
+        }
     }
 }

@@ -77,6 +77,7 @@ public class EditComponent extends AbstractContentComponent {
         out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_EDIT).append(GREATER_THAN).append(LINEBREAK);
     }
 
+    // TODO this is used in a few more places (might be a good candidate to add to ParagraphManager)
     private String resolveDialog(Paragraph paragraph) {
         if (this.dialog != null)
             return this.dialog;
