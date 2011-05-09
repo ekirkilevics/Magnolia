@@ -1,2 +1,2 @@
 [@cms.edit /]
-FREEMARKER PARAGRAPH
+FREEMARKER PARAGRAPH ${content.title!}<br/>
