@@ -134,6 +134,7 @@ public class AreaComponentTest {
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
         final AreaComponent marker = new AreaComponent(serverCfg, aggregationState);
+        marker.setName("main");
 
         final StringWriter out = new StringWriter();
         marker.postRender(out);
