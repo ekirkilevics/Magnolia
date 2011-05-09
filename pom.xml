@@ -20,7 +20,6 @@ for Java Content Repositories (JCR).
     <magnoliaEdition>Community Edition</magnoliaEdition>
     <magnoliaLicenseStyle>dual</magnoliaLicenseStyle>
     <documentationURL>http://documentation.magnolia-cms.com/release/5-0.html</documentationURL>
-    <!-- Temporarily switched to Java 6 although not yet decided whether we'll drop Java 5 support. Vaadin AddOn LazyLoaderWrapper is currently compiled with Java 6. -->
     <javaVersion>1.6</javaVersion>
   </properties>
   <issueManagement>
