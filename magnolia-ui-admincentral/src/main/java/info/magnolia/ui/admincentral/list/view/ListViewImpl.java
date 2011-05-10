@@ -87,7 +87,6 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
 
         table.addListener(new ItemClickEvent.ItemClickListener() {
 
-            @Override
             public void itemClick(ItemClickEvent event) {
                 if (event.isDoubleClick()) {
                     openChildren((ContainerItemId) event.getItemId());
@@ -124,24 +123,20 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         // TODO: reinitialize table with children on double click
     }
 
-    @Override
     public void select(String path) {
         ContainerItemId itemId = container.getItemByPath(path);
         table.select(itemId);
     }
 
-    @Override
     public void refresh() {
         container.fireItemSetChange();
         table.requestRepaintAll();
     }
 
-    @Override
     public Component asVaadinComponent() {
         return table;
     }
 
-    @Override
     public String getPathInTree(Item jcrItem) {
         try {
             return treeModel.getPathInTree(jcrItem);
@@ -150,9 +145,12 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         }
     }
 
-    @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    public JcrContainer getContainer() {
+        return container;
     }
 
     private void presenterOnItemSelection(ContainerItemId id) {

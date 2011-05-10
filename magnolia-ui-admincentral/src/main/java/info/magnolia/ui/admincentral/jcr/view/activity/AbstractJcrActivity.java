@@ -74,7 +74,6 @@ public abstract class AbstractJcrActivity extends AbstractActivity implements Jc
         }
     }
 
-    @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
         jcrView.setPresenter(this);
         jcrView.select(path);
@@ -82,7 +81,6 @@ public abstract class AbstractJcrActivity extends AbstractActivity implements Jc
         viewPort.setView(jcrView);
     }
 
-    @Override
     public void onItemSelection(Item jcrItem) {
         this.path = jcrView.getPathInTree(jcrItem);
         try {
@@ -97,9 +95,12 @@ public abstract class AbstractJcrActivity extends AbstractActivity implements Jc
         return jcrView instanceof TreeView ? ViewType.TREE: ViewType.LIST;
     }
 
-    @Override
     public void onContentChanged(ContentChangedEvent event) {
         // FIXME only if we are not the source!
         jcrView.refresh();
+    }
+
+    public JcrView getJcrView() {
+        return jcrView;
     }
 }

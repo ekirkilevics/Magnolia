@@ -39,6 +39,7 @@ import info.magnolia.objectfactory.MutableComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
 import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
+import info.magnolia.ui.admincentral.search.place.SearchPlace;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.framework.activity.AbstractMVPSubContainer;
@@ -99,7 +100,7 @@ public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer<WorkbenchA
     @SuppressWarnings("unchecked")
     protected Class<? extends Place>[] getSupportedPlaces() {
         // Casts since generic array creation doesn't exist
-        return new Class[] {ItemSelectedPlace.class};
+        return (Class<? extends Place>[]) new Class[] {ItemSelectedPlace.class, SearchPlace.class};
     }
 
     @Override

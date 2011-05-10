@@ -39,15 +39,71 @@ package info.magnolia.ui.admincentral.search.view;
  *
  */
 public class SearchParameters {
-    //FIXME this should not be hardcoded
-    private String query = "Search";
+    private String query;
+    private String workspace;
+    /**
+     * No-args constructor is needed by {@link BeanItem}.
+     */
+    public SearchParameters() { }
+
+    public SearchParameters(String workspace, String query) {
+        this.workspace = workspace;
+        this.query = query;
+    }
 
     public String getQuery() {
         return query;
+    }
+    public String getWorkspace() {
+        return workspace;
     }
 
     public void setQuery(String query) {
         this.query = query;
     }
+
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
+    }
     //TODO add filters
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((query == null) ? 0 : query.hashCode());
+        result = prime * result
+                + ((workspace == null) ? 0 : workspace.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        SearchParameters other = (SearchParameters) obj;
+        if (query == null) {
+            if (other.query != null) {
+                return false;
+            }
+        } else if (!query.equals(other.query)) {
+            return false;
+        }
+        if (workspace == null) {
+            if (other.workspace != null) {
+                return false;
+            }
+        } else if (!workspace.equals(other.workspace)) {
+            return false;
+        }
+        return true;
+    }
+
 }

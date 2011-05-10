@@ -46,6 +46,7 @@ import java.util.List;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.util.TraversingItemVisitor;
 
@@ -138,25 +139,22 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
         }
     }
 
-    @Override
     public Object nextItemId(Object itemId) {
-        int idx = itemIds.indexOf(itemId);
+        int idx = itemIds.indexOf((ContainerItemId)itemId);
         if(idx < 0 || idx == itemIds.size()-1){
             return null;
         }
         return itemIds.get(++idx);
     }
 
-    @Override
     public Object prevItemId(Object itemId) {
-        int idx = itemIds.indexOf(itemId);
+        int idx = itemIds.indexOf((ContainerItemId)itemId);
         if(idx <= 0){
             return null;
         }
         return itemIds.get(--idx);
     }
 
-    @Override
     public Object firstItemId() {
         if(itemIds.size() == 0){
             return null;
@@ -165,7 +163,6 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
     }
 
 
-    @Override
     public Object lastItemId() {
         if(itemIds.size() == 0){
             return null;
@@ -174,29 +171,32 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
     }
 
 
-    @Override
     public boolean isFirstId(Object itemId) {
-        return ((ContainerItemId)itemId).equals(firstItemId());
+        Object firstItemId = firstItemId();
+        if(firstItemId == null){
+            return false;
+        }
+        return ((ContainerItemId)itemId).equals(firstItemId);
     }
 
 
-    @Override
     public boolean isLastId(Object itemId) {
-        return  ((ContainerItemId)itemId).equals(lastItemId());
+        Object lastItemId = lastItemId();
+        if(lastItemId == null){
+            return false;
+        }
+        return  ((ContainerItemId)itemId).equals(lastItemId);
     }
 
-    @Override
     public Object addItemAfter(Object previousItemId) throws UnsupportedOperationException {
        throw new UnsupportedOperationException(getClass().getName() + " currently does not support this operation.");
     }
 
 
-    @Override
     public com.vaadin.data.Item addItemAfter(Object previousItemId, Object newItemId) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(getClass().getName() + " currently does not support this operation.");
     }
 
-    @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
         // Set up the item sorter for the sort operation
         itemSorter.setSortProperties(this, propertyId, ascending);
@@ -211,7 +211,6 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
         super.fireItemSetChange();
     }
 
-    @Override
     public Collection<?> getSortableContainerPropertyIds() {
         //delegate determining the actual sortable properties to a custom ItemSorter
         //TODO should we pass directly ConfigurableItemSorter to the constructor?
@@ -229,5 +228,17 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
+    }
+
+
+    @Override
+    public void updateContainerIds(NodeIterator iterator) throws RepositoryException {
+        log.debug("updating container...");
+        itemIds.clear();
+        while(iterator.hasNext()){
+            itemIds.add(createContainerId(iterator.nextNode()));
+        }
+        //FIXME workaround to trigger repainting
+        super.fireItemSetChange();
     }
 }

@@ -33,6 +33,19 @@
  */
 package info.magnolia.ui.admincentral.search.activity;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.admincentral.jcr.view.JcrView;
+import info.magnolia.ui.admincentral.search.action.SearchActionFactory;
+import info.magnolia.ui.admincentral.search.place.SearchPlace;
+import info.magnolia.ui.admincentral.search.view.SearchParameters;
+import info.magnolia.ui.admincentral.search.view.SearchResult;
+import info.magnolia.ui.admincentral.search.view.SearchView;
+import info.magnolia.ui.framework.activity.AbstractActivity;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.framework.view.ViewPort;
+
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -44,17 +57,6 @@ import org.apache.jackrabbit.core.query.QueryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.admincentral.search.action.SearchActionFactory;
-import info.magnolia.ui.admincentral.search.view.SearchParameters;
-import info.magnolia.ui.admincentral.search.view.SearchResult;
-import info.magnolia.ui.admincentral.search.view.SearchView;
-import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
-import info.magnolia.ui.framework.activity.AbstractActivity;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.framework.view.ViewPort;
-
 /**
  * The search activity.
  * @author fgrilli
@@ -65,30 +67,44 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
     private SearchView view;
     private SearchActionFactory actionFactory;
     private Shell shell;
-    private ItemSelectedPlace place;
+    private SearchPlace place;
+    private PlaceController placeController;
+    private JcrView jcrView;
 
-    public SearchActivity(SearchView view, SearchActionFactory actionFactory, ItemSelectedPlace place, Shell shell) {
+    public SearchActivity(SearchView view, SearchActionFactory actionFactory, SearchPlace place, PlaceController placeController, Shell shell) {
         this.view = view;
         this.actionFactory = actionFactory;
         this.shell = shell;
         this.place = place;
+        this.placeController = placeController;
         this.view.setPresenter(this);
+        this.jcrView = place.getJcrView();
     }
 
-    @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
         viewPort.setView(view);
+        onPerformSearch();
     }
 
-    @Override
-    public SearchResult onSearch(SearchParameters params) {
+    public void onStartSearch(SearchParameters params) {
+        placeController.goTo(new SearchPlace(params));
+    }
+
+    public void onAddFilter() {
+        shell.showNotification("Hi, one fine day you will see a search filter added to this UI");
+    }
+
+    public void onPerformSearch() {
+        if(place.getSearchParameters() == null || place.getSearchParameters().getQuery() == null){
+            return;
+        }
         //FIXME do it right.
         long foundItems = 0;
         try {
             final Session jcrSession = MgnlContext.getJCRSession(place.getWorkspace());
             final QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
 
-            final String stmt = "//*[jcr:contains(@*,'*"+params.getQuery()+"*') and @jcr:primaryType='mgnl:content']";
+            final String stmt = "//*[jcr:contains(@*,'*"+place.getSearchParameters().getQuery()+"*') and @jcr:primaryType='mgnl:content']";
             final QueryImpl query = (QueryImpl) jcrQueryManager.createQuery(stmt , Query.XPATH);
 
             log.debug("executing query against workspace [{}] with statement [{}] ", place.getWorkspace(), stmt);
@@ -96,6 +112,10 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             foundItems = queryResult.getRows().getSize();
 
             log.debug("query returned {} rows", foundItems);
+            //shell.showNotification("query returned "+ foundItems + " rows");
+            jcrView.getContainer().updateContainerIds(queryResult.getNodes());
+            view.getSearchForm().updateUI(true, new SearchResult(place.getSearchParameters().getQuery(), queryResult.getNodes().getSize()));
+
         } catch (LoginException e) {
             log.error(e.getMessage());
             shell.showError("An error occurred", e);
@@ -106,12 +126,5 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             shell.showError("An error occurred", e);
             log.error(e.getMessage());
         }
-        return new SearchResult(params.getQuery(), foundItems);
     }
-
-    @Override
-    public void onAddFilter() {
-        shell.showNotification("Hi, one fine day you will see a search filter added to this UI");
-    }
-
 }

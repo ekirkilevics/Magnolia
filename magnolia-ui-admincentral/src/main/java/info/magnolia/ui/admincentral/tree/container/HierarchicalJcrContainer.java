@@ -40,6 +40,7 @@ import info.magnolia.ui.admincentral.container.JcrContainerSource;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
@@ -58,7 +59,6 @@ public class HierarchicalJcrContainer extends JcrContainer {
         super(jcrContainerSource);
     }
 
-    @Override
     protected Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException {
         ArrayList<ContainerItemId> ids = new ArrayList<ContainerItemId>();
         for (javax.jcr.Item child : children) {
@@ -66,5 +66,10 @@ public class HierarchicalJcrContainer extends JcrContainer {
             ids.add(createContainerId(child));
         }
         return ids;
+    }
+
+    @Override
+    public void updateContainerIds(NodeIterator iterator) throws RepositoryException {
+        throw new UnsupportedOperationException(getClass().getName()+" does not implement this method");
     }
 }

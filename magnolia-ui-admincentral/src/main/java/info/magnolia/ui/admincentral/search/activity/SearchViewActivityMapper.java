@@ -34,25 +34,28 @@
 package info.magnolia.ui.admincentral.search.activity;
 
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
+import info.magnolia.ui.admincentral.search.place.SearchPlace;
+import info.magnolia.ui.admincentral.search.view.SearchParameters;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.model.builder.FactoryBase;
 
 /**
- * Search view activity mapper. A new search activity is started on every item {@link ItemSelectedPlace} change. TODO wouldn't be more efficient to start it only at WorkbenchPlace change?
+ * Search view activity mapper. A new search activity is started on {@link SearchPlace} change. TODO wouldn't be more efficient to start it only at WorkbenchPlace change?
  * @author fgrilli
  *
  */
 public class SearchViewActivityMapper extends FactoryBase<Place, Activity> implements ActivityMapper{
     public SearchViewActivityMapper(ComponentProvider componentProvider) {
         super(componentProvider);
-        addMapping(ItemSelectedPlace.class, SearchActivity.class);
+        addMapping(SearchPlace.class, SearchActivity.class);
     }
 
-    @Override
     public Activity getActivity(Place place) {
+        if(!(place instanceof SearchPlace)){
+            place = new SearchPlace(new SearchParameters());
+        }
         return create(place);
     }
 

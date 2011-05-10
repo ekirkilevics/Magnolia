@@ -47,10 +47,15 @@ public interface SearchView extends View {
      */
     public interface Presenter {
 
-        SearchResult onSearch(SearchParameters params);
+        void onStartSearch(SearchParameters params);
+
+        void onPerformSearch();
 
         void onAddFilter();
     }
 
     void setPresenter(Presenter presenter);
+
+    SearchForm getSearchForm();
+
 }

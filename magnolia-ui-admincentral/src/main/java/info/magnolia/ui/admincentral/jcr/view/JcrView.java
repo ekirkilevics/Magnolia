@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.jcr.view;
 
+import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.framework.view.View;
 
 import javax.jcr.Item;
@@ -94,4 +95,6 @@ public interface JcrView extends View {
     void select(String path);
 
     void refresh();
+
+    JcrContainer getContainer();
 }

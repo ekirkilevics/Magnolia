@@ -31,27 +31,46 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.search.view;
+package info.magnolia.ui.admincentral.navigation.action;
+
+import info.magnolia.ui.admincentral.search.place.SearchPlace;
+import info.magnolia.ui.admincentral.search.view.SearchParameters;
+import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 
 /**
- * An object representing search results. Mostly used to update the UI with info related to the search just performed.
+ * TODO write javadoc.
  * @author fgrilli
  *
  */
-public class SearchResult {
-    private long itemsFound = 0;
+public class ShowSearchResultsActionDefinition implements PlaceChangeActionDefinition{
+
+    private Place place;
+
+    private String workbenchName;
+
     private String query;
 
-    public SearchResult(String query, long itemsFound) {
-        this.query = query;
-        this.itemsFound = itemsFound;
+    public String getWorkbenchName() {
+        return workbenchName;
     }
-    public long getItemsFound() {
-        return itemsFound;
+
+    public void setWorkbenchName(String workspace) {
+        this.workbenchName = workspace;
     }
 
     public String getQuery() {
         return query;
     }
 
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
+    public Place getPlace() {
+        if(place == null) {
+            return new SearchPlace(new SearchParameters());
+        }
+        return place;
+    }
 }

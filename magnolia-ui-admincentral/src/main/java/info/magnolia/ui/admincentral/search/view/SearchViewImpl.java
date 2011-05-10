@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.search.view;
 
+
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import com.vaadin.ui.Component;
@@ -51,15 +52,17 @@ public class SearchViewImpl implements SearchView, IsVaadinComponent {
         searchForm = new SearchForm();
     }
 
-    @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
         searchForm.setPresenter(this.presenter);
     }
 
-    @Override
     public Component asVaadinComponent() {
         return searchForm.asVaadinComponent();
+    }
+
+    public SearchForm getSearchForm() {
+        return searchForm;
     }
 
 }
