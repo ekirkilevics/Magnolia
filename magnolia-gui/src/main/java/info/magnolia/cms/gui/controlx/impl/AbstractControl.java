@@ -113,7 +113,7 @@ public class AbstractControl implements Control {
     public void removeChild(String name){
         this.children.remove(name);
     }
-    
+
     public Collection getChildren() {
         return this.children.values();
     }

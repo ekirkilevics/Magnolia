@@ -103,7 +103,9 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
                 throw new FlowDefinitionException("can't use workflow name [" + workflowName + "] because the url[" + surl + "] is not accessible", e);
             }
             finally {
-                try {if(is!=null) is.close();} catch(Exception e) {/*just try to close any open stream*/}
+                try {if(is!=null) {
+                    is.close();
+                }} catch(Exception e) {/*just try to close any open stream*/}
             }
 
         }

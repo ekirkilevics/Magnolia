@@ -43,5 +43,5 @@ package info.magnolia.module.cache;
 public interface CacheModuleLifecycleListener {
 
     void onCacheModuleStart();
-    
+
 }

@@ -80,14 +80,14 @@ public class WorkflowModule implements ModuleLifecycle {
      * Use life time jcr sessions or a session per operation.
      */
     private boolean useLifeTimeJCRSession = true;
-    
-    
+
+
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
         instance = this;
         startEngine();
         initializeWorkItemStore();
     }
-    
+
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
         JCRPersistedEngine engine = getEngine();
         if (engine != null && engine.isRunning()) {

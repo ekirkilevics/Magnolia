@@ -79,7 +79,7 @@ public class DialogBasedSearchConfig extends SearchConfigImpl {
         // ordered definition
         SortedMap sortedByOrder = new TreeMap();
         SortedMap sortedByName = new TreeMap();
-        
+
         // for all tabs
         Collection tabNodes = dialogNode.getChildren(ItemType.CONTENTNODE);
 
@@ -109,7 +109,7 @@ public class DialogBasedSearchConfig extends SearchConfigImpl {
         for (Iterator iter = sortedByOrder.values().iterator(); iter.hasNext();) {
             this.addControlDefinition((SearchControlDefinition) iter.next());
         }
-        
+
         for (Iterator iter = sortedByName.values().iterator(); iter.hasNext();) {
             this.addControlDefinition((SearchControlDefinition) iter.next());
         }
@@ -118,7 +118,7 @@ public class DialogBasedSearchConfig extends SearchConfigImpl {
     protected SearchControlDefinition createSearchControl(Content controlNode) throws Exception {
         String contolType = controlNode.getNodeData("controlType").getString();
         String searchType = NodeDataUtil.getString(controlNode, "searchType", contolType);
-        
+
         String name = controlNode.getNodeData("name").getString();
         String label = NodeDataUtil.getI18NString(controlNode, "label");
 
@@ -128,7 +128,7 @@ public class DialogBasedSearchConfig extends SearchConfigImpl {
     protected SearchControlDefinition createSearchControl(String name, String label, String searchType, Content controlNode) throws RepositoryException {
         if (searchType.equals("select")) {
             SelectSearchControlDefinition select = new SelectSearchControlDefinition(name, label);
-            
+
             Collection optionNodes = controlNode.getContent("options").getChildren();
 
             for (Iterator iter = optionNodes.iterator(); iter.hasNext();) {

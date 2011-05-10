@@ -91,7 +91,7 @@ public class Sources {
         html.append("<script type=\"text/javascript\" src=\"");
         html.append(contextPath);
         html.append("/.resources/calendar/calendar-setup.js\"></script>\n");
-        
+
         return html.toString();
     }
 

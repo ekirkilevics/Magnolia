@@ -80,11 +80,11 @@ public class DialogMultiSelect extends DialogBox {
      * Set the onclick js code of the coose button. If non is set the button is not rendered.
      */
     private static final String CONFIG_CHOOSE_ONCLICK = "chooseOnclick";
-    
+
     /**
      * If you like to select the data from a tree, just define the config value tree instead of chooseOnclick
      */
-    private static final String CONFIG_TREE = "tree";    
+    private static final String CONFIG_TREE = "tree";
 
     /**
      * Render the Html using a template
@@ -103,8 +103,8 @@ public class DialogMultiSelect extends DialogBox {
      */
     public String getAddButton() {
         Button add = new Button();
-        add.setLabel(getMessage("buttons.add")); //$NON-NLS-1$ 
-        add.setOnclick(this.getName() + "DynamicTable.addNew();"); //$NON-NLS-1$ 
+        add.setLabel(getMessage("buttons.add")); //$NON-NLS-1$
+        add.setOnclick(this.getName() + "DynamicTable.addNew();"); //$NON-NLS-1$
         add.setSmall(true);
         return add.getHtml();
     }
@@ -113,7 +113,7 @@ public class DialogMultiSelect extends DialogBox {
      * If this control has a choose button
      */
     public String getChooseButton() {
-        
+
         String chooseOnclick = this.getConfigValue(CONFIG_CHOOSE_ONCLICK);
         if(StringUtils.isEmpty(chooseOnclick)){
             String tree = this.getConfigValue(CONFIG_TREE);

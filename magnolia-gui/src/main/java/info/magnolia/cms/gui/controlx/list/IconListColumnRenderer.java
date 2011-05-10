@@ -45,7 +45,7 @@ import org.apache.commons.lang.StringUtils;
  *
  */
 public class IconListColumnRenderer extends ListColumnRenderer {
-    
+
     public String render(Control control) {
         ListColumn column = (ListColumn) control;
         String src = (String) column.getValue();
@@ -54,9 +54,9 @@ public class IconListColumnRenderer extends ListColumnRenderer {
             return "<img src=\""
             + MgnlContext.getContextPath()
             + src
-            + "\"/>"; 
+            + "\"/>";
         }
-        
+
         return "" ;
     }
 

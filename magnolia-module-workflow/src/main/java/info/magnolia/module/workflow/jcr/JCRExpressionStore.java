@@ -70,7 +70,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The JCR implementation of the expression store.
- * 
+ *
  * @author Jackie Ju
  * @author Nicolas Modrzyk
  * @author John Mettraux

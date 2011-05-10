@@ -73,7 +73,7 @@ public class RolesTreeConfiguration extends AbstractTreeConfiguration {
         TreeColumn column1 = TreeColumn.createNodeDataColumn(tree, msgs.get("tree.roles.fullname"), "title", !browseMode);
         column1.setWidth(2);
 
-        TreeColumn columnIcons = TreeColumn.createActivationColumn(tree, msgs.get("tree.roles.status"));        
+        TreeColumn columnIcons = TreeColumn.createActivationColumn(tree, msgs.get("tree.roles.status"));
 
         TreeColumn column2 = TreeColumn.createMetaDataColumn(tree, msgs.get("tree.roles.date"), MetaData.LAST_MODIFIED, "yyyy-MM-dd, HH:mm");
         column2.setWidth(2);

@@ -55,7 +55,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Tools page to show cache info and flush caches.
- * 
+ *
  * @author Bert Leunis
  */
 public class CacheToolsPage extends TemplatedMVCHandler {

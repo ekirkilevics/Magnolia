@@ -79,7 +79,7 @@ public class EditBar extends TagSupport {
     private String deleteLabel;
 
     private String moveLabel;
-    
+
     private static final Logger log = LoggerFactory.getLogger(EditBar.class);
 
     /**
@@ -238,7 +238,7 @@ public class EditBar extends TagSupport {
                         path = Resource.getCurrentActivePage().getHandle();
                     }
                     bar.setPath(path);
-                } 
+                }
                 catch (Exception re) {
                     bar.setPath(StringUtils.EMPTY);
                 }

@@ -56,9 +56,9 @@ import java.io.Writer;
 public class BarNew extends Bar {
 
     private String paragraph;
-    
+
     private Button buttonNew = new Button();
-    
+
     private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
 
     /**
@@ -146,7 +146,7 @@ public class BarNew extends Bar {
     public void drawHtml(JspWriter out) throws IOException {
         drawHtml((Writer) out);
     }
-    
+
     /**
      * Draws the main bar (incl. all magnolia specific js and css sources).
      */
@@ -161,11 +161,11 @@ public class BarNew extends Bar {
             println(out, this.getHtml());
         }
     }
-    
+
     public String getParagraph() {
         return this.paragraph;
     }
-    
+
     public void setParagraph(String paragraph) {
         this.paragraph = paragraph;
     }

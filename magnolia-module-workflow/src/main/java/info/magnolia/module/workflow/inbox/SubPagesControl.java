@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Control used to display the list of sub pages in a workitem.
- * 
+ *
  * @author philipp
  * @version $Id$
  */

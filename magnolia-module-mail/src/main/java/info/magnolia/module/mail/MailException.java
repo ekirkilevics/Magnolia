@@ -40,7 +40,7 @@ package info.magnolia.module.mail;
 public class MailException extends Exception {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 

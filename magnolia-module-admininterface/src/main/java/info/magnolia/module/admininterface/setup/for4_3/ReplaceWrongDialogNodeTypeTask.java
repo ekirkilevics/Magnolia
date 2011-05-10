@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Check for each module in the config repository if dialogs are of the incorrect type <em>mgnl:content</em> 
+ * Check for each module in the config repository if dialogs are of the incorrect type <em>mgnl:content</em>
  * and attempts to replace them with the correct one <em>mgnl:contentNode<em>.<br>
  * See also jira MAGNOLIA-2810
  * @author fgrilli
@@ -63,9 +63,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
-    
+
     private final static Logger log = LoggerFactory.getLogger(ReplaceWrongDialogNodeTypeTask.class);
-    
+
     public ReplaceWrongDialogNodeTypeTask() {
         super("Replace incorrect dialog node types", "Checks for each module in the config repository if dialogs are of the incorrect type mgnl:content and replaces them with the correct one mgnl:contentNode");
     }
@@ -73,12 +73,12 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         final Collection<Content> dialogs = QueryUtil.query(ContentRepository.CONFIG, "modules/*/dialogs", Query.XPATH);
         List<Content> dialogNodes = new ArrayList<Content>();
-        
+
         for (Iterator<Content> iterator = dialogs.iterator(); iterator.hasNext();) {
             collectDialogNodes(iterator.next(), dialogNodes);
         }
         log.debug("Found {} dialog(s)", dialogNodes.size());
-        
+
         for (Content srcNode : dialogNodes) {
             final String handle = srcNode.getHandle();
             try {
@@ -93,7 +93,7 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
         }
     }
 
-    //the following private methods were copied from DialogHandlerManager 
+    //the following private methods were copied from DialogHandlerManager
     private void collectDialogNodes(Content current, List<Content> dialogNodes) throws RepositoryException {
         if(isDialogNode(current)){
             dialogNodes.add(current);

@@ -204,7 +204,7 @@ public class DialogButtonSet extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
-        
+
         for (int i = 0; i < this.getOptions().size(); i++) {
             Button b = (Button) this.getOptions().get(i);
          // translate

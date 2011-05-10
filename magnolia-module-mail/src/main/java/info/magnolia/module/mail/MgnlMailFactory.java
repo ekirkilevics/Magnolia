@@ -119,7 +119,7 @@ public class MgnlMailFactory {
         MailTemplate template = getTemplate(id);
         if (template == null) {
             log.error("Template {} can't be found", id);
-            return null;            
+            return null;
         }
         return getEmail(params, attachments, template);
     }

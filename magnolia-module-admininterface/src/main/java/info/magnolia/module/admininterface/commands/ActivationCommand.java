@@ -279,7 +279,9 @@ public class ActivationCommand extends BaseActivationCommand {
                 Node sibling = nodeIterator.nextNode();
                 // skip till the actual position
                 if (sibling.isNodeType(thisNodeType)) {
-                    if (thisNodeUUID.equalsIgnoreCase(sibling.getUUID())) break;
+                    if (thisNodeUUID.equalsIgnoreCase(sibling.getUUID())) {
+                        break;
+                    }
                 }
             }
             while (nodeIterator.hasNext()) {

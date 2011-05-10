@@ -55,7 +55,7 @@ public class DeleteCommand extends BaseRepositoryCommand {
         try {
             String parentPath = StringUtils.substringBeforeLast(getPath(), "/");
             String label = StringUtils.substringAfterLast(getPath(), "/");
-            
+
             Content parentNode = MgnlContext.getHierarchyManager(this.getRepository()).getContent(parentPath);
             parentNode.delete(label);
             parentNode.save();

@@ -43,7 +43,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  *
  */
 final class ThreadPool {
-    
+
     /**
      * Private constructor to prevent accidental instantiation.
      */
@@ -55,9 +55,9 @@ final class ThreadPool {
      * The fixes number of threads to use in the pool.
      */
     private static final int NUM_THREADS = 10;
-    
+
     private static final PooledExecutor instance;
-    
+
     static {
         // possibly have an infinite number of jobs
         instance = new PooledExecutor(new LinkedQueue());
@@ -73,5 +73,5 @@ final class ThreadPool {
     public static Executor getInstance() {
         return instance;
     }
-    
+
 }

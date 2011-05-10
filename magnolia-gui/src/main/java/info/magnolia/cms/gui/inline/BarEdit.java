@@ -59,7 +59,7 @@ public class BarEdit extends Bar {
     private Button buttonMove = new Button();
 
     private Button buttonDelete = new Button();
-    
+
     private String paragraph;
 
     /**
@@ -207,11 +207,11 @@ public class BarEdit extends Bar {
             println(out, getHtml());
         }
     }
-    
+
     public String getParagraph() {
         return this.paragraph;
     }
-    
+
     public void setParagraph(String paragraph) {
         this.paragraph = paragraph;
     }

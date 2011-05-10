@@ -61,8 +61,8 @@ public class StandaloneGZipFilterTest extends MgnlTestCase {
     // FIXME: MAGNOLIA-3413, this method was added to avoid junit warnings so that we can comment out the failing tests
     public void testDummy(){
     }
-    
-    // FIXME: MAGNOLIA-3413, commented out the failing tests 
+
+    // FIXME: MAGNOLIA-3413, commented out the failing tests
     /*
     public void testBypassesAsDictatedByVoters() {
         doTest(true, true);

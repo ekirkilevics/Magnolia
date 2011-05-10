@@ -70,8 +70,9 @@ public class MailCommand implements Command {
         try {
             MgnlMailFactory factory = MailModule.getInstance().getFactory();
             MgnlEmail email;
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug(Arrays.asList(ctx.entrySet().toArray()).toString());
+            }
 
             String template = (String) ctx.get("mailTemplate");
             //get parameters from mail page parameter text area

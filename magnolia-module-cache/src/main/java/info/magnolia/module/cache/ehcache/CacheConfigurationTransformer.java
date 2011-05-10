@@ -56,7 +56,7 @@ public class CacheConfigurationTransformer extends Content2BeanTransformerImpl {
         final TypeDescriptor typeDescriptor = descriptor.getType();
         final String propertyName = descriptor.getName();
         if ("memoryStoreEvictionPolicyFromObject".equals(propertyName)) {
-            // skip this property - it's only an illegitimate setter and we're taking care of this property just below. 
+            // skip this property - it's only an illegitimate setter and we're taking care of this property just below.
             return;
         } else if (typeDescriptor.getType().equals(MemoryStoreEvictionPolicy.class)) {
             final String memoryStoreEvictionPolicyName = (String) values.get(propertyName);

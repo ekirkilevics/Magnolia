@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Draws an html table.
- * 
+ *
  * @jsp.tag name="table" body-content="JSP"
  *
  * @author Fabrizio Giustina

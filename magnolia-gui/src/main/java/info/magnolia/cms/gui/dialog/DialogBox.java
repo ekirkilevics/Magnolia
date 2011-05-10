@@ -97,7 +97,7 @@ public class DialogBox extends DialogControlImpl {
             out.write("<td style=\"width:100%\" class=\"" + cssClass + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         else {
-        	
+
             out.write("<td style=\"width:100%\" colspan=\"2\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             if (StringUtils.isNotEmpty(this.getLabel())) {
                 out.write("<div class=\"" //$NON-NLS-1$

@@ -73,7 +73,7 @@ public class GroupsTreeConfiguration extends AbstractTreeConfiguration {
         TreeColumn column1 = TreeColumn.createNodeDataColumn(tree, msgs.get("tree.groups.fullname"), "title", !browseMode);
         column1.setWidth(2);
 
-        TreeColumn columnIcons = TreeColumn.createActivationColumn(tree, msgs.get("tree.groups.status"));        
+        TreeColumn columnIcons = TreeColumn.createActivationColumn(tree, msgs.get("tree.groups.status"));
 
         TreeColumn column2 = TreeColumn.createMetaDataColumn(tree, msgs.get("tree.groups.date"), MetaData.LAST_MODIFIED, "yyyy-MM-dd, HH:mm");
         column2.setWidth(2);
@@ -169,7 +169,7 @@ public class GroupsTreeConfiguration extends AbstractTreeConfiguration {
             tree.addMenuItem(menuDeactivate);
         }
         else {
-            tree.addMenuItem(ContextMenuItem.getRefreshMenuItem(tree, msgs, request));            
+            tree.addMenuItem(ContextMenuItem.getRefreshMenuItem(tree, msgs, request));
         }
     }
 

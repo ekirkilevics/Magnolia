@@ -38,7 +38,7 @@ import junit.framework.TestCase;
 
 /**
  * TODO : review, rewrite.
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */

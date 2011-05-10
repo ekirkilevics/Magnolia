@@ -44,7 +44,7 @@ import info.magnolia.cms.gui.controlx.impl.AbstractControl;
 public class ListColumn extends AbstractControl {
 
     /**
-     * 
+     *
      */
     public static final String RENDER_TYPE = "listColumn";
 

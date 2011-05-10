@@ -133,7 +133,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
      * There are some tasks common to the update process and the new installation process that are not automatically
      * bootstrapped. Add new menu item, and three sub menu items and then set the new menu item in the proper place And
      * then sets the default virtual URI on public instances
-     * 
+     *
      * @return
      */
     protected List<Task> getCommonTasks() {

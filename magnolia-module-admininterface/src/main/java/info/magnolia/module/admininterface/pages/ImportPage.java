@@ -159,7 +159,7 @@ public class ImportPage extends ExportPage {
                     + mgnlPath
                     + "]")); //$NON-NLS-1$
         }
-        
+
         DataTransporter.importDocument(
             mgnlFileImport,
             mgnlRepository,

@@ -56,7 +56,7 @@ import java.util.Hashtable;
 /**
  * Servlet to upload files. This is based on the SimpleUploaderServlet of the FCKeditor connector package.
  * This servlet just accepts file uploads, with an optional file type parameter.
- * 
+ *
  * @author Simone Chiaretta (simo@users.sourceforge.net)
  * @author Philipp Bracher
  */
@@ -80,13 +80,13 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
     public void init() throws ServletException {
         allowedExtensions = new Hashtable(3);
         deniedExtensions = new Hashtable(3);
-    
+
         allowedExtensions.put("file", stringToArrayList(getInitParameter("AllowedExtensionsFile")));
         deniedExtensions.put("file", stringToArrayList(getInitParameter("DeniedExtensionsFile")));
-    
+
         allowedExtensions.put("image", stringToArrayList(getInitParameter("AllowedExtensionsImage")));
         deniedExtensions.put("image", stringToArrayList(getInitParameter("DeniedExtensionsImage")));
-    
+
         allowedExtensions.put("flash", stringToArrayList(getInitParameter("AllowedExtensionsFlash")));
         deniedExtensions.put("flash", stringToArrayList(getInitParameter("DeniedExtensionsFlash")));
     }
@@ -103,20 +103,20 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
         PrintWriter out = response.getWriter();
-    
+
         String typeStr = request.getParameter("type");
-    
+
         String retVal = "0";
         String newName = "";
         String fileUrl = "";
         String errorMessage = "";
-    
+
         RequestFormUtil form = new RequestFormUtil(request);
-    
+
         Document doc = form.getDocument("NewFile");
-    
+
         if (extIsAllowed(typeStr, doc.getExtension())) {
-    
+
             try {
                 // now copy the files to the special fck tmp folder
                 String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
@@ -124,33 +124,33 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
                     + "/fckeditor/"
                     + uuid));
                 doc.delete();
-    
+
                 // the document will now point to the copied file
                 doc = new Document(new File(Path.getTempDirectoryPath()
                     + "/fckeditor/"
                     + uuid
                     + "/"
                     + doc.getFile().getName()), doc.getType());
-    
+
                 // save it to the session
                 FCKEditorTmpFiles.addDocument(doc, uuid);
-    
+
                 // make the temporary url ready for the editor
                 fileUrl = request.getContextPath() + "/tmp/fckeditor/" + uuid + "/" + doc.getFile().getName();
-    
+
             }
             catch (Exception ex) {
                 log.error("can't upload the file", ex);
                 retVal = "203";
             }
-    
+
         }
         else {
             log.info("Tried to upload a not allowed file [" + doc.getFileNameWithExtension() + "]");
             retVal = "202";
             errorMessage = "";
         }
-    
+
         out.println("<script type=\"text/javascript\">");
         out.println("window.parent.OnUploadCompleted("
             + retVal
@@ -171,7 +171,7 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
      */
     private ArrayList stringToArrayList(String str) {
         String[] strArr = str.split("\\|");
-    
+
         ArrayList tmp = new ArrayList();
         if (str.length() > 0) {
             for (int i = 0; i < strArr.length; ++i) {
@@ -185,28 +185,28 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
      * Helper function to verify if a file extension is allowed or not allowed.
      */
     private boolean extIsAllowed(String fileType, String ext) {
-    
+
         ext = ext.toLowerCase();
-    
+
         ArrayList allowList = (ArrayList) allowedExtensions.get(fileType);
         ArrayList denyList = (ArrayList) deniedExtensions.get(fileType);
-    
+
         if (allowList.size() == 0) {
             if (denyList.contains(ext)) {
                 return false;
             }
             return true;
-    
+
         }
-    
+
         if (denyList.size() == 0) {
             if (allowList.contains(ext)) {
                 return true;
             }
             return false;
-    
+
         }
-    
+
         return false;
     }
 

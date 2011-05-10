@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Returns informations as path, name or size of a file.
  * @deprecated see cms:out.
- * 
+ *
  * @jsp.tag name="fileSrc" body-content="empty"
  *
  * @author Marcel Salathe

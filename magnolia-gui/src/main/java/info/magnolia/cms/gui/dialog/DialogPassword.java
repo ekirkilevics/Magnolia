@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @version 2.0
  */
 public class DialogPassword extends DialogBox {
-    
+
     private static final Logger log = LoggerFactory.getLogger(DialogPassword.class);
 
     /**
@@ -108,6 +108,6 @@ public class DialogPassword extends DialogBox {
         }
         return super.validate();
     }
-    
-    
+
+
 }

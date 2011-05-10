@@ -328,7 +328,7 @@ public class TreeColumn extends ControlImpl {
         treeColumn.setDateFormat(dateFormat);
         return treeColumn;
     }
-    
+
     public static TreeColumn createNodeDataColumn(Tree tree, String title, String nodeDataName, TreeColumnHtmlRenderer renderer) {
         TreeColumn treeColumn = createColumn(tree, title);
         treeColumn.setName(nodeDataName);

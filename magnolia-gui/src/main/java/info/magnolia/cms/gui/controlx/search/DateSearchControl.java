@@ -53,12 +53,12 @@ import org.apache.commons.lang.time.FastDateFormat;
 public class DateSearchControl extends SearchControl {
 
     /**
-     * 
+     *
      */
     public static final String RENDER_TYPE = "dateSearchControl";
 
     /**
-     * 
+     *
      */
     public DateSearchControl() {
         this.setRenderType(RENDER_TYPE);

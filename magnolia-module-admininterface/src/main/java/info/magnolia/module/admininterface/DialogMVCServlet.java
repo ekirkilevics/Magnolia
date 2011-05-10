@@ -50,7 +50,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @see DialogMVCHandler
  * @see DialogHandlerManager
- * 
+ *
  * @author Philipp Bracher
  * @version $Id$
  */

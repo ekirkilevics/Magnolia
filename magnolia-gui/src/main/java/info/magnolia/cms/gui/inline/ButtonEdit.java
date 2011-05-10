@@ -56,7 +56,7 @@ public class ButtonEdit extends Button {
     private String label = "buttons.edit"; //$NON-NLS-1$
     private String dialogPath;
     private String dialog;
-    
+
     private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
 
     public ButtonEdit() {
@@ -129,11 +129,11 @@ public class ButtonEdit extends Button {
     public void setDialogPath(String dialogPath) {
         this.dialogPath = dialogPath;
     }
-    
+
     public void setDialog (String dialog) {
         this.dialog = dialog;
     }
-    
+
     public String getDialog () {
         return this.dialog;
     }

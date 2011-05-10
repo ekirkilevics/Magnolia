@@ -43,7 +43,7 @@ import javax.jcr.RepositoryException;
 
 /**
  * Adds new configuration properties introduced in 3.5.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

@@ -159,7 +159,7 @@ public class WorkflowUtilPage extends TemplatedMVCHandler {
     public String showFlow() throws FlowDefinitionException {
         String flow;
         flow = fdm.readDefinition(flowName);
-        
+
         // get flow by name
         if (StringUtils.isEmpty(flow)) {
             log.error("can not find flow definition for {}", flowName);

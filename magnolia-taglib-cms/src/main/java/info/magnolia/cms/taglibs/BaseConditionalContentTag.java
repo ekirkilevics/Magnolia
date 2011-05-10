@@ -63,10 +63,11 @@ public abstract class BaseConditionalContentTag extends BaseContentTag {
         boolean result = condition();
 
         // handle conditional behavior
-        if (result)
+        if (result) {
             return EVAL_BODY_INCLUDE;
-        else
+        } else {
             return SKIP_BODY;
+        }
     }
 
 }

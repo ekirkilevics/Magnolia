@@ -52,9 +52,9 @@ import java.util.List;
  * Displays the mainBar, i.e. the bar that allows you to change the page properties and switch to preview mode. This
  * tag also add the CSS and JS links if not previously defined, but it's recommended to add the cms:links tag to the
  * header of the page. CSS links are not valid inside the HTML body tag.
- * 
+ *
  * @jsp.tag name="mainBar" body-content="JSP"
- * 
+ *
  * @author Marcel Salathe
  * @author Sameer Charles
  * @version $Revision$ ($Author$)

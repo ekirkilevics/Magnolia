@@ -80,7 +80,7 @@ public class SimpleSearchUtil {
         }
         return query;
     }
-    
+
     /**
      * Return the expression build by a simple search
      */

@@ -65,9 +65,9 @@ public class BarMain extends Bar {
     private Button buttonProperties = new Button();
 
     private Button buttonSiteAdmin = new Button();
-    
+
     private Control languageChooser;
-    
+
     private String dialog;
 
     private int top;
@@ -125,7 +125,7 @@ public class BarMain extends Bar {
             this.getButtonsLeft().add(0, this.getButtonSiteAdmin());
         }
         this.getButtonsLeft().add(0, this.getButtonPreview());
-        
+
         if(this.languageChooser != null){
             getButtonsRight().add(this.languageChooser);
             getButtonsRight().add(new ControlImpl(){
@@ -134,7 +134,7 @@ public class BarMain extends Bar {
                 }
             });
         }
-        
+
         if (this.getDialog() != null) {
             this.getButtonsRight().add(this.getButtonProperties());
         }
@@ -233,7 +233,7 @@ public class BarMain extends Bar {
             languageChooser = i18nAuthoringSupport.getLanguageChooser();
         }
     }
-    
+
     public Control getLanguageChooser() {
         return this.languageChooser;
     }
@@ -280,7 +280,7 @@ public class BarMain extends Bar {
     public String getDialog() {
         return this.dialog;
     }
-    
+
     public void setDialog(String dialog) {
         this.dialog = dialog;
     }

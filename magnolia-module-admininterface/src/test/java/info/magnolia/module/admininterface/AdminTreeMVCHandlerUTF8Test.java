@@ -124,7 +124,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
         ComponentsTestUtil.clear();
         SystemProperty.clear();
     }
-    
+
     public void testMove() throws Exception
     {
         expect(ctx.getHierarchyManager("repo-name")).andReturn(hm);

@@ -105,7 +105,7 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
         menuNewFolder.setIcon(request.getContextPath() + "/.resources/icons/16/folder_add.gif"); //$NON-NLS-1$
         menuNewFolder.setOnclick(tree.getJavascriptTree() + ".createNode('"
             + ItemType.NT_FOLDER + "');"); //$NON-NLS-1$
-        
+
         menuNewFolder.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotItemType(" //$NON-NLS-1$
             + tree.getJavascriptTree()
             + ", '" + ItemType.NT_FOLDER + "')"); //$NON-NLS-1$
@@ -129,7 +129,7 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
             + "');"); //$NON-NLS-1$
         menuNew.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotItemType(" //$NON-NLS-1$
                 + tree.getJavascriptTree() + ","
-                + "'" + ItemType.USER.getSystemName() + "'" 
+                + "'" + ItemType.USER.getSystemName() + "'"
                 + ")"); //$NON-NLS-1$
 
         ContextMenuItem menuDelete = new ContextMenuItem("delete");

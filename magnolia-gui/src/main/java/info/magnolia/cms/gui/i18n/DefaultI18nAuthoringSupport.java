@@ -67,14 +67,14 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
     public Control getLanguageChooser() {
         if (isEnabled() && i18nContentSupport.isEnabled() && i18nContentSupport.getLocales().size()>1){
             Select select = new Select();
-            
+
             select.setName("locale");
             select.setEvent("onchange", "window.location = this.value");
 
             Content currentPage = MgnlContext.getAggregationState().getMainContent();
             String currentUri = createURI(currentPage, i18nContentSupport.getLocale());
             select.setValue(currentUri);
-            
+
             for (Locale locale : i18nContentSupport.getLocales()) {
                 String uri = createURI(currentPage, locale);
                 String label = StringUtils.capitalize(locale.getDisplayLanguage(locale));

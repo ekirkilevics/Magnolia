@@ -65,7 +65,7 @@ public class ActivationContent implements Cloneable {
     }
 
     public File getFile(String resourceId) {
-        return (File) this.fileList.get(resourceId);
+        return this.fileList.get(resourceId);
     }
 
     public void removeFile(String resourceId) {
@@ -104,7 +104,7 @@ public class ActivationContent implements Cloneable {
      * Gets value of property with specified key or null if such property was not set.
      */
     public String getproperty(String key) {
-        return (String) this.properties.get(key);
+        return this.properties.get(key);
     }
 
     public void removeProperty(String key) {
