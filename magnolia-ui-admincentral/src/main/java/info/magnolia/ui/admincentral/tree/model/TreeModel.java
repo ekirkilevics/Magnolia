@@ -51,6 +51,7 @@ import org.apache.commons.lang.StringUtils;
 import com.vaadin.ui.Component;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.container.JcrContainerSource;
 import info.magnolia.ui.admincentral.workbench.action.WorkbenchActionFactory;
@@ -219,7 +220,7 @@ public class TreeModel implements JcrContainerSource {
             return false;
         }
 
-        source.getSession().move(source.getPath(), target.getPath() + "/" + source.getName());
+        JCRUtil.moveNode((Node)source, (Node)target);
         source.getSession().save();
 
         return true;
@@ -236,17 +237,9 @@ public class TreeModel implements JcrContainerSource {
             return false;
         }
 
-        // TODO: verify all this works for nodes under root node
-
-        Node targetParent = target.getParent();
-
-        if (!source.getParent().isSame(targetParent)) {
-            source.getSession().move(source.getPath(), targetParent.getPath() + "/" + source.getName());
-        }
-
-        targetParent.orderBefore(source.getName(), target.getName());
-
+        JCRUtil.moveNodeBefore((Node)source, (Node)target);
         source.getSession().save();
+
         return true;
     }
 
@@ -261,17 +254,9 @@ public class TreeModel implements JcrContainerSource {
             return false;
         }
 
-        // TODO: verify all this works for nodes under root node
-
-        Node targetParent = target.getParent();
-
-        if (!source.getParent().isSame(targetParent)) {
-            source.getSession().move(source.getPath(), targetParent.getPath() + "/" + source.getName());
-        }
-
-        targetParent.orderBefore(target.getName(), source.getName());
-
+        JCRUtil.moveNodeAfter((Node)source, (Node)target);
         source.getSession().save();
+
         return true;
     }
 

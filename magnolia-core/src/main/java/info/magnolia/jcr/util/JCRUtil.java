@@ -148,7 +148,7 @@ public class JCRUtil {
     /**
      * Orders the node directly before a given sibling. If no sibling is specified the node is placed first.
      *
-     * @param node the node to order
+     * @param node        the node to order
      * @param siblingName the name of the sibling which the name should be before or null if the node should be first
      * @throws RepositoryException
      */
@@ -161,13 +161,14 @@ public class JCRUtil {
 
         Node parent = node.getParent();
         Node sibling = parent.getNode(siblingName);
+
         parent.orderBefore(node.getName(), sibling.getName());
     }
 
     /**
      * Orders the node directly after a given sibling. If no sibling is specified the node is placed last.
      *
-     * @param node the node to order
+     * @param node        the node to order
      * @param siblingName the name of the sibling which the name should be after or null if the node should be last
      * @throws RepositoryException
      */
@@ -179,25 +180,16 @@ public class JCRUtil {
         }
 
         Node parent = node.getParent();
-        NodeIterator siblings = parent.getNodes();
+        Node sibling = parent.getNode(siblingName);
+        Node siblingAfter = getSiblingAfter(sibling);
 
-        // Advance iterator to target sibling
-        while (siblings.hasNext()) {
-            Node sibling = siblings.nextNode();
-            if (sibling.getName().equals(siblingName)) {
-                break;
-            }
-        }
-
-        // If there's no sibling after the target sibling we move the node to the end
-        if (!siblings.hasNext()) {
-            parent.orderBefore(node.getName(), null);
+        if (siblingAfter == null) {
+            orderLast(node);
             return;
         }
 
         // Move the node before the sibling directly after the target sibling
-        Node siblingAfterTarget = siblings.nextNode();
-        parent.orderBefore(node.getName(), siblingAfterTarget.getName());
+        parent.orderBefore(node.getName(), siblingAfter.getName());
     }
 
     /**
@@ -207,7 +199,12 @@ public class JCRUtil {
      * @throws RepositoryException
      */
     public static void orderFirst(Node node) throws RepositoryException {
-        node.getParent().orderBefore(node.getName(), node.getParent().getNodes().nextNode().getName());
+        Node parent = node.getParent();
+        NodeIterator siblings = parent.getNodes();
+        Node firstSibling = siblings.nextNode();
+        if (!firstSibling.isSame(node)) {
+            parent.orderBefore(node.getName(), firstSibling.getName());
+        }
     }
 
     /**
@@ -228,21 +225,10 @@ public class JCRUtil {
      * @throws RepositoryException
      */
     public static void orderNodeUp(Node node) throws RepositoryException {
-        Node parent = node.getParent();
-        NodeIterator siblings = parent.getNodes();
-        Node previousSibling = null;
-        while (siblings.hasNext()) {
-            Node sibling = siblings.nextNode();
-            if (sibling.getName().equals(node.getName())) {
-                break;
-            }
-            previousSibling = sibling;
+        Node siblingBefore = getSiblingBefore(node);
+        if (siblingBefore != null) {
+            node.getParent().orderBefore(node.getName(), siblingBefore.getName());
         }
-        // If this is the first node then do nothing
-        if (previousSibling == null) {
-            return;
-        }
-        parent.orderBefore(node.getName(), previousSibling.getName());
     }
 
     /**
@@ -253,19 +239,62 @@ public class JCRUtil {
      * @throws RepositoryException
      */
     public static void orderNodeDown(Node node) throws RepositoryException {
+        Node siblingAfter = getSiblingAfter(node);
+        if (siblingAfter != null) {
+            node.getParent().orderBefore(siblingAfter.getName(), node.getName());
+        }
+    }
+
+    public static Node getSiblingBefore(Node node) throws RepositoryException {
+        Node parent = node.getParent();
+        NodeIterator siblings = parent.getNodes();
+        Node previousSibling = null;
+        while (siblings.hasNext()) {
+            Node sibling = siblings.nextNode();
+            if (sibling.isSame(node)) {
+                return previousSibling;
+            }
+            previousSibling = sibling;
+        }
+        return null;
+    }
+
+    public static Node getSiblingAfter(Node node) throws RepositoryException {
         Node parent = node.getParent();
         NodeIterator siblings = parent.getNodes();
         while (siblings.hasNext()) {
             Node sibling = siblings.nextNode();
-            if (sibling.getName().equals(node.getName())) {
+            if (sibling.isSame(node)) {
                 break;
             }
         }
-        // If this is the last node then do nothing
-        if (!siblings.hasNext()) {
-            return;
+        return siblings.hasNext() ? siblings.nextNode() : null;
+    }
+
+    public static void moveNode(Node nodeToMove, Node newParent) throws RepositoryException {
+        if (!nodeToMove.getParent().isSame(newParent)) {
+            String newPath = combinePathAndName(newParent.getPath(), nodeToMove.getName());
+            nodeToMove.getSession().move(nodeToMove.getPath(), newPath);
         }
-        Node nextSibling = siblings.nextNode();
-        parent.orderBefore(nextSibling.getName(), node.getName());
+    }
+
+    public static void moveNodeBefore(Node nodeToMove, Node target) throws RepositoryException {
+        Node targetParent = target.getParent();
+        moveNode(nodeToMove, targetParent);
+        targetParent.orderBefore(nodeToMove.getName(), target.getName());
+    }
+
+    public static void moveNodeAfter(Node nodeToMove, Node target) throws RepositoryException {
+        Node targetParent = target.getParent();
+        moveNode(nodeToMove, targetParent);
+        orderAfter(nodeToMove, target.getName());
+    }
+
+    private static String combinePathAndName(String path, String name) {
+        if ("/".equals(path)) {
+            return path + name;
+        } else {
+            return path + "/" + name;
+        }
     }
 }

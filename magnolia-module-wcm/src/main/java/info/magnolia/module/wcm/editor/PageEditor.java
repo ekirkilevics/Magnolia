@@ -35,10 +35,13 @@ package info.magnolia.module.wcm.editor;
 
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
+
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.ClientWidget;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.wcm.PageEditorPresenter;
 import info.magnolia.module.wcm.editor.client.VPageEditor;
 
@@ -80,6 +83,36 @@ public class PageEditor extends AbstractComponent {
             String path = (String) variables.get(VPageEditor.SELECTED_PATH);
             String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
             pageEditorPresenter.addParagraph(workspace, path, collectionName, paragraphs);
+        }
+        if (variables.containsKey(VPageEditor.MOVE)) {
+            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
+            String sourcePath = (String) variables.get(VPageEditor.SOURCE_PATH);
+            String destinationPath = (String) variables.get(VPageEditor.DESTINATION_PATH);
+            try {
+                pageEditorPresenter.moveParagraph(workspace, sourcePath, destinationPath);
+            } catch (RepositoryException e) {
+                throw new RuntimeRepositoryException(e);
+            }
+        }
+        if (variables.containsKey(VPageEditor.MOVE_BEFORE)) {
+            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
+            String sourcePath = (String) variables.get(VPageEditor.SOURCE_PATH);
+            String destinationPath = (String) variables.get(VPageEditor.DESTINATION_PATH);
+            try {
+                pageEditorPresenter.moveParagraphBefore(workspace, sourcePath, destinationPath);
+            } catch (RepositoryException e) {
+                throw new RuntimeRepositoryException(e);
+            }
+        }
+        if (variables.containsKey(VPageEditor.MOVE_AFTER)) {
+            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
+            String sourcePath = (String) variables.get(VPageEditor.SOURCE_PATH);
+            String destinationPath = (String) variables.get(VPageEditor.DESTINATION_PATH);
+            try {
+                pageEditorPresenter.moveParagraphAfter(workspace, sourcePath, destinationPath);
+            } catch (RepositoryException e) {
+                throw new RuntimeRepositoryException(e);
+            }
         }
     }
 

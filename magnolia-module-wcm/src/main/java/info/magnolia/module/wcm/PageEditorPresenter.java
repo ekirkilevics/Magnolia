@@ -35,6 +35,7 @@ package info.magnolia.module.wcm;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -43,6 +44,7 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.editor.SelectionChangedEvent;
 import info.magnolia.module.wcm.editor.SelectionChangedHandler;
@@ -173,6 +175,12 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         dialogPresenter.setWorkspace(workspace);
         dialogPresenter.setPath(path);
         dialogPresenter.setCollectionName(collectionName);
+        dialogPresenter.setDialogSaveCallback(new DialogSaveCallback() {
+            @Override
+            public void onSave(Node node) {
+                eventBus.fireEvent(new PageChangedEvent());
+            }
+        });
         dialogPresenter.showDialog();
     }
 
@@ -218,6 +226,35 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
 
     @Override
     public void onPageChanged() {
+        this.contentSelection = null;
+        this.type = null;
         this.toolboxView.showRack(wcmModule.getToolboxConfiguration().getPage());
+    }
+
+    public void moveParagraph(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
+        Session session = MgnlContext.getJCRSession(workspaceName);
+        Node source = session.getNode(sourcePath);
+        Node destination = session.getNode(destinationPath);
+        JCRUtil.moveNode(source, destination);
+        session.save();
+        eventBus.fireEvent(new PageChangedEvent());
+    }
+
+    public void moveParagraphBefore(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
+        Session session = MgnlContext.getJCRSession(workspaceName);
+        Node source = session.getNode(sourcePath);
+        Node destination = session.getNode(destinationPath);
+        JCRUtil.moveNodeBefore(source, destination);
+        session.save();
+        eventBus.fireEvent(new PageChangedEvent());
+    }
+
+    public void moveParagraphAfter(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
+        Session session = MgnlContext.getJCRSession(workspaceName);
+        Node source = session.getNode(sourcePath);
+        Node destination = session.getNode(destinationPath);
+        JCRUtil.moveNodeAfter(source, destination);
+        session.save();
+        eventBus.fireEvent(new PageChangedEvent());
     }
 }

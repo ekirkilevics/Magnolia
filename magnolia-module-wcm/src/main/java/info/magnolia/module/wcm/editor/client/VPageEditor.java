@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.wcm.editor.client;
 
+import javax.jcr.RepositoryException;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
@@ -56,6 +58,11 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
     public static final String OPEN_DIALOG = "open-dialog";
     public static final String UPDATE_SELECTION = "update-selection";
     public static final String ADD_PARAGRAPH = "addParagraph";
+    public static final String MOVE_BEFORE = "moveBefore";
+    public static final String SOURCE_PATH = "sourcePath";
+    public static final String DESTINATION_PATH = "destinationPath";
+    public static final String MOVE_AFTER = "moveAfter";
+    public static final String MOVE = "move";
 
     private IFrameElement iFrameElement;
     private ApplicationConnection client;
@@ -156,6 +163,30 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
         client.updateVariable(id, SELECTED_WORKSPACE, workspace, false);
         client.updateVariable(id, SELECTED_PATH, path, false);
         client.updateVariable(id, SELECTED_COLLECTION_NAME, collectionName, false);
+        client.sendPendingVariableChanges();
+    }
+
+    public void moveParagraph(String workspaceName, String sourcePath, String destinationPath) {
+        client.updateVariable(id, MOVE, "dummy", false);
+        client.updateVariable(id, SELECTED_WORKSPACE, workspaceName, false);
+        client.updateVariable(id, SOURCE_PATH, sourcePath, false);
+        client.updateVariable(id, DESTINATION_PATH, destinationPath, false);
+        client.sendPendingVariableChanges();
+    }
+
+    public void moveParagraphBefore(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
+        client.updateVariable(id, MOVE_BEFORE, "dummy", false);
+        client.updateVariable(id, SELECTED_WORKSPACE, workspaceName, false);
+        client.updateVariable(id, SOURCE_PATH, sourcePath, false);
+        client.updateVariable(id, DESTINATION_PATH, destinationPath, false);
+        client.sendPendingVariableChanges();
+    }
+
+    public void moveParagraphAfter(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
+        client.updateVariable(id, MOVE_AFTER, "dummy", false);
+        client.updateVariable(id, SELECTED_WORKSPACE, workspaceName, false);
+        client.updateVariable(id, SOURCE_PATH, sourcePath, false);
+        client.updateVariable(id, DESTINATION_PATH, destinationPath, false);
         client.sendPendingVariableChanges();
     }
 }
