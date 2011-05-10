@@ -52,6 +52,7 @@ public abstract class AbstractExpressionImpl implements SearchQueryExpression {
      * get left expression
      * @return object on left
      */
+    @Override
     public SearchQueryExpression getLeft() {
         return this.left;
     }
@@ -60,6 +61,7 @@ public abstract class AbstractExpressionImpl implements SearchQueryExpression {
      * set left expression
      * @param left object on left
      */
+    @Override
     public void setleft(SearchQueryExpression left) {
         this.left = left;
     }
@@ -68,6 +70,7 @@ public abstract class AbstractExpressionImpl implements SearchQueryExpression {
      * checks if has left
      * @return true if left object exist
      */
+    @Override
     public boolean hasLeft() {
         return (this.getLeft() != null);
     }
@@ -76,6 +79,7 @@ public abstract class AbstractExpressionImpl implements SearchQueryExpression {
      * get right expression
      * @return object on right
      */
+    @Override
     public SearchQueryExpression getRight() {
         return this.right;
     }
@@ -84,6 +88,7 @@ public abstract class AbstractExpressionImpl implements SearchQueryExpression {
      * set right expression
      * @param right object on right
      */
+    @Override
     public void setRight(SearchQueryExpression right) {
         this.right = right;
     }
@@ -92,6 +97,7 @@ public abstract class AbstractExpressionImpl implements SearchQueryExpression {
      * checks if has right
      * @return true if right object exist
      */
+    @Override
     public boolean hasRight() {
         return (this.getRight() != null);
     }

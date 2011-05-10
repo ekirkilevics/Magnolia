@@ -63,6 +63,7 @@ public class Edit extends ControlImpl {
         return this.rows;
     }
 
+    @Override
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         String id = this.getId();

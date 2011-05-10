@@ -75,11 +75,13 @@ public class EditButton extends TagSupport {
 
     private boolean adminOnly = true;
 
+    @Override
     public int doStartTag() {
         this.displayHandler = StringUtils.EMPTY;
         return EVAL_BODY_INCLUDE;
     }
 
+    @Override
     public int doEndTag() {
         if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET)) {
 
@@ -256,6 +258,7 @@ public class EditButton extends TagSupport {
         this.small = small;
     }
 
+    @Override
     public void release() {
         this.nodeName = null;
         this.nodeCollectionName = null;

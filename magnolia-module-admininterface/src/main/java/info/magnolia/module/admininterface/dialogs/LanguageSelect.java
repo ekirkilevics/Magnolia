@@ -65,6 +65,7 @@ public class LanguageSelect extends DialogSelect {
      * @see info.magnolia.cms.gui.dialog.DialogSelect#init(javax.servlet.http.HttpServletRequest,
      * javax.servlet.http.HttpServletResponse, info.magnolia.cms.core.Content, info.magnolia.cms.core.Content)
      */
+    @Override
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
@@ -87,6 +88,7 @@ public class LanguageSelect extends DialogSelect {
         // sort them
         Collections.sort(options, new Comparator() {
 
+            @Override
             public int compare(Object arg0, Object arg1) {
                 try {
                     String name0 = ((SelectOption) arg0).getLabel();

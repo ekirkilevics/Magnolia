@@ -81,6 +81,7 @@ public class AAttribute extends TagSupport {
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
+    @Override
     public int doEndTag() throws JspException {
 
         AHref parent = (AHref) findAncestorWithClass(this, AHref.class);
@@ -95,6 +96,7 @@ public class AAttribute extends TagSupport {
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#release()
      */
+    @Override
     public void release() {
         this.name = null;
         this.value = null;

@@ -56,10 +56,12 @@ public class EditBarTest extends MgnlTagTestCase {
     private Content mainContent;
     private Content currentContent;
 
+    @Override
     protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {
         return null;
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 

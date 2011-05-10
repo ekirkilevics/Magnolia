@@ -68,10 +68,12 @@ public class Button extends ControlImpl {
         super(name, value);
     }
 
+    @Override
     public void setLabel(String s) {
         this.label = s;
     }
 
+    @Override
     public String getLabel() {
         if (this.label != null) {
             return this.label;
@@ -154,6 +156,7 @@ public class Button extends ControlImpl {
         return this.pushButtonTag;
     }
 
+    @Override
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         this.setHtmlPre();

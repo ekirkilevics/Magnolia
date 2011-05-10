@@ -67,6 +67,7 @@ public class PublicOnly extends ConditionalTagSupport {
         this.showInPreview = showInPreview;
     }
 
+    @Override
     protected boolean condition() {
         if (!ServerConfiguration.getInstance().isAdmin() || (showInPreview && MgnlContext.getAggregationState().isPreviewMode())) {
             return true;
@@ -74,6 +75,7 @@ public class PublicOnly extends ConditionalTagSupport {
         return false;
     }
 
+    @Override
     public void release() {
         super.release();
         this.showInPreview = false;

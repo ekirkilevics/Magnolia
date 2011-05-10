@@ -53,6 +53,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SetExpirationHeaders extends AbstractExecutor {
 
+    @Override
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
             CachePolicyResult cachePolicyResult) throws IOException, ServletException {

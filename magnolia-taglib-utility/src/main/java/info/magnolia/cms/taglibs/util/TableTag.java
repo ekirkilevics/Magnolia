@@ -99,6 +99,7 @@ public class TableTag extends BodyTagSupport {
      * Standard html attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
+    @Override
     public void setId(String value) {
         this.htmlAttributes.put("id", value);
     }
@@ -122,6 +123,7 @@ public class TableTag extends BodyTagSupport {
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#doEndTag()
      */
+    @Override
     public int doEndTag() throws JspException {
         String data = getBodyContent().getString();
         JspWriter out = pageContext.getOut();
@@ -210,6 +212,7 @@ public class TableTag extends BodyTagSupport {
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#release()
      */
+    @Override
     public void release() {
         super.release();
         header = false;

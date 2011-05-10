@@ -58,6 +58,7 @@ public class PageIterator extends TagSupport {
 
     private String hiddenAttribute = "hidden";
 
+    @Override
     public int doAfterBody() throws JspException {
         boolean hasNext = nextContent();
 
@@ -68,11 +69,13 @@ public class PageIterator extends TagSupport {
         return SKIP_BODY;
     }
 
+    @Override
     public int doEndTag() throws JspException {
         Resource.restoreCurrentActivePage();
         return EVAL_PAGE;
     }
 
+    @Override
     public int doStartTag() throws JspException {
         initContentIterator();
 
@@ -84,6 +87,7 @@ public class PageIterator extends TagSupport {
         return SKIP_BODY;
     }
 
+    @Override
     public void release() {
         this.contentIterator = null;
         hiddenAttribute = "hidden";

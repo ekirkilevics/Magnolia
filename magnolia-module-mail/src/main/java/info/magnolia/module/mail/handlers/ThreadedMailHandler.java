@@ -63,6 +63,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
         bb.start();
     }
 
+    @Override
     protected void finalize() throws Throwable {
         this.thread.setStop(true);
         super.finalize();
@@ -73,6 +74,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
      * @param email the email to send
      * @throws Exception if fails
      */
+    @Override
     public void prepareAndSendMail(MgnlEmail email) throws Exception {
         email.setBodyNotSetFlag(true);
         synchronized (this) {
@@ -86,6 +88,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
      * @param email the email to send
      * @throws Exception if fails
      */
+    @Override
     public void sendMail(MgnlEmail email) throws Exception {
         synchronized (this) {
             this.emails.add(email);
@@ -100,6 +103,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
 
         boolean stop = false;
 
+        @Override
         public void run() {
             while (!this.stop) {
                 if (ThreadedMailHandler.this.emails.size() == 0) { // nothing to do just sleep

@@ -69,11 +69,13 @@ public class SamplesModule implements ModuleLifecycle {
 
     private String sampleProperty;
 
+    @Override
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
         log.info("Samples module is starting");
 
     }
 
+    @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
         log.info("Samples module is stopping");
 

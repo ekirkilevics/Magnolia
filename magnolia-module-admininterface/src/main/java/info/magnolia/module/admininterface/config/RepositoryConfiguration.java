@@ -90,6 +90,7 @@ public class RepositoryConfiguration extends BaseConfiguration implements Compar
         this.chooseButton = chooseButton;
     }
 
+    @Override
     public int compareTo(Object o) {
         return this.getI18nLabel().compareToIgnoreCase(((RepositoryConfiguration)o).getI18nLabel());
     }

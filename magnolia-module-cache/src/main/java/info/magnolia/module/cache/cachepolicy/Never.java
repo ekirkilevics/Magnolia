@@ -47,24 +47,29 @@ import info.magnolia.module.cache.FlushPolicy;
 public class Never implements CachePolicy {
     private static final CachePolicyResult NEVER = new CachePolicyResult(CachePolicyResult.bypass, null, null);
 
+    @Override
     public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
         return NEVER;
     }
 
+    @Override
     public Object retrieveCacheKey(AggregationState aggregationState) {
         // there are no keys since we don't cache
         return null;
     }
 
+    @Override
     public Object[] retrieveCacheKeys(String uuid, String repository) {
         // there are no keys since we don't cache
         return null;
     }
 
+    @Override
     public void persistCacheKey(String repo, String uuid, Object key) {
         // do nothing
     }
 
+    @Override
     public Object[] removeCacheKeys(String uuid, String repository) {
         // do nothing
         return null;

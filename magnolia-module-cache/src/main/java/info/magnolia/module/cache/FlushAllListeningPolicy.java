@@ -47,14 +47,17 @@ public class FlushAllListeningPolicy extends AbstractListeningFlushPolicy {
 
     Logger log = LoggerFactory.getLogger(FlushAllListeningPolicy.class);
 
+    @Override
     protected boolean preHandleEvents(Cache cache, String repository) {
         cache.clear();
         return false;
     }
 
+    @Override
     protected void handleSingleEvent(Cache cache, String repository, Event event) {
     }
 
+    @Override
     protected void postHandleEvents(Cache cache, String repository) {
     }
 }

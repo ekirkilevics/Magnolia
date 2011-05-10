@@ -173,6 +173,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     /*
      * @see info.magnolia.cms.servlets.MVCServletHandler#getCommand()
      */
+    @Override
     public String getCommand() {
         if (form != null) {
             return COMMAND_SAVE;
@@ -395,6 +396,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     /**
      * @see info.magnolia.cms.servlets.MVCServletHandler#renderHtml(java.lang.String)
      */
+    @Override
     public void renderHtml(String view) throws IOException {
         PrintWriter out = this.getResponse().getWriter();
 

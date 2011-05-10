@@ -56,6 +56,7 @@ public class DialogInclude extends DialogBox {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
+    @Override
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
         HttpServletRequest request = this.getRequest();

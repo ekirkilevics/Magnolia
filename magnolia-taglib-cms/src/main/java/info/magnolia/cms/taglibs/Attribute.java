@@ -72,6 +72,7 @@ public class Attribute extends TagSupport {
         this.value = value;
     }
 
+    @Override
     public int doEndTag() throws JspException {
         Include parent = (Include) findAncestorWithClass(this, Include.class);
         if (parent == null) {
@@ -81,6 +82,7 @@ public class Attribute extends TagSupport {
         return EVAL_PAGE;
     }
 
+    @Override
     public void release() {
         this.name = null;
         this.value = null;

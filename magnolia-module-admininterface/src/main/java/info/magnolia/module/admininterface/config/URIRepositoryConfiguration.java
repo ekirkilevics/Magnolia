@@ -36,6 +36,7 @@ package info.magnolia.module.admininterface.config;
 
 public class URIRepositoryConfiguration extends RepositoryConfiguration {
 
+    @Override
     public String toViewPattern(String path) {
         return path;
     }

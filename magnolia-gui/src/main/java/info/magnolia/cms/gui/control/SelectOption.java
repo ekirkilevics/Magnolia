@@ -67,10 +67,12 @@ public class SelectOption extends ControlImpl {
         return this.selected;
     }
 
+    @Override
     public void setLabel(String s) {
         this.label = s;
     }
 
+    @Override
     public String getLabel() {
         if (this.label != null) {
             return this.label;
@@ -79,6 +81,7 @@ public class SelectOption extends ControlImpl {
         return this.getValue();
     }
 
+    @Override
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         html.append("<option value=\"" + this.getValue() + "\""); //$NON-NLS-1$ //$NON-NLS-2$

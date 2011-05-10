@@ -153,6 +153,7 @@ public class ScaleImageTag extends BaseImageTag {
      * The name of the content node that contains the image to be copied and scaled.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
+    @Override
     public void setParentContentNodeName(String parentContentNodeName) {
         this.parentContentNodeName = parentContentNodeName;
     }
@@ -169,10 +170,12 @@ public class ScaleImageTag extends BaseImageTag {
      * The name of the new contentNode that will contain the scaled version of the image.
      * @jsp.attribute required="true" rtexprvalue="true"
      */
+    @Override
     public void setImageContentNodeName(String imageContentNodeName) {
         this.imageContentNodeName = imageContentNodeName;
     }
 
+    @Override
     public void doTag() throws JspException {
         // initialize everything
         Content parentContentNode;
@@ -364,6 +367,7 @@ public class ScaleImageTag extends BaseImageTag {
         return scaleFactor;
     }
 
+    @Override
     protected String getFilename() {
         return this.parentNodeDataName;
     }

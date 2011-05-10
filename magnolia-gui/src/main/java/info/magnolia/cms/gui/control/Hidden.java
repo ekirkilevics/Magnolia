@@ -59,6 +59,7 @@ public class Hidden extends ControlImpl {
         super(name, websiteNode);
     }
 
+    @Override
     public String getHtml() {
         final String id = getId() != null ? getId() : getName();
         final StringBuffer html = new StringBuffer();

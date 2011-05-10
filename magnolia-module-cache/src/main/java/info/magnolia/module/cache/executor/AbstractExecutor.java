@@ -52,6 +52,7 @@ public abstract class AbstractExecutor implements CachePolicyExecutor {
         return cacheConfiguration;
     }
 
+    @Override
     public void setCacheConfiguration(CacheConfiguration cacheConfiguration) {
         this.cacheConfiguration = cacheConfiguration;
     }

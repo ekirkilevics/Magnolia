@@ -301,6 +301,7 @@ public class FckEditorDialog extends DialogBox {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
+    @Override
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
@@ -309,6 +310,7 @@ public class FckEditorDialog extends DialogBox {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
+    @Override
     public void drawHtml(Writer out) throws IOException {
         // get the config values
         String jsInitFile = this.getConfigValue(PARAM_JS_INIT_FILE, PARAM_JS_INIT_FILE_DEFAULT);

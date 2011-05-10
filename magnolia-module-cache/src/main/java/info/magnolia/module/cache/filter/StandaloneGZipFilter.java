@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class StandaloneGZipFilter extends GZipFilter {
 
+    @Override
     public boolean bypasses(HttpServletRequest request) {
         return super.bypasses(request) || !acceptsGzipEncoding(request);
     }

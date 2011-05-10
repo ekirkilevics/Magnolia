@@ -46,6 +46,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  */
 public class LoadPagePath extends BodyTagSupport {
 
+    @Override
     public int doEndTag() throws JspException {
         LoadPage parent = (LoadPage) findAncestorWithClass(this, LoadPage.class);
         if (parent == null) {

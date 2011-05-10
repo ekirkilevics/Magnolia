@@ -209,6 +209,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         );
     }
 
+    @Override
     protected List<Task> getExtraInstallTasks(InstallContext ctx) {
         final List<Task> tasks = new ArrayList<Task>();
         tasks.add(new ModuleDependencyBootstrapTask("dms"));

@@ -237,6 +237,7 @@ public abstract class BaseContentTag extends TagSupport {
         return null;
     }
 
+    @Override
     public void release() {
         super.release();
 

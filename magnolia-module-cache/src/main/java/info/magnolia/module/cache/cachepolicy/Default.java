@@ -71,6 +71,7 @@ public class Default implements CachePolicy {
 
     private boolean refreshOnNoCacheRequests = false;
 
+    @Override
     public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
         final Object key = retrieveCacheKey(aggregationState);
 
@@ -132,6 +133,7 @@ public class Default implements CachePolicy {
         return false;
     }
 
+    @Override
     public Object retrieveCacheKey(final AggregationState aggregationState) {
         // get original URI - not using current URI since we want to cache original URIs, not those we forward to (parameters in virtual URIs, i18n, ...)
         final String uri = aggregationState.getOriginalURI();
@@ -160,12 +162,14 @@ public class Default implements CachePolicy {
         return new DefaultCacheKey(uri, serverName, localeStr, params);
     }
 
+    @Override
     public Object[] retrieveCacheKeys(final String uuid, final String repository) {
         final String uuidKey = repository + ":" + uuid;
         final Set<Object> keys = getUUIDKeySetFromCacheSafely(uuidKey);
         return keys.toArray();
     }
 
+    @Override
     public void persistCacheKey(final String repo, final String uuid, final Object key) {
         final String uuidKey = repo + ":" + uuid;
         final Set<Object> uuidToCacheKeyMapping = getUUIDKeySetFromCacheSafely(uuidKey);
@@ -180,6 +184,7 @@ public class Default implements CachePolicy {
         this.voters = voters;
     }
 
+    @Override
     public Object[] removeCacheKeys(final String uuid, final String repository) {
         final String uuidKey = repository + ":" + uuid;
         final Set keys = getUUIDKeySetFromCacheSafely(uuidKey);

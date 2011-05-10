@@ -58,6 +58,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
         private ListModelIterator current, previous;
         private int pos;
 
+        @Override
         public Object getValue(String name) {
             if(previous != null){
                 return previous.getValue(name);
@@ -65,6 +66,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
             return current.getValue(name);
         }
 
+        @Override
         public Object getValueObject() {
             if(previous != null){
                 return previous.getValueObject();
@@ -72,6 +74,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
             return current.getValueObject();
         }
 
+        @Override
         public String getId() {
             if(previous != null){
                 return previous.getId();
@@ -79,6 +82,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
             return current.getId();
         }
 
+        @Override
         public String getGroupName() {
             if(previous != null){
                 return previous.getGroupName();
@@ -86,6 +90,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
             return current.getGroupName();
         }
 
+        @Override
         public Object nextGroup() {
             if(previous != null){
                 return previous.nextGroup();
@@ -93,6 +98,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
             return current.nextGroup();
         }
 
+        @Override
         public boolean hasNextInGroup() {
             if(previous != null){
                 return previous.hasNext();
@@ -100,10 +106,12 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
             return current.hasNextInGroup();
         }
 
+        @Override
         public void remove() {
             current.remove();
         }
 
+        @Override
         public boolean hasNext() {
             if(current == null && models.length > 0){
                 current = models[pos].getListModelIterator();
@@ -119,6 +127,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
             return true;
         }
 
+        @Override
         public Object next() {
             previous = null;
             if(current == null) {
@@ -134,6 +143,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
 
     }
 
+    @Override
     public void setGroupBy(String name, String order) {
         super.setGroupBy(name, order);
         for(int i = 0; i < models.length; i++) {
@@ -141,6 +151,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
         }
     }
 
+    @Override
     public void setGroupBy(String name) {
         super.setGroupBy(name);
         for(int i = 0; i < models.length; i++) {
@@ -148,6 +159,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
         }
     }
 
+    @Override
     public void setSortBy(String name, String order) {
         super.setSortBy(name, order);
         for(int i = 0; i < models.length; i++) {
@@ -155,6 +167,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
         }
     }
 
+    @Override
     public void setSortBy(String name) {
         super.setSortBy(name);
         for(int i = 0; i < models.length; i++) {
@@ -162,6 +175,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
         }
     }
 
+    @Override
     public void setQuery(SearchQuery query) {
         super.setQuery(query);
         for(int i = 0; i < models.length; i++) {
@@ -169,6 +183,7 @@ public class MultipleSearchListModel extends AbstractSearchableListModel {
         }
     }
 
+    @Override
     protected Collection getResult() throws Exception {
         throw new RuntimeException("this method should never be called since the iterator creation was overwritten");
     }

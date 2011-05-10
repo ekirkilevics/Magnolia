@@ -52,6 +52,7 @@ import java.util.Map;
  * @version $Revision: $ ($Author: $)
  */
 public class CacheConfigurationTransformer extends Content2BeanTransformerImpl {
+    @Override
     public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
         final TypeDescriptor typeDescriptor = descriptor.getType();
         final String propertyName = descriptor.getName();

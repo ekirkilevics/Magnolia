@@ -129,6 +129,7 @@ public class BarMain extends Bar {
         if(this.languageChooser != null){
             getButtonsRight().add(this.languageChooser);
             getButtonsRight().add(new ControlImpl(){
+                @Override
                 public String getHtml() {
                     return "&nbsp;";
                 }

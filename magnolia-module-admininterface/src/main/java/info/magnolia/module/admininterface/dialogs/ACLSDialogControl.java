@@ -153,6 +153,7 @@ public class ACLSDialogControl extends DialogBox {
         return html.toString();
     }
 
+    @Override
     public void drawHtml(Writer w) throws IOException {
         PrintWriter out = (PrintWriter) w;
         this.drawHtmlPre(out);

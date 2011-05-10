@@ -154,6 +154,7 @@ public class TextToImageTag extends BaseImageTag {
      * The name of the new contentNode to create, under which all image nodes will be saved.
      * @jsp.attribute required="true" rtexprvalue="true"
      */
+    @Override
     public void setImageContentNodeName(String imageContentNodeName) {
         this.imageContentNodeName = imageContentNodeName;
     }
@@ -162,6 +163,7 @@ public class TextToImageTag extends BaseImageTag {
      * The name of the parent of the new contentNode.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
+    @Override
     public void setParentContentNodeName(String parentContentNodeName) {
         this.parentContentNodeName = parentContentNodeName;
     }
@@ -218,6 +220,7 @@ public class TextToImageTag extends BaseImageTag {
     /**
      * @see info.magnolia.cms.taglibs.util.BaseImageTag#getFilename()
      */
+    @Override
     protected String getFilename() {
         return "textImage";
     }
@@ -254,6 +257,7 @@ public class TextToImageTag extends BaseImageTag {
         }
     }
 
+    @Override
     public void doTag() throws JspException {
 
         this.setUp();

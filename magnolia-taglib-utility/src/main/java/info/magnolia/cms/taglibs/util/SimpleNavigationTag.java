@@ -349,6 +349,7 @@ public class SimpleNavigationTag extends TagSupport {
         markFirstAndLastElement = flag;
     }
 
+    @Override
     public int doEndTag() throws JspException {
         Content activePage = Resource.getCurrentActivePage();
         try {
@@ -402,6 +403,7 @@ public class SimpleNavigationTag extends TagSupport {
         return EVAL_PAGE;
     }
 
+    @Override
     public void release() {
         this.startLevel = 0;
         this.endLevel = 0;

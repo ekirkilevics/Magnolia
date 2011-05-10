@@ -145,6 +145,7 @@ public class Include extends BodyTagSupport {
         this.noEditBars = noEditBars;
     }
 
+    @Override
     public int doAfterBody() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         if ((attributes != null) && (attributes.size() > 0)) {
@@ -157,6 +158,7 @@ public class Include extends BodyTagSupport {
         return SKIP_BODY;
     }
 
+    @Override
     public int doEndTag() {
         boolean localContentNodeSet = false;
         Content oldContentNode = Resource.getLocalContentNode();
@@ -259,6 +261,7 @@ public class Include extends BodyTagSupport {
         attributes = null;
     }
 
+    @Override
     public void release() {
         this.path = null;
         this.attributes = null;

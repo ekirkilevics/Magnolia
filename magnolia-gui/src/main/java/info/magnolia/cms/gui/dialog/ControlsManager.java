@@ -63,6 +63,7 @@ public final class ControlsManager extends ObservedManager {
     /**
      * Registers dialog controls.
      */
+    @Override
     protected void onRegister(Content configNode) {
         log.info("Loading dialog controls configuration from {}", configNode.getHandle()); //$NON-NLS-1$
 
@@ -111,6 +112,7 @@ public final class ControlsManager extends ObservedManager {
         return Components.getSingleton(ControlsManager.class);
     }
 
+    @Override
     protected void onClear() {
     }
 

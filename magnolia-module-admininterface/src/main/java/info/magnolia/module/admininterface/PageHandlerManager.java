@@ -90,6 +90,7 @@ public class PageHandlerManager extends ObservedManager {
      * register the pages from the config
      * @param defNode
      */
+    @Override
     protected void onRegister(Content defNode) {
         // read the dialog configuration
 
@@ -120,6 +121,7 @@ public class PageHandlerManager extends ObservedManager {
         return Components.getSingleton(PageHandlerManager.class);
     }
 
+    @Override
     protected void onClear() {
         this.dialogPageHandlers.clear();
     }
@@ -166,6 +168,7 @@ public class PageHandlerManager extends ObservedManager {
             this.handlerClass = handlerClass;
         }
 
+        @Override
         public String getName() {
             return this.name;
         }
@@ -174,6 +177,7 @@ public class PageHandlerManager extends ObservedManager {
             this.name = name;
         }
 
+        @Override
         public PageMVCHandler newInstance(String name, HttpServletRequest request, HttpServletResponse response) {
 
             try {
@@ -199,15 +203,18 @@ public class PageHandlerManager extends ObservedManager {
             this.node = node;
         }
 
+        @Override
         public String getName() {
             return NodeDataUtil.getString(this.node, "name", this.node.getName());
         }
 
+        @Override
         public PageMVCHandler newInstance(String name, final HttpServletRequest request,
             final HttpServletResponse response) {
             try {
                 return (PageMVCHandler) Content2BeanUtil.toBean(node, true, new Content2BeanTransformerImpl() {
 
+                    @Override
                     public Object newBeanInstance(TransformationState state, Map properties, ComponentProvider componentProvider)
                         throws Content2BeanException {
                         if (state.getLevel() == 1) {

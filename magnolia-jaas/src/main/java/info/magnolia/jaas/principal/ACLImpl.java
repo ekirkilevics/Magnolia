@@ -74,6 +74,7 @@ public class ACLImpl implements ACL {
      * Get name given to this principal.
      * @return name
      */
+    @Override
     public String getName() {
         if (StringUtils.isEmpty(this.name)) {
             return NAME;
@@ -92,6 +93,7 @@ public class ACLImpl implements ACL {
      * Get repository ID for which this ACL has been constructed.
      * @return repository ID
      */
+    @Override
     public String getRepository() {
         return this.repository;
     }
@@ -108,6 +110,7 @@ public class ACLImpl implements ACL {
      * Get workspace ID for which this ACL has been constructed.
      * @return workspace ID
      */
+    @Override
     public String getWorkspace() {
         return this.workspace;
     }
@@ -140,6 +143,7 @@ public class ACLImpl implements ACL {
     /**
      * Returns list of permissions for this principal. Returned list is not a copy and should be treated as read only!
      */
+    @Override
     public List getList() {
         return this.list;
     }

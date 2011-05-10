@@ -90,6 +90,7 @@ public abstract class MgnlEmail extends MimeMessage {
 
     public abstract void setBody(String text) throws Exception;
 
+    @Override
     public void setSubject(String arg0) throws MessagingException {
         this.setSubject(arg0, "UTF-8");
     }
@@ -216,6 +217,7 @@ public abstract class MgnlEmail extends MimeMessage {
         this.setBody(buffer.toString());
     }
 
+    @Override
     public String getContentType() {
         if (template == null || StringUtils.isEmpty(template.getContentType())
                 || StringUtils.equalsIgnoreCase(template.getContentType(), "HTML")) {

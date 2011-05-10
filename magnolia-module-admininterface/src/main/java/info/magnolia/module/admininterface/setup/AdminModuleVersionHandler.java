@@ -155,6 +155,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new ContentDeletionTasks()));
     }
 
+    @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final List<Task> tasks = new ArrayList<Task>();
         tasks.add(new AddMainMenuItemTask("security", "menu.security", "info.magnolia.modules.admininterface.messages", "", "/.resources/icons/24/key1.gif", "config"));

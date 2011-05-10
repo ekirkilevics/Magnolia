@@ -78,6 +78,7 @@ public interface SearchQueryExpression {
      * get string representation
      * @return string representation if this expression
      */
+    @Override
     public String toString();
 
 }

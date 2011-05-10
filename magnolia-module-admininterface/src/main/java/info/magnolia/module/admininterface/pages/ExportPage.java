@@ -207,6 +207,7 @@ public class ExportPage extends TemplatedMVCHandler {
     /**
      * @see info.magnolia.cms.servlets.MVCServletHandlerImpl#getCommand()
      */
+    @Override
     public String getCommand() {
         if (this.exportxml) {
             return "exportxml";
@@ -304,6 +305,7 @@ public class ExportPage extends TemplatedMVCHandler {
         return true;
     }
 
+    @Override
     public void renderHtml(String view) throws IOException {
         // if we are exporing the file, everything is already done --> do not render
         if(VIEW_EXPORT.equals(view)){

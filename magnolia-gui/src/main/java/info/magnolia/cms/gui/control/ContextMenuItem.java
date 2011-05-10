@@ -94,6 +94,7 @@ public class ContextMenuItem extends ControlImpl {
     }
 
     // todo: icons
+    @Override
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         html.append("<div class=\"mgnlTreeMenuItem\" id=\"" //$NON-NLS-1$

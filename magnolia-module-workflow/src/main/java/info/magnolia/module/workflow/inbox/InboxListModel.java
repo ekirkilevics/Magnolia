@@ -55,6 +55,7 @@ public class InboxListModel extends AbstractListModel {
         this.setValueProvider(new InboxValueProvider());
     }
 
+    @Override
     protected Collection getResult() throws Exception {
         return WorkflowUtil.getUserInbox(this.userName);
     }

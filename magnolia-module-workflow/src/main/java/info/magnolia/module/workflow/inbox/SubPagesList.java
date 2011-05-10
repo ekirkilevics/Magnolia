@@ -95,6 +95,7 @@ public class SubPagesList extends AbstractList {
         super(name, request, response);
     }
 
+    @Override
     public void init() {
         super.init();
         item = WorkflowUtil.getWorkItem(getWorkItemId());
@@ -124,6 +125,7 @@ public class SubPagesList extends AbstractList {
         }
     }
 
+    @Override
     public void configureList(ListControl list) {
         ListColumn iconColumn = new ListColumn("icon", "", "30px", true);
         iconColumn.setRenderer(new IconListColumnRenderer());
@@ -143,10 +145,12 @@ public class SubPagesList extends AbstractList {
                 setBorder(true);
             }
 
+            @Override
             public String onDblClick(ListControl list, Integer index) {
                 return "mgnl.workflow.Inbox.show();";
             }
 
+            @Override
             public String onSelect(ListControl list, Integer index) {
 
                 String path = ObjectUtils.toString(list.getIteratorValue("path"));
@@ -167,6 +171,7 @@ public class SubPagesList extends AbstractList {
         });
     }
 
+    @Override
     protected void configureContextMenu(ContextMenu menu) {
         ContextMenuItem show = new ContextMenuItem("show");
         show.setLabel(this.getMsgs().get("subpages.show"));
@@ -176,9 +181,11 @@ public class SubPagesList extends AbstractList {
         menu.addMenuItem(show);
     }
 
+    @Override
     public ListModel getModel() {
         return new AbstractListModel() {
 
+            @Override
             protected Collection getResult() throws Exception {
                 return subPages;
             }

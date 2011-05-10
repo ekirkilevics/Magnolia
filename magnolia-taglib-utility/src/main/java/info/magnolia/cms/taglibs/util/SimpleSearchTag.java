@@ -142,6 +142,7 @@ public class SimpleSearchTag extends TagSupport {
         this.startLevel = startLevel;
     }
 
+    @Override
     public int doStartTag() throws JspException {
 
         final String queryString = useSimpleJcrQuery ? generateSimpleQuery(query) : generateComplexXPathQuery();
@@ -282,6 +283,7 @@ public class SimpleSearchTag extends TagSupport {
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#release()
      */
+    @Override
     public void release() {
         this.query = null;
         this.var = null;

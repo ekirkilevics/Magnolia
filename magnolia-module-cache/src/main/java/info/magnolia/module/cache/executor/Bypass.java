@@ -51,6 +51,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class Bypass extends AbstractExecutor {
 
+    @Override
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
             CachePolicyResult cachePolicy) throws IOException, ServletException {

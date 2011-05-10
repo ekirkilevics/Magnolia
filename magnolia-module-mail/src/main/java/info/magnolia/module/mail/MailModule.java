@@ -90,10 +90,12 @@ public class MailModule implements ModuleLifecycle {
         this.smtp = smtp;
     }
 
+    @Override
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
 
     }
 
+    @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
 
     }

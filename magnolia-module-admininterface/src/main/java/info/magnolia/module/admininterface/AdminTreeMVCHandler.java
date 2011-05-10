@@ -747,6 +747,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      * @param view
      * @throws IOException
      */
+    @Override
     public void renderHtml(String view) throws IOException {
         StringBuffer html = new StringBuffer(500);
 

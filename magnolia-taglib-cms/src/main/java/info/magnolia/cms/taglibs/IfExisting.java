@@ -58,10 +58,12 @@ public class IfExisting extends BaseConditionalContentTag {
      * @param name , antom name to evaluate
      * @jsp.attribute required="false" rtexprvalue="true"
      */
+    @Override
     public void setNodeDataName(String name) {
         this.nodeDataName = name;
     }
 
+    @Override
     protected boolean condition() {
         Content node = this.getFirstMatchingNode();
 

@@ -72,12 +72,14 @@ public class CacheConfigurationSetupTest extends RepositoryTestCase {
 
     private CacheConfiguration cacheConf;
 
+    @Override
     protected List<ModuleDefinition> getModuleDefinitionsForTests() throws ModuleManagementException {
         final ModuleDefinition core = new BetwixtModuleDefinitionReader().readFromResource("/META-INF/magnolia/core.xml");
         final ModuleDefinition cache = new BetwixtModuleDefinitionReader().readFromResource("/META-INF/magnolia/cache.xml");
         return Arrays.asList(core, cache);
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         bootstrapSingleResource("/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml");

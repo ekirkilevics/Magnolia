@@ -91,6 +91,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
         this.cacheConfigurationName = cacheConfigurationName;
     }
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
         cacheModule.register(this);
@@ -98,6 +99,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
         onCacheModuleStart();
     }
 
+    @Override
     public void onCacheModuleStart() {
         if (cacheConfigurationName == null) {
             log.warn("The cacheConfigurationName property is not set for the {} CacheFilter, falling back to {}.", getName(), DEFAULT_CACHE_CONFIG);
@@ -121,6 +123,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
         return cacheModule;
     }
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();

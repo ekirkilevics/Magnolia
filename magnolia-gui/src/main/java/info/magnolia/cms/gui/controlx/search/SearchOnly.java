@@ -45,6 +45,7 @@ public class SearchOnly extends DialogControlImpl {
         super();
     }
 
+    @Override
     public void drawHtml(Writer out) throws IOException {
         // nothing
     }

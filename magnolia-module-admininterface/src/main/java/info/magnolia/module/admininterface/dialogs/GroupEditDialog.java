@@ -64,6 +64,7 @@ public class GroupEditDialog extends UserEditDialog {
      * Write ACL entries under the given node
      * @param node under which ACL for all workspaces needs to be created
      */
+    @Override
     protected void writeACL(Content node) throws RepositoryException {
         // do nothing
     }

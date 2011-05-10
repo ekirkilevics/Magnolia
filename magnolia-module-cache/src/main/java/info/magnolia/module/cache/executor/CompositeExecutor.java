@@ -57,6 +57,7 @@ public class CompositeExecutor implements CachePolicyExecutor {
 
     private CachePolicyExecutor[] executors = new CachePolicyExecutor[0];
 
+    @Override
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
             CachePolicyResult cachePolicy) throws IOException, ServletException {
@@ -78,6 +79,7 @@ public class CompositeExecutor implements CachePolicyExecutor {
         this.executors = (CachePolicyExecutor[]) ArrayUtils.add(this.executors, executor);
     }
 
+    @Override
     public void setCacheConfiguration(CacheConfiguration cacheConfiguration) {
         for (int i = 0; i < executors.length; i++) {
             CachePolicyExecutor executor = executors[i];

@@ -57,6 +57,7 @@ public abstract class AbstractTreeConfiguration implements AdminTreeConfiguratio
         this.enableDeleteConfirmation = enableConfirmation;
     }
 
+    @Override
     public void setMessages(Messages m) {
         this.messages = m;
     }

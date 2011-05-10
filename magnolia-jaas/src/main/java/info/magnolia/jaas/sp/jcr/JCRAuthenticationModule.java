@@ -218,6 +218,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
         }
     }
 
+    @Override
     public User getUser() {
         return user;
     }

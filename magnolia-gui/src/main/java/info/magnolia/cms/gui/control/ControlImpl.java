@@ -341,6 +341,7 @@ public class ControlImpl implements Control {
      * Returns an empty string.
      * @see info.magnolia.cms.gui.control.Control#getHtml()
      */
+    @Override
     public String getHtml() {
         return StringUtils.EMPTY;
     }

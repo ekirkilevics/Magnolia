@@ -47,6 +47,7 @@ import java.io.IOException;
  * @version $Revision: $ ($Author: $)
  */
 public class PoweredByTagTest extends MgnlTagTestCase {
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -80,6 +81,7 @@ public class PoweredByTagTest extends MgnlTagTestCase {
         assertJspContent("I'm using version 7.5.3 of the Test Edition of Magnolia which was built on 30. July 2008 by Magnolia International. These guys have their offices at St.Johanns-Vorstadt 38 - 4054 Basel - Switzerland, and can be reached by email at info@magnolia-cms.com. Their wonderful website is at http://www.magnolia-cms.com !");
     }
 
+    @Override
     protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {
         return null;
     }

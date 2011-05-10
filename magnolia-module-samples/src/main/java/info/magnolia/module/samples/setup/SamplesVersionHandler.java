@@ -79,6 +79,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new NodeExistsDelegateTask("Backup samples website samples", "Creates a backup", "website",
                         "/mails", new BackupTask("website", "/mails", true)))
                 .addTask(new BootstrapResourcesTask("New configuration", "Bootstraps new default samples configuration.") {
+                    @Override
                     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
                         return new String[]{
                                 "/mgnl-bootstrap/samples/config.modules.samples.dialogs.controlsShowRoom.xml",
@@ -159,6 +160,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
     /**
      * Installation process will bootstrap everything in the bootstrap folder, then we have to add some extra tasks.
      */
+    @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         return getCommonTasks();
     }

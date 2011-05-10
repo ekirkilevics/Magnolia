@@ -70,6 +70,7 @@ public class AddMainMenuItemTask extends AbstractTask {
         this.orderBefore = orderBefore;
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         try {
             final Content parent = getParentNode(ctx);

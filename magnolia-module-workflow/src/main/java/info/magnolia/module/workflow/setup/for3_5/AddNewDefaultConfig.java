@@ -54,6 +54,7 @@ public class AddNewDefaultConfig extends AbstractTask {
         super("New config items", "Adding some new configuration items with their default values.");
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         try {
             final Content configNode = ctx.getOrCreateCurrentModuleConfigNode();

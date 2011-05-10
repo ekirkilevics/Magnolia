@@ -72,6 +72,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
     private AdminTreeMVCHandler handler;
     private Object[] objs;
 
+    @Override
     public void setUp() {
         req = createStrictMock(HttpServletRequest.class);
         res = createStrictMock(HttpServletResponse.class);
@@ -140,6 +141,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
     public void testCopy() throws Exception {
         final boolean unactivated[] = new boolean[1];
         MetaData meta = new MockMetaData(new MockContent("blah")) {
+            @Override
             public void setUnActivated() throws AccessDeniedException {
                 unactivated[0] = true;
             }
@@ -166,12 +168,14 @@ public class AdminTreeMVCHandlerTest extends TestCase {
     public void testDeepCopy() throws Exception {
         final boolean unactivated[] = new boolean[1];
         MetaData meta = new MockMetaData(new MockContent("blah")) {
+            @Override
             public void setUnActivated() throws AccessDeniedException {
                 unactivated[0] = true;
             }
         };
         Content child = createStrictMock(Content.class);
         MetaData childMeta = new MockMetaData(new MockContent("blah")) {
+            @Override
             public void setUnActivated() throws AccessDeniedException {
                 unactivated[0] = true;
             }
@@ -201,6 +205,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
         assertTrue(unactivated[0]);
     }
 
+    @Override
     public void tearDown() {
         MgnlContext.setInstance(null);
     }

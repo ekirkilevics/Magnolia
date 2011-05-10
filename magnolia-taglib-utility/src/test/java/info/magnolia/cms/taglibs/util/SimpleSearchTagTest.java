@@ -61,9 +61,11 @@ public class SimpleSearchTagTest extends TestCase {
      *
      */
     private static final NameResolver DUMMY_NAME_RESOLVER = new NameResolver(){
+                @Override
                 public String getJCRName(Name name) throws NamespaceException {
                     return "jcr:" + name.getLocalName();
                 }
+                @Override
                 public Name getQName(final String name) throws IllegalNameException, NamespaceException {
                     return NameFactoryImpl.getInstance().create(Name.NS_JCR_URI, StringUtils.substringAfter(name, ":"));
                 }

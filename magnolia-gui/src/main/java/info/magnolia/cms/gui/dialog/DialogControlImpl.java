@@ -143,6 +143,7 @@ public abstract class DialogControlImpl implements DialogControl {
 
     /**
      */
+    @Override
     public void init(HttpServletRequest request, HttpServletResponse response, Content storageNode, Content configNode)
         throws RepositoryException {
 
@@ -160,6 +161,7 @@ public abstract class DialogControlImpl implements DialogControl {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
+    @Override
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPreSubs(out);
         this.drawSubs(out);

@@ -60,6 +60,7 @@ public class WebsiteVersionsList extends VersionsList {
      * @param versionLabel
      * @return the url used in the link
      */
+    @Override
     public String getOnShowFunction() {
         String url = MgnlContext.getContextPath() + path + ".html?mgnlVersion=";
         return "function(versionLabel){open('" + url + "'+versionLabel, '');}";

@@ -60,6 +60,7 @@ public class MessageCommand extends MgnlCommand {
     /**
      * @see info.magnolia.commands.MgnlCommand#execute(info.magnolia.context.Context)
      */
+    @Override
     public boolean execute(Context context) throws Exception {
         if (StringUtils.isNotEmpty(message)) {
             Messages msgs = MessagesUtil.chainWithDefault(this.getI18nBasename());

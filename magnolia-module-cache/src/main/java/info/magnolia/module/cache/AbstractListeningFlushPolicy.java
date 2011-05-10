@@ -79,6 +79,7 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
         repositories.add(repository);
     }
 
+    @Override
     public void start(Cache cache) {
         for (Iterator iter = repositories.iterator(); iter.hasNext();) {
             final String repository = (String) iter.next();
@@ -96,6 +97,7 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
         }
     }
 
+    @Override
     public void stop(Cache cache) {
         final Iterator i = registeredListeners.keySet().iterator();
         while (i.hasNext()) {
@@ -169,6 +171,7 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
             this.repository = repository;
         }
 
+        @Override
         public void onEvent(EventIterator events) {
             List<Event> eventList = new ArrayList<Event>();
             // do not react on jcr: specific events. Those are sent to every registered workspace when any of the workspaces stores new version of its content

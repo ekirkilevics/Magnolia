@@ -65,6 +65,7 @@ public class CheckAndUpdateDefaultWorkflowDefinition extends AbstractTask {
         super("Update the default activation workflow definition", "Checks and updates the default activation workflow definition under the /modules/workflow/config/flows/activation config node.");
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         InputStream stream = null;
         InputStream stream30 = null;

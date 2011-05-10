@@ -51,6 +51,7 @@ public class DeleteCommand extends BaseRepositoryCommand {
 
     private static Logger log = LoggerFactory.getLogger(DeleteCommand.class);
 
+    @Override
     public boolean execute(Context ctx) {
         try {
             String parentPath = StringUtils.substringBeforeLast(getPath(), "/");

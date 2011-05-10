@@ -59,6 +59,7 @@ public class AdminInterfaceModule implements ModuleLifecycle {
         instance = this;
     }
 
+    @Override
     public void start(ModuleLifecycleContext ctx) {
         ctx.registerModuleObservingComponent("controls", ControlsManager.getInstance());
         ctx.registerModuleObservingComponent("dialogs", DialogHandlerManager.getInstance());
@@ -69,6 +70,7 @@ public class AdminInterfaceModule implements ModuleLifecycle {
         RenderKitFactory.registerRenderKit(RenderKitFactory.ADMIN_INTERFACE_RENDER_KIT, new AdminInterfaceRenderKit());
     }
 
+    @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
     }
 

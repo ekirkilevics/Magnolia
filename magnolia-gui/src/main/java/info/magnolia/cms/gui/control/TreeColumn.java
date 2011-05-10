@@ -259,6 +259,7 @@ public class TreeColumn extends ControlImpl {
         this.setHtmlEdit(edit.getHtml());
     }
 
+    @Override
     public String getHtml() {
         String html = null;
         try {

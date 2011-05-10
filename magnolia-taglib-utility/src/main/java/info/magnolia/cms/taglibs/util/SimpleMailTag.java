@@ -226,6 +226,7 @@ public class SimpleMailTag extends TagSupport {
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#doEndTag()
      */
+    @Override
     public int doEndTag() throws JspException {
 
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
@@ -400,6 +401,7 @@ public class SimpleMailTag extends TagSupport {
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#release()
      */
+    @Override
     public void release() {
         this.nodeCollectionName = null;
         this.to = null;

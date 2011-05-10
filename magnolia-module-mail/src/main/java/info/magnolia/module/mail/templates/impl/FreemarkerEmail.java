@@ -54,6 +54,7 @@ public class FreemarkerEmail extends MgnlMultipartEmail {
         super(template);
     }
 
+    @Override
     public void setFrom(String from) {
         try {
             from = proccesFreemarkerString(from);
@@ -63,6 +64,7 @@ public class FreemarkerEmail extends MgnlMultipartEmail {
         super.setFrom(from);
     }
 
+    @Override
     public void setSubject(String subject) throws MessagingException {
         try {
             subject = proccesFreemarkerString(subject);
@@ -73,17 +75,20 @@ public class FreemarkerEmail extends MgnlMultipartEmail {
 
     }
 
+    @Override
     public void setToList(String list) throws Exception {
         list = proccesFreemarkerString(list);
         super.setToList(list);
     }
 
+    @Override
     public void setBody(String body) throws Exception {
         body = proccesFreemarkerString(body);
         super.setBody(body);
     }
 
 
+    @Override
     public void setBodyFromResourceFile() throws Exception {
         final StringWriter writer = new StringWriter();
         FreemarkerHelper.getInstance().render(super.getTemplate().getTemplateFile(), super.getTemplate().getParameters(), writer);

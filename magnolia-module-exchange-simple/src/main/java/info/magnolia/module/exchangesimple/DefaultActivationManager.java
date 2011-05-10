@@ -49,23 +49,28 @@ public class DefaultActivationManager implements ActivationManager {
 
     private final Collection<Subscriber> subscribers = new ArrayList<Subscriber>();
 
+    @Override
     public synchronized Collection<Subscriber> getSubscribers() {
         return new ArrayList<Subscriber>(subscribers);
     }
 
+    @Override
     public synchronized void setSubscribers(Collection<Subscriber> subscribers) {
         this.subscribers.clear();
         this.subscribers.addAll(subscribers);
     }
 
+    @Override
     public synchronized void addSubscribers(Subscriber subscriber) {
         this.subscribers.add(subscriber);
     }
 
+    @Override
     public String getConfigPath() {
         return "/server/activation/subscribers";
     }
 
+    @Override
     public synchronized boolean hasAnyActiveSubscriber() {
         final Iterator<Subscriber> subscribers = this.subscribers.iterator();
         while (subscribers.hasNext()) {

@@ -74,6 +74,7 @@ public class UsersPage extends TemplatedMVCHandler {
         final List allIncludingFolders = ContentUtil.collectAllChildren(root, new ItemType[]{ItemType.FOLDER, ItemType.USER});
         // now we need to remove the folders - TODO : the page itself (UsersPage.html) could instead do this sorting and display folders differently...
         return CollectionUtils.select(allIncludingFolders, new Predicate() {
+            @Override
             public boolean evaluate(Object object) {
                 return ((Content) object).isNodeType(ItemType.USER.getSystemName());
             }

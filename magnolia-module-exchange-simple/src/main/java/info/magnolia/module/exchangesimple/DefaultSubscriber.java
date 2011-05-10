@@ -67,42 +67,52 @@ public class DefaultSubscriber implements Subscriber {
 
     private String authMethod = "Basic";
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public String getURL() {
         return url;
     }
 
+    @Override
     public void setURL(String url) {
         this.url = url;
     }
 
+    @Override
     public boolean isActive() {
         return active;
     }
 
+    @Override
     public void setActive(boolean active) {
         this.active = active;
     }
 
+    @Override
     public void setSubscriptions(Collection subscriptions) {
         this.subscriptions = subscriptions;
     }
 
+    @Override
     public Collection getSubscriptions() {
         return this.subscriptions;
     }
 
+    @Override
     public void addSubscriptions(Subscription subscription) {
         this.subscriptions.add(subscription);
     }
 
+    @Override
     public Subscription getMatchedSubscription(String path, String repositoryId) {
         Iterator subscriptions = this.getSubscriptions().iterator();
         Subscription matchedSubscription = null;
@@ -120,6 +130,7 @@ public class DefaultSubscriber implements Subscriber {
         return matchedSubscription;
     }
 
+    @Override
     public boolean isSubscribed(String path, String repositoryId) {
         return (null != this.getMatchedSubscription(path, repositoryId));
     }
@@ -147,27 +158,33 @@ public class DefaultSubscriber implements Subscriber {
         return subscribedPath;
     }
 
+    @Override
     public String getAuthenticationMethod() {
         return this.authMethod;
     }
 
+    @Override
     public void setAuthenticationMethod(String method) {
         this.authMethod  = method;
     }
 
+    @Override
     public int getConnectTimeout() {
         return connectTimeout;
     }
 
+    @Override
     public int getReadTimeout() {
         // TODO Auto-generated method stub
         return readTimeout;
     }
 
+    @Override
     public void setConnectTimeout(int timeoutMillis) {
         this.connectTimeout = timeoutMillis;
     }
 
+    @Override
     public void setReadTimeout(int timeoutMillis) {
         this.readTimeout = timeoutMillis;
     }

@@ -66,6 +66,7 @@ public class RegisterWorkspaceForCacheFlushingTask extends AbstractTask implemen
         }
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         HierarchyManager hm = ctx.getConfigHierarchyManager();
         try {

@@ -89,12 +89,14 @@ public class BlockingCacheTest extends TestCase {
     private static final String CONTENT = "CONTENT";
 
     private static final Producer SUCCEEDING_RENDERING = new Producer(){
+        @Override
         public void produce(ServletRequest request, ServletResponse response) throws IOException {
                 response.getWriter().write(CONTENT);
         }
     };
 
     private static final Producer SLOW_RENDERING = new Producer(){
+        @Override
         public void produce(ServletRequest request, ServletResponse response) throws IOException {
             try {
                 Thread.sleep(4000);
@@ -106,6 +108,7 @@ public class BlockingCacheTest extends TestCase {
     };
 
     private static final Producer FAILING_RENDERING = new Producer(){
+        @Override
         public void produce(ServletRequest request, ServletResponse response) throws IOException {
             throw new RuntimeException("Failing rendering.");
         }
@@ -124,6 +127,7 @@ public class BlockingCacheTest extends TestCase {
 
 
         Future<CachePolicyResult> futureResultOfFirstRequest = ex.submit(new Callable<CachePolicyResult>(){
+            @Override
             public CachePolicyResult call() throws Exception{
                 return doRequest(SLOW_RENDERING);
             }
@@ -161,12 +165,14 @@ public class BlockingCacheTest extends TestCase {
         doRequest(SUCCEEDING_RENDERING);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         super.tearDown();
         factory.stop();
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR, "target/cacheTest");
@@ -266,6 +272,7 @@ public class BlockingCacheTest extends TestCase {
         replay(request, response);
 
         filter.doFilter(request, response, new FilterChain() {
+            @Override
             public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
                 producer.produce(request, response);
             }

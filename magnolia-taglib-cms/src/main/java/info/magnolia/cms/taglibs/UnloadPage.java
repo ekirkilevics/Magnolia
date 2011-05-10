@@ -51,6 +51,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  */
 public class UnloadPage extends BodyTagSupport {
 
+    @Override
     public int doStartTag() {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final Content mainContent = aggregationState.getMainContent();

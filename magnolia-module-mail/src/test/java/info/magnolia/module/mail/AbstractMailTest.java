@@ -83,6 +83,7 @@ public abstract class AbstractMailTest extends RepositoryTestCase {
         return getResourceFile(filename).getAbsolutePath();
     }
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
 
@@ -110,6 +111,7 @@ public abstract class AbstractMailTest extends RepositoryTestCase {
     /**
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     public void tearDown() throws Exception {
         wiser.stop();
         // prevent random failure of the build in ubuntu due to not releasing socket fast enough.

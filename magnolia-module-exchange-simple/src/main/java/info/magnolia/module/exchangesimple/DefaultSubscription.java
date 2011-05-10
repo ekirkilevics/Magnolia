@@ -49,34 +49,42 @@ public class DefaultSubscription implements Subscription {
 
     private String repository;
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public String getFromURI() {
         return fromURI;
     }
 
+    @Override
     public void setFromURI(String fromURI) {
         this.fromURI = fromURI;
     }
 
+    @Override
     public String getToURI() {
         return toURI;
     }
 
+    @Override
     public void setToURI(String toURI) {
         this.toURI = toURI;
     }
 
+    @Override
     public String getRepository() {
         return repository;
     }
 
+    @Override
     public void setRepository(String repository) {
         this.repository = repository;
     }
@@ -86,6 +94,7 @@ public class DefaultSubscription implements Subscription {
      * @param value path to check
      * @return the length of the fromURI
      * */
+    @Override
     public int vote(Object value) {
         String path = String.valueOf(value);
         String subscribedPath = getFromURI();
@@ -102,6 +111,7 @@ public class DefaultSubscription implements Subscription {
         return -1;
     }
 
+    @Override
     public boolean isEnabled() {
         return true;
     }

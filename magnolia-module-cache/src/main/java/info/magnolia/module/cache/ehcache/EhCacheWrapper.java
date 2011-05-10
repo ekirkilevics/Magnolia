@@ -72,6 +72,7 @@ public class EhCacheWrapper implements info.magnolia.module.cache.BlockingCache 
         return (BlockingCache) ehcache;
     }
 
+    @Override
     public Object get(Object key) {
         final Element element = ehcache.get(key);
         try {
@@ -82,6 +83,7 @@ public class EhCacheWrapper implements info.magnolia.module.cache.BlockingCache 
         }
     }
 
+    @Override
     public boolean hasElement(Object key) {
         // we can't use isKeyInCache(), as it does not check for the element's expiration
         // which may lead to unexpected results.
@@ -100,20 +102,24 @@ public class EhCacheWrapper implements info.magnolia.module.cache.BlockingCache 
         }
     }
 
+    @Override
     public void put(Object key, Object value) {
         final Element element = new Element(key, value);
         ehcache.put(element);
     }
 
+    @Override
     public void remove(Object key) {
         ehcache.remove(key);
     }
 
+    @Override
     public void clear() {
         cacheMonitor.countFlush(this.name);
         ehcache.removeAll();
     }
 
+    @Override
     public void unlock(Object key) {
         if(ehcache.getQuiet(key) == null) {
             put(key, null);
@@ -121,6 +127,7 @@ public class EhCacheWrapper implements info.magnolia.module.cache.BlockingCache 
         }
     }
 
+    @Override
     public int getBlockingTimeout() {
         return ehcache.getTimeoutMillis();
     }
@@ -129,10 +136,12 @@ public class EhCacheWrapper implements info.magnolia.module.cache.BlockingCache 
         return ehcache;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public int getSize() {
         return ehcache.getSize();
     }

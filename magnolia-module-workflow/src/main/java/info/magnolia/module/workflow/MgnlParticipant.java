@@ -65,6 +65,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         super(name);
     }
 
+    @Override
     public void cancel(CancelItem cancelItem) throws Exception {
         if (log.isDebugEnabled()) {
             if (cancelItem.getId() != null) {
@@ -90,6 +91,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         }
     }
 
+    @Override
     public void consume(WorkItem wi) throws Exception {
 
         // get participant name

@@ -76,6 +76,7 @@ public class FunctionBar extends ContextMenu {
     /**
      * Render the html code using the freemarker template
      */
+    @Override
     public String getHtml() {
         Map params = new HashMap();
         params.put("functionBar", this);
@@ -85,6 +86,7 @@ public class FunctionBar extends ContextMenu {
     /**
      * Render the javascript code to initialize it
      */
+    @Override
     public String getJavascript() {
         Map params = new HashMap();
         params.put("functionBar", this);
@@ -98,6 +100,7 @@ public class FunctionBar extends ContextMenu {
         return !this.getMenuItems().isEmpty();
     }
 
+    @Override
     public void addMenuItem(ContextMenuItem item) {
         if(item != null && !(item instanceof FunctionBarItem)){
             item = new FunctionBarItem(item);

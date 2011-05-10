@@ -57,6 +57,7 @@ import java.util.Locale;
 public class OutTest extends MgnlTagTestCase {
     private AggregationState agState;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         agState = initAgState();
@@ -150,6 +151,7 @@ public class OutTest extends MgnlTagTestCase {
         return agState;
     }
 
+    @Override
     protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {
         return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("outtest.properties"));
     }

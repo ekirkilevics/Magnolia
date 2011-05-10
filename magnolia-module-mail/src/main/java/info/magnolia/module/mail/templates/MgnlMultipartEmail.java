@@ -73,6 +73,7 @@ public abstract class MgnlMultipartEmail extends MgnlEmail {
         super(template);
     }
 
+    @Override
     public MimeBodyPart addAttachment(MailAttachment attachment) throws MailException {
 
         try {
@@ -143,6 +144,7 @@ public abstract class MgnlMultipartEmail extends MgnlEmail {
         }
     }
 
+    @Override
     public void setBody(String body) throws Exception {
 
         this.setContent(body, getContentType());

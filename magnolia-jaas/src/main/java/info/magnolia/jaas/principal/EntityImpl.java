@@ -68,6 +68,7 @@ public class EntityImpl implements Entity {
      *
      * @return name
      */
+    @Override
     public String getName() {
         final String name = (String) getProperty(NAME);
         if (StringUtils.isEmpty(name)) {
@@ -79,15 +80,18 @@ public class EntityImpl implements Entity {
     /**
      * @deprecated use addProperty(NAME, name)
      */
+    @Override
     @Deprecated
     public void setName(String name) {
         addProperty(NAME, name);
     }
 
+    @Override
     public void addProperty(String key, Object value) {
         this.properties.put(key, value);
     }
 
+    @Override
     public Object getProperty(String key) {
         return this.properties.get(key);
     }

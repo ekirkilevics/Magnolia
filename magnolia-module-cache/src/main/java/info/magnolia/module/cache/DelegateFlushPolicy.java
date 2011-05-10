@@ -64,12 +64,14 @@ public class DelegateFlushPolicy implements FlushPolicy {
         this.policies.add(policy);
     }
 
+    @Override
     public void start(Cache cache) {
         for (FlushPolicy policy : policies) {
             policy.start(cache);
         }
     }
 
+    @Override
     public void stop(Cache cache) {
         for (FlushPolicy policy : policies) {
             policy.stop(cache);

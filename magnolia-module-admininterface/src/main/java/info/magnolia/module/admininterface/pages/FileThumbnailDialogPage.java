@@ -107,6 +107,7 @@ public class FileThumbnailDialogPage extends PageMVCHandler {
     /**
      * @see info.magnolia.cms.servlets.MVCServletHandler#renderHtml(java.lang.String)
      */
+    @Override
     public void renderHtml(String view) throws IOException {
 
         if (src == null) {

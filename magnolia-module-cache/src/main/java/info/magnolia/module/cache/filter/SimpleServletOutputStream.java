@@ -49,6 +49,7 @@ public class SimpleServletOutputStream extends ServletOutputStream {
         this.out = out;
     }
 
+    @Override
     public void write(int b) throws IOException {
         out.write(b);
     }

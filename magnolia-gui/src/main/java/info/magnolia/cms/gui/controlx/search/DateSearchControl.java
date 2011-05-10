@@ -77,6 +77,7 @@ public class DateSearchControl extends SearchControl {
     /**
      * create the date query expression
      */
+    @Override
     public SearchQueryExpression getExpression() {
         Date date = null;
         if (this.getConstraint().equals(DateSearchQueryParameter.TODAY)) {

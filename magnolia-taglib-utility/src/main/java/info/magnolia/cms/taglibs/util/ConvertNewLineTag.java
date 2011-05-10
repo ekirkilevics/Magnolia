@@ -74,6 +74,7 @@ public class ConvertNewLineTag extends BodyTagSupport {
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
+    @Override
     public int doEndTag() throws JspException {
         String bodyText = bodyContent.getString();
 
@@ -110,6 +111,7 @@ public class ConvertNewLineTag extends BodyTagSupport {
     /**
      * @see javax.servlet.jsp.tagext.Tag#release()
      */
+    @Override
     public void release() {
         para = false;
         super.release();

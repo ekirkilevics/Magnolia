@@ -64,6 +64,7 @@ public class ActivationFlowCommand extends PathMappedFlowCommand {
     /**
      * Set the start and end date for this page.
      */
+    @Override
     public void prepareLaunchItem(Context context, LaunchItem launchItem) {
         super.prepareLaunchItem(context, launchItem);
 
@@ -111,6 +112,7 @@ public class ActivationFlowCommand extends PathMappedFlowCommand {
         return ((attributeName.equals(WorkflowConstants.ATTRIBUTE_START_DATE)) || (attributeName.equals(WorkflowConstants.ATTRIBUTE_END_DATE)));
     }
 
+    @Override
     public String getDialogName() {
         String dialogName = super.getDialogName();
         if(StringUtils.isEmpty(WorkflowConstants.DEFAULT_EDIT_DIALOG)){
@@ -127,6 +129,7 @@ public class ActivationFlowCommand extends PathMappedFlowCommand {
         this.recursive = recursive;
     }
 
+    @Override
     public String getWorkflowName() {
         String workflowName = super.getWorkflowName();
         if(super.getWorkflowName().equals(WorkflowConstants.DEFAULT_WORKFLOW)){

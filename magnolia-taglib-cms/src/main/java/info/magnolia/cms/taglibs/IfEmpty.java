@@ -67,6 +67,7 @@ public class IfEmpty extends BaseConditionalContentTag {
      * @param name , antom name to evaluate
      * @jsp.attribute required="false" rtexprvalue="true"
      */
+    @Override
     public void setNodeDataName(String name) {
         this.nodeDataName = name;
     }
@@ -87,6 +88,7 @@ public class IfEmpty extends BaseConditionalContentTag {
         this.setContentNodeCollectionName(name);
     }
 
+    @Override
     protected boolean condition() {
         Content node = this.getFirstMatchingNode();
 

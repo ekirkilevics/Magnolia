@@ -70,6 +70,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      * Gets name given to this principal.
      * @return name
      */
+    @Override
     public String getName() {
         if (StringUtils.isEmpty(this.name)) {
             return NAME;
@@ -80,6 +81,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
     /**
      * Sets this principal name.
      */
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -88,6 +90,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      * Sets internal collection of principals.
      * @deprecated since 5.0
      */
+    @Override
     @Deprecated
     public void set(Collection<Principal> collection) {
         throw new UnsupportedOperationException("use addAll() instead");
@@ -97,6 +100,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      * Adds principal to the internal collection of principals.
      * @param principal to be added to the collection
      */
+    @Override
     public void add(Principal principal) {
         this.collection.add(principal);
     }
@@ -105,6 +109,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      * Adds principals to the internal collection of principals.
      * @param principal to be added to the collection
      */
+    @Override
     public void addAll(Collection<Principal> principal) {
         this.collection.addAll(principal);
     }
@@ -113,6 +118,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      * Removes principal from the collection if present or does nothing in case principal was not present in the collection.
      * @param principal to be removed from the collection
      */
+    @Override
     public void remove(Principal principal) {
         this.collection.remove(principal);
     }
@@ -120,6 +126,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
     /**
      * removes all principals from the collection.
      */
+    @Override
     public void clearAll() {
         this.collection.clear();
     }
@@ -128,6 +135,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      * Checks if this collection contains specified principal.
      * @return true if the specified object exist in the collection, false otherwise.
      */
+    @Override
     public boolean contains(Principal principal) {
         return this.collection.contains(principal);
     }
@@ -137,6 +145,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      * @param name
      * @return true if the collection contains the principal by the specified name, false otherwise.
      */
+    @Override
     public boolean contains(String name) {
         return this.get(name) != null;
     }
@@ -146,6 +155,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      * @param name
      * @return principal object associated to the specified name.
      */
+    @Override
     public Principal get(String name) {
         //TODO: change internal collection to a map and store names as keys to avoid loops !!!!
         Iterator<Principal> principalIterator = this.collection.iterator();
@@ -162,6 +172,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      * Returns an iterator over the collection of principals.
      * @return iterator for Principal objects
      */
+    @Override
     public Iterator<Principal> iterator() {
         return collection.iterator();
     }

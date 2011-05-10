@@ -126,6 +126,7 @@ public class DialogSelect extends DialogBox {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
+    @Override
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
@@ -137,6 +138,7 @@ public class DialogSelect extends DialogBox {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
+    @Override
     public void drawHtml(Writer out) throws IOException {
         Select control;
         if (this.getConfigValue("valueType").equals("multiple")) { //$NON-NLS-1$ //$NON-NLS-2$

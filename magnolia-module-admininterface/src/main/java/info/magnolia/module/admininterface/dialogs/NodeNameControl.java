@@ -50,6 +50,7 @@ public class NodeNameControl extends DialogStatic {
     /**
      * Use a bold label
      */
+    @Override
     public String getLabel() {
         return "<strong>" + this.getMessage(super.getLabel()) + "</strong>";
     }
@@ -57,6 +58,7 @@ public class NodeNameControl extends DialogStatic {
     /**
      * Set the nodes name as value
      */
+    @Override
     public void init(HttpServletRequest request, HttpServletResponse response, Content storageNode, Content configNode)
         throws RepositoryException {
         super.init(request, response, storageNode, configNode);

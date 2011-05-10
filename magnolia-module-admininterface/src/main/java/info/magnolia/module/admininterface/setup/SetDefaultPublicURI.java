@@ -55,6 +55,7 @@ public class SetDefaultPublicURI extends AbstractTask {
         this.moduleDescriptorPropertyName = moduleDescriptorPropertyName;
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         final String defaultURI = ctx.getCurrentModuleDefinition().getProperty(moduleDescriptorPropertyName);
         final SetPropertyTask setPropertyTask = new SetPropertyTask(ContentRepository.CONFIG, DEFAULT_URI_NODEPATH, "toURI", defaultURI);

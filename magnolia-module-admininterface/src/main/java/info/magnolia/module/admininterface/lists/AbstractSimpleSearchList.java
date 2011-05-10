@@ -65,6 +65,7 @@ public abstract class AbstractSimpleSearchList extends AbstractList {
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#onRender()
      */
+    @Override
     public String onRender() {
         String str = super.onRender();
         str += FreemarkerUtil.process(AbstractSimpleSearchList.class, this);
@@ -88,6 +89,7 @@ public abstract class AbstractSimpleSearchList extends AbstractList {
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#configureList(info.magnolia.cms.gui.controlx.list.ListControl)
      */
+    @Override
     public void initList(ListControl list) {
         super.initList(list);
         ((SearchableListModel) list.getModel()).setQuery(this.getQuery());
@@ -103,6 +105,7 @@ public abstract class AbstractSimpleSearchList extends AbstractList {
         return SimpleSearchUtil.getSimpleSearchQuery(this.getSearchStr(), this.getSearchConfig());
     }
 
+    @Override
     protected void configureFunctionBar(FunctionBar bar) {
         super.configureFunctionBar(bar);
         bar.setSearchable(true);

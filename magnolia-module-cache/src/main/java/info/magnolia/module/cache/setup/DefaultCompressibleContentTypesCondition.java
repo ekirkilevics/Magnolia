@@ -59,6 +59,7 @@ public class DefaultCompressibleContentTypesCondition extends ConditionalDelegat
         this.checkedNodeName = checkedNodeName;
     }
 
+    @Override
     protected boolean condition(InstallContext installContext) throws TaskExecutionException {
         try {
             List vals = new ArrayList();

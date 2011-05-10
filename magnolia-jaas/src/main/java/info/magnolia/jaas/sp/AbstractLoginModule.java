@@ -150,6 +150,7 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     }
 
+    @Override
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, final Map options) {
         this.subject = subject;
         this.callbackHandler = callbackHandler;
@@ -172,6 +173,7 @@ public abstract class AbstractLoginModule implements LoginModule {
         this.skipOnPreviousSuccess = BooleanUtil.toBoolean((String) options.get(OPTION_SKIP_ON_PREVIOUS_SUCCESS), false);
     }
 
+    @Override
     public boolean login() throws LoginException {
         if (this.getSkip()) {
             return true;
@@ -240,6 +242,7 @@ public abstract class AbstractLoginModule implements LoginModule {
     /**
      * Updates subject with ACL and other properties.
      */
+    @Override
     public boolean commit() throws LoginException {
         /**
          * If login module failed to authenticate then this method should simply return false
@@ -253,10 +256,12 @@ public abstract class AbstractLoginModule implements LoginModule {
         return true;
     }
 
+    @Override
     public boolean abort() throws LoginException {
         return this.release();
     }
 
+    @Override
     public boolean logout() throws LoginException {
         return this.release();
     }

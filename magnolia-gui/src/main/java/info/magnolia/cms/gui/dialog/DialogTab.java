@@ -48,6 +48,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DialogTab extends DialogControlImpl {
 
+    @Override
     public void drawHtmlPreSubs(Writer out) throws IOException {
         String parentId = this.getParent().getId();
         String id = this.getId();
@@ -77,6 +78,7 @@ public class DialogTab extends DialogControlImpl {
         out.write("<col width=\"200\" /><col />"); //$NON-NLS-1$
     }
 
+    @Override
     public void drawHtmlPostSubs(Writer out) throws IOException {
         out.write("</table>"); //$NON-NLS-1$
         out.write("</td></tr></table></div>"); //$NON-NLS-1$

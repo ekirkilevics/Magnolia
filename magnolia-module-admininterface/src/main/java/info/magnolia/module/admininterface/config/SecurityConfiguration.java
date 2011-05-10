@@ -125,38 +125,47 @@ public class SecurityConfiguration {
             this.repositoryConfiguration = repositoryConfiguration;
         }
 
+        @Override
         public void addAclType(AclTypeConfiguration type) {
             this.repositoryConfiguration.addAclType(type);
         }
 
+        @Override
         public void addPermission(PermissionConfiguration permission) {
             this.repositoryConfiguration.addPermission(permission);
         }
 
+        @Override
         public List getAclTypes() {
             return this.repositoryConfiguration.getAclTypes();
         }
 
+        @Override
         public List getPermissions() {
             return this.repositoryConfiguration.getPermissions();
         }
 
+        @Override
         public boolean isChooseButton() {
             return this.repositoryConfiguration.isChooseButton();
         }
 
+        @Override
         public void setAclTypes(List patternTypes) {
             this.repositoryConfiguration.setAclTypes(patternTypes);
         }
 
+        @Override
         public void setChooseButton(boolean chooseButton) {
             this.repositoryConfiguration.setChooseButton(chooseButton);
         }
 
+        @Override
         public void setPermissions(List permissions) {
             this.repositoryConfiguration.setPermissions(permissions);
         }
 
+        @Override
         public String toViewPattern(String path) {
             return this.repositoryConfiguration.toViewPattern(path);
         }

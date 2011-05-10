@@ -42,6 +42,7 @@ package info.magnolia.cms.taglibs;
  */
 public class IfNotEmpty extends IfEmpty {
 
+    @Override
     protected boolean condition() {
         return !super.condition();
     }

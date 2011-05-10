@@ -75,6 +75,7 @@ public class ImgTag extends BaseContentTag {
      * the name of the nodeData containing the image path.
      * @jsp.attribute required="true" rtexprvalue="true"
      */
+    @Override
     public void setNodeDataName(String nodeDataName) {
         super.setNodeDataName(nodeDataName);
     }
@@ -124,6 +125,7 @@ public class ImgTag extends BaseContentTag {
      * html pass through attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
+    @Override
     public void setId(String value) {
         this.htmlAttributes.put("id", value);
     }
@@ -131,6 +133,7 @@ public class ImgTag extends BaseContentTag {
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#doEndTag()
      */
+    @Override
     public int doEndTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
@@ -237,6 +240,7 @@ public class ImgTag extends BaseContentTag {
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#release()
      */
+    @Override
     public void release() {
         super.release();
         altNodeDataName = null;

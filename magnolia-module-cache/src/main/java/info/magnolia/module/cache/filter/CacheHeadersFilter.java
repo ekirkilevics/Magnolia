@@ -106,6 +106,7 @@ public class CacheHeadersFilter extends AbstractMgnlFilter {
         this.nocache = nocache;
     }
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (nocache) {
             response.setHeader("Pragma", "no-cache");

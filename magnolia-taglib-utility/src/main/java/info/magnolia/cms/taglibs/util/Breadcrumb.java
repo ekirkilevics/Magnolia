@@ -173,6 +173,7 @@ public class Breadcrumb extends TagSupport {
         this.activeCss = activeCss;
     }
 
+    @Override
     public int doStartTag() throws JspException {
 
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
@@ -243,6 +244,7 @@ public class Breadcrumb extends TagSupport {
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#release()
      */
+    @Override
     public void release() {
         this.startLevel = 1;
         this.delimiter = null;

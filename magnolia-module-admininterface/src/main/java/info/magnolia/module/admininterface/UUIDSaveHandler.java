@@ -59,10 +59,12 @@ public class UUIDSaveHandler extends SaveHandlerImpl implements DialogAwareSaveH
      */
     private Dialog dialog;
 
+    @Override
     public Dialog getDialog() {
         return dialog;
     }
 
+    @Override
     public void setDialog(Dialog dialog) {
         this.dialog = dialog;
     }
@@ -70,6 +72,7 @@ public class UUIDSaveHandler extends SaveHandlerImpl implements DialogAwareSaveH
     /**
      * Process a singel value
      */
+    @Override
     protected void processString(Content node, String name, int type, int encoding, String[] values, String valueStr)
         throws PathNotFoundException, RepositoryException, AccessDeniedException {
         DialogControlImpl control = getControl(name);
@@ -86,6 +89,7 @@ public class UUIDSaveHandler extends SaveHandlerImpl implements DialogAwareSaveH
     /**
      * Process a multiple value
      */
+    @Override
     protected void processMultiple(Content node, String name, int type, String[] values) throws RepositoryException,
         PathNotFoundException, AccessDeniedException {
         DialogControlImpl control = getControl(name);

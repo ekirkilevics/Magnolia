@@ -43,6 +43,7 @@ package info.magnolia.cms.taglibs;
  */
 public class IfNotExisting extends IfExisting {
 
+    @Override
     protected boolean condition() {
         return !super.condition();
     }

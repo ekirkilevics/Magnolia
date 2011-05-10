@@ -130,6 +130,7 @@ public class QueryTag extends TagSupport {
         this.nodeType = nodeType;
     }
 
+    @Override
     public int doEndTag() throws JspException {
 
         Query q;
@@ -157,6 +158,7 @@ public class QueryTag extends TagSupport {
         return EVAL_PAGE;
     }
 
+    @Override
     public void release() {
         super.release();
         this.var = null;

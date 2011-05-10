@@ -54,6 +54,7 @@ import org.slf4j.LoggerFactory;
 public class SubPagesControl extends DialogBox {
     private static final Logger log = LoggerFactory.getLogger(SubPagesControl.class);
 
+    @Override
     public void drawHtml(Writer out) throws IOException {
         try {
             if (NodeDataUtil.getBoolean(this.getWebsiteNode(), "recursive", false)) {

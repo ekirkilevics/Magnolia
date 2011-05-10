@@ -100,6 +100,7 @@ public class EhCacheFactory implements CacheFactory {
         return Arrays.asList(cacheManager.getCacheNames());
     }
 
+    @Override
     public Cache getCache(String name) {
         final Ehcache ehcache = cacheManager.getEhcache(name);
         if (ehcache == null) {
@@ -121,6 +122,7 @@ public class EhCacheFactory implements CacheFactory {
         }
     }
 
+    @Override
     public void start() {
         final Configuration cfg = ConfigurationFactory.parseConfiguration();
         cfg.setSource("ehcache defaults");
@@ -140,6 +142,7 @@ public class EhCacheFactory implements CacheFactory {
         ManagementService.registerMBeans(cacheManager, mBeanServer, true, true, true, true);
     }
 
+    @Override
     public void stop() {
         cacheManager.shutdown();
     }

@@ -148,6 +148,7 @@ public class Dialog extends DialogControlImpl {
         return (DialogTab) this.getSubs().get(i);
     }
 
+    @Override
     public void drawHtmlPreSubs(Writer out) throws IOException {
 
         out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" ");
@@ -219,6 +220,7 @@ public class Dialog extends DialogControlImpl {
         out.write("</script>\n"); //$NON-NLS-1$
     }
 
+    @Override
     public void drawHtmlPostSubs(Writer out) throws IOException {
         this.drawHtmlPostSubsTabSet(out);
         this.drawHtmlPostSubsButtons(out);

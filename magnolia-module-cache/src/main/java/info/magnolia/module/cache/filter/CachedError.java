@@ -62,6 +62,7 @@ public class CachedError implements CachedEntry, Serializable {
         return statusCode;
     }
 
+    @Override
     public void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (!response.isCommitted()) {
             response.sendError(getStatusCode());

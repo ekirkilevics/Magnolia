@@ -48,6 +48,7 @@ import info.magnolia.objectfactory.Components;
  */
 public class DeactivationCommand extends BaseRepositoryCommand {
 
+    @Override
     public boolean execute(Context ctx) throws Exception {
         try{
             Syndicator syndicator = Components.getComponentProvider().newInstance(Syndicator.class);

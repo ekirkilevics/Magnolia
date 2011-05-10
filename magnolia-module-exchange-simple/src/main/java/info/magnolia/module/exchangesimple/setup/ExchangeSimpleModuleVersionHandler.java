@@ -74,6 +74,7 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
             new IsAuthorInstanceDelegateTask("", "", new BootstrapSingleResource("Bootstrap new activation configuration", "Bootstrap new activation configuration",
                     "/mgnl-bootstrap/exchange-simple/config.server.activation.xml"), createEmptyActivationConfig)) {
 
+        @Override
         protected boolean condition(InstallContext ctx) {
             final HierarchyManager hm = ctx.getConfigHierarchyManager();
             return hm.isExist(UpdateActivationConfigTask.CE30_ROOT_PATH) || hm.isExist(UpdateActivationConfigTask.EE30_ROOT_PATH);
@@ -92,6 +93,7 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
         this.register(deltaTo354);
     }
 
+    @Override
     protected List getBasicInstallTasks(InstallContext installContext) {
         // 3.5.0 is the first version of this module. install tasks take care of updating existing config
 

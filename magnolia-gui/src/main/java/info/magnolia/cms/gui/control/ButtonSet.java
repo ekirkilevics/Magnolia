@@ -143,6 +143,7 @@ public class ButtonSet extends ControlImpl {
 
     }
 
+    @Override
     public String getHtmlPre() {
         if (super.getHtmlPre(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
@@ -153,6 +154,7 @@ public class ButtonSet extends ControlImpl {
         return super.getHtmlPre();
     }
 
+    @Override
     public String getHtmlInter() {
         if (super.getHtmlInter(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
@@ -163,6 +165,7 @@ public class ButtonSet extends ControlImpl {
         return super.getHtmlInter();
     }
 
+    @Override
     public String getHtmlPost() {
         if (super.getHtmlPost(null) == null) {
             if (this.getButtonType() == BUTTONTYPE_PUSHBUTTON) {
@@ -182,6 +185,7 @@ public class ButtonSet extends ControlImpl {
         return this.buttonType;
     }
 
+    @Override
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         html.append(this.getHtmlPre());

@@ -118,6 +118,7 @@ public class SimpleSyndicatorTest extends TestCase {
 
     public void testDeactivateWithNoSubscriber() throws Exception {
         runDeactivateTest(new Runnable() {
+            @Override
             public void run() {
                 try {
                     // TODO: shouldn't repo be set even tho there is no  subscriber???
@@ -143,6 +144,7 @@ public class SimpleSyndicatorTest extends TestCase {
 
     public void testDeactivateWithNoActiveSubscriber() throws Exception {
         runDeactivateTest(new Runnable() {
+            @Override
             public void run() {
                 try {
                     Subscriber subscriber = createStrictMock(Subscriber.class);

@@ -113,10 +113,12 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     // MAGNOLIA-1996: this can be called multiple times, e.g. by chunk writers, but always from a single thread.
+    @Override
     public ServletOutputStream getOutputStream() throws IOException {
         return wrappedStream;
     }
 
+    @Override
     public PrintWriter getWriter() throws IOException {
         if (wrappedWriter == null) {
             String encoding = getCharacterEncoding();
@@ -128,6 +130,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         return wrappedWriter;
     }
 
+    @Override
     public void flushBuffer() throws IOException {
         flush();
     }
@@ -141,6 +144,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
 
+    @Override
     public void reset() {
         super.reset();
 //        if (wrappedStream instanceof ByteArrayOutputStream) {
@@ -156,6 +160,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
 
+    @Override
     public void resetBuffer() {
         super.resetBuffer();
 //        if (wrappedStream != null) {
@@ -207,26 +212,32 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         return redirectionLocation;
     }
 
+    @Override
     public void setDateHeader(String name, long date) {
         replaceHeader(name, Long.valueOf(date));
     }
 
+    @Override
     public void addDateHeader(String name, long date) {
         appendHeader(name, Long.valueOf(date));
     }
 
+    @Override
     public void setHeader(String name, String value) {
         replaceHeader(name, value);
     }
 
+    @Override
     public void addHeader(String name, String value) {
         appendHeader(name, value);
     }
 
+    @Override
     public void setIntHeader(String name, int value) {
         replaceHeader(name, Integer.valueOf(value));
     }
 
+    @Override
     public void addIntHeader(String name, int value) {
         appendHeader(name, Integer.valueOf(value));
     }
@@ -245,30 +256,36 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         headers.put(name, value);
     }
 
+    @Override
     public void setStatus(int status) {
         this.status = status;
     }
 
+    @Override
     public void setStatus(int status, String string) {
         this.status = status;
     }
 
+    @Override
     public void sendRedirect(String location) throws IOException {
         this.status = SC_MOVED_TEMPORARILY;
         this.redirectionLocation = location;
     }
 
+    @Override
     public void sendError(int status, String errorMsg) throws IOException {
         this.errorMsg = errorMsg;
         this.status = status;
         this.isError = true;
     }
 
+    @Override
     public void sendError(int status) throws IOException {
         this.status = status;
         this.isError = true;
     }
 
+    @Override
     public void setContentLength(int len) {
         this.contentLength = len;
     }

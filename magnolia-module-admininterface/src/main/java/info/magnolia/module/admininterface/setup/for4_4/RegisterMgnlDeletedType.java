@@ -55,6 +55,7 @@ public class RegisterMgnlDeletedType extends AbstractTask {
         super("", "");
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         HierarchyManager webHM = ctx.getHierarchyManager(ContentRepository.WEBSITE);
         final String mixDeleted = "mgnl:deleted";

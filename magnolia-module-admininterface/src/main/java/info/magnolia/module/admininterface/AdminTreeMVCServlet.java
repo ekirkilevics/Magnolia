@@ -57,6 +57,7 @@ public class AdminTreeMVCServlet extends MVCServlet {
     /**
      * @see info.magnolia.cms.servlets.MVCServlet#getHandler(javax.servlet.http.HttpServletRequest)
      */
+    @Override
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
         String handlerName = request.getRequestURI();
         handlerName = StringUtils.replaceOnce(

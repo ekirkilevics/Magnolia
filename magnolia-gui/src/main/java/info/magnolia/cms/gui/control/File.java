@@ -92,6 +92,7 @@ public class File extends ControlImpl {
         return StringUtils.EMPTY;
     }
 
+    @Override
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         html.append(this.getHtmlBrowse());
@@ -176,6 +177,7 @@ public class File extends ControlImpl {
         return this.getWebsiteNode().getHandle() + "/" + this.getName(); //$NON-NLS-1$
     }
 
+    @Override
     public String getPath() {
         return getHandle() + "/" + this.getFileName() + "." + this.getExtension(); //$NON-NLS-1$ //$NON-NLS-2$
     }

@@ -64,6 +64,7 @@ public class Store extends AbstractExecutor {
 
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Store.class);
 
+    @Override
     public void processCacheRequest(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Cache cache, CachePolicyResult cachePolicyResult) throws IOException, ServletException {
         CachedEntry cachedEntry = null;
         final Object key = cachePolicyResult.getCacheKey();

@@ -101,6 +101,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
 
     public static final String TEXT_NOT_ALLOWED_VALIDATED = "-----";
 
+    @Override
     public void setUp()
     {
         req = createStrictMock(HttpServletRequest.class);
@@ -118,6 +119,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
         ComponentsTestUtil.setInstance(SystemContext.class, sysctx);
     }
 
+    @Override
     public void tearDown()
     {
         MgnlContext.setInstance(null);
@@ -276,6 +278,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
         MetaData meta = new MockMetaData(new MockContent(TEXT_RUSSIAN))
         {
 
+            @Override
             public void setUnActivated() throws AccessDeniedException
             {
                 unactivated[0] = true;
@@ -306,6 +309,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
         MetaData meta = new MockMetaData(new MockContent(TEXT_RUSSIAN))
         {
 
+            @Override
             public void setUnActivated() throws AccessDeniedException
             {
                 unactivated[0] = true;
@@ -315,6 +319,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
         MetaData childMeta = new MockMetaData(new MockContent(TEXT_RUSSIAN))
         {
 
+            @Override
             public void setUnActivated() throws AccessDeniedException
             {
                 unactivated[0] = true;

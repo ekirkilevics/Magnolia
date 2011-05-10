@@ -99,6 +99,7 @@ public class Select extends ControlImpl {
         return multiple;
     }
 
+    @Override
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         html.append("<select"); //$NON-NLS-1$

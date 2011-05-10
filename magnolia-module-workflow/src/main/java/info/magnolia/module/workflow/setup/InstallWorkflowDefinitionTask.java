@@ -64,6 +64,7 @@ public class InstallWorkflowDefinitionTask extends AbstractTask {
         this.resourcePath = resourcePath;
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         InputStream stream = null;
         try {

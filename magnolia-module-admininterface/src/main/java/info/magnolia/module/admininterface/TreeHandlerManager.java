@@ -99,6 +99,7 @@ public class TreeHandlerManager<H extends AdminTreeMVCHandler> extends ObservedM
         treeHandlers.put(name, new TreeHandlerConfig(treeHandler, repository, treeDefinition));
     }
 
+    @Override
     protected void onRegister(Content defNode) {
         Collection<Content> trees = defNode.getChildren(ItemType.CONTENTNODE.getSystemName());
         for (Object tree1 : trees) {
@@ -147,6 +148,7 @@ public class TreeHandlerManager<H extends AdminTreeMVCHandler> extends ObservedM
     /**
      * Clear the handlers
      */
+    @Override
     protected void onClear() {
         this.treeHandlers.clear();
     }

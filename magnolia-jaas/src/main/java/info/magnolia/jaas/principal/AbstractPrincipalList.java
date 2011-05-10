@@ -64,6 +64,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
      * Gets name given to this principal.
      * @return name
      */
+    @Override
     public String getName() {
         if (StringUtils.isEmpty(this.name)) {
             return getDefaultName();
@@ -77,6 +78,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
      * Sets principal name.
      * @param name
      */
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -85,6 +87,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
      * Adds a name to the list.
      * @param name
      */
+    @Override
     public void add(String name) {
         this.list.add(name);
     }
@@ -93,6 +96,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
      * Gets list of roles as string.
      * @return roles
      */
+    @Override
     public Collection getList() {
         return this.list;
     }
@@ -101,6 +105,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
      * Checks if the role name exist in this list.
      * @param name
      */
+    @Override
     public boolean has(String name) {
         Iterator listIterator = this.list.iterator();
         while (listIterator.hasNext()) {
@@ -115,6 +120,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
     /**
      * @see Object#toString()
      */
+    @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", getName()).append("list", this.list).toString();
     }

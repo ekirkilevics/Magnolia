@@ -77,6 +77,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         paragraph = params.getParameter("mgnlParagraph"); //$NON-NLS-1$
     }
 
+    @Override
     protected Dialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
         Dialog dialog = DialogFactory.getDialogInstance(request, response, null, null);
 
@@ -151,14 +152,17 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         radioButtonSet.addOption(button);
     }
 
+    @Override
     public Content getStorageNode() {
         return null;
     }
 
+    @Override
     public Content getConfigNode() {
         return null;
     }
 
+    @Override
     public String save() {
         try {
             // copy all parameters except mgnlDialog (which we switch to "editParagraph")

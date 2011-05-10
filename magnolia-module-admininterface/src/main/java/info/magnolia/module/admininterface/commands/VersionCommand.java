@@ -69,6 +69,7 @@ public class VersionCommand extends RuleBasedCommand {
     /**
      * @see info.magnolia.commands.MgnlCommand#execute(org.apache.commons.chain.Context)
      */
+    @Override
     public boolean execute(Context ctx) {
         try {
             final Content node = getNode(ctx);
@@ -119,6 +120,7 @@ public class VersionCommand extends RuleBasedCommand {
 
     protected Content.ContentFilter getFilter() {
         Content.ContentFilter filter = new Content.ContentFilter() {
+            @Override
             public boolean accept(Content content) {
                 try {
                     return !getRule().isAllowed(content.getNodeTypeName());

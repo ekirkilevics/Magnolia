@@ -53,11 +53,13 @@ public class SimpleMailHandler implements MgnlMailHandler {
 
     private static Logger log = LoggerFactory.getLogger(SimpleMailHandler.class);
 
+    @Override
     public synchronized void prepareAndSendMail(MgnlEmail email) throws Exception {
         email.setBody();
         sendMail(email);
     }
 
+    @Override
     public synchronized void sendMail(MgnlEmail email) throws Exception {
         Transport.send(email);
         log.info("Mail has been sent to: {}", Arrays.asList(email.getAllRecipients()));

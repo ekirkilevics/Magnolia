@@ -148,6 +148,7 @@ public class FckEditorDialogTest extends BaseLinkTest {
 
     // just makes setTopParent available for tests ...
     private final class FckEditorDialogForTest extends FckEditorDialog {
+        @Override
         public void setTopParent(DialogControlImpl top) {
             super.setTopParent(top);
         }

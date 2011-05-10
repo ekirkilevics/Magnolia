@@ -113,6 +113,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
 
             }
 
+            @Override
             public void checkNode(HierarchyManager hm) throws Exception {
                 //before
                 expect(hm.getContentByUUID("DUMMY-UUID")).andThrow(new ItemNotFoundException());
@@ -121,9 +122,11 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(new MockContent("blah"));
             }
 
+            @Override
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
                 session.importXML(eq(PARENT_PATH), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING));
                 expectLastCall().andAnswer(new IAnswer<Object>() {
+                    @Override
                     public Object answer() throws Throwable {
                         final InputStream passedStream = (InputStream) getCurrentArguments()[1];
                         final InputStream expectedStream = new GZIPInputStream(getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz"));
@@ -180,14 +183,17 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 expect(hm.getRoot()).andReturn(root);
             }
 
+            @Override
             public void checkNode(HierarchyManager hm) throws Exception {
                 expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(existingNode);
             }
 
+            @Override
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
 
                 session.importXML(startsWith("/DUMMY-UUID"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
                 expectLastCall().andAnswer(new IAnswer<Object>() {
+                    @Override
                     public Object answer() throws Throwable {
                         final InputStream passedStream = (InputStream) getCurrentArguments()[1];
                         final InputStream expectedStream = new GZIPInputStream(getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz"));
@@ -254,14 +260,17 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 expect(hm.getRoot()).andReturn(root);
             }
 
+            @Override
             public void checkNode(HierarchyManager hm) throws Exception {
                 expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(existingNode);
             }
 
+            @Override
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
 
                 session.importXML(eq("/DUMMY-UUID"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
                 expectLastCall().andAnswer(new IAnswer<Object>() {
+                    @Override
                     public Object answer() throws Throwable {
                         final InputStream passedStream = (InputStream) getCurrentArguments()[1];
                         final InputStream expectedStream = new GZIPInputStream(getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz"));
@@ -325,14 +334,17 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 expect(hm.getRoot()).andReturn(root);
             }
 
+            @Override
             public void checkNode(HierarchyManager hm) throws Exception {
                 expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(existingNode);
             }
 
+            @Override
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
 
                 session.importXML(eq("/DUMMY-UUID"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
                 expectLastCall().andAnswer(new IAnswer<Object>() {
+                    @Override
                     public Object answer() throws Throwable {
                         final InputStream passedStream = (InputStream) getCurrentArguments()[1];
                         final InputStream expectedStream = new GZIPInputStream(getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz"));
@@ -384,6 +396,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 parentNode.unlock();
             }
 
+            @Override
             public void checkNode(HierarchyManager hm) throws Exception {
                 // won't be called as parent is locked
             }
@@ -393,6 +406,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 // don't save ... we've not activated anything
             }
 
+            @Override
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
                 // won't be called as parent is locked
             }
@@ -539,6 +553,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
     public abstract class AbstractTestCallBack implements TestCallBack {
         private final Content parentNode = createMock(Content.class); // TODO this should maybe be strict
 
+        @Override
         public void checkParent(HierarchyManager hm) throws Exception {
             expect(hm.getContent(PARENT_PATH)).andReturn(parentNode).anyTimes();
             expect(hm.getContent(PARENT_PATH + "/")).andReturn(parentNode).anyTimes();
@@ -550,18 +565,22 @@ public class ReceiveFilterTest extends MgnlTestCase {
             expect(parentNode.lock(true, true)).andReturn(null);
         }
 
+        @Override
         public void checkPermissions(HierarchyManager hm) {
             // do nothing by default
         }
 
+        @Override
         public Content getParentNode() {
             return parentNode;
         }
 
+        @Override
         public void saveSession(HierarchyManager hm) throws Exception {
             hm.save();
         }
 
+        @Override
         public void createTemp(SystemContext arg0, HierarchyManager arg1) throws Exception {
             // nothing by default
         }

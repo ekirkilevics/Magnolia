@@ -54,6 +54,7 @@ public class OwfeJcrBeanCoder extends JcrBeanCoder {
         super(ns, startNode, beanNodeName);
     }
 
+    @Override
     protected Object[] asPropertyMapEntry(Object key, Object value) {
         if ((key instanceof StringAttribute) && isSafeForAnItemName(key.toString())) {
             if (value instanceof StringAttribute) {

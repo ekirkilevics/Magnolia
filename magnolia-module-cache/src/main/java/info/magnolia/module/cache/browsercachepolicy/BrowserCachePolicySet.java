@@ -58,6 +58,7 @@ public class BrowserCachePolicySet implements BrowserCachePolicy {
         this.policies = policies;
     }
 
+    @Override
     public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
         for (BrowserCachePolicy policy : policies) {
             BrowserCachePolicyResult result = policy.canCacheOnClient(cachePolicyResult);

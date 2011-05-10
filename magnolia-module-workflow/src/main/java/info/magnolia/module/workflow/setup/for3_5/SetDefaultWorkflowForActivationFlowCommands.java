@@ -59,6 +59,7 @@ public class SetDefaultWorkflowForActivationFlowCommands extends AbstractReposit
         super("Workflow activation", "Sets default values on workflow activation commands");
     }
 
+    @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         Collection nodes = QueryUtil.query(ContentRepository.CONFIG, "select * from nt:base where class='" + ActivationFlowCommand.class.getName() + "'");
         for (Iterator iter = nodes.iterator(); iter.hasNext();) {

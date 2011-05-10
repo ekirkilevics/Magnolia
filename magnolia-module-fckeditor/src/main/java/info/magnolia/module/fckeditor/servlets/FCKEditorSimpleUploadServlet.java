@@ -77,6 +77,7 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
      * If not specified the value of "/UserFiles/" will be used.<br>
      * Also it retrieve all allowed and denied extensions to be handled.
      */
+    @Override
     public void init() throws ServletException {
         allowedExtensions = new Hashtable(3);
         deniedExtensions = new Hashtable(3);
@@ -99,6 +100,7 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
      * It store the file (renaming it in case a file with the same name exists) and then return an HTML file with a
      * javascript command in it.
      */
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html; charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");

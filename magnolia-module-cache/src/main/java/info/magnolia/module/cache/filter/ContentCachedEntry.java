@@ -68,6 +68,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 public abstract class ContentCachedEntry implements CachedEntry, Serializable {
 
     private static final ToStringStyle BYTE_ARRAY_SIZE_STYLE = new ToStringStyle() {
+        @Override
         protected void appendDetail(StringBuffer buffer, String fieldName,
                 byte[] array) {
             super.appendDetail(buffer, fieldName, array.length + " bytes");
@@ -126,6 +127,7 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
         return lastModificationTime;
     }
 
+    @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, BYTE_ARRAY_SIZE_STYLE);
     }
@@ -155,6 +157,7 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
         serializableHeadersBackingList = null;
    }
 
+    @Override
     public void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         response.setStatus(getStatusCode());
 

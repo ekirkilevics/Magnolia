@@ -82,12 +82,14 @@ public class WorkflowModule implements ModuleLifecycle {
     private boolean useLifeTimeJCRSession = true;
 
 
+    @Override
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
         instance = this;
         startEngine();
         initializeWorkItemStore();
     }
 
+    @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
         JCRPersistedEngine engine = getEngine();
         if (engine != null && engine.isRunning()) {

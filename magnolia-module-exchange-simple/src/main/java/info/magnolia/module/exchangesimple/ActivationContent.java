@@ -118,6 +118,7 @@ public class ActivationContent implements Cloneable {
         return this.properties;
     }
 
+    @Override
     public Object clone() {
         try {
             ActivationContent clone = (ActivationContent) super.clone();

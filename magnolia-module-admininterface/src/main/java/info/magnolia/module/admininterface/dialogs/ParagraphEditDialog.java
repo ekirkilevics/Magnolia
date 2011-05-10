@@ -103,14 +103,17 @@ public class ParagraphEditDialog extends ConfiguredDialog {
     // methods delegating to the paragraph's dialog handler
     // this are the only methods called by the dialog mvc servlet
 
+    @Override
     public String getCommand() {
         return dialogHandler.getCommand();
     }
 
+    @Override
     public String execute(String command) {
         return dialogHandler.execute(command);
     }
 
+    @Override
     public void renderHtml(String view) throws IOException {
         dialogHandler.renderHtml(view);
     }

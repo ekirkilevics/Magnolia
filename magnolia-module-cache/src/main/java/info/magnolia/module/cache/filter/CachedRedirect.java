@@ -63,6 +63,7 @@ public class CachedRedirect implements CachedEntry, Serializable {
         return location;
     }
 
+    @Override
     public void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // we'll ignore the redirection code for now - especially since the servlet api doesn't really let us choose anyway
         // except if someone sets the header manually ?

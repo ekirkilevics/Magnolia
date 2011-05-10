@@ -65,6 +65,7 @@ public class DialogFile extends DialogBox {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
+    @Override
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
@@ -88,6 +89,7 @@ public class DialogFile extends DialogBox {
         this.getImageExtensions().add("swf"); //$NON-NLS-1$
     }
 
+    @Override
     public void drawHtml(Writer out) throws IOException {
         File control = getFileControl();
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
@@ -270,6 +272,7 @@ public class DialogFile extends DialogBox {
         return htmlControlFileName;
     }
 
+    @Override
     public boolean validate() {
         if (isRequired()) {
             // if we have a form, then this is going to the database

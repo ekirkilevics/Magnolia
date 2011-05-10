@@ -84,6 +84,7 @@ public class Bar extends ControlImpl {
         return this.small;
     }
 
+    @Override
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         if (StringUtils.isEmpty(this.getCssClass())) {

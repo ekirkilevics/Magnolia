@@ -46,6 +46,7 @@ public class DialogStatic extends DialogBox {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
+    @Override
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
         String value = this.getConfigValue("value", null); //$NON-NLS-1$

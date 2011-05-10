@@ -62,6 +62,7 @@ public class LinksTag extends TagSupport {
      */
     private boolean adminOnly = true;
 
+    @Override
     public int doStartTag() throws JspException {
         if (!adminOnly || ServerConfiguration.getInstance().isAdmin()) {
 
@@ -97,6 +98,7 @@ public class LinksTag extends TagSupport {
         this.adminOnly = adminOnly;
     }
 
+    @Override
     public void release() {
         this.adminOnly = true;
         super.release();

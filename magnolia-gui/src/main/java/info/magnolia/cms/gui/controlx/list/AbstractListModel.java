@@ -93,6 +93,7 @@ public abstract class AbstractListModel implements ListModel {
      * @return Iterator over found records
      * @see ListModelIterator
      */
+    @Override
     public ListModelIterator getListModelIterator() {
         try {
             Collection items = getResult();
@@ -105,6 +106,7 @@ public abstract class AbstractListModel implements ListModel {
         }
     }
 
+    @Override
     public Iterator iterator() {
         return getListModelIterator();
     }
@@ -130,6 +132,7 @@ public abstract class AbstractListModel implements ListModel {
      * set sort by field
      * @param name
      */
+    @Override
     public void setSortBy(String name) {
         this.sortBy = name;
     }
@@ -139,6 +142,7 @@ public abstract class AbstractListModel implements ListModel {
      * @param name
      * @param order
      */
+    @Override
     public void setSortBy(String name, String order) {
         this.sortBy = name;
         this.sortByOrder = order;
@@ -148,6 +152,7 @@ public abstract class AbstractListModel implements ListModel {
      * set group by field
      * @param name
      */
+    @Override
     public void setGroupBy(String name) {
         this.groupBy = name;
     }
@@ -157,6 +162,7 @@ public abstract class AbstractListModel implements ListModel {
      * @param name
      * @param order
      */
+    @Override
     public void setGroupBy(String name, String order) {
         this.groupBy = name;
         this.groupByOrder = order;
@@ -166,6 +172,7 @@ public abstract class AbstractListModel implements ListModel {
      * get sort on field name
      * @return String field name
      */
+    @Override
     public String getSortBy() {
         return this.sortBy;
     }
@@ -174,6 +181,7 @@ public abstract class AbstractListModel implements ListModel {
      * get sort by ordering
      * @return order ('ASCENDING' | 'DESCENDING')
      */
+    @Override
     public String getSortByOrder() {
         return this.sortByOrder;
     }
@@ -182,6 +190,7 @@ public abstract class AbstractListModel implements ListModel {
      * get group on field name
      * @return String field name
      */
+    @Override
     public String getGroupBy() {
         return this.groupBy;
     }
@@ -190,6 +199,7 @@ public abstract class AbstractListModel implements ListModel {
      * get group by ordering
      * @return order ('ASCENDING' | 'DESCENDING')
      */
+    @Override
     public String getGroupByOrder() {
         return this.groupByOrder;
     }
@@ -266,6 +276,7 @@ public abstract class AbstractListModel implements ListModel {
 
         private String order;
 
+        @Override
         public int compare(Object object, Object object1) {
             if (StringUtils.isNotEmpty(this.sortBy) && StringUtils.isEmpty(this.preSort)) {
                 return this.sort(object, object1);

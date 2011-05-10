@@ -65,6 +65,7 @@ public class VelocityEmail extends MgnlMultipartEmail {
         super(template);
     }
 
+    @Override
     public void setBodyFromResourceFile() throws Exception {
         String resourceFile = this.getTemplate().getTemplateFile();
         VelocityContext context = new VelocityContext(super.getTemplate().getParameters());

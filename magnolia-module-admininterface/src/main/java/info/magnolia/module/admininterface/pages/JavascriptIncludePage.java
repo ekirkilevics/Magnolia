@@ -102,6 +102,7 @@ public class JavascriptIncludePage extends PageMVCHandler {
     /**
      * @see info.magnolia.cms.servlets.MVCServletHandler#renderHtml(java.lang.String)
      */
+    @Override
     public void renderHtml(String view) throws IOException {
         HttpServletRequest request = getRequest();
         HttpServletResponse response = getResponse();
@@ -115,6 +116,7 @@ public class JavascriptIncludePage extends PageMVCHandler {
 
         // finding files in classpath is too expensive, just cache the list of paths!
         String[] files = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
+            @Override
             public boolean accept(String name) {
                 return name.startsWith("/mgnl-resources/js-classes") && name.endsWith(".js");
             }

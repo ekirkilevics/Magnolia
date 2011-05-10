@@ -132,6 +132,7 @@ public class EhCacheFactoryTest extends TestCase {
 
         // 2nd call - wait until mutex is gone and entry is available
         FutureTask<Object> task2 = new FutureTask<Object>(new Callable<Object>() {
+            @Override
             public Object call() throws Exception {
                 log.debug("2nd get called");
                 Object res = ehCache.get("blah");
@@ -142,6 +143,7 @@ public class EhCacheFactoryTest extends TestCase {
 
         // 3rd call - wait until mutex is gone and entry is available
         FutureTask<Object> task3 = new FutureTask<Object>(new Callable<Object>() {
+            @Override
             public Object call() throws Exception {
                 log.debug("3rd get called");
                 Object res = ehCache.get("blah");
@@ -195,6 +197,7 @@ public class EhCacheFactoryTest extends TestCase {
         // instead make 2nd call on separate thread - cache entry should exist
         FutureTask<Object> task2 = new FutureTask<Object>(new Callable<Object>() {
 
+            @Override
             public Object call() throws Exception {
                 log.info("2nd get called");
                 Object res = ehCache.get("blah");
@@ -216,6 +219,7 @@ public class EhCacheFactoryTest extends TestCase {
         // 3rd call - after evicted and before cached again == > block forever
         FutureTask<Object> task3 = new FutureTask<Object>(new Callable<Object>() {
 
+            @Override
             public Object call() throws Exception {
                 log.info("3rd get called");
                 Object res = "futureDummyNotModifiedByCacheGetCall";

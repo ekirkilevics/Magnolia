@@ -114,6 +114,7 @@ public class MainBar extends TagSupport implements BarTag {
         this.adminButtonVisible = adminButtonVisible;
     }
 
+    @Override
     public void addButtonLeft(Button button) {
         if (buttonLeft == null) {
             buttonLeft = new ArrayList();
@@ -121,6 +122,7 @@ public class MainBar extends TagSupport implements BarTag {
         buttonLeft.add(button);
     }
 
+    @Override
     public void addButtonRight(Button button) {
         if (buttonRight == null) {
             buttonRight = new ArrayList();
@@ -128,6 +130,7 @@ public class MainBar extends TagSupport implements BarTag {
         buttonRight.add(button);
     }
 
+    @Override
     public int doStartTag() {
 
         if (ServerConfiguration.getInstance().isAdmin()) {
@@ -136,6 +139,7 @@ public class MainBar extends TagSupport implements BarTag {
         return SKIP_BODY;
     }
 
+    @Override
     public int doEndTag() {
         Content activePage = MgnlContext.getAggregationState().getMainContent();
         if (ServerConfiguration.getInstance().isAdmin() && activePage != null && activePage.isGranted(Permission.SET)) {
@@ -184,6 +188,7 @@ public class MainBar extends TagSupport implements BarTag {
         }
     }
 
+    @Override
     public void release() {
         super.release();
         this.dialog = null;

@@ -70,6 +70,7 @@ public class CachePolicyResult {
         return cachedEntry;
     }
 
+    @Override
     public String toString() {
         return "CachePolicyResult{" +
                 "behaviour=" + behaviour +
@@ -88,6 +89,7 @@ public class CachePolicyResult {
             this.name = name;
         }
 
+        @Override
         public String toString() {
             return name;
         }

@@ -95,6 +95,7 @@ public class ButtonTag extends TagSupport {
         this.position = position;
     }
 
+    @Override
     public int doEndTag() throws JspException {
 
         BarTag bartag = (BarTag) findAncestorWithClass(this, BarTag.class);
@@ -124,6 +125,7 @@ public class ButtonTag extends TagSupport {
         return EVAL_PAGE;
     }
 
+    @Override
     public void release() {
         super.release();
         this.dialogName = null;

@@ -82,6 +82,7 @@ public class ImportPage extends ExportPage {
     /**
      * @see info.magnolia.module.admininterface.pages.ExportPage#getCommand()
      */
+    @Override
     public String getCommand() {
         if ("POST".equals(getRequest().getMethod())) {
             return "importxml"; // a post request is an import request, preserve the behaviour from the servlet

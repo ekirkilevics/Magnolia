@@ -128,6 +128,7 @@ public class SearchResultSnippetTag extends TagSupport {
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#doStartTag()
      */
+    @Override
     public int doStartTag() throws JspException {
 
         JspWriter out = this.pageContext.getOut();
@@ -271,6 +272,7 @@ public class SearchResultSnippetTag extends TagSupport {
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#release()
      */
+    @Override
     public void release() {
         this.query = null;
         this.page = null;

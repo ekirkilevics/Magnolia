@@ -167,6 +167,7 @@ public class DialogFreemarker extends DialogBox {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected List readValues() {
 
         List values = new ArrayList();
@@ -234,6 +235,7 @@ public class DialogFreemarker extends DialogBox {
      * {@inheritDoc}
      */
 
+    @Override
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
@@ -243,6 +245,7 @@ public class DialogFreemarker extends DialogBox {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void drawHtml(Writer out) throws IOException {
         String ftlPath = StringUtils.defaultIfEmpty(this.getConfigValue("path"), path);
         drawHtml(out, ftlPath);

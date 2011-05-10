@@ -50,6 +50,7 @@ public class SimpleEmail extends MgnlMultipartEmail {
     }
 
 
+    @Override
     public void setBody(String body) throws Exception {
         super.setBody(body);
     }

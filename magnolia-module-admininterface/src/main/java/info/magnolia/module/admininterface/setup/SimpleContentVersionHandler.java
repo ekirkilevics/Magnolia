@@ -46,6 +46,7 @@ import java.util.List;
  */
 public class SimpleContentVersionHandler extends DefaultModuleVersionHandler {
 
+    @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         return Collections.<Task>singletonList(new SetDefaultPublicURI("defaultPublicURI"));
     }

@@ -52,6 +52,7 @@ public abstract class AbstractSearchableListModel extends AbstractListModel impl
      * set Query
      * @param query
      */
+    @Override
     public void setQuery(SearchQuery query) {
         this.query = query;
     }
@@ -60,6 +61,7 @@ public abstract class AbstractSearchableListModel extends AbstractListModel impl
      * get query
      * @return query
      */
+    @Override
     public SearchQuery getQuery() {
         return this.query;
     }

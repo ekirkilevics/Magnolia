@@ -69,6 +69,7 @@ public class ImgTagBeanInfo extends SimpleBeanInfo {
     /**
      * @see java.beans.BeanInfo#getPropertyDescriptors()
      */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
 
         try {

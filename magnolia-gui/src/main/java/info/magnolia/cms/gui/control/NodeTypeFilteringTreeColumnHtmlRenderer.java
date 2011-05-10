@@ -57,6 +57,7 @@ public class NodeTypeFilteringTreeColumnHtmlRenderer implements TreeColumnHtmlRe
         this.allowedNodeTypeNames = allowedNodeTypeNames;
     }
 
+    @Override
     public String renderHtml(TreeColumn treeColumn, Content content) {
         final boolean shouldRender = shouldRender(content);
         return shouldRender ? delegate.renderHtml(treeColumn, content) : " "; // space avoids underscore

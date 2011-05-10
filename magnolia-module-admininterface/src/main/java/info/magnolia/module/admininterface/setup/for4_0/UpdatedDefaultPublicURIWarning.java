@@ -59,6 +59,7 @@ public class UpdatedDefaultPublicURIWarning extends AbstractRepositoryTask {
         super("Checks the default public URI is correct", "Warns the user if the URI has been changed wrongly.");
     }
 
+    @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         if (templatesExist() && hasDefaultURI(installContext)) {
             installContext.warn("Please set the default virtual URI mapping; it was incorrectly reset by a previous update.");

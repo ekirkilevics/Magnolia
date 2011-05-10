@@ -56,6 +56,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class MultiValueSaveHandler extends SaveHandlerImpl implements FieldSaveHandler {
 
+    @Override
     protected void processMultiple(Content node, String name, int type, String[] values) throws RepositoryException,
         PathNotFoundException, AccessDeniedException {
 
@@ -79,6 +80,7 @@ public class MultiValueSaveHandler extends SaveHandlerImpl implements FieldSaveH
         }
     }
 
+    @Override
     public void save(Content parentNode, Content configNode, String name,
             MultipartForm form, int type, int valueType, int isRichEditValue,
             int encoding) throws RepositoryException, AccessDeniedException {

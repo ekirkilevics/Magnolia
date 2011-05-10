@@ -54,6 +54,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UseCache extends AbstractExecutor {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UseCache.class);
 
+    @Override
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
             CachePolicyResult cachePolicy) throws IOException, ServletException {

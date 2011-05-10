@@ -91,6 +91,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         this.cleanUp = cleanUp;
     }
 
+    @Override
     public void init(final String serviceName, final ApplicationContext context, final Map serviceParams) throws ServiceException {
         super.init(serviceName, context, serviceParams);
     }
@@ -98,6 +99,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * Stores one expression.
      */
+    @Override
     public synchronized void storeExpression(final FlowExpression fe) throws PoolException {
         boolean release = !useLifeTimeJCRSession && !MgnlContext.hasInstance();
         HierarchyManager hm = null;
@@ -137,6 +139,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * Removes the expression from the JCR storage.
      */
+    @Override
     public synchronized void unstoreExpression(final FlowExpression fe) throws PoolException {
         boolean release = !useLifeTimeJCRSession && !MgnlContext.hasInstance();
         try {
@@ -166,6 +169,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * Returns an iterator on the content of that expression store.
      */
+    @Override
     public synchronized Iterator contentIterator(final Class assignClass) {
         try {
             return new StoreIterator(assignClass);
@@ -182,6 +186,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * Loads an expression given its id.
      */
+    @Override
     public synchronized FlowExpression loadExpression(final FlowExpressionId fei) throws PoolException {
         try {
             Content cExpression = findExpression(fei, getHierarchyManager());
@@ -208,6 +213,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * Returns the number of expressions currently stored in that store.
      */
+    @Override
     public int size() {
         try {
             final QueryManager qm = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_EXPRESSION);
@@ -343,6 +349,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             this.next = fetchNext();
         }
 
+        @Override
         public boolean hasNext() {
             return (this.next != null);
         }
@@ -373,6 +380,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             }
         }
 
+        @Override
         public Object next() throws java.util.NoSuchElementException {
             final FlowExpression current = this.next;
 
@@ -389,6 +397,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             return current;
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }

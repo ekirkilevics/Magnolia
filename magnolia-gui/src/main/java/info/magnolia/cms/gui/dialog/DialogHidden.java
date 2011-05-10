@@ -48,6 +48,7 @@ public class DialogHidden extends DialogBox {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
+    @Override
     public void drawHtml(Writer out) throws IOException {
         Hidden control = new Hidden(this.getName(), this.getValue());
         if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$

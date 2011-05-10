@@ -105,6 +105,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("3.6", "New cache API and configuration.")
                 .addTask(new BackupTask("config", "/modules/cache/config", true))
                 .addTask(new BootstrapResourcesTask("New configuration", "Bootstraps new default cache configuration.") {
+                    @Override
                     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
                         return new String[]{
                                 "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml",
@@ -125,6 +126,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
         register(DeltaBuilder.update("3.6.2", "Updated executors and filter configuration.")
                 .addTask(new BootstrapResourcesTask("Updated configuration", "Bootstraps new default cache configuration.") {
+                    @Override
                     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
                         return new String[]{
                                 "/mgnl-bootstrap/cache/setup/config.modules.cache.config.configurations.default.executors.store.cacheContent.compressible.xml",
@@ -197,6 +199,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         List<Task> list = new ArrayList<Task>();
         // Add new compression types and user agents configuration
         list.add(new BootstrapResourcesTask("Updated configuration", "Bootstraps cache compression configuration.") {
+            @Override
             protected String[] getResourcesToBootstrap(final InstallContext installContext) {
                 return new String[]{"/mgnl-bootstrap/cache/config.modules.cache.config.compression.xml"};
             }
@@ -216,6 +219,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
         // add new bypass to GzipFilter that executes voters from new compression configuration in /modules/cache/config
         list.add(new AbstractRepositoryTask("Add bypass", "Adds new bypass for GZip filter using global configuration.") {
+            @Override
             protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
                 final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
                 Content content = hm.createContent("/server/filters/gzip/bypasses", "deletageBypass", ItemType.CONTENTNODE.getSystemName());
@@ -225,6 +229,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         });
 
         list.add(new AbstractRepositoryTask("Cache Flushing", "Migrate old cache flushing configuration to new location." ) {
+            @Override
             protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
                 final String reposPath= "/modules/cache/config/repositories";
                 final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
@@ -242,6 +247,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         return list;
     }
 
+    @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final List<Task> tasks = new ArrayList<Task>();
         tasks.add(new FilterOrderingTask("gzip", new String[]{"context", "multipartRequest", "activation"}));

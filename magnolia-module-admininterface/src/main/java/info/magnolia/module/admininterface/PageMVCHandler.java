@@ -107,6 +107,7 @@ public abstract class PageMVCHandler extends CommandBasedMVCServletHandler {
      *
      * TODO ! init is called twice !!! once by content2bean, once by MVCServlet !
      */
+    @Override
     public void init() {
         super.init();
         if (StringUtils.isEmpty(this.getCommand())) {

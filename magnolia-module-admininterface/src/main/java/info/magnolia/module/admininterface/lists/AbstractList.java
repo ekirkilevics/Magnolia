@@ -86,10 +86,12 @@ public abstract class AbstractList extends TemplatedMVCHandler {
     /**
      * Don't use the class name.
      */
+    @Override
     protected String getTemplateName(String viewName) {
         return FreemarkerUtil.createTemplateName(AbstractList.class, "html");
     }
 
+    @Override
     public String show() {
         String view = super.show();
         ListControl list = this.getList();

@@ -60,6 +60,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
     private MockPageContext pc;
     private ArrayList items;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // reinit mock context - this test needs instance of WebContext
@@ -67,6 +68,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         MgnlContext.setInstance(ctx);
         // and system context as well
         ComponentsTestUtil.setInstanceFactory(SystemContext.class, new ComponentFactory() {
+            @Override
             public Object newInstance() {
                 return ctx;
             }
@@ -91,6 +93,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         cni.setItems(items);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();

@@ -55,6 +55,7 @@ public class GroupsTreeConfiguration extends AbstractTreeConfiguration {
      * @see info.magnolia.module.admininterface.AdminTreeConfiguration#prepareTree(info.magnolia.cms.gui.control.Tree,
      * boolean, javax.servlet.http.HttpServletRequest)
      */
+    @Override
     public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
         tree.setSortComparator(new NodeNameComparator());
 
@@ -92,6 +93,7 @@ public class GroupsTreeConfiguration extends AbstractTreeConfiguration {
      * @see info.magnolia.module.admininterface.AdminTreeConfiguration#prepareContextMenu(info.magnolia.cms.gui.control.Tree,
      * boolean, javax.servlet.http.HttpServletRequest)
      */
+    @Override
     public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
         final Messages msgs = getMessages();
 
@@ -177,6 +179,7 @@ public class GroupsTreeConfiguration extends AbstractTreeConfiguration {
      * @see info.magnolia.module.admininterface.AdminTreeConfiguration#prepareFunctionBar(info.magnolia.cms.gui.control.Tree,
      * boolean, javax.servlet.http.HttpServletRequest)
      */
+    @Override
     public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
         tree.addFunctionBarItemFromContextMenu("edit");
         tree.addFunctionBarItemFromContextMenu("new");

@@ -64,6 +64,7 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
         this.i18nContentSupport = I18nContentSupportFactory.getI18nSupport();
     }
 
+    @Override
     public Control getLanguageChooser() {
         if (isEnabled() && i18nContentSupport.isEnabled() && i18nContentSupport.getLocales().size()>1){
             Select select = new Select();
@@ -105,6 +106,7 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
         return uri;
     }
 
+    @Override
     public void i18nIze(Dialog dialog) {
         // TODO: should this be set in the aggregation state?
         Locale locale = LocaleUtils.toLocale(dialog.getConfigValue("locale", null));
@@ -129,6 +131,7 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
         }
     }
 
+    @Override
     public boolean isEnabled() {
         return this.enabled;
     }

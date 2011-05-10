@@ -80,6 +80,7 @@ public class DialogHandlerManager extends ObservedManager {
     /**
      * register the dialogs from the config.
      */
+    @Override
     protected void onRegister(Content node) {
         final List<Content> dialogNodes = new ArrayList<Content>();
         try {
@@ -127,6 +128,7 @@ public class DialogHandlerManager extends ObservedManager {
         }
     }
 
+    @Override
     protected void onClear() {
         this.dialogHandlers.clear();
     }

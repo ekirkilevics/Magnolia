@@ -87,6 +87,7 @@ public class VersionListModel extends AbstractListModel {
      * get all versions
      * @return all versions in a collection
      */
+    @Override
     protected Collection getResult() throws RepositoryException {
         List allVersions = new ArrayList();
 

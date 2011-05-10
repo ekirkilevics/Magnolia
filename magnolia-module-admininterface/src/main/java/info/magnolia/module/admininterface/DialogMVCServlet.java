@@ -57,6 +57,7 @@ import javax.servlet.http.HttpServletResponse;
 public class DialogMVCServlet extends MVCServlet {
     private static final Logger log = LoggerFactory.getLogger(DialogMVCServlet.class);
 
+    @Override
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
         final String dialogName = getDialogName(request);
 

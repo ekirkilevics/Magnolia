@@ -136,11 +136,13 @@ public class CacheMonitor implements CacheMonitorMBean {
     }
 
     // mbean exposed operations
+    @Override
     public void flushAll() throws Exception {
         Command flush = getCommand("flushAll");
         flush.execute(MgnlContext.getSystemContext());
     }
 
+    @Override
     public void flushByUUID(String repository, String uuid) throws Exception {
         Command flush = getCommand("flushByUUID");
         Context ctx = new SimpleContext(MgnlContext.getSystemContext());
@@ -150,38 +152,47 @@ public class CacheMonitor implements CacheMonitorMBean {
     }
 
     // mbean exposed attributes
+    @Override
     public Map<String, Integer> getAll() {
         return calls;
     }
 
+    @Override
     public int getHits() {
         return calls.get("useCache");
     }
 
+    @Override
     public int getBypasses() {
         return calls.get("bypass");
     }
 
+    @Override
     public int getPuts() {
         return calls.get("store");
     }
 
+    @Override
     public int getStopCalls() {
         return stop;
     }
 
+    @Override
     public int getStartCalls() {
         return start;
     }
 
+    @Override
     public Map<String, Integer> getFlushes() {
         return caches;
     }
 
+    @Override
     public Map<String, Integer> getDomainAccesses() {
         return domains;
     }
 
+    @Override
     public int getCachedKeysCount() {
         int count = 0;
         // there's most likely gonna be ever just one map in the default cache, but let's not assume that and search all configured caches
@@ -197,6 +208,7 @@ public class CacheMonitor implements CacheMonitorMBean {
         return count;
     }
 
+    @Override
     public int getCachedUUIDsCount() {
         CacheFactory factory = getCacheFactory();
         Cache cache = factory.getCache(Default.UUID_KEY_MAP_KEY);

@@ -46,6 +46,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version $Revision: $ ($Author: $)
  */
 public class WorkflowTreeConfiguration extends ConfigTreeConfiguration {
+    @Override
     public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
         super.prepareTree(tree, browseMode, request);
         tree.addItemType(ItemType.NT_UNSTRUCTURED);

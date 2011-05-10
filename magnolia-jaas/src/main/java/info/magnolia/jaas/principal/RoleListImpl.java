@@ -51,6 +51,7 @@ public class RoleListImpl extends AbstractPrincipalList implements RoleList {
      */
     private static final String DEFAULT_NAME = "roles";
 
+    @Override
     protected String getDefaultName() {
         return DEFAULT_NAME;
     }

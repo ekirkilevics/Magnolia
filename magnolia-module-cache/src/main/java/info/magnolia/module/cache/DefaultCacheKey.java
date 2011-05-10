@@ -91,6 +91,7 @@ public class DefaultCacheKey implements Serializable {
     }
 
     // generated toString() method
+    @Override
     public String toString() {
         return "DefaultCacheKey{" +
                 "uri='" + uri + '\'' +

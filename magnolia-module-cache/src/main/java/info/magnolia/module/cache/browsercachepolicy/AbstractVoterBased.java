@@ -56,6 +56,7 @@ public abstract class AbstractVoterBased implements BrowserCachePolicy {
         this.voters = voters;
     }
 
+    @Override
     public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
         if(voters == null || voters.vote(cachePolicyResult)>0){
             return getPositiveVoteResult(cachePolicyResult);

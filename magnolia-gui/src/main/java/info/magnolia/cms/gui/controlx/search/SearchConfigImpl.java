@@ -50,10 +50,12 @@ public class SearchConfigImpl implements SearchConfig {
     /**
      * @return Returns the controls.
      */
+    @Override
     public Collection getControlDefinitions() {
         return this.controlDefinitions.values();
     }
 
+    @Override
     public void addControlDefinition(SearchControlDefinition def) {
         controlDefinitions.put(def.getName(), def);
     }
@@ -61,6 +63,7 @@ public class SearchConfigImpl implements SearchConfig {
     /**
      * @see info.magnolia.cms.gui.controlx.search.SearchConfig#getControlDefinition(java.lang.String)
      */
+    @Override
     public SearchControlDefinition getControlDefinition(String name) {
         return (SearchControlDefinition) this.controlDefinitions.get(name);
     }

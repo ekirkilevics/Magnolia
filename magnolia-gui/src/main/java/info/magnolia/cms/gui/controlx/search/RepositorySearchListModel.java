@@ -112,6 +112,7 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
     /**
      * Creates the jcr query and executes it.
      */
+    @Override
     protected Collection getResult() throws Exception {
         String query = buildQuery();
         if(log.isDebugEnabled()){
@@ -131,6 +132,7 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
     /**
      * Returns the uuid of the node
      */
+    @Override
     protected String resolveId(int index, Object value) {
         if(value instanceof Content){
             return ((Content)value).getUUID();
@@ -206,6 +208,7 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
      * set Query
      * @param query
      */
+    @Override
     public void setQuery(SearchQuery query) {
         this.query = query;
     }
@@ -214,6 +217,7 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
      * get query
      * @return query
      */
+    @Override
     public SearchQuery getQuery() {
         // this is needed in case the list page is not a searchable list
         if(this.query == null){

@@ -58,6 +58,7 @@ public class TableTagBeanInfo extends SimpleBeanInfo {
     /**
      * @see java.beans.BeanInfo#getPropertyDescriptors()
      */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
 
         try {

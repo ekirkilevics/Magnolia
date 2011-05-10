@@ -62,6 +62,7 @@ public class MailCommand implements Command {
 
     public static Logger log = LoggerFactory.getLogger(MailCommand.class);
 
+    @Override
     public boolean execute(Context ctx) {
         if (log.isDebugEnabled()) {
             log.debug("starting sending mail");

@@ -69,12 +69,14 @@ import junit.framework.TestCase;
 public class ActivationCommandTest extends TestCase {
     private static final String PARENT_PATH = "/foo/bar";
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         super.tearDown();

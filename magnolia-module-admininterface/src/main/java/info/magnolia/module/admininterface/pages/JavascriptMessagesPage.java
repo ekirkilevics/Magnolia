@@ -63,6 +63,7 @@ public class JavascriptMessagesPage extends JavascriptIncludePage {
         super(name, request, response);
     }
 
+    @Override
     public void renderHtml(String view) throws IOException {
         final Locale locale = LocaleUtils.toLocale(localeStr);
         //adminInterface or default messages

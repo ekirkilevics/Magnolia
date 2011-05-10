@@ -72,6 +72,7 @@ public class TemplateColumn extends TreeColumn {
 
     }
 
+    @Override
     public String getHtml() {
         Content content = this.getWebsiteNode();
         String templateName = content.getMetaData().getTemplate();
@@ -80,6 +81,7 @@ public class TemplateColumn extends TreeColumn {
 
     }
 
+    @Override
     public String getHtmlEdit() {
         Iterator<Template> templates = templateManager.getAvailableTemplates(this.getWebsiteNode());
 

@@ -60,6 +60,7 @@ public class Xmp extends BodyTagSupport {
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
+    @Override
     public int doEndTag() {
         JspWriter out = pageContext.getOut();
         String xmpString = getBodyContent().getString();

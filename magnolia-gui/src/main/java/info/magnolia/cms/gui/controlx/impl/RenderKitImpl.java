@@ -61,6 +61,7 @@ public class RenderKitImpl implements RenderKit {
     public RenderKitImpl() {
         renderers = MapUtils.lazyMap(new HashMap(), new Factory() {
 
+            @Override
             public Object create() {
                 return new TemplatedRenderer();
             }
@@ -70,6 +71,7 @@ public class RenderKitImpl implements RenderKit {
     /**
      * @see info.magnolia.cms.gui.controlx.RenderKit#register(java.lang.String, info.magnolia.cms.gui.controlx.Renderer)
      */
+    @Override
     public void register(String type, Renderer renderer) {
         this.renderers.put(type, renderer);
     }
@@ -77,6 +79,7 @@ public class RenderKitImpl implements RenderKit {
     /**
      * @see info.magnolia.cms.gui.controlx.RenderKit#getRenderer(java.lang.String)
      */
+    @Override
     public Renderer getRenderer(String type) {
         // using the lazy map
         return (Renderer) this.renderers.get(type);

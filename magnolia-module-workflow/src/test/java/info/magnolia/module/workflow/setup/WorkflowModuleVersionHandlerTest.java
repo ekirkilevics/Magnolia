@@ -70,6 +70,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
     private RoleManager roleManager;
     private Role role;
 
+    @Override
     protected String getModuleDescriptorPath() {
         return "/META-INF/magnolia/workflow.xml";
     }
@@ -83,10 +84,12 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
                 "/META-INF/magnolia/core.xml"
         );
     }
+    @Override
     protected ModuleVersionHandler newModuleVersionHandlerForTests() {
         return new WorkflowModuleVersionHandler();
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // setup security
@@ -162,6 +165,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         assertFalse(hm.isExist("/modules/data/trees/data/configurationClass"));
     }
 
+    @Override
     protected String[] getExtraWorkspaces() {
         return new String[]{"dms", "data"};
     }

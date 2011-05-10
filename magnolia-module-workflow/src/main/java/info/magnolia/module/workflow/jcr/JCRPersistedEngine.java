@@ -95,6 +95,7 @@ public class JCRPersistedEngine extends PersistedEngine {
     }
 
     // TODO : this is useless since engine.stop() already stops the expression pool, like the WFModule tries to do ... ?
+    @Override
     public ExpressionPool getExpressionPool() {
         return super.getExpressionPool();
     }

@@ -83,6 +83,7 @@ public class TemplatedMVCHandler extends PageMVCHandler {
     /**
      * Renders the template. The handlers is passed with the name 'this'.
      */
+    @Override
     public void renderHtml(String view) throws IOException {
         // no rendering if view is null
         if(StringUtils.isEmpty(view)){

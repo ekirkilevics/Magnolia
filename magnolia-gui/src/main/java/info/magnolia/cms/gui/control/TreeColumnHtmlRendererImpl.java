@@ -50,6 +50,7 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
     /**
      * @see info.magnolia.cms.gui.control.TreeColumnHtmlRenderer#renderHtml(TreeColumn, Content)
      */
+    @Override
     public String renderHtml(TreeColumn treeColumn, Content content) {
         String html;
         if (treeColumn.getIsMeta()) {

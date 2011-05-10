@@ -118,6 +118,7 @@ public class RedirectTag extends BodyTagSupport {
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
+    @Override
     public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         String location = getRedirectLocation(request);
@@ -145,6 +146,7 @@ public class RedirectTag extends BodyTagSupport {
     /**
      * @see javax.servlet.jsp.tagext.Tag#release()
      */
+    @Override
     public void release() {
         this.var = null;
         super.release();

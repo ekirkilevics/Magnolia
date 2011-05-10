@@ -109,6 +109,7 @@ public class CacheModule implements ModuleLifecycle {
     }
 
     // TODO : i still feel like we should separate module config bean and lifecycle
+    @Override
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
         // TODO : this is implementation dependent - some factories might need or want to be notified also on restart..
         // if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_STARTUP) {
@@ -146,6 +147,7 @@ public class CacheModule implements ModuleLifecycle {
         }
     }
 
+    @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
         cacheMonitor.stop();
         for (CacheConfiguration cfg : configurations.values()) {

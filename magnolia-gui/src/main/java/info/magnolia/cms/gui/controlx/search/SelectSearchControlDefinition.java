@@ -59,6 +59,7 @@ public class SelectSearchControlDefinition extends SearchControlDefinition {
     // array
     public OrderedMap options = new ListOrderedMap();
 
+    @Override
     public String getJsField() {
 
         List pairs = new ArrayList();

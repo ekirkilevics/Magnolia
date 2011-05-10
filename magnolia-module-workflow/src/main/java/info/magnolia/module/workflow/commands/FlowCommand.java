@@ -74,6 +74,7 @@ public class FlowCommand extends MgnlCommand {
      */
     private String dialogName = WorkflowConstants.DEFAULT_EDIT_DIALOG;
 
+    @Override
     public boolean execute(Context ctx) throws FlowDefinitionException {
         // Get the references
         LaunchItem li = new LaunchItem();

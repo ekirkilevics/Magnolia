@@ -1120,6 +1120,7 @@ public class Tree extends ControlImpl {
             // order them alphabetically
             Collections.sort(nodeDatas, new Comparator() {
 
+                @Override
                 public int compare(Object arg0, Object arg1) {
                     return ((NodeData) arg0).getName().compareTo(((NodeData) arg1).getName());
                 }

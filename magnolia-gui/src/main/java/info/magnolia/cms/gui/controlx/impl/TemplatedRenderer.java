@@ -71,6 +71,7 @@ public class TemplatedRenderer implements Renderer {
      * Render the using the template. The control is passed under the name 'this' and the renderer class is passed under
      * the name 'renderer'
      */
+    @Override
     public String render(Control control) {
         Map data = new HashMap();
         data.put("this", control);

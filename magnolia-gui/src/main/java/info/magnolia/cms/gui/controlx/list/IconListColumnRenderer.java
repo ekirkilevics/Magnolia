@@ -46,6 +46,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class IconListColumnRenderer extends ListColumnRenderer {
 
+    @Override
     public String render(Control control) {
         ListColumn column = (ListColumn) control;
         String src = (String) column.getValue();

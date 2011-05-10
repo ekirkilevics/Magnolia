@@ -57,6 +57,7 @@ public class Password extends ControlImpl {
         super(name, websiteNode);
     }
 
+    @Override
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         String value = StringUtils.EMPTY;

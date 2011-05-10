@@ -60,17 +60,21 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
         super(name, request, response);
     }
 
+    @Override
     public ListModel getModel() {
         return new RepositorySearchListModel(ContentRepository.WEBSITE);
     }
 
+    @Override
     public void configureList(ListControl list) {
         list.setRenderer(new AdminListControlRenderer() {
 
+            @Override
             public String onDblClick(ListControl list, Integer index) {
                 return "mgnl.admininterface.WebsiteSearchList.show();";
             }
 
+            @Override
             public String onSelect(ListControl list, Integer index) {
                 String js = "mgnl.admininterface.WebsiteSearchList.selected = '" + list.getIteratorValue("path") + "';";
                 js += super.onSelect(list, index);
@@ -88,6 +92,7 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
                 setWidth("200");
             }
 
+            @Override
             public String render() {
                 return "<span style=\"vertical-align: middle\"><img  src=\""
                     + MgnlContext.getContextPath()
@@ -106,6 +111,7 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
         list.addGroupableField("mgnl:authorid");
     }
 
+    @Override
     protected void configureContextMenu(ContextMenu menu) {
         ContextMenuItem open = new ContextMenuItem("open");
         open.setLabel(msgs.get("tree.web.menu.open")); //$NON-NLS-1$
@@ -124,6 +130,7 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
         menu.addMenuItem(navigate);
     }
 
+    @Override
     protected void configureFunctionBar(FunctionBar bar) {
         super.configureFunctionBar(bar);
         bar.setOnSearchFunction("mgnl.admininterface.WebsiteSearchList.search");
@@ -138,6 +145,7 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
     /**
      * Here we create a all over query
      */
+    @Override
     public SearchQuery getQuery() {
         return SimpleSearchUtil.getSimpleSearchQuery(this.getSearchStr());
 
@@ -146,6 +154,7 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
     /**
      * Not used in this context
      */
+    @Override
     public SearchConfig getSearchConfig() {
         return null;
     }

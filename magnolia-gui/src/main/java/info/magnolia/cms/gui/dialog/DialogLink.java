@@ -46,6 +46,7 @@ public class DialogLink extends DialogEditWithButton {
      * Customize the dialog.
      * @see info.magnolia.cms.gui.dialog.DialogEditWithButton#doBeforeDrawHtml()
      */
+    @Override
     protected void doBeforeDrawHtml() {
         super.doBeforeDrawHtml();
 

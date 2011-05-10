@@ -89,6 +89,7 @@ public class DialogMultiSelect extends DialogBox {
     /**
      * Render the Html using a template
      */
+    @Override
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
         // this could be replaced by

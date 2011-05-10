@@ -47,6 +47,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class IfFirstContentNode extends TagSupport {
 
+    @Override
     public int doStartTag() {
         int currentIndex = ((Integer) pageContext.getAttribute(
             ContentNodeIterator.CURRENT_INDEX,
@@ -54,6 +55,7 @@ public class IfFirstContentNode extends TagSupport {
         return (currentIndex == 0) ? EVAL_BODY_INCLUDE : SKIP_BODY;
     }
 
+    @Override
     public int doEndTag() {
         return EVAL_PAGE;
     }

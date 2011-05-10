@@ -76,6 +76,7 @@ public class DefaultValueProvider implements ValueProvider {
     /* (non-Javadoc)
      * @see info.magnolia.cms.gui.controlx.list.util.ValueProvider#getValue(java.lang.String, java.lang.Object)
      */
+    @Override
     public Object getValue(String name, Object obj) {
         Object value = null;
         try {

@@ -59,6 +59,7 @@ public abstract class SimplePageMVCHandler extends PageMVCHandler {
      * Calls the render method.
      * @see info.magnolia.cms.servlets.MVCServletHandler#renderHtml(java.lang.String)
      */
+    @Override
     public void renderHtml(String view) throws IOException {
         if (VIEW_SHOW.equals(view)) {
             try {

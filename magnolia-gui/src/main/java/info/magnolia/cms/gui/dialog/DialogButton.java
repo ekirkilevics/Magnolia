@@ -48,6 +48,7 @@ public class DialogButton extends DialogBox {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
+    @Override
     public void drawHtml(Writer out) throws IOException {
         Button control = new Button();
         String label = getConfigValue("buttonLabel"); //$NON-NLS-1$

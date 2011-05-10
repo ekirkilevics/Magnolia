@@ -66,6 +66,7 @@ public class AdminListControlRenderer extends ListControlRenderer {
     /**
      * Sets the selected id in the js object
      */
+    @Override
     public String onSelect(ListControl list, Integer index) {
         return list.getName() + ".select(" + index + ");";
     }
@@ -73,6 +74,7 @@ public class AdminListControlRenderer extends ListControlRenderer {
     /**
      * Show the context menu
      */
+    @Override
     public String onRightClick(ListControl list, Integer index) {
         if (list.getContextMenu() != null) {
             return list.getContextMenu().getName() + ".show(event);";
@@ -80,6 +82,7 @@ public class AdminListControlRenderer extends ListControlRenderer {
         return "";
     }
 
+    @Override
     public String onDblClick(ListControl list, Integer index) {
         return list.getName() + ".show();";
     }

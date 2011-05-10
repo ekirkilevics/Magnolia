@@ -67,6 +67,7 @@ public class VersionUtil {
 
     private static Set<Version> getSortedVersions(Iterator<Version> iterator, Content versionBase) throws RepositoryException {
         Set<Version> allVersions = new TreeSet<Version>(new Comparator<Version>() {
+            @Override
             public int compare(Version o1, Version o2) {
                 // nulls are not allowed
                 Calendar c1, c2;

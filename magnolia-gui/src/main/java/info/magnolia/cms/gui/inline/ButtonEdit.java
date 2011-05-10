@@ -118,10 +118,12 @@ public class ButtonEdit extends Button {
             +");");
     }
 
+    @Override
     public String getLabel() {
         return MessagesManager.getWithDefault(label, label);
     }
 
+    @Override
     public void setLabel(String s) {
         this.label = s;
     }

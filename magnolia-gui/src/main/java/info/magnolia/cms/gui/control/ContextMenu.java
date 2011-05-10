@@ -103,6 +103,7 @@ public class ContextMenu extends ControlImpl {
      * Renders the HTML Code. Creates a div with all the containing menuitems and adds the initialization in javascript
      * @return html code
      */
+    @Override
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         html.append("<div id=\"" + getName() + "_DivMenu\" class=\"mgnlTreeMenu\" onmouseover=\"" + getName() + ".keepShowing();\" onmouseout=\"" + getName() + ".hide();\" >"); //$NON-NLS-1$ //$NON-NLS-2$

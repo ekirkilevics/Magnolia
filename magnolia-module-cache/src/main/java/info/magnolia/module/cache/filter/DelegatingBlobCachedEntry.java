@@ -73,6 +73,7 @@ public class DelegatingBlobCachedEntry extends ContentCachedEntry {
         return false;
     }
 
+    @Override
     public void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         File contentFile = getContentFileBoundToTheRequest(request);
         if(contentFile != null){

@@ -64,6 +64,7 @@ public class PageMVCServlet extends MVCServlet {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
 
         String pageName = RequestFormUtil.getParameter(request, "mgnlPage"); //$NON-NLS-1$

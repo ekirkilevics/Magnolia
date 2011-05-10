@@ -57,6 +57,7 @@ public class DialogPassword extends DialogBox {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
+    @Override
     public void drawHtml(Writer out) throws IOException {
         Password control = new Password(this.getName(), this.getValue());
         if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -91,6 +92,7 @@ public class DialogPassword extends DialogBox {
         this.drawHtmlPost(out);
     }
 
+    @Override
     public boolean validate() {
         if (super.getConfigValue("verification", "true").equals("true")) {
             String newP = super.getRequest().getParameter(getName());

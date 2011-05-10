@@ -65,6 +65,7 @@ public class LinkBrowserDialogPage extends SimplePageMVCHandler {
      */
     private static final long serialVersionUID = 222L;
 
+    @Override
     protected void render(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         String repository = request.getParameter("repository"); //$NON-NLS-1$

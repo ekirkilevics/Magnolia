@@ -76,6 +76,7 @@ public class ActivationCommand extends BaseActivationCommand {
     /**
      * Execute activation
      */
+    @Override
     public boolean execute(Context ctx) {
         boolean success = false;
         try {
@@ -157,6 +158,7 @@ public class ActivationCommand extends BaseActivationCommand {
         getSyndicator().activate(parentPath, node, getOrderingInfo(node));
 
         Collection children = node.getChildren(new Content.ContentFilter() {
+            @Override
             public boolean accept(Content content) {
                 try {
                     return !getRule().isAllowed(content.getNodeTypeName());
@@ -209,6 +211,7 @@ public class ActivationCommand extends BaseActivationCommand {
         // versionMap is a flat list of all activated content. We need to ensure that the content is ordered from top down and siblings are activated from bottom up
         Collections.sort((List<Map<String, Object>>) versionMap, new Comparator<Map<String, Object>>() {
 
+            @Override
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {
                 String handle1 = (String) o1.get("handle");
                 String handle2 = (String) o2.get("handle");

@@ -346,6 +346,7 @@ public class Text2PngFactory {
         graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
     }
 
+    @Override
     public String toString() {
         return this.fontname + ", " + this.fontsize + "pt: " + this.text;
     }

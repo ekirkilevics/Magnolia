@@ -59,11 +59,13 @@ import java.util.Locale;
  */
 public class DialogPasswordTest extends TestCase {
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         //MessagesManager.setDefaultLocale("en");
     }
 
+    @Override
     public void tearDown() throws Exception {
         MgnlContext.release();
         // reset manually since we used system context.

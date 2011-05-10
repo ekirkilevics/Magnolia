@@ -76,6 +76,7 @@ public class RolesEditDialog extends ConfiguredDialog {
         super(name, request, response, configNode);
     }
 
+    @Override
     public String getRepository() {
         String repository = super.getRepository();
         if (repository == null) {
@@ -89,6 +90,7 @@ public class RolesEditDialog extends ConfiguredDialog {
      * @see info.magnolia.module.admininterface.DialogMVCHandler#createDialog(info.magnolia.cms.core.Content,
      * info.magnolia.cms.core.Content)
      */
+    @Override
     protected Dialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
 
         Dialog dialog = super.createDialog(configNode, storageNode);
@@ -101,11 +103,13 @@ public class RolesEditDialog extends ConfiguredDialog {
     /**
      * @see info.magnolia.module.admininterface.DialogMVCHandler#configureSaveHandler(info.magnolia.module.admininterface.SaveHandler)
      */
+    @Override
     protected void configureSaveHandler(SaveHandler save) {
         super.configureSaveHandler(save);
         save.setPath(path);
     }
 
+    @Override
     protected boolean onPostSave(SaveHandler saveControl) {
         Content role = this.getStorageNode();
         try {

@@ -60,11 +60,13 @@ public class AbstractExecutorTest extends TestCase {
 
     private HttpServletRequest request;
 
+    @Override
     protected void setUp() throws Exception {
         //MockUtil.initMockContext();
         request = createStrictMock(HttpServletRequest.class);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         verify(request);
     }
@@ -116,6 +118,7 @@ public class AbstractExecutorTest extends TestCase {
      */
     static class TestExecutor extends AbstractExecutor {
 
+        @Override
         public void processCacheRequest(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Cache cache, CachePolicyResult cachePolicyResult) throws IOException, ServletException {
             // do nothing
         }

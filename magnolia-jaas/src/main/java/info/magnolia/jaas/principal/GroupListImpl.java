@@ -50,6 +50,7 @@ public class GroupListImpl extends AbstractPrincipalList implements GroupList {
      */
     private static final String DEFAULT_NAME = "groups";
 
+    @Override
     protected String getDefaultName() {
         return DEFAULT_NAME;
     }

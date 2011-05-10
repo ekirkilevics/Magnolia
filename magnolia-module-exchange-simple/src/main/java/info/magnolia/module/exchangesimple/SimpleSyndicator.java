@@ -108,6 +108,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
 
         executeInPool(new Runnable() {
+            @Override
             public void run() {
                 cleanTemporaryStore(activationContent);
             }
@@ -116,6 +117,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
 
     private Runnable getActivateTask(final ActivationContent activationContent, final Sync done, final Map<Subscriber, Exception> errors, final Subscriber subscriber, final String nodePath) {
         Runnable r = new Runnable() {
+            @Override
             public void run() {
                 try {
                     activate(subscriber, activationContent, nodePath);
@@ -170,6 +172,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
 
     private Runnable getDeactivateTask(final Sync done, final Map<Subscriber, Exception> errors, final Subscriber subscriber, final String nodeUUID, final String nodePath) {
         Runnable r = new Runnable() {
+            @Override
             public void run() {
                 try {
                     doDeactivate(subscriber, nodeUUID, nodePath);

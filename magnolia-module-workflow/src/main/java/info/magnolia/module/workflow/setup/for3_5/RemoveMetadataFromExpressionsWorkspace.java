@@ -56,6 +56,7 @@ public class RemoveMetadataFromExpressionsWorkspace extends AbstractRepositoryTa
         super("Nodetypes changed", "Removes the metadata nodes from the Expressions workspace");
     }
 
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getHierarchyManager("Expressions");
         final Content root = hm.getRoot();
@@ -75,6 +76,7 @@ public class RemoveMetadataFromExpressionsWorkspace extends AbstractRepositoryTa
 
         private final InstallContext ctx;
 
+        @Override
         public void visit(Content node) throws Exception {
             final Content metadata = node.getChildByName("MetaData");
             if (metadata != null) {

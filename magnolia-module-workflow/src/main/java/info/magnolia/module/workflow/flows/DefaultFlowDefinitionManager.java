@@ -79,6 +79,7 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
 
     private String flowDefinitionURLPattern;
 
+    @Override
     public void configure(LaunchItem launchItem, String workflowName) throws FlowDefinitionException {
         if(saveWorkflowDefinitionInWorkItem){
             launchItem.setWorkflowDefinitionUrl(WorkflowConstants.ATTRIBUTE_WORKFLOW_DEFINITION_URL);
@@ -111,6 +112,7 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
         }
     }
 
+    @Override
     public String readDefinition(String workflowName) throws FlowDefinitionException {
         Content node;
         try {
@@ -136,6 +138,7 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
         return ContentUtil.getContent(ContentRepository.CONFIG, WorkflowConstants.ROOT_PATH_FOR_FLOW + "/"+ name);
     }
 
+    @Override
     public void saveDefinition(String definition) throws FlowDefinitionException {
         saveDefinition(extractWorkflowName(definition), definition);
     }
@@ -176,6 +179,7 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
         }
     }
 
+    @Override
     public List getDefinitionNames(){
         ArrayList list = new ArrayList();
 

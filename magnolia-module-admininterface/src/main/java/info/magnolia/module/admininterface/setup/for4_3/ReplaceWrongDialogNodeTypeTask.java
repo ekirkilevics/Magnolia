@@ -70,6 +70,7 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
         super("Replace incorrect dialog node types", "Checks for each module in the config repository if dialogs are of the incorrect type mgnl:content and replaces them with the correct one mgnl:contentNode");
     }
 
+    @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         final Collection<Content> dialogs = QueryUtil.query(ContentRepository.CONFIG, "modules/*/dialogs", Query.XPATH);
         List<Content> dialogNodes = new ArrayList<Content>();

@@ -56,6 +56,7 @@ public class PathMappedFlowCommand extends FlowCommand {
     /**
      * In case there is a mapping defined the mapping is used otherwise we fall back to the normal behavior.
      */
+    @Override
     public String getWorkflowName() {
         for (Iterator<Mapping> iter = getMappings().iterator(); iter.hasNext();) {
             Mapping mapping = iter.next();
@@ -65,6 +66,7 @@ public class PathMappedFlowCommand extends FlowCommand {
         }
         return super.getWorkflowName();
     }
+    @Override
     public String getDialogName() {
         for (Iterator<Mapping> iter = getMappings().iterator(); iter.hasNext();) {
             Mapping mapping = iter.next();

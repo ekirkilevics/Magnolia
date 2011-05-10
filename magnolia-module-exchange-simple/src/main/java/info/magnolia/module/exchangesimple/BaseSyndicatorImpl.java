@@ -236,6 +236,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @see info.magnolia.cms.exchange.Syndicator#init(info.magnolia.cms.security.User, String, String,
      * info.magnolia.cms.util.Rule)
      */
+    @Override
     public void init(User user, String repositoryName, String workspaceName, Rule rule) {
         this.user = user;
         this.basicCredentials = "Basic "
@@ -254,6 +255,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @throws javax.jcr.RepositoryException
      * @throws info.magnolia.cms.exchange.ExchangeException
      */
+    @Override
     public void activate(String parent, Content content) throws ExchangeException, RepositoryException {
         this.activate(parent, content, null);
     }
@@ -268,6 +270,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @throws info.magnolia.cms.exchange.ExchangeException
      *
      */
+    @Override
     public void activate(String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException {
         this.activate(null, parent, content, orderBefore);
     }
@@ -281,6 +284,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @throws javax.jcr.RepositoryException
      * @throws info.magnolia.cms.exchange.ExchangeException
      */
+    @Override
     public void activate(Subscriber subscriber, String parent, Content content) throws ExchangeException, RepositoryException {
         this.activate(subscriber, parent, content, null);
     }
@@ -295,6 +299,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @throws javax.jcr.RepositoryException
      * @throws info.magnolia.cms.exchange.ExchangeException
      */
+    @Override
     public void activate(Subscriber subscriber, String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException {
         this.parent = parent;
         String path = content.getHandle();
@@ -438,6 +443,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
+    @Override
     public synchronized void deactivate(Content node) throws ExchangeException, RepositoryException {
         String nodeUUID = node.getUUID();
         String path = node.getHandle();
@@ -451,6 +457,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
+    @Override
     public synchronized void deactivate(Subscriber subscriber, Content node) throws ExchangeException, RepositoryException {
         String nodeUUID = node.getUUID();
         String path = node.getHandle();

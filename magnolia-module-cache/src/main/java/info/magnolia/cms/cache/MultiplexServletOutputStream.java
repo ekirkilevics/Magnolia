@@ -57,26 +57,31 @@ public class MultiplexServletOutputStream extends ServletOutputStream {
         this.stream2 = stream2;
     }
 
+    @Override
     public void write(int value) throws IOException {
         stream1.write(value);
         stream2.write(value);
     }
 
+    @Override
     public void write(byte[] value) throws IOException {
         stream1.write(value);
         stream2.write(value);
     }
 
+    @Override
     public void write(byte[] b, int off, int len) throws IOException {
         stream1.write(b, off, len);
         stream2.write(b, off, len);
     }
 
+    @Override
     public void flush() throws IOException {
         stream1.flush();
         stream2.flush();
     }
 
+    @Override
     public void close() throws IOException {
         try {
             stream1.close();

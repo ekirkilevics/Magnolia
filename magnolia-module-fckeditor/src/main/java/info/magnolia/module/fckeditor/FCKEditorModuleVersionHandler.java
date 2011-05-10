@@ -65,6 +65,7 @@ public class FCKEditorModuleVersionHandler extends DefaultModuleVersionHandler {
         );
     }
 
+    @Override
     protected List getBasicInstallTasks(InstallContext installContext) {
         final List basicInstallTasks = new ArrayList();
         basicInstallTasks.add(new BootstrapSingleResource("New FCKEditor browser", "Bootstraps the new configuration for the browser page", "/mgnl-bootstrap/fckEditor/config.modules.fckEditor.pages.repositoryBrowser.xml"));

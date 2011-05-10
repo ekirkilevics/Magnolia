@@ -55,6 +55,7 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
     /**
      * @see info.magnolia.cms.gui.control.TreeColumnHtmlRenderer#renderHtml(TreeColumn, Content)
      */
+    @Override
     public String renderHtml(TreeColumn treeColumn, Content content) {
         String templateName = content.getMetaData().getTemplate();
         Template template = templateManager.getTemplateDefinition(templateName);

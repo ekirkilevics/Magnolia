@@ -70,6 +70,7 @@ public class PoweredByTag extends SimpleTagSupport {
         this.pattern = pattern;
     }
 
+    @Override
     public void doTag() throws JspException, IOException {
         final Writer out = getJspContext().getOut();
         final LicenseFileExtractor license = LicenseFileExtractor.getInstance();

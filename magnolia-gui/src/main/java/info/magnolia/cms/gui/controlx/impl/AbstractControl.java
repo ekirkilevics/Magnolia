@@ -84,6 +84,7 @@ public class AbstractControl implements Control {
     /**
      * @return Returns the parent.
      */
+    @Override
     public Control getParent() {
         return parent;
     }
@@ -91,6 +92,7 @@ public class AbstractControl implements Control {
     /**
      * @param parent The parent to set.
      */
+    @Override
     public void setParent(Control parent) {
         this.parent = parent;
     }
@@ -98,6 +100,7 @@ public class AbstractControl implements Control {
     /**
      * If no name set yet just set one.
      */
+    @Override
     public void addChild(Control control) {
         control.setParent(this);
         if (StringUtils.isEmpty(control.getName())) {
@@ -106,6 +109,7 @@ public class AbstractControl implements Control {
         this.children.put(control.getName(), control);
     }
 
+    @Override
     public Control getChild(String name) {
         return (Control) this.children.get(name);
     }
@@ -125,6 +129,7 @@ public class AbstractControl implements Control {
     /**
      * @return Returns the name.
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -132,6 +137,7 @@ public class AbstractControl implements Control {
     /**
      * @param name The name to set.
      */
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -139,6 +145,7 @@ public class AbstractControl implements Control {
     /**
      * @return Returns the renderKit.
      */
+    @Override
     public RenderKit getRenderKit() {
         if (this.renderKit == null) {
             if (this.getParent() != null) {
@@ -151,6 +158,7 @@ public class AbstractControl implements Control {
     /**
      * @param renderKit The renderKit to set.
      */
+    @Override
     public void setRenderKit(RenderKit renderKit) {
         this.renderKit = renderKit;
     }
@@ -158,6 +166,7 @@ public class AbstractControl implements Control {
     /**
      * Get the Renderer assigned to this renderer type and call its renderer() method.
      */
+    @Override
     public String render() {
         return this.getRenderer().render(this);
     }
@@ -165,6 +174,7 @@ public class AbstractControl implements Control {
     /**
      * @return Returns the renderType.
      */
+    @Override
     public String getRenderType() {
         return renderType;
     }
@@ -172,6 +182,7 @@ public class AbstractControl implements Control {
     /**
      * @param renderType The renderType to set.
      */
+    @Override
     public void setRenderType(String renderType) {
         this.renderType = renderType;
     }

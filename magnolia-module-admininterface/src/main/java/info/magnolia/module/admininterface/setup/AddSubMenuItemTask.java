@@ -59,6 +59,7 @@ public class AddSubMenuItemTask extends AddMainMenuItemTask {
         this(parent, menuName, label, i18nBasename, onClick, icon, null);
     }
 
+    @Override
     protected Content getParentNode(InstallContext ctx) throws RepositoryException {
         final Content mainMenu = super.getParentNode(ctx);
         return mainMenu.getContent(parent);

@@ -69,6 +69,7 @@ public class ConfiguredDialog extends DialogMVCHandler {
      * Returns the node with the dialog definition.
      * @return
      */
+    @Override
     public Content getConfigNode() {
         return configNode;
     }

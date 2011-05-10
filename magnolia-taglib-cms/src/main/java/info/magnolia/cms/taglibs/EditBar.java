@@ -176,6 +176,7 @@ public class EditBar extends TagSupport {
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
+    @Override
     public int doStartTag() {
         return EVAL_BODY_INCLUDE;
     }
@@ -183,6 +184,7 @@ public class EditBar extends TagSupport {
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
+    @Override
     public int doEndTag() {
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();

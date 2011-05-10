@@ -59,10 +59,12 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
 
+    @Override
     public boolean bypasses(HttpServletRequest request) {
         return !GZipUtil.isAcceptsGzip(request) || super.bypasses(request);
     }
 
+    @Override
     public void doFilter(HttpServletRequest request, final HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // we need to setContentLength before writing content ...
         // (otherwise Tomcat adds a Transfer-Encoding: chunked header, which seems to cause trouble
@@ -134,6 +136,7 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
             return super.getOutputStream();
         }
 
+        @Override
         public ServletOutputStream getOutputStream(){
             return deferredOutputStream;
         }

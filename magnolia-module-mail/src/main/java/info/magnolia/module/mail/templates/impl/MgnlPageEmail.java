@@ -133,6 +133,7 @@ public class MgnlPageEmail extends FreemarkerEmail {
         super(template);
     }
 
+    @Override
     public void setBodyFromResourceFile() throws Exception {
         String resourceFile = this.getTemplate().getTemplateFile();
 
@@ -169,6 +170,7 @@ public class MgnlPageEmail extends FreemarkerEmail {
         SAXBuilder parser = new SAXBuilder();
         parser.setEntityResolver(new EntityResolver() {
 
+            @Override
             public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
                 return new InputSource(new java.io.ByteArrayInputStream(new byte[0]));
             }
@@ -398,6 +400,7 @@ public class MgnlPageEmail extends FreemarkerEmail {
 
         private static final long serialVersionUID = 1L;
 
+        @Override
         public boolean matches(Object object) {
             if (object instanceof Element) {
                 Element e = (Element) object;

@@ -76,6 +76,7 @@ public class UserTag extends TagSupport {
         this.var = var;
     }
 
+    @Override
     public int doEndTag() throws JspException {
 
         User user = MgnlContext.getUser();
@@ -89,6 +90,7 @@ public class UserTag extends TagSupport {
         return super.doEndTag();
     }
 
+    @Override
     public void release() {
         super.release();
         this.var = null;

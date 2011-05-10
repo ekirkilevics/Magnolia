@@ -77,6 +77,7 @@ public class StrToObj extends BodyTagSupport {
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
+    @Override
     public int doEndTag() {
         String str = getBodyContent().getString();
         if (StringUtils.isNotEmpty(str)) {
@@ -93,6 +94,7 @@ public class StrToObj extends BodyTagSupport {
     /**
      * @see javax.servlet.jsp.tagext.BodyTagSupport#release()
      */
+    @Override
     public void release() {
         this.var = null;
         this.delims = null;

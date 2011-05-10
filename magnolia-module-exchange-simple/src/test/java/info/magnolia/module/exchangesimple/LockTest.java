@@ -70,6 +70,7 @@ public class LockTest extends RepositoryTestCase {
 
         private boolean locked;
 
+        @Override
         public void run() {
             MockUtil.initMockContext();
             try {
@@ -131,6 +132,7 @@ public class LockTest extends RepositoryTestCase {
             this.retry = retry;
         }
 
+        @Override
         public void run() {
             MockUtil.initMockContext();
             try {

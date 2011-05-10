@@ -126,6 +126,7 @@ public class Date extends TagSupport {
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
+    @Override
     public int doStartTag() {
         if (this.actpage) {
             this.contentNode = Resource.getCurrentActivePage();

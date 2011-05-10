@@ -45,6 +45,7 @@ public class DialogUUIDLink extends DialogLink implements UUIDDialogControl {
     /**
      * Get the configured repository
      */
+    @Override
     public String getRepository() {
         return getConfigValue("repository", ContentRepository.WEBSITE);
     }

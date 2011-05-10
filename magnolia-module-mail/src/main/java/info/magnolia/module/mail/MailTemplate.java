@@ -314,6 +314,7 @@ public class MailTemplate {
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.user", smtpUser);
             auth = new Authenticator() {
+                @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(smtpUser, smtpPassword);
                 }

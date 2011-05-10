@@ -100,6 +100,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * get named value
      * @param name its a key to which value is attached in this record
      */
+    @Override
     public Object getValue(String name) {
         return this.getValue(name, this.current);
     }
@@ -116,6 +117,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
     /**
      * @see info.magnolia.cms.gui.controlx.list.ListModelIterator#getValueObject()
      */
+    @Override
     public Object getValueObject() {
         return this.current;
     }
@@ -124,6 +126,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * get group name
      * @return name of the group of the current record
      */
+    @Override
     public String getGroupName() {
         if (StringUtils.isEmpty(this.groupKey)) {
             return StringUtils.EMPTY;
@@ -134,6 +137,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
     /**
      * move next
      */
+    @Override
     public Object next() {
         if (this.next == null) {
             throw new NoSuchElementException();
@@ -148,6 +152,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
     /**
      * jump to next group
      */
+    @Override
     public Object nextGroup() {
         Object tmp = null;
         while (this.hasNextInGroup()) {
@@ -160,6 +165,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * checks if there is next record
      * @return true if not EOF
      */
+    @Override
     public boolean hasNext() {
         return this.next != null;
     }
@@ -168,6 +174,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * checks if there are more records in the current group
      * @return true if not EOF
      */
+    @Override
     public boolean hasNextInGroup() {
         if (StringUtils.isEmpty(this.groupKey)) {
             return this.hasNext(); // no group key defined, its all one group
@@ -185,10 +192,12 @@ public class ListModelIteratorImpl implements ListModelIterator {
         return true;
     }
 
+    @Override
     public String getId() {
         return this.model.resolveId(pos-1, this.getValueObject());
     }
 
+    @Override
     public void remove() {
         // not implemented
     }

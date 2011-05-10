@@ -92,6 +92,7 @@ public class StandaloneGZipFilterTest extends MgnlTestCase {
         verify(request);
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         MockUtil.initMockContext();

@@ -54,6 +54,7 @@ public class I18nMenuPoint extends PropertyValuesTask {
         super("i18n", "Internationalization of the Inbox menu entry.");
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         final HierarchyManager hm = ctx.getHierarchyManager("config");
         if (!hm.isExist(MENU_PATH)) {

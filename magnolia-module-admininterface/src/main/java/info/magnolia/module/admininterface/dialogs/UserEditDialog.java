@@ -83,6 +83,7 @@ public class UserEditDialog extends ConfiguredDialog {
      * (non-Javadoc)
      * @see info.magnolia.module.admininterface.DialogMVCHandler#getRepository()
      */
+    @Override
     public String getRepository() {
         String repository = super.getRepository();
         if (repository == null) {
@@ -104,6 +105,7 @@ public class UserEditDialog extends ConfiguredDialog {
     /**
      * @see info.magnolia.module.admininterface.DialogMVCHandler#configureSaveHandler(info.magnolia.module.admininterface.SaveHandler)
      */
+    @Override
     protected void configureSaveHandler(SaveHandler save) {
         super.configureSaveHandler(save);
         save.setPath(path);
@@ -115,6 +117,7 @@ public class UserEditDialog extends ConfiguredDialog {
      * @param storageNode
      * @throws javax.jcr.RepositoryException
      */
+    @Override
     protected Dialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
         Dialog dialog = super.createDialog(configNode, storageNode);
         // don't do anything if command is "save"
@@ -175,6 +178,7 @@ public class UserEditDialog extends ConfiguredDialog {
         // still keeping method as a hook for changing permissions directly on user node if ever needed
     }
 
+    @Override
     protected boolean onPostSave(SaveHandler saveControl) {
 
         Content node = this.getStorageNode();

@@ -631,6 +631,7 @@ public class CacheFilterTest extends TestCase {
 
         // some filter or servlet down the chain sends a 304
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 ((CacheResponseWrapper) args[1]).setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -680,11 +681,13 @@ public class CacheFilterTest extends TestCase {
         verify(cache, cacheFactory, cachePolicy, webContext, request, response, filterChain);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         super.tearDown();
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");

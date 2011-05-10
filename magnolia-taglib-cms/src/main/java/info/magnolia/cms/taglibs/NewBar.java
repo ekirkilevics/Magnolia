@@ -134,6 +134,7 @@ public class NewBar extends TagSupport implements BarTag {
     /**
      * @see info.magnolia.cms.taglibs.BarTag#addButtonLeft(info.magnolia.cms.gui.control.Button)
      */
+    @Override
     public void addButtonLeft(Button button) {
         if (buttonLeft == null) {
             buttonLeft = new ArrayList();
@@ -144,6 +145,7 @@ public class NewBar extends TagSupport implements BarTag {
     /**
      * @see info.magnolia.cms.taglibs.BarTag#addButtonRight(info.magnolia.cms.gui.control.Button)
      */
+    @Override
     public void addButtonRight(Button button) {
         if (buttonRight == null) {
             buttonRight = new ArrayList();
@@ -178,10 +180,12 @@ public class NewBar extends TagSupport implements BarTag {
         }
     }
 
+    @Override
     public int doStartTag() {
         return EVAL_BODY_INCLUDE;
     }
 
+    @Override
     public int doEndTag() {
 
         if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET)) {
@@ -222,6 +226,7 @@ public class NewBar extends TagSupport implements BarTag {
         return EVAL_PAGE;
     }
 
+    @Override
     public void release() {
         super.release();
         this.contentNodeCollectionName = null;
