@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,32 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm.action;
+package info.magnolia.module.wcm;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.Application;
-import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.wcm.ContentSelection;
-import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
-import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.event.Event;
 
 /**
- * Opens a dialog for adding a paragraph at the top of an area.
+ * Event fired when the content of the page is changed and the page editor needs to reload.
  *
  * @version $Id$
  */
-public class AddParagraphAtTopAction extends AbstractAddParagraphAction<AddParagraphAtTopActionDefinition> {
-
-    public AddParagraphAtTopAction(AddParagraphAtTopActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node, EventBus eventBus) {
-        super(definition, application, dialogPresenterFactory, selection, node, eventBus);
-    }
+public class PageChangedEvent implements Event<PageChangedHandler> {
 
     @Override
-    protected void onPreSave(Node node, Paragraph paragraph) throws RepositoryException {
-        JCRUtil.orderFirst(node);
-        super.onPreSave(node, paragraph);
+    public void dispatch(PageChangedHandler handler) {
+        handler.onPageChanged();
     }
 }

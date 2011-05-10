@@ -41,6 +41,7 @@ import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.ContentSelection;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
+import info.magnolia.ui.framework.event.EventBus;
 
 /**
  * Opens a dialog for adding a paragraph at the bottom of an area.
@@ -49,8 +50,8 @@ import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
  */
 public class AddParagraphAtBottomAction extends AbstractAddParagraphAction<AddParagraphAtBottomActionDefinition> {
 
-    public AddParagraphAtBottomAction(AddParagraphAtBottomActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node) {
-        super(definition, application, dialogPresenterFactory, selection, node);
+    public AddParagraphAtBottomAction(AddParagraphAtBottomActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node, EventBus eventBus) {
+        super(definition, application, dialogPresenterFactory, selection, node, eventBus);
     }
 
     @Override

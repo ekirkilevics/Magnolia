@@ -38,6 +38,7 @@ import javax.jcr.Node;
 import com.vaadin.Application;
 import info.magnolia.module.wcm.ContentSelection;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
+import info.magnolia.ui.framework.event.EventBus;
 
 /**
  * Opens a dialog for adding a paragraph.
@@ -46,7 +47,7 @@ import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
  */
 public class AddParagraphAction extends AbstractAddParagraphAction<AddParagraphActionDefinition> {
 
-    public AddParagraphAction(AddParagraphActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node) {
-        super(definition, application, dialogPresenterFactory, selection, node);
+    public AddParagraphAction(AddParagraphActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node, EventBus eventBus) {
+        super(definition, application, dialogPresenterFactory, selection, node, eventBus);
     }
 }

@@ -42,6 +42,7 @@ import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.ContentSelection;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
+import info.magnolia.ui.framework.event.EventBus;
 
 /**
  * Opens a dialog for adding a paragraph before another paragraph.
@@ -52,8 +53,8 @@ public class AddParagraphBeforeAction extends AbstractAddParagraphAction<AddPara
 
     private ContentSelection selection;
 
-    public AddParagraphBeforeAction(AddParagraphBeforeActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node) {
-        super(definition, application, dialogPresenterFactory, selection, node);
+    public AddParagraphBeforeAction(AddParagraphBeforeActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node, EventBus eventBus) {
+        super(definition, application, dialogPresenterFactory, selection, node, eventBus);
         this.selection = selection;
 
         String collectionPath = PathUtil.getFolder(selection.getPath());

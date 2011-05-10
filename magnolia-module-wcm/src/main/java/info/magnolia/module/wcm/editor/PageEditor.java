@@ -83,6 +83,10 @@ public class PageEditor extends AbstractComponent {
         }
     }
 
+    public void reload() {
+        this.requestRepaint();
+    }
+
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);

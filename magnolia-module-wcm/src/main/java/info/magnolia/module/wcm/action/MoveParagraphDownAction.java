@@ -37,6 +37,8 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.module.wcm.PageChangedEvent;
+import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
 
@@ -48,17 +50,20 @@ import info.magnolia.ui.model.action.ActionExecutionException;
 public class MoveParagraphDownAction extends ActionBase<MoveParagraphDownActionDefinition> {
 
     private Node node;
+    private EventBus eventBus;
 
-    public MoveParagraphDownAction(MoveParagraphDownActionDefinition definition, Node node) {
+    public MoveParagraphDownAction(MoveParagraphDownActionDefinition definition, Node node, EventBus eventBus) {
         super(definition);
         this.node = node;
+        this.eventBus = eventBus;
     }
 
     @Override
     public void execute() throws ActionExecutionException {
         try {
-            JCRUtil.moveNodeDown(node);
+            JCRUtil.orderNodeDown(node);
             node.getSession().save();
+            eventBus.fireEvent(new PageChangedEvent());
         } catch (RepositoryException e) {
             throw new ActionExecutionException(e);
         }

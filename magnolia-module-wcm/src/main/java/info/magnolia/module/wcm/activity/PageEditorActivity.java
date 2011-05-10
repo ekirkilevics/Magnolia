@@ -35,6 +35,8 @@ package info.magnolia.module.wcm.activity;
 
 import com.vaadin.ui.Component;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.wcm.PageChangedEvent;
+import info.magnolia.module.wcm.PageChangedHandler;
 import info.magnolia.module.wcm.editor.PageEditor;
 import info.magnolia.module.wcm.place.PageEditorPlace;
 import info.magnolia.objectfactory.ComponentProvider;
@@ -47,31 +49,46 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 /**
  * Activity for page editing.
  */
-public class PageEditorActivity extends AbstractActivity {
+public class PageEditorActivity extends AbstractActivity implements PageChangedHandler {
 
     private ComponentProvider componentProvider;
     private PageEditorPlace place;
+    private EventBus eventBus;
+    private EditorView editorView;
 
-    public PageEditorActivity(ComponentProvider componentProvider, PageEditorPlace place) {
+    public PageEditorActivity(ComponentProvider componentProvider, PageEditorPlace place, EventBus eventBus) {
         this.componentProvider = componentProvider;
         this.place = place;
+        this.eventBus = eventBus;
+        this.eventBus.addHandler(PageChangedEvent.class, this);
     }
 
     @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
-        viewPort.setView(new EditorView(place.getPath()));
+        editorView = new EditorView(place.getPath());
+        viewPort.setView(editorView);
+    }
+
+    @Override
+    public void onPageChanged() {
+        editorView.getPageEditor().reload();
     }
 
     private class EditorView implements View, IsVaadinComponent {
 
         private String path;
         private Component component;
+        private PageEditor pageEditor;
 
         private EditorView(String path) {
             this.path = path;
-            PageEditor pageEditor = componentProvider.newInstance(PageEditor.class, MgnlContext.getContextPath() + path);
+            pageEditor = componentProvider.newInstance(PageEditor.class, MgnlContext.getContextPath() + path);
             pageEditor.setSizeFull();
             component = pageEditor;
+        }
+
+        public PageEditor getPageEditor() {
+            return pageEditor;
         }
 
         @Override

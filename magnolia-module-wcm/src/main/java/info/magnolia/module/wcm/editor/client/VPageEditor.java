@@ -85,6 +85,8 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
         String url = uidl.getStringAttribute("url");
 
         iFrameElement.setSrc(url);
+
+        this.selectedBar = null;
     }
 
     @Override

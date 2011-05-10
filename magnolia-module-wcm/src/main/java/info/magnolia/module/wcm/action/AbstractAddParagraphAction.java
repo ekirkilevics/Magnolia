@@ -43,11 +43,13 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.ContentSelection;
+import info.magnolia.module.wcm.PageChangedEvent;
 import info.magnolia.module.wcm.PageEditorHacks;
 import info.magnolia.module.wcm.ParagraphSelectionDialog;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.admincentral.dialog.DialogSaveCallback;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
+import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
@@ -65,12 +67,14 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
     private Application application;
     private DialogPresenterFactory dialogPresenterFactory;
     private ContentSelection selection;
+    private EventBus eventBus;
 
-    public AbstractAddParagraphAction(D definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node) {
+    public AbstractAddParagraphAction(D definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node, EventBus eventBus) {
         super(definition);
         this.application = application;
         this.dialogPresenterFactory = dialogPresenterFactory;
         this.selection = selection;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -100,6 +104,7 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
                             try {
                                 onPreSave(node, paragraph);
                                 node.getSession().save();
+                                eventBus.fireEvent(new PageChangedEvent());
                             } catch (RepositoryException e) {
                                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                             }

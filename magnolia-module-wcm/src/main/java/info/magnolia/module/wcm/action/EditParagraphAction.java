@@ -41,10 +41,12 @@ import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.module.wcm.ContentSelection;
+import info.magnolia.module.wcm.PageChangedEvent;
 import info.magnolia.module.wcm.PageEditorHacks;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.admincentral.dialog.DialogSaveCallback;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
+import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
 
@@ -59,13 +61,15 @@ public class EditParagraphAction extends ActionBase<EditParagraphActionDefinitio
     private DialogPresenterFactory dialogPresenterFactory;
     private ContentSelection selection;
     private ParagraphManager paragraphManager;
+    private EventBus eventBus;
 
-    public EditParagraphAction(EditParagraphActionDefinition definition, Node node, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, ParagraphManager paragraphManager) {
+    public EditParagraphAction(EditParagraphActionDefinition definition, Node node, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, ParagraphManager paragraphManager, EventBus eventBus) {
         super(definition);
         this.node = node;
         this.dialogPresenterFactory = dialogPresenterFactory;
         this.selection = selection;
         this.paragraphManager = paragraphManager;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -86,6 +90,7 @@ public class EditParagraphAction extends ActionBase<EditParagraphActionDefinitio
                     MetaData metaData = JCRMetadataUtil.getMetaData(node);
                     metaData.setTemplate(paragraph.getName());
                     node.getSession().save();
+                    eventBus.fireEvent(new PageChangedEvent());
                 } catch (RepositoryException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }

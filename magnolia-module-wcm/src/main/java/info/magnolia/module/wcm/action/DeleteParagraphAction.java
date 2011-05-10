@@ -36,6 +36,8 @@ package info.magnolia.module.wcm.action;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.module.wcm.PageChangedEvent;
+import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
 
@@ -47,10 +49,12 @@ import info.magnolia.ui.model.action.ActionExecutionException;
 public class DeleteParagraphAction extends ActionBase<DeleteParagraphActionDefinition> {
 
     private Node node;
+    private EventBus eventBus;
 
-    public DeleteParagraphAction(DeleteParagraphActionDefinition definition, Node node) {
+    public DeleteParagraphAction(DeleteParagraphActionDefinition definition, Node node, EventBus eventBus) {
         super(definition);
         this.node = node;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -58,6 +62,7 @@ public class DeleteParagraphAction extends ActionBase<DeleteParagraphActionDefin
         try {
             node.remove();
             node.getSession().save();
+            eventBus.fireEvent(new PageChangedEvent());
         } catch (RepositoryException e) {
             throw new ActionExecutionException(e);
         }

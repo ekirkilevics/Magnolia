@@ -69,7 +69,7 @@ import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
 /**
  * Presenter logic for page editor.
  */
-public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChangedHandler {
+public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChangedHandler, PageChangedHandler {
 
     private Shell shell;
     private EventBus eventBus;
@@ -94,6 +94,8 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         this.application = application;
         this.dialogPresenterFactory = dialogPresenterFactory;
         this.toolboxActionFactory = toolboxActionFactory;
+
+        eventBus.addHandler(PageChangedEvent.class, this);
     }
 
     public void init() {
@@ -214,4 +216,8 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         eventBus.fireEvent(new SelectionChangedEvent(type, workspace, path, collectionName, nodeName));
     }
 
+    @Override
+    public void onPageChanged() {
+        this.toolboxView.showRack(wcmModule.getToolboxConfiguration().getPage());
+    }
 }

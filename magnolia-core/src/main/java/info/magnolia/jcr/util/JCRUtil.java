@@ -145,6 +145,13 @@ public class JCRUtil {
         return node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
     }
 
+    /**
+     * Orders the node directly before a given sibling. If no sibling is specified the node is placed first.
+     *
+     * @param node the node to order
+     * @param siblingName the name of the sibling which the name should be before or null if the node should be first
+     * @throws RepositoryException
+     */
     public static void orderBefore(Node node, String siblingName) throws RepositoryException {
 
         if (siblingName == null) {
@@ -157,6 +164,13 @@ public class JCRUtil {
         parent.orderBefore(node.getName(), sibling.getName());
     }
 
+    /**
+     * Orders the node directly after a given sibling. If no sibling is specified the node is placed last.
+     *
+     * @param node the node to order
+     * @param siblingName the name of the sibling which the name should be after or null if the node should be last
+     * @throws RepositoryException
+     */
     public static void orderAfter(Node node, String siblingName) throws RepositoryException {
 
         if (siblingName == null) {
@@ -186,15 +200,34 @@ public class JCRUtil {
         parent.orderBefore(node.getName(), siblingAfterTarget.getName());
     }
 
+    /**
+     * Orders the node first among its siblings.
+     *
+     * @param node the node to order
+     * @throws RepositoryException
+     */
     public static void orderFirst(Node node) throws RepositoryException {
         node.getParent().orderBefore(node.getName(), node.getParent().getNodes().nextNode().getName());
     }
 
+    /**
+     * Orders the node last among its siblings.
+     *
+     * @param node the node to order
+     * @throws RepositoryException
+     */
     public static void orderLast(Node node) throws RepositoryException {
         node.getParent().orderBefore(node.getName(), null);
     }
 
-    public static void moveNodeUp(Node node) throws RepositoryException {
+    /**
+     * Orders the node up one step among its siblings. If the node is the only sibling or the first sibling this method
+     * has no effect.
+     *
+     * @param node the node to order
+     * @throws RepositoryException
+     */
+    public static void orderNodeUp(Node node) throws RepositoryException {
         Node parent = node.getParent();
         NodeIterator siblings = parent.getNodes();
         Node previousSibling = null;
@@ -212,7 +245,14 @@ public class JCRUtil {
         parent.orderBefore(node.getName(), previousSibling.getName());
     }
 
-    public static void moveNodeDown(Node node) throws RepositoryException {
+    /**
+     * Orders the node down one step among its siblings. If the node is the only sibling or the last sibling this method
+     * has no effect.
+     *
+     * @param node the node to order
+     * @throws RepositoryException
+     */
+    public static void orderNodeDown(Node node) throws RepositoryException {
         Node parent = node.getParent();
         NodeIterator siblings = parent.getNodes();
         while (siblings.hasNext()) {
