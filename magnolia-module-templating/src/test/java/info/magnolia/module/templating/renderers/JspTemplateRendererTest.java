@@ -60,6 +60,7 @@ import static org.easymock.EasyMock.*;
  */
 public class JspTemplateRendererTest extends TestCase {
 
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();

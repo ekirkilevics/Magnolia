@@ -114,6 +114,7 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
         // TODO the double click event should be removed when the text field is visible, otherwise its not possible to double click to mark words
         layout.addListener(new LayoutEvents.LayoutClickListener() {
 
+            @Override
             public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
                 if (event.isDoubleClick()) {
                     try {
@@ -163,6 +164,7 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
         }
     }
 
+    @Override
     public int compareTo(AbstractEditable o) {
         try {
             log.debug("comparing {} and {}", this.getItem().getName().toLowerCase(), o.getItem().getName().toLowerCase());

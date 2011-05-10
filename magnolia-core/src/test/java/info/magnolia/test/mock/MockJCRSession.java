@@ -87,123 +87,154 @@ public class MockJCRSession implements Session {
         workspace = new MockWorkspace(mockHM.getName(), this, mockHM);
     }
 
+    @Override
     public void addLockToken(String lt) {
     }
 
+    @Override
     public void checkPermission(String absPath, String actions) throws AccessControlException, RepositoryException {
     }
 
+    @Override
     public void exportDocumentView(String absPath, ContentHandler contentHandler, boolean skipBinary, boolean noRecurse)
     throws PathNotFoundException, SAXException, RepositoryException {
     }
 
+    @Override
     public void exportDocumentView(String absPath, OutputStream out, boolean skipBinary, boolean noRecurse)
     throws IOException, PathNotFoundException, RepositoryException {
     }
 
+    @Override
     public void exportSystemView(String absPath, ContentHandler contentHandler, boolean skipBinary, boolean noRecurse)
     throws PathNotFoundException, SAXException, RepositoryException {
     }
 
+    @Override
     public void exportSystemView(String absPath, OutputStream out, boolean skipBinary, boolean noRecurse)
     throws IOException, PathNotFoundException, RepositoryException {
     }
 
+    @Override
     public Object getAttribute(String name) {
         return null;
     }
 
+    @Override
     public String[] getAttributeNames() {
         return null;
     }
 
+    @Override
     public ContentHandler getImportContentHandler(String parentAbsPath, int uuidBehavior) throws PathNotFoundException,
     ConstraintViolationException, VersionException, LockException, RepositoryException {
         return null;
     }
 
+    @Override
     public Item getItem(String absPath) throws PathNotFoundException, RepositoryException {
         return null;
     }
 
+    @Override
     public String[] getLockTokens() {
         return null;
     }
 
+    @Override
     public String getNamespacePrefix(String uri) throws NamespaceException, RepositoryException {
         return null;
     }
 
+    @Override
     public String[] getNamespacePrefixes() throws RepositoryException {
         return null;
     }
 
+    @Override
     public String getNamespaceURI(String prefix) throws NamespaceException, RepositoryException {
         return null;
     }
 
+    @Override
     public Node getNodeByUUID(String uuid) throws ItemNotFoundException, RepositoryException {
         return this.mockHM.getContentByUUID(uuid).getJCRNode();
     }
 
+    @Override
     public Repository getRepository() {
         return null;
     }
 
+    @Override
     public Node getRootNode() throws RepositoryException {
         return this.mockHM.getRoot().getJCRNode();
     }
 
+    @Override
     public String getUserID() {
         return null;
     }
 
+    @Override
     public ValueFactory getValueFactory() throws UnsupportedRepositoryOperationException, RepositoryException {
         return null;
     }
 
+    @Override
     public Workspace getWorkspace() {
         return workspace;
     }
 
+    @Override
     public boolean hasPendingChanges() throws RepositoryException {
         return false;
     }
 
+    @Override
     public Session impersonate(Credentials credentials) throws LoginException, RepositoryException {
         return null;
     }
 
+    @Override
     public void importXML(String parentAbsPath, InputStream in, int uuidBehavior) throws IOException,
     PathNotFoundException, ItemExistsException, ConstraintViolationException, VersionException,
     InvalidSerializedDataException, LockException, RepositoryException {
     }
 
+    @Override
     public boolean isLive() {
         return true;
     }
 
+    @Override
     public boolean itemExists(String absPath) throws RepositoryException {
         return mockHM.isExist(absPath);
     }
 
+    @Override
     public void logout() {
     }
 
+    @Override
     public void move(String srcAbsPath, String destAbsPath) throws ItemExistsException, PathNotFoundException,
     VersionException, ConstraintViolationException, LockException, RepositoryException {
     }
 
+    @Override
     public void refresh(boolean keepChanges) throws RepositoryException {
     }
 
+    @Override
     public void removeLockToken(String lt) {
     }
 
+    @Override
     public void save() throws AccessDeniedException, ItemExistsException, ConstraintViolationException,
     InvalidItemStateException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
     }
 
+    @Override
     public void setNamespacePrefix(String prefix, String uri) throws NamespaceException, RepositoryException {
     }
 
@@ -212,42 +243,52 @@ public class MockJCRSession implements Session {
         this.workspace = workspace;
     }
 
+    @Override
     public Node getNodeByIdentifier(String id) throws ItemNotFoundException, RepositoryException {
         return this.mockHM.getContentByUUID(id).getJCRNode();
     }
 
+    @Override
     public Node getNode(String absPath) throws PathNotFoundException, RepositoryException {
         return this.mockHM.getContent(absPath).getJCRNode();
     }
 
+    @Override
     public Property getProperty(String absPath) throws PathNotFoundException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public boolean nodeExists(String absPath) throws RepositoryException {
         return this.mockHM.isExist(absPath);
     }
 
+    @Override
     public boolean propertyExists(String absPath) throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public void removeItem(String absPath) throws VersionException, LockException, ConstraintViolationException, AccessDeniedException, RepositoryException {
     }
 
+    @Override
     public boolean hasPermission(String absPath, String actions) throws RepositoryException {
         // constantly return true - use dynamic mock if you need different behaviour...
         return true;
     }
 
+    @Override
     public boolean hasCapability(String methodName, Object target, Object[] arguments) throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public AccessControlManager getAccessControlManager() throws UnsupportedRepositoryOperationException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public RetentionManager getRetentionManager() throws UnsupportedRepositoryOperationException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }

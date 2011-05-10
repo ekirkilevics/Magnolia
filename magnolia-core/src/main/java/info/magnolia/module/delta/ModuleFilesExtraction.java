@@ -53,6 +53,7 @@ public class ModuleFilesExtraction extends AbstractTask {
         super("Files extraction", "Extracts module files.");
     }
 
+    @Override
     public void execute(final InstallContext ctx) throws TaskExecutionException {
         final String moduleName = ctx.getCurrentModuleDefinition().getName();
         // TODO use a separate workspace, or a different storage root, ... ?
@@ -72,6 +73,7 @@ public class ModuleFilesExtraction extends AbstractTask {
             this.ctx = ctx;
         }
 
+        @Override
         public void error(String message) {
             ctx.warn(message);
         }

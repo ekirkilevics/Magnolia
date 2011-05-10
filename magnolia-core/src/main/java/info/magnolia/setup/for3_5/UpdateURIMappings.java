@@ -61,12 +61,14 @@ public class UpdateURIMappings extends AllModulesNodeOperation {
      * @see info.magnolia.module.delta.AllModulesNodeOperation#operateOnModuleNode(info.magnolia.cms.core.Content,
      * info.magnolia.cms.core.HierarchyManager, info.magnolia.module.InstallContext)
      */
+    @Override
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
         throws RepositoryException, TaskExecutionException {
 
         try {
             if (node.hasContent("virtualURIMapping")) {
                 ContentUtil.visit(node.getContent("virtualURIMapping"), new ContentUtil.Visitor() {
+                    @Override
                     public void visit(Content node) throws Exception {
                         if (node.hasNodeData("fromURI") && node.hasNodeData("toURI")) {
                             NodeData classNodeData = NodeDataUtil.getOrCreate(node, "class");

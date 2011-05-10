@@ -54,6 +54,7 @@ import javax.jcr.Value;
 public abstract class Ops {
     public static NodeOperation addNode(final String name) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 return context.createContent(name);
             }
@@ -62,6 +63,7 @@ public abstract class Ops {
 
     public static NodeOperation addNode(final String name, final String type) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 return context.createContent(name, type);
             }
@@ -70,6 +72,7 @@ public abstract class Ops {
 
     public static NodeOperation addNode(final String name, final ItemType type) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 return context.createContent(name, type);
             }
@@ -78,6 +81,7 @@ public abstract class Ops {
 
     public static NodeOperation getNode(final String name) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 return context.getContent(name);
             }
@@ -89,6 +93,7 @@ public abstract class Ops {
      */
     public static NodeOperation remove(final String name) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 context.delete(name);
                 return context;
@@ -101,6 +106,7 @@ public abstract class Ops {
      */
     public static NodeOperation addProperty(final String name, final Object value) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 if (context.hasNodeData(name)) {
                     // throw new ItemExistsException("Property " + name + " already exists at " + context.getHandle());
@@ -118,6 +124,7 @@ public abstract class Ops {
      */
     public static NodeOperation setProperty(final String name, final Object newValue) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 if (!context.hasNodeData(name)) {
                     throw new ItemNotFoundException(name);
@@ -136,6 +143,7 @@ public abstract class Ops {
      */
     public static NodeOperation setProperty(final String name, final Object expectedCurrentValue, final Object newValue) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 if (!context.hasNodeData(name)) {
                     throw new ItemNotFoundException(name);
@@ -158,6 +166,7 @@ public abstract class Ops {
      */
     public static NodeOperation renameNode(final String currentName, final String newName) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 ContentUtil.rename(context.getContent(currentName), newName);
                 return context;
@@ -170,6 +179,7 @@ public abstract class Ops {
      */
     public static NodeOperation renameProperty(final String name, final String newName) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 if (!context.hasNodeData(name)) {
                     throw new ItemNotFoundException(name);
@@ -191,6 +201,7 @@ public abstract class Ops {
      */
     public static NodeOperation moveNode(final String nodeName, final String dest) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 ContentUtil.moveInSession(context.getContent(nodeName), dest);
                 return context;
@@ -203,6 +214,7 @@ public abstract class Ops {
      */
     public static NodeOperation copyNode(final String nodeName, final String dest) {
         return new AbstractNodeOperation() {
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 ContentUtil.copyInSession(context.getContent(nodeName), dest);
                 return context;
@@ -237,6 +249,7 @@ public abstract class Ops {
     public static NodeOperation onChildNodes(final Content.ContentFilter filter, final NodeOperation... childrenOps) {
         return new AbstractNodeOperation() {
             // TODO shouldn't this implement NodeOperation directly instead? it has no business doing with the then() method anyway
+            @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 for (Content subNode : context.getChildren(filter)) {
                     for (NodeOperation nodeOperation : childrenOps) {
@@ -253,10 +266,12 @@ public abstract class Ops {
      */
     public static NodeOperation noop() {
         return new NodeOperation() {
+            @Override
             public NodeOperation then(NodeOperation... childrenOps) {
                 return null;
             }
 
+            @Override
             public void exec(Content context, ErrorHandler errorHandler) {
             }
         };

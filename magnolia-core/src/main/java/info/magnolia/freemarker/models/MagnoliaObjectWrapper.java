@@ -74,11 +74,13 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
     /**
      * Unwraps our custom wrappers, let the default wrapper do the rest.
      */
+    @Override
     public Object unwrap(TemplateModel model, Class hint) throws TemplateModelException {
         // all our models implement either AdapterTemplateModel or a already handled by super.unwrap() (boolean, string, ..)
         return super.unwrap(model, hint);
     }
 
+    @Override
     public TemplateModel wrap(Object obj) throws TemplateModelException {
         if (obj instanceof Context) {
             // bypass the default SimpleHash wrapping, we need a MapModel.
@@ -107,6 +109,7 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
      * @see #DEFAULT_MODEL_FACTORIES
      * @see info.magnolia.freemarker.FreemarkerConfig
      */
+    @Override
     protected ModelFactory getModelFactory(Class clazz) {
         final List<MagnoliaModelFactory> registeredModelFactories = freemarkerConfig.getModelFactories();
         ModelFactory modelFactory = getModelFactory(clazz, registeredModelFactories);

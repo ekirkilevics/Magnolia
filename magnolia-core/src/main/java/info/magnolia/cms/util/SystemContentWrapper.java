@@ -58,6 +58,7 @@ public class SystemContentWrapper extends LazyContentWrapper {
         super(node);
     }
 
+    @Override
     public HierarchyManager getHierarchyManager() {
         return LifeTimeJCRSessionUtil.getHierarchyManager(getRepository());
     }

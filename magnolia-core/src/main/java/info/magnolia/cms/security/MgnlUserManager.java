@@ -127,6 +127,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
      * @param name
      * @return the user object
      */
+    @Override
     public User getUser(final String name) {
         try {
             return MgnlContext.doInSystemContext(new JCRSessionOp<User>(getRepositoryName()) {
@@ -146,6 +147,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         return null;
     }
 
+    @Override
     public User getUser(Subject subject) throws UnsupportedOperationException {
         // this could be the case if no one is logged in yet
         if (subject == null) {
@@ -221,6 +223,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     /**
      * SystemUserManager does this.
      */
+    @Override
     public User getSystemUser() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
@@ -228,6 +231,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     /**
      * SystemUserManager does this.
      */
+    @Override
     public User getAnonymousUser() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
@@ -235,6 +239,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     /**
      * Get all users managed by this user manager.
      */
+    @Override
     public Collection<User> getAllUsers() {
         return MgnlContext.doInSystemContext(new SilentSessionOp<Collection<User>>(getRepositoryName()) {
 
@@ -259,6 +264,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         });
     }
 
+    @Override
     public User createUser(final String name, final String pw) {
         validateUsername(name);
         return MgnlContext.doInSystemContext(new SilentSessionOp<MgnlUser>(getRepositoryName()) {
@@ -295,6 +301,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         });
     }
 
+    @Override
     public User changePassword(final User user, final String newPassword) {
         return MgnlContext.doInSystemContext(new SilentSessionOp<User>(getRepositoryName()) {
 
@@ -384,6 +391,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         return acl;
     }
 
+    @Override
     public void updateLastAccessTimestamp(final User user) throws UnsupportedOperationException {
         MgnlContext.doInSystemContext(new SilentSessionOp<Void>(getRepositoryName()) {
 
@@ -442,6 +450,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     /**
      * Sets access control list from a list of roles under the provided content object.
      */
+    @Override
     public Map<String, ACL> getACLs(final User user) {
         if (!(user instanceof MgnlUser)) {
             return null;
@@ -449,6 +458,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         return super.getACLs(user.getName());
     }
 
+    @Override
     public User addRole(User user, String roleName) {
         super.add(user.getName(), roleName, NODE_ROLES);
         return getUser(user.getName());

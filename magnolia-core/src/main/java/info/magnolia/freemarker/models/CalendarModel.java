@@ -49,10 +49,12 @@ import java.util.Date;
 class CalendarModel implements TemplateDateModel, AdapterTemplateModel {
 
     static final MagnoliaModelFactory FACTORY = new MagnoliaModelFactory() {
+        @Override
         public Class factoryFor() {
             return Calendar.class;
         }
 
+        @Override
         public TemplateModel create(Object object, ObjectWrapper wrapper) {
             return new CalendarModel((Calendar) object);
         }
@@ -64,18 +66,22 @@ class CalendarModel implements TemplateDateModel, AdapterTemplateModel {
         this.cal = cal;
     }
 
+    @Override
     public Object getAdaptedObject(Class hint) {
         return cal;
     }
 
+    @Override
     public Date getAsDate() {
         return cal.getTime();
     }
 
+    @Override
     public int getDateType() {
         return TemplateDateModel.DATETIME;
     }
 
+    @Override
     public String toString() {
         return getAsDate().toString();
     }

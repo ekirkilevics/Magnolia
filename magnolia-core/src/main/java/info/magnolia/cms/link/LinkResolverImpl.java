@@ -53,10 +53,12 @@ public class LinkResolverImpl implements LinkResolver {
 
     private boolean addContextPathToBrowserLinks = false;
 
+    @Override
     public String parseLinks(String str) {
         return LinkUtil.convertAbsoluteLinksToUUIDs(str);
     }
 
+    @Override
     public String convertToEditorLinks(String str) {
         try {
             return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getEditorLink());
@@ -65,6 +67,7 @@ public class LinkResolverImpl implements LinkResolver {
         }
     }
 
+    @Override
     public String convertToBrowserLinks(String str, String currentPath) {
         if(isMakeBrowserLinksRelative()){
             return convertToRelativeLinks(str, currentPath);
@@ -74,6 +77,7 @@ public class LinkResolverImpl implements LinkResolver {
         }
     }
 
+    @Override
     public String convertToAbsoluteLinks(String str, boolean addContextPath) {
         try {
             return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getAbsolute(addContextPath));
@@ -82,6 +86,7 @@ public class LinkResolverImpl implements LinkResolver {
         }
     }
 
+    @Override
     public String convertToRelativeLinks(String str, String currentPath) {
         try {
             return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getRelative(currentPath));
@@ -90,6 +95,7 @@ public class LinkResolverImpl implements LinkResolver {
         }
     }
 
+    @Override
     public String convertToExternalLinks(String str) {
         try {
             return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getCompleteUrl());

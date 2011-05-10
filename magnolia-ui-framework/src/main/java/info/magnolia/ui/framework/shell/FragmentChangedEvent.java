@@ -51,6 +51,7 @@ public class FragmentChangedEvent implements Event<FragmentChangedHandler> {
         return fragment;
     }
 
+    @Override
     public void dispatch(FragmentChangedHandler handler) {
         handler.onFragmentChanged(this);
     }

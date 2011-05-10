@@ -56,6 +56,7 @@ public class BootstrapSingleModuleResource extends BootstrapResourcesTask {
         this.resourceName = resourceName;
     }
 
+    @Override
     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
         return new String[]{"/mgnl-bootstrap/"+installContext.getCurrentModuleDefinition().getName()+"/"+resourceName};
     }

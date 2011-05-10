@@ -59,14 +59,17 @@ public abstract class AbstractTask implements Task {
         this.description = taskDescription;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public String toString() {
         return "task: " + name;
     }

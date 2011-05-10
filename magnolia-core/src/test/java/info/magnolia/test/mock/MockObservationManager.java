@@ -46,23 +46,29 @@ import javax.jcr.observation.ObservationManager;
  */
 public class MockObservationManager implements ObservationManager {
 
+    @Override
     public void addEventListener(EventListener listener, int eventTypes, String absPath, boolean isDeep, String[] uuid, String[] nodeTypeName, boolean noLocal) throws RepositoryException {
     }
 
+    @Override
     public EventListenerIterator getRegisteredEventListeners() throws RepositoryException {
         return null;
     }
 
+    @Override
     public void removeEventListener(EventListener listener) throws RepositoryException {
     }
 
+    @Override
     public void setUserData(String userData) throws RepositoryException {
     }
 
+    @Override
     public EventJournal getEventJournal() throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public EventJournal getEventJournal(int eventTypes, String absPath, boolean isDeep, String[] uuid, String[] nodeTypeName) throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }

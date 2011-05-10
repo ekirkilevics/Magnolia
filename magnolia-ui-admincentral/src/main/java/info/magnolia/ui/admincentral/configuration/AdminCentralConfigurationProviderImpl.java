@@ -48,6 +48,7 @@ public class AdminCentralConfigurationProviderImpl implements AdminCentralConfig
         this.module = module;
     }
 
+    @Override
     public AdminCentralConfiguration getConfiguration(User user, UISettings uiSettings) {
         // TODO will need a kind of mechanism for that
         return module.getConfigurations().get("default");

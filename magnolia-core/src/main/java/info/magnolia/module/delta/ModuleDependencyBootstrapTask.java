@@ -47,6 +47,7 @@ public class ModuleDependencyBootstrapTask extends IsModuleInstalledOrRegistered
     public ModuleDependencyBootstrapTask(final String dependencyName) {
         super("Bootstrap " + dependencyName, "Bootstraps " + dependencyName + " content if installed.", dependencyName,
                 new BootstrapResourcesTask("", "") {
+                    @Override
                     protected boolean acceptResource(InstallContext ctx, String name) {
                         final String moduleName = ctx.getCurrentModuleDefinition().getName();
                         final String path = "/info/magnolia/module/" + moduleName + "/setup/" + dependencyName + "/";

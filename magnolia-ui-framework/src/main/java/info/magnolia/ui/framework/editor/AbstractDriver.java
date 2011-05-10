@@ -65,26 +65,32 @@ public abstract class AbstractDriver<T> implements Driver<T> {
             this.value = value;
         }
 
+        @Override
         public String getPath() {
             return path;
         }
 
+        @Override
         public Editor getEditor() {
             return editor;
         }
 
+        @Override
         public String getMessage() {
             return message;
         }
 
+        @Override
         public Object getValue() {
             return value;
         }
 
+        @Override
         public boolean isConsumed() {
             return consumed;
         }
 
+        @Override
         public void setConsumed(boolean consumed) {
             this.consumed = consumed;
         }
@@ -100,15 +106,18 @@ public abstract class AbstractDriver<T> implements Driver<T> {
     private List<EditorError> errors = new ArrayList<EditorError>();
     private HasEditors view;
 
+    @Override
     public void initialize(HasEditors view) {
         this.view = view;
 
         // TODO should this really happen here?
 
         visitEditors(view, new EditorVisitor() {
+            @Override
             public void visit(final Editor editor) {
                 if ((editor instanceof HasEditorDelegate) && (editor instanceof ValueEditor)) {
                     ((HasEditorDelegate)editor).setDelegate(new EditorDelegate() {
+                        @Override
                         public void recordError(String message, Object value) {
                             addError(((ValueEditor)editor).getPath(), editor, message, value);
                         }
@@ -126,6 +135,7 @@ public abstract class AbstractDriver<T> implements Driver<T> {
         this.errors.clear();
     }
 
+    @Override
     public boolean hasErrors() {
         return !this.errors.isEmpty();
     }
@@ -138,6 +148,7 @@ public abstract class AbstractDriver<T> implements Driver<T> {
         return false;
     }
 
+    @Override
     public List<EditorError> getErrors() {
         ArrayList<EditorError> unconsumedErrors = new ArrayList<EditorError>();
         for (EditorError error : errors) {

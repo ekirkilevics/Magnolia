@@ -54,6 +54,7 @@ public class NodeDataStringComparator implements Comparator<Content> {
         this.nodeDataName = nodeDataName;
     }
 
+    @Override
     public int compare(Content c1, Content c2) {
         final String s1 = c1.getNodeData(this.nodeDataName).getString();
         final String s2 = c2.getNodeData(this.nodeDataName).getString();

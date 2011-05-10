@@ -63,6 +63,7 @@ public class RealmCallback implements Callback {
 
     public void setRealm(final String realm) {
         this.realm = new Realm() {
+            @Override
             public String getName() {
                 return realm;
             }};

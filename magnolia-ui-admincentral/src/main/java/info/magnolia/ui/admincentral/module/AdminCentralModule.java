@@ -69,6 +69,7 @@ public class AdminCentralModule implements ModuleLifecycle {
         this.configuredWorkbenchManager = configuredWorkbenchManager;
     }
 
+    @Override
     public void start(ModuleLifecycleContext ctx) {
         ctx.registerModuleObservingComponent("mgnl50dialogs", configuredDialogManager);
         ctx.registerModuleObservingComponent("workbenches", configuredWorkbenchManager);
@@ -86,6 +87,7 @@ public class AdminCentralModule implements ModuleLifecycle {
         // DialogRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
     }
 
+    @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
     }
 

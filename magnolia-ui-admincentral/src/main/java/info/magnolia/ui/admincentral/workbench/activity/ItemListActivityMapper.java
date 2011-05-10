@@ -56,6 +56,7 @@ public class ItemListActivityMapper implements ActivityMapper {
         this.listActivity = listActivity;
     }
 
+    @Override
     public Activity getActivity(final Place place) {
         final ItemSelectedPlace selectedPlace = (ItemSelectedPlace)place;
         if(ViewType.TREE == selectedPlace.getViewType()){

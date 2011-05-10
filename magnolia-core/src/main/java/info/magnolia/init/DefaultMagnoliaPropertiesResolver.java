@@ -107,6 +107,7 @@ public class DefaultMagnoliaPropertiesResolver implements MagnoliaPropertiesReso
         return locations;
     }
 
+    @Override
     public List<PropertySource> getSources() {
         final List<PropertySource> sources = new ArrayList<PropertySource>();
         boolean foundFiles = false;

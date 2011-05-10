@@ -119,6 +119,7 @@ public class ModuleAdapterFactory extends AbstractBehaviorFactory {
             this.path = new ComponentConfigurationPath(moduleNodePath);
         }
 
+        @Override
         public T getComponentInstance(final PicoContainer container, Type into) throws PicoCompositionException {
             final T instance = super.getComponentInstance(container, into);
             if (moduleDefinition == null) {
@@ -154,11 +155,13 @@ public class ModuleAdapterFactory extends AbstractBehaviorFactory {
 
         private void startObservation(final T component) {
             ObservationUtil.registerDeferredChangeListener(path.getRepository(), path.getPath(), new EventListener() {
+                @Override
                 public void onEvent(EventIterator events) {
                     // TODO we should keep only one instance of the lifecycle context
                     final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
                     lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_MODULE_RESTART);
                     MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                        @Override
                         public void doExec() {
                             stopModule(component, moduleDefinition, lifecycleContext);
                             populate((T) component);
@@ -204,6 +207,7 @@ public class ModuleAdapterFactory extends AbstractBehaviorFactory {
             }
         }
 
+        @Override
         public String getDescriptor() {
             return "Module";
         }

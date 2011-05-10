@@ -54,9 +54,11 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
     private static Logger log = LoggerFactory.getLogger(ActivityManager.class);
 
     private static final Activity NULL_ACTIVITY = new AbstractActivity() {
+        @Override
         public void start(ViewPort viewPort, EventBus eventBus) {
             viewPort.setView(null);
         }
+        @Override
         public String toString() {
             return "NULL_ACTIVITY";
         }
@@ -78,6 +80,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
         eventBus.addHandler(PlaceChangeRequestEvent.class, this);
     }
 
+    @Override
     public void onPlaceChange(PlaceChangeEvent event) {
         Place newPlace = event.getNewPlace();
         Activity nextActivity = mapper.getActivity(newPlace);
@@ -108,6 +111,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
         this.viewPort = viewPort;
     }
 
+    @Override
     public void onPlaceChangeRequest(final PlaceChangeRequestEvent event) {
         log.debug("onPlaceChangeRequest for event {}", event);
         if (!currentActivity.equals(NULL_ACTIVITY)) {

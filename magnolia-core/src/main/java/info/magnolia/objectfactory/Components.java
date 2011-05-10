@@ -90,14 +90,17 @@ public class Components {
     private static ThreadLocal<ComponentProvider> scopes = new ThreadLocal<ComponentProvider>();
 
     private static class NullComponentProvider implements ComponentProvider {
+        @Override
         public <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException {
             throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
         }
 
+        @Override
         public <T> T getComponent(Class<T> type) {
             throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
         }
 
+        @Override
         public <T> T getSingleton(Class<T> type) {
             throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
         }
@@ -106,6 +109,7 @@ public class Components {
             throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
         }
 
+        @Override
         public <T> T newInstance(Class<T> type, Object... parameters) {
             throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
         }

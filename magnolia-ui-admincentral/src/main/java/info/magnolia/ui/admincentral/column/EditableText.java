@@ -65,6 +65,7 @@ public abstract class EditableText extends AbstractEditable {
             this.path = path;
         }
 
+        @Override
         public String getPath() {
             return path;
         }
@@ -75,6 +76,7 @@ public abstract class EditableText extends AbstractEditable {
         TextFieldEditor textField = new TextFieldEditor(path);
         textField.addListener(new FieldEvents.BlurListener() {
 
+            @Override
             public void blur(FieldEvents.BlurEvent event) {
                 onCancel();
             }

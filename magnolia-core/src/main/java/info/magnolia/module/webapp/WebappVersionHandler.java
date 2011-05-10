@@ -55,6 +55,7 @@ import java.util.List;
 public class WebappVersionHandler implements ModuleVersionHandler {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebappVersionHandler.class);
 
+    @Override
     public Version getCurrentlyInstalled(InstallContext ctx) {
         try {
             final boolean anyContent = ContentRepository.checkIfInitialized();
@@ -72,6 +73,7 @@ public class WebappVersionHandler implements ModuleVersionHandler {
         }
     }
 
+    @Override
     public List<Delta> getDeltas(InstallContext ctx, Version from) {
         if (from == null) {
             final Version version = ctx.getCurrentModuleDefinition().getVersion();
@@ -83,6 +85,7 @@ public class WebappVersionHandler implements ModuleVersionHandler {
         }
     }
 
+    @Override
     public Delta getStartupDelta(InstallContext ctx) {
         return DeltaBuilder.startup(ctx.getCurrentModuleDefinition(), Collections.<Task>emptyList());
     }

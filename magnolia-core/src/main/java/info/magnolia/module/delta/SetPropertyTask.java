@@ -77,6 +77,7 @@ public class SetPropertyTask extends AbstractRepositoryTask {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
 
         HierarchyManager hm = installContext.getHierarchyManager(workspaceName);

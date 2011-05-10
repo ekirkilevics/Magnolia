@@ -59,6 +59,7 @@ public class WarnIgnoredModuleFilters extends AllModulesNodeOperation {
         super("Filters", "Warns if filters are registered in module nodes since they're ignored in 3.5.");
     }
     
+    @Override
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
         throws RepositoryException, TaskExecutionException {
         

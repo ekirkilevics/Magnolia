@@ -61,6 +61,7 @@ public class CosMultipartRequestFilter extends OncePerRequestAbstractMgnlFilter 
      */
     private static final int MAX_FILE_SIZE = 2000000000; // 2GB
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
 

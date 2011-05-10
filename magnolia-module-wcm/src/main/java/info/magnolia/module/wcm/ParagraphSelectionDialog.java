@@ -61,6 +61,7 @@ public class ParagraphSelectionDialog extends Window {
         buttons.setSpacing(true);
         Button save = new Button("Save", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(Button.ClickEvent event) {
 
                 String paragraphName = (String) optionGroup.getValue();
@@ -84,6 +85,7 @@ public class ParagraphSelectionDialog extends Window {
 
         Button cancel = new Button("Cancel", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 close();
             }

@@ -71,6 +71,7 @@ public class UpdateI18nConfiguration extends NodeExistsDelegateTask {
             super(null, null);
         }
 
+        @Override
         protected String[] getResourcesToBootstrap(final InstallContext installContext) {
             return new String[]{
                     "/mgnl-bootstrap/core/config.server.i18n.content.xml",
@@ -87,6 +88,7 @@ public class UpdateI18nConfiguration extends NodeExistsDelegateTask {
             super(null, null);
         }
 
+        @Override
         protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
             final HierarchyManager configHM = ctx.getConfigHierarchyManager();
 

@@ -72,18 +72,21 @@ public class MgnlMainFilter implements Filter {
      */
     public static final String SERVER_FILTERS = "/server/filters";
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         instance = this;
         filterManager = getFilterManager(filterConfig.getServletContext());
         filterManager.init(filterConfig);
     }
 
+    @Override
     public void destroy() {
         if (filterManager != null) {
             filterManager.destroyRootFilter();
         }
     }
 
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }

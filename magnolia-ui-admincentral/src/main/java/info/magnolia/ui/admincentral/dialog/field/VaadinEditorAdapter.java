@@ -66,10 +66,12 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
         this.abstractDialogField = abstractDialogField;
     }
 
+    @Override
     public void setValue(T object) {
         field.setValue(object);
     }
 
+    @Override
     public T getValue() {
         T value = (T) field.getValue();
 
@@ -84,10 +86,12 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
         return value;
     }
 
+    @Override
     public void setDelegate(EditorDelegate delegate) {
         this.delegate = delegate;
     }
 
+    @Override
     public void showErrors(List<EditorError> errors) {
 
         // Clear any previous error
@@ -101,10 +105,12 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
         }
     }
 
+    @Override
     public String getPath() {
         return fieldDefinition.getName();
     }
 
+    @Override
     public Class<T> getType() {
         return type;
     }

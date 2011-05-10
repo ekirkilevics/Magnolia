@@ -106,6 +106,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
         startObservation(path);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     // until commons-proxy becomes generics-aware, we have to ignore this warning
     public T newInstance() {
@@ -117,6 +118,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
         }
 
         return (T) new CglibProxyFactory().createDelegatorProxy(new ObjectProvider() {
+            @Override
             public Object getObject() {
                 return getObservedObject();
             }
@@ -130,6 +132,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
         ObservationUtil.registerDeferredChangeListener(repository, handle, this, DEFAULT_DELAY, DEFAULT_MAX_DELAY);
     }
 
+    @Override
     public void onEvent(EventIterator events) {
         reload();
     }

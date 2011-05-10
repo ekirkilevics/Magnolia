@@ -65,6 +65,7 @@ public class UpdateUsers extends AllChildrenNodesOperation {
         super("User definition update", "Adds right to read their own node to all existing users.", ContentRepository.USERS,  "/", new NodeTypeFilter(ItemType.FOLDER));
     }
 
+    @Override
     public void operateOnChildNode(Content node, InstallContext installContext)
         throws RepositoryException, TaskExecutionException {
         try {

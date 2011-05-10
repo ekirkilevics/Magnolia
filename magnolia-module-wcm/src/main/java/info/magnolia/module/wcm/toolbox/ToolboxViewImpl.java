@@ -61,6 +61,7 @@ public class ToolboxViewImpl implements ToolboxView, IsVaadinComponent {
         this.table.setSelectable(true);
         table.addListener(new ItemClickEvent.ItemClickListener() {
 
+            @Override
             public void itemClick(ItemClickEvent event) {
                 if (!event.isDoubleClick()) {
                     String name = (String) event.getItemId();

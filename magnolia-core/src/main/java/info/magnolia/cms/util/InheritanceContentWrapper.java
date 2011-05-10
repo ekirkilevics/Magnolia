@@ -208,6 +208,7 @@ public class InheritanceContentWrapper extends ContentWrapper {
         return isNodeType(ItemType.CONTENT.getSystemName());
     }
 
+    @Override
     public NodeData getNodeData(String name) {
         try {
             if (getWrappedContent().hasNodeData(name)) {
@@ -229,6 +230,7 @@ public class InheritanceContentWrapper extends ContentWrapper {
     /**
      * Wrap returned nodes. Sets the inherited flag
      */
+    @Override
     protected Content wrap(Content node) {
         // only wrap once
         if(node instanceof InheritanceContentWrapper){

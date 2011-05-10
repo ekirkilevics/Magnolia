@@ -70,6 +70,7 @@ public final class Color {
         return blue;
     }
 
+    @Override
     public String toString() {
         return "color:" + name;
     }

@@ -161,6 +161,7 @@ public class ObservedComponentFactoryTest extends TestCase {
     public static class MyImpl implements MyInterface {
         private String someString;
 
+        @Override
         public String getSomeString() {
             return someString;
         }

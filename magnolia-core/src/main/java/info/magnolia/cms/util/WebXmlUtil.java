@@ -112,6 +112,7 @@ public class WebXmlUtil {
         final List servletMappings = getElementsFromXPath(servletMappingXPathExpr);
 
         return CollectionUtils.collect(servletMappings, new Transformer() {
+            @Override
             public Object transform(Object input) {
                 final Element servletMapping = (Element) input;
                 return servletMapping.getText();

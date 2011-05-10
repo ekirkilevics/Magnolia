@@ -68,6 +68,7 @@ public class RedirectClientCallback implements HttpClientCallback {
         this.location = location;
     }
 
+    @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) {
         final String target;
         if (location.startsWith("/")) {

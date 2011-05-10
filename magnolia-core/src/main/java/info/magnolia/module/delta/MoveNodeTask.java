@@ -58,6 +58,7 @@ public class MoveNodeTask extends AbstractRepositoryTask {
         this.overwrite = overwrite;
     }
 
+    @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         HierarchyManager hm = installContext.getHierarchyManager(workspaceName);
         if(hm.isExist(dest)){

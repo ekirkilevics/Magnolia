@@ -67,6 +67,7 @@ public class ImportXmlRootFilter extends XMLFilterImpl {
     /**
      * @see org.xml.sax.helpers.XMLFilterImpl#endElement(String, String, String)
      */
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
 
         if (inFilterElement > 0) {
@@ -87,6 +88,7 @@ public class ImportXmlRootFilter extends XMLFilterImpl {
     /**
      * @see org.xml.sax.helpers.XMLFilterImpl#characters(char[], int, int)
      */
+    @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         // filter content
         if (inFilterElement == 0) {
@@ -112,6 +114,7 @@ public class ImportXmlRootFilter extends XMLFilterImpl {
      * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
      * org.xml.sax.Attributes)
      */
+    @Override
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
         // filter if already in a version element
         if (inFilterElement > 0) {

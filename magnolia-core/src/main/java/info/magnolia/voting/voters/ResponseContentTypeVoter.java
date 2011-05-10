@@ -71,6 +71,7 @@ public class ResponseContentTypeVoter extends AbstractBoolVoter {
         rejected.add(contentType);
     }
 
+    @Override
     protected boolean boolVote(Object value) {
         final HttpServletResponse response;
         if (value instanceof HttpServletResponse) {

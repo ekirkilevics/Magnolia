@@ -62,22 +62,27 @@ public class MgnlRole implements Role {
         this.acls = acls;
     }
 
+    @Override
     public String getName() {
         return roleName;
     }
 
+    @Override
     public void addPermission(String repository, String path, long permission) {
         throw new UnsupportedOperationException("Use RoleManager.addPermission() instead.");
     }
 
+    @Override
     public void removePermission(String repository, String path) {
         this.removePermission(repository, path, MgnlRole.PERMISSION_ANY);
     }
 
+    @Override
     public void removePermission(String repository, String path, long permission) {
         throw new UnsupportedOperationException("Use RoleManager.removePermission() instead.");
     }
 
+    @Override
     public String getId() {
         return roleId;
     }

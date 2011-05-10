@@ -49,6 +49,7 @@ public class MgnlValue implements Value {
 
     javax.jcr.Value v;
 
+    @Override
     public Object getWrappedInstance() throws JcrException {
         return v;
     }
@@ -57,6 +58,7 @@ public class MgnlValue implements Value {
         this.v = v;
     }
 
+    @Override
     public String getString() throws JcrException {
         try {
             return v.getString();
@@ -66,10 +68,12 @@ public class MgnlValue implements Value {
         }
     }
 
+    @Override
     public int getType() {
         return v.getType();
     }
 
+    @Override
     public long getLong() throws JcrException {
         try {
             return v.getLong();
@@ -79,6 +83,7 @@ public class MgnlValue implements Value {
         }
     }
 
+    @Override
     public Object getValue() throws JcrException {
         return JcrProxy.wrapJcrValue(v).getValue();
     }
@@ -86,6 +91,7 @@ public class MgnlValue implements Value {
     /**
      * @see openwfe.org.jcr.Value#getStream()
      */
+    @Override
     public InputStream getStream() throws JcrException {
         try {
             return v.getStream();

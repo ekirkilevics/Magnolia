@@ -71,6 +71,7 @@ public class URI2RepositoryManager {
 
     protected Comparator<URI2RepositoryMapping> getMappingComparator() {
         return new Comparator<URI2RepositoryMapping>() {
+            @Override
             public int compare(URI2RepositoryMapping m0, URI2RepositoryMapping m1) {
                 return m1.getURIPrefix().compareTo(m0.getURIPrefix());
             }

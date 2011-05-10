@@ -54,6 +54,7 @@ public class NodeExistsDelegateTask extends ConditionalDelegateTask {
         this.workspaceName = workspaceName;
     }
 
+    @Override
     protected boolean condition(InstallContext ctx) {
         return ctx.getHierarchyManager(workspaceName).isExist(pathToCheck);
     }

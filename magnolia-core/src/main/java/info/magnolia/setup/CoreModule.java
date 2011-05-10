@@ -57,12 +57,14 @@ public class CoreModule implements ModuleLifecycle {
         this.shutdownManager = shutdownManager;
     }
 
+    @Override
     public void start(ModuleLifecycleContext ctx) {
         ctx.registerModuleObservingComponent("virtualURIMapping", virtualURIManager);
         ctx.registerModuleObservingComponent("commands", commandsManager);
         ctx.registerModuleObservingComponent("shutdown", shutdownManager);
     }
 
+    @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
     }
 }

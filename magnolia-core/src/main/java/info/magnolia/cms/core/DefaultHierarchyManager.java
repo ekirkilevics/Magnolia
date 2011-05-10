@@ -142,6 +142,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * Get access manager.
      * @return accessmanager attached to this hierarchy
      */
+    @Override
     public AccessManager getAccessManager() {
         // throw an ex because letting this fall through would be too unsecure for code relying on the old behavior
         throw new UnsupportedOperationException("Custom access managers are no longer supported. Use Repository level security checks instead.");
@@ -155,6 +156,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         this.queryManager = queryManager;
     }
 
+    @Override
     public QueryManager getQueryManager() {
         if (null == this.queryManager) {
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
@@ -195,6 +197,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws RepositoryException
      * @throws AccessDeniedException
      */
+    @Override
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException,
     RepositoryException, AccessDeniedException {
         Content content = new DefaultContent(this.getRootNode(), this.getNodePath(path, label), contentType, this);
@@ -238,6 +241,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      */
+    @Override
     public Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         if (path.equals("/")) { //$NON-NLS-1$
             return this.getRoot();
@@ -259,6 +263,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws AccessDeniedException
      * @throws RepositoryException
      */
+    @Override
     public Content getContent(String path, boolean create, ItemType type) throws AccessDeniedException,
     RepositoryException {
         Content node;
@@ -287,6 +292,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      */
+    @Override
     public NodeData getNodeData(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         if (StringUtils.isEmpty(path)) {
             return null;
@@ -344,6 +350,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws javax.jcr.RepositoryException
      * @throws AccessDeniedException
      */
+    @Override
     public void delete(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Access.tryPermission(jcrSession, path, Session.ACTION_REMOVE);
         ItemType type = null;
@@ -371,6 +378,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     /**
      * @return rootNode of the current working repository-workspace
      */
+    @Override
     public Content getRoot() throws RepositoryException, AccessDeniedException {
         return (new DefaultContent(this.getRootNode(), this));
     }
@@ -381,6 +389,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * granted or not running in SystemContext, the method will return false even if the node in question exists.
      * @param path
      */
+    @Override
     public boolean isExist(String path) {
         if (!Access.isGranted(jcrSession, path, Session.ACTION_READ)) {
             return false;
@@ -395,6 +404,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         }
     }
 
+    @Override
     public boolean isGranted(String path, long oldPermissions) {
         String permissions = "";
         //TODO: review && convert all the permissions properly
@@ -415,6 +425,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @param path of the requested NodeData
      * @return boolean true is the requested content is an NodeData
      */
+    @Override
     public boolean isNodeData(String path) throws AccessDeniedException {
         Access.tryPermission(jcrSession, path, Session.ACTION_READ);
         boolean result = false;
@@ -440,6 +451,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * has mixin type mix:referenceable.
      * @param uuid
      */
+    @Override
     public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
     AccessDeniedException {
         try {
@@ -454,6 +466,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     /**
      * gets currently used workspace for this hierarchy manager.
      */
+    @Override
     public Workspace getWorkspace() {
         if (null == this.workspace) {
             reInitialize();
@@ -468,6 +481,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      */
+    @Override
     public void moveTo(String source, String destination) throws PathNotFoundException, RepositoryException,
     AccessDeniedException {
         Access.tryPermission(jcrSession, source, Session.ACTION_REMOVE);
@@ -483,6 +497,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
      */
+    @Override
     public void copyTo(String source, String destination) throws PathNotFoundException, RepositoryException,
     AccessDeniedException {
         Access.tryPermission(jcrSession, source, Session.ACTION_READ);
@@ -495,6 +510,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * Persists all changes to the repository if validation succeeds.
      * @throws RepositoryException
      */
+    @Override
     public void save() throws RepositoryException {
         try {
             this.getJcrSession().save();
@@ -508,6 +524,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     /**
      * Returns true if the session has pending (unsaved) changes.
      */
+    @Override
     public boolean hasPendingChanges() throws RepositoryException {
         return this.getJcrSession().hasPendingChanges();
     }
@@ -518,10 +535,12 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws RepositoryException
      * @see javax.jcr.Session#refresh(boolean)
      */
+    @Override
     public void refresh(boolean keepChanges) throws RepositoryException {
         this.getJcrSession().refresh(keepChanges);
     }
 
+    @Override
     public String getName() {
         return this.workspaceName;
     }

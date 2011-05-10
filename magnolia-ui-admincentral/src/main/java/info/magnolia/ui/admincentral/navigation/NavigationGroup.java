@@ -98,6 +98,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
         accordion.addListener(new SelectedNavigationItemTabChangeListener());
     }
 
+    @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
     }
@@ -191,6 +192,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
 
             this.addListener(new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     NavigationItemDefinition menuConfig = navigationItems.get(event.getComponent());
                     presenter.onMenuSelection(menuConfig);
@@ -206,6 +208,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
      */
     public class SelectedNavigationItemTabChangeListener implements SelectedTabChangeListener {
 
+        @Override
         public void selectedTabChange(SelectedTabChangeEvent event) {
             TabSheet tabsheet = event.getTabSheet();
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
@@ -217,10 +220,12 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
         }
     }
 
+    @Override
     public Component asVaadinComponent() {
         return customComponent;
     }
 
+    @Override
     public void update(Place place) {
         for(Entry<Component, NavigationItemDefinition> entry : navigationItems.entrySet()){
             if(!(entry.getValue().getActionDefinition() instanceof PlaceChangeActionDefinition)){

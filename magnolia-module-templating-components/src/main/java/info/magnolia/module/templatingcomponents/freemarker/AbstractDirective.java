@@ -68,6 +68,7 @@ import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent
  */
 public abstract class AbstractDirective implements TemplateDirectiveModel {
 
+    @Override
     @SuppressWarnings("unchecked")
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
         final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();

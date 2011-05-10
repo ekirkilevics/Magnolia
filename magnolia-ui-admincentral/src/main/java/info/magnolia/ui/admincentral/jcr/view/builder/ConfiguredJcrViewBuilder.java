@@ -91,6 +91,7 @@ public class ConfiguredJcrViewBuilder extends FactoryBase<AbstractColumnDefiniti
         return create(definition);
     }
 
+    @Override
     public JcrView build(WorkbenchDefinition workbenchDefinition, ViewType type) {
         Map<String, Column<?>> columns = new LinkedHashMap<String, Column<?>>();
         for (AbstractColumnDefinition columnDefinition : workbenchDefinition.getColumns()) {

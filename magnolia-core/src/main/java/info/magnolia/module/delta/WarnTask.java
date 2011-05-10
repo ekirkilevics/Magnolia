@@ -49,6 +49,7 @@ public class WarnTask extends AbstractTask {
         super(name, warningMessage);
     }
 
+    @Override
     public void execute(InstallContext installContext) throws TaskExecutionException {
         installContext.warn(getDescription());
     }

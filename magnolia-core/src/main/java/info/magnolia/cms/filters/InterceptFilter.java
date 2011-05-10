@@ -109,6 +109,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
      */
     public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview"; //$NON-NLS-1$
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
 
         if (request.getParameter(INTERCEPT) != null) {

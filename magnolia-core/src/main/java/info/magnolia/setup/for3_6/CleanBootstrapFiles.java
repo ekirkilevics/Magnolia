@@ -90,6 +90,7 @@ public class CleanBootstrapFiles{
 
     public static Iterator findFiles(File root){
         return FileUtils.iterateFiles(root, new AbstractFileFilter(){
+            @Override
             public boolean accept(File file) {
                 return file.getName().endsWith(".xml");
             }

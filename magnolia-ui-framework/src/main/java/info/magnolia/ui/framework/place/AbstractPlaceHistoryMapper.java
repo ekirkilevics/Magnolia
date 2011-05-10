@@ -58,7 +58,8 @@ public abstract class AbstractPlaceHistoryMapper implements PlaceHistoryMapper  
     }
   }
 
-  public Place getPlace(String token) {
+  @Override
+public Place getPlace(String token) {
     int colonAt = token.indexOf(':');
     if (colonAt > 0) {
       String initial = token.substring(0, colonAt);
@@ -71,7 +72,8 @@ public abstract class AbstractPlaceHistoryMapper implements PlaceHistoryMapper  
     return null;
   }
 
-  public String getToken(Place place) {
+  @Override
+public String getToken(Place place) {
     PrefixAndToken token = getPrefixAndToken(place);
     if (token != null) {
       return token.toString();

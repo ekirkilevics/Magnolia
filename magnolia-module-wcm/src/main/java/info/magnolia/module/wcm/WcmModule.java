@@ -61,9 +61,11 @@ public class WcmModule implements ModuleLifecycle {
         this.toolboxConfiguration = toolboxConfiguration;
     }
 
+    @Override
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
     }
 
+    @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
     }
 }

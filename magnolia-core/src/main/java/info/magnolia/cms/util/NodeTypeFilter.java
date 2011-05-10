@@ -52,10 +52,12 @@ public class NodeTypeFilter implements ContentFilter {
         this.systemName = type.getSystemName();
     }
 
+    @Override
     public boolean accept(Content content) {
         return content.isNodeType(systemName);
     }
 
+    @Override
     public String toString() {
         return "NodeTypeFilter for type " + systemName;
     }

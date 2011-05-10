@@ -55,10 +55,12 @@ import javax.jcr.RepositoryException;
 class NodeDataModelFactory implements MagnoliaModelFactory {
     static final NodeDataModelFactory INSTANCE = new NodeDataModelFactory();
 
+    @Override
     public Class factoryFor() {
         return NodeData.class;
     }
 
+    @Override
     public TemplateModel create(final Object object, final ObjectWrapper wrapper) {
         final MagnoliaObjectWrapper magnoliaWrapper = (MagnoliaObjectWrapper) wrapper;
         final NodeData nodeData = (NodeData) object;

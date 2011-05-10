@@ -64,8 +64,10 @@ public class FilterManagerImpl implements FilterManager {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FilterManagerImpl.class);
 
     private final EventListener filtersEventListener = new EventListener() {
+        @Override
         public void onEvent(EventIterator arg0) {
             MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                @Override
                 public void doExec() {
                     resetRootFilter();
                 }
@@ -83,10 +85,12 @@ public class FilterManagerImpl implements FilterManager {
         this.systemContext = systemContext;
     }
 
+    @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
         // remember this config
         this.filterConfig = filterConfig;
         MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+            @Override
             public void doExec() {
                 if (!isSystemUIMode()) {
                     startObservation();
@@ -97,6 +101,7 @@ public class FilterManagerImpl implements FilterManager {
         }, true);
     }
 
+    @Override
     public MgnlFilter getRootFilter() {
         if (rootFilter == null) {
             // TODO - lock while rootFilter is being reconstructed ?
@@ -181,12 +186,14 @@ public class FilterManagerImpl implements FilterManager {
                 5000);
     }
 
+    @Override
     public void resetRootFilter() {
         destroyRootFilter();
         createRootFilter();
         initRootFilter();
     }
 
+    @Override
     public void destroyRootFilter() {
         if (rootFilter != null) {
             rootFilter.destroy();

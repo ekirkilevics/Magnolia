@@ -65,6 +65,7 @@ public class CheckNodesForMixVersionable extends AbstractTask {
         super("Check existing top level nodes", "Checks existing top level nodes for existence of mix:versionable.");
     }
 
+    @Override
     public void execute(InstallContext installContext)
             throws TaskExecutionException {
         HierarchyManager hm = installContext.getHierarchyManager("website");

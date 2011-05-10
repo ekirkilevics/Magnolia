@@ -52,16 +52,19 @@ public class SimpleEventBus implements EventBus {
 
     private final Multimap<Class<? extends Event>, EventHandler> eventHandlers = ArrayListMultimap.create();
 
+    @Override
     public <H extends EventHandler> HandlerRegistration addHandler(final Class<? extends Event<H>> eventClass, final H handler) {
         log.debug("Adding handler {} for events of class {}", handler, eventClass);
         internalAddHandler(eventClass, handler);
         return new HandlerRegistration() {
+            @Override
             public void removeHandler() {
                 internalRemoveHandler(eventClass, handler);
             }
         };
     }
 
+    @Override
     public <H extends EventHandler> void fireEvent(Event<H> event) {
         for (H eventHandler : internalGetHandlers(event)) {
             log.debug("Dispatch event {} with handler {}", event, eventHandler);

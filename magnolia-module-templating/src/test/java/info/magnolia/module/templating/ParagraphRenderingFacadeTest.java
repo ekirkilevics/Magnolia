@@ -55,11 +55,13 @@ import static org.easymock.classextension.EasyMock.*;
  */
 public class ParagraphRenderingFacadeTest extends MgnlTestCase {
 
+    @Override
     protected void setUp() throws Exception {
         MgnlContext.setInstance(null);
         super.setUp();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();

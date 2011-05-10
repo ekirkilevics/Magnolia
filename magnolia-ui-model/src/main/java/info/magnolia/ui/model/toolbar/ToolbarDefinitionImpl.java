@@ -46,6 +46,7 @@ public class ToolbarDefinitionImpl implements ToolbarDefinition {
 
     private List<ToolbarItemGroupDefinition> groups = new ArrayList<ToolbarItemGroupDefinition>();
 
+    @Override
     public List<ToolbarItemGroupDefinition> getGroups() {
         return Collections.unmodifiableList(groups);
     }

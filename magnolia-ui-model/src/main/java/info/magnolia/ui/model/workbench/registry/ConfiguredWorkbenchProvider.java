@@ -51,6 +51,7 @@ public class ConfiguredWorkbenchProvider implements WorkbenchProvider {
         this.configNode = new LazyContentWrapper(content);
     }
 
+    @Override
     public WorkbenchDefinition getDefinition() {
         try {
             return (WorkbenchDefinition) Content2BeanUtil.toBean(configNode, true, WorkbenchDefinition.class);

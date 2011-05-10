@@ -69,6 +69,7 @@ public class AggregatorFilter extends AbstractMgnlFilter{
     private final String VERSION_NUMBER = "mgnlVersion"; //$NON-NLS-1$
 
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
 
         boolean success;

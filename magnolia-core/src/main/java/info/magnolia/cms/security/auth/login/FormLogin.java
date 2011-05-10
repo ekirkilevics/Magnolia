@@ -64,6 +64,7 @@ public class FormLogin extends LoginHandlerBase implements LoginHandler {
 
     private String jaasChain = SecuritySupportBase.DEFAULT_JAAS_LOGIN_CHAIN;
 
+    @Override
     public LoginResult handle(HttpServletRequest request, HttpServletResponse response) {
         String userid = request.getParameter(PARAMETER_USER_ID);
         log.debug("handle login for {}", userid);

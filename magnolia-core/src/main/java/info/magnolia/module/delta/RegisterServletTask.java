@@ -64,6 +64,7 @@ public class RegisterServletTask extends AbstractTask {
         this.servletDefinition = servletDefinition;
     }
 
+    @Override
     public void execute(InstallContext installContext) throws TaskExecutionException {
         log.debug("Registering servlet " + servletDefinition.getName() + " in servlet filter.");
 

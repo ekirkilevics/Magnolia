@@ -59,6 +59,7 @@ public class PageEditorViewImpl implements PageEditorView {
         this.wcmModule = wcmModule;
     }
 
+    @Override
     public void init() {
 
         pageLayout = new VerticalLayout();
@@ -86,6 +87,7 @@ public class PageEditorViewImpl implements PageEditorView {
         return toolboxView;
     }
 
+    @Override
     public ComponentContainer getEditorContainer() {
         return pageLayout;
     }

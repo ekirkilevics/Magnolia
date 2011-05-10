@@ -53,6 +53,7 @@ public class PropertyExistsDelegateTask extends NodeCheckDelegateTask {
         super(taskName, taskDescription, workspaceName, parentPath, propertyName, ifTrue, ifFalse);
     }
 
+    @Override
     protected boolean checkNode(Content node, InstallContext ctx) throws RepositoryException {
         return node.hasNodeData(propertyName);
     }

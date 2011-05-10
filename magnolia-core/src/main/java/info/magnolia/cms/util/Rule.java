@@ -131,6 +131,7 @@ public class Rule implements Serializable {
      * Get a string representation of this rule.
      * @return string representation
      */
+    @Override
     public String toString() {
         StringBuffer buffer = new StringBuffer();
         Iterator typeIterator = IteratorUtils.arrayIterator(allowedTypes);

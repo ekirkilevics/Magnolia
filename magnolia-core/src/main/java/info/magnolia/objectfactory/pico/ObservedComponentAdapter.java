@@ -69,6 +69,7 @@ public class ObservedComponentAdapter extends AbstractAdapter {
         this.componentProvider = componentProvider;
     }
 
+    @Override
     public Object getComponentInstance(PicoContainer container, Type into) throws PicoCompositionException {
         if (factory == null) {
             factory = new ObservedComponentFactory(path.getRepository(), path.getPath(), getComponentImplementation(), componentProvider);
@@ -79,10 +80,12 @@ public class ObservedComponentAdapter extends AbstractAdapter {
         return o;
     }
 
+    @Override
     public void verify(PicoContainer container) throws PicoCompositionException {
         // anything to do here ?
     }
 
+    @Override
     public String getDescriptor() {
         return "ObservedComponentAdapter";
     }

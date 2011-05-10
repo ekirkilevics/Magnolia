@@ -140,10 +140,12 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
         requestRepaintAll();
     }
 
+    @Override
     public Component getComponent() {
         return this;
     }
 
+    @Override
     public Editor getEditor() {
         return this.editor;
     }

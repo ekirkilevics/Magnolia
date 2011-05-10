@@ -53,11 +53,13 @@ public class MgnlServletContextListener extends MagnoliaServletContextListener {
     public static final String MAGNOLIA_INITIALIZATION_FILE = "magnolia.initialization.file";
     public static final String MAGNOLIA_UNQUALIFIED_SERVER_NAME = "magnolia.unqualified.server.name";
 
+    @Override
     public void contextDestroyed(final ServletContextEvent sce) {
         DeprecationUtil.isDeprecated("Use info.magnolia.init.MagnoliaServletContextListener instead");
         super.contextDestroyed(sce);
     }
 
+    @Override
     public void contextInitialized(final ServletContextEvent sce) {
         DeprecationUtil.isDeprecated("Use info.magnolia.init.MagnoliaServletContextListener instead");
         super.contextInitialized(sce);
@@ -81,6 +83,7 @@ public class MgnlServletContextListener extends MagnoliaServletContextListener {
     /**
      * @deprecated since 5.0, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
      */
+    @Override
     protected String initServername(boolean unqualified) {
         DeprecationUtil.isDeprecated("Use info.magnolia.init.MagnoliaServletContextListener instead");
         return null;
@@ -89,6 +92,7 @@ public class MgnlServletContextListener extends MagnoliaServletContextListener {
     /**
      * @deprecated since 5.0, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
      */
+    @Override
     protected String initRootPath(final ServletContext context) {
         DeprecationUtil.isDeprecated("Use info.magnolia.init.MagnoliaServletContextListener instead");
         return null;
@@ -97,6 +101,7 @@ public class MgnlServletContextListener extends MagnoliaServletContextListener {
     /**
      * @deprecated since 5.0, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
      */
+    @Override
     protected String initWebappName(String rootPath) {
         DeprecationUtil.isDeprecated("Use info.magnolia.init.MagnoliaServletContextListener instead");
         return null;

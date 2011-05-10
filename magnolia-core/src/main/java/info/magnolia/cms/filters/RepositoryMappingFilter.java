@@ -59,6 +59,7 @@ import org.slf4j.LoggerFactory;
 public class RepositoryMappingFilter extends AbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(RepositoryMappingFilter.class);
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String uri = MgnlContext.getAggregationState().getCurrentURI();
         int firstDotPos = StringUtils.indexOf(uri, '.', StringUtils.lastIndexOf(uri, '/'));

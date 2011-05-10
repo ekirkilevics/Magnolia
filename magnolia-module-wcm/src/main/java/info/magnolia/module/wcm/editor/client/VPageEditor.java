@@ -72,6 +72,7 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
         hookEvents(iFrameElement, this);
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         // Save details

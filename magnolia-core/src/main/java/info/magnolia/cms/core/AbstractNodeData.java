@@ -64,26 +64,32 @@ public abstract class AbstractNodeData implements NodeData{
         this.name = name;
     }
 
+    @Override
     public HierarchyManager getHierarchyManager() {
         return parent.getHierarchyManager();
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public String getHandle() {
         return Path.getAbsolutePath(parent.getHandle(), name);
     }
 
+    @Override
     public boolean isGranted(long permissions) {
         return getHierarchyManager().isGranted(getHandle(), permissions);
     }
 
+    @Override
     public String getString(String lineBreak) {
         return getString().replaceAll("\n", lineBreak); //$NON-NLS-1$
     }
 
+    @Override
     public Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {
         return this.parent;
     }
@@ -92,6 +98,7 @@ public abstract class AbstractNodeData implements NodeData{
         this.parent = parent;
     }
 
+    @Override
     public Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException {
         if(this.getHierarchyManager().getName().equals(repositoryId)){
             return getReferencedContent();
@@ -99,6 +106,7 @@ public abstract class AbstractNodeData implements NodeData{
         return getReferencedContent(MgnlContext.getHierarchyManager(repositoryId));
     }
 
+    @Override
     public Content getReferencedContent() throws PathNotFoundException, RepositoryException {
         return getReferencedContent(this.getHierarchyManager());
     }
@@ -152,6 +160,7 @@ public abstract class AbstractNodeData implements NodeData{
      */
     protected abstract Content getContentFromJCRReference() throws RepositoryException;
 
+    @Override
     public int isMultiValue() {
         if(multiValue == MULTIVALUE_UNDEFINED) {
             try {
@@ -170,18 +179,22 @@ public abstract class AbstractNodeData implements NodeData{
         return this.multiValue;
     }
 
+    @Override
     public String getAttribute(String name) {
         throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
     }
 
+    @Override
     public Collection<String> getAttributeNames() throws RepositoryException {
         throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
     }
 
+    @Override
     public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
         throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
     }
 
+    @Override
     public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
         throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
     }

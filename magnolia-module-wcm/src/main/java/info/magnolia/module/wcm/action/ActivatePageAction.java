@@ -50,6 +50,7 @@ public class ActivatePageAction extends ActionBase<ActivatePageActionDefinition>
         this.node = node;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
     }
 }

@@ -53,6 +53,7 @@ public class LogCommand extends MgnlCommand {
 
     private String log = LogCommand.class.getName();
 
+    @Override
     public boolean execute(Context ctx) throws Exception {
         getLogger().info(getMsg());
         return true;

@@ -61,6 +61,7 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
     /**
      * Use the <code>Map.put()</code>.
      */
+    @Override
     public void setAttribute(String name, Object value, int scope) {
         this.map.put(name, value);
     }
@@ -68,6 +69,7 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
     /**
      * Use the <code>Map.get()</code>.
      */
+    @Override
     public Object getAttribute(String name, int scope) {
         return this.map.get(name);
     }
@@ -75,6 +77,7 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
     /**
      * use the <code>Map.remove()</code>.
      */
+    @Override
     public void removeAttribute(String name, int scope) {
         this.map.remove(name);
     }
@@ -82,6 +85,7 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
     /**
      * Ignore scope and return the inner map.
      */
+    @Override
     public Map<String, Object> getAttributes(int scope) {
         return this.getAttributes();
     }
@@ -89,6 +93,7 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
     /**
      * Returns the inner map.
      */
+    @Override
     public Map<String, Object> getAttributes() {
         return this.map;
     }

@@ -68,9 +68,11 @@ public class ShellImpl extends AbstractShell {
         application.getMainWindow().addComponent(uriFragmentUtility);
     }
 
+    @Override
     public void askForConfirmation(String message, final ConfirmationHandler listener) {
         ConfirmDialog.show(application.getMainWindow(), message, new ConfirmDialog.Listener() {
 
+            @Override
             public void onClose(ConfirmDialog dialog) {
                 if (dialog.isConfirmed()) {
                     listener.onConfirm();
@@ -82,20 +84,24 @@ public class ShellImpl extends AbstractShell {
         });
     }
 
+    @Override
     public void showNotification(String message) {
         application.getMainWindow().showNotification(message);
     }
 
+    @Override
     public void showError(String message, Exception e) {
         log.error(message, e);
         application.getMainWindow().showNotification(message, e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
     }
 
+    @Override
     public void openWindow(String uri, String windowName) {
         Window window = application.getMainWindow();
         window.open(new ExternalResource(uri), windowName);
     }
 
+    @Override
     protected UriFragmentUtility getUriFragmentUtility() {
         return uriFragmentUtility;
     }

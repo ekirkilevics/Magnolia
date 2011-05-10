@@ -72,11 +72,13 @@ public class InstallFilter extends AbstractMgnlFilter {
         this.filterManager = filterManager;
     }
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
         servletContext = filterConfig.getServletContext();
     }
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // this isn't the cleanest thing, but we're basically tricking FreemarkerHelper into using a Context, while avoiding using WebContextImpl and its depedencies on the repository
         final Context originalContext = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
@@ -117,10 +119,12 @@ public class InstallFilter extends AbstractMgnlFilter {
     }
 
     private final static class InstallWebContext extends WebContextImpl {
+        @Override
         public User getUser() {
             return null;
         }
 
+        @Override
         public Locale getLocale() {
             return MgnlContext.getSystemContext().getLocale();
         }

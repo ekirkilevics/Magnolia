@@ -59,10 +59,12 @@ public class MgnlGroup implements Group {
         this.roles = Collections.unmodifiableCollection(roleNames);
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public void addRole(String roleName) throws UnsupportedOperationException, AccessDeniedException {
         throw new UnsupportedOperationException("Use manager to modify this group");
     }
@@ -70,10 +72,12 @@ public class MgnlGroup implements Group {
     /**
      * Add a subgroup to this group.
      */
+    @Override
     public void addGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException {
         throw new UnsupportedOperationException("Use manager to modify this group");
     }
 
+    @Override
     public void removeRole(String roleName) throws UnsupportedOperationException, AccessDeniedException {
         throw new UnsupportedOperationException("Use manager to modify this group");
     }
@@ -81,10 +85,12 @@ public class MgnlGroup implements Group {
     /**
      * Remove a subgroup from this group.
      */
+    @Override
     public void removeGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException {
         throw new UnsupportedOperationException("Use manager to modify this group");
     }
 
+    @Override
     public boolean hasRole(String roleName) throws UnsupportedOperationException, AccessDeniedException {
         return this.roles.contains(roleName);
     }
@@ -94,10 +100,12 @@ public class MgnlGroup implements Group {
      * wasting the time and memory on group instance creation or such props should be requested on demand from the manager.
      * The fact that group interface exposes also setter for this method makes it even worse!
      */
+    @Override
     public String getProperty(String propertyName) {
         throw new UnsupportedOperationException("Use manager to retrieve arbitrary group properties");
     }
 
+    @Override
     public void setProperty(String propertyName, String value) {
         throw new UnsupportedOperationException("Use manager to modify this group");
     }
@@ -106,6 +114,7 @@ public class MgnlGroup implements Group {
      * Returns read only roles collection.
      * @see info.magnolia.cms.security.Group#getRoles()
      */
+    @Override
     public Collection<String> getRoles() {
         return Collections.unmodifiableCollection(this.roles);
     }
@@ -114,6 +123,7 @@ public class MgnlGroup implements Group {
      * Returns read only groups collection.
      * @see info.magnolia.cms.security.Group#getGroups()
      */
+    @Override
     public Collection<String> getGroups() {
         return this.groups;
     }
@@ -122,10 +132,12 @@ public class MgnlGroup implements Group {
      * FIXME: While this method could be potentially supported and can return all the groups that this group belongs to by inheritance,
      * it doesn't seem to be great idea to pre-fill it on object creation and should be just requested on demand from manager.
      */
+    @Override
     public Collection<String> getAllGroups() {
         throw new UnsupportedOperationException("Use manager to modify this group");
     }
 
+    @Override
     public String getId() {
         return id;
     }

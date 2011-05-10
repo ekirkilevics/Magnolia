@@ -74,6 +74,7 @@ public class MessagesChain extends AbstractMessagesImpl {
     /**
      * Get the string searching in the chain.
      */
+    @Override
     public String get(String key) {
         for (Iterator<Messages> iter = chain.iterator(); iter.hasNext();) {
             Messages msgs = iter.next();
@@ -88,6 +89,7 @@ public class MessagesChain extends AbstractMessagesImpl {
     /**
      * Return all keys contained in this chain.
      */
+    @Override
     public Iterator<String> keys() {
         Set<String> keys = new HashSet<String>();
         for (Iterator<Messages> iter = chain.iterator(); iter.hasNext();) {
@@ -101,6 +103,7 @@ public class MessagesChain extends AbstractMessagesImpl {
     /**
      * Reload the chain.
      */
+    @Override
     public void reload() throws Exception {
         for (Iterator<Messages> iter = chain.iterator(); iter.hasNext();) {
             Messages msgs = iter.next();

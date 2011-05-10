@@ -48,10 +48,12 @@ public class PageEditorPlace extends Place {
      */
     public static class Tokenizer implements PlaceTokenizer<PageEditorPlace> {
 
+        @Override
         public PageEditorPlace getPlace(String token) {
             return new PageEditorPlace(token);
         }
 
+        @Override
         public String getToken(PageEditorPlace place) {
             return place.getPath();
         }

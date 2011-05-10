@@ -55,10 +55,12 @@ public class MgnlProperty implements Property {
 
     Node parent;
 
+    @Override
     public String getPath() throws JcrException {
         return data.getHandle();
     }
 
+    @Override
     public Object getWrappedInstance() throws JcrException {
         return data;
     }
@@ -68,26 +70,32 @@ public class MgnlProperty implements Property {
         this.parent = parent;
     }
 
+    @Override
     public Value getValue() throws JcrException {
         return new MgnlValue(data.getValue());
     }
 
+    @Override
     public String getString() throws JcrException {
         return data.getString();
     }
 
+    @Override
     public long getLong() throws JcrException {
         return data.getLong();
     }
 
+    @Override
     public String getName() throws JcrException {
         return data.getName();
     }
 
+    @Override
     public Item getParent() throws JcrException {
         return parent;
     }
 
+    @Override
     public boolean isNode() throws JcrException {
         return false;
     }
@@ -104,6 +112,7 @@ public class MgnlProperty implements Property {
     /**
      * @see openwfe.org.jcr.Property#getStream()
      */
+    @Override
     public InputStream getStream() throws JcrException {
         return data.getStream();
     }

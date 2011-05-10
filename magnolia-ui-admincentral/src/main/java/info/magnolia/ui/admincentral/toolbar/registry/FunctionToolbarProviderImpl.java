@@ -50,6 +50,7 @@ public class FunctionToolbarProviderImpl implements ToolbarProvider {
         this.configuration = configuration;
     }
 
+    @Override
     public ToolbarDefinition getToolbar() {
         return configuration.getFunctionToolbar();
     }

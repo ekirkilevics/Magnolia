@@ -58,6 +58,7 @@ public class MoveAndRenamePropertyTaskTest extends TestCase {
     private MoveAndRenamePropertyTask task;
 
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         ctx = createStrictMock(InstallContext.class);
@@ -68,6 +69,7 @@ public class MoveAndRenamePropertyTaskTest extends TestCase {
         newProp = createStrictMock(NodeData.class);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         replay(ctx, hm, origParent, origProp, newParent, newProp);

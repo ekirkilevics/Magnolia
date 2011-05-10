@@ -46,6 +46,7 @@ import java.util.Date;
  */
 public class CreationDateComparator implements Comparator<Content> {
 
+    @Override
     public int compare(Content c1, Content c2) {
         final Date date1 = c1.getMetaData().getCreationDate().getTime();
         final Date date2 = c2.getMetaData().getCreationDate().getTime();

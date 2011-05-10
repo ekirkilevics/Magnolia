@@ -64,6 +64,7 @@ public abstract class AllChildrenNodesOperation extends AbstractRepositoryTask {
         this.filter = filter;
     }
 
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final Content parentNode = getParentNode(ctx);
         final Collection<Content> childNodes = parentNode.getChildren(filter);

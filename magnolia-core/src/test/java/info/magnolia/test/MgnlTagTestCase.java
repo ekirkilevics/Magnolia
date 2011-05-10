@@ -67,6 +67,7 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
     protected MockPageContext pageContext;
     private SystemContext sysContext;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -94,6 +95,7 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
         pageContext = new MockPageContext(new MockServletConfig(), req, new MockHttpServletResponse());
     }
 
+    @Override
     protected void tearDown() throws Exception {
         verify(sysContext);
         MgnlContext.setInstance(null);

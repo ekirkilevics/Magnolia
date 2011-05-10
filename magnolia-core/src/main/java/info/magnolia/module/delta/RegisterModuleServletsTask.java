@@ -49,6 +49,7 @@ public class RegisterModuleServletsTask extends ArrayDelegateTask {
         super("Register module servlets", "Registers servlets for this module.");
     }
     
+    @Override
     public void execute(InstallContext installContext) throws TaskExecutionException {
         final ModuleDefinition moduleDefinition = installContext.getCurrentModuleDefinition();
         

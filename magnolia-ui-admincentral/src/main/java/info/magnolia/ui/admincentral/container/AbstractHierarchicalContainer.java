@@ -50,19 +50,23 @@ public abstract class AbstractHierarchicalContainer implements Container.Hierarc
 
     private Map<String, PropertyDefinition> containerProperties = new LinkedHashMap<String, PropertyDefinition>();
 
+    @Override
     public Collection<?> getContainerPropertyIds() {
         return Collections.unmodifiableCollection(containerProperties.keySet());
     }
 
+    @Override
     public Class<?> getType(Object propertyId) {
         return containerProperties.get(propertyId).getType();
     }
 
+    @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type, Object defaultValue) throws UnsupportedOperationException {
         containerProperties.put((String) propertyId, new PropertyDefinition((String) propertyId, type, defaultValue));
         return true;
     }
 
+    @Override
     public boolean removeContainerProperty(Object propertyId) throws UnsupportedOperationException {
         containerProperties.remove(propertyId);
         return true;
@@ -78,6 +82,7 @@ public abstract class AbstractHierarchicalContainer implements Container.Hierarc
          *
          * @see com.vaadin.data.Container.ItemSetChangeEvent#getContainer()
          */
+        @Override
         public Container getContainer() {
             return AbstractHierarchicalContainer.this;
         }

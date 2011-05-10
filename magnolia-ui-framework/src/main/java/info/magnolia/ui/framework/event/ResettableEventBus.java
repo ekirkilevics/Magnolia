@@ -51,10 +51,12 @@ public class ResettableEventBus implements EventBus {
         this.wrapped = wrappedBus;
     }
 
+    @Override
     public synchronized <H extends EventHandler> HandlerRegistration addHandler(Class<? extends Event<H>> eventClass, H handler) {
         final HandlerRegistration registration = wrapped.addHandler(eventClass, handler);
         registrations.add(registration);
         return new HandlerRegistration() {
+            @Override
             public void removeHandler() {
                 synchronized (ResettableEventBus.this) {
                     registration.removeHandler();
@@ -64,6 +66,7 @@ public class ResettableEventBus implements EventBus {
         };
     }
 
+    @Override
     public <H extends EventHandler> void fireEvent(Event<H> event) {
         wrapped.fireEvent(event);
     }

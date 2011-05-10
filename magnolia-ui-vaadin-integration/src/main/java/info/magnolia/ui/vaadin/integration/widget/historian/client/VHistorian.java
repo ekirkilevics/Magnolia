@@ -51,6 +51,7 @@ public class VHistorian extends VUriFragmentUtility {
     private String paintableId;
     private boolean immediate;
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (client.updateComponent(this, uidl, false)) {
             return;
@@ -81,6 +82,7 @@ public class VHistorian extends VUriFragmentUtility {
     }
 
     // MAGNOLIA this is a copy because the variable are private
+    @Override
     public void onValueChange(ValueChangeEvent<String> event) {
         String historyToken = event.getValue();
         fragment = historyToken;

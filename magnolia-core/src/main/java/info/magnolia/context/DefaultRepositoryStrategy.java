@@ -50,6 +50,7 @@ public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
     /**
      * @deprecated since 5.0 Access Manager is no longer supported. Security is checked directly by repository.
      */
+    @Override
     @Deprecated
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return null;
@@ -68,6 +69,7 @@ public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
         return this.context.getUser().getName();
     }
 
+    @Override
     public void release() {
         release(false);
     }

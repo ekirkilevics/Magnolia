@@ -49,6 +49,7 @@ public class DialogDateField extends AbstractDialogField {
         super(dialogDefinition, tabDefinition, fieldDefinition);
     }
 
+    @Override
     protected Field getField() {
         DateField dateField = new DateField();
         DateFieldDefinition def = (DateFieldDefinition) getFieldDefinition();

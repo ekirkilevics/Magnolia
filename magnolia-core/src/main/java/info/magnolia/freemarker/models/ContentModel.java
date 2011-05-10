@@ -67,10 +67,12 @@ import freemarker.template.TemplateSequenceModel;
  */
 public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, TemplateScalarModel, AdapterTemplateModel {
     static final MagnoliaModelFactory FACTORY = new MagnoliaModelFactory() {
+        @Override
         public Class factoryFor() {
             return Content.class;
         }
 
+        @Override
         public AdapterTemplateModel create(Object object, ObjectWrapper wrapper) {
             return new ContentModel((Content) object, (MagnoliaObjectWrapper) wrapper);
         }
@@ -84,10 +86,12 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
         this.wrapper = wrapper;
     }
 
+    @Override
     public String getAsString() {
         return content.getName();
     }
 
+    @Override
     public TemplateModel get(String key) throws TemplateModelException {
         final Object result;
 
@@ -120,16 +124,20 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
         return wrapper.wrap(result);
     }
 
+    @Override
     public boolean isEmpty() throws TemplateModelException {
         return (size() == 0);
     }
 
+    @Override
     public int size() throws TemplateModelException {
         return content.getNodeDataCollection().size();
     }
 
+    @Override
     public TemplateCollectionModel keys() throws TemplateModelException {
         final Iterator it = IteratorUtils.transformedIterator(content.getNodeDataCollection().iterator(), new Transformer() {
+            @Override
             public Object transform(Object input) {
                 return ((NodeData) input).getName();
             }
@@ -137,10 +145,12 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
         return new SimpleCollection(it);
     }
 
+    @Override
     public TemplateCollectionModel values() throws TemplateModelException {
         return (TemplateCollectionModel) wrapper.wrap(content.getNodeDataCollection().iterator());
     }
 
+    @Override
     public TemplateNodeModel getParentNode() throws TemplateModelException {
         try {
             // todo : check if this is the root?
@@ -155,15 +165,18 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
     /**
      * This returns all children, except nodes or jcr: types and mgnl:metaData.
      */
+    @Override
     public TemplateSequenceModel getChildNodes() throws TemplateModelException {
         final Collection<Content> children = ContentUtil.getAllChildren(content);
         return (TemplateSequenceModel) wrapper.wrap(children);
     }
 
+    @Override
     public String getNodeName() throws TemplateModelException {
         return content.getName();
     }
 
+    @Override
     public String getNodeType() throws TemplateModelException {
         try {
             return content.getNodeTypeName();
@@ -172,6 +185,7 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
         }
     }
 
+    @Override
     public String getNodeNamespace() throws TemplateModelException {
         return null; // non XML implementation
     }
@@ -180,6 +194,7 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
         return this.content;
     }
 
+    @Override
     public Object getAdaptedObject(Class hint) {
         return asContent();
     }

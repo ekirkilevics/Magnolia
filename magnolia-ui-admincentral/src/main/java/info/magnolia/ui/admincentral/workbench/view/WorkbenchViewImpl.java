@@ -63,6 +63,7 @@ public class WorkbenchViewImpl implements WorkbenchView{
         splitPanel.setSizeFull();
         splitPanel.addListener(new SplitterClickListener() {
 
+            @Override
             public void splitterClick(SplitterClickEvent event) {
                 if(event.isDoubleClick()){
                     HorizontalSplitPanel panel = (HorizontalSplitPanel)event.getSource();
@@ -94,22 +95,27 @@ public class WorkbenchViewImpl implements WorkbenchView{
 
     }
 
+    @Override
     public Component asVaadinComponent() {
         return outerLayout;
     }
 
+    @Override
     public ViewPort getItemListViewPort() {
         return itemListViewPort;
     }
 
+    @Override
     public ViewPort getSidebarViewPort() {
         return sidebarViewPort;
     }
 
+    @Override
     public ViewPort getFunctionToolbarViewPort() {
         return functionToolbarViewPort;
     }
 
+    @Override
     public ViewPort getSearchViewPort() {
         return searchViewPort;
     }

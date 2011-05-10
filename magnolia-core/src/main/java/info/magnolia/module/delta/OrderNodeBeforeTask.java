@@ -58,6 +58,7 @@ public class OrderNodeBeforeTask extends AbstractRepositoryTask {
         this.orderBeforeNodeName = orderBeforeNodeName;
     }
 
+    @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         final Content node = installContext.getHierarchyManager(repository).getContent(path);
         node.getParent().orderBefore(node.getName(), orderBeforeNodeName);

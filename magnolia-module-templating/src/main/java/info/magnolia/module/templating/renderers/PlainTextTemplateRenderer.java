@@ -54,6 +54,7 @@ import java.util.Map;
  */
 public class PlainTextTemplateRenderer extends AbstractTemplateRenderer {
 
+    @Override
     public void renderTemplate(Content content, Template template, Writer out) throws IOException {
         final HttpServletResponse response = MgnlContext.getWebContext().getResponse();
 
@@ -96,10 +97,12 @@ public class PlainTextTemplateRenderer extends AbstractTemplateRenderer {
         }
     }
 
+    @Override
     protected Map newContext() {
         throw new IllegalStateException();
     }
 
+    @Override
     protected void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException {
         throw new IllegalStateException();
     }

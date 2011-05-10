@@ -73,6 +73,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         this.typeMapping = typeMapping;
     }
 
+    @Override
     public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer, ComponentProvider componentProvider) throws Content2BeanException{
         return toBean(new ExtendingContentWrapper(node), recursive, transformer, transformer.newState(), componentProvider);
     }
@@ -139,6 +140,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         return bean;
     }
 
+    @Override
     public Object setProperties(final Object bean, Content node, boolean recursive, Content2BeanTransformer transformer, ComponentProvider componentProvider) throws Content2BeanException {
         // enable extending feature
         node = new ExtendingContentWrapper(node);

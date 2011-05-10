@@ -61,10 +61,12 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
         this.shell = shell;
         view.setPresenter(this);
     }
+    @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
         viewPort.setView(view);
     }
 
+    @Override
     public void onMenuSelection(MenuItemDefinition menuItem) {
         final ActionDefinition actionDefinition = menuItem.getActionDefinition();
         if(actionDefinition != null){

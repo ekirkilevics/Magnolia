@@ -59,6 +59,7 @@ public class RelativePathTransformer extends AbsolutePathTransformer {
     }
 
 
+    @Override
     public String transform(Link target) {
         String link = super.transform(target);
         return LinkUtil.makePathRelative(absolutSourcePath, link);

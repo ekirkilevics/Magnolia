@@ -92,6 +92,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         allDeltas.put(v, delta);
     }
 
+    @Override
     public Version getCurrentlyInstalled(InstallContext ctx) {
         try {
             log.debug("checking currently installed version of module [{}]", ctx.getCurrentModuleDefinition());
@@ -112,6 +113,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         }
     }
 
+    @Override
     public List<Delta> getDeltas(InstallContext installContext, Version from) {
         if (from == null) {
             return Collections.singletonList(getInstall(installContext));
@@ -194,6 +196,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         return Collections.emptyList();
     }
 
+    @Override
     public Delta getStartupDelta(InstallContext installContext) {
         final ModuleDefinition moduleDef = installContext.getCurrentModuleDefinition();
         final List<Task> tasks = getStartupTasks(installContext);
@@ -218,6 +221,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
             super("Version number", "Sets installed module version number.");
         }
 
+        @Override
         protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
             // make sure we have the /modules node
             if (!ctx.hasModulesNode()) {
@@ -246,6 +250,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
             this.toVersion = toVersion;
         }
 
+        @Override
         protected Version getVersion(InstallContext ctx) {
             return toVersion;
         }

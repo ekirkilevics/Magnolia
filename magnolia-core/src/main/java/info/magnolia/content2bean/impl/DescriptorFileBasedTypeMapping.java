@@ -62,6 +62,7 @@ public class DescriptorFileBasedTypeMapping extends TypeMappingImpl {
 
     public DescriptorFileBasedTypeMapping() {
         String[] fileNames = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter(){
+            @Override
             public boolean accept(String name) {
                 return name.endsWith(".content2bean");
             }

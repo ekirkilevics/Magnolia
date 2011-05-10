@@ -104,6 +104,7 @@ public class UpdateI18nConfigurationTest extends TestCase {
             "server.i18n.content.locales.es.enabled=true\n" +
             "server.i18n.content.locales.es.langage=es\n";
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         final TypeMappingImpl typeMapping = new TypeMappingImpl();
@@ -113,6 +114,7 @@ public class UpdateI18nConfigurationTest extends TestCase {
         ComponentsTestUtil.setImplementation(TransformationState.class, TransformationStateImpl.class);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         MgnlContext.setInstance(null);
@@ -129,6 +131,7 @@ public class UpdateI18nConfigurationTest extends TestCase {
 
         MgnlContext.setInstance(mgnlCtx);
         final UpdateI18nConfiguration.UpdateFrom30 task = new UpdateI18nConfiguration.UpdateFrom30() {
+            @Override
             protected void doBootstrap(InstallContext ctx) throws TaskExecutionException {
                 final ByteArrayInputStream propertiesStream = new ByteArrayInputStream(BOOTSTRAPPED_CONTENT_FOR_35.getBytes());
                 try {

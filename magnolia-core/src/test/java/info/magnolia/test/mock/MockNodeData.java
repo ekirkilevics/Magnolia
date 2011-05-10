@@ -72,18 +72,22 @@ public class MockNodeData extends AbstractNodeData {
         this.type = type;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getString() {
         return value !=null ? value.toString() : "";
     }
 
+    @Override
     public int getType() {
         return type;
     }
 
+    @Override
     public boolean getBoolean() {
         try {
             return ((Boolean) value).booleanValue();
@@ -93,6 +97,7 @@ public class MockNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public Calendar getDate() {
         try {
             return (Calendar) value;
@@ -102,6 +107,7 @@ public class MockNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public double getDouble() {
         try {
             return ((Double) value).doubleValue();
@@ -111,6 +117,7 @@ public class MockNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public long getLong() {
         try {
             if (value instanceof Integer) {
@@ -123,6 +130,7 @@ public class MockNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public InputStream getStream() {
         if (value instanceof InputStream) {
             return (InputStream) value;
@@ -139,6 +147,7 @@ public class MockNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public String getHandle() {
         try {
             return getParent().getHandle() + "/" + this.getName();
@@ -148,6 +157,7 @@ public class MockNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     protected Content getContentFromJCRReference() throws RepositoryException {
         if (value instanceof Content) {
             return (Content) value;
@@ -155,75 +165,93 @@ public class MockNodeData extends AbstractNodeData {
         throw new ValueFormatException("Not a reference");
     }
 
+    @Override
     public boolean isExist() {
         return value != null;
     }
 
+    @Override
     public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
         this.value = Boolean.valueOf(value);
     }
 
+    @Override
     public void setValue(Calendar value) throws RepositoryException, AccessDeniedException {
         this.value = value;
     }
 
+    @Override
     public void setValue(double value) throws RepositoryException, AccessDeniedException {
         this.value = Double.valueOf(value);
     }
 
+    @Override
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
         this.value = value;
     }
 
+    @Override
     public void setValue(int value) throws RepositoryException, AccessDeniedException {
         this.value = Integer.valueOf(value);
     }
 
+    @Override
     public void setValue(long value) throws RepositoryException, AccessDeniedException {
         this.value = Long.valueOf(value);
     }
 
+    @Override
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
         this.value = value;
     }
 
+    @Override
     public void setValue(Content value) throws RepositoryException, AccessDeniedException {
         this.value = value;
     }
 
+    @Override
     public void save() throws RepositoryException {
         // nothing to do
     }
 
+    @Override
     public void delete() throws RepositoryException {
     }
 
+    @Override
     public long getContentLength() {
         return getString().length();
     }
 
+    @Override
     public Property getJCRProperty() {
         return new MockJCRProperty(this);
     }
 
+    @Override
     public Value getValue() {
         return new MockJCRValue(this);
     }
 
+    @Override
     public Value[] getValues() {
         Value[] values = new Value[1];
         values[0] = getValue();
         return values;
     }
 
+    @Override
     public void refresh(boolean keepChanges) throws RepositoryException {
         // nothing to do
     }
 
+    @Override
     public void setValue(Value value) throws RepositoryException, AccessDeniedException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public void setValue(Value[] value) throws RepositoryException, AccessDeniedException {
         throw new UnsupportedOperationException("Not implemented");
     }

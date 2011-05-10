@@ -83,6 +83,7 @@ public class MultipartRequestFilterTest extends MgnlTestCase {
     private FilterChain filterChain;
     private WebContext webCtx;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -101,6 +102,7 @@ public class MultipartRequestFilterTest extends MgnlTestCase {
         MgnlContext.setInstance(webCtx);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         super.tearDown();
@@ -123,6 +125,7 @@ public class MultipartRequestFilterTest extends MgnlTestCase {
         final byte[] bytes = output.toByteArray();
         final ByteArrayInputStream delegateStream = new ByteArrayInputStream(bytes);
         final ServletInputStream servletInputStream = new ServletInputStream() {
+            @Override
             public int read() throws IOException {
                 return delegateStream.read();
             }
@@ -137,6 +140,7 @@ public class MultipartRequestFilterTest extends MgnlTestCase {
         expect(req.getInputStream()).andReturn(servletInputStream);
         req.setAttribute(eq(MultipartForm.REQUEST_ATTRIBUTE_NAME), isA(MultipartForm.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 checkMultipartForm((MultipartForm) args[1], expectedDocumentType);

@@ -51,6 +51,7 @@ import javax.jcr.observation.ObservationManager;
  */
 public class ObservationUtilTest extends MgnlTestCase {
     
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
     }
@@ -68,6 +69,7 @@ public class ObservationUtilTest extends MgnlTestCase {
         try {
             ObservationUtil.registerChangeListener("some-repo", "/parent", new EventListener() {
     
+                @Override
                 public void onEvent(EventIterator events) {
                     // do nothing
                 }});
@@ -87,6 +89,7 @@ public class ObservationUtilTest extends MgnlTestCase {
         final ObservationManager observationManager = createStrictMock(ObservationManager.class);
         EventListener listener = new EventListener() {
 
+            @Override
             public void onEvent(EventIterator events) {
                 // do nothing
             }};
@@ -112,6 +115,7 @@ public class ObservationUtilTest extends MgnlTestCase {
         replay( hm, wks);
             ObservationUtil.unregisterChangeListener("some-repo", new EventListener() {
     
+                @Override
                 public void onEvent(EventIterator events) {
                     // do nothing
                 }});
@@ -126,6 +130,7 @@ public class ObservationUtilTest extends MgnlTestCase {
         final ObservationManager observationManager = createStrictMock(ObservationManager.class);
         EventListener listener = new EventListener() {
 
+            @Override
             public void onEvent(EventIterator events) {
                 // do nothing
             }};

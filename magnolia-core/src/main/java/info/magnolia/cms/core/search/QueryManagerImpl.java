@@ -57,16 +57,19 @@ public class QueryManagerImpl implements QueryManager {
         this.hm = hm;
     }
 
+    @Override
     public Query createQuery(String s, String s1) throws InvalidQueryException, RepositoryException {
         javax.jcr.query.Query query = this.queryManager.createQuery(s, s1);
         return (new QueryImpl(query, this.hm));
     }
 
+    @Override
     public Query getQuery(Node node) throws InvalidQueryException, RepositoryException {
         javax.jcr.query.Query query = this.queryManager.getQuery(node);
         return (new QueryImpl(query, this.hm));
     }
 
+    @Override
     public String[] getSupportedQueryLanguages() throws RepositoryException {
         return this.queryManager.getSupportedQueryLanguages();
     }

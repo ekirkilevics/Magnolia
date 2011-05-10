@@ -74,6 +74,7 @@ public class VersionFilter extends XMLFilterImpl {
     /**
      * @see org.xml.sax.helpers.XMLFilterImpl#endElement(String, String, String)
      */
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
 
         if (inVersionElement > 0) {
@@ -87,6 +88,7 @@ public class VersionFilter extends XMLFilterImpl {
     /**
      * @see org.xml.sax.helpers.XMLFilterImpl#characters(char[], int, int)
      */
+    @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         // filter content
         if (inVersionElement == 0) {
@@ -97,6 +99,7 @@ public class VersionFilter extends XMLFilterImpl {
     /**
      * @see org.xml.sax.helpers.XMLFilterImpl#startElement(String, String, String, Attributes)
      */
+    @Override
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 
         if (inVersionElement > 0) {

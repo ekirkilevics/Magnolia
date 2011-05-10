@@ -58,6 +58,7 @@ public class InstallFilterTest extends MgnlTestCase {
     private FilterChain chain;
     private PrintWriter writer;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);

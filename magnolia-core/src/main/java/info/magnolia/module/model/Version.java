@@ -171,6 +171,7 @@ public class Version {
         return classifier;
     }
 
+    @Override
     public String toString() {
         return major + "." + minor + "." + patch + (classifier != null ? "-" + classifier : "");
     }
@@ -188,6 +189,7 @@ public class Version {
             super(Short.MAX_VALUE, Short.MAX_VALUE, Short.MAX_VALUE);
         }
 
+        @Override
         public String toString() {
             return "*";
         }
@@ -198,6 +200,7 @@ public class Version {
             super(Short.MIN_VALUE, Short.MIN_VALUE, Short.MIN_VALUE);
         }
 
+        @Override
         public String toString() {
             return "*";
         }
@@ -216,10 +219,12 @@ public class Version {
             super(0, 0, 0);
         }
 
+        @Override
         public boolean isEquivalent(Version other) {
             return true;
         }
 
+        @Override
         public String toString() {
             return KEY;
         }
@@ -231,6 +236,7 @@ public class Version {
     }
 
     // generated methods:
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -257,6 +263,7 @@ public class Version {
         return true;
     }
 
+    @Override
     public int hashCode() {
         int result;
         result = (int) major;

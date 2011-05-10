@@ -81,6 +81,7 @@ public interface UrlPattern extends Serializable {
         /**
          * @see info.magnolia.cms.util.UrlPattern#match(java.lang.String)
          */
+        @Override
         public boolean match(String str) {
             return true;
         }
@@ -88,6 +89,7 @@ public interface UrlPattern extends Serializable {
         /**
          * @see info.magnolia.cms.util.UrlPattern#getLength()
          */
+        @Override
         public int getLength() {
             return 1;
         }

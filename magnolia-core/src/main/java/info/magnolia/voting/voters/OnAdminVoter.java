@@ -42,6 +42,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
  */
 public class OnAdminVoter extends AbstractBoolVoter {
 
+    @Override
     protected boolean boolVote(Object value) {
         return ServerConfiguration.getInstance().isAdmin();
     }

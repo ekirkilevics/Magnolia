@@ -88,14 +88,17 @@ public class ExternalUser extends AbstractUser implements Serializable {
         this.groupList = groupListIterator.next();
     }
 
+    @Override
     public boolean hasRole(String roleName) {
         return this.roleList.has(roleName);
     }
 
+    @Override
     public void removeRole(String roleName) {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
 
+    @Override
     public void addRole(String roleName) {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
@@ -104,6 +107,7 @@ public class ExternalUser extends AbstractUser implements Serializable {
      * Is this user in a specified group?
      * @return true if in group
      */
+    @Override
     public boolean inGroup(String groupName) {
         return this.groupList.has(groupName);
     }
@@ -111,6 +115,7 @@ public class ExternalUser extends AbstractUser implements Serializable {
     /**
      * Remove a group. Implementation is optional
      */
+    @Override
     public void removeGroup(String groupName) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
@@ -118,17 +123,21 @@ public class ExternalUser extends AbstractUser implements Serializable {
     /**
      * Adds this user to a group. Implementation is optional
      */
+    @Override
     public void addGroup(String groupName) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
 
+    @Override
     public boolean isEnabled() {
         return true;
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
     }
 
+    @Override
     public String getLanguage() {
         String language = (String) this.userDetails.getProperty(Entity.LANGUAGE);
         if (null == language) {
@@ -137,34 +146,42 @@ public class ExternalUser extends AbstractUser implements Serializable {
         return language;
     }
 
+    @Override
     public String getName() {
         return (String) this.userDetails.getProperty(Entity.NAME);
     }
 
+    @Override
     public String getPassword() {
         return (String) this.userDetails.getProperty(Entity.PASSWORD);
     }
 
+    @Override
     public String getProperty(String propertyName) {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
 
+    @Override
     public void setProperty(String propertyName, String value) {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
 
+    @Override
     public Collection<String> getGroups() {
         return this.groupList.getList();
     }
 
+    @Override
     public Collection<String> getAllGroups() {
         return this.getGroups();
     }
 
+    @Override
     public Collection<String> getRoles() {
         return this.roleList.getList();
     }
 
+    @Override
     public Collection<String> getAllRoles() {
         return this.getRoles();
     }

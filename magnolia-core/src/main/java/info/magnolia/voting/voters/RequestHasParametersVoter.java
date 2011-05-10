@@ -47,6 +47,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class RequestHasParametersVoter extends AbstractBoolVoter {
 
+    @Override
     protected boolean boolVote(Object value) {
         HttpServletRequest request;
         if (value instanceof HttpServletRequest) {

@@ -174,6 +174,7 @@ public class URI2RepositoryMapping {
         this.URIPrefix = uriPrefix;
     }
 
+    @Override
     public String toString() {
         return this.URIPrefix + " --> " + repository + ":" + this.handlePrefix;
     }

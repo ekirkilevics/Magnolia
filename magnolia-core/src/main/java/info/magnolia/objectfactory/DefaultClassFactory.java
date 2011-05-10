@@ -46,6 +46,7 @@ import java.util.Arrays;
  */
 public class DefaultClassFactory implements ClassFactory {
 
+    @Override
     public <C> Class<C> forName(String className) throws ClassNotFoundException {
         Class<C> loadedClass;
         try {
@@ -57,20 +58,24 @@ public class DefaultClassFactory implements ClassFactory {
 
     }
 
+    @Override
     public <T> T newInstance(final Class<T> c, final Class<?>[] argTypes, final Object... params) {
         if (argTypes.length != params.length) {
             throw new IllegalStateException("Argument types and values do not match! " + Arrays.asList(argTypes) + " / " + Arrays.asList(params));
         }
 
         return newInstance(c, params, new Invoker<T>() {
+            @Override
             public T invoke() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
                 return (T) ConstructorUtils.invokeConstructor(c, params, argTypes);
             }
         });
     }
 
+    @Override
     public <T> T newInstance(final Class<T> c, final Object... params) {
         return newInstance(c, params, new Invoker<T>() {
+            @Override
             public T invoke() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
                 return (T) ConstructorUtils.invokeConstructor(c, params);
             }

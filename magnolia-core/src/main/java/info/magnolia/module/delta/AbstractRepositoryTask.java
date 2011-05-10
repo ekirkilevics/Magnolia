@@ -53,6 +53,7 @@ public abstract class AbstractRepositoryTask extends AbstractTask {
         super(name, description);
     }
 
+    @Override
     public void execute(InstallContext installContext) throws TaskExecutionException {
         try {
             doExecute(installContext);

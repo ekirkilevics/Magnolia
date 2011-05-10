@@ -52,6 +52,7 @@ public class EditPagePropertiesAction extends ActionBase<EditPagePropertiesActio
         this.node = node;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
     }
 }

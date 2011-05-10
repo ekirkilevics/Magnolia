@@ -52,6 +52,7 @@ public class DeleteAreaAction extends ActionBase<DeleteAreaActionDefinition> {
         this.node = node;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
     }
 }

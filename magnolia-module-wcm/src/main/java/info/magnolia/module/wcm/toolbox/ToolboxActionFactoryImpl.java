@@ -68,6 +68,7 @@ public class ToolboxActionFactoryImpl extends FactoryBase<ActionDefinition, Acti
         addMapping(mapping.getDefinition(), mapping.getImplementation());
     }
 
+    @Override
     public Action createAction(ActionDefinition actionDefinition, Object... args) {
         return create(actionDefinition, args);
     }

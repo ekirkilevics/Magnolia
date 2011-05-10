@@ -78,6 +78,7 @@ public abstract class BaseLinkTest extends MgnlTestCase {
         "/parent/sub2@uuid=3";
 
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -107,6 +108,7 @@ public abstract class BaseLinkTest extends MgnlTestCase {
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
     }

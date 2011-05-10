@@ -106,90 +106,109 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
     }
 
     // ---- below are only generated wrappedHM methods
+    @Override
     public AccessManager getAccessManager() {
         return getWrappedHierarchyManager().getAccessManager();
     }
 
+    @Override
     public QueryManager getQueryManager() {
         return getWrappedHierarchyManager().getQueryManager();
     }
 
+    @Override
     public Content createContent(String path, String label, String contentType) throws RepositoryException {
         path = transformPath(path);
         return wrap(getWrappedHierarchyManager().createContent(path, label, contentType));
     }
 
+    @Override
     public Content getContent(String path) throws RepositoryException {
         path = transformPath(path);
         return wrap(getWrappedHierarchyManager().getContent(path));
     }
 
+    @Override
     public Content getContent(String path, boolean create, ItemType type) throws RepositoryException {
         path = transformPath(path);
         return wrap(getWrappedHierarchyManager().getContent(path, create, type));
     }
 
+    @Override
     public NodeData getNodeData(String path) throws RepositoryException {
         path = transformPath(path);
         return wrap(getWrappedHierarchyManager().getNodeData(path));
     }
 
+    @Override
     public void delete(String path) throws RepositoryException {
         path = transformPath(path);
         getWrappedHierarchyManager().delete(path);
     }
 
+    @Override
     public Content getRoot() throws RepositoryException {
         return wrap(getWrappedHierarchyManager().getRoot());
     }
 
+    @Override
     public boolean isExist(String path) {
         path = transformPath(path);
         return getWrappedHierarchyManager().isExist(path);
     }
 
+    @Override
     public boolean isGranted(String path, long permissions) {
         path = transformPath(path);
         return getWrappedHierarchyManager().isGranted(path, permissions);
     }
 
+    @Override
     public boolean isNodeData(String path) throws AccessDeniedException {
         path = transformPath(path);
         return getWrappedHierarchyManager().isNodeData(path);
     }
 
+    @Override
     public Content getContentByUUID(String uuid) throws RepositoryException {
         return wrap(getWrappedHierarchyManager().getContentByUUID(uuid));
     }
 
+    @Override
     public Workspace getWorkspace() {
         return getWrappedHierarchyManager().getWorkspace();
     }
 
+    @Override
     public void moveTo(String source, String destination) throws RepositoryException {
         source = transformPath(source);
         destination = transformPath(destination);
         getWrappedHierarchyManager().moveTo(source, destination);
     }
 
+    @Override
     public void copyTo(String source, String destination) throws RepositoryException {
         source = transformPath(source);
         destination = transformPath(destination);
         getWrappedHierarchyManager().copyTo(source, destination);
     }
 
+    @Override
     public void save() throws RepositoryException {
         getWrappedHierarchyManager().save();
     }
 
+    @Override
     public boolean hasPendingChanges() throws RepositoryException {
         return getWrappedHierarchyManager().hasPendingChanges();
     }
 
+    @Override
     public void refresh(boolean keepChanges) throws RepositoryException {
         getWrappedHierarchyManager().refresh(keepChanges);
     }
 
+    @Override
     public String getName() {
         return getWrappedHierarchyManager().getName();
     }

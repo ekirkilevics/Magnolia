@@ -75,6 +75,7 @@ public class ClasspathSpool extends HttpServlet {
 
     private final static Logger log = LoggerFactory.getLogger(ClasspathSpool.class);
 
+    @Override
     protected long getLastModified(HttpServletRequest req) {
         String filePath = this.getFilePath(req);
         try {
@@ -107,6 +108,7 @@ public class ClasspathSpool extends HttpServlet {
      * All static resource requests are handled here.
      * @throws IOException for error in accessing the resource or the servlet output stream
      */
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String filePath = getFilePath(request);
@@ -144,6 +146,7 @@ public class ClasspathSpool extends HttpServlet {
     /**
      * @see javax.servlet.GenericServlet#init()
      */
+    @Override
     public void init() throws ServletException {
         super.init();
         multipleFilePathsCache = new Hashtable<String, String[]>();
@@ -152,6 +155,7 @@ public class ClasspathSpool extends HttpServlet {
     /**
      * @see javax.servlet.GenericServlet#destroy()
      */
+    @Override
     public void destroy() {
         super.destroy();
         multipleFilePathsCache.clear();
@@ -173,6 +177,7 @@ public class ClasspathSpool extends HttpServlet {
 
             paths = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
 
+                @Override
                 public boolean accept(String name) {
                     return name.startsWith(startsWith) && name.endsWith(endssWith);
                 }

@@ -54,24 +54,29 @@ public class DoNothingServlet extends GenericServlet {
     DoNothingServlet(ServletContext sc) throws ServletException {
         this.servletContext = sc;
         this.init(new ServletConfig() {
+            @Override
             public String getInitParameter(String name) {
                 return null;
             }
 
+            @Override
             public Enumeration getInitParameterNames() {
                 return Collections.enumeration(Collections.EMPTY_LIST);
             }
 
+            @Override
             public ServletContext getServletContext() {
                 return servletContext;
             }
 
+            @Override
             public String getServletName() {
                 return DoNothingServlet.class.getName();
             }
         });
     }
 
+    @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
         // seriously, just don't do anything.
     }

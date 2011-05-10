@@ -108,6 +108,7 @@ public class LocaleDefinition {
     /**
      * Uses the locals toString() method.
      */
+    @Override
     public String toString() {
         return getLocale() != null ? getLocale().toString() : "none";
     }

@@ -95,6 +95,7 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
         }
     }
 
+    @Override
     public Map<String, ModuleDefinition> readAll() throws ModuleManagementException {
         final Map<String, ModuleDefinition> moduleDefinitions = new HashMap<String, ModuleDefinition>();
 
@@ -110,12 +111,14 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
 
     protected String[] findModuleDescriptors() {
         return ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
+            @Override
             public boolean accept(String name) {
                 return name.startsWith("/META-INF/magnolia/") && name.endsWith(".xml");
             }
         });
     }
 
+    @Override
     public ModuleDefinition read(Reader in) throws ModuleManagementException {
         try {
             final Reader replacedDtd = replaceDtd(in);
@@ -127,6 +130,7 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
         }
     }
 
+    @Override
     public ModuleDefinition readFromResource(String resourcePath) throws ModuleManagementException {
         final InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream(resourcePath));
         try {
@@ -172,14 +176,17 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
 
     private static class ErrorHandler implements org.xml.sax.ErrorHandler {
         // TODO -- pass source (url, content, ...) for each parse ?
+        @Override
         public void warning(SAXParseException e) throws SAXException {
             log.warn("Warning on module definition " + getSaxParseExceptionMessage(e));
         }
 
+        @Override
         public void error(SAXParseException e) throws SAXException {
             throw new SAXException("Invalid module definition file, error " + getSaxParseExceptionMessage(e), e);
         }
 
+        @Override
         public void fatalError(SAXParseException e) throws SAXException {
             throw new SAXException("Invalid module definition file, fatal error " + getSaxParseExceptionMessage(e), e);
         }

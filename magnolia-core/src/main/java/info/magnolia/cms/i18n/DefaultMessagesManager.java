@@ -98,6 +98,7 @@ public class DefaultMessagesManager extends MessagesManager {
      * Called through the initialization process. (startup of the container)
      */
 
+    @Override
     public void init() {
         load();
         registerEventListener();
@@ -114,6 +115,7 @@ public class DefaultMessagesManager extends MessagesManager {
             // this transformer will wrap the Messages in a MessagesChain which
             // will fall back to a Messages instance for the same bundle with
             // default locale.
+            @Override
             public Object transform(Object input) {
                 final MessagesID id = (MessagesID) input;
                 return newMessages(id);
@@ -187,6 +189,7 @@ public class DefaultMessagesManager extends MessagesManager {
         log.info("Registering event listener for i18n"); //$NON-NLS-1$
         ObservationUtil.registerChangeListener(ContentRepository.CONFIG, I18N_CONFIG_PATH, new EventListener() {
 
+            @Override
             public void onEvent(EventIterator iterator) {
                 // reload everything
                 reload();
@@ -197,6 +200,7 @@ public class DefaultMessagesManager extends MessagesManager {
     /**
      * Reload i18n configuration.
      */
+    @Override
     public void reload() {
         try {
             // reload all present
@@ -212,6 +216,7 @@ public class DefaultMessagesManager extends MessagesManager {
         load();
     }
 
+    @Override
     public Messages getMessagesInternal(String basename, Locale locale) {
         if (StringUtils.isEmpty(basename)) {
             basename = defaultBasename;
@@ -219,6 +224,7 @@ public class DefaultMessagesManager extends MessagesManager {
         return (Messages) messages.get(new MessagesID(basename, locale));
     }
 
+    @Override
     public Locale getDefaultLocale() {
         return applicationLocale;
     }
@@ -234,6 +240,7 @@ public class DefaultMessagesManager extends MessagesManager {
         // MgnlContext.getSystemContext().setLocale(applicationLocale);
     }
 
+    @Override
     public Collection getAvailableLocales() {
         return availableLocales;
     }
@@ -260,6 +267,7 @@ public class DefaultMessagesManager extends MessagesManager {
 
         // generated equals and hashcode methods
 
+        @Override
         public boolean equals(Object o) {
             if (this == o)
                 return true;
@@ -276,6 +284,7 @@ public class DefaultMessagesManager extends MessagesManager {
             return true;
         }
 
+        @Override
         public int hashCode() {
             int result = basename != null ? basename.hashCode() : 0;
             result = 31 * result + (locale != null ? locale.hashCode() : 0);

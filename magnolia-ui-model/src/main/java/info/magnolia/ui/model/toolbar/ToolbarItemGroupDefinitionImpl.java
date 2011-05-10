@@ -48,10 +48,12 @@ public class ToolbarItemGroupDefinitionImpl implements ToolbarItemGroupDefinitio
 
     private List<ToolbarItemDefinition> items = new ArrayList<ToolbarItemDefinition>();
 
+    @Override
     public List<ToolbarItemDefinition> getItems() {
        return Collections.unmodifiableList(items);
     }
 
+    @Override
     public String getGroupLabel() {
         return groupLabel;
     }
@@ -64,6 +66,7 @@ public class ToolbarItemGroupDefinitionImpl implements ToolbarItemGroupDefinitio
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return name;
     }

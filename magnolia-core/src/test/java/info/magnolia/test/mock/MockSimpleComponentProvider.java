@@ -45,21 +45,25 @@ import java.lang.reflect.Constructor;
  */
 public class MockSimpleComponentProvider implements ComponentProvider {
 
+    @Override
     public <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException {
         // TODO implement as soon as needed
         return null;
     }
 
+    @Override
     public <T> T getSingleton(Class<T> type) {
         // TODO implement as soon as needed
         return null;
     }
 
+    @Override
     public <T> T getComponent(Class<T> type) {
         // TODO implement as soon as needed
         return null;
     }
 
+    @Override
     public <T> T newInstance(Class<T> type, Object... parameters) {
         T newInstance = null;
         Class[] classesArray = new Class[parameters.length];

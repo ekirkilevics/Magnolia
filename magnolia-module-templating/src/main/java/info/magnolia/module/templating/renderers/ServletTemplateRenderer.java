@@ -69,6 +69,7 @@ import java.util.Map;
 public class ServletTemplateRenderer extends AbstractTemplateRenderer {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ServletTemplateRenderer.class);
 
+    @Override
     public void renderTemplate(Content content, Template template, Writer out) throws IOException, RenderException {
         final HttpServletRequest request = MgnlContext.getWebContext("ServletTemplateRenderer can only be used with a WebContext").getRequest();
         final HttpServletResponse response = MgnlContext.getWebContext("ServletTemplateRenderer can only be used with a WebContext").getResponse();
@@ -106,10 +107,12 @@ public class ServletTemplateRenderer extends AbstractTemplateRenderer {
         }
     }
 
+    @Override
     protected Map newContext() {
         throw new IllegalStateException();
     }
 
+    @Override
     protected void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException {
         throw new IllegalStateException();
     }

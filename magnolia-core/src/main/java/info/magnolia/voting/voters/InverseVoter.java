@@ -44,6 +44,7 @@ public class InverseVoter extends BaseVoterImpl {
 
     private Voter voter;
 
+    @Override
     public int vote(Object value) {
         return -1 * voter.vote(value);
     }

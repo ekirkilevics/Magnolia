@@ -68,6 +68,7 @@ public class EditParagraphAction extends ActionBase<EditParagraphActionDefinitio
         this.paragraphManager = paragraphManager;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
 
         String template = JCRMetadataUtil.getMetaData(node).getTemplate();

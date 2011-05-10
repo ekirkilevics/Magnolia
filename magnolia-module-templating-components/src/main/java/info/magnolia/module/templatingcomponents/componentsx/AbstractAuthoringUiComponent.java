@@ -83,6 +83,7 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
         return aggregationState;
     }
 
+    @Override
     public void render(Appendable out) throws IOException {
         if (!shouldRender()) {
             return;
@@ -99,6 +100,7 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
     /**
      * Override this method if you need to "do something" once the component is rendered, i.e cleanup the context.
      */
+    @Override
     public void postRender() {
     }
 

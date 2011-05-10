@@ -65,6 +65,7 @@ public class UpdateRoles extends AllChildrenNodesOperation {
         super("Roles definition update", "Adds right to read their own node to all existing roles.", ContentRepository.USER_ROLES,  "/", new NodeTypeFilter(ItemType.ROLE));
     }
 
+    @Override
     public void operateOnChildNode(Content role, InstallContext installContext)
         throws RepositoryException, TaskExecutionException {
         try {

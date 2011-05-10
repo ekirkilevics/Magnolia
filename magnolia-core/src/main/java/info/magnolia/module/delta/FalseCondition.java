@@ -50,6 +50,7 @@ public class FalseCondition extends AbstractCondition {
         super(name, description);
     }
 
+    @Override
     public boolean check(InstallContext installContext) {
         return false;
     }

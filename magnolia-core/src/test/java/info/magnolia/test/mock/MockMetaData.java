@@ -51,34 +51,42 @@ public class MockMetaData extends MetaData {
         this.mockContent = mockContent;
     }
     
+    @Override
     public String getHandle() {
         return mockContent.getHandle();
     }
 
+    @Override
     public String getLabel() {
         return mockContent.getName();
     }
 
+    @Override
     public boolean getBooleanProperty(String name) {
         return mockContent.getNodeData(name).getBoolean();
     }
 
+    @Override
     public String getStringProperty(String name) {
         return mockContent.getNodeData(name).getString();
     }
 
+    @Override
     public Calendar getDateProperty(String name) {
         return mockContent.getNodeData(name).getDate();
     }
 
+    @Override
     public void setProperty(String name, boolean value) throws AccessDeniedException {
         mockContent.addNodeData(new MockNodeData(name, Boolean.valueOf(value)));
     }
 
+    @Override
     public void setProperty(String name, Calendar value) throws AccessDeniedException {
         mockContent.addNodeData(new MockNodeData(name, value));
     }
 
+    @Override
     public void setProperty(String name, String value) throws AccessDeniedException {
         mockContent.addNodeData(new MockNodeData(name, value));
     }

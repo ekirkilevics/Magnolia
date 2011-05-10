@@ -48,6 +48,7 @@ public class NavigationProviderImpl implements NavigationProvider {
         this.configuration = configuration;
     }
 
+    @Override
     public NavigationDefinition getNavigation() {
         return configuration.getNavigation();
     }

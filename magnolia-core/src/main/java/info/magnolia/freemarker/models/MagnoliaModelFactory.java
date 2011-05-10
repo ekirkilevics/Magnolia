@@ -59,5 +59,6 @@ public interface MagnoliaModelFactory extends ModelFactory {
      * so they can be unwrapped easily. (by custom directives, for example)
      * @see freemarker.template.AdapterTemplateModel
      */
+    @Override
     TemplateModel create(Object object, ObjectWrapper wrapper);
 }

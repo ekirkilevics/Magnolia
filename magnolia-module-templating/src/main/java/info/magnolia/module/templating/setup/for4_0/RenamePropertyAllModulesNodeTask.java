@@ -71,12 +71,14 @@ public class RenamePropertyAllModulesNodeTask extends AllModulesNodeOperation {
     }
 
 
+    @Override
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
             throws RepositoryException, TaskExecutionException {
         try {
             if(node.hasContent(baseNodeName)){
                 ContentUtil.visit(node.getContent(baseNodeName), new ContentUtil.Visitor(){
-                   public void visit(Content subNode) throws Exception {
+                   @Override
+                public void visit(Content subNode) throws Exception {
                        if(subNode.hasNodeData(srcPropertyName)){
                            Value value = subNode.getNodeData(srcPropertyName).getValue();
                            subNode.deleteNodeData(srcPropertyName);

@@ -54,6 +54,7 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
+    @Override
     protected String getModuleDescriptorPath() {
         return "/META-INF/magnolia/templating.xml";
     }
@@ -65,6 +66,7 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
                 "/META-INF/magnolia/core.xml"
         );
     }
+    @Override
     protected ModuleVersionHandler newModuleVersionHandlerForTests() {
         return new TemplatingModuleVersionHandler();
     }

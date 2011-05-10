@@ -73,6 +73,7 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
         this.selection = selection;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
 
         // TODO find the area and get available paragraphs from it

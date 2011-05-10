@@ -54,6 +54,7 @@ public class RemoveNodeTask extends AbstractRepositoryTask {
         this.pathToRemove = pathToRemove;
     }
 
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
         if (!hm.isExist(pathToRemove)) {

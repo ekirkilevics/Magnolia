@@ -64,6 +64,7 @@ public class MgnlUserManagerTest {
     public void testUsernameIsValidatedUponCreation() {
         final String justCheckingIfValidateUsernameIsCalledMessage = "Yes! I wanted this method to be called !";
         final MgnlUserManager hm = new MgnlUserManager() {
+            @Override
             protected void validateUsername(String name) {
                 throw new IllegalArgumentException(justCheckingIfValidateUsernameIsCalledMessage);
             }

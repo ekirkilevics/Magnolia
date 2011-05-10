@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 public class BasicLogin extends LoginHandlerBase {
     private static final Logger log = LoggerFactory.getLogger(BasicLogin.class);
 
+    @Override
     public LoginResult handle(HttpServletRequest request, HttpServletResponse response) {
         String credentials = request.getHeader("Authorization");
         if (StringUtils.isNotEmpty(credentials) && !credentials.startsWith("NTLM ")) {

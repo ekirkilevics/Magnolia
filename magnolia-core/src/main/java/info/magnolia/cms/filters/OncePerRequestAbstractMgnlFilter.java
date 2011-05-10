@@ -54,12 +54,14 @@ public abstract class OncePerRequestAbstractMgnlFilter extends AbstractMgnlFilte
 
     private final String requestKeyName = "__" + getClass() + "@" + System.identityHashCode(this) + "_FILTERED";
 
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         request.setAttribute(requestKeyName, Boolean.TRUE);
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
 
+    @Override
     public boolean bypasses(HttpServletRequest request) {
         return MgnlContext.getAttribute(requestKeyName, Context.LOCAL_SCOPE) != null || super.bypasses(request);
     }

@@ -68,14 +68,17 @@ public class DefaultRenderingEngine implements RenderingEngine {
     protected enum RenderingHelper {
         PARAGRAPH {
 
+            @Override
             public RenderableDefinition getDefinition(String definitionName) {
                 return ParagraphManager.getInstance().getParagraphDefinition(definitionName);
             }
 
+            @Override
             public Object getRenderer(RenderableDefinition definition) {
                 return ParagraphRendererManager.getInstance().getRenderer(definition.getType());
             }
 
+            @Override
             void render(Content content, RenderableDefinition definition, Object renderer, Writer out) throws RenderException, IOException {
                 ((ParagraphRenderer) renderer).render(content, (Paragraph) definition, out);
             }
@@ -83,6 +86,7 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
         TEMPLATE {
 
+            @Override
             public RenderableDefinition getDefinition(String definitionName) {
                 AggregationState state = getAggregationStateSafely();
                 String extension = null;
@@ -100,10 +104,12 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
             }
 
+            @Override
             public Object getRenderer(RenderableDefinition definition) {
                 return TemplateRendererManager.getInstance().getRenderer(definition.getType());
             }
 
+            @Override
             public void render(Content content, RenderableDefinition definition, Object renderer, Writer out) throws RenderException, IOException {
                 ((TemplateRenderer) renderer).renderTemplate(content, (Template) definition, out);
             }
@@ -116,10 +122,12 @@ public class DefaultRenderingEngine implements RenderingEngine {
         abstract void render(Content content, RenderableDefinition definition, Object renderer, Writer out) throws RenderException, IOException;
     }
 
+    @Override
     public void render(Content content, Writer out) throws RenderException  {
         render(content, determineAssignedDefinitionName(content), out);
     }
 
+    @Override
     public void render(Content content, String definitionName, Writer out) throws RenderException {
         // FIXME content can be null in case of a request to a node date having a template attribute set for the binary
         // this is probably not used anymore and should not be supported

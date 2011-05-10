@@ -43,6 +43,7 @@ import info.magnolia.module.ModuleLifecycleContext;
  */
 public class TemplatingModule implements ModuleLifecycle {
 
+    @Override
     public void start(ModuleLifecycleContext ctx) {
         ctx.registerModuleObservingComponent("templates", TemplateManager.getInstance());
         ctx.registerModuleObservingComponent("template-renderers", TemplateRendererManager.getInstance());
@@ -50,6 +51,7 @@ public class TemplatingModule implements ModuleLifecycle {
         ctx.registerModuleObservingComponent("paragraph-renderers", ParagraphRendererManager.getInstance());
     }
 
+    @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
 
     }

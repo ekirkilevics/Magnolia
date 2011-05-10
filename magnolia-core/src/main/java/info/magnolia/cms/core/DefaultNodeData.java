@@ -65,6 +65,7 @@ public class DefaultNodeData extends AbstractNodeData {
         super(parent, name);
     }
 
+    @Override
     public Value getValue() {
         if(isExist()){
             try {
@@ -79,6 +80,7 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public Value[] getValues() {
         if(isExist()){
             try {
@@ -97,6 +99,7 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public String getString() {
         if(isExist()){
             try {
@@ -128,6 +131,7 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public long getLong() {
         if(isExist()){
             try {
@@ -142,6 +146,7 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public double getDouble() {
         if(isExist()){
             try {
@@ -156,6 +161,7 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public Calendar getDate() {
         if(isExist()){
             try {
@@ -170,6 +176,7 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public boolean getBoolean() {
         if(isExist()){
             try {
@@ -184,6 +191,7 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public InputStream getStream() {
         if (isExist()){
             try {
@@ -198,6 +206,7 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public int getType() {
         if (isExist()) {
             try {
@@ -210,6 +219,7 @@ public class DefaultNodeData extends AbstractNodeData {
         return PropertyType.UNDEFINED;
     }
 
+    @Override
     public long getContentLength() {
         if(!isExist()){
             return 0;
@@ -223,6 +233,7 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public Property getJCRProperty() {
         try {
             return getJCRNode().getProperty(name);
@@ -244,52 +255,63 @@ public class DefaultNodeData extends AbstractNodeData {
         return getHierarchyManager().getContent(getJCRProperty().getNode().getPath());
     }
 
+    @Override
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
         Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);
     }
 
+    @Override
     public void setValue(int value) throws RepositoryException, AccessDeniedException {
         Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);
     }
 
+    @Override
     public void setValue(long value) throws RepositoryException, AccessDeniedException {
         Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);
     }
 
+    @Override
     public void setValue(double value) throws RepositoryException, AccessDeniedException {
         Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);
     }
 
+    @Override
     public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
         Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);
     }
 
+    @Override
     public void setValue(Calendar value) throws RepositoryException, AccessDeniedException {
         Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);    }
 
+    @Override
     public void setValue(Value value) throws RepositoryException, AccessDeniedException {
         Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);    }
 
+    @Override
     public void setValue(Value[] value) throws RepositoryException, AccessDeniedException {
         Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);    }
 
+    @Override
     public void setValue(Content value) throws RepositoryException, AccessDeniedException {
         Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value.getJCRNode());
     }
 
+    @Override
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
         throw new UnsupportedOperationException("This operation is only supported for node datas of type BINARY");
     }
 
+    @Override
     public boolean isExist() {
         try {
             return getJCRNode().hasProperty(name);
@@ -299,12 +321,14 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public void save() throws RepositoryException {
         if(isExist()){
             getJCRProperty().save();
         }
     }
 
+    @Override
     public void delete() throws RepositoryException {
         Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         if(isExist()){
@@ -312,6 +336,7 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public void refresh(boolean keepChanges) throws RepositoryException {
         if(isExist()){
             getJCRProperty().refresh(keepChanges);

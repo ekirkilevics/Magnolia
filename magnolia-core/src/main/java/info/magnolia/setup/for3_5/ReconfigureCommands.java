@@ -66,11 +66,13 @@ public class ReconfigureCommands extends AllModulesNodeOperation {
         super("reconfigure commands", "rename impl to class or commandName");
     }
 
+    @Override
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx) throws RepositoryException, TaskExecutionException  {
         try {
             if(node.hasContent("commands")){
                 ContentUtil.visit(node.getContent("commands"), new ContentUtil.Visitor(){
-                   public void visit(Content node) throws Exception {
+                   @Override
+                public void visit(Content node) throws Exception {
                        if(node.hasNodeData("impl")){
                            String value = node.getNodeData("impl").getString();
                            node.deleteNodeData("impl");

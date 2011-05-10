@@ -70,6 +70,7 @@ public class FilterOrderingTask extends AbstractRepositoryTask {
         this.requiredFilters = new ArrayList<String>(Arrays.asList(requiredFiltersBefore));
     }
 
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final Content filtersParent = ctx.getConfigHierarchyManager().getContent(FilterManager.SERVER_FILTERS);
 

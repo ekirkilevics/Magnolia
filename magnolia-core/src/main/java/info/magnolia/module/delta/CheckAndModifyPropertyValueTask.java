@@ -62,6 +62,7 @@ public class CheckAndModifyPropertyValueTask extends PropertyValuesTask {
         this.newValue = newValue;
     }
 
+    @Override
     public void execute(InstallContext ctx) {
         final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
         try {

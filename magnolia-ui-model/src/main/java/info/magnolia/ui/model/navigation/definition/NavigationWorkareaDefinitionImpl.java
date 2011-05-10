@@ -50,14 +50,17 @@ public class NavigationWorkareaDefinitionImpl extends MenuItemDefinitionImpl imp
     private String name;
     private boolean visible;
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public boolean isVisible() {
         return visible;
     }
@@ -68,6 +71,7 @@ public class NavigationWorkareaDefinitionImpl extends MenuItemDefinitionImpl imp
         this.visible = visible;
     }
 
+    @Override
     public List<NavigationGroupDefinition> getGroups() {
         return Collections.unmodifiableList(groups);
     }

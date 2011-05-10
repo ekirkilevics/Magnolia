@@ -41,6 +41,7 @@ package info.magnolia.context;
  */
 public class JCRSessionPerThreadSystemContext extends AbstractSystemContext implements ThreadDependentSystemContext {
 
+    @Override
     public RepositoryAcquiringStrategy getRepositoryStrategy() {
         if (repositoryStrategyThreadLocal.get() == null) {
             repositoryStrategyThreadLocal.set(new SystemRepositoryStrategy(this));
@@ -48,6 +49,7 @@ public class JCRSessionPerThreadSystemContext extends AbstractSystemContext impl
         return repositoryStrategyThreadLocal.get();
     }
 
+    @Override
     public void releaseThread() {
         //FIXME: MAGNOLIA-2324
         getRepositoryStrategy().release();

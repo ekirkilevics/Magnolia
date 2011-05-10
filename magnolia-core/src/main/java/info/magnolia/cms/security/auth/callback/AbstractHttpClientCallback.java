@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public abstract class AbstractHttpClientCallback implements HttpClientCallback {
 
+    @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         this.doCallback(request, response);

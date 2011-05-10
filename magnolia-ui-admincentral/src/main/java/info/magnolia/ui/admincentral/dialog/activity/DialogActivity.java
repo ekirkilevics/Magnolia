@@ -72,6 +72,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
         this.dialogRegistry = dialogRegistry;
     }
 
+    @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
         try {
 
@@ -101,10 +102,12 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
         return (Node) MgnlContext.getJCRSession(ContentRepository.USERS).getItem(this.place.getPath());
     }
 
+    @Override
     public String mayStop() {
         return "You might have unsaved changes, do you really want to leave this page?";
     }
 
+    @Override
     public void onSave() {
         try {
             driver.flush(getNode());
@@ -120,6 +123,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
         }
     }
 
+    @Override
     public void onCancel() {
     }
 }

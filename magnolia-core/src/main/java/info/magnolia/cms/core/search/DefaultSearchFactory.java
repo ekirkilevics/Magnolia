@@ -42,6 +42,7 @@ import info.magnolia.cms.core.HierarchyManager;
  */
 public class DefaultSearchFactory extends SearchFactory {
 
+    @Override
     public QueryManager getQueryManager(javax.jcr.query.QueryManager queryManager, HierarchyManager hm) {
         return (new QueryManagerImpl(queryManager, hm));
     }

@@ -54,6 +54,7 @@ public class IsInstallSamplesTask extends ConditionalDelegateTask {
         super(taskName, taskDescription, ifTrue);
     }
 
+    @Override
     protected boolean condition(InstallContext installContext) throws TaskExecutionException {
         return SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_BOOTSTRAP_SAMPLES);
     }

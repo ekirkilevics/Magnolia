@@ -64,6 +64,7 @@ public abstract class AbstractFreemarkerTestCase extends TestCase {
     protected FreemarkerHelper fmHelper;
     protected FreemarkerConfig fmConfig;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
@@ -86,6 +87,7 @@ public abstract class AbstractFreemarkerTestCase extends TestCase {
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);

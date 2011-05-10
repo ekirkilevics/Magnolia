@@ -60,6 +60,7 @@ public abstract class BootstrapResourcesTask extends AbstractTask {
     }
 
     // TODO : check if nodes were already there
+    @Override
     public void execute(final InstallContext installContext) throws TaskExecutionException {
         try {
             final String[] resourcesToBootstrap = getResourcesToBootstrap(installContext);
@@ -76,6 +77,7 @@ public abstract class BootstrapResourcesTask extends AbstractTask {
      */
     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
         String[] resourcesToBootstrap = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
+            @Override
             public boolean accept(final String name) {
                 return acceptResource(installContext, name);
             }

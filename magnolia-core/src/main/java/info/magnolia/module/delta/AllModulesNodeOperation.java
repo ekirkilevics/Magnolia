@@ -59,6 +59,7 @@ public abstract class AllModulesNodeOperation extends AllChildrenNodesOperation 
         return ctx.getConfigHierarchyManager();
     }
 
+    @Override
     protected Content getParentNode(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         if (!ctx.hasModulesNode()) {
             throw new TaskExecutionException("The main /modules node does not exist in the config repository, can not proceed.");
@@ -66,6 +67,7 @@ public abstract class AllModulesNodeOperation extends AllChildrenNodesOperation 
         return ctx.getModulesNode();
     }
 
+    @Override
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getConfigHierarchyManager();
         operateOnModuleNode(node, hm, ctx);

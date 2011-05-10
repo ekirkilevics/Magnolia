@@ -47,14 +47,17 @@ import java.util.Locale;
  */
 public class RequestLocaleAwareI18nContentSupport extends AbstractI18nContentSupport {
 
+    @Override
     protected Locale onDetermineLocale() {
         return ((WebContext) MgnlContext.getInstance()).getRequest().getLocale();
     }
 
+    @Override
     protected String toI18NURI(String uri, Locale locale) {
         return uri;
     }
 
+    @Override
     protected String toRawURI(String i18nURI, Locale locale) {
         return i18nURI;
     }

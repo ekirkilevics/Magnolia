@@ -85,6 +85,7 @@ public class DependencyDefinition {
         this.optional = optional;
     }
 
+    @Override
     public String toString() {
         return name + " version " + version;
     }

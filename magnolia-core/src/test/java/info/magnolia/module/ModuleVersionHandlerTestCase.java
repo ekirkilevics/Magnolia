@@ -216,14 +216,17 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
                 assertEquals("this test doesn't behave as expected", moduleDefinition, module);
                 // wrap and delegate so that we control getCurrentlyInstalled()
                 return new ModuleVersionHandler() {
+                    @Override
                     public Version getCurrentlyInstalled(InstallContext ctx) {
                         return currentlyInstalledVersion;
                     }
 
+                    @Override
                     public List<Delta> getDeltas(InstallContext installContext, Version from) {
                         return versionHandlerUnderTest.getDeltas(installContext, from);
                     }
 
+                    @Override
                     public Delta getStartupDelta(InstallContext installContext) {
                         return versionHandlerUnderTest.getStartupDelta(installContext);
                     }
@@ -274,10 +277,12 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
     protected abstract ModuleVersionHandler newModuleVersionHandlerForTests();
 
     private static class NullDependencyChecker implements DependencyChecker {
+        @Override
         public void checkDependencies(Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
             // do nothing
         }
 
+        @Override
         public List<ModuleDefinition> sortByDependencyLevel(Map<String, ModuleDefinition> moduleDefinitions) {
             return new ArrayList<ModuleDefinition>(moduleDefinitions.values());
         }

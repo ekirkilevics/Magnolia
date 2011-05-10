@@ -59,6 +59,7 @@ public abstract class AbstractErrorHandler implements ErrorHandler {
     // (neither spec nor api) that, for instance, an ItemExistsException is
     // thrown with the item's name as it's sole message (and unfortunately we
     // rely on this here below)
+    @Override
     public void handle(RepositoryException e, Content context) throws NodeOperationException {
         if (e instanceof ItemExistsException) {
             report(e.getMessage() + " already exists at " + context.getHandle() + ".");

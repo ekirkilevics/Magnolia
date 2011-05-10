@@ -56,6 +56,7 @@ public class RegexpVirtualURIMapping implements VirtualURIMapping {
     private String toURI;
     private Pattern regexp;
 
+    @Override
     public MappingResult mapURI(final String uri) {
 
         if (regexp != null) {
@@ -96,6 +97,7 @@ public class RegexpVirtualURIMapping implements VirtualURIMapping {
         this.toURI = toURI;
     }
 
+    @Override
     public String toString() {
         return "RegexpVirtualURIMapping[" + fromURI + " --> " + toURI + "]";
     }

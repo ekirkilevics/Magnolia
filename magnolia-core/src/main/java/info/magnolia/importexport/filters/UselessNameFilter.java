@@ -54,10 +54,12 @@ public class UselessNameFilter extends SkipNodePropertyFilter {
         super(parent);
     }
 
+    @Override
     protected String getFilteredPropertyName() {
         return "name";
     }
 
+    @Override
     protected boolean filter(String propertyValue, String parentNodeName) {
         boolean filter = parentNodeName.equals(propertyValue);
         if (filter) {

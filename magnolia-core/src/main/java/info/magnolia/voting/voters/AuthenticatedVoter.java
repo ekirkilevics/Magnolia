@@ -45,6 +45,7 @@ import info.magnolia.context.MgnlContext;
  */
 public class AuthenticatedVoter extends AbstractBoolVoter {
 
+    @Override
     protected boolean boolVote(Object value) {
         return !MgnlContext.getUser().getName().equals(UserManager.ANONYMOUS_USER);
     }

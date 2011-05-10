@@ -61,6 +61,7 @@ public class PropertiesImportTask extends AbstractRepositoryTask {
         this.workspace = workspace;
     }
 
+    @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         try {
             final InputStream propsStream = ClasspathResourcesUtil.getStream(resource);

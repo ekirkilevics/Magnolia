@@ -56,6 +56,7 @@ public class RenamedRenderersToTemplateRenderers extends AllModulesNodeOperation
         super("Template renderers", "Modules' renderers nodes were renamed to template-renderers.");
     }
 
+    @Override
     protected void operateOnModuleNode(Content parent, HierarchyManager hm, InstallContext ctx) throws TaskExecutionException {
         final String moduleNodePath = parent.getHandle();
         final String oldPath = moduleNodePath + "/" + OLDNAME;

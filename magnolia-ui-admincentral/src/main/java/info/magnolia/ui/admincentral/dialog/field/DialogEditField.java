@@ -50,6 +50,7 @@ public class DialogEditField extends AbstractDialogField {
         super(dialogDefinition, tabDefinition, fieldDefinition);
     }
 
+    @Override
     protected Field getField() {
         EditFieldDefinition d = (EditFieldDefinition) getFieldDefinition();
         if (d.getRows() > 1) {

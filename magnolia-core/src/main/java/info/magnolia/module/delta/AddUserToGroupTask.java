@@ -54,6 +54,7 @@ public class AddUserToGroupTask extends AbstractTask {
         this.groupname = groupname;
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         final UserManager userManager = SecuritySupport.Factory.getInstance().getUserManager();
         final User user = userManager.getUser(username);

@@ -43,6 +43,7 @@ import info.magnolia.voting.Voting;
  */
 public class OrVoting implements Voting {
 
+    @Override
     public int vote(Voter[] voters, Object value) {
         for (int i = 0; i < voters.length; i++) {
             Voter voter = voters[i];

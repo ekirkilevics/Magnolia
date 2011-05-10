@@ -44,6 +44,7 @@ public class BasicClientCallback extends AbstractHttpClientCallback {
 
     private String realmName;
 
+    @Override
     public void doCallback(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("WWW-Authenticate", "BASIC realm=\"" + getRealmName() + "\"");
     }

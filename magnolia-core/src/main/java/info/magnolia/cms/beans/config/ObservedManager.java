@@ -77,6 +77,7 @@ public abstract class ObservedManager {
 
         ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, node.getHandle(), new EventListener() {
 
+            @Override
             public void onEvent(EventIterator events) {
                 reload();
             }

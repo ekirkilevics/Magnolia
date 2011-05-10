@@ -52,18 +52,22 @@ public abstract class AbstractDelegatingTemplateLoader implements TemplateLoader
 
     private TemplateLoader delegate;
 
+    @Override
     public Object findTemplateSource(String name) throws IOException {
         return getDelegate().findTemplateSource(name);
     }
 
+    @Override
     public long getLastModified(Object templateSource) {
         return getDelegate().getLastModified(templateSource);
     }
 
+    @Override
     public Reader getReader(Object templateSource, String encoding) throws IOException {
         return getDelegate().getReader(templateSource, encoding);
     }
 
+    @Override
     public void closeTemplateSource(Object templateSource) throws IOException {
         getDelegate().closeTemplateSource(templateSource);
     }
@@ -87,18 +91,22 @@ public abstract class AbstractDelegatingTemplateLoader implements TemplateLoader
     protected abstract TemplateLoader newDelegate();
 
     private static class NullTemplateLoader implements TemplateLoader {
+        @Override
         public Object findTemplateSource(String name) throws IOException {
             return null;
         }
 
+        @Override
         public long getLastModified(Object templateSource) {
             return -1;
         }
 
+        @Override
         public Reader getReader(Object templateSource, String encoding) throws IOException {
             return null;
         }
 
+        @Override
         public void closeTemplateSource(Object templateSource) throws IOException {
         }
     }

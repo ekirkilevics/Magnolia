@@ -80,6 +80,7 @@ public class Content2BeanUtil {
             this.defaultClass = defaultClass;
         }
 
+        @Override
         protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType) {
             // return resolvedType==null? defaultType : resolvedType;
             return resolvedType==null? typeMapping.getTypeDescriptor(defaultClass) : resolvedType;

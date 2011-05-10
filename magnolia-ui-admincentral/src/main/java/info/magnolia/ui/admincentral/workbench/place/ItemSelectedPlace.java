@@ -54,6 +54,7 @@ public class ItemSelectedPlace extends Place {
      */
     public static class Tokenizer implements PlaceTokenizer<ItemSelectedPlace> {
 
+        @Override
         public ItemSelectedPlace getPlace(String token) {
             final String[] bits = token.split(":");
             if(bits.length != 3){
@@ -62,6 +63,7 @@ public class ItemSelectedPlace extends Place {
             return new ItemSelectedPlace(bits[0], bits[1], ViewType.fromString(bits[2]));
         }
 
+        @Override
         public String getToken(ItemSelectedPlace place) {
             return place.getWorkspace() + ":" + place.getPath() + ":" + place.getViewType().getText();
         }

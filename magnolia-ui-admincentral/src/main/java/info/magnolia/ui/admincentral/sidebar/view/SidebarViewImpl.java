@@ -67,19 +67,23 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
         panel.setSecondComponent(lazyPreview);
     }
 
+    @Override
     public ActionListView getActionList() {
         return actionListView;
     }
 
+    @Override
     public PreviewView getPreviewView() {
         return previewView;
     }
 
+    @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
         actionListView.setPresenter(this.presenter);
     }
 
+    @Override
     public Component asVaadinComponent() {
         return panel;
     }

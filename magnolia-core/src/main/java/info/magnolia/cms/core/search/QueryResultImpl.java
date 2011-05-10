@@ -150,10 +150,12 @@ public class QueryResultImpl implements QueryResult {
         }
     }
 
+    @Override
     public Collection<Content> getContent() {
         return getContent(ItemType.CONTENT.getSystemName());
     }
 
+    @Override
     public Collection<Content> getContent(String nodeType) {
         Collection<Content> resultSet = this.objectStore.get(nodeType);
         if (resultSet == null) {

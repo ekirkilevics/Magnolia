@@ -77,6 +77,7 @@ public class SearchReplace implements ContentUtil.Visitor {
         this.searchPattern = Pattern.compile(search, regexFlags);
     }
 
+    @Override
     public void visit(Content node) throws Exception {
         final Collection<NodeData> props = node.getNodeDataCollection(propertyNamePattern);
         for (NodeData prop : props) {

@@ -45,6 +45,7 @@ import java.util.Comparator;
  */
 class BootstrapFilesComparator implements Comparator<File> {
     // remove file with the same name in different dirs
+    @Override
     public int compare(File file1, File file2) {
         String name1 = getName(file1);
         String name2 = getName(file2);

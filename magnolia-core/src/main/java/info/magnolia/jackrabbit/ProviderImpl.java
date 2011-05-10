@@ -165,6 +165,7 @@ public class ProviderImpl implements Provider {
     /**
      * @see info.magnolia.repository.Provider#init(info.magnolia.repository.RepositoryMapping)
      */
+    @Override
     public void init(RepositoryMapping repositoryMapping) throws RepositoryNotInitializedException {
         checkXmlSettings();
 
@@ -230,6 +231,7 @@ public class ProviderImpl implements Provider {
         }
     }
 
+    @Override
     public void shutdownRepository() {
         log.info("Shutting down repository bound to '{}'", bindName);
 
@@ -246,10 +248,12 @@ public class ProviderImpl implements Provider {
     /**
      * @deprecated typo - use get #getUnderlyingRepository() - since 4.0
      */
+    @Override
     public Repository getUnderlineRepository() throws RepositoryNotInitializedException {
         return getUnderlyingRepository();
     }
 
+    @Override
     public Repository getUnderlyingRepository() throws RepositoryNotInitializedException {
         if (this.repository == null) {
             throw new RepositoryNotInitializedException("Null repository"); //$NON-NLS-1$
@@ -260,6 +264,7 @@ public class ProviderImpl implements Provider {
     /**
      * @see info.magnolia.repository.Provider#registerNamespace(java.lang.String, java.lang.String, javax.jcr.Workspace)
      */
+    @Override
     public void registerNamespace(String namespacePrefix, String uri, Workspace workspace) throws RepositoryException {
         try {
             workspace.getNamespaceRegistry().getURI(namespacePrefix);
@@ -276,6 +281,7 @@ public class ProviderImpl implements Provider {
     /**
      * @see info.magnolia.repository.Provider#unregisterNamespace(java.lang.String, javax.jcr.Workspace)
      */
+    @Override
     public void unregisterNamespace(String prefix, Workspace workspace) throws RepositoryException {
         workspace.getNamespaceRegistry().unregisterNamespace(prefix);
     }
@@ -283,6 +289,7 @@ public class ProviderImpl implements Provider {
     /**
      * @see info.magnolia.repository.Provider#registerNodeTypes(String)
      */
+    @Override
     public void registerNodeTypes() throws RepositoryException {
         registerNodeTypes(StringUtils.EMPTY);
     }
@@ -290,6 +297,7 @@ public class ProviderImpl implements Provider {
     /**
      * @see info.magnolia.repository.Provider#registerNodeTypes(java.lang.String)
      */
+    @Override
     public void registerNodeTypes(String configuration) throws RepositoryException {
         if (StringUtils.isEmpty(configuration)) {
             configuration = (String) this.repositoryMapping.getParameters().get(CUSTOM_NODETYPES);
@@ -302,6 +310,7 @@ public class ProviderImpl implements Provider {
     /**
      * @see info.magnolia.repository.Provider#registerNodeTypes(java.io.InputStream)
      */
+    @Override
     public void registerNodeTypes(InputStream xmlStream) throws RepositoryException {
         SimpleCredentials credentials = new SimpleCredentials(
             ContentRepository.REPOSITORY_USER,
@@ -496,6 +505,7 @@ public class ProviderImpl implements Provider {
     /**
      * @see info.magnolia.repository.Provider#registerWorkspace(java.lang.String)
      */
+    @Override
     public boolean registerWorkspace(String workspaceName) throws RepositoryException {
         // check if workspace already exists
         SimpleCredentials credentials = new SimpleCredentials(

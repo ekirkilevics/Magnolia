@@ -79,6 +79,7 @@ public class TreeModel implements JcrContainerSource {
 
     // JcrContainerSource
 
+    @Override
     public Collection<Item> getChildren(Item item) throws RepositoryException {
         if (item instanceof Property)
             return Collections.emptySet();
@@ -98,6 +99,7 @@ public class TreeModel implements JcrContainerSource {
             }
             // TODO This behaviour is optional in old AdminCentral, you can set a custom comparator.
             Collections.sort(nodes, new Comparator<Node>() {
+                @Override
                 public int compare(Node lhs, Node rhs) {
                     try {
                         return lhs.getName().compareTo(rhs.getName());
@@ -130,6 +132,7 @@ public class TreeModel implements JcrContainerSource {
                 }
             }
             Collections.sort(properties, new Comparator<Property>() {
+                @Override
                 public int compare(Property lhs, Property rhs) {
                     try {
                         return lhs.getName().compareTo(rhs.getName());
@@ -147,10 +150,12 @@ public class TreeModel implements JcrContainerSource {
         return Collections.unmodifiableCollection(c);
     }
 
+    @Override
     public Collection<Item> getRootItemIds() throws RepositoryException {
         return getChildren(getRootNode());
     }
 
+    @Override
     public boolean isRoot(Item item) throws RepositoryException {
         if (item instanceof Property)
             return false;
@@ -158,16 +163,19 @@ public class TreeModel implements JcrContainerSource {
         return item.getDepth() <= depthOfRootNodesInTree;
     }
 
+    @Override
     public boolean hasChildren(Item item) throws RepositoryException {
         if (item instanceof Property)
             return false;
         return !getChildren(item).isEmpty();
     }
 
+    @Override
     public Component getColumnComponent(String columnName, Item item) throws RepositoryException {
         return getColumn(columnName).getComponent(item);
     }
 
+    @Override
     public String getItemIcon(Item item) throws RepositoryException {
         for (ItemTypeDefinition itemType : workbenchDefinition.getItemTypes()) {
             if (item instanceof javax.jcr.Property && itemType.getItemType().equals(ItemTypeDefinition.ITEM_TYPE_NODE_DATA)) {
@@ -182,10 +190,12 @@ public class TreeModel implements JcrContainerSource {
         return null;
     }
 
+    @Override
     public Node getNodeByIdentifier(String nodeIdentifier) throws RepositoryException {
         return getSession().getNodeByIdentifier(nodeIdentifier);
     }
 
+    @Override
     public Item getItemByPath(String path) throws RepositoryException {
         String absolutePath = getPathInWorkspace(path);
         return getSession().getItem(absolutePath);

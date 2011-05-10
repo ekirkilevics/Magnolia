@@ -71,6 +71,7 @@ public class SidebarViewActivity extends AbstractActivity implements SidebarView
         showItem(place);
     }
 
+    @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
         viewPort.setView(sidebarView);
     }
@@ -95,6 +96,7 @@ public class SidebarViewActivity extends AbstractActivity implements SidebarView
         }
     }
 
+    @Override
     public void onMenuItemSelected(String menuItemName) {
         MenuItemDefinition menuItemDefinition = getMenuItemDefinition(menuItemName);
         try {

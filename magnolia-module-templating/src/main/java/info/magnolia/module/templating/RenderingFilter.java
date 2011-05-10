@@ -78,6 +78,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
         this.renderingEngine = renderingEngine;
     }
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
         final AggregationState aggregationState = MgnlContext.getAggregationState();
 

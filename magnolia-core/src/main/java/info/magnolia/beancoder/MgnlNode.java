@@ -67,10 +67,12 @@ public class MgnlNode implements Node {
         this.mnode = mnode;
     }
 
+    @Override
     public Iterator<MgnlProperty> getProperties() throws JcrException {
         return new MgnlPropertyIterator(mnode);
     }
 
+    @Override
     public Iterator<MgnlNode> getNodes() throws JcrException {
         return new MgnlNodeIterator(mnode);
     }
@@ -102,14 +104,17 @@ public class MgnlNode implements Node {
         return property;
     }
 
+    @Override
     public String getPath() throws JcrException {
         return mnode.getHandle();
     }
 
+    @Override
     public Object getWrappedInstance() throws JcrException {
         return mnode;
     }
 
+    @Override
     public boolean hasProperty(String propertyName) throws JcrException {
         try {
             return mnode.hasNodeData(propertyName);
@@ -119,6 +124,7 @@ public class MgnlNode implements Node {
         }
     }
 
+    @Override
     public Property getProperty(String propertyName) throws JcrException {
         try {
             return new MgnlProperty(this, NodeDataUtil.getOrCreate(mnode, propertyName));
@@ -129,6 +135,7 @@ public class MgnlNode implements Node {
     }
 
     // TODO : delegate to setProperty(String, String, int)
+    @Override
     public Property setProperty(String propertyName, String value) throws JcrException {
         try {
             NodeData nodeData = NodeDataUtil.getOrCreate(mnode, propertyName);
@@ -152,6 +159,7 @@ public class MgnlNode implements Node {
         }
     }
 
+    @Override
     public boolean hasNode(String relPath) throws JcrException {
         try {
             return mnode.hasContent(relPath);
@@ -161,6 +169,7 @@ public class MgnlNode implements Node {
         }
     }
 
+    @Override
     public Node getNode(String relPath) throws JcrException {
         try {
             Content c = ContentUtil.getOrCreateContent(mnode, relPath, ItemType.CONTENTNODE);
@@ -171,6 +180,7 @@ public class MgnlNode implements Node {
         }
     }
 
+    @Override
     public Node addNode(String newNodeName) throws JcrException {
         try {
             return new MgnlNode(mnode.createContent(newNodeName));
@@ -180,10 +190,12 @@ public class MgnlNode implements Node {
         }
     }
 
+    @Override
     public String getName() throws JcrException {
         return mnode.getName();
     }
 
+    @Override
     public Item getParent() throws JcrException {
         try {
             return new MgnlNode(mnode.getParent());
@@ -193,6 +205,7 @@ public class MgnlNode implements Node {
         }
     }
 
+    @Override
     public boolean isNode() throws JcrException {
         return true;
     }
@@ -217,14 +230,17 @@ public class MgnlNode implements Node {
             this.internalIterator = node.getChildren().iterator();
         }
 
+        @Override
         public void remove() {
             internalIterator.remove();
         }
 
+        @Override
         public boolean hasNext() {
             return internalIterator.hasNext();
         }
 
+        @Override
         public MgnlNode next() {
             return new MgnlNode(internalIterator.next());
         }
@@ -244,14 +260,17 @@ public class MgnlNode implements Node {
             this.internalIterator = mnode.getNodeDataCollection().iterator();
         }
 
+        @Override
         public void remove() {
             internalIterator.remove();
         }
 
+        @Override
         public boolean hasNext() {
             return internalIterator.hasNext();
         }
 
+        @Override
         public MgnlProperty next() {
             return new MgnlProperty(new MgnlNode(mnode), internalIterator.next());
         }
@@ -260,6 +279,7 @@ public class MgnlNode implements Node {
     /**
      * @see openwfe.org.jcr.Node#setProperty(java.lang.String, java.lang.String, int)
      */
+    @Override
     public Property setProperty(String propertyName, String valueStr, int type) throws JcrException {
         if (type == PropertyType.NAME) {
             log.debug("setProperty(" + propertyName + ", " + valueStr + " with type PropertyType.NAME, will switch to PropertyType.STRING ...");
@@ -277,6 +297,7 @@ public class MgnlNode implements Node {
         }
     }
 
+    @Override
     public void remove() throws JcrException {
         try {
             this.mnode.delete();
@@ -290,6 +311,7 @@ public class MgnlNode implements Node {
     /**
      * @see openwfe.org.jcr.Node#setProperty(java.lang.String, java.io.InputStream)
      */
+    @Override
     public Property setProperty(String propertyName, InputStream value) throws JcrException {
         try {
             NodeData nodeData = NodeDataUtil.getOrCreate(mnode, propertyName);

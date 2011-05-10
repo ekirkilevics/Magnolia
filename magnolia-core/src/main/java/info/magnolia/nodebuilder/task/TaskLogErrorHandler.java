@@ -50,6 +50,7 @@ public class TaskLogErrorHandler extends AbstractErrorHandler {
         this.installCtx = installCtx;
     }
 
+    @Override
     public void report(String message) {
         installCtx.warn(message);
     }

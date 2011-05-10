@@ -53,6 +53,7 @@ public class ClassUtilTest extends TestCase {
     }
 
     public class Bar extends Foo {
+        @Override
         public String getName() {
             return super.getName() + "bar";
         }

@@ -99,6 +99,7 @@ public interface User extends Principal, Serializable {
 
     String getLanguage();
 
+    @Override
     String getName();
 
     String getPassword();

@@ -90,6 +90,7 @@ public class DelayedExecutorTest extends TestCase {
 
         boolean executed = false;
 
+        @Override
         public void run() {
             executed = true;
             LoggerFactory.getLogger(DelayedExecutorTest.class).debug("executed");

@@ -121,6 +121,7 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
         }
     }
 
+    @Override
     public void onSave() {
         try {
 
@@ -173,6 +174,7 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
         }
     }
 
+    @Override
     public void onCancel() {
         dialogView.close();
     }

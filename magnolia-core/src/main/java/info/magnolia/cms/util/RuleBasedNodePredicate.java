@@ -60,6 +60,7 @@ public class RuleBasedNodePredicate implements Predicate {
         this.rule = rule;
     }
 
+    @Override
     public boolean evaluate(Object object) {
         if (!(object instanceof Node)) {
             return false;

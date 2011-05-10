@@ -60,10 +60,12 @@ public class MenuItemDefinitionImpl implements MenuItemDefinition {
         this.name = name;
     }
 
+    @Override
     public String getLabel() {
         return label;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -72,10 +74,12 @@ public class MenuItemDefinitionImpl implements MenuItemDefinition {
         this.icon = icon;
     }
 
+    @Override
     public String getIcon() {
         return icon;
     }
 
+    @Override
     public ActionDefinition getActionDefinition() {
         return actionDefinition;
     }
@@ -85,6 +89,7 @@ public class MenuItemDefinitionImpl implements MenuItemDefinition {
     }
 
 
+    @Override
     public String getI18nBasename() {
         return i18nBasename;
     }

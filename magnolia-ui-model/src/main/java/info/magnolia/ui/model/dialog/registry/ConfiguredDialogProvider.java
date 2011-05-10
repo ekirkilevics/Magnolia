@@ -53,6 +53,7 @@ public class ConfiguredDialogProvider implements DialogProvider {
         this.configNode = new LazyContentWrapper(configNode);
     }
 
+    @Override
     public DialogDefinition getDialogDefinition() throws RepositoryException {
         try {
             DialogDefinition definition = (DialogDefinition) Content2BeanUtil.toBean(configNode, true, DialogDefinition.class);

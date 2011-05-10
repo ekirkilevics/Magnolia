@@ -96,6 +96,7 @@ public class MultipartRequestFilter extends OncePerRequestAbstractMgnlFilter {
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
+    @Override
     public void init(FilterConfig config) throws ServletException {
         super.init(config);
         String maxFileSize = config.getInitParameter(PARAM_MAX_FILE_SIZE);
@@ -110,6 +111,7 @@ public class MultipartRequestFilter extends OncePerRequestAbstractMgnlFilter {
      * Determine if the request has multipart content and if so parse it into a <code>MultipartForm</code> and store
      * it as a request attribute.
      */
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
 

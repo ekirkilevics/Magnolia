@@ -52,6 +52,7 @@ public class TestCommand extends MgnlCommand {
     /**
      * Execute activation
      */
+    @Override
     public boolean execute(Context ctx) {
         return true;
     }

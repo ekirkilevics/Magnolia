@@ -63,6 +63,7 @@ public abstract class QueryTask extends AbstractRepositoryTask {
         this.query = query;
     }
 
+    @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         final Collection<Content> nodes = QueryUtil.exceptionThrowingQuery(repositoryName, query, Query.SQL, ItemType.NT_BASE);
         final Iterator<Content> it = nodes.iterator();

@@ -77,10 +77,12 @@ public abstract class AbstractEditableColumn<D extends AbstractColumnDefinition>
 
         private ContentDriver driver;
 
+        @Override
         public void edit(Item item, final Editor editor) throws RepositoryException {
 
             driver = new ContentDriver();
             driver.initialize(new HasEditors() {
+                @Override
                 public Collection<? extends Editor> getEditors() {
                     ArrayList<Editor> list = new ArrayList<Editor>();
                     list.add(editor);
@@ -91,6 +93,7 @@ public abstract class AbstractEditableColumn<D extends AbstractColumnDefinition>
             driver.edit(item instanceof Node ? (Node) item : item.getParent());
         }
 
+        @Override
         public boolean save(Item item) throws RepositoryException {
             driver.flush(item instanceof Node ? (Node) item : item.getParent());
 
@@ -108,6 +111,7 @@ public abstract class AbstractEditableColumn<D extends AbstractColumnDefinition>
             return true;
         }
 
+        @Override
         public void onClick(Item item) throws RepositoryException {
 
             // TODO ItemSelectedPlace wants a path relative to the tree root, not the jcr workspace absolute root

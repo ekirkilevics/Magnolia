@@ -97,6 +97,7 @@ public class MainActivityMapperImpl extends FactoryBase<Place, Activity> impleme
         addMapping(mapping.getPlace(), mapping.getActivity());
     }
 
+    @Override
     public Activity getActivity(final Place place) {
         return create(place);
     }

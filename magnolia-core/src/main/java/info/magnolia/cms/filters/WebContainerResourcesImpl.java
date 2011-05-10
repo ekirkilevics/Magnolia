@@ -54,6 +54,7 @@ public class WebContainerResourcesImpl implements WebContainerResources {
 
     private Mapping mapping = new Mapping();
 
+    @Override
     public boolean isWebContainerResource(HttpServletRequest request) {
         boolean markerAttribute = request.getAttribute(WebContainerResourcesImpl.WEB_CONTAINER_RESOURCE_MARKER_ATTRIBUTE) != null;
         return markerAttribute || mapping.match(request).isMatching();

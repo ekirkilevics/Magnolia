@@ -96,6 +96,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         this.beanUtilsBean = new BeanUtilsBean(convertUtilsBean, new PropertyUtilsBean());
     }
 
+    @Override
     @Deprecated
     public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException {
         throw new UnsupportedOperationException();
@@ -112,6 +113,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
      * <li>otherwise use a Map
      * </ul>
      */
+    @Override
     public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state) throws ClassNotFoundException {
         TypeDescriptor typeDscr = null;
         Content node = state.getCurrentContent();
@@ -201,6 +203,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         return onResolveType(getTypeMapping(), state, resolvedType);
     }
 
+    @Override
     public Collection<Content> getChildren(Content node) {
         return node.getChildren(this);
     }
@@ -208,10 +211,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     /**
      * Process all nodes except MetaData and nodes with names prefixed by "jcr:".
      */
+    @Override
     public boolean accept(Content content) {
         return ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER.accept(content);
     }
 
+    @Override
     public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
         throw new UnsupportedOperationException();
     }
@@ -219,6 +224,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     /**
      * Do not set class property. In case of a map/collection try to use adder method.
      */
+    @Override
     public void setProperty(TypeMapping mapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
         String propertyName = descriptor.getName();
         if (propertyName.equals("class")) {
@@ -330,6 +336,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
      * Most of the conversion is done by the BeanUtils. TODO don't use bean utils conversion since it can't be used for
      * the adder methods
      */
+    @Override
     public Object convertPropertyValue(Class<?> propertyType, Object value) throws Content2BeanException {
         if (Class.class.equals(propertyType)) {
             try {
@@ -365,6 +372,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     /**
      * Use the factory util to instantiate. This is useful to get default implementation of interfaces
      */
+    @Override
     public Object newBeanInstance(TransformationState state, Map properties, ComponentProvider componentProvider) throws Content2BeanException {
         // we try first to use conversion (Map --> primitive type)
         // this is the case when we flattening the hierarchy?
@@ -394,6 +402,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     /**
      * Initializes bean by calling its init method if present.
      */
+    @Override
     public void initBean(TransformationState state, Map properties) throws Content2BeanException {
         Object bean = state.getCurrentBean();
 
@@ -413,6 +422,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         log.debug("{} is initialized", bean);
     }
 
+    @Override
     public TransformationState newState() {
         return new TransformationStateImpl();
         // TODO - do we really need different impls for TransformationState ?
@@ -425,6 +435,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
      *
      * @deprecated since 5.0, do not use.
      */
+    @Override
     public TypeMapping getTypeMapping() {
         return typeMapping;// TypeMapping.Factory.getDefaultMapping();
     }

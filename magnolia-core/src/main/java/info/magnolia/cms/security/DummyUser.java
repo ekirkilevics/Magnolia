@@ -65,6 +65,7 @@ public class DummyUser extends AbstractUser {
     /**
      * Dummy user has full access, always returns true.
      */
+    @Override
     public boolean hasRole(String roleName) {
         return true;
     }
@@ -72,6 +73,7 @@ public class DummyUser extends AbstractUser {
     /**
      * Simply log that its a dummy user.
      */
+    @Override
     public void removeRole(String roleName) throws UnsupportedOperationException {
         log.debug("User [ Anonymous ] has no roles");
     }
@@ -80,6 +82,7 @@ public class DummyUser extends AbstractUser {
      * Simply log that its a dummy user.
      * @param roleName the name of the role
      */
+    @Override
     public void addRole(String roleName) throws UnsupportedOperationException {
         log.debug("No roles can be attached to user [ Anonymous ]");
     }
@@ -87,57 +90,71 @@ public class DummyUser extends AbstractUser {
     /**
      * Always returns true.
      */
+    @Override
     public boolean inGroup(String groupName) {
         return true;
     }
 
+    @Override
     public void removeGroup(String groupName) throws UnsupportedOperationException {
         log.debug("User [ Anonymous ] has no groups");
     }
 
+    @Override
     public void addGroup(String groupName) throws UnsupportedOperationException {
         log.debug("No groups can be attached to user [ Anonymous ]");
     }
 
+    @Override
     public boolean isEnabled() {
         return true;
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
     }
 
+    @Override
     public String getLanguage() {
         return DEFAULT_LANGUAGE;
     }
 
+    @Override
     public String getName() {
         return UserManager.ANONYMOUS_USER;
     }
 
+    @Override
     public String getPassword() {
         return StringUtils.EMPTY;
     }
 
+    @Override
     public String getProperty(String propertyName) {
         return null;
     }
 
+    @Override
     public void setProperty(String propertyName, String value) {
         log.debug("Can not set properties on dummy user (name: {}, value: {})", propertyName, value);
     }
 
+    @Override
     public Collection<String> getGroups() {
         return Collections.emptyList();
     }
 
+    @Override
     public Collection<String> getAllGroups() {
         return new ArrayList<String>();
     }
 
+    @Override
     public Collection<String> getRoles() {
         return Collections.emptyList();
     }
 
+    @Override
     public Collection<String> getAllRoles() {
         return new ArrayList<String>();
     }

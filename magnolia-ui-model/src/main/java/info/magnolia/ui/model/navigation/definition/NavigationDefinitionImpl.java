@@ -44,6 +44,7 @@ public class NavigationDefinitionImpl implements NavigationDefinition {
 
     private List<NavigationWorkareaDefinition> workareas = new ArrayList<NavigationWorkareaDefinition>();
 
+    @Override
     public List<NavigationWorkareaDefinition> getWorkareas() {
         return Collections.unmodifiableList(workareas);
     }

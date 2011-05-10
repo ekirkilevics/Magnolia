@@ -71,6 +71,7 @@ import static org.easymock.classextension.EasyMock.replay;
  */
 public class JspParagraphRendererTest extends TestCase {
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -81,6 +82,7 @@ public class JspParagraphRendererTest extends TestCase {
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();

@@ -66,6 +66,7 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
     /**
      * @deprecated since 5.0, permissions are checked directly by jcr now. Use Session.hasPermission() directly
      */
+    @Override
     @Deprecated
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return null;
@@ -97,6 +98,7 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
 
     }
 
+    @Override
     public void release() {
         super.release(true);
     }

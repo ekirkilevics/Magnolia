@@ -51,6 +51,7 @@ public class DefaultI18nContentSupport extends AbstractI18nContentSupport {
     /**
      * Adds the language prefix to the uri.
      */
+    @Override
     protected String toI18NURI(String uri, Locale locale) {
         // don't extend the uri for the default fallback language
         if(locale.equals(getDefaultLocale())){
@@ -64,6 +65,7 @@ public class DefaultI18nContentSupport extends AbstractI18nContentSupport {
         return uri;
     }
 
+    @Override
     protected String toRawURI(String i18nURI, Locale locale) {
         //MAGNOLIA-2142 - make sure we strip language only when it is actually present
         String raw = StringUtils.removeStart(i18nURI, "/" + locale.toString() + "/");
@@ -71,6 +73,7 @@ public class DefaultI18nContentSupport extends AbstractI18nContentSupport {
         return raw == null || raw.startsWith("/") ? raw : ("/" + raw);
     }
 
+    @Override
     protected Locale onDetermineLocale() {
         Locale locale;
         final String i18nURI = MgnlContext.getAggregationState().getCurrentURI();

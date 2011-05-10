@@ -81,6 +81,7 @@ public class CompositeCallback implements HttpClientCallback {
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
+    @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) {
         for (int i = 0; i < patterns.length; i++) {
             PatternDelegate currentPattern = patterns[i];

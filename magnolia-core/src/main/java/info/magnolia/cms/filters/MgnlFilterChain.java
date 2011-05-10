@@ -65,6 +65,7 @@ public class MgnlFilterChain implements FilterChain {
         this.originalChain = originalChain;
     }
 
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
         Context ctx = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
         boolean updateCtx = ctx instanceof WebContext && request instanceof HttpServletRequest && response instanceof HttpServletResponse;

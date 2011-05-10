@@ -214,6 +214,7 @@ public class ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand extends M
 
     private Collection<Content> getTabs(Content newDialog) {
         Collection<Content> tabs = newDialog.getChildren(new Content.ContentFilter() {
+            @Override
             public boolean accept(Content content) {
                 try {
                     return content.hasNodeData("controlType") && content.getNodeData("controlType").getString().equals("tab");
@@ -228,6 +229,7 @@ public class ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand extends M
 
     private Collection<Content> getControls(Content tab) {
         Collection<Content> controls = tab.getChildren(new Content.ContentFilter() {
+            @Override
             public boolean accept(Content content) {
                 try {
                     return content.hasNodeData("controlType");

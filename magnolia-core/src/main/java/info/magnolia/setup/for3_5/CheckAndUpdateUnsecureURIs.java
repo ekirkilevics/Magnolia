@@ -63,11 +63,13 @@ public class CheckAndUpdateUnsecureURIs extends AllChildrenNodesOperation implem
         subtasks = new ArrayDelegateTask("Unsecure URI transformations");
     }
 
+    @Override
     public void execute(InstallContext installContext) throws TaskExecutionException {
         super.execute(installContext);
         subtasks.execute(installContext);
     }
 
+    @Override
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final String bypassName = node.getName();
         final String bypassPattern = NodeDataUtil.getString(node, PROPERTY_URI);

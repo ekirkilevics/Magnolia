@@ -81,6 +81,7 @@ public class ConfigUtil {
             this.dtds = dtds;
         }
 
+        @Override
         public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
             String key = StringUtils.substringAfterLast(systemId, "/");
             if (dtds.containsKey(key)) {

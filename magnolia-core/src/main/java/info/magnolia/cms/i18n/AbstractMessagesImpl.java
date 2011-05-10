@@ -81,6 +81,7 @@ public abstract class AbstractMessagesImpl implements Messages {
     /**
      * Returns the current locale.
      */
+    @Override
     public Locale getLocale() {
         return locale;
     }
@@ -89,6 +90,7 @@ public abstract class AbstractMessagesImpl implements Messages {
      * If no basename is provided this method returns DEFAULT_BASENAME.
      * @return current basename
      */
+    @Override
     public String getBasename() {
         return basename;
     }
@@ -97,6 +99,7 @@ public abstract class AbstractMessagesImpl implements Messages {
      * Replace the {n} parameters in the string.
      * @see java.text.MessageFormat#format(String, Object[])
      */
+    @Override
     public String get(String key, Object[] args) {
         return MessageFormat.format(get(key), args);
     }
@@ -107,6 +110,7 @@ public abstract class AbstractMessagesImpl implements Messages {
      * @param defaultMsg the default message
      * @return the message
      */
+    @Override
     public String getWithDefault(String key, String defaultMsg) {
         String msg = get(key);
         if (msg.startsWith("???")) { //$NON-NLS-1$
@@ -122,6 +126,7 @@ public abstract class AbstractMessagesImpl implements Messages {
      * @param defaultMsg default message
      * @return message
      */
+    @Override
     public String getWithDefault(String key, Object[] args, String defaultMsg) {
         return MessageFormat.format(getWithDefault(key, defaultMsg), args);
     }
@@ -129,6 +134,7 @@ public abstract class AbstractMessagesImpl implements Messages {
     /**
      * True if the basename and the locale are the same.
      */
+    @Override
     public boolean equals(Object arg0) {
         if (arg0 == null || !(arg0 instanceof AbstractMessagesImpl)) {
             return false;
@@ -140,6 +146,7 @@ public abstract class AbstractMessagesImpl implements Messages {
     /**
      * Nice string.
      */
+    @Override
     public String toString() {
         return this.basename + "(" + this.locale + ")";
     }

@@ -43,6 +43,7 @@ import org.apache.commons.beanutils.Converter;
  * @version $Revision: $ ($Author: $)
  */
 public class VersionConverter implements Converter {
+    @Override
     public Object convert(Class type, Object value) {
         return Version.parseVersion((String) value);
     }

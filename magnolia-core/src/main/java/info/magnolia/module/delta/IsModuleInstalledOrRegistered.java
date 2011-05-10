@@ -58,6 +58,7 @@ public class IsModuleInstalledOrRegistered extends NodeExistsDelegateTask {
         this.moduleName = moduleName;
     }
 
+    @Override
     protected boolean condition(InstallContext ctx) {
         return super.condition(ctx) || ctx.isModuleRegistered(moduleName);
     }

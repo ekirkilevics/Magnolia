@@ -53,18 +53,22 @@ public class ContainerItem implements Item {
         this.jcrContainer = jcrContainer;
     }
 
+    @Override
     public Property getItemProperty(Object id) {
         return jcrContainer.getContainerProperty(itemId, id);
     }
 
+    @Override
     public Collection<?> getItemPropertyIds() {
         return jcrContainer.getContainerPropertyIds();
     }
 
+    @Override
     public boolean addItemProperty(Object id, Property property) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean removeItemProperty(Object id) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }

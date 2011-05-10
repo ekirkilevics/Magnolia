@@ -45,5 +45,6 @@ public interface SystemContext extends Context {
     /**
      * @deprecated since 4.0 - this method should not be exposed on SystemContext.
      */
+    @Override
     void setLocale(Locale locale);
 }

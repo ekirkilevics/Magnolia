@@ -71,6 +71,7 @@ public class NavigationWorkArea implements IsVaadinComponent {
         return navigationGroupView;
     }
 
+    @Override
     public Component asVaadinComponent() {
         return customComponent;
     }

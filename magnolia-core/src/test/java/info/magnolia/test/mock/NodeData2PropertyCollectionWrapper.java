@@ -54,18 +54,22 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
         this.col = c;
     }
 
+    @Override
     public boolean add(Property arg0) {
         throw new UnsupportedOperationException("This collection is read only");
     }
 
+    @Override
     public boolean addAll(Collection<? extends Property> arg0) {
         throw new UnsupportedOperationException("This collection is read only");
     }
 
+    @Override
     public void clear() {
         col.clear();
     }
 
+    @Override
     public boolean contains(Object arg0) {
         for (NodeData c : col) {
             if (c.getJCRProperty().equals(arg0)) {
@@ -75,6 +79,7 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
         return false;
     }
 
+    @Override
     public boolean containsAll(Collection<?> arg0) {
         if (arg0 == null) {
             return false;
@@ -86,10 +91,12 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
         return test.isEmpty();
     }
 
+    @Override
     public boolean isEmpty() {
         return col.isEmpty();
     }
 
+    @Override
     public Iterator<Property> iterator() {
         Collection<Property> test = new ArrayList<Property>();
         for (NodeData c : col) {
@@ -99,6 +106,7 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
         return test.iterator();
     }
 
+    @Override
     public boolean remove(Object arg0) {
         for (NodeData c : col) {
             if (c.getJCRProperty().equals(arg0)) {
@@ -109,11 +117,13 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
         return false;
     }
 
+    @Override
     public boolean removeAll(Collection<?> propertiesToRemove) {
         Collection<NodeData> nodeDataToRemove = createCollectionOfContainedNodeData(propertiesToRemove);
         return col.removeAll(nodeDataToRemove);
     }
 
+    @Override
     public boolean retainAll(Collection<?> propertiesToRetain) {
         Collection<NodeData> nodeDataToRetain = createCollectionOfContainedNodeData(propertiesToRetain);
         return col.retainAll(nodeDataToRetain);
@@ -132,10 +142,12 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
     }
 
 
+    @Override
     public int size() {
         return col.size();
     }
 
+    @Override
     public Object[] toArray() {
         Collection<Property> test = new ArrayList<Property>();
         for (NodeData c : col) {
@@ -144,6 +156,7 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
         return test.toArray();
     }
 
+    @Override
     public <T> T[] toArray(T[] arg0) {
         Collection<Property> test = new ArrayList<Property>();
         for (NodeData c : col) {

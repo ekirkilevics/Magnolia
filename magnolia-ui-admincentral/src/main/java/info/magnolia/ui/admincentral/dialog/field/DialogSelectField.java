@@ -50,6 +50,7 @@ public class DialogSelectField extends AbstractDialogField {
         super(dialogDefinition, tabDefinition, fieldDefinition);
     }
 
+    @Override
     protected Field getField() {
         NativeSelect select = new NativeSelect();
         select.setNullSelectionAllowed(false);

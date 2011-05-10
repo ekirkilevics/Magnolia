@@ -79,6 +79,7 @@ public class AddMimeMappingTask extends AbstractRepositoryTask {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         HierarchyManager hm = ctx.getHierarchyManager(ContentRepository.CONFIG);
         Content mimeNode = hm.getContent("/server/MIMEMapping");

@@ -40,6 +40,7 @@ public class BasePatternVoterTest extends TestCase {
 
     public void testInitWithoutPattern(){
         BasePatternVoter voter = new BasePatternVoter() {
+            @Override
             protected boolean boolVote(Object value) {
                 return false;
             }};

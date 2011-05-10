@@ -52,6 +52,7 @@ public class IfVoter extends BaseVoterImpl {
 
     private Voter otherwise = new NullVoter();
 
+    @Override
     public int vote(Object value) {
         final boolean isTrue = condition.vote(value) > 0;
         log.debug("test of {} was {}", this.condition, Boolean.valueOf(isTrue));
@@ -90,6 +91,7 @@ public class IfVoter extends BaseVoterImpl {
         this.otherwise = otherwise;
     }
 
+    @Override
     public String toString() {
         return super.toString() + "if [" + condition + "] then: [" + then + "] otherwise: [" + otherwise + "]";
     }

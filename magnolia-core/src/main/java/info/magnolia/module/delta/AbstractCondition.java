@@ -48,10 +48,12 @@ public abstract class AbstractCondition implements Condition {
         this.description = description;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }

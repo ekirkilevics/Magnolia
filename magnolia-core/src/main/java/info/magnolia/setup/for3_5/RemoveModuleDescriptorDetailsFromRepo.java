@@ -51,6 +51,7 @@ public class RemoveModuleDescriptorDetailsFromRepo extends AllModulesNodeOperati
         super("Cleanup modules node", "Removes the name, displayName and class properties from the modules nodes, as these are not used anymore.");
     }
 
+    @Override
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx) {
         deleteNodeDataIfExists(node, "name", ctx);
         deleteNodeDataIfExists(node, "displayName", ctx);

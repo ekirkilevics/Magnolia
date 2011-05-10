@@ -55,10 +55,12 @@ public class RenderableDefinitionModel extends BeanModel {
      * A factory for the enclosing type.
      */
     public static final class Factory implements MagnoliaModelFactory {
+        @Override
         public Class factoryFor() {
             return RenderableDefinition.class;
         }
 
+        @Override
         public TemplateModel create(Object object, ObjectWrapper wrapper) {
             // make parameters directly available (as if they were properties of the definition itself)
             return new RenderableDefinitionModel((RenderableDefinition) object, (BeansWrapper) wrapper);
@@ -78,6 +80,7 @@ public class RenderableDefinitionModel extends BeanModel {
     /**
      * Fall back on the parameters' hash model if no bean property has been found.
      */
+    @Override
     public TemplateModel get(String key) throws TemplateModelException {
         TemplateModel templateModel = super.get(key);
         if (templateModel == null) {

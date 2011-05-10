@@ -56,6 +56,7 @@ class DependencyLevelComparator implements Comparator<ModuleDefinition> {
         this.allKnownModulesDefinitions = allKnownModulesDefinitions;
     }
 
+    @Override
     public int compare(ModuleDefinition def1, ModuleDefinition def2) {
 
         // the core module must always be installed/updated/started first

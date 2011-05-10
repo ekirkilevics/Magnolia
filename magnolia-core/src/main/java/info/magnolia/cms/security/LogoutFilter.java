@@ -62,6 +62,7 @@ public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
 
     private ServletContext servletContext;
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.servletContext = filterConfig.getServletContext();
     }
@@ -70,6 +71,7 @@ public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
      * Check if a request parameter PARAMETER_LOGOUT is set. If so logout user,
      * unset the context and restart the filter chain.
      */
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (null != request.getParameter(PARAMETER_LOGOUT)) {
             Context ctx = MgnlContext.getInstance();

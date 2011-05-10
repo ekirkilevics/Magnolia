@@ -62,10 +62,12 @@ public class FunctionToolbarActivity extends AbstractActivity implements Functio
         this.functionToolbarView.setPresenter(this);
     }
 
+    @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
         viewPort.setView(functionToolbarView);
     }
 
+    @Override
     public void onToolbarItemSelection(ToolbarItemDefinition itemDefinition) {
         final ActionDefinition actionDefinition = itemDefinition.getActionDefinition();
         if(actionDefinition != null){

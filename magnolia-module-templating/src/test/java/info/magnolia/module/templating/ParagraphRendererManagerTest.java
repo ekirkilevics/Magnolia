@@ -161,12 +161,14 @@ public class ParagraphRendererManagerTest extends TestCase {
     }
 
     public static final class DummyParagraphRenderer implements ParagraphRenderer {
+        @Override
         public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
             out.write("tralala:" + paragraph.getName());
         }
     }
 
     public static final class OtherDummyParagraphRenderer implements ParagraphRenderer {
+        @Override
         public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
             out.write("trululu:" + paragraph.getName());
         }

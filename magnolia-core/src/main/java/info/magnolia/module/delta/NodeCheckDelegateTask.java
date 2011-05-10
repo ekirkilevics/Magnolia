@@ -56,6 +56,7 @@ public abstract class NodeCheckDelegateTask extends ConditionalDelegateTask {
         this.propertyName = propertyName;
     }
 
+    @Override
     protected boolean condition(InstallContext ctx) throws TaskExecutionException {
         final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
         if (!hm.isExist(nodePath)) {

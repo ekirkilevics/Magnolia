@@ -59,6 +59,7 @@ public class PlaceChangeEvent implements Event<PlaceChangeEvent.Handler> {
       return newPlace;
     }
 
+    @Override
     public void dispatch(Handler handler) {
         handler.onPlaceChange(this);
     }

@@ -40,6 +40,7 @@ package info.magnolia.voting.voters;
  */
 public class FalseVoter extends AbstractBoolVoter {
 
+    @Override
     protected boolean boolVote(Object value) {
         return false;
     }

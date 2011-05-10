@@ -48,6 +48,7 @@ public class URIRegexVoter extends BasePatternVoter {
 
     private Pattern regex;
 
+    @Override
     protected boolean boolVote(Object value) {
         String uri = resolveURIFromValue(value);
         if(StringUtils.isEmpty(uri)){
@@ -57,6 +58,7 @@ public class URIRegexVoter extends BasePatternVoter {
         return regex.matcher(uri).matches();
     }
 
+    @Override
     public void setPattern(String pattern) {
         super.setPattern(pattern);
         this.regex = Pattern.compile(pattern);

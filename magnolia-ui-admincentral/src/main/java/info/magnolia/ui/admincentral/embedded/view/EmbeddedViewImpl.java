@@ -50,6 +50,7 @@ public class EmbeddedViewImpl extends Embedded implements EmbeddedView {
         setSizeFull();
     }
 
+    @Override
     public Component asVaadinComponent() {
         return this;
     }

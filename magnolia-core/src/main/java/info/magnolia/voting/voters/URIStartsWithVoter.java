@@ -48,6 +48,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class URIStartsWithVoter extends BasePatternVoter {
 
+    @Override
     protected boolean boolVote(Object value) {
         String uri = resolveURIFromValue(value);
         ;

@@ -60,18 +60,22 @@ public class TestMagnoliaInitPaths implements MagnoliaInitPaths {
         this.contextPath = contextPath;
     }
 
+    @Override
     public String getServerName() {
         return serverName;
     }
 
+    @Override
     public String getRootPath() {
         return rootPath;
     }
 
+    @Override
     public String getWebappFolderName() {
         return webapp;
     }
 
+    @Override
     public String getContextPath() {
         return contextPath;
     }

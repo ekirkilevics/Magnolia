@@ -51,30 +51,37 @@ public class WrappingNodesIterator implements NodeIterator {
         this.wrapper = childWrappingNodeWrapper;
     }
 
+    @Override
     public Node nextNode() {
         return wrapper.wrap(nodes.nextNode());
     }
 
+    @Override
     public long getPosition() {
         return nodes.getPosition();
     }
 
+    @Override
     public long getSize() {
         return nodes.getSize();
     }
 
+    @Override
     public void skip(long skipNum) {
         nodes.skip(skipNum);
     }
 
+    @Override
     public boolean hasNext() {
         return nodes.hasNext();
     }
 
+    @Override
     public Object next() {
         return nextNode();
     }
 
+    @Override
     public void remove() {
         nodes.remove();
     }

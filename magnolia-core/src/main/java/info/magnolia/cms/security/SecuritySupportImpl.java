@@ -49,10 +49,12 @@ public class SecuritySupportImpl extends SecuritySupportBase {
      * Returns a UserManager which is delegating to the configured UserManagers.
      * @see info.magnolia.cms.security.DelegatingUserManager
      */
+    @Override
     public UserManager getUserManager() {
         return new DelegatingUserManager(userManagers);
     }
 
+    @Override
     public UserManager getUserManager(String realmName) {
         if(Realm.REALM_ALL.getName().equals(realmName)){
             return getUserManager();
@@ -68,6 +70,7 @@ public class SecuritySupportImpl extends SecuritySupportBase {
         userManagers.put(realmName, delegate);
     }
 
+    @Override
     public GroupManager getGroupManager() {
         return groupManager;
     }
@@ -76,6 +79,7 @@ public class SecuritySupportImpl extends SecuritySupportBase {
         this.groupManager = groupManager;
     }
 
+    @Override
     public RoleManager getRoleManager() {
         return roleManager;
     }

@@ -50,6 +50,7 @@ public class PlaceChangeAction extends ActionBase<PlaceChangeActionDefinition>  
         this.placeController = placeController;
     }
 
+    @Override
     public void execute() {
         Place newPlace = getDefinition().getPlace();
         placeController.goTo(newPlace);

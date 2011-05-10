@@ -133,6 +133,7 @@ public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
         MgnlContext.setAttribute(SingletonParagraphBar.class.getName(), Boolean.TRUE);
     }
 
+    @Override
     public void postRender() {
         MgnlContext.removeAttribute(SingletonParagraphBar.class.getName());
     }

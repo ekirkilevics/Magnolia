@@ -48,15 +48,18 @@ import java.io.IOException;
  */
 public class BasicFileExtractor implements FileExtractor {
 
+    @Override
     public void extractFile(String resourcePath, String absTargetPath) throws IOException {
         newOperation(resourcePath, absTargetPath).extract();
     }
 
+    @Override
     public void extractFile(String resourcePath, Transformer transformer) throws IOException {
         final String absTargetPath = transformer.accept(resourcePath);
         extractFile(resourcePath, absTargetPath);
     }
 
+    @Override
     public void extractFiles(Transformer transformer) throws IOException {
         final String[] resources = collectResources(transformer);
         for (final String resourcePath : resources) {

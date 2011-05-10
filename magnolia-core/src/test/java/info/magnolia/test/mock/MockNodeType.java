@@ -52,136 +52,159 @@ public class MockNodeType implements NodeType {
         this.name = nodeTypeName;
     }
 
+    @Override
     public boolean canAddChildNode(String childNodeName) {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public boolean canAddChildNode(String childNodeName, String nodeTypeName) {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public boolean canRemoveItem(String itemName) {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public boolean canRemoveNode(String nodeName) {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public boolean canRemoveProperty(String propertyName) {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public boolean canSetProperty(String propertyName, Value value) {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public boolean canSetProperty(String propertyName, Value[] values) {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public NodeDefinition[] getChildNodeDefinitions() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public NodeTypeIterator getDeclaredSubtypes() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public NodeType[] getDeclaredSupertypes() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public PropertyDefinition[] getPropertyDefinitions() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public NodeTypeIterator getSubtypes() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public NodeType[] getSupertypes() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public boolean isNodeType(String nodeTypeName) {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public NodeDefinition[] getDeclaredChildNodeDefinitions() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public PropertyDefinition[] getDeclaredPropertyDefinitions() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public String[] getDeclaredSupertypeNames() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getPrimaryItemName() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public boolean hasOrderableChildNodes() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public boolean isAbstract() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public boolean isMixin() {
         throw new UnsupportedOperationException("Not Implemented");
 
 
     }
 
+    @Override
     public boolean isQueryable() {
         throw new UnsupportedOperationException("Not Implemented");
 

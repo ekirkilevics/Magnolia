@@ -63,6 +63,7 @@ public class MgnlContextTest extends TestCase {
 
         try {
             MgnlContext.doInSystemContext(new MgnlContext.Op<Content, RepositoryException>() {
+                @Override
                 public Content exec() throws RepositoryException {
                     throw testEx;
                 }
@@ -77,6 +78,7 @@ public class MgnlContextTest extends TestCase {
         final IllegalStateException testEx = new IllegalStateException("test!");
         try {
             MgnlContext.doInSystemContext(new MgnlContext.Op<Object, RuntimeException>() {
+                @Override
                 public Object exec() {
                     throw testEx;
                 }

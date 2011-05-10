@@ -48,6 +48,7 @@ public class ForwardVoter extends AbstractBoolVoter {
      */
     public static final String FORWARD_REQUEST_URI_ATTRIBUTE = "javax.servlet.forward.request_uri";
 
+    @Override
     protected boolean boolVote(Object value) {
         HttpServletRequest request = (HttpServletRequest) value;
         return request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE) != null;

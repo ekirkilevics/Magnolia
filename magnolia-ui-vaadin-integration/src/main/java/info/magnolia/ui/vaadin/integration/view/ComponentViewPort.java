@@ -45,6 +45,7 @@ import com.vaadin.ui.CustomComponent;
 @SuppressWarnings("serial")
 public class ComponentViewPort extends CustomComponent implements ViewPort {
 
+    @Override
     public void setView(View view) {
         setCompositionRoot(VaadinComponentUtil.toVaadinComponent(view));
     }

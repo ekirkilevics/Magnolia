@@ -64,6 +64,7 @@ public class WorkbenchActivity extends AbstractActivity {
         this.searchViewActivityMapper = searchViewActivityMapper;
     }
 
+    @Override
     public void start(ViewPort display, EventBus eventBus) {
 
         final ActivityManager jcrActivityManager = new ActivityManager(itemListActivityMapper, eventBus);

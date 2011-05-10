@@ -45,6 +45,7 @@ import org.apache.commons.beanutils.Converter;
 class EnumAwareConvertUtilsBean extends ConvertUtilsBean {
     private final EnumConverter enumConverter = new EnumConverter();
 
+    @Override
     public Converter lookup(Class clazz) {
         final Converter converter = super.lookup(clazz);
         // no specific converter for this class, so it's neither a String, (which has a default converter),
@@ -57,6 +58,7 @@ class EnumAwareConvertUtilsBean extends ConvertUtilsBean {
     }
 
     private class EnumConverter implements Converter {
+        @Override
         public Object convert(Class type, Object value) {
             return Enum.valueOf(type, (String) value);
         }

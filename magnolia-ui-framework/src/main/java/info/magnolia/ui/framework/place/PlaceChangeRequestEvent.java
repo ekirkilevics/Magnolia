@@ -92,6 +92,7 @@ public class PlaceChangeRequestEvent implements Event<PlaceChangeRequestEvent.Ha
         }
     }
 
+    @Override
     public void dispatch(Handler handler) {
         handler.onPlaceChangeRequest(this);
     }

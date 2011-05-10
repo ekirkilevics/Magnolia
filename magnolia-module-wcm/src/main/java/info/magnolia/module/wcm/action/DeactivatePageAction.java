@@ -52,6 +52,7 @@ public class DeactivatePageAction extends ActionBase<DeactivatePageActionDefinit
         this.node = node;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
     }
 }

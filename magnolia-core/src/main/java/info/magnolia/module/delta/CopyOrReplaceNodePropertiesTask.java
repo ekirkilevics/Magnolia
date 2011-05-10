@@ -62,6 +62,7 @@ public class CopyOrReplaceNodePropertiesTask extends AbstractRepositoryTask {
         this.targetNodePath = targetNodePath;
     }
 
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
         final Content source = hm.getContent(sourceNodePath);

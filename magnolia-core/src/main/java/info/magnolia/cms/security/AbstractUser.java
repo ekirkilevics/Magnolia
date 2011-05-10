@@ -54,11 +54,13 @@ public abstract class AbstractUser implements User {
     protected Subject subject;
 
 
+    @Override
     public Subject getSubject() {
         return this.subject;
     }
 
 
+    @Override
     public void setSubject(Subject subject) {
         this.subject = subject;
     }

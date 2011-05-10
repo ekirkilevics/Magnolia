@@ -64,6 +64,7 @@ public class JcrViewBuilderProviderImpl implements JcrViewBuilderProvider {
         this.uiSettings = uiSettings;
     }
 
+    @Override
     public JcrViewBuilder getBuilder() {
         // FIXME: use user and uiSettings
         return jcrViewBuilders.get(0);

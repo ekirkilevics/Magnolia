@@ -65,6 +65,7 @@ public abstract class OnInitSilentSessionOp<R> implements Op<R, RuntimeException
         this.closeOnExit = closeOnExit;
     }
 
+    @Override
     public R exec() {
         Session session = null;
         try {

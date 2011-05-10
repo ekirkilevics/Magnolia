@@ -58,6 +58,7 @@ public class DumpHeadersFilter extends AbstractMgnlFilter {
 
     private long count = 0;
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         long nr = count++;
         LoggingResponse wrappedResponse = new LoggingResponse(response);

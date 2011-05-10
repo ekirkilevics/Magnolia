@@ -53,54 +53,67 @@ public class TransformationStateImpl implements TransformationState {
 
     protected ArrayStack contentStack = new ArrayStack();
 
+    @Override
     public Object getCurrentBean() {
         return beanStack.peek();
     }
 
+    @Override
     public TypeDescriptor getCurrentType() {
         return (TypeDescriptor) typeStack.peek();
     }
 
+    @Override
     public Content getCurrentContent() {
         return (Content) contentStack.peek();
     }
 
+    @Override
     public Object peekBean(int pos) {
         return beanStack.peek(pos);
     }
 
+    @Override
     public TypeDescriptor peekType(int pos) {
         return (TypeDescriptor) typeStack.peek(pos);
     }
 
+    @Override
     public Content peekContent(int pos) {
         return (Content) contentStack.peek(pos);
     }
 
+    @Override
     public void popBean() {
         beanStack.pop();
     }
 
+    @Override
     public void popType() {
         typeStack.pop();
     }
 
+    @Override
     public void popContent() {
         contentStack.pop();
     }
 
+    @Override
     public void pushBean(Object bean) {
         beanStack.push(bean);
     }
 
+    @Override
     public void pushType(TypeDescriptor type) {
         typeStack.push(type);
     }
 
+    @Override
     public void pushContent(Content node) {
         contentStack.push(node);
     }
 
+    @Override
     public int getLevel() {
         return Math.max(Math.max(typeStack.size(), beanStack.size()), contentStack.size());
     }

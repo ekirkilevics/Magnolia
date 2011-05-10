@@ -53,6 +53,7 @@ public class DerbyTestPersistenceManager extends DerbyPersistenceManager {
      */
     private String testPrefix = "pm";
 
+    @Override
     public void store(ChangeLog changeLog) throws ItemStateException {
         PerformanceTestStatus.getInstance().start(testPrefix + "-store");
         super.store(changeLog);
@@ -60,6 +61,7 @@ public class DerbyTestPersistenceManager extends DerbyPersistenceManager {
 
     }
 
+    @Override
     public void store(PropertyState state) throws ItemStateException {
         if (state.getType() == PropertyType.BINARY) {
             PerformanceTestStatus.getInstance().start(testPrefix + "-blob");

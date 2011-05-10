@@ -49,6 +49,7 @@ public class CompleteUrlPathTransformer extends AbsolutePathTransformer {
         super(false, useURI2RepositoryMapping, useI18N);
     }
 
+    @Override
     protected String prefixLink(String linkStr) {
         final String base = ServerConfiguration.getInstance().getDefaultBaseUrl();
         if (base.endsWith("/") && linkStr.startsWith("/")) {

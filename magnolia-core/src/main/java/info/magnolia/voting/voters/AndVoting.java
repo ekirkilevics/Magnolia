@@ -43,6 +43,7 @@ import info.magnolia.voting.Voting;
  */
 public class AndVoting implements Voting {
 
+    @Override
     public int vote(Voter[] voters, Object value) {
         int maxOutcome = 0;
         for (int i = 0; i < voters.length; i++) {

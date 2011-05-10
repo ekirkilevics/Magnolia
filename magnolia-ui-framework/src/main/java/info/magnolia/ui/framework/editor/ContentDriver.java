@@ -53,11 +53,13 @@ import info.magnolia.jcr.util.JCRMetadataUtil;
  */
 public class ContentDriver extends AbstractDriver<Node> {
 
+    @Override
     public void edit(final Node node) {
 
         // TODO default values also need to be set, but we don't have the definition available here
 
         visitEditors(getView(), new EditorVisitor() {
+            @Override
             public void visit(Editor editor) {
                 try {
                     if (editor instanceof ValueEditor) {
@@ -74,6 +76,7 @@ public class ContentDriver extends AbstractDriver<Node> {
         });
     }
 
+    @Override
     public void flush(final Node node) {
 
         // Clear any errors from a previous flush
@@ -81,6 +84,7 @@ public class ContentDriver extends AbstractDriver<Node> {
 
         try {
             visitEditors(getView(), new EditorVisitor() {
+                @Override
                 public void visit(Editor editor) {
                     if (editor instanceof ValueEditor) {
                         ValueEditor valueEditor = (ValueEditor) editor;
@@ -105,6 +109,7 @@ public class ContentDriver extends AbstractDriver<Node> {
             } else {
 
                 visitEditors(getView(), new EditorVisitor() {
+                    @Override
                     public void visit(Editor editor) {
                         if (editor instanceof HasEditorErrors) {
                             ((HasEditorErrors) editor).showErrors(getAllErrors());

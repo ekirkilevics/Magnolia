@@ -45,6 +45,7 @@ import java.util.Locale;
  *
  */
 public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupportTest {
+    @Override
     public void testDetermineLocale(){
         HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
@@ -103,6 +104,7 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
         assertEquals(DEFAULT_LOCALE, locale);
     }
 
+    @Override
     public void testDetermineLocaleEndlessLoop () {
         HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
@@ -140,6 +142,7 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
 
     }
 
+    @Override
     public void testGetNodeDataEndlessLoop() throws Exception {
         HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
         defSupport.setEnabled(true);

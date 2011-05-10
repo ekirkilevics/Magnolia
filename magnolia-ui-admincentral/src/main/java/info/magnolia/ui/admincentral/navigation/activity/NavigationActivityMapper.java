@@ -50,6 +50,7 @@ public class NavigationActivityMapper implements ActivityMapper {
         this.navigationActivity = navigationActivity;
     }
 
+    @Override
     public Activity getActivity(Place place) {
         navigationActivity.update(place);
         return navigationActivity;

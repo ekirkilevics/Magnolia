@@ -91,6 +91,7 @@ public class UrlPatternDelegate implements PatternDelegate {
      * Compares the reques with the url and host patterns.
      * @return <code>true</code> if the pattern matches the configured host (if set) and url (if set)
      */
+    @Override
     public boolean match(HttpServletRequest request) {
 
         boolean match = true;
@@ -118,6 +119,7 @@ public class UrlPatternDelegate implements PatternDelegate {
      * Returns the delegate.
      * @return the delegate
      */
+    @Override
     public Object getDelegate() {
         return delegate;
     }
@@ -125,6 +127,7 @@ public class UrlPatternDelegate implements PatternDelegate {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("url", this.url).append(
             "host",

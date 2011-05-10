@@ -65,6 +65,7 @@ public abstract class OnInitSessionOp<R> implements Op<R, RepositoryException> {
         this.closeOnExit = closeOnExit;
     }
 
+    @Override
     public R exec() throws RepositoryException {
         Session session = null;
         try {

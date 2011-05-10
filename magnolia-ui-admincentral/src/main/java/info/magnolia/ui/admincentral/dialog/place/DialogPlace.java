@@ -70,11 +70,13 @@ public class DialogPlace extends Place {
 
         static final String SEPARATOR = ";";
 
+        @Override
         public DialogPlace getPlace(String token) {
             String[] split = StringUtils.split(token, SEPARATOR);
             return new DialogPlace(split[0], split[1]);
         }
 
+        @Override
         public String getToken(DialogPlace place) {
             return place.getDialogName() + SEPARATOR + place.getPath();
         }

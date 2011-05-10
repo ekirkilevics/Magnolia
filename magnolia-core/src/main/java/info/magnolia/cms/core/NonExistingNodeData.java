@@ -67,38 +67,47 @@ public class NonExistingNodeData extends AbstractNodeData {
         return null;
     }
 
+    @Override
     public void delete() throws RepositoryException {
         throw new ItemNotFoundException("Can't delete a non-existing node data");
     }
 
+    @Override
     public boolean getBoolean() {
         return false;
     }
 
+    @Override
     public long getContentLength() {
         return 0;
     }
 
+    @Override
     public Calendar getDate() {
         return null;
     }
 
+    @Override
     public double getDouble() {
         return 0;
     }
 
+    @Override
     public Property getJCRProperty() {
         return null;
     }
 
+    @Override
     public long getLong() {
         return 0;
     }
 
+    @Override
     public InputStream getStream() {
         return null;
     }
 
+    @Override
     public String getString() {
         return "";
     }
@@ -108,65 +117,81 @@ public class NonExistingNodeData extends AbstractNodeData {
         return "";
     }
 
+    @Override
     public int getType() {
         return PropertyType.UNDEFINED;
     }
 
+    @Override
     public Value getValue() {
         return null;
     }
 
+    @Override
     public Value[] getValues() {
         return null;
     }
 
+    @Override
     public boolean isExist() {
         return false;
     }
 
+    @Override
     public void refresh(boolean keepChanges) throws RepositoryException {
     }
 
+    @Override
     public void save() throws RepositoryException {
         throw new ItemNotFoundException("Can't save a non-existing node data");
     }
 
+    @Override
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
         throw new ItemNotFoundException("Can't set a non-existing node data");
     }
 
+    @Override
     public void setValue(int value) throws RepositoryException, AccessDeniedException {
         throw new ItemNotFoundException("Can't set a non-existing node data");
     }
 
+    @Override
     public void setValue(long value) throws RepositoryException, AccessDeniedException {
         throw new ItemNotFoundException("Can't set a non-existing node data");
     }
 
+    @Override
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
         throw new ItemNotFoundException("Can't set a non-existing node data");
     }
 
+    @Override
     public void setValue(double value) throws RepositoryException, AccessDeniedException {
         throw new ItemNotFoundException("Can't set a non-existing node data");
     }
 
+    @Override
     public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
         throw new ItemNotFoundException("Can't set a non-existing node data");
     }
 
+    @Override
     public void setValue(Calendar value) throws RepositoryException, AccessDeniedException {
         throw new ItemNotFoundException("Can't set a non-existing node data");
     }
 
+    @Override
     public void setValue(Content value) throws RepositoryException, AccessDeniedException {
         throw new ItemNotFoundException("Can't set a non-existing node data");
     }
 
+    @Override
     public void setValue(Value value) throws RepositoryException, AccessDeniedException {
         throw new ItemNotFoundException("Can't set a non-existing node data");
     }
 
+    @Override
     public void setValue(Value[] value) throws RepositoryException, AccessDeniedException {
         throw new ItemNotFoundException("Can't set a non-existing node data");
     }

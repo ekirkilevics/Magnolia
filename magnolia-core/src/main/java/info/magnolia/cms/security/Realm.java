@@ -75,6 +75,7 @@ public interface Realm extends Principal {
             }
             this.name = name;
         }
+        @Override
         public String getName() {
             return name;
         }

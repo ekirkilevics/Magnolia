@@ -55,6 +55,7 @@ public abstract class SecuritySupportBase implements SecuritySupport {
 
     public static final String DEFAULT_JAAS_LOGIN_CHAIN = "magnolia";
 
+    @Override
     public LoginResult authenticate(CredentialsCallbackHandler callbackHandler, String customLoginModule) {
         Subject subject;
         try {
@@ -89,6 +90,7 @@ public abstract class SecuritySupportBase implements SecuritySupport {
         return new LoginContext(loginContextName, callbackHandler);
     }
 
+    @Override
     public User extractUser(Subject subject) {
         for (User userPrincipal : subject.getPrincipals(User.class)) {
             return userPrincipal;

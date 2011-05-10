@@ -63,6 +63,7 @@ public class MockRepositoryAcquiringStrategy implements RepositoryAcquiringStrat
 
     private final Map<String, Session> sessions = new HashMap<String, Session>();
 
+    @Override
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         if(!hierarchyManagers.containsKey(repositoryId)){
             throw new IllegalArgumentException("repository [" + repositoryId + "] not initialized");
@@ -74,18 +75,22 @@ public class MockRepositoryAcquiringStrategy implements RepositoryAcquiringStrat
         hierarchyManagers.put(repositoryId, hm);
     }
 
+    @Override
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return null;
     }
 
 
+    @Override
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return null;
     }
 
+    @Override
     public void release() {
     }
 
+    @Override
     public Session getSession(String repositoryId, String workspaceId) {
         if(!sessions.containsKey(repositoryId)){
             throw new IllegalArgumentException("session [" + repositoryId + "] not initialized");

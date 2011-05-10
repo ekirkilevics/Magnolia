@@ -53,6 +53,7 @@ public class DeleteParagraphAction extends ActionBase<DeleteParagraphActionDefin
         this.node = node;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
         try {
             node.remove();

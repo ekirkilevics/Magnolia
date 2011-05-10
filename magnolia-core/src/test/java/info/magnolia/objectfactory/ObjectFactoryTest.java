@@ -48,6 +48,7 @@ public class ObjectFactoryTest extends TestCase {
         SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         SystemProperty.clear();

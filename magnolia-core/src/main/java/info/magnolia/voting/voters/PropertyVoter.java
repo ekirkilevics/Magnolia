@@ -53,6 +53,7 @@ public class PropertyVoter extends AbstractBoolVoter {
 
     private String value;
 
+    @Override
     protected boolean boolVote(Object value) {
         String propertyValue = StringUtils.defaultString(SystemProperty.getProperty(property));
         return propertyValue.equals(this.value);
@@ -74,6 +75,7 @@ public class PropertyVoter extends AbstractBoolVoter {
         this.value = value;
     }
 
+    @Override
     public String toString() {
         return super.toString() + " " + property + "=" + value;
     }

@@ -54,6 +54,7 @@ class WriterResponseWrapper extends HttpServletResponseWrapper {
     private boolean writerWasUsed = false;
     private boolean streamWasUsed = false;
     private final ServletOutputStream sos = new ServletOutputStream() {
+        @Override
         public void write(int b) throws IOException {
             out.write(b);
         }
@@ -66,11 +67,13 @@ class WriterResponseWrapper extends HttpServletResponseWrapper {
         this.pw = new PrintWriter(out);
     }
 
+    @Override
     public PrintWriter getWriter() {
         writerWasUsed = checkOutputState(streamWasUsed);
         return pw;
     }
 
+    @Override
     public ServletOutputStream getOutputStream() {
         streamWasUsed = checkOutputState(writerWasUsed);
         return sos;
@@ -84,6 +87,7 @@ class WriterResponseWrapper extends HttpServletResponseWrapper {
     }
 
 
+    @Override
     public void setStatus(int status) {
         this.status = status;
     }

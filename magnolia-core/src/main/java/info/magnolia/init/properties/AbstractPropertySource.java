@@ -54,6 +54,7 @@ public abstract class AbstractPropertySource implements PropertySource {
         this.properties = properties;
     }
 
+    @Override
     public Set<String> getKeys() {
         // TODO hum ...
         final HashSet<String> keys = new HashSet<String>();
@@ -63,14 +64,17 @@ public abstract class AbstractPropertySource implements PropertySource {
         return keys;
     }
 
+    @Override
     public String getProperty(String key) {
         return properties.getProperty(key);
     }
 
+    @Override
     public boolean hasProperty(String key) {
         return properties.containsKey(key);
     }
 
+    @Override
     public String describe() {
         return "[" + getClass().getSimpleName() + "]";
     }

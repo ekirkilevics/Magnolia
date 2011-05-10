@@ -62,6 +62,7 @@ public interface Entity extends Principal, Serializable {
     /**
      * @return the name of the entity, or a default value if no name was set.
      */
+    @Override
     public String getName();
 
     /**

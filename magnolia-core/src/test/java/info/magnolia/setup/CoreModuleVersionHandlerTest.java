@@ -56,13 +56,16 @@ import java.util.List;
  */
 public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
+    @Override
     protected String getModuleDescriptorPath() {
         return "/META-INF/magnolia/core.xml";
     }
 
+    @Override
     protected ModuleVersionHandler newModuleVersionHandlerForTests() {
         return new CoreModuleVersionHandler() {
             // cheat - one of the conditions needs web.xml. Can't be bothered to fake that here
+            @Override
             protected List<Condition> getInstallConditions() {
                 return Collections.emptyList();
             }

@@ -59,6 +59,7 @@ public class LazyObservedComponentFactory<T> implements ComponentFactory<T> {
         this.componentProvider = componentProvider;
     }
 
+    @Override
     public T newInstance() {
         if (observedComponentFactory == null) {
             observedComponentFactory = new ObservedComponentFactory<T>(repository, path, type, componentProvider);

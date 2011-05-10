@@ -54,6 +54,7 @@ public class MoveParagraphUpAction extends ActionBase<MoveParagraphUpActionDefin
         this.node = node;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
         try {
             JCRUtil.moveNodeUp(node);

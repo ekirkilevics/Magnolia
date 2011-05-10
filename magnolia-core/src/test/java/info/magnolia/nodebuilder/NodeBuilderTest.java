@@ -160,6 +160,7 @@ public class NodeBuilderTest extends RepositoryTestCase {
             return messages;
         }
 
+        @Override
         public void report(String message) {
             messages.add(message);
         }

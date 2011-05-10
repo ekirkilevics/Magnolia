@@ -239,6 +239,7 @@ public class AbstractAuthoringUiComponentTest {
             templates.put(t.getName(), t);
         }
 
+        @Override
         public Template getTemplateDefinition(String key) {
             return templates.get(key);
         }
@@ -253,6 +254,7 @@ public class AbstractAuthoringUiComponentTest {
             super(serverConfig, aggregationState);
         }
 
+        @Override
         protected void doRender(Appendable out) throws IOException, RepositoryException {
             out.append("hello world");
         }

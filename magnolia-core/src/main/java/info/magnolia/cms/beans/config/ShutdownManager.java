@@ -56,10 +56,12 @@ public class ShutdownManager extends ObservedManager {
         return instance;
     }
 
+    @Override
     protected void onRegister(Content node) {
         log.warn("Shutdown tasks at {} will not be executed. Please use your module's ModuleLifecycle.", node.getHandle());
     }
 
+    @Override
     protected void onClear() {
     }
 }

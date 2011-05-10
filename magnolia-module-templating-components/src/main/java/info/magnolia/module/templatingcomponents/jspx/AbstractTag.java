@@ -60,6 +60,7 @@ import org.apache.commons.collections.EnumerationUtils;
  */
 public abstract class AbstractTag extends SimpleTagSupport {
 
+    @Override
     public void doTag() throws JspException, IOException {
         final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
         final AggregationState aggregationState = MgnlContext.getAggregationState();

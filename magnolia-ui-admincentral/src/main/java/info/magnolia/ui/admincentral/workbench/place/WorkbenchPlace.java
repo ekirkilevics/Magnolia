@@ -54,10 +54,12 @@ public class WorkbenchPlace extends Place {
      */
     public static class Tokenizer implements PlaceTokenizer<WorkbenchPlace>{
 
+        @Override
         public WorkbenchPlace getPlace(String token) {
             return new WorkbenchPlace(token);
         }
 
+        @Override
         public String getToken(WorkbenchPlace place) {
             return place.getWorkbenchName();
         }

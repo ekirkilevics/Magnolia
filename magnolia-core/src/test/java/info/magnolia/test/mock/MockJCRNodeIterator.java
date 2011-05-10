@@ -52,6 +52,7 @@ public class MockJCRNodeIterator extends MockJCRIterator<Node> implements NodeIt
         super(children.size() > 0 && children.iterator().next() instanceof Content ? new Content2NodeCollectionWrapper(children) : children);
     }
 
+    @Override
     public Node nextNode() {
         return nextItem();
     }

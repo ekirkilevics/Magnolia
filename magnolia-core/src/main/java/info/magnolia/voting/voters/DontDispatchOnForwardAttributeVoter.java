@@ -51,6 +51,7 @@ public class DontDispatchOnForwardAttributeVoter extends AbstractBoolVoter {
      */
     public static final String DONT_DISPATCH_ON_FORWARD_ATTRIBUTE = WebContainerResourcesImpl.WEB_CONTAINER_RESOURCE_MARKER_ATTRIBUTE;
 
+    @Override
     protected boolean boolVote(Object value) {
         HttpServletRequest request = (HttpServletRequest) value;
         return request.getAttribute(DONT_DISPATCH_ON_FORWARD_ATTRIBUTE) != null;

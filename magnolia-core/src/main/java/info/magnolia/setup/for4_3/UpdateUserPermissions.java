@@ -67,6 +67,7 @@ public class UpdateUserPermissions extends AllChildrenNodesOperation {
         super("User definition update", "Changes user rights to allow properties updates while preventing user from modifying ACLs unintentionally.", ContentRepository.USERS,  "/", new NodeTypeFilter(ItemType.FOLDER));
     }
 
+    @Override
     public void operateOnChildNode(Content node, InstallContext installContext)
         throws RepositoryException, TaskExecutionException {
         try {

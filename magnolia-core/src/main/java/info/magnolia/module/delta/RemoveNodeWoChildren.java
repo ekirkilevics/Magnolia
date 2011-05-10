@@ -54,6 +54,7 @@ public class RemoveNodeWoChildren extends AbstractRepositoryTask {
         this.workspaceName = workspaceName;
     }
 
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
            if (!hm.getContent(pathToCheck).hasChildren() == true) {

@@ -52,6 +52,7 @@ public class MessagesManagerTest extends TestCase {
     private Context ctx;
     private static final String DUMMY_BUNDLE = "info.magnolia.cms.i18n.dummy";
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         
@@ -71,6 +72,7 @@ public class MessagesManagerTest extends TestCase {
         replay(ctx, sysCtx);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         verify(ctx, sysCtx);
         MgnlContext.setInstance(null);

@@ -48,6 +48,7 @@ public class ClasspathResourcesFilterAdapter implements ClasspathResourcesUtil.F
         this.transformer = transformer;
     }
 
+    @Override
     public boolean accept(String name) {
         return transformer.accept(name) != null;
     }

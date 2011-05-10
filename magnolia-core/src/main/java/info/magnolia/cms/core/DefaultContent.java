@@ -195,10 +195,12 @@ public class DefaultContent extends AbstractContent {
         this.path = path;
     }
 
+    @Override
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return (new DefaultContent(this.node, name, this.hierarchyManager));
     }
 
+    @Override
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
     AccessDeniedException {
         Content content = new DefaultContent(this.node, name, contentType, this.hierarchyManager);
@@ -266,6 +268,7 @@ public class DefaultContent extends AbstractContent {
     }
 
 
+    @Override
     public MetaData getMetaData() {
         if (this.metaData == null) {
             try {
@@ -277,6 +280,7 @@ public class DefaultContent extends AbstractContent {
         return this.metaData;
     }
 
+    @Override
     public String getName() {
         try {
             return this.node.getName();
@@ -327,6 +331,7 @@ public class DefaultContent extends AbstractContent {
         return children;
     }
 
+    @Override
     public Collection<NodeData> getNodeDataCollection(String namePattern) {
         final ArrayList<NodeData> all = new ArrayList<NodeData>();
         try {
@@ -365,10 +370,12 @@ public class DefaultContent extends AbstractContent {
     }
 
 
+    @Override
     public boolean hasContent(String name) throws RepositoryException {
         return this.node.hasNode(name);
     }
 
+    @Override
     public String getHandle() {
         try {
             return this.node.getPath();
@@ -379,10 +386,12 @@ public class DefaultContent extends AbstractContent {
         }
     }
 
+    @Override
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return (new DefaultContent(this.node.getParent(), this.hierarchyManager));
     }
 
+    @Override
     public Content getAncestor(int level) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         if (level > this.getLevel()) {
             throw new PathNotFoundException();
@@ -390,6 +399,7 @@ public class DefaultContent extends AbstractContent {
         return (new DefaultContent(this.node.getAncestor(level), this.hierarchyManager));
     }
 
+    @Override
     public Collection<Content> getAncestors() throws PathNotFoundException, RepositoryException {
         List<Content> allAncestors = new ArrayList<Content>();
         int level = this.getLevel();
@@ -404,22 +414,27 @@ public class DefaultContent extends AbstractContent {
         return allAncestors;
     }
 
+    @Override
     public int getLevel() throws PathNotFoundException, RepositoryException {
         return this.node.getDepth();
     }
 
+    @Override
     public void orderBefore(String srcName, String beforeName) throws RepositoryException {
         this.node.orderBefore(srcName, beforeName);
     }
 
+    @Override
     public int getIndex() throws RepositoryException {
         return this.node.getIndex();
     }
 
+    @Override
     public Node getJCRNode() {
         return this.node;
     }
 
+    @Override
     public boolean isNodeType(String type) {
         return isNodeType(this.node, type);
     }
@@ -451,10 +466,12 @@ public class DefaultContent extends AbstractContent {
         }
     }
 
+    @Override
     public NodeType getNodeType() throws RepositoryException {
         return this.node.getPrimaryNodeType();
     }
 
+    @Override
     public String getNodeTypeName() throws RepositoryException {
 
         if (this.node.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
@@ -463,35 +480,42 @@ public class DefaultContent extends AbstractContent {
         return this.node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
     }
 
+    @Override
     public ItemType getItemType() throws RepositoryException {
         return new ItemType(getNodeTypeName());
     }
 
+    @Override
     public void restore(String versionName, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
         Access.tryPermission(this.node.getSession(), this.getHandle(), Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY);
         Version version = this.getVersionHistory().getVersion(versionName);
         this.restore(version, removeExisting);
     }
 
+    @Override
     public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
         Access.tryPermission(this.node.getSession(), this.getHandle(), Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY);
         VersionManager.getInstance().restore(this, version, removeExisting);
     }
 
+    @Override
     public void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
         throw new UnsupportedRepositoryOperationException("Not implemented since 3.0 Beta");
     }
 
+    @Override
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
         // FIXME: !!! why does it do something and then throws exception anyway?
         this.node.restoreByLabel(versionLabel, removeExisting);
         throw new UnsupportedRepositoryOperationException("Not implemented since 3.0 Beta");
     }
 
+    @Override
     public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
         return VersionManager.getInstance().addVersion(this.getJCRNode());
     }
 
+    @Override
     public Version addVersion(Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
         return VersionManager.getInstance().addVersion(this.getJCRNode(), rule);
     }
@@ -514,39 +538,48 @@ public class DefaultContent extends AbstractContent {
         return this.node.isCheckedOut();
     }
 
+    @Override
     public boolean isModified() {
         return this.node.isModified();
     }
 
+    @Override
     public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
         return VersionManager.getInstance().getVersionHistory(this.getJCRNode());
     }
 
+    @Override
     public VersionIterator getAllVersions() throws UnsupportedRepositoryOperationException, RepositoryException {
         return VersionManager.getInstance().getAllVersions(this.getJCRNode());
     }
 
+    @Override
     public ContentVersion getBaseVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
         return new ContentVersion(VersionManager.getInstance().getBaseVersion(this.getJCRNode()), this);
     }
 
+    @Override
     public ContentVersion getVersionedContent(Version version) throws RepositoryException {
         return new ContentVersion(version, this);
     }
 
+    @Override
     public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
         return new ContentVersion(VersionManager.getInstance().getVersion(this.getJCRNode(), versionName), this);
     }
 
+    @Override
     public void removeVersionHistory() throws AccessDeniedException, RepositoryException {
         Access.tryPermission(this.node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY);
         VersionManager.getInstance().removeVersionHistory(this.node.getUUID());
     }
 
+    @Override
     public void save() throws RepositoryException {
         this.node.save();
     }
 
+    @Override
     public void delete() throws RepositoryException {
         Access.tryPermission(this.node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_REMOVE);
         String nodePath = Path.getAbsolutePath(this.node.getPath());
@@ -556,10 +589,12 @@ public class DefaultContent extends AbstractContent {
     }
 
 
+    @Override
     public void refresh(boolean keepChanges) throws RepositoryException {
         this.node.refresh(keepChanges);
     }
 
+    @Override
     public String getUUID() {
         try {
             return this.node.getUUID();
@@ -573,6 +608,7 @@ public class DefaultContent extends AbstractContent {
         return StringUtils.EMPTY;
     }
 
+    @Override
     public void addMixin(String type) throws RepositoryException {
         // TODO: was Permission.SET, is this OK?
         Access.tryPermission(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_SET_PROPERTY);
@@ -587,20 +623,24 @@ public class DefaultContent extends AbstractContent {
         }
     }
 
+    @Override
     public void removeMixin(String type) throws RepositoryException {
         // TODO: was Permission.SET, is this OK?
         Access.tryPermission(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_SET_PROPERTY);
         this.node.removeMixin(type);
     }
 
+    @Override
     public NodeType[] getMixinNodeTypes() throws RepositoryException {
         return this.node.getMixinNodeTypes();
     }
 
+    @Override
     public Lock lock(boolean isDeep, boolean isSessionScoped) throws LockException, RepositoryException {
         return this.node.lock(isDeep, isSessionScoped);
     }
 
+    @Override
     public Lock lock(boolean isDeep, boolean isSessionScoped, long yieldFor) throws LockException, RepositoryException {
         long finalTime = System.currentTimeMillis() + yieldFor;
         LockException lockException = null;
@@ -618,22 +658,27 @@ public class DefaultContent extends AbstractContent {
         throw lockException;
     }
 
+    @Override
     public Lock getLock() throws LockException, RepositoryException {
         return this.node.getLock();
     }
 
+    @Override
     public void unlock() throws LockException, RepositoryException {
         this.node.unlock();
     }
 
+    @Override
     public boolean holdsLock() throws RepositoryException {
         return this.node.holdsLock();
     }
 
+    @Override
     public boolean isLocked() throws RepositoryException {
         return this.node.isLocked();
     }
 
+    @Override
     public boolean hasMetaData() {
         try {
             return this.node.hasNode("MetaData");
@@ -644,6 +689,7 @@ public class DefaultContent extends AbstractContent {
         return false;
     }
 
+    @Override
     public boolean hasMixin(String mixinName) throws RepositoryException {
         if (StringUtils.isBlank(mixinName)) {
             throw new IllegalArgumentException("Mixin name can't be empty.");

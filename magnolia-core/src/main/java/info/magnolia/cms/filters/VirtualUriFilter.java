@@ -59,6 +59,7 @@ public class VirtualUriFilter extends AbstractMgnlFilter {
 
     private static final Logger log = LoggerFactory.getLogger(VirtualUriFilter.class);
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 

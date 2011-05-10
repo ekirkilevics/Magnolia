@@ -52,6 +52,7 @@ public class EditAreaAction extends ActionBase<EditAreaActionDefinition> {
         this.node = node;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
     }
 }

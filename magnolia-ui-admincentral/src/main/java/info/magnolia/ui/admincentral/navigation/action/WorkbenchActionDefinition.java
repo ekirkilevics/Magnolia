@@ -56,6 +56,7 @@ public class WorkbenchActionDefinition implements PlaceChangeActionDefinition {
         this.workbenchName = workspace;
     }
 
+    @Override
     public Place getPlace() {
         if (place == null) {
             place = new WorkbenchPlace(getWorkbenchName());

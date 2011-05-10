@@ -44,6 +44,7 @@ import java.util.List;
  */
 public interface NavigationWorkareaDefinition extends MenuItemDefinition{
     List<NavigationGroupDefinition> getGroups();
+    @Override
     String getName();
     boolean isVisible();
 }

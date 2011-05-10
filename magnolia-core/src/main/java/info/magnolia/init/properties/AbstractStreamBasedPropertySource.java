@@ -55,6 +55,7 @@ public abstract class AbstractStreamBasedPropertySource extends AbstractProperty
         this.path = path;
     }
 
+    @Override
     public String describe() {
         return "[" + getClass().getSimpleName() + " from " + path + "]";
     }
@@ -87,6 +88,7 @@ public abstract class AbstractStreamBasedPropertySource extends AbstractProperty
             }
         }
 
+        @Override
         public String toString() {
             return "[Properties loaded from " + path + ": <" + super.toString() + ">]";
         }

@@ -58,38 +58,47 @@ class MockJCRValue implements Value {
         this.mockNodeData = mockNodeData;
     }
 
+    @Override
     public int getType() {
         return this.mockNodeData.getType();
     }
 
+    @Override
     public String getString() throws ValueFormatException, IllegalStateException, RepositoryException {
         return this.mockNodeData.getString();
     }
 
+    @Override
     public InputStream getStream() throws IllegalStateException, RepositoryException {
         return this.mockNodeData.getStream();
     }
 
+    @Override
     public long getLong() throws ValueFormatException, IllegalStateException, RepositoryException {
         return this.mockNodeData.getLong();
     }
 
+    @Override
     public double getDouble() throws ValueFormatException, IllegalStateException, RepositoryException {
         return this.mockNodeData.getDouble();
     }
 
+    @Override
     public Calendar getDate() throws ValueFormatException, IllegalStateException, RepositoryException {
         return this.mockNodeData.getDate();
     }
 
+    @Override
     public boolean getBoolean() throws ValueFormatException, IllegalStateException, RepositoryException {
         return this.mockNodeData.getBoolean();
     }
 
+    @Override
     public Binary getBinary() throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public BigDecimal getDecimal() throws ValueFormatException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }

@@ -56,6 +56,7 @@ import java.util.Properties;
  * @version $Revision: $ ($Author: $) 
  */
 public class DefaultComponentProviderTest extends TestCase {
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         MgnlContext.setInstance(null);
@@ -63,6 +64,7 @@ public class DefaultComponentProviderTest extends TestCase {
         SystemProperty.clear();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
@@ -197,6 +199,7 @@ public class DefaultComponentProviderTest extends TestCase {
     }
 
     public static final class TestInstanceFactory implements ComponentFactory<TestInterface> {
+        @Override
         public TestInterface newInstance() {
             return new TestOtherImplementation();
         }

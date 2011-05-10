@@ -72,10 +72,12 @@ public class PlaceController {
         eventBus.fireEvent(willChange);
         if (willChange.getWarning() != null) {
             shell.askForConfirmation(willChange.getWarning(), new ConfirmationHandler() {
+                @Override
                 public void onConfirm() {
                     goToWithoutChecks(newPlace);
                 }
 
+                @Override
                 public void onCancel() {
                 }
             });

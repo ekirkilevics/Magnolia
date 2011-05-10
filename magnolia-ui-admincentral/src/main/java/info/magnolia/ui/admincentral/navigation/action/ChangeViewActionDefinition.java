@@ -64,6 +64,7 @@ public class ChangeViewActionDefinition implements PlaceChangeActionDefinition {
         this.workbenchName = workspace;
     }
 
+    @Override
     public Place getPlace() {
         if(place == null) {
             return new ItemSelectedPlace(getWorkbenchName(), "/", JcrView.ViewType.fromString(viewType));

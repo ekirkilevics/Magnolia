@@ -126,6 +126,7 @@ public class UnicodeNormalizer {
 
         }
 
+        @Override
         public String normalizeNFC(String in) {
             try {
                 return (String) normalize.invoke(null, in, nfc);
@@ -141,6 +142,7 @@ public class UnicodeNormalizer {
      * Uses {@link com.ibm.icu.text.Normalizer} to normalize the string.
      */
     public static final class ICUNormalizer implements UnicodeNormalizer.Normalizer {
+        @Override
         public String normalizeNFC(String in) {
             return com.ibm.icu.text.Normalizer.normalize(in, com.ibm.icu.text.Normalizer.NFC);
         }
@@ -150,6 +152,7 @@ public class UnicodeNormalizer {
      * Returns the original value unchanged.
      */
     public static final class NonNormalizer implements UnicodeNormalizer.Normalizer {
+        @Override
         public String normalizeNFC(String in) {
             return in;
         }
@@ -185,6 +188,7 @@ public class UnicodeNormalizer {
             this.delegate = candidate;
         }
 
+        @Override
         public String normalizeNFC(String in) {
             return delegate.normalizeNFC(in);
         }

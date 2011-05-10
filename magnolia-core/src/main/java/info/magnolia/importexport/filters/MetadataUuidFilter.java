@@ -81,6 +81,7 @@ public class MetadataUuidFilter extends XMLFilterImpl {
         this.removeUnwantedNamespaces = removeUnwantedNamespaces;
     }
 
+    @Override
     public void endPrefixMapping(String prefix) throws SAXException {
         if (!inSkippedNs) {
             super.endPrefixMapping(prefix);
@@ -92,6 +93,7 @@ public class MetadataUuidFilter extends XMLFilterImpl {
     /**
      * Skip unwanted name spaces, see MAGNOLIA-2756.
      */
+    @Override
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
         if (!removeUnwantedNamespaces || ArrayUtils.contains(validNs, prefix)) {
             super.startPrefixMapping(prefix, uri);
@@ -101,6 +103,7 @@ public class MetadataUuidFilter extends XMLFilterImpl {
         }
     }
 
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
 
         if (inMetadataElement > 0) {
@@ -117,12 +120,14 @@ public class MetadataUuidFilter extends XMLFilterImpl {
         super.endElement(uri, localName, qName);
     }
 
+    @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         if (!skipProperty) {
             super.characters(ch, start, length);
         }
     }
 
+    @Override
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 
         if (inMetadataElement > 0) {

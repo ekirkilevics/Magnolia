@@ -79,6 +79,7 @@ public class LazyContentWrapper extends ContentWrapper implements Serializable {
         this.node = node;
     }
 
+    @Override
     public synchronized Content getWrappedContent() {
         try {
             if(node == null || !node.getJCRNode().getSession().isLive()){
@@ -91,6 +92,7 @@ public class LazyContentWrapper extends ContentWrapper implements Serializable {
         return node;
     }
 
+    @Override
     public HierarchyManager getHierarchyManager() {
         return MgnlContext.getSystemContext().getHierarchyManager(getRepository());
     }

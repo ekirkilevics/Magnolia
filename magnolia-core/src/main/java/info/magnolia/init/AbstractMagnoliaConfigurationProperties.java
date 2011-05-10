@@ -54,6 +54,7 @@ public abstract class AbstractMagnoliaConfigurationProperties implements Magnoli
         this.sources = propertySources;
     }
 
+    @Override
     public Set<String> getKeys() {
         final Set<String> allKeys = new HashSet<String>();
         for (PropertySource source : sources) {
@@ -62,6 +63,7 @@ public abstract class AbstractMagnoliaConfigurationProperties implements Magnoli
         return allKeys;
     }
 
+    @Override
     public PropertySource getPropertySource(String key) {
         for (PropertySource source : sources) {
             if (source.hasProperty(key)) {
@@ -71,6 +73,7 @@ public abstract class AbstractMagnoliaConfigurationProperties implements Magnoli
         return null;
     }
 
+    @Override
     public String getProperty(String key) {
         final PropertySource propertySource = getPropertySource(key);
         if (propertySource != null) {
@@ -80,10 +83,12 @@ public abstract class AbstractMagnoliaConfigurationProperties implements Magnoli
         return null;
     }
 
+    @Override
     public boolean hasProperty(String key) {
         return getPropertySource(key) != null;
     }
 
+    @Override
     public String describe() {
         final StringBuilder s = new StringBuilder()
                 .append("[")

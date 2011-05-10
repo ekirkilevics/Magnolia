@@ -76,6 +76,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         setLabel("Area");
         Button button = new Button("Edit&nbsp;area");
         button.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 pageEditor.openDialog(dialog, workspace, path);
             }
@@ -83,6 +84,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         addButton(button);
         Button addButton = new Button("Add&nbsp;paragraph");
         addButton.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 pageEditor.addParagraph(workspace, path, name, paragraphs);
             }
@@ -96,6 +98,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         pageEditor.updateSelection(this, "area", workspace, path, name, null);
     }
 
+    @Override
     public void attach(Element element) {
         element.appendChild(getElement());
         onAttach();

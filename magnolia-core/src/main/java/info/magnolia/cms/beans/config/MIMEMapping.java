@@ -129,6 +129,7 @@ public class MIMEMapping {
         log.info("Registering event listener for MIMEMapping"); //$NON-NLS-1$
 
         ObservationUtil.registerChangeListener(ContentRepository.CONFIG, NODEPATH, new EventListener() {
+            @Override
             public void onEvent(EventIterator iterator) {
                 // reload everything
                 reload();

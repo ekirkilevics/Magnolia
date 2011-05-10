@@ -72,6 +72,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
      */
     public class DenyAllPermissions extends AbstractCompiledPermissions {
 
+        @Override
         public boolean canRead(Path itemPath, ItemId itemId) throws RepositoryException {
             return false;
         }
@@ -96,6 +97,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
             this.acls = acls;
         }
 
+        @Override
         public boolean canRead(Path itemPath, ItemId itemId) throws RepositoryException {
             log.error("IMPLEMENT CHECK FOR " + itemPath + " :: " + itemId);
             return false;

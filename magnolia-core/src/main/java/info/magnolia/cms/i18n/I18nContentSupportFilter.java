@@ -53,6 +53,7 @@ import java.util.Locale;
  */
 public class I18nContentSupportFilter extends AbstractMgnlFilter {
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
         if(i18nSupport != null){

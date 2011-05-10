@@ -56,42 +56,52 @@ import java.util.Set;
 public class OrderedProperties extends Properties {
     private final LinkedHashMap map = new LinkedHashMap();
 
+    @Override
     public Object put(Object key, Object value) {
         return map.put(key, value);
     }
 
+    @Override
     public Object get(Object key) {
         return map.get(key);
     }
 
+    @Override
     public String getProperty(String key) {
         return (String) get(key);
     }
 
+    @Override
     public boolean containsValue(Object value) {
         return this.map.containsValue(value);
     }
 
+    @Override
     public boolean containsKey(Object key) {
         return this.map.containsKey(key);
     }
 
+    @Override
     public Set entrySet() {
         return this.map.entrySet();
     }
 
+    @Override
     public Set keySet() {
         return this.map.keySet();
     }
 
+    @Override
     public Collection values() {
         return this.map.values();
     }
 
+    @Override
     public int size() {
         return this.map.size();
     }
 
+    @Override
     public boolean isEmpty() {
         return this.map.isEmpty();
     }

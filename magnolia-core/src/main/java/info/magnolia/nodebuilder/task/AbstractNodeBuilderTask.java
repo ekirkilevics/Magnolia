@@ -61,6 +61,7 @@ public abstract class AbstractNodeBuilderTask extends AbstractRepositoryTask {
         this.operations = operations;
     }
 
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final Content root = getRootNode(ctx);
         final ErrorHandler errorHandler = newErrorHandler(ctx);

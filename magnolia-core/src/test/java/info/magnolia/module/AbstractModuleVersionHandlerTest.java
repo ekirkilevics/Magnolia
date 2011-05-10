@@ -269,6 +269,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
             super(name, description);
         }
 
+        @Override
         public void execute(InstallContext installContext) {
         }
     }

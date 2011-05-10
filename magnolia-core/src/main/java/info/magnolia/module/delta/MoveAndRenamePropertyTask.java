@@ -79,6 +79,7 @@ public class MoveAndRenamePropertyTask extends AbstractRepositoryTask {
         this.newDefaultValue = newDefaultValue;
     }
 
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getConfigHierarchyManager();
         if (!hm.isExist(originalParentNode)) {

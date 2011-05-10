@@ -60,6 +60,7 @@ public class ContextDecorator extends AbstractContext {
     /**
      * Delegates call to the original context.
      */
+    @Override
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return this.ctx.getAccessManager(repositoryId, workspaceId);
     }
@@ -67,6 +68,7 @@ public class ContextDecorator extends AbstractContext {
     /**
      * Delegates call to the original context.
      */
+    @Override
     public Object getAttribute(String name, int scope) {
         return this.ctx.getAttribute(name, scope);
     }
@@ -74,6 +76,7 @@ public class ContextDecorator extends AbstractContext {
     /**
      * Delegates call to the original context.
      */
+    @Override
     public Map<String, Object> getAttributes(int scope) {
         return this.ctx.getAttributes(scope);
     }
@@ -81,6 +84,7 @@ public class ContextDecorator extends AbstractContext {
     /**
      * Delegates call to the original context.
      */
+    @Override
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         return this.ctx.getHierarchyManager(repositoryId, workspaceId);
     }
@@ -88,6 +92,7 @@ public class ContextDecorator extends AbstractContext {
     /**
      * Delegates call to the original context.
      */
+    @Override
     public User getUser() {
         return this.ctx.getUser();
     }
@@ -95,6 +100,7 @@ public class ContextDecorator extends AbstractContext {
     /**
      * Delegates call to the original context.
      */
+    @Override
     public void setAttribute(String name, Object value, int scope) {
         this.ctx.setAttribute(name, value, scope);
     }
@@ -102,6 +108,7 @@ public class ContextDecorator extends AbstractContext {
     /**
      * Delegates call to the original context.
      */
+    @Override
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return this.ctx.getQueryManager(repositoryId, workspaceId);
     }
@@ -109,6 +116,7 @@ public class ContextDecorator extends AbstractContext {
     /**
      * Delegates call to the original context.
      */
+    @Override
     public void removeAttribute(String name, int scope) {
         this.ctx.removeAttribute(name, scope);
     }
@@ -121,6 +129,7 @@ public class ContextDecorator extends AbstractContext {
         return this.ctx;
     }
 
+    @Override
     public void release() {
         this.ctx.release();
     }

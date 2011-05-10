@@ -59,6 +59,7 @@ public class FixTemplatePathTask extends AllModulesNodeOperation {
         super(name, description);
     }
 
+    @Override
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
             throws RepositoryException, TaskExecutionException {
         final String moveFromNodeName = "parameters";

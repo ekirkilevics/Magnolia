@@ -58,6 +58,7 @@ public class BasicFileExtractorOperation implements FileExtractorOperation {
         this.absoluteTargetPath = absoluteTargetPath;
     }
 
+    @Override
     public void extract() throws IOException {
         final InputStream resourceStream = checkInput();
         final File checkedTargetFile = checkOutput();

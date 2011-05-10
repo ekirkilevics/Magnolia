@@ -53,6 +53,7 @@ import info.magnolia.cms.util.SimpleUrlPattern;
 public class URIPatternVoter extends BasePatternVoter {
     private SimpleUrlPattern pattern;
 
+    @Override
     protected boolean boolVote(Object value) {
         String uri = resolveURIFromValue(value);
         if(StringUtils.isEmpty(uri)){
@@ -62,6 +63,7 @@ public class URIPatternVoter extends BasePatternVoter {
         return pattern.match(uri);
     }
 
+    @Override
     public void setPattern(String pattern) {
         super.setPattern(pattern);
         this.pattern = new SimpleUrlPattern(pattern);

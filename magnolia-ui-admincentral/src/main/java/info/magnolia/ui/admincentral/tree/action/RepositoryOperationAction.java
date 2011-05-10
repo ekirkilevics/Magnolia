@@ -62,6 +62,7 @@ public abstract class RepositoryOperationAction<D extends ActionDefinition, T ex
         this.eventBus = eventBus;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
         Session session;
         try {

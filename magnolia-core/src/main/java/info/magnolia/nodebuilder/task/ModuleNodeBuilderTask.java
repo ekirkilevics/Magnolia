@@ -50,6 +50,7 @@ public class ModuleNodeBuilderTask extends AbstractNodeBuilderTask {
         super(name, description, errorHandling, operations);
     }
 
+    @Override
     protected Content getRootNode(InstallContext ctx) throws RepositoryException {
         return ctx.getOrCreateCurrentModuleNode();
     }

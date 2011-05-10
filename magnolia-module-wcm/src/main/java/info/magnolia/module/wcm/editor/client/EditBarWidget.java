@@ -68,6 +68,7 @@ public class EditBarWidget extends AbstractBarWidget {
         setLabel(label);
         Button button = new Button("Edit&nbsp;paragraph");
         button.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 pageEditor.openDialog(dialog, workspace, path);
             }
@@ -81,6 +82,7 @@ public class EditBarWidget extends AbstractBarWidget {
         pageEditor.updateSelection(this, "paragraph", workspace, path, null, null);
     }
 
+    @Override
     public void attach(Element element) {
         element.appendChild(getElement());
         onAttach();

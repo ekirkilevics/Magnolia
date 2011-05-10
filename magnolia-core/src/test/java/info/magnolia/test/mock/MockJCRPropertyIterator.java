@@ -50,6 +50,7 @@ public class MockJCRPropertyIterator extends MockJCRIterator<Property> implement
         super(children.size() > 0 && children.iterator().next() instanceof NodeData ? new NodeData2PropertyCollectionWrapper(children) : children);
     }
 
+    @Override
     public Property nextProperty() {
         return super.nextItem();
     }

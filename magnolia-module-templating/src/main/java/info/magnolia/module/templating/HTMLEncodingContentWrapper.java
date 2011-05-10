@@ -55,10 +55,12 @@ public class HTMLEncodingContentWrapper extends ContentWrapper {
         this.transformLineBreaks = transformLineBreaks;
     }
 
+    @Override
     public String getTitle() {
         return I18nContentSupportFactory.getI18nSupport().getNodeData(this, "title").getString();
     }
 
+    @Override
     public NodeData getNodeData(String name) {
         return new HTMLEncodingNodeDataWrapper(super.getNodeData(name), transformLineBreaks);
     }

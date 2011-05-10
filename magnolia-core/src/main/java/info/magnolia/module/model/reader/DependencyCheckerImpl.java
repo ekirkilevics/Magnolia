@@ -51,6 +51,7 @@ import java.util.Map;
  */
 public class DependencyCheckerImpl implements DependencyChecker {
 
+    @Override
     public void checkDependencies(Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
         for (ModuleDefinition def : moduleDefinitions.values()) {
             for (DependencyDefinition dep : def.getDependencies()) {
@@ -61,6 +62,7 @@ public class DependencyCheckerImpl implements DependencyChecker {
         }
     }
 
+    @Override
     public List<ModuleDefinition> sortByDependencyLevel(Map<String, ModuleDefinition> moduleDefinitions) {
         final List<ModuleDefinition> modules = new ArrayList<ModuleDefinition>(moduleDefinitions.values());
 

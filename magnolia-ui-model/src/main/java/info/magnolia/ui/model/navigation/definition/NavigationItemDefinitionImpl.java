@@ -50,14 +50,17 @@ public class NavigationItemDefinitionImpl extends MenuItemDefinitionImpl impleme
     private NavigationItemDefinition parent;
 
     // interface
+    @Override
     public List<NavigationItemDefinition> getItems() {
         return Collections.unmodifiableList(items);
     }
 
+    @Override
     public NavigationItemDefinition getParent() {
         return parent;
     }
 
+    @Override
     public void setParent(NavigationItemDefinition parent) {
         this.parent = parent;
     }

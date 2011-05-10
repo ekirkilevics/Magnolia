@@ -57,6 +57,7 @@ public class PageEditorActivity extends AbstractActivity {
         this.place = place;
     }
 
+    @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
         viewPort.setView(new EditorView(place.getPath()));
     }
@@ -73,6 +74,7 @@ public class PageEditorActivity extends AbstractActivity {
             component = pageEditor;
         }
 
+        @Override
         public Component asVaadinComponent() {
             return component;
         }

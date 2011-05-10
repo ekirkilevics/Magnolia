@@ -63,6 +63,7 @@ class BetwixtBindingStrategy extends TypeBindingStrategy {
         ConvertUtils.register(converter, clazz);
     }
 
+    @Override
     public TypeBindingStrategy.BindingType bindingType(Class type) {
         if (convertedClasses.contains(type)) {
             return TypeBindingStrategy.BindingType.PRIMITIVE;

@@ -60,6 +60,7 @@ import java.util.Enumeration;
 public class SessionDebugger extends AbstractMgnlFilter implements HttpSessionListener, HttpSessionAttributeListener {
     private static final Logger log = LoggerFactory.getLogger("info.magnolia.debug");
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         final HttpSession session = request.getSession(false);
         if (session == null) {
@@ -72,22 +73,27 @@ public class SessionDebugger extends AbstractMgnlFilter implements HttpSessionLi
         chain.doFilter(request, response);
     }
 
+    @Override
     public void sessionCreated(HttpSessionEvent se) {
         logSessionEvent(se, "Session created");
     }
 
+    @Override
     public void sessionDestroyed(HttpSessionEvent se) {
         logSessionEvent(se, "Session destroyed");
     }
 
+    @Override
     public void attributeAdded(HttpSessionBindingEvent event) {
         logSessionEvent(event, "Session attribute added");
     }
 
+    @Override
     public void attributeRemoved(HttpSessionBindingEvent event) {
         logSessionEvent(event, "Session attribute removed");
     }
 
+    @Override
     public void attributeReplaced(HttpSessionBindingEvent event) {
         logSessionEvent(event, "Session attribute replaced");
     }

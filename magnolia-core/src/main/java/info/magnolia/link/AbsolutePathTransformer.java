@@ -69,6 +69,7 @@ public class AbsolutePathTransformer implements LinkTransformer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String transform(Link uuidLink) {
         String linkStr;
         if(useURI2RepositoryMapping){

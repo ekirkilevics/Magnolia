@@ -214,6 +214,7 @@ public class DependencyCheckerImplTest extends TestCase {
         return modules;
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         depChecker = new DependencyCheckerImpl();

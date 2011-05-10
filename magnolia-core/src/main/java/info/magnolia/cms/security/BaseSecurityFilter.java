@@ -59,6 +59,7 @@ public abstract class BaseSecurityFilter extends AbstractMgnlFilter {
      * Continue with the Magnolia defined filter chain if isAllowed returns true
      * else send an authentication request to the client as configured.
      */
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (isAllowed(request, response)) {
             chain.doFilter(request, response);

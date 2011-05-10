@@ -45,6 +45,7 @@ public class LoginFormPropertyMovedToFilter extends MoveAndRenamePropertyTask {
         super("Login form", "/server/login", "LoginForm", "/server/filters/uriSecurity/clientCallback", "loginForm");
     }
 
+    @Override
     protected String modifyCurrentValue(String currentValue) {
         // pre-3.0.2
         if ("/.resources/loginForm/login.html".equals(currentValue)) {

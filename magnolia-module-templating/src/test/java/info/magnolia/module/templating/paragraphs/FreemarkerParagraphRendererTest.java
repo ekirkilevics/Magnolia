@@ -73,6 +73,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
     private StringTemplateLoader tplLoader;
     private FreemarkerParagraphRenderer renderer;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -197,6 +198,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         private String pouet = "it works";
         private String blah;
 
+        @Override
         public String execute() {
             return "success";
         }

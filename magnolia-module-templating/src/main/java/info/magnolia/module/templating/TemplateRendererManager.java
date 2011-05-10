@@ -70,6 +70,7 @@ public class TemplateRendererManager extends ObservedManager {
     /**
      * @see info.magnolia.cms.beans.config.ObservedManager#onRegister(info.magnolia.cms.core.Content)
      */
+    @Override
     protected void onRegister(Content node) {
         Collection list = node.getChildren(ItemType.CONTENTNODE);
         for (Iterator iter = list.iterator(); iter.hasNext();) {
@@ -103,6 +104,7 @@ public class TemplateRendererManager extends ObservedManager {
     /**
      * @see info.magnolia.cms.beans.config.ObservedManager#onClear()
      */
+    @Override
     protected void onClear() {
         this.renderers.clear();
     }

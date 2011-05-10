@@ -54,6 +54,7 @@ public class BootstrapSingleResource extends BootstrapResourcesTask {
         this.resource = resource;
     }
 
+    @Override
     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
         return new String[]{resource};
     }

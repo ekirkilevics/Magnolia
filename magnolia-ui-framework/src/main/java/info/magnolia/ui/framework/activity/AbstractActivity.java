@@ -40,10 +40,12 @@ package info.magnolia.ui.framework.activity;
  */
 public abstract class AbstractActivity implements Activity {
 
+    @Override
     public String mayStop() {
         return null;
     }
 
+    @Override
     public void onStop() {
     }
 }

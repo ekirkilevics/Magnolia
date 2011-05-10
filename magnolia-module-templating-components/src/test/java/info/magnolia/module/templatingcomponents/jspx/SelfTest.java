@@ -58,6 +58,7 @@ public class SelfTest extends AbstractJspTest {
     protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req) {
     }
 
+    @Override
     public void check(WebResponse response, HtmlPage page) throws Exception {
         final String txt = response.getText();
         assertTrue(txt.contains("Hello world!"));

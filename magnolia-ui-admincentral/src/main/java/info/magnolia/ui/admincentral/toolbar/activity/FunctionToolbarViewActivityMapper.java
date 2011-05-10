@@ -50,6 +50,7 @@ public class FunctionToolbarViewActivityMapper implements ActivityMapper {
         this.functionToolbarActivity = functionToolbarActivity;
     }
 
+    @Override
     public Activity getActivity(Place place) {
         return functionToolbarActivity;
     }

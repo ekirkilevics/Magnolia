@@ -60,6 +60,7 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
 
     public AddURIPermissionsToAllRoles(boolean isAuthorInstance) {
         super("URI permissions", "Introduction of URI-based security. All existing roles will have GET/POST permissions on /*.", ContentRepository.USER_ROLES, "/", new Content.ContentFilter() {
+            @Override
             public boolean accept(Content content) {
                 try {
                     final String itemType = content.getItemType().getSystemName();
@@ -76,6 +77,7 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
         this.isAuthorInstance = isAuthorInstance;
     }
 
+    @Override
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final Content uriPermissionsNode = node.createContent("acl_uri", ItemType.CONTENTNODE);
         if ("anonymous".equals(node.getName())) {

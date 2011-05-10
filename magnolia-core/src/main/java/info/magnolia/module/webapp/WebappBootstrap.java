@@ -59,6 +59,7 @@ public class WebappBootstrap extends AbstractTask {
     }
 
     // TODO exception handling ?
+    @Override
     public void execute(InstallContext installContext) throws TaskExecutionException {
         final String[] bootDirs = Bootstrapper.getBootstrapDirs();
         if (bootDirs.length == 0) {
@@ -67,6 +68,7 @@ public class WebappBootstrap extends AbstractTask {
 
         // at least one bootstrap directory is configured, trying to initialize repositories
         Bootstrapper.bootstrapRepositories(bootDirs, new Bootstrapper.BootstrapFilter() {
+            @Override
             public boolean accept(String filename) {
                 log.debug("Will bootstrap {}", filename);
                 return true;

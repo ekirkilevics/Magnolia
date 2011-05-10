@@ -47,6 +47,7 @@ import javax.servlet.http.HttpSession;
  * @version $Revision: $ ($Author: $)
  */
 public class RequestAttributeStrategyTest extends TestCase {
+    @Override
     protected void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);

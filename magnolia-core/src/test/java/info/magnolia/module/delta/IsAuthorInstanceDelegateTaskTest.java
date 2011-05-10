@@ -51,6 +51,7 @@ public class IsAuthorInstanceDelegateTaskTest extends TestCase {
     private Task delegIfAuthor;
     private Task delegIfPublic;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         MockUtil.initMockContext();
@@ -59,6 +60,7 @@ public class IsAuthorInstanceDelegateTaskTest extends TestCase {
         delegIfPublic = createStrictMock(Task.class);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         ComponentsTestUtil.clear();

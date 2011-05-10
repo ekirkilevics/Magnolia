@@ -65,6 +65,7 @@ public class CommandTransformer extends Content2BeanTransformerImpl {
 
     private static final String DEPRECATED_IMPL_NODE_DATA = "impl";
 
+    @Override
     protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType) {
         if(resolvedType != null){
             return resolvedType;
@@ -112,6 +113,7 @@ public class CommandTransformer extends Content2BeanTransformerImpl {
         return resolvedType;
     }
 
+    @Override
     public void initBean(TransformationState state, Map values) throws Content2BeanException {
         // we add the commands here (reflection does not work)
         if(state.getCurrentBean() instanceof Catalog){
@@ -152,6 +154,7 @@ public class CommandTransformer extends Content2BeanTransformerImpl {
         super.initBean(state, values);
     }
 
+    @Override
     public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
         Object bean = state.getCurrentBean();
         if(bean instanceof MgnlCatalog){

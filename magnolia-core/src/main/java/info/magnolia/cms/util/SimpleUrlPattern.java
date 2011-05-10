@@ -129,6 +129,7 @@ public final class SimpleUrlPattern implements UrlPattern {
     /**
      * @see info.magnolia.cms.util.UrlPattern#match(java.lang.String)
      */
+    @Override
     public boolean match(String str) {
         return this.pattern.matcher(str).matches();
     }
@@ -136,10 +137,12 @@ public final class SimpleUrlPattern implements UrlPattern {
     /**
      * @see info.magnolia.cms.util.UrlPattern#getLength()
      */
+    @Override
     public int getLength() {
         return this.length;
     }
 
+    @Override
     public String toString() {
         // don't use pattern.pattern(), but keep the original string.
         // The "compiled" pattern will display the ugly patterns like MULTIPLE_CHAR_PATTERN instead of simple *

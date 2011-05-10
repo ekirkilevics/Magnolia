@@ -59,6 +59,7 @@ public class CompositeFilter extends AbstractMgnlFilter {
 
     private MgnlFilter[] filters = new MgnlFilter[0];
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         FilterChain fullchain = new MgnlFilterChain(chain, filters);
@@ -74,6 +75,7 @@ public class CompositeFilter extends AbstractMgnlFilter {
         this.filters = (MgnlFilter[]) ArrayUtils.add(this.filters, filter);
     }
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         initFilters(filterConfig);
     }
@@ -93,6 +95,7 @@ public class CompositeFilter extends AbstractMgnlFilter {
         }
     }
 
+    @Override
     public void destroy() {
         for (MgnlFilter filter : filters) {
             try {

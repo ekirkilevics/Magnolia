@@ -65,6 +65,7 @@ public class UpdateURI2RepositoryMappings extends info.magnolia.module.delta.All
     /**
      * Creates the mappings node and delegates to the super {@link #doExecute(InstallContext)} method.
      */
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager configHM = ctx.getConfigHierarchyManager();
         final Content parentNode = getParentNode(ctx);
@@ -80,6 +81,7 @@ public class UpdateURI2RepositoryMappings extends info.magnolia.module.delta.All
     /**
      * Moves every node to the mappings node.
      */
+    @Override
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final String oldHandle = node.getHandle();
         final String newHandle = SERVER_URI2REPOSITORY_MAPPING + "/mappings/" + node.getName();

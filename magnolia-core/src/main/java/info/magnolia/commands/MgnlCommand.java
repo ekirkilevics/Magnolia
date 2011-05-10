@@ -88,18 +88,21 @@ public abstract class MgnlCommand implements Command {
             this.prototype = prototype;
         }
 
+        @Override
         public Object makeObject() throws Exception {
             MgnlCommand cmd = (MgnlCommand) BeanUtils.cloneBean(this.prototype);
             cmd.setClone(true);
             return cmd;
         }
 
+        @Override
         public void activateObject(Object arg0) throws Exception {
             super.activateObject(arg0);
             // set default properties
             BeanUtils.populate(arg0, defaultProperties);
         }
 
+        @Override
         public void passivateObject(Object cmd) throws Exception {
             ((MgnlCommand) cmd).release();
             super.passivateObject(cmd);
@@ -121,6 +124,7 @@ public abstract class MgnlCommand implements Command {
      * Make sure that the context is castable to a magnolia context.
      * @return true on success, false otherwise
      */
+    @Override
     public boolean execute(Context ctx) throws Exception {
         if (!(ctx instanceof info.magnolia.context.Context)) {
             throw new IllegalArgumentException("context must be of type " + info.magnolia.context.Context.class);

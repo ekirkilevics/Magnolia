@@ -162,9 +162,11 @@ public final class Bootstrapper {
 
             @SuppressWarnings("unchecked")
             Collection<File> files = FileUtils.listFiles(xmldir, new IOFileFilter() {
+                @Override
                 public boolean accept(File file) {
                     return accept(file.getParentFile(), file.getName());
                 }
+                @Override
                 public boolean accept(File dir, String name) {
                     return name.startsWith(repositoryName + ".")
                         && filter.accept(name)

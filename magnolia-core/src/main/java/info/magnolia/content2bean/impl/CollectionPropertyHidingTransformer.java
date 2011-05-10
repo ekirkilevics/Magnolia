@@ -77,6 +77,7 @@ public class CollectionPropertyHidingTransformer extends Content2BeanTransformer
 //        propertyType = propertyDescriptor.getCollectionEntryType();
     }
 
+    @Override
     protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType){
         // lazy init, we need TypeMapping
         if (type == null) {
@@ -101,6 +102,7 @@ public class CollectionPropertyHidingTransformer extends Content2BeanTransformer
         return resolvedType;
     }
 
+    @Override
     public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
         if(descriptor.getName().equals(collectionName)){
             Object bean = state.getCurrentBean();

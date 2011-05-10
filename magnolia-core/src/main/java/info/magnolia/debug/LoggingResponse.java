@@ -72,46 +72,55 @@ class LoggingResponse extends HttpServletResponseWrapper {
     }
 
 
+    @Override
     public void setDateHeader(String name, long date) {
         super.setDateHeader(name, date);
         headers.put(name, String.valueOf(date));
     }
 
+    @Override
     public void setIntHeader(String name, int value) {
         super.setIntHeader(name, value);
         headers.put(name, String.valueOf(value));
     }
 
+    @Override
     public void setContentLength(int len) {
         this.length = len;
         super.setContentLength(len);
     }
 
+    @Override
     public void setHeader(String name, String value) {
         super.setHeader(name, value);
         headers.put(name, value);
     }
 
+    @Override
     public void sendRedirect(String location) throws IOException {
         this.status = HttpServletResponse.SC_MOVED_TEMPORARILY;
         super.sendRedirect(location);
     }
 
+    @Override
     public void sendError(int sc) throws IOException {
         this.status = sc;
         super.sendError(sc);
     }
 
+    @Override
     public void sendError(int sc, String msg) throws IOException {
         this.status = sc;
         super.sendError(sc, msg);
     }
 
+    @Override
     public void setStatus(int sc) {
         this.status = sc;
         super.setStatus(sc);
     }
 
+    @Override
     public void setStatus(int sc, String sm) {
         this.status = sc;
         super.setStatus(sc, sm);

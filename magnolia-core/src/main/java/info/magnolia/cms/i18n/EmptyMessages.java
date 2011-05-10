@@ -49,14 +49,17 @@ public class EmptyMessages extends AbstractMessagesImpl {
         super(null, null);
     }
 
+    @Override
     public String get(String key) {
         return key;
     }
 
+    @Override
     public Iterator<String> keys() {
         return IteratorUtils.EMPTY_ITERATOR;
     }
 
+    @Override
     public void reload() throws Exception {
     }
 }

@@ -71,6 +71,7 @@ public class IPConfigRulesUpdate extends AllChildrenNodesOperation {
      *  rule-name (p) IP = *
      *            (p) methods = GET,POST
      */
+    @Override
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException, TaskExecutionException {
         if (node.hasContent("Access")) {
             final Content accessNode = node.getContent("Access");

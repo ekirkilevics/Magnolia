@@ -65,6 +65,7 @@ public class UpdateGroups extends AllChildrenNodesOperation {
         super("Groups definition update", "Adds right to read their own node to all existing groups.", ContentRepository.USER_GROUPS,  "/", new NodeTypeFilter(ItemType.GROUP));
     }
 
+    @Override
     public void operateOnChildNode(Content group, InstallContext installContext)
         throws RepositoryException, TaskExecutionException {
         try {

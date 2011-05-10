@@ -82,15 +82,18 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
     protected AbstractMgnlFilter() {
     }
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
 
     public abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
 
+    @Override
     public boolean matches(HttpServletRequest request) {
         return isEnabled() && matchesDispatching(request) && mapsTo(request) && !bypasses(request);
     }
@@ -125,6 +128,7 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
         return false;
     }
 
+    @Override
     public void destroy() {
         // nothing to do here
     }
@@ -137,10 +141,12 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
         this.bypasses = (Voter[]) ArrayUtils.add(this.bypasses, voter);
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }

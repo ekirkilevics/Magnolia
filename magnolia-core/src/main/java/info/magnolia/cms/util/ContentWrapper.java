@@ -143,6 +143,7 @@ public abstract class ContentWrapper extends AbstractContent {
         return wrapped;
     }
 
+    @Override
     public String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getClass().getSimpleName());
@@ -151,6 +152,7 @@ public abstract class ContentWrapper extends AbstractContent {
         return buffer.toString();
     }
 
+    @Override
     public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria) {
         Content content = getWrappedContent();
         if(content instanceof AbstractContent){
@@ -183,42 +185,52 @@ public abstract class ContentWrapper extends AbstractContent {
     // --- - methods returning Content should wrap it using #wrap()
     // --- - methods returning Collection<Content> should wrap it with #wrapContentNodes()
 
+    @Override
     public void addMixin(String type) throws RepositoryException {
         this.getWrappedContent().addMixin(type);
     }
 
+    @Override
     public Version addVersion() throws RepositoryException {
         return this.getWrappedContent().addVersion();
     }
 
+    @Override
     public Version addVersion(Rule rule) throws RepositoryException {
         return this.getWrappedContent().addVersion(rule);
     }
 
+    @Override
     public Content createContent(String name, String contentType) throws RepositoryException {
         return wrap(this.getWrappedContent().createContent(name, contentType));
     }
 
+    @Override
     public void delete() throws RepositoryException {
         this.getWrappedContent().delete();
     }
 
+    @Override
     public void deleteNodeData(String name) throws RepositoryException {
         this.getWrappedContent().deleteNodeData(name);
     }
 
+    @Override
     public VersionIterator getAllVersions() throws RepositoryException {
         return this.getWrappedContent().getAllVersions();
     }
 
+    @Override
     public Content getAncestor(int level) throws RepositoryException {
         return wrap(this.getWrappedContent().getAncestor(level));
     }
 
+    @Override
     public Collection<Content> getAncestors() throws RepositoryException {
         return wrapContentNodes(this.getWrappedContent().getAncestors());
     }
 
+    @Override
     public ContentVersion getBaseVersion() throws RepositoryException {
         return this.getWrappedContent().getBaseVersion();
     }
@@ -226,182 +238,227 @@ public abstract class ContentWrapper extends AbstractContent {
     /**
      * @deprecated since 4.3, either use {@link #getContent(String)} or {@link #getChildren(String)}
      */
+    @Override
     public Content getChildByName(String namePattern) {
         return wrap(this.getWrappedContent().getChildByName(namePattern));
     }
 
+    @Override
     public Content getContent(String name) throws RepositoryException {
         return wrap(this.getWrappedContent().getContent(name));
     }
 
+    @Override
     public String getHandle() {
         return this.getWrappedContent().getHandle();
     }
 
+    @Override
     public int getIndex() throws RepositoryException {
         return this.getWrappedContent().getIndex();
     }
 
+    @Override
     public ItemType getItemType() throws RepositoryException {
         return this.getWrappedContent().getItemType();
     }
 
+    @Override
     public Node getJCRNode() {
         return this.getWrappedContent().getJCRNode();
     }
 
+    @Override
     public int getLevel() throws RepositoryException {
         return this.getWrappedContent().getLevel();
     }
 
+    @Override
     public Lock getLock() throws RepositoryException {
         return this.getWrappedContent().getLock();
     }
 
+    @Override
     public MetaData getMetaData() {
         return this.getWrappedContent().getMetaData();
     }
 
+    @Override
     public NodeType[] getMixinNodeTypes() throws RepositoryException {
         return this.getWrappedContent().getMixinNodeTypes();
     }
 
+    @Override
     public String getName() {
         return this.getWrappedContent().getName();
     }
 
+    @Override
     public Collection<NodeData> getNodeDataCollection(String namePattern) {
         return wrapNodeDatas(this.getWrappedContent().getNodeDataCollection(namePattern));
     }
 
+    @Override
     public NodeType getNodeType() throws RepositoryException {
         return this.getWrappedContent().getNodeType();
     }
 
+    @Override
     public String getNodeTypeName() throws RepositoryException {
         return this.getWrappedContent().getNodeTypeName();
     }
 
+    @Override
     public Content getParent() throws RepositoryException {
         return wrap(this.getWrappedContent().getParent());
     }
 
+    @Override
     public String getTemplate() {
         return this.getWrappedContent().getTemplate();
     }
 
+    @Override
     public String getTitle() {
         return this.getWrappedContent().getTitle();
     }
 
+    @Override
     public String getUUID() {
         return this.getWrappedContent().getUUID();
     }
 
+    @Override
     public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
         return this.getWrappedContent().getVersionedContent(versionName);
     }
 
+    @Override
     public ContentVersion getVersionedContent(Version version) throws RepositoryException {
         return this.getWrappedContent().getVersionedContent(version);
     }
 
+    @Override
     public VersionHistory getVersionHistory() throws RepositoryException {
         return this.getWrappedContent().getVersionHistory();
     }
 
+    @Override
     public Workspace getWorkspace() throws RepositoryException {
         return this.getWrappedContent().getWorkspace();
     }
 
+    @Override
     public boolean hasContent(String name) throws RepositoryException {
         return getWrappedContent().hasContent(name);
     }
 
+    @Override
     public boolean hasMetaData() {
         return this.getWrappedContent().hasMetaData();
     }
 
+    @Override
     public boolean holdsLock() throws RepositoryException {
         return this.getWrappedContent().holdsLock();
     }
 
+    @Override
     public boolean isGranted(long permissions) {
         return this.getWrappedContent().isGranted(permissions);
     }
 
+    @Override
     public boolean isLocked() throws RepositoryException {
         return this.getWrappedContent().isLocked();
     }
 
+    @Override
     public boolean isModified() {
         return this.getWrappedContent().isModified();
     }
 
+    @Override
     public boolean isNodeData(String path) throws RepositoryException {
         return this.getWrappedContent().isNodeData(path);
     }
 
+    @Override
     public boolean isNodeType(String type) {
         return this.getWrappedContent().isNodeType(type);
     }
 
+    @Override
     public Lock lock(boolean isDeep, boolean isSessionScoped, long yieldFor) throws RepositoryException {
         return this.getWrappedContent().lock(isDeep, isSessionScoped, yieldFor);
     }
 
+    @Override
     public Lock lock(boolean isDeep, boolean isSessionScoped) throws RepositoryException {
         return this.getWrappedContent().lock(isDeep, isSessionScoped);
     }
 
+    @Override
     public void orderBefore(String srcName, String beforeName) throws RepositoryException {
         this.getWrappedContent().orderBefore(srcName, beforeName);
     }
 
+    @Override
     public void refresh(boolean keepChanges) throws RepositoryException {
         this.getWrappedContent().refresh(keepChanges);
     }
 
+    @Override
     public void removeMixin(String type) throws RepositoryException {
         this.getWrappedContent().removeMixin(type);
     }
 
+    @Override
     public void removeVersionHistory() throws RepositoryException {
         this.getWrappedContent().removeVersionHistory();
     }
 
+    @Override
     public void restore(String versionName, boolean removeExisting) throws RepositoryException {
         this.getWrappedContent().restore(versionName, removeExisting);
     }
 
+    @Override
     public void restore(Version version, boolean removeExisting) throws RepositoryException {
         this.getWrappedContent().restore(version, removeExisting);
     }
 
+    @Override
     public void restore(Version version, String relPath, boolean removeExisting) throws RepositoryException {
         this.getWrappedContent().restore(version, relPath, removeExisting);
     }
 
+    @Override
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws RepositoryException {
         this.getWrappedContent().restoreByLabel(versionLabel, removeExisting);
     }
 
+    @Override
     public void save() throws RepositoryException {
         this.getWrappedContent().save();
     }
 
+    @Override
     public void unlock() throws RepositoryException {
         this.getWrappedContent().unlock();
     }
 
+    @Override
     public void updateMetaData() throws RepositoryException {
         this.getWrappedContent().updateMetaData();
     }
 
+    @Override
     public HierarchyManager getHierarchyManager(){
         return this.getWrappedContent().getHierarchyManager();
     }
 
+    @Override
     public boolean hasMixin(String mixinName) throws RepositoryException {
         return this.getWrappedContent().hasMixin(mixinName);
     }

@@ -63,6 +63,7 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
         this.id = id;
     }
 
+    @Override
     public String getFragment() {
         final String fragment = getUriFragmentUtility().getFragment();
         log.debug("complete uri fragment is {}", fragment);
@@ -71,6 +72,7 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
         return fragmenter.getSubFragment(id);
     }
 
+    @Override
     public void setFragment(String fragment) {
         final String currentCompleteFragment = getUriFragmentUtility().getFragment();
         final Fragmenter fragmenter = new Fragmenter(currentCompleteFragment);
@@ -86,6 +88,7 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
         }
     }
 
+    @Override
     public HandlerRegistration addFragmentChangedHandler(final FragmentChangedHandler handler) {
         log.debug("adding listener {}", handler);
 
@@ -95,6 +98,7 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
         }
         handlers.add(handler);
         return new HandlerRegistration() {
+            @Override
             public void removeHandler() {
                 removeFragmentChangedHandler(handler);
             }
@@ -111,6 +115,7 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
         }
     }
 
+    @Override
     public void fragmentChanged(com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent event) {
         final Fragmenter fragmenter = new Fragmenter(event.getUriFragmentUtility().getFragment());
         final String subFragment = fragmenter.getSubFragment(id);
@@ -124,6 +129,7 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
 
     protected abstract UriFragmentUtility getUriFragmentUtility();
 
+    @Override
     public Shell createSubShell(String id) {
         return new SubShell(id, this);
     }

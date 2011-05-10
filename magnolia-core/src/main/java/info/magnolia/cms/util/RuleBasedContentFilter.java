@@ -64,6 +64,7 @@ public class RuleBasedContentFilter implements Content.ContentFilter {
      * Test if this content should be included in a resultant collection.
      * @return if true this will be a part of collection
      */
+    @Override
     public boolean accept(Content content) {
         String nodeType = "";
         try {

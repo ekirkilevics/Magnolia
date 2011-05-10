@@ -63,6 +63,7 @@ public class ModuleLifecycleContextImpl implements ModuleLifecycleContext {
         components = new LinkedHashMap<String, ObservedManager>();
     }
 
+    @Override
     public void registerModuleObservingComponent(String nodeName, ObservedManager component) {
         if (components.containsKey(nodeName)) {
             final Object currentObservedManager = components.get(nodeName);
@@ -90,6 +91,7 @@ public class ModuleLifecycleContextImpl implements ModuleLifecycleContext {
         }
     }
 
+    @Override
     public ModuleDefinition getCurrentModuleDefinition() {
         return this.currentModuleDefinition;
     }
@@ -99,6 +101,7 @@ public class ModuleLifecycleContextImpl implements ModuleLifecycleContext {
     }
 
 
+    @Override
     public int getPhase() {
         return this.phase;
     }

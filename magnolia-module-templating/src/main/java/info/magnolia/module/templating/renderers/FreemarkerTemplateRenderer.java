@@ -68,6 +68,7 @@ public class FreemarkerTemplateRenderer extends AbstractTemplateRenderer {
         this.fmHelper = fmRenderer;
     }
 
+    @Override
     protected void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
@@ -83,6 +84,7 @@ public class FreemarkerTemplateRenderer extends AbstractTemplateRenderer {
         }
     }
 
+    @Override
     protected Map newContext() {
         return new HashMap();
     }

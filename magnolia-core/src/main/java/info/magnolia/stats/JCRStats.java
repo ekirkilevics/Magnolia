@@ -60,6 +60,7 @@ public class JCRStats implements JCRStatsMBean {
         MBeanUtil.registerMBean("JCRStats", this);
     }
 
+    @Override
     public int getSessionCount() {
         return sessionCount;
     }

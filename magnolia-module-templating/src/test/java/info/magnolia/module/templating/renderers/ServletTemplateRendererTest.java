@@ -49,6 +49,7 @@ import static org.easymock.EasyMock.*;
  * @version $Revision: $ ($Author: $)
  */
 public class ServletTemplateRendererTest extends TestCase {
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();

@@ -57,12 +57,14 @@ public abstract class SkipNodeFilter extends XMLFilterImpl {
         super(parent);
     }
 
+    @Override
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
         if (!skipping) {
             super.ignorableWhitespace(ch, start, length);
         }
     }
 
+    @Override
     public void characters(char[] ch, int start, int length)
             throws SAXException {
         if (!skipping) {
@@ -70,6 +72,7 @@ public abstract class SkipNodeFilter extends XMLFilterImpl {
         }
     }
 
+    @Override
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 
         String svname = atts.getValue(NAME_TAG);
@@ -86,6 +89,7 @@ public abstract class SkipNodeFilter extends XMLFilterImpl {
         super.startElement(uri, localName, qName, atts);
     }
 
+    @Override
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
 

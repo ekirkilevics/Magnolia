@@ -45,6 +45,7 @@ import java.util.Iterator;
  */
 public interface PrincipalCollection extends Principal, Serializable {
 
+    @Override
     public String getName();
 
     public void setName(String name);

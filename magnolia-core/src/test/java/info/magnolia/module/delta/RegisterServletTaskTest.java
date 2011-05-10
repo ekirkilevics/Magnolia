@@ -58,6 +58,7 @@ import java.util.List;
 public class RegisterServletTaskTest extends RepositoryTestCase {
     private InstallContextImpl installContext;
 
+    @Override
     protected void setUp() throws Exception {
         final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
         ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);

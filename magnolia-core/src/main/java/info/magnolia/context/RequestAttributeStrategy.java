@@ -60,6 +60,7 @@ public class RequestAttributeStrategy implements AttributeStrategy {
         return ctx.getRequest();
     }
 
+    @Override
     public Object getAttribute(String name, int scope) {
         switch (scope) {
             case Context.LOCAL_SCOPE:
@@ -91,6 +92,7 @@ public class RequestAttributeStrategy implements AttributeStrategy {
         }
     }
 
+    @Override
     public Map getAttributes(int scope) {
         Map map = new HashMap();
         Enumeration keysEnum;
@@ -130,6 +132,7 @@ public class RequestAttributeStrategy implements AttributeStrategy {
         }
     }
 
+    @Override
     public void removeAttribute(String name, int scope) {
         switch (scope) {
             case Context.LOCAL_SCOPE:
@@ -149,6 +152,7 @@ public class RequestAttributeStrategy implements AttributeStrategy {
         }
     }
 
+    @Override
     public void setAttribute(String name, Object value, int scope) {
         if (value == null) {
             removeAttribute(name, scope);

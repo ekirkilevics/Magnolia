@@ -59,18 +59,22 @@ public class CustomFilterConfig implements FilterConfig {
         this(filterName, servletContext, new LinkedHashMap<String, String>());
     }
 
+    @Override
     public String getFilterName() {
         return filterName;
     }
 
+    @Override
     public ServletContext getServletContext() {
         return servletContext;
     }
 
+    @Override
     public String getInitParameter(String name) {
         return this.initParameters.get(name);
     }
 
+    @Override
     public Enumeration getInitParameterNames() {
         return Collections.enumeration(initParameters.keySet());
     }

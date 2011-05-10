@@ -117,6 +117,7 @@ public class MockContentTest extends TestCase {
 
         // sort by name
         final TreeSet<NodeData> sorted = new TreeSet<NodeData>(new Comparator<NodeData>() {
+            @Override
             public int compare(NodeData o1, NodeData o2) {
                 return o1.getName().compareTo(o2.getName());
             }
@@ -188,6 +189,7 @@ public class MockContentTest extends TestCase {
         Collection<Content> result = node.getChildren();
         // transform to collection of names
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -205,6 +207,7 @@ public class MockContentTest extends TestCase {
         Collection<Content> result = node.getChildren();
         // transform to collection of names
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -222,6 +225,7 @@ public class MockContentTest extends TestCase {
         Collection<Content> result = node.getChildren();
         // transform to collection of names
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }

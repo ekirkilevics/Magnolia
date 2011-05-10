@@ -54,6 +54,7 @@ public class EmbeddedActionDefinition implements PlaceChangeActionDefinition {
         this.url = uri;
     }
 
+    @Override
     public Place getPlace() {
         if(place != null){
             return place;

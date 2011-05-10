@@ -89,6 +89,7 @@ public class VersionRange {
         return other.isEquivalent(from) || (other.isStrictlyAfter(from) && other.isBeforeOrEquivalent(to));
     }
 
+    @Override
     public String toString() {
         return from + "/" + to;
     }

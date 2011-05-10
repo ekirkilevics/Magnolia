@@ -60,12 +60,15 @@ public class ModuleLifecycleContextImplTest extends TestCase {
 
     private static class DummyObservedManager1 extends ObservedManager {
 
+        @Override
         protected void onRegister(Content node) {
         }
 
+        @Override
         protected void onClear() {
         }
 
+        @Override
         public String toString() {
             return getClass().getSimpleName();
         }

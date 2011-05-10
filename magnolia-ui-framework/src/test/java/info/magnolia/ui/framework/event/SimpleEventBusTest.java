@@ -51,6 +51,7 @@ import junit.framework.TestCase;
 public class SimpleEventBusTest extends TestCase {
 
     private static class TestEvent implements Event<TestEventHandler> {
+        @Override
         public void dispatch(TestEventHandler handler) {
             handler.handleEvent(this);
         }

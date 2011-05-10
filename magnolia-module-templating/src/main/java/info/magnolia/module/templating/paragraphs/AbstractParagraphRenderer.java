@@ -60,6 +60,7 @@ public abstract class AbstractParagraphRenderer extends AbstractRenderer impleme
         super();
     }
 
+    @Override
     public void render(Content content, Paragraph paragraph, Writer out) throws RenderException, IOException {
         try {
             render(content, (RenderableDefinition) paragraph, out);

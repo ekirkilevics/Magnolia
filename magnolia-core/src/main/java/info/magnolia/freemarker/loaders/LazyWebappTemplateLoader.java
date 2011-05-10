@@ -47,6 +47,7 @@ import javax.servlet.ServletContext;
  * @author had
  */
 public class LazyWebappTemplateLoader extends AbstractDelegatingTemplateLoader {
+    @Override
     protected TemplateLoader newDelegate() {
         final WebContext webCtx = MgnlContext.getWebContextOrNull();
         if (webCtx != null) {

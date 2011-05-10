@@ -71,6 +71,7 @@ public class MD5CheckingFileExtractorOperationTest extends TestCase {
         md5.setValue(isA(String.class));
 
         final MD5CheckingFileExtractorOperation op = new MD5CheckingFileExtractorOperation(new FileExtractionLogger() {
+            @Override
             public void error(String message) {
                 fail(message);
             }

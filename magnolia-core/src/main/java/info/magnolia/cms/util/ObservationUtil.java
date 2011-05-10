@@ -204,10 +204,12 @@ public class ObservationUtil {
             executor = new ObservationBasedDelayedExecutor(listener, delay, maxDelay);
         }
 
+        @Override
         public void onEvent(EventIterator events) {
             this.executor.consume(events);
         }
 
+        @Override
         public String toString() {
             return super.toString() + ":" + this.listener;
         }
@@ -222,6 +224,7 @@ public class ObservationUtil {
 
         public ObservationBasedDelayedExecutor(final EventListener listener, long delay, long maxDelay) {
             delayedExecutor = new DelayedExecutor(new Runnable() {
+                @Override
                 public void run() {
                     // during execution consume is blocked
                     synchronized (eventsBuffer) {
@@ -256,31 +259,38 @@ public class ObservationUtil {
             this.iterator = events.iterator();
         }
 
+        @Override
         public boolean hasNext() {
             return this.iterator.hasNext();
         }
 
+        @Override
         public Object next() {
             pos++;
             return this.iterator.next();
         }
 
+        @Override
         public void remove() {
             this.iterator.remove();
         }
 
+        @Override
         public Event nextEvent() {
             return (Event) next();
         }
 
+        @Override
         public long getPosition() {
             return pos;
         }
 
+        @Override
         public long getSize() {
             return events.size();
         }
 
+        @Override
         public void skip(long skipNum) {
             for (int i = 0; i < skipNum; i++) {
                 next();

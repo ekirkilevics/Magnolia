@@ -73,6 +73,7 @@ public class RemoveMixversionableFilter extends XMLFilterImpl {
         super(parent);
     }
 
+    @Override
     public void startElement(String uri, String localName, String name, Attributes atts) throws SAXException {
         if (name.equals("sv:property") && atts.getValue("sv:name").equals("jcr:mixinTypes")) {
             this.atts = new AttributesImpl(atts);
@@ -87,6 +88,7 @@ public class RemoveMixversionableFilter extends XMLFilterImpl {
         }
     }
 
+    @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         if (inValue) {
             if(value == null){
@@ -101,6 +103,7 @@ public class RemoveMixversionableFilter extends XMLFilterImpl {
         }
     }
 
+    @Override
     public void endElement(String uri, String localName, String name) throws SAXException {
         if (inValue && name.equals("sv:value")) {
             inValue = false;

@@ -58,6 +58,7 @@ public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
         this.pageNode = pageNode;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
         try {
             String uri = MgnlContext.getContextPath() + "/.magnolia/page-editor#app:page:" + pageNode.getPath() + ".html";

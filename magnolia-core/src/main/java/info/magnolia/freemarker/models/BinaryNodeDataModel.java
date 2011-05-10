@@ -67,6 +67,7 @@ public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarM
         this.wrapper = wrapper;
     }
 
+    @Override
     public int size() throws TemplateModelException {
         int result = 0;
 
@@ -79,6 +80,7 @@ public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarM
         return result;
     }
 
+    @Override
     public TemplateCollectionModel keys() throws TemplateModelException {
         Iterator<String> result = null;
         try {
@@ -89,6 +91,7 @@ public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarM
         return (TemplateCollectionModel) wrapper.wrap(result);
     }
 
+    @Override
     public TemplateCollectionModel values() throws TemplateModelException {
         ArrayList<String> result = new ArrayList<String>();
         try {
@@ -102,6 +105,7 @@ public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarM
         return (TemplateCollectionModel) wrapper.wrap(result.iterator());
     }
 
+    @Override
     public TemplateModel get(String key) throws TemplateModelException {
         Object result = null;
 
@@ -132,11 +136,13 @@ public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarM
         return wrapper.wrap(result);
     }
 
+    @Override
     public boolean isEmpty() throws TemplateModelException {
         return (size() == 0);
     }
 
     // this reproduces the logic found in the cms out tag.
+    @Override
     public String getAsString() throws TemplateModelException {
         String handle = binaryNodeData.getHandle();
         String filename = binaryNodeData.getAttribute(FileProperties.PROPERTY_FILENAME);
@@ -148,6 +154,7 @@ public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarM
         return this.binaryNodeData;
     }
 
+    @Override
     public Object getAdaptedObject(Class hint) {
         return asNodeData();
     }

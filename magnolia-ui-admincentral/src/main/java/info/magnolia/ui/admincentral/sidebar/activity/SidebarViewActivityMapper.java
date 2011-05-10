@@ -53,6 +53,7 @@ public class SidebarViewActivityMapper extends FactoryBase<Place, Activity> impl
         addMapping(ItemSelectedPlace.class, SidebarViewActivity.class);
     }
 
+    @Override
     public Activity getActivity(final Place place) {
         return this.create(place);
     }

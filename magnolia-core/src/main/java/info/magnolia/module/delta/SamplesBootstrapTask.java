@@ -46,6 +46,7 @@ public class SamplesBootstrapTask extends IsInstallSamplesTask {
 
     public SamplesBootstrapTask() {
         super("Bootstrap samples", "Bootstraps samples content", new BootstrapResourcesTask("",""){
+            @Override
             protected boolean acceptResource(InstallContext ctx, String name) {
                 final String moduleName = ctx.getCurrentModuleDefinition().getName();
                 return name.startsWith("/mgnl-bootstrap-samples/" + moduleName + "/") && name.endsWith(".xml");

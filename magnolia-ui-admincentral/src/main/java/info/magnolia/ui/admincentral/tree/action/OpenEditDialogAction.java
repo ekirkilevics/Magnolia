@@ -61,6 +61,7 @@ public class OpenEditDialogAction extends ActionBase<OpenEditDialogActionDefinit
         this.dialogPresenterFactory = dialogPresenterFactory;
     }
 
+    @Override
     public void execute() throws ActionExecutionException {
         try {
 

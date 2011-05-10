@@ -57,6 +57,7 @@ public class ComponentContainerBasedViewPort implements ViewPort {
         this.componentContainer = componentContainer;
     }
 
+    @Override
     public void setView(View view) {
         componentContainer.removeAllComponents();
         if (view != null) {

@@ -113,6 +113,7 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
                  final Button button = new Button(item.getLabel());
                  button.addListener(new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                        presenter.onToolbarItemSelection(item);
                     }
@@ -124,10 +125,12 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
         }
     }
 
+    @Override
     public Component asVaadinComponent() {
        return customComponent;
     }
 
+    @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
     }

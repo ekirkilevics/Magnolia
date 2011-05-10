@@ -63,6 +63,7 @@ public class PropertyValueDelegateTask extends NodeCheckDelegateTask {
         this.propertyMustExist = propertyMustExist;
     }
 
+    @Override
     protected boolean checkNode(Content node, InstallContext ctx) throws TaskExecutionException, RepositoryException {
         if (node.hasNodeData(propertyName)) {
             final NodeData prop = node.getNodeData(propertyName);

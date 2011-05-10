@@ -66,18 +66,22 @@ import org.apache.commons.lang.StringUtils;
 public abstract class AbstractContent extends ContentHandler implements Content {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractContent.class);
 
+    @Override
     public Content createContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return createContent(name, ItemType.CONTENT);
     }
 
+    @Override
     public Content createContent(String name, ItemType contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return createContent(name, contentType.getSystemName());
     }
 
+    @Override
     public NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return setNodeData(name, "");
     }
 
+    @Override
     public NodeData createNodeData(String name, Value value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return setNodeData(name, value);
     }
@@ -85,6 +89,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * @deprecated
      */
+    @Override
     @Deprecated
     public NodeData createNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return setNodeData(name, value);
@@ -93,6 +98,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * @deprecated
      */
+    @Override
     @Deprecated
     public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         // set some default values to create the property
@@ -115,6 +121,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * @deprecated
      */
+    @Override
     @Deprecated
     public NodeData createNodeData(String name, Object valueObj) throws RepositoryException {
         return setNodeData(name, valueObj);
@@ -124,6 +131,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
      * {@inheritDoc}
      * Delegates to {@link #newNodeDataInstance(String, int, boolean)} by setting the type to PropertyType.UNDEFINED. A subclass has to handle this by trying to determine the type if the node data exists. The reason for this is that implementations want to instantiate different node data classes per type
      */
+    @Override
     public NodeData getNodeData(String name) {
         try {
             // will try to determine the type if the node data exists, otherwise an non-mutable node data will be returned
@@ -144,16 +152,19 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * Delegates to {@link NodeData#isExist()}.
      */
+    @Override
     public boolean hasNodeData(String name) throws RepositoryException {
         return getNodeData(name).isExist();
     }
 
+    @Override
     public NodeData setNodeData(String name, Value value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, value.getType(), true);
         nodeData.setValue(value);
         return nodeData;
     }
 
+    @Override
     public NodeData setNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         if(value.length == 0){
             throw new IllegalArgumentException("Value array can't be empty");
@@ -163,42 +174,49 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         return nodeData;
     }
 
+    @Override
     public NodeData setNodeData(String name, boolean value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.BOOLEAN, true);
         nodeData.setValue(value);
         return nodeData;
     }
 
+    @Override
     public NodeData setNodeData(String name, long value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.LONG, true);
         nodeData.setValue(value);
         return nodeData;
     }
 
+    @Override
     public NodeData setNodeData(String name, double value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.DOUBLE, true);
         nodeData.setValue(value);
         return nodeData;
     }
 
+    @Override
     public NodeData setNodeData(String name, String value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.STRING, true);
         nodeData.setValue(value);
         return nodeData;
     }
 
+    @Override
     public NodeData setNodeData(String name, InputStream value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.BINARY, true);
         nodeData.setValue(value);
         return nodeData;
     }
 
+    @Override
     public NodeData setNodeData(String name, Calendar value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.DATE, true);
         nodeData.setValue(value);
         return nodeData;
     }
 
+    @Override
     public NodeData setNodeData(String name, Content value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.STRING, true);
         nodeData.setValue(value.getUUID());
@@ -208,12 +226,14 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * Uses the {@link NodeDataUtil} to create and set the node data based on the object type.
      */
+    @Override
     public NodeData setNodeData(String name, Object value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, NodeDataUtil.getJCRPropertyType(value), true);
         NodeDataUtil.setValue(nodeData, value);
         return nodeData;
     }
 
+    @Override
     public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
         getNodeData(name).delete();
     }
@@ -222,6 +242,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
      * {@inheritDoc}
      * Delegates to {@link #getChildren(ItemType)} passing the current node's type.
      */
+    @Override
     public Collection<Content> getChildren() {
         String type = null;
 
@@ -244,6 +265,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
      * {@inheritDoc}
      * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator).
      */
+    @Override
     public Collection<Content> getChildren(ContentFilter filter) {
         return getChildren(filter, null);
     }
@@ -252,6 +274,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
      * {@inheritDoc}
      * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator).
      */
+    @Override
     public Collection<Content> getChildren(ItemType itemType) {
         return getChildren(new NodeTypeFilter(itemType), null);
     }
@@ -260,6 +283,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
      * {@inheritDoc}
      * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator).
      */
+    @Override
     public Collection<Content> getChildren(String contentType) {
         return getChildren(new NodeTypeFilter(contentType), null);
     }
@@ -268,6 +292,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
      * {@inheritDoc}
      * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)}.
      */
+    @Override
     public Collection<Content> getChildren(final String contentType, final String namePattern) {
         return getChildren(new NodeTypeFilter(contentType), namePattern, null);
     }
@@ -276,6 +301,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
      * {@inheritDoc}
      * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)}.
      */
+    @Override
     public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
         return getChildren(filter, null, orderCriteria);
     }
@@ -288,6 +314,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * @deprecated
      */
+    @Override
     @Deprecated
     public Content getChildByName(String namePattern) {
         Collection<Content> children = getChildren("nt:base", namePattern);
@@ -297,6 +324,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         return null;
     }
 
+    @Override
     public Collection<NodeData> getNodeDataCollection() {
         return getNodeDataCollection(null);
     }
@@ -311,14 +339,17 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     }
 
 
+    @Override
     public boolean hasChildren() {
         return (this.getChildren().size() > 0);
     }
 
+    @Override
     public boolean hasChildren(String contentType) {
         return (this.getChildren(contentType).size() > 0);
     }
 
+    @Override
     public void delete(String path) throws RepositoryException {
         if(isNodeData(path)){
             deleteNodeData(path);
@@ -328,18 +359,22 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         }
     }
 
+    @Override
     public boolean isNodeData(String path) throws AccessDeniedException, RepositoryException {
         return hasNodeData(path);
     }
 
+    @Override
     public String getTemplate() {
         return this.getMetaData().getTemplate();
     }
 
+    @Override
     public String getTitle() {
         return I18nContentSupportFactory.getI18nSupport().getNodeData(this, "title").getString();
     }
 
+    @Override
     public void updateMetaData() throws RepositoryException, AccessDeniedException {
         MetaData md = this.getMetaData();
         md.setModificationDate();
@@ -347,10 +382,12 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFY, hierarchyManager.getName(),this.getItemType(), getHandle());
     }
 
+    @Override
     public boolean isGranted(long permissions) {
         return hierarchyManager.isGranted(getHandle(), permissions);
     }
 
+    @Override
     public Workspace getWorkspace() throws RepositoryException {
         return getHierarchyManager().getWorkspace();
     }

@@ -63,6 +63,7 @@ import static org.easymock.classextension.EasyMock.*;
  */
 public class FilterTest extends MgnlTestCase {
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // shunt log4j
@@ -188,6 +189,7 @@ public class FilterTest extends MgnlTestCase {
 
         private String prop1;
 
+        @Override
         public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
             this.executed = true;
         }
@@ -209,13 +211,16 @@ public class FilterTest extends MgnlTestCase {
 
         public boolean executed = false;
 
+        @Override
         public void destroy() {
         }
 
+        @Override
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
             this.executed = true;
         }
 
+        @Override
         public void init(FilterConfig filterConfig) throws ServletException {
             param1 = filterConfig.getInitParameter("param1");
         }

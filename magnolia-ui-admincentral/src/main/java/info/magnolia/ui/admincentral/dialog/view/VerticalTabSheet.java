@@ -142,6 +142,7 @@ public class VerticalTabSheet extends CustomComponent {
 
         tabComponent.addListener(new MouseEvents.ClickListener() {
 
+            @Override
             public void click(MouseEvents.ClickEvent event) {
                 selectTab(index);
             }

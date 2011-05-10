@@ -78,6 +78,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     public ServletDispatchingFilter() {
     }
 
+    @Override
     public String getName() {
         return "Wrapper for " + servletName + " servlet";
     }
@@ -85,6 +86,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     /**
      * Initializes the servlet and its mappings. ServletConfig is wrapped to take init parameters into account.
      */
+    @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
 
@@ -102,6 +104,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     /**
      * Delegates the destroy() call to the wrapper servlet, then to this filter itself.
      */
+    @Override
     public void destroy() {
         if (servlet != null) {
             servlet.destroy();
@@ -113,6 +116,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
      * Dispatches the request to the servlet if not already bypassed. The request is wrapped for properly setting the
      * pathInfo.
      */
+    @Override
     public void doFilter(final HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.debug("Dispatching to servlet {}", getServletClass());
         final Matcher matcher = getMapping().match(request).getMatcher();
@@ -189,6 +193,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
             }
         }
 
+        @Override
         public String getPathInfo() {
             String current = super.getPathInfo();
             if (!StringUtils.equals(super.getRequestURI(), originalRequestUri))
@@ -202,6 +207,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
             return newPathInfo;
         }
 
+        @Override
         public String getServletPath() {
             String current = super.getServletPath();
             if (!StringUtils.equals(super.getRequestURI(), originalRequestUri))

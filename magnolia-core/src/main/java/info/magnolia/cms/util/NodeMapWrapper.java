@@ -87,6 +87,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#size()
      */
+    @Override
     public int size() {
         return getWrappedContent().getNodeDataCollection().size();
     }
@@ -94,6 +95,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#isEmpty()
      */
+    @Override
     public boolean isEmpty() {
         return getWrappedContent().getNodeDataCollection().isEmpty();
     }
@@ -101,6 +103,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#containsKey(java.lang.Object)
      */
+    @Override
     public boolean containsKey(Object key) {
         return this.getWrappedContent().getNodeData((String) key).isExist() || hasProperty(key);
     }
@@ -108,6 +111,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#containsValue(java.lang.Object)
      */
+    @Override
     public boolean containsValue(Object value) {
         // not implemented, only get() is needed
         return false;
@@ -117,6 +121,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
      * Shortcut for Content.getNodeData(name).getString() or Content.getNodeData(name).getName().
      * @see java.util.Map#get(Object)
      */
+    @Override
     public Object get(Object key) {
         try {
             if (!getWrappedContent().hasNodeData((String) key)) {
@@ -191,6 +196,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
+    @Override
     public Object put(Object arg0, Object arg1) {
         // not implemented, only get() is needed
         return null;
@@ -199,6 +205,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#remove(java.lang.Object)
      */
+    @Override
     public Object remove(Object key) {
         // not implemented, only get() is needed
         return null;
@@ -207,6 +214,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#putAll(java.util.Map)
      */
+    @Override
     public void putAll(Map t) {
         // not implemented, only get() is needed
     }
@@ -214,6 +222,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#clear()
      */
+    @Override
     public void clear() {
         // not implemented, only get() is needed
     }
@@ -221,6 +230,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#keySet()
      */
+    @Override
     public Set<String> keySet() {
         Collection<NodeData> nodeDataCollection = getWrappedContent().getNodeDataCollection();
         Set<String> keys = new HashSet<String>();
@@ -234,6 +244,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#values()
      */
+    @Override
     public Collection<String> values() {
         Collection<NodeData> nodeDataCollection = getWrappedContent().getNodeDataCollection();
         Collection<String> values = new ArrayList<String>();
@@ -247,6 +258,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#entrySet()
      */
+    @Override
     public Set entrySet() {
         Collection<NodeData> nodeDataCollection = getWrappedContent().getNodeDataCollection();
         Set<Map.Entry> keys = new HashSet<Map.Entry>();
@@ -256,14 +268,17 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
             final String value = nd.getString();
             keys.add(new Map.Entry() {
 
+                @Override
                 public Object getKey() {
                     return key;
                 }
 
+                @Override
                 public Object getValue() {
                     return value;
                 }
 
+                @Override
                 public Object setValue(Object value) {
                     return value;
                 }

@@ -62,6 +62,7 @@ public abstract class AbstractTemplateRenderer extends AbstractRenderer implemen
     /**
      * @deprecated since 4.0
      */
+    @Override
     public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         final Content content = MgnlContext.getAggregationState().getMainContent();
         final PrintWriter out = response.getWriter();
@@ -72,6 +73,7 @@ public abstract class AbstractTemplateRenderer extends AbstractRenderer implemen
         }
     }
 
+    @Override
     public void renderTemplate(Content content, Template template, Writer out) throws RenderException, IOException {
         try {
             render(content, template, out);

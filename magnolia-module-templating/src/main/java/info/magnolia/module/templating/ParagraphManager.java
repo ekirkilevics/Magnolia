@@ -111,6 +111,7 @@ public class ParagraphManager extends ObservedManager {
     /**
      * Register all the paragraphs under this and subnodes.
      */
+    @Override
     protected void onRegister(Content node) {
         // register a listener
 
@@ -156,6 +157,7 @@ public class ParagraphManager extends ObservedManager {
         paragraphs.put(paragraph.getName(), paragraph);
     }
 
+    @Override
     public void onClear() {
         this.paragraphs.clear();
     }

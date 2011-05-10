@@ -57,6 +57,7 @@ import java.util.Locale;
  */
 public class SelfTest extends TestCase {
 
+    @Override
     protected void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);

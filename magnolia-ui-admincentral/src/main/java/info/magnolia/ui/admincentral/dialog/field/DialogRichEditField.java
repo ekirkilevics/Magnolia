@@ -48,6 +48,7 @@ public class DialogRichEditField extends AbstractDialogField {
         super(dialogDefinition, tabDefinition, fieldDefinition);
     }
 
+    @Override
     protected Field getField() {
         return new RichTextArea();
     }

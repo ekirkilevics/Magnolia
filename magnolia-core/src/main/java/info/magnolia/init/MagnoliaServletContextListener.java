@@ -154,6 +154,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
 
     private ConfigLoader loader;
 
+    @Override
     public void contextDestroyed(final ServletContextEvent sce) {
         final MutablePicoContainer rootContainer = getRootContainer(sce.getServletContext());
         // just in case we weren't even able to create/store the root container ...
@@ -174,6 +175,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
 
         if (loader != null) {
             MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                @Override
                 public void doExec() {
                     loader.unload(sce.getServletContext());
                 }
@@ -184,6 +186,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     /**
      * TODO : javadoc.
      */
+    @Override
     public void contextInitialized(final ServletContextEvent sce) {
         try {
             final ServletContext context = sce.getServletContext();
@@ -407,6 +410,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
 
     protected void startServer() {
         MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+            @Override
             public void doExec() {
                 loader.load();
             }

@@ -52,14 +52,17 @@ public class SubShell extends AbstractShell {
         this.parent = parent;
     }
 
+    @Override
     public void askForConfirmation(String message, ConfirmationHandler listener) {
         parent.askForConfirmation(message, listener);
     }
 
+    @Override
     public void showNotification(String message) {
         parent.showNotification(message);
     }
 
+    @Override
     public void showError(String message, Exception e) {
         parent.showError(message, e);
     }
@@ -70,6 +73,7 @@ public class SubShell extends AbstractShell {
         return ((AbstractShell)parent).getUriFragmentUtility();
     }
 
+    @Override
     public void openWindow(String uri, String windowName) {
        parent.openWindow(uri, windowName);
     }

@@ -67,6 +67,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
     private final Map<String, HierarchyManager> hierarchyManagers = new HashMap<String, HierarchyManager>();
 
+    @Override
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         log.debug("creating {}:{} HM for {}, using {} strategy", new Object[] {repositoryId, workspaceId, getUserId(), this.getClass().getName()});
         final String hmAttrName = repositoryId + "_" + workspaceId;
@@ -90,10 +91,12 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
     abstract protected String getUserId();
 
+    @Override
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return this.getHierarchyManager(repositoryId, workspaceId).getQueryManager();
     }
 
+    @Override
     public Session getSession(String repositoryName, String workspaceName) throws LoginException, RepositoryException {
         WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
         return getRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);

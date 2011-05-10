@@ -45,6 +45,7 @@ import org.apache.jackrabbit.commons.predicate.Predicate;
  */
 public class JCRPropertyHidingPredicate implements Predicate {
 
+    @Override
     public boolean evaluate(Object object) {
         if (!(object instanceof Property)) {
             return false;

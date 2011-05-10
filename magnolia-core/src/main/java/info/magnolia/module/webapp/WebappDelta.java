@@ -57,22 +57,27 @@ public class WebappDelta implements Delta {
         this.version = version;
     }
 
+    @Override
     public String getDescription() {
         return "Bootstraps the webapp upon first deployment.";
     }
 
+    @Override
     public Version getVersion() {
         return version;
     }
 
+    @Override
     public List<Condition> getConditions() {
         return Collections.emptyList();
     }
 
+    @Override
     public List<Task> getTasks() {
         return Collections.<Task>singletonList(new WebappBootstrap());
     }
 
+    @Override
     public DeltaType getType() {
         return DeltaType.install;
     }

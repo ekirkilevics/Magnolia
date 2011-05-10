@@ -54,11 +54,13 @@ import java.io.IOException;
 public class BootstrapConditionallyTest extends TestCase {
     private static final String SOMECONTENT = "foo.bar.baz=bleh";
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         MockUtil.initMockContext();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         ComponentsTestUtil.clear();

@@ -41,6 +41,7 @@ package info.magnolia.nodebuilder;
  * @version $Revision: $ ($Author: $)
  */
 public class StrictErrorHandler extends AbstractErrorHandler {
+    @Override
     public void report(String message) throws NodeOperationException {
         throw new NodeOperationException(message);
     }

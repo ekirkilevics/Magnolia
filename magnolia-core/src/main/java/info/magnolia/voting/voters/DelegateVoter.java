@@ -53,6 +53,7 @@ public class DelegateVoter extends AbstractBoolVoter {
 
     private String delegatePath;
 
+    @Override
     protected boolean boolVote(Object value) {
         Content delegate;
         try {

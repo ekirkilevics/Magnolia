@@ -70,6 +70,7 @@ public class UserAgentVoter extends AbstractBoolVoter {
         rejected.add(contentType);
     }
 
+    @Override
     protected boolean boolVote(Object value) {
         final HttpServletRequest request;
         if (value instanceof HttpServletRequest) {

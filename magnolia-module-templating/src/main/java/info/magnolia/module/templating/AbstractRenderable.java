@@ -71,6 +71,7 @@ public class AbstractRenderable implements RenderableDefinition {
     /**
      * Return always the {@link #templatePath} property.
      */
+    @Override
     public String determineTemplatePath(String actionResult, RenderingModel model ) {
         return this.getTemplatePath();
     }
@@ -80,6 +81,7 @@ public class AbstractRenderable implements RenderableDefinition {
      * constructor similar to {@link RenderingModelImpl#RenderingModelImpl(Content, RenderableDefinition, RenderingModel)}.
      * All the request parameters are then mapped to the model's properties.
      */
+    @Override
     public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
         try {
             final RenderingModel model = Classes.getClassFactory().newInstance(getModelClass(), new Class[]{Content.class, definition.getClass(), RenderingModel.class}, content, definition, parentModel);
@@ -93,22 +95,27 @@ public class AbstractRenderable implements RenderableDefinition {
         }
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public String getTitle() {
         return this.title;
     }
 
+    @Override
     public String getTemplatePath() {
         return this.templatePath;
     }
 
+    @Override
     public String getType() {
         return type;
     }
 
+    @Override
     public String getDescription() {
         return this.description;
     }
@@ -133,6 +140,7 @@ public class AbstractRenderable implements RenderableDefinition {
         this.title = title;
     }
 
+    @Override
     public String getDialog() {
         return this.dialog;
     }
@@ -141,6 +149,7 @@ public class AbstractRenderable implements RenderableDefinition {
         this.dialog = dialog;
     }
 
+    @Override
     public String getI18nBasename() {
         return this.i18nBasename;
     }
@@ -149,6 +158,7 @@ public class AbstractRenderable implements RenderableDefinition {
         this.i18nBasename = basename;
     }
 
+    @Override
     public Map getParameters() {
         return this.parameters;
     }
@@ -173,6 +183,7 @@ public class AbstractRenderable implements RenderableDefinition {
         this.modelClass = modelClass;
     }
 
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
         .append("name", this.name) //$NON-NLS-1$

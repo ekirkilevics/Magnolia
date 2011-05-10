@@ -52,6 +52,7 @@ public class PlainTextParagraphRenderer implements ParagraphRenderer {
     /**
      * The given paragraph is ignored here, since we're just printing the value of the text property.
      */
+    @Override
     public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
         final String s = content.getNodeData("text").getString();
         out.write(s);

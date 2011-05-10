@@ -63,6 +63,7 @@ import org.slf4j.LoggerFactory;
 public class MgnlGroupManager extends RepositoryBackedSecurityManager implements GroupManager {
     private static final Logger log = LoggerFactory.getLogger(MgnlGroupManager.class);
 
+    @Override
     public Group createGroup(final String name) throws AccessDeniedException {
         return MgnlContext.doInSystemContext(new SilentSessionOp<MgnlGroup>(getRepositoryName()) {
 
@@ -80,6 +81,7 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
         });
     }
 
+    @Override
     public Group getGroup(final String name) throws AccessDeniedException {
         return MgnlContext.doInSystemContext(new SilentSessionOp<Group>(getRepositoryName()) {
 
@@ -96,6 +98,7 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
         });
     }
 
+    @Override
     public Collection<Group> getAllGroups() {
         return MgnlContext.doInSystemContext(new SilentSessionOp<Collection<Group>>(getRepositoryName()) {
 

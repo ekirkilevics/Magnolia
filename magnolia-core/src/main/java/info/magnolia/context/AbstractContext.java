@@ -66,6 +66,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractContext implements Context, Serializable {
     private static final Logger log = LoggerFactory.getLogger(AbstractContext.class);
 
+    @Override
     public User getUser() {
         return Security.getSystemUser();
     }
@@ -95,18 +96,22 @@ public abstract class AbstractContext implements Context, Serializable {
         this.repositoryStrategy = strategy;
     }
 
+    @Override
     public Object getAttribute(String name, int scope) {
         return getAttributeStrategy().getAttribute(name, scope);
     }
 
+    @Override
     public Map<String, Object> getAttributes(int scope) {
         return getAttributeStrategy().getAttributes(scope);
     }
 
+    @Override
     public void removeAttribute(String name, int scope) {
         getAttributeStrategy().removeAttribute(name, scope);
     }
 
+    @Override
     public void setAttribute(String name, Object value, int scope) {
         getAttributeStrategy().setAttribute(name, value, scope);
     }
@@ -114,19 +119,23 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * @deprecated since 5.0
      */
+    @Override
     @Deprecated
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return getRepositoryStrategy().getAccessManager(repositoryId, workspaceId);
     }
 
+    @Override
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         return getRepositoryStrategy().getHierarchyManager(repositoryId, workspaceId);
     }
 
+    @Override
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return getRepositoryStrategy().getQueryManager(repositoryId, workspaceId);
     }
 
+    @Override
     public Session getJCRSession(String repositoryId, String workspaceId) throws LoginException, RepositoryException {
         return getRepositoryStrategy().getSession(repositoryId,  workspaceId);
     }
@@ -136,6 +145,7 @@ public abstract class AbstractContext implements Context, Serializable {
      * @param name to which value is associated to
      * @return attribute value
      */
+    @Override
     public Object getAttribute(String name) {
         Object value = this.getAttribute(name, Context.LOCAL_SCOPE);
         if (null == value) {
@@ -150,6 +160,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * Merge the scopes maps.
      */
+    @Override
     public Map<String, Object> getAttributes() {
         final Map<String, Object> map = new HashMap<String, Object>();
         map.putAll(this.getAttributes(Context.LOCAL_SCOPE));
@@ -162,6 +173,7 @@ public abstract class AbstractContext implements Context, Serializable {
      * If not yet set try to get the locale of the user. Else use the locale of the system context.
      * @see Context#getLocale()
      */
+    @Override
     public Locale getLocale() {
         if (locale == null) {
             final SystemContext sysctx = MgnlContext.getSystemContext();
@@ -174,6 +186,7 @@ public abstract class AbstractContext implements Context, Serializable {
         return locale;
     }
 
+    @Override
     public void setLocale(Locale locale) {
         this.locale = locale;
     }
@@ -181,6 +194,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * TODO: This duplicates methods from MessagesManager : remove either.
      */
+    @Override
     public Messages getMessages() {
         return getMessages(MessagesManager.DEFAULT_BASENAME);
     }
@@ -188,18 +202,22 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * TODO: This duplicates methods from MessagesManager : remove either.
      */
+    @Override
     public Messages getMessages(String basename) {
         return MessagesManager.getMessages(basename, getLocale());
     }
 
+    @Override
     public HierarchyManager getHierarchyManager(String repositoryId) {
         return this.getHierarchyManager(repositoryId, ContentRepository.getDefaultWorkspace(repositoryId));
     }
 
+    @Override
     public AccessManager getAccessManager(String repositoryId) {
         return this.getAccessManager(repositoryId, ContentRepository.getDefaultWorkspace(repositoryId));
     }
 
+    @Override
     public QueryManager getQueryManager(String repositoryId) {
         return this.getQueryManager(repositoryId, ContentRepository.getDefaultWorkspace(repositoryId));
     }
@@ -208,6 +226,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Object get(Object key) {
         return this.getAttribute(key.toString());
     }
@@ -215,6 +234,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Object put(Object key, Object value) {
         this.setAttribute(key.toString(), value, Context.LOCAL_SCOPE);
         return value;
@@ -223,6 +243,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void clear() {
         for (String key : this.getAttributes().keySet()) {
             this.removeAttribute(key, Context.LOCAL_SCOPE);
@@ -233,6 +254,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * This implementation is very slow!
      */
+    @Override
     public boolean containsValue(Object value) {
         return this.getAttributes().containsValue(value);
     }
@@ -240,6 +262,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Set<Entry<String, Object>> entrySet() {
         return this.getAttributes().entrySet();
     }
@@ -247,6 +270,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isEmpty() {
         return this.getAttributes().isEmpty();
     }
@@ -254,6 +278,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Set<String> keySet() {
         return this.getAttributes().keySet();
     }
@@ -261,6 +286,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void putAll(Map map) {
         for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
             Entry entry = (Entry) iter.next();
@@ -271,6 +297,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Object remove(Object key) {
         Object obj = this.getAttribute(key.toString());
         this.removeAttribute(key.toString(), Context.LOCAL_SCOPE);
@@ -280,6 +307,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Collection<Object> values() {
         return this.getAttributes().values();
     }
@@ -287,6 +315,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean containsKey(Object arg0) {
         return this.getAttributes().containsKey(arg0);
     }
@@ -294,6 +323,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int size() {
         return this.getAttributes().size();
     }
@@ -301,6 +331,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void release() {
         getRepositoryStrategy().release();
     }

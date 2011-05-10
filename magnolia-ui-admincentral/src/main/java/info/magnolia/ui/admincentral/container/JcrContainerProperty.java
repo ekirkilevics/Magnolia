@@ -55,21 +55,26 @@ public class JcrContainerProperty implements Property {
         this.container = container;
     }
 
+    @Override
     public Object getValue() {
         return container.getColumnValue(propertyId, itemId);
     }
 
+    @Override
     public void setValue(Object newValue) throws ReadOnlyException, ConversionException {
     }
 
+    @Override
     public Class<?> getType() {
         return container.getType(propertyId);
     }
 
+    @Override
     public boolean isReadOnly() {
         return readOnly;
     }
 
+    @Override
     public void setReadOnly(boolean newStatus) {
         readOnly = newStatus;
     }

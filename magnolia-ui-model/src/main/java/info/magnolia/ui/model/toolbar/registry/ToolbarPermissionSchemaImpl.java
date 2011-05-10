@@ -42,6 +42,7 @@ import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 public class ToolbarPermissionSchemaImpl implements ToolbarPermissionSchema {
 
     // TODO real implementation
+    @Override
     public boolean hasPermission(MenuItemDefinition item) {
         return true;
     }

@@ -67,6 +67,7 @@ public class CheckNodeTypesDefinition extends AbstractCondition {
         super("Check existing node types definition", "Checks existing node types definition for occurence of mix:versionable.");
     }
 
+    @Override
     public boolean check(InstallContext installContext) {
         String home = SystemProperty.getProperty("magnolia.repositories.home");
         File repoHome = new File(Path.getAbsoluteFileSystemPath(home));

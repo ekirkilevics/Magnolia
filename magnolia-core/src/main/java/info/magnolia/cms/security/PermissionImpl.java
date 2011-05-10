@@ -69,26 +69,32 @@ public class PermissionImpl implements Permission, Serializable {
 
     private long permissions;
 
+    @Override
     public void setPattern(UrlPattern value) {
         this.pattern = value;
     }
 
+    @Override
     public UrlPattern getPattern() {
         return this.pattern;
     }
 
+    @Override
     public void setPermissions(long value) {
         this.permissions = value;
     }
 
+    @Override
     public long getPermissions() {
         return this.permissions;
     }
 
+    @Override
     public boolean match(String path) {
         return this.pattern.match(path);
     }
 
+    @Override
     public String toString() {
         return getPermissionAsName(permissions) + " " + pattern;
     }

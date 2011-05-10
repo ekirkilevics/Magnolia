@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultVoting implements Voting {
 
     Logger log = LoggerFactory.getLogger(DefaultVoting.class);
+    @Override
     public int vote(Voter[] voters, Object value) {
         int highestVote = 0;
         for (int i = 0; i < voters.length; i++) {

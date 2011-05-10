@@ -100,10 +100,12 @@ public class BinaryMockNodeData extends MockNodeData {
         }
     }
 
+    @Override
     public int getType() {
         return PropertyType.BINARY;
     }
 
+    @Override
     public InputStream getStream() {
         if (wrappedContent != null) {
             return wrappedContent.getNodeData(ItemType.JCR_DATA).getStream();
@@ -112,6 +114,7 @@ public class BinaryMockNodeData extends MockNodeData {
         return super.getStream();
     }
 
+    @Override
     public String getString() {
         if (wrappedContent != null) {
             return wrappedContent.getNodeData(ItemType.JCR_DATA).getString();
@@ -119,6 +122,7 @@ public class BinaryMockNodeData extends MockNodeData {
         return super.getString();
     }
 
+    @Override
     public String getAttribute(String name) {
         if (wrappedContent != null) {
             return wrappedContent.getNodeData(name).getString();
@@ -126,9 +130,11 @@ public class BinaryMockNodeData extends MockNodeData {
         return attributes.get(name);
     }
 
+    @Override
     public Collection<String> getAttributeNames() throws RepositoryException {
         if (wrappedContent != null) {
             return CollectionUtils.transformedCollection(wrappedContent.getNodeDataCollection(), new Transformer() {
+                @Override
                 public Object transform(Object input) {
                     return ((MockNodeData) input).getName();
                 }
@@ -137,6 +143,7 @@ public class BinaryMockNodeData extends MockNodeData {
         return attributes.keySet();
     }
 
+    @Override
     public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
         if (wrappedContent != null) {
             throw new UnsupportedOperationException();
@@ -144,6 +151,7 @@ public class BinaryMockNodeData extends MockNodeData {
         setAttribute(name, value.toString());
     }
 
+    @Override
     public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
         if (wrappedContent != null) {
             throw new UnsupportedOperationException();
@@ -153,58 +161,72 @@ public class BinaryMockNodeData extends MockNodeData {
 
     // unsupported operations, copied from BinaryNockData
 
+    @Override
     public Calendar getDate() {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public boolean getBoolean() {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public double getDouble() {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public long getLong() {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public Value[] getValues() {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(String value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(int value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(long value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(double value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(boolean value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(Calendar value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(Content value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(Value value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(Value[] value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }

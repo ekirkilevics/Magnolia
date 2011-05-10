@@ -54,20 +54,24 @@ public class MockQueryManager implements QueryManager {
         this.session = session;
     }
 
+    @Override
     public Query createQuery(String statement, String language) throws InvalidQueryException, RepositoryException {
         return new MockQuery(session, statement, language);
     }
 
+    @Override
     public QueryObjectModelFactory getQOMFactory() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public Query getQuery(Node node) throws InvalidQueryException, RepositoryException {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public String[] getSupportedQueryLanguages() throws RepositoryException {
         // TODO Auto-generated method stub
         return null;

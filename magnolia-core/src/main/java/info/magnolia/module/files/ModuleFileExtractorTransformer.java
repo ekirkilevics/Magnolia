@@ -51,6 +51,7 @@ public class ModuleFileExtractorTransformer implements FileExtractor.Transformer
         this.moduleName = moduleName;
     }
 
+    @Override
     public String accept(String resourcePath) {
         final boolean thisIsAFileWeWant = resourcePath.startsWith("/mgnl-files/") && StringUtils.contains(resourcePath, "/" + moduleName + "/");
         if (!thisIsAFileWeWant) {

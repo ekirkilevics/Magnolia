@@ -122,6 +122,7 @@ public class ClassesTest extends TestCase {
     }
 
     public static class Chenanigans implements Whatever {
+        @Override
         public int blah() {
             return 327;
         }
@@ -134,6 +135,7 @@ public class ClassesTest extends TestCase {
         public TestClassFactory() {
         }
 
+        @Override
         public <C> Class<C> forName(String className) throws ClassNotFoundException {
             if ("chalala".equals(className)) {
                 return (Class<C>) String.class;
@@ -141,6 +143,7 @@ public class ClassesTest extends TestCase {
             throw new IllegalStateException("unexpected call with " + className);
         }
 
+        @Override
         public <T> T newInstance(Class<T> c, Object... params) {
             try {
                 return (T) ConstructorUtils.invokeConstructor(c, params);
@@ -149,6 +152,7 @@ public class ClassesTest extends TestCase {
             }
         }
 
+        @Override
         public <T> T newInstance(Class<T> c, Class<?>[] argTypes, Object... params) {
             try {
                 return (T) ConstructorUtils.invokeExactConstructor(c, params, argTypes);

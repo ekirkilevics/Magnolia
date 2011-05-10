@@ -116,6 +116,7 @@ public class SearchForm extends Form implements Handler {
         gridLayout.setColumnExpandRatio(0, 5);
 
         final Button updateResults = new Button("Update results", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 commit();
                 final SearchResult result = presenter.onSearch(searchParameters.getBean());
@@ -125,6 +126,7 @@ public class SearchForm extends Form implements Handler {
         buttons.addComponent(updateResults);
 
         final Button doneButton = new Button("Done", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 discard();
                 updateUI(false, null);
@@ -150,10 +152,12 @@ public class SearchForm extends Form implements Handler {
         this.presenter = presenter;
     }
 
+    @Override
     public Action[] getActions(Object target, Object sender) {
         return actions;
     }
 
+    @Override
     public void handleAction(Action action, Object sender, Object target) {
         if(action == SEARCH_ACTION){
             commit();
@@ -213,6 +217,7 @@ public class SearchForm extends Form implements Handler {
 
                 searchField.addListener(new FocusListener() {
 
+                    @Override
                     public void focus(FocusEvent event) {
                         ((TextField)event.getSource()).setValue("");
                     }
@@ -220,6 +225,7 @@ public class SearchForm extends Form implements Handler {
 
                 searchField.addListener(new BlurListener() {
 
+                    @Override
                     public void blur(BlurEvent event) {
                         TextField text = ((TextField)event.getSource());
                         if("".equals(text.getValue())){
@@ -264,6 +270,7 @@ public class SearchForm extends Form implements Handler {
 
             addFilterButton.addListener(new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     presenter.onAddFilter();
 

@@ -52,6 +52,7 @@ public class CheckMagnoliaDevelopProperty extends AbstractTask {
         super("Check magnolia.develop", MSG);
     }
 
+    @Override
     public void execute(InstallContext installContext) throws TaskExecutionException {
         if (SystemProperty.getBooleanProperty("magnolia.develop")) {
             installContext.warn(MSG_DETAILED);

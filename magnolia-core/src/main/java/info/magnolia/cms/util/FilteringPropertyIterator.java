@@ -53,6 +53,7 @@ public class FilteringPropertyIterator implements PropertyIterator {
         this.iterator = iterator;
         this.predicate = predicate;
     }
+    @Override
     public Property nextProperty() {
         if (nextItem != null) {
             Property temp = nextItem;
@@ -62,18 +63,22 @@ public class FilteringPropertyIterator implements PropertyIterator {
         return iterator.nextProperty();
     }
 
+    @Override
     public long getPosition() {
         return iterator.getPosition();
     }
 
+    @Override
     public long getSize() {
         return iterator.getSize();
     }
 
+    @Override
     public void skip(long skipNum) {
         iterator.skip(skipNum);
     }
 
+    @Override
     public boolean hasNext() {
         while (nextItem == null) {
             if (!iterator.hasNext()) {
@@ -87,10 +92,12 @@ public class FilteringPropertyIterator implements PropertyIterator {
         return true;
     }
 
+    @Override
     public Object next() {
         return nextProperty();
     }
 
+    @Override
     public void remove() {
         iterator.remove();
     }

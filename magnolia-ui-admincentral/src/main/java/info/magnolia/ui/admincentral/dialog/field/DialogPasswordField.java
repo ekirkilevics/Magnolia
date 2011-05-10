@@ -48,6 +48,7 @@ public class DialogPasswordField extends AbstractDialogField {
         super(dialogDefinition, tabDefinition, fieldDefinition);
     }
 
+    @Override
     protected Field getField() {
 
         // TODO if definition.verification is true we should render a verification box and do validation

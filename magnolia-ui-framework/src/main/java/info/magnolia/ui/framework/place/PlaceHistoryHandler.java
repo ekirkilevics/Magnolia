@@ -87,6 +87,7 @@ public class PlaceHistoryHandler implements FragmentChangedHandler {
         handleHistoryToken(StringUtils.defaultString(fragment));
     }
 
+    @Override
     public void onFragmentChanged(FragmentChangedEvent event) {
         String token = event.getFragment();
         log.debug("fragmentChanged with token {}", token);
@@ -105,6 +106,7 @@ public class PlaceHistoryHandler implements FragmentChangedHandler {
 
         return eventBus.addHandler(PlaceChangeEvent.class, new PlaceChangeEvent.Handler() {
 
+            @Override
             public void onPlaceChange(PlaceChangeEvent event) {
                 log.debug("onPlaceChange...");
                 Place newPlace = event.getNewPlace();

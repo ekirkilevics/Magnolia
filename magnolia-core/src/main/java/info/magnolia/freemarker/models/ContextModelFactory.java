@@ -54,10 +54,12 @@ import java.util.Map;
 class ContextModelFactory implements MagnoliaModelFactory {
     static final ContextModelFactory INSTANCE = new ContextModelFactory();
 
+    @Override
     public Class factoryFor() {
         return Context.class;
     }
 
+    @Override
     public AdapterTemplateModel create(Object object, ObjectWrapper wrapper) {
         return new MapModel((Map) object, (BeansWrapper) wrapper);
     }

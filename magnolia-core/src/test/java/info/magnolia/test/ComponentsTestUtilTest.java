@@ -45,6 +45,7 @@ import junit.framework.TestCase;
  * @version $Revision: $ ($Author: $) 
  */
 public class ComponentsTestUtilTest extends TestCase {
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         MgnlContext.setInstance(null);
@@ -52,6 +53,7 @@ public class ComponentsTestUtilTest extends TestCase {
         SystemProperty.clear();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         MgnlContext.setInstance(null);

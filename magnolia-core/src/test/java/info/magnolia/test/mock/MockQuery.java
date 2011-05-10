@@ -66,45 +66,54 @@ public class MockQuery implements Query {
 
     }
 
+    @Override
     public void bindValue(String varName, Value value) throws IllegalArgumentException, RepositoryException {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public QueryResult execute() throws InvalidQueryException, RepositoryException {
         return new MockQueryResult(session, statement, language);
     }
 
+    @Override
     public String[] getBindVariableNames() throws RepositoryException {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public String getLanguage() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public String getStatement() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public String getStoredQueryPath() throws ItemNotFoundException, RepositoryException {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public void setLimit(long limit) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void setOffset(long offset) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public Node storeAsNode(String absPath) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException,
     UnsupportedRepositoryOperationException, RepositoryException {
         // TODO Auto-generated method stub

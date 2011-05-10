@@ -57,6 +57,7 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
 
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JspTemplateRenderer.class);
 
+    @Override
     protected void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException {
         HttpServletRequest request = ((WebContext) MgnlContext.getInstance()).getRequest();
         HttpServletResponse response = ((WebContext) MgnlContext.getInstance()).getResponse();
@@ -76,15 +77,18 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
     /**
      * We expose nodes as Map instances in JSPs.
      */
+    @Override
     protected Content wrapNodeForTemplate(Content currentContent, Content mainContent) {
         final Content wrapped = super.wrapNodeForTemplate(currentContent, mainContent);
         return new NodeMapWrapper(wrapped, mainContent.getHandle());
     }
 
+    @Override
     protected Map newContext() {
         return MgnlContext.getWebContext("JspTemplateRenderer can only be used with a WebContext");
     }
 
+    @Override
     protected String getPageAttributeName() {
         return "actpage";
     }

@@ -82,6 +82,7 @@ public abstract class ContentHandler implements Cloneable {
      * Bit by bit copy of the current object.
      * @return Object cloned object
      */
+    @Override
     protected Object clone() {
         try {
             return super.clone();

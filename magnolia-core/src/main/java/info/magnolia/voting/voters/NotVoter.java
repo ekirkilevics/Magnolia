@@ -44,6 +44,7 @@ public class NotVoter extends AbstractBoolVoter {
 
     private AbstractBoolVoter voter;
 
+    @Override
     protected boolean boolVote(Object value) {
         return !voter.boolVote(value);
     }

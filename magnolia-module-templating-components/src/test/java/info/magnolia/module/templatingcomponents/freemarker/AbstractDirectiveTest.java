@@ -61,6 +61,7 @@ public class AbstractDirectiveTest {
     @Test
     public void testBodyCheck() throws TemplateModelException {
         final TemplateDirectiveBody dummyDirBody = new TemplateDirectiveBody() {
+            @Override
             public void render(Writer out) throws TemplateException, IOException {
             }
         };

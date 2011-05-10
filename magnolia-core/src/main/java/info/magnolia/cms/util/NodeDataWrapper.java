@@ -72,6 +72,7 @@ public abstract class NodeDataWrapper implements NodeData {
         this.wrappedNodeData = wrappedNodeData;
     }
 
+    @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append(getClass().getSimpleName());
@@ -81,154 +82,192 @@ public abstract class NodeDataWrapper implements NodeData {
     }
 
     // ---- below are only generated delegate methods
+    @Override
     public void delete() throws RepositoryException {
         getWrappedNodeData().delete();
     }
 
+    @Override
     public String getAttribute(String name) {
         return getWrappedNodeData().getAttribute(name);
     }
 
+    @Override
     public Collection<String> getAttributeNames() throws RepositoryException {
         return getWrappedNodeData().getAttributeNames();
     }
 
+    @Override
     public boolean getBoolean() {
         return getWrappedNodeData().getBoolean();
     }
 
+    @Override
     public long getContentLength() {
         return getWrappedNodeData().getContentLength();
     }
 
+    @Override
     public Calendar getDate() {
         return getWrappedNodeData().getDate();
     }
 
+    @Override
     public double getDouble() {
         return getWrappedNodeData().getDouble();
     }
 
+    @Override
     public String getHandle() {
         return getWrappedNodeData().getHandle();
     }
 
+    @Override
     public HierarchyManager getHierarchyManager() {
         return getWrappedNodeData().getHierarchyManager();
     }
 
+    @Override
     public Property getJCRProperty() {
         return getWrappedNodeData().getJCRProperty();
     }
 
+    @Override
     public long getLong() {
         return getWrappedNodeData().getLong();
     }
 
+    @Override
     public String getName() {
         return getWrappedNodeData().getName();
     }
 
+    @Override
     public Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {
         return getWrappedNodeData().getParent();
     }
 
+    @Override
     public Content getReferencedContent() throws RepositoryException, PathNotFoundException, RepositoryException {
         return getWrappedNodeData().getReferencedContent();
     }
 
+    @Override
     public Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException {
         return getWrappedNodeData().getReferencedContent(repositoryId);
     }
 
+    @Override
     public InputStream getStream() {
         return getWrappedNodeData().getStream();
     }
 
+    @Override
     public String getString() {
         return getWrappedNodeData().getString();
     }
 
+    @Override
     public String getString(String lineBreak) {
         return getWrappedNodeData().getString(lineBreak);
     }
 
+    @Override
     public int getType() {
         return getWrappedNodeData().getType();
     }
 
+    @Override
     public Value getValue() {
         return getWrappedNodeData().getValue();
     }
 
+    @Override
     public Value[] getValues() {
         return getWrappedNodeData().getValues();
     }
 
+    @Override
     public boolean isExist() {
         return getWrappedNodeData().isExist();
     }
 
+    @Override
     public boolean isGranted(long permissions) {
         return getWrappedNodeData().isGranted(permissions);
     }
 
+    @Override
     public int isMultiValue() {
         return getWrappedNodeData().isMultiValue();
     }
 
+    @Override
     public void refresh(boolean keepChanges) throws RepositoryException {
         getWrappedNodeData().refresh(keepChanges);
     }
 
+    @Override
     public void save() throws RepositoryException {
         getWrappedNodeData().save();
     }
 
+    @Override
     public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
         getWrappedNodeData().setAttribute(name, value);
     }
 
+    @Override
     public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
         getWrappedNodeData().setAttribute(name, value);
     }
 
+    @Override
     public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }
 
+    @Override
     public void setValue(Calendar value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }
 
+    @Override
     public void setValue(double value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }
 
+    @Override
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }
 
+    @Override
     public void setValue(int value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }
 
+    @Override
     public void setValue(long value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }
 
+    @Override
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }
 
+    @Override
     public void setValue(Content value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }
 
+    @Override
     public void setValue(Value value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }
 
+    @Override
     public void setValue(Value[] value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }

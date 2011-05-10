@@ -51,6 +51,7 @@ import java.util.Map;
  */
 public class JspParagraphRenderer extends AbstractParagraphRenderer {
 
+    @Override
     protected void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException {
         try {
             ((WebContext) ctx).include(templatePath, out);
@@ -60,6 +61,7 @@ public class JspParagraphRenderer extends AbstractParagraphRenderer {
 
     }
 
+    @Override
     protected Map newContext() {
         return MgnlContext.getWebContext("JspParagraphRenderer can only be used with a WebContext");
     }
@@ -67,11 +69,13 @@ public class JspParagraphRenderer extends AbstractParagraphRenderer {
     /**
      * We expose nodes as Map instances in JSPs.
      */
+    @Override
     protected Content wrapNodeForTemplate(Content currentContent, Content mainContent) {
         final Content wrapped = super.wrapNodeForTemplate(currentContent, mainContent);
         return new NodeMapWrapper(wrapped, mainContent.getHandle());
     }
 
+    @Override
     protected String getPageAttributeName() {
         return "actpage";
     }

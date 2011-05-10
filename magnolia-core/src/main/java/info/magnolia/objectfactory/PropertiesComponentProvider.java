@@ -105,6 +105,7 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
         }
     }
 
+    @Override
     public PropertiesComponentProvider createChild() {
         return new PropertiesComponentProvider(this);
     }

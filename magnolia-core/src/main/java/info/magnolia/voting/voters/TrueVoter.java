@@ -42,6 +42,7 @@ package info.magnolia.voting.voters;
  * @version $Id$
  */
 public class TrueVoter extends AbstractBoolVoter {
+    @Override
     protected boolean boolVote(Object value) {
         return true;
     }

@@ -183,6 +183,7 @@ public class ServletDispatchingFilterTest extends MgnlTestCase {
         if (!shouldBypass) {
             servlet.service(isA(HttpServletRequestWrapper.class), same(res));
             expectLastCall().andAnswer(new IAnswer<Object>() {
+                @Override
                 public Object answer() throws Throwable {
                     final HttpServletRequestWrapper requestWrapper = (HttpServletRequestWrapper) getCurrentArguments()[0];
                     final String pathInfo = requestWrapper.getPathInfo();

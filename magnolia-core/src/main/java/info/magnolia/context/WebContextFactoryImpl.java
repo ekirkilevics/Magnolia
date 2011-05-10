@@ -49,6 +49,7 @@ import java.io.Serializable;
 public class WebContextFactoryImpl implements WebContextFactory, Serializable {
     /* TODO - do we really need to implement Serializable - see MAGNOLIA-3523 */
 
+    @Override
     public WebContext createWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         final WebContext ctx = new WebContextImpl() {
             @Override

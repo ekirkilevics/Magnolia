@@ -62,6 +62,7 @@ public class PerformanceTestStatus {
     }
 
     Map states = MapUtils.lazyMap(new LinkedMap(), new Factory() {
+        @Override
         public Object create() {
             return new TestStatus();
         }
@@ -87,6 +88,7 @@ public class PerformanceTestStatus {
         return (PerformanceTestStatus) MgnlContext.getAttribute(ATTRIBUTE_NAME);
     }
 
+    @Override
     public String toString() {
         StringBuffer str = new StringBuffer();
         final Iterator it = states.entrySet().iterator();

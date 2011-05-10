@@ -145,18 +145,22 @@ public class DefaultMagnoliaInitPaths implements MagnoliaInitPaths {
         }
     }
 
+    @Override
     public String getServerName() {
         return serverName;
     }
 
+    @Override
     public String getRootPath() {
         return rootPath;
     }
 
+    @Override
     public String getWebappFolderName() {
         return webappFolderName;
     }
 
+    @Override
     public String getContextPath() {
         return contextPath;
     }

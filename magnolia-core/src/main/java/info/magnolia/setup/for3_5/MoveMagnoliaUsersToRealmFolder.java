@@ -61,6 +61,7 @@ public class MoveMagnoliaUsersToRealmFolder extends AbstractRepositoryTask {
         super("Update Magnolia users repository structure", "Moves Magnolia admin users into /" + Realm.REALM_ADMIN + " folder.");
     }
 
+    @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         // move existing users there
         final HierarchyManager usersHm = installContext.getHierarchyManager(ContentRepository.USERS);

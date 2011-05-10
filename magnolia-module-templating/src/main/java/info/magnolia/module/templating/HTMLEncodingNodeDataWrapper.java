@@ -56,6 +56,7 @@ public class HTMLEncodingNodeDataWrapper extends NodeDataWrapper {
         this.transformLineBreaks = transformLineBreaks;
     }
 
+    @Override
     public String getString() {
         final String str = StringEscapeUtils.escapeHtml(super.getString());
         if(transformLineBreaks){

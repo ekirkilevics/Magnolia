@@ -262,18 +262,22 @@ public class FreemarkerHelper {
             this.freemarkerConfig = freemarkerConfig;
         }
 
+        @Override
         public Object findTemplateSource(String name) throws IOException {
             return freemarkerConfig.getTemplateLoader().findTemplateSource(name);
         }
 
+        @Override
         public long getLastModified(Object templateSource) {
             return freemarkerConfig.getTemplateLoader().getLastModified(templateSource);
         }
 
+        @Override
         public Reader getReader(Object templateSource, String encoding) throws IOException {
             return freemarkerConfig.getTemplateLoader().getReader(templateSource, encoding);
         }
 
+        @Override
         public void closeTemplateSource(Object templateSource) throws IOException {
             freemarkerConfig.getTemplateLoader().closeTemplateSource(templateSource);
         }
@@ -286,6 +290,7 @@ public class FreemarkerHelper {
             this.freemarkerConfig = freemarkerConfig;
         }
 
+        @Override
         public TemplateModel wrap(Object obj) throws TemplateModelException {
             return freemarkerConfig.getObjectWrapper().wrap(obj);
         }

@@ -81,6 +81,7 @@ public class UserContextImpl extends AbstractContext implements UserContext {
         return this.user;
     }
 
+    @Override
     public void login(User user) {
         setLocaleFor(user);
         if(!user.getName().equals(Security.getAnonymousUser().getName())){
@@ -89,6 +90,7 @@ public class UserContextImpl extends AbstractContext implements UserContext {
         this.user = null;
     }
 
+    @Override
     public void logout() {
         removeAttribute(SESSION_USER, Context.SESSION_SCOPE);
         user = null;

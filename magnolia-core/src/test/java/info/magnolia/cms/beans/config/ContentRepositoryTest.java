@@ -48,6 +48,7 @@ import java.io.InputStream;
  */
 public class ContentRepositoryTest extends TestCase {
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.clear();
@@ -55,6 +56,7 @@ public class ContentRepositoryTest extends TestCase {
         SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties(in));
     }
 
+    @Override
     protected void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         // TODO - this does nothing anymore since getProperties recreates the props instance - SystemProperty.getProperties().clear();

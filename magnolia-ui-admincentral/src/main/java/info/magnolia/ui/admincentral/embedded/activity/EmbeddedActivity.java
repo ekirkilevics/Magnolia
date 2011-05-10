@@ -56,6 +56,7 @@ public class EmbeddedActivity extends AbstractActivity {
         this.place = place;
     }
 
+    @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
         String url;
         if(LinkUtil.isExternalLinkOrAnchor(place.getUrl())){

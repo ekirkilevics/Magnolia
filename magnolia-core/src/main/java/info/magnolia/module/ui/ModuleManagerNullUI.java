@@ -55,6 +55,7 @@ public class ModuleManagerNullUI implements ModuleManagerUI {
         this.moduleManager = moduleManager;
     }
 
+    @Override
     public void onStartup() throws ModuleManagementException {
         final ModuleManager.ModuleManagementState moduleMgtState = moduleManager.getStatus();
         if (moduleMgtState.needsUpdateOrInstall()) {
@@ -77,10 +78,12 @@ public class ModuleManagerNullUI implements ModuleManagerUI {
         }
     }
 
+    @Override
     public boolean execute(Writer out, String command) throws ModuleManagementException {
         throw new IllegalStateException("This implementation of ModuleManagerUI is only meant to be used at startup.");
     }
 
+    @Override
     public void renderTempPage(Writer out) {
         throw new IllegalStateException("This implementation of ModuleManagerUI is only meant to be used at startup.");
     }

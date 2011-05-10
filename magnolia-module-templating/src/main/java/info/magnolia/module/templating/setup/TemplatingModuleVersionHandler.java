@@ -123,6 +123,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
         );
     }
 
+    @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final ArrayList<Task> tasks = new ArrayList<Task>();
         tasks.add(orderBackwardCompatibilityFilter);

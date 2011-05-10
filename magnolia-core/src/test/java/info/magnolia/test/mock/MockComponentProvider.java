@@ -100,6 +100,7 @@ public class MockComponentProvider extends PropertiesComponentProvider {
      * this means tests also have to call SystemProperty.clearr()
      * @see {@link info.magnolia.test.ComponentsTestUtil}
      */
+    @Override
     public void clear() {
         super.clear();
     }

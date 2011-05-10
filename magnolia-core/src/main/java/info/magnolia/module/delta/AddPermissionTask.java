@@ -61,6 +61,7 @@ public class AddPermissionTask extends AbstractTask {
         this.includingSubNodes = includingSubNodes;
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         SecuritySupport securitySupport = SecuritySupport.Factory.getInstance();
         RoleManager roleManager = securitySupport.getRoleManager();

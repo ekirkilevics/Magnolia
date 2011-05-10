@@ -49,15 +49,18 @@ public class LazyInitPrintWriter extends PrintWriter {
 
             private Writer writer;
 
+            @Override
             public void write(char[] cbuf, int off, int len) throws IOException {
                 getTargetWriter().write(cbuf, off, len);
             }
 
+            @Override
             public void flush() throws IOException {
                 if (writer != null)
                     writer.flush();
             }
 
+            @Override
             public void close() throws IOException {
                 getTargetWriter().close();
             }

@@ -87,9 +87,11 @@ public class RecursiveOp extends AbstractNodeOperation {
         this.childrenOps = childrenOps;
     }
 
+    @Override
     protected Content doExec(Content context, final ErrorHandler errorHandler) throws RepositoryException {
         try {
             ContentUtil.visit(context, new ContentUtil.Visitor() {
+                @Override
                 public void visit(Content node) throws Exception {
                     if (filter.accept(node)) {
                         for (NodeOperation nodeOperation : childrenOps) {

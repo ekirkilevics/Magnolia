@@ -76,6 +76,7 @@ public class BackupTask extends ArrayDelegateTask {
         addTask(moveNodeToBackupPath);
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         super.execute(ctx);
         if (info) {

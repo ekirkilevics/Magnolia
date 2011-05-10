@@ -65,28 +65,34 @@ public class QueryImpl implements Query {
         this.hm = hm;
     }
 
+    @Override
     public void setLimit(long limit) {
         this.limit = limit;
     }
 
+    @Override
     public QueryResult execute() throws RepositoryException {
         javax.jcr.query.QueryResult result = this.query.execute();
         QueryResultImpl filteredResult = new QueryResultImpl(result, this.hm, limit);
         return filteredResult;
     }
 
+    @Override
     public String getStatement() {
         return this.query.getStatement();
     }
 
+    @Override
     public String getLanguage() {
         return this.query.getLanguage();
     }
 
+    @Override
     public String getStoredQueryPath() throws ItemNotFoundException, RepositoryException {
         return this.query.getStoredQueryPath();
     }
 
+    @Override
     public Node storeAsNode(String s) throws ItemExistsException, PathNotFoundException, VersionException,
         ConstraintViolationException, LockException, UnsupportedRepositoryOperationException, RepositoryException {
         return this.query.storeAsNode(s);

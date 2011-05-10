@@ -88,6 +88,7 @@ public class ClasspathResourcesUtil {
             this.pattern = Pattern.compile(pattern);
         }
 
+        @Override
         public boolean accept(String name) {
             return pattern.matcher(name).matches();
         }
@@ -175,6 +176,7 @@ public class ClasspathResourcesUtil {
         File dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/lib")); //$NON-NLS-1$
         if (dir.exists()) {
             File[] files = dir.listFiles(new FilenameFilter() {
+                @Override
                 public boolean accept(File file, String name) {
                     return name.endsWith(".jar");
                 }

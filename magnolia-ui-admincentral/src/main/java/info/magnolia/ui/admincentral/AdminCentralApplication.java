@@ -111,6 +111,7 @@ public class AdminCentralApplication extends Application implements HttpServletR
 //        componentProvider.registerImplementation(PlaceController.class, PlaceController.class);
     }
 
+    @Override
     public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {
         if (componentProvider == null)
             createComponentProvider();
@@ -120,6 +121,7 @@ public class AdminCentralApplication extends Application implements HttpServletR
         Components.pushScope(componentProvider);
     }
 
+    @Override
     public void onRequestEnd(HttpServletRequest request, HttpServletResponse response) {
         Components.popScope(componentProvider);
     }

@@ -58,6 +58,7 @@ public abstract class AbstractBoolVoter extends BaseVoterImpl {
 
     private boolean not;
 
+    @Override
     public int vote(Object value) {
         boolean vote = boolVote(value);
         if(not){
@@ -93,6 +94,7 @@ public abstract class AbstractBoolVoter extends BaseVoterImpl {
         this.not = not;
     }
 
+    @Override
     public String toString() {
         return super.toString() + ": " + (not?"not" : "");
     }

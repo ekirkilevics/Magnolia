@@ -54,6 +54,7 @@ public class ContentChangedEvent implements Event<ContentChangedEvent.Handler> {
 
     private String path;
 
+    @Override
     public void dispatch(Handler handler) {
         handler.onContentChanged(this);
     }

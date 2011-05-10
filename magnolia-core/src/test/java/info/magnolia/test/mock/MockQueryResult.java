@@ -72,11 +72,13 @@ public class MockQueryResult implements QueryResult {
         }
     }
 
+    @Override
     public String[] getColumnNames() throws RepositoryException {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public NodeIterator getNodes() throws RepositoryException {
         List<Node> results = new ArrayList<Node>();
         // mocking up real search qould be a pain, so for now we just return all ... could be substituted for op that will return expected results
@@ -101,11 +103,13 @@ public class MockQueryResult implements QueryResult {
 
     }
 
+    @Override
     public RowIterator getRows() throws RepositoryException {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public String[] getSelectorNames() throws RepositoryException {
         // TODO Auto-generated method stub
         return null;

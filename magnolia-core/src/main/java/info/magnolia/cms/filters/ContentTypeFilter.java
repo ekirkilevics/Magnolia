@@ -70,6 +70,7 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
      */
     private static final String AGGREGATION_STATE_INITIALIZED = ContentTypeFilter.class.getName() + ".aggregationStateInitialized";
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // we will set the original uri, to avoid conflicts we have to reset the aggregation state
         // this will mainly reset the original uri and keep all other information

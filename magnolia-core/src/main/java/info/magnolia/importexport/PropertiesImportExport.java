@@ -230,6 +230,7 @@ public class PropertiesImportExport {
     private static Properties toProperties(Content rootContent, Content.ContentFilter contentFilter, final boolean legacyMode) throws Exception {
         final Properties out = new OrderedProperties();
         ContentUtil.visit(rootContent, new ContentUtil.Visitor() {
+            @Override
             public void visit(Content node) throws Exception {
                 if (!legacyMode) {
                     appendNodeTypeAndUUID(node, out, true);

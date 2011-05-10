@@ -66,6 +66,7 @@ public class I18nContentWrapper extends ContentWrapper {
         return super.newNodeDataInstance(name, type, createIfNotExisting);
     }
     
+    @Override
     protected Content wrap(Content node) {
         // be sure we don't wrap nulls
         if (node == null) {

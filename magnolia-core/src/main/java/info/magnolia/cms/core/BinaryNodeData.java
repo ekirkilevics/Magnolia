@@ -68,6 +68,7 @@ public class BinaryNodeData extends AbstractNodeData {
         super(parent, name);
     }
 
+    @Override
     public Property getJCRProperty() {
         if(binaryProperty == null){
             if(isExist()){
@@ -100,10 +101,12 @@ public class BinaryNodeData extends AbstractNodeData {
         return binaryNode;
     }
 
+    @Override
     public boolean isExist() {
         return getBinaryNode(false) != null;
     }
 
+    @Override
     public InputStream getStream() {
         if (isExist()) {
             try {
@@ -118,11 +121,13 @@ public class BinaryNodeData extends AbstractNodeData {
         }
     }
 
+    @Override
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
         Access.tryPermission(this.parent.getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY + "," + Session.ACTION_ADD_NODE);
         getBinaryNode(true).setProperty(ItemType.JCR_DATA, value);
     }
 
+    @Override
     public void delete() throws RepositoryException {
         Access.tryPermission(this.parent.getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_REMOVE);
         if(isExist()){
@@ -173,10 +178,12 @@ public class BinaryNodeData extends AbstractNodeData {
         return names;
     }
 
+    @Override
     public int getType() {
         return PropertyType.BINARY;
     }
 
+    @Override
     public Value getValue() {
         if(isExist()){
             try {
@@ -189,6 +196,7 @@ public class BinaryNodeData extends AbstractNodeData {
         return null;
     }
 
+    @Override
     public long getContentLength() {
         if(!isExist()){
             return 0;
@@ -207,12 +215,14 @@ public class BinaryNodeData extends AbstractNodeData {
         return MULTIVALUE_FALSE;
     }
 
+    @Override
     public void refresh(boolean keepChanges) throws RepositoryException {
         if(isExist()){
             getBinaryNode(false).refresh(keepChanges);
         }
     }
 
+    @Override
     public void save() throws RepositoryException {
         if(isExist()){
             getBinaryNode(false).save();
@@ -234,6 +244,7 @@ public class BinaryNodeData extends AbstractNodeData {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public String getString() {
         if(isExist()){
             try {
@@ -246,58 +257,72 @@ public class BinaryNodeData extends AbstractNodeData {
         return "";
     }
 
+    @Override
     public Calendar getDate() {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public boolean getBoolean() {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public double getDouble() {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public long getLong() {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public Value[] getValues() {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(String value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(int value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(long value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(double value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(boolean value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(Calendar value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(Content value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(Value value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
+    @Override
     public void setValue(Value[] value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }

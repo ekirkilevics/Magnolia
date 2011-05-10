@@ -81,24 +81,30 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
         return (Content) (pageContext == null ? null : pageContext.getAttribute("actPage"));
     }
 
+    @Override
     public AggregationState getAggregationState() {
         return aggregationState ;
     }
 
+    @Override
     public String getParameter(String name) {
         return getParameters().get(name);
     }
 
+    @Override
     public void include(String path, Writer out) throws ServletException, IOException {
         throw new IllegalStateException("not implemented !");
     }
 
+    @Override
     public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
     }
 
+    @Override
     public void resetAggregationState() {
     }
 
+    @Override
     public void setPageContext(PageContext pageContext) {
         this.pageContext = pageContext;
     }
@@ -111,18 +117,22 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
         this.aggregationState = agState;
     }
 
+    @Override
     public User getUser() {
         return this.user;
     }
 
+    @Override
     public void login(User user) {
         this.user = user;
     }
 
+    @Override
     public void logout() {
         this.user = null;
     }
 
+    @Override
     public HttpServletRequest getRequest() {
         return request;
     }
@@ -131,6 +141,7 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
         this.request = request;
     }
 
+    @Override
     public HttpServletResponse getResponse() {
         return response;
     }
@@ -139,10 +150,12 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
         this.response = response;
     }
 
+    @Override
     public void setUser(User user) {
         this.user = user;
     }
 
+    @Override
     public String getContextPath() {
         return contextPath;
     }
@@ -151,6 +164,7 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
         this.contextPath = contextPath;
     }
 
+    @Override
     public Map<String, String> getParameters() {
         return parameters;
     }
@@ -159,6 +173,7 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
         this.parameters = parameters;
     }
 
+    @Override
     public ServletContext getServletContext() {
         return servletContext;
     }
@@ -167,6 +182,7 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
         this.servletContext = servletContext;
     }
 
+    @Override
     public MultipartForm getPostedForm() {
         return postedForm;
     }
@@ -175,6 +191,7 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
         this.postedForm = postedForm;
     }
 
+    @Override
     public PageContext getPageContext() {
         return pageContext;
     }
@@ -186,6 +203,7 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
     /* (non-Javadoc)
      * @see info.magnolia.context.WebContext#pop()
      */
+    @Override
     public void pop() {
         // TODO Auto-generated method stub
 
@@ -194,11 +212,13 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
     /* (non-Javadoc)
      * @see info.magnolia.context.WebContext#push(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
+    @Override
     public void push(HttpServletRequest request, HttpServletResponse response) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public String[] getParameterValues(String name) {
         // TODO Auto-generated method stub
         return null;

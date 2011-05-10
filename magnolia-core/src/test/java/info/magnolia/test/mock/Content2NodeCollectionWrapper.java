@@ -55,18 +55,22 @@ public class Content2NodeCollectionWrapper implements Collection<Node> {
         this.col = c;
     }
 
+    @Override
     public boolean add(Node arg0) {
         throw new UnsupportedOperationException("This collection is read only");
     }
 
+    @Override
     public boolean addAll(Collection<? extends Node> arg0) {
         throw new UnsupportedOperationException("This collection is read only");
     }
 
+    @Override
     public void clear() {
         col.clear();
     }
 
+    @Override
     public boolean contains(Object arg0) {
         for (Content c : col) {
             if (c.getJCRNode().equals(arg0)) {
@@ -76,6 +80,7 @@ public class Content2NodeCollectionWrapper implements Collection<Node> {
         return false;
     }
 
+    @Override
     public boolean containsAll(Collection<?> arg0) {
         if (arg0 == null) {
             return false;
@@ -87,10 +92,12 @@ public class Content2NodeCollectionWrapper implements Collection<Node> {
         return test.isEmpty();
     }
 
+    @Override
     public boolean isEmpty() {
         return col.isEmpty();
     }
 
+    @Override
     public Iterator<Node> iterator() {
         Collection<Node> test = new ArrayList<Node>();
         for (Content c : col) {
@@ -99,6 +106,7 @@ public class Content2NodeCollectionWrapper implements Collection<Node> {
         return test.iterator();
     }
 
+    @Override
     public boolean remove(Object arg0) {
         for (Content c : col) {
             if (c.getJCRNode().equals(arg0)) {
@@ -109,11 +117,13 @@ public class Content2NodeCollectionWrapper implements Collection<Node> {
         return false;
     }
 
+    @Override
     public boolean removeAll(Collection<?> nodesToRemove) {
         Collection<Content> contentToRemove = createCollectionOfContainedContent(nodesToRemove);
         return col.removeAll(contentToRemove);
     }
 
+    @Override
     public boolean retainAll(Collection<?> nodesToRetain) {
         Collection<Content> contentToRetain = createCollectionOfContainedContent(nodesToRetain);
         return col.retainAll(contentToRetain);
@@ -132,10 +142,12 @@ public class Content2NodeCollectionWrapper implements Collection<Node> {
     }
 
 
+    @Override
     public int size() {
         return col.size();
     }
 
+    @Override
     public Object[] toArray() {
         Collection<Node> test = new ArrayList<Node>();
         for (Content c : col) {
@@ -144,6 +156,7 @@ public class Content2NodeCollectionWrapper implements Collection<Node> {
         return test.toArray();
     }
 
+    @Override
     public <T> T[] toArray(T[] arg0) {
         Collection<Node> test = new ArrayList<Node>();
         for (Content c : col) {

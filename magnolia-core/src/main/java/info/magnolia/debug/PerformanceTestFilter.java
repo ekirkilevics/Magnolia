@@ -54,6 +54,7 @@ import org.slf4j.LoggerFactory;
 public class PerformanceTestFilter extends AbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger("info.magnolia.debug");
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
         final PerformanceTestStatus test = PerformanceTestStatus.getInstance();

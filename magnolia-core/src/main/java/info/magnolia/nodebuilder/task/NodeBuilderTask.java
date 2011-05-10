@@ -60,6 +60,7 @@ public class NodeBuilderTask extends AbstractNodeBuilderTask {
         this.rootPath = rootPath;
     }
 
+    @Override
     protected Content getRootNode(InstallContext ctx) throws RepositoryException {
         final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
         return hm.getContent(rootPath);

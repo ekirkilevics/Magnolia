@@ -109,6 +109,7 @@ public class ArrayDelegateTask implements Task {
         this(name, description, new Task[]{task1, task2, task3, task4});
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -120,6 +121,7 @@ public class ArrayDelegateTask implements Task {
         this.tasks = (Task[]) ArrayUtils.add(tasks, task);
     }
 
+    @Override
     public String getDescription() {
         if (description != null) {
             return description;
@@ -135,12 +137,14 @@ public class ArrayDelegateTask implements Task {
         }
     }
 
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         for (Task task : tasks) {
             task.execute(ctx);
         }
     }
 
+    @Override
     public String toString() {
         return Arrays.toString(tasks);
     }

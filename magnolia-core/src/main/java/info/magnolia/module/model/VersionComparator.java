@@ -43,6 +43,7 @@ import java.util.Comparator;
  * @version $Revision: $ ($Author: $)
  */
 public class VersionComparator implements Comparator<Version> {
+    @Override
     public int compare(Version v1, Version v2) {
         if (v1.isStrictlyAfter(v2)) {
             return 1;

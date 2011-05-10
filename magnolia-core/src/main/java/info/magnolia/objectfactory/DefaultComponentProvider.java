@@ -91,11 +91,13 @@ public class DefaultComponentProvider implements ComponentProvider {
         // since it might get swapped later
     }
 
+    @Override
     @Deprecated
     public synchronized <T> T getSingleton(Class<T> type) {
         return getComponent(type);
     }
 
+    @Override
     public synchronized <T> T getComponent(Class<T> type) {
         T instance = (T) instances.get(type);
         if (instance == null) {
@@ -108,6 +110,7 @@ public class DefaultComponentProvider implements ComponentProvider {
         return instance;
     }
 
+    @Override
     public <T> T newInstance(Class<T> type, Object... parameters) {
         if (type == null) {
             log.error("type can't be null", new Throwable());
@@ -157,6 +160,7 @@ public class DefaultComponentProvider implements ComponentProvider {
     }
 
     // TODO - is this needed / correct ?
+    @Override
     public <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException {
         final String className = getImplementationName(type);
         if (!isInRepositoryDefinition(className)) {

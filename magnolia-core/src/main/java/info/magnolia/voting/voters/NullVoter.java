@@ -42,10 +42,12 @@ import info.magnolia.voting.Voter;
  * @version $Revision: $ ($Author: $)
  */
 class NullVoter implements Voter {
+    @Override
     public int vote(Object value) {
         return 0;
     }
 
+    @Override
     public boolean isEnabled() {
         return false;
     }

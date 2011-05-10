@@ -110,11 +110,13 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
     /**
      * Executes the AllChildrenNodesOperation and possibly added subtasks to update the configuration.
      */
+    @Override
     public void execute(InstallContext installContext) throws TaskExecutionException {
         super.execute(installContext);
         subtasks.execute(installContext);
     }
 
+    @Override
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException,
         TaskExecutionException {
 

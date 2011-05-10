@@ -50,6 +50,7 @@ public class ModuleBootstrapTask extends BootstrapResourcesTask {
     /**
      * Accepts any resource under "/mgnl-bootstrap/moduleName" including any subfolders.
      */
+    @Override
     protected boolean acceptResource(InstallContext ctx, String resourceName) {
         final String moduleName = ctx.getCurrentModuleDefinition().getName();
         return resourceName.startsWith("/mgnl-bootstrap/" + moduleName + "/") && resourceName.endsWith(".xml");

@@ -74,6 +74,7 @@ public class NestPropertiesAllModulesNodeTask extends AllModulesNodeOperation {
     }
 
 
+    @Override
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
             throws RepositoryException, TaskExecutionException {
         try {

@@ -60,6 +60,7 @@ public class ChangeNodeTypesInUserWorkspace extends AbstractRepositoryTask {
      * Content filter accepting only <code>nt:folder</code>.
      */
     private static ContentFilter NT_FOLDER_FILTER = new ContentFilter() {
+        @Override
         public boolean accept(Content content) {
             return content.isNodeType("nt:folder");
         }
@@ -69,6 +70,7 @@ public class ChangeNodeTypesInUserWorkspace extends AbstractRepositoryTask {
         super("Nodetypes change", "Changes node type of folders in users workspace.");
     }
 
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getHierarchyManager("users");
         try {
@@ -80,6 +82,7 @@ public class ChangeNodeTypesInUserWorkspace extends AbstractRepositoryTask {
 
     private final static class TypeChanger implements ContentUtil.PostVisitor {
 
+        @Override
         public void postVisit(Content node) throws Exception {
             Content parent = null;
             if (node.getLevel() == 0) {
@@ -100,6 +103,7 @@ public class ChangeNodeTypesInUserWorkspace extends AbstractRepositoryTask {
             ContentUtil.moveInSession(tmp, StringUtils.removeEnd(parent.getHandle(), "/") + "/" + name);
         }
 
+        @Override
         public void visit(Content node) throws Exception {
             // do nothing
         }

@@ -69,11 +69,13 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
         this.rules = new HashMap<String, Rule>();
     }
 
+    @Override
     public boolean isAllowed(HttpServletRequest req) {
         final Rule rule = getRule(req.getRemoteAddr());
         return rule != null && rule.allowsMethod(req.getMethod());
     }
 
+    @Override
     public boolean isAllowed(String ip) {
         return getRule(ip) != null;
     }
@@ -117,6 +119,7 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
      */
     public static final class IPSecurityManagerTransformer extends Content2BeanTransformerImpl {
 
+        @Override
         public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
             final Object currentBean = state.getCurrentBean();
             if (currentBean instanceof IPSecurityManagerImpl) {
@@ -131,6 +134,7 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
             super.setProperty(typeMapping, state, descriptor, values);
         }
 
+        @Override
         protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state,
                 TypeDescriptor resolvedType) {
             if (state.getLevel() == 2 && resolvedType == null) {

@@ -58,6 +58,7 @@ public abstract class SilentSessionOp<R> implements Op<R, RuntimeException> {
         this.repository = repository;
     }
 
+    @Override
     public R exec() {
         Session session = null;
         try {

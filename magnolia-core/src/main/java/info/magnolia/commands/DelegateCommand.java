@@ -55,6 +55,7 @@ public class DelegateCommand implements Command {
     public DelegateCommand() {
     }
 
+    @Override
     public boolean execute(Context ctx) throws Exception {
         Command cmd = CommandsManager.getInstance().getCommand(commandName);
         if(cmd != null){

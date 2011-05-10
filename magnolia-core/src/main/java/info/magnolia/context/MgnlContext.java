@@ -443,6 +443,7 @@ public class MgnlContext {
      * An Op that does not return values and can only throw RuntimeExceptions.
      */
     public abstract static class VoidOp implements Op<Void, RuntimeException> {
+        @Override
         public Void exec() {
             doExec();
             return null;

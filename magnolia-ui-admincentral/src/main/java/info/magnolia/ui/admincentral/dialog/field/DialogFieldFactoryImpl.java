@@ -70,6 +70,7 @@ public class DialogFieldFactoryImpl extends FactoryBase<FieldDefinition, DialogF
         addMapping(mapping.getDefinition(), mapping.getImplementation());
     }
 
+    @Override
     public DialogField getDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
         return super.create(fieldDefinition, dialogDefinition, tabDefinition);
     }

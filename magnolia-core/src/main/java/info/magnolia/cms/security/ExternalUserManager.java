@@ -48,6 +48,7 @@ import javax.security.auth.Subject;
  */
 public class ExternalUserManager implements UserManager {
 
+    @Override
     public User getUser(String name) throws UnsupportedOperationException {
         // we only support accessing current User object
         // - implement source specific UserManager if needed
@@ -62,18 +63,22 @@ public class ExternalUserManager implements UserManager {
      * @param subject
      * @throws UnsupportedOperationException
      */
+    @Override
     public User getUser(Subject subject) throws UnsupportedOperationException {
         return new ExternalUser(subject);
     }
 
+    @Override
     public Collection<User> getAllUsers() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
+    @Override
     public User createUser(String name, String pw) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
+    @Override
     public User changePassword(User user, String newPassword) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented yet");
     }
@@ -81,6 +86,7 @@ public class ExternalUserManager implements UserManager {
     /**
      * SystemUserManager does this.
      */
+    @Override
     public User getSystemUser() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
@@ -88,22 +94,27 @@ public class ExternalUserManager implements UserManager {
     /**
      * SystemUserManager does this.
      */
+    @Override
     public User getAnonymousUser() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void updateLastAccessTimestamp(User user) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean hasAny(String name, String roleName, String nodeRoles) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
+    @Override
     public Map<String,ACL> getACLs(User user) {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
+    @Override
     public User addRole(User user, String roleName) {
         throw new UnsupportedOperationException("not implemented yet");
     }

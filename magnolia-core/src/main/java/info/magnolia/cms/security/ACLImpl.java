@@ -58,18 +58,22 @@ public class ACLImpl implements ACL {
         this.permissions = permissions;
     }
 
+    @Override
     public List<Permission> getList() {
         return permissions;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getRepository() {
         return repositoryName;
     }
 
+    @Override
     public String getWorkspace() {
         return workspaceName;
     }

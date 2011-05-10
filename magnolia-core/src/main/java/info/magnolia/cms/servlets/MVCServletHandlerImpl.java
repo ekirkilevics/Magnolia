@@ -79,6 +79,7 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
         this.setResponse(response);
     }
 
+    @Override
     public void init() {
         populateFromRequest(this);
     }
@@ -101,6 +102,7 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
     /**
      * @see info.magnolia.cms.servlets.MVCServletHandler#getName()
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -108,6 +110,7 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
     /**
      * Call the method through reflection.
      */
+    @Override
     public String execute(String command) {
         String view = VIEW_ERROR;
         Method method;
@@ -160,6 +163,7 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
     /**
      * @return Returns the command.
      */
+    @Override
     public String getCommand() {
         return this.command;
     }

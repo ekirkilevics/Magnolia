@@ -79,6 +79,7 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
         this.fmHelper = fmRenderer;
     }
 
+    @Override
     protected void onRender(Content content, RenderableDefinition definition, Writer out, final Map ctx, String templatePath) throws RenderException {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
@@ -110,17 +111,20 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
         }
     }
 
+    @Override
     protected Map saveContextState(Map ctx) {
         Map state = super.saveContextState(ctx);
         saveAttribute(ctx, state, "params");
         return state;
     }
 
+    @Override
     protected void setupContext(Map ctx, Content content, RenderableDefinition definition, RenderingModel state, Object actionResult) {
         super.setupContext(ctx, content, definition, state, actionResult);
         setContextAttribute(ctx, "params", MgnlContext.getParameters());
     }
 
+    @Override
     protected Map newContext() {
         return new HashMap();
     }

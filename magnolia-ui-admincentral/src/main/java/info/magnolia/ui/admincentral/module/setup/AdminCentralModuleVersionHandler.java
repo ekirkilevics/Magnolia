@@ -56,6 +56,7 @@ public class AdminCentralModuleVersionHandler extends DefaultModuleVersionHandle
         List<Task> tasks = new ArrayList<Task>();
         tasks.addAll(super.getExtraInstallTasks(installContext));
         tasks.add (new AbstractTask("Update dialogs", "Will update dialog structure from the old format into new one") {
+            @Override
             public void execute(InstallContext installContext) throws TaskExecutionException {
                 try {
                     new ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getSystemContext());

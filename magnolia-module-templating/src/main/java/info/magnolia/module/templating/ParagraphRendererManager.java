@@ -78,6 +78,7 @@ public class ParagraphRendererManager extends ObservedManager {
         return paragraphRenderers;
     }
 
+    @Override
     protected void onRegister(Content node) {
         final Collection list = node.getChildren(ItemType.CONTENTNODE);
         final Iterator it = list.iterator();
@@ -115,6 +116,7 @@ public class ParagraphRendererManager extends ObservedManager {
         paragraphRenderers.put(name, renderer);
     }
 
+    @Override
     protected void onClear() {
         paragraphRenderers.clear();
     }

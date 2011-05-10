@@ -69,6 +69,7 @@ public class WorkbenchActionFactoryImpl extends FactoryBase<ActionDefinition, Ac
         addMapping(mapping.getDefinition(), mapping.getImplementation());
     }
 
+    @Override
     public Action createAction(ActionDefinition actionDefinition, Item item) {
         return create(actionDefinition, item);
     }

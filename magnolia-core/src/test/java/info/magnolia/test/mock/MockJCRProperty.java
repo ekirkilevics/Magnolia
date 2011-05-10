@@ -73,129 +73,159 @@ public class MockJCRProperty implements Property {
         this.mockNodeData = mockNodeData;
     }
 
+    @Override
     public void save() throws javax.jcr.AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException,
         ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
         this.mockNodeData.save();
     }
 
+    @Override
     public void remove() throws VersionException, LockException, ConstraintViolationException, RepositoryException {
         this.mockNodeData.delete();
     }
 
+    @Override
     public void refresh(boolean keepChanges) throws InvalidItemStateException, RepositoryException {
         this.mockNodeData.refresh(keepChanges);
     }
 
+    @Override
     public boolean isSame(Item otherItem) throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public boolean isNode() {
         return false;
     }
 
+    @Override
     public boolean isNew() {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public boolean isModified() {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public Session getSession() throws RepositoryException {
         return this.mockNodeData.getParent().getHierarchyManager().getWorkspace().getSession();
     }
 
+    @Override
     public String getPath() throws RepositoryException {
         return this.mockNodeData.getHandle();
     }
 
+    @Override
     public Node getParent() throws ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {
         return this.mockNodeData.getParent().getJCRNode();
     }
 
+    @Override
     public String getName() throws RepositoryException {
         return this.mockNodeData.getName();
     }
 
+    @Override
     public int getDepth() throws RepositoryException {
         return this.mockNodeData.getParent().getLevel() + 1;
     }
 
+    @Override
     public Item getAncestor(int depth) throws ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {
         return this.mockNodeData.getParent().getParent().getAncestor(depth -1).getJCRNode();
     }
 
+    @Override
     public void accept(ItemVisitor visitor) throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public void setValue(Node value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public void setValue(boolean value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
         RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
+    @Override
     public void setValue(Calendar value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
         RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
+    @Override
     public void setValue(double value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
         RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
+    @Override
     public void setValue(long value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
+    @Override
     public void setValue(InputStream value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
         RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
+    @Override
     public void setValue(String[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
         RepositoryException {
     }
 
+    @Override
     public void setValue(String value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
         RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
+    @Override
     public void setValue(Value[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
         RepositoryException {
         this.mockNodeData.setValue(values);
     }
 
+    @Override
     public void setValue(Value value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
+    @Override
     public Value[] getValues() throws ValueFormatException, RepositoryException {
         return this.mockNodeData.getValues();
     }
 
+    @Override
     public Value getValue() throws ValueFormatException, RepositoryException {
         return this.mockNodeData.getValue();
     }
 
+    @Override
     public int getType() throws RepositoryException {
         return this.mockNodeData.getType();
     }
 
+    @Override
     public String getString() throws ValueFormatException, RepositoryException {
         return this.mockNodeData.getString();
     }
 
+    @Override
     public InputStream getStream() throws ValueFormatException, RepositoryException {
         return this.mockNodeData.getStream();
     }
 
+    @Override
     public Node getNode() throws ValueFormatException, RepositoryException {
         if (getType() != PropertyType.REFERENCE) {
             throw new ValueFormatException("Not a reference");
@@ -203,52 +233,65 @@ public class MockJCRProperty implements Property {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public long getLong() throws ValueFormatException, RepositoryException {
         return this.mockNodeData.getLong();
     }
 
+    @Override
     public double getDouble() throws ValueFormatException, RepositoryException {
         return this.mockNodeData.getDouble();
     }
 
+    @Override
     public Calendar getDate() throws ValueFormatException, RepositoryException {
         return this.mockNodeData.getDate();
     }
 
+    @Override
     public boolean getBoolean() throws ValueFormatException, RepositoryException {
         return this.mockNodeData.getBoolean();
     }
 
+    @Override
     public long getLength() throws ValueFormatException, RepositoryException {
         return this.mockNodeData.getContentLength();
     }
 
+    @Override
     public long[] getLengths() throws ValueFormatException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public PropertyDefinition getDefinition() throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public void setValue(Binary value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
     }
 
+    @Override
     public void setValue(BigDecimal value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
     }
 
+    @Override
     public Binary getBinary() throws ValueFormatException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public BigDecimal getDecimal() throws ValueFormatException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public boolean isMultiple() throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }

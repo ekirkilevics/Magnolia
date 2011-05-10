@@ -98,6 +98,7 @@ public class HostBasedVirtualURIMapping implements VirtualURIMapping {
         }
     }
 
+    @Override
     public MappingResult mapURI(String uri) {
 
         String destination = toURI;

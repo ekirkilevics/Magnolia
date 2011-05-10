@@ -45,6 +45,7 @@ public class LoginAuthTypePropertyMovedToFilter extends MoveAndRenamePropertyTas
         super("Login authentication type", "/server/login", "AuthType", "/server/filters/uriSecurity/clientCallback", "class");
     }
 
+    @Override
     protected String modifyCurrentValue(String currentValue) {
         if ("Basic".equals(currentValue)) {
             return "info.magnolia.cms.security.auth.callback.BasicClientCallback";

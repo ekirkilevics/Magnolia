@@ -67,10 +67,12 @@ public class EmbeddedPlace extends Place {
      */
     public static class Tokenizer implements PlaceTokenizer<EmbeddedPlace>{
 
+        @Override
         public EmbeddedPlace getPlace(String token) {
             return new EmbeddedPlace(token);
         }
 
+        @Override
         public String getToken(EmbeddedPlace place) {
             return place.getUrl();
         }

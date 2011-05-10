@@ -50,21 +50,25 @@ public class RescueSecuritySupport extends SecuritySupportBase {
         log.warn("Using RescueSecuritySupport !");
     }
 
+    @Override
     public UserManager getUserManager() {
         log.warn("Using RescueSecuritySupport, will instanciate SystemUserManager, please fix your configuration !");
         return new SystemUserManager();
     }
 
+    @Override
     public UserManager getUserManager(String realmName) {
         log.warn("Using RescueSecuritySupport, will instanciate SystemUserManager, please fix your configuration !");
         return new SystemUserManager();
     }
 
+    @Override
     public GroupManager getGroupManager() {
         log.warn("Using RescueSecuritySupport, will instanciate MgnlGroupManager, please fix your configuration !");
         return new MgnlGroupManager();
     }
 
+    @Override
     public RoleManager getRoleManager() {
         log.warn("Using RescueSecuritySupport, will instanciate MgnlRoleManager, please fix your configuration !");
         return new MgnlRoleManager();

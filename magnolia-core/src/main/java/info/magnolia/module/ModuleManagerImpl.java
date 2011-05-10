@@ -124,6 +124,7 @@ public class ModuleManagerImpl implements ModuleManager {
         this.dependencyChecker = dependencyChecker;
     }
 
+    @Override
     public List<ModuleDefinition> loadDefinitions() throws ModuleManagementException {
         if (state != null) {
             throw new IllegalStateException("ModuleManager was already initialized !");
@@ -149,6 +150,7 @@ public class ModuleManagerImpl implements ModuleManager {
      *
      * @see info.magnolia.module.ModuleManager#checkForInstallOrUpdates()
      */
+    @Override
     public void checkForInstallOrUpdates() {
         // compare and determine if we need to do anything
         state = new ModuleManagementState();
@@ -181,6 +183,7 @@ public class ModuleManagerImpl implements ModuleManager {
         // TODO : check the force bootstrap properties
     }
 
+    @Override
     public ModuleManagementState getStatus() {
         if (state == null) {
             throw new IllegalStateException("ModuleManager was not initialized !");
@@ -189,6 +192,7 @@ public class ModuleManagerImpl implements ModuleManager {
         return state;
     }
 
+    @Override
     public ModuleManagerUI getUI() {
         if (SystemProperty.getBooleanProperty("magnolia.update.auto")) {
             return new ModuleManagerNullUI(this);
@@ -210,6 +214,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
     }
 
+    @Override
     public void performInstallOrUpdate() {
         synchronized (installContext) {
             if (state == null) {
@@ -248,6 +253,7 @@ public class ModuleManagerImpl implements ModuleManager {
         loadModulesRepositories();
 
         MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+            @Override
             public void doExec() {
                 final Iterator<ModuleAndDeltas> it = state.getList().iterator();
                 while (it.hasNext()) {
@@ -263,10 +269,12 @@ public class ModuleManagerImpl implements ModuleManager {
         installContext.setStatus(status);
     }
 
+    @Override
     public InstallContext getInstallContext() {
         return installContext;
     }
 
+    @Override
     public void startModules() {
         // process startup tasks before actually starting modules
         executeStartupTasks();
@@ -357,6 +365,7 @@ public class ModuleManagerImpl implements ModuleManager {
      */
     protected void executeStartupTasks() {
         MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+            @Override
             public void doExec() {
                 for (ModuleDefinition module : orderedModuleDescriptors) {
                     final ModuleVersionHandler versionHandler = registry.getVersionHandler(module.getName());
@@ -407,6 +416,7 @@ public class ModuleManagerImpl implements ModuleManager {
          */
     }
 
+    @Override
     public void stopModules() {
         // TODO we should keep only one instance of the lifecycle context
         final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();

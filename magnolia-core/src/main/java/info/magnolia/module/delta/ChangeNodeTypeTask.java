@@ -64,6 +64,7 @@ public class ChangeNodeTypeTask extends AbstractRepositoryTask {
         this.newType = newType;
     }
 
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getHierarchyManager(workspace);
         try {

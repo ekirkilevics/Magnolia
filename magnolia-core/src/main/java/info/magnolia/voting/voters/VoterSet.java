@@ -76,6 +76,7 @@ public class VoterSet extends BaseVoterImpl {
         }
     }
 
+    @Override
     public int vote(Object value) {
         int outcome = getVoting().vote(voters, value);
         if(level != 0){
@@ -127,6 +128,7 @@ public class VoterSet extends BaseVoterImpl {
         this.level = level;
     }
 
+    @Override
     public String toString() {
         return super.toString() + " set: " + (not ? "not " : "") + ArrayUtils.toString(voters);
     }

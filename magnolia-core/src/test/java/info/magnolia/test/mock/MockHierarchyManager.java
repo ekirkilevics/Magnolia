@@ -87,6 +87,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
     /**
      * Expose internal JCR session to outside world
      */
+    @Override
     public Session getJcrSession() {
         return super.getJcrSession();
     }
@@ -191,6 +192,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         final StringBuilder str = new StringBuilder();
         try {
             ContentUtil.visit(getRoot(), new ContentUtil.Visitor() {
+                @Override
                 public void visit(Content node) throws Exception {
                     StringBuilder prefix = new StringBuilder();
                     for (int i = 1; i <= node.getLevel(); i++) {

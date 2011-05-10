@@ -101,6 +101,7 @@ public class TypeMappingImpl implements TypeMapping {
      * Cache the already resolved types.
      *
      */
+    @Override
     public PropertyTypeDescriptor getPropertyTypeDescriptor(Class<?> beanClass, String propName) {
         PropertyTypeDescriptor dscr;
         String key = beanClass.getName() + "." + propName;
@@ -157,14 +158,17 @@ public class TypeMappingImpl implements TypeMapping {
         return dscr;
     }
 
+    @Override
     public void addPropertyTypeDescriptor(Class<?> beanClass, String propName, PropertyTypeDescriptor dscr) {
         propertyTypes.put(beanClass.getName() + "." + propName, dscr);
     }
 
+    @Override
     public void addTypeDescriptor(Class<?> beanClass, TypeDescriptor dscr) {
         types.put(beanClass, dscr);
     }
 
+    @Override
     public TypeDescriptor getTypeDescriptor(Class<?> beanClass) {
         TypeDescriptor dscr = types.get(beanClass);
         // eh, we know about this type, don't bother resolving any further.

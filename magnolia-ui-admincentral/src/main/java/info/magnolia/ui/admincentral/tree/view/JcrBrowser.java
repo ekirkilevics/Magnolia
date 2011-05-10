@@ -160,6 +160,7 @@ public class JcrBrowser extends TreeTable {
 
         addActionHandler(new Action.Handler() {
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 // FIXME make that item type, security dependent
                 List<JcrBrowserAction> actions = new ArrayList<JcrBrowserAction>();
@@ -170,6 +171,7 @@ public class JcrBrowser extends TreeTable {
                 return actions.toArray(new Action[actions.size()]);
             }
 
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
               ((JcrBrowserAction) action).handleAction((ContainerItemId) target);
             }
@@ -187,6 +189,7 @@ public class JcrBrowser extends TreeTable {
              * @seecom.vaadin.event.dd.DropHandler#drop(com.vaadin.event.dd.
              * DragAndDropEvent)
              */
+            @Override
             public void drop(DragAndDropEvent event) {
 
                 try {
@@ -245,6 +248,7 @@ public class JcrBrowser extends TreeTable {
             /*
              * @see com.vaadin.event.dd.DropHandler#getAcceptCriterion()
              */
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }

@@ -81,6 +81,7 @@ public abstract class AbstractMVPSubContainer<A extends Activity> extends Abstra
         this.componentProvider = ComponentProviderUtil.createChild(parentComponentProvider);
     }
 
+    @Override
     public void start(ViewPort viewPort, EventBus outerEventBus) {
 
         componentProvider.registerImplementation(EventBus.class, SimpleEventBus.class);

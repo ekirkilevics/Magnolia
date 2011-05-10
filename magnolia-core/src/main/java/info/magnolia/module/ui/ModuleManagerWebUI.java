@@ -68,6 +68,7 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
         this.moduleManager = moduleManager;
     }
 
+    @Override
     public void onStartup() {
         final ModuleManager.ModuleManagementState moduleMgtState = moduleManager.getStatus();
         if (moduleMgtState.needsUpdateOrInstall()) {
@@ -82,6 +83,7 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
         }
     }
 
+    @Override
     public boolean execute(Writer out, String command) throws ModuleManagementException {
         if (command == null) {
             render("listTasks", out);
@@ -100,6 +102,7 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
                 return false;
             } else if ("finish".equals(command) && status.equals(InstallStatus.installDone)) {
                 MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                    @Override
                     public void doExec() {
                         //TODO : actually check for status before executing
                         moduleManager.startModules();
@@ -112,12 +115,14 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
         throw new IllegalStateException("Unexpected state In ModuleManagerWebUI.");
     }
 
+    @Override
     public void renderTempPage(Writer out) throws ModuleManagementException {
         render("temp", out);
     }
 
     protected void performInstallOrUpdate() {
         final Runnable runnable = new Runnable() {
+            @Override
             public void run() {
                 try {
                     moduleManager.performInstallOrUpdate();
@@ -139,6 +144,7 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
     protected void render(String templateName, Writer out) throws ModuleManagementException {
         // a special instance of FreemarkerHelper which does not use Magnolia components
         final FreemarkerHelper freemarkerHelper = new FreemarkerHelper(new FreemarkerConfig()) {
+            @Override
             protected void addDefaultData(Map data, Locale locale, String i18nBasename) {
                 final WebContext webCtx = (WebContext) MgnlContext.getInstance();
                 // @deprecated (-> update all templates)

@@ -281,6 +281,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         final Property nodeTypeProp = createStrictMock(Property.class);
         expect(node.getProperty(ItemType.JCR_PRIMARY_TYPE)).andReturn(nodeTypeProp).times(2);
         expect(node.isNodeType((String)anyObject())).andAnswer(new IAnswer<Boolean>(){
+            @Override
             public Boolean answer() throws Throwable {
                 return getCurrentArguments()[0].equals("foo");
             }
@@ -386,6 +387,7 @@ public class DefaultContentTest extends RepositoryTestCase {
 
         // sort by name
         final TreeSet<NodeData> sorted = new TreeSet<NodeData>(new Comparator<NodeData>() {
+            @Override
             public int compare(NodeData o1, NodeData o2) {
                 return o1.getName().compareTo(o2.getName());
             }

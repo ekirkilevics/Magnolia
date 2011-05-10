@@ -57,30 +57,37 @@ public class ModuleRegistryImpl implements ModuleRegistry {
         entries = new LinkedHashMap<String, ModuleEntry>();
     }
 
+    @Override
     public void registerModuleDefinition(String name, ModuleDefinition moduleDefinition) {
         getOrCreateModuleEntry(name).moduleDefinition = moduleDefinition;
     }
 
+    @Override
     public void registerModuleInstance(String name, Object moduleInstance) {
         getOrCreateModuleEntry(name).moduleInstance = moduleInstance;
     }
 
+    @Override
     public void registerModuleVersionHandler(String name, ModuleVersionHandler moduleVersionHandler) {
         getOrCreateModuleEntry(name).moduleVersionHandler = moduleVersionHandler;
     }
 
+    @Override
     public boolean isModuleRegistered(String name) {
         return entries.containsKey(name);
     }
 
+    @Override
     public ModuleDefinition getDefinition(String name) {
         return safeGetModuleEntry(name).moduleDefinition;
     }
 
+    @Override
     public Object getModuleInstance(String name) {
         return safeGetModuleEntry(name).moduleInstance;
     }
 
+    @Override
     public <T> T getModuleInstance(final Class<T> moduleClass) {
         T module = null;
         for (ModuleEntry m : entries.values()) {
@@ -97,14 +104,17 @@ public class ModuleRegistryImpl implements ModuleRegistry {
         throw new IllegalArgumentException("No module registered with " + moduleClass.toString() + ".");
     }
 
+    @Override
     public ModuleVersionHandler getVersionHandler(String name) {
         return safeGetModuleEntry(name).moduleVersionHandler;
     }
 
+    @Override
     public Set<String> getModuleNames() {
         return Collections.unmodifiableSet(entries.keySet());
     }
 
+    @Override
     public List<ModuleDefinition> getModuleDefinitions() {
         // TODO - use something like a Transformer from commons-collections ?
         final List<ModuleDefinition> defs = new ArrayList<ModuleDefinition>();

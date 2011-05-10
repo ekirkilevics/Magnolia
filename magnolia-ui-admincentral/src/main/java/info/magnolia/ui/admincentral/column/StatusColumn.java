@@ -140,6 +140,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
             return status;
         }
 
+        @Override
         public int compareTo(ActivationStatus o) {
             return status.compareTo(o.getStatus());
         }

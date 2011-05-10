@@ -64,6 +64,7 @@ public class ChildrenExistsDelegateTask extends ConditionalDelegateTask {
         this.contentType = contentType;
     }
 
+    @Override
     protected boolean condition(InstallContext ctx) {
         try {
             if (contentType != null) {

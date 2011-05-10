@@ -49,6 +49,7 @@ public class TrueCondition extends AbstractCondition {
         super(name, description);
     }
 
+    @Override
     public boolean check(InstallContext installContext) {
         return true;
     }

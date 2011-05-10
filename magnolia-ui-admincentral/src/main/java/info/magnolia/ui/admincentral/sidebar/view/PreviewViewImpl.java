@@ -90,6 +90,7 @@ public class PreviewViewImpl implements PreviewView {
         grid.addComponent(statusField,1,3);
     }
 
+    @Override
     public void show(Item item) {
         try {
             pathField.setValue(item.getPath());
@@ -109,6 +110,7 @@ public class PreviewViewImpl implements PreviewView {
         }
     }
 
+    @Override
     public Component asVaadinComponent() {
         return grid;
     }

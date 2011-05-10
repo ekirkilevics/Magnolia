@@ -62,30 +62,37 @@ public class VersionedNode extends DelegateNodeWrapper implements Node, Version 
         return version;
     }
 
+    @Override
     public VersionHistory getContainingHistory() throws RepositoryException {
         return version.getContainingHistory();
     }
 
+    @Override
     public Calendar getCreated() throws RepositoryException {
         return version.getCreated();
     }
 
+    @Override
     public Node getFrozenNode() throws RepositoryException {
         return deepUnwrap(getClass());
     }
 
+    @Override
     public Version getLinearPredecessor() throws RepositoryException {
         return version.getLinearPredecessor();
     }
 
+    @Override
     public Version getLinearSuccessor() throws RepositoryException {
         return version.getLinearSuccessor();
     }
 
+    @Override
     public Version[] getPredecessors() throws RepositoryException {
         return null;
     }
 
+    @Override
     public Version[] getSuccessors() throws RepositoryException {
         return version.getSuccessors();
     }

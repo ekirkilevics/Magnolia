@@ -75,21 +75,25 @@ public class InstallContextImpl implements InstallContext {
         this.currentModule = module;
     }
 
+    @Override
     public void info(String message) {
         log.info("> " + message);
         log(new Message(MessagePriority.info, message));
     }
 
+    @Override
     public void warn(String message) {
         log.warn("> " + message);
         log(new Message(MessagePriority.warning, message));
     }
 
+    @Override
     public void error(String message, Throwable th) {
         log.error("> " + message, th);
         log(new Message(MessagePriority.error, message, th));
     }
 
+    @Override
     public void restartNeeded(String message) {
         this.restartNeeded = true;
         log.warn("> restartNeeded > " + message);
@@ -104,10 +108,12 @@ public class InstallContextImpl implements InstallContext {
         executedTaskCount++;
     }
 
+    @Override
     public int getExecutedTaskCount() {
         return executedTaskCount;
     }
 
+    @Override
     public int getTotalTaskCount() {
         return totalTaskCount;
     }
@@ -116,6 +122,7 @@ public class InstallContextImpl implements InstallContext {
         this.totalTaskCount = totalTaskCount;
     }
 
+    @Override
     public InstallStatus getStatus() {
         return status;
     }
@@ -124,41 +131,50 @@ public class InstallContextImpl implements InstallContext {
         this.status = status;
     }
 
+    @Override
     public Map<String, List<Message>> getMessages() {
         return messages;
     }
 
+    @Override
     public ModuleDefinition getCurrentModuleDefinition() {
         return currentModule;
     }
 
+    @Override
     public boolean isModuleRegistered(String moduleName) {
         return moduleRegistry.isModuleRegistered(moduleName);
     }
 
+    @Override
     public HierarchyManager getHierarchyManager(String workspace) {
         return MgnlContext.getSystemContext().getHierarchyManager(workspace);
     }
 
+    @Override
     public HierarchyManager getConfigHierarchyManager() {
         return getHierarchyManager(ContentRepository.CONFIG);
     }
 
+    @Override
     public boolean hasModulesNode() {
         final HierarchyManager hm = getConfigHierarchyManager();
         return hm.isExist("/" + ModuleManagerImpl.MODULES_NODE);
     }
 
+    @Override
     public Content getModulesNode() throws RepositoryException {
         final HierarchyManager hm = getConfigHierarchyManager();
         return hm.getContent(ModuleManagerImpl.MODULES_NODE);
     }
 
+    @Override
     public Content getOrCreateCurrentModuleNode() throws RepositoryException {
         final Content allModulesNode = getModulesNode();
         return ContentUtil.getOrCreateContent(allModulesNode, currentModule.getName(), ItemType.CONTENT);
     }
 
+    @Override
     public Content getOrCreateCurrentModuleConfigNode() throws RepositoryException {
         final Content moduleNode = getOrCreateCurrentModuleNode();
         return ContentUtil.getOrCreateContent(moduleNode, "config", ItemType.CONTENT);

@@ -78,6 +78,7 @@ public class HostSecurityFilter extends OncePerRequestAbstractMgnlFilter {
     }
 
     // required by content2bean in order to make addMapping work, do not remove!
+    @Override
     public List<String> getMappings() {
         return null;
     }
@@ -86,6 +87,7 @@ public class HostSecurityFilter extends OncePerRequestAbstractMgnlFilter {
      * Adds a mapping (used by content2bean).
      * @param mapping in the form /path=host
      */
+    @Override
     public void addMapping(String mapping) {
         String[] pathToHost = StringUtils.split(mapping, "=");
         if (pathToHost != null && pathToHost.length == 2) {

@@ -43,6 +43,7 @@ import java.util.Collection;
  */
 public interface PrincipalList extends Principal, Serializable {
 
+    @Override
     String getName();
 
     void setName(String name);

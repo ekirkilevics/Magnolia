@@ -73,6 +73,7 @@ public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImp
     /**
      * Try to get the command from the catalog.
      */
+    @Override
     public String execute(String commandName) {
         // get command from command map in JCR repository
         Command command = findCommand(commandName);

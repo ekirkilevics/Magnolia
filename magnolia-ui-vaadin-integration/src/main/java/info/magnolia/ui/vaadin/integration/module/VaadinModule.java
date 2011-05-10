@@ -44,10 +44,12 @@ import info.magnolia.module.ModuleLifecycleContext;
  */
 public class VaadinModule  implements ModuleLifecycle {
 
+    @Override
     public void start(ModuleLifecycleContext ctx) {
 
     }
 
+    @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
     }
 

@@ -75,10 +75,12 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
         this.view.setPresenter(this);
     }
 
+    @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
         viewPort.setView(view);
     }
 
+    @Override
     public SearchResult onSearch(SearchParameters params) {
         //FIXME do it right.
         long foundItems = 0;
@@ -107,6 +109,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
         return new SearchResult(params.getQuery(), foundItems);
     }
 
+    @Override
     public void onAddFilter() {
         shell.showNotification("Hi, one fine day you will see a search filter added to this UI");
     }

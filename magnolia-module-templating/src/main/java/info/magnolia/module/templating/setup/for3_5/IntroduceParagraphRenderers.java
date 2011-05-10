@@ -47,6 +47,7 @@ public class IntroduceParagraphRenderers extends BootstrapResourcesTask {
         super("Paragraph renderers", "Paragraph renderers were introduced in Magnolia 3.5");
     }
 
+    @Override
     protected boolean acceptResource(InstallContext installContext, String name) {
         return name.startsWith("/mgnl-bootstrap/templating/config.modules.templating.paragraph-renderers.")
                 && name.endsWith(".xml");

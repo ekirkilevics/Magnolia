@@ -71,6 +71,7 @@ public class DialogViewImpl extends Window implements DialogView {
             this.name = name;
         }
 
+        @Override
         public void showErrors(List<EditorError> errors) {
             for (EditorError error : errors) {
                 if (editors.indexOf(error.getEditor()) != -1) {
@@ -81,6 +82,7 @@ public class DialogViewImpl extends Window implements DialogView {
             // TODO if no errors are found we must remove any previous highlighting
         }
 
+        @Override
         public Collection<Editor> getEditors() {
             return editors;
         }
@@ -109,6 +111,7 @@ public class DialogViewImpl extends Window implements DialogView {
 
         Button save = new Button("Save", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 presenter.onSave();
             }
@@ -120,6 +123,7 @@ public class DialogViewImpl extends Window implements DialogView {
 
         Button cancel = new Button("Cancel", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 presenter.onCancel();
             }
@@ -147,6 +151,7 @@ public class DialogViewImpl extends Window implements DialogView {
         super.getContent().addComponent(layout);
     }
 
+    @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
     }
@@ -172,6 +177,7 @@ public class DialogViewImpl extends Window implements DialogView {
         return this;
     }
 
+    @Override
     public Collection<? extends Editor> getEditors() {
         return tabs.values();
     }

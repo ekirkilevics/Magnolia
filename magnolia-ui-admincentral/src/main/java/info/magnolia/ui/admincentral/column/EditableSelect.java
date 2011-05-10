@@ -64,6 +64,7 @@ public abstract class EditableSelect extends AbstractEditable {
             this.path = path;
         }
 
+        @Override
         public String getPath() {
             return path;
         }

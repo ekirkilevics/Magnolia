@@ -56,6 +56,7 @@ public abstract class BaseVoterImpl implements Voter {
         enabled = true;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
@@ -72,6 +73,7 @@ public abstract class BaseVoterImpl implements Voter {
         this.name = name;
     }
 
+    @Override
     public String toString() {
         return this.getName();
     }

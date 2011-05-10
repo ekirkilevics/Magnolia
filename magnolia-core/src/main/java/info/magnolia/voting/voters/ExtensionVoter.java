@@ -71,6 +71,7 @@ public class ExtensionVoter extends AbstractBoolVoter {
         this.deny = StringUtils.split(deny, ',');
     }
 
+    @Override
     protected boolean boolVote(Object value) {
         String extension;
         if (value instanceof String) {

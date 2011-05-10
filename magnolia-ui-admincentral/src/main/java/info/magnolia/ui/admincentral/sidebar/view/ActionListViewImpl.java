@@ -62,6 +62,7 @@ public class ActionListViewImpl implements ActionListView {
         table.setSelectable(true);
         table.addListener(new ItemClickEvent.ItemClickListener() {
 
+            @Override
             public void itemClick(ItemClickEvent event) {
                 if (!event.isDoubleClick()) {
                     presenter.onMenuItemSelected((String) event.getItemId());
@@ -70,6 +71,7 @@ public class ActionListViewImpl implements ActionListView {
         });
     }
 
+    @Override
     public void show(List<MenuItemDefinition> contextMenuItems) {
         clear();
         for (MenuItemDefinition menuItem : contextMenuItems) {
@@ -89,10 +91,12 @@ public class ActionListViewImpl implements ActionListView {
         table.setItemIcon(itemId, new ExternalResource(MgnlContext.getContextPath() + menuItem.getIcon()));
     }
 
+    @Override
     public void setPresenter(Presenter presenter){
         this.presenter = presenter;
     }
 
+    @Override
     public Component asVaadinComponent() {
         return table;
     }

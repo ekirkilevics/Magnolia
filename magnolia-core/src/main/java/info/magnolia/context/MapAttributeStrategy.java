@@ -47,14 +47,17 @@ public class MapAttributeStrategy implements AttributeStrategy {
     public MapAttributeStrategy() {
     }
 
+    @Override
     public void setAttribute(String name, Object value, int scope) {
         this.map.put(name, value);
     }
 
+    @Override
     public Object getAttribute(String name, int scope) {
         return this.map.get(name);
     }
 
+    @Override
     public void removeAttribute(String name, int scope) {
         this.map.remove(name);
     }
@@ -62,6 +65,7 @@ public class MapAttributeStrategy implements AttributeStrategy {
     /**
      * Ignore scope and return the inner map.
      */
+    @Override
     public Map<String, Object> getAttributes(int scope) {
         return this.getAttributes();
     }

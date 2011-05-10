@@ -93,64 +93,78 @@ public class MockWorkspace implements Workspace {
         this.hm = hm;
     }
 
+    @Override
     public void clone(String srcWorkspace, String srcAbsPath, String destAbsPath, boolean removeExisting)
     throws NoSuchWorkspaceException, ConstraintViolationException, VersionException, AccessDeniedException,
     PathNotFoundException, ItemExistsException, LockException, RepositoryException {
     }
 
+    @Override
     public void copy(String srcAbsPath, String destAbsPath) throws ConstraintViolationException, VersionException,
     AccessDeniedException, PathNotFoundException, ItemExistsException, LockException, RepositoryException {
     }
 
+    @Override
     public void copy(String srcWorkspace, String srcAbsPath, String destAbsPath) throws NoSuchWorkspaceException,
     ConstraintViolationException, VersionException, AccessDeniedException, PathNotFoundException,
     ItemExistsException, LockException, RepositoryException {
     }
 
+    @Override
     public String[] getAccessibleWorkspaceNames() throws RepositoryException {
         return null;
     }
 
+    @Override
     public ContentHandler getImportContentHandler(String parentAbsPath, int uuidBehavior) throws PathNotFoundException,
     ConstraintViolationException, VersionException, LockException, AccessDeniedException, RepositoryException {
         return null;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public NamespaceRegistry getNamespaceRegistry() throws RepositoryException {
         return null;
     }
 
+    @Override
     public NodeTypeManager getNodeTypeManager() throws RepositoryException {
         return null;
     }
 
+    @Override
     public QueryManager getQueryManager() throws RepositoryException {
         return new MockQueryManager(this.session);
     }
 
+    @Override
     public Session getSession() {
         return session;
     }
 
+    @Override
     public void importXML(String parentAbsPath, InputStream in, int uuidBehavior) throws IOException,
     PathNotFoundException, ItemExistsException, ConstraintViolationException, InvalidSerializedDataException,
     LockException, AccessDeniedException, RepositoryException {
     }
 
+    @Override
     public void move(String srcAbsPath, String destAbsPath) throws ConstraintViolationException, VersionException,
     AccessDeniedException, PathNotFoundException, ItemExistsException, LockException, RepositoryException {
     }
 
+    @Override
     public void restore(Version[] versions, boolean removeExisting) throws ItemExistsException,
     UnsupportedRepositoryOperationException, VersionException, LockException, InvalidItemStateException,
     RepositoryException {
     }
 
 
+    @Override
     public ObservationManager getObservationManager() {
         return this.observationManager;
     }
@@ -160,20 +174,25 @@ public class MockWorkspace implements Workspace {
         this.observationManager = observationManager;
     }
 
+    @Override
     public LockManager getLockManager() throws UnsupportedRepositoryOperationException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public VersionManager getVersionManager() throws UnsupportedRepositoryOperationException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public void createWorkspace(String name) throws AccessDeniedException, UnsupportedRepositoryOperationException, RepositoryException {
     }
 
+    @Override
     public void createWorkspace(String name, String srcWorkspace) throws AccessDeniedException, UnsupportedRepositoryOperationException, NoSuchWorkspaceException, RepositoryException {
     }
 
+    @Override
     public void deleteWorkspace(String name) throws AccessDeniedException, UnsupportedRepositoryOperationException, NoSuchWorkspaceException, RepositoryException {
     }
 }

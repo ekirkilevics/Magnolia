@@ -72,6 +72,7 @@ public class AdminCentralViewImpl implements AdminCentralView {
         this.dialogPresenterFactory = dialogPresenterFactory;
     }
 
+    @Override
     public void init() {
 
         application.setTheme("magnolia");
@@ -135,6 +136,7 @@ public class AdminCentralViewImpl implements AdminCentralView {
         userPreferences.setStyleName(BaseTheme.BUTTON_LINK);
         userPreferences.addListener(new Button.ClickListener () {
 
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 try {
                     if (user instanceof MgnlUser) {
@@ -159,6 +161,7 @@ public class AdminCentralViewImpl implements AdminCentralView {
         logout.setStyleName(BaseTheme.BUTTON_LINK);
         logout.addListener(new Button.ClickListener () {
 
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 ((WebApplicationContext)application.getContext()).getHttpSession().invalidate();
                 application.getMainWindow().getApplication().close();
@@ -169,10 +172,12 @@ public class AdminCentralViewImpl implements AdminCentralView {
         return headerLayout;
     }
 
+    @Override
     public VerticalLayout getMainContainer() {
         return mainContainer;
     }
 
+    @Override
     public VerticalLayout getMenuDisplay() {
         return menuDisplay;
     }

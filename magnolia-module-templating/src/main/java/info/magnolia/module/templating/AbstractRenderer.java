@@ -109,6 +109,7 @@ public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
     /**
      * Creates the model for this rendering process. Will set the properties
      */
+    @Override
     public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws RenderException {
         try {
             final Content wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));

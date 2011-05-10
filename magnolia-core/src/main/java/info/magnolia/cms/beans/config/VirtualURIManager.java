@@ -99,10 +99,12 @@ public final class VirtualURIManager extends ObservedManager {
         return mappedURI;
     }
 
+    @Override
     protected void onRegister(Content node) {
         try {
             log.info("Loading VirtualURIMapping from {}", node.getHandle()); //$NON-NLS-1$
             Content2BeanUtil.setProperties(this.cachedURImapping, node, true, new Content2BeanTransformerImpl(){
+                @Override
                 protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType) {
                     if(state.getLevel()==2 && resolvedType == null){
                         return typeMapping.getTypeDescriptor(DefaultVirtualURIMapping.class);
@@ -117,6 +119,7 @@ public final class VirtualURIManager extends ObservedManager {
         }
     }
 
+    @Override
     protected void onClear() {
         this.cachedURImapping.clear();
     }

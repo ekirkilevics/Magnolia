@@ -50,6 +50,7 @@ import javax.jcr.RepositoryException;
 public class PropertyValuesTaskTest extends TestCase {
     private InstallContext ctx;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         ctx = createStrictMock(InstallContext.class);
@@ -131,6 +132,7 @@ public class PropertyValuesTaskTest extends TestCase {
             super(null, null);
         }
 
+        @Override
         public void execute(InstallContext installContext) throws TaskExecutionException {
         }
     }

@@ -86,6 +86,7 @@ public class PageEditBar extends AbstractAuthoringUiComponent {
         this.editButtonLabel = editButtonLabel;
     }
 
+    @Override
     protected void doRender(Appendable out) throws IOException {
         final Content content = currentContent();
 

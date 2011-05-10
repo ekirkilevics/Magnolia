@@ -64,6 +64,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
     public MgnlRoleManager() {
     }
 
+    @Override
     public Role getRole(String name) {
         try {
             return newRoleInstance(findPrincipalNode(name, MgnlContext.getJCRSession(getRepositoryName())));
@@ -74,6 +75,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
         }
     }
 
+    @Override
     public Role createRole(String name) {
         try {
             Content node = getHierarchyManager().createContent("/", name, ItemType.ROLE.getSystemName());
@@ -102,6 +104,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
         return MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
     }
 
+    @Override
     public void removePermission(Role role, String repository, String path, long permission) {
         try {
             Session session = MgnlContext.getJCRSession(ContentRepository.REPOSITORY_USER);
@@ -157,6 +160,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
         return false;
     }
 
+    @Override
     public void addPermission(Role role, String repository, String path, long permission) {
         try {
             Session session = MgnlContext.getJCRSession(getRepositoryName());
@@ -185,6 +189,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
         return ContentRepository.USER_ROLES;
     }
 
+    @Override
     public String getRoleNameById(String string) {
         return getResourceName(string);
     }

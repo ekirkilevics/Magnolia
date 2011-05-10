@@ -70,6 +70,7 @@ public class SystemUserManager extends MgnlUserManager {
 
         EventListener anonymousListener = new EventListener() {
 
+            @Override
             public void onEvent(EventIterator events) {
                 anonymousUser = null;
                 log.debug("Anonymous user reloaded");

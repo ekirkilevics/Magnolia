@@ -73,6 +73,7 @@ public class FixedModuleDefinitionReader implements ModuleDefinitionReader {
         this.modules = Arrays.asList(modules);
     }
 
+    @Override
     public Map<String, ModuleDefinition> readAll() throws ModuleManagementException {
         Map<String, ModuleDefinition> all = new LinkedHashMap<String, ModuleDefinition>();
         for (ModuleDefinition module : modules) {
@@ -81,10 +82,12 @@ public class FixedModuleDefinitionReader implements ModuleDefinitionReader {
         return all;
     }
 
+    @Override
     public ModuleDefinition read(Reader in) throws ModuleManagementException {
         throw new IllegalStateException("should not be called");
     }
 
+    @Override
     public ModuleDefinition readFromResource(String resourcePath) throws ModuleManagementException {
         throw new IllegalStateException("should not be called");
     }

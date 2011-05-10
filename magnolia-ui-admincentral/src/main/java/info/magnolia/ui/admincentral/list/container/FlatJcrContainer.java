@@ -138,6 +138,7 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
         }
     }
 
+    @Override
     public Object nextItemId(Object itemId) {
         int idx = itemIds.indexOf((ContainerItemId)itemId);
         if(idx < 0 || idx == itemIds.size()-1){
@@ -146,6 +147,7 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
         return itemIds.get(++idx);
     }
 
+    @Override
     public Object prevItemId(Object itemId) {
         int idx = itemIds.indexOf((ContainerItemId)itemId);
         if(idx <= 0){
@@ -154,6 +156,7 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
         return itemIds.get(--idx);
     }
 
+    @Override
     public Object firstItemId() {
         if(itemIds.size() == 0){
             return null;
@@ -162,6 +165,7 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
     }
 
 
+    @Override
     public Object lastItemId() {
         if(itemIds.size() == 0){
             return null;
@@ -170,24 +174,29 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
     }
 
 
+    @Override
     public boolean isFirstId(Object itemId) {
         return ((ContainerItemId)itemId).equals(firstItemId());
     }
 
 
+    @Override
     public boolean isLastId(Object itemId) {
         return  ((ContainerItemId)itemId).equals(lastItemId());
     }
 
+    @Override
     public Object addItemAfter(Object previousItemId) throws UnsupportedOperationException {
        throw new UnsupportedOperationException(getClass().getName() + " currently does not support this operation.");
     }
 
 
+    @Override
     public com.vaadin.data.Item addItemAfter(Object previousItemId, Object newItemId) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(getClass().getName() + " currently does not support this operation.");
     }
 
+    @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
         // Set up the item sorter for the sort operation
         itemSorter.setSortProperties(this, propertyId, ascending);
@@ -202,6 +211,7 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
         super.fireItemSetChange();
     }
 
+    @Override
     public Collection<?> getSortableContainerPropertyIds() {
         //delegate determining the actual sortable properties to a custom ItemSorter
         //TODO should we pass directly ConfigurableItemSorter to the constructor?

@@ -57,8 +57,10 @@ public class DelegatingUserManager implements UserManager {
         this.delegates = delegates;
     }
 
+    @Override
     public User createUser(final String name, final String pw) throws UnsupportedOperationException {
         final Op<User> op = new Op<User>() {
+            @Override
             public User delegate(UserManager um) {
                 return um.createUser(name, pw);
             }
@@ -66,36 +68,45 @@ public class DelegatingUserManager implements UserManager {
         return delegateUntilSupported(op);
     }
 
+    @Override
     public User changePassword(User user, String newPassword) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Please use a specific instance of UserManager to do this.");
     }
 
+    @Override
     public User getAnonymousUser() {
         return delegateUntilSupported(new Op<User>() {
+            @Override
             public User delegate(UserManager um) {
                 return um.getAnonymousUser();
             }
         });
     }
 
+    @Override
     public User getSystemUser() {
         return delegateUntilSupported(new Op<User>() {
+            @Override
             public User delegate(UserManager um) {
                 return um.getSystemUser();
             }
         });
     }
 
+    @Override
     public User getUser(final String name) throws UnsupportedOperationException {
         return delegateUntilNotNull(new Op<User>() {
+            @Override
             public User delegate(UserManager um) {
                 return um.getUser(name);
             }
         });
     }
 
+    @Override
     public User getUser(final Subject subject) throws UnsupportedOperationException {
         return delegateUntilNotNull(new Op<User>() {
+            @Override
             public User delegate(UserManager um) {
                 return um.getUser(subject);
             }
@@ -104,16 +115,20 @@ public class DelegatingUserManager implements UserManager {
 
     // TODO : this should maybe aggregate results, but ExternalUserManager throws an UnsupportedOperationException
     // TODO : also not that this is seemingly never used (or maybe through reflection or other ide-search unfriendly mechanisms)
+    @Override
     public Collection<User> getAllUsers() throws UnsupportedOperationException {
         return delegateUntilSupported(new Op<Collection<User>>() {
+            @Override
             public Collection<User> delegate(UserManager um) {
                 return um.getAllUsers();
             }
         });
     }
 
+    @Override
     public void updateLastAccessTimestamp(final User user) {
         delegateUntilSupported(new Op<Void>() {
+            @Override
             public Void delegate(UserManager um) {
                 um.updateLastAccessTimestamp(user);
                 return null;
@@ -148,24 +163,30 @@ public class DelegatingUserManager implements UserManager {
         RT delegate(UserManager um);
     }
 
+    @Override
     public boolean hasAny(final String principal, final String resourceName, final String resourceTypeName) {
         return delegateUntilSupported(new Op<Boolean>() {
+            @Override
             public Boolean delegate(UserManager um) {
                 return um.hasAny(principal, resourceName, resourceTypeName);
             }
         });
     }
 
+    @Override
     public Map<String,ACL> getACLs(final User user) {
         return delegateUntilSupported(new Op<Map<String,ACL>>() {
+            @Override
             public Map<String,ACL> delegate(UserManager um) {
                 return um.getACLs(user);
             }
         });
     }
 
+    @Override
     public User addRole(final User user, final String roleName) {
         return delegateUntilSupported(new Op<User>() {
+            @Override
             public User delegate(UserManager um) {
                 return um.addRole(user, roleName);
             }

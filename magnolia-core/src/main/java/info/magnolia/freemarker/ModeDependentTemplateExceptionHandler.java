@@ -49,6 +49,7 @@ import freemarker.template.TemplateExceptionHandler;
  * @version $Id: $
  */
 public class ModeDependentTemplateExceptionHandler implements TemplateExceptionHandler {
+    @Override
     public void handleTemplateException(TemplateException te, Environment env, Writer out) throws TemplateException {
         final boolean isAuthorInstance = ServerConfiguration.getInstance().isAdmin();
         final boolean isPreviewMode = MgnlContext.getAggregationState().isPreviewMode();

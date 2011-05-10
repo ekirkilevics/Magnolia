@@ -56,6 +56,7 @@ final class ConfiguredComponentFactory<T> implements ComponentFactory<T> {
         this.componentProvider = componentProvider;
     }
 
+    @Override
     public T newInstance() {
         final Content node = ContentUtil.getContent(workspace, path);
         if(node == null){

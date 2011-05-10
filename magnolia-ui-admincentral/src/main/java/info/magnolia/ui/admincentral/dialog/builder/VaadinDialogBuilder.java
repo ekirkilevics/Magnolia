@@ -60,6 +60,7 @@ public class VaadinDialogBuilder implements DialogBuilder {
         this.dialogFieldFactory = dialogFieldFactory;
     }
 
+    @Override
     public DialogView build(DialogDefinition dialogDefinition) {
 
         // TODO: shouldn't we use IoC here? (Not really, this is all vaadin specific and that's why it has a hard dependency on DialogViewImpl)

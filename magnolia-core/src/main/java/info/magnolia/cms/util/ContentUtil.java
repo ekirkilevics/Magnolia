@@ -75,6 +75,7 @@ public class ContentUtil {
      */
     public static ContentFilter ALL_NODES_CONTENT_FILTER = new ContentFilter() {
 
+        @Override
         public boolean accept(Content content) {
             return true;
         }
@@ -85,6 +86,7 @@ public class ContentUtil {
      */
     public static ContentFilter ALL_NODES_EXCEPT_JCR_CONTENT_FILTER = new ContentFilter() {
 
+        @Override
         public boolean accept(Content content) {
             return !content.getName().startsWith("jcr:");
         }
@@ -94,6 +96,7 @@ public class ContentUtil {
      * Content filter accepting everything except meta data and jcr types.
      */
     public static ContentFilter EXCLUDE_META_DATA_CONTENT_FILTER = new ContentFilter() {
+        @Override
         public boolean accept(Content content) {
             return !content.getName().startsWith("jcr:") && !content.isNodeType(ItemType.NT_METADATA);
         }
@@ -103,6 +106,7 @@ public class ContentUtil {
      * Content filter accepting all nodes with a nodetype of namespace mgnl.
      */
     public static ContentFilter MAGNOLIA_FILTER = new ContentFilter() {
+        @Override
         public boolean accept(Content content) {
 
             try {

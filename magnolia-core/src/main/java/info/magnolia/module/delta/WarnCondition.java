@@ -58,6 +58,7 @@ public class WarnCondition extends AbstractCondition {
         this(name, description, description);
     }
 
+    @Override
     public boolean check(InstallContext installContext) {
         installContext.warn(message);
         return true;

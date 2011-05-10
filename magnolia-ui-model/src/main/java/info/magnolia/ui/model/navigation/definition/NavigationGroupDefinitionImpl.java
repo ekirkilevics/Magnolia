@@ -46,12 +46,14 @@ public class NavigationGroupDefinitionImpl implements NavigationGroupDefinition 
     private String name;
     private List<NavigationItemDefinition> items = new ArrayList<NavigationItemDefinition>();
 
+    @Override
     public List<NavigationItemDefinition> getItems() {
         return items;
     }
     public void addItem(NavigationItemDefinition definition) {
         items.add(definition);
     }
+    @Override
     public String getName() {
         return name;
     }

@@ -239,6 +239,7 @@ public class ModuleManagerImplTest extends TestCase {
         final ModuleVersionHandler mvh1 = createStrictMock(ModuleVersionHandler.class);
         final ModuleVersionHandler mvh2 = createStrictMock(ModuleVersionHandler.class);
         final Task t1 = new AbstractTask("sleep", "sleeeeep") {
+            @Override
             public void execute(InstallContext installContext) throws TaskExecutionException {
                 installContext.info("t1 executing");
                 try {
@@ -296,6 +297,7 @@ public class ModuleManagerImplTest extends TestCase {
 
     private void performInstallOrUpdateInThread(final ModuleManagerImpl moduleManager, final boolean shouldFail) {
         final Runnable runnable = new Runnable() {
+            @Override
             public void run() {
                 try {
                     moduleManager.performInstallOrUpdate();

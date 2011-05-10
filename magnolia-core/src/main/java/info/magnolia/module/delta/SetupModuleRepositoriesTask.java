@@ -64,6 +64,7 @@ public class SetupModuleRepositoriesTask extends AbstractTask {
     }
 
     // TODO finer exception handling ?
+    @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         try {
             final ModuleDefinition def = ctx.getCurrentModuleDefinition();
@@ -74,6 +75,7 @@ public class SetupModuleRepositoriesTask extends AbstractTask {
                     if (!ContentRepository.checkIfInitialized(workspace)) {
                         final String[] bootstrapDirs = Bootstrapper.getBootstrapDirs();
                         Bootstrapper.bootstrapRepository(bootstrapDirs, workspace, new Bootstrapper.BootstrapFilter() {
+                            @Override
                             public boolean accept(String filename) {
                                 return filename.startsWith(workspace + ".");
                             }

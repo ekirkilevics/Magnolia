@@ -153,6 +153,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderAfter(a, "b");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -170,6 +171,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderAfter(a, "c");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -190,6 +192,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderAfter(a, "f");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -207,6 +210,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderAfter(c, "a");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -227,6 +231,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderAfter(c, "a");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -247,6 +252,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderAfter(c, "a");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -267,6 +273,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderAfter(c, "c");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -287,6 +294,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderAfter(c, "b");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -307,6 +315,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderBefore(c, "a");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -327,6 +336,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderBefore(c, "a");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -347,6 +357,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderBefore(c, "b");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -367,6 +378,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderBefore(c, "a");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -387,6 +399,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderBefore(c, "f");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -407,6 +420,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderBefore(c, "f");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -427,6 +441,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderBefore(c, "f");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -447,6 +462,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderBefore(c, "e");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -467,6 +483,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderBefore(c, "e");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -487,6 +504,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.orderBefore(c, "e");
         Collection<Content> result = node.getChildren();
         CollectionUtils.transform(result, new Transformer() {
+            @Override
             public Object transform(Object childObj) {
                 return ((Content)childObj).getName();
             }
@@ -538,6 +556,7 @@ public class ContentUtilTest extends RepositoryTestCase {
             this.rejectedTypes = Arrays.asList(rejectedTypes);
         }
 
+        @Override
         public boolean accept(Content content) {
             try {
                 return !rejectedTypes.contains(content.getNodeTypeName());

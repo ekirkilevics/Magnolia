@@ -109,6 +109,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
      * @param groupName the name of the group
      * @return true if in group
      */
+    @Override
     public boolean inGroup(String groupName) {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("inGroup({})", groupName);
@@ -120,6 +121,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
      * Remove a group. Implementation is optional
      * @param groupName
      */
+    @Override
     public void removeGroup(String groupName) throws UnsupportedOperationException {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("removeGroup({})", groupName);
@@ -131,6 +133,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
      * Adds this user to a group. Implementation is optional
      * @param groupName
      */
+    @Override
     public void addGroup(String groupName) throws UnsupportedOperationException {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("addGroup({})", groupName);
@@ -138,6 +141,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         throw new UnsupportedOperationException("use manager to add groups!");
     }
 
+    @Override
     public boolean isEnabled() {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("isEnabled()");
@@ -148,6 +152,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
     /**
      * This methods sets flag just on the bean. It does not update persisted user data. Use manager to update user data.
      */
+    @Override
     public void setEnabled(boolean enabled) {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("setEnabled({})", enabled);
@@ -160,10 +165,12 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
      * @param roleName the name of the role
      * @return true if in role
      */
+    @Override
     public boolean hasRole(String roleName) {
         return SecuritySupport.Factory.getInstance().getUserManager(getRealm()).hasAny(getName(), roleName, NODE_ROLES);
     }
 
+    @Override
     public void removeRole(String roleName) throws UnsupportedOperationException {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("removeRole({})", roleName);
@@ -171,6 +178,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         throw new UnsupportedOperationException("use manager to remove roles!");
     }
 
+    @Override
     public void addRole(String roleName) throws UnsupportedOperationException {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("addRole({})", roleName);
@@ -237,6 +245,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         return false;
     }
 
+    @Override
     public String getName() {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("getName()=>{}", name);
@@ -244,6 +253,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         return name;
     }
 
+    @Override
     public String getPassword() {
         // TODO: should we really decode pwd here? Encoding is UM implementation specific
         return decodePassword(encodedPassword);
@@ -253,6 +263,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         return new String(Base64.decodeBase64(encodedPassword.getBytes()));
     }
 
+    @Override
     public String getLanguage() {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("getLang()=>{}", language);
@@ -260,6 +271,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         return this.language;
     }
 
+    @Override
     public String getProperty(String propertyName) {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("getProperty({})", propertyName);
@@ -267,6 +279,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         return properties.get(propertyName);
     }
 
+    @Override
     public Collection<String> getGroups() {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("getGroups()");
@@ -274,6 +287,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         return groups;
     }
 
+    @Override
     public Collection<String> getAllGroups() {
         // TODO: if the user is just a simple bean, then this method doesn't belong here anymore!!!!
         // should be moved to user manager or to group manager???
@@ -295,6 +309,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         return allGroups;
     }
 
+    @Override
     public Collection<String> getRoles() {
         if (logAdmin || !"admin".equals(name)) {
             log.debug("getRoles()");
@@ -302,6 +317,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         return roles;
     }
 
+    @Override
     public Collection<String> getAllRoles() {
         // TODO: if the user is just a simple bean, then this method doesn't belong here anymore!!!!
         if (logAdmin || !"admin".equals(name)) {
@@ -404,6 +420,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
     /**
      * @deprecated since 5.0, use {@link UserManager} instead
      */
+    @Override
     @Deprecated
     public void setProperty(String propertyName, String value) {
         throw new UnsupportedOperationException("Use manager to modify properties of the user.");

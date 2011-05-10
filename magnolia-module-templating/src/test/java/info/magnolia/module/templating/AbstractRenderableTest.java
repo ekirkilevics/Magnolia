@@ -94,18 +94,22 @@ public class AbstractRenderableTest extends TestCase {
     }
 
     public static class NoConstructorModel implements RenderingModel {
+        @Override
         public RenderingModel getParent() {
             return null;
         }
 
+        @Override
         public Content getContent() {
             return null;
         }
 
+        @Override
         public RenderableDefinition getDefinition() {
             return null;
         }
 
+        @Override
         public String execute() {
             return null;
         }
@@ -122,18 +126,22 @@ public class AbstractRenderableTest extends TestCase {
 
         }
 
+        @Override
         public RenderingModel getParent() {
             return null;
         }
 
+        @Override
         public Content getContent() {
             return null;
         }
 
+        @Override
         public RenderableDefinition getDefinition() {
             return null;
         }
 
+        @Override
         public String execute() {
             return null;
         }

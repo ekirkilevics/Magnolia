@@ -85,10 +85,12 @@ public class Log4jConfigurer implements Startable {
     public Log4jConfigurer() {
     }
 
+    @Override
     public void start() {
         initLogging();
     }
 
+    @Override
     public void stop() {
         shutdownLogging();
     }

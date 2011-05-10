@@ -73,14 +73,17 @@ public class FilterDecorator extends AbstractMgnlFilter {
      */
     private static Logger log = LoggerFactory.getLogger(FilterDecorator.class);
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.decoratedFilter.init(new CustomFilterConfig(filterConfig, config));
     }
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
         this.decoratedFilter.doFilter(request, response, chain);
     }
 
+    @Override
     public void destroy() {
         this.decoratedFilter.destroy();
     }
@@ -121,18 +124,22 @@ public class FilterDecorator extends AbstractMgnlFilter {
             }
         }
 
+        @Override
         public String getFilterName() {
             return parent.getFilterName();
         }
 
+        @Override
         public String getInitParameter(String name) {
             return (String) parameters.get(name);
         }
 
+        @Override
         public Enumeration getInitParameterNames() {
             return new Hashtable(parameters).keys();
         }
 
+        @Override
         public ServletContext getServletContext() {
             return parent.getServletContext();
         }

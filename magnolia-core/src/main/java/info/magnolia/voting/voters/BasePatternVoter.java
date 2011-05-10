@@ -70,6 +70,7 @@ public abstract class BasePatternVoter extends AbstractBoolVoter {
         }
     }
 
+    @Override
     public void setTrueValue(int positiveVoteValue) {
         autoTrueValue = false;
         super.setTrueValue(positiveVoteValue);
@@ -110,6 +111,7 @@ public abstract class BasePatternVoter extends AbstractBoolVoter {
         return uri;
     }
 
+    @Override
     public String toString() {
         return super.toString() + " pattern: " + this.getPattern();
     }

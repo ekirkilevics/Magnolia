@@ -221,6 +221,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 workspaceName, nodePath, "mime-type", previouslyWrongValue, false, fixTask);
     }
 
+    @Override
     protected List<Task> getBasicInstallTasks(InstallContext ctx) {
         final List<Task> l = new ArrayList<Task>();
         l.addAll(GenericTasks.genericTasksFor35());
@@ -233,6 +234,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         return l;
     }
 
+    @Override
     protected List<Condition> getInstallConditions() {
         final ArrayList<Condition> conditions = new ArrayList<Condition>();
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);

@@ -46,6 +46,7 @@ import javax.jcr.RepositoryException;
  */
 public class HierarchicalUserManager extends MgnlUserManager {
 
+    @Override
     protected Content createUserNode(String name) throws RepositoryException {
         final String parentPath = getParentPath(name);
         final Content parent = ContentUtil.createPath(getHierarchyManager(), parentPath, ItemType.FOLDER, false);

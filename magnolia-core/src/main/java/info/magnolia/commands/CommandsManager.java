@@ -69,6 +69,7 @@ public class CommandsManager extends ObservedManager {
     /**
      * Register observation for command catalogs.
      */
+    @Override
     protected void onRegister(Content node) {
         // is this a catalog or a collection of catalogs?
         if(node.getChildren(ItemType.CONTENT).size() == 0){
@@ -102,6 +103,7 @@ public class CommandsManager extends ObservedManager {
     /**
      * Clear all catalogs.
      */
+    @Override
     protected void onClear() {
         CatalogFactory.clear();
     }

@@ -43,6 +43,7 @@ import javax.jcr.RepositoryException;
 public abstract class AbstractNodeOperation implements NodeOperation {
     private NodeOperation[] childrenOps = {};
 
+    @Override
     public void exec(Content context, ErrorHandler errorHandler) {
         try {
             context = doExec(context, errorHandler);
@@ -61,6 +62,7 @@ public abstract class AbstractNodeOperation implements NodeOperation {
      */
     protected abstract Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException;
 
+    @Override
     public NodeOperation then(NodeOperation... childrenOps) {
         this.childrenOps = childrenOps;
         return this;

@@ -54,10 +54,12 @@ public class HackContent extends DefaultContent {
         setNode(node);
     }
 
+    @Override
     public Content getParent() throws RepositoryException {
         return (new HackContent(this.node.getParent()));
     }
 
+    @Override
     public MetaData getMetaData() {
         return JCRMetadataUtil.getMetaData(this.node);
     }

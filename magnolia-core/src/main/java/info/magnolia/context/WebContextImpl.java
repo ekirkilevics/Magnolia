@@ -86,6 +86,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
         log.debug("new WebContextImpl() {}", this);
     }
 
+    @Override
     public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         this.request = request;
         this.response = response;
@@ -96,6 +97,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
         setRepositoryStrategy(new DefaultRepositoryStrategy(this));
     }
 
+    @Override
     public AggregationState getAggregationState() {
         if (aggregationState == null) {
             aggregationState = newAggregationState();
@@ -111,6 +113,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
     /**
      * This will only reset the original URI/URL by calling {@link AggregationState#resetURIs()}.
      */
+    @Override
     public void resetAggregationState() {
         getAggregationState().resetURIs();
     }
@@ -119,6 +122,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
      * Get form object assembled by <code>MultipartRequestFilter</code>.
      * @return multipart form object
      */
+    @Override
     public MultipartForm getPostedForm() {
         return (MultipartForm) getAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME, LOCAL_SCOPE);
     }
@@ -127,6 +131,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
      * Get parameter value as string.
      * @return parameter value
      */
+    @Override
     public String getParameter(String name) {
         return this.request.getParameter(name);
     }
@@ -135,6 +140,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
      * Get parameter values as string[].
      * @return parameter values
      */
+    @Override
     public String[] getParameterValues(String name) {
         return this.request.getParameterValues(name);
     }
@@ -144,6 +150,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
      * String[]>, so don't expect to retrieve multiple-valued form parameters here).
      * @return parameter values
      */
+    @Override
     public Map<String, String> getParameters() {
         Map<String, String> map = new HashMap<String, String>();
         Enumeration<String> paramEnum = this.request.getParameterNames();
@@ -158,14 +165,17 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
      * Avoid the call to this method where ever possible.
      * @return Returns the request.
      */
+    @Override
     public HttpServletRequest getRequest() {
         return this.request;
     }
 
+    @Override
     public HttpServletResponse getResponse() {
         return response;
     }
 
+    @Override
     public String getContextPath() {
         return this.request.getContextPath();
     }
@@ -174,6 +184,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
      * Does an include using the request that was set when setting up this context, or using the
      * request wrapped by the pageContext if existing.
      */
+    @Override
     public void include(final String path, final Writer out) throws ServletException, IOException {
         try {
             final ServletRequest requestToUse = /*pageContext != null ? pageContext.getRequest() :*/ this.getRequest();
@@ -193,6 +204,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
     /**
      * {@inheritDoc}
      */
+    @Override
     public PageContext getPageContext() {
         return pageContext;
     }
@@ -200,6 +212,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setPageContext(PageContext pageContext) {
         this.pageContext = pageContext;
     }
@@ -207,6 +220,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
     /**
      * {@inheritDoc}
      */
+    @Override
     public ServletContext getServletContext() {
         return servletContext;
     }
@@ -219,6 +233,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
      * Closes opened JCR sessions and invalidates the current HttpSession.
      * @see #release()
      */
+    @Override
     public void logout() {
         releaseJCRSessions();
 
@@ -232,6 +247,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
     /**
      * Closes opened JCR sessions.
      */
+    @Override
     public void release() {
         releaseJCRSessions();
         this.request = null;
@@ -245,6 +261,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
     /* (non-Javadoc)
      * @see info.magnolia.context.WebContext#pop()
      */
+    @Override
     public void pop() {
         request = requestStack.pop();
         response = responseStack.pop();
@@ -253,6 +270,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
     /* (non-Javadoc)
      * @see info.magnolia.context.WebContext#push(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
+    @Override
     public void push(HttpServletRequest request, HttpServletResponse response) {
         requestStack.push(this.request);
         this.request = request;

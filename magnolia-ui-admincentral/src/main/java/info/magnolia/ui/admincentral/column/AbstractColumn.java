@@ -54,24 +54,30 @@ public abstract class AbstractColumn<D extends AbstractColumnDefinition> impleme
         this.definition = def;
     }
 
+    @Override
     public D getDefinition() {
         return this.definition;
     }
 
+    @Override
     public abstract Component getComponent(Item item) throws RepositoryException;
 
+    @Override
     public int getWidth() {
         return getDefinition().getWidth();
     }
 
+    @Override
     public void setWidth(int newWidth) {
         getDefinition().setWidth(newWidth);
     }
 
+    @Override
     public String getLabel() {
         return getDefinition().getLabel();
     }
 
+    @Override
     public void setLabel(String newLabel) {
         getDefinition().setLabel(newLabel);
     }

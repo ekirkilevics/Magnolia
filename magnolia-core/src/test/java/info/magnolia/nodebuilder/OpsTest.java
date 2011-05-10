@@ -47,10 +47,12 @@ import javax.jcr.RepositoryException;
  */
 public class OpsTest extends RepositoryTestCase {
     private final ErrorHandler eh = new ErrorHandler() {
+        @Override
         public void report(String message) {
             throw new RuntimeException(message); // TODO
         }
 
+        @Override
         public void handle(RepositoryException e, Content context) {
             throw new RuntimeException(e.getMessage());
         }

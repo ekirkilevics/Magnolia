@@ -46,6 +46,7 @@ import java.util.List;
  */
 public interface ACL extends Principal, Serializable {
 
+    @Override
     public String getName();
 
     /**

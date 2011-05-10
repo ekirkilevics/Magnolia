@@ -52,6 +52,7 @@ public class PropertyValueDelegateTaskTest extends TestCase {
     private Task delegIfTrue;
     private Task delegIfFalse;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         MockUtil.initMockContext();
@@ -63,6 +64,7 @@ public class PropertyValueDelegateTaskTest extends TestCase {
         expect(ctx.getHierarchyManager("somerepo")).andReturn(hm);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         ComponentsTestUtil.clear();

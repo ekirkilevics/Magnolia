@@ -58,6 +58,7 @@ public abstract class JCRSessionOp<R> implements Op<R, RepositoryException> {
         this.repository = repository;
     }
 
+    @Override
     public R exec() throws RepositoryException {
         Session session = null;
         try {

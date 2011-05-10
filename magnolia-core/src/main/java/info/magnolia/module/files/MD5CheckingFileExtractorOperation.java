@@ -74,11 +74,13 @@ class MD5CheckingFileExtractorOperation extends BasicFileExtractorOperation {
         this.hm = hm;
     }
 
+    @Override
     protected InputStream checkInput() throws IOException {
         return wrap(super.checkInput());
     }
 
     // TODO : behaviour: overwrite, log, backup, .. ?
+    @Override
     protected File checkOutput() throws IOException {
         final File out = super.checkOutput();
 
@@ -106,12 +108,14 @@ class MD5CheckingFileExtractorOperation extends BasicFileExtractorOperation {
         return out;
     }
 
+    @Override
     protected OutputStream openOutput(File outFile) throws IOException {
         final OutputStream outputStream = super.openOutput(outFile);
         final MessageDigest md5 = getMessageDigest();
         return new DigestOutputStream(outputStream, md5);
     }
 
+    @Override
     protected void copyAndClose(InputStream in, OutputStream out) throws IOException {
         super.copyAndClose(in, out);
 

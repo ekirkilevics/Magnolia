@@ -112,22 +112,27 @@ public class DeltaBuilder implements Delta {
         return this;
     }
 
+    @Override
     public Version getVersion() {
         return version;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public List<Condition> getConditions() {
         return conditions;
     }
 
+    @Override
     public List<Task> getTasks() {
         return tasks;
     }
 
+    @Override
     public DeltaType getType() {
         return type;
     }

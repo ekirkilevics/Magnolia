@@ -63,6 +63,7 @@ public class DeprecateDialogPathAllModules extends AllModulesNodeOperation {
     }
 
 
+    @Override
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
             throws RepositoryException, TaskExecutionException {
         try {
@@ -70,7 +71,8 @@ public class DeprecateDialogPathAllModules extends AllModulesNodeOperation {
             if(node.hasContent("paragraphs")){
                 Content paragraphsNode = node.getContent("paragraphs");
                 ContentUtil.visit(paragraphsNode, new ContentUtil.Visitor(){
-                   public void visit(Content paragraphDefNode) throws Exception {
+                   @Override
+                public void visit(Content paragraphDefNode) throws Exception {
                        if(paragraphDefNode.hasNodeData("dialogPath")){
                            String dialogPath = paragraphDefNode.getNodeData("dialogPath").getString();
                            paragraphDefNode.deleteNodeData("dialogPath");

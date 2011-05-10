@@ -49,6 +49,7 @@ public class AccessManagerImpl implements AccessManager, Serializable {
 
     private List<Permission> userPermissions;
 
+    @Override
     public boolean isGranted(String path, long permissions) {
         if (StringUtils.isEmpty(path)) {
             path = "/"; //$NON-NLS-1$
@@ -60,14 +61,17 @@ public class AccessManagerImpl implements AccessManager, Serializable {
         return granted;
     }
 
+    @Override
     public void setPermissionList(List<Permission> permissions) {
         this.userPermissions = permissions;
     }
 
+    @Override
     public List<Permission> getPermissionList() {
         return this.userPermissions;
     }
 
+    @Override
     public long getPermissions(String path) {
         if (userPermissions == null) {
             return Permission.NONE;

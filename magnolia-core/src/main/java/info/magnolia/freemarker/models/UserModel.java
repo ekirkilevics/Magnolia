@@ -52,10 +52,12 @@ class UserModel extends BeanModel {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserModel.class);
 
     static final MagnoliaModelFactory FACTORY = new MagnoliaModelFactory() {
+        @Override
         public Class factoryFor() {
             return User.class;
         }
 
+        @Override
         public TemplateModel create(Object object, ObjectWrapper wrapper) {
             final User user = (User) object;
             return new UserModel(user, (MagnoliaObjectWrapper) wrapper);
@@ -69,6 +71,7 @@ class UserModel extends BeanModel {
         this.user = user;
     }
 
+    @Override
     public TemplateModel get(String key) throws TemplateModelException {
         final TemplateModel result = super.get(key);
         if (result != null) {

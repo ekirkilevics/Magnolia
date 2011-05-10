@@ -82,6 +82,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
      */
     private Map<String, Locale> locales = new LinkedHashMap<String, Locale>();
 
+    @Override
     public Locale getLocale() {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
         if (locale == null) {
@@ -91,14 +92,17 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
         }
     }
 
+    @Override
     public void setLocale(Locale locale) {
         MgnlContext.getAggregationState().setLocale(locale);
     }
 
+    @Override
     public Locale getFallbackLocale() {
         return this.fallbackLocale;
     }
 
+    @Override
     public void setFallbackLocale(Locale fallbackLocale) {
         this.fallbackLocale = fallbackLocale;
     }
@@ -135,6 +139,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     /**
      * Extracts the language from the uri.
      */
+    @Override
     public Locale determineLocale() {
         Locale locale;
 
@@ -171,6 +176,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
         return null;
     }
 
+    @Override
     public String toI18NURI(String uri) {
         if (!isEnabled()) {
             return uri;
@@ -187,6 +193,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     /**
      * Removes the prefix.
      */
+    @Override
     public String toRawURI(String i18nURI) {
         if (!isEnabled()) {
             return i18nURI;
@@ -201,6 +208,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
     protected abstract String toRawURI(String i18nURI, Locale locale);
 
+    @Override
     public NodeData getNodeData(Content node, String name, Locale locale) throws RepositoryException {
         String nodeDataName = name + "_" + locale;
         if (node.hasNodeData(nodeDataName)) {
@@ -213,6 +221,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
      * Returns the nodedata with the name &lt;name&gt;_&lt;current language&gt; or &lt;name&gt;_&lt;fallback language&gt
      * otherwise returns &lt;name&gt;.
      */
+    @Override
     public NodeData getNodeData(Content node, String name) {
         NodeData nd = null;
 
@@ -257,6 +266,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
         return getFallbackLocale();
     }
 
+    @Override
     public boolean isEnabled() {
         return this.enabled;
     }
@@ -265,6 +275,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
         this.enabled = enabled;
     }
 
+    @Override
     public Collection<Locale> getLocales() {
         return this.locales.values();
     }

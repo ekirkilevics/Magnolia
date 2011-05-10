@@ -113,6 +113,7 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
         outerNavigationContainer.addComponent(navigationWorkareaContainer);
     }
 
+    @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
         for(NavigationWorkArea navigationWorkArea: registeredNavigationAreas.values()){
@@ -122,6 +123,7 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
         }
     }
 
+    @Override
     public void update(Place place) {
         for(NavigationWorkArea workarea: registeredNavigationAreas.values()){
             //the navigation group will set the correct navigation  area as visible
@@ -132,6 +134,7 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
         }
     }
 
+    @Override
     public Component asVaadinComponent() {
         return customComponent;
     }
@@ -147,6 +150,7 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
 
             addListener(new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     for(NavigationWorkArea navigationWorkArea : registeredNavigationAreas.values()){
                         navigationWorkArea.setVisible(false);

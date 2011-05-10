@@ -56,6 +56,7 @@ public class BackwardCompatibilityFilter extends OncePerRequestAbstractMgnlFilte
 
     private static Content ACTPAGE = new ContentWrapper(){
 
+        @Override
         public Content getWrappedContent() {
             DeprecationUtil.isDeprecated("The request attribute ${" + ACTPAGE_ATTRIBUTE + "} is deprecated please use the new ${" + ACTPAGE_FUNCTION + "} function instead");
 
@@ -67,6 +68,7 @@ public class BackwardCompatibilityFilter extends OncePerRequestAbstractMgnlFilte
 
     private static final String ACTPAGE_FUNCTION = "cmsfn:mainPage()";
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
         request.setAttribute(ACTPAGE_ATTRIBUTE, ACTPAGE);

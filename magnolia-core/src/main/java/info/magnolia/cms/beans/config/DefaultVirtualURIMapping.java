@@ -51,6 +51,7 @@ public class DefaultVirtualURIMapping implements VirtualURIMapping {
 
     private String toURI;
 
+    @Override
     public MappingResult mapURI(String uri) {
 
         if (pattern != null && pattern.match(uri)) {
@@ -79,6 +80,7 @@ public class DefaultVirtualURIMapping implements VirtualURIMapping {
         this.toURI = toURI;
     }
 
+    @Override
     public String toString() {
         return fromURI + " --> " + toURI;
     }

@@ -68,6 +68,7 @@ public class AddFilterBypassTask extends AbstractRepositoryTask implements Task 
         this.bypassPattern = bypassPattern;
     }
 
+    @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = installContext.getConfigHierarchyManager();
         final Content filter = hm.getContent(filterPath);
