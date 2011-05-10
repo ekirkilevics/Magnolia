@@ -112,7 +112,7 @@ public class LocaleDefinition {
     public String toString() {
         return getLocale() != null ? getLocale().toString() : "none";
     }
-    
+
     public String getId() {
         return getLocale().toString();
     }

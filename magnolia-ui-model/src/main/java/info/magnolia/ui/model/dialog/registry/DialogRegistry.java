@@ -48,8 +48,9 @@ public class DialogRegistry {
 
     public void registerDialog(String dialogName, DialogProvider provider) {
         synchronized (providers) {
-            if (providers.containsKey(dialogName))
+            if (providers.containsKey(dialogName)) {
                 throw new IllegalStateException("Dialog already registered for name [" + dialogName + "]");
+            }
             providers.put(dialogName, provider);
         }
     }

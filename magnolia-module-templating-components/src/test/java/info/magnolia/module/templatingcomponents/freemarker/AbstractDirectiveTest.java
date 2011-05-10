@@ -53,7 +53,7 @@ import freemarker.template.TemplateModelException;
 
 /**
  * Tests for AbstractDirective's utility methods.
- * 
+ *
  * @version $Id$
  */
 public class AbstractDirectiveTest {

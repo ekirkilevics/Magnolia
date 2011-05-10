@@ -44,7 +44,7 @@ import javax.jcr.RepositoryException;
  * @see #operateOnChildNode(info.magnolia.cms.core.Content,info.magnolia.module.InstallContext)
  *
  * Warning: tasks will fail if the modules node does not exist yet. (As an incentive to force the explicit creation
- * of this node) 
+ * of this node)
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

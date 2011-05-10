@@ -53,10 +53,11 @@ public class DialogDateField extends AbstractDialogField {
     protected Field getField() {
         DateField dateField = new DateField();
         DateFieldDefinition def = (DateFieldDefinition) getFieldDefinition();
-        if (def.isTime())
+        if (def.isTime()) {
             dateField.setResolution(DateField.RESOLUTION_MIN);
-        else
+        } else {
             dateField.setResolution(DateField.RESOLUTION_DAY);
+        }
         return dateField;
     }
 }

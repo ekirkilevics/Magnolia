@@ -47,7 +47,7 @@ import org.junit.Test;
 
 /**
  * Tests.
- * 
+ *
  * @author dlipp
  */
 public class NodeData2PropertyCollectionWrapperTest {

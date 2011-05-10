@@ -74,8 +74,9 @@ public class ToolboxViewImpl implements ToolboxView, IsVaadinComponent {
 
     private MenuItemDefinition findMenuItemByName(String name) {
         for (MenuItemDefinition action : actions) {
-            if (action.getName().equals(name))
+            if (action.getName().equals(name)) {
                 return action;
+            }
         }
         return null;
     }

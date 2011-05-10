@@ -67,8 +67,9 @@ public class MultipartRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String getParameter(String name) {
         String value = form.getParameter(name);
-        if (value == null)
+        if (value == null) {
             value = super.getParameter(name);
+        }
         return value;
     }
 
@@ -84,16 +85,18 @@ public class MultipartRequestWrapper extends HttpServletRequestWrapper {
     public Enumeration getParameterNames() {
         Set<String> parameterNames = new HashSet<String>(form.getParameters().keySet());
         Enumeration enumeration = super.getParameterNames();
-        while (enumeration.hasMoreElements())
+        while (enumeration.hasMoreElements()) {
             parameterNames.add((String) enumeration.nextElement());
+        }
         return Collections.enumeration(parameterNames);
     }
 
     @Override
     public String[] getParameterValues(String name) {
         String[] value = form.getParameterValues(name);
-        if (value == null)
+        if (value == null) {
             value = super.getParameterValues(name);
+        }
         return value;
     }
 }

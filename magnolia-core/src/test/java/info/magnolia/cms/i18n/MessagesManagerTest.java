@@ -55,7 +55,7 @@ public class MessagesManagerTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        
+
         ctx = createMock(Context.class);
         // current context locale
         expect(ctx.getLocale()).andReturn(new Locale("en")).anyTimes();

@@ -47,7 +47,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Registers a servlet definition from a module descriptor into the /server/filters/servlets node.
- * 
+ *
  * @see info.magnolia.module.model.ServletDefinition
  *
  * @author philipp

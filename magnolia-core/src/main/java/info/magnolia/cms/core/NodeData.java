@@ -221,7 +221,7 @@ public interface NodeData extends Cloneable {
      * Sets a reference value.
      */
     void setValue(Content value) throws RepositoryException, AccessDeniedException;
-    
+
     /**
      * set value of type <code>Value</code>.
      * @param value

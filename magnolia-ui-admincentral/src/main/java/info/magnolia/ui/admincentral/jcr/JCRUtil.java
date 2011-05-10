@@ -114,8 +114,9 @@ public class JCRUtil {
     }
 
     public static String getPropertyString(Node node, String propertyName, String defaultValue) throws RepositoryException {
-        if (node.hasProperty(propertyName))
+        if (node.hasProperty(propertyName)) {
             return node.getProperty(propertyName).getString();
+        }
         return defaultValue;
     }
 }

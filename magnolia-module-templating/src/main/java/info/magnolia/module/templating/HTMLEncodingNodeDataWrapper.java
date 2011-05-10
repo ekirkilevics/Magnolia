@@ -42,13 +42,13 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Implementation of wrapped node data in HTML format.
- * 
+ *
  * @author pbracher
  * @version $Id: HTMLEncodingNodeDataWrapper.java 32669 2010-03-13 00:53:19Z gjoseph $
  *
  */
 public class HTMLEncodingNodeDataWrapper extends NodeDataWrapper {
-    
+
     private boolean transformLineBreaks;
 
     public HTMLEncodingNodeDataWrapper(NodeData wrappedNodeData, boolean transformLineBreaks) {

@@ -178,7 +178,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         });
         assertEquals(asList("b", "c","a"), result);
     }
-    
+
     public void testOrderAfterLastNodeVariation1() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -301,7 +301,7 @@ public class ContentUtilTest extends RepositoryTestCase {
         });
         assertEquals(asList("a","b","e","c","d","f"), result);
     }
-    
+
     public void testOrderBeforeFirstNodeVariation1() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +

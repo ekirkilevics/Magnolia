@@ -45,7 +45,7 @@ import java.util.Map;
 /**
  * This default implementation of ModuleLifecycleContext allows the ModuleManager to set the current "phase" of
  * installation; other ModuleLifecycleContext clients have read-only access to the phase.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

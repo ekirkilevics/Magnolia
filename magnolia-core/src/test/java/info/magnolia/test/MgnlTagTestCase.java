@@ -136,9 +136,9 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
      * Tests that the doEndTag() method outputs a value that matches the result parameter
      * After testing this, the JspWriter buffer is cleared to allow for further tests
      *
-     * @param explanation Explanation of what is being tested 
+     * @param explanation Explanation of what is being tested
      * @param expectedResult The expected result that the tag should write to the jsp page as a string
-     * @param leaveJspIntact by default, the JSP buffer will be cleared after each call to this method 
+     * @param leaveJspIntact by default, the JSP buffer will be cleared after each call to this method
      *                       if this value is true, the jsp will be left untouched after the assertion
      * @throws JspException  Thrown if there is a JSP Exception thrown by the tag
      */

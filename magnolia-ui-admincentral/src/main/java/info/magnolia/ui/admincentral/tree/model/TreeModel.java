@@ -81,8 +81,9 @@ public class TreeModel implements JcrContainerSource {
 
     @Override
     public Collection<Item> getChildren(Item item) throws RepositoryException {
-        if (item instanceof Property)
+        if (item instanceof Property) {
             return Collections.emptySet();
+        }
 
         Node node = (Node) item;
 
@@ -157,16 +158,18 @@ public class TreeModel implements JcrContainerSource {
 
     @Override
     public boolean isRoot(Item item) throws RepositoryException {
-        if (item instanceof Property)
+        if (item instanceof Property) {
             return false;
+        }
         int depthOfRootNodesInTree = getRootNode().getDepth() + 1;
         return item.getDepth() <= depthOfRootNodesInTree;
     }
 
     @Override
     public boolean hasChildren(Item item) throws RepositoryException {
-        if (item instanceof Property)
+        if (item instanceof Property) {
             return false;
+        }
         return !getChildren(item).isEmpty();
     }
 
@@ -207,12 +210,14 @@ public class TreeModel implements JcrContainerSource {
 
     public boolean moveItem(Item source, Item target) throws RepositoryException {
 
-        if (target instanceof Property)
+        if (target instanceof Property) {
             return false;
+        }
 
-        if (source instanceof Property)
+        if (source instanceof Property) {
             // Not yet implemented
             return false;
+        }
 
         source.getSession().move(source.getPath(), target.getPath() + "/" + source.getName());
         source.getSession().save();
@@ -222,12 +227,14 @@ public class TreeModel implements JcrContainerSource {
 
     public boolean moveItemBefore(Item source, Item target) throws RepositoryException {
 
-        if (target instanceof Property)
+        if (target instanceof Property) {
             return false;
+        }
 
-        if (source instanceof Property)
+        if (source instanceof Property) {
             // Not yet implemented
             return false;
+        }
 
         // TODO: verify all this works for nodes under root node
 
@@ -245,12 +252,14 @@ public class TreeModel implements JcrContainerSource {
 
     public boolean moveItemAfter(Item source, Item target) throws RepositoryException {
 
-        if (target instanceof Property)
+        if (target instanceof Property) {
             return false;
+        }
 
-        if (source instanceof Property)
+        if (source instanceof Property) {
             // Not yet implemented
             return false;
+        }
 
         // TODO: verify all this works for nodes under root node
 
@@ -270,10 +279,11 @@ public class TreeModel implements JcrContainerSource {
 
     public String getPathInTree(Item item) throws RepositoryException {
         String base = workbenchDefinition.getPath();
-        if (base.equals("/"))
+        if (base.equals("/")) {
             return item.getPath();
-        else
+        } else {
             return StringUtils.substringAfter(item.getPath(), base);
+        }
     }
 
     public Map<String,Column<?>> getColumns() {
@@ -301,9 +311,10 @@ public class TreeModel implements JcrContainerSource {
 
     private String getPathInWorkspace(String pathInTree) {
         String base = this.workbenchDefinition.getPath();
-        if (base.equals("/"))
+        if (base.equals("/")) {
             return pathInTree;
-        else
+        } else {
             return base + pathInTree;
+        }
     }
 }

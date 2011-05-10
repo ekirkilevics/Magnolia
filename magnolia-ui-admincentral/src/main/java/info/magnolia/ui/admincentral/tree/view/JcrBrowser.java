@@ -198,8 +198,9 @@ public class JcrBrowser extends TreeTable {
                     Transferable t = event.getTransferable();
 
                     // Make sure the drag source is the same tree
-                    if (t.getSourceComponent() != JcrBrowser.this)
+                    if (t.getSourceComponent() != JcrBrowser.this) {
                         return;
+                    }
 
                     AbstractSelectTargetDetails target = (AbstractSelectTargetDetails) event.getTargetDetails();
                     // Get ids of the dragged item and the target item
@@ -215,8 +216,9 @@ public class JcrBrowser extends TreeTable {
                     if (location == VerticalDropLocation.MIDDLE) {
                         Item sourceItem = container.getJcrItem((ContainerItemId) sourceItemId);
                         Item targetItem = container.getJcrItem((ContainerItemId) targetItemId);
-                        if (treeModel.moveItem(sourceItem, targetItem))
+                        if (treeModel.moveItem(sourceItem, targetItem)) {
                             setParent(sourceItemId, targetItemId);
+                        }
                     }
                     // Drop at the top of a subtree -> make it previous
                     else if (location == VerticalDropLocation.TOP) {
@@ -225,8 +227,9 @@ public class JcrBrowser extends TreeTable {
                             log.debug("Parent:" + containerWrapper.getItem(parentId));
                             Item sourceItem = container.getJcrItem((ContainerItemId) sourceItemId);
                             Item targetItem = container.getJcrItem((ContainerItemId) targetItemId);
-                            if (treeModel.moveItemBefore(sourceItem, targetItem))
+                            if (treeModel.moveItemBefore(sourceItem, targetItem)) {
                                 setParent(sourceItemId, targetItemId);
+                            }
                         }
                     }
 
@@ -236,8 +239,9 @@ public class JcrBrowser extends TreeTable {
                         if (parentId != null) {
                             Item sourceItem = container.getJcrItem((ContainerItemId) sourceItemId);
                             Item targetItem = container.getJcrItem((ContainerItemId) targetItemId);
-                            if (treeModel.moveItemAfter(sourceItem, targetItem))
+                            if (treeModel.moveItemAfter(sourceItem, targetItem)) {
                                 setParent(sourceItemId, targetItemId);
+                            }
                         }
                     }
                 } catch (RepositoryException e) {

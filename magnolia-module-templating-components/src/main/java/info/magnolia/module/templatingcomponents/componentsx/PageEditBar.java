@@ -45,7 +45,7 @@ import java.io.Writer;
  * This describes the "main bar" for pages. This typically renders a bar to be placed on top of pages, with a "preview"
  * button and a "page info" button. It might also display a language selector (if i18n authoring is enabled), and a
  * "back to AdminCentral" button if relevant.
- * 
+ *
  * @version $Id$
  */
 public class PageEditBar extends AbstractAuthoringUiComponent {

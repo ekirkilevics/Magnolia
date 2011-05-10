@@ -71,12 +71,18 @@ public class PageEditorPlace extends Place {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PageEditorPlace)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof PageEditorPlace)) {
+            return false;
+        }
 
         PageEditorPlace that = (PageEditorPlace) o;
 
-        if (path != null ? !path.equals(that.path) : that.path != null) return false;
+        if (path != null ? !path.equals(that.path) : that.path != null) {
+            return false;
+        }
 
         return true;
     }

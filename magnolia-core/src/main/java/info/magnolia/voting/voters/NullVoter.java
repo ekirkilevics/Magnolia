@@ -37,7 +37,7 @@ import info.magnolia.voting.Voter;
 
 /**
  * A Voter which always returns 0 and isn't considered enabled. Useful for default values.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

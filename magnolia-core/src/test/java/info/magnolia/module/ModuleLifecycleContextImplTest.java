@@ -55,7 +55,7 @@ public class ModuleLifecycleContextImplTest extends TestCase {
     }
 
     public void testStartRegistersAllObserversWithAllModules() {
-        
+
     }
 
     private static class DummyObservedManager1 extends ObservedManager {

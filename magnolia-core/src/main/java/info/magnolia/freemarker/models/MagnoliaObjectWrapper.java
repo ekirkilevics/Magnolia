@@ -113,7 +113,7 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
     protected ModelFactory getModelFactory(Class clazz) {
         final List<MagnoliaModelFactory> registeredModelFactories = freemarkerConfig.getModelFactories();
         ModelFactory modelFactory = getModelFactory(clazz, registeredModelFactories);
-        
+
         if (modelFactory == null) {
             modelFactory = getModelFactory(clazz, DEFAULT_MODEL_FACTORIES);
         }

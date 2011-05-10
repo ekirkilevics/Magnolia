@@ -113,8 +113,9 @@ public class AdminCentralApplication extends Application implements HttpServletR
 
     @Override
     public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {
-        if (componentProvider == null)
+        if (componentProvider == null) {
             createComponentProvider();
+        }
 
         // TODO keeping scopes in ThreadLocal is not necessary if we allow components to have their ComponentProvider injected, expect that since Content2Bean is a static service it needs to get it this way which is a shame..
 

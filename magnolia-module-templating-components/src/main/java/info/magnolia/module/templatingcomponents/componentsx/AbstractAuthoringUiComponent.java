@@ -56,7 +56,7 @@ import org.apache.commons.lang.StringUtils;
  * methods for their specific parameters (so that template-specific wrappers can set parameters). (no need to clutter
  * things up with getters). Implementation might also expose static factory methods, which can take care of default
  * values, i.e for labels.
- * 
+ *
  * @version $Id$
  */
 public abstract class AbstractAuthoringUiComponent implements AuthoringUiComponent {

@@ -64,8 +64,9 @@ public class DialogSelectField extends AbstractDialogField {
             select.setItemCaption(entry.getKey(), entry.getValue());
         }
         // We can't leave the field without a value because it will render an extra, blank, option if we do
-        if (!options.isEmpty())
+        if (!options.isEmpty()) {
             select.setValue(options.entrySet().iterator().next().getKey());
+        }
         return select;
     }
 }

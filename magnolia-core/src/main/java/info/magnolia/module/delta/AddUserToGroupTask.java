@@ -61,7 +61,7 @@ public class AddUserToGroupTask extends AbstractTask {
         if (user == null) {
             ctx.warn("User \"" + username + "\" not found, can't add him/her to the \"" + groupname + "\" group.");
         } else {
-            // TODO this saves at node level, thus breaking the "save once per module install/update" rule :( 
+            // TODO this saves at node level, thus breaking the "save once per module install/update" rule :(
             try{
                 user.addGroup(groupname);
             }

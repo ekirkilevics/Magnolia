@@ -39,7 +39,7 @@ import info.magnolia.module.model.ServletDefinition;
 
 /**
  * Reads the servlets to register from the module descriptor.
- * 
+ *
  * @author philipp
  * @version $Id$
  */
@@ -48,16 +48,16 @@ public class RegisterModuleServletsTask extends ArrayDelegateTask {
     public RegisterModuleServletsTask() {
         super("Register module servlets", "Registers servlets for this module.");
     }
-    
+
     @Override
     public void execute(InstallContext installContext) throws TaskExecutionException {
         final ModuleDefinition moduleDefinition = installContext.getCurrentModuleDefinition();
-        
+
         // register servlets
         for (ServletDefinition servletDefinition : moduleDefinition.getServlets()) {
             addTask(new RegisterServletTask(servletDefinition));
         }
-        
+
         super.execute(installContext);
     }
 }

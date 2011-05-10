@@ -47,7 +47,7 @@ import info.magnolia.module.InstallContext;
 public class RemoveNodeWoChildren extends AbstractRepositoryTask {
     private final String workspaceName;
     private final String pathToCheck;
-    
+
     public RemoveNodeWoChildren(String name, String description, String workspaceName, String pathToCheck) {
         super(name, description);
         this.pathToCheck = pathToCheck;
@@ -60,7 +60,8 @@ public class RemoveNodeWoChildren extends AbstractRepositoryTask {
            if (!hm.getContent(pathToCheck).hasChildren() == true) {
                     final Content node = hm.getContent(pathToCheck);
                     node.delete();
-            }
-           else ctx.warn("Was supposed to remove " + pathToCheck + " but the node was not empty");
+            } else {
+            ctx.warn("Was supposed to remove " + pathToCheck + " but the node was not empty");
+        }
     }
 }

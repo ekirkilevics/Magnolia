@@ -39,7 +39,7 @@ import info.magnolia.cms.core.SystemProperty;
 
 
 /**
- * Checks if the named Magnolia property has the expected value. 
+ * Checks if the named Magnolia property has the expected value.
  * <p>Parameters (as Magnolia's configuration nodes):
  * <ul>
  * <li>property: property name.

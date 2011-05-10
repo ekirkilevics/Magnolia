@@ -41,7 +41,7 @@ import java.util.Collection;
  * Servlet as defined in a module descriptor.
  *
  * @see ModuleDefinition
- * 
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */

@@ -34,13 +34,13 @@
 package info.magnolia.link;
 
 /**
- * Implementing classes declare the intent of translating Magnolia UUID links to 
- * desired output like absolute, relative or other special kinds of links. 
+ * Implementing classes declare the intent of translating Magnolia UUID links to
+ * desired output like absolute, relative or other special kinds of links.
  * @author had
  *
  */
 public interface LinkTransformer {
-    
+
     /**
      * Transforms Link into desired output.
      * @param link Link to repository content be transformed.

@@ -63,7 +63,7 @@ public interface FileExtractor {
 
     /**
      * Transforms a resource path into a file system path. (i.e where the resource is extracted)
-     * Returns null if the resource should not be extracted. 
+     * Returns null if the resource should not be extracted.
      *
      * TODO : find better name !
      */

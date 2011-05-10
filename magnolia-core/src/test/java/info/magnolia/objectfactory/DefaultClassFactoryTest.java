@@ -38,7 +38,7 @@ import junit.framework.TestCase;
 /**
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class DefaultClassFactoryTest extends TestCase {
     public void testCanInstantiateWithEmptyConstructor() {
@@ -86,8 +86,8 @@ public class DefaultClassFactoryTest extends TestCase {
         catch (MgnlInstantiationException e) {
             fail("It should have used the more generic constructor <init>(String, Object)");
         }
-        
-        // it does not work if the types are less precise 
+
+        // it does not work if the types are less precise
         try {
             assertEquals("bingo", classFactory.newInstance(FooBar.class, arr(Object.class), "bingo").getValue());
             fail("should have failed");
@@ -98,7 +98,7 @@ public class DefaultClassFactoryTest extends TestCase {
 
     }
 
-//    MAGNOLIA-3082: replaced by the test above    
+//    MAGNOLIA-3082: replaced by the test above
 //    public void testWillFailIfSignatureWrongSpecifiedEvenIfArgumentsCouldFit() {
 //        final DefaultClassFactory classFactory = new DefaultClassFactory();
 //        try {

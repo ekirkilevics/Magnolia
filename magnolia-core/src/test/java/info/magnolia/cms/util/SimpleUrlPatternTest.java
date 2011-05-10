@@ -133,14 +133,14 @@ public class SimpleUrlPatternTest extends TestCase {
     public void testWildcardsMatch() {
         assertTrue(new SimpleUrlPattern("/*/num?page.html").match("/*/num2page.html"));
     }
-    
+
     /**
      * Test with the <code>*</code> and <code>?</code> wildcards.
      */
     public void testWildcardsWithSpecialChars() {
         assertTrue(new SimpleUrlPattern("/*").match("/*/page‘.html"));
     }
-    
+
     /**
      * Test with the <code>*</code> and <code>?</code> wildcards.
      */
@@ -184,9 +184,9 @@ public class SimpleUrlPatternTest extends TestCase {
         assertTrue(new SimpleUrlPattern("/*").match(NFC));
         assertTrue(new SimpleUrlPattern("/*").match(NFD));
         assertTrue(new SimpleUrlPattern("/*").match(MACROMAN));
-        
+
         assertTrue(new SimpleUrlPattern("/*").match("/£"));
-        
+
     }
 
 }

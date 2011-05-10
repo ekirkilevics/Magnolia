@@ -41,7 +41,7 @@ import java.util.List;
  * Repository as defined in a module descriptor.
  *
  * @see ModuleDefinition
- * 
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */

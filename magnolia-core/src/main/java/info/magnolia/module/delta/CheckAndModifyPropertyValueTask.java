@@ -42,7 +42,7 @@ import javax.jcr.RepositoryException;
 
 /**
  * If the specified property (NodeData) has the expected value, then it will be replaced by the new value.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

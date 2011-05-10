@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
- * 
+ *
  * @version $Id$
  */
 public class TemplatingFunctions {

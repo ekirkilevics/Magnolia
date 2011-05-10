@@ -47,7 +47,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @see Bootstrapper#getBootstrapDirs()
  * @see info.magnolia.cms.core.SystemProperty#MAGNOLIA_BOOTSTRAP_ROOTDIR
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

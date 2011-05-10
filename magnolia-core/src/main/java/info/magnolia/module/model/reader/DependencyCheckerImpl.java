@@ -45,7 +45,7 @@ import java.util.Map;
 
 /**
  * Default implementation of DependencyChecker.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

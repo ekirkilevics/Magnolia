@@ -121,7 +121,7 @@ public class URI2RepositoryMappingTest extends TestCase {
         WebContext context = createNiceMock(WebContext.class);
         HierarchyManager hm = createNiceMock(HierarchyManager.class);
         MgnlContext.setInstance(context);
-        MockRepositoryAcquiringStrategy strategy = (MockRepositoryAcquiringStrategy) Components.getSingleton(MockRepositoryAcquiringStrategy.class);
+        MockRepositoryAcquiringStrategy strategy = Components.getSingleton(MockRepositoryAcquiringStrategy.class);
         strategy.addHierarchyManager("config", hm);
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);

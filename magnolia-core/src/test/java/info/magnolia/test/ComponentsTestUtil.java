@@ -51,7 +51,7 @@ import java.util.Properties;
  * delegates to its set* methods.
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class ComponentsTestUtil {
 

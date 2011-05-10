@@ -37,7 +37,7 @@ import info.magnolia.module.ModuleManagementException;
 
 /**
  * Thrown when a module dependency is missing or present with an unsupported version.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

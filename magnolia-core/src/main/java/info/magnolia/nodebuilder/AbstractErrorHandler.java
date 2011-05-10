@@ -42,7 +42,7 @@ import javax.jcr.RepositoryException;
 
 /**
  * Provides a basic behaviour for ErrorHandlers.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

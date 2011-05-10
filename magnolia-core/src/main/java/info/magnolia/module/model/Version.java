@@ -266,9 +266,9 @@ public class Version {
     @Override
     public int hashCode() {
         int result;
-        result = (int) major;
-        result = 31 * result + (int) minor;
-        result = 31 * result + (int) patch;
+        result = major;
+        result = 31 * result + minor;
+        result = 31 * result + patch;
         result = 31 * result + (classifier != null ? classifier.hashCode() : 0);
         return result;
     }

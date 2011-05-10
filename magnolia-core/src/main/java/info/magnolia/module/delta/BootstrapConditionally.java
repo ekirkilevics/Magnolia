@@ -63,7 +63,7 @@ public class BootstrapConditionally extends NodeExistsDelegateTask {
      * Executes the given task if the specified node exists in the specific repository, bootstraps the given resource otherwise.
      */
     public BootstrapConditionally(String taskName, String taskDescription, String repositoryName, String pathToCheck, String resourceToBootstrap, Task ifNodeExists) {
-        super(taskName, taskDescription, repositoryName, pathToCheck, ifNodeExists, new BootstrapSingleResource(taskName, taskDescription, resourceToBootstrap));        
+        super(taskName, taskDescription, repositoryName, pathToCheck, ifNodeExists, new BootstrapSingleResource(taskName, taskDescription, resourceToBootstrap));
     }
 
     // TODO --- these are copied from BootstrapUtil which has been removed with r12086

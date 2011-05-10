@@ -38,7 +38,7 @@ package info.magnolia.nodebuilder.task;
  * @see info.magnolia.nodebuilder.task.TaskLogErrorHandler
  * @see info.magnolia.nodebuilder.StrictErrorHandler
  * @see AbstractNodeBuilderTask
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

@@ -41,7 +41,7 @@ import info.magnolia.cms.util.ContentWrapper;
 
 /**
  * Implementation of wrapped content in HTML format.
- * 
+ *
  * @author pbracher
  * @version $Id: HTMLEncodingContentWrapper.java 32669 2010-03-13 00:53:19Z gjoseph $
  *

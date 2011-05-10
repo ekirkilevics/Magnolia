@@ -50,12 +50,12 @@ import javax.jcr.observation.ObservationManager;
  *
  */
 public class ObservationUtilTest extends MgnlTestCase {
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
     }
-    
+
     public void testFailRegisterWhenSessionInvalid() throws Exception {
         final HierarchyManager hm = createStrictMock(HierarchyManager.class);
         MockUtil.getSystemMockContext().addHierarchyManager("some-repo", hm);
@@ -64,11 +64,11 @@ public class ObservationUtilTest extends MgnlTestCase {
         expect(hm.getWorkspace()).andReturn(wks);
         expect(wks.getSession()).andReturn(session);
         expect(session.isLive()).andReturn(false);
-        
+
         replay( hm, wks);
         try {
             ObservationUtil.registerChangeListener("some-repo", "/parent", new EventListener() {
-    
+
                 @Override
                 public void onEvent(EventIterator events) {
                     // do nothing
@@ -77,7 +77,7 @@ public class ObservationUtilTest extends MgnlTestCase {
         } catch (IllegalStateException e) {
             assertEquals("Observation manager can't be obtained due to invalid session.", e.getMessage());
         }
-        
+
         verify( hm, wks);
     }
 
@@ -98,7 +98,7 @@ public class ObservationUtilTest extends MgnlTestCase {
         expect(session.isLive()).andReturn(true);
         expect(wks.getObservationManager()).andReturn(observationManager);
         observationManager.addEventListener(listener, 31, "/parent", true, null, null, false);
-        
+
         replay( hm, wks, session, observationManager);
         ObservationUtil.registerChangeListener("some-repo", "/parent", listener);
         verify( hm, wks, session, observationManager);
@@ -111,10 +111,10 @@ public class ObservationUtilTest extends MgnlTestCase {
         expect(hm.getWorkspace()).andReturn(wks);
         expect(wks.getSession()).andReturn(session);
         expect(session.isLive()).andReturn(false);
-        
+
         replay( hm, wks);
             ObservationUtil.unregisterChangeListener("some-repo", new EventListener() {
-    
+
                 @Override
                 public void onEvent(EventIterator events) {
                     // do nothing
@@ -139,7 +139,7 @@ public class ObservationUtilTest extends MgnlTestCase {
         expect(session.isLive()).andReturn(true);
         expect(wks.getObservationManager()).andReturn(observationManager);
         observationManager.removeEventListener(listener);
-        
+
         replay( hm, wks, session, observationManager);
         ObservationUtil.unregisterChangeListener("some-repo", listener);
         verify( hm, wks, session, observationManager);

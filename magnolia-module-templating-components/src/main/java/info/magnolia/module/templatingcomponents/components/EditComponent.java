@@ -79,11 +79,13 @@ public class EditComponent extends AbstractContentComponent {
 
     // TODO this is used in a few more places (might be a good candidate to add to ParagraphManager)
     private String resolveDialog(Paragraph paragraph) {
-        if (this.dialog != null)
+        if (this.dialog != null) {
             return this.dialog;
+        }
         String dialogToUse = paragraph.getDialog();
-        if (dialogToUse == null)
+        if (dialogToUse == null) {
             return paragraph.getName();
+        }
         return dialogToUse;
     }
 

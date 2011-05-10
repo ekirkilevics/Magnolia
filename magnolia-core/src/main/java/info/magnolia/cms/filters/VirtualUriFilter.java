@@ -80,8 +80,9 @@ public class VirtualUriFilter extends AbstractMgnlFilter {
             return;
         }
 
-        if (RequestDispatchUtil.dispatch(targetUri, request, response))
+        if (RequestDispatchUtil.dispatch(targetUri, request, response)) {
             return;
+        }
 
         aggregationState.setCurrentURI(targetUri);
         chain.doFilter(request, response);

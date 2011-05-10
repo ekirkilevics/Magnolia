@@ -72,14 +72,16 @@ public class Components {
 
     public static ComponentProvider getComponentProvider() {
         ComponentProvider scoped = scopes.get();
-        if (scoped != null)
+        if (scoped != null) {
             return scoped;
+        }
         return componentProvider;
     }
 
     public static void pushScope(ComponentProvider scope) {
-        if (scopes.get() != null)
+        if (scopes.get() != null) {
             throw new IllegalStateException("Only one additional scope is supported at this time");
+        }
         scopes.set(scope);
     }
 

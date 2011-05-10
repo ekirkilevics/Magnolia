@@ -48,7 +48,7 @@ public class BootstrapSingleResource extends BootstrapResourcesTask {
         super(name, description);
         this.resource = resource;
     }
-    
+
     public BootstrapSingleResource(String name, String description, String resource, int importUUIDBehavior) {
         super(name, description, importUUIDBehavior);
         this.resource = resource;

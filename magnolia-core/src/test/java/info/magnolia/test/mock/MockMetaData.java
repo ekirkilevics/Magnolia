@@ -50,7 +50,7 @@ public class MockMetaData extends MetaData {
     public MockMetaData(MockContent mockContent) {
         this.mockContent = mockContent;
     }
-    
+
     @Override
     public String getHandle() {
         return mockContent.getHandle();

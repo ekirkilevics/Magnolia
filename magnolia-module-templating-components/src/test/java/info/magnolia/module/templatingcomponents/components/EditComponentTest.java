@@ -59,7 +59,7 @@ import org.junit.Test;
 
 /**
  * Tests for EditMarker.
- * 
+ *
  * @version $Id$
  */
 public class EditComponentTest {

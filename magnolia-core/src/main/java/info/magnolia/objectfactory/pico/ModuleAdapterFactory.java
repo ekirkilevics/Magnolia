@@ -164,7 +164,7 @@ public class ModuleAdapterFactory extends AbstractBehaviorFactory {
                         @Override
                         public void doExec() {
                             stopModule(component, moduleDefinition, lifecycleContext);
-                            populate((T) component);
+                            populate(component);
                             startModule(component, moduleDefinition, lifecycleContext);
                         }
                     }, true);

@@ -38,7 +38,7 @@ import info.magnolia.module.InstallContext;
 /**
  * A Condition which always return false. Just a convenient implementation when we already know
  * at instanciation time that the condition won't be met.
- * 
+ *
  * @see info.magnolia.module.delta.TrueCondition
  *
  * @author gjoseph

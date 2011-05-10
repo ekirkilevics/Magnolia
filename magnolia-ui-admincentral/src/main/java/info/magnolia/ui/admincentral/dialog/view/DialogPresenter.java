@@ -138,8 +138,9 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
                 // TODO we should fire a tree update event so changes are reflected in the tree view
                 // eventBus.fireEvent(new ContentChangedEvent(treeName, path));
 
-                if (dialogSaveCallback != null)
+                if (dialogSaveCallback != null) {
                     dialogSaveCallback.onSave(node);
+                }
             }
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);

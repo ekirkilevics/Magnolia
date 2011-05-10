@@ -242,7 +242,7 @@ public class TypeMappingImpl implements TypeMapping {
 
     /**
      * Find a method.
-     * 
+     *
      * @param numberOfParameters
      */
     protected Method getExactMethod(Class<?> type, String name, int numberOfParameters) {

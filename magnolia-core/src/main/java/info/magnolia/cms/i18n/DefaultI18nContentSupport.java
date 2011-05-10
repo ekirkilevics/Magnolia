@@ -57,7 +57,7 @@ public class DefaultI18nContentSupport extends AbstractI18nContentSupport {
         if(locale.equals(getDefaultLocale())){
             return uri;
         }
-        
+
         // nothing to do for relative links
         if(uri.startsWith("/")){
             return "/" + locale.toString() + uri;

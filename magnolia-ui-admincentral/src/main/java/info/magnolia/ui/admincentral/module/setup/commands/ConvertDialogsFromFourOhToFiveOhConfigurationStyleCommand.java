@@ -194,20 +194,27 @@ public class ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand extends M
 
     private Class<? extends FieldDefinition> getDefinitionFromControlType(String controlType) {
 
-        if ("edit".equals(controlType))
+        if ("edit".equals(controlType)) {
             return EditFieldDefinition.class;
-        if ("password".equals(controlType))
+        }
+        if ("password".equals(controlType)) {
             return PasswordFieldDefinition.class;
-        if ("select".equals(controlType))
+        }
+        if ("select".equals(controlType)) {
             return SelectFieldDefinition.class;
-        if ("checkboxSwitch".equals(controlType))
+        }
+        if ("checkboxSwitch".equals(controlType)) {
             return CheckboxFieldDefinition.class;
-        if ("date".equals(controlType))
+        }
+        if ("date".equals(controlType)) {
             return DateFieldDefinition.class;
-        if ("static".equals(controlType))
+        }
+        if ("static".equals(controlType)) {
             return StaticFieldDefinition.class;
-        if ("fckEdit".equals(controlType))
+        }
+        if ("fckEdit".equals(controlType)) {
             return RichEditFieldDefinition.class;
+        }
 
         return FieldDefinition.class;
     }

@@ -47,8 +47,9 @@ public class WorkbenchRegistry {
 
     public void register(String name, WorkbenchProvider provider) {
         synchronized (providers) {
-            if (providers.containsKey(name))
+            if (providers.containsKey(name)) {
                 throw new IllegalStateException("Workbench already registered for name [" + name + "]");
+            }
             providers.put(name, provider);
         }
     }

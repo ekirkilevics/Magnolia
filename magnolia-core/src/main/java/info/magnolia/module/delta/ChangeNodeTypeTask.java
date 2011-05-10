@@ -53,7 +53,7 @@ public class ChangeNodeTypeTask extends AbstractRepositoryTask {
     private final ItemType newType;
 
     /**
-     * @param nodePath - String the path to the node 
+     * @param nodePath - String the path to the node
      * @param workspace - String the workspace where the node is stored
      * @param newType - {@link ItemType} the new type
      */

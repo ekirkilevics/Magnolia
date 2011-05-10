@@ -45,7 +45,7 @@ import info.magnolia.cms.util.ContentWrapper;
  * A ContentWrapper implementation which knows about I18nContentSupport.
  * @see I18nContentSupport
  * @see info.magnolia.cms.util.ContentWrapper
- * 
+ *
  * @author pbracher
  * @version $Id$
  */
@@ -65,7 +65,7 @@ public class I18nContentWrapper extends ContentWrapper {
         // nothing we can do
         return super.newNodeDataInstance(name, type, createIfNotExisting);
     }
-    
+
     @Override
     protected Content wrap(Content node) {
         // be sure we don't wrap nulls

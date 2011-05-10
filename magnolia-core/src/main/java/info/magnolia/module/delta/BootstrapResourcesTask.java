@@ -43,7 +43,7 @@ import java.io.IOException;
 
 /**
  * Base class for tasks which bootstrap resources.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -53,7 +53,7 @@ public abstract class BootstrapResourcesTask extends AbstractTask {
     public BootstrapResourcesTask(String name, String description) {
         this(name, description, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
     }
-    
+
     public BootstrapResourcesTask(String name, String description, int importUUIDBehavior) {
         super(name, description);
         this.importUUIDBehavior = importUUIDBehavior;

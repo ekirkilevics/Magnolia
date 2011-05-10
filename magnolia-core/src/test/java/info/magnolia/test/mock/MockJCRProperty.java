@@ -306,18 +306,23 @@ public class MockJCRProperty implements Property {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         MockJCRProperty other = (MockJCRProperty) obj;
         if (mockNodeData == null) {
-            if (other.mockNodeData != null)
+            if (other.mockNodeData != null) {
                 return false;
-        } else if (!mockNodeData.equals(other.mockNodeData))
+            }
+        } else if (!mockNodeData.equals(other.mockNodeData)) {
             return false;
+        }
         return true;
     }
 }

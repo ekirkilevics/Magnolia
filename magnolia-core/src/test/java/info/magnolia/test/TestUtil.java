@@ -55,7 +55,7 @@ public class TestUtil {
     public static Enumeration enumeration(String... strings) {
         return IteratorUtils.asEnumeration(Arrays.asList(strings).iterator());
     }
-    
+
     public static String getCurrentTestMethodName() {
         final StackTraceElement[] stackTrace = new Exception().getStackTrace();
         for (StackTraceElement ste : stackTrace) {

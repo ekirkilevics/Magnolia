@@ -57,14 +57,14 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Checks for modifications between current filter configuration and the 3.0 default configuration. If there are some, a
  * warning is displayed.
- * 
+ *
  * Bypass configurations are transformed to the new format if that's the only change.
- * 
+ *
  * TODO deletion of filters is not detected.
- * 
+ *
  * @author vsteller
  * @version $Id$
- * 
+ *
  */
 public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperation {
     private static final String FILTER_INTERCEPT = "intercept";
@@ -176,8 +176,9 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
     private String getBypasses(final Map existingFilter) {
         String bypasses = null;
         final Map existingConfig = (Map) existingFilter.get("config");
-        if (existingConfig != null && existingConfig.containsKey("bypass"))
+        if (existingConfig != null && existingConfig.containsKey("bypass")) {
             bypasses = (String) existingConfig.get("bypass");
+        }
         return bypasses;
     }
 
@@ -223,18 +224,22 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
          * @return true if they are equal, otherwise false
          */
         private boolean equalParams(final Map existingFilterParams) {
-            if (params == null && existingFilterParams == null)
+            if (params == null && existingFilterParams == null) {
                 return true;
-            if (params == null || existingFilterParams == null)
+            }
+            if (params == null || existingFilterParams == null) {
                 return false;
-            if (params.size() != existingFilterParams.size())
+            }
+            if (params.size() != existingFilterParams.size()) {
                 return false;
+            }
 
             final Iterator paramIterator = params.keySet().iterator();
             while (paramIterator.hasNext()) {
                 final String currentParam = (String) paramIterator.next();
-                if (!existingFilterParams.containsKey(currentParam) || !existingFilterParams.get(currentParam).equals(params.get(currentParam)))
+                if (!existingFilterParams.containsKey(currentParam) || !existingFilterParams.get(currentParam).equals(params.get(currentParam))) {
                     return false;
+                }
             }
             return true;
         }

@@ -44,9 +44,9 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Abstract base class for components that operate on a specified piece of content.
- * 
+ *
  * @version $Id$
- * 
+ *
  *          TODO Should be renamed: AbstractNodeComponent?
  */
 public abstract class AbstractContentComponent extends AbstractAuthoringUiComponent {

@@ -127,10 +127,11 @@ public class ContentDriver extends AbstractDriver<Node> {
         if (path.endsWith("@name")) {
             path = StringUtils.substringBefore(path, "@name");
             Item item = getItemByRelPath(node, path);
-            if (item instanceof Node)
+            if (item instanceof Node) {
                 renameNode(node, (String) value);
-            else if (item instanceof Property)
+            } else if (item instanceof Property) {
                 renameProperty((Property) item, (String) value);
+            }
         } else if (value instanceof String) {
             node.setProperty(path, (String) value);
         } else if (value instanceof Calendar) {
@@ -144,21 +145,26 @@ public class ContentDriver extends AbstractDriver<Node> {
             path = StringUtils.substringBefore(path, "@name");
             valueEditor.setValue(getItemByRelPath(node, path).getName());
         } else if (type.equals(String.class)) {
-            if (node.hasProperty(path))
+            if (node.hasProperty(path)) {
                 valueEditor.setValue(node.getProperty(path).getString());
+            }
         } else if (type.equals(Calendar.class)) {
-            if (node.hasProperty(path))
+            if (node.hasProperty(path)) {
                 valueEditor.setValue(node.getProperty(path).getDate());
+            }
         }
     }
 
     private Item getItemByRelPath(Node node, String relPath) throws RepositoryException {
-        if (relPath.equals(""))
+        if (relPath.equals("")) {
             return node;
-        if (node.hasNode(relPath))
+        }
+        if (node.hasNode(relPath)) {
             return node.getNode(relPath);
-        if (node.hasProperty(relPath))
+        }
+        if (node.hasProperty(relPath)) {
             return node.getProperty(relPath);
+        }
         throw new PathNotFoundException(node.getPath() + " "  + relPath);
     }
 

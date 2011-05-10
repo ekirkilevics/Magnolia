@@ -112,7 +112,7 @@ public class HierarchyBasedI18nContentSupport extends AbstractI18nContentSupport
             }
             locale = null;
         }
-       
+
         return locale != null ? locale : validUnsupportedLocale;
     }
 

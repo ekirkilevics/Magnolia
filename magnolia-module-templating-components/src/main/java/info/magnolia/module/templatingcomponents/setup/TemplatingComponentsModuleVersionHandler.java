@@ -49,7 +49,7 @@ import java.util.List;
 
 /**
  * The module's version handler.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

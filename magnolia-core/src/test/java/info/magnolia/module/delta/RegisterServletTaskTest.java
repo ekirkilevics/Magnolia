@@ -51,7 +51,7 @@ import info.magnolia.test.RepositoryTestCase;
 import java.util.List;
 
 /**
- * 
+ *
  * @author ochytil
  * @version $Revision: $ ($Author: $)
  */

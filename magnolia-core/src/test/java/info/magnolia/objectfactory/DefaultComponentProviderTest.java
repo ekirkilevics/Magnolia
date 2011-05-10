@@ -53,7 +53,7 @@ import java.util.Properties;
 /**
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class DefaultComponentProviderTest extends TestCase {
     @Override

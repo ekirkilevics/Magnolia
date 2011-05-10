@@ -35,7 +35,7 @@ package info.magnolia.module.delta;
 
 /**
  * A task which replaces a node by bootstrapping a file, only if it exists. Outputs a warning if not.
- *  
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

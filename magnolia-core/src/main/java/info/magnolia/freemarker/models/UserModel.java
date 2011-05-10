@@ -63,7 +63,7 @@ class UserModel extends BeanModel {
             return new UserModel(user, (MagnoliaObjectWrapper) wrapper);
         }
     };
-    
+
     private final User user;
 
     UserModel(User user, MagnoliaObjectWrapper wrapper) {

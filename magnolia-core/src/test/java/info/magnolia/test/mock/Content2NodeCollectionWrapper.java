@@ -43,7 +43,7 @@ import javax.jcr.Node;
 
 /**
  * Wrapper for collections of content where collections of nodes are expected.
- * 
+ *
  * @author had
  * @version $Id: $
  */

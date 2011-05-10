@@ -44,7 +44,7 @@ import org.junit.Test;
 
 /**
  * Tests.
- * 
+ *
  * @version $Id$
  */
 public class TemplatingFunctionsTest {

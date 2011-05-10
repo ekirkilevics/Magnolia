@@ -110,28 +110,37 @@ public class ItemSelectedPlace extends Place {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         ItemSelectedPlace other = (ItemSelectedPlace) obj;
         if (path == null) {
-            if (other.path != null)
+            if (other.path != null) {
                 return false;
-        } else if (!path.equals(other.path))
+            }
+        } else if (!path.equals(other.path)) {
             return false;
+        }
         if (workspace == null) {
-            if (other.workspace != null)
+            if (other.workspace != null) {
                 return false;
-        } else if (!workspace.equals(other.workspace))
+            }
+        } else if (!workspace.equals(other.workspace)) {
             return false;
+        }
         if (viewType == null) {
-            if (other.viewType != null)
+            if (other.viewType != null) {
                 return false;
-        } else if (!(viewType == other.viewType))
+            }
+        } else if (!(viewType == other.viewType)) {
             return false;
+        }
         return true;
     }
 

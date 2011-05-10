@@ -51,7 +51,7 @@ import org.apache.commons.lang.UnhandledException;
  * Collection of utilities to simplify working with the JCR API. In contrast to info.magnolia.cms.core.Content it is -
  * from a caller perspective - independent from Content API. Internally content API is still used for now, but this will
  * most probably change quite soon.
- * 
+ *
  * @deprecated temporary
  */
 public class JCRMetadataUtil {

@@ -104,8 +104,9 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
 
             @Override
             protected String getCss(Component c) {
-                if (errorMessage != null)
+                if (errorMessage != null) {
                     return "background-color:#ff8080;";
+                }
                 return super.getCss(c);
             }
         };
@@ -154,16 +155,21 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
 
         // TODO this should look at fieldDefinition.type instead
 
-        if ("edit".equals(fieldDefinition.getControlType()))
+        if ("edit".equals(fieldDefinition.getControlType())) {
             return String.class;
-        if ("date".equals(fieldDefinition.getControlType()))
+        }
+        if ("date".equals(fieldDefinition.getControlType())) {
             return Calendar.class;
-        if ("richText".equals(fieldDefinition.getControlType()))
+        }
+        if ("richText".equals(fieldDefinition.getControlType())) {
             return String.class;
-        if ("password".equals(fieldDefinition.getControlType()))
+        }
+        if ("password".equals(fieldDefinition.getControlType())) {
             return String.class;
-        if ("checkboxSwitch".equals(fieldDefinition.getControlType()))
+        }
+        if ("checkboxSwitch".equals(fieldDefinition.getControlType())) {
             return Boolean.class;
+        }
         return String.class;
 //        throw new IllegalArgumentException("Unsupported type " + dialogControl.getClass());
     }

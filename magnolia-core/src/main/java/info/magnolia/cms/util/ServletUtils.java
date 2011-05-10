@@ -88,8 +88,9 @@ public abstract class ServletUtils {
      */
     public static <T extends ServletRequest> T getWrappedRequest(ServletRequest request, Class<T> clazz) {
         while (request != null) {
-            if (clazz.isAssignableFrom(request.getClass()))
+            if (clazz.isAssignableFrom(request.getClass())) {
                 return (T) request;
+            }
             request = (request instanceof ServletRequestWrapper) ? ((ServletRequestWrapper) request).getRequest() : null;
         }
         return null;
@@ -133,12 +134,15 @@ public abstract class ServletUtils {
      */
     public static DispatcherType getDispatcherType(HttpServletRequest request) {
         // The order of these tests is important.
-        if (request.getAttribute(INCLUDE_REQUEST_URI_ATTRIBUTE) != null)
+        if (request.getAttribute(INCLUDE_REQUEST_URI_ATTRIBUTE) != null) {
             return DispatcherType.INCLUDE;
-        if (request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE) != null)
+        }
+        if (request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE) != null) {
             return DispatcherType.FORWARD;
-        if (request.getAttribute(ERROR_REQUEST_STATUS_CODE_ATTRIBUTE) != null)
+        }
+        if (request.getAttribute(ERROR_REQUEST_STATUS_CODE_ATTRIBUTE) != null) {
             return DispatcherType.ERROR;
+        }
         return DispatcherType.REQUEST;
     }
 }

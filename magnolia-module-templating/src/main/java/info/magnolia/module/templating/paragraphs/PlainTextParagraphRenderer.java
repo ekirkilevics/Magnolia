@@ -43,7 +43,7 @@ import java.io.Writer;
 /**
  * A simple paragraph renderer which just writes the value of the "text" property of the content node.
  * Could be useful for plaintext resources (css, robots.txt, ...)
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

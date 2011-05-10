@@ -44,7 +44,7 @@ import java.util.List;
 
 /**
  * Builds a new bar UI component.
- * 
+ *
  * @version $Id$
  */
 public class NewBar extends AbstractAuthoringUiComponent {

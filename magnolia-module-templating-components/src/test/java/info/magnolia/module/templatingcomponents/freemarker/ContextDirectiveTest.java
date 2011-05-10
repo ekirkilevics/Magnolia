@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Tests for ContextAttributeDirective.
- * 
+ *
  * $Id$
  */
 public class ContextDirectiveTest extends AbstractDirectiveTestCase {

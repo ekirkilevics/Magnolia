@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Abstract implementation of the Task interface which handles the mandatory properties name and description.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

@@ -113,17 +113,20 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
         boolean toMagnoliaResource = !toWebContainerResource;
 
         DispatchRule dispatchRule = getDispatching().getDispatchRule(ServletUtils.getDispatcherType(request));
-        if (toMagnoliaResource && dispatchRule.isToMagnoliaResources())
+        if (toMagnoliaResource && dispatchRule.isToMagnoliaResources()) {
             return true;
-        if (toWebContainerResource && dispatchRule.isToWebContainerResources())
+        }
+        if (toWebContainerResource && dispatchRule.isToWebContainerResources()) {
             return true;
+        }
         return false;
     }
 
     protected boolean bypasses(HttpServletRequest request) {
         Voting voting = Voting.HIGHEST_LEVEL;
-        if (voting.vote(bypasses, request) > 0)
+        if (voting.vote(bypasses, request) > 0) {
             return true;
+        }
 
         return false;
     }

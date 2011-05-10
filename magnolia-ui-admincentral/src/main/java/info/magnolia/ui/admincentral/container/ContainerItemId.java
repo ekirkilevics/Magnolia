@@ -80,14 +80,21 @@ public class ContainerItemId {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ContainerItemId that = (ContainerItemId) o;
 
-        if (nodeIdentifier != null ? !nodeIdentifier.equals(that.nodeIdentifier) : that.nodeIdentifier != null)
+        if (nodeIdentifier != null ? !nodeIdentifier.equals(that.nodeIdentifier) : that.nodeIdentifier != null) {
             return false;
-        if (propertyName != null ? !propertyName.equals(that.propertyName) : that.propertyName != null) return false;
+        }
+        if (propertyName != null ? !propertyName.equals(that.propertyName) : that.propertyName != null) {
+            return false;
+        }
 
         return true;
     }

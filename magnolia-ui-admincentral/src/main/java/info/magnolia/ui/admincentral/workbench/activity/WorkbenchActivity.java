@@ -91,18 +91,23 @@ public class WorkbenchActivity extends AbstractActivity {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         WorkbenchActivity other = (WorkbenchActivity) obj;
         if (workspace == null) {
-            if (other.workspace != null)
+            if (other.workspace != null) {
                 return false;
-        } else if (!workspace.equals(other.workspace))
+            }
+        } else if (!workspace.equals(other.workspace)) {
             return false;
+        }
         return true;
     }
 

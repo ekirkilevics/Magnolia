@@ -50,7 +50,7 @@ import javax.jcr.RepositoryException;
  * removed. This is currently meant to be used in conjunction with the regular edit bar component: if the request
  * content is present, wrappers should render their content (which should render said paragraph with an edit bar), and
  * if not, this renders a "new bar".
- * 
+ *
  * @version $Id$
  */
 public class SingletonParagraphBar extends AbstractAuthoringUiComponent {

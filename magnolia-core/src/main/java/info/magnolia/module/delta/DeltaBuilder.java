@@ -41,7 +41,7 @@ import java.util.List;
 
 /**
  * Helper class to build Delta instances.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

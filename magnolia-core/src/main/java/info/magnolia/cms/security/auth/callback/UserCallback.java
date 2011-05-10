@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Used to transport the created User object back.
- * 
+ *
  * @author philipp
  * @version $Id$
  */
@@ -53,7 +53,7 @@ public class UserCallback implements Callback {
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(UserCallback.class);
-    
+
     private User user;
 
     public UserCallback(User user) {

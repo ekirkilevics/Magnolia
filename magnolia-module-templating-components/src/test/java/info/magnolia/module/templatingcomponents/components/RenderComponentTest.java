@@ -66,7 +66,7 @@ import org.junit.Test;
 
 /**
  * Tests for ParagraphMarker.
- * 
+ *
  * @version $Id$
  */
 public class RenderComponentTest {

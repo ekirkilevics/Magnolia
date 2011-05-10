@@ -41,7 +41,7 @@ import javax.jcr.RepositoryException;
 
 /**
  * Creates a node in the given parent with the given name and type.
- * 
+ *
  * @author vsteller
  * @version $Id$
  */

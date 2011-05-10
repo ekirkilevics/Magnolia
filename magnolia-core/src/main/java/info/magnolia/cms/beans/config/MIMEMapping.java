@@ -223,7 +223,7 @@ public class MIMEMapping {
      * @return the icon name
      */
     public static String getMIMETypeIcon(String extension) {
-        MIMEMappingItem item = (MIMEMappingItem) MIMEMapping.cachedContent.get(extension.toLowerCase());
+        MIMEMappingItem item = MIMEMapping.cachedContent.get(extension.toLowerCase());
         if (item != null) {
             return StringUtils.defaultIfEmpty(item.icon, DEFAULT_ICON);
         }

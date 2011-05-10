@@ -38,7 +38,7 @@ import info.magnolia.context.MgnlContext;
 
 /**
  * Checks if the current user is authenticated.
- * 
+ *
  * @author philipp
  * @version $Id$
  *

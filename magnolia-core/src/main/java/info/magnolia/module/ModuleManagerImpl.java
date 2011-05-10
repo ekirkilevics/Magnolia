@@ -355,7 +355,7 @@ public class ModuleManagerImpl implements ModuleManager {
                 log.error("Can't start module " + moduleName, th);
             }
         }
-        
+
         lifecycleContext.start(moduleNodes);
     }
 
@@ -607,7 +607,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
 
     }
-    
+
     /**
      * Register nodeType file in repository.
      * @param repositoryName repository name

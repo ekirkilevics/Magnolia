@@ -139,11 +139,13 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
     public synchronized <T> T getComponent(Class<T> type) {
         ComponentDefinition<T> definition = getComponentDefinition(type);
         if (definition == null) {
-            if (parent != null && parent.isConfiguredFor(type))
+            if (parent != null && parent.isConfiguredFor(type)) {
                 return parent.getComponent(type);
+            }
             // Register the component on-demand
-            if (!Classes.isConcrete(type))
+            if (!Classes.isConcrete(type)) {
                 throw new MgnlInstantiationException("No concrete implementation defined for " + type);
+            }
             registerImplementation(type, type);
             definition = getComponentDefinition(type);
         }
@@ -166,8 +168,9 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
         try {
             ComponentDefinition<T> definition = getComponentDefinition(type);
             if (definition == null) {
-                if (parent != null && parent.isConfiguredFor(type))
+                if (parent != null && parent.isConfiguredFor(type)) {
                     return parent.newInstance(type);
+                }
                 if (!Classes.isConcrete(type)) {
                     throw new MgnlInstantiationException("No concrete implementation defined for " + type);
                 }
@@ -188,13 +191,16 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
     @Override
     public <T> Class<? extends T> getImplementation(Class<T> type) throws ClassNotFoundException {
         ComponentDefinition<T> definition = getComponentDefinition(type);
-        if (definition == null)
-            if (parent != null && parent.isConfiguredFor(type))
+        if (definition == null) {
+            if (parent != null && parent.isConfiguredFor(type)) {
                 return parent.getImplementation(type);
-            else
+            } else {
                 return type;
-        if (definition.isFactory())
+            }
+        }
+        if (definition.isFactory()) {
             return type;
+        }
         return definition.getImplementationType();
     }
 
@@ -276,8 +282,9 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
         if (type == null) {
             throw new NullPointerException("Null type is not allowed. Please check your type definition and classes on the classpath.");
         }
-        if (definitions.containsKey(type))
+        if (definitions.containsKey(type)) {
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
+        }
         ComponentDefinition<T> definition = new ComponentDefinition<T>();
         definition.setType(type);
         definition.setFactory(componentFactory);
@@ -286,8 +293,9 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
 
     @Override
     public synchronized <T> void registerInstance(Class<T> type, T instance) {
-        if (definitions.containsKey(type))
+        if (definitions.containsKey(type)) {
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
+        }
         ComponentDefinition<T> definition = new ComponentDefinition<T>();
         definition.setType(type);
         definition.setInstance(instance);
@@ -321,10 +329,12 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
     @Override
     public boolean isConfiguredFor(Class<?> type) {
         ComponentDefinition<?> definition = getComponentDefinition(type);
-        if (definition != null)
+        if (definition != null) {
             return true;
-        if (parent != null)
+        }
+        if (parent != null) {
             return parent.isConfiguredFor(type);
+        }
         return false;
     }
 }

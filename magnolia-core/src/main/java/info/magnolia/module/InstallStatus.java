@@ -36,7 +36,7 @@ package info.magnolia.module;
 /**
  * An enum identifying the status/result of the install/update in InstallContext.
  *
- * @see InstallContext#getStatus() 
+ * @see InstallContext#getStatus()
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

@@ -42,7 +42,7 @@ import junit.framework.TestCase;
 /**
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class ContentModelTest extends TestCase {
     public void testCanBeUnwrappedByDeepUnWrap() throws TemplateModelException {

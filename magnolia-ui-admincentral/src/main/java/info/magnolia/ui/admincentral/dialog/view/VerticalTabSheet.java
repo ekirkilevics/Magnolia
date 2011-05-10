@@ -151,21 +151,24 @@ public class VerticalTabSheet extends CustomComponent {
         tabList.addComponent(tabComponent);
         canvas.addComponent(component);
 
-        if (selected == -1)
+        if (selected == -1) {
             selectTab(index);
+        }
     }
 
     public Component getTab(String name) {
         for (Tab tab : tabs) {
-            if (tab.getName().equals(name))
+            if (tab.getName().equals(name)) {
                 return tab.getComponent();
+            }
         }
         throw new IllegalArgumentException("No tab found for name [" + name+ "]");
     }
 
     public void selectTab(int position) {
-        if (position == selected)
+        if (position == selected) {
             return;
+        }
 
         if (selected != -1) {
             Tab previous = tabs.get(selected);

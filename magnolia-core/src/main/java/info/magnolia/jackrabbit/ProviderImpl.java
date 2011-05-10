@@ -300,7 +300,7 @@ public class ProviderImpl implements Provider {
     @Override
     public void registerNodeTypes(String configuration) throws RepositoryException {
         if (StringUtils.isEmpty(configuration)) {
-            configuration = (String) this.repositoryMapping.getParameters().get(CUSTOM_NODETYPES);
+            configuration = this.repositoryMapping.getParameters().get(CUSTOM_NODETYPES);
         }
 
         InputStream xml = getNodeTypeDefinition(configuration);

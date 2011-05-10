@@ -56,8 +56,9 @@ public class LazyInitPrintWriter extends PrintWriter {
 
             @Override
             public void flush() throws IOException {
-                if (writer != null)
+                if (writer != null) {
                     writer.flush();
+                }
             }
 
             @Override
@@ -66,8 +67,9 @@ public class LazyInitPrintWriter extends PrintWriter {
             }
 
             private Writer getTargetWriter() throws IOException {
-                if (writer != null)
+                if (writer != null) {
                     return writer;
+                }
                 writer = response.getWriter();
                 return writer;
             }

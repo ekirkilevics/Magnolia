@@ -39,7 +39,7 @@ import javax.jcr.RepositoryException;
 
 /**
  * A task that delegates to another depending on existence of children.
- * 
+ *
  * @author ochytil
  * @version $Revision: $ ($Author: $)
  */

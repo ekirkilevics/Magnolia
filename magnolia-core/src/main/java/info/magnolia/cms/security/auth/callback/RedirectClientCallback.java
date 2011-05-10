@@ -44,7 +44,7 @@ import java.text.MessageFormat;
  * This can be useful, for instance, in SSO contexts where the login screen is handled by
  * a different application, or if one wants to simply hide the login form from a public instance
  * using a fronting server configuration.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

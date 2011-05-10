@@ -37,7 +37,7 @@ import info.magnolia.module.templatingcomponents.components.AbstractContentCompo
 
 /**
  * Tests for AreaDirective.
- * 
+ *
  * $Id$
  */
 public class AreaDirectiveTest extends AbstractDirectiveTestCase {

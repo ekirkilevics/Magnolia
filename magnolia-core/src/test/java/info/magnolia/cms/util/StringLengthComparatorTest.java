@@ -45,5 +45,5 @@ public class StringLengthComparatorTest extends TestCase {
         assertTrue(new StringLengthComparator().compare("ac", "wwxxxw") < 0);
         assertTrue(new StringLengthComparator().compare("awwwc", "ww") > 0);
     }
-    
+
 }

@@ -46,7 +46,7 @@ import org.junit.Test;
 
 /**
  * Tests.
- * 
+ *
  * @author dlipp
  */
 public class Content2NodeCollectionWrapperTest {

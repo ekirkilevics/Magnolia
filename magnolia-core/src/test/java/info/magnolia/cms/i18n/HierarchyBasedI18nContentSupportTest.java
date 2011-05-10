@@ -73,22 +73,22 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
         setCurrentURI("/foo/de_ch/bar/home.html");
         locale = defSupport.determineLocale();
         assertEquals(new Locale("de", "ch"), locale);
-        
+
         //same locale, but unsupported country. Should default to the plain locale w/o country
         setCurrentURI("/foo/de_at/bar/home.html");
         locale = defSupport.determineLocale();
         assertEquals(new Locale("de"), locale);
-        
+
         //infer the locale also from the last element in the URI (e.g. a page)
         setCurrentURI("/foo/bar/de.html");
         locale = defSupport.determineLocale();
         assertEquals(new Locale("de"), locale);
-        
+
         //last element with no dot
         setCurrentURI("/foo/bar/de");
         locale = defSupport.determineLocale();
         assertEquals(new Locale("de"), locale);
-        
+
         setCurrentURI("/foo/bar/de_CH.html");
         locale = defSupport.determineLocale();
         assertEquals(new Locale("de", "ch"), locale);

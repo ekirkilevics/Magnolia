@@ -105,8 +105,9 @@ public class UnicodeNormalizationRequestWrapper extends HttpServletRequestWrappe
      * Performs URL decoding using the requests character encoding if it is supported.
      */
     private String urlDecodeIfPossible(String value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
         try {
             return URLDecoder.decode(value, getCharacterEncoding());
         } catch (UnsupportedEncodingException e) {

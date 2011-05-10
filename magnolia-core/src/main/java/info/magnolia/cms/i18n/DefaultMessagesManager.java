@@ -269,17 +269,21 @@ public class DefaultMessagesManager extends MessagesManager {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o)
+            if (this == o) {
                 return true;
-            if (o == null || getClass() != o.getClass())
+            }
+            if (o == null || getClass() != o.getClass()) {
                 return false;
+            }
 
             MessagesID that = (MessagesID) o;
 
-            if (basename != null ? !basename.equals(that.basename) : that.basename != null)
+            if (basename != null ? !basename.equals(that.basename) : that.basename != null) {
                 return false;
-            if (locale != null ? !locale.equals(that.locale) : that.locale != null)
+            }
+            if (locale != null ? !locale.equals(that.locale) : that.locale != null) {
                 return false;
+            }
 
             return true;
         }

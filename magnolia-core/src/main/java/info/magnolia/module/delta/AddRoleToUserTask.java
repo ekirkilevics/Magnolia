@@ -60,7 +60,7 @@ public class AddRoleToUserTask extends AbstractTask {
         if (user == null) {
             ctx.warn("User \"" + username + "\" not found, can't add the \"" + rolename + "\" role.");
         } else {
-            // TODO this saves at node level, thus breaking the "save once per module install/update" rule :( 
+            // TODO this saves at node level, thus breaking the "save once per module install/update" rule :(
             try{
                 user.addRole(rolename);
             }

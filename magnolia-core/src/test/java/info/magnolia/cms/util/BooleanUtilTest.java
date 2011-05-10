@@ -69,6 +69,6 @@ public class BooleanUtilTest extends TestCase {
 
     public void testToBooleanUsesDefaultValueForUnknownValues() {
         assertEquals(true, toBoolean("blah", true));
-        assertEquals(false, toBoolean("blah", false));        
+        assertEquals(false, toBoolean("blah", false));
     }
 }

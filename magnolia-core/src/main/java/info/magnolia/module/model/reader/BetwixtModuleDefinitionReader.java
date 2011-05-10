@@ -80,7 +80,7 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
             throw new IllegalStateException("DTD not found at " + DTD);
         }
         dtdUrl = dtd.toString();
-        
+
         final BetwixtBindingStrategy bindingStrategy = new BetwixtBindingStrategy();
         bindingStrategy.registerConverter(Version.class, new VersionConverter());
 

@@ -82,7 +82,7 @@ public class MD5CheckingFileExtractorOperationTest extends TestCase {
         op.extract();
 
         verify(hm, fileInfoNode, md5);
-        
+
         assertEquals("File should have been re-extracted", true, testOut.exists());
         assertEquals(IOUtils.toString(new FileInputStream(testOut)), IOUtils.toString(getClass().getResourceAsStream(resourcePath)));
     }

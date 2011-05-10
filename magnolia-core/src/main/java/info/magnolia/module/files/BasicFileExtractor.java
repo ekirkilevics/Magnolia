@@ -42,7 +42,7 @@ import java.io.IOException;
  * via {@link info.magnolia.module.files.FileExtractorOperation}s.
  *
  * @see FileExtractorOperation
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

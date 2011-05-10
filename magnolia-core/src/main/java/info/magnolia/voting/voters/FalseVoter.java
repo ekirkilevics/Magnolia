@@ -35,7 +35,7 @@ package info.magnolia.voting.voters;
 
 /**
  * Returns false.
- * 
+ *
  * @author pbracher
  */
 public class FalseVoter extends AbstractBoolVoter {

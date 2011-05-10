@@ -196,28 +196,36 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
         @Override
         public String getPathInfo() {
             String current = super.getPathInfo();
-            if (!StringUtils.equals(super.getRequestURI(), originalRequestUri))
+            if (!StringUtils.equals(super.getRequestURI(), originalRequestUri)) {
                 return current;
-            if (!StringUtils.equals(super.getServletPath(), originalServletPath))
+            }
+            if (!StringUtils.equals(super.getServletPath(), originalServletPath)) {
                 return current;
-            if (!StringUtils.equals(current, originalPathInfo))
+            }
+            if (!StringUtils.equals(current, originalPathInfo)) {
                 return current;
-            if (!StringUtils.equals(super.getQueryString(), originalQueryString))
+            }
+            if (!StringUtils.equals(super.getQueryString(), originalQueryString)) {
                 return current;
+            }
             return newPathInfo;
         }
 
         @Override
         public String getServletPath() {
             String current = super.getServletPath();
-            if (!StringUtils.equals(super.getRequestURI(), originalRequestUri))
+            if (!StringUtils.equals(super.getRequestURI(), originalRequestUri)) {
                 return current;
-            if (!StringUtils.equals(current, originalServletPath))
+            }
+            if (!StringUtils.equals(current, originalServletPath)) {
                 return current;
-            if (!StringUtils.equals(super.getPathInfo(), originalPathInfo))
+            }
+            if (!StringUtils.equals(super.getPathInfo(), originalPathInfo)) {
                 return current;
-            if (!StringUtils.equals(super.getQueryString(), originalQueryString))
+            }
+            if (!StringUtils.equals(super.getQueryString(), originalQueryString)) {
                 return current;
+            }
             return newServletPath;
         }
     }

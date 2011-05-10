@@ -88,19 +88,24 @@ public class WorkbenchPlace extends Place {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (!(obj instanceof WorkbenchPlace))
+        }
+        if (!(obj instanceof WorkbenchPlace)) {
             return false;
+        }
         WorkbenchPlace other = (WorkbenchPlace) obj;
         if (workbenchName == null) {
-            if (other.workbenchName != null)
+            if (other.workbenchName != null) {
                 return false;
+            }
         }
-        else if (!workbenchName.equals(other.workbenchName))
+        else if (!workbenchName.equals(other.workbenchName)) {
             return false;
+        }
         return true;
     }
 

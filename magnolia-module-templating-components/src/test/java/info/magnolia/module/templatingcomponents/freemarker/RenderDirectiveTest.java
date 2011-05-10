@@ -45,7 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Tests for RenderDirective.
- * 
+ *
  * $Id$
  */
 public class RenderDirectiveTest extends AbstractDirectiveTestCase {

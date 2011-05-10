@@ -142,8 +142,9 @@ public abstract class AbstractDriver<T> implements Driver<T> {
 
     public boolean hasErrors(String path) {
         for (EditorError error : errors) {
-            if (error.getPath().equals(path))
+            if (error.getPath().equals(path)) {
                 return true;
+            }
         }
         return false;
     }
@@ -152,8 +153,9 @@ public abstract class AbstractDriver<T> implements Driver<T> {
     public List<EditorError> getErrors() {
         ArrayList<EditorError> unconsumedErrors = new ArrayList<EditorError>();
         for (EditorError error : errors) {
-            if (!error.isConsumed())
+            if (!error.isConsumed()) {
                 unconsumedErrors.add(error);
+            }
         }
         return unconsumedErrors;
     }
@@ -174,8 +176,9 @@ public abstract class AbstractDriver<T> implements Driver<T> {
      */
     protected void visitEditors(HasEditors hasEditors, EditorVisitor visitor) {
         for (Editor editor : hasEditors.getEditors()) {
-            if (editor instanceof HasEditors)
+            if (editor instanceof HasEditors) {
                 visitEditors((HasEditors) editor, visitor);
+            }
             visitor.visit(editor);
         }
     }

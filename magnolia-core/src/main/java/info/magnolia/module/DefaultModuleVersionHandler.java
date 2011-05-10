@@ -56,7 +56,7 @@ public class DefaultModuleVersionHandler extends AbstractModuleVersionHandler {
 
     /**
      * This method should generally not be overridden.
-     * To add install tasks, use {@link #getExtraInstallTasks}. 
+     * To add install tasks, use {@link #getExtraInstallTasks}.
      */
     @Override
     protected List<Task> getBasicInstallTasks(InstallContext installContext) {

@@ -41,7 +41,7 @@ import java.util.Locale;
 
 /**
  * Reads the local from the request. Attention this implementation does not render language specific URLs.
- * 
+ *
  * @author philipp
  * @version $Id$
  */

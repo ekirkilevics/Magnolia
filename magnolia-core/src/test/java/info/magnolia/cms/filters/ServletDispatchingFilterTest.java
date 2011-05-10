@@ -71,7 +71,7 @@ import static org.easymock.EasyMock.*;
  * @version $Revision: $ ($Author: $)
  */
 public class ServletDispatchingFilterTest extends MgnlTestCase {
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

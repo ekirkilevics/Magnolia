@@ -48,7 +48,7 @@ import javax.jcr.RepositoryException;
 /**
  * This describes an "edit bar" for paragraphs. It typically displays edit, move and delete buttons. The dialog to use
  * is normally deduced from the given content node, but can be overridden by a specific one.
- * 
+ *
  * @version $Id$
  */
 public class EditBar extends AbstractAuthoringUiComponent {

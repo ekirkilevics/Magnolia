@@ -127,11 +127,13 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
             }
 
             // If the model rendered something on its own or sent a redirect we will not proceed with rendering.
-            if (response.isCommitted())
+            if (response.isCommitted()) {
                 return;
+            }
 
-            if (handleActionResult(actionResult, request, response))
+            if (handleActionResult(actionResult, request, response)) {
                 return;
+            }
 
             // Proceed with page rendering, the model will be reused later when the paragraph is rendered.
             MgnlContext.setAttribute(MODEL_ATTRIBUTE_PREFIX + paragraphUuid, renderingModel);
@@ -206,8 +208,9 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
 
         ParagraphRenderer renderer = ParagraphRendererManager.getInstance().getRenderer(paragraph.getType());
 
-        if (!(renderer instanceof RenderingModelBasedRenderer))
+        if (!(renderer instanceof RenderingModelBasedRenderer)) {
             throw new ServletException("Renderer [" + paragraph.getName() + "] does not support RenderingModel");
+        }
 
         return (RenderingModelBasedRenderer) renderer;
     }
@@ -217,14 +220,17 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
      */
     protected boolean handleActionResult(String actionResult, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        if (actionResult == null)
+        if (actionResult == null) {
             return false;
+        }
 
-        if (actionResult.equals(RenderingModel.SKIP_RENDERING))
+        if (actionResult.equals(RenderingModel.SKIP_RENDERING)) {
             return true;
+        }
 
-        if (RequestDispatchUtil.dispatch(actionResult, request, response))
+        if (RequestDispatchUtil.dispatch(actionResult, request, response)) {
             return true;
+        }
 
         return false;
     }

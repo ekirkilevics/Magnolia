@@ -63,8 +63,9 @@ public class RequestDispatchUtil {
      */
     public static boolean dispatch(String targetUri, HttpServletRequest request, HttpServletResponse response) {
 
-        if (targetUri == null)
+        if (targetUri == null) {
             return false;
+        }
 
         if (targetUri.startsWith(REDIRECT_PREFIX)) {
             String redirectUrl = StringUtils.substringAfter(targetUri, REDIRECT_PREFIX);

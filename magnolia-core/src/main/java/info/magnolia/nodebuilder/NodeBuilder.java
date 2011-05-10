@@ -60,7 +60,7 @@ public class NodeBuilder {
 
     /**
      * Execute the operations.
-     * 
+     *
      * @throws NodeOperationException if the given ErrorHandler decided to do so !
      */
     public void exec() throws NodeOperationException {

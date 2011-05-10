@@ -48,7 +48,7 @@ import info.magnolia.voting.Voter;
  * @author had
  */
 public class DelegateVoter extends AbstractBoolVoter {
-    
+
     private static final Logger log = LoggerFactory.getLogger(DelegateVoter.class);
 
     private String delegatePath;

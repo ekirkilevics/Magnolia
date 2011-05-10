@@ -42,7 +42,7 @@ import junit.framework.TestCase;
 /**
  * Tests for {@link info.magnolia.test.ComponentsTestUtil}
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class ComponentsTestUtilTest extends TestCase {
     @Override

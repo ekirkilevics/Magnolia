@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * <code>/.resources/*</code>. This servlet should be used for authoring-only resources, like rich editor images and
  * scripts. It's not suggested for public website resources. Content length and last modification date are not set on
  * files returned from the classpath.
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
