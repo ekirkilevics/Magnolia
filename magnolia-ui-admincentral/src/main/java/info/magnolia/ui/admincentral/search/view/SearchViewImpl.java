@@ -52,15 +52,18 @@ public class SearchViewImpl implements SearchView, IsVaadinComponent {
         searchForm = new SearchForm();
     }
 
+    @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
         searchForm.setPresenter(this.presenter);
     }
 
+    @Override
     public Component asVaadinComponent() {
         return searchForm.asVaadinComponent();
     }
 
+    @Override
     public SearchForm getSearchForm() {
         return searchForm;
     }

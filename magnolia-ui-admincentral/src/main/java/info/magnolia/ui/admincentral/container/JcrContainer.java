@@ -70,6 +70,7 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         this.jcrContainerSource = jcrContainerSource;
     }
 
+    @Override
     public void addListener(ItemSetChangeListener listener) {
         if (itemSetChangeListeners == null) {
             itemSetChangeListeners = new LinkedHashSet<ItemSetChangeListener>();
@@ -77,6 +78,7 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         itemSetChangeListeners.add(listener);
     }
 
+    @Override
     public void removeListener(ItemSetChangeListener listener) {
         if (itemSetChangeListeners != null) {
             itemSetChangeListeners.remove(listener);
@@ -101,6 +103,7 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
 
     // Container
 
+    @Override
     public Item getItem(Object itemId) {
         try {
             getJcrItem(((ContainerItemId) itemId));
@@ -110,6 +113,7 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         }
     }
 
+    @Override
     public Collection<ContainerItemId> getItemIds() {
         try {
             Collection<ContainerItemId> collection = Collections.unmodifiableCollection(createContainerIds(jcrContainerSource.getRootItemIds()));
@@ -120,15 +124,18 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         }
     }
 
+    @Override
     public Property getContainerProperty(Object itemId, Object propertyId) {
         return new JcrContainerProperty((String) propertyId, (ContainerItemId) itemId, this);
     }
 
+    @Override
     public int size() {
         log.debug("jcr container size is {}", size);
         return size;
     }
 
+    @Override
     public boolean containsId(Object itemId) {
         try {
             getJcrItem((ContainerItemId) itemId);
@@ -138,21 +145,25 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         }
     }
 
+    @Override
     public Item addItem(Object itemId) throws UnsupportedOperationException {
         fireItemSetChange();
         return getItem(itemId);
     }
 
+    @Override
     public Object addItem() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean removeAllItems() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
     // Container.Hierarchical
 
+    @Override
     public Collection<ContainerItemId> getChildren(Object itemId) {
         try {
             return createContainerIds(jcrContainerSource.getChildren(getJcrItem((ContainerItemId) itemId)));
@@ -161,6 +172,7 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         }
     }
 
+    @Override
     public ContainerItemId getParent(Object itemId) {
         try {
             javax.jcr.Item item = getJcrItem((ContainerItemId) itemId);
@@ -174,6 +186,7 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         }
     }
 
+    @Override
     public Collection<ContainerItemId> rootItemIds() {
         try {
             return createContainerIds(jcrContainerSource.getRootItemIds());
@@ -182,19 +195,23 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         }
     }
 
+    @Override
     public boolean setParent(Object itemId, Object newParentId) throws UnsupportedOperationException {
         fireItemSetChange();
         return true;
     }
 
+    @Override
     public boolean areChildrenAllowed(Object itemId) {
         return ((ContainerItemId) itemId).isNode();
     }
 
+    @Override
     public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean isRoot(Object itemId) {
         try {
             return jcrContainerSource.isRoot(getJcrItem((ContainerItemId) itemId));
@@ -203,6 +220,7 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         }
     }
 
+    @Override
     public boolean hasChildren(Object itemId) {
         try {
             return jcrContainerSource.hasChildren(getJcrItem((ContainerItemId) itemId));
@@ -211,6 +229,7 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         }
     }
 
+    @Override
     public boolean removeItem(Object itemId) throws UnsupportedOperationException {
         // throw new UnsupportedOperationException();
         fireItemSetChange();

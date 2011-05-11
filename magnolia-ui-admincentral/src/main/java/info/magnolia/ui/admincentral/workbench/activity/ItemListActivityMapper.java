@@ -57,6 +57,7 @@ public class ItemListActivityMapper implements ActivityMapper {
         this.listActivity = listActivity;
     }
 
+    @Override
     public Activity getActivity(final Place place) {
         if(place instanceof SearchPlace){
             ((SearchPlace)place).setJcrView(listActivity.getJcrView());

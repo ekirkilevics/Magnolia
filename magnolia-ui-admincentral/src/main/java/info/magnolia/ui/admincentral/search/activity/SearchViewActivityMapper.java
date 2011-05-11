@@ -52,6 +52,7 @@ public class SearchViewActivityMapper extends FactoryBase<Place, Activity> imple
         addMapping(SearchPlace.class, SearchActivity.class);
     }
 
+    @Override
     public Activity getActivity(Place place) {
         if(!(place instanceof SearchPlace)){
             place = new SearchPlace(new SearchParameters());

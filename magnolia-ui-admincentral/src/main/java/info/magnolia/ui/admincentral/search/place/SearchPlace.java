@@ -56,6 +56,7 @@ public class SearchPlace extends ItemSelectedPlace {
      */
     public static class Tokenizer implements PlaceTokenizer<SearchPlace> {
 
+        @Override
         public SearchPlace getPlace(String token) {
             final String[] bits = token.split(":");
             if(bits.length != 3){
@@ -64,6 +65,7 @@ public class SearchPlace extends ItemSelectedPlace {
             return new SearchPlace(new SearchParameters(bits[0], bits[1]));
         }
 
+        @Override
         public String getToken(SearchPlace place) {
             return place.getWorkspace() + ":" + place.getSearchParameters().getQuery() + ":" + place.getViewType().getText();
         }

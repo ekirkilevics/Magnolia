@@ -67,6 +67,7 @@ public class ShowSearchResultsActionDefinition implements PlaceChangeActionDefin
         this.query = query;
     }
 
+    @Override
     public Place getPlace() {
         if(place == null) {
             return new SearchPlace(new SearchParameters());

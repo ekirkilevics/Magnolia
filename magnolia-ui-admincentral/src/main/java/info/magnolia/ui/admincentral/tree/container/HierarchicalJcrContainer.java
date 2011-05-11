@@ -59,6 +59,7 @@ public class HierarchicalJcrContainer extends JcrContainer {
         super(jcrContainerSource);
     }
 
+    @Override
     protected Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException {
         ArrayList<ContainerItemId> ids = new ArrayList<ContainerItemId>();
         for (javax.jcr.Item child : children) {

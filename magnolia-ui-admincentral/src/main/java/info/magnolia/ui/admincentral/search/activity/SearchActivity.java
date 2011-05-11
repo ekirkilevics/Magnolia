@@ -81,19 +81,23 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
         this.jcrView = place.getJcrView();
     }
 
+    @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
         viewPort.setView(view);
         onPerformSearch();
     }
 
+    @Override
     public void onStartSearch(SearchParameters params) {
         placeController.goTo(new SearchPlace(params));
     }
 
+    @Override
     public void onAddFilter() {
         shell.showNotification("Hi, one fine day you will see a search filter added to this UI");
     }
 
+    @Override
     public void onPerformSearch() {
         if(place.getSearchParameters() == null || place.getSearchParameters().getQuery() == null){
             return;
