@@ -56,6 +56,9 @@ public interface SearchView extends View {
 
     void setPresenter(Presenter presenter);
 
-    SearchForm getSearchForm();
+    /**
+     * Updates the view by showing or hiding search results and applying/removing styles.
+     */
+    void update(SearchResult result);
 
 }

@@ -64,8 +64,7 @@ public class SearchViewImpl implements SearchView, IsVaadinComponent {
     }
 
     @Override
-    public SearchForm getSearchForm() {
-        return searchForm;
+    public void update(SearchResult result) {
+       searchForm.updateUI(true, result);
     }
-
 }
