@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.wcm.editor.client;
 
-import javax.jcr.RepositoryException;
-
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
@@ -174,7 +172,7 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
         client.sendPendingVariableChanges();
     }
 
-    public void moveParagraphBefore(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
+    public void moveParagraphBefore(String workspaceName, String sourcePath, String destinationPath) {
         client.updateVariable(id, MOVE_BEFORE, "dummy", false);
         client.updateVariable(id, SELECTED_WORKSPACE, workspaceName, false);
         client.updateVariable(id, SOURCE_PATH, sourcePath, false);
@@ -182,7 +180,7 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
         client.sendPendingVariableChanges();
     }
 
-    public void moveParagraphAfter(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
+    public void moveParagraphAfter(String workspaceName, String sourcePath, String destinationPath) {
         client.updateVariable(id, MOVE_AFTER, "dummy", false);
         client.updateVariable(id, SELECTED_WORKSPACE, workspaceName, false);
         client.updateVariable(id, SOURCE_PATH, sourcePath, false);

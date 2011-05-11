@@ -206,6 +206,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
                                 MetaData metaData = JCRMetadataUtil.getMetaData(node);
                                 metaData.setTemplate(paragraph.getName());
                                 node.getSession().save();
+                                eventBus.fireEvent(new PageChangedEvent());
                             } catch (RepositoryException e) {
                                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                             }
