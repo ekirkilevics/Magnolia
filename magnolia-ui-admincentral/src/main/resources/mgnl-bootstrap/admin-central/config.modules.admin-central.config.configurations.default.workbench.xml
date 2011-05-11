@@ -775,7 +775,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="DetailView">
+      <sv:node sv:name="PreviewView">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
