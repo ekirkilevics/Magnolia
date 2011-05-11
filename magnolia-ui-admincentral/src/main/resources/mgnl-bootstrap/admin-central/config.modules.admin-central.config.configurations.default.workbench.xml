@@ -586,13 +586,13 @@
           <sv:value>2450f127-c783-438d-abee-699ef5edf8e9</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.search.activity.SearchViewActivityMapper</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.search.activity.SearchActivityMapper</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="type" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.search.activity.SearchViewActivityMapper</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.search.activity.SearchActivityMapper</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
