@@ -53,6 +53,7 @@ import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.JCRSessionOp;
+import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.context.MgnlContext;
 
@@ -143,6 +144,13 @@ public class JCRUtil {
             return node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString();
         }
         return node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
+    }
+
+    public static Node unwrap(Node node) {
+        while (node instanceof DelegateNodeWrapper) {
+            node = ((DelegateNodeWrapper) node).getWrappedNode();
+        }
+        return node;
     }
 
     /**
@@ -251,7 +259,7 @@ public class JCRUtil {
         Node previousSibling = null;
         while (siblings.hasNext()) {
             Node sibling = siblings.nextNode();
-            if (sibling.isSame(node)) {
+            if (isSame(node, sibling)) {
                 return previousSibling;
             }
             previousSibling = sibling;
@@ -264,7 +272,7 @@ public class JCRUtil {
         NodeIterator siblings = parent.getNodes();
         while (siblings.hasNext()) {
             Node sibling = siblings.nextNode();
-            if (sibling.isSame(node)) {
+            if (isSame(node, sibling)) {
                 break;
             }
         }
@@ -272,7 +280,7 @@ public class JCRUtil {
     }
 
     public static void moveNode(Node nodeToMove, Node newParent) throws RepositoryException {
-        if (!nodeToMove.getParent().isSame(newParent)) {
+        if (!isSame(newParent, nodeToMove.getParent())) {
             String newPath = combinePathAndName(newParent.getPath(), nodeToMove.getName());
             nodeToMove.getSession().move(nodeToMove.getPath(), newPath);
         }
@@ -288,6 +296,14 @@ public class JCRUtil {
         Node targetParent = target.getParent();
         moveNode(nodeToMove, targetParent);
         orderAfter(nodeToMove, target.getName());
+    }
+
+    /**
+     * Returns true if both arguments represents the same node. In case the nodes are wrapped the comparison is done
+     * one the actual nodes behind the wrappers.
+     */
+    private static boolean isSame(Node lhs, Node rhs) throws RepositoryException {
+        return unwrap(lhs).isSame(unwrap(rhs));
     }
 
     private static String combinePathAndName(String path, String name) {
