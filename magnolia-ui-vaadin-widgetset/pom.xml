@@ -42,6 +42,17 @@
       <groupId>org.vaadin.addons</groupId>
       <artifactId>lazyloadwrapper</artifactId>
     </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <classifier>sources</classifier>
+      <scope>compile</scope>
+    </dependency>
      <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
@@ -78,11 +89,12 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>2.1.0-1</version>
+        <version>2.2.0</version>
         <configuration>
           <!-- put the created resources on the classpath -->
           <webappDirectory>target/classes/mgnl-resources/VAADIN/widgetsets</webappDirectory>
-          <!-- the target/classes directory is cleaned regularly. You can use mvn gwt:compile -Dgwt.inplace to store the output in the resource folder-->
+          <!-- the target/classes directory is cleaned regularly. You can
+            use mvn gwt:compile -Dgwt.inplace to store the output in the resource folder -->
           <warSourceDirectory>src/main/resources/mgnl-resources/VAADIN/widgetsets</warSourceDirectory>
           <!-- this is not a webapp -->
           <noServer>true</noServer>
@@ -99,6 +111,30 @@
             </goals>
           </execution>
         </executions>
+        <!-- Tell what GWT version to use -->
+        <dependencies>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>2.3.0</version>
+          </dependency>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>2.3.0</version>
+          </dependency>
+          <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+          </dependency>
+          <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+            <classifier>sources</classifier>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
