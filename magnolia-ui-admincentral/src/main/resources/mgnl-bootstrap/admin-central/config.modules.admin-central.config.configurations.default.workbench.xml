@@ -255,7 +255,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="SidebarViewActivityMapper">
+      <sv:node sv:name="SidebarActivityMapper">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -266,13 +266,13 @@
           <sv:value>1c6fdd02-86a5-4c2a-bc56-01befd870e53</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarViewActivityMapper</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarActivityMapper</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="type" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarViewActivityMapper</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarActivityMapper</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -295,7 +295,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="SidebarViewActivity">
+      <sv:node sv:name="SidebarActivity">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -306,13 +306,13 @@
           <sv:value>34770cce-11f6-4a0a-aeb3-87bea1c8ceb3</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarViewActivity</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarActivity</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="type" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarViewActivity</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.sidebar.activity.SidebarActivity</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">

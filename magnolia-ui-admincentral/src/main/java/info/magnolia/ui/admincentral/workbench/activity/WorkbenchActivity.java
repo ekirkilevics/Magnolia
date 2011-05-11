@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.workbench.activity;
 
 import info.magnolia.ui.admincentral.search.activity.SearchActivityMapper;
-import info.magnolia.ui.admincentral.sidebar.activity.SidebarViewActivityMapper;
+import info.magnolia.ui.admincentral.sidebar.activity.SidebarActivityMapper;
 import info.magnolia.ui.admincentral.toolbar.activity.FunctionToolbarViewActivityMapper;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
@@ -45,21 +45,21 @@ import info.magnolia.ui.framework.view.ViewPort;
 
 
 /**
- * Edit a workspace. Shows the structure view.
+ * Edit a workspace.
  */
 public class WorkbenchActivity extends AbstractActivity {
     private String workspace;
     private ItemListActivityMapper itemListActivityMapper;
-    private SidebarViewActivityMapper sidebarViewActivityMapper;
+    private SidebarActivityMapper sidebarActivityMapper;
     private FunctionToolbarViewActivityMapper functionToolbarViewActivityMapper;
     private SearchActivityMapper searchActivityMapper;
     private WorkbenchView view;
 
-    public WorkbenchActivity(WorkbenchPlace place, WorkbenchView view, ItemListActivityMapper itemListActivityMapper, SidebarViewActivityMapper sidebarViewActivityMapper, FunctionToolbarViewActivityMapper functionToolbarViewActivityMapper, SearchActivityMapper searchActivityMapper) {
+    public WorkbenchActivity(WorkbenchPlace place, WorkbenchView view, ItemListActivityMapper itemListActivityMapper, SidebarActivityMapper sidebarActivityMapper, FunctionToolbarViewActivityMapper functionToolbarViewActivityMapper, SearchActivityMapper searchActivityMapper) {
         this.workspace = place.getWorkbenchName();
         this.view = view;
         this.itemListActivityMapper = itemListActivityMapper;
-        this.sidebarViewActivityMapper = sidebarViewActivityMapper;
+        this.sidebarActivityMapper = sidebarActivityMapper;
         this.functionToolbarViewActivityMapper = functionToolbarViewActivityMapper;
         this.searchActivityMapper = searchActivityMapper;
     }
@@ -68,14 +68,14 @@ public class WorkbenchActivity extends AbstractActivity {
     public void start(ViewPort display, EventBus eventBus) {
 
         final ActivityManager jcrActivityManager = new ActivityManager(itemListActivityMapper, eventBus);
-        final ActivityManager sidebarViewActivityManager = new ActivityManager(sidebarViewActivityMapper, eventBus);
+        final ActivityManager sidebarActivityManager = new ActivityManager(sidebarActivityMapper, eventBus);
         final ActivityManager functionToolbarViewActivityManager = new ActivityManager(functionToolbarViewActivityMapper, eventBus);
-        final ActivityManager searchViewViewActivityManager = new ActivityManager(searchActivityMapper, eventBus);
+        final ActivityManager searchActivityManager = new ActivityManager(searchActivityMapper, eventBus);
 
         jcrActivityManager.setViewPort(view.getItemListViewPort());
-        sidebarViewActivityManager.setViewPort(view.getSidebarViewPort());
+        sidebarActivityManager.setViewPort(view.getSidebarViewPort());
         functionToolbarViewActivityManager.setViewPort(view.getFunctionToolbarViewPort());
-        searchViewViewActivityManager.setViewPort(view.getSearchViewPort());
+        searchActivityManager.setViewPort(view.getSearchViewPort());
 
         display.setView(view);
     }
