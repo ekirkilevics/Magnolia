@@ -33,15 +33,6 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Set;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -51,6 +42,16 @@ import info.magnolia.module.templating.Area;
 import info.magnolia.module.templating.RenderException;
 import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.objectfactory.Components;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Set;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Outputs an area.
@@ -67,7 +68,7 @@ public class AreaComponent extends AbstractContentComponent {
      * Comma separated list of paragraphs.
      */
     private String paragraphs;
-    private Boolean collection = Boolean.TRUE;
+    private String type = "collection";
     private String dialog;
 
     // TODO implement support for script and placeholderScript
@@ -96,7 +97,7 @@ public class AreaComponent extends AbstractContentComponent {
         if (StringUtils.isNotEmpty(paragraphs)) {
             param(out, "paragraphs", paragraphs);
         }
-        param(out, "collection", String.valueOf(collection));
+        param(out, "type", type);
         if (StringUtils.isNotEmpty(dialog)) {
             param(out, "dialog", dialog);
         }
@@ -166,12 +167,12 @@ public class AreaComponent extends AbstractContentComponent {
         this.paragraphs = paragraphs;
     }
 
-    public boolean isCollection() {
-        return collection;
+    public String getType() {
+        return type;
     }
 
-    public void setCollection(boolean collection) {
-        this.collection = collection;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getDialog() {

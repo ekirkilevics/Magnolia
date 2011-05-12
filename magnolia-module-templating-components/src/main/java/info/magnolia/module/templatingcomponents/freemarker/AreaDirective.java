@@ -66,7 +66,7 @@ public class AreaDirective extends AbstractDirective {
         String name = string(params, "name", null);
         String paragraphs = string(params, "paragraphs", null);
         String dialog = string(params, "dialog", null);
-        boolean collection = bool(params, "collection", true);
+        String type = string(params, "type", "collection");
 
         AreaComponent marker = new AreaComponent(serverCfg, aggState);
         marker.setContent(content);
@@ -77,7 +77,7 @@ public class AreaDirective extends AbstractDirective {
         marker.setName(name);
         marker.setParagraphs(paragraphs);
         marker.setDialog(dialog);
-        marker.setCollection(collection);
+        marker.setType(type);
 
         return marker;
     }

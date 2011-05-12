@@ -168,7 +168,7 @@ public abstract class AbstractDirectiveTestCase extends AbstractFreemarkerTestCa
         super.tearDown();
     }
 
-    protected String renderForTest(final String templateSource) throws Exception {
+    public String renderForTest(final String templateSource) throws Exception {
         tplLoader.putTemplate("test.ftl", templateSource);
 
         final Map<String, Object> map = contextWithDirectives();
