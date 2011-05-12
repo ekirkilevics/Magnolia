@@ -38,13 +38,10 @@ import java.util.Map;
 
 /**
  * Represents an area definition.
+ * 
+ * @version $Id$
  */
 public class Area extends AbstractRenderable {
-
-    // TODO: remove no-args constructor - just for debugging purposes
-    public Area() {
-        super();
-    }
 
     private Map<String, Paragraph> paragraphs = new LinkedHashMap<String, Paragraph>();
 

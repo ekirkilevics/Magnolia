@@ -46,7 +46,6 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.module.templating.Area;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -81,9 +80,7 @@ public class AreaComponentTest {
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
         final AreaComponent marker = new AreaComponent(serverCfg, aggregationState);
-        final Area area = new Area();
-        area.setName("test");
-        marker.setArea(area);
+        marker.setName("test");
 
         StringWriter out = new StringWriter();
         marker.doRender(out);

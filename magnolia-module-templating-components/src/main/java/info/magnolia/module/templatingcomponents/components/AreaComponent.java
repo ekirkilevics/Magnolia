@@ -63,13 +63,13 @@ public class AreaComponent extends AbstractContentComponent {
     public static final String CMS_AREA = "cms:area";
 
     private String name;
+    // set a default
+    private String type = "collection";
     private Area area;
     /**
      * Comma separated list of paragraphs.
      */
     private String paragraphs;
-    private String type = "collection";
-    private String dialog;
 
     // TODO implement support for script and placeholderScript
     // private String script;
@@ -87,19 +87,13 @@ public class AreaComponent extends AbstractContentComponent {
         out.append(LESS_THAN).append(CMS_AREA);
         param(out, "content", getNodePath(content));
 
-        /**
-         * Can already be set - or not. If not, we set it in order to avoid tons of if statements in the beyond code...
-         */
-        if (area == null) {
-            area = new Area();
-        }
-        param(out, "name", name != null ? name : area.getName());
+        param(out, "name", name != null ? name : getArea().getName());
         if (StringUtils.isNotEmpty(paragraphs)) {
             param(out, "paragraphs", paragraphs);
         }
-        param(out, "type", type);
-        if (StringUtils.isNotEmpty(dialog)) {
-            param(out, "dialog", dialog);
+        param(out, "type", getType());
+        if (StringUtils.isNotEmpty(getArea().getDialog())) {
+            param(out, "dialog", getArea().getDialog());
         }
 
         // Paragraphs may be set in area or in comma separated list
@@ -152,6 +146,10 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     public Area getArea() {
+        // lazy initialisation to prevent from running into NPE
+        if (area == null) {
+            area = new Area();
+        }
         return area;
     }
 
@@ -176,11 +174,11 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     public String getDialog() {
-        return dialog;
+        return getArea().getDialog();
     }
 
     public void setDialog(String dialog) {
-        this.dialog = dialog;
+        getArea().setDialog(dialog);
     }
 
     protected String getParagraphNames() {
