@@ -72,7 +72,7 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
     // TODO should also support a JSP ContentMap
     private Node node;
     private String workspace;
-    private String uuid;
+    private String uuid; // TODO should be nodeIdentifier
     private String path;
 
     public AbstractContentComponent(ServerConfiguration server, AggregationState aggregationState) {

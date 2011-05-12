@@ -78,10 +78,6 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
     @Override
     public void execute() throws ActionExecutionException {
 
-        // TODO find the area and get available paragraphs from it
-
-        // TODO if its not been created yet then we need another strategy for finding it, like name of the area in combination with the parent template/paragraph
-
         ParagraphSelectionDialog paragraphSelectionDialog = new ParagraphSelectionDialog(selection.getParagraphs()) {
             @Override
             protected void onClosed(final Paragraph paragraph) {

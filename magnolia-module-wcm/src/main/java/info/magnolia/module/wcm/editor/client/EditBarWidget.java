@@ -89,7 +89,7 @@ public class EditBarWidget extends AbstractBarWidget {
         if (parentBar instanceof AreaBarWidget)
             return ((AreaBarWidget)parentBar).getParagraphs();
         // TODO parent isn't set yet, so this is hard coded for now
-        return "samplesHowToFTL,samplesFreemarkerParagraph";
+        return "samplesHowToFTL,freemarkerParagraph";
     }
 
     @Override

@@ -59,10 +59,6 @@ public class AreaBarWidget extends AbstractBarWidget {
         super(parentBar, "rgb(107, 171, 251)");
         this.pageEditor = pageEditor;
 
-        // TODO we should get the label from the templating component
-
-        // TODO uuid vs nodeIdentifier ?
-
         String content = element.getAttribute("content");
         int i = content.indexOf(':');
         this.workspace = content.substring(0, i);
