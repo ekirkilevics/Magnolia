@@ -10,19 +10,18 @@
 
     <body style="background-color:#ccb">
 
-	<h1>This page is: ${cmsfn.asJCRNode(content).path} (${cmsfn.asJCRNode(content).identifier})</h1>
+		<h1>${content.title}</h1>
+		<h3>${cmsfn.asJCRNode(content).path} (${cmsfn.asJCRNode(content).identifier})</h3>
 
-	<div id="main" style="padding:15px;">
+		<div id="main" style="padding:15px;">
 
-	<h2>Singleton Area (stage)</h2>
-	[@cms.area name="stage" dialog="mainProperties" type="slot" paragraphs="samplesHowToFTL,samplesFreemarkerParagraph"/]
+			<h2>Singleton Area (stage)</h2>
+			[@cms.area name="stage" dialog="mainProperties" type="slot" paragraphs="samplesHowToFTL,samplesText"/]
 
-	<h2>Area (main)</h2>
-	[@cms.area name="main" dialog="mainProperties" paragraphs="samplesHowToFTL,samplesFreemarkerParagraph"/]
+			<h2>Area (main)</h2>
+			[@cms.area name="main" dialog="mainProperties" paragraphs="samplesHowToFTL,samplesText"/]
 
-	[@cms.context name="shoeSize" value="213" /]
-
-	</div>
+		</div>
 
 	</body>
 </html>

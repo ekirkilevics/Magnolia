@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="samplesFreemarkerParagraph" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sv:node sv:name="samplesText" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
@@ -10,22 +10,19 @@
     <sv:value>4355d0ca-f87f-4234-8807-c61b6b65245a</sv:value>
   </sv:property>
   <sv:property sv:name="description" sv:type="String">
-    <sv:value>Freemarker paragraph description</sv:value>
+    <sv:value>Displays a title and a body of text</sv:value>
   </sv:property>
   <sv:property sv:name="dialog" sv:type="String">
-    <sv:value>mainProperties</sv:value>
-  </sv:property>
-  <sv:property sv:name="i18nBasename" sv:type="String">
-    <sv:value>info.magnolia.module.samples.messages</sv:value>
+    <sv:value>samplesTextDialog</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>
   </sv:property>
   <sv:property sv:name="templatePath" sv:type="String">
-    <sv:value>/samples/paragraphs/freemarkerParagraph.ftl</sv:value>
+    <sv:value>/samples/paragraphs/samplesText.ftl</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
-    <sv:value>Freemarker paragraph</sv:value>
+    <sv:value>Text paragraph</sv:value>
   </sv:property>
   <sv:property sv:name="type" sv:type="String">
     <sv:value>freemarker</sv:value>
@@ -47,7 +44,7 @@
       <sv:value>2008-09-25T12:45:26.721+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2011-05-04T10:40:04.053+02:00</sv:value>
+      <sv:value>2011-05-12T21:37:47.406+02:00</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>
