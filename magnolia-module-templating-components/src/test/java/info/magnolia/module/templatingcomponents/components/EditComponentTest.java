@@ -99,7 +99,7 @@ public class EditComponentTest {
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + AbstractContentComponent.LINEBREAK
-                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" dialog=\"testParagraph0\"></cms:edit>"
+                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" dialog=\"testParagraph0\" paragraph=\"testParagraph0\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK, out.toString());
 
         // now with format & dialog
@@ -112,7 +112,7 @@ public class EditComponentTest {
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + AbstractContentComponent.LINEBREAK
-                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" format=\"testFormat\" label=\"Test Paragraph 0\" dialog=\"testDialog\"></cms:edit>"
+                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" format=\"testFormat\" label=\"Test Paragraph 0\" dialog=\"testDialog\" paragraph=\"testParagraph0\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK, out.toString());
 
     }

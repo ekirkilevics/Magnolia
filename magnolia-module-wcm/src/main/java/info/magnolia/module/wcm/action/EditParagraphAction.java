@@ -83,6 +83,7 @@ public class EditParagraphAction extends ActionBase<EditParagraphActionDefinitio
         dialogPresenter.setWorkspace(selection.getWorkspace());
         dialogPresenter.setPath(selection.getPath());
         dialogPresenter.setCollectionName(selection.getCollectionName());
+        dialogPresenter.setNodeName(selection.getNodeName());
         dialogPresenter.setDialogSaveCallback(new DialogSaveCallback() {
             @Override
             public void onSave(Node node) {

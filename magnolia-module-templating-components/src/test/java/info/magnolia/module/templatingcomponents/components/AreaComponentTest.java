@@ -87,7 +87,7 @@ public class AreaComponentTest {
 
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" type=\"collection\"></cms:area>"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"\" type=\"collection\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // with paragraph set
@@ -97,7 +97,7 @@ public class AreaComponentTest {
 
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"collection\"></cms:area>"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"collection\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // as collection == false (= singleton)
@@ -108,7 +108,7 @@ public class AreaComponentTest {
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + EditComponent.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"slot\"></cms:area>"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"slot\" showAddButton=\"true\"></cms:area>"
                         + EditComponent.LINEBREAK, out.toString());
     }
 

@@ -51,11 +51,12 @@ public class AreaBarWidget extends AbstractBarWidget {
     private String label;
     private String name;
     private String paragraphs;
-    private boolean collection;
+    private String type;
     private String dialog;
+    private boolean showAddButton = true;
 
-    public AreaBarWidget(final VPageEditor pageEditor, Element element) {
-        super("rgb(107, 171, 251)");
+    public AreaBarWidget(AbstractBarWidget parentBar, final VPageEditor pageEditor, Element element) {
+        super(parentBar, "rgb(107, 171, 251)");
         this.pageEditor = pageEditor;
 
         // TODO we should get the label from the templating component
@@ -70,37 +71,61 @@ public class AreaBarWidget extends AbstractBarWidget {
         this.label = element.getAttribute("label");
         this.name = element.getAttribute("name");
         this.paragraphs = element.getAttribute("paragraphs");
-        this.collection = Boolean.parseBoolean(element.getAttribute("collection"));
+        this.type = element.getAttribute("type");
         this.dialog = element.getAttribute("dialog");
+        if (element.hasAttribute("showAddButton")) {
+            this.showAddButton = Boolean.parseBoolean(element.getAttribute("showAddButton"));
+        }
 
         setLabel("Area");
         Button button = new Button("Edit&nbsp;area");
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                pageEditor.openDialog(dialog, workspace, path);
+                if (type.equals("collection"))
+                    pageEditor.openDialog(dialog, workspace, path, name, null);
+                else
+                if (type.equals("slot"))
+                    pageEditor.openDialog(dialog, workspace, path, null, name);
             }
         });
         addButton(button);
-        Button addButton = new Button("Add&nbsp;paragraph");
-        addButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                pageEditor.addParagraph(workspace, path, name, paragraphs);
-            }
-        });
-        addButton(addButton);
+
+        // TODO to add a button for editing the paragraph in a slot area i need its workspace,path and dialog
+
+        if (showAddButton) {
+            Button addButton = new Button("Add&nbsp;paragraph");
+            addButton.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    if (type.equals("collection"))
+                        pageEditor.addParagraph(workspace, path, name, null, paragraphs);
+                    else
+                    if (type.equals("slot"))
+                        pageEditor.addParagraph(workspace, path, null, name, paragraphs);
+                }
+            });
+            addButton(addButton);
+        }
     }
 
     @Override
     protected void onSelect() {
         super.onSelect();
-        pageEditor.updateSelection(this, "area", workspace, path, name, null);
+        if (type.equals("collection"))
+            pageEditor.updateSelection(this, "area", workspace, path, name, null, paragraphs);
+        else
+        if (type.equals("slot"))
+            pageEditor.updateSelection(this, "area", workspace, path, null, name, paragraphs);
     }
 
     @Override
     public void attach(Element element) {
         element.appendChild(getElement());
         onAttach();
+    }
+
+    public String getParagraphs() {
+        return paragraphs;
     }
 }

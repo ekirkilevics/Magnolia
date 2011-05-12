@@ -173,6 +173,8 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
     }
 
     protected void param(Appendable out, String name, String value) throws IOException {
-        out.append(SPACE).append(name).append(EQUALS).append(QUOTE).append(value).append(QUOTE);
+        // TODO we need to do html attribute escaping on the value
+        if (value != null)
+            out.append(SPACE).append(name).append(EQUALS).append(QUOTE).append(value).append(QUOTE);
     }
 }

@@ -37,8 +37,6 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.vaadin.Application;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
@@ -133,6 +131,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         this.contentSelection.setPath(event.getPath());
         this.contentSelection.setCollectionName(event.getCollectionName());
         this.contentSelection.setNodeName(event.getNodeName());
+        this.contentSelection.setParagraphs(event.getParagraphs());
 
         if ("page".equals(event.getType())) {
             toolboxView.showRack(wcmModule.getToolboxConfiguration().getPage());
@@ -170,11 +169,12 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         }
     }
 
-    public void openDialog(String dialogName, String workspace, String path, String collectionName) {
+    public void openDialog(String dialogName, String workspace, String path, String collectionName, String nodeName) {
         DialogPresenter dialogPresenter = dialogPresenterFactory.createDialog(dialogName);
         dialogPresenter.setWorkspace(workspace);
         dialogPresenter.setPath(path);
         dialogPresenter.setCollectionName(collectionName);
+        dialogPresenter.setNodeName(nodeName);
         dialogPresenter.setDialogSaveCallback(new DialogSaveCallback() {
             @Override
             public void onSave(Node node) {
@@ -184,12 +184,13 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         dialogPresenter.showDialog();
     }
 
-    public void addParagraph(final String workspace, final String path, final String collectionName, String paragraphs) {
+    public void addParagraph(final String workspace, final String path, final String collectionName, String nodeName, String paragraphs) {
         final ContentSelection selection = new ContentSelection();
         selection.setWorkspace(workspace);
         selection.setPath(path);
         selection.setCollectionName(collectionName);
-        ParagraphSelectionDialog paragraphSelectionDialog = new ParagraphSelectionDialog(StringUtils.split(paragraphs, ", \t\n")) {
+        selection.setNodeName(nodeName);
+        ParagraphSelectionDialog paragraphSelectionDialog = new ParagraphSelectionDialog(paragraphs) {
             @Override
             protected void onClosed(final Paragraph paragraph) {
                 String dialogName = PageEditorHacks.getDialogUsedByParagraph(paragraph);
@@ -199,6 +200,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
                     dialogPresenter.setWorkspace(selection.getWorkspace());
                     dialogPresenter.setPath(selection.getPath());
                     dialogPresenter.setCollectionName(selection.getCollectionName());
+                    dialogPresenter.setNodeName(selection.getNodeName());
                     dialogPresenter.setDialogSaveCallback(new DialogSaveCallback() {
                         @Override
                         public void onSave(Node node) {
@@ -220,9 +222,9 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         application.getMainWindow().addWindow(paragraphSelectionDialog);
     }
 
-    public void selectionChanged(String type, String workspace, String path, String collectionName, String nodeName) {
+    public void selectionChanged(String type, String workspace, String path, String collectionName, String nodeName, String paragraphs) {
         // TODO we fire the event from this class and receives it in this class, not really necessary
-        eventBus.fireEvent(new SelectionChangedEvent(type, workspace, path, collectionName, nodeName));
+        eventBus.fireEvent(new SelectionChangedEvent(type, workspace, path, collectionName, nodeName, paragraphs));
     }
 
     @Override

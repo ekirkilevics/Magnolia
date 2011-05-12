@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.wcm;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
@@ -49,7 +51,7 @@ public class ParagraphSelectionDialog extends Window {
 
     private OptionGroup optionGroup;
 
-    public ParagraphSelectionDialog(String[] paragraphs) {
+    public ParagraphSelectionDialog(String paragraphs) {
 
         setCaption("Select paragraph");
         setModal(true);
@@ -104,7 +106,9 @@ public class ParagraphSelectionDialog extends Window {
 
         optionGroup = new OptionGroup();
 
-        for (String paragraph : paragraphs) {
+        String[] paragraphsArray = StringUtils.split(paragraphs, ", \t\n");
+
+        for (String paragraph : paragraphsArray) {
             Paragraph paragraphDefinition = paragraphManager.getParagraphDefinition(paragraph);
             if (paragraphDefinition == null) {
                 continue;

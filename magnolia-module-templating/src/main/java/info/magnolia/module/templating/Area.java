@@ -45,6 +45,7 @@ public class Area extends AbstractRenderable {
 
     private Map<String, Paragraph> paragraphs = new LinkedHashMap<String, Paragraph>();
 
+    // TODO can't this be a primitive boolean instead default set to true? //Tobias
     private Boolean enabled;
 
     private String template;
@@ -73,7 +74,7 @@ public class Area extends AbstractRenderable {
         return this.template;
     }
 
-    public void setTemplate(String tempate) {
-        this.template = tempate;
+    public void setTemplate(String template) {
+        this.template = template;
     }
 }

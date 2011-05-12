@@ -14,12 +14,11 @@
 
 	<div id="main" style="padding:15px;">
 
-	[#list (content.main)?children as paragraph]
-		[@cms.render content=paragraph /]
-	[/#list]
+	<h2>Singleton Area (stage)</h2>
+	[@cms.area name="stage" dialog="mainProperties" type="slot" paragraphs="samplesHowToFTL,samplesFreemarkerParagraph"/]
 
-	<h2>Area</h2>
-	[@cms.area name="stage" dialog="mainProperties" paragraphs="samplesHowToFTL,samplesFreemarkerParagraph"/]
+	<h2>Area (main)</h2>
+	[@cms.area name="main" dialog="mainProperties" paragraphs="samplesHowToFTL,samplesFreemarkerParagraph"/]
 
 	[@cms.context name="shoeSize" value="213" /]
 

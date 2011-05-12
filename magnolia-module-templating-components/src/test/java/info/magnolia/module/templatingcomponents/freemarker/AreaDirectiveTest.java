@@ -46,7 +46,7 @@ public class AreaDirectiveTest extends AbstractDirectiveTestCase {
         final String result = renderForTest("[@cms.area name=\"stage\" /]");
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" name=\"stage\" type=\"collection\"></cms:area>"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" name=\"stage\" paragraphs=\"\" type=\"collection\" showAddButton=\"true\"></cms:area>"
                 + AbstractContentComponent.LINEBREAK
                 + "<!-- cms:end cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK, result);

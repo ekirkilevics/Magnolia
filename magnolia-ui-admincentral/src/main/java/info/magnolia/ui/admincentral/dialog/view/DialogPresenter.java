@@ -51,9 +51,9 @@ import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
 /**
  * Window for creating or editing content using a dialog.
- *
+ * <p/>
  * Note: This is a use-once object.
- *
+ * <p/>
  * TODO should this be merged with {@link info.magnolia.ui.admincentral.dialog.activity.DialogActivity}
  */
 public class DialogPresenter implements DialogView.Presenter, Serializable {
@@ -68,6 +68,7 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
     private String collectionName;
     private DialogSaveCallback dialogSaveCallback;
     private String label;
+    private String nodeName;
 
     public DialogPresenter(DialogBuilder dialogBuilder, DialogDefinition dialogDefinition) {
         this.dialogBuilder = dialogBuilder;
@@ -88,6 +89,10 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
 
     public void setCollectionName(String collectionName) {
         this.collectionName = collectionName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
     }
 
     public void setDialogSaveCallback(DialogSaveCallback dialogSaveCallback) {
@@ -150,12 +155,23 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
     private Node getOrCreateNode() throws RepositoryException {
         try {
             Node node = MgnlContext.getJCRSession(workspace).getNode(path);
+            // If a collectionName is specified we get it or create it if it doesn't exist
             if (StringUtils.isNotEmpty(collectionName)) {
                 if (node.hasNode(collectionName)) {
                     node = node.getNode(collectionName);
                 } else {
                     node = node.addNode(collectionName, ItemType.CONTENTNODE.getSystemName());
                 }
+            }
+            // If a nodeName is specified we get it or create it if it doesn't exist
+            if (StringUtils.isNotEmpty(nodeName)) {
+                if (node.hasNode(nodeName)) {
+                    node = node.getNode(nodeName);
+                } else {
+                    node = node.addNode(JCRUtil.getUniqueLabel(node, nodeName), ItemType.CONTENTNODE.getSystemName());
+                }
+            } else if (StringUtils.isNotEmpty(collectionName)) {
+                // If a collectionName was specified but nodeName wasn't we create a new node with a generated nodeName
                 node = node.addNode(JCRUtil.getUniqueLabel(node, "0"), ItemType.CONTENTNODE.getSystemName());
             }
             return node;
@@ -165,14 +181,27 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
     }
 
     private Node getNode() throws RepositoryException {
-        if (StringUtils.isNotEmpty(collectionName)) {
-            return null;
-        }
+        Node node;
         try {
-            return MgnlContext.getJCRSession(workspace).getNode(path);
+            node = MgnlContext.getJCRSession(workspace).getNode(path);
         } catch (PathNotFoundException e) {
             return null;
         }
+        if (StringUtils.isNotEmpty(collectionName)) {
+            if (node.hasNode(collectionName)) {
+                node = node.getNode(collectionName);
+            } else {
+                return null;
+            }
+        }
+        if (StringUtils.isNotEmpty(nodeName)) {
+            if (node.hasNode(nodeName)) {
+                node = node.getNode(nodeName);
+            } else {
+                return null;
+            }
+        }
+        return node;
     }
 
     @Override

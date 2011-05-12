@@ -65,6 +65,9 @@ public class EditComponent extends AbstractContentComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
+
+        // TODO we need to do html attribute escaping on this
+
         out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
         out.append(LESS_THAN).append(CMS_EDIT).append(" content=").append(QUOTE).append(getNodePath(content)).append(QUOTE);
         if (StringUtils.isNotEmpty(format)) {
@@ -74,6 +77,9 @@ public class EditComponent extends AbstractContentComponent {
         out.append(" label=").append(QUOTE).append(paragraph.getTitle()).append(QUOTE);
 
         out.append(" dialog=").append(QUOTE).append(resolveDialog(paragraph)).append(QUOTE);
+
+        out.append(" paragraph=").append(QUOTE).append(paragraph.getName()).append(QUOTE);
+
         out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_EDIT).append(GREATER_THAN).append(LINEBREAK);
     }
 

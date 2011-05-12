@@ -36,8 +36,6 @@ package info.magnolia.module.wcm.action;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.vaadin.Application;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.jcr.util.JCRMetadataUtil;
@@ -84,11 +82,7 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
 
         // TODO if its not been created yet then we need another strategy for finding it, like name of the area in combination with the parent template/paragraph
 
-        String paragraphs = "samplesHowToFTL,samplesFreemarkerParagraph";
-
-        String[] paragraphsArray = StringUtils.split(paragraphs, ", \t\n");
-
-        ParagraphSelectionDialog paragraphSelectionDialog = new ParagraphSelectionDialog(paragraphsArray) {
+        ParagraphSelectionDialog paragraphSelectionDialog = new ParagraphSelectionDialog(selection.getParagraphs()) {
             @Override
             protected void onClosed(final Paragraph paragraph) {
                 String dialogName = PageEditorHacks.getDialogUsedByParagraph(paragraph);
@@ -98,6 +92,7 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
                     dialogPresenter.setWorkspace(selection.getWorkspace());
                     dialogPresenter.setPath(selection.getPath());
                     dialogPresenter.setCollectionName(selection.getCollectionName());
+                    dialogPresenter.setNodeName(selection.getNodeName());
                     dialogPresenter.setDialogSaveCallback(new DialogSaveCallback() {
                         @Override
                         public void onSave(Node node) {

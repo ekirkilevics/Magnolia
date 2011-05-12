@@ -63,11 +63,14 @@ public class PageEditor extends AbstractComponent {
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
+
         if (variables.containsKey(VPageEditor.OPEN_DIALOG)) {
             String dialog = (String) variables.get(VPageEditor.OPEN_DIALOG);
             String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
             String path = (String) variables.get(VPageEditor.SELECTED_PATH);
-            pageEditorPresenter.openDialog(dialog, workspace, path, null);
+            String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
+            String nodeName = (String) variables.get(VPageEditor.SELECTED_NODE_NAME);
+            pageEditorPresenter.openDialog(dialog, workspace, path, collectionName, nodeName);
         }
         if (variables.containsKey(VPageEditor.UPDATE_SELECTION)) {
             String type = (String) variables.get(VPageEditor.UPDATE_SELECTION);
@@ -75,14 +78,16 @@ public class PageEditor extends AbstractComponent {
             String path = (String) variables.get(VPageEditor.SELECTED_PATH);
             String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
             String nodeName = (String) variables.get(VPageEditor.SELECTED_NODE_NAME);
-            pageEditorPresenter.selectionChanged(type, workspace, path, collectionName, nodeName);
+            String paragraphs = (String) variables.get(VPageEditor.PARAGRAPHS);
+            pageEditorPresenter.selectionChanged(type, workspace, path, collectionName, nodeName, paragraphs);
         }
         if (variables.containsKey(VPageEditor.ADD_PARAGRAPH)) {
             String paragraphs = (String) variables.get(VPageEditor.ADD_PARAGRAPH);
             String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
             String path = (String) variables.get(VPageEditor.SELECTED_PATH);
             String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
-            pageEditorPresenter.addParagraph(workspace, path, collectionName, paragraphs);
+            String nodeName = (String) variables.get(VPageEditor.SELECTED_NODE_NAME);
+            pageEditorPresenter.addParagraph(workspace, path, collectionName, nodeName, paragraphs);
         }
         if (variables.containsKey(VPageEditor.MOVE)) {
             String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);

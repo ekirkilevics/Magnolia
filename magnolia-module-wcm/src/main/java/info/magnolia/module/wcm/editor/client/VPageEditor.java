@@ -61,6 +61,7 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
     public static final String DESTINATION_PATH = "destinationPath";
     public static final String MOVE_AFTER = "moveAfter";
     public static final String MOVE = "move";
+    public static final String PARAGRAPHS = "paragraphs";
 
     private IFrameElement iFrameElement;
     private ApplicationConnection client;
@@ -115,76 +116,90 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
     public void onFrameLoad() {
         // TODO when the user navigates in the iframe we need to respond accordingly
         Element documentElement = iFrameElement.getContentDocument().getDocumentElement();
-        detectCmsTag(documentElement);
+        detectCmsTag(documentElement, null);
     }
 
-    private void detectCmsTag(Element element) {
+    private void detectCmsTag(Element element, AbstractBarWidget parentBar) {
 
         if (element.getTagName().equalsIgnoreCase("cms:edit")) {
-            EditBarWidget editBarWidget = new EditBarWidget(this, element);
+            EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, element);
             editBarWidget.attach(element);
         } else if (element.getTagName().equalsIgnoreCase("cms:area")) {
-            AreaBarWidget areaBarWidget = new AreaBarWidget(this, element);
+            AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, element);
             areaBarWidget.attach(element);
         }
+
+        // TODO the parentBar isn't carried along since cms:edit isn't inside cms:area
 
         for (int i = 0; i < element.getChildCount(); i++) {
             Node child = element.getChild(i);
             if (child.getNodeType() == Element.ELEMENT_NODE) {
-                detectCmsTag((Element) child);
+                detectCmsTag((Element) child, parentBar);
             }
         }
     }
 
-    public void openDialog(String dialog, String workspace, String path) {
-        client.updateVariable(id, OPEN_DIALOG, dialog, false);
-        client.updateVariable(id, SELECTED_WORKSPACE, workspace, false);
-        client.updateVariable(id, SELECTED_PATH, path, false);
+    public void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName) {
+        updateVariable(OPEN_DIALOG, dialog);
+        updateVariable(SELECTED_WORKSPACE, workspace);
+        updateVariable(SELECTED_PATH, path);
+        updateVariable(SELECTED_COLLECTION_NAME, collectionName);
+        updateVariable(SELECTED_NODE_NAME, nodeName);
         client.sendPendingVariableChanges();
     }
 
-    public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName) {
+    public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName, String paragraphs) {
         if (this.selectedBar != null && (this.selectedBar != selectedBar)) {
             this.selectedBar.deselect();
         }
         this.selectedBar = selectedBar;
-        client.updateVariable(id, UPDATE_SELECTION, type, false);
-        client.updateVariable(id, SELECTED_WORKSPACE, workspace, false);
-        client.updateVariable(id, SELECTED_PATH, path, false);
-        client.updateVariable(id, SELECTED_COLLECTION_NAME, collectionName, false);
-        client.updateVariable(id, SELECTED_NODE_NAME, nodeName, false);
+        updateVariable(UPDATE_SELECTION, type);
+        updateVariable(SELECTED_WORKSPACE, workspace);
+        updateVariable(SELECTED_PATH, path);
+        updateVariable(SELECTED_COLLECTION_NAME, collectionName);
+        updateVariable(SELECTED_NODE_NAME, nodeName);
+        updateVariable(PARAGRAPHS, paragraphs);
         client.sendPendingVariableChanges();
     }
 
-    public void addParagraph(String workspace, String path, String collectionName, String paragraphs) {
-        client.updateVariable(id, ADD_PARAGRAPH, paragraphs, false);
-        client.updateVariable(id, SELECTED_WORKSPACE, workspace, false);
-        client.updateVariable(id, SELECTED_PATH, path, false);
-        client.updateVariable(id, SELECTED_COLLECTION_NAME, collectionName, false);
+    public void addParagraph(String workspace, String path, String collectionName, String nodeName, String paragraphs) {
+        updateVariable(ADD_PARAGRAPH, paragraphs);
+        updateVariable(SELECTED_WORKSPACE, workspace);
+        updateVariable(SELECTED_PATH, path);
+        updateVariable(SELECTED_COLLECTION_NAME, collectionName);
+        updateVariable(SELECTED_NODE_NAME, nodeName);
         client.sendPendingVariableChanges();
     }
 
     public void moveParagraph(String workspaceName, String sourcePath, String destinationPath) {
-        client.updateVariable(id, MOVE, "dummy", false);
-        client.updateVariable(id, SELECTED_WORKSPACE, workspaceName, false);
-        client.updateVariable(id, SOURCE_PATH, sourcePath, false);
-        client.updateVariable(id, DESTINATION_PATH, destinationPath, false);
+        updateVariable(MOVE, "dummy");
+        updateVariable(SELECTED_WORKSPACE, workspaceName);
+        updateVariable(SOURCE_PATH, sourcePath);
+        updateVariable(DESTINATION_PATH, destinationPath);
         client.sendPendingVariableChanges();
     }
 
     public void moveParagraphBefore(String workspaceName, String sourcePath, String destinationPath) {
-        client.updateVariable(id, MOVE_BEFORE, "dummy", false);
-        client.updateVariable(id, SELECTED_WORKSPACE, workspaceName, false);
-        client.updateVariable(id, SOURCE_PATH, sourcePath, false);
-        client.updateVariable(id, DESTINATION_PATH, destinationPath, false);
+        updateVariable(MOVE_BEFORE, "dummy");
+        updateVariable(SELECTED_WORKSPACE, workspaceName);
+        updateVariable(SOURCE_PATH, sourcePath);
+        updateVariable(DESTINATION_PATH, destinationPath);
         client.sendPendingVariableChanges();
     }
 
     public void moveParagraphAfter(String workspaceName, String sourcePath, String destinationPath) {
-        client.updateVariable(id, MOVE_AFTER, "dummy", false);
-        client.updateVariable(id, SELECTED_WORKSPACE, workspaceName, false);
-        client.updateVariable(id, SOURCE_PATH, sourcePath, false);
-        client.updateVariable(id, DESTINATION_PATH, destinationPath, false);
+        updateVariable(MOVE_AFTER, "dummy");
+        updateVariable(SELECTED_WORKSPACE, workspaceName);
+        updateVariable(SOURCE_PATH, sourcePath);
+        updateVariable(DESTINATION_PATH, destinationPath);
         client.sendPendingVariableChanges();
+    }
+
+    private void updateVariable(String variableName, String value) {
+        // We don't add it if the value is null since it appears as the string "null" on the server side
+        // See Vaadin ticket #6968
+        if (value != null) {
+            client.updateVariable(id, variableName, value, false);
+        }
     }
 }

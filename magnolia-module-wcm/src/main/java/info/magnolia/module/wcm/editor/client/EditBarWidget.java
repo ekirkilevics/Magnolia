@@ -48,12 +48,13 @@ public class EditBarWidget extends AbstractBarWidget {
     private String workspace;
     private String path;
 
+    private String paragraph; // name of the paragraph, needed for drag n drop
     private String label;
     private String dialog;
     private String format; // bar or button (its likely too late to make a decision here)
 
-    public EditBarWidget(final VPageEditor pageEditor, Element element) {
-        super("rgb(116, 173, 59)");
+    public EditBarWidget(AbstractBarWidget parentBar, final VPageEditor pageEditor, Element element) {
+        super(parentBar, "rgb(116, 173, 59)");
         this.pageEditor = pageEditor;
 
         String content = element.getAttribute("content");
@@ -61,16 +62,17 @@ public class EditBarWidget extends AbstractBarWidget {
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
 
+        this.paragraph = element.getAttribute("paragraph");
         this.label = element.getAttribute("label");
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
 
-        setLabel(label);
+        setLabel(label + "(" + paragraph + ")");
         Button button = new Button("Edit&nbsp;paragraph");
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                pageEditor.openDialog(dialog, workspace, path);
+                pageEditor.openDialog(dialog, workspace, path, null, null);
             }
         });
         addButton(button);
@@ -79,7 +81,15 @@ public class EditBarWidget extends AbstractBarWidget {
     @Override
     protected void onSelect() {
         super.onSelect();
-        pageEditor.updateSelection(this, "paragraph", workspace, path, null, null);
+        pageEditor.updateSelection(this, "paragraph", workspace, path, null, null, getParagraphsInsertableAtThisLocation());
+    }
+
+    private String getParagraphsInsertableAtThisLocation() {
+        AbstractBarWidget parentBar = getParentBar();
+        if (parentBar instanceof AreaBarWidget)
+            return ((AreaBarWidget)parentBar).getParagraphs();
+        // TODO parent isn't set yet, so this is hard coded for now
+        return "samplesHowToFTL,samplesFreemarkerParagraph";
     }
 
     @Override

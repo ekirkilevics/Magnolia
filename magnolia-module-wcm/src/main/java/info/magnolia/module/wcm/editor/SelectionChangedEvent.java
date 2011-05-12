@@ -45,13 +45,15 @@ public class SelectionChangedEvent implements Event<SelectionChangedHandler> {
     private String path;
     private String collectionName;
     private String nodeName;
+    private String paragraphs;
 
-    public SelectionChangedEvent(String type, String workspace, String path, String collectionName, String nodeName) {
+    public SelectionChangedEvent(String type, String workspace, String path, String collectionName, String nodeName, String paragraphs) {
         this.type = type;
         this.workspace = workspace;
         this.path = path;
         this.collectionName = collectionName;
         this.nodeName = nodeName;
+        this.paragraphs = paragraphs;
     }
 
     public String getType() {
@@ -72,6 +74,14 @@ public class SelectionChangedEvent implements Event<SelectionChangedHandler> {
 
     public String getNodeName() {
         return nodeName;
+    }
+
+    public String getParagraphs() {
+        return paragraphs;
+    }
+
+    public void setParagraphs(String paragraphs) {
+        this.paragraphs = paragraphs;
     }
 
     @Override

@@ -46,13 +46,15 @@ import com.google.gwt.user.client.ui.SimplePanel;
 /**
  * Base class for horizontal bars with buttons.
  */
-public class AbstractBarWidget extends SimplePanel {
+public abstract class AbstractBarWidget extends SimplePanel {
 
+    private AbstractBarWidget parentBar;
     private HorizontalPanel horizontalPanel;
     private Label label;
     private String color;
 
-    public AbstractBarWidget(String color) {
+    public AbstractBarWidget(AbstractBarWidget parentBar, String color) {
+        this.parentBar = parentBar;
         this.color = color;
         label = new Label("");
 
@@ -93,6 +95,10 @@ public class AbstractBarWidget extends SimplePanel {
                         "border-left: 1px solid #ADC97B !important;" +
                         "border-bottom: 1px solid #396101 !important;" +
                         "border-right: 1px solid #396101 !important;");
+    }
+
+    public AbstractBarWidget getParentBar() {
+        return parentBar;
     }
 
     protected void setLabel(String label) {

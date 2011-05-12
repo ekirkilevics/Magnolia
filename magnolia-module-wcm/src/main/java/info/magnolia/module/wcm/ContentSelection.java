@@ -42,6 +42,7 @@ public class ContentSelection {
     private String path;
     private String collectionName;
     private String nodeName;
+    private String paragraphs;
 
     public String getWorkspace() {
         return workspace;
@@ -73,5 +74,13 @@ public class ContentSelection {
 
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
+    }
+
+    public String getParagraphs() {
+        return paragraphs;
+    }
+
+    public void setParagraphs(String paragraphs) {
+        this.paragraphs = paragraphs;
     }
 }
