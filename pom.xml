@@ -663,12 +663,6 @@ for Java Content Repositories (JCR).
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.jbehave</groupId>
-        <artifactId>jbehave-core</artifactId>
-        <version>3.3</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
         <groupId>net.sourceforge.openutils</groupId>
         <artifactId>openutils-testing4web</artifactId>
         <version>1.2</version>
