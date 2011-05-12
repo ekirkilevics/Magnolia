@@ -51,5 +51,16 @@ public interface CachedEntry extends Serializable {
      * @param chain a cache entry might want to delegate to the filter chain, see {@link DelegatingBlobCachedEntry#replay(HttpServletRequest, HttpServletResponse, FilterChain)}
      */
     void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
+    
+    /**
+     * Entry might be required to produce url used to create it in the first place.
+     * @return URL that triggered cache entry creation.
+     */
+    String getOriginalURL();
 
+    /**
+     * Produce last modification date of the cache entry. If no other time can be discerned, the time of entry creation should be returned.
+     * @return time when cached entry was last modified. This time should reflect real modification time of the cached content.
+     */
+    public long getLastModificationTime();
 }

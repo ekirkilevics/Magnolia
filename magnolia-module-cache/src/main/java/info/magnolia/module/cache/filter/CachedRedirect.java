@@ -49,10 +49,14 @@ import javax.servlet.http.HttpServletResponse;
 public class CachedRedirect implements CachedEntry, Serializable {
     private final int statusCode;
     private final String location;
+    private long timestamp;
+    private String originalUrl;
 
-    public CachedRedirect(int statusCode, String location) {
+    public CachedRedirect(int statusCode, String location, String originalUrl) {
         this.statusCode = statusCode;
         this.location = location;
+        this.originalUrl = originalUrl;
+        this.timestamp = System.currentTimeMillis();
     }
 
     public int getStatusCode() {
@@ -70,5 +74,13 @@ public class CachedRedirect implements CachedEntry, Serializable {
         if (!response.isCommitted()) {
             response.sendRedirect(getLocation());
         }
+    }
+
+    public String getOriginalURL() {
+        return originalUrl;
+    }
+
+    public long getLastModificationTime() {
+        return timestamp;
     }
 }

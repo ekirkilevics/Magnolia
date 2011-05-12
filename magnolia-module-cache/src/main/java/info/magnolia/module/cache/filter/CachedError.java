@@ -54,8 +54,14 @@ public class CachedError implements CachedEntry, Serializable {
 
     private final int statusCode;
 
-    public CachedError(int statusCode) {
+    private String originalUrl;
+
+    private long timestamp;
+
+    public CachedError(int statusCode, String originalUrl) {
         this.statusCode = statusCode;
+        this.originalUrl = originalUrl;
+        this.timestamp = System.currentTimeMillis();
     }
 
     public int getStatusCode() {
@@ -71,5 +77,13 @@ public class CachedError implements CachedEntry, Serializable {
             // TODO: is there a better work around to make sure we do not swallow some exception accidentally?
             log.debug("Failed to serve cached error due to response already committed.");
         }
+    }
+
+    public String getOriginalURL() {
+        return originalUrl;
+    }
+
+    public long getLastModificationTime() {
+        return timestamp;
     }
 }

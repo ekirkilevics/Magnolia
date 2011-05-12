@@ -54,8 +54,8 @@ public class InMemoryCachedEntry extends ContentCachedEntry {
     private final byte[] gzippedContent;
     private final byte[] plainContent;
 
-    public InMemoryCachedEntry(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
-        super(contentType, characterEncoding, statusCode, headers, modificationDate);
+    public InMemoryCachedEntry(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate, String originalUrl) throws IOException {
+        super(contentType, characterEncoding, statusCode, headers, modificationDate, originalUrl);
         // content which is actually of a compressed type must stay that way
         if (GZipUtil.isGZipped(out)) {
             this.gzippedContent = out;

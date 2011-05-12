@@ -36,6 +36,8 @@ package info.magnolia.module.cache;
 import java.io.Serializable;
 import java.util.Map;
 
+import edu.emory.mathcs.backport.java.util.Collections;
+
 /**
  * Default cache key implementation. Key is based on the URI, server name, parameters and request headers. Since the server name is likely to change from server to server, copying cached items around will most likely not help to avoid generating cache entries.
  *
@@ -56,7 +58,7 @@ public class DefaultCacheKey implements Serializable {
         this.uri = uri;
         this.serverName = serverName;
         this.locale = locale;
-        this.params = params;
+        this.params = params == null ? null : Collections.unmodifiableMap(params);
     }
 
     @Override
@@ -88,6 +90,14 @@ public class DefaultCacheKey implements Serializable {
 
     public String getDomain() {
         return this.serverName;
+    }
+    
+    public String getLocale() {
+        return this.locale;
+    }
+    
+    public Map<String, String> getParams() {
+        return params;
     }
 
     // generated toString() method

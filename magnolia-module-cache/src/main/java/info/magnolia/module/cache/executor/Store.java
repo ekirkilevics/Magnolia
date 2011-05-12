@@ -100,14 +100,16 @@ public class Store extends AbstractExecutor {
     }
 
     protected CachedEntry makeCachedEntry(HttpServletRequest request, CacheResponseWrapper cachedResponse) throws IOException {
+        // query params are handled by the cache key
+        final String originalUrl = request.getRequestURL().toString();
         int status = cachedResponse.getStatus();
         // TODO : handle more of the 30x codes - although CacheResponseWrapper currently only sets the 302 or 304.
         if (cachedResponse.getRedirectionLocation() != null) {
-            return new CachedRedirect(cachedResponse.getStatus(), cachedResponse.getRedirectionLocation());
+            return new CachedRedirect(cachedResponse.getStatus(), cachedResponse.getRedirectionLocation(), originalUrl);
         }
 
         if (cachedResponse.isError()) {
-            return new CachedError(cachedResponse.getStatus());
+            return new CachedError(cachedResponse.getStatus(), originalUrl);
         }
 
         final long modificationDate = cachedResponse.getLastModified();
@@ -120,7 +122,8 @@ public class Store extends AbstractExecutor {
                     cachedResponse.getCharacterEncoding(),
                     status,
                     cachedResponse.getHeaders(),
-                    modificationDate);
+                    modificationDate,
+                    originalUrl);
         }
         else{
             cacheEntry = new DelegatingBlobCachedEntry(cachedResponse.getContentLength(),
@@ -128,7 +131,8 @@ public class Store extends AbstractExecutor {
                 cachedResponse.getCharacterEncoding(),
                 status,
                 cachedResponse.getHeaders(),
-                modificationDate);
+                modificationDate,
+                originalUrl);
 
             // TODO remove this once we use a blob store
             // the file will be deleted once served in this request

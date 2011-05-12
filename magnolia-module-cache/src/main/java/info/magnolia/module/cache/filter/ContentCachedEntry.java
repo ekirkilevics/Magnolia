@@ -81,6 +81,7 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
     private transient MultiMap headers;
     private Map serializableHeadersBackingList;
     private final long lastModificationTime;
+    private String originalUrl;
 
     /**
      * @param out Cached content.
@@ -92,12 +93,17 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
      * @param shouldCompress Flag marking this content as desirable to be sent in compressed form (should the client support such compression). Setting this to true means cache entry will contain both, compressed and flat version of the content. Compression is applied here only if content is not gzipped already.
      * @throws IOException when failing to compress the content.
      */
-    public ContentCachedEntry(String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
+    public ContentCachedEntry(String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate, String originalUrl) throws IOException {
         this.contentType = contentType;
         this.characterEncoding = characterEncoding;
         this.statusCode = statusCode;
         this.headers = headers;
         this.lastModificationTime = modificationDate;
+        this.originalUrl = originalUrl;
+    }
+
+    public String getOriginalURL() {
+        return this.originalUrl;
     }
 
     // TODO : replacing getOut() with streamTo(OutputStream out) could help subclasses stream content
