@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.search.view;
 
 import info.magnolia.ui.admincentral.search.view.SearchView.Presenter;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 import java.util.Arrays;
 
@@ -89,7 +90,7 @@ public class SearchForm extends Form implements Handler {
     private Label searchFormLabel = new Label("Basic search");
     private Presenter presenter;
 
-    public SearchForm() {
+    public SearchForm(WorkbenchDefinition definition) {
         //need to wrap into a Panel in order to react on enter key
         final Panel panel = new Panel();
         panel.addActionHandler(this);
@@ -99,8 +100,7 @@ public class SearchForm extends Form implements Handler {
         gridLayout.setWidth(100, Sizeable.UNITS_PERCENTAGE);
         gridLayout.setMargin(false, true, false, false);
         panel.addComponent(gridLayout);
-        //FIXME how to get the workspace here?
-        searchParameters = new BeanItem<SearchParameters>(new SearchParameters("website", ""));
+        searchParameters = new BeanItem<SearchParameters>(new SearchParameters(definition.getWorkspace(), ""));
 
         setWriteThrough(false);
         setItemDataSource(searchParameters);

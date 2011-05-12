@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.search.view;
 
 
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import com.vaadin.ui.Component;
@@ -48,8 +49,8 @@ public class SearchViewImpl implements SearchView, IsVaadinComponent {
     private SearchForm searchForm;
     private Presenter presenter;
 
-    public SearchViewImpl() {
-        searchForm = new SearchForm();
+    public SearchViewImpl(WorkbenchDefinition definition) {
+        searchForm = new SearchForm(definition);
     }
 
     @Override
