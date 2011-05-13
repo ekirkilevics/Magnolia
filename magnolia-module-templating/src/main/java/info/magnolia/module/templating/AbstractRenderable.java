@@ -66,7 +66,7 @@ public class AbstractRenderable implements RenderableDefinition {
 
     // TODO: check whether we shouldn't use LinkedHashMap here - would preserve order!
     private Map parameters = new HashMap();
-    private Map areas = new HashMap();
+    private Map<String, Area> areas = new HashMap<String, Area>();
 
     /**
      * Return always the {@link #templateScript} property.
@@ -197,11 +197,11 @@ public class AbstractRenderable implements RenderableDefinition {
         this.parameters = params;
     }
 
-    public Map getAreas() {
+    public Map<String, Area> getAreas() {
         return this.areas;
     }
 
-    public void setAreas(Map params) {
+    public void setAreas(Map<String, Area> areas) {
         this.areas = areas;
     }
 
@@ -223,6 +223,18 @@ public class AbstractRenderable implements RenderableDefinition {
         .append("title", this.title)
         .append("templateScript", this.templateScript)
         .toString();
+    }
+
+    public Area getArea(String areaName) {
+        Map<String, Area> areas = this.getAreas();
+        if (areas != null) {
+            for (Area area : areas.values()) {
+                if (areaName.equals(area.getName())) {
+                    return area;
+                }
+            }
+        }
+        return null;
     }
 
     private static final Class<?>[] MODEL_CONSTRUCTOR_TYPES = new Class[]{Content.class, RenderableDefinition.class, RenderingModel.class};
