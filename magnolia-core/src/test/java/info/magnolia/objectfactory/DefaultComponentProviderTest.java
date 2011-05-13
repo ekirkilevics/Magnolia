@@ -44,11 +44,13 @@ import info.magnolia.content2bean.impl.TypeMappingImpl;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.Properties;
+
+import javax.jcr.RepositoryException;
+
+import junit.framework.TestCase;
 
 /**
  *
@@ -84,7 +86,6 @@ public class DefaultComponentProviderTest extends TestCase {
             componentProvider.getSingleton(TestInterface.class);
             fail("should have thrown a MgnlInstantiationException");
         } catch (MgnlInstantiationException e) {
-            assertTrue("expecting a MgnlInstantiationException with a specific message", e instanceof MgnlInstantiationException);
             assertEquals("No concrete implementation defined for interface info.magnolia.objectfactory.DefaultComponentProviderTest$TestInterface", e.getMessage());
         }
     }
