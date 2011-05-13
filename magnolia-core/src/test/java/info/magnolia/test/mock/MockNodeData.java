@@ -38,14 +38,16 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.NodeDataUtil;
 
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
-import javax.jcr.Value;
-import javax.jcr.ValueFormatException;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
+
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
+import javax.jcr.ValueFormatException;
 
 
 /**
@@ -248,7 +250,19 @@ public class MockNodeData extends AbstractNodeData {
 
     @Override
     public void setValue(Value value) throws RepositoryException, AccessDeniedException {
-        throw new UnsupportedOperationException("Not implemented");
+        switch (value.getType()) {
+        case PropertyType.STRING:
+            setValue(value.getString());
+            break;
+        case PropertyType.BOOLEAN:
+            setValue(value.getBoolean());
+        // TODO complete when required...
+            break;
+
+        default:
+            throw new UnsupportedOperationException("Not implemented");
+
+        }
     }
 
     @Override

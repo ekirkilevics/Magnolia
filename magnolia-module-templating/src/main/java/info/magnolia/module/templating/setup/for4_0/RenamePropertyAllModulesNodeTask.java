@@ -33,55 +33,18 @@
  */
 package info.magnolia.module.templating.setup.for4_0;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AllModulesNodeOperation;
-import info.magnolia.module.delta.TaskExecutionException;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Value;
-
 /**
- * Renames a property found in a given subnode of all modules; typically, renames "path" to "templatePath"
- * for all nodes under "paragraphs" for each module.
+ * Renames a property found in a given subnode of all modules; typically, renames "path" to "templatePath" for all nodes
+ * under "paragraphs" for each module.
  *
  * @version $Id$
+ *
+ * @deprecated since 5.0 - use {@link info.magnolia.module.delta.RenamePropertyAllModulesNodeTask} instead - as it is of
+ *             general purpose the implementation got moved to core.
  */
-public class RenamePropertyAllModulesNodeTask extends AllModulesNodeOperation {
-    private final String srcPropertyName;
-    private final String destPropertyName;
-    private final String baseNodeName;
-
-    public RenamePropertyAllModulesNodeTask(String name, String description, String baseNodeName, String srcPropertyName, String destPropertyName) {
-        super(name, description);
-        this.baseNodeName = baseNodeName;
-        this.srcPropertyName = srcPropertyName;
-        this.destPropertyName = destPropertyName;
-    }
-
-    @Override
-    protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        try {
-            if (node.hasContent(baseNodeName)) {
-                ContentUtil.visit(node.getContent(baseNodeName), new ContentUtil.Visitor() {
-                    @Override
-                    public void visit(Content subNode) throws Exception {
-                        if (subNode.hasNodeData(srcPropertyName)) {
-                            final Value value = subNode.getNodeData(srcPropertyName).getValue();
-                            subNode.deleteNodeData(srcPropertyName);
-                            subNode.setNodeData(destPropertyName, value);
-                        }
-                    }
-                });
-            }
-        } catch (RepositoryException e) {
-            throw e;
-        } catch (Exception e) {
-            // should not happen, but is a relict of info.magnolia.cms.util.ContentUtil#visit
-            throw new TaskExecutionException(e.getMessage(), e);
-        }
+public class RenamePropertyAllModulesNodeTask extends info.magnolia.module.delta.RenamePropertyAllModulesNodeTask {
+    public RenamePropertyAllModulesNodeTask(String name, String description, String baseNodeName,
+            String srcPropertyName, String destPropertyName) {
+        super(name, description, baseNodeName, srcPropertyName, destPropertyName);
     }
 }
-

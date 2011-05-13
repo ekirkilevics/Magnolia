@@ -43,11 +43,11 @@ import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
+import info.magnolia.module.delta.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
 import info.magnolia.module.templating.setup.for4_0.DeprecateDialogPathAllModules;
 import info.magnolia.module.templating.setup.for4_0.FixTemplatePathTask;
-import info.magnolia.module.templating.setup.for4_0.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.templating.setup.for4_0.NestPropertiesAllModulesNodeTask;
 
 import java.util.ArrayList;
@@ -120,6 +120,13 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                         "Add Model Execution Filter",
                         "/mgnl-bootstrap/templating/config.server.filters.cms.modelExecution.xml",
                         "backwardCompatibility"))
+        );
+
+        register(DeltaBuilder.update("5.0", "")
+                .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "templatePath is now templateScript.", "templates", "templatePath", "templateScript"))
+                .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "templatePath is now templateScript.", "paragraphs", "templatePath", "templateScript"))
+                .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "type is now renderType.", "templates", "type", "renderType"))
+                .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "type is now renderType.", "paragraphs", "type", "renderType"))
         );
     }
 
