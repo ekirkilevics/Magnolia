@@ -33,11 +33,20 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.freemarker.models.ContentModel;
+import info.magnolia.module.templatingcomponents.components.AbstractContentComponent;
+import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -53,12 +62,6 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
 import freemarker.template.utility.DeepUnwrap;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.freemarker.models.ContentModel;
-import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
 
 /**
  * A base class for freemarker directives used in Magnolia.
@@ -69,7 +72,6 @@ import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent
 public abstract class AbstractDirective implements TemplateDirectiveModel {
 
     @Override
-    @SuppressWarnings("unchecked")
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
         final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
         final AggregationState aggregationState = MgnlContext.getAggregationState();
@@ -91,7 +93,7 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
 
                 // TODO what exception is appropriate to throw
 
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         }
     }
@@ -234,5 +236,20 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
         }
 
         return (MT) m;
+    }
+
+    /**
+     * Init attributes common to all AbstractContentComponents.
+     */
+    protected void initContentComponent(Map<String, TemplateModel> params, AbstractContentComponent component) throws TemplateModelException {
+        Node target = node(params, "content", null);
+        String workspace = string(params, "workspace", null);
+        String nodeIdentifier = string(params, "uuid", null);
+        String path = string(params, "path", null);
+
+        component.setContent(target);
+        component.setWorkspace(workspace);
+        component.setNodeIdentifier(nodeIdentifier);
+        component.setPath(path);
     }
 }

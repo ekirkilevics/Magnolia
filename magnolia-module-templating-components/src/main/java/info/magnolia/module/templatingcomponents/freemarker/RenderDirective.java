@@ -33,10 +33,6 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
-import java.io.IOException;
-import java.util.Map;
-import javax.jcr.Node;
-
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
@@ -45,6 +41,9 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
 import info.magnolia.module.templatingcomponents.components.RenderComponent;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * A freemarker directive for rendering an arbitrary piece of content.
@@ -56,18 +55,11 @@ public class RenderDirective extends AbstractDirective {
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
 
-        Node target = node(params, "content", null);
-        String workspace = string(params, "workspace", null);
-        String uuid = string(params, "uuid", null);
-        String path = string(params, "path", null);
+        RenderComponent marker = new RenderComponent(serverCfg, aggState);
+        initContentComponent(params, marker);
+
         boolean editable = bool(params, "editable", false);
         String template = string(params, "template", null);
-
-        RenderComponent marker = new RenderComponent(serverCfg, aggState);
-        marker.setContent(target);
-        marker.setWorkspace(workspace);
-        marker.setUuid(uuid);
-        marker.setPath(path);
         marker.setEditable(editable);
         marker.setTemplate(template);
 

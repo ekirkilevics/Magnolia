@@ -33,10 +33,6 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
-import java.io.IOException;
-import java.util.Map;
-import javax.jcr.Node;
-
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
@@ -45,6 +41,9 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
 import info.magnolia.module.templatingcomponents.components.EditComponent;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * A freemarker directive for the edit bar UI component.
@@ -57,18 +56,12 @@ public class EditDirective extends AbstractDirective {
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
         checkBody(body, false);
 
-        Node content = node(params, "content", null);
-        String workspace = string(params, "workspace", null);
-        String uuid = string(params, "uuid", null);
-        String path = string(params, "path", null);
+        EditComponent marker = new EditComponent(serverCfg, aggState);
+        initContentComponent(params, marker);
+
         String format = string(params, "format", null);
         String dialog = string(params, "dialog", null);
 
-        EditComponent marker = new EditComponent(serverCfg, aggState);
-        marker.setContent(content);
-        marker.setWorkspace(workspace);
-        marker.setUuid(uuid);
-        marker.setPath(path);
         marker.setFormat(format);
         marker.setDialog(dialog);
 

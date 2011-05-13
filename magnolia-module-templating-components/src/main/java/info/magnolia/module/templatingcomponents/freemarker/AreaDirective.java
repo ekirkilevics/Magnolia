@@ -46,8 +46,6 @@ import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent
 import java.io.IOException;
 import java.util.Map;
 
-import javax.jcr.Node;
-
 /**
  * A freemarker directive for rendering an area.
  *
@@ -58,21 +56,16 @@ public class AreaDirective extends AbstractDirective {
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
 
-        Node content = node(params, "content", null);
-        String workspace = string(params, "workspace", null);
-        String uuid = string(params, "uuid", null);
-        String path = string(params, "path", null);
+
+        AreaComponent marker = new AreaComponent(serverCfg, aggState);
+        initContentComponent(params, marker);
+
         Area area = (Area) object(params, "area");
         String name = string(params, "name", null);
         String paragraphs = string(params, "paragraphs", null);
         String dialog = string(params, "dialog", null);
         String type = string(params, "type", "collection");
 
-        AreaComponent marker = new AreaComponent(serverCfg, aggState);
-        marker.setContent(content);
-        marker.setWorkspace(workspace);
-        marker.setUuid(uuid);
-        marker.setPath(path);
         marker.setArea(area);
         marker.setName(name);
         marker.setParagraphs(paragraphs);

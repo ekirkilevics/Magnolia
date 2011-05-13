@@ -46,8 +46,6 @@ import org.apache.commons.lang.StringUtils;
  * Abstract base class for components that operate on a specified piece of content.
  *
  * @version $Id$
- *
- *          TODO Should be renamed: AbstractNodeComponent?
  */
 public abstract class AbstractContentComponent extends AbstractAuthoringUiComponent {
 
@@ -72,7 +70,7 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
     // TODO should also support a JSP ContentMap
     private Node node;
     private String workspace;
-    private String uuid; // TODO should be nodeIdentifier
+    private String nodeIdentifier;
     private String path;
 
     public AbstractContentComponent(ServerConfiguration server, AggregationState aggregationState) {
@@ -94,8 +92,8 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
             return node;
         }
         if (StringUtils.isNotEmpty(workspace)) {
-            if (StringUtils.isNotEmpty(uuid)) {
-                return MgnlContext.getJCRSession(workspace).getNodeByIdentifier(uuid);
+            if (StringUtils.isNotEmpty(nodeIdentifier)) {
+                return MgnlContext.getJCRSession(workspace).getNodeByIdentifier(nodeIdentifier);
             }
             if (StringUtils.isNotEmpty(path)) {
                 return MgnlContext.getJCRSession(workspace).getNodeByIdentifier(path);
@@ -124,12 +122,12 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
         this.workspace = workspace;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getNodeIdentifier() {
+        return nodeIdentifier;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setNodeIdentifier(String nodeIdentifier) {
+        this.nodeIdentifier = nodeIdentifier;
     }
 
     public String getPath() {
