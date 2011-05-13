@@ -38,7 +38,7 @@ import java.util.Map;
 
 /**
  * Represents an area definition.
- * 
+ *
  * @version $Id$
  */
 public class Area extends AbstractRenderable {
@@ -47,9 +47,6 @@ public class Area extends AbstractRenderable {
 
     // TODO can't this be a primitive boolean instead default set to true? //Tobias
     private Boolean enabled;
-
-    // TODO - remove - use templateScript
-    private String template;
 
     public Map<String, Paragraph> getParagraphs() {
         return paragraphs;
@@ -69,13 +66,5 @@ public class Area extends AbstractRenderable {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public String getTemplate() {
-        return this.template;
-    }
-
-    public void setTemplate(String template) {
-        this.template = template;
     }
 }
