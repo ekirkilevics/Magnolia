@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.wcm.action;
 
-import javax.jcr.Node;
-
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
 
@@ -45,11 +43,8 @@ import info.magnolia.ui.model.action.ActionExecutionException;
  */
 public class DeleteAreaAction extends ActionBase<DeleteAreaActionDefinition> {
 
-    private Node node;
-
-    public DeleteAreaAction(DeleteAreaActionDefinition definition, Node node) {
+    public DeleteAreaAction(DeleteAreaActionDefinition definition) {
         super(definition);
-        this.node = node;
     }
 
     @Override

@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.wcm.action;
 
-import javax.jcr.Node;
-
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
 
@@ -43,11 +41,8 @@ import info.magnolia.ui.model.action.ActionExecutionException;
  */
 public class ActivatePageAction extends ActionBase<ActivatePageActionDefinition> {
 
-    private Node node;
-
-    public ActivatePageAction(ActivatePageActionDefinition definition, Node node) {
+    public ActivatePageAction(ActivatePageActionDefinition definition) {
         super(definition);
-        this.node = node;
     }
 
     @Override

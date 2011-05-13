@@ -36,67 +36,36 @@ package info.magnolia.module.wcm.action;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.module.wcm.ContentSelection;
-import info.magnolia.module.wcm.PageChangedEvent;
 import info.magnolia.module.wcm.PageEditorHacks;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
-import info.magnolia.ui.admincentral.dialog.DialogSaveCallback;
-import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.model.action.ActionBase;
-import info.magnolia.ui.model.action.ActionExecutionException;
 
 /**
  * Opens a dialog for editing a paragraph.
  *
  * @version $Id$
  */
-public class EditParagraphAction extends ActionBase<EditParagraphActionDefinition> {
+public class EditParagraphAction extends AbstractEditAction<EditParagraphActionDefinition> {
 
-    private Node node;
-    private DialogPresenterFactory dialogPresenterFactory;
-    private ContentSelection selection;
     private ParagraphManager paragraphManager;
-    private EventBus eventBus;
 
-    public EditParagraphAction(EditParagraphActionDefinition definition, Node node, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, ParagraphManager paragraphManager, EventBus eventBus) {
-        super(definition);
-        this.node = node;
-        this.dialogPresenterFactory = dialogPresenterFactory;
-        this.selection = selection;
+    public EditParagraphAction(EditParagraphActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus, ParagraphManager paragraphManager) {
+        super(definition, dialogPresenterFactory, selection, eventBus);
         this.paragraphManager = paragraphManager;
-        this.eventBus = eventBus;
     }
 
-    @Override
-    public void execute() throws ActionExecutionException {
+    protected String getDialog() throws RepositoryException {
+
+        Node node = getNode();
+
+        // TODO this does not respect a dialog set in the template to override the configured dialog
 
         String template = JCRMetadataUtil.getMetaData(node).getTemplate();
         final Paragraph paragraph = paragraphManager.getParagraphDefinition(template);
-        String dialogName = PageEditorHacks.getDialogUsedByParagraph(paragraph);
-
-        DialogPresenter dialogPresenter = dialogPresenterFactory.createDialog(dialogName);
-        dialogPresenter.setWorkspace(selection.getWorkspace());
-        dialogPresenter.setPath(selection.getPath());
-        dialogPresenter.setCollectionName(selection.getCollectionName());
-        dialogPresenter.setNodeName(selection.getNodeName());
-        dialogPresenter.setDialogSaveCallback(new DialogSaveCallback() {
-            @Override
-            public void onSave(Node node) {
-                try {
-                    MetaData metaData = JCRMetadataUtil.getMetaData(node);
-                    metaData.setTemplate(paragraph.getName());
-                    node.getSession().save();
-                    eventBus.fireEvent(new PageChangedEvent());
-                } catch (RepositoryException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-            }
-        });
-        dialogPresenter.showDialog();
+        return PageEditorHacks.getDialogUsedByParagraph(paragraph);
     }
 }

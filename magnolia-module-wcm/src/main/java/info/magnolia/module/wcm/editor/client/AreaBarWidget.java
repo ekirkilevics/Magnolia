@@ -78,11 +78,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (type.equals("collection"))
-                    pageEditor.openDialog(dialog, workspace, path, name, null);
-                else
-                if (type.equals("slot"))
-                    pageEditor.openDialog(dialog, workspace, path, null, name);
+                pageEditor.openDialog(dialog, workspace, path, null, name);
             }
         });
         addButton(button);

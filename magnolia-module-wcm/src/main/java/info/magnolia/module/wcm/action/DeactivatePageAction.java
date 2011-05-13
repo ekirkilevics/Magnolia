@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.wcm.action;
 
-import javax.jcr.Node;
-
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
 
@@ -45,11 +43,8 @@ import info.magnolia.ui.model.action.ActionExecutionException;
  */
 public class DeactivatePageAction extends ActionBase<DeactivatePageActionDefinition> {
 
-    private Node node;
-
-    public DeactivatePageAction(DeactivatePageActionDefinition definition, Node node) {
+    public DeactivatePageAction(DeactivatePageActionDefinition definition) {
         super(definition);
-        this.node = node;
     }
 
     @Override

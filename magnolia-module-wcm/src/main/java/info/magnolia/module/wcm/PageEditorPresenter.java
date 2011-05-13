@@ -38,12 +38,10 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import com.vaadin.Application;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.wcm.action.AddParagraphActionDefinition;
 import info.magnolia.module.wcm.editor.SelectionChangedEvent;
 import info.magnolia.module.wcm.editor.SelectionChangedHandler;
 import info.magnolia.module.wcm.place.PageEditorPlace;
@@ -62,6 +60,7 @@ import info.magnolia.ui.framework.place.PlaceHistoryMapper;
 import info.magnolia.ui.framework.place.PlaceHistoryMapperImpl;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
@@ -152,6 +151,11 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
             return;
         }
 
+        executeAction(menuItem.getActionDefinition(), selection);
+    }
+
+    private void executeAction(ActionDefinition actionDefinition, ContentSelection selection) {
+
         Node node;
         try {
             node = MgnlContext.getJCRSession(selection.getWorkspace()).getNode(selection.getPath());
@@ -159,7 +163,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
             throw new RuntimeRepositoryException(e);
         }
 
-        Action action = toolboxActionFactory.createAction(menuItem.getActionDefinition(), node, selection);
+        Action action = toolboxActionFactory.createAction(actionDefinition, node, selection);
         System.out.println("Executing " + action.getClass());
         try {
             action.execute();
@@ -184,42 +188,16 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         dialogPresenter.showDialog();
     }
 
-    public void addParagraph(final String workspace, final String path, final String collectionName, String nodeName, String paragraphs) {
-        final ContentSelection selection = new ContentSelection();
+    public void addParagraph(String workspace, String path, String collectionName, String nodeName, String paragraphs) {
+
+        ContentSelection selection = new ContentSelection();
         selection.setWorkspace(workspace);
         selection.setPath(path);
         selection.setCollectionName(collectionName);
         selection.setNodeName(nodeName);
-        ParagraphSelectionDialog paragraphSelectionDialog = new ParagraphSelectionDialog(paragraphs) {
-            @Override
-            protected void onClosed(final Paragraph paragraph) {
-                String dialogName = PageEditorHacks.getDialogUsedByParagraph(paragraph);
-                if (dialogName != null) {
+        selection.setParagraphs(paragraphs);
 
-                    DialogPresenter dialogPresenter = dialogPresenterFactory.createDialog(dialogName);
-                    dialogPresenter.setWorkspace(selection.getWorkspace());
-                    dialogPresenter.setPath(selection.getPath());
-                    dialogPresenter.setCollectionName(selection.getCollectionName());
-                    dialogPresenter.setNodeName(selection.getNodeName());
-                    dialogPresenter.setDialogSaveCallback(new DialogSaveCallback() {
-                        @Override
-                        public void onSave(Node node) {
-                            try {
-                                MetaData metaData = JCRMetadataUtil.getMetaData(node);
-                                metaData.setTemplate(paragraph.getName());
-                                node.getSession().save();
-                                eventBus.fireEvent(new PageChangedEvent());
-                            } catch (RepositoryException e) {
-                                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                            }
-                        }
-                    });
-                    dialogPresenter.showDialog();
-                }
-            }
-        };
-
-        application.getMainWindow().addWindow(paragraphSelectionDialog);
+        executeAction(new AddParagraphActionDefinition(), selection);
     }
 
     public void selectionChanged(String type, String workspace, String path, String collectionName, String nodeName, String paragraphs) {

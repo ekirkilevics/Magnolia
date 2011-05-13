@@ -34,25 +34,35 @@
 package info.magnolia.module.wcm.action;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
-import info.magnolia.ui.model.action.ActionBase;
-import info.magnolia.ui.model.action.ActionExecutionException;
+import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateManager;
+import info.magnolia.module.wcm.ContentSelection;
+import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
+import info.magnolia.ui.framework.event.EventBus;
 
 /**
  * Opens a dialog for editing page properties.
  *
  * @version $Id$
  */
-public class EditPagePropertiesAction extends ActionBase<EditPagePropertiesActionDefinition> {
+public class EditPagePropertiesAction extends AbstractEditAction<EditPagePropertiesActionDefinition> {
 
-    private Node node;
+    private TemplateManager templateManager;
 
-    public EditPagePropertiesAction(EditPagePropertiesActionDefinition definition, Node node) {
-        super(definition);
-        this.node = node;
+    public EditPagePropertiesAction(EditPagePropertiesActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus, TemplateManager templateManager) {
+        super(definition, dialogPresenterFactory, selection, eventBus);
+        this.templateManager = templateManager;
     }
 
-    @Override
-    public void execute() throws ActionExecutionException {
+    protected String getDialog() throws RepositoryException {
+
+        Node node = getNode();
+
+        String template = JCRMetadataUtil.getMetaData(node).getTemplate();
+        Template templateDefinition = templateManager.getTemplateDefinition(template);
+        return templateDefinition.getDialog();
     }
 }

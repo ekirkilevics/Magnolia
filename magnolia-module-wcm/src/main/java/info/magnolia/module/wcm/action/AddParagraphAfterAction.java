@@ -53,8 +53,8 @@ public class AddParagraphAfterAction extends AbstractAddParagraphAction<AddParag
 
     private ContentSelection selection;
 
-    public AddParagraphAfterAction(AddParagraphAfterActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node, EventBus eventBus) {
-        super(definition, application, dialogPresenterFactory, selection, node, eventBus);
+    public AddParagraphAfterAction(AddParagraphAfterActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
+        super(definition, application, dialogPresenterFactory, selection, eventBus);
         this.selection = selection;
 
         String collectionPath = PathUtil.getFolder(selection.getPath());

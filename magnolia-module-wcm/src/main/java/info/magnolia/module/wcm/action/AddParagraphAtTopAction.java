@@ -50,8 +50,8 @@ import info.magnolia.ui.framework.event.EventBus;
  */
 public class AddParagraphAtTopAction extends AbstractAddParagraphAction<AddParagraphAtTopActionDefinition> {
 
-    public AddParagraphAtTopAction(AddParagraphAtTopActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node, EventBus eventBus) {
-        super(definition, application, dialogPresenterFactory, selection, node, eventBus);
+    public AddParagraphAtTopAction(AddParagraphAtTopActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
+        super(definition, application, dialogPresenterFactory, selection, eventBus);
     }
 
     @Override

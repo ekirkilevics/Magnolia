@@ -34,25 +34,40 @@
 package info.magnolia.module.wcm.action;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
-import info.magnolia.ui.model.action.ActionBase;
-import info.magnolia.ui.model.action.ActionExecutionException;
+import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.module.templating.Area;
+import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateManager;
+import info.magnolia.module.wcm.ContentSelection;
+import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
+import info.magnolia.ui.framework.event.EventBus;
 
 /**
  * Opens a dialog for editing an area.
  *
  * @version $Id$
  */
-public class EditAreaAction extends ActionBase<EditAreaActionDefinition> {
+public class EditAreaAction extends AbstractEditAction<EditAreaActionDefinition> {
 
-    private Node node;
+    private TemplateManager templateManager;
 
-    public EditAreaAction(EditAreaActionDefinition definition, Node node) {
-        super(definition);
-        this.node = node;
+    public EditAreaAction(EditAreaActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus, TemplateManager templateManager) {
+        super(definition, dialogPresenterFactory, selection, eventBus);
+        this.templateManager = templateManager;
     }
 
-    @Override
-    public void execute() throws ActionExecutionException {
+    protected String getDialog() throws RepositoryException {
+
+        // TODO this does not respect a dialog set in the template to override the configured dialog
+
+        Node node = getNode();
+
+        String parentTemplate = JCRMetadataUtil.getMetaData(node.getParent()).getTemplate();
+        Template templateDefinition = templateManager.getTemplateDefinition(parentTemplate);
+        String template = JCRMetadataUtil.getMetaData(node).getTemplate();
+        Area area = templateDefinition.getArea(template);
+        return area.getDialog();
     }
 }

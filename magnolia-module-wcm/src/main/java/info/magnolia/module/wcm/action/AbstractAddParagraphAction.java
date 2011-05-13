@@ -67,7 +67,7 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
     private ContentSelection selection;
     private EventBus eventBus;
 
-    public AbstractAddParagraphAction(D definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, Node node, EventBus eventBus) {
+    public AbstractAddParagraphAction(D definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
         super(definition);
         this.application = application;
         this.dialogPresenterFactory = dialogPresenterFactory;
