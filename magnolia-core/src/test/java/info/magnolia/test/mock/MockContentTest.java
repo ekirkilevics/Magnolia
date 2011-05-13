@@ -35,7 +35,14 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import junit.framework.TestCase;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -43,16 +50,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
-
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-
-import junit.framework.TestCase;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -239,5 +236,20 @@ public class MockContentTest extends TestCase {
         Content node = hm.getContent("/level0/level1/level2");
         Collection<Content> ancestors = node.getAncestors();
         assertEquals(3, ancestors.size());
+    }
+
+    public void testCanDeleteAProperty() throws Exception {
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node.a=lol\n" +
+            "/node.b=yop\n" +
+            "/node.c=boum\n");
+        final Content node = hm.getContent("/node");
+        assertEquals(3, node.getNodeDataCollection().size());
+        node.deleteNodeData("b");
+
+        assertEquals(2, node.getNodeDataCollection().size());
+        assertEquals(true, node.getNodeData("a").isExist());
+        assertEquals(true, node.getNodeData("c").isExist());
+        assertEquals(false, node.getNodeData("b").isExist());
     }
 }

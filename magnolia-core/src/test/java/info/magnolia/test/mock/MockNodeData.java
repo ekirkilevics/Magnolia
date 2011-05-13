@@ -38,15 +38,14 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.NodeDataUtil;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
-
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 
 
 /**
@@ -217,6 +216,7 @@ public class MockNodeData extends AbstractNodeData {
 
     @Override
     public void delete() throws RepositoryException {
+        getParent().deleteNodeData(this.name);
     }
 
     @Override
