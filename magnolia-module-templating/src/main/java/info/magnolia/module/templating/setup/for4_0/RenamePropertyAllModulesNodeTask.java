@@ -35,9 +35,7 @@ package info.magnolia.module.templating.setup.for4_0;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllModulesNodeOperation;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -45,58 +43,43 @@ import info.magnolia.module.delta.TaskExecutionException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
- * Renames property node in all subnodes of all modules, from a base node, i.e. in every paragraph definition
- * rename property 'a' to 'b'
- * @author tmiyar
- *
+ * Renames a property found in a given subnode of all modules; typically, renames "path" to "templatePath"
+ * for all nodes under "paragraphs" for each module.
  */
 public class RenamePropertyAllModulesNodeTask extends AllModulesNodeOperation {
-
-    private static Logger log = LoggerFactory.getLogger(RenamePropertyAllModulesNodeTask.class);
-
     private final String srcPropertyName;
     private final String destPropertyName;
     private final String baseNodeName;
 
     public RenamePropertyAllModulesNodeTask(String name, String description, String baseNodeName, String srcPropertyName, String destPropertyName) {
         super(name, description);
+        this.baseNodeName = baseNodeName;
         this.srcPropertyName = srcPropertyName;
         this.destPropertyName = destPropertyName;
-        this.baseNodeName = baseNodeName;
     }
-
 
     @Override
-    protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
-            throws RepositoryException, TaskExecutionException {
+    protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx) throws RepositoryException, TaskExecutionException {
         try {
-            if(node.hasContent(baseNodeName)){
-                ContentUtil.visit(node.getContent(baseNodeName), new ContentUtil.Visitor(){
-                   @Override
-                public void visit(Content subNode) throws Exception {
-                       if(subNode.hasNodeData(srcPropertyName)){
-                           Value value = subNode.getNodeData(srcPropertyName).getValue();
-                           subNode.deleteNodeData(srcPropertyName);
-                           NodeData newNodeData = NodeDataUtil.getOrCreate(subNode, destPropertyName);
-                           newNodeData.setValue(value);
-                       }
-                   }
+            if (node.hasContent(baseNodeName)) {
+                ContentUtil.visit(node.getContent(baseNodeName), new ContentUtil.Visitor() {
+                    @Override
+                    public void visit(Content subNode) throws Exception {
+                        if (subNode.hasNodeData(srcPropertyName)) {
+                            final Value value = subNode.getNodeData(srcPropertyName).getValue();
+                            subNode.deleteNodeData(srcPropertyName);
+                            subNode.setNodeData(destPropertyName, value);
+                        }
+                    }
                 });
             }
-        }
-        catch(RepositoryException e){
+        } catch (RepositoryException e) {
             throw e;
+        } catch (Exception e) {
+            // should not happen, but is a relict of info.magnolia.cms.util.ContentUtil#visit
+            throw new TaskExecutionException(e.getMessage(), e);
         }
-        catch (Exception e) {
-            throw new TaskExecutionException("can't reconfigure tasks", e);
-        }
-
     }
-
 }
 
