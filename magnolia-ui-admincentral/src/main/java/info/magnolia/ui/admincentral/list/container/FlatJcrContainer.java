@@ -141,7 +141,7 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
 
     @Override
     public Object nextItemId(Object itemId) {
-        int idx = itemIds.indexOf((ContainerItemId)itemId);
+        int idx = itemIds.indexOf(itemId);
         if(idx < 0 || idx == itemIds.size()-1){
             return null;
         }
@@ -150,7 +150,7 @@ public class FlatJcrContainer extends JcrContainer implements Sortable {
 
     @Override
     public Object prevItemId(Object itemId) {
-        int idx = itemIds.indexOf((ContainerItemId)itemId);
+        int idx = itemIds.indexOf(itemId);
         if(idx <= 0){
             return null;
         }

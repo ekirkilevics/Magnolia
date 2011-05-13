@@ -100,7 +100,7 @@ public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer<WorkbenchA
     @SuppressWarnings("unchecked")
     protected Class<? extends Place>[] getSupportedPlaces() {
         // Casts since generic array creation doesn't exist
-        return (Class<? extends Place>[]) new Class[] {ItemSelectedPlace.class, SearchPlace.class};
+        return new Class[] {ItemSelectedPlace.class, SearchPlace.class};
     }
 
     @Override
