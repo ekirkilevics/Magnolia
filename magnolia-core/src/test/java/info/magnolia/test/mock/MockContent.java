@@ -42,14 +42,13 @@ import info.magnolia.cms.core.NonExistingNodeData;
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Rule;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.OrderedMap;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.map.ListOrderedMap;
-import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.util.ChildrenCollectorFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -63,12 +62,15 @@ import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.OrderedMap;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.util.ChildrenCollectorFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -424,6 +426,7 @@ public class MockContent extends AbstractContent {
         }
     }
 
+    @Override
     public Collection<Content> getAncestors() throws PathNotFoundException, RepositoryException {
         ArrayList<Content> ancestors = new ArrayList<Content>();
         Content parent = getParent();
