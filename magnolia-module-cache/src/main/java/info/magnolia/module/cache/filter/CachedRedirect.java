@@ -76,10 +76,12 @@ public class CachedRedirect implements CachedEntry, Serializable {
         }
     }
 
+    @Override
     public String getOriginalURL() {
         return originalUrl;
     }
 
+    @Override
     public long getLastModificationTime() {
         return timestamp;
     }

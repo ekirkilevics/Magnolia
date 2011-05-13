@@ -102,6 +102,7 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
         this.originalUrl = originalUrl;
     }
 
+    @Override
     public String getOriginalURL() {
         return this.originalUrl;
     }
@@ -129,6 +130,7 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
         return headers;
     }
 
+    @Override
     public long getLastModificationTime() {
         return lastModificationTime;
     }
