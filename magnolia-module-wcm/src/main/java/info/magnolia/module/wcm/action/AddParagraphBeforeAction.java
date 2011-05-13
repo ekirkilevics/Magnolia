@@ -41,6 +41,7 @@ import info.magnolia.cms.util.PathUtil;
 import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.ContentSelection;
+import info.magnolia.module.wcm.PageEditorHacks;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.framework.event.EventBus;
 
@@ -56,16 +57,7 @@ public class AddParagraphBeforeAction extends AbstractAddParagraphAction<AddPara
     public AddParagraphBeforeAction(AddParagraphBeforeActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
         super(definition, application, dialogPresenterFactory, selection, eventBus);
         this.selection = selection;
-
-        String collectionPath = PathUtil.getFolder(selection.getPath());
-        String collectionName = PathUtil.getFileName(collectionPath);
-        String path = PathUtil.getFolder(collectionPath);
-
-        ContentSelection contentSelection = new ContentSelection();
-        contentSelection.setWorkspace(selection.getWorkspace());
-        contentSelection.setPath(path);
-        contentSelection.setCollectionName(collectionName);
-        super.setSelection(contentSelection);
+        super.setSelection(PageEditorHacks.convertFromPointingToParagraphToCollection(selection));
     }
 
     @Override

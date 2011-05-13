@@ -33,11 +33,21 @@
  */
 package info.magnolia.module.wcm.activity;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import com.vaadin.ui.Component;
+import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.module.wcm.PageChangedEvent;
 import info.magnolia.module.wcm.PageChangedHandler;
 import info.magnolia.module.wcm.editor.PageEditor;
+import info.magnolia.module.wcm.editor.SelectionChangedEvent;
 import info.magnolia.module.wcm.place.PageEditorPlace;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.framework.activity.AbstractActivity;
@@ -55,18 +65,43 @@ public class PageEditorActivity extends AbstractActivity implements PageChangedH
     private PageEditorPlace place;
     private EventBus eventBus;
     private EditorView editorView;
+    private URI2RepositoryManager uri2RepositoryManager;
+    private TemplateManager templateManager;
 
-    public PageEditorActivity(ComponentProvider componentProvider, PageEditorPlace place, EventBus eventBus) {
+    public PageEditorActivity(ComponentProvider componentProvider, PageEditorPlace place, EventBus eventBus, URI2RepositoryManager uri2RepositoryManager, TemplateManager templateManager) {
         this.componentProvider = componentProvider;
         this.place = place;
         this.eventBus = eventBus;
+        this.uri2RepositoryManager = uri2RepositoryManager;
+        this.templateManager = templateManager;
+
         this.eventBus.addHandler(PageChangedEvent.class, this);
     }
 
     @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
-        editorView = new EditorView(place.getPath());
+        String path = place.getPath();
+        editorView = new EditorView(path);
         viewPort.setView(editorView);
+
+        String workspace = uri2RepositoryManager.getRepository(path);
+        path = uri2RepositoryManager.getHandle(path);
+
+        String dialog = getDialogUsedByTemplate(path, workspace);
+
+        eventBus.fireEvent(new SelectionChangedEvent("page", workspace, path, null, null, null, dialog));
+    }
+
+    private String getDialogUsedByTemplate(String path, String workspace) {
+        try {
+            Session session = MgnlContext.getJCRSession(workspace);
+            Node node = session.getNode(path);
+            String template = JCRMetadataUtil.getMetaData(node).getTemplate();
+            Template templateDefinition = templateManager.getTemplateDefinition(template);
+            return templateDefinition.getDialog();
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     @Override

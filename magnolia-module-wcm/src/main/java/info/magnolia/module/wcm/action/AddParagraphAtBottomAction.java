@@ -56,6 +56,7 @@ public class AddParagraphAtBottomAction extends AbstractAddParagraphAction<AddPa
 
     @Override
     protected void onPreSave(Node node, Paragraph paragraph) throws RepositoryException {
+        // TODO not necessary to move it last since adding nodes always adds them at the end
         JCRUtil.orderLast(node);
         super.onPreSave(node, paragraph);
     }

@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.wcm;
 
+import info.magnolia.cms.util.PathUtil;
 import info.magnolia.module.templating.Paragraph;
 
 /**
@@ -54,5 +55,20 @@ public class PageEditorHacks {
             return paragraph.getName();
         }
         return dialogToUse;
+    }
+
+    public static ContentSelection convertFromPointingToParagraphToCollection(ContentSelection selection) {
+        String collectionPath = PathUtil.getFolder(selection.getPath());
+        String collectionName = PathUtil.getFileName(collectionPath);
+        String path = PathUtil.getFolder(collectionPath);
+
+        ContentSelection contentSelection = new ContentSelection();
+        contentSelection.setType(selection.getType());
+        contentSelection.setWorkspace(selection.getWorkspace());
+        contentSelection.setPath(path);
+        contentSelection.setCollectionName(collectionName);
+        contentSelection.setParagraphs(selection.getParagraphs());
+        contentSelection.setDialog(selection.getDialog());
+        return contentSelection;
     }
 }

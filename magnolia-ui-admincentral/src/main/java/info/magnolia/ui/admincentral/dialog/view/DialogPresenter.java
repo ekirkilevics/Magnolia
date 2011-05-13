@@ -160,6 +160,7 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
                 if (node.hasNode(collectionName)) {
                     node = node.getNode(collectionName);
                 } else {
+                    // TODO when this is in the website workspace we need to set template here
                     node = node.addNode(collectionName, ItemType.CONTENTNODE.getSystemName());
                 }
             }
@@ -187,21 +188,28 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
         } catch (PathNotFoundException e) {
             return null;
         }
-        if (StringUtils.isNotEmpty(collectionName)) {
-            if (node.hasNode(collectionName)) {
-                node = node.getNode(collectionName);
-            } else {
+        if (StringUtils.isEmpty(collectionName) && StringUtils.isEmpty(nodeName)) {
+            return node;
+        }
+        if (StringUtils.isEmpty(collectionName) && StringUtils.isNotEmpty(nodeName)) {
+            if (!node.hasNode(nodeName)) {
                 return null;
             }
+            return node.getNode(nodeName);
         }
-        if (StringUtils.isNotEmpty(nodeName)) {
-            if (node.hasNode(nodeName)) {
-                node = node.getNode(nodeName);
-            } else {
+        if (StringUtils.isNotEmpty(collectionName) && StringUtils.isNotEmpty(nodeName)) {
+
+            if (!node.hasNode(collectionName)) {
                 return null;
             }
+            node = node.getNode(collectionName);
+
+            if (!node.hasNode(nodeName)) {
+                return null;
+            }
+            return node.getNode(nodeName);
         }
-        return node;
+        return null;
     }
 
     @Override

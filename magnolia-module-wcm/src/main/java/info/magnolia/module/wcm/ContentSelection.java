@@ -38,11 +38,21 @@ package info.magnolia.module.wcm;
  */
 public class ContentSelection {
 
+    private String type; // "page" "area" "paragraph"
     private String workspace;
     private String path;
     private String collectionName;
     private String nodeName;
     private String paragraphs;
+    private String dialog;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getWorkspace() {
         return workspace;
@@ -82,5 +92,13 @@ public class ContentSelection {
 
     public void setParagraphs(String paragraphs) {
         this.paragraphs = paragraphs;
+    }
+
+    public String getDialog() {
+        return dialog;
+    }
+
+    public void setDialog(String dialog) {
+        this.dialog = dialog;
     }
 }

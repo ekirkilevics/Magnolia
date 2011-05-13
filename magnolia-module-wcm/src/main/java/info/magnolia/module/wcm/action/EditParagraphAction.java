@@ -33,14 +33,7 @@
  */
 package info.magnolia.module.wcm.action;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.module.wcm.ContentSelection;
-import info.magnolia.module.wcm.PageEditorHacks;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.framework.event.EventBus;
 
@@ -51,21 +44,7 @@ import info.magnolia.ui.framework.event.EventBus;
  */
 public class EditParagraphAction extends AbstractEditAction<EditParagraphActionDefinition> {
 
-    private ParagraphManager paragraphManager;
-
-    public EditParagraphAction(EditParagraphActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus, ParagraphManager paragraphManager) {
+    public EditParagraphAction(EditParagraphActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
         super(definition, dialogPresenterFactory, selection, eventBus);
-        this.paragraphManager = paragraphManager;
-    }
-
-    protected String getDialog() throws RepositoryException {
-
-        Node node = getNode();
-
-        // TODO this does not respect a dialog set in the template to override the configured dialog
-
-        String template = JCRMetadataUtil.getMetaData(node).getTemplate();
-        final Paragraph paragraph = paragraphManager.getParagraphDefinition(template);
-        return PageEditorHacks.getDialogUsedByParagraph(paragraph);
     }
 }

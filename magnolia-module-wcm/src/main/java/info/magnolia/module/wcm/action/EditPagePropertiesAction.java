@@ -33,12 +33,6 @@
  */
 package info.magnolia.module.wcm.action;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.module.wcm.ContentSelection;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.framework.event.EventBus;
@@ -50,19 +44,7 @@ import info.magnolia.ui.framework.event.EventBus;
  */
 public class EditPagePropertiesAction extends AbstractEditAction<EditPagePropertiesActionDefinition> {
 
-    private TemplateManager templateManager;
-
-    public EditPagePropertiesAction(EditPagePropertiesActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus, TemplateManager templateManager) {
+    public EditPagePropertiesAction(EditPagePropertiesActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
         super(definition, dialogPresenterFactory, selection, eventBus);
-        this.templateManager = templateManager;
-    }
-
-    protected String getDialog() throws RepositoryException {
-
-        Node node = getNode();
-
-        String template = JCRMetadataUtil.getMetaData(node).getTemplate();
-        Template templateDefinition = templateManager.getTemplateDefinition(template);
-        return templateDefinition.getDialog();
     }
 }

@@ -105,10 +105,10 @@ public class AreaBarWidget extends AbstractBarWidget {
     protected void onSelect() {
         super.onSelect();
         if (type.equals("collection"))
-            pageEditor.updateSelection(this, "area", workspace, path, name, null, paragraphs);
+            pageEditor.updateSelection(this, "area", workspace, path, name, null, paragraphs, dialog);
         else
         if (type.equals("slot"))
-            pageEditor.updateSelection(this, "area", workspace, path, null, name, paragraphs);
+            pageEditor.updateSelection(this, "area", workspace, path, null, name, paragraphs, dialog);
     }
 
     @Override

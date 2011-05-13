@@ -117,20 +117,19 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         toolboxView.showRack(wcmModule.getToolboxConfiguration().getPage());
     }
 
-    private String type; // "page" "area" "paragraph"
     private ContentSelection contentSelection;
 
     @Override
     public void onSelectionChanged(SelectionChangedEvent event) {
 
-        this.type = event.getType();
-
         this.contentSelection = new ContentSelection();
+        this.contentSelection.setType(event.getType());
         this.contentSelection.setWorkspace(event.getWorkspace());
         this.contentSelection.setPath(event.getPath());
         this.contentSelection.setCollectionName(event.getCollectionName());
         this.contentSelection.setNodeName(event.getNodeName());
         this.contentSelection.setParagraphs(event.getParagraphs());
+        this.contentSelection.setDialog(event.getDialog());
 
         if ("page".equals(event.getType())) {
             toolboxView.showRack(wcmModule.getToolboxConfiguration().getPage());
@@ -188,27 +187,28 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         dialogPresenter.showDialog();
     }
 
-    public void addParagraph(String workspace, String path, String collectionName, String nodeName, String paragraphs) {
+    public void addParagraph(String workspace, String path, String collectionName, String nodeName, String paragraphs, String dialog) {
 
         ContentSelection selection = new ContentSelection();
+        selection.setDialog(dialog);
         selection.setWorkspace(workspace);
         selection.setPath(path);
         selection.setCollectionName(collectionName);
         selection.setNodeName(nodeName);
         selection.setParagraphs(paragraphs);
+        selection.setDialog(dialog);
 
         executeAction(new AddParagraphActionDefinition(), selection);
     }
 
-    public void selectionChanged(String type, String workspace, String path, String collectionName, String nodeName, String paragraphs) {
+    public void selectionChanged(String type, String workspace, String path, String collectionName, String nodeName, String paragraphs, String dialog) {
         // TODO we fire the event from this class and receives it in this class, not really necessary
-        eventBus.fireEvent(new SelectionChangedEvent(type, workspace, path, collectionName, nodeName, paragraphs));
+        eventBus.fireEvent(new SelectionChangedEvent(type, workspace, path, collectionName, nodeName, paragraphs, dialog));
     }
 
     @Override
     public void onPageChanged() {
         this.contentSelection = null;
-        this.type = null;
         this.toolboxView.showRack(wcmModule.getToolboxConfiguration().getPage());
     }
 

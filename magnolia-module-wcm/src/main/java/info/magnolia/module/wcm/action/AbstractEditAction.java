@@ -34,12 +34,7 @@
 package info.magnolia.module.wcm.action;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.wcm.ContentSelection;
 import info.magnolia.module.wcm.PageChangedEvent;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
@@ -72,14 +67,7 @@ public abstract class AbstractEditAction<D extends ActionDefinition> extends Act
     @Override
     public void execute() throws ActionExecutionException {
 
-        String dialogName;
-        try {
-            dialogName = getDialog();
-        } catch (RepositoryException e) {
-            throw new ActionExecutionException(e);
-        }
-
-        DialogPresenter dialogPresenter = dialogPresenterFactory.createDialog(dialogName);
+        DialogPresenter dialogPresenter = dialogPresenterFactory.createDialog(selection.getDialog());
         dialogPresenter.setWorkspace(selection.getWorkspace());
         dialogPresenter.setPath(selection.getPath());
         dialogPresenter.setCollectionName(selection.getCollectionName());
@@ -91,32 +79,5 @@ public abstract class AbstractEditAction<D extends ActionDefinition> extends Act
             }
         });
         dialogPresenter.showDialog();
-    }
-
-    protected abstract String getDialog() throws RepositoryException;
-
-    // TODO This is duplicated in DialogEditorPresenter
-    protected Node getNode() throws RepositoryException {
-        Node node;
-        try {
-            node = MgnlContext.getJCRSession(selection.getWorkspace()).getNode(selection.getPath());
-        } catch (PathNotFoundException e) {
-            return null;
-        }
-        if (StringUtils.isNotEmpty(selection.getCollectionName())) {
-            if (node.hasNode(selection.getCollectionName())) {
-                node = node.getNode(selection.getCollectionName());
-            } else {
-                return null;
-            }
-        }
-        if (StringUtils.isNotEmpty(selection.getNodeName())) {
-            if (node.hasNode(selection.getNodeName())) {
-                node = node.getNode(selection.getNodeName());
-            } else {
-                return null;
-            }
-        }
-        return node;
     }
 }

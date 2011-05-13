@@ -49,6 +49,9 @@ import com.vaadin.terminal.gwt.client.UIDL;
  */
 public class VPageEditor extends HTML implements Paintable, EventListener {
 
+    public static final String EDIT_MARKER = "cms:edit";
+    public static final String AREA_MARKER = "cms:area";
+
     public static final String SELECTED_WORKSPACE = "selectedWorkspace";
     public static final String SELECTED_PATH = "selectedPath";
     public static final String SELECTED_COLLECTION_NAME = "selectedCollectionName";
@@ -62,6 +65,7 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
     public static final String MOVE_AFTER = "moveAfter";
     public static final String MOVE = "move";
     public static final String PARAGRAPHS = "paragraphs";
+    public static final String DIALOG = "dialog";
 
     private IFrameElement iFrameElement;
     private ApplicationConnection client;
@@ -117,38 +121,44 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
         // TODO when the user navigates in the iframe we need to respond accordingly
         Element documentElement = iFrameElement.getContentDocument().getDocumentElement();
         detectCmsTag(documentElement, null);
+        // TODO ideally we would do updateSelection() to select the page here but we don't have access to website+path
+        // TODO so this is now done in PageEditorActivity
+        // TODO this could maybe be solved with a special page marker, but that requires a new directive
     }
 
-    private void detectCmsTag(Element element, AbstractBarWidget parentBar) {
-
-        if (element.getTagName().equalsIgnoreCase("cms:edit")) {
-            EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, element);
-            editBarWidget.attach(element);
-        } else if (element.getTagName().equalsIgnoreCase("cms:area")) {
-            AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, element);
-            areaBarWidget.attach(element);
-        }
-
-        // TODO the parentBar isn't carried along since cms:edit isn't inside cms:area
+    private void detectCmsTag(Element element, AreaBarWidget parentBar) {
 
         for (int i = 0; i < element.getChildCount(); i++) {
-            Node child = element.getChild(i);
-            if (child.getNodeType() == Element.ELEMENT_NODE) {
-                detectCmsTag((Element) child, parentBar);
+            Node childNode = element.getChild(i);
+            if (childNode.getNodeType() == Element.ELEMENT_NODE) {
+                Element child = (Element) childNode;
+
+                if (child.getTagName().equalsIgnoreCase(EDIT_MARKER)) {
+                    EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
+                    editBarWidget.attach(child);
+                } else
+                if (child.getTagName().equalsIgnoreCase(AREA_MARKER)) {
+                    AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, child);
+                    areaBarWidget.attach(child);
+                    parentBar = areaBarWidget;
+                }
+
+                detectCmsTag(child, parentBar);
             }
         }
     }
 
     public void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName) {
-        updateVariable(OPEN_DIALOG, dialog);
+        updateVariable(OPEN_DIALOG, "dummy");
         updateVariable(SELECTED_WORKSPACE, workspace);
         updateVariable(SELECTED_PATH, path);
         updateVariable(SELECTED_COLLECTION_NAME, collectionName);
         updateVariable(SELECTED_NODE_NAME, nodeName);
+        updateVariable(DIALOG, dialog);
         client.sendPendingVariableChanges();
     }
 
-    public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName, String paragraphs) {
+    public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName, String paragraphs, String dialog) {
         if (this.selectedBar != null && (this.selectedBar != selectedBar)) {
             this.selectedBar.deselect();
         }
@@ -159,15 +169,17 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
         updateVariable(SELECTED_COLLECTION_NAME, collectionName);
         updateVariable(SELECTED_NODE_NAME, nodeName);
         updateVariable(PARAGRAPHS, paragraphs);
+        updateVariable(DIALOG, dialog);
         client.sendPendingVariableChanges();
     }
 
     public void addParagraph(String workspace, String path, String collectionName, String nodeName, String paragraphs) {
-        updateVariable(ADD_PARAGRAPH, paragraphs);
+        updateVariable(ADD_PARAGRAPH, "dummy");
         updateVariable(SELECTED_WORKSPACE, workspace);
         updateVariable(SELECTED_PATH, path);
         updateVariable(SELECTED_COLLECTION_NAME, collectionName);
         updateVariable(SELECTED_NODE_NAME, nodeName);
+        updateVariable(PARAGRAPHS, paragraphs);
         client.sendPendingVariableChanges();
     }
 

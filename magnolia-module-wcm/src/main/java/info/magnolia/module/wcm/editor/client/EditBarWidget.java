@@ -81,15 +81,14 @@ public class EditBarWidget extends AbstractBarWidget {
     @Override
     protected void onSelect() {
         super.onSelect();
-        pageEditor.updateSelection(this, "paragraph", workspace, path, null, null, getParagraphsInsertableAtThisLocation());
+        pageEditor.updateSelection(this, "paragraph", workspace, path, null, null, getParagraphsInsertableAtThisLocation(), dialog);
     }
 
     private String getParagraphsInsertableAtThisLocation() {
         AbstractBarWidget parentBar = getParentBar();
         if (parentBar instanceof AreaBarWidget)
             return ((AreaBarWidget)parentBar).getParagraphs();
-        // TODO parent isn't set yet, so this is hard coded for now
-        return "samplesHowToFTL,freemarkerParagraph";
+        return "";
     }
 
     @Override
