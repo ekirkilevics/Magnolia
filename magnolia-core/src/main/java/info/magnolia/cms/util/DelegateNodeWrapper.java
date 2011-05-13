@@ -556,4 +556,8 @@ public abstract class DelegateNodeWrapper implements Node {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return wrapped != null ? wrapped.toString() : "";
+    }
 }
