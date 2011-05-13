@@ -48,6 +48,7 @@ public class Area extends AbstractRenderable {
     // TODO can't this be a primitive boolean instead default set to true? //Tobias
     private Boolean enabled;
 
+    // TODO - remove - use templateScript
     private String template;
 
     public Map<String, Paragraph> getParagraphs() {

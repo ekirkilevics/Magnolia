@@ -33,10 +33,10 @@
  */
 package info.magnolia.module.templating;
 
+import info.magnolia.cms.core.Content;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-
-import info.magnolia.cms.core.Content;
 
 /**
  * Abstract rendering definition used for templates and paragraphs.
@@ -50,7 +50,13 @@ public interface RenderableDefinition {
     public String getTitle();
     public String getDescription();
     public String getI18nBasename();
+
+    /**
+     * @deprecated use {@link #getTemplateScript()} instead
+     */
     public String getTemplatePath();
+
+    public String getTemplateScript();
     public String getDialog();
 
     /**

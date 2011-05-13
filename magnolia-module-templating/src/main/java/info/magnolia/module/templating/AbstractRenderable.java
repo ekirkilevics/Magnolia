@@ -57,8 +57,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class AbstractRenderable implements RenderableDefinition {
     private String name;
     private String title;
-    private String templatePath;
+    private String templateScript;
     private String dialog;
+    // TODO rename to renderType
     private String type;
     private String description;
     private String i18nBasename;
@@ -69,11 +70,11 @@ public class AbstractRenderable implements RenderableDefinition {
     private Map areas = new HashMap();
 
     /**
-     * Return always the {@link #templatePath} property.
+     * Return always the {@link #templateScript} property.
      */
     @Override
     public String determineTemplatePath(String actionResult, RenderingModel model ) {
-        return this.getTemplatePath();
+        return this.getTemplateScript();
     }
 
     /**
@@ -105,9 +106,17 @@ public class AbstractRenderable implements RenderableDefinition {
         return this.title;
     }
 
+    /**
+     * @deprecated use {@link #getTemplateScript()} instead
+     */
     @Override
     public String getTemplatePath() {
-        return this.templatePath;
+        return getTemplateScript();
+    }
+
+    @Override
+    public String getTemplateScript() {
+        return this.templateScript;
     }
 
     @Override
@@ -128,8 +137,15 @@ public class AbstractRenderable implements RenderableDefinition {
         this.name = name;
     }
 
+    /**
+     * @deprecated use {@link #setTemplateScript(String)} instead
+     */
     public void setTemplatePath(String templatePath) {
-        this.templatePath = templatePath;
+        setTemplateScript(templatePath);
+    }
+
+    public void setTemplateScript(String templateScript) {
+        this.templateScript = templateScript;
     }
 
     public void setType(String type) {
@@ -186,12 +202,12 @@ public class AbstractRenderable implements RenderableDefinition {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-        .append("name", this.name) //$NON-NLS-1$
-        .append("type", this.type) //$NON-NLS-1$
-        .append("description", this.description) //$NON-NLS-1$
-        .append("dialog", this.dialog) //$NON-NLS-1$
-        .append("title", this.title) //$NON-NLS-1$
-        .append("templatePath", this.templatePath) //$NON-NLS-1$
+        .append("name", this.name)
+        .append("type", this.type)
+        .append("description", this.description)
+        .append("dialog", this.dialog)
+        .append("title", this.title)
+        .append("templateScript", this.templateScript)
         .toString();
     }
 
