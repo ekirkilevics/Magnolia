@@ -40,19 +40,22 @@ import java.util.Map;
 
 /**
  * Abstract rendering definition used for templates and paragraphs.
- * @author pbracher
- * @version $Id$
  *
+ * @version $Id$
  */
 public interface RenderableDefinition {
     public String getName();
+    /**
+     * @deprecated since 5.0 - use {@link #getRenderType()} instead
+     */
     public String getType();
+    public String getRenderType();
     public String getTitle();
     public String getDescription();
     public String getI18nBasename();
 
     /**
-     * @deprecated use {@link #getTemplateScript()} instead
+     * @deprecated since 5.0 - use {@link #getTemplateScript()} instead
      */
     public String getTemplatePath();
 

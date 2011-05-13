@@ -51,7 +51,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * Base implementation for paragraph and template definitions. Provides the
  * {@link #modelClass} property which is used in the method
  * {@link #newModel(Content, RenderableDefinition , RenderingModel)}
- * @author pbracher
+ *
  * @version $Id$
  */
 public class AbstractRenderable implements RenderableDefinition {
@@ -59,8 +59,7 @@ public class AbstractRenderable implements RenderableDefinition {
     private String title;
     private String templateScript;
     private String dialog;
-    // TODO rename to renderType
-    private String type;
+    private String renderType;
     private String description;
     private String i18nBasename;
     private Class<? extends RenderingModel> modelClass = RenderingModelImpl.class;
@@ -107,7 +106,7 @@ public class AbstractRenderable implements RenderableDefinition {
     }
 
     /**
-     * @deprecated use {@link #getTemplateScript()} instead
+     * @deprecated since 5.0 - use {@link #getTemplateScript()} instead
      */
     @Override
     public String getTemplatePath() {
@@ -119,9 +118,17 @@ public class AbstractRenderable implements RenderableDefinition {
         return this.templateScript;
     }
 
+    /**
+     * @deprecated since 5.0 - use {@link #getRenderType()} instead
+     */
     @Override
     public String getType() {
-        return type;
+        return getRenderType();
+    }
+
+    @Override
+    public String getRenderType() {
+        return renderType;
     }
 
     @Override
@@ -138,7 +145,7 @@ public class AbstractRenderable implements RenderableDefinition {
     }
 
     /**
-     * @deprecated use {@link #setTemplateScript(String)} instead
+     * @deprecated since 5.0 - use {@link #setTemplateScript(String)} instead
      */
     public void setTemplatePath(String templatePath) {
         setTemplateScript(templatePath);
@@ -148,8 +155,15 @@ public class AbstractRenderable implements RenderableDefinition {
         this.templateScript = templateScript;
     }
 
+    /**
+     * @deprecated since 5.0 - use {@link #setRenderType(String)} instead
+     */
     public void setType(String type) {
-        this.type = type;
+        setRenderType(type);
+    }
+
+    public void setRenderType(String renderType) {
+        this.renderType = renderType;
     }
 
     public void setTitle(String title) {
@@ -203,7 +217,7 @@ public class AbstractRenderable implements RenderableDefinition {
     public String toString() {
         return new ToStringBuilder(this)
         .append("name", this.name)
-        .append("type", this.type)
+        .append("type", this.renderType)
         .append("description", this.description)
         .append("dialog", this.dialog)
         .append("title", this.title)
