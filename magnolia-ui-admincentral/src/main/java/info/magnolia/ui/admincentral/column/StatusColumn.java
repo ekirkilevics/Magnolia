@@ -49,9 +49,9 @@ import javax.jcr.Session;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.HorizontalLayout;
 
 /**
  * A column that displays icons for permissions and activation status.
@@ -103,7 +103,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
     protected class ActivationStatus extends CustomComponent implements Comparable<ActivationStatus>{
 
         private Integer status;
-        private HorizontalLayout root = new HorizontalLayout();
+        private CssLayout root = new CssLayout();
 
         public ActivationStatus(final Node node, boolean activation, boolean permissions) throws RepositoryException {
             setCompositionRoot(root);

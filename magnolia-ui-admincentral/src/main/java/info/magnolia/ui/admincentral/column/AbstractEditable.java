@@ -46,8 +46,8 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
 /**
@@ -98,7 +98,7 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
     private final String workspace;
     private final String nodeIdentifier;
     private final String propertyName;
-    private HorizontalLayout layout;
+    private CssLayout layout;
     private Presenter presenter;
 
     protected AbstractEditable(Item item, Presenter presenter) throws RepositoryException {
@@ -109,7 +109,7 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
         this.nodeIdentifier = item.isNode() ? ((Node) item).getIdentifier() : item.getParent().getIdentifier();
         this.propertyName = item.isNode() ? null: item.getName();
 
-        this.layout = new HorizontalLayout();
+        this.layout = new CssLayout();
 
         // TODO the double click event should be removed when the text field is visible, otherwise its not possible to double click to mark words
         layout.addListener(new LayoutEvents.LayoutClickListener() {
