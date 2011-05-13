@@ -46,6 +46,8 @@ import javax.jcr.Value;
 /**
  * Renames a property found in a given subnode of all modules; typically, renames "path" to "templatePath"
  * for all nodes under "paragraphs" for each module.
+ *
+ * @version $Id$
  */
 public class RenamePropertyAllModulesNodeTask extends AllModulesNodeOperation {
     private final String srcPropertyName;
