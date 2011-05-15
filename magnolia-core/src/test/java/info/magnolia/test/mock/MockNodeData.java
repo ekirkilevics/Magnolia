@@ -254,6 +254,12 @@ public class MockNodeData extends AbstractNodeData {
         case PropertyType.STRING:
             setValue(value.getString());
             break;
+        case PropertyType.LONG:
+            setValue(value.getLong());
+            break;
+        case PropertyType.DATE:
+            setValue(value.getDate());
+            break;
         case PropertyType.BOOLEAN:
             setValue(value.getBoolean());
         // TODO complete when required...
