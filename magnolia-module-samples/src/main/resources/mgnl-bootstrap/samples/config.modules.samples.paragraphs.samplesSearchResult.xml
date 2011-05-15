@@ -25,13 +25,13 @@
   <sv:property sv:name="modelClass" sv:type="String">
     <sv:value>info.magnolia.module.samples.model.SampleParagraphModel</sv:value>
   </sv:property>
-  <sv:property sv:name="templatePath" sv:type="String">
+  <sv:property sv:name="templateScript" sv:type="String">
     <sv:value>/templates/samples/paragraphs/searchResult.jsp</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
     <sv:value>paragraphs.samplesSearchResult.title</sv:value>
   </sv:property>
-  <sv:property sv:name="type" sv:type="String">
+  <sv:property sv:name="renderType" sv:type="String">
     <sv:value>jsp</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">

@@ -15,13 +15,13 @@
   <sv:property sv:name="modelClass" sv:type="String">
     <sv:value>info.magnolia.module.admininterface.templates.MgnlDeletedTemplateModel</sv:value>
   </sv:property>
-  <sv:property sv:name="templatePath" sv:type="String">
+  <sv:property sv:name="templateScript" sv:type="String">
     <sv:value>/templates/mgnlDeleted.ftl</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
     <sv:value>templates.mgnlDeleted.title</sv:value>
   </sv:property>
-  <sv:property sv:name="type" sv:type="String">
+  <sv:property sv:name="renderType" sv:type="String">
     <sv:value>freemarker</sv:value>
   </sv:property>
   <sv:property sv:name="visible" sv:type="String">

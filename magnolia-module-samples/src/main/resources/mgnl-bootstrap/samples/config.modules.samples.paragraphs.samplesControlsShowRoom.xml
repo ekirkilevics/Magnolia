@@ -22,13 +22,13 @@
   <sv:property sv:name="i18nBasename" sv:type="String">
     <sv:value>info.magnolia.module.samples.messages</sv:value>
   </sv:property>
-  <sv:property sv:name="templatePath" sv:type="String">
+  <sv:property sv:name="templateScript" sv:type="String">
     <sv:value>samples/paragraphs/controls.ftl</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
     <sv:value>paragraphs.samplesControlsShowRoom.title</sv:value>
   </sv:property>
-  <sv:property sv:name="type" sv:type="String">
+  <sv:property sv:name="renderType" sv:type="String">
     <sv:value>freemarker</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">

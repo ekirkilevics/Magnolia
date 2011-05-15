@@ -21,7 +21,7 @@
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>
   </sv:property>
-  <sv:property sv:name="templatePath" sv:type="String">
+  <sv:property sv:name="templateScript" sv:type="String">
     <sv:value>samples/templates/main2.ftl</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
@@ -30,7 +30,7 @@
   <sv:property sv:name="titleSize" sv:type="String">
     <sv:value>1</sv:value>
   </sv:property>
-  <sv:property sv:name="type" sv:type="String">
+  <sv:property sv:name="renderType" sv:type="String">
     <sv:value>freemarker</sv:value>
   </sv:property>
   <sv:property sv:name="visible" sv:type="String">
