@@ -44,9 +44,10 @@ import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.model.Version;
 
-import javax.jcr.RepositoryException;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
 
 /**
  *
@@ -89,7 +90,9 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
 
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         assertConfig("My Test Template", tplPath + "/title");
-        assertConfig("/some/path.ftl", tplPath + "/templatePath");
+        
+        // 5.0 renames templatePath to templateScript
+        assertConfig("/some/path.ftl", tplPath + "/templateScript");
         // non-standard props are supposed to be moved to the "parameters" subnode
         assertConfig("someValue", tplPath + "/parameters/someProperty");
         assertFalse("path property should have been removed", hm.isExist(tplPath + "/path"));
@@ -119,7 +122,9 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
 
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         assertConfig("My Test Template", tplPath + "/title");
-        assertConfig("/some/path.ftl", tplPath + "/templatePath");
+
+        // 5.0 renames templatePath to templateScript
+        assertConfig("/some/path.ftl", tplPath + "/templateScript");
         // non-standard props are supposed to be moved to the "parameters" subnode
         assertConfig("someValue", tplPath + "/parameters/someProperty");
         assertFalse("path property should have been removed", hm.isExist(tplPath + "/path"));
@@ -148,7 +153,9 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
 
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         assertConfig("My Test Template", tplPath + "/title");
-        assertConfig("/some/path.ftl", tplPath + "/templatePath");
+
+        // 5.0 renames templatePath to templateScript
+        assertConfig("/some/path.ftl", tplPath + "/templateScript");
         // non-standard props are supposed to be moved to the "parameters" subnode
         assertConfig("someValue", tplPath + "/parameters/someProperty");
         assertFalse("path property should have been removed", hm.isExist(tplPath + "/path"));
