@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+   "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+   "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+  <!-- extra suppression: -->
+  <suppress files="src/main/java/com/vaadin/.*" checks=".*" />
+
+  <!-- our regular exclusions, as per build-tools:  -->
+  <suppress files="src/test/.*" checks="JavadocType" />
+  <suppress files="src/test/.*" checks="JavadocStyle" />
+  <!-- Excluding Clover-generated sources - See BUILD-57 -->
+  <suppress files="target/clover/.*" checks=".*" />
+</suppressions>
