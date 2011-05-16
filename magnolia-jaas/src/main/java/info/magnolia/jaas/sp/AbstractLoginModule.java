@@ -197,18 +197,16 @@ public abstract class AbstractLoginModule implements LoginModule {
         try {
             // TODO: really?
             RealmCallback realmCallback = null;
-            if (this.callbackHandler instanceof CallbackHandler) {
-                log.debug("Removing RealmCallback unsupported by JR before passing through to JR CallbackHandler.");
-                List<Callback> tmp = new ArrayList<Callback>();
-                for (Callback callback : callbacks) {
-                    if (!(callback instanceof RealmCallback)) {
-                        tmp.add(callback);
-                    } else {
-                        realmCallback = (RealmCallback) callback;
-                    }
+            log.debug("Removing RealmCallback unsupported by JR before passing through to JR CallbackHandler.");
+            List<Callback> tmp = new ArrayList<Callback>();
+            for (Callback callback : callbacks) {
+                if (!(callback instanceof RealmCallback)) {
+                    tmp.add(callback);
+                } else {
+                    realmCallback = (RealmCallback) callback;
                 }
-                callbacks = tmp.toArray(new Callback[tmp.size()]);
             }
+            callbacks = tmp.toArray(new Callback[tmp.size()]);
             this.callbackHandler.handle(callbacks);
             this.name = ((NameCallback) callbacks[0]).getName();
             this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
