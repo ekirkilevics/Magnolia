@@ -56,7 +56,6 @@ public class AreaDirective extends AbstractDirective {
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
 
-
         AreaComponent marker = new AreaComponent(serverCfg, aggState);
         initContentComponent(params, marker);
 
@@ -64,7 +63,7 @@ public class AreaDirective extends AbstractDirective {
         String name = string(params, "name", null);
         String paragraphs = string(params, "paragraphs", null);
         String dialog = string(params, "dialog", null);
-        String type = string(params, "type", "collection");
+        String type = string(params, "type", AreaComponent.DEFAULT_TYPE);
 
         marker.setArea(area);
         marker.setName(name);
