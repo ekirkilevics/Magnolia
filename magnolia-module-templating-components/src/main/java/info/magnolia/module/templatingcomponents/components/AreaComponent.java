@@ -33,25 +33,26 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Iterator;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.Area;
-import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphConfig;
 import info.magnolia.module.templating.RenderException;
 import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.objectfactory.Components;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Outputs an area.
@@ -175,8 +176,8 @@ public class AreaComponent extends AbstractContentComponent {
         if (StringUtils.isNotEmpty(paragraphs)) {
             return paragraphs;
         }
-        if (area != null && area.getParagraphs().size() > 0) {
-            Iterator<Paragraph> iterator = area.getParagraphs().values().iterator();
+        if (area != null && area.getAvailableParagraphs().size() > 0) {
+            Iterator<ParagraphConfig> iterator = area.getAvailableParagraphs().values().iterator();
             StringBuilder builder = new StringBuilder();
             builder.append(iterator.next().getName());
             while (iterator.hasNext()) {
