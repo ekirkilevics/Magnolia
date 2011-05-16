@@ -4361,7 +4361,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         }
                         if (widget != null) {
                             // widget is now the closest widget to this row
-                            if (widget instanceof VLabel
+                            if ((widget instanceof TableCellWidget && ((TableCellWidget) widget)
+                                    .isRowSelector())
+                                    || widget instanceof VLabel
                                     || widget instanceof VEmbedded
                                     || (widget instanceof VTextField && ((VTextField) widget)
                                             .isReadOnly())) {

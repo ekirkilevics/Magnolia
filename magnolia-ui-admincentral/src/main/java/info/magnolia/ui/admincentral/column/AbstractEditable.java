@@ -35,6 +35,10 @@ package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.admincentral.column.client.VEditable;
+import info.magnolia.ui.admincentral.container.ContainerItemId;
+import info.magnolia.ui.admincentral.container.JcrContainer;
+import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
 import info.magnolia.ui.framework.editor.Editor;
 
 import javax.jcr.Item;
@@ -45,21 +49,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.event.LayoutEvents;
+import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 
+
 /**
- * UI component that displays a label and on double click opens it for editing by switching the label to save text field.
- * Implements {@link Comparable} to allow sorting of columns holding this component with Vaadin. Default implementation for
- * <code>compareTo(..),</code> method uses jcr's item name for comparison. Subclasses may use more specific properties.
- *
+ * UI component that displays a label and on double click opens it for editing by switching the
+ * label to save text field. Implements {@link Comparable} to allow sorting of columns holding this
+ * component with Vaadin. Default implementation for <code>compareTo(..),</code> method uses jcr's
+ * item name for comparison. Subclasses may use more specific properties.
+ * 
  * @author tmattsson
+ * @author mrichert
  */
-public abstract class AbstractEditable extends CustomComponent implements Comparable<AbstractEditable>{
+@ClientWidget(value = VEditable.class)
+public abstract class AbstractEditable extends CustomComponent implements Comparable<AbstractEditable> {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractEditable.class);
+
     /**
      * Presenter for AbstractEditable.
      */
@@ -79,6 +89,7 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
     public static class ComponentAndEditor {
 
         private Component component;
+
         private Editor editor;
 
         public ComponentAndEditor(Component component, Editor editor) {
@@ -96,7 +107,9 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
     }
 
     private final String workspace;
+
     private final String nodeIdentifier;
+
     private final String propertyName;
     private CssLayout layout;
     private Presenter presenter;
@@ -105,31 +118,44 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
 
         this.presenter = presenter;
 
-        this.workspace = item.getSession().getWorkspace().getName();
-        this.nodeIdentifier = item.isNode() ? ((Node) item).getIdentifier() : item.getParent().getIdentifier();
-        this.propertyName = item.isNode() ? null: item.getName();
+        workspace = item.getSession().getWorkspace().getName();
+        nodeIdentifier = item.isNode() ? ((Node) item).getIdentifier() : item.getParent().getIdentifier();
+        propertyName = item.isNode() ? null: item.getName();
 
-        this.layout = new CssLayout();
+        layout = new CssLayout();
 
         // TODO the double click event should be removed when the text field is visible, otherwise its not possible to double click to mark words
         layout.addListener(new LayoutEvents.LayoutClickListener() {
 
             @Override
             public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
-                if (event.isDoubleClick()) {
+                Component parent = AbstractEditable.this.getParent();
+                while (!(parent instanceof JcrBrowser)) {
+                    parent = parent.getParent();
+                    if (parent == null) {
+                        return;
+                    }
+                }
+                JcrBrowser browser = (JcrBrowser) parent;
+                String path;
+                try {
+                    path = getItem().getPath();
+                }
+                catch (RepositoryException e) {
+                    throw new RuntimeRepositoryException(e);
+                }
+                JcrContainer container = browser.getContainer();
+                ContainerItemId itemId = container.getItemByPath(path);
+
+                if (browser.isSelected(itemId)) {
                     try {
                         Item item = getItem();
                         ComponentAndEditor componentAndEditor = getComponentAndEditor(item);
                         AbstractEditable.this.presenter.edit(item, componentAndEditor.getEditor());
                         layout.removeAllComponents();
                         layout.addComponent(componentAndEditor.getComponent());
-                    } catch (RepositoryException e) {
-                        throw new RuntimeRepositoryException(e);
                     }
-                } else {
-                    try {
-                        AbstractEditable.this.presenter.onClick(getItem());
-                    } catch (RepositoryException e) {
+                    catch (RepositoryException e) {
                         throw new RuntimeRepositoryException(e);
                     }
                 }
@@ -139,6 +165,7 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
         layout.setSizeFull();
         setCompositionRoot(layout);
         setSizeFull();
+
         //FIXME this is a hack to show the label which is a div inline with the preceding icons. It probably breaks on IE as it uses display: inline-block.
         addStyleName("m-inline-div");
     }
@@ -167,12 +194,13 @@ public abstract class AbstractEditable extends CustomComponent implements Compar
     @Override
     public int compareTo(AbstractEditable o) {
         try {
-            log.debug("comparing {} and {}", this.getItem().getName().toLowerCase(), o.getItem().getName().toLowerCase());
-            return this.getItem().getName().toLowerCase().compareTo(o.getItem().getName().toLowerCase());
+            log.debug("comparing {} and {}", getItem().getName().toLowerCase(), o.getItem().getName().toLowerCase());
+            return getItem().getName().toLowerCase().compareTo(o.getItem().getName().toLowerCase());
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
+
     protected abstract String getLabelText(Item item) throws RepositoryException;
 
     protected abstract ComponentAndEditor getComponentAndEditor(Item item) throws RepositoryException;

@@ -21,6 +21,11 @@
       <artifactId>magnolia-module-wcm</artifactId>
       <version>${project.version}</version>
     </dependency>
+<!--     <dependency> -->
+<!--       <groupId>info.magnolia</groupId> -->
+<!--       <artifactId>magnolia-ui-admincentral</artifactId> -->
+<!--       <version>${project.version}</version> -->
+<!--     </dependency> -->
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>

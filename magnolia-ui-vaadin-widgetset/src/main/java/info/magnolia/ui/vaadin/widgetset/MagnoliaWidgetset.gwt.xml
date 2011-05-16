@@ -5,7 +5,7 @@
     <inherits name="com.vaadin.addon.treetable.TreetableWidgetset" />
     <inherits name="info.magnolia.ui.vaadin.integration.widget.historian.HistorianWidgetset"/>
     <inherits name="info.magnolia.module.wcm.editor.PageEditorWidgetset" />
-
+    <inherits name="info.magnolia.ui.admincentral.column.ColumnWidgetset" />
 
     <!--
      Uncomment the following to compile the widgetset for one browser only.

@@ -33,8 +33,23 @@
  */
 package info.magnolia.ui.admincentral.tree.view;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.container.ContainerItemId;
+import info.magnolia.ui.admincentral.container.JcrContainer;
+import info.magnolia.ui.admincentral.jcr.JCRUtil;
+import info.magnolia.ui.admincentral.tree.container.HierarchicalJcrContainer;
+import info.magnolia.ui.admincentral.tree.model.TreeModel;
+import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.action.ActionDefinition;
+import info.magnolia.ui.model.action.ActionExecutionException;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
@@ -53,19 +68,6 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.container.ContainerItemId;
-import info.magnolia.ui.admincentral.container.JcrContainer;
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
-import info.magnolia.ui.admincentral.tree.container.HierarchicalJcrContainer;
-import info.magnolia.ui.admincentral.tree.model.TreeModel;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.action.ActionDefinition;
-import info.magnolia.ui.model.action.ActionExecutionException;
-import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
-import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
  * User interface component that extends TreeTable and uses a WorkbenchDefinition for layout and invoking command callbacks.
@@ -98,7 +100,7 @@ public class JcrBrowser extends TreeTable {
 
         addDragAndDrop();
 
-        this.container = new HierarchicalJcrContainer(treeModel);
+        container = new HierarchicalJcrContainer(treeModel);
 
         for (Column<?> treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();
@@ -135,7 +137,7 @@ public class JcrBrowser extends TreeTable {
         private JcrBrowserAction(MenuItemDefinition menuItemDefinition) {
             super(menuItemDefinition.getLabel());
             super.setIcon(new ExternalResource(MgnlContext.getContextPath() + menuItemDefinition.getIcon()));
-            this.actionDefinition = menuItemDefinition.getActionDefinition();
+            actionDefinition = menuItemDefinition.getActionDefinition();
         }
 
         public void handleAction(ContainerItemId itemId) {
@@ -303,5 +305,9 @@ public class JcrBrowser extends TreeTable {
             throw new RuntimeRepositoryException(e);
         }
         return super.getItemIcon(itemId);
+    }
+
+    public JcrContainer getContainer() {
+        return container;
     }
 }
