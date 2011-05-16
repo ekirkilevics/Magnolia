@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,38 +33,38 @@
  */
 package info.magnolia.module.templating;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
- * Represents an area definition.
+ * Keeps configuration for a paragraph - name and roles it is available for.
  *
  * @version $Id$
+ *
+ * TODO dlipp: implementation copied from info.magnolia.module.templatingkit.templates.ParagraphConfig as
+ * templating-components has no dependency to templating. Check whether the impl in Templating should get
+ * deprecated and references replaced by this impl.
  */
-public class Area extends AbstractRenderable {
+public class ParagraphConfig {
 
-    private Map<String, ParagraphConfig> availableParagraphs = new LinkedHashMap<String, ParagraphConfig>();
+    private Collection<String> roles = new ArrayList<String>();
 
-    // TODO can't this be a primitive boolean instead default set to true? //Tobias
-    private Boolean enabled;
+    private String name;
 
-    public Map<String, ParagraphConfig> getAvailableParagraphs() {
-        return availableParagraphs;
+    public String getName() {
+        return this.name;
     }
 
-    public void setAvailableParagraphs(Map<String, ParagraphConfig> availableParagraphs) {
-        this.availableParagraphs = availableParagraphs;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void addAvailableParagraph(String name, ParagraphConfig paragraphConfig) {
-        this.availableParagraphs.put(name, paragraphConfig);
+    public Collection<String> getRoles() {
+        return this.roles;
     }
 
-    public Boolean getEnabled() {
-        return this.enabled;
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
     }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
 }
