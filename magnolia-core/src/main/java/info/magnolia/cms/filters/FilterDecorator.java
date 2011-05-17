@@ -67,6 +67,8 @@ public class FilterDecorator extends AbstractMgnlFilter {
      * Parameters passed in the config.
      */
     private Map config;
+    
+    private String filterName;
 
     /**
      * Logger.
@@ -75,16 +77,29 @@ public class FilterDecorator extends AbstractMgnlFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        if (this.decoratedFilter == null) {
+            filterName = filterConfig.getFilterName();
+            log.warn("{} is not correctly configured or can't be instantiated.", filterName);
+            return;
+        }
         this.decoratedFilter.init(new CustomFilterConfig(filterConfig, config));
     }
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
+        if (this.decoratedFilter == null) {
+            log.warn("{} is not correctly configured or can't be instantiated.", filterName);
+            return;
+        }
         this.decoratedFilter.doFilter(request, response, chain);
     }
 
     @Override
     public void destroy() {
+        if (this.decoratedFilter == null) {
+            log.warn("{} is not correctly configured or can't be instantiated.", filterName);
+            return;
+        }
         this.decoratedFilter.destroy();
     }
 
@@ -111,7 +126,7 @@ public class FilterDecorator extends AbstractMgnlFilter {
 
         private Map parameters;
 
-        private FilterConfig parent;
+        private final FilterConfig parent;
 
         public CustomFilterConfig(FilterConfig parent, Map parameters) {
             super();
@@ -124,22 +139,18 @@ public class FilterDecorator extends AbstractMgnlFilter {
             }
         }
 
-        @Override
         public String getFilterName() {
             return parent.getFilterName();
         }
 
-        @Override
         public String getInitParameter(String name) {
             return (String) parameters.get(name);
         }
 
-        @Override
         public Enumeration getInitParameterNames() {
             return new Hashtable(parameters).keys();
         }
 
-        @Override
         public ServletContext getServletContext() {
             return parent.getServletContext();
         }
