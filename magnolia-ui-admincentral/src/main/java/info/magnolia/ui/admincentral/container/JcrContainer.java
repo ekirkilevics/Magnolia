@@ -119,7 +119,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     }
 
     protected abstract Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException;
-
+    //TODO do we really need this method or might instead refactor getPage() to take a query.
     public abstract void updateContainerIds(NodeIterator iterator) throws RepositoryException;
 
     @Override

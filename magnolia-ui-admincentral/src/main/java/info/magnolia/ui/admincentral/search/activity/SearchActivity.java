@@ -110,7 +110,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
 
             final String stmt = "//element(*,mgnl:content)[jcr:contains(@*,'*"+place.getSearchParameters().getQuery()+"*')]";
             final QueryImpl query = (QueryImpl) jcrQueryManager.createQuery(stmt , Query.XPATH);
-
+            //FIXME set limit and offset by getting them from the Container (need to exposed). We would not need this if we chose to refactor JcrContainer.getPage()
             log.debug("executing query against workspace [{}] with statement [{}] ", place.getWorkspace(), stmt);
             final QueryResult queryResult = query.execute();
             foundItems = queryResult.getRows().getSize();
