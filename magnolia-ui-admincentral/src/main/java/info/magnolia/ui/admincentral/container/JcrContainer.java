@@ -331,7 +331,6 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
             itemIndexes.clear();
 
             try {
-                //TODO sql2 query is much slower than its xpath counterpart (on average 10 to 30 times slower). However xpath is deprecated.
                 final QueryResult queryResult = executeQuery(stmt.toString(), Query.JCR_SQL2, pageLength * CACHE_RATIO, currentOffset);
                 //final QueryResult queryResult = executeQuery("//element(*,mgnl:content)", Query.XPATH, pageLength * CACHE_RATIO, currentOffset);
                 final RowIterator iterator = queryResult.getRows();
@@ -472,7 +471,8 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
         //TODO order by
         try {
-            //TODO sql2 query is much slower than its xpath counterpart (on average 20 times slower). However xpath is deprecated. Try using JQOM
+            //FIXME sql2 query is much slower than its xpath counterpart (on average 80 times slower). However xpath is deprecated and strangely, although query execution is faster, it takes much longer
+            //to iterate over the results to the point that any benefit gained from faster query execution is lost and overall performance gets worse. Try using JQOM.
             final QueryResult queryResult = executeQuery("select * from [mgnl:content]", Query.JCR_SQL2, pageLength * CACHE_RATIO, currentOffset);
             //final QueryResult queryResult = executeQuery("//element(*,mgnl:content)", Query.XPATH, pageLength * CACHE_RATIO, currentOffset);
             final NodeIterator iterator = queryResult.getNodes();
