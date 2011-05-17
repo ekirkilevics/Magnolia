@@ -35,7 +35,12 @@ package info.magnolia.module.wcm.action;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
+import org.apache.commons.lang.StringUtils;
+
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.wcm.ContentSelection;
 import info.magnolia.module.wcm.PageChangedEvent;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.model.action.ActionBase;
@@ -48,21 +53,33 @@ import info.magnolia.ui.model.action.ActionExecutionException;
  */
 public class DeleteParagraphAction extends ActionBase<DeleteParagraphActionDefinition> {
 
-    private Node node;
+    private ContentSelection selection;
     private EventBus eventBus;
 
-    public DeleteParagraphAction(DeleteParagraphActionDefinition definition, Node node, EventBus eventBus) {
+    public DeleteParagraphAction(DeleteParagraphActionDefinition definition, ContentSelection selection, EventBus eventBus) {
         super(definition);
-        this.node = node;
+        this.selection = selection;
         this.eventBus = eventBus;
     }
 
     @Override
     public void execute() throws ActionExecutionException {
         try {
+
+            Session session = MgnlContext.getJCRSession(selection.getWorkspace());
+            Node node = session.getNode(selection.getPath());
+            if (StringUtils.isNotEmpty(selection.getNodeName())) {
+                if (StringUtils.isNotEmpty(selection.getCollectionName())) {
+                    node = node.getNode(selection.getCollectionName());
+                }
+                node = node.getNode(selection.getNodeName());
+            }
+
             node.remove();
             node.getSession().save();
+
             eventBus.fireEvent(new PageChangedEvent());
+
         } catch (RepositoryException e) {
             throw new ActionExecutionException(e);
         }
