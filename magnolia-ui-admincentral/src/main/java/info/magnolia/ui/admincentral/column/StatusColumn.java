@@ -50,14 +50,15 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Embedded;
+
 
 /**
  * A column that displays icons for permissions and activation status.
- *
+ * 
  * @author dlipp
  * @author tmattsson
+ * @author mrichert
  */
 public class StatusColumn extends AbstractColumn<StatusColumnDefinition> implements Serializable {
 
@@ -89,32 +90,17 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
     public Component getComponent(Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
-            return new ActivationStatus(node, activation, permissions);
-        }
-        return null;
-    }
-
-    /**
-     * A comparable component which embeds an icon.
-     * TODO: extract it as a top-level class?
-     * @author fgrilli
-     *
-     */
-    protected class ActivationStatus extends CustomComponent implements Comparable<ActivationStatus>{
-
-        private Integer status;
-        private CssLayout root = new CssLayout();
-
-        public ActivationStatus(final Node node, boolean activation, boolean permissions) throws RepositoryException {
-            setCompositionRoot(root);
-            if(activation) {
-                this.status = JCRMetadataUtil.getMetaData(node).getActivationStatus();
-                Embedded activationStatus = new Embedded();
+            // return new ActivationStatus(node, activation, permissions);
+            Integer status;
+            Embedded activationStatus = null;
+            Embedded permissionStatus = null;
+            if (activation) {
+                status = JCRMetadataUtil.getMetaData(node).getActivationStatus();
+                activationStatus = new Embedded();
                 activationStatus.setType(Embedded.TYPE_IMAGE);
                 activationStatus.setSource(new ExternalResource(UIUtil.getActivationStatusIconURL(node)));
                 activationStatus.setWidth(16, Sizeable.UNITS_PIXELS);
                 activationStatus.setHeight(16, Sizeable.UNITS_PIXELS);
-                root.addComponent(activationStatus);
             }
             if (permissions) {
                 try {
@@ -122,27 +108,33 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
                     // implementation:
                     // if (permissions && !node.isGranted(info.magnolia.cms.security.Permission.WRITE))
                     node.getSession().checkPermission(node.getPath(), Session.ACTION_SET_PROPERTY);
-
-                } catch (AccessControlException e) {
+                }
+                catch (AccessControlException e) {
                     // does not have permission to set properties - in that case will return two Icons
                     // in a layout for being displayed...
-                    Embedded permissionStatus = new Embedded();
+                    permissionStatus = new Embedded();
                     permissionStatus.setType(Embedded.TYPE_IMAGE);
-                    permissionStatus.setSource(new ExternalResource(MgnlContext.getContextPath() + UIUtil.RESOURCES_ICONS_16_PATH + "pen_blue_canceled.gif"));
+                    permissionStatus.setSource(new ExternalResource(MgnlContext.getContextPath()
+                        + UIUtil.RESOURCES_ICONS_16_PATH
+                        + "pen_blue_canceled.gif"));
                     permissionStatus.setWidth(16, Sizeable.UNITS_PIXELS);
                     permissionStatus.setHeight(16, Sizeable.UNITS_PIXELS);
-                    root.addComponent(permissionStatus);
                 }
             }
+            if (activation && permissions) {
+                CssLayout root = new TableCellLayout();
+                root.addComponent(activationStatus);
+                root.addComponent(permissionStatus);
+                return root;
+            }
+            else if (activation) {
+                return activationStatus;
+            }
+            else if (permissions) {
+                return permissionStatus;
+            }
+            return new TableCellLayout();
         }
-
-        public Integer getStatus() {
-            return status;
-        }
-
-        @Override
-        public int compareTo(ActivationStatus o) {
-            return status.compareTo(o.getStatus());
-        }
+        return null;
     }
 }
