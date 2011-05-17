@@ -298,6 +298,22 @@ public class JCRUtil {
         orderAfter(nodeToMove, target.getName());
     }
 
+    public static boolean isFirstSibling(Node node) throws RepositoryException {
+        Node parent = node.getParent();
+        NodeIterator nodes = parent.getNodes();
+        return isSame(nodes.nextNode(), node);
+    }
+
+    public static boolean isLastSibling(Node node) throws RepositoryException {
+        Node parent = node.getParent();
+        NodeIterator nodes = parent.getNodes();
+        Node last = null;
+        while (nodes.hasNext()) {
+            last = nodes.nextNode();
+        }
+        return isSame(last, node);
+    }
+
     /**
      * Returns true if both arguments represents the same node. In case the nodes are wrapped the comparison is done
      * one the actual nodes behind the wrappers.
