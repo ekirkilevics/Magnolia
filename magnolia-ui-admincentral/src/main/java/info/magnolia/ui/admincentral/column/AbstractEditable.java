@@ -61,7 +61,8 @@ import com.vaadin.ui.Label;
  * label to save text field. Implements {@link Comparable} to allow sorting of columns holding this
  * component with Vaadin. Default implementation for <code>compareTo(..),</code> method uses jcr's
  * item name for comparison. Subclasses may use more specific properties.
- * 
+ * FIXME: no longer need to implement comparable as we use jcr sorting by default now.
+ *
  * @author tmattsson
  * @author mrichert
  */

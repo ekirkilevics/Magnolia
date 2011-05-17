@@ -37,7 +37,6 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
-import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.admincentral.tree.container.HierarchicalJcrContainer;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
@@ -79,7 +78,7 @@ public class JcrBrowser extends TreeTable {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private WorkbenchDefinition workbenchDefinition;
-    private JcrContainer container;
+    private HierarchicalJcrContainer container;
     private Shell shell;
 
     private TreeModel treeModel;
@@ -100,7 +99,7 @@ public class JcrBrowser extends TreeTable {
 
         addDragAndDrop();
 
-        container = new HierarchicalJcrContainer(treeModel);
+        this.container = new HierarchicalJcrContainer(treeModel, workbenchDefinition.getWorkspace());
 
         for (Column<?> treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();
@@ -307,7 +306,7 @@ public class JcrBrowser extends TreeTable {
         return super.getItemIcon(itemId);
     }
 
-    public JcrContainer getContainer() {
+    public HierarchicalJcrContainer getContainer() {
         return container;
     }
 }

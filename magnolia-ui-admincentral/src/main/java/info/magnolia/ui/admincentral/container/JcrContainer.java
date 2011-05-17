@@ -33,17 +33,31 @@
  */
 package info.magnolia.ui.admincentral.container;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import javax.jcr.LoginException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.query.InvalidQueryException;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
+import javax.jcr.query.RowIterator;
 
+import org.apache.jackrabbit.core.query.QueryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,12 +65,13 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
+
 /**
- * Vaadin container that reads its items from a JCR repository. Subclasses need to implement {@link JcrContainer#createContainerIds(Collection)}.
+ * Vaadin container that reads its items from a JCR repository. Inspired by http://vaadin.com/directory#addon/vaadin-sqlcontainer.
  *
  * @author tmattsson
  */
-public abstract class JcrContainer extends AbstractHierarchicalContainer implements Container.ItemSetChangeNotifier {
+public abstract class JcrContainer extends AbstractContainer implements Container.Sortable, Container.Indexed, Container.ItemSetChangeNotifier  {
 
     private static final Logger log = LoggerFactory.getLogger(JcrContainer.class);
 
@@ -64,11 +79,48 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
 
     private final JcrContainerSource jcrContainerSource;
 
-    private int size = 0;
+    private int size = Integer.MIN_VALUE;
 
-    public JcrContainer(JcrContainerSource jcrContainerSource) {
+    /** Page length = number of items contained in one page. */
+    private int pageLength = DEFAULT_PAGE_LENGTH;
+    public static final int DEFAULT_PAGE_LENGTH = 100;
+
+    /** Number of items to cache = CACHE_RATIO x pageLength. */
+    public static final int CACHE_RATIO = 2;
+
+    /** Item and index caches. */
+    private final Map<Long, ContainerItemId> itemIndexes = new HashMap<Long, ContainerItemId>();
+    private final LinkedHashMap<ContainerItemId, ContainerItem> cachedItems = new LinkedHashMap<ContainerItemId, ContainerItem>();
+
+    private List<String> sortablePropertyIds = new ArrayList<String>();
+
+
+    /** Filters (WHERE) and sorters (ORDER BY) */
+    //private final List<Filter> filters = new ArrayList<Filter>();
+    //private final List<OrderBy> sorters = new ArrayList<OrderBy>();
+
+
+    /**
+     * Size updating logic. Do not update size from data source if it has been
+     * updated in the last sizeValidMilliSeconds milliseconds.
+     */
+    private final int sizeValidMilliSeconds = 10000;
+    private boolean sizeDirty = true;
+    private long sizeUpdated = System.currentTimeMillis();
+
+    private String workspace;
+
+    /** Starting row number of the currently fetched page. */
+    private int currentOffset;
+
+    public JcrContainer(JcrContainerSource jcrContainerSource, String workspace) {
         this.jcrContainerSource = jcrContainerSource;
+        this.workspace = workspace;
     }
+
+    protected abstract Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException;
+
+    public abstract void updateContainerIds(NodeIterator iterator) throws RepositoryException;
 
     @Override
     public void addListener(ItemSetChangeListener listener) {
@@ -92,7 +144,7 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
 
         log.debug("Firing item set changed");
         if (itemSetChangeListeners != null && !itemSetChangeListeners.isEmpty()) {
-            final Container.ItemSetChangeEvent event = new ItemSetChangeEvent();
+            final Container.ItemSetChangeEvent event = new AbstractContainer.ItemSetChangeEvent();
             Object[] array = itemSetChangeListeners.toArray();
             for (Object anArray : array) {
                 ItemSetChangeListener listener = (ItemSetChangeListener) anArray;
@@ -101,27 +153,38 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         }
     }
 
-    // Container
+    protected Map<Long, ContainerItemId> getItemIndexes() {
+        return itemIndexes;
+    }
+
+    protected LinkedHashMap<ContainerItemId, ContainerItem> getCachedItems() {
+        return cachedItems;
+    }
+
+    @Override
+    public void addSortableContainerProperty(String propertyId) {
+         sortablePropertyIds.add(propertyId);
+    }
+
+
+    /**************************************/
+    /** Methods from interface Container **/
+    /**************************************/
 
     @Override
     public Item getItem(Object itemId) {
-        try {
-            getJcrItem(((ContainerItemId) itemId));
+        if (!cachedItems.containsKey(itemId)) {
+            int index = indexOfId(itemId);
+            // load the item into cache
+            updateOffsetAndCache(index);
             return new ContainerItem((ContainerItemId) itemId, this);
-        } catch (RepositoryException e) {
-            throw new IllegalArgumentException("TODO");
         }
+        return cachedItems.get(itemId);
     }
 
     @Override
     public Collection<ContainerItemId> getItemIds() {
-        try {
-            Collection<ContainerItemId> collection = Collections.unmodifiableCollection(createContainerIds(jcrContainerSource.getRootItemIds()));
-            size = collection.size();
-            return collection;
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+        throw new UnsupportedOperationException("Currently unsupported.");
     }
 
     @Override
@@ -131,18 +194,22 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
 
     @Override
     public int size() {
-        log.debug("jcr container size is {}", size);
+        updateCount();
+        //log.debug("size is {}", size);
         return size;
     }
 
     @Override
     public boolean containsId(Object itemId) {
-        try {
-            getJcrItem((ContainerItemId) itemId);
-            return true;
-        } catch (RepositoryException e) {
+        if (itemId == null) {
             return false;
         }
+
+        if (cachedItems.containsKey(itemId)) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -161,72 +228,131 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         throw new UnsupportedOperationException();
     }
 
-    // Container.Hierarchical
+    /**********************************************/
+    /** Methods from interface Container.Indexed **/
+    /**********************************************/
 
-    @Override
-    public Collection<ContainerItemId> getChildren(Object itemId) {
-        try {
-            return createContainerIds(jcrContainerSource.getChildren(getJcrItem((ContainerItemId) itemId)));
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
+    public int indexOfId(Object itemId) {
+
+        if (!containsId(itemId)) {
+            return -1;
         }
-    }
-
-    @Override
-    public ContainerItemId getParent(Object itemId) {
-        try {
-            javax.jcr.Item item = getJcrItem((ContainerItemId) itemId);
-            if (item instanceof javax.jcr.Property) {
-                return createContainerId(item.getParent());
+        if (cachedItems.isEmpty()) {
+            getPage();
+        }
+        int size = size();
+        boolean wrappedAround = false;
+        while (!wrappedAround) {
+            for (Long i : itemIndexes.keySet()) {
+                if (itemIndexes.get(i).equals(itemId)) {
+                    return i.intValue();
+                }
             }
-            Node node = (Node) item;
-            return node.getDepth() > 0 ? createContainerId(node.getParent()) : null;
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
+            // load in the next page.
+            int nextIndex = (currentOffset / (pageLength * CACHE_RATIO) + 1) * (pageLength * CACHE_RATIO);
+            if (nextIndex >= size) {
+                // Container wrapped around, start from index 0.
+                wrappedAround = true;
+                nextIndex = 0;
+            }
+            updateOffsetAndCache(nextIndex);
         }
+        return -1;
     }
 
-    @Override
-    public Collection<ContainerItemId> rootItemIds() {
-        try {
-            return createContainerIds(jcrContainerSource.getRootItemIds());
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
+    public Object getIdByIndex(int index) {
+        if (index < 0 || index > size() - 1) {
+            return null;
         }
-    }
-
-    @Override
-    public boolean setParent(Object itemId, Object newParentId) throws UnsupportedOperationException {
-        fireItemSetChange();
-        return true;
-    }
-
-    @Override
-    public boolean areChildrenAllowed(Object itemId) {
-        return ((ContainerItemId) itemId).isNode();
-    }
-
-    @Override
-    public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean isRoot(Object itemId) {
-        try {
-            return jcrContainerSource.isRoot(getJcrItem((ContainerItemId) itemId));
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
+        if (itemIndexes.keySet().contains(index)) {
+            return itemIndexes.get(index);
         }
+        updateOffsetAndCache(index);
+        return itemIndexes.get(Long.valueOf(index));
+
     }
 
-    @Override
-    public boolean hasChildren(Object itemId) {
-        try {
-            return jcrContainerSource.hasChildren(getJcrItem((ContainerItemId) itemId));
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
+    /**********************************************/
+    /** Methods from interface Container.Ordered **/
+    /**********************************************/
+
+    public Object nextItemId(Object itemId) {
+        return getIdByIndex(indexOfId(itemId) + 1);
+    }
+
+    public Object prevItemId(Object itemId) {
+        return getIdByIndex(indexOfId(itemId) - 1);
+    }
+
+    public Object firstItemId() {
+        updateCount();
+        if (size == 0) {
+            return null;
         }
+        if (!itemIndexes.containsKey(0)) {
+            updateOffsetAndCache(0);
+        }
+        return itemIndexes.get(0);
+    }
+
+    public Object lastItemId() {
+        int lastIx = size() - 1;
+        if (!itemIndexes.containsKey(lastIx)) {
+            updateOffsetAndCache(size - 1);
+        }
+        return itemIndexes.get(lastIx);
+    }
+
+    public boolean isFirstId(Object itemId) {
+        return firstItemId().equals(itemId);
+    }
+
+    public boolean isLastId(Object itemId) {
+        return lastItemId().equals(itemId);
+    }
+
+    /***********************************************/
+    /** Methods from interface Container.Sortable **/
+    /***********************************************/
+    //FIXME does not work
+    public void sort(Object[] propertyId, boolean[] ascending) {
+        StringBuilder stmt = new StringBuilder("select * from [mgnl:content] as c order by ");
+        for (int i = 0; i < propertyId.length; i++) {
+            if (sortablePropertyIds.contains(propertyId[i])) {
+                stmt.append("c.")
+                .append(propertyId[i])
+                .append(" ")
+                .append(ascending[i] ? "asc":"desc")
+                .append(", ");
+            }
+            stmt.delete(stmt.lastIndexOf(","), stmt.length()-1);
+            updateCount();
+            cachedItems.clear();
+            itemIndexes.clear();
+
+            try {
+                //TODO sql2 query is much slower than its xpath counterpart (on average 10 to 30 times slower). However xpath is deprecated.
+                final QueryResult queryResult = executeQuery(stmt.toString(), Query.JCR_SQL2, pageLength * CACHE_RATIO, currentOffset);
+                //final QueryResult queryResult = executeQuery("//element(*,mgnl:content)", Query.XPATH, pageLength * CACHE_RATIO, currentOffset);
+                final RowIterator iterator = queryResult.getRows();
+                long rowCount = currentOffset;
+                while(iterator.hasNext()){
+
+                    ContainerItemId id = createContainerId(iterator.nextRow().getNode());
+                    /* Cache item */
+                    itemIndexes.put(rowCount++, id);
+                    cachedItems.put(id, new ContainerItem(id, this));
+
+                }
+            } catch (RepositoryException re){
+                throw new RuntimeRepositoryException(re);
+            }
+        }
+        refresh();
+    }
+
+    public List<String> getSortableContainerPropertyIds() {
+        return Collections.unmodifiableList(sortablePropertyIds);
     }
 
     @Override
@@ -236,7 +362,9 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         return true;
     }
 
-    // Used by JcrContainerProperty
+    /***********************************************/
+    /** Used by JcrContainerProperty              **/
+    /***********************************************/
 
     public Object getColumnValue(String propertyId, Object itemId) {
         try {
@@ -265,16 +393,160 @@ public abstract class JcrContainer extends AbstractHierarchicalContainer impleme
         }
     }
 
-    public abstract void updateContainerIds(NodeIterator iterator) throws RepositoryException;
-
-    protected abstract Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException;
-
-
     protected ContainerItemId createContainerId(javax.jcr.Item item) throws RepositoryException {
         return new ContainerItemId(item);
     }
 
     protected JcrContainerSource getJcrContainerSource() {
         return jcrContainerSource;
+    }
+
+    /************************************/
+    /** UNSUPPORTED CONTAINER FEATURES **/
+    /************************************/
+
+    public Item addItemAfter(Object previousItemId, Object newItemId) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public Item addItemAt(int index, Object newItemId) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public Object addItemAt(int index) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public Object addItemAfter(Object previousItemId) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+
+    /**
+     * Determines a new offset for updating the row cache. The offset is
+     * calculated from the given index, and will be fixed to match the start of
+     * a page, based on the value of pageLength.
+     *
+     * @param index
+     *            Index of the item that was requested, but not found in cache
+     */
+    private void updateOffsetAndCache(int index) {
+        if (itemIndexes.containsKey(Long.valueOf(index))) {
+            return;
+        }
+        currentOffset = (index / (pageLength * CACHE_RATIO)) * (pageLength * CACHE_RATIO);
+        if (currentOffset < 0) {
+            currentOffset = 0;
+        }
+        getPage();
+    }
+
+
+    /**
+     * Fetches new count of rows from the data source, if needed.
+     */
+    private void updateCount() {
+        if (!sizeDirty && System.currentTimeMillis() < sizeUpdated + sizeValidMilliSeconds) {
+            return;
+        }
+
+        int newSize = getRowCount();
+        if (newSize != size) {
+            size = newSize;
+            refresh();
+        }
+        sizeUpdated = System.currentTimeMillis();
+        sizeDirty = false;
+
+    }
+
+
+    /**
+     * Fetches a page from the data source based on the values of pageLenght and
+     * currentOffset.
+     */
+    protected void getPage() {
+        updateCount();
+        cachedItems.clear();
+        itemIndexes.clear();
+
+        //TODO order by
+        try {
+            //TODO sql2 query is much slower than its xpath counterpart (on average 20 times slower). However xpath is deprecated. Try using JQOM
+            final QueryResult queryResult = executeQuery("select * from [mgnl:content]", Query.JCR_SQL2, pageLength * CACHE_RATIO, currentOffset);
+            //final QueryResult queryResult = executeQuery("//element(*,mgnl:content)", Query.XPATH, pageLength * CACHE_RATIO, currentOffset);
+            final NodeIterator iterator = queryResult.getNodes();
+            long rowCount = currentOffset;
+            while(iterator.hasNext()){
+
+                final ContainerItemId id = createContainerId(iterator.nextNode());
+                /* Cache item */
+                itemIndexes.put(rowCount++, id);
+                cachedItems.put(id, new ContainerItem(id, this));
+
+            }
+        } catch (RepositoryException re){
+            throw new RuntimeRepositoryException(re);
+        }
+
+    }
+
+    public String getWorkspace() {
+        return workspace;
+    }
+
+    /**
+     * Refreshes the container - clears all caches and resets size and offset.
+     * Does NOT remove sorting or filtering rules!
+     */
+    public void refresh() {
+        sizeDirty = true;
+        currentOffset = 0;
+        cachedItems.clear();
+        itemIndexes.clear();
+        fireItemSetChange();
+    }
+
+    protected int getRowCount()  {
+        //cache the size cause at present the query to count rows is extremely slow.
+        if(size >= 0){
+            return size;
+        }
+        QueryResult result = executeQuery("select * from [mgnl:content]", Query.JCR_SQL2, 0, 0);
+        try {
+            return Long.valueOf(result.getRows().getSize()).intValue();
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+
+    }
+
+    protected void setSize(int size) {
+        this.size = size;
+    }
+
+    protected QueryResult executeQuery(String statement, String language, long limit, long offset){
+        try {
+            final Session jcrSession = MgnlContext.getJCRSession(workspace);
+            final QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
+            final QueryImpl query = (QueryImpl) jcrQueryManager.createQuery(statement , language);
+            if(limit > 0) {
+                query.setLimit(limit);
+            }
+            if(offset > 0){
+                query.setOffset(offset);
+            }
+            long start = System.currentTimeMillis();
+            final QueryResult result = query.execute();
+            log.debug("Executed query against workspace [{}] with statement [{}] and limit {} and offset {}. Took {} ms", new Object[]{getWorkspace(), statement, limit, offset, System.currentTimeMillis() - start});
+            return result;
+
+        } catch (LoginException e) {
+           throw new RuntimeRepositoryException(e);
+        } catch (InvalidQueryException e) {
+            throw new RuntimeRepositoryException(e);
+        } catch (RepositoryException e) {
+           throw new RuntimeRepositoryException(e);
+        }
     }
 }

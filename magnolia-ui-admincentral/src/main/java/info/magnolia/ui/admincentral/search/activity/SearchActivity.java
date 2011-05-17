@@ -110,16 +110,12 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
 
             final String stmt = "//element(*,mgnl:content)[jcr:contains(@*,'*"+place.getSearchParameters().getQuery()+"*')]";
             final QueryImpl query = (QueryImpl) jcrQueryManager.createQuery(stmt , Query.XPATH);
-            //final String stmt = "select * from [mgnl:content] as c where contains(c.*, '"+place.getSearchParameters().getQuery() +"')";
-            //final QueryImpl query = (QueryImpl) jcrQueryManager.createQuery(stmt , Query.JCR_SQL2);
-            //query.setLimit(3);
 
             log.debug("executing query against workspace [{}] with statement [{}] ", place.getWorkspace(), stmt);
             final QueryResult queryResult = query.execute();
             foundItems = queryResult.getRows().getSize();
 
             log.debug("query returned {} rows", foundItems);
-            //shell.showNotification("query returned "+ foundItems + " rows");
             jcrView.getContainer().updateContainerIds(queryResult.getNodes());
             view.update(new SearchResult(place.getSearchParameters().getQuery(), foundItems));
 

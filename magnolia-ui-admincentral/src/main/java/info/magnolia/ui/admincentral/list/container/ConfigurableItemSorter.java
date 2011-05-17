@@ -49,8 +49,9 @@ import com.vaadin.data.util.DefaultItemSorter;
 /**
  * A configurable {@link ItemSorter} which reads from column definition what columns are sortable.
  * @author fgrilli
- *
+ * @deprecated will use a different mechanism to sort columns.
  */
+@Deprecated
 public class ConfigurableItemSorter extends DefaultItemSorter {
     private static final Logger log = LoggerFactory.getLogger(ConfigurableItemSorter.class);
     private List<String> sortablePropertyIds = new ArrayList<String>();

@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.admincentral.tree.container;
 
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.admincentral.container.ContainerItem;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.container.JcrContainerSource;
@@ -40,37 +42,114 @@ import info.magnolia.ui.admincentral.container.JcrContainerSource;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.jcr.Item;
+import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.data.Container;
+
 /**
  * Hierarchical implementation of {@link JcrContainer}.
+ * TODO optimize it: getChildren() might use a cache. We might also implement {@link Collapsible} interface.
  * @author fgrilli
  *
  */
-public class HierarchicalJcrContainer extends JcrContainer {
+public class HierarchicalJcrContainer extends JcrContainer implements Container.Hierarchical {
 
     private static final Logger log = LoggerFactory.getLogger(HierarchicalJcrContainer.class);
 
-    public HierarchicalJcrContainer(JcrContainerSource jcrContainerSource) {
-        super(jcrContainerSource);
+    public HierarchicalJcrContainer(JcrContainerSource jcrContainerSource, String workspace) {
+        super(jcrContainerSource, workspace);
     }
 
     @Override
-    protected Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException {
-        ArrayList<ContainerItemId> ids = new ArrayList<ContainerItemId>();
-        for (javax.jcr.Item child : children) {
-            log.debug("adding {}", child.getName());
-            ids.add(createContainerId(child));
+    public Collection<ContainerItemId> getChildren(Object itemId) {
+        try {
+            return createContainerIds(getJcrContainerSource().getChildren(getJcrItem((ContainerItemId) itemId)));
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
         }
-        return ids;
+    }
+
+    @Override
+    public ContainerItemId getParent(Object itemId) {
+        try {
+            javax.jcr.Item item = getJcrItem((ContainerItemId) itemId);
+            if (item instanceof javax.jcr.Property) {
+                return createContainerId(item.getParent());
+            }
+            Node node = (Node) item;
+            return node.getDepth() > 0 ? createContainerId(node.getParent()) : null;
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+    }
+
+    @Override
+    public Collection<ContainerItemId> rootItemIds() {
+        try {
+            return createContainerIds(getJcrContainerSource().getRootItemIds());
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+    }
+
+    @Override
+    public boolean setParent(Object itemId, Object newParentId) throws UnsupportedOperationException {
+        fireItemSetChange();
+        return true;
+    }
+
+    @Override
+    public boolean areChildrenAllowed(Object itemId) {
+        return ((ContainerItemId) itemId).isNode();
+    }
+
+    @Override
+    public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isRoot(Object itemId) {
+        try {
+            return getJcrContainerSource().isRoot(getJcrItem((ContainerItemId) itemId));
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+    }
+
+    @Override
+    public boolean hasChildren(Object itemId) {
+        try {
+            return getJcrContainerSource().hasChildren(getJcrItem((ContainerItemId) itemId));
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     @Override
     public void updateContainerIds(NodeIterator iterator) throws RepositoryException {
-        throw new UnsupportedOperationException(getClass().getName()+" does not implement this method");
+        throw new UnsupportedOperationException();
+
+    }
+
+    @Override
+    protected Collection<ContainerItemId> createContainerIds(Collection<Item> children) throws RepositoryException {
+        ArrayList<ContainerItemId> ids = new ArrayList<ContainerItemId>();
+        for (javax.jcr.Item child : children) {
+            ids.add(createContainerId(child));
+        }
+        log.debug("added {} ContainerItemId(s)", ids.size());
+        return ids;
+    }
+
+    @Override
+    public com.vaadin.data.Item getItem(Object itemId) {
+        return new ContainerItem((ContainerItemId) itemId, this);
     }
 }

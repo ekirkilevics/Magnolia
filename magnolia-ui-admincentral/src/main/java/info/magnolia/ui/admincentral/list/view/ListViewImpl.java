@@ -38,7 +38,6 @@ import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.jcr.view.JcrView;
-import info.magnolia.ui.admincentral.list.container.ConfigurableItemSorter;
 import info.magnolia.ui.admincentral.list.container.FlatJcrContainer;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.framework.shell.Shell;
@@ -106,17 +105,20 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         // TODO: check Ticket http://dev.vaadin.com/ticket/5453
         table.setColumnReorderingAllowed(true);
 
-        this.container = new FlatJcrContainer(treeModel, new ConfigurableItemSorter(treeModel), -1);
+        this.container = new FlatJcrContainer(treeModel,workbenchDefinition.getWorkspace());
 
         for (Column<?> treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();
+            boolean sortable = treeColumn.getDefinition().isSortable();
             table.setColumnExpandRatio(columnName, treeColumn.getWidth() <= 0 ? 1 : treeColumn.getWidth());
             container.addContainerProperty(columnName, Component.class, "");
+            if(sortable){
+                container.addSortableContainerProperty(columnName);
+            }
             table.setColumnHeader(columnName, treeColumn.getLabel());
         }
 
         table.setContainerDataSource(container);
-        table.setPageLength(900);
     }
 
     private void openChildren(ContainerItemId itemId) {
