@@ -44,8 +44,10 @@ import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 public class ToolboxConfiguration {
 
     private List<MenuItemDefinition> page = new ArrayList<MenuItemDefinition>();
-    private List<MenuItemDefinition> paragraph = new ArrayList<MenuItemDefinition>();
     private List<MenuItemDefinition> area = new ArrayList<MenuItemDefinition>();
+    private List<MenuItemDefinition> slot = new ArrayList<MenuItemDefinition>();
+    private List<MenuItemDefinition> paragraph = new ArrayList<MenuItemDefinition>();
+    private List<MenuItemDefinition> paragraphInSlot = new ArrayList<MenuItemDefinition>();
 
     public List<MenuItemDefinition> getPage() {
         return page;
@@ -71,6 +73,22 @@ public class ToolboxConfiguration {
         this.area = area;
     }
 
+    public List<MenuItemDefinition> getParagraphInSlot() {
+        return paragraphInSlot;
+    }
+
+    public List<MenuItemDefinition> getSlot() {
+        return slot;
+    }
+
+    public void setSlot(List<MenuItemDefinition> slot) {
+        this.slot = slot;
+    }
+
+    public void setParagraphInSlot(List<MenuItemDefinition> paragraphInSlot) {
+        this.paragraphInSlot = paragraphInSlot;
+    }
+
     public boolean addPage(MenuItemDefinition menuItemDefinition) {
         return page.add(menuItemDefinition);
     }
@@ -81,5 +99,13 @@ public class ToolboxConfiguration {
 
     public boolean addArea(MenuItemDefinition menuItemDefinition) {
         return area.add(menuItemDefinition);
+    }
+
+    public boolean addParagraphInSlot(MenuItemDefinition menuItemDefinition) {
+        return paragraphInSlot.add(menuItemDefinition);
+    }
+
+    public boolean addSlot(MenuItemDefinition menuItemDefinition) {
+        return slot.add(menuItemDefinition);
     }
 }

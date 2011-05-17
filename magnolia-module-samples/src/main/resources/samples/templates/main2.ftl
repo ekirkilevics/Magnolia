@@ -15,8 +15,11 @@
 
 		<div id="main" style="padding:15px;">
 
+			<h2>Singleton Area (foobar)</h2>
+			[@cms.area name="foobar" type="slot" paragraphs="samplesText"/]
+
 			<h2>Singleton Area (stage)</h2>
-			[@cms.area name="stage" dialog="mainProperties" type="slot" paragraphs="samplesText"/]
+			[@cms.area name="stage" type="slot" paragraphs="samplesText"/]
 
 			<h2>Area (main)</h2>
 			[@cms.area name="main" dialog="mainProperties" paragraphs="samplesHowToFTL,samplesText"/]

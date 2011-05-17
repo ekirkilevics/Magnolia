@@ -34,71 +34,13 @@
 package info.magnolia.module.wcm;
 
 /**
- * Parameter object representing the selection in the page editor.
+ * Enumerations of different types of selectable content in the page editor.
+ *
+ * TODO using an enum might limit extensibility
+ *
+ * @version $Id$
  */
-public class ContentSelection {
+public enum SelectionType {
 
-    private SelectionType type;
-    private String workspace;
-    private String path;
-    private String collectionName;
-    private String nodeName;
-    private String paragraphs;
-    private String dialog;
-
-    public SelectionType getType() {
-        return type;
-    }
-
-    public void setType(SelectionType type) {
-        this.type = type;
-    }
-
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getCollectionName() {
-        return collectionName;
-    }
-
-    public void setCollectionName(String collectionName) {
-        this.collectionName = collectionName;
-    }
-
-    public String getNodeName() {
-        return nodeName;
-    }
-
-    public void setNodeName(String nodeName) {
-        this.nodeName = nodeName;
-    }
-
-    public String getParagraphs() {
-        return paragraphs;
-    }
-
-    public void setParagraphs(String paragraphs) {
-        this.paragraphs = paragraphs;
-    }
-
-    public String getDialog() {
-        return dialog;
-    }
-
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
-    }
+    PAGE, AREA, SLOT, PARAGRAPH, PARAGRAPH_IN_SLOT
 }

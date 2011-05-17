@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.wcm.editor;
 
+import info.magnolia.module.wcm.SelectionType;
 import info.magnolia.ui.framework.event.Event;
 
 /**
@@ -40,7 +41,7 @@ import info.magnolia.ui.framework.event.Event;
  */
 public class SelectionChangedEvent implements Event<SelectionChangedHandler> {
 
-    private String type;
+    private SelectionType type;
     private String workspace;
     private String path;
     private String collectionName;
@@ -48,7 +49,7 @@ public class SelectionChangedEvent implements Event<SelectionChangedHandler> {
     private String paragraphs;
     private String dialog;
 
-    public SelectionChangedEvent(String type, String workspace, String path, String collectionName, String nodeName, String paragraphs, String dialog) {
+    public SelectionChangedEvent(SelectionType type, String workspace, String path, String collectionName, String nodeName, String paragraphs, String dialog) {
         this.type = type;
         this.workspace = workspace;
         this.path = path;
@@ -58,7 +59,7 @@ public class SelectionChangedEvent implements Event<SelectionChangedHandler> {
         this.dialog = dialog;
     }
 
-    public String getType() {
+    public SelectionType getType() {
         return type;
     }
 

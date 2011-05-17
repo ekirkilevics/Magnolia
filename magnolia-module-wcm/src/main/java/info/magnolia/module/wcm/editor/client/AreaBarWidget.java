@@ -74,14 +74,17 @@ public class AreaBarWidget extends AbstractBarWidget {
         }
 
         setLabel("Area");
-        Button button = new Button("Edit&nbsp;area");
-        button.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                pageEditor.openDialog(dialog, workspace, path, null, name);
-            }
-        });
-        addButton(button);
+
+        if (type.equals("collection")) {
+            Button button = new Button("Edit&nbsp;area");
+            button.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    pageEditor.openDialog(dialog, workspace, path, null, name);
+                }
+            });
+            addButton(button);
+        }
 
         // TODO to add a button for editing the paragraph in a slot area i need its workspace,path and dialog
 
@@ -90,11 +93,11 @@ public class AreaBarWidget extends AbstractBarWidget {
             addButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    if (type.equals("collection"))
+                    if (type.equals("collection")) {
                         pageEditor.addParagraph(workspace, path, name, null, paragraphs);
-                    else
-                    if (type.equals("slot"))
+                    } else if (type.equals("slot")) {
                         pageEditor.addParagraph(workspace, path, null, name, paragraphs);
+                    }
                 }
             });
             addButton(addButton);
@@ -104,11 +107,16 @@ public class AreaBarWidget extends AbstractBarWidget {
     @Override
     protected void onSelect() {
         super.onSelect();
-        if (type.equals("collection"))
+        if (type.equals("collection")) {
             pageEditor.updateSelection(this, "area", workspace, path, name, null, paragraphs, dialog);
-        else
-        if (type.equals("slot"))
-            pageEditor.updateSelection(this, "area", workspace, path, null, name, paragraphs, dialog);
+        } else if (type.equals("slot")) {
+            if (showAddButton) {
+                pageEditor.updateSelection(this, "slot", workspace, path, null, name, paragraphs, dialog);
+            } else {
+                // TODO dialog here is wrong! it needs to be the dialog of the paragraph, not that of the area
+                pageEditor.updateSelection(this, "paragraph_in_slot", workspace, path, null, name, paragraphs, dialog);
+            }
+        }
     }
 
     @Override
@@ -119,5 +127,9 @@ public class AreaBarWidget extends AbstractBarWidget {
 
     public String getParagraphs() {
         return paragraphs;
+    }
+
+    public String getType() {
+        return type;
     }
 }

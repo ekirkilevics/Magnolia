@@ -182,6 +182,15 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
     }
 
     private Node getNode() throws RepositoryException {
+
+        // workspace and path are mandatory
+        // if provided neither collection or nodeName, edit path
+        // if provided only nodeName, edit path/nodeName
+        // if provided only collection, create new node under path
+        // if provided both collection and nodeName, edit path/collectionName/nodeName
+
+        // TODO this is too complicated, clients should hand it a DialogPersistenceStrategy object instead
+
         Node node;
         try {
             node = MgnlContext.getJCRSession(workspace).getNode(path);

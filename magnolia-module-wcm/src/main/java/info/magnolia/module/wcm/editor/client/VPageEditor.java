@@ -37,8 +37,11 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -46,6 +49,8 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 /**
  * Client side implementation of the page editor. Outputs an iframe and injects ui widgets inside its content.
+ *
+ * @version $Id$
  */
 public class VPageEditor extends HTML implements Paintable, EventListener {
 
@@ -134,8 +139,12 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
                 Element child = (Element) childNode;
 
                 if (child.getTagName().equalsIgnoreCase(EDIT_MARKER)) {
-                    EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
-                    editBarWidget.attach(child);
+                    if (parentBar != null && parentBar.getType().equals("slot")) {
+                        addEditParagraphButtonForSlot(child, parentBar);
+                    } else {
+                        EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
+                        editBarWidget.attach(child);
+                    }
                 } else
                 if (child.getTagName().equalsIgnoreCase(AREA_MARKER)) {
                     AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, child);
@@ -146,6 +155,27 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
                 detectCmsTag(child, parentBar);
             }
         }
+    }
+
+    private void addEditParagraphButtonForSlot(Element element, AreaBarWidget parentBar) {
+
+        String content = element.getAttribute("content");
+        int i = content.indexOf(':');
+        final String workspace = content.substring(0, i);
+        final String path = content.substring(i + 1);
+        final String name = element.getAttribute("name");
+        final String dialog = element.getAttribute("dialog");
+
+        // TODO with drap-n-drop we need to also know which paragraph this is to test if it can be dropped somewhere
+
+        Button button = new Button("Edit&nbsp;Paragraph");
+        button.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                openDialog(dialog, workspace, path, null, name);
+            }
+        });
+        parentBar.addButton(button);
     }
 
     public void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName) {

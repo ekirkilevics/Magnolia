@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.wcm;
 
+import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -131,12 +132,27 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         this.contentSelection.setParagraphs(event.getParagraphs());
         this.contentSelection.setDialog(event.getDialog());
 
-        if ("page".equals(event.getType())) {
-            toolboxView.showRack(wcmModule.getToolboxConfiguration().getPage());
-        } else if ("area".equals(event.getType())) {
-            toolboxView.showRack(wcmModule.getToolboxConfiguration().getArea());
-        } else if ("paragraph".equals(event.getType())) {
-            toolboxView.showRack(wcmModule.getToolboxConfiguration().getParagraph());
+        List<MenuItemDefinition> menuItemDefinitions = null;
+        switch (this.contentSelection.getType()) {
+            case PAGE:
+                menuItemDefinitions = wcmModule.getToolboxConfiguration().getPage();
+                break;
+            case AREA:
+                menuItemDefinitions = wcmModule.getToolboxConfiguration().getArea();
+                break;
+            case SLOT:
+                menuItemDefinitions = wcmModule.getToolboxConfiguration().getSlot();
+                break;
+            case PARAGRAPH:
+                menuItemDefinitions = wcmModule.getToolboxConfiguration().getParagraph();
+                break;
+            case PARAGRAPH_IN_SLOT:
+                menuItemDefinitions = wcmModule.getToolboxConfiguration().getParagraphInSlot();
+                break;
+        }
+
+        if (menuItemDefinitions != null) {
+            toolboxView.showRack(menuItemDefinitions);
         }
     }
 
@@ -201,7 +217,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         executeAction(new AddParagraphActionDefinition(), selection);
     }
 
-    public void selectionChanged(String type, String workspace, String path, String collectionName, String nodeName, String paragraphs, String dialog) {
+    public void selectionChanged(SelectionType type, String workspace, String path, String collectionName, String nodeName, String paragraphs, String dialog) {
         // TODO we fire the event from this class and receives it in this class, not really necessary
         eventBus.fireEvent(new SelectionChangedEvent(type, workspace, path, collectionName, nodeName, paragraphs, dialog));
     }

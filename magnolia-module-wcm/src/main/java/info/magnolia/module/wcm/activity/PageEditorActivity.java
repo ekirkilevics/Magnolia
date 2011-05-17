@@ -46,6 +46,7 @@ import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.module.wcm.PageChangedEvent;
 import info.magnolia.module.wcm.PageChangedHandler;
+import info.magnolia.module.wcm.SelectionType;
 import info.magnolia.module.wcm.editor.PageEditor;
 import info.magnolia.module.wcm.editor.SelectionChangedEvent;
 import info.magnolia.module.wcm.place.PageEditorPlace;
@@ -89,7 +90,7 @@ public class PageEditorActivity extends AbstractActivity implements PageChangedH
 
         String dialog = getDialogUsedByTemplate(path, workspace);
 
-        eventBus.fireEvent(new SelectionChangedEvent("page", workspace, path, null, null, null, dialog));
+        eventBus.fireEvent(new SelectionChangedEvent(SelectionType.PAGE, workspace, path, null, null, null, dialog));
     }
 
     private String getDialogUsedByTemplate(String path, String workspace) {

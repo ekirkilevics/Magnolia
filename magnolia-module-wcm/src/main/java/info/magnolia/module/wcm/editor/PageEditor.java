@@ -43,6 +43,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.ClientWidget;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.wcm.PageEditorPresenter;
+import info.magnolia.module.wcm.SelectionType;
 import info.magnolia.module.wcm.editor.client.VPageEditor;
 
 /**
@@ -80,7 +81,7 @@ public class PageEditor extends AbstractComponent {
             String nodeName = (String) variables.get(VPageEditor.SELECTED_NODE_NAME);
             String paragraphs = (String) variables.get(VPageEditor.PARAGRAPHS);
             String dialog = (String) variables.get(VPageEditor.DIALOG);
-            pageEditorPresenter.selectionChanged(type, workspace, path, collectionName, nodeName, paragraphs, dialog);
+            pageEditorPresenter.selectionChanged(SelectionType.valueOf(type.toUpperCase()), workspace, path, collectionName, nodeName, paragraphs, dialog);
         }
         if (variables.containsKey(VPageEditor.ADD_PARAGRAPH)) {
             String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
