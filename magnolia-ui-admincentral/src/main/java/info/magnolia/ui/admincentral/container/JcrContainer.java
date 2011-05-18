@@ -55,7 +55,6 @@ import javax.jcr.query.InvalidQueryException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.jcr.query.RowIterator;
 
 import org.apache.jackrabbit.core.query.QueryImpl;
 import org.slf4j.Logger;
@@ -97,7 +96,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     /** Filters (WHERE) and sorters (ORDER BY) */
     //private final List<Filter> filters = new ArrayList<Filter>();
-    //private final List<OrderBy> sorters = new ArrayList<OrderBy>();
+    private final List<OrderBy> sorters = new ArrayList<OrderBy>();
 
 
     /**
@@ -314,37 +313,14 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     /***********************************************/
     /** Methods from interface Container.Sortable **/
     /***********************************************/
-    //FIXME does not work
+    //FIXME this only work when column name is equal to jcr property name (i.e. title column). Need to
+    //find a mechanism to bind a column to a jcr property (possibly in the column definition).
     public void sort(Object[] propertyId, boolean[] ascending) {
-        StringBuilder stmt = new StringBuilder("select * from [mgnl:content] as c order by ");
+        sorters.clear();
         for (int i = 0; i < propertyId.length; i++) {
             if (sortablePropertyIds.contains(propertyId[i])) {
-                stmt.append("c.")
-                .append(propertyId[i])
-                .append(" ")
-                .append(ascending[i] ? "asc":"desc")
-                .append(", ");
-            }
-            stmt.delete(stmt.lastIndexOf(","), stmt.length()-1);
-            updateCount();
-            cachedItems.clear();
-            itemIndexes.clear();
-
-            try {
-                final QueryResult queryResult = executeQuery(stmt.toString(), Query.JCR_SQL2, pageLength * CACHE_RATIO, currentOffset);
-                //final QueryResult queryResult = executeQuery("//element(*,mgnl:content)", Query.XPATH, pageLength * CACHE_RATIO, currentOffset);
-                final RowIterator iterator = queryResult.getRows();
-                long rowCount = currentOffset;
-                while(iterator.hasNext()){
-
-                    ContainerItemId id = createContainerId(iterator.nextRow().getNode());
-                    /* Cache item */
-                    itemIndexes.put(rowCount++, id);
-                    cachedItems.put(id, new ContainerItem(id, this));
-
-                }
-            } catch (RepositoryException re){
-                throw new RuntimeRepositoryException(re);
+                OrderBy orderBy = new OrderBy((String)propertyId[i], ascending[i]);
+                sorters.add(orderBy);
             }
         }
         refresh();
@@ -469,11 +445,23 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         cachedItems.clear();
         itemIndexes.clear();
 
-        //TODO order by
         try {
+            final StringBuilder stmt = new StringBuilder("select * from [mgnl:content] as c");
+            if(!sorters.isEmpty()) {
+                stmt.append(" order by ");
+                for(OrderBy orderBy: sorters){
+                    stmt.append("c.")
+                    .append(orderBy.getProperty())
+                    .append(" ")
+                    .append(orderBy.isAscending() ? "asc":"desc")
+                    .append(", ");
+                }
+                stmt.delete(stmt.lastIndexOf(","), stmt.length()-1);
+            }
+
             //FIXME sql2 query is much slower than its xpath counterpart (on average 80 times slower). However xpath is deprecated and strangely, although query execution is faster, it takes much longer
             //to iterate over the results to the point that any benefit gained from faster query execution is lost and overall performance gets worse. Try using JQOM.
-            final QueryResult queryResult = executeQuery("select * from [mgnl:content]", Query.JCR_SQL2, pageLength * CACHE_RATIO, currentOffset);
+            final QueryResult queryResult = executeQuery(stmt.toString(), Query.JCR_SQL2, pageLength * CACHE_RATIO, currentOffset);
             //final QueryResult queryResult = executeQuery("//element(*,mgnl:content)", Query.XPATH, pageLength * CACHE_RATIO, currentOffset);
             final NodeIterator iterator = queryResult.getNodes();
             long rowCount = currentOffset;
