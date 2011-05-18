@@ -262,7 +262,7 @@ public class TreeModel implements JcrContainerSource {
 
     public String getPathInTree(Item item) throws RepositoryException {
         String base = workbenchDefinition.getPath();
-        if ("".equals(base)) {
+        if ("/".equals(base)) {
             return item.getPath();
         } else {
             return StringUtils.substringAfter(item.getPath(), base);
@@ -294,7 +294,7 @@ public class TreeModel implements JcrContainerSource {
 
     private String getPathInWorkspace(String pathInTree) {
         String base = this.workbenchDefinition.getPath();
-        if ("".equals(base)) {
+        if ("/".equals(base)) {
             return pathInTree;
         } else {
             return base + pathInTree;
