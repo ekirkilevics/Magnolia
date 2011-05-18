@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,21 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.toolbox.action;
 
-import com.vaadin.ui.ComponentContainer;
-import info.magnolia.module.wcm.toolbox.ToolboxView;
+import com.vaadin.Application;
+import info.magnolia.module.wcm.editor.ContentSelection;
+import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
+import info.magnolia.ui.framework.event.EventBus;
 
 /**
- * Main page editor view.
+ * Opens a dialog for adding a paragraph at the bottom of an area.
  *
  * @version $Id$
  */
-public interface PageEditorView {
+public class AddParagraphAtBottomAction extends AbstractAddParagraphAction<AddParagraphAtBottomActionDefinition> {
 
-    void init();
-
-    ComponentContainer getEditorContainer();
-
-    ToolboxView getToolboxView();
+    public AddParagraphAtBottomAction(AddParagraphAtBottomActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
+        super(definition, application, dialogPresenterFactory, selection, eventBus);
+    }
 }

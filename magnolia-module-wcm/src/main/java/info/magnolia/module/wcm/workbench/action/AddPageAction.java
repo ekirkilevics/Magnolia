@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,21 +31,38 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.workbench.action;
 
-import com.vaadin.ui.ComponentContainer;
-import info.magnolia.module.wcm.toolbox.ToolboxView;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateManager;
+import info.magnolia.ui.admincentral.jcr.HackContent;
+import info.magnolia.ui.admincentral.tree.action.AddNodeAction;
+import info.magnolia.ui.admincentral.tree.action.AddNodeActionDefinition;
+import info.magnolia.ui.framework.event.EventBus;
 
 /**
- * Main page editor view.
+ * Tree action for adding a page to the website repository.
  *
  * @version $Id$
  */
-public interface PageEditorView {
+public class AddPageAction extends AddNodeAction {
 
-    void init();
+    public AddPageAction(AddNodeActionDefinition definition, Node parent, EventBus eventBus) {
+        super(definition, parent, eventBus);
+    }
 
-    ComponentContainer getEditorContainer();
-
-    ToolboxView getToolboxView();
+    @Override
+    protected void postProcessNode(Node newNode) throws RepositoryException {
+        MetaData metaData = JCRMetadataUtil.getMetaData(newNode);
+        JCRMetadataUtil.updateMetaData(newNode);
+        Template newTemplate = TemplateManager.getInstance().getDefaultTemplate(new HackContent(newNode));
+        if (newTemplate != null) {
+            metaData.setTemplate(newTemplate.getName());
+        }
+    }
 }

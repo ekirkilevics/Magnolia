@@ -31,21 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.editor;
 
-import com.vaadin.ui.ComponentContainer;
-import info.magnolia.module.wcm.toolbox.ToolboxView;
+import info.magnolia.ui.framework.event.EventHandler;
 
 /**
- * Main page editor view.
+ * Event handler for {@link PageChangedEvent}.
  *
  * @version $Id$
  */
-public interface PageEditorView {
+public interface PageChangedHandler extends EventHandler {
 
-    void init();
-
-    ComponentContainer getEditorContainer();
-
-    ToolboxView getToolboxView();
+    void onPageChanged();
 }

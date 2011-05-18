@@ -31,21 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.editor;
 
-import com.vaadin.ui.ComponentContainer;
-import info.magnolia.module.wcm.toolbox.ToolboxView;
+import info.magnolia.ui.framework.event.Event;
 
 /**
- * Main page editor view.
+ * Event fired when the content of the page is changed and the page editor needs to reload.
  *
  * @version $Id$
  */
-public interface PageEditorView {
+public class PageChangedEvent implements Event<PageChangedHandler> {
 
-    void init();
-
-    ComponentContainer getEditorContainer();
-
-    ToolboxView getToolboxView();
+    @Override
+    public void dispatch(PageChangedHandler handler) {
+        handler.onPageChanged();
+    }
 }

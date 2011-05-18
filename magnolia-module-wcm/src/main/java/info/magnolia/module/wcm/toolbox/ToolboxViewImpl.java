@@ -46,6 +46,8 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
  * View for the page editor toolbox.
+ *
+ * @version $Id$
  */
 public class ToolboxViewImpl implements ToolboxView, IsVaadinComponent {
 

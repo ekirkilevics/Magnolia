@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,44 +31,47 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.toolbox.action;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.wcm.toolbox.ToolboxConfiguration;
-import info.magnolia.module.wcm.toolbox.ToolboxConfigurationProvider;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.module.wcm.editor.ContentSelection;
+import info.magnolia.module.wcm.editor.PageChangedEvent;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.model.action.ActionBase;
+import info.magnolia.ui.model.action.ActionExecutionException;
 
 /**
- * Module class for WCM module.
+ * Moves a paragraph down one step within an area.
  *
  * @version $Id$
  */
-public class WcmModule implements ModuleLifecycle, ToolboxConfigurationProvider {
+public class MoveParagraphDownAction extends ActionBase<MoveParagraphDownActionDefinition> implements ToolboxAction {
 
-    private WcmModuleConfiguration configurations;
-    private ToolboxConfiguration toolboxConfiguration;
+    private Node node;
+    private EventBus eventBus;
 
-    public WcmModuleConfiguration getConfigurations() {
-        return configurations;
-    }
-
-    public void setConfigurations(WcmModuleConfiguration configurations) {
-        this.configurations = configurations;
-    }
-
-    public ToolboxConfiguration getToolboxConfiguration() {
-        return toolboxConfiguration;
-    }
-
-    public void setToolboxConfiguration(ToolboxConfiguration toolboxConfiguration) {
-        this.toolboxConfiguration = toolboxConfiguration;
+    public MoveParagraphDownAction(MoveParagraphDownActionDefinition definition, Node node, EventBus eventBus) {
+        super(definition);
+        this.node = node;
+        this.eventBus = eventBus;
     }
 
     @Override
-    public void start(ModuleLifecycleContext moduleLifecycleContext) {
+    public boolean isAvailable(ContentSelection selection, Node node) throws RepositoryException {
+        return !JCRUtil.isLastSibling(node);
     }
 
     @Override
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+    public void execute() throws ActionExecutionException {
+        try {
+            JCRUtil.orderNodeDown(node);
+            node.getSession().save();
+            eventBus.fireEvent(new PageChangedEvent());
+        } catch (RepositoryException e) {
+            throw new ActionExecutionException(e);
+        }
     }
 }

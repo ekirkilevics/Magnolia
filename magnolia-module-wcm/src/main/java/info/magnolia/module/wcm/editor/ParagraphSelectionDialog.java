@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.editor;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -46,6 +46,8 @@ import info.magnolia.module.templating.ParagraphManager;
 
 /**
  * Dialog for selecting a paragraph to add.
+ *
+ * @version $Id$
  */
 public class ParagraphSelectionDialog extends Window {
 

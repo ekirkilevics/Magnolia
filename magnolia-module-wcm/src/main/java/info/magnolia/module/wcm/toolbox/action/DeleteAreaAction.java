@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,21 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.toolbox.action;
 
-import com.vaadin.ui.ComponentContainer;
-import info.magnolia.module.wcm.toolbox.ToolboxView;
+import info.magnolia.ui.model.action.ActionBase;
+import info.magnolia.ui.model.action.ActionExecutionException;
 
 /**
- * Main page editor view.
+ * Deletes an area.
  *
  * @version $Id$
  */
-public interface PageEditorView {
+public class DeleteAreaAction extends ActionBase<DeleteAreaActionDefinition> {
 
-    void init();
+    public DeleteAreaAction(DeleteAreaActionDefinition definition) {
+        super(definition);
+    }
 
-    ComponentContainer getEditorContainer();
-
-    ToolboxView getToolboxView();
+    @Override
+    public void execute() throws ActionExecutionException {
+    }
 }

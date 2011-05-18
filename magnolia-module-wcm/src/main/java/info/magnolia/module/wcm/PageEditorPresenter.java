@@ -33,21 +33,30 @@
  */
 package info.magnolia.module.wcm;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import com.vaadin.Application;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.module.wcm.action.AddParagraphActionDefinition;
+import info.magnolia.module.wcm.editor.ContentSelection;
+import info.magnolia.module.wcm.editor.PageChangedEvent;
+import info.magnolia.module.wcm.editor.PageChangedHandler;
 import info.magnolia.module.wcm.editor.SelectionChangedEvent;
 import info.magnolia.module.wcm.editor.SelectionChangedHandler;
+import info.magnolia.module.wcm.editor.SelectionType;
 import info.magnolia.module.wcm.place.PageEditorPlace;
 import info.magnolia.module.wcm.toolbox.ToolboxActionFactory;
+import info.magnolia.module.wcm.toolbox.ToolboxConfigurationProvider;
 import info.magnolia.module.wcm.toolbox.ToolboxView;
+import info.magnolia.module.wcm.toolbox.action.AddParagraphActionDefinition;
+import info.magnolia.module.wcm.toolbox.action.ToolboxAction;
 import info.magnolia.ui.admincentral.MainActivityMapper;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.admincentral.dialog.DialogSaveCallback;
@@ -68,8 +77,12 @@ import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
 
 /**
  * Presenter logic for page editor.
+ *
+ * @version $Id$
  */
 public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChangedHandler, PageChangedHandler {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private Shell shell;
     private EventBus eventBus;
@@ -77,23 +90,19 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
     private MainActivityMapper mainActivityMapper;
     private PageEditorView pageEditorView;
     private ToolboxView toolboxView;
-    private WcmModule wcmModule;
-    private Application application;
+    private ToolboxConfigurationProvider toolboxConfigurationProvider;
     private DialogPresenterFactory dialogPresenterFactory;
     private ToolboxActionFactory toolboxActionFactory;
 
-    // TODO should not depend on wcmModule but rather on a configuration provider
-
-    public PageEditorPresenter(Shell shell, EventBus eventBus, PlaceController placeController, MainActivityMapper mainActivityMapper, PageEditorView pageEditorView, Application application, DialogPresenterFactory dialogPresenterFactory, WcmModule wcmModule, ToolboxActionFactory toolboxActionFactory) {
+    public PageEditorPresenter(Shell shell, EventBus eventBus, PlaceController placeController, MainActivityMapper mainActivityMapper, PageEditorView pageEditorView, DialogPresenterFactory dialogPresenterFactory, ToolboxActionFactory toolboxActionFactory, ToolboxConfigurationProvider toolboxConfigurationProvider) {
         this.shell = shell;
         this.eventBus = eventBus;
         this.placeController = placeController;
         this.mainActivityMapper = mainActivityMapper;
         this.pageEditorView = pageEditorView;
-        this.wcmModule = wcmModule;
-        this.application = application;
         this.dialogPresenterFactory = dialogPresenterFactory;
         this.toolboxActionFactory = toolboxActionFactory;
+        this.toolboxConfigurationProvider = toolboxConfigurationProvider;
 
         eventBus.addHandler(PageChangedEvent.class, this);
     }
@@ -115,7 +124,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
 
         eventBus.addHandler(SelectionChangedEvent.class, this);
 
-        toolboxView.showRack(wcmModule.getToolboxConfiguration().getPage());
+        toolboxView.showRack(toolboxConfigurationProvider.getToolboxConfiguration().getPage());
     }
 
     private ContentSelection contentSelection;
@@ -135,24 +144,41 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         List<MenuItemDefinition> menuItemDefinitions = null;
         switch (this.contentSelection.getType()) {
             case PAGE:
-                menuItemDefinitions = wcmModule.getToolboxConfiguration().getPage();
+                menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getPage();
                 break;
             case AREA:
-                menuItemDefinitions = wcmModule.getToolboxConfiguration().getArea();
+                menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getArea();
                 break;
             case SLOT:
-                menuItemDefinitions = wcmModule.getToolboxConfiguration().getSlot();
+                menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getSlot();
                 break;
             case PARAGRAPH:
-                menuItemDefinitions = wcmModule.getToolboxConfiguration().getParagraph();
+                menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getParagraph();
                 break;
             case PARAGRAPH_IN_SLOT:
-                menuItemDefinitions = wcmModule.getToolboxConfiguration().getParagraphInSlot();
+                menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getParagraphInSlot();
                 break;
         }
 
         if (menuItemDefinitions != null) {
-            toolboxView.showRack(menuItemDefinitions);
+            List<MenuItemDefinition> x = new ArrayList<MenuItemDefinition>();
+            for (MenuItemDefinition mid : menuItemDefinitions) {
+                Node node = getNodeForSelection(this.contentSelection);
+                Action action = toolboxActionFactory.createAction(mid.getActionDefinition(), node, this.contentSelection);
+                if (action instanceof ToolboxAction) {
+                    try {
+                        ToolboxAction toolboxAction = (ToolboxAction) action;
+                        if (toolboxAction.isAvailable(this.contentSelection, node)) {
+                            x.add(mid);
+                        }
+                    } catch (RepositoryException e) {
+                        log.error("Error when determining if action [" + mid.getName() + "] is available", e);
+                    }
+                } else {
+                    x.add(mid);
+                }
+            }
+            toolboxView.showRack(x);
         }
     }
 
@@ -170,14 +196,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
     }
 
     private void executeAction(ActionDefinition actionDefinition, ContentSelection selection) {
-
-        Node node;
-        try {
-            node = MgnlContext.getJCRSession(selection.getWorkspace()).getNode(selection.getPath());
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
-
+        Node node = getNodeForSelection(selection);
         Action action = toolboxActionFactory.createAction(actionDefinition, node, selection);
         System.out.println("Executing " + action.getClass());
         try {
@@ -185,6 +204,14 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         } catch (ActionExecutionException e) {
             // TODO present error to user
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+
+    private Node getNodeForSelection(ContentSelection selection) {
+        try {
+            return MgnlContext.getJCRSession(selection.getWorkspace()).getNode(selection.getPath());
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
         }
     }
 
@@ -225,7 +252,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
     @Override
     public void onPageChanged() {
         this.contentSelection = null;
-        this.toolboxView.showRack(wcmModule.getToolboxConfiguration().getPage());
+        this.toolboxView.showRack(toolboxConfigurationProvider.getToolboxConfiguration().getPage());
     }
 
     public void moveParagraph(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {

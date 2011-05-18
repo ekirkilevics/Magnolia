@@ -10,10 +10,10 @@
     <sv:value>441453ea-8a6f-46ba-9de1-2f7261216188</sv:value>
   </sv:property>
   <sv:property sv:name="definition" sv:type="String">
-    <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+    <sv:value>info.magnolia.module.wcm.workbench.action.AddPageActionDefinition</sv:value>
   </sv:property>
   <sv:property sv:name="implementation" sv:type="String">
-    <sv:value>info.magnolia.module.wcm.action.AddPageAction</sv:value>
+    <sv:value>info.magnolia.module.wcm.workbench.action.AddPageAction</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>

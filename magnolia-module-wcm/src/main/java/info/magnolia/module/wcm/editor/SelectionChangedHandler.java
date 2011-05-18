@@ -37,6 +37,8 @@ import info.magnolia.ui.framework.event.EventHandler;
 
 /**
  * Handler for {@link SelectionChangedEvent}.
+ *
+ * @version $Id$
  */
 public interface SelectionChangedHandler extends EventHandler {
 

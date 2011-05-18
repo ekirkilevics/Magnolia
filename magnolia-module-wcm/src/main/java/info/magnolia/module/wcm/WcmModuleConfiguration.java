@@ -37,6 +37,8 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 /**
  * Configuration for the WCM module.
+ *
+ * @version $Id$
  */
 public class WcmModuleConfiguration {
 

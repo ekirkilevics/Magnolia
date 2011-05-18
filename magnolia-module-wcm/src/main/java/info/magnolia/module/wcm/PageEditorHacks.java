@@ -35,6 +35,7 @@ package info.magnolia.module.wcm;
 
 import info.magnolia.cms.util.PathUtil;
 import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.wcm.editor.ContentSelection;
 
 /**
  * Utility methods for the page editor that should be reviewed and placed elsewhere.
@@ -45,7 +46,7 @@ public class PageEditorHacks {
 
     /**
      * Returns the name of the dialog that the paragraph uses.
-     *
+     * <p/>
      * TODO this is used in a few more places (might be a good candidate to add to ParagraphManager)
      * See also {@link info.magnolia.module.admininterface.dialogs.ParagraphEditDialog}
      */

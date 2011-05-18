@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,21 +31,32 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.toolbox.action;
 
-import com.vaadin.ui.ComponentContainer;
-import info.magnolia.module.wcm.toolbox.ToolboxView;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.Application;
+import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.wcm.editor.ContentSelection;
+import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
+import info.magnolia.ui.framework.event.EventBus;
 
 /**
- * Main page editor view.
+ * Opens a dialog for adding a paragraph at the top of an area.
  *
  * @version $Id$
  */
-public interface PageEditorView {
+public class AddParagraphAtTopAction extends AbstractAddParagraphAction<AddParagraphAtTopActionDefinition> {
 
-    void init();
+    public AddParagraphAtTopAction(AddParagraphAtTopActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
+        super(definition, application, dialogPresenterFactory, selection, eventBus);
+    }
 
-    ComponentContainer getEditorContainer();
-
-    ToolboxView getToolboxView();
+    @Override
+    protected void onPreSave(Node node, Paragraph paragraph) throws RepositoryException {
+        JCRUtil.orderFirst(node);
+        super.onPreSave(node, paragraph);
+    }
 }

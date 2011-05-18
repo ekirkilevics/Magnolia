@@ -31,16 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.toolbox.action;
+
+import info.magnolia.ui.model.action.ActionDefinition;
 
 /**
- * Enumerations of different types of selectable content in the page editor.
- *
- * TODO using an enum might limit extensibility
+ * Action definition for {@link MoveParagraphUpAction}.
  *
  * @version $Id$
  */
-public enum SelectionType {
+public class MoveParagraphUpActionDefinition implements ActionDefinition {
 
-    PAGE, AREA, SLOT, PARAGRAPH, PARAGRAPH_IN_SLOT
 }

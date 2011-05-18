@@ -44,6 +44,8 @@ import info.magnolia.module.wcm.toolbox.ToolboxViewImpl;
 
 /**
  * Main page editor view.
+ *
+ * @version $Id$
  */
 public class PageEditorViewImpl implements PageEditorView {
 

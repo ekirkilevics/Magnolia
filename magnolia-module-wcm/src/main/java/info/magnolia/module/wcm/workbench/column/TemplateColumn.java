@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm.column;
+package info.magnolia.module.wcm.workbench.column;
 
 import java.io.Serializable;
 import java.util.Iterator;

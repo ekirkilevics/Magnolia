@@ -34,7 +34,6 @@
 package info.magnolia.module.wcm.editor;
 
 import java.util.Map;
-
 import javax.jcr.RepositoryException;
 
 import com.vaadin.terminal.PaintException;
@@ -43,11 +42,12 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.ClientWidget;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.wcm.PageEditorPresenter;
-import info.magnolia.module.wcm.SelectionType;
 import info.magnolia.module.wcm.editor.client.VPageEditor;
 
 /**
  * Server side vaadin component for the page editor.
+ *
+ * @version $Id$
  */
 @ClientWidget(VPageEditor.class)
 public class PageEditor extends AbstractComponent {

@@ -33,11 +33,12 @@
  */
 package info.magnolia.module.wcm.editor;
 
-import info.magnolia.module.wcm.SelectionType;
 import info.magnolia.ui.framework.event.Event;
 
 /**
  * Event fired when selection in page editor changes.
+ *
+ * @version $Id$
  */
 public class SelectionChangedEvent implements Event<SelectionChangedHandler> {
 

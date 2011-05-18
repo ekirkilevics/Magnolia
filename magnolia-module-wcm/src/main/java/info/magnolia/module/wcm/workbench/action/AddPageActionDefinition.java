@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,27 +25,26 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.workbench.action;
 
-import com.vaadin.ui.ComponentContainer;
-import info.magnolia.module.wcm.toolbox.ToolboxView;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.ui.admincentral.tree.action.AddNodeActionDefinition;
 
 /**
- * Main page editor view.
+ * Action definiton for {@link AddPageAction}.
  *
  * @version $Id$
  */
-public interface PageEditorView {
+public class AddPageActionDefinition extends AddNodeActionDefinition {
 
-    void init();
+    public AddPageActionDefinition() {
+        setNodeType(ItemType.CONTENT.getSystemName());
+    }
 
-    ComponentContainer getEditorContainer();
-
-    ToolboxView getToolboxView();
 }

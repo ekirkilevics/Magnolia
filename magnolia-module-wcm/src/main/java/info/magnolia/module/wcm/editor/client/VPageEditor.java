@@ -142,8 +142,7 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
                         EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
                         editBarWidget.attach(child);
                     }
-                } else
-                if (child.getTagName().equalsIgnoreCase(AREA_MARKER)) {
+                } else if (child.getTagName().equalsIgnoreCase(AREA_MARKER)) {
                     AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, child);
                     areaBarWidget.attach(child);
                     parentBar = areaBarWidget;

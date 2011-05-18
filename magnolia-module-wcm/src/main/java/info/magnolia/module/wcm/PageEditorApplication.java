@@ -42,6 +42,8 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 /**
  * Note: This Application does not install its component provider as a scope in Components.
+ *
+ * @version $Id$
  */
 public class PageEditorApplication extends Application {
 

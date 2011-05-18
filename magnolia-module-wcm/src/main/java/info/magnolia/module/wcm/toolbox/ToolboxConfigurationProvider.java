@@ -31,21 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
-
-import com.vaadin.ui.ComponentContainer;
-import info.magnolia.module.wcm.toolbox.ToolboxView;
+package info.magnolia.module.wcm.toolbox;
 
 /**
- * Main page editor view.
+ * Provider of configuration for the toolbox.
  *
  * @version $Id$
  */
-public interface PageEditorView {
+public interface ToolboxConfigurationProvider {
 
-    void init();
-
-    ComponentContainer getEditorContainer();
-
-    ToolboxView getToolboxView();
+    ToolboxConfiguration getToolboxConfiguration();
 }

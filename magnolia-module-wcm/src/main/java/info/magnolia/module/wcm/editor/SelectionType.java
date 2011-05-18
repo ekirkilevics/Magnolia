@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,27 +25,22 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.wcm;
-
-import com.vaadin.ui.ComponentContainer;
-import info.magnolia.module.wcm.toolbox.ToolboxView;
+package info.magnolia.module.wcm.editor;
 
 /**
- * Main page editor view.
+ * Enumerations of different types of selectable content in the page editor.
+ * <p/>
+ * TODO using an enum might limit extensibility
  *
  * @version $Id$
  */
-public interface PageEditorView {
+public enum SelectionType {
 
-    void init();
-
-    ComponentContainer getEditorContainer();
-
-    ToolboxView getToolboxView();
+    PAGE, AREA, SLOT, PARAGRAPH, PARAGRAPH_IN_SLOT
 }

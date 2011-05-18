@@ -31,10 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.editor;
 
 /**
  * Parameter object representing the selection in the page editor.
+ *
+ * @version $Id$
  */
 public class ContentSelection {
 

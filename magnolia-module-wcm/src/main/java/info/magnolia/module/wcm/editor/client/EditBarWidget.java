@@ -86,8 +86,9 @@ public class EditBarWidget extends AbstractBarWidget {
 
     private String getParagraphsInsertableAtThisLocation() {
         AbstractBarWidget parentBar = getParentBar();
-        if (parentBar instanceof AreaBarWidget)
-            return ((AreaBarWidget)parentBar).getParagraphs();
+        if (parentBar instanceof AreaBarWidget) {
+            return ((AreaBarWidget) parentBar).getParagraphs();
+        }
         return "";
     }
 

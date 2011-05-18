@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm.column;
+package info.magnolia.module.wcm.workbench.column;
 
 import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
 

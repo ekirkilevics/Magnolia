@@ -40,6 +40,8 @@ import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 /**
  * View for the page editor toolbox.
+ *
+ * @version $Id$
  */
 public interface ToolboxView {
 

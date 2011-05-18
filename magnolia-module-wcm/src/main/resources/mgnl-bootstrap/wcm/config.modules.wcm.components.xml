@@ -220,10 +220,10 @@
           <sv:value>518d2d98-7213-47c1-b07f-d9d78ef1fb6c</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.ActivatePageActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.ActivatePageActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.ActivatePageAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.ActivatePageAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -260,10 +260,10 @@
           <sv:value>c5bb5769-8797-4512-8f13-fc6cfc719b4a</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.workbench.action.AddPageActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddPageAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.workbench.action.AddPageAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -300,10 +300,10 @@
           <sv:value>9592daf7-adbb-44a4-8407-b5fd7110e718</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddParagraphActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddParagraphAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -340,10 +340,10 @@
           <sv:value>3557c702-cba9-46cd-804c-54c2fc98bc91</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddParagraphAfterActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAfterActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddParagraphAfterAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAfterAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -380,10 +380,10 @@
           <sv:value>c5967f2c-cf98-4405-a0ad-4dd0062e1f20</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddParagraphAtBottomActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAtBottomActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddParagraphAtBottomAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAtBottomAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -420,10 +420,10 @@
           <sv:value>08ecb4e6-83a9-4a72-894a-447749962cc6</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddParagraphAtTopActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAtTopActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddParagraphAtTopAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAtTopAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -460,10 +460,10 @@
           <sv:value>12f9a43b-9cef-45a6-91eb-dcd484b667fa</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddParagraphBeforeActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphBeforeActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.AddParagraphBeforeAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphBeforeAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -500,10 +500,10 @@
           <sv:value>82964cff-f2c5-42e5-b0b2-245372ff5e3e</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.DeactivatePageActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.DeactivatePageActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.DeactivatePageAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.DeactivatePageAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -540,10 +540,10 @@
           <sv:value>9466b93c-6049-4e3d-9ba8-dac95cde7325</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.DeleteAreaActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.DeleteAreaActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.DeleteAreaAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.DeleteAreaAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -580,10 +580,10 @@
           <sv:value>1f86b283-1daa-4850-bfaf-f4d6ca161147</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.DeleteParagraphActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.DeleteParagraphActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.DeleteParagraphAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.DeleteParagraphAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -620,10 +620,10 @@
           <sv:value>bdc7bd45-cf5b-4d3d-9bc7-0eebbae7cda5</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.EditAreaActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.EditAreaActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.EditAreaAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.EditAreaAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -660,10 +660,10 @@
           <sv:value>0395c63b-ec21-49c9-a3af-1c28725fc3f9</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.EditPagePropertiesActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.EditPagePropertiesActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.EditPagePropertiesAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.EditPagePropertiesAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -700,10 +700,10 @@
           <sv:value>eb04de31-3d5b-401e-be8f-a4e902b40563</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.EditParagraphActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.EditParagraphActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.EditParagraphAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.EditParagraphAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -740,10 +740,10 @@
           <sv:value>5bfabb37-3f95-4c60-8b12-67c1559c7800</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.MoveParagraphDownActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveParagraphDownActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.MoveParagraphDownAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveParagraphDownAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -780,10 +780,10 @@
           <sv:value>81a9fb6b-e13d-49ba-89c7-bd4a707af59d</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.MoveParagraphUpActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveParagraphUpActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.action.MoveParagraphUpAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveParagraphUpAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>

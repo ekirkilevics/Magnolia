@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,16 +31,40 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.workbench.action;
 
-import info.magnolia.ui.framework.event.EventHandler;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.action.ActionBase;
+import info.magnolia.ui.model.action.ActionExecutionException;
 
 /**
- * Event handler for {@link PageChangedEvent}.
+ * Opens the selected pageNode for page editing.
  *
  * @version $Id$
  */
-public interface PageChangedHandler extends EventHandler {
+public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
 
-    void onPageChanged();
+    private Shell shell;
+
+    private Node pageNode;
+
+    public OpenPageAction(OpenPageActionDefinition definition, Shell shell, Node pageNode) {
+        super(definition);
+        this.shell = shell;
+        this.pageNode = pageNode;
+    }
+
+    @Override
+    public void execute() throws ActionExecutionException {
+        try {
+            String uri = MgnlContext.getContextPath() + "/.magnolia/page-editor#app:page:" + pageNode.getPath() + ".html";
+            shell.openWindow(uri, getDefinition().getWindowName());
+        } catch (RepositoryException e) {
+            throw new ActionExecutionException("Can't open page.", e);
+        }
+    }
 }

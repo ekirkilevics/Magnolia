@@ -10,10 +10,10 @@
     <sv:value>39d93e3e-81b5-4d59-9390-9ece846a396e</sv:value>
   </sv:property>
   <sv:property sv:name="definition" sv:type="String">
-    <sv:value>info.magnolia.module.wcm.column.TemplateColumnDefinition</sv:value>
+    <sv:value>info.magnolia.module.wcm.workbench.column.TemplateColumnDefinition</sv:value>
   </sv:property>
   <sv:property sv:name="implementation" sv:type="String">
-    <sv:value>info.magnolia.module.wcm.column.TemplateColumn</sv:value>
+    <sv:value>info.magnolia.module.wcm.workbench.column.TemplateColumn</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>
