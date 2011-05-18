@@ -67,7 +67,7 @@ public class FilterDecorator extends AbstractMgnlFilter {
      * Parameters passed in the config.
      */
     private Map config;
-    
+
     private String filterName;
 
     /**
@@ -139,18 +139,22 @@ public class FilterDecorator extends AbstractMgnlFilter {
             }
         }
 
+        @Override
         public String getFilterName() {
             return parent.getFilterName();
         }
 
+        @Override
         public String getInitParameter(String name) {
             return (String) parameters.get(name);
         }
 
+        @Override
         public Enumeration getInitParameterNames() {
             return new Hashtable(parameters).keys();
         }
 
+        @Override
         public ServletContext getServletContext() {
             return parent.getServletContext();
         }
