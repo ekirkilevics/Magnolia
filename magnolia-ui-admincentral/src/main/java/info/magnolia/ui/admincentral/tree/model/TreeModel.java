@@ -110,7 +110,6 @@ public class TreeModel implements JcrContainerSource {
                     }
                 }
             });
-            //TODO is addAll() more efficient?
             for (Node n : nodes) {
                 c.add(n);
             }
@@ -143,7 +142,6 @@ public class TreeModel implements JcrContainerSource {
                     }
                 }
             });
-            //TODO is addAll() more efficient?
             for (Property p : properties) {
                 c.add(p);
             }
@@ -264,7 +262,7 @@ public class TreeModel implements JcrContainerSource {
 
     public String getPathInTree(Item item) throws RepositoryException {
         String base = workbenchDefinition.getPath();
-        if (base.equals("/")) {
+        if ("".equals(base)) {
             return item.getPath();
         } else {
             return StringUtils.substringAfter(item.getPath(), base);
@@ -296,7 +294,7 @@ public class TreeModel implements JcrContainerSource {
 
     private String getPathInWorkspace(String pathInTree) {
         String base = this.workbenchDefinition.getPath();
-        if (base.equals("/")) {
+        if ("".equals(base)) {
             return pathInTree;
         } else {
             return base + pathInTree;
