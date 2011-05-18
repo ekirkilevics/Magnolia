@@ -54,7 +54,6 @@ import com.vaadin.data.Container;
 
 /**
  * Hierarchical implementation of {@link JcrContainer}.
- * TODO optimize it: getChildren() might use a cache. We might also implement {@link Collapsible} interface.
  * @author fgrilli
  *
  */
