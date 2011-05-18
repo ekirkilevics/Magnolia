@@ -84,8 +84,9 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     private int pageLength = DEFAULT_PAGE_LENGTH;
     public static final int DEFAULT_PAGE_LENGTH = 100;
 
-    /** Number of items to cache = CACHE_RATIO x pageLength. */
-    public static final int CACHE_RATIO = 2;
+    /** Number of items to cache = cacheRatio x pageLength. */
+    private int cacheRatio = DEFAULT_CACHE_RATIO;
+    public static final int DEFAULT_CACHE_RATIO = 2;
 
     /** Item and index caches. */
     private final Map<Long, ContainerItemId> itemIndexes = new HashMap<Long, ContainerItemId>();
@@ -165,6 +166,21 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
          sortablePropertyIds.add(propertyId);
     }
 
+    public int getPageLength() {
+        return pageLength;
+    }
+
+    public void setPageLength(int pageLength) {
+        this.pageLength = pageLength;
+    }
+
+    public int getCacheRatio() {
+        return cacheRatio;
+    }
+
+    public void setCacheRatio(int cacheRatio) {
+        this.cacheRatio = cacheRatio;
+    }
 
     /**************************************/
     /** Methods from interface Container **/
@@ -183,7 +199,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     @Override
     public Collection<ContainerItemId> getItemIds() {
-        throw new UnsupportedOperationException("Currently unsupported.");
+        throw new UnsupportedOperationException(getClass().getName() +" does not support this method.");
     }
 
     @Override
@@ -248,7 +264,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
                 }
             }
             // load in the next page.
-            int nextIndex = (currentOffset / (pageLength * CACHE_RATIO) + 1) * (pageLength * CACHE_RATIO);
+            int nextIndex = (currentOffset / (pageLength * cacheRatio) + 1) * (pageLength * cacheRatio);
             if (nextIndex >= size) {
                 // Container wrapped around, start from index 0.
                 wrappedAround = true;
@@ -409,7 +425,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         if (itemIndexes.containsKey(Long.valueOf(index))) {
             return;
         }
-        currentOffset = (index / (pageLength * CACHE_RATIO)) * (pageLength * CACHE_RATIO);
+        currentOffset = (index / (pageLength * cacheRatio)) * (pageLength * cacheRatio);
         if (currentOffset < 0) {
             currentOffset = 0;
         }
@@ -461,8 +477,8 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
             //FIXME sql2 query is much slower than its xpath counterpart (on average 80 times slower). However xpath is deprecated and strangely, although query execution is faster, it takes much longer
             //to iterate over the results to the point that any benefit gained from faster query execution is lost and overall performance gets worse. Try using JQOM.
-            final QueryResult queryResult = executeQuery(stmt.toString(), Query.JCR_SQL2, pageLength * CACHE_RATIO, currentOffset);
-            //final QueryResult queryResult = executeQuery("//element(*,mgnl:content)", Query.XPATH, pageLength * CACHE_RATIO, currentOffset);
+            final QueryResult queryResult = executeQuery(stmt.toString(), Query.JCR_SQL2, pageLength * cacheRatio, currentOffset);
+            //final QueryResult queryResult = executeQuery("//element(*,mgnl:content)", Query.XPATH, pageLength * DEFAULT_CACHE_RATIO, currentOffset);
             final NodeIterator iterator = queryResult.getNodes();
             long rowCount = currentOffset;
             while(iterator.hasNext()){

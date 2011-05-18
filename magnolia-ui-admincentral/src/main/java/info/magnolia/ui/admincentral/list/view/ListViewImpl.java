@@ -83,6 +83,10 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         // next two lines are required to make the browser (Table) react on selection change via mouse
         table.setImmediate(true);
         table.setNullSelectionAllowed(false);
+        //Important do not set page length and cache ratio on the Table, rather set them by using JcrContainer corresponding methods. Setting
+        //those value explicitly on the Table will cause the same jcr query to be repeated twice thus degrading performance greatly.
+        //TODO investigate cause for this behavior.
+        //table.setPageLength(200); recipe for slowness, don't do this!
 
         table.addListener(new ItemClickEvent.ItemClickListener() {
 
