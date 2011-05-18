@@ -162,7 +162,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
 
         ContentSelection selection = this.contentSelection;
         if (selection == null) {
-            // TODO this should mean the page itself, but only the activity knows about the page...
+            // TreeActivity selects the page when it loads so this should never be null after that
             return;
         }
 

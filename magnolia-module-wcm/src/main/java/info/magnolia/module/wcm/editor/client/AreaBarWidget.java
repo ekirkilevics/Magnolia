@@ -73,7 +73,7 @@ public class AreaBarWidget extends AbstractBarWidget {
             this.showAddButton = Boolean.parseBoolean(element.getAttribute("showAddButton"));
         }
 
-        setLabel("Area");
+        setLabelText("Area");
 
         if (type.equals("collection")) {
             Button button = new Button("Edit&nbsp;area");
@@ -85,8 +85,6 @@ public class AreaBarWidget extends AbstractBarWidget {
             });
             addButton(button);
         }
-
-        // TODO to add a button for editing the paragraph in a slot area i need its workspace,path and dialog
 
         if (showAddButton) {
             Button addButton = new Button("Add&nbsp;paragraph");
@@ -113,10 +111,39 @@ public class AreaBarWidget extends AbstractBarWidget {
             if (showAddButton) {
                 pageEditor.updateSelection(this, "slot", workspace, path, null, name, paragraphs, dialog);
             } else {
-                // TODO dialog here is wrong! it needs to be the dialog of the paragraph, not that of the area
-                pageEditor.updateSelection(this, "paragraph_in_slot", workspace, path, null, name, paragraphs, dialog);
+                pageEditor.updateSelection(this, "paragraph_in_slot", workspace, path, null, null, paragraphs, dialog);
             }
         }
+    }
+
+    public void mutateIntoSlotBar(Element element) {
+
+        String content = element.getAttribute("content");
+        int i = content.indexOf(':');
+        this.workspace = content.substring(0, i);
+        this.path = content.substring(i + 1);
+
+        this.label = element.getAttribute("label");
+        this.dialog = element.getAttribute("dialog");
+        this.paragraphs = "";
+
+        // TODO this also changes the area bar from being a drop-target to a drag-anchor, we need to know the name
+        // TODO of the paragraph to implement that
+        String paragraph = element.getAttribute("paragraph");
+
+        setLabelText(label + "(" + paragraph + ")");
+
+        Button button = new Button("Edit&nbsp;Paragraph");
+        button.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                pageEditor.openDialog(dialog, workspace, path, null, name);
+            }
+        });
+        addButton(button);
+
+        super.setColor("rgb(116, 173, 59)");
+        super.setStyle(super.getColor());
     }
 
     @Override

@@ -67,7 +67,7 @@ public class EditBarWidget extends AbstractBarWidget {
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
 
-        setLabel(label + "(" + paragraph + ")");
+        setLabelText(label + "(" + paragraph + ")");
         Button button = new Button("Edit&nbsp;paragraph");
         button.addClickHandler(new ClickHandler() {
             @Override
