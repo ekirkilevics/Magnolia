@@ -68,7 +68,10 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
     @Override
     public Collection<ContainerItemId> getChildren(Object itemId) {
         try {
-            return createContainerIds(getJcrContainerSource().getChildren(getJcrItem((ContainerItemId) itemId)));
+            long start = System.currentTimeMillis();
+            Collection<Item> children = getJcrContainerSource().getChildren(getJcrItem((ContainerItemId) itemId));
+            log.debug("Fetched {} children in {}ms", children.size(), System.currentTimeMillis() - start);
+            return createContainerIds(children);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -140,11 +143,9 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
     @Override
     protected Collection<ContainerItemId> createContainerIds(Collection<Item> children) throws RepositoryException {
         ArrayList<ContainerItemId> ids = new ArrayList<ContainerItemId>();
-        long start = System.currentTimeMillis();
         for (javax.jcr.Item child : children) {
             ids.add(createContainerId(child));
         }
-        log.debug("added {} ContainerItemId(s) in {}ms", ids.size(), System.currentTimeMillis() - start);
         return ids;
     }
 
