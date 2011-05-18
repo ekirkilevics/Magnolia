@@ -53,7 +53,7 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 
 /**
- * TreeBuild configured via content to bean.
+ * Jcr view configured via content to bean.
  */
 public class ConfiguredJcrViewBuilder extends FactoryBase<AbstractColumnDefinition, Column<AbstractColumnDefinition>> implements JcrViewBuilder, Serializable {
 
