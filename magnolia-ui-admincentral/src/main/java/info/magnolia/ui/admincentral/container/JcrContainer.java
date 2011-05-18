@@ -95,7 +95,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     private List<String> sortablePropertyIds = new ArrayList<String>();
 
 
-    /** Filters (WHERE) and sorters (ORDER BY) */
+    /** Filters (WHERE) and sorters (ORDER BY). */
     //private final List<Filter> filters = new ArrayList<Filter>();
     private final List<OrderBy> sorters = new ArrayList<OrderBy>();
 
