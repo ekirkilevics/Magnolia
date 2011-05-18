@@ -33,12 +33,7 @@
  */
 package info.magnolia.module.wcm.action;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import com.vaadin.Application;
-import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.ContentSelection;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.framework.event.EventBus;
@@ -52,12 +47,5 @@ public class AddParagraphAtBottomAction extends AbstractAddParagraphAction<AddPa
 
     public AddParagraphAtBottomAction(AddParagraphAtBottomActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
         super(definition, application, dialogPresenterFactory, selection, eventBus);
-    }
-
-    @Override
-    protected void onPreSave(Node node, Paragraph paragraph) throws RepositoryException {
-        // TODO not necessary to move it last since adding nodes always adds them at the end
-        JCRUtil.orderLast(node);
-        super.onPreSave(node, paragraph);
     }
 }
