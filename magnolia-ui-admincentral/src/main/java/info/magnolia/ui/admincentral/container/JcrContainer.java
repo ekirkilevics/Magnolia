@@ -67,7 +67,8 @@ import com.vaadin.ui.Component;
 
 
 /**
- * Vaadin container that reads its items from a JCR repository. Inspired by http://vaadin.com/directory#addon/vaadin-sqlcontainer.
+ * Vaadin container that reads its items from a JCR repository. Implements a simple mechanism for lazy loading items from a JCR repository and a cache for items and item ids.
+ * Inspired by http://vaadin.com/directory#addon/vaadin-sqlcontainer.
  *
  * @author tmattsson
  */
@@ -83,11 +84,11 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     private int size = Integer.MIN_VALUE;
 
-    /** Page length = number of items contained in one page. */
+    /** Page length = number of items contained in one page. Defaults to 100.*/
     private int pageLength = DEFAULT_PAGE_LENGTH;
     public static final int DEFAULT_PAGE_LENGTH = 100;
 
-    /** Number of items to cache = cacheRatio x pageLength. */
+    /** Number of items to cache = cacheRatio x pageLength. Default cache ratio value is 2.*/
     private int cacheRatio = DEFAULT_CACHE_RATIO;
     public static final int DEFAULT_CACHE_RATIO = 2;
 
@@ -106,6 +107,8 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     /** Starting row number of the currently fetched page. */
     private int currentOffset;
+
+    protected static final Long LONG_ZERO = Long.valueOf(0);
 
     public JcrContainer(JcrContainerSource jcrContainerSource, String workspace) {
         this.jcrContainerSource = jcrContainerSource;
@@ -307,11 +310,13 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         if (index < 0 || index > size() - 1) {
             return null;
         }
-        if (itemIndexes.keySet().contains(index)) {
-            return itemIndexes.get(index);
+        final Long idx = Long.valueOf(index);
+        if (itemIndexes.containsKey(idx)) {
+            return itemIndexes.get(idx);
         }
+        log.debug("item id {} not found in cache. Need to update offset, fetch new item ids from jcr repo and put them in cache.", index);
         updateOffsetAndCache(index);
-        return itemIndexes.get(Long.valueOf(index));
+        return itemIndexes.get(idx);
 
     }
 
@@ -335,15 +340,15 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         if (size == 0) {
             return null;
         }
-        if (!itemIndexes.containsKey(0)) {
+        if (!itemIndexes.containsKey(LONG_ZERO)) {
             updateOffsetAndCache(0);
         }
-        return itemIndexes.get(0);
+        return itemIndexes.get(LONG_ZERO);
     }
 
     @Override
     public Object lastItemId() {
-        int lastIx = size() - 1;
+        final Long lastIx = Long.valueOf(size() - 1);
         if (!itemIndexes.containsKey(lastIx)) {
             updateOffsetAndCache(size - 1);
         }
