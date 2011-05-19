@@ -47,7 +47,7 @@ import com.vaadin.tools.ReflectTools;
 public interface EditListener extends EventListener {
 
     public static Method EVENT_METHOD = ReflectTools.findMethod(
-        EditListener.class, "textChange", EditListener.class);
+        EditListener.class, "edit", EditEvent.class);
 
     void edit(EditEvent event);
 }

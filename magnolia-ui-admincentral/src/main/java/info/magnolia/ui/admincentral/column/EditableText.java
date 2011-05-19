@@ -41,6 +41,8 @@ import javax.jcr.RepositoryException;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextField;
 
 /**
@@ -86,7 +88,6 @@ public abstract class EditableText extends Editable {
 
             @Override
             public void handleAction(Object sender, Object target) {
-                textField.commit();
                 save();
             }
         });
@@ -95,14 +96,15 @@ public abstract class EditableText extends Editable {
 
             @Override
             public void handleAction(Object sender, Object target) {
-                textField.discard();
                 cancel();
             }
         });
         textField.focus();
         textField.setSizeFull();
+        Layout layout = new HorizontalLayout();
+        layout.addComponent(textField);
 
-        return new ComponentAndEditor(textField, textField);
+        return new ComponentAndEditor(layout, textField);
     }
 
 }

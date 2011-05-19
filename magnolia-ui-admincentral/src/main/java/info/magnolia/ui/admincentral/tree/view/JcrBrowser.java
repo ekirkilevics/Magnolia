@@ -36,6 +36,8 @@ package info.magnolia.ui.admincentral.tree.view;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.column.EditEvent;
+import info.magnolia.ui.admincentral.column.EditListener;
 import info.magnolia.ui.admincentral.column.Editable;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
@@ -118,24 +120,32 @@ public class JcrBrowser extends TreeTable {
 
         setContainerDataSource(container);
         addContextMenu();
-        // setPageLength(900);
+        setPageLength(900);
 
         addListener(new ItemClickListener() {
 
             @Override
             public void itemClick(ItemClickEvent event) {
-                Object itemId = event.getItemId();
-                String propertyId = (String) event.getPropertyId();
+                final Object itemId = event.getItemId();
+                final String propertyId = (String) event.getPropertyId();
                 if (isSelected(itemId)) {
                     Property containerProperty = getContainerProperty(itemId,
                         propertyId);
                     Object value = containerProperty.getValue();
                     if (value instanceof Editable) {
-                        Editable editable = (Editable) value;
+                        final Editable editable = (Editable) value;
+
+                        editable.addListener(new EditListener() {
+
+                            @Override
+                            public void edit(EditEvent event) {
+                                getContainerProperty(itemId,
+                                    propertyId).setValue(editable);
+                            }
+                        });
+
                         Component editorComponent = editable.getEditorComponent();
                         containerProperty.setValue(editorComponent);
-
-                        // FIXME: How to handle different ways you can stop editing?
                     }
                 }
             }

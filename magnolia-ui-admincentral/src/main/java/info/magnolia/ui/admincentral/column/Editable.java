@@ -103,62 +103,16 @@ public abstract class Editable extends Label {
 
     private Presenter presenter;
 
-    private ComponentAndEditor componentAndEditor;
-
     public Presenter getPresenter() {
         return presenter;
     }
 
     protected Editable(Item item, Presenter presenter) throws RepositoryException {
-        setCaption(getLabelText(item));
+        setValue(getLabelText(item));
         this.presenter = presenter;
         workspace = item.getSession().getWorkspace().getName();
         nodeIdentifier = item.isNode() ? ((Node) item).getIdentifier() : item.getParent().getIdentifier();
         propertyName = item.isNode() ? null : item.getName();
-
-        // layout = new CssLayout();
-
-        // TODO the double click event should be removed when the text field is visible, otherwise
-        // its not possible to double click to mark words
-        // layout.addListener(new LayoutEvents.LayoutClickListener() {
-        //
-        // @Override
-        // public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
-        // Component parent = AbstractEditable.this.getParent();
-        // while (!(parent instanceof JcrBrowser)) {
-        // parent = parent.getParent();
-        // if (parent == null) {
-        // return;
-        // }
-        // }
-        // JcrBrowser browser = (JcrBrowser) parent;
-        // String path;
-        // try {
-        // path = getItem().getPath();
-        // }
-        // catch (RepositoryException e) {
-        // throw new RuntimeRepositoryException(e);
-        // }
-        // JcrContainer container = browser.getContainer();
-        // ContainerItemId itemId = container.getItemByPath(path);
-        //
-        // if (browser.isSelected(itemId)) {
-        // try {
-        // Item item = getItem();
-        // ComponentAndEditor componentAndEditor = getComponentAndEditor(item);
-        // AbstractEditable.this.presenter.edit(item, componentAndEditor.getEditor());
-        // layout.removeAllComponents();
-        // layout.addComponent(componentAndEditor.getComponent());
-        // }
-        // catch (RepositoryException e) {
-        // throw new RuntimeRepositoryException(e);
-        // }
-        // }
-        // }
-        // });
-        // layout.addComponent(new Label(getLabelText(item)));
-        // layout.setSizeFull();
-        // setCompositionRoot(layout);
         setSizeFull();
 
         // FIXME this is a hack to show the label which is a div inline with the preceding icons. It
@@ -167,17 +121,17 @@ public abstract class Editable extends Label {
     }
 
     public void addListener(EditListener listener) {
-
+        addListener(EditEvent.class, listener, EditListener.EVENT_METHOD);
     }
 
     protected void cancel() {
-        componentAndEditor = null;
+        fireEvent(new EditEvent(this));
     }
 
     protected void save() {
         try {
             if (presenter.save(getItem())) {
-                componentAndEditor = null;
+                fireEvent(new EditEvent(this));
             }
         }
         catch (RepositoryException e) {
@@ -216,7 +170,7 @@ public abstract class Editable extends Label {
     public Component getEditorComponent() {
         try {
             Item item = getItem();
-            componentAndEditor = getComponentAndEditor(item);
+            ComponentAndEditor componentAndEditor = getComponentAndEditor(item);
             presenter.edit(item, componentAndEditor.getEditor());
             return componentAndEditor.getComponent();
         }

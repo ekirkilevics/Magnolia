@@ -33,7 +33,7 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import java.util.EventObject;
+import com.vaadin.ui.Component;
 
 
 /**
@@ -41,9 +41,9 @@ import java.util.EventObject;
  * 
  * @author mrichert
  */
-public class EditEvent extends EventObject {
+public class EditEvent extends Component.Event {
 
-    public EditEvent(Object source) {
+    public EditEvent(Component source) {
         super(source);
     }
 }

@@ -40,6 +40,8 @@ import java.util.Map;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
 
 /**
@@ -96,7 +98,9 @@ public abstract class EditableSelect extends Editable {
         });
 */
         select.setSizeFull();
+        Layout layout = new HorizontalLayout();
+        layout.addComponent(select);
 
-        return new ComponentAndEditor(select, select);
+        return new ComponentAndEditor(layout, select);
     }
 }
