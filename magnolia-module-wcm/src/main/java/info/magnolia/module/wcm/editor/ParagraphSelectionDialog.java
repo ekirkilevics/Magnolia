@@ -74,16 +74,14 @@ public class ParagraphSelectionDialog extends Window {
             public void buttonClick(Button.ClickEvent event) {
 
                 String paragraphName = (String) optionGroup.getValue();
+                if (paragraphName != null) {
 
-                // TODO validate that something is selected
+                    Paragraph paragraph = paragraphManager.getParagraphDefinition(paragraphName);
+                    if (paragraph != null) {
 
-                Paragraph paragraph = paragraphManager.getParagraphDefinition(paragraphName);
-
-                if (paragraph != null) {
-
-                    close();
-
-                    onClosed(paragraph);
+                        close();
+                        onClosed(paragraph);
+                    }
                 }
             }
         });
