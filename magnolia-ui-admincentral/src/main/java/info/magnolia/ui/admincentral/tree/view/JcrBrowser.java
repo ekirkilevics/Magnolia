@@ -328,7 +328,7 @@ public class JcrBrowser extends TreeTable {
     }
 
     public void refresh() {
-        container.fireItemSetChange();
+        // container.fireItemSetChange();
     }
 
     @Override

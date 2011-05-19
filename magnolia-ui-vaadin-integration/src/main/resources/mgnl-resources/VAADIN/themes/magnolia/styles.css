@@ -4,73 +4,85 @@
 	overflow-y: scroll !important;
 }
 */
-
-.v-table-row,.v-table-row-odd {
-    height: 30px; /* a fix for TreeTable row jittering */
-}
-
 .v-table-focus .v-table-cell-content {
-	border: none;
+  border: none;
 }
 
 .v-table-body focused {
-	border: none;
+  border: none;
 }
 
 .m-vtabsheet-canvas {
-	background-color: #dddddd;
+  background-color: #dddddd;
 }
 
 .v-panel-nocaption-vtabsheet-selectedtab {
-	display:none;
+  display: none;
 }
+
 .v-panel-captionwrap-vtabsheet-selectedtab {
-	display:none;
+  display: none;
 }
+
 .v-panel-content-vtabsheet-selectedtab {
-	background-color: #dddddd;
-	border:0;
+  background-color: #dddddd;
+  border: 0;
 }
+
 .v-panel-deco-vtabsheet-selectedtab {
-	display:none;
+  display: none;
 }
 
 .v-panel-nocaption-vtabsheet-tab {
-	display:none;
+  display: none;
 }
+
 .v-panel-captionwrap-vtabsheet-tab {
-	display:none;
+  display: none;
 }
+
 .v-panel-content-vtabsheet-tab {
-	background-color: white;
-	border:0;
+  background-color: white;
+  border: 0;
 }
+
 .v-panel-deco-vtabsheet-tab {
-	display:none;
+  display: none;
 }
+
 .m-workbench-header {
-	border-top: 1px solid #B6BBBC;
-	border-left: 1px solid #B6BBBC;
+  border-top: 1px solid #B6BBBC;
+  border-left: 1px solid #B6BBBC;
 }
+
 .m-search-box {
-	-moz-border-radius: 15px;
-	border-radius: 15px;
-	padding-left: 20px !important;
-	padding-top: 2px !important;
-	padding-bottom: 2px !important;
-	background: #FFF url("img/magnifier.png") no-repeat 2px 4px;
-	color: #B6BBBC !important;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  padding-left: 20px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  background: #FFF url("img/magnifier.png") no-repeat 2px 4px;
+  color: #B6BBBC !important;
 }
+
 .m-search-form-expanded {
-	border-top: 1px solid #B6BBBC !important;
-	border-left: 1px solid #B6BBBC !important;
+  border-top: 1px solid #B6BBBC !important;
+  border-left: 1px solid #B6BBBC !important;
 }
+
 .m-search-box:focus {
-	color: #3B4B57 !important;
+  color: #3B4B57 !important;
 }
+
 .m-search-form-label {
-	font-weight: bold;
+  font-weight: bold;
 }
+
+/* a fix for TreeTable row jittering */
+.v-table-row,.v-table-row-odd {
+    height: 30px;
+}
+
 .v-treetable-treespacer{
 	float: left;
 	margin-top: 2px;
@@ -81,18 +93,19 @@
     margin-top: 2px;
     margin-right: 5px;
 }
+
 .m-embedded-view {
 	border-top: 1px solid #B6BBBC;
 	border-left: 1px solid #B6BBBC;
 }
+
 /**
 * FIXME this is a hack to show the label which is a div inline with the preceding icons. It probably breaks on IE as it uses inline-block.
 */
-
 .m-inline-div {
 	display: inline-block;
 }
 
 .v-splitpanel-second-container {
-	overflow: hidden !important; /* remove scrollbars added by lazy load wrapper*/
+  overflow: hidden !important; /* remove scrollbars added by lazy load wrapper*/
 }
