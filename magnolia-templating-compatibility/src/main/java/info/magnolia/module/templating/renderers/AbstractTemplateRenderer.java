@@ -59,20 +59,6 @@ import java.io.Writer;
 public abstract class AbstractTemplateRenderer extends AbstractRenderer implements TemplateRenderer {
     private static final Logger log = LoggerFactory.getLogger(AbstractTemplateRenderer.class);
 
-    /**
-     * @deprecated since 4.0
-     */
-    @Override
-    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        final Content content = MgnlContext.getAggregationState().getMainContent();
-        final PrintWriter out = response.getWriter();
-        try {
-            renderTemplate(content, template, out);
-        } catch (RenderException e) {
-            throw new ServletException(e);
-        }
-    }
-
     @Override
     public void renderTemplate(Content content, Template template, Writer out) throws RenderException, IOException {
         try {

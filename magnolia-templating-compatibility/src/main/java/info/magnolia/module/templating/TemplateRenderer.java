@@ -58,9 +58,4 @@ public interface TemplateRenderer {
      */
     void renderTemplate(Content content, Template template, Writer out) throws RenderException, IOException;
 
-    /**
-     * @deprecated since 4.0
-     * @see #renderTemplate(info.magnolia.cms.core.Content, Template, java.io.Writer)
-     */
-    void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
 }

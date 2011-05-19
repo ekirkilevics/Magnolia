@@ -121,47 +121,5 @@ import javax.jcr.RepositoryException;
  */
 public class Paragraph extends AbstractRenderable {
 
-    private final static Logger log = LoggerFactory.getLogger(Paragraph.class);
-
-    /**
-     * @deprecated since 4.0 use the type property
-     */
-    public String getTemplateType(){
-        DeprecationUtil.isDeprecated("The property templateType in paragraph definitions has changed to type" );
-        return getType();
-    }
-
-    /**
-     * @deprecated since 4.0 use the type property
-     */
-    public void setTemplateType(String type){
-        DeprecationUtil.isDeprecated("The property templateType in paragraph definitions has changed to type" );
-        setType(type);
-    }
-
-    /**
-     * @deprecated since 4.0 use the dialog property
-     */
-    public String getDialogPath(String path){
-        String msg = "The property dialogPath in paragraph definitions has been deprecated, use the dialog property instead";
-        DeprecationUtil.isDeprecated(msg);
-        throw new UnsupportedOperationException(msg);
-    }
-
-    /**
-     * @deprecated since 4.0 use the dialog property
-     */
-    public void setDialogPath(String path){
-        DeprecationUtil.isDeprecated("The property dialogPath in paragraph definitions has been deprecated, use the dialog property instead");
-        Content node;
-        try {
-            node = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG).getContent(path);
-            String name = NodeDataUtil.getString(node, "name", node.getName());
-            setDialog(name);
-        }
-        catch (RepositoryException e) {
-            log.error("Can't determine dialog name using the path [" + path + "]", e);
-        }
-    }
 
 }

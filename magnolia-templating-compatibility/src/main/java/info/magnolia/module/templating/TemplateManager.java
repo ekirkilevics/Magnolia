@@ -106,22 +106,6 @@ public class TemplateManager extends ObservedManager {
      * <li> description - description of a template</li>
      * </ol>
      * @return TemplateInfo
-     * @deprecated since 4.0 Use {@link #getTemplateDefinition(String)} instead
-     */
-    @Deprecated
-    public Template getInfo(String key) {
-        return getTemplateDefinition(key);
-    }
-
-    /**
-     * Returns the cached content of the requested template. TemplateInfo properties:
-     * <ol>
-     * <li> title - title describing template</li>
-     * <li> type - jsp / servlet</li>
-     * <li> path - jsp / servlet path</li>
-     * <li> description - description of a template</li>
-     * </ol>
-     * @return TemplateInfo
      */
     public Template getTemplateDefinition(String key) {
         return cachedContent.get(key);

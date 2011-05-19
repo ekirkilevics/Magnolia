@@ -169,13 +169,6 @@ public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
     }
 
     /**
-     * @deprecated since 4.3 - typo, use getAggregationStateSafely()
-     */
-    protected AggregationState getAggrigationStateSafely() {
-        return getAggregationStateSafely();
-    }
-
-    /**
      * This gets the aggregation state without throwing an exception if the current context is not a WebContext.
      */
     protected AggregationState getAggregationStateSafely() {
