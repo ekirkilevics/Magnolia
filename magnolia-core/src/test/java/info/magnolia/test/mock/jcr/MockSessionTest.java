@@ -54,11 +54,9 @@ public class MockSessionTest {
     @Test
     public void testGetNodeFromStringe() throws Exception {
         final MockSession mockSession = new MockSession("test");
-        final MockNode parent = new MockNode("parent");
+        final MockNode parent = (MockNode) mockSession.getRootNode();
         final MockNode child = new MockNode("child");
         parent.addNode(child);
-
-        mockSession.setRootNode(parent);
 
         assertEquals(child, mockSession.getNode("/child"));
     }
@@ -66,7 +64,7 @@ public class MockSessionTest {
     @Test
     public void testGetPropertyFromString() throws Exception {
         final MockSession mockSession = new MockSession("test");
-        final MockNode parent = new MockNode("parent");
+        final MockNode parent = (MockNode) mockSession.getRootNode();
         final MockNode child = new MockNode("child");
         parent.addNode(child);
         final MockNode childOfChild = new MockNode("childOfChild");
@@ -82,7 +80,7 @@ public class MockSessionTest {
     @Test
     public void testNodeExistsFromString() throws Exception {
         final MockSession mockSession = new MockSession("test");
-        final MockNode parent = new MockNode("parent");
+        final MockNode parent = (MockNode) mockSession.getRootNode();
         final MockNode child = new MockNode("child");
         parent.addNode(child);
 

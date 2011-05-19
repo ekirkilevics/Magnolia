@@ -59,6 +59,8 @@ import org.xml.sax.ContentHandler;
  */
 public class MockSession implements Session {
 
+    public static final String JCR_ROOT_NAME = "jcr:root";
+
     final private Map<String, MockNode> nodesCache = new LinkedHashMap<String, MockNode>();
 
     private MockNode rootNode = null;
@@ -68,6 +70,8 @@ public class MockSession implements Session {
     public MockSession(MockWorkspace workspace) {
         this.workspace = workspace;
         workspace.setSession(this);
+
+        rootNode = new MockNode(JCR_ROOT_NAME);
     }
 
     public MockSession(String name) {
