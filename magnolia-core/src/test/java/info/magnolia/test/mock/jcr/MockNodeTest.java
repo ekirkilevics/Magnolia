@@ -35,7 +35,6 @@ package info.magnolia.test.mock.jcr;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import javax.jcr.PathNotFoundException;
 
@@ -85,16 +84,9 @@ public class MockNodeTest {
         assertEquals(childOfChild, parent.getNode("child/childOfChild"));
     }
 
-    @Test
+    @Test(expected = PathNotFoundException.class)
     public void testGetNodeWithFalsePath() throws Exception {
-        final MockNode parent = new MockNode("parent");
-
-        try {
-            parent.getNode("does/not/exist");
-            fail("Expected excption instead");
-        } catch (PathNotFoundException e) {
-            // expected
-        }
+        new MockNode("parent").getNode("does/not/exist");
     }
 
     @Test
