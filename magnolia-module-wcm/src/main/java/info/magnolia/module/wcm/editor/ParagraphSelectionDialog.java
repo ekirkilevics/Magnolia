@@ -41,6 +41,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
 
@@ -54,6 +56,9 @@ public class ParagraphSelectionDialog extends Window {
     private OptionGroup optionGroup;
 
     public ParagraphSelectionDialog(String paragraphs) {
+
+        // TODO use IoC
+        final ParagraphManager paragraphManager = ParagraphManager.getInstance();
 
         setCaption("Select paragraph");
         setModal(true);
@@ -72,7 +77,7 @@ public class ParagraphSelectionDialog extends Window {
 
                 // TODO validate that something is selected
 
-                Paragraph paragraph = ParagraphManager.getInstance().getParagraphDefinition(paragraphName);
+                Paragraph paragraph = paragraphManager.getParagraphDefinition(paragraphName);
 
                 if (paragraph != null) {
 
@@ -103,9 +108,6 @@ public class ParagraphSelectionDialog extends Window {
         layout.setSpacing(true);
         layout.setSizeFull();
 
-        // TODO use IoC
-        ParagraphManager paragraphManager = ParagraphManager.getInstance();
-
         optionGroup = new OptionGroup();
 
         String[] paragraphsArray = StringUtils.split(paragraphs, ", \t\n");
@@ -117,8 +119,11 @@ public class ParagraphSelectionDialog extends Window {
             }
 
             optionGroup.addItem(paragraph);
-            // TODO i18n
-            optionGroup.setItemCaption(paragraph, paragraphDefinition.getTitle());
+
+            Messages messages = MessagesManager.getMessages(paragraphDefinition.getI18nBasename());
+            String title = messages.getWithDefault(paragraphDefinition.getTitle(), paragraphDefinition.getTitle());
+
+            optionGroup.setItemCaption(paragraph, title);
         }
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
