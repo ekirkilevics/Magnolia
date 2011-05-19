@@ -37,7 +37,6 @@ import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.util.DeprecationUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.HashMap;

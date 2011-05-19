@@ -33,15 +33,6 @@
  */
 package info.magnolia.module.templating;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.DeprecationUtil;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.context.MgnlContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.RepositoryException;
 
 /**
  * Represents a paragraph definition. Following are most of the properties you can use

@@ -34,7 +34,6 @@
 package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.AbstractRenderer;
 import info.magnolia.module.templating.RenderException;
 import info.magnolia.module.templating.TemplateRenderer;
@@ -42,11 +41,7 @@ import info.magnolia.module.templating.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Writer;
 
 
