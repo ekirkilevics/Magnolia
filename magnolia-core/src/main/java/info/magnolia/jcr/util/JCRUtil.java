@@ -314,6 +314,18 @@ public class JCRUtil {
         return isSame(last, node);
     }
 
+    public static void renameNode(Node node, String newName) throws RepositoryException {
+        Node parent = node.getParent();
+        String newPath = combinePathAndName(parent.getPath(), newName);
+        node.getSession().move(node.getPath(), newPath);
+    }
+
+    public static void renameProperty(Property property, String newName) throws RepositoryException {
+        Node node = property.getNode();
+        node.setProperty(newName, property.getValue());
+        property.remove();
+    }
+
     /**
      * Returns true if both arguments represents the same node. In case the nodes are wrapped the comparison is done
      * one the actual nodes behind the wrappers.
@@ -324,7 +336,7 @@ public class JCRUtil {
 
     private static String combinePathAndName(String path, String name) {
         if ("/".equals(path)) {
-            return path + name;
+            return "/" + name;
         } else {
             return path + "/" + name;
         }

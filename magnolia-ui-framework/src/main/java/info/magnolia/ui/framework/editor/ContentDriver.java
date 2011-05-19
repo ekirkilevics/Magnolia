@@ -44,6 +44,7 @@ import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.JCRUtil;
 
 
 /**
@@ -128,9 +129,9 @@ public class ContentDriver extends AbstractDriver<Node> {
             path = StringUtils.substringBefore(path, "@name");
             Item item = getItemByRelPath(node, path);
             if (item instanceof Node) {
-                renameNode(node, (String) value);
+                JCRUtil.renameNode(node, (String) value);
             } else if (item instanceof Property) {
-                renameProperty((Property) item, (String) value);
+                JCRUtil.renameProperty((Property) item, (String) value);
             }
         } else if (value instanceof String) {
             node.setProperty(path, (String) value);
@@ -166,15 +167,5 @@ public class ContentDriver extends AbstractDriver<Node> {
             return node.getProperty(relPath);
         }
         throw new PathNotFoundException(node.getPath() + " "  + relPath);
-    }
-
-    private void renameNode(Node node, String newName) throws RepositoryException {
-        String newPath = (node.getParent().getDepth() > 0 ? node.getParent().getPath() : "") + "/" + newName;
-        node.getSession().move(node.getPath(), newPath);
-    }
-
-    private void renameProperty(Property property, String newName) throws RepositoryException {
-        property.getNode().setProperty(newName, property.getValue());
-        property.remove();
     }
 }
