@@ -102,15 +102,6 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     //private final List<Filter> filters = new ArrayList<Filter>();
     private final List<OrderBy> sorters = new ArrayList<OrderBy>();
 
-
-    /**
-     * Size updating logic. Do not update size from data source if it has been
-     * updated in the last sizeValidMilliSeconds milliseconds.
-     */
-    private final int sizeValidMilliSeconds = 10000;
-    private boolean sizeDirty = true;
-    private long sizeUpdated = System.currentTimeMillis();
-
     private String workspace;
 
     /** Starting row number of the currently fetched page. */
@@ -493,20 +484,14 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
 
     /**
-     * Fetches new count of rows from the data source, if needed.
+     * Triggers a refresh if the current row count has changed.
      */
     private void updateCount() {
-        if (!sizeDirty && System.currentTimeMillis() < sizeUpdated + sizeValidMilliSeconds) {
-            return;
-        }
-
         int newSize = getRowCount();
         if (newSize != size) {
             size = newSize;
             refresh();
         }
-        sizeUpdated = System.currentTimeMillis();
-        sizeDirty = false;
 
     }
 
@@ -563,7 +548,6 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
      * Does NOT remove sorting or filtering rules!
      */
     public void refresh() {
-        sizeDirty = true;
         currentOffset = 0;
         cachedItems.clear();
         itemIndexes.clear();
