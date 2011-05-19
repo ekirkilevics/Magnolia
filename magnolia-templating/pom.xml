@@ -7,17 +7,12 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>magnolia-module-templating</artifactId>
-  <name>magnolia-module-templating</name>
+  <artifactId>magnolia-templating</artifactId>
+  <name>magnolia-templating</name>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-gui</artifactId>
       <version>5.0-SNAPSHOT</version>
     </dependency>
     <dependency>

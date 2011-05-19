@@ -8,8 +8,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>info.magnolia</groupId>
-  <artifactId>magnolia-module-templating-components</artifactId>
-  <name>magnolia-module-templating-components</name>
+  <artifactId>magnolia-templating-components</artifactId>
+  <name>magnolia-templating-components</name>
 
   <properties>
     <taglib.shortname>ui</taglib.shortname>

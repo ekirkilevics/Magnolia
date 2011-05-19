@@ -712,7 +712,6 @@ for Java Content Repositories (JCR).
 
     <!-- Old Magnolia UI -->
     <module>magnolia-gui</module>
-    <module>magnolia-module-exchange-simple</module>
     <module>magnolia-module-fckeditor</module>
     <module>magnolia-module-admininterface</module>
 
@@ -722,20 +721,24 @@ for Java Content Repositories (JCR).
     <module>magnolia-ui-vaadin-widgetset</module>
     <module>magnolia-ui-vaadin-integration</module>
     <module>magnolia-ui-admincentral</module>
-    <module>magnolia-module-wcm</module>
 
     <!-- Templating -->
-    <module>magnolia-module-templating-components</module>
-    <module>magnolia-taglib-cms</module>
-    <module>magnolia-taglib-utility</module>
-    <module>magnolia-module-templating</module>
+    <module>magnolia-templating</module>
+    <module>magnolia-templating-components</module>
+    <module>magnolia-templating-samples</module>
+
+    <module>magnolia-templating-compatibility</module>
+    <module>magnolia-templating-compatibility-taglib-cms</module>
+    <module>magnolia-templating-compatibility-taglib-utility</module>
 
     <!-- Modules -->
     <module>magnolia-module-cache</module>
+    <module>magnolia-module-exchange-simple</module>
     <module>magnolia-module-mail</module>
-    <module>magnolia-module-workflow</module>
-    <module>magnolia-module-samples</module>
     <module>magnolia-module-store-client</module>
+    <module>magnolia-module-wcm</module>
+    <module>magnolia-module-workflow</module>
+
     <module>magnolia-empty-webapp</module>
   </modules>
 </project>

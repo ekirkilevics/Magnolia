@@ -6,8 +6,8 @@
     <version>5.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>magnolia-module-samples</artifactId>
-  <name>magnolia-module-samples</name>
+  <artifactId>magnolia-templating-samples</artifactId>
+  <name>magnolia-templating-samples</name>
   <packaging>jar</packaging>
   <description />
   <properties>

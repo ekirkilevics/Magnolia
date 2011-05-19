@@ -7,9 +7,9 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>magnolia-taglib-cms</artifactId>
-  <name>CMS Tag Library</name>
-  <description>Core tag library for CMS</description>
+  <artifactId>magnolia-templating-compatibility-taglib-cms</artifactId>
+  <name>magnolia-templating-compatibility-taglib-cms</name>
+  <description>Compatibility tag library for CMS</description>
   <properties>
     <taglib.shortname>cms</taglib.shortname>
     <taglib.uri>cms-taglib</taglib.uri>
