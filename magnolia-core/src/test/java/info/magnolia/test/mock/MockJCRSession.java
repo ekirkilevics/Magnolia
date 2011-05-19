@@ -70,9 +70,8 @@ import org.xml.sax.SAXException;
 
 
 /**
- * @author philipp
  * @version $Id$
- *
+ * @deprecated since 5.0 - use {@link info.magnolia.test.mock.jcr.MockSession} instead.
  */
 public class MockJCRSession implements Session {
 

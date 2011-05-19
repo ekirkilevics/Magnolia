@@ -65,10 +65,10 @@ import org.xml.sax.ContentHandler;
 
 
 /**
- * @author pbracher
  * @version $Id$
- *
+ * @deprecated since 5.0 - use {@link info.magnolia.test.mock.jcr.MockWorkspace} instead.
  */
+
 public class MockWorkspace implements Workspace {
 
     private static Logger log = LoggerFactory.getLogger(MockWorkspace.class);
