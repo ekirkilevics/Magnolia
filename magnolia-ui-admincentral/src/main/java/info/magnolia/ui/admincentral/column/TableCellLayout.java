@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -37,10 +37,13 @@ import info.magnolia.ui.admincentral.column.client.VTableCellLayout;
 
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.CssLayout;
+
+
 /**
- * Table Cell Layout.
+ * A table-cell-friendly layout.
+ * 
  * @author mrichert
- *
+ * @version $Id$
  */
 @ClientWidget(value = VTableCellLayout.class)
 public class TableCellLayout extends CssLayout {

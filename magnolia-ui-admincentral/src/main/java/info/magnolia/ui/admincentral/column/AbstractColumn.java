@@ -33,11 +33,15 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import com.vaadin.ui.Component;
 import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Component;
 
 /**
  * Base class for tree columns.
@@ -47,20 +51,31 @@ import javax.jcr.RepositoryException;
  * @author tmattsson
  */
 public abstract class AbstractColumn<D extends AbstractColumnDefinition> implements Column<AbstractColumnDefinition> {
-
     protected final D definition;
+
+    private Map<String, Component> components = new HashMap<String, Component>();
 
     public AbstractColumn(D def) {
         this.definition = def;
     }
 
     @Override
-    public D getDefinition() {
-        return this.definition;
+    public Component getComponent(Item item) throws RepositoryException {
+        Component component = components.get(item.getPath());
+        return component == null ? getDefaultComponent(item) : component;
+    }
+
+    protected abstract Component getDefaultComponent(Item item) throws RepositoryException;
+
+    @Override
+    public void setComponent(Item item, Component newValue) throws RepositoryException {
+        components.put(item.getPath(), newValue);
     }
 
     @Override
-    public abstract Component getComponent(Item item) throws RepositoryException;
+    public D getDefinition() {
+        return this.definition;
+    }
 
     @Override
     public int getWidth() {

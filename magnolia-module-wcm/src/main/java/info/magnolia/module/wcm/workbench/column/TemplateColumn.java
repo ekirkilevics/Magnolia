@@ -33,15 +33,6 @@
  */
 package info.magnolia.module.wcm.workbench.column;
 
-import java.io.Serializable;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.ui.Component;
 import info.magnolia.cms.core.Content;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.module.templating.Template;
@@ -52,6 +43,17 @@ import info.magnolia.ui.admincentral.jcr.TemporaryHackUtil;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
+
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Component;
 
 /**
  * A column that displays the currently selected template for a page and allows the editor to choose
@@ -68,7 +70,7 @@ public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinit
     }
 
     @Override
-    public Component getComponent(Item item) throws RepositoryException {
+    public Component getDefaultComponent(Item item) throws RepositoryException {
         return new EditableSelect(item, new PresenterImpl(), "MetaData/mgnl:template", getAvailableTemplates((Node) item)) {
 
             @Override

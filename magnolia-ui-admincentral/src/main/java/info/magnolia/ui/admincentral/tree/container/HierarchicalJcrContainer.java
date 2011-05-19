@@ -45,6 +45,7 @@ import java.util.Collection;
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
@@ -52,10 +53,11 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Container;
 
+
 /**
  * Hierarchical implementation of {@link JcrContainer}.
  * @author fgrilli
- *
+ * 
  */
 public class HierarchicalJcrContainer extends JcrContainer implements Container.Hierarchical {
 
@@ -72,7 +74,8 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
             Collection<Item> children = getJcrContainerSource().getChildren(getJcrItem((ContainerItemId) itemId));
             log.debug("Fetched {} children in {}ms", children.size(), System.currentTimeMillis() - start);
             return createContainerIds(children);
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
@@ -80,13 +83,14 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
     @Override
     public ContainerItemId getParent(Object itemId) {
         try {
-            javax.jcr.Item item = getJcrItem((ContainerItemId) itemId);
-            if (item instanceof javax.jcr.Property) {
+            Item item = getJcrItem((ContainerItemId) itemId);
+            if (item instanceof Property) {
                 return createContainerId(item.getParent());
             }
             Node node = (Node) item;
             return node.getDepth() > 0 ? createContainerId(node.getParent()) : null;
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
@@ -95,7 +99,8 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
     public Collection<ContainerItemId> rootItemIds() {
         try {
             return createContainerIds(getJcrContainerSource().getRootItemIds());
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
@@ -120,7 +125,8 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
     public boolean isRoot(Object itemId) {
         try {
             return getJcrContainerSource().isRoot(getJcrItem((ContainerItemId) itemId));
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
@@ -129,7 +135,8 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
     public boolean hasChildren(Object itemId) {
         try {
             return getJcrContainerSource().hasChildren(getJcrItem((ContainerItemId) itemId));
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
@@ -159,7 +166,8 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
         try {
             getJcrItem((ContainerItemId) itemId);
             return true;
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             return false;
         }
     }

@@ -93,7 +93,22 @@ public abstract class AbstractContainer implements Container {
         public Container getContainer() {
             return AbstractContainer.this;
         }
+    }
 
+    /**
+     * ImplementationConfiguration of item set change event.
+     */
+    protected class PropertySetChangeEvent implements Container.PropertySetChangeEvent {
+
+        /**
+         * Gets the Property where the event occurred.
+         * 
+         * @see com.vaadin.data.Container.ItemSetChangeEvent#getContainer()
+         */
+        @Override
+        public Container getContainer() {
+            return AbstractContainer.this;
+        }
     }
 }
 

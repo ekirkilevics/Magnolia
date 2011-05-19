@@ -33,11 +33,12 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import com.vaadin.ui.Component;
 import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Component;
 
 /**
  * Defines a Column - e.g. for lists or trees.
@@ -54,6 +55,8 @@ public interface Column<D extends AbstractColumnDefinition> {
      * @return value to be displayed in the corresponding column (from the provided Node)
      */
     Component getComponent(Item item) throws RepositoryException;
+
+    void setComponent(Item item, Component newValue) throws RepositoryException;
 
     int getWidth();
 

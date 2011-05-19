@@ -50,6 +50,7 @@ import org.apache.commons.lang.time.FastDateFormat;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
+
 /**
  * Column that displays a property for a nodes MetaData. Used to display the modification date of
  * content nodes.
@@ -63,25 +64,26 @@ public class MetaDataColumn extends AbstractColumn<MetaDataColumnDefinition> imp
     }
 
     @Override
-    public Component getComponent(Item item) throws RepositoryException {
+    protected Component getDefaultComponent(Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
             Calendar date = JCRMetadataUtil.getMetaData(node).getModificationDate();
             final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : UIUtil.DEFAULT_DATE_PATTERN;
             final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance(pattern);
-            return  new Label( date != null ? DATE_FORMAT.format(date.getTime()) : "");
+            return new Label(date != null ? DATE_FORMAT.format(date.getTime()) : "");
         }
         return new Label();
     }
 
     /**
-     * @param datePattern a {@link SimpleDateFormat} compatible pattern
+     * @param datePattern a SimpleDateFormat compatible pattern
      */
     public void setDatePattern(String datePattern) {
         this.datePattern = datePattern;
     }
+
     /**
-     * @return {@link SimpleDateFormat} compatible pattern
+     * @return SimpleDateFormat compatible pattern
      */
     public String getDatePattern() {
         return datePattern;

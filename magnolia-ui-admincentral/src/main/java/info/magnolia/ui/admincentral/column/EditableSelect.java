@@ -33,19 +33,21 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import info.magnolia.ui.framework.editor.ValueEditor;
+
 import java.util.Map;
+
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.NativeSelect;
-import info.magnolia.ui.framework.editor.ValueEditor;
 
 /**
  * UI component that displays a label and on double click opens it for editing by switching the label to a select field.
  *
  * @author tmattsson
  */
-public abstract class EditableSelect extends AbstractEditable {
+public abstract class EditableSelect extends Editable {
 
     private Map<String, String> options;
     private String path;

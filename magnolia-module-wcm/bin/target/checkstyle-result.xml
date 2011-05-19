@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="5.0">
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AbstractAddParagraphAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AbstractEditAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/ActivatePageAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/ActivatePageActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddPageAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddPageActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddParagraphAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddParagraphActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddParagraphAfterAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddParagraphAfterActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddParagraphAtBottomAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddParagraphAtBottomActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddParagraphAtTopAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddParagraphAtTopActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddParagraphBeforeAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/AddParagraphBeforeActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/DeactivatePageAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/DeactivatePageActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/DeleteAreaAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/DeleteAreaActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/DeleteParagraphAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/DeleteParagraphActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/EditAreaAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/EditAreaActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/EditPagePropertiesAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/EditPagePropertiesActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/EditParagraphAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/EditParagraphActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/MoveParagraphDownAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/MoveParagraphDownActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/MoveParagraphUpAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/MoveParagraphUpActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/OpenPageAction.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/action/OpenPageActionDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/activity/PageEditorActivity.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/column/TemplateColumn.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/column/TemplateColumnDefinition.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/ContentSelection.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/editor/client/AbstractBarWidget.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/editor/client/AreaBarWidget.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/editor/client/EditBarWidget.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/editor/client/VPageEditor.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/editor/PageEditor.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/editor/SelectionChangedEvent.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/editor/SelectionChangedHandler.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/PageChangedEvent.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/PageChangedHandler.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/PageEditorApplication.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/PageEditorHacks.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/PageEditorPresenter.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/PageEditorView.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/PageEditorViewImpl.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/ParagraphSelectionDialog.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/place/PageEditorPlace.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/SelectionType.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/setup/WcmVersionHandler.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/toolbox/ToolboxActionFactory.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/toolbox/ToolboxActionFactoryImpl.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/toolbox/ToolboxConfiguration.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/toolbox/ToolboxView.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/toolbox/ToolboxViewImpl.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/WcmModule.java">
+</file>
+<file name="/Users/marlon/Documents/Magnolia/magnolia-project/magnolia-module-wcm/src/main/java/info/magnolia/module/wcm/WcmModuleConfiguration.java">
+</file>
+</checkstyle>

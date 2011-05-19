@@ -33,7 +33,7 @@
  */
 package info.magnolia.ui.admincentral.container;
 
-import com.vaadin.data.Property;
+import com.vaadin.data.util.AbstractProperty;
 
 /**
  * Represents a property on an item in JcrContainer. Think of this as a cell in a table.
@@ -42,7 +42,7 @@ import com.vaadin.data.Property;
  *
  * @author tmattsson
  */
-public class JcrContainerProperty implements Property {
+public class JcrContainerProperty extends AbstractProperty {
 
     private String propertyId;
     private Object itemId;
@@ -53,6 +53,7 @@ public class JcrContainerProperty implements Property {
         this.propertyId = propertyId;
         this.itemId = itemId;
         this.container = container;
+        setReadOnly(false);
     }
 
     @Override
@@ -62,6 +63,8 @@ public class JcrContainerProperty implements Property {
 
     @Override
     public void setValue(Object newValue) throws ReadOnlyException, ConversionException {
+        container.setColumnValue(propertyId, itemId, newValue);
+        fireValueChange();
     }
 
     @Override

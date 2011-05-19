@@ -33,8 +33,6 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
 import info.magnolia.ui.model.column.definition.PropertyTypeColumnDefinition;
 
 import java.io.Serializable;
@@ -43,6 +41,9 @@ import javax.jcr.Item;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 
 
 /**
@@ -55,7 +56,7 @@ public class PropertyTypeColumn extends AbstractColumn<PropertyTypeColumnDefinit
     }
 
     @Override
-    public Component getComponent(Item item) throws RepositoryException {
+    protected Component getDefaultComponent(Item item) throws RepositoryException {
         if (item instanceof Property) {
             Property property = (Property) item;
             return new Label(PropertyType.nameFromValue(property.getType()));

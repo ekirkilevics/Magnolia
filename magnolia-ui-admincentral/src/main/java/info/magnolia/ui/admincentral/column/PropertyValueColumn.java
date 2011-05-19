@@ -33,7 +33,14 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.column.definition.PropertyValueColumnDefinition;
+
 import java.io.Serializable;
+
 import javax.jcr.Item;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
@@ -43,11 +50,6 @@ import javax.jcr.ValueFormatException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.place.PlaceController;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.column.definition.PropertyValueColumnDefinition;
 
 /**
  * Definition for a column that displays the value of a property.
@@ -62,7 +64,7 @@ public class PropertyValueColumn extends AbstractEditableColumn<PropertyValueCol
     }
 
     @Override
-    public Component getComponent(Item item) throws RepositoryException {
+    protected Component getDefaultComponent(Item item) throws RepositoryException {
         if (item instanceof Property) {
             return new EditableText(item, new PresenterImpl(), item.getName()) {
 
@@ -73,22 +75,31 @@ public class PropertyValueColumn extends AbstractEditableColumn<PropertyValueCol
                 }
 
                 @Override
-                public int compareTo(AbstractEditable o) {
-                    try {
-                        Property property = (Property) getItem();
-                        String thisObjectProperty = property.getString();
+                public int compareTo(Object other) {
+                    if (other instanceof Editable) {
+                        Editable o = (Editable) other;
+                        try {
+                            Property property = (Property) getItem();
+                            String thisObjectProperty = property.getString();
 
-                        Property otherProperty = (Property) o.getItem();
-                        String otherObjectProperty = otherProperty.getString();
+                            Property otherProperty = (Property) o.getItem();
+                            String otherObjectProperty = otherProperty.getString();
 
-                        return thisObjectProperty.toLowerCase().compareTo(otherObjectProperty.toLowerCase());
+                            return thisObjectProperty.toLowerCase().compareTo(otherObjectProperty.toLowerCase());
 
-                    } catch (ValueFormatException e) {
-                        throw new RuntimeRepositoryException(e);
-                    } catch (PathNotFoundException e) {
-                        throw new RuntimeRepositoryException(e);
-                    } catch (RepositoryException e) {
-                        throw new RuntimeRepositoryException(e);
+                        }
+                        catch (ValueFormatException e) {
+                            throw new RuntimeRepositoryException(e);
+                        }
+                        catch (PathNotFoundException e) {
+                            throw new RuntimeRepositoryException(e);
+                        }
+                        catch (RepositoryException e) {
+                            throw new RuntimeRepositoryException(e);
+                        }
+                    }
+                    else {
+                        return super.compareTo(other);
                     }
                 }
             };

@@ -63,6 +63,7 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.ui.Component;
 
 
 /**
@@ -70,11 +71,13 @@ import com.vaadin.data.Property;
  *
  * @author tmattsson
  */
-public abstract class JcrContainer extends AbstractContainer implements Container.Sortable, Container.Indexed, Container.ItemSetChangeNotifier  {
+public abstract class JcrContainer extends AbstractContainer implements Container.Sortable, Container.Indexed, Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier {
 
     private static final Logger log = LoggerFactory.getLogger(JcrContainer.class);
 
     private Set<ItemSetChangeListener> itemSetChangeListeners;
+
+    private Set<PropertySetChangeListener> propertySetChangeListeners;
 
     private final JcrContainerSource jcrContainerSource;
 
@@ -119,6 +122,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     }
 
     protected abstract Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException;
+
     //TODO do we really need this method or might instead refactor getPage() to take a query.
     public abstract void updateContainerIds(NodeIterator iterator) throws RepositoryException;
 
@@ -140,6 +144,24 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         }
     }
 
+    @Override
+    public void addListener(PropertySetChangeListener listener) {
+        if (propertySetChangeListeners == null) {
+            propertySetChangeListeners = new LinkedHashSet<PropertySetChangeListener>();
+        }
+        propertySetChangeListeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(PropertySetChangeListener listener) {
+        if (propertySetChangeListeners != null) {
+            propertySetChangeListeners.remove(listener);
+            if (propertySetChangeListeners.isEmpty()) {
+                propertySetChangeListeners = null;
+            }
+        }
+    }
+
     public void fireItemSetChange() {
 
         log.debug("Firing item set changed");
@@ -149,6 +171,19 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
             for (Object anArray : array) {
                 ItemSetChangeListener listener = (ItemSetChangeListener) anArray;
                 listener.containerItemSetChange(event);
+            }
+        }
+    }
+
+    public void firePropertySetChange() {
+
+        log.debug("Firing property set changed");
+        if (propertySetChangeListeners != null && !propertySetChangeListeners.isEmpty()) {
+            final Container.PropertySetChangeEvent event = new AbstractContainer.PropertySetChangeEvent();
+            Object[] array = propertySetChangeListeners.toArray();
+            for (Object anArray : array) {
+                PropertySetChangeListener listener = (PropertySetChangeListener) anArray;
+                listener.containerPropertySetChange(event);
             }
         }
     }
@@ -247,6 +282,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     /** Methods from interface Container.Indexed **/
     /**********************************************/
 
+    @Override
     public int indexOfId(Object itemId) {
 
         if (!containsId(itemId)) {
@@ -275,6 +311,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         return -1;
     }
 
+    @Override
     public Object getIdByIndex(int index) {
         if (index < 0 || index > size() - 1) {
             return null;
@@ -291,14 +328,17 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     /** Methods from interface Container.Ordered **/
     /**********************************************/
 
+    @Override
     public Object nextItemId(Object itemId) {
         return getIdByIndex(indexOfId(itemId) + 1);
     }
 
+    @Override
     public Object prevItemId(Object itemId) {
         return getIdByIndex(indexOfId(itemId) - 1);
     }
 
+    @Override
     public Object firstItemId() {
         updateCount();
         if (size == 0) {
@@ -310,6 +350,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         return itemIndexes.get(0);
     }
 
+    @Override
     public Object lastItemId() {
         int lastIx = size() - 1;
         if (!itemIndexes.containsKey(lastIx)) {
@@ -318,10 +359,12 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         return itemIndexes.get(lastIx);
     }
 
+    @Override
     public boolean isFirstId(Object itemId) {
         return firstItemId().equals(itemId);
     }
 
+    @Override
     public boolean isLastId(Object itemId) {
         return lastItemId().equals(itemId);
     }
@@ -331,6 +374,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     /***********************************************/
     //FIXME this only work when column name is equal to jcr property name (i.e. title column). Need to
     //find a mechanism to bind a column to a jcr property (possibly in the column definition).
+    @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
         sorters.clear();
         for (int i = 0; i < propertyId.length; i++) {
@@ -342,6 +386,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         refresh();
     }
 
+    @Override
     public List<String> getSortableContainerPropertyIds() {
         return Collections.unmodifiableList(sortablePropertyIds);
     }
@@ -361,6 +406,16 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         try {
             return jcrContainerSource.getColumnComponent(propertyId, getJcrItem(((ContainerItemId) itemId)));
         } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+    }
+
+    public void setColumnValue(String propertyId, Object itemId, Object newValue) {
+        try {
+            jcrContainerSource.setColumnComponent(propertyId, getJcrItem(((ContainerItemId) itemId)), (Component) newValue);
+            firePropertySetChange();
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
@@ -396,18 +451,22 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     /** UNSUPPORTED CONTAINER FEATURES **/
     /************************************/
 
+    @Override
     public Item addItemAfter(Object previousItemId, Object newItemId) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Item addItemAt(int index, Object newItemId) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Object addItemAt(int index) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Object addItemAfter(Object previousItemId) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }

@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import info.magnolia.ui.framework.editor.ValueEditor;
+
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
@@ -41,14 +43,12 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.TextField;
 
-import info.magnolia.ui.framework.editor.ValueEditor;
-
 /**
  * UI component that displays a label and on double click opens it for editing by switching the label to save text field.
  *
  * @author tmattsson
  */
-public abstract class EditableText extends AbstractEditable {
+public abstract class EditableText extends Editable {
 
     private String path;
 
@@ -57,7 +57,7 @@ public abstract class EditableText extends AbstractEditable {
         this.path = path;
     }
 
-    private static class TextFieldEditor extends TextField implements ValueEditor {
+    private static class TextFieldEditor extends TextField implements ValueEditor<Object> {
 
         private String path;
 
@@ -73,26 +73,30 @@ public abstract class EditableText extends AbstractEditable {
 
     @Override
     protected ComponentAndEditor getComponentAndEditor(Item item) throws RepositoryException {
-        TextFieldEditor textField = new TextFieldEditor(path);
+        final TextFieldEditor textField = new TextFieldEditor(path);
         textField.addListener(new FieldEvents.BlurListener() {
 
             @Override
             public void blur(FieldEvents.BlurEvent event) {
-                onCancel();
+                cancel();
             }
         });
-        textField.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ENTER, new int[]{}) {
+        textField.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ENTER, new
+            int[]{}) {
 
             @Override
             public void handleAction(Object sender, Object target) {
-                onSave();
+                textField.commit();
+                save();
             }
         });
-        textField.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ESCAPE, new int[]{}) {
+        textField.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ESCAPE, new
+            int[]{}) {
 
             @Override
             public void handleAction(Object sender, Object target) {
-                onCancel();
+                textField.discard();
+                cancel();
             }
         });
         textField.focus();

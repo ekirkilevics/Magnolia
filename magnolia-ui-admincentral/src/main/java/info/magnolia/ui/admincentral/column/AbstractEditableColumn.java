@@ -33,13 +33,6 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.editor.ContentDriver;
@@ -50,6 +43,14 @@ import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * Abstract base class for columns that use AbstractEditable. Provides selecting of items and tree refresh on modification.
@@ -73,7 +74,7 @@ public abstract class AbstractEditableColumn<D extends AbstractColumnDefinition>
     /**
      * Presenter for AbstractEditable.
      */
-    public class PresenterImpl implements AbstractEditable.Presenter {
+    public class PresenterImpl implements Editable.Presenter {
 
         private ContentDriver driver;
 

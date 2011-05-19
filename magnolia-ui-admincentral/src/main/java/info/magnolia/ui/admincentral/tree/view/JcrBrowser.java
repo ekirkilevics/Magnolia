@@ -36,6 +36,7 @@ package info.magnolia.ui.admincentral.tree.view;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.column.Editable;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.admincentral.tree.container.HierarchicalJcrContainer;
@@ -57,7 +58,10 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.addon.treetable.HierarchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
+import com.vaadin.data.Property;
 import com.vaadin.event.Action;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -68,9 +72,11 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 
+
 /**
- * User interface component that extends TreeTable and uses a WorkbenchDefinition for layout and invoking command callbacks.
- *
+ * User interface component that extends TreeTable and uses a WorkbenchDefinition for layout and
+ * invoking command callbacks.
+ * 
  * @author tmattsson
  */
 public class JcrBrowser extends TreeTable {
@@ -93,15 +99,17 @@ public class JcrBrowser extends TreeTable {
         setEditable(false);
         setSelectable(true);
         setColumnCollapsingAllowed(true);
+        setMultiSelect(false);
+        setImmediate(true);
 
         // TODO: check Ticket http://dev.vaadin.com/ticket/5453
         setColumnReorderingAllowed(true);
 
         addDragAndDrop();
 
-        this.container = new HierarchicalJcrContainer(treeModel, workbenchDefinition.getWorkspace());
+        container = new HierarchicalJcrContainer(treeModel, workbenchDefinition.getWorkspace());
 
-        for (Column<?> treeColumn : treeModel.getColumns().values()) {
+        for (Column< ? > treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();
             super.setColumnExpandRatio(columnName, treeColumn.getWidth() <= 0 ? 1 : treeColumn.getWidth());
             container.addContainerProperty(columnName, Component.class, "");
@@ -110,27 +118,52 @@ public class JcrBrowser extends TreeTable {
 
         setContainerDataSource(container);
         addContextMenu();
-        setPageLength(900);
+        // setPageLength(900);
+
+        addListener(new ItemClickListener() {
+
+            @Override
+            public void itemClick(ItemClickEvent event) {
+                Object itemId = event.getItemId();
+                String propertyId = (String) event.getPropertyId();
+                if (isSelected(itemId)) {
+                    Property containerProperty = getContainerProperty(itemId,
+                        propertyId);
+                    Object value = containerProperty.getValue();
+                    if (value instanceof Editable) {
+                        Editable editable = (Editable) value;
+                        Component editorComponent = editable.getEditorComponent();
+                        containerProperty.setValue(editorComponent);
+
+                        // FIXME: How to handle different ways you can stop editing?
+                    }
+                }
+            }
+        });
     }
 
     public String getPathInTree(Item item) {
         try {
             return treeModel.getPathInTree(item);
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
-    // TODO this should not be needed, JcrBrowser should have event mechanisms that expose the JCR item not the ContainerItemId
+    // TODO this should not be needed, JcrBrowser should have event mechanisms that expose the JCR
+    // item not the ContainerItemId
     public Item getJcrItem(ContainerItemId itemId) {
         try {
             return container.getJcrItem(itemId);
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
-    private  class JcrBrowserAction extends Action {
+    private class JcrBrowserAction extends Action {
+
         private ActionDefinition actionDefinition;
 
         private JcrBrowserAction(MenuItemDefinition menuItemDefinition) {
@@ -174,7 +207,7 @@ public class JcrBrowser extends TreeTable {
 
             @Override
             public void handleAction(Action action, Object sender, Object target) {
-              ((JcrBrowserAction) action).handleAction((ContainerItemId) target);
+                ((JcrBrowserAction) action).handleAction((ContainerItemId) target);
             }
         });
     }
@@ -245,7 +278,8 @@ public class JcrBrowser extends TreeTable {
                             }
                         }
                     }
-                } catch (RepositoryException e) {
+                }
+                catch (RepositoryException e) {
                     throw new RuntimeRepositoryException(e);
                 }
             }
@@ -264,13 +298,13 @@ public class JcrBrowser extends TreeTable {
 
         ContainerItemId itemId = container.getItemByPath(path);
 
-        if(!container.isRoot(itemId)){
+        if (!container.isRoot(itemId)) {
             ContainerItemId parent = container.getParent(itemId);
             while (!container.isRoot(parent)) {
                 setCollapsed(parent, false);
                 parent = container.getParent(parent);
             }
-            //finally expand the root else children won't be visibile.
+            // finally expand the root else children won't be visibile.
             setCollapsed(parent, false);
         }
 
@@ -278,7 +312,8 @@ public class JcrBrowser extends TreeTable {
         select(itemId);
 
         // Make sure its in view
-        // TODO commented out to avoid flicker on selection via place controller while this should definitely be called when navigated by the history
+        // TODO commented out to avoid flicker on selection via place controller while this should
+        // definitely be called when navigated by the history
         // setCurrentPageFirstItemId(itemId);
     }
 
@@ -289,18 +324,21 @@ public class JcrBrowser extends TreeTable {
     @Override
     public Resource getItemIcon(Object itemId) {
 
-        // FIXME this is not the best place to do it, ideally we could set it when we create a new item (investigate, might not make a difference)
+        // FIXME this is not the best place to do it, ideally we could set it when we create a new
+        // item (investigate, might not make a difference)
         try {
 
             // TODO should getItemIcon be available on JcrContainerSource ?
 
             String itemIcon = treeModel.getItemIcon(container.getJcrItem((ContainerItemId) itemId));
             if (itemIcon != null) {
-                String tmp = MgnlContext.getContextPath() + (!itemIcon.startsWith(JCRUtil.PATH_SEPARATOR) ? JCRUtil.PATH_SEPARATOR + itemIcon : itemIcon);
+                String tmp = MgnlContext.getContextPath()
+                    + (!itemIcon.startsWith(JCRUtil.PATH_SEPARATOR) ? JCRUtil.PATH_SEPARATOR + itemIcon : itemIcon);
                 return new ExternalResource(tmp);
             }
 
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
         return super.getItemIcon(itemId);

@@ -58,7 +58,7 @@ public class LabelColumn extends AbstractEditableColumn<LabelColumnDefinition> i
     }
 
     @Override
-    public Component getComponent(Item item) throws RepositoryException {
+    protected Component getDefaultComponent(Item item) throws RepositoryException {
 
         String path = item.isNode() ? "@name" : item.getName() + "@name";
 

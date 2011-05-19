@@ -33,22 +33,6 @@
  */
 package info.magnolia.ui.admincentral.tree.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map;
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.vaadin.ui.Component;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRUtil;
@@ -60,6 +44,24 @@ import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.workbench.definition.ItemTypeDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
+
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.vaadin.ui.Component;
 
 /**
  * Model class for tree. Serves as a source for operations by JcrContainer and executes them.
@@ -116,7 +118,7 @@ public class TreeModel implements JcrContainerSource {
         }
 
         boolean includeProperties = false;
-        for (ItemTypeDefinition itemType : this.workbenchDefinition.getItemTypes()) {
+        for (ItemTypeDefinition itemType : workbenchDefinition.getItemTypes()) {
             if (itemType.getItemType().equals(ItemTypeDefinition.ITEM_TYPE_NODE_DATA)) {
                 includeProperties = true;
                 break;
@@ -175,6 +177,11 @@ public class TreeModel implements JcrContainerSource {
     @Override
     public Component getColumnComponent(String columnName, Item item) throws RepositoryException {
         return getColumn(columnName).getComponent(item);
+    }
+
+    @Override
+    public void setColumnComponent(String columnName, Item item, Component newValue) throws RepositoryException {
+        getColumn(columnName).setComponent(item, newValue);
     }
 
     @Override
@@ -293,7 +300,7 @@ public class TreeModel implements JcrContainerSource {
     }
 
     private String getPathInWorkspace(String pathInTree) {
-        String base = this.workbenchDefinition.getPath();
+        String base = workbenchDefinition.getPath();
         if ("/".equals(base)) {
             return pathInTree;
         } else {
