@@ -43,6 +43,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.SaveHandler;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -129,44 +130,36 @@ public class UserEditDialog extends ConfiguredDialog {
         DialogControlImpl control = dialog.getSub("groups");
         // it is ok to use system context here as long as it is used only to retrieve UUIDs of nodes we are interested in
         HierarchyManager groupsHM = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
-        List values = control.getValues();
-        for (int index = 0; index < values.size(); index++) {
-            // replace uuid with path
-            String uuid = (String) values.get(index);
-            if (StringUtils.isEmpty(uuid)) {
-                continue;
-            }
-            try {
-                values.set(index, groupsHM.getContentByUUID(uuid).getHandle());
-            }
-            catch (ItemNotFoundException e) {
-                // remove invalid ID
-                values.remove(index);
-                index--;
-            }
-        }
+        // replace uuid with path
+        replaceUUIDsWithNames(control, groupsHM);
 
         control = dialog.getSub("roles");
         // it is ok to use system context here as long as it is used only to retrieve UUIDs of nodes we are interested in
         HierarchyManager rolesHM = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
-        values = control.getValues();
-        for (int index = 0; index < values.size(); index++) {
-            // replace uuid with path
-            String uuid = (String) values.get(index);
+        // replace uuid with path
+        replaceUUIDsWithNames(control, rolesHM);
+       
+        return dialog;
+    }
+
+	private void replaceUUIDsWithNames(DialogControlImpl control, HierarchyManager hm) throws RepositoryException {
+		List values = new ArrayList<String>();
+        Iterator it = control.getValues().iterator();
+        while(it.hasNext()){
+            String uuid = (String) it.next();
             if (StringUtils.isEmpty(uuid)) {
                 continue;
             }
             try {
-                values.set(index, rolesHM.getContentByUUID(uuid).getHandle());
+                values.add(hm.getContentByUUID(uuid).getHandle());
             }
             catch (ItemNotFoundException e) {
-                // remove invalid ID
-                values.remove(index);
-                index--;
+             // ignore - group/role doesn't exist anymore
             }
         }
-        return dialog;
-    }
+        control.getValues().clear();
+        control.getValues().addAll(values);
+	}
 
     /**
      * Write ACL entries under the given user node
