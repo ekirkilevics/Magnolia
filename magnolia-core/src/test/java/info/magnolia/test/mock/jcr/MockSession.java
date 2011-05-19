@@ -72,6 +72,7 @@ public class MockSession implements Session {
         workspace.setSession(this);
 
         rootNode = new MockNode(JCR_ROOT_NAME);
+        rootNode.setSession(this);
     }
 
     public MockSession(String name) {
@@ -304,5 +305,10 @@ public class MockSession implements Session {
 
     protected void setRootNode(MockNode root) {
         this.rootNode = root;
+    }
+
+    @Override
+    public String toString() {
+        return "MockSession [rootNode=" + rootNode + ", workspace=" + workspace + "]";
     }
 }

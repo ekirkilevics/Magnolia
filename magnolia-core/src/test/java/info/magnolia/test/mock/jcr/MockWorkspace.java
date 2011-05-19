@@ -168,4 +168,9 @@ public class MockWorkspace implements Workspace {
         this.session = session;
     }
 
+    @Override
+    public String toString() {
+        return "MockWorkspace [name=" + name + "]";
+    }
+
 }

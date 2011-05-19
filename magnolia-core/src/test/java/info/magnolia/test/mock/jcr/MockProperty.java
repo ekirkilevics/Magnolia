@@ -59,14 +59,19 @@ import javax.jcr.version.VersionException;
  */
 public class MockProperty extends MockItem implements Property {
 
-    private Value value;
+    private MockValue value;
 
     public MockProperty(String name, Object objectValue) {
         this(name, new MockValue(objectValue));
     }
 
-    public MockProperty(String name, Value value) {
+    public MockProperty(String name, MockValue value) {
         super(name);
+        this.value = value;
+    }
+
+    public MockProperty(String name, MockValue value, MockSession session) {
+        super(name, session);
         this.value = value;
     }
 
@@ -231,7 +236,7 @@ public class MockProperty extends MockItem implements Property {
 
     @Override
     public void setValue(Value value) {
-        this.value = value;
+        this.value = (MockValue) value;
     }
 
     @Override
@@ -241,5 +246,10 @@ public class MockProperty extends MockItem implements Property {
 
     protected void setValueFromObject(Object object) {
         value = new MockValue(object);
+    }
+
+    @Override
+    public String toString() {
+        return "MockProperty [value=" + value + super.toString() + "]";
     }
 }

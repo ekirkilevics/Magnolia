@@ -54,7 +54,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.lock.Lock;
 import javax.jcr.nodetype.NodeDefinition;
@@ -95,19 +94,18 @@ public class MockNode extends MockItem implements Node {
         this.mixins.add(mixinName);
     }
 
-    protected void addNode(MockNode child) {
+    protected void addNode(MockNode child) throws RepositoryException{
         child.setParent(this);
         children.put(child.getName(), child);
     }
 
     @Override
-    public Node addNode(String relPath) {
-        // TODO dlipp: to be verified whether this is a proper implementation
+    public Node addNode(String relPath) throws RepositoryException {
         return addNode(relPath, primaryType);
     }
 
     @Override
-    public Node addNode(String relPath, String primaryNodeTypeName) {
+    public Node addNode(String relPath, String primaryNodeTypeName) throws RepositoryException{
         final MockNode newChild = new MockNode(relPath);
         newChild.setPrimaryType(primaryNodeTypeName);
         addNode(newChild);
@@ -267,11 +265,6 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public PropertyIterator getReferences(String name) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public Session getSession() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -516,7 +509,7 @@ public class MockNode extends MockItem implements Node {
     public Property setProperty(String name, Value value) {
         MockProperty property = (MockProperty) this.properties.get(name);
         if (property == null) {
-            property = new MockProperty(name, value);
+            property = new MockProperty(name, (MockValue) value, (MockSession) getSession());
             properties.put(name, property);
         } else {
             property.setValue(value);
@@ -547,5 +540,10 @@ public class MockNode extends MockItem implements Node {
     @Override
     public void update(String srcWorkspaceName) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    }
+
+    @Override
+    public String toString() {
+        return "MockNode [primaryType=" + primaryType + super.toString() + "]";
     }
 }

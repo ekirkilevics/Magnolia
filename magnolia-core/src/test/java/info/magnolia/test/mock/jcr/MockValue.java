@@ -138,4 +138,9 @@ public class MockValue implements Value {
         return type;
     }
 
+    @Override
+    public String toString() {
+        return "MockValue [type=" + type + ", value=" + value + "]";
+    }
+
 }

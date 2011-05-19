@@ -55,9 +55,15 @@ public abstract class MockItem implements Item {
 
     final private String name;
     private MockNode parent;
+    private MockSession session;
 
     public MockItem(String name) {
+        this(name, null);
+    }
+
+    public MockItem(String name, MockSession session) {
         this.name = name;
+        this.session = session;
     }
 
     @Override
@@ -97,8 +103,12 @@ public abstract class MockItem implements Item {
     }
 
     @Override
-    public Session getSession() throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public Session getSession() {
+        return session;
+    }
+
+    protected void setSession(MockSession session) {
+        this.session = session;
     }
 
     @Override
@@ -134,7 +144,13 @@ public abstract class MockItem implements Item {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
-    protected void setParent(MockNode parent) {
+    protected void setParent(MockNode parent) throws RepositoryException {
         this.parent = parent;
+        setSession((MockSession) parent.getSession());
+    }
+
+    @Override
+    public String toString() {
+        return "MockItem [name=" + name + ", parent=" + (parent == null ? "null" :parent.getName()) + ", session=" + (session == null ? "null" : session.getWorkspace().getName()) + "]";
     }
 }

@@ -47,7 +47,7 @@ import org.junit.Test;
 public class MockNodeTest {
 
     @Test
-    public void testAddNodeWithParamFakeJCRNode() {
+    public void testAddNodeWithParamFakeJCRNode() throws Exception {
         final MockNode parent = new MockNode("parent");
         final MockNode child = new MockNode("child");
         parent.addNode(child);
@@ -57,7 +57,7 @@ public class MockNodeTest {
     }
 
     @Test
-    public void testAddNodeWithParamString() {
+    public void testAddNodeWithParamString() throws Exception {
         final MockNode parent = new MockNode("parent");
         final MockNode child = (MockNode) parent.addNode("child");
 
@@ -145,4 +145,14 @@ public class MockNodeTest {
         assertEquals(value, parent.getProperty("string").getValue());
     }
 
+    @Test
+    public void testChildNodesAndPropertiesGetProperSession() throws Exception {
+        MockSession session = new MockSession("test");
+
+        MockNode child = (MockNode) session.getRootNode().addNode("child");
+        MockProperty property = (MockProperty) child.setProperty("property", "propertyValue");
+
+        assertEquals(session, child.getSession());
+        assertEquals(session, property.getSession());
+    }
 }

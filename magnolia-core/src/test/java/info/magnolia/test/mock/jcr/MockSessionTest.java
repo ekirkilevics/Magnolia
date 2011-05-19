@@ -52,6 +52,13 @@ public class MockSessionTest {
     }
 
     @Test
+    public void testConstructionProperlyWiresSessionToRoot() throws Exception {
+        MockSession session = new MockSession("test");
+        MockNode root = (MockNode) session.getRootNode();
+        assertEquals(session, root.getSession());
+    }
+
+    @Test
     public void testGetNodeFromStringe() throws Exception {
         final MockSession mockSession = new MockSession("test");
         final MockNode parent = (MockNode) mockSession.getRootNode();
