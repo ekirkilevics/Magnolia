@@ -56,6 +56,7 @@ public class WcmModule implements ModuleLifecycle, ToolboxConfigurationProvider 
         this.configurations = configurations;
     }
 
+    @Override
     public ToolboxConfiguration getToolboxConfiguration() {
         return toolboxConfiguration;
     }
