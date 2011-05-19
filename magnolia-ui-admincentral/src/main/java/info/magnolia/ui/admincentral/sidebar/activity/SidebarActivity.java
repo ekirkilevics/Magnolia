@@ -33,13 +33,18 @@
  */
 package info.magnolia.ui.admincentral.sidebar.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.sidebar.view.SidebarView;
+import info.magnolia.ui.admincentral.tree.action.TreeAction;
 import info.magnolia.ui.admincentral.workbench.action.WorkbenchActionFactory;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.activity.AbstractActivity;
@@ -55,6 +60,8 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
  * Shows the detail view and command list.
  */
 public class SidebarActivity extends AbstractActivity implements SidebarView.Presenter {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private String path;
     private SidebarView sidebarView;
@@ -90,8 +97,31 @@ public class SidebarActivity extends AbstractActivity implements SidebarView.Pre
         // Displaying commands for the root node makes no sense
         if (!"/".equals(path)) {
             this.path = path;
-            // FIXME should be dependent on the item type
-            sidebarView.getActionList().show(workbenchDefinition.getMenuItems());
+
+            List<MenuItemDefinition> menuItemDefinitions = workbenchDefinition.getMenuItems();
+
+            List<MenuItemDefinition> x = new ArrayList<MenuItemDefinition>();
+            for (MenuItemDefinition mid : menuItemDefinitions) {
+
+                // TODO an optimization here would be to use reflection to test if the action implements TreeAction, instantiating it only to test this is a waste
+
+                Action action = actionFactory.createAction(mid.getActionDefinition(), item);
+
+                if (action instanceof TreeAction) {
+                    TreeAction treeAction = (TreeAction) action;
+                    try {
+                        if (treeAction.isAvailable(item)) {
+                            x.add(mid);
+                        }
+                    } catch (RepositoryException e) {
+                        log.error("Error when determining if action [" + mid.getName() + "] is available", e);
+                    }
+                } else {
+                    x.add(mid);
+                }
+            }
+
+            sidebarView.getActionList().show(x);
             sidebarView.getPreviewView().show(item);
         }
     }

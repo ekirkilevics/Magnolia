@@ -164,7 +164,11 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
             List<MenuItemDefinition> x = new ArrayList<MenuItemDefinition>();
             for (MenuItemDefinition mid : menuItemDefinitions) {
                 Node node = getNodeForSelection(this.contentSelection);
+
+                // TODO an optimization here would be to use reflection to test if the action implements TreeAction, instantiating it only to test this is a waste
+
                 Action action = toolboxActionFactory.createAction(mid.getActionDefinition(), node, this.contentSelection);
+
                 if (action instanceof ToolboxAction) {
                     try {
                         ToolboxAction toolboxAction = (ToolboxAction) action;
