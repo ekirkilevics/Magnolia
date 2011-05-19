@@ -58,10 +58,10 @@ import javax.jcr.nodetype.PropertyDefinition;
 import javax.jcr.version.VersionException;
 
 /**
- * @author pbaerfuss
  * @version $Id$
- *
+ * @deprecated since 5.0 - use {@link info.magnolia.test.mock.jcr.MockProperty} instead.
  */
+
 public class MockJCRProperty implements Property {
 
     private final MockNodeData mockNodeData;

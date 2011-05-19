@@ -34,6 +34,7 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
+
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -72,7 +73,10 @@ import javax.jcr.version.VersionHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * @version $Id$
+ * @deprecated since 5.0 - use {@link info.magnolia.test.mock.jcr.MockNode} instead.
+ */
 public class MockJCRNode implements Node {
 
     /**

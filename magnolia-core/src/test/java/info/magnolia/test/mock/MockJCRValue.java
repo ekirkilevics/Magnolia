@@ -43,10 +43,10 @@ import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
 
 /**
- * @author pbaerfuss
  * @version $Id$
- *
+ * @deprecated since 5.0 - use {@link info.magnolia.test.mock.jcr.MockValue} instead.
  */
+
 class MockJCRValue implements Value {
 
     private final MockNodeData mockNodeData;
