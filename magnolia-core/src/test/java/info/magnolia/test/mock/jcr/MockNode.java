@@ -45,35 +45,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.AccessDeniedException;
 import javax.jcr.Binary;
-import javax.jcr.InvalidItemStateException;
-import javax.jcr.InvalidLifecycleTransitionException;
 import javax.jcr.Item;
-import javax.jcr.ItemExistsException;
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.ItemVisitor;
-import javax.jcr.MergeException;
-import javax.jcr.NoSuchWorkspaceException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
-import javax.jcr.ReferentialIntegrityException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
-import javax.jcr.ValueFormatException;
 import javax.jcr.lock.Lock;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.nodetype.NodeDefinition;
 import javax.jcr.nodetype.NodeType;
 import javax.jcr.version.Version;
-import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 
 import org.apache.commons.lang.StringUtils;
@@ -154,21 +140,22 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public void followLifecycleTransition(String transition) throws UnsupportedRepositoryOperationException, InvalidLifecycleTransitionException, RepositoryException {
-    }
-
-    @Override
-    public String[] getAllowedLifecycleTransistions() throws UnsupportedRepositoryOperationException, RepositoryException {
+    public void followLifecycleTransition(String transition) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Item getAncestor(int depth) throws ItemNotFoundException, AccessDeniedException, RepositoryException {
+    public String[] getAllowedLifecycleTransistions() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Version getBaseVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
+    public Item getAncestor(int depth) {
+        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    }
+
+    @Override
+    public Version getBaseVersion() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -177,7 +164,7 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public String getCorrespondingNodePath(String workspaceName) throws ItemNotFoundException, NoSuchWorkspaceException, AccessDeniedException, RepositoryException {
+    public String getCorrespondingNodePath(String workspaceName) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -187,17 +174,17 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public String getIdentifier() throws RepositoryException {
+    public String getIdentifier() {
         return identifier;
     }
 
     @Override
-    public int getIndex() throws RepositoryException {
+    public int getIndex() {
         return index;
     }
 
     @Override
-    public Lock getLock() throws UnsupportedRepositoryOperationException, LockException, AccessDeniedException, RepositoryException {
+    public Lock getLock() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -229,22 +216,22 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public NodeIterator getNodes() throws RepositoryException {
+    public NodeIterator getNodes() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public NodeIterator getNodes(String namePattern) throws RepositoryException {
+    public NodeIterator getNodes(String namePattern) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public NodeIterator getNodes(String[] nameGlobs) throws RepositoryException {
+    public NodeIterator getNodes(String[] nameGlobs) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Item getPrimaryItem() throws ItemNotFoundException, RepositoryException {
+    public Item getPrimaryItem() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -254,62 +241,62 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public PropertyIterator getProperties() throws RepositoryException {
+    public PropertyIterator getProperties() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public PropertyIterator getProperties(String namePattern) throws RepositoryException {
+    public PropertyIterator getProperties(String namePattern) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public PropertyIterator getProperties(String[] nameGlobs) throws RepositoryException {
+    public PropertyIterator getProperties(String[] nameGlobs) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
+    public Property getProperty(String relPath) {
         return properties.get(relPath);
     }
 
     @Override
-    public PropertyIterator getReferences() throws RepositoryException {
+    public PropertyIterator getReferences() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public PropertyIterator getReferences(String name) throws RepositoryException {
+    public PropertyIterator getReferences(String name) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Session getSession() throws RepositoryException {
+    public Session getSession() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public NodeIterator getSharedSet() throws RepositoryException {
+    public NodeIterator getSharedSet() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public String getUUID() throws UnsupportedRepositoryOperationException, RepositoryException {
+    public String getUUID() {
         return getIdentifier();
     }
 
     @Override
-    public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
+    public VersionHistory getVersionHistory() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public PropertyIterator getWeakReferences() throws RepositoryException {
+    public PropertyIterator getWeakReferences() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public PropertyIterator getWeakReferences(String name) throws RepositoryException {
+    public PropertyIterator getWeakReferences(String name) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -324,32 +311,32 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public boolean hasNodes() throws RepositoryException {
+    public boolean hasNodes() {
         return (this.getChildren().size() > 0);
     }
 
     @Override
-    public boolean hasProperties() throws RepositoryException {
+    public boolean hasProperties() {
         return (this.properties.size() > 0);
     }
 
     @Override
-    public boolean hasProperty(String relPath) throws RepositoryException {
+    public boolean hasProperty(String relPath) {
         return (this.properties.get(relPath) != null);
     }
 
     @Override
-    public boolean holdsLock() throws RepositoryException {
+    public boolean holdsLock() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public boolean isCheckedOut() throws RepositoryException {
+    public boolean isCheckedOut() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public boolean isLocked() throws RepositoryException {
+    public boolean isLocked() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -369,32 +356,32 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public boolean isNodeType(String nodeTypeName) throws RepositoryException {
+    public boolean isNodeType(String nodeTypeName) {
         return primaryType.equals(nodeTypeName);
     }
 
     @Override
-    public Lock lock(boolean isDeep, boolean isSessionScoped) throws UnsupportedRepositoryOperationException, LockException, AccessDeniedException, InvalidItemStateException, RepositoryException {
+    public Lock lock(boolean isDeep, boolean isSessionScoped) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public NodeIterator merge(String srcWorkspace, boolean bestEffort) throws NoSuchWorkspaceException, AccessDeniedException, MergeException, LockException, InvalidItemStateException, RepositoryException {
+    public NodeIterator merge(String srcWorkspace, boolean bestEffort) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void orderBefore(String srcChildRelPath, String destChildRelPath) throws UnsupportedRepositoryOperationException, VersionException, ConstraintViolationException, ItemNotFoundException, LockException, RepositoryException {
+    public void orderBefore(String srcChildRelPath, String destChildRelPath) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void refresh(boolean keepChanges) throws InvalidItemStateException, RepositoryException {
+    public void refresh(boolean keepChanges) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void remove() throws VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public void remove() {
         ((MockNode) getParent()).removeFromChildren(this);
     }
 
@@ -413,40 +400,42 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public void removeMixin(String mixinName) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
+    public void removeMixin(String mixinName) {
         mixins.remove(mixinName);
     }
 
     @Override
-    public void removeShare() throws VersionException, LockException, ConstraintViolationException, RepositoryException {
-    }
-
-    @Override
-    public void removeSharedSet() throws VersionException, LockException, ConstraintViolationException, RepositoryException {
-    }
-
-    @Override
-    public void restore(String versionName, boolean removeExisting) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
+    public void removeShare() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void restore(Version version, boolean removeExisting) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException, LockException, RepositoryException {
+    public void removeSharedSet() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void restore(Version version, String relPath, boolean removeExisting) throws PathNotFoundException, ItemExistsException, VersionException, ConstraintViolationException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
+    public void restore(String versionName, boolean removeExisting) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
+    public void restore(Version version, boolean removeExisting) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void save() throws AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException, ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
+    public void restore(Version version, String relPath, boolean removeExisting) {
+        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    }
+
+    @Override
+    public void restoreByLabel(String versionLabel, boolean removeExisting) {
+        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    }
+
+    @Override
+    public void save() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -464,69 +453,68 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public Property setProperty(String name, BigDecimal value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, BigDecimal value) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Property setProperty(String name, Binary value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, Binary value) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Property setProperty(String name, boolean value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return setProperty(name, new MockValue(value));
-    }
-
-
-    @Override
-    public Property setProperty(String name, Calendar value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, boolean value) {
         return setProperty(name, new MockValue(value));
     }
 
     @Override
-    public Property setProperty(String name, double value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, Calendar value) {
         return setProperty(name, new MockValue(value));
     }
 
     @Override
-    public Property setProperty(String name, InputStream value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, double value) {
         return setProperty(name, new MockValue(value));
     }
 
     @Override
-    public Property setProperty(String name, long value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, InputStream value) {
         return setProperty(name, new MockValue(value));
     }
 
     @Override
-    public Property setProperty(String name, Node value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, long value) {
+        return setProperty(name, new MockValue(value));
+    }
+
+    @Override
+    public Property setProperty(String name, Node value) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Property setProperty(String name, String value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, String value) {
         return setProperty(name, new MockValue(value));
     }
 
     @Override
-    public Property setProperty(String name, String value, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, String value, int type) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Property setProperty(String name, String[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, String[] values) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Property setProperty(String name, String[] values, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, String[] values, int type) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Property setProperty(String name, Value value) throws RepositoryException{
-        Property property = this.properties.get(name);
+    public Property setProperty(String name, Value value) {
+        MockProperty property = (MockProperty) this.properties.get(name);
         if (property == null) {
             property = new MockProperty(name, value);
             properties.put(name, property);
@@ -537,27 +525,27 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public Property setProperty(String name, Value value, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, Value value, int type) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Property setProperty(String name, Value[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, Value[] values) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public Property setProperty(String name, Value[] values, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public Property setProperty(String name, Value[] values, int type) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void unlock() throws UnsupportedRepositoryOperationException, LockException, AccessDeniedException, InvalidItemStateException, RepositoryException {
+    public void unlock() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void update(String srcWorkspaceName) throws NoSuchWorkspaceException, AccessDeniedException, LockException, InvalidItemStateException, RepositoryException {
+    public void update(String srcWorkspaceName) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 }
