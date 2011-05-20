@@ -78,7 +78,7 @@ import com.vaadin.ui.Component;
 /**
  * User interface component that extends TreeTable and uses a WorkbenchDefinition for layout and
  * invoking command callbacks.
- * 
+ *
  * @author tmattsson
  */
 public class JcrBrowser extends TreeTable {
@@ -314,7 +314,7 @@ public class JcrBrowser extends TreeTable {
                 setCollapsed(parent, false);
                 parent = container.getParent(parent);
             }
-            // finally expand the root else children won't be visibile.
+            // finally expand the root else children won't be visible.
             setCollapsed(parent, false);
         }
 
@@ -328,7 +328,7 @@ public class JcrBrowser extends TreeTable {
     }
 
     public void refresh() {
-        // container.fireItemSetChange();
+        container.fireItemSetChange();
     }
 
     @Override
