@@ -208,8 +208,12 @@ public abstract class MgnlCommand implements Command {
     private void initDefaultProperties() {
         try {
             this.defaultProperties = PropertyUtils.describe(this);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.warn("Failed to persist "+ this.getClass().getName()+" command properties due to "+ e.getMessage()+". Please review your configuration.", e);
+            } else {
+                log.warn("Failed to persist {} command properties due to {}. Please review your configuration.", this.getClass().getName(), e.getMessage());
+            }
             this.defaultProperties = Collections.EMPTY_MAP;
         }
     }
