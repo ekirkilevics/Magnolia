@@ -33,10 +33,8 @@
  */
 package info.magnolia.jcr.util;
 
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.JCRSessionOp;
 import info.magnolia.cms.util.DelegateNodeWrapper;
-import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
@@ -130,20 +128,6 @@ public class JCRUtil {
             }
         }
         return false;
-    }
-
-    /**
-     * from default content.
-     */
-    public static String getNodeTypeName(Node node) throws RepositoryException {
-        if (node instanceof JCRPropertiesFilteringNodeWrapper) {
-            node = ((JCRPropertiesFilteringNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
-        }
-
-        if (node.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
-            return node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString();
-        }
-        return node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
     }
 
     public static Node unwrap(Node node) {

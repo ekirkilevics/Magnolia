@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,51 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.util;
 
-import info.magnolia.jcr.util.JCRVersionUtil;
+import static org.junit.Assert.assertEquals;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
+import info.magnolia.test.mock.jcr.MockNode;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
-import org.apache.jackrabbit.commons.predicate.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.junit.Test;
 
 /**
- * A {@link ContentFilter} using a {@link Rule}.
- * @version $Revision: 41135 $ ($Author: gjoseph $)
+ * @version $Id$
  */
-public class RuleBasedNodePredicate implements Predicate {
+public class JCRVersionUtilTest {
 
-    private static Logger log = LoggerFactory.getLogger(RuleBasedNodePredicate.class);
+    @Test
+    public void testGetNodeTypeName() throws Exception {
+        final MockNode node = new MockNode("test");
+        final String primaryTypeValue = "primaryTypeValue";
+        node.setProperty(ItemType.JCR_PRIMARY_TYPE, primaryTypeValue);
+        assertEquals(primaryTypeValue, JCRVersionUtil.getNodeTypeName(node));
 
-    /**
-     * Rule on which this filter works.
-     */
-    private final Rule rule;
+        final String frozenPrimaryTypeValue = "frozenPrimaryTypeValue";
+        node.setProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE, frozenPrimaryTypeValue);
+        assertEquals(frozenPrimaryTypeValue, JCRVersionUtil.getNodeTypeName(node));
 
-    public RuleBasedNodePredicate(Rule rule) {
-        this.rule = rule;
+        final Node wrapper = new JCRPropertiesFilteringNodeWrapper(node);
+        assertEquals(frozenPrimaryTypeValue, JCRVersionUtil.getNodeTypeName(wrapper));
     }
-
-    @Override
-    public boolean evaluate(Object object) {
-        if (!(object instanceof Node)) {
-            return false;
-        }
-        Node content = (Node) object;
-        String nodeType = "";
-        try {
-            nodeType = JCRVersionUtil.getNodeTypeName(content);
-        }
-        catch (RepositoryException re) {
-            if (log.isDebugEnabled()) {
-                log.debug("failed to retrieve node type : " + re.getMessage(), re);
-            }
-        }
-        return this.rule.isAllowed(nodeType);
-    }
-
 }

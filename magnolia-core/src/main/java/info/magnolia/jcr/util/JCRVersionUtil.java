@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,51 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.util;
 
-import info.magnolia.jcr.util.JCRVersionUtil;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.jackrabbit.commons.predicate.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
- * A {@link ContentFilter} using a {@link Rule}.
- * @version $Revision: 41135 $ ($Author: gjoseph $)
+ * Various utility methods useful for JCR-Versioning.
+ *
+ * @version $Id$
  */
-public class RuleBasedNodePredicate implements Predicate {
-
-    private static Logger log = LoggerFactory.getLogger(RuleBasedNodePredicate.class);
+public class JCRVersionUtil {
 
     /**
-     * Rule on which this filter works.
+     * Return the NodeType-name for the provided Node. It it's a JCPropertiesFilteringNodeWrapper the unwrapped node will be used for retrieving the property from.
+     * As it's about versioning, the frozen primary type if existing (else primary type) will be returned.
      */
-    private final Rule rule;
+    public static String getNodeTypeName(Node node) throws RepositoryException {
+        Node unwrappedNode = node;
+        if (node instanceof JCRPropertiesFilteringNodeWrapper) {
+            unwrappedNode = ((JCRPropertiesFilteringNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
+        }
 
-    public RuleBasedNodePredicate(Rule rule) {
-        this.rule = rule;
+        if (unwrappedNode.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
+            return unwrappedNode.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString();
+        }
+        return unwrappedNode.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
     }
-
-    @Override
-    public boolean evaluate(Object object) {
-        if (!(object instanceof Node)) {
-            return false;
-        }
-        Node content = (Node) object;
-        String nodeType = "";
-        try {
-            nodeType = JCRVersionUtil.getNodeTypeName(content);
-        }
-        catch (RepositoryException re) {
-            if (log.isDebugEnabled()) {
-                log.debug("failed to retrieve node type : " + re.getMessage(), re);
-            }
-        }
-        return this.rule.isAllowed(nodeType);
-    }
-
 }
