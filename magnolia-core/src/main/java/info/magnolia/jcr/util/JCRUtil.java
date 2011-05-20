@@ -33,10 +33,17 @@
  */
 package info.magnolia.jcr.util;
 
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.JCRSessionOp;
+import info.magnolia.cms.util.DelegateNodeWrapper;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
+import info.magnolia.context.MgnlContext;
+
 import java.util.Collection;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -51,12 +58,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.JCRSessionOp;
-import info.magnolia.cms.util.DelegateNodeWrapper;
-import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
-import info.magnolia.context.MgnlContext;
-
 /**
  * Various utility methods to collect data from JCR repository.
  *
@@ -64,7 +65,7 @@ import info.magnolia.context.MgnlContext;
  */
 public class JCRUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(JCRUtilTest.class);
+    private static final Logger log = LoggerFactory.getLogger(JCRUtil.class);
 
     /**
      * Collects all property names of given type, sorting them (case insensitive) and removing duplicates in the process.
