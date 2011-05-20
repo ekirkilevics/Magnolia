@@ -3,7 +3,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>5.0-SNAPSHOT</version>
+    <version>5.0-m4-s2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -17,7 +17,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m4-s2</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
