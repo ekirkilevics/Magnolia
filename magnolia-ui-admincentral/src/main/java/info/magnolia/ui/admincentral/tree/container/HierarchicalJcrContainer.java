@@ -57,7 +57,7 @@ import com.vaadin.data.Container;
 /**
  * Hierarchical implementation of {@link JcrContainer}.
  * @author fgrilli
- * 
+ *
  */
 public class HierarchicalJcrContainer extends JcrContainer implements Container.Hierarchical {
 
@@ -142,8 +142,8 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
     }
 
     @Override
-    public void updateContainerIds(NodeIterator iterator) throws RepositoryException {
-        throw new UnsupportedOperationException();
+    public void updateContainerIds(NodeIterator iterator) throws RepositoryException, UnsupportedOperationException {
+        throw new UnsupportedOperationException(getClass().getName() + " does not support this operation.");
 
     }
 

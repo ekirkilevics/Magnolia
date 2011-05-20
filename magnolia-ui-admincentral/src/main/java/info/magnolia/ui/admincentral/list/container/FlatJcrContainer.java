@@ -58,7 +58,6 @@ public class FlatJcrContainer extends JcrContainer {
     private static final Logger log = LoggerFactory.getLogger(FlatJcrContainer.class);
     /**
      * Constructor for {@link FlatJcrContainer}.
-     * @param maxLevel the 0-based level up to which the hierarchy should be traversed (if it's -1, the hierarchy will be traversed until there are no more children of the current item).
      */
     public FlatJcrContainer(JcrContainerSource jcrContainerSource, String workspace) {
         super(jcrContainerSource, workspace);
@@ -66,9 +65,15 @@ public class FlatJcrContainer extends JcrContainer {
     }
 
     @Override
-    protected Collection<ContainerItemId> createContainerIds(Collection<Item> children) throws RepositoryException {
-        throw new UnsupportedOperationException();
+    protected Collection<ContainerItemId> createContainerIds(Collection<Item> children) throws RepositoryException, UnsupportedOperationException {
+        throw new UnsupportedOperationException(getClass().getName() + " does not support this operation.");
     }
+    //TODO on item set change we should refresh the data view to reflect the changes.
+//    @Override
+//    public void fireItemSetChange() {
+//        getPage();
+//        super.fireItemSetChange();
+//    }
 
     @Override
     public void updateContainerIds(NodeIterator iterator) throws RepositoryException {
