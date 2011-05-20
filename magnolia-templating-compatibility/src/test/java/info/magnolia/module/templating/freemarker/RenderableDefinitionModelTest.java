@@ -60,10 +60,10 @@ import freemarker.template.TemplateException;
 public class RenderableDefinitionModelTest extends TestCase {
 
     public void testRenderableDefinitionParametersAreAvailableAsTopLevelProperties() throws IOException, TemplateException {
-        final Map<String, String> parameters = new HashMap<String, String>();
+        final Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("foo", "bar");
 
-        final AbstractRenderable def = new Paragraph();
+        final Paragraph def = new Paragraph();
         def.setName("myname");
         def.setParameters(parameters);
 
@@ -74,7 +74,7 @@ public class RenderableDefinitionModelTest extends TestCase {
     }
 
     public void testRenderableDefinitionPropertiesHaveHigherPriorityThanParameters() throws IOException, TemplateException {
-        final Map<String, String> parameters = new HashMap<String, String>();
+        final Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("foo", "bar");
         parameters.put("name", "should not appear");
 
@@ -89,7 +89,7 @@ public class RenderableDefinitionModelTest extends TestCase {
     }
 
     public void testRenderableDefinitionPropertiesAreStillAvailableIfReallyNeeded() throws IOException, TemplateException {
-        final Map<String, String> parameters = new HashMap<String, String>();
+        final Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("foo", "bar");
         parameters.put("name", "other name");
 

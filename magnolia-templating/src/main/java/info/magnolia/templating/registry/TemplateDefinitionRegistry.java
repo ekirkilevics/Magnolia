@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2008-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,27 +25,20 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.templating;
-
-import info.magnolia.templating.model.RenderingModel;
-
-import javax.jcr.Node;
+package info.magnolia.templating.registry;
 
 
 /**
- * Deprecated.
- * @deprecated since 5.0, use {@link info.magnolia.templating.model.RenderingModelImpl} instead.
- * @param <RD> the {@link RenderableDefinition} bound to the model
+ * @author pbaerfuss
+ * @version $Id$
+ *
  */
-public class RenderingModelImpl<RD extends RenderableDefinition> extends info.magnolia.templating.model.RenderingModelImpl<RD> implements info.magnolia.module.templating.RenderingModel<RD>{
+public class TemplateDefinitionRegistry {
 
-    public RenderingModelImpl(Node content, RD definition, RenderingModel< ? > parent) {
-        super(content, definition, parent);
-    }
 }

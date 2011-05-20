@@ -237,10 +237,10 @@ public class JspParagraphRendererTest extends TestCase {
         return c;
     }
 
-    public static final class SkippableTestState extends RenderingModelImpl {
+    public static final class SkippableTestState extends RenderingModelImpl<RenderableDefinition> {
 
         public SkippableTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
-            super(content, definition, parent);
+            super(content.getJCRNode(), definition, parent);
         }
         @Override
         public String execute() {

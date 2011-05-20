@@ -33,11 +33,11 @@
  */
 package info.magnolia.module.templating;
 
+import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.beans.config.ObservedManager;
-import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.objectfactory.Components;
 
 import java.util.Collection;
@@ -50,7 +50,7 @@ import org.apache.commons.lang.StringUtils;
  * Manages the paragraphs on the system. Modules can register the nodes where
  * the paragraphs are defined.
  *
- * @author philipp
+ * @deprecated since 5.0, use the {@link TemplateDefinitionRegistry} instead
  */
 public class ParagraphManager extends ObservedManager {
 

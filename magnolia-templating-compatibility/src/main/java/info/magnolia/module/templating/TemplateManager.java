@@ -33,14 +33,13 @@
  */
 package info.magnolia.module.templating;
 
+import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.objectfactory.Components;
 
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -48,10 +47,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
+
 
 /**
  * Manages the templates of the system.
- * @author philipp
+ * @deprecated since 5.0, use the {@link TemplateDefinitionRegistry} instead
  */
 public class TemplateManager extends ObservedManager {
 

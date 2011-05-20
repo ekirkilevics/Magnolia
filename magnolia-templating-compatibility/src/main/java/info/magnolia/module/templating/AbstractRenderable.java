@@ -33,19 +33,10 @@
  */
 package info.magnolia.module.templating;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.objectfactory.MgnlInstantiationException;
-
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-
+import info.magnolia.cms.core.Content;
+import info.magnolia.templating.definition.TemplateDefinitionImpl;
 
 /**
  * Base implementation for paragraph and template definitions. Provides the
@@ -53,56 +44,16 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * {@link #newModel(Content, RenderableDefinition , RenderingModel)}
  *
  * @version $Id$
+ * @deprecated since 5.0, use {@link AbstractRenderableDefinition} instead.
  */
-public class AbstractRenderable implements RenderableDefinition {
-    private String name;
-    private String title;
-    private String templateScript;
-    private String dialog;
-    private String renderType;
-    private String description;
-    private String i18nBasename;
-    private Class<? extends RenderingModel> modelClass = RenderingModelImpl.class;
-
-    // TODO: check whether we shouldn't use LinkedHashMap here - would preserve order!
-    private Map parameters = new HashMap();
-    private Map<String, Area> areas = new HashMap<String, Area>();
+public class AbstractRenderable extends TemplateDefinitionImpl implements RenderableDefinition{
 
     /**
      * Return always the {@link #templateScript} property.
      */
     @Override
-    public String determineTemplatePath(String actionResult, RenderingModel model ) {
+    public String determineTemplatePath(String actionResult, RenderingModel<?> model ) {
         return this.getTemplateScript();
-    }
-
-    /**
-     * Instantiates the model based on the class defined by the {@link #modelClass} property. The class must provide a
-     * constructor similar to {@link RenderingModelImpl#RenderingModelImpl(Content, RenderableDefinition, RenderingModel)}.
-     * All the request parameters are then mapped to the model's properties.
-     */
-    @Override
-    public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        try {
-            final RenderingModel model = Classes.getClassFactory().newInstance(getModelClass(), new Class[]{Content.class, definition.getClass(), RenderingModel.class}, content, definition, parentModel);
-            final Map<String, String> params = MgnlContext.getParameters();
-            if (params != null) {
-                BeanUtils.populate(model, params);
-            }
-            return model;
-        } catch (MgnlInstantiationException e) {
-            throw new IllegalArgumentException(MISSING_CONSTRUCTOR_MESSAGE + "Can't instantiate " + getModelClass(), e);
-        }
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public String getTitle() {
-        return this.title;
     }
 
     /**
@@ -113,35 +64,12 @@ public class AbstractRenderable implements RenderableDefinition {
         return getTemplateScript();
     }
 
-    @Override
-    public String getTemplateScript() {
-        return this.templateScript;
-    }
-
     /**
      * @deprecated since 5.0 - use {@link #getRenderType()} instead
      */
     @Override
     public String getType() {
         return getRenderType();
-    }
-
-    @Override
-    public String getRenderType() {
-        return renderType;
-    }
-
-    @Override
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -151,10 +79,6 @@ public class AbstractRenderable implements RenderableDefinition {
         setTemplateScript(templatePath);
     }
 
-    public void setTemplateScript(String templateScript) {
-        this.templateScript = templateScript;
-    }
-
     /**
      * @deprecated since 5.0 - use {@link #setRenderType(String)} instead
      */
@@ -162,84 +86,8 @@ public class AbstractRenderable implements RenderableDefinition {
         setRenderType(type);
     }
 
-    public void setRenderType(String renderType) {
-        this.renderType = renderType;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     @Override
-    public String getDialog() {
-        return this.dialog;
-    }
-
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
-    }
-
-    @Override
-    public String getI18nBasename() {
-        return this.i18nBasename;
-    }
-
-    public void setI18nBasename(String basename) {
-        this.i18nBasename = basename;
-    }
-
-    @Override
-    public Map getParameters() {
-        return this.parameters;
-    }
-
-    public void setParameters(Map params) {
-        this.parameters = params;
-    }
-
-    public Map<String, Area> getAreas() {
-        return this.areas;
-    }
-
-    public void setAreas(Map<String, Area> areas) {
-        this.areas = areas;
-    }
-
-    public Class<? extends RenderingModel> getModelClass() {
-        return this.modelClass;
-    }
-
-    public void setModelClass(Class<? extends RenderingModel> modelClass) {
-        this.modelClass = modelClass;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-        .append("name", this.name)
-        .append("type", this.renderType)
-        .append("description", this.description)
-        .append("dialog", this.dialog)
-        .append("title", this.title)
-        .append("templateScript", this.templateScript)
-        .toString();
-    }
-
-    public Area getArea(String areaName) {
-        Map<String, Area> areas = this.getAreas();
-        if (areas != null) {
-            for (Area area : areas.values()) {
-                if (areaName.equals(area.getName())) {
-                    return area;
-                }
-            }
-        }
-        return null;
-    }
-
-    private static final Class<?>[] MODEL_CONSTRUCTOR_TYPES = new Class[]{Content.class, RenderableDefinition.class, RenderingModel.class};
-    private static final String MISSING_CONSTRUCTOR_MESSAGE;
-    static {
-        MISSING_CONSTRUCTOR_MESSAGE = "A model class must define a constructor with types " + ArrayUtils.toString(MODEL_CONSTRUCTOR_TYPES) + ". ";
+    public RenderingModel<?> newModel(Content content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        return (RenderingModel<?>) newModel(content.getJCRNode(), definition, parentModel);
     }
 }

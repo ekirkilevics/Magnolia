@@ -33,46 +33,12 @@
  */
 package info.magnolia.module.templating;
 
-import info.magnolia.cms.core.Content;
-
 
 /**
- * A bean tying the current content and the rendering definition. Subclasses
- * will provide helper methods to the template. The {@link #execute()} method is
- * executed before the rendering starts. The model is available under the name
- * <code>model</code>.
- * @param <RD> - an instance of {@link RenderableDefinition}
- * @author pbracher
- * @version $Id$
+ * Deprecated.
+ * @deprecated since 5.0, use {@link info.magnolia.templating.model.RenderingModel}
+ * @param <RD> the {@link RenderableDefinition} bound to the model
  */
-public interface RenderingModel <RD extends RenderableDefinition> {
-    /**
-     * A constant used in some special cases where rendering must be skipped, i.e. a redirect template.
-     * It can be used by template models as a return value for the {@link RenderingModel#execute()} method to inform
-     * {@link AbstractRenderer} that it should not render anything in that particular case.
-     */
-    public static final String SKIP_RENDERING = "skip-rendering";
-
-    /**
-     * The model of the parent paragraph or template.
-     */
-    public RenderingModel getParent();
-
-    /**
-     * The content tied to this model.
-     */
-    public Content getContent();
-
-    /**
-     * The renderable (paragraph/template) tied to this model.
-     */
-    public RD getDefinition();
-
-    /**
-     * Called after all properties were set. Can return a string which is passed
-     * to the method.
-     * {@link RenderableDefinition#determineTemplatePath(String, RenderingModel)}
-     */
-    public String execute();
+public interface RenderingModel <RD extends RenderableDefinition> extends info.magnolia.templating.model.RenderingModel<RD> {
 
 }

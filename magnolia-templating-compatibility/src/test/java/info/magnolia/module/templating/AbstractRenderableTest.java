@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.templating;
 
+import javax.jcr.Node;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
@@ -47,7 +49,7 @@ import junit.framework.TestCase;
 public class AbstractRenderableTest extends TestCase {
     private MockContent dummyContent = new MockContent("");
     private Paragraph dummyDef = new Paragraph();
-    private final RenderingModelImpl dummyParentModel = new RenderingModelImpl(null, null, null);
+    private final RenderingModel dummyParentModel = new RenderingModelImpl(null, null, null);
 
     @Override
     protected void setUp() throws Exception {
@@ -64,7 +66,7 @@ public class AbstractRenderableTest extends TestCase {
     public void testCanInstantiateModel() throws Exception {
         final AbstractRenderable renderable = new AbstractRenderable() {
         };
-        renderable.setModelClass(StandardConstructorModel.class);
+        renderable.setModelClass((Class< ? extends info.magnolia.templating.model.RenderingModel< ? >>) StandardConstructorModel.class);
         final RenderingModel m = renderable.newModel(dummyContent, dummyDef, dummyParentModel);
         assertNotNull(m);
         assertTrue(m instanceof StandardConstructorModel);
@@ -73,7 +75,7 @@ public class AbstractRenderableTest extends TestCase {
     public void testModelNeedSpecificConstructor() {
         final AbstractRenderable renderable = new AbstractRenderable() {
         };
-        renderable.setModelClass(NoConstructorModel.class);
+        renderable.setModelClass((Class< ? extends info.magnolia.templating.model.RenderingModel< ? >>) NoConstructorModel.class);
         try {
             final RenderingModel m = renderable.newModel(dummyContent, dummyDef, dummyParentModel);
             fail("should have failed");
@@ -93,14 +95,14 @@ public class AbstractRenderableTest extends TestCase {
         }
     }
 
-    public static class NoConstructorModel implements RenderingModel {
+    public static class NoConstructorModel implements RenderingModel<RenderableDefinition> {
         @Override
         public RenderingModel getParent() {
             return null;
         }
 
         @Override
-        public Content getContent() {
+        public Node getContent() {
             return null;
         }
 
@@ -132,7 +134,7 @@ public class AbstractRenderableTest extends TestCase {
         }
 
         @Override
-        public Content getContent() {
+        public Node getContent() {
             return null;
         }
 

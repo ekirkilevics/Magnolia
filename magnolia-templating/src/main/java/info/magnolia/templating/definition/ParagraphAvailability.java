@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,21 +31,40 @@
  * intact.
  *
  */
-package info.magnolia.module.templating;
+package info.magnolia.templating.definition;
 
-import info.magnolia.templating.model.RenderingModel;
-
-import javax.jcr.Node;
-
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
- * Deprecated.
- * @deprecated since 5.0, use {@link info.magnolia.templating.model.RenderingModelImpl} instead.
- * @param <RD> the {@link RenderableDefinition} bound to the model
+ * Keeps configuration for a paragraph - name and roles it is available for.
+ *
+ * @version $Id$
+ *
+ * TODO dlipp: implementation copied from info.magnolia.module.templatingkit.templates.ParagraphConfig as
+ * templating-components has no dependency to templating. Check whether the impl in Templating should get
+ * deprecated and references replaced by this impl.
  */
-public class RenderingModelImpl<RD extends RenderableDefinition> extends info.magnolia.templating.model.RenderingModelImpl<RD> implements info.magnolia.module.templating.RenderingModel<RD>{
+public class ParagraphAvailability {
 
-    public RenderingModelImpl(Node content, RD definition, RenderingModel< ? > parent) {
-        super(content, definition, parent);
+    private Collection<String> roles = new ArrayList<String>();
+
+    private String name;
+
+    public String getName() {
+        return this.name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Collection<String> getRoles() {
+        return this.roles;
+    }
+
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
+    }
+
 }

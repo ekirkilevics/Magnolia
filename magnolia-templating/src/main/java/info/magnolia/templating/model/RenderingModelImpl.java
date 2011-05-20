@@ -31,21 +31,64 @@
  * intact.
  *
  */
-package info.magnolia.module.templating;
-
-import info.magnolia.templating.model.RenderingModel;
+package info.magnolia.templating.model;
 
 import javax.jcr.Node;
 
+import info.magnolia.templating.definition.RenderableDefinition;
+
 
 /**
- * Deprecated.
- * @deprecated since 5.0, use {@link info.magnolia.templating.model.RenderingModelImpl} instead.
- * @param <RD> the {@link RenderableDefinition} bound to the model
+ * The default concrete rendering definition used for templates and paragraphs.
+ * @author pbracher
+ * @param <RD> - an instance of {@link RenderableDefinition}
+ * @version $Id: RenderingModelImpl.java 44893 2011-05-10 07:33:22Z dlipp $
+ *
  */
-public class RenderingModelImpl<RD extends RenderableDefinition> extends info.magnolia.templating.model.RenderingModelImpl<RD> implements info.magnolia.module.templating.RenderingModel<RD>{
+public class RenderingModelImpl<RD extends RenderableDefinition> implements RenderingModel<RD> {
+    protected RenderingModel<?> parentModel;
+    protected final Node content;
+    protected final RD definition;
 
-    public RenderingModelImpl(Node content, RD definition, RenderingModel< ? > parent) {
-        super(content, definition, parent);
+    public RenderingModelImpl(Node content, RD definition, RenderingModel<?> parent) {
+        this.content = content;
+        this.definition = definition;
+        this.parentModel = parent;
     }
+
+    @Override
+    public RenderingModel<?> getParent() {
+        return this.parentModel;
+    }
+
+    public RenderingModel<?> getRoot(){
+        RenderingModel<?> model = this;
+        while(model.getParent() != null){
+            model = model.getParent();
+        }
+        return model;
+    }
+
+    @Override
+    public Node getContent() {
+        return this.content;
+    }
+
+    /**
+     * Shortname for templates: model.def.
+     */
+    public RD getDef() {
+        return getDefinition();
+    }
+
+    @Override
+    public RD getDefinition() {
+        return this.definition;
+    }
+
+    @Override
+    public String execute() {
+        return null;
+    }
+
 }
