@@ -100,8 +100,11 @@ public abstract class EditableText extends Editable {
             }
         });
         textField.focus();
-        textField.setSizeFull();
+        textField.setSizeUndefined();
+        textField.setWidth(100, UNITS_PERCENTAGE);
         Layout layout = new HorizontalLayout();
+        layout.setSizeUndefined();
+        layout.setWidth(100, UNITS_PERCENTAGE);
         layout.addComponent(textField);
 
         return new ComponentAndEditor(layout, textField);

@@ -97,8 +97,11 @@ public abstract class EditableSelect extends Editable {
             }
         });
 */
-        select.setSizeFull();
+        select.setSizeUndefined();
+        select.setWidth(100, UNITS_PERCENTAGE);
         Layout layout = new HorizontalLayout();
+        layout.setSizeUndefined();
+        layout.setWidth(100, UNITS_PERCENTAGE);
         layout.addComponent(select);
 
         return new ComponentAndEditor(layout, select);

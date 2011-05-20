@@ -35,9 +35,7 @@ package info.magnolia.ui.admincentral.list.view;
 
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.column.EditEvent;
-import info.magnolia.ui.admincentral.column.EditListener;
-import info.magnolia.ui.admincentral.column.Editable;
+import info.magnolia.ui.admincentral.column.EditHandler;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.jcr.view.JcrView;
@@ -53,7 +51,6 @@ import javax.jcr.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
@@ -99,34 +96,11 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
                 if (event.isDoubleClick()) {
                     openChildren((ContainerItemId) event.getItemId());
                 }
-                else {
-                    final Object itemId = event.getItemId();
-                    final String propertyId = (String) event.getPropertyId();
-                    if (table.isSelected(itemId)) {
-                        Property containerProperty = table.getContainerProperty(itemId,
-                            propertyId);
-                        Object value = containerProperty.getValue();
-                        if (value instanceof Editable) {
-                            final Editable editable = (Editable) value;
-
-                            editable.addListener(new EditListener() {
-
-                                @Override
-                                public void edit(EditEvent event) {
-                                    table.getContainerProperty(itemId,
-                                        propertyId).setValue(editable);
-                                }
-                            });
-
-                            Component editorComponent = editable.getEditorComponent();
-                            containerProperty.setValue(editorComponent);
-                        }
-                    }
-                }
                 // TODO JcrBrowser should have a click event of its own that sends a JCR item instead of a ContainerItemId
                 presenterOnItemSelection((ContainerItemId) event.getItemId());
             }
         });
+        table.addListener(new EditHandler());
 
         this.workbenchDefinition = workbenchDefinition;
 

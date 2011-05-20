@@ -117,7 +117,7 @@ public abstract class Editable extends Label {
 
         // FIXME this is a hack to show the label which is a div inline with the preceding icons. It
         // probably breaks on IE as it uses display: inline-block.
-        addStyleName("m-inline-div");
+        // addStyleName("m-inline-div");
     }
 
     public void addListener(EditListener listener) {
@@ -172,7 +172,9 @@ public abstract class Editable extends Label {
             Item item = getItem();
             ComponentAndEditor componentAndEditor = getComponentAndEditor(item);
             presenter.edit(item, componentAndEditor.getEditor());
-            return componentAndEditor.getComponent();
+            Component component = componentAndEditor.getComponent();
+            // component.addStyleName("m-inline-div");
+            return component;
         }
         catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
