@@ -37,6 +37,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import javax.jcr.PathNotFoundException;
+import javax.jcr.nodetype.NodeType;
 
 import org.junit.Test;
 
@@ -147,4 +148,16 @@ public class MockNodeTest {
         assertEquals(session, child.getSession());
         assertEquals(session, property.getSession());
     }
+
+    @Test
+    public void testGetMixingNodeTypes() throws Exception {
+        MockNode node = new MockNode("mixin-test");
+        node.addMixin("mixin1");
+
+        NodeType[] nodeTypes = node.getMixinNodeTypes();
+
+        assertEquals(1, nodeTypes.length);
+        assertEquals("mixin1", nodeTypes[0].getName());
+    }
+
 }

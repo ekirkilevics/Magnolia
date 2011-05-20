@@ -188,7 +188,11 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public NodeType[] getMixinNodeTypes() throws RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
+        NodeType[] nodeTypes = new NodeType[mixins.size()];
+        for (int i=0; i<mixins.size(); i++) {
+            nodeTypes[i] = new MockNodeType(mixins.get(i));
+         }
+        return nodeTypes;
     }
 
     @Override
