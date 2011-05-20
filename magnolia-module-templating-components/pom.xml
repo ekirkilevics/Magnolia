@@ -4,7 +4,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>5.0-m4-s2</version>
+    <version>5.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>info.magnolia</groupId>
@@ -43,12 +43,12 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-m4-s2</version>
+      <version>5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
-      <version>5.0-m4-s2</version>
+      <version>5.0-SNAPSHOT</version>
     </dependency>
     <!-- dependency TODO needed for ParagraphSelectDialog - but currently
       circular, so see note in info.magnolia.module.templatingcomponentsomponents.EditBar
@@ -57,7 +57,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-templating</artifactId>
-      <version>5.0-m4-s2</version>
+      <version>5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.freemarker</groupId>
@@ -89,7 +89,7 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <type>test-jar</type>
-      <version>5.0-m4-s2</version>
+      <version>5.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
