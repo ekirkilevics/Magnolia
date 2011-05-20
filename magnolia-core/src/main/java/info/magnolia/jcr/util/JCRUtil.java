@@ -60,12 +60,11 @@ import info.magnolia.context.MgnlContext;
 /**
  * Various utility methods to collect data from JCR repository.
  *
- * @author had
- * @version $Id: $
+ * @version $Id$
  */
 public class JCRUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(JCRUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(JCRUtilTest.class);
 
     /**
      * Collects all property names of given type, sorting them (case insensitive) and removing duplicates in the process.
