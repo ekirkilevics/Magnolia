@@ -115,10 +115,12 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         this.workspace = workspace;
     }
 
-    protected abstract Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException;
-
-    //TODO do we really need this method or might instead refactor getPage() to take a query.
-    public abstract void updateContainerIds(NodeIterator iterator) throws RepositoryException;
+    /**
+     * Updates the container with the items pointed to by the {@link NodeIterator} passed as argument.
+     * @param iterator
+     * @throws RepositoryException
+     */
+    public abstract void update(NodeIterator iterator) throws RepositoryException;
 
     @Override
     public void addListener(ItemSetChangeListener listener) {

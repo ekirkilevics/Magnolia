@@ -39,9 +39,6 @@ import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.container.JcrContainerSource;
 
-import java.util.Collection;
-
-import javax.jcr.Item;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
@@ -64,10 +61,6 @@ public class FlatJcrContainer extends JcrContainer {
 
     }
 
-    @Override
-    protected Collection<ContainerItemId> createContainerIds(Collection<Item> children) throws RepositoryException, UnsupportedOperationException {
-        throw new UnsupportedOperationException(getClass().getName() + " does not support this operation.");
-    }
     //TODO on item set change we should refresh the data view to reflect the changes.
 //    @Override
 //    public void fireItemSetChange() {
@@ -76,7 +69,7 @@ public class FlatJcrContainer extends JcrContainer {
 //    }
 
     @Override
-    public void updateContainerIds(NodeIterator iterator) throws RepositoryException {
+    public void update(NodeIterator iterator) throws RepositoryException {
         log.debug("updating container...");
         getItemIndexes().clear();
         getCachedItems().clear();

@@ -142,12 +142,11 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
     }
 
     @Override
-    public void updateContainerIds(NodeIterator iterator) throws RepositoryException, UnsupportedOperationException {
+    public void update(NodeIterator iterator) throws RepositoryException, UnsupportedOperationException {
         throw new UnsupportedOperationException(getClass().getName() + " does not support this operation.");
 
     }
 
-    @Override
     protected Collection<ContainerItemId> createContainerIds(Collection<Item> children) throws RepositoryException {
         ArrayList<ContainerItemId> ids = new ArrayList<ContainerItemId>();
         for (javax.jcr.Item child : children) {
