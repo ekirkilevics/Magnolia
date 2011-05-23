@@ -33,24 +33,33 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
-import info.magnolia.ui.framework.event.EventBus;
-
+import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+
+import info.magnolia.ui.admincentral.jcr.JCRUtil;
+import info.magnolia.ui.framework.event.EventBus;
 
 
 /**
  * Action for creating a new property.
+ *
+ * @verison $Id$
  */
-public class AddPropertyAction extends RepositoryOperationAction<AddPropertyActionDefinition, Node> {
+public class AddPropertyAction extends RepositoryOperationAction<AddPropertyActionDefinition> implements TreeAction {
 
-    public AddPropertyAction(AddPropertyActionDefinition definition, Node node, EventBus eventBus) {
-        super(definition, node, eventBus);
+    public AddPropertyAction(AddPropertyActionDefinition definition, Item item, EventBus eventBus) {
+        super(definition, item, eventBus);
     }
 
     @Override
-    protected void onExecute(Node node) throws RepositoryException {
+    public boolean isAvailable(Item item) throws RepositoryException {
+        return item.isNode();
+    }
+
+    @Override
+    protected void onExecute(Item item) throws RepositoryException {
+        Node node = (Node) item;
         String name = JCRUtil.getUniqueLabel(node, "untitled");
         node.setProperty(name, "");
     }
