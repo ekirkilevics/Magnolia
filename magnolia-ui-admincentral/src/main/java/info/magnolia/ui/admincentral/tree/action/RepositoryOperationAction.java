@@ -46,7 +46,7 @@ import info.magnolia.ui.model.action.ActionExecutionException;
 /**
  * A repository operation action which saves the changes and informs the event bus.
  *
- * @verison $Id$
+ * @version $Id$
  * @param <D> The {@link ActionDefinition} used by the action.
  */
 public abstract class RepositoryOperationAction<D extends ActionDefinition> extends ActionBase<D> {

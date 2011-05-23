@@ -42,7 +42,7 @@ import info.magnolia.ui.framework.event.EventBus;
 /**
  * Deletes a node from the repository.
  *
- * @verison $Id$
+ * @version $Id$
  */
 public class DeleteItemAction extends RepositoryOperationAction<DeleteItemActionDefinition> {
 

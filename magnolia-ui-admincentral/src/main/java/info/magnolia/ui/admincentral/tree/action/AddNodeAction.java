@@ -49,7 +49,7 @@ import info.magnolia.ui.framework.event.EventBus;
  *
  * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
  *
- * @verison $Id$
+ * @version $Id$
  */
 public class AddNodeAction extends RepositoryOperationAction<AddNodeActionDefinition> implements TreeAction {
 

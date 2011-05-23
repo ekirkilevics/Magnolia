@@ -44,7 +44,7 @@ import info.magnolia.ui.framework.event.EventBus;
 /**
  * Action for creating a new property.
  *
- * @verison $Id$
+ * @version $Id$
  */
 public class AddPropertyAction extends RepositoryOperationAction<AddPropertyActionDefinition> implements TreeAction {
 
