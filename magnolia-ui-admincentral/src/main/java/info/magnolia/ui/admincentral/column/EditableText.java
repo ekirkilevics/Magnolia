@@ -106,7 +106,7 @@ public abstract class EditableText extends Editable {
         layout.setSizeUndefined();
         layout.setWidth(100, UNITS_PERCENTAGE);
         layout.addComponent(textField);
-
+        layout.addStyleName("m-inline-div");
         return new ComponentAndEditor(layout, textField);
     }
 

@@ -1,10 +1,13 @@
-@import "../runo/styles.css";
-/*@import url('../reindeer/styles.css');*/
+@import url('../runo/styles.css');
 
-/*.v-table-body {
-	overflow-y: scroll !important;
+/* .v-table-body { */
+/* 	overflow-y: scroll !important; */
+/* } */
+
+.v-table-cell-wrapper {
+  overflow-x: hidden;
 }
-*/
+
 /* .v-table-focus .v-table-cell-content { */
 /*   border: none; */
 /* } */
@@ -51,33 +54,33 @@
 /*   display: none; */
 /* } */
 
- .m-workbench-header {
-   border-top: 1px solid #B6BBBC;
-   border-left: 1px solid #B6BBBC;
- }
+.m-workbench-header {
+  border-top: 1px solid #B6BBBC;
+  border-left: 1px solid #B6BBBC;
+}
 
- .m-search-box {
-   -moz-border-radius: 15px;
-   border-radius: 15px;
-   padding-left: 20px !important;
-   padding-top: 2px !important;
-   padding-bottom: 2px !important;
-   background: #FFF url("img/magnifier.png") no-repeat 2px 4px;
-   color: #B6BBBC !important;
- }
-/**/
- .m-search-form-expanded {
-   border-top: 1px solid #B6BBBC !important;
-   border-left: 1px solid #B6BBBC !important;
- }
-/**/
- .m-search-box:focus {
-   color: #3B4B57 !important;
- }
-/**/
- .m-search-form-label {
-   font-weight: bold;
- }
+.m-search-box {
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  padding-left: 20px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  background: #FFF url("img/magnifier.png") no-repeat 2px 4px;
+  color: #B6BBBC !important;
+}
+
+.m-search-form-expanded {
+  border-top: 1px solid #B6BBBC !important;
+  border-left: 1px solid #B6BBBC !important;
+}
+
+.m-search-box:focus {
+  color: #3B4B57 !important;
+}
+
+.m-search-form-label {
+  font-weight: bold;
+}
 
 /* a fix for TreeTable row jittering */
 /* .v-table-row,.v-table-row-odd { */
@@ -95,18 +98,19 @@
 /*     margin-right: 5px; */
 /* } */
 
- .m-embedded-view {
- 	border-top: 1px solid #B6BBBC;
- 	border-left: 1px solid #B6BBBC;
- }
+.m-embedded-view {
+  border-top: 1px solid #B6BBBC;
+  border-left: 1px solid #B6BBBC;
+}
 
 /**
 * FIXME this is a hack to show the label which is a div inline with the preceding icons. It probably breaks on IE as it uses inline-block.
 */
- .m-inline-div {
- 	display: inline-block;
- }
+.m-inline-div {
+  display: inline-block;
+}
 
- .v-splitpanel-second-container {
-   overflow: hidden !important; remove scrollbars added by lazy load wrapper
- }
+/*  remove scrollbars added by lazy load wrapper */
+.v-splitpanel-second-container {
+  overflow: hidden !important;
+}

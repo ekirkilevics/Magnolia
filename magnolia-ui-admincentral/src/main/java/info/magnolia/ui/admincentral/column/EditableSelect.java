@@ -40,9 +40,13 @@ import java.util.Map;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.NativeSelect;
 
 /**
  * UI component that displays a label and on double click opens it for editing by switching the label to a select field.
@@ -60,7 +64,7 @@ public abstract class EditableSelect extends Editable {
         this.options = options;
     }
 
-    private static class SelectEditor extends NativeSelect implements ValueEditor {
+    private static class SelectEditor extends ComboBox implements ValueEditor {
 
         private String path;
 
@@ -89,21 +93,38 @@ public abstract class EditableSelect extends Editable {
         select.focus();
         select.setImmediate(true);
         select.setInvalidAllowed(false);
-/*
-        select.addListener(new FieldEvents.BlurListener() {
 
-            public void blur(FieldEvents.BlurEvent event) {
-                    onSave();
+        select.addListener(new BlurListener() {
+
+            @Override
+            public void blur(BlurEvent event) {
+                cancel();
             }
         });
-*/
+        select.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ESCAPE, new
+            int[]{}) {
+
+            @Override
+            public void handleAction(Object sender, Object target) {
+                cancel();
+            }
+        });
+
+        // select.addListener(new ValueChangeListener() {
+        //
+        // @Override
+        // public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
+        // save();
+        // }
+        // });
+
         select.setSizeUndefined();
         select.setWidth(100, UNITS_PERCENTAGE);
         Layout layout = new HorizontalLayout();
         layout.setSizeUndefined();
         layout.setWidth(100, UNITS_PERCENTAGE);
         layout.addComponent(select);
-
+        layout.addStyleName("m-inline-div");
         return new ComponentAndEditor(layout, select);
     }
 }
