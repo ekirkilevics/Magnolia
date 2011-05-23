@@ -110,13 +110,13 @@ public abstract class EditableSelect extends Editable {
             }
         });
 
-        // select.addListener(new ValueChangeListener() {
-        //
-        // @Override
-        // public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-        // save();
-        // }
-        // });
+        select.addListener(new ValueChangeListener() {
+
+            @Override
+            public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
+                save();
+            }
+        });
 
         select.setSizeUndefined();
         select.setWidth(100, UNITS_PERCENTAGE);
