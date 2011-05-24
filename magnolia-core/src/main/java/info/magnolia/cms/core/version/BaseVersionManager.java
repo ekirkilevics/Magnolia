@@ -398,7 +398,7 @@ public abstract class BaseVersionManager {
             public Void exec(Session session) throws RepositoryException {
                 //mixins are NOT restored automatically
                 List<String> mixins = new ArrayList<String>();
-                for (Value v: unwrappedVersion.getNode("jcr:frozenNode").getProperty("jcr:frozenMixinTypes").getValues()) {
+                for (Value v: unwrappedVersion.getNode(ItemType.JCR_FROZENNODE).getProperty("jcr:frozenMixinTypes").getValues()) {
                     mixins.add(v.getString());
                 }
 

@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.core.version;
 
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 
 import java.util.Calendar;
@@ -54,7 +55,7 @@ public class VersionedNode extends DelegateNodeWrapper implements Version {
     private final Version version;
 
     public VersionedNode(Version versionedNode) throws PathNotFoundException, RepositoryException {
-        super(versionedNode.getNode("jcr:frozenNode"));
+        super(versionedNode.getNode(ItemType.JCR_FROZENNODE));
         this.version = versionedNode;
     }
 
