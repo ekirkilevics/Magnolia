@@ -33,9 +33,6 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
-
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -45,6 +42,8 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
 
 /**
  * UI component that displays a label and on double click opens it for editing by switching the
@@ -130,7 +129,9 @@ public abstract class Editable extends Label {
 
     protected void save() {
         try {
-            if (presenter.save(getItem())) {
+            Item item = getItem();
+            if (presenter.save(item)) {
+                setValue(getLabelText(item));
                 fireEvent(new EditEvent(this));
             }
         }
