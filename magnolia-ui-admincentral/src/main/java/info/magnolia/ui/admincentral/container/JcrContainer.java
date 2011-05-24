@@ -56,7 +56,6 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.apache.jackrabbit.core.query.QueryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -583,11 +582,11 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         try {
             final Session jcrSession = MgnlContext.getJCRSession(workspace);
             final QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
-            final QueryImpl query = (QueryImpl) jcrQueryManager.createQuery(statement , language);
+            final Query query = jcrQueryManager.createQuery(statement , language);
             if(limit > 0) {
                 query.setLimit(limit);
             }
-            if(offset > 0){
+            if(offset >= 0){
                 query.setOffset(offset);
             }
             long start = System.currentTimeMillis();
