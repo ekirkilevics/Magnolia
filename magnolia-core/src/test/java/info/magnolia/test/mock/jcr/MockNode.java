@@ -94,7 +94,7 @@ public class MockNode extends MockItem implements Node {
         this.mixins.add(mixinName);
     }
 
-    protected void addNode(MockNode child) throws RepositoryException{
+    protected void addNode(MockNode child) {
         child.setParent(this);
         children.put(child.getName(), child);
     }
@@ -105,7 +105,7 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public Node addNode(String relPath, String primaryNodeTypeName) throws RepositoryException{
+    public Node addNode(String relPath, String primaryNodeTypeName) throws RepositoryException {
         final MockNode newChild = new MockNode(relPath);
         newChild.setPrimaryType(primaryNodeTypeName);
         addNode(newChild);
@@ -189,9 +189,9 @@ public class MockNode extends MockItem implements Node {
     @Override
     public NodeType[] getMixinNodeTypes() throws RepositoryException {
         NodeType[] nodeTypes = new NodeType[mixins.size()];
-        for (int i=0; i<mixins.size(); i++) {
+        for (int i = 0; i < mixins.size(); i++) {
             nodeTypes[i] = new MockNodeType(mixins.get(i));
-         }
+        }
         return nodeTypes;
     }
 
@@ -212,7 +212,7 @@ public class MockNode extends MockItem implements Node {
         }
         c = children.get(path);
         if (c == null) {
-            throw new PathNotFoundException(path);
+            throw new PathNotFoundException(getPath() + "/" + path);
         }
         return c;
     }
