@@ -36,11 +36,8 @@ package info.magnolia.ui.admincentral.tree.view;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.column.EditEvent;
-import info.magnolia.ui.admincentral.column.EditListener;
-import info.magnolia.ui.admincentral.column.Editable;
+import info.magnolia.ui.admincentral.column.EditHandler;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
-import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.admincentral.tree.container.HierarchicalJcrContainer;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
@@ -61,10 +58,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.addon.treetable.HierarchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
-import com.vaadin.data.Property;
 import com.vaadin.event.Action;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -74,7 +68,6 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Table;
 
 
 /**
@@ -145,46 +138,6 @@ public class JcrBrowser extends TreeTable {
         }
         catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
-        }
-    }
-
-    /**
-     * Event handler for a table that uses JcrContainer. When the user clicks on a cell that should
-     * allow editing, it converts the cell's label into an editable field. When the user finishes
-     * editing, it will revert back to a label again.
-     * 
-     * @author mrichert
-     */
-    public static final class EditHandler implements ItemClickListener {
-
-        @Override
-        public void itemClick(ItemClickEvent event) {
-            final Table table = (Table) event.getSource();
-            final Object itemId = event.getItemId();
-            final String propertyId = (String) event.getPropertyId();
-            if (table.isSelected(itemId)) {
-                Property containerProperty = table.getContainerProperty(itemId,
-                    propertyId);
-                Object value = containerProperty.getValue();
-                if (value instanceof String) {
-                    value = ((JcrContainer) table.getContainerDataSource()).getColumnValue(propertyId, itemId);
-                }
-                if (value instanceof Editable) {
-                    final Editable editable = (Editable) value;
-
-                    editable.addListener(new EditListener() {
-
-                        @Override
-                        public void edit(EditEvent event) {
-                            table.getContainerProperty(itemId,
-                                propertyId).setValue(editable);
-                        }
-                    });
-
-                    Component editorComponent = editable.getEditorComponent();
-                    containerProperty.setValue(editorComponent);
-                }
-            }
         }
     }
 
