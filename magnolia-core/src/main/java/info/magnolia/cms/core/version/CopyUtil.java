@@ -33,10 +33,11 @@
  */
 package info.magnolia.cms.core.version;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -69,8 +70,7 @@ import org.slf4j.LoggerFactory;
  * Util to copy nodes and hierarchies between workspaces. A {@link Content.ContentFilter} defines what such a copy process includes.
  * This is used to copy pages to the version workspace. While the paragraph nodes have to be copied the sub-pages should not.
  *
- * @author Sameer Charles
- * $Id$
+ * @version $Id$
  */
 public final class CopyUtil {
 

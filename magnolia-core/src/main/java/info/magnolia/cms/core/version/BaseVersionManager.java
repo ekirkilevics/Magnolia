@@ -79,7 +79,7 @@ import org.slf4j.LoggerFactory;
  *
  * The mix:versionable is only added on the top level nodes.
  *
- * @author Sameer Charles
+ * @version $Id$
  */
 public abstract class BaseVersionManager {
 

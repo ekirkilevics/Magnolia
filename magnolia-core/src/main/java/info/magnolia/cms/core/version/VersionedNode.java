@@ -33,9 +33,9 @@
  */
 package info.magnolia.cms.core.version;
 
-import java.util.Calendar;
-
 import info.magnolia.cms.util.DelegateNodeWrapper;
+
+import java.util.Calendar;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -45,10 +45,10 @@ import javax.jcr.version.VersionHistory;
 
 /**
  * Wrapper for version of the node exposing frozen node content as its own as used to happen in old Content API.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
-public class VersionedNode extends DelegateNodeWrapper implements Node, Version {
+public class VersionedNode extends DelegateNodeWrapper implements Version {
 
 
     private final Version version;

@@ -35,16 +35,17 @@ package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.cms.util.NodeDataWrapper;
 import info.magnolia.cms.util.Rule;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -71,8 +72,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Wraps a versioned node (frozen node) and allows traversing the hierarchy as if the node where in the original place.
- * @author Sameer Charles
- * $Id$
+ *
+ * @version $Id$
  */
 public class ContentVersion extends DefaultContent {
 
