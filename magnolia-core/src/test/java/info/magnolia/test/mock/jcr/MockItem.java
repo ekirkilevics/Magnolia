@@ -107,7 +107,7 @@ public abstract class MockItem implements Item {
         return session;
     }
 
-    protected void setSession(MockSession session) {
+    public void setSession(MockSession session) {
         this.session = session;
     }
 
@@ -144,7 +144,7 @@ public abstract class MockItem implements Item {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
-    protected void setParent(MockNode parent) throws RepositoryException {
+    public void setParent(MockNode parent) {
         this.parent = parent;
         setSession((MockSession) parent.getSession());
     }
