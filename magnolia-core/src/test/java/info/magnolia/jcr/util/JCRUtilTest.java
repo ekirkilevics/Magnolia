@@ -33,9 +33,16 @@
  */
 package info.magnolia.jcr.util;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.test.mock.jcr.MockNode;
+
+import javax.jcr.version.Version;
 
 import org.junit.Test;
 
@@ -52,5 +59,15 @@ public class JCRUtilTest {
 
         assertTrue(JCRUtil.hasMixin(node, mixin1));
         assertFalse(JCRUtil.hasMixin(node, "mixin2"));
+    }
+
+    @Test
+    public void testUnwrap() throws Exception {
+        final MockNode wrapped = new MockNode("wrapped");
+        final Version version = mock(Version.class);
+        when(version.getNode(ItemType.JCR_FROZENNODE)).thenReturn(wrapped);
+        final VersionedNode wrapper = new VersionedNode(version);
+
+        assertEquals(wrapped, JCRUtil.unwrap(wrapper));
     }
 }
