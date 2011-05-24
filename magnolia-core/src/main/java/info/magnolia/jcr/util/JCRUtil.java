@@ -321,8 +321,7 @@ public class JCRUtil {
     private static String combinePathAndName(String path, String name) {
         if ("/".equals(path)) {
             return "/" + name;
-        } else {
-            return path + "/" + name;
         }
+        return path + "/" + name;
     }
 }
