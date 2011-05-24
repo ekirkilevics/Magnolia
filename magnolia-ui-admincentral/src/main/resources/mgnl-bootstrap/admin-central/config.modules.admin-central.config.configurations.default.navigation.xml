@@ -1201,7 +1201,7 @@
                     <sv:value>3c44aac3-f875-4e0c-a5ac-18084e5c7fdd</sv:value>
                   </sv:property>
                   <sv:property sv:name="i18nBasename" sv:type="String">
-                    <sv:value>info.magnolia.module.admininterface.messages</sv:value>
+                    <sv:value>info.magnolia.ui.admincentral.messages</sv:value>
                   </sv:property>
                   <sv:property sv:name="icon" sv:type="String">
                     <sv:value>/.resources/icons/16/dot.gif</sv:value>

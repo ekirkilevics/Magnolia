@@ -78,7 +78,7 @@ public class AdminCentralViewImpl implements AdminCentralView {
         application.setTheme("magnolia");
         application.setLogoutURL(MgnlContext.getContextPath() + "/?mgnlLogout=true");
 
-        Messages messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
+        Messages messages = MessagesManager.getMessages("info.magnolia.ui.admincentral.messages");
 
         menuDisplay = new VerticalLayout();
         menuDisplay.setHeight(100,Sizeable.UNITS_PERCENTAGE);
