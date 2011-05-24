@@ -79,8 +79,6 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         table = new Table();
         table.setSizeFull();
 
-        // sorting
-        table.setSortDisabled(false);
         // next two lines are required to make the browser (Table) react on selection change via mouse
         table.setImmediate(true);
         table.setNullSelectionAllowed(false);
@@ -93,10 +91,6 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
 
             @Override
             public void itemClick(ItemClickEvent event) {
-                if (event.isDoubleClick()) {
-                    openChildren((ContainerItemId) event.getItemId());
-                }
-                // TODO JcrBrowser should have a click event of its own that sends a JCR item instead of a ContainerItemId
                 presenterOnItemSelection((ContainerItemId) event.getItemId());
             }
         });
@@ -108,7 +102,7 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         table.setSelectable(true);
         table.setColumnCollapsingAllowed(true);
 
-        // TODO: check Ticket http://dev.vaadin.com/ticket/5453
+        // TODO: check Ticket http://dev.vaadin.com/ticket/5493
         table.setColumnReorderingAllowed(true);
 
         container = new FlatJcrContainer(treeModel,workbenchDefinition.getWorkspace());
@@ -127,11 +121,6 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         table.setContainerDataSource(container);
     }
 
-    private void openChildren(ContainerItemId itemId) {
-        log.debug("opening folder "+ itemId);
-        // TODO: reinitialize table with children on double click
-    }
-
     @Override
     public void select(String path) {
         ContainerItemId itemId = container.getItemByPath(path);
@@ -141,7 +130,6 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
     @Override
     public void refresh() {
         container.fireItemSetChange();
-        table.requestRepaintAll();
     }
 
     @Override
