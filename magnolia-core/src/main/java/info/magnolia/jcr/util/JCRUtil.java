@@ -144,17 +144,16 @@ public class JCRUtil {
             return s.equalsIgnoreCase(type);
 
             // FIXME this method does not consider mixins when the node is frozen
-
-        } else {
-            return node.isNodeType(type);
         }
+        return node.isNodeType(type);
     }
 
     public static Node unwrap(Node node) {
-        while (node instanceof DelegateNodeWrapper) {
-            node = ((DelegateNodeWrapper) node).getWrappedNode();
+        Node unwrappedNode = node;
+        while (unwrappedNode instanceof DelegateNodeWrapper) {
+            unwrappedNode = ((DelegateNodeWrapper) node).getWrappedNode();
         }
-        return node;
+        return unwrappedNode;
     }
 
     /**
