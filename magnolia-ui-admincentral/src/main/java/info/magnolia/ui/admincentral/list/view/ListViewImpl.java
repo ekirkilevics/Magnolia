@@ -51,6 +51,7 @@ import javax.jcr.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
@@ -82,6 +83,7 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         // next two lines are required to make the browser (Table) react on selection change via mouse
         table.setImmediate(true);
         table.setNullSelectionAllowed(false);
+
         //Important do not set page length and cache ratio on the Table, rather set them by using JcrContainer corresponding methods. Setting
         //those value explicitly on the Table will cause the same jcr query to be repeated twice thus degrading performance greatly.
         //TODO investigate cause for this behavior.
@@ -92,6 +94,13 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
             @Override
             public void itemClick(ItemClickEvent event) {
                 presenterOnItemSelection((ContainerItemId) event.getItemId());
+            }
+        });
+
+        table.addListener(new Table.ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                presenterOnItemSelection((ContainerItemId) event.getProperty().getValue());
             }
         });
         table.addListener(new EditHandler());
