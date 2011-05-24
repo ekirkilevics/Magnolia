@@ -55,6 +55,7 @@ import javax.jcr.query.InvalidQueryException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
+import javax.jcr.query.RowIterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -512,14 +513,13 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         itemIndexes.clear();
 
         try {
-            final StringBuilder stmt = new StringBuilder("select * from [mgnl:content] as c");
+            final StringBuilder stmt = new StringBuilder("select * from [mgnl:content] as content");
             if(!sorters.isEmpty()) {
+                stmt.append(" inner join [mgnl:metaData] as metaData on ischildnode(metaData,content)");
                 stmt.append(" order by ");
                 for(OrderBy orderBy: sorters){
-                    stmt.append("c.")
-                    .append(orderBy.getProperty())
-                    .append(" ")
-                    .append(orderBy.isAscending() ? "asc":"desc")
+                    stmt.append("content."+orderBy.getProperty())
+                    .append(orderBy.isAscending() ? " asc":" desc")
                     .append(", ");
                 }
                 stmt.delete(stmt.lastIndexOf(","), stmt.length()-1);
@@ -529,11 +529,11 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
             //to iterate over the results to the point that any benefit gained from faster query execution is lost and overall performance gets worse. Try using JQOM.
             final QueryResult queryResult = executeQuery(stmt.toString(), Query.JCR_SQL2, pageLength * cacheRatio, currentOffset);
             //final QueryResult queryResult = executeQuery("//element(*,mgnl:content)", Query.XPATH, pageLength * DEFAULT_CACHE_RATIO, currentOffset);
-            final NodeIterator iterator = queryResult.getNodes();
+            final RowIterator iterator = queryResult.getRows();
             long rowCount = currentOffset;
             while(iterator.hasNext()){
 
-                final ContainerItemId id = createContainerId(iterator.nextNode());
+                final ContainerItemId id = createContainerId(iterator.nextRow().getNode("content"));
                 /* Cache item */
                 itemIndexes.put(rowCount++, id);
                 cachedItems.put(id, new ContainerItem(id, this));
