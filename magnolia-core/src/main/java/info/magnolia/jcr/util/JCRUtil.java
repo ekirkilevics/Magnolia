@@ -33,8 +33,10 @@
  */
 package info.magnolia.jcr.util;
 
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.JCRSessionOp;
 import info.magnolia.cms.util.DelegateNodeWrapper;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
@@ -128,6 +130,24 @@ public class JCRUtil {
             }
         }
         return false;
+    }
+
+    public static boolean isNodeType(Node node, String type) throws RepositoryException {
+        if (node instanceof DelegateNodeWrapper) {
+            node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
+        }
+        final String actualType = node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
+        // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original node type
+        if (ItemType.NT_FROZENNODE.equals(actualType) && !(ItemType.NT_FROZENNODE.equals(type))) {
+            final Property p = node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE);
+            final String s = p.getString();
+            return s.equalsIgnoreCase(type);
+
+            // FIXME this method does not consider mixins when the node is frozen
+
+        } else {
+            return node.isNodeType(type);
+        }
     }
 
     public static Node unwrap(Node node) {

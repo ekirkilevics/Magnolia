@@ -39,6 +39,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.Rule;
+import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.util.ArrayList;
@@ -445,21 +446,9 @@ public class DefaultContent extends AbstractContent {
      * @param type
      */
     protected boolean isNodeType(Node node, String type) {
-        if (node instanceof DelegateNodeWrapper) {
-            node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
-        }
         try {
-            final String actualType = node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
-            // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original node type
-            if (ItemType.NT_FROZENNODE.equals(actualType) && !(ItemType.NT_FROZENNODE.equals(type))) {
-                final Property p = node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE);
-                final String s = p.getString();
-                return s.equalsIgnoreCase(type);
-            } else {
-                return node.isNodeType(type);
-            }
-        }
-        catch (RepositoryException re) {
+            return JCRUtil.isNodeType(node, type);
+        } catch (RepositoryException re) {
             log.error(re.getMessage());
             log.debug(re.getMessage(), re);
             return false;
