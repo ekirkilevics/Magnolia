@@ -31,16 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.jcr.nodebuilder;
 
 
-import static info.magnolia.jcr.util.Ops.addNode;
-import static info.magnolia.jcr.util.Ops.addProperty;
-import static info.magnolia.jcr.util.Ops.getNode;
+import static info.magnolia.jcr.nodebuilder.Ops.addNode;
+import static info.magnolia.jcr.nodebuilder.Ops.addProperty;
+import static info.magnolia.jcr.nodebuilder.Ops.getNode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import info.magnolia.jcr.nodebuilder.NodeBuilder;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.MockValue;

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2009-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,50 +31,36 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.jcr.nodebuilder;
+
+import info.magnolia.nodebuilder.NodeOperationException;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * Abstract implementation of NodeOperation. Mainly implementing {@link #then(NodeOperation...)}.
+ * ErrorHandler implementations can decide what to do with certain conditions.
+ * Specifically, they'll usually log or throw exceptions. They can only throw
+ * NodeOperationException (or other RuntimeExceptions, obviously), which
+ * the client code is expected to handle.
  *
  * @version $Id$
  */
-public abstract class AbstractNodeOperation implements NodeOperation {
-    private static final Logger log = LoggerFactory.getLogger(AbstractNodeOperation.class);
-
-    private NodeOperation[] childrenOps = {};
-
-    @Override
-    public void exec(Node context, ErrorHandler errorHandler) {
-        Node execResult = context;
-        try {
-            execResult = doExec(execResult, errorHandler);
-        } catch (RepositoryException e) {
-            try {
-                errorHandler.handle(e, execResult);
-            } catch (RepositoryException e1) {
-                log.warn("Could not handle original exception " + e.getMessage() + " because of: ", e1);
-            }
-        }
-
-        for (NodeOperation childrenOp : childrenOps) {
-            childrenOp.exec(execResult, errorHandler);
-        }
-    }
+public interface ErrorHandler {
 
     /**
-     * @return the node that should now be used as the context for subsequent operations
+     * The operation calling this method is expected to pass a fully formed message;
+     * it should ideally contain some context information about the operation that
+     * caused an issue. The ErrorHandler implementation will decide what to do
+     * with it. (log, throw a NodeOperationException, ...)
      */
-    protected abstract Node doExec(Node context, ErrorHandler errorHandler) throws RepositoryException;
+    void report(String message) throws NodeOperationException, RepositoryException;
 
-    @Override
-    public NodeOperation then(NodeOperation... childrenOps) {
-        this.childrenOps = childrenOps;
-        return this;
-    }
+    /**
+     * The operation calling this method isn't expected to do anything here;
+     * the ErrorHandler implementation will attempt to build a fully formed message,
+     * then decide what to do with it. (log, throw a NodeOperationException, ...)
+     */
+    void handle(RepositoryException e, Node context) throws NodeOperationException, RepositoryException;
+
 }

@@ -31,46 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.jcr.nodebuilder;
 
 import info.magnolia.nodebuilder.NodeOperationException;
 
+import javax.jcr.ItemExistsException;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 
 /**
- * Entry point for using the node builder API.
- * Also see the {@link info.magnolia.nodebuilder.task.NodeBuilderTask} and {@link info.magnolia.nodebuilder.task.ModuleNodeBuilderTask}
- * classes for usage of the node builder API in {@link info.magnolia.module.ModuleVersionHandler}s.
+ * Provides basic behavior for ErrorHandlers.
  *
  * @version $Id$
  */
-public class NodeBuilder {
-    private final ErrorHandler errorHandler;
-    private final Node root;
-    private final NodeOperation[] childrenOps;
+public abstract class AbstractErrorHandler implements ErrorHandler {
 
-    public NodeBuilder(Node root, NodeOperation... childrenOps) {
-        this(new StrictErrorHandler(), root, childrenOps);
-    }
-
-    public NodeBuilder(ErrorHandler errorHandler, Node root, NodeOperation... childrenOps) {
-        this.errorHandler = errorHandler;
-        this.root = root;
-        this.childrenOps = childrenOps;
-    }
-
-    /**
-     * Execute the operations.
-     *
-     * @throws NodeOperationException if the given ErrorHandler decided to do so !
-     */
-    public void exec() throws NodeOperationException {
-        for (NodeOperation childrenOp : childrenOps) {
-            childrenOp.exec(root, errorHandler);
+    @Override
+    public void handle(RepositoryException e, Node context) throws NodeOperationException, RepositoryException {
+        if (e instanceof ItemExistsException) {
+            report(e.getMessage() + " already exists at " + context.getPath() + ".");
+        } else if (e instanceof ItemNotFoundException) {
+            report(e.getMessage() + " can't be found at " + context.getPath() + ".");
+        } else if (e instanceof PathNotFoundException) {
+            report(e.getMessage() + " can't be found at " + context.getPath() + ".");
+        } else {
+            unhandledRepositoryException(e, context);
         }
     }
 
-    // TODO some context passed around, configuration at beginning
-    // (what to do with exceptions, what to do with warnings
-
+    /**
+     * Override this method if you need finer grained control on RepositoryExceptions that haven't been handled
+     * by the handle() method yet, or if you want to try and keep on proceeding anyway.
+     */
+    protected void unhandledRepositoryException(RepositoryException e, Node context) throws NodeOperationException, RepositoryException {
+        throw new NodeOperationException("Failed to operate on " + context.getPath() + " with message: " + e.getMessage(), e);
+    }
 }

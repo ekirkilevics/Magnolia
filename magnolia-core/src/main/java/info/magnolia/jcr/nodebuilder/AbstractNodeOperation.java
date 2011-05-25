@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2009-2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,41 +31,50 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.jcr.nodebuilder;
 
-import info.magnolia.nodebuilder.NodeOperationException;
-
-import javax.jcr.ItemExistsException;
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * Provides basic behavior for ErrorHandlers.
+ * Abstract implementation of NodeOperation. Mainly implementing {@link #then(NodeOperation...)}.
  *
  * @version $Id$
  */
-public abstract class AbstractErrorHandler implements ErrorHandler {
+public abstract class AbstractNodeOperation implements NodeOperation {
+    private static final Logger log = LoggerFactory.getLogger(AbstractNodeOperation.class);
+
+    private NodeOperation[] childrenOps = {};
 
     @Override
-    public void handle(RepositoryException e, Node context) throws NodeOperationException, RepositoryException {
-        if (e instanceof ItemExistsException) {
-            report(e.getMessage() + " already exists at " + context.getPath() + ".");
-        } else if (e instanceof ItemNotFoundException) {
-            report(e.getMessage() + " can't be found at " + context.getPath() + ".");
-        } else if (e instanceof PathNotFoundException) {
-            report(e.getMessage() + " can't be found at " + context.getPath() + ".");
-        } else {
-            unhandledRepositoryException(e, context);
+    public void exec(Node context, ErrorHandler errorHandler) {
+        Node execResult = context;
+        try {
+            execResult = doExec(execResult, errorHandler);
+        } catch (RepositoryException e) {
+            try {
+                errorHandler.handle(e, execResult);
+            } catch (RepositoryException e1) {
+                log.warn("Could not handle original exception " + e.getMessage() + " because of: ", e1);
+            }
+        }
+
+        for (NodeOperation childrenOp : childrenOps) {
+            childrenOp.exec(execResult, errorHandler);
         }
     }
 
     /**
-     * Override this method if you need finer grained control on RepositoryExceptions that haven't been handled
-     * by the handle() method yet, or if you want to try and keep on proceeding anyway.
+     * @return the node that should now be used as the context for subsequent operations
      */
-    protected void unhandledRepositoryException(RepositoryException e, Node context) throws NodeOperationException, RepositoryException {
-        throw new NodeOperationException("Failed to operate on " + context.getPath() + " with message: " + e.getMessage(), e);
+    protected abstract Node doExec(Node context, ErrorHandler errorHandler) throws RepositoryException;
+
+    @Override
+    public NodeOperation then(NodeOperation... childrenOps) {
+        this.childrenOps = childrenOps;
+        return this;
     }
 }

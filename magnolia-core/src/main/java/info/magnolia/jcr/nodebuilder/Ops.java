@@ -31,10 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.jcr.nodebuilder;
 
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.jcr.util.JCRUtil;
 
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;

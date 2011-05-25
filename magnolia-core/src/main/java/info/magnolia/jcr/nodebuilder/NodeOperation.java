@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.jcr.nodebuilder;
 
 import javax.jcr.Node;
 
