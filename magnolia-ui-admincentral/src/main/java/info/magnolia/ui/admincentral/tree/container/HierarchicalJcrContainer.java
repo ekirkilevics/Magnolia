@@ -38,9 +38,12 @@ import info.magnolia.ui.admincentral.container.ContainerItem;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.container.JcrContainerSource;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
@@ -63,8 +66,8 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
 
     private static final Logger log = LoggerFactory.getLogger(HierarchicalJcrContainer.class);
 
-    public HierarchicalJcrContainer(JcrContainerSource jcrContainerSource, String workspace) {
-        super(jcrContainerSource, workspace);
+    public HierarchicalJcrContainer(JcrContainerSource jcrContainerSource, WorkbenchDefinition workbenchDefinition) {
+        super(jcrContainerSource, workbenchDefinition);
     }
 
     @Override
@@ -153,6 +156,12 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
             ids.add(createContainerId(child));
         }
         return ids;
+    }
+
+    @Override
+    public List<String> getSortableContainerPropertyIds() {
+        //at present tree view is not sortable
+        return Collections.emptyList();
     }
 
     @Override

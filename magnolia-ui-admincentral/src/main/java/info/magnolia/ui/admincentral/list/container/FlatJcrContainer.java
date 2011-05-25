@@ -38,6 +38,7 @@ import info.magnolia.ui.admincentral.container.ContainerItem;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.container.JcrContainerSource;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
@@ -56,8 +57,8 @@ public class FlatJcrContainer extends JcrContainer {
     /**
      * Constructor for {@link FlatJcrContainer}.
      */
-    public FlatJcrContainer(JcrContainerSource jcrContainerSource, String workspace) {
-        super(jcrContainerSource, workspace);
+    public FlatJcrContainer(JcrContainerSource jcrContainerSource, WorkbenchDefinition workbenchDefinition) {
+        super(jcrContainerSource, workbenchDefinition);
 
     }
 

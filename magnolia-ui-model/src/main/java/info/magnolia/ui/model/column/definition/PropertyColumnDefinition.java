@@ -40,7 +40,6 @@ package info.magnolia.ui.model.column.definition;
  */
 public class PropertyColumnDefinition extends AbstractColumnDefinition {
 
-    private String propertyName;
     private boolean editable = false;
 
     public boolean isEditable() {
@@ -49,14 +48,6 @@ public class PropertyColumnDefinition extends AbstractColumnDefinition {
 
     public void setEditable(boolean editable) {
         this.editable = editable;
-    }
-
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
     }
 
 }

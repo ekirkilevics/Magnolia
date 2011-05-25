@@ -47,9 +47,7 @@ import info.magnolia.exception.RuntimeRepositoryException;
 
 /**
  * UI component that displays a label and on double click opens it for editing by switching the
- * label to save text field. Implements {@link Comparable} to allow sorting of columns holding this
- * component with Vaadin. Default implementation for <code>compareTo(..),</code> method uses jcr's
- * item name for comparison. Subclasses may use more specific properties.
+ * label to save text field.
  *
  * @author tmattsson
  * @author mrichert
@@ -137,25 +135,6 @@ public abstract class Editable extends Label {
         }
         catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
-        }
-    }
-
-    @Override
-    public int compareTo(Object other) {
-        if (other instanceof Editable) {
-            Editable o = (Editable) other;
-            try {
-
-                log.debug("comparing {} and {}", getItem().getName().toLowerCase(), o.getItem().getName().toLowerCase());
-
-                return getItem().getName().toLowerCase().compareTo(o.getItem().getName().toLowerCase());
-            }
-            catch (RepositoryException e) {
-                throw new RuntimeRepositoryException(e);
-            }
-        }
-        else {
-            return super.compareTo(other);
         }
     }
 

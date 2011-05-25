@@ -106,7 +106,7 @@ public class JcrBrowser extends TreeTable {
 
         addDragAndDrop();
 
-        container = new HierarchicalJcrContainer(treeModel, workbenchDefinition.getWorkspace());
+        container = new HierarchicalJcrContainer(treeModel, workbenchDefinition);
 
         for (Column< ? > treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();

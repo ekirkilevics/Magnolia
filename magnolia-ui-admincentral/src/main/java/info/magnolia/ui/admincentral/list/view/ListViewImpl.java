@@ -71,8 +71,6 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
 
     private final TreeModel treeModel;
 
-    private final WorkbenchDefinition workbenchDefinition;
-
     private static final Logger log = LoggerFactory.getLogger(ListViewImpl.class);
 
     public ListViewImpl(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell){
@@ -105,8 +103,6 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         });
         table.addListener(new EditHandler());
 
-        this.workbenchDefinition = workbenchDefinition;
-
         table.setEditable(false);
         table.setSelectable(true);
         table.setColumnCollapsingAllowed(true);
@@ -114,16 +110,12 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         // TODO: check Ticket http://dev.vaadin.com/ticket/5493
         table.setColumnReorderingAllowed(true);
 
-        container = new FlatJcrContainer(treeModel,workbenchDefinition.getWorkspace());
+        container = new FlatJcrContainer(treeModel,workbenchDefinition);
 
         for (Column<?> treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();
-            boolean sortable = treeColumn.getDefinition().isSortable();
             table.setColumnExpandRatio(columnName, treeColumn.getWidth() <= 0 ? 1 : treeColumn.getWidth());
             container.addContainerProperty(columnName, Component.class, "");
-            if(sortable){
-                container.addSortableContainerProperty(columnName);
-            }
             table.setColumnHeader(columnName, treeColumn.getLabel());
         }
 
