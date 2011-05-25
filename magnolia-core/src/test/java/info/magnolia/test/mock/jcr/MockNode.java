@@ -68,7 +68,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class MockNode extends MockItem implements Node {
 
-    private final Map<String, MockNode> children = new LinkedHashMap<String, MockNode>();
+    private final LinkedHashMap<String, MockNode> children = new LinkedHashMap<String, MockNode>();
 
     private String identifier;
 
@@ -78,7 +78,7 @@ public class MockNode extends MockItem implements Node {
 
     private String primaryType = ItemType.CONTENTNODE.getSystemName();
 
-    private final Map<String, Property> properties = new LinkedHashMap<String, Property>();
+    private final LinkedHashMap<String, Property> properties = new LinkedHashMap<String, Property>();
 
     public MockNode(String name) {
         super(name);
@@ -367,9 +367,35 @@ public class MockNode extends MockItem implements Node {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
+    /**
+     * @see javax.jcr.Node#orderBefore(String, String) for description of desired behaviour
+     */
     @Override
-    public void orderBefore(String srcChildRelPath, String destChildRelPath) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public void orderBefore(String srcName, String beforeName) {
+        // don't do anything if both names are identical
+        if (!srcName.equals(beforeName)) {
+            MockNode nodeToMove = children.remove(srcName);
+            int childrenSize = children.size();
+            List<MockNode> newOrder = new ArrayList<MockNode>();
+
+            for (MockNode child : children.values()) {
+                if (child.getName().equals(beforeName)) {
+                    newOrder.add(nodeToMove);
+                }
+                newOrder.add(child);
+            }
+
+            if (childrenSize > newOrder.size()) {
+                // in that case nodeToMove has not yet been added but should be added at the end - so do it!
+                newOrder.add(nodeToMove);
+            }
+
+            children.clear();
+
+            for (MockNode child : newOrder) {
+                children.put(child.getName(), child);
+            }
+        }
     }
 
     @Override

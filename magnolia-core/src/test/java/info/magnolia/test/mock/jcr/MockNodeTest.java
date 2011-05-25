@@ -36,6 +36,9 @@ package info.magnolia.test.mock.jcr;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Iterator;
+
+import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.nodetype.NodeType;
 
@@ -158,6 +161,45 @@ public class MockNodeTest {
 
         assertEquals(1, nodeTypes.length);
         assertEquals("mixin1", nodeTypes[0].getName());
+    }
+
+    @Test
+    public void testOrderBeforeWithBothNamesValid() throws Exception {
+        MockNode root = new MockNode("root");
+        final String firstChild = "1";
+        final String secondChild = "2";
+        final String thirdChild = "3";
+
+        final Node first = root.addNode(firstChild);
+        final Node second = root.addNode(secondChild);
+        final Node third = root.addNode(thirdChild);
+
+        root.orderBefore(secondChild, firstChild);
+
+        assertEquals(3, root.getChildren().values().size());
+        Iterator<MockNode> orderedKids = root.getChildren().values().iterator();
+        assertEquals(second, orderedKids.next());
+        assertEquals(first, orderedKids.next());
+        assertEquals(third, orderedKids.next());
+    }
+
+    public void testOrderBeforeWithSecondNameBe() throws Exception {
+        MockNode root = new MockNode("root");
+        final String firstChild = "1";
+        final String secondChild = "2";
+        final String thirdChild = "3";
+
+        final Node first = root.addNode(firstChild);
+        final Node second = root.addNode(secondChild);
+        final Node third = root.addNode(thirdChild);
+
+        // should result in putting firstChild at the end of the children
+        root.orderBefore(firstChild, null);
+
+        Iterator<MockNode> orderedKids = root.getChildren().values().iterator();
+        assertEquals(second, orderedKids.next());
+        assertEquals(third, orderedKids.next());
+        assertEquals(first, orderedKids.next());
     }
 
 }
