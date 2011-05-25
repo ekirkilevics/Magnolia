@@ -406,7 +406,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
                 sorters.add(orderBy);
             }
         }
-        refresh();
+        getPage();
     }
 
     public List<String> getSortableContainerPropertyIds() {
