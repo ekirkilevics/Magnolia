@@ -532,11 +532,11 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
             if(!sorters.isEmpty()) {
                 stmt.append(JOIN_METADATA_ORDER_BY);
                 for(OrderBy orderBy: sorters){
-                    stmt.append(CONTENT_SELECTOR_NAME+"."+orderBy.getProperty())
+                    stmt.append(CONTENT_SELECTOR_NAME+".["+orderBy.getProperty()+"]")
                     .append(orderBy.isAscending() ? " asc":" desc")
                     .append(", ");
                     //TODO here we don't know to which primary type this prop belongs to. I would tend not to clutter the column definition with yet another info about primary type.
-                    stmt.append(METADATA_SELECTOR_NAME+"."+orderBy.getProperty())
+                    stmt.append(METADATA_SELECTOR_NAME+".["+orderBy.getProperty()+"]")
                     .append(orderBy.isAscending() ? " asc":" desc")
                     .append(", ");
                 }
