@@ -537,6 +537,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         try {
             final StringBuilder stmt = new StringBuilder(SELECT_CONTENT);
             if(!sorters.isEmpty()) {
+                //TODO one workaround to make this faster would be avoiding doing a join when we know for sure there are no properties from metadata to order by.
                 stmt.append(JOIN_METADATA_ORDER_BY);
                 for(OrderBy orderBy: sorters){
                     if(NAME_PROPERTY.equals(orderBy.getProperty())){
