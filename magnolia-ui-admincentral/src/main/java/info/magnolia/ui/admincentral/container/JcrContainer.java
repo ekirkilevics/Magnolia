@@ -128,8 +128,10 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         for(AbstractColumnDefinition columnDefinition: workbenchDefinition.getColumns()){
             if(columnDefinition.isSortable()){
                 log.debug("Configuring column [{}] as sortable", columnDefinition.getName());
+
                 String propertyName = columnDefinition.getPropertyName();
                 log.debug("propertyName is {}", propertyName);
+
                 if(StringUtils.isBlank(propertyName)){
                     propertyName = columnDefinition.getName();
                     log.warn("Column {} is sortable but no propertyName has been defined. Defaulting to column name (sorting may not work as expected).", columnDefinition.getName());
@@ -610,9 +612,11 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
             if(offset >= 0){
                 query.setOffset(offset);
             }
+            log.debug("Executing query against workspace [{}] with statement [{}] and limit {} and offset {}...", new Object[]{getWorkspace(), statement, limit, offset});
             long start = System.currentTimeMillis();
             final QueryResult result = query.execute();
-            log.debug("Executed query against workspace [{}] with statement [{}] and limit {} and offset {}. Took {} ms", new Object[]{getWorkspace(), statement, limit, offset, System.currentTimeMillis() - start});
+            log.debug("Query execution took {} ms", System.currentTimeMillis() - start);
+
             return result;
 
         } catch (LoginException e) {
