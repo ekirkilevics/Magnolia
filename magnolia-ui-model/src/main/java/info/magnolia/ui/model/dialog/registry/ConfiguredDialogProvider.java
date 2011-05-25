@@ -43,6 +43,8 @@ import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
 /**
  * DialogProvider that instantiates a dialog from a configuration node.
+ *
+ * @version $Id$
  */
 public class ConfiguredDialogProvider implements DialogProvider {
 
