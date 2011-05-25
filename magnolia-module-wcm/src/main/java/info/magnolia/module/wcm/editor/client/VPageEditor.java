@@ -51,8 +51,18 @@ import com.vaadin.terminal.gwt.client.UIDL;
  */
 public class VPageEditor extends HTML implements Paintable, EventListener {
 
+    public static final String PAGE_MARKER = "cms:page";
     public static final String EDIT_MARKER = "cms:edit";
     public static final String AREA_MARKER = "cms:area";
+
+    public static final String AREA_TYPE_LIST = "list";
+    public static final String AREA_TYPE_SINGLE = "single";
+
+    public static final String SELECTION_PAGE = "page";
+    public static final String SELECTION_AREA = "area";
+    public static final String SELECTION_SINGLE = "single";
+    public static final String SELECTION_PARAGRAPH = "paragraph";
+    public static final String SELECTION_PARAGRAPH_IN_SINGLE = "paragraph_in_single";
 
     public static final String SELECTED_WORKSPACE = "selectedWorkspace";
     public static final String SELECTED_PATH = "selectedPath";
@@ -135,12 +145,12 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
             if (childNode.getNodeType() == Element.ELEMENT_NODE) {
                 Element child = (Element) childNode;
 
-                if (child.getTagName().equalsIgnoreCase("cms:page")) {
+                if (child.getTagName().equalsIgnoreCase(PAGE_MARKER)) {
                     PageBarWidget pageBarWidget = new PageBarWidget(this, child);
                     pageBarWidget.attach(child);
                 } else if (child.getTagName().equalsIgnoreCase(EDIT_MARKER)) {
-                    if (parentBar != null && parentBar.getType().equals("slot")) {
-                        parentBar.mutateIntoSlotBar(child);
+                    if (parentBar != null && parentBar.getType().equals(AREA_TYPE_SINGLE)) {
+                        parentBar.mutateIntoSingleBar(child);
                     } else {
                         EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
                         editBarWidget.attach(child);
