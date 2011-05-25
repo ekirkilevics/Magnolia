@@ -68,7 +68,7 @@ public class JcrContainerProperty extends AbstractProperty {
     @Override
     public void setValue(Object newValue) throws ReadOnlyException, ConversionException {
         container.setColumnValue(propertyId, itemId, newValue);
-        fireValueChange();
+        // fireValueChange();
     }
 
     @Override

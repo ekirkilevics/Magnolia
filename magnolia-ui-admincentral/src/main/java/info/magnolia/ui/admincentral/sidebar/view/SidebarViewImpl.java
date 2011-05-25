@@ -60,6 +60,7 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
         this.actionListView = actionListView;
         this.previewView = previewView;
         panel = new VerticalSplitPanel();
+        panel.setImmediate(false);
         panel.setSizeFull();
 
         panel.setFirstComponent(actionListView.asVaadinComponent());

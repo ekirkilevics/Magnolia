@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.framework.editor.Editor;
@@ -107,7 +106,8 @@ public abstract class AbstractEditableColumn<D extends AbstractColumnDefinition>
                 return false;
             }
 
-            eventBus.fireEvent(new ContentChangedEvent(item.getSession().getWorkspace().getName(), item.getPath()));
+            // eventBus.fireEvent(new
+            // ContentChangedEvent(item.getSession().getWorkspace().getName(), item.getPath()));
 
             return true;
         }

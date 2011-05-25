@@ -33,16 +33,18 @@
  */
 package info.magnolia.module.wcm.editor;
 
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.module.wcm.PageEditorPresenter;
+import info.magnolia.module.wcm.editor.client.VPageEditor;
+
 import java.util.Map;
+
 import javax.jcr.RepositoryException;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.ClientWidget;
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.module.wcm.PageEditorPresenter;
-import info.magnolia.module.wcm.editor.client.VPageEditor;
 
 /**
  * Server side vaadin component for the page editor.
@@ -125,7 +127,7 @@ public class PageEditor extends AbstractComponent {
     }
 
     public void reload() {
-        this.requestRepaint();
+        // this.requestRepaint();
     }
 
     @Override

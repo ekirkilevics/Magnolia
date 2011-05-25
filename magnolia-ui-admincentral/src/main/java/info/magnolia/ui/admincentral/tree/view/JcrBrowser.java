@@ -99,7 +99,7 @@ public class JcrBrowser extends TreeTable {
         setSelectable(true);
         setColumnCollapsingAllowed(true);
         setMultiSelect(false);
-        setImmediate(true);
+        setImmediate(false);
 
         // TODO: check Ticket http://dev.vaadin.com/ticket/5453
         setColumnReorderingAllowed(true);
@@ -118,8 +118,13 @@ public class JcrBrowser extends TreeTable {
         setContainerDataSource(container);
         addContextMenu();
 
-        addListener(new EditHandler());
+        new EditHandler(this);
     }
+
+    // @Override
+    // protected void setInternalValue(Object newValue) {
+    // super.setInternalValue(newValue);
+    // }
 
     public String getPathInTree(Item item) {
         try {
