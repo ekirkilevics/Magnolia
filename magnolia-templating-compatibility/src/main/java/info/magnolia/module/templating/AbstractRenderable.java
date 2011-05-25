@@ -44,7 +44,7 @@ import info.magnolia.templating.definition.TemplateDefinitionImpl;
  * {@link #newModel(Content, RenderableDefinition , RenderingModel)}
  *
  * @version $Id$
- * @deprecated since 5.0, use {@link AbstractRenderableDefinition} instead.
+ * @deprecated since 5.0, use {@link RenderableDefinitionImpl} instead.
  */
 public class AbstractRenderable extends TemplateDefinitionImpl implements RenderableDefinition{
 

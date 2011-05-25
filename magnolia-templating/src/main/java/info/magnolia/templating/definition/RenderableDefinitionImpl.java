@@ -54,7 +54,7 @@ import info.magnolia.templating.model.RenderingModelImpl;
  * @version $Id$
  *
  */
-public class AbstractRenderableDefinition implements RenderableDefinition {
+public class RenderableDefinitionImpl implements RenderableDefinition {
     private String name;
     private String title;
     private String templateScript;

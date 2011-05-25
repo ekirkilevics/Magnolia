@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templating;
+package info.magnolia.templating.definition;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -41,25 +41,27 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public class Area extends AbstractRenderable {
+public class AreaDefinitionImpl extends TemplateDefinitionImpl implements AreaDefinition {
 
-    private Map<String, ParagraphConfig> availableParagraphs = new LinkedHashMap<String, ParagraphConfig>();
+    private Map<String, ParagraphAvailabilityImpl> availableParagraphs = new LinkedHashMap<String, ParagraphAvailabilityImpl>();
 
     // TODO can't this be a primitive boolean instead default set to true? //Tobias
     private Boolean enabled;
 
-    public Map<String, ParagraphConfig> getAvailableParagraphs() {
+    @Override
+    public Map<String, ParagraphAvailabilityImpl> getAvailableParagraphs() {
         return availableParagraphs;
     }
 
-    public void setAvailableParagraphs(Map<String, ParagraphConfig> availableParagraphs) {
+    public void setAvailableParagraphs(Map<String, ParagraphAvailabilityImpl> availableParagraphs) {
         this.availableParagraphs = availableParagraphs;
     }
 
-    public void addAvailableParagraph(String name, ParagraphConfig paragraphConfig) {
-        this.availableParagraphs.put(name, paragraphConfig);
+    public void addAvailableParagraph(String name, ParagraphAvailabilityImpl paragraphAvailabilityImpl) {
+        this.availableParagraphs.put(name, paragraphAvailabilityImpl);
     }
 
+    @Override
     public Boolean getEnabled() {
         return this.enabled;
     }

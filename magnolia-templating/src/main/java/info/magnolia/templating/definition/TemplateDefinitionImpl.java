@@ -41,10 +41,10 @@ import java.util.Map;
  * @version $Id$
  *
  */
-public class TemplateDefinitionImpl extends AbstractRenderableDefinition implements TemplateDefinition {
+public class TemplateDefinitionImpl extends RenderableDefinitionImpl implements TemplateDefinition {
 
     private String dialog;
-    private Map<String, AreaDefinition> areaDefinitions = new HashMap<String, AreaDefinition>();
+    private Map<String, AreaDefinitionImpl> areaDefinitionImpls = new HashMap<String, AreaDefinitionImpl>();
 
     @Override
     public String getDialog() {
@@ -56,15 +56,15 @@ public class TemplateDefinitionImpl extends AbstractRenderableDefinition impleme
     }
 
     @Override
-    public Map<String, AreaDefinition> getAreas() {
-        return this.areaDefinitions;
+    public Map<String, AreaDefinitionImpl> getAreas() {
+        return this.areaDefinitionImpls;
     }
 
-    public void setAreas(Map<String, AreaDefinition> areaDefinitions) {
-        this.areaDefinitions = areaDefinitions;
+    public void setAreas(Map<String, AreaDefinitionImpl> areaDefinitionImpls) {
+        this.areaDefinitionImpls = areaDefinitionImpls;
     }
 
-    public void addArea(String name, AreaDefinition areaDefinition){
-        this.areaDefinitions.put(name, areaDefinition);
+    public void addArea(String name, AreaDefinitionImpl areaDefinitionImpl){
+        this.areaDefinitionImpls.put(name, areaDefinitionImpl);
     }
 }
