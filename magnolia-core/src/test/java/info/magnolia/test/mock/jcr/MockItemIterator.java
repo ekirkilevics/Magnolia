@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,29 +31,58 @@
  * intact.
  *
  */
-package info.magnolia.test.mock;
-
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.test.mock.jcr.MockItemIterator;
+package info.magnolia.test.mock.jcr;
 
 import java.util.Collection;
+import java.util.Iterator;
 
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
+import javax.jcr.Item;
 
 /**
- * @version $Id$
+ * Mock implementation of JCR-Item Iterator.
  *
- * @deprecated since 5.0 - use {@link  info.magnolia.test.mock.jcr.MockPropertyIterator}
+ * @version $Id$
  */
-public class MockJCRPropertyIterator extends MockItemIterator<Property> implements PropertyIterator {
+public class MockItemIterator<T extends Item> {
 
-    public MockJCRPropertyIterator(Collection children) {
-        super(children.size() > 0 && children.iterator().next() instanceof NodeData ? new NodeData2PropertyCollectionWrapper(children) : children);
+    private final Iterator<T> internalIterator;
+    private long count = 0;
+    private final Collection<T> list;
+
+    public MockItemIterator(Collection<T> list) {
+        this.list = list;
+        this.internalIterator = list.iterator();
     }
 
-    @Override
-    public Property nextProperty() {
-        return super.nextItem();
+    public T nextItem() {
+        count++;
+        return internalIterator.next();
     }
+
+    public long getPosition() {
+        return count;
+    }
+
+    public long getSize() {
+        return list.size();
+    }
+
+    public void skip(long skipNum) {
+        for (int i = 0; i < skipNum; i++) {
+            internalIterator.next();
+        }
+    }
+
+    public boolean hasNext() {
+        return internalIterator.hasNext();
+    }
+
+    public Object next() {
+        return internalIterator.next();
+    }
+
+    public void remove() {
+        internalIterator.remove();
+    }
+
 }

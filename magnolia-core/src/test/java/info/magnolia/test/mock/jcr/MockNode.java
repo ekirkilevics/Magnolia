@@ -219,7 +219,7 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public NodeIterator getNodes() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return new MockNodeIterator(children.values());
     }
 
     @Override

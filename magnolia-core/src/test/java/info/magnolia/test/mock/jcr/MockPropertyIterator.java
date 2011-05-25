@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,58 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.test.mock;
+package info.magnolia.test.mock.jcr;
 
 import java.util.Collection;
-import java.util.Iterator;
-import javax.jcr.Item;
+
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
 
 /**
- * Mock implementation of generic JCR Iterator.
- * @author had
- * @version $Id: $
+ * Iterates over a collections of MockProperties.
+ *
+ * @version $Id$
  */
-public class MockJCRIterator<T extends Item> {
+public class MockPropertyIterator extends MockItemIterator<MockProperty> implements PropertyIterator {
 
-    private final Iterator<T> internalIterator;
-    private long count = 0;
-    private final Collection<T> list;
-
-    public MockJCRIterator(Collection<T> list) {
-        this.list = list;
-        this.internalIterator = list.iterator();
+    public MockPropertyIterator(Collection<MockProperty> children) {
+        super(children);
     }
 
-    public T nextItem() {
-        count++;
-        return internalIterator.next();
+    @Override
+    public Property nextProperty() {
+        return nextItem();
     }
-
-    public long getPosition() {
-        return count;
-    }
-
-    public long getSize() {
-        return list.size();
-    }
-
-    public void skip(long skipNum) {
-        for (int i = 0; i < skipNum; i++) {
-            internalIterator.next();
-        }
-
-    }
-
-    public boolean hasNext() {
-        return internalIterator.hasNext();
-    }
-
-    public Object next() {
-        return internalIterator.next();
-    }
-
-    public void remove() {
-        internalIterator.remove();
-    }
-
 }
