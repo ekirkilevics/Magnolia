@@ -149,11 +149,10 @@ public class JCRUtil {
     }
 
     public static Node unwrap(Node node) {
-        Node unwrappedNode = node;
-        while (unwrappedNode instanceof DelegateNodeWrapper) {
-            unwrappedNode = ((DelegateNodeWrapper) node).getWrappedNode();
+        while (node instanceof DelegateNodeWrapper) {
+            node = ((DelegateNodeWrapper) node).getWrappedNode();
         }
-        return unwrappedNode;
+        return node;
     }
 
     /**
