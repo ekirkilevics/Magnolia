@@ -113,9 +113,9 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     private static final Long LONG_ZERO = Long.valueOf(0);
 
-    protected static final String CONTENT_SELECTOR_NAME = "content";
+    private static final String CONTENT_SELECTOR_NAME = "content";
 
-    protected static final String METADATA_SELECTOR_NAME = "metaData";
+    private static final String METADATA_SELECTOR_NAME = "metaData";
 
     private static final String SELECT_CONTENT = "select * from [mgnl:content] as content ";
 
