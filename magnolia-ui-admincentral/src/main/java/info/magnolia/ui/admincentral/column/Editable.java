@@ -33,9 +33,6 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
-
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -45,12 +42,12 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
 
 /**
  * UI component that displays a label and on double click opens it for editing by switching the
- * label to save text field. Implements {@link Comparable} to allow sorting of columns holding this
- * component with Vaadin. Default implementation for <code>compareTo(..),</code> method uses jcr's
- * item name for comparison. Subclasses may use more specific properties.
+ * label to save text field.
  *
  * @author tmattsson
  * @author mrichert
@@ -117,7 +114,7 @@ public abstract class Editable extends Label {
 
         // FIXME this is a hack to show the label which is a div inline with the preceding icons. It
         // probably breaks on IE as it uses display: inline-block.
-        addStyleName("m-inline-div");
+        // addStyleName("m-inline-div");
     }
 
     public void addListener(EditListener listener) {
@@ -130,31 +127,14 @@ public abstract class Editable extends Label {
 
     protected void save() {
         try {
-            if (presenter.save(getItem())) {
+            Item item = getItem();
+            if (presenter.save(item)) {
+                setValue(getLabelText(item));
                 fireEvent(new EditEvent(this));
             }
         }
         catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
-        }
-    }
-
-    @Override
-    public int compareTo(Object other) {
-        if (other instanceof Editable) {
-            Editable o = (Editable) other;
-            try {
-
-                log.debug("comparing {} and {}", getItem().getName().toLowerCase(), o.getItem().getName().toLowerCase());
-
-                return getItem().getName().toLowerCase().compareTo(o.getItem().getName().toLowerCase());
-            }
-            catch (RepositoryException e) {
-                throw new RuntimeRepositoryException(e);
-            }
-        }
-        else {
-            return super.compareTo(other);
         }
     }
 
@@ -172,7 +152,9 @@ public abstract class Editable extends Label {
             Item item = getItem();
             ComponentAndEditor componentAndEditor = getComponentAndEditor(item);
             presenter.edit(item, componentAndEditor.getEditor());
-            return componentAndEditor.getComponent();
+            Component component = componentAndEditor.getComponent();
+            // component.addStyleName("m-inline-div");
+            return component;
         }
         catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);

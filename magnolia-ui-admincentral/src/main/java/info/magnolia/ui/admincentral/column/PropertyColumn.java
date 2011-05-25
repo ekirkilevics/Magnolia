@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
@@ -43,9 +42,7 @@ import java.io.Serializable;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.ValueFormatException;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
@@ -81,37 +78,6 @@ public class PropertyColumn extends AbstractEditableColumn<PropertyColumnDefinit
             protected String getLabelText(Item item) throws RepositoryException {
                 Node node = (Node) item;
                 return node.hasProperty(getPropertyName()) ? node.getProperty(getPropertyName()).getString() : "";
-            }
-
-            @Override
-            public int compareTo(Object other) {
-                if (other instanceof Editable) {
-                    Editable o = (Editable) other;
-                    try {
-                        Node node = (Node) getItem();
-                        String thisObjectProperty = node.hasProperty(getPropertyName()) ? node.getProperty(getPropertyName()).getString() : "";
-
-                        Node otherNode = (Node) o.getItem();
-                        String otherObjectProperty = otherNode.hasProperty(getPropertyName())
-                            ? otherNode.getProperty(getPropertyName()).getString()
-                            : "";
-
-                        return thisObjectProperty.toLowerCase().compareTo(otherObjectProperty.toLowerCase());
-
-                    }
-                    catch (ValueFormatException e) {
-                        throw new RuntimeRepositoryException(e);
-                    }
-                    catch (PathNotFoundException e) {
-                        throw new RuntimeRepositoryException(e);
-                    }
-                    catch (RepositoryException e) {
-                        throw new RuntimeRepositoryException(e);
-                    }
-                }
-                else {
-                    return super.compareTo(other);
-                }
             }
         };
     }

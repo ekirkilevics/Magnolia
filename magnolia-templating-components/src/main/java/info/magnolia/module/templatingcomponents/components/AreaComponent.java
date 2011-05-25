@@ -62,9 +62,9 @@ import org.apache.commons.lang.StringUtils;
 public class AreaComponent extends AbstractContentComponent {
 
     public static final String CMS_AREA = "cms:area";
-    public static final String TYPE_COLLECTION = "collection";
-    public static final String TYPE_SLOT = "slot";
-    public static final String DEFAULT_TYPE = TYPE_COLLECTION;
+    public static final String TYPE_LIST = "list";
+    public static final String TYPE_SINGLE = "single";
+    public static final String DEFAULT_TYPE = TYPE_LIST;
 
     private String name;
     private Area area;
@@ -117,7 +117,7 @@ public class AreaComponent extends AbstractContentComponent {
             // TODO need to get writer some other way
             PrintWriter writer = MgnlContext.getWebContext().getResponse().getWriter();
 
-            if (resolveType().equals(TYPE_COLLECTION)) {
+            if (resolveType().equals(TYPE_LIST)) {
                 Node areaNode = content.getNode(resolveName());
                 NodeIterator nodeIterator = areaNode.getNodes();
                 while (nodeIterator.hasNext()) {
@@ -126,7 +126,7 @@ public class AreaComponent extends AbstractContentComponent {
                         renderParagraph(renderingEngine, writer, node);
                     }
                 }
-            } else if (resolveType().equals(TYPE_SLOT)) {
+            } else if (resolveType().equals(TYPE_SINGLE)) {
                 // TODO we should suppress any editbar inside the paragraph rendered here
                 Node paragraphNode = content.getNode(resolveName());
                 renderParagraph(renderingEngine, writer, paragraphNode);
@@ -163,10 +163,10 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     private boolean shouldShowAddButton() throws RepositoryException {
-        if (resolveType().equals(TYPE_COLLECTION)) {
+        if (resolveType().equals(TYPE_LIST)) {
             return true;
         }
-        if (resolveType().equals(TYPE_SLOT)) {
+        if (resolveType().equals(TYPE_SINGLE)) {
             return !currentContent().hasNode(resolveName());
         }
         throw new IllegalStateException("Unknown area type [" + type + "]");

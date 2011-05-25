@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 /**
  * CE version of the VersionManager. Limited to one version only.
  *
- * @author Sameer Charles
+ * @version $Id$
  */
 public final class VersionManager extends BaseVersionManager {
 

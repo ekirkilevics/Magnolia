@@ -40,10 +40,10 @@ import javax.jcr.Session;
 
 /**
  * Session wrapper enabling Magnolia specific way of handling versioning on all child nodes.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
-public class MgnlVersioningSession extends NodeWrappingDelegateSessionWrapper implements Session {
+public class MgnlVersioningSession extends NodeWrappingDelegateSessionWrapper {
 
 
     public MgnlVersioningSession(Session wrapped) {

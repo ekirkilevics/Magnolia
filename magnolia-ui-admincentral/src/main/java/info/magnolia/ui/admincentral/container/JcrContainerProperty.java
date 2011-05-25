@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.container;
 
 import com.vaadin.data.util.AbstractProperty;
+import com.vaadin.ui.Label;
 
 /**
  * Represents a property on an item in JcrContainer. Think of this as a cell in a table.
@@ -58,7 +59,10 @@ public class JcrContainerProperty extends AbstractProperty {
 
     @Override
     public Object getValue() {
-        return container.getColumnValue(propertyId, itemId);
+        Object columnValue = container.getColumnValue(propertyId, itemId);
+        return (columnValue instanceof Label && ((Label) columnValue).getContentMode() == Label.CONTENT_TEXT)
+                ? " " + ((Label) columnValue).getValue()
+                : columnValue;
     }
 
     @Override

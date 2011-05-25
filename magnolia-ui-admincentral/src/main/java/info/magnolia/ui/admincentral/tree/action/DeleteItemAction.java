@@ -33,15 +33,18 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
-import info.magnolia.ui.framework.event.EventBus;
-
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.ui.framework.event.EventBus;
+
+
 /**
  * Deletes a node from the repository.
+ *
+ * @version $Id$
  */
-public class DeleteItemAction extends RepositoryOperationAction<DeleteItemActionDefinition, Item> {
+public class DeleteItemAction extends RepositoryOperationAction<DeleteItemActionDefinition> {
 
     public DeleteItemAction(DeleteItemActionDefinition definition, Item item, EventBus eventBus) {
         super(definition, item, eventBus);

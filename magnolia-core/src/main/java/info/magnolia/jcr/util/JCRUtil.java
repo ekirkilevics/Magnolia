@@ -33,10 +33,17 @@
  */
 package info.magnolia.jcr.util;
 
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.JCRSessionOp;
+import info.magnolia.cms.util.DelegateNodeWrapper;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
+import info.magnolia.context.MgnlContext;
+
 import java.util.Collection;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -51,17 +58,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.JCRSessionOp;
-import info.magnolia.cms.util.DelegateNodeWrapper;
-import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
-import info.magnolia.context.MgnlContext;
-
 /**
  * Various utility methods to collect data from JCR repository.
  *
- * @author had
- * @version $Id: $
+ * @version $Id$
  */
 public class JCRUtil {
 
@@ -132,58 +132,48 @@ public class JCRUtil {
         return false;
     }
 
-    /**
-     * from default content.
-     */
-    public static String getNodeTypeName(Node node) throws RepositoryException {
-        if (node instanceof JCRPropertiesFilteringNodeWrapper) {
-            node = ((JCRPropertiesFilteringNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
+    public static boolean isNodeType(Node node, String type) throws RepositoryException {
+        if (node instanceof DelegateNodeWrapper) {
+            node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
         }
+        final String actualType = node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
+        // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original node type
+        if (ItemType.NT_FROZENNODE.equals(actualType) && !(ItemType.NT_FROZENNODE.equals(type))) {
+            final Property p = node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE);
+            final String s = p.getString();
+            return s.equalsIgnoreCase(type);
 
-        if (node.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
-            return node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString();
+            // FIXME this method does not consider mixins when the node is frozen
         }
-        return node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
+        return node.isNodeType(type);
     }
 
     public static Node unwrap(Node node) {
-        while (node instanceof DelegateNodeWrapper) {
-            node = ((DelegateNodeWrapper) node).getWrappedNode();
+        Node unwrappedNode = node;
+        while (unwrappedNode instanceof DelegateNodeWrapper) {
+            unwrappedNode = ((DelegateNodeWrapper) node).getWrappedNode();
         }
-        return node;
+        return unwrappedNode;
     }
 
     /**
-     * Orders the node directly before a given sibling. If no sibling is specified the node is placed first.
-     *
-     * @param node        the node to order
-     * @param siblingName the name of the sibling which the name should be before or null if the node should be first
-     * @throws RepositoryException
+     * Convenience - delegate to {@link Node#orderBefore(String, String)}.
      */
     public static void orderBefore(Node node, String siblingName) throws RepositoryException {
-
-        if (siblingName == null) {
-            orderFirst(node);
-            return;
-        }
-
-        Node parent = node.getParent();
-        Node sibling = parent.getNode(siblingName);
-
-        parent.orderBefore(node.getName(), sibling.getName());
+        node.getParent().orderBefore(node.getName(), siblingName);
     }
 
     /**
-     * Orders the node directly after a given sibling. If no sibling is specified the node is placed last.
+     * Orders the node directly after a given sibling. If no sibling is specified the node is placed first.
      *
      * @param node        the node to order
-     * @param siblingName the name of the sibling which the name should be after or null if the node should be last
+     * @param siblingName the name of the sibling which the name should be after or null if the node should be first
      * @throws RepositoryException
      */
     public static void orderAfter(Node node, String siblingName) throws RepositoryException {
 
         if (siblingName == null) {
-            orderLast(node);
+            orderFirst(node);
             return;
         }
 
@@ -337,8 +327,7 @@ public class JCRUtil {
     private static String combinePathAndName(String path, String name) {
         if ("/".equals(path)) {
             return "/" + name;
-        } else {
-            return path + "/" + name;
         }
+        return path + "/" + name;
     }
 }

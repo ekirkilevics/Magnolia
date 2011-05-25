@@ -35,11 +35,14 @@ package info.magnolia.ui.admincentral.dialog.field;
 
 import com.vaadin.ui.Component;
 import info.magnolia.ui.framework.editor.Editor;
+import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 
 /**
  * Dialog field.
  */
 public interface DialogField {
+
+    FieldDefinition getFieldDefinition();
 
     Component getComponent();
 

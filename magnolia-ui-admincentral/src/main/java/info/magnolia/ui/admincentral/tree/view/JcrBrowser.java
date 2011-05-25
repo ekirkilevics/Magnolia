@@ -36,9 +36,7 @@ package info.magnolia.ui.admincentral.tree.view;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.column.EditEvent;
-import info.magnolia.ui.admincentral.column.EditListener;
-import info.magnolia.ui.admincentral.column.Editable;
+import info.magnolia.ui.admincentral.column.EditHandler;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.admincentral.tree.container.HierarchicalJcrContainer;
@@ -60,10 +58,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.addon.treetable.HierarchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
-import com.vaadin.data.Property;
 import com.vaadin.event.Action;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -78,7 +73,7 @@ import com.vaadin.ui.Component;
 /**
  * User interface component that extends TreeTable and uses a WorkbenchDefinition for layout and
  * invoking command callbacks.
- * 
+ *
  * @author tmattsson
  */
 public class JcrBrowser extends TreeTable {
@@ -86,10 +81,12 @@ public class JcrBrowser extends TreeTable {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private WorkbenchDefinition workbenchDefinition;
+
     private HierarchicalJcrContainer container;
+
     private Shell shell;
 
-    private TreeModel treeModel;
+    private final TreeModel treeModel;
 
     public JcrBrowser(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) {
         this.workbenchDefinition = workbenchDefinition;
@@ -109,7 +106,7 @@ public class JcrBrowser extends TreeTable {
 
         addDragAndDrop();
 
-        container = new HierarchicalJcrContainer(treeModel, workbenchDefinition.getWorkspace());
+        container = new HierarchicalJcrContainer(treeModel, workbenchDefinition);
 
         for (Column< ? > treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();
@@ -120,36 +117,8 @@ public class JcrBrowser extends TreeTable {
 
         setContainerDataSource(container);
         addContextMenu();
-        setPageLength(900);
 
-        addListener(new ItemClickListener() {
-
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                final Object itemId = event.getItemId();
-                final String propertyId = (String) event.getPropertyId();
-                if (isSelected(itemId)) {
-                    Property containerProperty = getContainerProperty(itemId,
-                        propertyId);
-                    Object value = containerProperty.getValue();
-                    if (value instanceof Editable) {
-                        final Editable editable = (Editable) value;
-
-                        editable.addListener(new EditListener() {
-
-                            @Override
-                            public void edit(EditEvent event) {
-                                getContainerProperty(itemId,
-                                    propertyId).setValue(editable);
-                            }
-                        });
-
-                        Component editorComponent = editable.getEditorComponent();
-                        containerProperty.setValue(editorComponent);
-                    }
-                }
-            }
-        });
+        addListener(new EditHandler());
     }
 
     public String getPathInTree(Item item) {
@@ -314,7 +283,7 @@ public class JcrBrowser extends TreeTable {
                 setCollapsed(parent, false);
                 parent = container.getParent(parent);
             }
-            // finally expand the root else children won't be visibile.
+            // finally expand the root else children won't be visible.
             setCollapsed(parent, false);
         }
 

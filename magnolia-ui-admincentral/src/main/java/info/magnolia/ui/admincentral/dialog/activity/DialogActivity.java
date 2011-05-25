@@ -38,6 +38,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
+import info.magnolia.ui.admincentral.dialog.field.DialogField;
 import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
@@ -65,6 +66,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
     private DialogPlace place;
     private ContentDriver driver;
     private DialogRegistry dialogRegistry;
+    private DialogView dialogView;
 
     public DialogActivity(DialogPlace place, ComponentProvider componentProvider, DialogRegistry dialogRegistry) {
         this.componentProvider = componentProvider;
@@ -83,15 +85,15 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
 
             // TODO get the builder injected
             DialogBuilder builder = componentProvider.newInstance(DialogBuilder.class);
-            DialogView dialog = builder.build(dialogDefinition);
+            dialogView = builder.build(dialogDefinition, this);
 
             driver = new ContentDriver();
-            driver.initialize(dialog);
+            driver.initialize(dialogView);
             driver.edit(node);
 
-            dialog.setPresenter(this);
+            dialogView.setPresenter(this);
 
-            viewPort.setView(dialog);
+            viewPort.setView(dialogView);
 
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
@@ -121,6 +123,11 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
+    }
+
+    @Override
+    public void onFocus(DialogField dialogField) {
+        this.dialogView.setDescriptionText(dialogField.getFieldDefinition().getDescription());
     }
 
     @Override

@@ -43,6 +43,6 @@ import info.magnolia.ui.model.dialog.definition.DialogDefinition;
  */
 public interface DialogBuilder {
 
-    DialogView build(DialogDefinition dialogDefinition);
+    DialogView build(DialogDefinition dialogDefinition, DialogView.Presenter presenter);
 
 }

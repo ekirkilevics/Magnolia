@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.wcm.workbench.action;
 
+import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -52,7 +53,7 @@ import info.magnolia.ui.framework.event.EventBus;
  */
 public class AddPageAction extends AddNodeAction {
 
-    public AddPageAction(AddNodeActionDefinition definition, Node parent, EventBus eventBus) {
+    public AddPageAction(AddNodeActionDefinition definition, Item parent, EventBus eventBus) {
         super(definition, parent, eventBus);
     }
 

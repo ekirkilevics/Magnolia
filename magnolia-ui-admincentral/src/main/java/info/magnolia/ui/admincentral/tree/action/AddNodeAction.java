@@ -33,29 +33,38 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.framework.event.EventBus;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 
 /**
  * Action for adding a new folder.
  *
  * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
+ *
+ * @version $Id$
  */
-public class AddNodeAction extends RepositoryOperationAction<AddNodeActionDefinition, Node> {
+public class AddNodeAction extends RepositoryOperationAction<AddNodeActionDefinition> implements TreeAction {
 
-    public AddNodeAction(AddNodeActionDefinition definition, Node node, EventBus eventBus) {
-        super(definition, node, eventBus);
+    public AddNodeAction(AddNodeActionDefinition definition, Item item, EventBus eventBus) {
+        super(definition, item, eventBus);
     }
 
     @Override
-    protected void onExecute(Node node) throws RepositoryException {
+    public boolean isAvailable(Item item) throws RepositoryException {
+        return item.isNode();
+    }
+
+    @Override
+    protected void onExecute(Item item) throws RepositoryException {
+        Node node = (Node) item;
         String name = JCRUtil.getUniqueLabel(node, "untitled");
         Node newNode = node.addNode(name, getDefinition().getNodeType());
         postProcessNode(newNode);

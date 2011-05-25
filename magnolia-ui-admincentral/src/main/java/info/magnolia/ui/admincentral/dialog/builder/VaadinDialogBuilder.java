@@ -61,7 +61,7 @@ public class VaadinDialogBuilder implements DialogBuilder {
     }
 
     @Override
-    public DialogView build(DialogDefinition dialogDefinition) {
+    public DialogView build(DialogDefinition dialogDefinition, DialogView.Presenter presenter) {
 
         // TODO: shouldn't we use IoC here? (Not really, this is all vaadin specific and that's why it has a hard dependency on DialogViewImpl)
         DialogViewImpl dialog = new DialogViewImpl();
@@ -76,7 +76,7 @@ public class VaadinDialogBuilder implements DialogBuilder {
 
             for (FieldDefinition fieldDefinition : tabDefinition.getFields()) {
 
-                addField(dialog, dialogDefinition, tabDefinition, fieldDefinition);
+                addField(dialog, dialogDefinition, tabDefinition, fieldDefinition, presenter);
             }
         }
 
@@ -92,7 +92,7 @@ public class VaadinDialogBuilder implements DialogBuilder {
         dialog.addTab(tabDefinition.getName(), label);
     }
 
-    private void addField(DialogViewImpl dialog, DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
+    private void addField(DialogViewImpl dialog, DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
 
         // Special case for StaticFieldDefinition
         if (fieldDefinition instanceof StaticFieldDefinition) {
@@ -100,7 +100,7 @@ public class VaadinDialogBuilder implements DialogBuilder {
             return;
         }
 
-        DialogField dialogField = dialogFieldFactory.getDialogField(dialogDefinition, tabDefinition, fieldDefinition);
+        DialogField dialogField = dialogFieldFactory.getDialogField(dialogDefinition, tabDefinition, fieldDefinition, presenter);
 
         if (dialogField == null) {
             dialog.addField(tabDefinition.getName(), "Missing UI component for controlType=" + fieldDefinition.getControlType());

@@ -60,7 +60,7 @@ public class PathMappedFlowCommand extends FlowCommand {
     public String getWorkflowName() {
         for (Iterator<Mapping> iter = getMappings().iterator(); iter.hasNext();) {
             Mapping mapping = iter.next();
-            if(path.startsWith(mapping.getPath())){
+            if(path != null && path.startsWith(mapping.getPath())){
                 return mapping.getWorkflowName();
             }
         }
@@ -70,7 +70,7 @@ public class PathMappedFlowCommand extends FlowCommand {
     public String getDialogName() {
         for (Iterator<Mapping> iter = getMappings().iterator(); iter.hasNext();) {
             Mapping mapping = iter.next();
-            if(path.startsWith(mapping.getPath()) && StringUtils.isNotEmpty(mapping.getDialogName())){
+            if(path != null && path.startsWith(mapping.getPath()) && StringUtils.isNotEmpty(mapping.getDialogName())){
                 return mapping.getDialogName();
             }
         }

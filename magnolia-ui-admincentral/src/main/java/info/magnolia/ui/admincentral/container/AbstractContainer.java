@@ -38,7 +38,6 @@ package info.magnolia.ui.admincentral.container;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.vaadin.data.Container;
@@ -75,10 +74,6 @@ public abstract class AbstractContainer implements Container {
         return true;
     }
 
-    protected abstract void addSortableContainerProperty(String propertyId);
-
-    protected abstract List<String> getSortableContainerPropertyIds();
-
     /**
      * ImplementationConfiguration of item set change event.
      */
@@ -102,7 +97,7 @@ public abstract class AbstractContainer implements Container {
 
         /**
          * Gets the Property where the event occurred.
-         * 
+         *
          * @see com.vaadin.data.Container.ItemSetChangeEvent#getContainer()
          */
         @Override

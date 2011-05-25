@@ -41,6 +41,7 @@ import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedNodePredicate;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.JCRVersionUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -78,7 +79,7 @@ import org.slf4j.LoggerFactory;
  *
  * The mix:versionable is only added on the top level nodes.
  *
- * @author Sameer Charles
+ * @version $Id$
  */
 public abstract class BaseVersionManager {
 
@@ -150,7 +151,7 @@ public abstract class BaseVersionManager {
     public synchronized Version addVersion(Node node) throws UnsupportedRepositoryOperationException,
     RepositoryException {
         // Rule rule = new Rule(new String[] {node.getNodeType().getName(), ItemType.SYSTEM.getSystemName()});
-        Rule rule = new Rule(JCRUtil.getNodeTypeName(node) + "," + ItemType.SYSTEM.getSystemName(), ",");
+        Rule rule = new Rule(JCRVersionUtil.getNodeTypeName(node) + "," + ItemType.SYSTEM.getSystemName(), ",");
         rule.reverse();
         return this.addVersion(node, rule);
     }
@@ -397,7 +398,7 @@ public abstract class BaseVersionManager {
             public Void exec(Session session) throws RepositoryException {
                 //mixins are NOT restored automatically
                 List<String> mixins = new ArrayList<String>();
-                for (Value v: unwrappedVersion.getNode("jcr:frozenNode").getProperty("jcr:frozenMixinTypes").getValues()) {
+                for (Value v: unwrappedVersion.getNode(ItemType.JCR_FROZENNODE).getProperty("jcr:frozenMixinTypes").getValues()) {
                     mixins.add(v.getString());
                 }
 

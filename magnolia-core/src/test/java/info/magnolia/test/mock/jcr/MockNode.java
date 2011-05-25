@@ -68,7 +68,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class MockNode extends MockItem implements Node {
 
-    private final Map<String, MockNode> children = new LinkedHashMap<String, MockNode>();
+    private final LinkedHashMap<String, MockNode> children = new LinkedHashMap<String, MockNode>();
 
     private String identifier;
 
@@ -78,7 +78,7 @@ public class MockNode extends MockItem implements Node {
 
     private String primaryType = ItemType.CONTENTNODE.getSystemName();
 
-    private final Map<String, Property> properties = new LinkedHashMap<String, Property>();
+    private final LinkedHashMap<String, Property> properties = new LinkedHashMap<String, Property>();
 
     public MockNode(String name) {
         super(name);
@@ -94,7 +94,7 @@ public class MockNode extends MockItem implements Node {
         this.mixins.add(mixinName);
     }
 
-    protected void addNode(MockNode child) throws RepositoryException{
+    protected void addNode(MockNode child) {
         child.setParent(this);
         children.put(child.getName(), child);
     }
@@ -105,7 +105,7 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public Node addNode(String relPath, String primaryNodeTypeName) throws RepositoryException{
+    public Node addNode(String relPath, String primaryNodeTypeName) throws RepositoryException {
         final MockNode newChild = new MockNode(relPath);
         newChild.setPrimaryType(primaryNodeTypeName);
         addNode(newChild);
@@ -188,7 +188,11 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public NodeType[] getMixinNodeTypes() throws RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
+        NodeType[] nodeTypes = new NodeType[mixins.size()];
+        for (int i = 0; i < mixins.size(); i++) {
+            nodeTypes[i] = new MockNodeType(mixins.get(i));
+        }
+        return nodeTypes;
     }
 
     @Override
@@ -208,14 +212,14 @@ public class MockNode extends MockItem implements Node {
         }
         c = children.get(path);
         if (c == null) {
-            throw new PathNotFoundException(path);
+            throw new PathNotFoundException(getPath() + "/" + path);
         }
         return c;
     }
 
     @Override
     public NodeIterator getNodes() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return new MockNodeIterator(children.values());
     }
 
     @Override
@@ -363,9 +367,35 @@ public class MockNode extends MockItem implements Node {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
+    /**
+     * @see javax.jcr.Node#orderBefore(String, String) for description of desired behaviour
+     */
     @Override
-    public void orderBefore(String srcChildRelPath, String destChildRelPath) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public void orderBefore(String srcName, String beforeName) {
+        // don't do anything if both names are identical
+        if (!srcName.equals(beforeName)) {
+            int childrenSize = children.size();
+            MockNode nodeToMove = children.remove(srcName);
+            List<MockNode> newOrder = new ArrayList<MockNode>();
+
+            for (MockNode child : children.values()) {
+                if (child.getName().equals(beforeName)) {
+                    newOrder.add(nodeToMove);
+                }
+                newOrder.add(child);
+            }
+
+            if (childrenSize > newOrder.size()) {
+                // in that case nodeToMove has not yet been added but should be added at the end - so do it!
+                newOrder.add(nodeToMove);
+            }
+
+            children.clear();
+
+            for (MockNode child : newOrder) {
+                children.put(child.getName(), child);
+            }
+        }
     }
 
     @Override

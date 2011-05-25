@@ -48,10 +48,10 @@ import javax.jcr.version.VersionException;
 
 /**
  * Wrapper providing support for Magnolia specific versioning ops (by copy).
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
-public class MgnlVersioningNodeWrapper extends ChildWrappingNodeWrapper implements Node {
+public class MgnlVersioningNodeWrapper extends ChildWrappingNodeWrapper {
 
     public MgnlVersioningNodeWrapper(Node wrapped) {
         super(wrapped, MgnlVersioningNodeWrapper.class);

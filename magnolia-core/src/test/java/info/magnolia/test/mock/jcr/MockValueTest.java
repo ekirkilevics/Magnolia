@@ -34,8 +34,6 @@
 package info.magnolia.test.mock.jcr;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,14 +63,17 @@ public class MockValueTest {
             @Override
             public void dispose() {
             }
+
             @Override
             public long getSize() throws RepositoryException {
                 return 0;
             }
+
             @Override
             public InputStream getStream() throws RepositoryException {
                 return null;
             }
+
             @Override
             public int read(byte[] b, long position) throws IOException, RepositoryException {
                 return 0;
@@ -83,15 +84,9 @@ public class MockValueTest {
 
     }
 
-    @Test
-    public void testGetBinaryWithWrongValueType() throws Exception{
-        MockValue value = new MockValue(Boolean.FALSE);
-        try {
-            value.getBinary();
-            fail("Should have thrown an Exception");
-        } catch (ValueFormatException e) {
-            assertTrue("expected", true);
-        }
+    @Test(expected = ValueFormatException.class)
+    public void testGetBinaryWithWrongValueType() throws Exception {
+        new MockValue(Boolean.FALSE).getBinary();
     }
 
     @Test
@@ -101,17 +96,11 @@ public class MockValueTest {
         assertEquals(objectValue, jcrValue.getBoolean());
     }
 
-
-    @Test
-    public void testGetBooleanmWithWrongValueType() throws Exception{
-        MockValue value = new MockValue(BigDecimal.ONE);
-        try {
-            value.getBoolean();
-            fail("Should have thrown an Exception");
-        } catch (ValueFormatException e) {
-            assertTrue("expected", true);
-        }
+    @Test(expected = ValueFormatException.class)
+    public void testGetBooleanmWithWrongValueType() throws Exception {
+        new MockValue(BigDecimal.ONE).getBoolean();
     }
+
     @Test
     public void testGetDate() throws Exception {
         Object objectValue = Calendar.getInstance();
@@ -120,16 +109,11 @@ public class MockValueTest {
 
     }
 
-    @Test
-    public void testGetDateWithWrongValueType() throws Exception{
-        MockValue value = new MockValue(Boolean.FALSE);
-        try {
-            value.getDate();
-            fail("Should have thrown an Exception");
-        } catch (ValueFormatException e) {
-            assertTrue("expected", true);
-        }
+    @Test(expected = ValueFormatException.class)
+    public void testGetDateWithWrongValueType() throws Exception {
+        new MockValue(Boolean.FALSE).getDate();
     }
+
     @Test
     public void testGetDecimal() throws Exception {
         Object objectValue = BigDecimal.valueOf(123l);
@@ -137,16 +121,11 @@ public class MockValueTest {
         assertEquals(objectValue, jcrValue.getDecimal());
     }
 
-    @Test
-    public void testGetDecimalWithWrongValueType() throws Exception{
-        MockValue value = new MockValue(Boolean.FALSE);
-        try {
-            value.getDecimal();
-            fail("Should have thrown an Exception");
-        } catch (ValueFormatException e) {
-            assertTrue("expected", true);
-        }
+    @Test(expected = ValueFormatException.class)
+    public void testGetDecimalWithWrongValueType() throws Exception {
+        new MockValue(Boolean.FALSE).getDecimal();
     }
+
     @Test
     public void testGetDouble() throws Exception {
         Object objectValue = Double.valueOf(123);
@@ -154,16 +133,11 @@ public class MockValueTest {
         assertEquals(objectValue, jcrValue.getDouble());
     }
 
-    @Test
-    public void testGetDoubleWithWrongValueType() throws Exception{
-        MockValue value = new MockValue(Boolean.FALSE);
-        try {
-            value.getDouble();
-            fail("Should have thrown an Exception");
-        } catch (ValueFormatException e) {
-            assertTrue("expected", true);
-        }
+    @Test(expected = ValueFormatException.class)
+    public void testGetDoubleWithWrongValueType() throws Exception {
+        new MockValue(Boolean.FALSE).getDouble();
     }
+
     @Test
     public void testGetLength() throws Exception {
         assertEquals(6, new MockValue("string").getLength());
@@ -177,15 +151,10 @@ public class MockValueTest {
         MockValue jcrValue = new MockValue(objectValue);
         assertEquals(objectValue, jcrValue.getLong());
     }
-    @Test
-    public void testGetLongWithWrongValueType() throws Exception{
-        MockValue value = new MockValue(Boolean.FALSE);
-        try {
-            value.getLong();
-            fail("Should have thrown an Exception");
-        } catch (ValueFormatException e) {
-            assertTrue("expected", true);
-        }
+
+    @Test(expected = ValueFormatException.class)
+    public void testGetLongWithWrongValueType() throws Exception {
+        new MockValue(Boolean.FALSE).getLong();
     }
 
     @Test
@@ -199,33 +168,22 @@ public class MockValueTest {
         MockValue jcrValue = new MockValue(objectValue);
         assertEquals(objectValue, jcrValue.getStream());
     }
-    @Test
-    public void testGetStreamWithWrongValueType() throws Exception{
-        MockValue value = new MockValue(Boolean.FALSE);
-        try {
-            value.getStream();
-            fail("Should have thrown an Exception");
-        } catch (ValueFormatException e) {
-            assertTrue("expected", true);
-        }
+
+    @Test(expected = ValueFormatException.class)
+    public void testGetStreamWithWrongValueType() throws Exception {
+        new MockValue(Boolean.FALSE).getStream();
     }
 
     @Test
-    public void testGetStringWithString() throws Exception{
+    public void testGetStringWithString() throws Exception {
         Object objectValue = "String";
         MockValue jcrValue = new MockValue(objectValue);
         assertEquals(objectValue, jcrValue.getString());
     }
 
-    @Test
-    public void testGetStringWithWrongValueType() throws Exception{
-        MockValue value = new MockValue(Boolean.FALSE);
-        try {
-            value.getString();
-            fail("Should have thrown an Exception");
-        } catch (ValueFormatException e) {
-            assertTrue("expected", true);
-        }
+    @Test(expected = ValueFormatException.class)
+    public void testGetStringWithWrongValueType() throws Exception {
+        new MockValue(Boolean.FALSE).getString();
     }
 
     @Test
@@ -234,5 +192,4 @@ public class MockValueTest {
         assertEquals(PropertyType.BOOLEAN, new MockValue(Boolean.FALSE).getType());
         assertEquals(PropertyType.DOUBLE, new MockValue(Double.valueOf(12)).getType());
     }
-
 }

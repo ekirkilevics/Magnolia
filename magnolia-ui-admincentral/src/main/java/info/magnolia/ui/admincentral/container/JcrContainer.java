@@ -35,6 +35,8 @@ package info.magnolia.ui.admincentral.container;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,8 +57,9 @@ import javax.jcr.query.InvalidQueryException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
+import javax.jcr.query.RowIterator;
 
-import org.apache.jackrabbit.core.query.QueryImpl;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +70,8 @@ import com.vaadin.ui.Component;
 
 
 /**
- * Vaadin container that reads its items from a JCR repository. Inspired by http://vaadin.com/directory#addon/vaadin-sqlcontainer.
+ * Vaadin container that reads its items from a JCR repository. Implements a simple mechanism for lazy loading items from a JCR repository and a cache for items and item ids.
+ * Inspired by http://vaadin.com/directory#addon/vaadin-sqlcontainer.
  *
  * @author tmattsson
  */
@@ -83,11 +87,11 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     private int size = Integer.MIN_VALUE;
 
-    /** Page length = number of items contained in one page. */
+    /** Page length = number of items contained in one page. Defaults to 100.*/
     private int pageLength = DEFAULT_PAGE_LENGTH;
     public static final int DEFAULT_PAGE_LENGTH = 100;
 
-    /** Number of items to cache = cacheRatio x pageLength. */
+    /** Number of items to cache = cacheRatio x pageLength. Default cache ratio value is 2.*/
     private int cacheRatio = DEFAULT_CACHE_RATIO;
     public static final int DEFAULT_CACHE_RATIO = 2;
 
@@ -95,7 +99,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     private final Map<Long, ContainerItemId> itemIndexes = new HashMap<Long, ContainerItemId>();
     private final LinkedHashMap<ContainerItemId, ContainerItem> cachedItems = new LinkedHashMap<ContainerItemId, ContainerItem>();
 
-    private List<String> sortablePropertyIds = new ArrayList<String>();
+    private Map<String, String> sortableProperties = new HashMap<String,String>();
 
 
     /** Filters (WHERE) and sorters (ORDER BY). */
@@ -107,15 +111,43 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     /** Starting row number of the currently fetched page. */
     private int currentOffset;
 
-    public JcrContainer(JcrContainerSource jcrContainerSource, String workspace) {
+    private static final Long LONG_ZERO = Long.valueOf(0);
+
+    private static final String CONTENT_SELECTOR_NAME = "content";
+
+    private static final String METADATA_SELECTOR_NAME = "metaData";
+
+    private static final String SELECT_CONTENT = "select * from [mgnl:content] as content ";
+
+    private static final String JOIN_METADATA_ORDER_BY = "inner join [mgnl:metaData] as metaData on ischildnode(metaData,content) order by ";
+
+    public JcrContainer(JcrContainerSource jcrContainerSource, WorkbenchDefinition workbenchDefinition) {
         this.jcrContainerSource = jcrContainerSource;
-        this.workspace = workspace;
+        this.workspace = workbenchDefinition.getWorkspace();
+
+        for(AbstractColumnDefinition columnDefinition: workbenchDefinition.getColumns()){
+            if(columnDefinition.isSortable()){
+                log.debug("Configuring column [{}] as sortable", columnDefinition.getName());
+
+                String propertyName = columnDefinition.getPropertyName();
+                log.debug("propertyName is {}", propertyName);
+
+                if(StringUtils.isBlank(propertyName)){
+                    propertyName = columnDefinition.getName();
+                    log.warn("Column {} is sortable but no propertyName has been defined. Defaulting to column name (sorting may not work as expected).", columnDefinition.getName());
+                }
+
+                sortableProperties.put(columnDefinition.getName(), propertyName);
+            }
+        }
     }
 
-    protected abstract Collection<ContainerItemId> createContainerIds(Collection<javax.jcr.Item> children) throws RepositoryException;
-
-    //TODO do we really need this method or might instead refactor getPage() to take a query.
-    public abstract void updateContainerIds(NodeIterator iterator) throws RepositoryException;
+    /**
+     * Updates the container with the items pointed to by the {@link NodeIterator} passed as argument.
+     * @param iterator
+     * @throws RepositoryException
+     */
+    public abstract void update(NodeIterator iterator) throws RepositoryException;
 
     @Override
     public void addListener(ItemSetChangeListener listener) {
@@ -185,11 +217,6 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     protected LinkedHashMap<ContainerItemId, ContainerItem> getCachedItems() {
         return cachedItems;
-    }
-
-    @Override
-    public void addSortableContainerProperty(String propertyId) {
-         sortablePropertyIds.add(propertyId);
     }
 
     public int getPageLength() {
@@ -307,11 +334,13 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         if (index < 0 || index > size() - 1) {
             return null;
         }
-        if (itemIndexes.keySet().contains(index)) {
-            return itemIndexes.get(index);
+        final Long idx = Long.valueOf(index);
+        if (itemIndexes.containsKey(idx)) {
+            return itemIndexes.get(idx);
         }
+        log.debug("item id {} not found in cache. Need to update offset, fetch new item ids from jcr repo and put them in cache.", index);
         updateOffsetAndCache(index);
-        return itemIndexes.get(Long.valueOf(index));
+        return itemIndexes.get(idx);
 
     }
 
@@ -335,15 +364,15 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         if (size == 0) {
             return null;
         }
-        if (!itemIndexes.containsKey(0)) {
+        if (!itemIndexes.containsKey(LONG_ZERO)) {
             updateOffsetAndCache(0);
         }
-        return itemIndexes.get(0);
+        return itemIndexes.get(LONG_ZERO);
     }
 
     @Override
     public Object lastItemId() {
-        int lastIx = size() - 1;
+        final Long lastIx = Long.valueOf(size() - 1);
         if (!itemIndexes.containsKey(lastIx)) {
             updateOffsetAndCache(size - 1);
         }
@@ -363,23 +392,20 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     /***********************************************/
     /** Methods from interface Container.Sortable **/
     /***********************************************/
-    //FIXME this only work when column name is equal to jcr property name (i.e. title column). Need to
-    //find a mechanism to bind a column to a jcr property (possibly in the column definition).
     @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
         sorters.clear();
         for (int i = 0; i < propertyId.length; i++) {
-            if (sortablePropertyIds.contains(propertyId[i])) {
-                OrderBy orderBy = new OrderBy((String)propertyId[i], ascending[i]);
+            if (sortableProperties.keySet().contains(propertyId[i])) {
+                OrderBy orderBy = new OrderBy(sortableProperties.get(propertyId[i]), ascending[i]);
                 sorters.add(orderBy);
             }
         }
         refresh();
     }
 
-    @Override
     public List<String> getSortableContainerPropertyIds() {
-        return Collections.unmodifiableList(sortablePropertyIds);
+        return Collections.unmodifiableList(new ArrayList<String>(sortableProperties.keySet()));
     }
 
     @Override
@@ -462,7 +488,6 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         throw new UnsupportedOperationException();
     }
 
-
     /**
      * Determines a new offset for updating the row cache. The offset is
      * calculated from the given index, and will be fixed to match the start of
@@ -495,7 +520,6 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     }
 
-
     /**
      * Fetches a page from the data source based on the values of pageLenght and
      * currentOffset.
@@ -506,28 +530,33 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         itemIndexes.clear();
 
         try {
-            final StringBuilder stmt = new StringBuilder("select * from [mgnl:content] as c");
+            final StringBuilder stmt = new StringBuilder(SELECT_CONTENT);
             if(!sorters.isEmpty()) {
-                stmt.append(" order by ");
+                stmt.append(JOIN_METADATA_ORDER_BY);
                 for(OrderBy orderBy: sorters){
-                    stmt.append("c.")
-                    .append(orderBy.getProperty())
-                    .append(" ")
-                    .append(orderBy.isAscending() ? "asc":"desc")
+                    stmt.append(CONTENT_SELECTOR_NAME+".["+orderBy.getProperty()+"]")
+                    .append(orderBy.isAscending() ? " asc":" desc")
+                    .append(", ");
+                    //TODO here we don't know to which primary type this prop belongs to. I would tend not to clutter the column definition with yet another info about primary type.
+                    stmt.append(METADATA_SELECTOR_NAME+".["+orderBy.getProperty()+"]")
+                    .append(orderBy.isAscending() ? " asc":" desc")
                     .append(", ");
                 }
                 stmt.delete(stmt.lastIndexOf(","), stmt.length()-1);
             }
 
-            //FIXME sql2 query is much slower than its xpath counterpart (on average 80 times slower). However xpath is deprecated and strangely, although query execution is faster, it takes much longer
-            //to iterate over the results to the point that any benefit gained from faster query execution is lost and overall performance gets worse. Try using JQOM.
+            //FIXME sql2 query is much slower than its xpath/sql1 counterpart (on average 80 times slower) see https://issues.apache.org/jira/browse/JCR-2830.
+            //However xpath is deprecated and, although query execution is faster, it takes much longer to iterate over the results (for an explanation see comment here
+            //https://issues.apache.org/jira/browse/JCR-2715?focusedCommentId=12965273&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-12965273
+            //"The SQL2/QOM implementation loads all matching rows into memory during the execute() call, so you'll see an expensive query.execute() but can then very quickly iterate over the query results.")
+            // to the point that any benefit gained from faster query execution is lost and overall performance gets worse.
             final QueryResult queryResult = executeQuery(stmt.toString(), Query.JCR_SQL2, pageLength * cacheRatio, currentOffset);
-            //final QueryResult queryResult = executeQuery("//element(*,mgnl:content)", Query.XPATH, pageLength * DEFAULT_CACHE_RATIO, currentOffset);
-            final NodeIterator iterator = queryResult.getNodes();
+
+            final RowIterator iterator = queryResult.getRows();
             long rowCount = currentOffset;
             while(iterator.hasNext()){
 
-                final ContainerItemId id = createContainerId(iterator.nextNode());
+                final ContainerItemId id = createContainerId(iterator.nextRow().getNode(CONTENT_SELECTOR_NAME));
                 /* Cache item */
                 itemIndexes.put(rowCount++, id);
                 cachedItems.put(id, new ContainerItem(id, this));
@@ -559,7 +588,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         if(size >= 0){
             return size;
         }
-        QueryResult result = executeQuery("select * from [mgnl:content]", Query.JCR_SQL2, 0, 0);
+        QueryResult result = executeQuery(SELECT_CONTENT, Query.JCR_SQL2, 0, 0);
         try {
             return Long.valueOf(result.getRows().getSize()).intValue();
         } catch (RepositoryException e) {
@@ -576,16 +605,18 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         try {
             final Session jcrSession = MgnlContext.getJCRSession(workspace);
             final QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
-            final QueryImpl query = (QueryImpl) jcrQueryManager.createQuery(statement , language);
+            final Query query = jcrQueryManager.createQuery(statement , language);
             if(limit > 0) {
                 query.setLimit(limit);
             }
-            if(offset > 0){
+            if(offset >= 0){
                 query.setOffset(offset);
             }
+            log.debug("Executing query against workspace [{}] with statement [{}] and limit {} and offset {}...", new Object[]{getWorkspace(), statement, limit, offset});
             long start = System.currentTimeMillis();
             final QueryResult result = query.execute();
-            log.debug("Executed query against workspace [{}] with statement [{}] and limit {} and offset {}. Took {} ms", new Object[]{getWorkspace(), statement, limit, offset, System.currentTimeMillis() - start});
+            log.debug("Query execution took {} ms", System.currentTimeMillis() - start);
+
             return result;
 
         } catch (LoginException e) {

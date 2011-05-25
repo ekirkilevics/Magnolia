@@ -53,7 +53,6 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.apache.jackrabbit.core.query.QueryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,15 +107,19 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             final Session jcrSession = MgnlContext.getJCRSession(place.getWorkspace());
             final QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
 
-            final String stmt = "//element(*,mgnl:content)[jcr:contains(@*,'*"+place.getSearchParameters().getQuery()+"*')]";
-            final QueryImpl query = (QueryImpl) jcrQueryManager.createQuery(stmt , Query.XPATH);
             //FIXME set limit and offset by getting them from the Container (need to exposed). We would not need this if we chose to refactor JcrContainer.getPage()
+            final String stmt = "select * from [mgnl:content] as content where contains(content.*,'"+place.getSearchParameters().getQuery()+"')";
+            final Query query = jcrQueryManager.createQuery(stmt , Query.JCR_SQL2);;
             log.debug("executing query against workspace [{}] with statement [{}] ", place.getWorkspace(), stmt);
             final QueryResult queryResult = query.execute();
-            foundItems = queryResult.getRows().getSize();
-
-            log.debug("query returned {} rows", foundItems);
-            jcrView.getContainer().updateContainerIds(queryResult.getNodes());
+            //TODO how do we get the number of items returned by the query? I tried
+            //1) foundItems = ((QueryResultImpl)queryResult).getTotalSize();
+            //   this causes "java.lang.ClassCastException: org.apache.jackrabbit.core.query.lucene.join.SimpleQueryResult cannot be cast to org.apache.jackrabbit.core.query.lucene.QueryResultImpl"
+            //2) foundItems = queryResult.getNodes().getSize()
+            //   this causes "javax.jcr.RepositoryException: This query result has already been iterated through" when updating the container below.
+            //Probably we need two queries one for the total count, the other for getting the actual items.
+            //log.debug("query returned {} rows", foundItems);
+            jcrView.getContainer().update(queryResult.getNodes());
             view.update(new SearchResult(place.getSearchParameters().getQuery(), foundItems));
 
         } catch (LoginException e) {

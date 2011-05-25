@@ -122,7 +122,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
                 }
             }
             if (activation && permissions) {
-                CssLayout root = new TableCellLayout();
+                CssLayout root = new CssLayout();
                 root.addComponent(activationStatus);
                 root.addComponent(permissionStatus);
                 return root;
@@ -133,7 +133,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
             else if (permissions) {
                 return permissionStatus;
             }
-            return new TableCellLayout();
+            return new CssLayout();
         }
         return null;
     }

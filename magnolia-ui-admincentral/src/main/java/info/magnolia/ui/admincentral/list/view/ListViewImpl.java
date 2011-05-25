@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.list.view;
 
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.column.EditHandler;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.jcr.view.JcrView;
@@ -50,6 +51,7 @@ import javax.jcr.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
@@ -69,8 +71,6 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
 
     private final TreeModel treeModel;
 
-    private final WorkbenchDefinition workbenchDefinition;
-
     private static final Logger log = LoggerFactory.getLogger(ListViewImpl.class);
 
     public ListViewImpl(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell){
@@ -78,11 +78,10 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         table = new Table();
         table.setSizeFull();
 
-        // sorting
-        table.setSortDisabled(false);
         // next two lines are required to make the browser (Table) react on selection change via mouse
         table.setImmediate(true);
         table.setNullSelectionAllowed(false);
+
         //Important do not set page length and cache ratio on the Table, rather set them by using JcrContainer corresponding methods. Setting
         //those value explicitly on the Table will cause the same jcr query to be repeated twice thus degrading performance greatly.
         //TODO investigate cause for this behavior.
@@ -92,42 +91,35 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
 
             @Override
             public void itemClick(ItemClickEvent event) {
-                if (event.isDoubleClick()) {
-                    openChildren((ContainerItemId) event.getItemId());
-                }
-                // TODO JcrBrowser should have a click event of its own that sends a JCR item instead of a ContainerItemId
                 presenterOnItemSelection((ContainerItemId) event.getItemId());
             }
         });
 
-        this.workbenchDefinition = workbenchDefinition;
+        table.addListener(new Table.ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                presenterOnItemSelection((ContainerItemId) event.getProperty().getValue());
+            }
+        });
+        table.addListener(new EditHandler());
 
         table.setEditable(false);
         table.setSelectable(true);
         table.setColumnCollapsingAllowed(true);
 
-        // TODO: check Ticket http://dev.vaadin.com/ticket/5453
+        // TODO: check Ticket http://dev.vaadin.com/ticket/5493
         table.setColumnReorderingAllowed(true);
 
-        this.container = new FlatJcrContainer(treeModel,workbenchDefinition.getWorkspace());
+        container = new FlatJcrContainer(treeModel,workbenchDefinition);
 
         for (Column<?> treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();
-            boolean sortable = treeColumn.getDefinition().isSortable();
             table.setColumnExpandRatio(columnName, treeColumn.getWidth() <= 0 ? 1 : treeColumn.getWidth());
             container.addContainerProperty(columnName, Component.class, "");
-            if(sortable){
-                container.addSortableContainerProperty(columnName);
-            }
             table.setColumnHeader(columnName, treeColumn.getLabel());
         }
 
         table.setContainerDataSource(container);
-    }
-
-    private void openChildren(ContainerItemId itemId) {
-        log.debug("opening folder "+ itemId);
-        // TODO: reinitialize table with children on double click
     }
 
     @Override
@@ -139,7 +131,6 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
     @Override
     public void refresh() {
         container.fireItemSetChange();
-        table.requestRepaintAll();
     }
 
     @Override

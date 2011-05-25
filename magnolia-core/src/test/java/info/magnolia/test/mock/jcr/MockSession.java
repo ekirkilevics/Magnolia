@@ -64,6 +64,7 @@ public class MockSession implements Session {
     final private Map<String, MockNode> nodesCache = new LinkedHashMap<String, MockNode>();
 
     private MockNode rootNode = null;
+    private ValueFactory valueFactory = null;
 
     final private Workspace workspace;
 
@@ -209,7 +210,7 @@ public class MockSession implements Session {
 
     @Override
     public ValueFactory getValueFactory()  {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return valueFactory;
     }
 
     @Override
@@ -305,6 +306,10 @@ public class MockSession implements Session {
 
     protected void setRootNode(MockNode root) {
         this.rootNode = root;
+    }
+
+    public void setValueFactory(ValueFactory valueFactory) {
+        this.valueFactory = valueFactory;
     }
 
     @Override

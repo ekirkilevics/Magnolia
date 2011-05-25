@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2009-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,58 +31,36 @@
  * intact.
  *
  */
-package info.magnolia.test.mock;
+package info.magnolia.jcr.util;
 
-import java.util.Collection;
-import java.util.Iterator;
-import javax.jcr.Item;
+import info.magnolia.nodebuilder.NodeOperationException;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
- * Mock implementation of generic JCR Iterator.
- * @author had
- * @version $Id: $
+ * ErrorHandler implementations can decide what to do with certain conditions.
+ * Specifically, they'll usually log or throw exceptions. They can only throw
+ * NodeOperationException (or other RuntimeExceptions, obviously), which
+ * the client code is expected to handle.
+ *
+ * @version $Id$
  */
-public class MockJCRIterator<T extends Item> {
+public interface ErrorHandler {
 
-    private final Iterator<T> internalIterator;
-    private long count = 0;
-    private final Collection<T> list;
+    /**
+     * The operation calling this method is expected to pass a fully formed message;
+     * it should ideally contain some context information about the operation that
+     * caused an issue. The ErrorHandler implementation will decide what to do
+     * with it. (log, throw a NodeOperationException, ...)
+     */
+    void report(String message) throws NodeOperationException, RepositoryException;
 
-    public MockJCRIterator(Collection<T> list) {
-        this.list = list;
-        this.internalIterator = list.iterator();
-    }
-
-    public T nextItem() {
-        count++;
-        return internalIterator.next();
-    }
-
-    public long getPosition() {
-        return count;
-    }
-
-    public long getSize() {
-        return list.size();
-    }
-
-    public void skip(long skipNum) {
-        for (int i = 0; i < skipNum; i++) {
-            internalIterator.next();
-        }
-
-    }
-
-    public boolean hasNext() {
-        return internalIterator.hasNext();
-    }
-
-    public Object next() {
-        return internalIterator.next();
-    }
-
-    public void remove() {
-        internalIterator.remove();
-    }
+    /**
+     * The operation calling this method isn't expected to do anything here;
+     * the ErrorHandler implementation will attempt to build a fully formed message,
+     * then decide what to do with it. (log, throw a NodeOperationException, ...)
+     */
+    void handle(RepositoryException e, Node context) throws NodeOperationException, RepositoryException;
 
 }

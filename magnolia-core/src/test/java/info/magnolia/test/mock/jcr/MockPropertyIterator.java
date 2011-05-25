@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,20 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.column;
+package info.magnolia.test.mock.jcr;
 
-import info.magnolia.ui.admincentral.column.client.VTableCellLayout;
+import java.util.Collection;
 
-import com.vaadin.ui.ClientWidget;
-import com.vaadin.ui.CssLayout;
-
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
 
 /**
- * A table-cell-friendly layout.
- * 
- * @author mrichert
+ * Iterates over a collections of MockProperties.
+ *
  * @version $Id$
  */
-@ClientWidget(value = VTableCellLayout.class)
-public class TableCellLayout extends CssLayout {
+public class MockPropertyIterator extends MockItemIterator<MockProperty> implements PropertyIterator {
+
+    public MockPropertyIterator(Collection<MockProperty> children) {
+        super(children);
+    }
+
+    @Override
+    public Property nextProperty() {
+        return nextItem();
+    }
 }

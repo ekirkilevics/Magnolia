@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
+import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
@@ -42,5 +43,5 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
  */
 public interface DialogFieldFactory {
 
-    DialogField getDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition);
+    DialogField getDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter);
 }

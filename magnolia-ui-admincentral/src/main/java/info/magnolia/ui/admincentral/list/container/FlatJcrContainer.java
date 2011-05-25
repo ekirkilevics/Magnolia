@@ -38,10 +38,8 @@ import info.magnolia.ui.admincentral.container.ContainerItem;
 import info.magnolia.ui.admincentral.container.ContainerItemId;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.container.JcrContainerSource;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
-import java.util.Collection;
-
-import javax.jcr.Item;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
@@ -58,20 +56,21 @@ public class FlatJcrContainer extends JcrContainer {
     private static final Logger log = LoggerFactory.getLogger(FlatJcrContainer.class);
     /**
      * Constructor for {@link FlatJcrContainer}.
-     * @param maxLevel the 0-based level up to which the hierarchy should be traversed (if it's -1, the hierarchy will be traversed until there are no more children of the current item).
      */
-    public FlatJcrContainer(JcrContainerSource jcrContainerSource, String workspace) {
-        super(jcrContainerSource, workspace);
+    public FlatJcrContainer(JcrContainerSource jcrContainerSource, WorkbenchDefinition workbenchDefinition) {
+        super(jcrContainerSource, workbenchDefinition);
 
     }
 
-    @Override
-    protected Collection<ContainerItemId> createContainerIds(Collection<Item> children) throws RepositoryException {
-        throw new UnsupportedOperationException();
-    }
+    //TODO on item set change we should refresh the data view to reflect the changes.
+//    @Override
+//    public void fireItemSetChange() {
+//        getPage();
+//        super.fireItemSetChange();
+//    }
 
     @Override
-    public void updateContainerIds(NodeIterator iterator) throws RepositoryException {
+    public void update(NodeIterator iterator) throws RepositoryException {
         log.debug("updating container...");
         getItemIndexes().clear();
         getCachedItems().clear();

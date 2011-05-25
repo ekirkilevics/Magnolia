@@ -43,5 +43,5 @@ import javax.jcr.RepositoryException;
  */
 public interface TreeAction {
 
-    boolean isAvailable(Item node) throws RepositoryException;
+    boolean isAvailable(Item item) throws RepositoryException;
 }

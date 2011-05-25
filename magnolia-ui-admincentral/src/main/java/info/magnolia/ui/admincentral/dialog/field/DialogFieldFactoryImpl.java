@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.admincentral.jcr.view.builder.DefinitionToImplementationMapping;
 import info.magnolia.ui.model.builder.FactoryBase;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
@@ -71,7 +72,7 @@ public class DialogFieldFactoryImpl extends FactoryBase<FieldDefinition, DialogF
     }
 
     @Override
-    public DialogField getDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
-        return super.create(fieldDefinition, dialogDefinition, tabDefinition);
+    public DialogField getDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
+        return super.create(fieldDefinition, dialogDefinition, tabDefinition, presenter);
     }
 }

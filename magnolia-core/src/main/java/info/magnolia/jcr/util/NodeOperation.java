@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2009-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,19 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.column.client;
+package info.magnolia.jcr.util;
 
-import com.vaadin.terminal.gwt.client.ui.VCustomComponent;
+import javax.jcr.Node;
 
 /**
- * Custom implementation of VCustomerComponent.
+ * A NodeOperation instance describes an "atomic" operation to apply to a node ("context").
+ * Instances of this are executed via {@link NodeBuilder}, can be nested (via {@link #then(NodeOperation...)}).
  *
  * @version $Id$
  */
-public class VEditable extends VCustomComponent implements com.vaadin.terminal.gwt.client.ui.TableCellWidget {
+public interface NodeOperation {
+    // return this
+    // TODO - differentiate between operations that can be chained or not - i.e setProperty shouldn't be chainable
+    NodeOperation then(NodeOperation... childrenOps);
 
-    @Override
-    public boolean isRowSelector() {
-        return true;
-    }
+    // TODO exec should not appear in public interface
+    void exec(Node context, ErrorHandler errorHandler);
+
+    // TODO - description ... ?
 }

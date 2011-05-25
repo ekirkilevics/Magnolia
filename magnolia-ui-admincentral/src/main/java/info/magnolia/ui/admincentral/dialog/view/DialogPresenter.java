@@ -45,6 +45,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.dialog.DialogSaveCallback;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
+import info.magnolia.ui.admincentral.dialog.field.DialogField;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
@@ -110,7 +111,7 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
         try {
             // TODO we should be able to set the label/caption of the dialog here
 
-            dialogView = dialogBuilder.build(dialogDefinition);
+            dialogView = dialogBuilder.build(dialogDefinition, this);
             dialogView.setPresenter(this);
 
             driver = new ContentDriver();
@@ -219,6 +220,11 @@ public class DialogPresenter implements DialogView.Presenter, Serializable {
             return node.getNode(nodeName);
         }
         return null;
+    }
+
+    @Override
+    public void onFocus(DialogField dialogField) {
+        dialogView.setDescriptionText(dialogField.getFieldDefinition().getDescription());
     }
 
     @Override

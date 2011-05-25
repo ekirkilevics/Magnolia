@@ -33,30 +33,29 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
+import javax.jcr.Item;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
 
-import javax.jcr.Item;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
-
 /**
  * A repository operation action which saves the changes and informs the event bus.
+ *
+ * @version $Id$
  * @param <D> The {@link ActionDefinition} used by the action.
- * @param <T> The item type the operation is working with, {@link javax.jcr.Node} or
- * {@link javax.jcr.Property}.
  */
-public abstract class RepositoryOperationAction<D extends ActionDefinition, T extends Item> extends ActionBase<D> {
+public abstract class RepositoryOperationAction<D extends ActionDefinition> extends ActionBase<D> {
 
-    private T item;
+    private Item item;
 
     private EventBus eventBus;
 
-    public RepositoryOperationAction(D definition, T item, EventBus eventBus) {
+    public RepositoryOperationAction(D definition, Item item, EventBus eventBus) {
         super(definition);
         this.item = item;
         this.eventBus = eventBus;
@@ -64,19 +63,17 @@ public abstract class RepositoryOperationAction<D extends ActionDefinition, T ex
 
     @Override
     public void execute() throws ActionExecutionException {
-        Session session;
         try {
-            session = item.getSession();
+            Session session = item.getSession();
             final String path = item.getPath();
             onExecute(item);
             session.save();
             eventBus.fireEvent(new ContentChangedEvent(session.getWorkspace().getName(), path));
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             throw new ActionExecutionException("Can't execute repository operation.", e);
         }
     }
 
-    protected abstract void onExecute(T item) throws RepositoryException;
+    protected abstract void onExecute(Item item) throws RepositoryException;
 
 }

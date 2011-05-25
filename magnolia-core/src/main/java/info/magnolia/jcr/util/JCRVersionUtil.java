@@ -31,41 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.list.container;
+package info.magnolia.jcr.util;
 
-import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.tree.model.TreeModel;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.vaadin.data.util.DefaultItemSorter;
-
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
- * A configurable {@link ItemSorter} which reads from column definition what columns are sortable.
- * @author fgrilli
- * @deprecated will use a different mechanism to sort columns.
+ * Various utility methods useful for JCR-Versioning.
+ *
+ * @version $Id$
  */
-@Deprecated
-public class ConfigurableItemSorter extends DefaultItemSorter {
-    private static final Logger log = LoggerFactory.getLogger(ConfigurableItemSorter.class);
-    private List<String> sortablePropertyIds = new ArrayList<String>();
+public class JCRVersionUtil {
 
-    public ConfigurableItemSorter(TreeModel model) {
-        for (Column<?> treeColumn : model.getColumns().values()) {
-            if(treeColumn.getDefinition().isSortable()){
-                log.debug("Adding property {} to sortable columns", treeColumn.getDefinition().getName());
-                sortablePropertyIds.add(treeColumn.getDefinition().getName());
-            }
+    /**
+     * Return the NodeType-name for the provided Node. It it's a JCPropertiesFilteringNodeWrapper the unwrapped node will be used for retrieving the property from.
+     * As it's about versioning, the frozen primary type if existing (else primary type) will be returned.
+     */
+    public static String getNodeTypeName(Node node) throws RepositoryException {
+        Node unwrappedNode = node;
+        if (node instanceof JCRPropertiesFilteringNodeWrapper) {
+            unwrappedNode = ((JCRPropertiesFilteringNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
         }
-    }
 
-    public List<String> getSortablePropertyIds() {
-        return Collections.unmodifiableList(sortablePropertyIds);
+        if (unwrappedNode.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
+            return unwrappedNode.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString();
+        }
+        return unwrappedNode.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
     }
 }

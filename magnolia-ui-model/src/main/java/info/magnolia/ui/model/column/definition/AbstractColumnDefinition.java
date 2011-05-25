@@ -46,6 +46,15 @@ public abstract class AbstractColumnDefinition {
     private String label;
     private int width = 1;
     private boolean sortable = false;
+    private String propertyName;
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
 
     public String getName() {
         return name;

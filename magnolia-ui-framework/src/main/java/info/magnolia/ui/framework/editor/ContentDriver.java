@@ -134,9 +134,9 @@ public class ContentDriver extends AbstractDriver<Node> {
                 JCRUtil.renameProperty((Property) item, (String) value);
             }
         } else if (value instanceof String) {
-            node.setProperty(path, (String) value);
+            node.getProperty(path).setValue((String) value);
         } else if (value instanceof Calendar) {
-            node.setProperty(path, (Calendar) value);
+            node.getProperty(path).setValue((Calendar) value);
         }
     }
 

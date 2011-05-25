@@ -135,7 +135,10 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
             if (childNode.getNodeType() == Element.ELEMENT_NODE) {
                 Element child = (Element) childNode;
 
-                if (child.getTagName().equalsIgnoreCase(EDIT_MARKER)) {
+                if (child.getTagName().equalsIgnoreCase("cms:page")) {
+                    PageBarWidget pageBarWidget = new PageBarWidget(this, child);
+                    pageBarWidget.attach(child);
+                } else if (child.getTagName().equalsIgnoreCase(EDIT_MARKER)) {
                     if (parentBar != null && parentBar.getType().equals("slot")) {
                         parentBar.mutateIntoSlotBar(child);
                     } else {

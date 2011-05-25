@@ -33,8 +33,10 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
+import com.vaadin.event.FieldEvents;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
+import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.model.dialog.definition.DateFieldDefinition;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
@@ -45,8 +47,8 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
  */
 public class DialogDateField extends AbstractDialogField {
 
-    public DialogDateField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
-        super(dialogDefinition, tabDefinition, fieldDefinition);
+    public DialogDateField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
+        super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
     }
 
     @Override
@@ -58,6 +60,12 @@ public class DialogDateField extends AbstractDialogField {
         } else {
             dateField.setResolution(DateField.RESOLUTION_DAY);
         }
+        dateField.addListener(new FieldEvents.FocusListener() {
+            @Override
+            public void focus(FieldEvents.FocusEvent event) {
+                getPresenter().onFocus(DialogDateField.this);
+            }
+        });
         return dateField;
     }
 }
