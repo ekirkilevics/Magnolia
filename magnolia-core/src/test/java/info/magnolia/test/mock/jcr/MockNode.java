@@ -374,8 +374,8 @@ public class MockNode extends MockItem implements Node {
     public void orderBefore(String srcName, String beforeName) {
         // don't do anything if both names are identical
         if (!srcName.equals(beforeName)) {
-            MockNode nodeToMove = children.remove(srcName);
             int childrenSize = children.size();
+            MockNode nodeToMove = children.remove(srcName);
             List<MockNode> newOrder = new ArrayList<MockNode>();
 
             for (MockNode child : children.values()) {

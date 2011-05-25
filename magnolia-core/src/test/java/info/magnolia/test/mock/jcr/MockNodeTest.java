@@ -183,7 +183,8 @@ public class MockNodeTest {
         assertEquals(third, orderedKids.next());
     }
 
-    public void testOrderBeforeWithSecondNameBe() throws Exception {
+    @Test
+    public void testOrderBeforeWithNullBeforeName() throws Exception {
         MockNode root = new MockNode("root");
         final String firstChild = "1";
         final String secondChild = "2";
