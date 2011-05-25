@@ -126,7 +126,8 @@ public abstract class MockItem implements Item {
 
     @Override
     public boolean isSame(Item otherItem) throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        // very strict but better than nothing ;-)
+        return equals(otherItem);
     }
 
     @Override
