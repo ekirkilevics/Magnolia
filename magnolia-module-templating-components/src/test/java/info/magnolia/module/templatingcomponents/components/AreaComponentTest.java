@@ -87,7 +87,7 @@ public class AreaComponentTest {
 
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"\" type=\"collection\" showAddButton=\"true\"></cms:area>"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // with paragraph set
@@ -97,18 +97,18 @@ public class AreaComponentTest {
 
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"collection\" showAddButton=\"true\"></cms:area>"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // as collection == false (= singleton)
         out = new StringWriter();
-        marker.setType("slot");
+        marker.setType(AreaComponent.TYPE_SINGLE);
         marker.doRender(out);
 
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                         + EditComponent.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"slot\" showAddButton=\"true\"></cms:area>"
+                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
                         + EditComponent.LINEBREAK, out.toString());
     }
 
