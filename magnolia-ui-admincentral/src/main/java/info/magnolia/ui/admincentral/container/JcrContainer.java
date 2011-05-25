@@ -123,6 +123,9 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     private static final String NAME_PROPERTY = "name";
 
+    private static final String JCR_NAME_FUNCTION = "name("+CONTENT_SELECTOR_NAME+")";
+
+
     public JcrContainer(JcrContainerSource jcrContainerSource, WorkbenchDefinition workbenchDefinition) {
         this.jcrContainerSource = jcrContainerSource;
         this.workspace = workbenchDefinition.getWorkspace();
@@ -538,7 +541,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
                 for(OrderBy orderBy: sorters){
                     if(NAME_PROPERTY.equals(orderBy.getProperty())){
                         //need to use name(..) function here as name or jcr:name is not supported by JCR2.
-                        stmt.append("name("+CONTENT_SELECTOR_NAME+")")
+                        stmt.append(JCR_NAME_FUNCTION)
                         .append(orderBy.isAscending() ? " asc":" desc")
                         .append(", ");
                         continue;
