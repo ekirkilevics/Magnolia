@@ -49,6 +49,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.ui.admincentral.dialog.support.DialogLocalizationUtil;
+import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.framework.editor.Editor;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
@@ -61,20 +62,23 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
  */
 public abstract class AbstractDialogField extends CustomComponent implements DialogField {
 
+    private DialogDefinition dialogDefinition;
+    private TabDefinition tabDefinition;
+    private FieldDefinition fieldDefinition;
+    private DialogView.Presenter presenter;
+    private Messages messages;
+
     private String errorMessage;
     private Label errorLabel;
     private Field field;
     private Editor editor;
-    private DialogDefinition dialogDefinition;
-    private TabDefinition tabDefinition;
-    private FieldDefinition fieldDefinition;
-    private Messages messages;
 
-    protected AbstractDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
+    protected AbstractDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
 
         this.dialogDefinition = dialogDefinition;
         this.tabDefinition = tabDefinition;
         this.fieldDefinition = fieldDefinition;
+        this.presenter = presenter;
         this.messages = DialogLocalizationUtil.getMessages(dialogDefinition, tabDefinition, fieldDefinition);
 
         this.field = getField();
@@ -85,7 +89,7 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
         Label labelLabel = new Label(label);
         errorLabel = new Label();
         errorLabel.setVisible(false);
-        Label descriptionLabel = new Label(StringUtils.isNotBlank(description)? description : "(Description not specified)");
+        Label descriptionLabel = new Label(StringUtils.isNotBlank(description) ? description : "(Description not specified)");
 
         VerticalLayout layout = new VerticalLayout();
         layout.addComponent(field);
@@ -130,12 +134,12 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
             errorLabel.setVisible(true);
             errorLabel.setCaption(message);
             if (field instanceof AbstractComponent) {
-                ((AbstractComponent)field).setComponentError(new UserError(message));
+                ((AbstractComponent) field).setComponentError(new UserError(message));
             }
         } else {
             errorLabel.setVisible(false);
             if (field instanceof AbstractComponent) {
-                ((AbstractComponent)field).setComponentError(null); // ??
+                ((AbstractComponent) field).setComponentError(null); // ??
             }
         }
         requestRepaintAll();
@@ -178,6 +182,7 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
         return messages;
     }
 
+    @Override
     public FieldDefinition getFieldDefinition() {
         return fieldDefinition;
     }
@@ -188,5 +193,9 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
 
     public DialogDefinition getDialogDefinition() {
         return dialogDefinition;
+    }
+
+    public DialogView.Presenter getPresenter() {
+        return presenter;
     }
 }

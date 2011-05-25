@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.dialog.field;
 
 import com.vaadin.ui.Field;
 import com.vaadin.ui.RichTextArea;
+import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
@@ -44,12 +45,16 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
  */
 public class DialogRichEditField extends AbstractDialogField {
 
-    public DialogRichEditField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
-        super(dialogDefinition, tabDefinition, fieldDefinition);
+    public DialogRichEditField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
+        super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
     }
 
     @Override
     protected Field getField() {
-        return new RichTextArea();
+        RichTextArea richTextArea = new RichTextArea();
+
+        // TODO add focus listener
+
+        return richTextArea;
     }
 }

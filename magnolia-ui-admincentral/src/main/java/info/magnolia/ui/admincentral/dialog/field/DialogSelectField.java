@@ -37,7 +37,9 @@ import java.util.Map;
 
 import com.vaadin.ui.Field;
 import com.vaadin.ui.NativeSelect;
+import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.SelectFieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
@@ -46,8 +48,8 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
  */
 public class DialogSelectField extends AbstractDialogField {
 
-    public DialogSelectField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, SelectFieldDefinition fieldDefinition) {
-        super(dialogDefinition, tabDefinition, fieldDefinition);
+    public DialogSelectField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
+        super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
     }
 
     @Override
@@ -67,6 +69,9 @@ public class DialogSelectField extends AbstractDialogField {
         if (!options.isEmpty()) {
             select.setValue(options.entrySet().iterator().next().getKey());
         }
+
+        // TODO add focus listener
+
         return select;
     }
 }

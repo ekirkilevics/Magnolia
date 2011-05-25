@@ -187,6 +187,12 @@ public class DialogViewImpl extends Window implements DialogView {
     }
 
     @Override
+    public void setDescriptionText(String description) {
+        Label descriptionLabel = (Label) this.description.getComponent(0);
+        descriptionLabel.setValue(description);
+    }
+
+    @Override
     public void close() {
         super.close();
     }

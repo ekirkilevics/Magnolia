@@ -33,8 +33,10 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
+import com.vaadin.event.FieldEvents;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Field;
+import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.model.dialog.definition.CheckboxFieldDefinition;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
@@ -42,14 +44,13 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
  * Dialog field for checkbox.
- *
+ * <p/>
  * Note: This is the equivalent of controlType=checkboxSwitch
- *
  */
 public class DialogCheckboxField extends AbstractDialogField {
 
-    public DialogCheckboxField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
-        super(dialogDefinition, tabDefinition, fieldDefinition);
+    public DialogCheckboxField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
+        super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
     }
 
     @Override
@@ -57,6 +58,12 @@ public class DialogCheckboxField extends AbstractDialogField {
         CheckboxFieldDefinition def = (CheckboxFieldDefinition) getFieldDefinition();
         CheckBox checkBox = new CheckBox();
         checkBox.setValue(def.isDefaultValue());
+        checkBox.addListener(new FieldEvents.FocusListener() {
+            @Override
+            public void focus(FieldEvents.FocusEvent event) {
+                getPresenter().onFocus(DialogCheckboxField.this);
+            }
+        });
         return checkBox;
     }
 }

@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.dialog.view;
 
+import info.magnolia.ui.admincentral.dialog.field.DialogField;
 import info.magnolia.ui.framework.editor.HasEditors;
 import info.magnolia.ui.framework.view.View;
 
@@ -45,10 +46,14 @@ public interface DialogView extends View, HasEditors {
 
     void close();
 
+    void setDescriptionText(String description);
+
     /**
      * Presenter for DialogViewImpl.
      */
     public static interface Presenter {
+
+        void onFocus(DialogField dialogField);
 
         void onSave();
 
