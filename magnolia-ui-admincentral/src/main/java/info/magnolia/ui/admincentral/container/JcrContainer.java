@@ -50,7 +50,6 @@ import java.util.Set;
 
 import javax.jcr.LoginException;
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.query.InvalidQueryException;
@@ -148,11 +147,11 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     }
 
     /**
-     * Updates the container with the items pointed to by the {@link NodeIterator} passed as argument.
+     * Updates the container with the items pointed to by the {@link RowIterator} passed as argument.
      * @param iterator
      * @throws RepositoryException
      */
-    public abstract void update(NodeIterator iterator) throws RepositoryException;
+    public abstract void update(RowIterator iterator) throws RepositoryException;
 
     @Override
     public void addListener(ItemSetChangeListener listener) {

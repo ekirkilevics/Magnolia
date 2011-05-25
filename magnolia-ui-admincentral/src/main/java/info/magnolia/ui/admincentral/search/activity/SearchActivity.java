@@ -119,7 +119,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             //   this causes "javax.jcr.RepositoryException: This query result has already been iterated through" when updating the container below.
             //Probably we need two queries one for the total count, the other for getting the actual items.
             //log.debug("query returned {} rows", foundItems);
-            jcrView.getContainer().update(queryResult.getNodes());
+            jcrView.getContainer().update(queryResult.getRows());
             view.update(new SearchResult(place.getSearchParameters().getQuery(), foundItems));
 
         } catch (LoginException e) {
