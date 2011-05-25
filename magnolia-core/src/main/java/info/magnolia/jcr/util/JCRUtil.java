@@ -157,36 +157,23 @@ public class JCRUtil {
     }
 
     /**
-     * Orders the node directly before a given sibling. If no sibling is specified the node is placed first.
-     *
-     * @param node        the node to order
-     * @param siblingName the name of the sibling which the name should be before or null if the node should be first
-     * @throws RepositoryException
+     * Convenience - delegate to {@link Node#orderBefore(String, String)}.
      */
     public static void orderBefore(Node node, String siblingName) throws RepositoryException {
-
-        if (siblingName == null) {
-            orderFirst(node);
-            return;
-        }
-
-        Node parent = node.getParent();
-        Node sibling = parent.getNode(siblingName);
-
-        parent.orderBefore(node.getName(), sibling.getName());
+        node.getParent().orderBefore(node.getName(), siblingName);
     }
 
     /**
-     * Orders the node directly after a given sibling. If no sibling is specified the node is placed last.
+     * Orders the node directly after a given sibling. If no sibling is specified the node is placed first.
      *
      * @param node        the node to order
-     * @param siblingName the name of the sibling which the name should be after or null if the node should be last
+     * @param siblingName the name of the sibling which the name should be after or null if the node should be first
      * @throws RepositoryException
      */
     public static void orderAfter(Node node, String siblingName) throws RepositoryException {
 
         if (siblingName == null) {
-            orderLast(node);
+            orderFirst(node);
             return;
         }
 

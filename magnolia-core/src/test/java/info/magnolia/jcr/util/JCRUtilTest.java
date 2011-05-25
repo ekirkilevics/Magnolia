@@ -42,14 +42,35 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.test.mock.jcr.MockNode;
 
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @version $Id$
  */
 public class JCRUtilTest {
+
+    private static final String firstChild = "1";
+    private static final String secondChild = "2";
+    private static final String thirdChild = "3";
+
+    private MockNode root;
+    private Node first;
+    private Node second;
+    private Node third;
+
+    @Before
+    public void setUpTestStructure() throws RepositoryException {
+        root = new MockNode("root");
+        first = root.addNode(firstChild);
+        second = root.addNode(secondChild);
+        third = root.addNode(thirdChild);
+    }
 
     @Test
     public void testHasMixin() throws Exception {
@@ -70,4 +91,64 @@ public class JCRUtilTest {
 
         assertEquals(wrapped, JCRUtil.unwrap(wrapper));
     }
+
+    @Test
+    public void testOrderBeforeWithExistingNodeAndSibling() throws Exception {
+        JCRUtil.orderBefore(third, firstChild);
+
+        NodeIterator kidsIterator = root.getNodes();
+        assertEquals(third, kidsIterator.next());
+        assertEquals(first, kidsIterator.next());
+        assertEquals(second, kidsIterator.next());
+    }
+
+    @Test
+    public void testOrderBeforeWithNullSibling() throws Exception {
+        // should result in putting firstChild at the end of the children
+        JCRUtil.orderBefore(first, null);
+
+        NodeIterator orderedKids = root.getNodes();
+        assertEquals(second, orderedKids.next());
+        assertEquals(third, orderedKids.next());
+        assertEquals(first, orderedKids.next());
+    }
+
+    @Test
+    public void testOrderAfterWithExistingNodeAndSibling() throws Exception {
+        JCRUtil.orderAfter(third, firstChild);
+
+        NodeIterator kidsIterator = root.getNodes();
+        assertEquals(first, kidsIterator.next());
+        assertEquals(third, kidsIterator.next());
+        assertEquals(second, kidsIterator.next());
+    }
+
+    @Test
+    public void testOrderAfterWithNullSibling() throws RepositoryException {
+        // should result in putting thirdChild at the begin of the children
+        JCRUtil.orderAfter(third, null);
+        NodeIterator orderedKids = root.getNodes();
+        assertEquals(third, orderedKids.next());
+        assertEquals(first, orderedKids.next());
+        assertEquals(second, orderedKids.next());
+    }
+
+    @Test
+    public void testOrderFirst() throws RepositoryException {
+        JCRUtil.orderFirst(second);
+        NodeIterator orderedKids = root.getNodes();
+        assertEquals(second, orderedKids.next());
+        assertEquals(first, orderedKids.next());
+        assertEquals(third, orderedKids.next());
+    }
+
+    @Test
+    public void testOrderLast() throws RepositoryException {
+        JCRUtil.orderLast(second);
+        NodeIterator orderedKids = root.getNodes();
+        assertEquals(first, orderedKids.next());
+        assertEquals(third, orderedKids.next());
+        assertEquals(second, orderedKids.next());
+    }
+
 }
