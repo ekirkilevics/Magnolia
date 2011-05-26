@@ -230,7 +230,7 @@ public class SubPagesList extends AbstractList {
         }
 
         public String getActivationStatusIcon() {
-            return Tree.ICONDOCROOT + MetaDataUtil.getActivationStatusIcon(versionedNode);
+            return Tree.ICONDOCROOT + MetaDataUtil.getActivationStatusIcon(versionedNode.getJCRNode());
         }
 
         public String getModDate() {

@@ -65,32 +65,6 @@ public class MetaDataUtil {
         }
     }
 
-    /**
-     * Return iconFileName for a node.
-     *
-     * @param node node to read status from
-     * @return file name for an icon
-     *
-     * TODO dlipp: move to somewhere in AdminCentral
-     */
-    public static String getActivationStatusIcon(Node node) {
-
-        MetaData metaData = getMetaData(node);
-        String iconFileName;
-        switch (metaData.getActivationStatus()) {
-        case MetaData.ACTIVATION_STATUS_MODIFIED:
-            iconFileName = "indicator_yellow.gif";
-            break;
-        case MetaData.ACTIVATION_STATUS_ACTIVATED:
-            iconFileName = "indicator_green.gif";
-            break;
-        default:
-            iconFileName = "indicator_red.gif";
-        }
-
-        return iconFileName;
-    }
-
     public static void updateMetaData(Node node) throws RepositoryException {
         MetaData md = getMetaData(node);
         md.setModificationDate();

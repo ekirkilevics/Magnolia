@@ -38,6 +38,8 @@ import info.magnolia.cms.core.MetaData;
 
 import java.util.Calendar;
 
+import javax.jcr.Node;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,10 +98,38 @@ public class MetaDataUtil {
     }
 
     /**
-     * @deprecated - directly use JCRMetaDataUtil instead
+     * @deprecated since 5.0 - use {@link #getActivationStatusIcon(Node)} instead.
      */
     public static String getActivationStatusIcon(Content content) {
-        return info.magnolia.jcr.util.MetaDataUtil.getActivationStatusIcon(content.getJCRNode());
+        return getActivationStatusIcon(content.getJCRNode());
+    }
+
+    /**
+     * Return iconFileName for a node.
+     *
+     * @param node
+     *            node to read status from
+     * @return file name for an icon
+     *
+     *         TODO dlipp: move to ui-layer as soon as there's a ui-project on which magnolia-gui,
+     *         magnolia-module-workflow and admincentral are based (all these currently use this method).
+     */
+    public static String getActivationStatusIcon(Node node) {
+
+        MetaData metaData = info.magnolia.jcr.util.MetaDataUtil.getMetaData(node);
+        String iconFileName;
+        switch (metaData.getActivationStatus()) {
+        case MetaData.ACTIVATION_STATUS_MODIFIED:
+            iconFileName = "indicator_yellow.gif";
+            break;
+        case MetaData.ACTIVATION_STATUS_ACTIVATED:
+            iconFileName = "indicator_green.gif";
+            break;
+        default:
+            iconFileName = "indicator_red.gif";
+        }
+
+        return iconFileName;
     }
 
 }

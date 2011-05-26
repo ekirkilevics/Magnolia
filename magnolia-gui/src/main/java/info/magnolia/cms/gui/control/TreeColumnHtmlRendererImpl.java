@@ -87,7 +87,7 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
         StringBuilder html = new StringBuilder();
         String altOrTitle = "";
         if (treeColumn.getIconsActivation()) {
-            String imgSrc = Tree.ICONDOCROOT + MetaDataUtil.getActivationStatusIcon(content);
+            String imgSrc = Tree.ICONDOCROOT + MetaDataUtil.getActivationStatusIcon(content.getJCRNode());
             int activationStatus = content.getMetaData().getActivationStatus();
 
             switch (activationStatus) {
