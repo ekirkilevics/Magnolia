@@ -45,7 +45,7 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.templating.template.definition.TemplateDefinition;
+import info.magnolia.templating.template.TemplateDefinition;
 
 /**
  * ObservedManager for {@link TemplateDefinition} configured in repository.

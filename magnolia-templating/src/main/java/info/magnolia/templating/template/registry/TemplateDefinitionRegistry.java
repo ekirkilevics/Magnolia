@@ -33,7 +33,7 @@
  */
 package info.magnolia.templating.template.registry;
 
-import info.magnolia.templating.template.definition.TemplateDefinition;
+import info.magnolia.templating.template.TemplateDefinition;
 
 import java.util.HashMap;
 import java.util.Map;

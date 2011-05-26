@@ -31,20 +31,42 @@
  * intact.
  *
  */
-package info.magnolia.templating.template.definition;
+package info.magnolia.templating.template.configured;
 
+import info.magnolia.templating.template.TemplateDefinition;
+
+import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * @author pbaerfuss
  * @version $Id$
  *
  */
-public interface TemplateDefinition extends RenderableDefinition {
+public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition implements TemplateDefinition {
 
-    public String getDialog();
+    private String dialog;
+    private Map<String, ConfiguredAreaDefinition> configuredAreaDefinitions = new HashMap<String, ConfiguredAreaDefinition>();
 
-    public Map<String, AreaDefinitionImpl> getAreas();
+    @Override
+    public String getDialog() {
+        return this.dialog;
+    }
 
+    public void setDialog(String dialog) {
+        this.dialog = dialog;
+    }
+
+    @Override
+    public Map<String, ConfiguredAreaDefinition> getAreas() {
+        return this.configuredAreaDefinitions;
+    }
+
+    public void setAreas(Map<String, ConfiguredAreaDefinition> configuredAreaDefinitions) {
+        this.configuredAreaDefinitions = configuredAreaDefinitions;
+    }
+
+    public void addArea(String name, ConfiguredAreaDefinition configuredAreaDefinition){
+        this.configuredAreaDefinitions.put(name, configuredAreaDefinition);
+    }
 }

@@ -35,7 +35,7 @@ package info.magnolia.templating.model;
 
 import javax.jcr.Node;
 
-import info.magnolia.templating.template.definition.RenderableDefinition;
+import info.magnolia.templating.template.RenderableDefinition;
 
 
 /**

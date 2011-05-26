@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,50 +25,50 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.templating.template.definition;
+package info.magnolia.templating.template.configured;
 
-import info.magnolia.templating.model.RenderingModel;
+import info.magnolia.templating.template.ParagraphAvailability;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
-
-import javax.jcr.Node;
-
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
- * @author pbaerfuss
+ * Keeps configuration for a paragraph - name and roles it is available for.
+ *
  * @version $Id$
  *
+ * TODO dlipp: implementation copied from info.magnolia.module.templatingkit.templates.ParagraphConfig as
+ * templating-components has no dependency to templating. Check whether the impl in Templating should get
+ * deprecated and references replaced by this impl.
  */
-public interface RenderableDefinition {
+public class ConfiguredParagraphAvailability implements ParagraphAvailability {
 
-    public String getName();
+    private Collection<String> roles = new ArrayList<String>();
 
-    public String getRenderType();
+    private String name;
 
-    public String getTitle();
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
-    public String getDescription();
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getI18nBasename();
+    @Override
+    public Collection<String> getRoles() {
+        return this.roles;
+    }
 
-    public String getTemplateScript();
-
-    /**
-     * An arbitrary list of parameters. Used to omit subclass with getters and setters for each
-     * extra parameter.
-     */
-    public Map<String, Object> getParameters();
-
-    /**
-     * Create the model based on the current content.
-     */
-    public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
+    }
 
 }

@@ -31,15 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.templating.rendering.engine;
+package info.magnolia.templating.rendering;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.templating.rendering.RenderException;
-import info.magnolia.templating.rendering.renderer.Renderer;
-import info.magnolia.templating.template.definition.RenderableDefinition;
+import info.magnolia.templating.renderer.Renderer;
+import info.magnolia.templating.template.RenderableDefinition;
 
 import java.io.Writer;
 import java.util.Map;

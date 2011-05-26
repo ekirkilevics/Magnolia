@@ -1,4 +1,4 @@
-package info.magnolia.templating.template.definition;
+package info.magnolia.templating.template;
 
 import java.util.Collection;
 

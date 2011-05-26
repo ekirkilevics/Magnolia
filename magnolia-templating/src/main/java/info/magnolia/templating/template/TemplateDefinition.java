@@ -31,15 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.templating.rendering.engine;
+package info.magnolia.templating.template;
 
-import info.magnolia.templating.rendering.RenderException;
-import info.magnolia.templating.template.definition.RenderableDefinition;
+import info.magnolia.templating.template.configured.ConfiguredAreaDefinition;
 
-import java.io.Writer;
 import java.util.Map;
-
-import javax.jcr.Node;
 
 
 /**
@@ -47,8 +43,10 @@ import javax.jcr.Node;
  * @version $Id$
  *
  */
-public interface RenderingEngine {
+public interface TemplateDefinition extends RenderableDefinition {
 
-    public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws RenderException;
+    public String getDialog();
+
+    public Map<String, ConfiguredAreaDefinition> getAreas();
 
 }

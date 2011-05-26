@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.template.definition;
+package info.magnolia.templating.template.configured;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -48,13 +48,14 @@ import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.templating.model.RenderingModel;
 import info.magnolia.templating.model.RenderingModelImpl;
+import info.magnolia.templating.template.RenderableDefinition;
 
 
 /**
  * @version $Id$
  *
  */
-public class RenderableDefinitionImpl implements RenderableDefinition {
+public class ConfiguredRenderableDefinition implements RenderableDefinition {
     private String name;
     private String title;
     private String templateScript;

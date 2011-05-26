@@ -31,9 +31,9 @@
  * intact.
  *
  */
-package info.magnolia.templating.rendering.renderer;
+package info.magnolia.templating.renderer;
 
-import info.magnolia.templating.template.definition.RenderableDefinition;
+import info.magnolia.templating.template.RenderableDefinition;
 
 import java.io.Writer;
 import java.util.Map;

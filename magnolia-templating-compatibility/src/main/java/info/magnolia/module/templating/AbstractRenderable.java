@@ -36,7 +36,7 @@ package info.magnolia.module.templating;
 import java.lang.reflect.InvocationTargetException;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.templating.template.definition.TemplateDefinitionImpl;
+import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 
 /**
  * Base implementation for paragraph and template definitions. Provides the
@@ -44,9 +44,9 @@ import info.magnolia.templating.template.definition.TemplateDefinitionImpl;
  * {@link #newModel(Content, RenderableDefinition , RenderingModel)}
  *
  * @version $Id$
- * @deprecated since 5.0, use {@link RenderableDefinitionImpl} instead.
+ * @deprecated since 5.0, use {@link ConfiguredRenderableDefinition} instead.
  */
-public class AbstractRenderable extends TemplateDefinitionImpl implements RenderableDefinition{
+public class AbstractRenderable extends ConfiguredTemplateDefinition implements RenderableDefinition{
 
     /**
      * Return always the {@link #templateScript} property.

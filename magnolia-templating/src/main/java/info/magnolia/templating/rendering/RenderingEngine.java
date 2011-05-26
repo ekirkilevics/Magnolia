@@ -31,40 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.templating.template.definition;
+package info.magnolia.templating.rendering;
 
-import java.util.HashMap;
+import info.magnolia.templating.template.RenderableDefinition;
+
+import java.io.Writer;
 import java.util.Map;
+
+import javax.jcr.Node;
+
 
 /**
  * @author pbaerfuss
  * @version $Id$
  *
  */
-public class TemplateDefinitionImpl extends RenderableDefinitionImpl implements TemplateDefinition {
+public interface RenderingEngine {
 
-    private String dialog;
-    private Map<String, AreaDefinitionImpl> areaDefinitionImpls = new HashMap<String, AreaDefinitionImpl>();
+    public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws RenderException;
 
-    @Override
-    public String getDialog() {
-        return this.dialog;
-    }
-
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
-    }
-
-    @Override
-    public Map<String, AreaDefinitionImpl> getAreas() {
-        return this.areaDefinitionImpls;
-    }
-
-    public void setAreas(Map<String, AreaDefinitionImpl> areaDefinitionImpls) {
-        this.areaDefinitionImpls = areaDefinitionImpls;
-    }
-
-    public void addArea(String name, AreaDefinitionImpl areaDefinitionImpl){
-        this.areaDefinitionImpls.put(name, areaDefinitionImpl);
-    }
 }
