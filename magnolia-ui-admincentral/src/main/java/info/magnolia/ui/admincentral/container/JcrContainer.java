@@ -35,7 +35,6 @@ package info.magnolia.ui.admincentral.container;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.ui.admincentral.column.Editable;
 import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
@@ -103,10 +102,10 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     private final LinkedHashMap<ContainerItemId, ContainerItem> cachedItems = new LinkedHashMap<ContainerItemId, ContainerItem>();
 
-    private Map<String, String> sortableProperties = new HashMap<String,String>();
+    private Map<String, String> sortableProperties = new HashMap<String, String>();
 
     /** Filters (WHERE) and sorters (ORDER BY). */
-    //private final List<Filter> filters = new ArrayList<Filter>();
+    // private final List<Filter> filters = new ArrayList<Filter>();
     private final List<OrderBy> sorters = new ArrayList<OrderBy>();
 
     private String workspace;
@@ -126,23 +125,24 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     private static final String NAME_PROPERTY = "name";
 
-    private static final String JCR_NAME_FUNCTION = "name("+CONTENT_SELECTOR_NAME+")";
-
+    private static final String JCR_NAME_FUNCTION = "name(" + CONTENT_SELECTOR_NAME + ")";
 
     public JcrContainer(JcrContainerSource jcrContainerSource, WorkbenchDefinition workbenchDefinition) {
         this.jcrContainerSource = jcrContainerSource;
-        this.workspace = workbenchDefinition.getWorkspace();
+        workspace = workbenchDefinition.getWorkspace();
 
-        for(AbstractColumnDefinition columnDefinition: workbenchDefinition.getColumns()){
-            if(columnDefinition.isSortable()){
+        for (AbstractColumnDefinition columnDefinition : workbenchDefinition.getColumns()) {
+            if (columnDefinition.isSortable()) {
                 log.debug("Configuring column [{}] as sortable", columnDefinition.getName());
 
                 String propertyName = columnDefinition.getPropertyName();
                 log.debug("propertyName is {}", propertyName);
 
-                if(StringUtils.isBlank(propertyName)){
+                if (StringUtils.isBlank(propertyName)) {
                     propertyName = columnDefinition.getName();
-                    log.warn("Column {} is sortable but no propertyName has been defined. Defaulting to column name (sorting may not work as expected).", columnDefinition.getName());
+                    log.warn(
+                        "Column {} is sortable but no propertyName has been defined. Defaulting to column name (sorting may not work as expected).",
+                        columnDefinition.getName());
                 }
 
                 sortableProperties.put(columnDefinition.getName(), propertyName);
@@ -151,7 +151,8 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     }
 
     /**
-     * Updates the container with the items pointed to by the {@link RowIterator} passed as argument.
+     * Updates the container with the items pointed to by the {@link RowIterator} passed as
+     * argument.
      * @param iterator
      * @throws RepositoryException
      */
@@ -260,7 +261,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     @Override
     public Collection<ContainerItemId> getItemIds() {
-        throw new UnsupportedOperationException(getClass().getName() +" does not support this method.");
+        throw new UnsupportedOperationException(getClass().getName() + " does not support this method.");
     }
 
     @Override
@@ -271,7 +272,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     @Override
     public int size() {
         updateCount();
-        //log.debug("size is {}", size);
+        // log.debug("size is {}", size);
         return size;
     }
 
@@ -412,6 +413,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         getPage();
     }
 
+    @Override
     public List<String> getSortableContainerPropertyIds() {
         return Collections.unmodifiableList(new ArrayList<String>(sortableProperties.keySet()));
     }
@@ -424,13 +426,14 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     }
 
     /***********************************************/
-    /** Used by JcrContainerProperty              **/
+    /** Used by JcrContainerProperty **/
     /***********************************************/
 
     public Object getColumnValue(String propertyId, Object itemId) {
         try {
             return jcrContainerSource.getColumnComponent(propertyId, getJcrItem(((ContainerItemId) itemId)));
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
@@ -438,9 +441,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     public void setColumnValue(String propertyId, Object itemId, Object newValue) {
         try {
             jcrContainerSource.setColumnComponent(propertyId, getJcrItem(((ContainerItemId) itemId)), (Component) newValue);
-            if (!(newValue instanceof Editable)) {
-                firePropertySetChange();
-            }
+            firePropertySetChange();
         }
         catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
@@ -461,7 +462,8 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     public ContainerItemId getItemByPath(String path) {
         try {
             return createContainerId(jcrContainerSource.getItemByPath(path));
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
@@ -528,8 +530,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     }
 
     /**
-     * Fetches a page from the data source based on the values of pageLenght and
-     * currentOffset.
+     * Fetches a page from the data source based on the values of pageLenght and currentOffset.
      */
     protected void getPage() {
         updateCount();
@@ -538,38 +539,45 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
         try {
             final StringBuilder stmt = new StringBuilder(SELECT_CONTENT);
-            if(!sorters.isEmpty()) {
-                //TODO one workaround to make this faster would be avoiding doing a join when we know for sure there are no properties from metadata to order by.
+            if (!sorters.isEmpty()) {
+                // TODO one workaround to make this faster would be avoiding doing a join when we
+                // know for sure there are no properties from metadata to order by.
                 stmt.append(JOIN_METADATA_ORDER_BY);
-                for(OrderBy orderBy: sorters){
-                    if(NAME_PROPERTY.equals(orderBy.getProperty())){
-                        //need to use name(..) function here as name or jcr:name is not supported by JCR2.
+                for (OrderBy orderBy : sorters) {
+                    if (NAME_PROPERTY.equals(orderBy.getProperty())) {
+                        // need to use name(..) function here as name or jcr:name is not supported
+                        // by JCR2.
                         stmt.append(JCR_NAME_FUNCTION)
-                        .append(orderBy.isAscending() ? " asc":" desc")
-                        .append(", ");
+                            .append(orderBy.isAscending() ? " asc" : " desc")
+                            .append(", ");
                         continue;
                     }
-                    stmt.append(CONTENT_SELECTOR_NAME+".["+orderBy.getProperty()+"]")
-                    .append(orderBy.isAscending() ? " asc":" desc")
-                    .append(", ");
-                    //TODO here we don't know to which primary type this prop belongs to. I would tend not to clutter the column definition with yet another info about primary type.
-                    stmt.append(METADATA_SELECTOR_NAME+".["+orderBy.getProperty()+"]")
-                    .append(orderBy.isAscending() ? " asc":" desc")
-                    .append(", ");
+                    stmt.append(CONTENT_SELECTOR_NAME + ".[" + orderBy.getProperty() + "]")
+                        .append(orderBy.isAscending() ? " asc" : " desc")
+                        .append(", ");
+                    // TODO here we don't know to which primary type this prop belongs to. I would
+                    // tend not to clutter the column definition with yet another info about primary
+                    // type.
+                    stmt.append(METADATA_SELECTOR_NAME + ".[" + orderBy.getProperty() + "]")
+                        .append(orderBy.isAscending() ? " asc" : " desc")
+                        .append(", ");
                 }
-                stmt.delete(stmt.lastIndexOf(","), stmt.length()-1);
+                stmt.delete(stmt.lastIndexOf(","), stmt.length() - 1);
             }
 
-            //FIXME sql2 query is much slower than its xpath/sql1 counterpart (on average 80 times slower) see https://issues.apache.org/jira/browse/JCR-2830.
-            //However xpath is deprecated and, although query execution is faster, it takes much longer to iterate over the results (for an explanation see comment here
-            //https://issues.apache.org/jira/browse/JCR-2715?focusedCommentId=12965273&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-12965273
-            //"The SQL2/QOM implementation loads all matching rows into memory during the execute() call, so you'll see an expensive query.execute() but can then very quickly iterate over the query results.")
-            // to the point that any benefit gained from faster query execution is lost and overall performance gets worse.
+            // FIXME sql2 query is much slower than its xpath/sql1 counterpart (on average 80 times
+            // slower) see https://issues.apache.org/jira/browse/JCR-2830.
+            // However xpath is deprecated and, although query execution is faster, it takes much
+            // longer to iterate over the results (for an explanation see comment here
+            // https://issues.apache.org/jira/browse/JCR-2715?focusedCommentId=12965273&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-12965273
+            // "The SQL2/QOM implementation loads all matching rows into memory during the execute() call, so you'll see an expensive query.execute() but can then very quickly iterate over the query results.")
+            // to the point that any benefit gained from faster query execution is lost and overall
+            // performance gets worse.
             final QueryResult queryResult = executeQuery(stmt.toString(), Query.JCR_SQL2, pageLength * cacheRatio, currentOffset);
 
             final RowIterator iterator = queryResult.getRows();
             long rowCount = currentOffset;
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
 
                 final ContainerItemId id = createContainerId(iterator.nextRow().getNode(CONTENT_SELECTOR_NAME));
                 /* Cache item */
@@ -577,7 +585,8 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
                 cachedItems.put(id, new ContainerItem(id, this));
 
             }
-        } catch (RepositoryException re){
+        }
+        catch (RepositoryException re) {
             throw new RuntimeRepositoryException(re);
         }
 
@@ -588,8 +597,8 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     }
 
     /**
-     * Refreshes the container - clears all caches and resets size and offset.
-     * Does NOT remove sorting or filtering rules!
+     * Refreshes the container - clears all caches and resets size and offset. Does NOT remove
+     * sorting or filtering rules!
      */
     public void refresh() {
         currentOffset = 0;
@@ -598,7 +607,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         fireItemSetChange();
     }
 
-    protected int getRowCount()  {
+    protected int getRowCount() {
         //FIXME cache the size cause at present the query to count rows is extremely slow () with "large" (20000+ nodes) data sets and it's called frequently by Vaadin.
         //On the other hand caching this value prevents flat container changes (add/remove nodes) to be reflected immediately. See
         if(size >= 0){
@@ -607,7 +616,8 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         QueryResult result = executeQuery(SELECT_CONTENT, Query.JCR_SQL2, 0, 0);
         try {
             return Long.valueOf(result.getRows().getSize()).intValue();
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
 
@@ -617,30 +627,37 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         this.size = size;
     }
 
-    protected QueryResult executeQuery(String statement, String language, long limit, long offset){
+    protected QueryResult executeQuery(String statement, String language, long limit, long offset) {
         try {
             final Session jcrSession = MgnlContext.getJCRSession(workspace);
             final QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
-            final Query query = jcrQueryManager.createQuery(statement , language);
-            if(limit > 0) {
+            final Query query = jcrQueryManager.createQuery(statement, language);
+            if (limit > 0) {
                 query.setLimit(limit);
             }
-            if(offset >= 0){
+            if (offset >= 0) {
                 query.setOffset(offset);
             }
-            log.debug("Executing query against workspace [{}] with statement [{}] and limit {} and offset {}...", new Object[]{getWorkspace(), statement, limit, offset});
+            log.debug("Executing query against workspace [{}] with statement [{}] and limit {} and offset {}...", new Object[]{
+                getWorkspace(),
+                statement,
+                limit,
+                offset});
             long start = System.currentTimeMillis();
             final QueryResult result = query.execute();
             log.debug("Query execution took {} ms", System.currentTimeMillis() - start);
 
             return result;
 
-        } catch (LoginException e) {
-           throw new RuntimeRepositoryException(e);
-        } catch (InvalidQueryException e) {
+        }
+        catch (LoginException e) {
             throw new RuntimeRepositoryException(e);
-        } catch (RepositoryException e) {
-           throw new RuntimeRepositoryException(e);
+        }
+        catch (InvalidQueryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+        catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
         }
     }
 }

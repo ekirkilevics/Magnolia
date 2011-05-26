@@ -79,8 +79,10 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         table.setSizeFull();
 
         // next two lines are required to make the browser (Table) react on selection change via mouse
-        table.setImmediate(false);
+        table.setImmediate(true);
         table.setNullSelectionAllowed(false);
+        // table.setMultiSelectMode(MultiSelectMode.DEFAULT);
+        table.setMultiSelect(false);
 
         //Important do not set page length and cache ratio on the Table, rather set them by using JcrContainer corresponding methods. Setting
         //those value explicitly on the Table will cause the same jcr query to be repeated twice thus degrading performance greatly.
@@ -95,6 +97,7 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
             }
         });
         table.addListener(new Table.ValueChangeListener() {
+
             @Override
             public void valueChange(ValueChangeEvent event) {
                 presenterOnItemSelection((ContainerItemId) event.getProperty().getValue());

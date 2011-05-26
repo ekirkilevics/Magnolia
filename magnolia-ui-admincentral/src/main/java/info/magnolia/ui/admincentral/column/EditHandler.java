@@ -36,8 +36,6 @@ package info.magnolia.ui.admincentral.column;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Component;
@@ -51,14 +49,13 @@ import com.vaadin.ui.Table;
  * 
  * @author mrichert
  */
-public class EditHandler implements ItemClickListener, ValueChangeListener {
+public class EditHandler implements ItemClickListener {
 
     private Table table;
 
     public EditHandler(Table table) {
         this.table = table;
-        table.addListener((ItemClickListener) this);
-        table.addListener((ValueChangeListener) this);
+        table.addListener(this);
     }
 
     @Override
@@ -84,21 +81,13 @@ public class EditHandler implements ItemClickListener, ValueChangeListener {
                     @Override
                     public void edit(EditEvent event) {
                         table.getContainerProperty(itemId,
-                            propertyId).setValue(editable);
+                                propertyId).setValue(editable);
                     }
                 });
 
                 Component editorComponent = editable.getEditorComponent();
                 containerProperty.setValue(editorComponent);
             }
-            else {
-                jcrContainer.firePropertySetChange();
-            }
         }
-    }
-
-    @Override
-    public void valueChange(ValueChangeEvent event) {
-        ((JcrContainer) table.getContainerDataSource()).firePropertySetChange();
     }
 }
