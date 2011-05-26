@@ -34,9 +34,11 @@
 package info.magnolia.jcr.nodebuilder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.MockValue;
@@ -45,81 +47,106 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFactory;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @version $Id$
  */
 public class OpsTest {
-    private final ErrorHandler eh = new ErrorHandler() {
-        @Override
-        public void report(String message) {
-            throw new RuntimeException(message);
-        }
 
+    private static final String CHILD_NAME = "child";
+    private static final String PROPERTY_NAME = "property1";
+    private static final String PROPERTY_VALUE = "propertValue";
+    private final ErrorHandler eh = new ErrorHandler() {
         @Override
         public void handle(RepositoryException e, Node context) {
             throw new RuntimeException(e.getMessage());
         }
+
+        @Override
+        public void report(String message) {
+            throw new RuntimeException(message);
+        }
     };
+
+    private MockNode rootNode;
+    private MockSession session;
+
+    @Before
+    public void setUp() {
+        rootNode = new MockNode("root");
+        session = new MockSession("testSession");
+        rootNode.setSession(session);
+    }
+
+    @Test
+    public void testAddNodeWithString() throws RepositoryException {
+        final NodeOperation op = Ops.addNode(CHILD_NAME);
+        op.exec(rootNode, eh);
+        assertTrue(rootNode.hasNode(CHILD_NAME));
+    }
+
+    @Test
+    public void testAddNodeWithStringAndItemType() throws RepositoryException {
+        final ItemType itemType = ItemType.USER;
+
+        final NodeOperation op = Ops.addNode(CHILD_NAME, itemType);
+        op.exec(rootNode, eh);
+        assertTrue(rootNode.hasNode(CHILD_NAME));
+        assertEquals(itemType.getSystemName(), rootNode.getNode(CHILD_NAME).getPrimaryNodeType().getName());
+    }
+
+    @Test
+    public void testAddNodeWithTwoStrings() throws RepositoryException {
+        final String itemTypeName = ItemType.FOLDER.getSystemName();
+
+        final NodeOperation op = Ops.addNode(CHILD_NAME, itemTypeName);
+        op.exec(rootNode, eh);
+        assertTrue(rootNode.hasNode(CHILD_NAME));
+        assertEquals(itemTypeName, rootNode.getNode(CHILD_NAME).getPrimaryNodeType().getName());
+    }
 
     @Test
     public void testAddProperty() throws Exception {
-        final MockNode node = new MockNode("hello");
-        String propertyName = "foo";
-        String propertyValue = "zazoo";
-
-        final MockSession session = new MockSession("testSession");
-        node.setSession(session);
-
         final ValueFactory valueFactory = mock(ValueFactory.class);
-        when(valueFactory.createValue(propertyValue)).thenReturn(new MockValue(propertyValue));
+        when(valueFactory.createValue(PROPERTY_VALUE)).thenReturn(new MockValue(PROPERTY_VALUE));
         session.setValueFactory(valueFactory);
 
-        final NodeOperation op = Ops.addProperty(propertyName, propertyValue);
-        op.exec(node, eh);
+        final NodeOperation op = Ops.addProperty(PROPERTY_NAME, PROPERTY_VALUE);
+        op.exec(rootNode, eh);
 
-        assertEquals(propertyValue, node.getProperty(propertyName).getString());
+        assertEquals(PROPERTY_VALUE, rootNode.getProperty(PROPERTY_NAME).getString());
     }
 
     @Test(expected = RuntimeException.class)
     public void testAddPropertyFailsIfPropertyExists() throws Exception {
-        final Node node = new MockNode("hello");
-        node.setProperty("foo", "bar");
-        final NodeOperation op = Ops.addProperty("foo", "zazoo");
-        op.exec(node, eh);
+        rootNode.setProperty(PROPERTY_NAME, PROPERTY_VALUE);
+        final NodeOperation op = Ops.addProperty(PROPERTY_NAME, "otherValue");
+        op.exec(rootNode, eh);
         fail("should have failed");
     }
 
     @Test
     public void testSetProperty() throws Exception {
-        final MockNode node = new MockNode("hello");
-        final String propertyName = "foo";
-        final String oldPropertyValue = "old";
-        node.setProperty(propertyName, oldPropertyValue);
+        rootNode.setProperty(PROPERTY_NAME, PROPERTY_VALUE);
 
-        final String propertyValue = "zazoo";
-
-        final MockSession session = new MockSession("testSession");
-        node.setSession(session);
+        final String newPropertyValue = "zazoo";
 
         final ValueFactory valueFactory = mock(ValueFactory.class);
-        when(valueFactory.createValue(propertyValue)).thenReturn(new MockValue(propertyValue));
+        when(valueFactory.createValue(newPropertyValue)).thenReturn(new MockValue(newPropertyValue));
         session.setValueFactory(valueFactory);
 
-        final NodeOperation op = Ops.setProperty(propertyName, propertyValue);
-        op.exec(node, eh);
+        final NodeOperation op = Ops.setProperty(PROPERTY_NAME, newPropertyValue);
+        op.exec(rootNode, eh);
 
-        assertEquals(propertyValue, node.getProperty(propertyName).getString());
+        assertEquals(newPropertyValue, rootNode.getProperty(PROPERTY_NAME).getString());
     }
 
     @Test(expected = RuntimeException.class)
     public void testSetPropertyFailsIfItsNotExistingAlready() throws Exception {
-        final MockNode root = new MockNode("root");
-
-        final NodeOperation op = Ops.setProperty("foo", "bar");
-        op.exec(root, eh);
+        final NodeOperation op = Ops.setProperty(PROPERTY_NAME, PROPERTY_VALUE);
+        op.exec(rootNode, eh);
         fail("should have failed");
     }
-
 }
