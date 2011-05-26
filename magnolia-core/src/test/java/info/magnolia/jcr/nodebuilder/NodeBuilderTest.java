@@ -33,7 +33,6 @@
  */
 package info.magnolia.jcr.nodebuilder;
 
-
 import static info.magnolia.jcr.nodebuilder.Ops.addNode;
 import static info.magnolia.jcr.nodebuilder.Ops.addProperty;
 import static info.magnolia.jcr.nodebuilder.Ops.getNode;
@@ -45,10 +44,10 @@ import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.MockValue;
 
-import javax.jcr.Node;
-import javax.jcr.Property;
+import javax.jcr.RepositoryException;
 import javax.jcr.ValueFactory;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -56,32 +55,52 @@ import org.junit.Test;
  */
 public class NodeBuilderTest {
 
-    @Test
-    public void testHasMixin() throws Exception {
-        final String rootNodeName = "root";
-        final String firstSubName = "firstSub";
-        final String secondSubName = "newSub";
-        final String propertyName = "newProp";
-        final String propertyValue= "newValue";
-        final MockNode node = new MockNode(rootNodeName);
-        final MockSession session = new MockSession("testSession");
-        node.setSession(session);
-        final MockNode firstSub = (MockNode) node.addNode(firstSubName);
+    private static final String CHILD_NAME = "child";
+    private static final String PROPERTY_NAME = "property1";
+    private static final String PROPERTY_VALUE = "propertValue";
+    private MockNode rootNode;
+    private MockSession session;
+    private MockValue propertyValue;
+
+    @Before
+    public void setUp() {
+        rootNode = new MockNode("root");
+        propertyValue = new MockValue(PROPERTY_VALUE);
+        session = new MockSession("testSession");
+        rootNode.setSession(session);
+
 
         final ValueFactory valueFactory = mock(ValueFactory.class);
-        when(valueFactory.createValue(propertyValue)).thenReturn(new MockValue(propertyValue));
+        when(valueFactory.createValue(PROPERTY_VALUE)).thenReturn(propertyValue);
         session.setValueFactory(valueFactory);
+    }
 
-        NodeBuilder builder =
-                new NodeBuilder(node, getNode(firstSubName).then(
-                        addNode(secondSubName).then(addProperty(propertyName, propertyValue))));
+    @Test
+    public void testExecWithSeveralChildOps() throws Exception {
+        final NodeOperation addNodeOp = Ops.addNode(CHILD_NAME);
+        final NodeOperation addPropertyOp = Ops.addProperty(PROPERTY_NAME, PROPERTY_VALUE);
 
+        NodeBuilder builder = new NodeBuilder(rootNode, addNodeOp, addPropertyOp);
         builder.exec();
 
-        assertTrue(firstSub.hasNode(secondSubName));
-        Node subNode = firstSub.getNode(secondSubName);
-        Property prop = subNode.getProperty(propertyName);
-        assertEquals(propertyValue, prop.getString());
+        assertTrue("AddNode Operation failed!", rootNode.hasNode(CHILD_NAME));
+        assertEquals("AddProperty Operation failed!", propertyValue, rootNode.getProperty(PROPERTY_NAME).getValue());
+    }
 
+    /**
+     * This test is rather a sample how to properly use NodeBuilder-API than a simple unit-test.
+     */
+    @Test
+    public void testRealisticUsageScenario() throws RepositoryException {
+        final MockNode childNode = (MockNode) rootNode.addNode(CHILD_NAME);
+        final String childOfChildName = "childOfChild";
+
+        NodeBuilder builder =
+                new NodeBuilder(rootNode, getNode(CHILD_NAME).then(
+                        addNode(childOfChildName).then(addProperty(PROPERTY_NAME, PROPERTY_VALUE))));
+        builder.exec();
+
+        assertTrue(childNode.hasNode(childOfChildName));
+        assertEquals("AddProperty Operation failed!", propertyValue, childNode.getNode(childOfChildName).getProperty(PROPERTY_NAME).getValue());
     }
 }

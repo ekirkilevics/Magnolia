@@ -43,7 +43,6 @@ import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.MockValue;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFactory;
 
@@ -58,18 +57,7 @@ public class OpsTest {
     private static final String CHILD_NAME = "child";
     private static final String PROPERTY_NAME = "property1";
     private static final String PROPERTY_VALUE = "propertValue";
-    private final ErrorHandler eh = new ErrorHandler() {
-        @Override
-        public void handle(RepositoryException e, Node context) {
-            throw new RuntimeException(e.getMessage());
-        }
-
-        @Override
-        public void report(String message) {
-            throw new RuntimeException(message);
-        }
-    };
-
+    private final ErrorHandler eh = new RuntimeExceptionThrowingErrorHandler();
     private MockNode rootNode;
     private MockSession session;
 
