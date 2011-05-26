@@ -33,8 +33,8 @@
  */
 package info.magnolia.ui.admincentral.util;
 
+import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.MetaDataUtil;
 
 import javax.jcr.Node;
 
