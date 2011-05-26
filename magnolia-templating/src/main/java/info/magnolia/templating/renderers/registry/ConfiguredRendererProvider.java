@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2009-2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,27 +31,33 @@
  * intact.
  *
  */
-package info.magnolia.module.templating;
+package info.magnolia.templating.renderers.registry;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.templating.renderer.Renderer;
 
 /**
- * Deprecated.
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.module.TemplatingModule}
+ * RendererProvider that instantiates a dialog from a configuration node.
  */
-public class TemplatingModule implements ModuleLifecycle {
+public class ConfiguredRendererProvider implements RendererProvider {
 
-    @Override
-    public void start(ModuleLifecycleContext ctx) {
-//        ctx.registerModuleObservingComponent("templates", TemplateManager.getInstance());
-//        ctx.registerModuleObservingComponent("template-renderers", TemplateRendererManager.getInstance());
-//        ctx.registerModuleObservingComponent("paragraphs", ParagraphManager.getInstance());
-//        ctx.registerModuleObservingComponent("paragraph-renderers", ParagraphRendererManager.getInstance());
+    private Content configNode;
+
+    public ConfiguredRendererProvider(Content configNode) {
+        // session that opened provided content might not be alive by the time we need to use this
+        this.configNode = new LazyContentWrapper(configNode);
     }
 
     @Override
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-
+    public Renderer getRenderer() throws RendererRegistrationException {
+        // FIXME we should not constantly transform the object. the manager re-registers the providers upon changes
+        try {
+            return (Renderer) Content2BeanUtil.toBean(configNode, true, Renderer.class);
+        } catch (Content2BeanException e) {
+            throw new RendererRegistrationException(e);
+        }
     }
 }

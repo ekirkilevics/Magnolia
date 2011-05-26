@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2009-2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,27 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.module.templating;
+package info.magnolia.templating.renderers.registry;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.templating.renderer.Renderer;
+
 
 /**
- * Deprecated.
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.module.TemplatingModule}
+ * Provides a {@link Renderer}.
  */
-public class TemplatingModule implements ModuleLifecycle {
+public interface RendererProvider {
 
-    @Override
-    public void start(ModuleLifecycleContext ctx) {
-//        ctx.registerModuleObservingComponent("templates", TemplateManager.getInstance());
-//        ctx.registerModuleObservingComponent("template-renderers", TemplateRendererManager.getInstance());
-//        ctx.registerModuleObservingComponent("paragraphs", ParagraphManager.getInstance());
-//        ctx.registerModuleObservingComponent("paragraph-renderers", ParagraphRendererManager.getInstance());
-    }
-
-    @Override
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-
-    }
+    Renderer getRenderer() throws RendererRegistrationException;
 }

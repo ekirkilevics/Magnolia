@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2009-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,33 +25,37 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.templating;
+package info.magnolia.templating.module;
 
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.templating.renderers.registry.ConfiguredRendererManager;
+import info.magnolia.templating.template.registry.ConfiguredTemplateDefinitionManager;
+
 
 /**
- * Deprecated.
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.module.TemplatingModule}
+ * @author pbaerfuss
+ * @version $Id$
+ *
  */
 public class TemplatingModule implements ModuleLifecycle {
+    private ConfiguredTemplateDefinitionManager templateDefinitionManager;
+    private ConfiguredRendererManager rendererManager;
 
     @Override
-    public void start(ModuleLifecycleContext ctx) {
-//        ctx.registerModuleObservingComponent("templates", TemplateManager.getInstance());
-//        ctx.registerModuleObservingComponent("template-renderers", TemplateRendererManager.getInstance());
-//        ctx.registerModuleObservingComponent("paragraphs", ParagraphManager.getInstance());
-//        ctx.registerModuleObservingComponent("paragraph-renderers", ParagraphRendererManager.getInstance());
+    public void start(ModuleLifecycleContext moduleLifecycleContext) {
+        moduleLifecycleContext.registerModuleObservingComponent("templates", templateDefinitionManager);
+        moduleLifecycleContext.registerModuleObservingComponent("renderers", rendererManager);
     }
 
     @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-
     }
+
 }
