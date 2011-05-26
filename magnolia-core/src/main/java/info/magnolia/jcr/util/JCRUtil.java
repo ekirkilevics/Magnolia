@@ -132,6 +132,7 @@ public class JCRUtil {
         return false;
     }
 
+
     public static boolean isNodeType(Node node, String type) throws RepositoryException {
         if (node instanceof DelegateNodeWrapper) {
             node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
@@ -149,8 +150,9 @@ public class JCRUtil {
     }
 
     public static Node unwrap(Node node) {
-        while (node instanceof DelegateNodeWrapper) {
-            node = ((DelegateNodeWrapper) node).getWrappedNode();
+        Node unwrappedNode = node;
+        while (unwrappedNode instanceof DelegateNodeWrapper) {
+            unwrappedNode = ((DelegateNodeWrapper) unwrappedNode).getWrappedNode();
         }
         return node;
     }
