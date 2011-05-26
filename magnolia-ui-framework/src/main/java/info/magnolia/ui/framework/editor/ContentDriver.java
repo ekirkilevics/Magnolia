@@ -36,6 +36,7 @@ package info.magnolia.ui.framework.editor;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.PropertyUtil;
 
 import java.util.Calendar;
 
@@ -132,7 +133,7 @@ public class ContentDriver extends AbstractDriver<Node> {
             if (item instanceof Node) {
                 NodeUtil.renameNode(node, (String) value);
             } else if (item instanceof Property) {
-                NodeUtil.renameProperty((Property) item, (String) value);
+                PropertyUtil.renameProperty((Property) item, (String) value);
             }
         } else if (value instanceof String) {
             node.getProperty(path).setValue((String) value);
