@@ -75,7 +75,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         setLabelText("Area");
 
-        if (type.equals("collection")) {
+        if (type.equals(VPageEditor.AREA_TYPE_LIST)) {
             Button button = new Button("Edit&nbsp;area");
             button.addClickHandler(new ClickHandler() {
                 @Override
@@ -91,9 +91,9 @@ public class AreaBarWidget extends AbstractBarWidget {
             addButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    if (type.equals("collection")) {
+                    if (type.equals(VPageEditor.AREA_TYPE_LIST)) {
                         pageEditor.addParagraph(workspace, path, name, null, paragraphs);
-                    } else if (type.equals("slot")) {
+                    } else if (type.equals(VPageEditor.AREA_TYPE_SINGLE)) {
                         pageEditor.addParagraph(workspace, path, null, name, paragraphs);
                     }
                 }
@@ -105,18 +105,18 @@ public class AreaBarWidget extends AbstractBarWidget {
     @Override
     protected void onSelect() {
         super.onSelect();
-        if (type.equals("collection")) {
-            pageEditor.updateSelection(this, "area", workspace, path, name, null, paragraphs, dialog);
-        } else if (type.equals("slot")) {
+        if (type.equals(VPageEditor.AREA_TYPE_LIST)) {
+            pageEditor.updateSelection(this, VPageEditor.SELECTION_AREA, workspace, path, name, null, paragraphs, dialog);
+        } else if (type.equals(VPageEditor.AREA_TYPE_SINGLE)) {
             if (showAddButton) {
-                pageEditor.updateSelection(this, "slot", workspace, path, null, name, paragraphs, dialog);
+                pageEditor.updateSelection(this, VPageEditor.SELECTION_SINGLE, workspace, path, null, name, paragraphs, dialog);
             } else {
-                pageEditor.updateSelection(this, "paragraph_in_slot", workspace, path, null, null, paragraphs, dialog);
+                pageEditor.updateSelection(this, VPageEditor.SELECTION_PARAGRAPH_IN_SINGLE, workspace, path, null, null, paragraphs, dialog);
             }
         }
     }
 
-    public void mutateIntoSlotBar(Element element) {
+    public void mutateIntoSingleBar(Element element) {
 
         String content = element.getAttribute("content");
         int i = content.indexOf(':');

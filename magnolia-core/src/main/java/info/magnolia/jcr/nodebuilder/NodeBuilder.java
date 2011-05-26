@@ -31,36 +31,46 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.jcr.nodebuilder;
 
 import info.magnolia.nodebuilder.NodeOperationException;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 /**
- * ErrorHandler implementations can decide what to do with certain conditions.
- * Specifically, they'll usually log or throw exceptions. They can only throw
- * NodeOperationException (or other RuntimeExceptions, obviously), which
- * the client code is expected to handle.
+ * Entry point for using the node builder API.
+ * Also see the {@link info.magnolia.nodebuilder.task.NodeBuilderTask} and {@link info.magnolia.nodebuilder.task.ModuleNodeBuilderTask}
+ * classes for usage of the node builder API in {@link info.magnolia.module.ModuleVersionHandler}s.
  *
  * @version $Id$
  */
-public interface ErrorHandler {
+public class NodeBuilder {
+    private final ErrorHandler errorHandler;
+    private final Node root;
+    private final NodeOperation[] childrenOps;
+
+    public NodeBuilder(Node root, NodeOperation... childrenOps) {
+        this(new StrictErrorHandler(), root, childrenOps);
+    }
+
+    public NodeBuilder(ErrorHandler errorHandler, Node root, NodeOperation... childrenOps) {
+        this.errorHandler = errorHandler;
+        this.root = root;
+        this.childrenOps = childrenOps;
+    }
 
     /**
-     * The operation calling this method is expected to pass a fully formed message;
-     * it should ideally contain some context information about the operation that
-     * caused an issue. The ErrorHandler implementation will decide what to do
-     * with it. (log, throw a NodeOperationException, ...)
+     * Execute the operations.
+     *
+     * @throws NodeOperationException if the given ErrorHandler decided to do so !
      */
-    void report(String message) throws NodeOperationException, RepositoryException;
+    public void exec() throws NodeOperationException {
+        for (NodeOperation childrenOp : childrenOps) {
+            childrenOp.exec(root, errorHandler);
+        }
+    }
 
-    /**
-     * The operation calling this method isn't expected to do anything here;
-     * the ErrorHandler implementation will attempt to build a fully formed message,
-     * then decide what to do with it. (log, throw a NodeOperationException, ...)
-     */
-    void handle(RepositoryException e, Node context) throws NodeOperationException, RepositoryException;
+    // TODO some context passed around, configuration at beginning
+    // (what to do with exceptions, what to do with warnings
 
 }

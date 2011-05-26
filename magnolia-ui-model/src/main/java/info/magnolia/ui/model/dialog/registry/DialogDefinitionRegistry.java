@@ -33,48 +33,26 @@
  */
 package info.magnolia.ui.model.dialog.registry;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
 /**
  * Maintains a registry of dialog providers registered by name.
+ *
+ * @version $Id$
  */
-public class DialogRegistry {
+public interface DialogDefinitionRegistry {
 
-    private final Map<String, DialogProvider> providers = new HashMap<String, DialogProvider>();
+    void registerDialog(String dialogName, DialogProvider provider);
 
-    public void registerDialog(String dialogName, DialogProvider provider) {
-        synchronized (providers) {
-            if (providers.containsKey(dialogName)) {
-                throw new IllegalStateException("Dialog already registered for name [" + dialogName + "]");
-            }
-            providers.put(dialogName, provider);
-        }
-    }
-
-    public void unregisterDialog(String dialogName) {
-        synchronized (providers) {
-            providers.remove(dialogName);
-        }
-    }
+    void unregisterDialog(String dialogName);
 
     /**
      * Gets dialog definition for dialog of provided name or null when such dialog is not registered.
+     *
      * @param dialogName name of the dialog to retrieve. Case sensitive. Null is not allowed.
      * @return dialog definition or null when dialog of requested name doesn't exist.
      */
-    public DialogDefinition getDialog(String dialogName) throws RepositoryException {
-
-        DialogProvider dialogProvider;
-        synchronized (providers) {
-            dialogProvider = providers.get(dialogName);
-        }
-        if (dialogProvider == null) {
-            return null;
-        }
-        return dialogProvider.getDialogDefinition();
-    }
+    DialogDefinition getDialogDefinition(String dialogName) throws RepositoryException;
 }

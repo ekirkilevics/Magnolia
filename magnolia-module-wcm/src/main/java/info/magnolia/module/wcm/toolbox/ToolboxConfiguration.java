@@ -45,9 +45,9 @@ public class ToolboxConfiguration {
 
     private List<MenuItemDefinition> page = new ArrayList<MenuItemDefinition>();
     private List<MenuItemDefinition> area = new ArrayList<MenuItemDefinition>();
-    private List<MenuItemDefinition> slot = new ArrayList<MenuItemDefinition>();
+    private List<MenuItemDefinition> single = new ArrayList<MenuItemDefinition>();
     private List<MenuItemDefinition> paragraph = new ArrayList<MenuItemDefinition>();
-    private List<MenuItemDefinition> paragraphInSlot = new ArrayList<MenuItemDefinition>();
+    private List<MenuItemDefinition> paragraphInSingle = new ArrayList<MenuItemDefinition>();
 
     public List<MenuItemDefinition> getPage() {
         return page;
@@ -73,20 +73,20 @@ public class ToolboxConfiguration {
         this.area = area;
     }
 
-    public List<MenuItemDefinition> getParagraphInSlot() {
-        return paragraphInSlot;
+    public List<MenuItemDefinition> getParagraphInSingle() {
+        return paragraphInSingle;
     }
 
-    public List<MenuItemDefinition> getSlot() {
-        return slot;
+    public List<MenuItemDefinition> getSingle() {
+        return single;
     }
 
-    public void setSlot(List<MenuItemDefinition> slot) {
-        this.slot = slot;
+    public void setSingle(List<MenuItemDefinition> single) {
+        this.single = single;
     }
 
-    public void setParagraphInSlot(List<MenuItemDefinition> paragraphInSlot) {
-        this.paragraphInSlot = paragraphInSlot;
+    public void setParagraphInSingle(List<MenuItemDefinition> paragraphInSingle) {
+        this.paragraphInSingle = paragraphInSingle;
     }
 
     public boolean addPage(MenuItemDefinition menuItemDefinition) {
@@ -101,11 +101,11 @@ public class ToolboxConfiguration {
         return area.add(menuItemDefinition);
     }
 
-    public boolean addParagraphInSlot(MenuItemDefinition menuItemDefinition) {
-        return paragraphInSlot.add(menuItemDefinition);
+    public boolean addParagraphInSingle(MenuItemDefinition menuItemDefinition) {
+        return paragraphInSingle.add(menuItemDefinition);
     }
 
-    public boolean addSlot(MenuItemDefinition menuItemDefinition) {
-        return slot.add(menuItemDefinition);
+    public boolean addSingle(MenuItemDefinition menuItemDefinition) {
+        return single.add(menuItemDefinition);
     }
 }

@@ -81,7 +81,7 @@ public class EditBarWidget extends AbstractBarWidget {
     @Override
     protected void onSelect() {
         super.onSelect();
-        pageEditor.updateSelection(this, "paragraph", workspace, path, null, null, getParagraphsInsertableAtThisLocation(), dialog);
+        pageEditor.updateSelection(this, VPageEditor.SELECTION_PARAGRAPH, workspace, path, null, null, getParagraphsInsertableAtThisLocation(), dialog);
     }
 
     private String getParagraphsInsertableAtThisLocation() {

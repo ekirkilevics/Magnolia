@@ -80,7 +80,7 @@ public class ActionListViewImpl implements ActionListView {
     }
 
     protected void clear() {
-        table.removeAllItems();
+        // table.removeAllItems();
     }
 
     protected void addAction(MenuItemDefinition menuItem) {

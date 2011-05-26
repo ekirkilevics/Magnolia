@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,18 +31,36 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.dialog.registry;
+package info.magnolia.jcr.nodebuilder;
+
+import static org.junit.Assert.assertTrue;
+import info.magnolia.test.mock.jcr.MockNode;
 
 import javax.jcr.RepositoryException;
 
-import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import org.junit.Test;
 
 /**
- * Provides a dialog definition.
- *
  * @version $Id$
  */
-public interface DialogProvider {
+public class AbstractNodeOperationTest {
 
-    DialogDefinition getDialogDefinition() throws RepositoryException;
+    @Test
+    public void testThen() throws RepositoryException {
+        final String rootNodeName = "root";
+        final String subName = "firstSub";
+        final String subSubName = "secondSub";
+
+        final MockNode rootNode = new MockNode(rootNodeName);
+
+        final NodeOperation addNodeOp = Ops.addNode(subName);
+        final NodeOperation addAnotherNode = Ops.addNode(subSubName);
+
+        addNodeOp.then(addAnotherNode);
+
+        addNodeOp.exec(rootNode, new RuntimeExceptionThrowingErrorHandler());
+
+        assertTrue(rootNode.hasNode(subName));
+        assertTrue(rootNode.getNode(subName).hasNode(subSubName));
+    }
 }

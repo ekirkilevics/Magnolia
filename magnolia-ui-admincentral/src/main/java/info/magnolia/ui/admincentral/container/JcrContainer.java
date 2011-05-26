@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.container;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.admincentral.column.Editable;
 import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
@@ -50,7 +51,6 @@ import java.util.Set;
 
 import javax.jcr.LoginException;
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.query.InvalidQueryException;
@@ -70,9 +70,10 @@ import com.vaadin.ui.Component;
 
 
 /**
- * Vaadin container that reads its items from a JCR repository. Implements a simple mechanism for lazy loading items from a JCR repository and a cache for items and item ids.
- * Inspired by http://vaadin.com/directory#addon/vaadin-sqlcontainer.
- *
+ * Vaadin container that reads its items from a JCR repository. Implements a simple mechanism for
+ * lazy loading items from a JCR repository and a cache for items and item ids. Inspired by
+ * http://vaadin.com/directory#addon/vaadin-sqlcontainer.
+ * 
  * @author tmattsson
  */
 public abstract class JcrContainer extends AbstractContainer implements Container.Sortable, Container.Indexed, Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier {
@@ -87,20 +88,22 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     private int size = Integer.MIN_VALUE;
 
-    /** Page length = number of items contained in one page. Defaults to 100.*/
+    /** Page length = number of items contained in one page. Defaults to 100. */
     private int pageLength = DEFAULT_PAGE_LENGTH;
+
     public static final int DEFAULT_PAGE_LENGTH = 100;
 
-    /** Number of items to cache = cacheRatio x pageLength. Default cache ratio value is 2.*/
+    /** Number of items to cache = cacheRatio x pageLength. Default cache ratio value is 2. */
     private int cacheRatio = DEFAULT_CACHE_RATIO;
+
     public static final int DEFAULT_CACHE_RATIO = 2;
 
     /** Item and index caches. */
     private final Map<Long, ContainerItemId> itemIndexes = new HashMap<Long, ContainerItemId>();
+
     private final LinkedHashMap<ContainerItemId, ContainerItem> cachedItems = new LinkedHashMap<ContainerItemId, ContainerItem>();
 
     private Map<String, String> sortableProperties = new HashMap<String,String>();
-
 
     /** Filters (WHERE) and sorters (ORDER BY). */
     //private final List<Filter> filters = new ArrayList<Filter>();
@@ -120,6 +123,11 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     private static final String SELECT_CONTENT = "select * from [mgnl:content] as content ";
 
     private static final String JOIN_METADATA_ORDER_BY = "inner join [mgnl:metaData] as metaData on ischildnode(metaData,content) order by ";
+
+    private static final String NAME_PROPERTY = "name";
+
+    private static final String JCR_NAME_FUNCTION = "name("+CONTENT_SELECTOR_NAME+")";
+
 
     public JcrContainer(JcrContainerSource jcrContainerSource, WorkbenchDefinition workbenchDefinition) {
         this.jcrContainerSource = jcrContainerSource;
@@ -143,11 +151,11 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     }
 
     /**
-     * Updates the container with the items pointed to by the {@link NodeIterator} passed as argument.
+     * Updates the container with the items pointed to by the {@link RowIterator} passed as argument.
      * @param iterator
      * @throws RepositoryException
      */
-    public abstract void update(NodeIterator iterator) throws RepositoryException;
+    public abstract void update(RowIterator iterator) throws RepositoryException;
 
     @Override
     public void addListener(ItemSetChangeListener listener) {
@@ -401,7 +409,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
                 sorters.add(orderBy);
             }
         }
-        refresh();
+        getPage();
     }
 
     public List<String> getSortableContainerPropertyIds() {
@@ -430,7 +438,9 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     public void setColumnValue(String propertyId, Object itemId, Object newValue) {
         try {
             jcrContainerSource.setColumnComponent(propertyId, getJcrItem(((ContainerItemId) itemId)), (Component) newValue);
-            firePropertySetChange();
+            if (!(newValue instanceof Editable)) {
+                firePropertySetChange();
+            }
         }
         catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
@@ -489,12 +499,10 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     }
 
     /**
-     * Determines a new offset for updating the row cache. The offset is
-     * calculated from the given index, and will be fixed to match the start of
-     * a page, based on the value of pageLength.
-     *
-     * @param index
-     *            Index of the item that was requested, but not found in cache
+     * Determines a new offset for updating the row cache. The offset is calculated from the given
+     * index, and will be fixed to match the start of a page, based on the value of pageLength.
+     * 
+     * @param index Index of the item that was requested, but not found in cache
      */
     private void updateOffsetAndCache(int index) {
         if (itemIndexes.containsKey(Long.valueOf(index))) {
@@ -506,7 +514,6 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         }
         getPage();
     }
-
 
     /**
      * Triggers a refresh if the current row count has changed.
@@ -532,8 +539,16 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         try {
             final StringBuilder stmt = new StringBuilder(SELECT_CONTENT);
             if(!sorters.isEmpty()) {
+                //TODO one workaround to make this faster would be avoiding doing a join when we know for sure there are no properties from metadata to order by.
                 stmt.append(JOIN_METADATA_ORDER_BY);
                 for(OrderBy orderBy: sorters){
+                    if(NAME_PROPERTY.equals(orderBy.getProperty())){
+                        //need to use name(..) function here as name or jcr:name is not supported by JCR2.
+                        stmt.append(JCR_NAME_FUNCTION)
+                        .append(orderBy.isAscending() ? " asc":" desc")
+                        .append(", ");
+                        continue;
+                    }
                     stmt.append(CONTENT_SELECTOR_NAME+".["+orderBy.getProperty()+"]")
                     .append(orderBy.isAscending() ? " asc":" desc")
                     .append(", ");

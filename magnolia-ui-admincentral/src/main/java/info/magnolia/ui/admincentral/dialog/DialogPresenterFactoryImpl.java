@@ -40,7 +40,7 @@ import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
-import info.magnolia.ui.model.dialog.registry.DialogRegistry;
+import info.magnolia.ui.model.dialog.registry.DialogDefinitionRegistry;
 
 /**
  * Implementation of {@link DialogPresenterFactory}.
@@ -50,11 +50,11 @@ import info.magnolia.ui.model.dialog.registry.DialogRegistry;
 public class DialogPresenterFactoryImpl implements DialogPresenterFactory {
 
     private ComponentProvider componentProvider;
-    private DialogRegistry dialogRegistry;
+    private DialogDefinitionRegistry dialogDefinitionRegistry;
 
-    public DialogPresenterFactoryImpl(ComponentProvider componentProvider, DialogRegistry dialogRegistry) {
+    public DialogPresenterFactoryImpl(ComponentProvider componentProvider, DialogDefinitionRegistry dialogDefinitionRegistry) {
         this.componentProvider = componentProvider;
-        this.dialogRegistry = dialogRegistry;
+        this.dialogDefinitionRegistry = dialogDefinitionRegistry;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class DialogPresenterFactoryImpl implements DialogPresenterFactory {
 
         DialogDefinition dialogDefinition;
         try {
-            dialogDefinition = dialogRegistry.getDialog(dialogName);
+            dialogDefinition = dialogDefinitionRegistry.getDialogDefinition(dialogName);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }

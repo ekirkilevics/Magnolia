@@ -1126,7 +1126,7 @@
       </sv:node>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="slot">
+  <sv:node sv:name="single">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
@@ -1237,7 +1237,7 @@
       </sv:node>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="paragraphInSlot">
+  <sv:node sv:name="paragraphInSingle">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>

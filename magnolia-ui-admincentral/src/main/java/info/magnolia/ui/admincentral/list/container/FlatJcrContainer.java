@@ -40,8 +40,8 @@ import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.container.JcrContainerSource;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
-import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
+import javax.jcr.query.RowIterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +70,7 @@ public class FlatJcrContainer extends JcrContainer {
 //    }
 
     @Override
-    public void update(NodeIterator iterator) throws RepositoryException {
+    public void update(RowIterator iterator) throws RepositoryException {
         log.debug("updating container...");
         getItemIndexes().clear();
         getCachedItems().clear();
@@ -78,7 +78,7 @@ public class FlatJcrContainer extends JcrContainer {
         long rowCount = 0;
         while(iterator.hasNext()){
 
-            final ContainerItemId id = createContainerId(iterator.nextNode());
+            final ContainerItemId id = createContainerId(iterator.nextRow().getNode());
             /* Cache item */
             getItemIndexes().put(rowCount++, id);
             getCachedItems().put(id, new ContainerItem(id, this));

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,18 +31,25 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.dialog.registry;
+package info.magnolia.jcr.nodebuilder;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.ui.model.dialog.definition.DialogDefinition;
-
 /**
- * Provides a dialog definition.
+ * Dummy implementation handling and reporting Errors by simply throwing a RuntimeException.
  *
  * @version $Id$
  */
-public interface DialogProvider {
+public class RuntimeExceptionThrowingErrorHandler implements ErrorHandler {
 
-    DialogDefinition getDialogDefinition() throws RepositoryException;
+    @Override
+    public void handle(RepositoryException e, Node context) {
+        throw new RuntimeException(e.getMessage());
+    }
+
+    @Override
+    public void report(String message) {
+        throw new RuntimeException(message);
+    }
 }

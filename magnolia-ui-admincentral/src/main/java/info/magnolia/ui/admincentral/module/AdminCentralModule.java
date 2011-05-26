@@ -84,7 +84,7 @@ public class AdminCentralModule implements ModuleLifecycle {
                 log.error("Failed to convert dialog structure.", e);
             }
         }
-        // DialogRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
+        // DialogDefinitionRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
     }
 
     @Override

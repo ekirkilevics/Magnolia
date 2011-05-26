@@ -47,16 +47,18 @@ import info.magnolia.cms.core.ItemType;
 
 /**
  * ObservedManager for dialogs configured in repository.
+ *
+ * @version $Id$
  */
 public class ConfiguredDialogManager extends ObservedManager {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Set<String> registeredDialogs = new HashSet<String>();
-    private DialogRegistry dialogRegistry;
+    private DialogDefinitionRegistry dialogDefinitionRegistry;
 
-    public ConfiguredDialogManager(DialogRegistry dialogRegistry) {
-        this.dialogRegistry = dialogRegistry;
+    public ConfiguredDialogManager(DialogDefinitionRegistry dialogDefinitionRegistry) {
+        this.dialogDefinitionRegistry = dialogDefinitionRegistry;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class ConfiguredDialogManager extends ObservedManager {
             synchronized (registeredDialogs) {
                 try {
                     ConfiguredDialogProvider dialogProvider = new ConfiguredDialogProvider(dialogNode);
-                    dialogRegistry.registerDialog(name, dialogProvider);
+                    dialogDefinitionRegistry.registerDialog(name, dialogProvider);
                     this.registeredDialogs.add(name);
                 } catch (IllegalStateException e) {
                     log.error("Unable to register dialog [" + name + "]", e);
@@ -87,7 +89,7 @@ public class ConfiguredDialogManager extends ObservedManager {
     protected void onClear() {
         synchronized (registeredDialogs) {
             for (String dialogName : registeredDialogs) {
-                dialogRegistry.unregisterDialog(dialogName);
+                dialogDefinitionRegistry.unregisterDialog(dialogName);
             }
             this.registeredDialogs.clear();
         }
