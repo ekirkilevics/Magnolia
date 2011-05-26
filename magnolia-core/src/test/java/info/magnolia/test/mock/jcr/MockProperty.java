@@ -60,6 +60,7 @@ import javax.jcr.version.VersionException;
 public class MockProperty extends MockItem implements Property {
 
     private MockValue value;
+    private MockNode node = null;
 
     public MockProperty(String name, Object objectValue) {
         this(name, new MockValue(objectValue));
@@ -70,9 +71,10 @@ public class MockProperty extends MockItem implements Property {
         this.value = value;
     }
 
-    public MockProperty(String name, MockValue value, MockSession session) {
-        super(name, session);
+    public MockProperty(String name, MockValue value, MockNode node) {
+        super(name, (MockSession) node.getSession());
         this.value = value;
+        this.node = node;
     }
 
     @Override
@@ -131,9 +133,8 @@ public class MockProperty extends MockItem implements Property {
     }
 
     @Override
-    public Node getNode() throws ItemNotFoundException, ValueFormatException, RepositoryException {
-        // References not implemented
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public Node getNode() {
+       return node;
     }
 
     @Override
@@ -251,5 +252,11 @@ public class MockProperty extends MockItem implements Property {
     @Override
     public String toString() {
         return "MockProperty [value=" + value + super.toString() + "]";
+    }
+
+    @Override
+    public void remove() {
+        ((MockNode) getNode()).removeProperty(getName());
+        node = null;
     }
 }

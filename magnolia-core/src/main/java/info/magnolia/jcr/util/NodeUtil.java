@@ -62,8 +62,6 @@ import org.slf4j.LoggerFactory;
  * Various utility methods to collect data from JCR repository.
  *
  * @version $Id$
- *
- * TODO dlipp: move Property-related stuff to proper util-impl called PropertyUtil.
  */
 public class NodeUtil {
 
@@ -313,12 +311,6 @@ public class NodeUtil {
         Node parent = node.getParent();
         String newPath = combinePathAndName(parent.getPath(), newName);
         node.getSession().move(node.getPath(), newPath);
-    }
-
-    public static void renameProperty(Property property, String newName) throws RepositoryException {
-        Node node = property.getNode();
-        node.setProperty(newName, property.getValue());
-        property.remove();
     }
 
     /**
