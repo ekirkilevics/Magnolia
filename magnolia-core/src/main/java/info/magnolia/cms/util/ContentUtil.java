@@ -629,7 +629,7 @@ public class ContentUtil {
         final Session session = content.getSession();
         final HierarchyManager hm = MgnlContext.getHierarchyManager(session.getWorkspace().getName());
         if(!hm.getWorkspace().getSession().equals(session)){
-            throw new IllegalStateException("Can't create a Content object which lives in the same session as the passed node. This could lead to confusing issues.");
+            throw new IllegalStateException("Won't create a Content object, because the session of the passed node and the one used by the hierarchy manager are NOT the same. This could lead to various issues.");
         }
         return hm.getContent(content.getPath());
     }
