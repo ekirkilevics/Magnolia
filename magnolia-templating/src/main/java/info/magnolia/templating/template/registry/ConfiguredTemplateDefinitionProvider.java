@@ -31,42 +31,32 @@
  * intact.
  *
  */
-package info.magnolia.templating.definition;
+package info.magnolia.templating.template.registry;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.templating.template.definition.TemplateDefinition;
 
 /**
- * Keeps configuration for a paragraph - name and roles it is available for.
- *
- * @version $Id$
- *
- * TODO dlipp: implementation copied from info.magnolia.module.templatingkit.templates.ParagraphConfig as
- * templating-components has no dependency to templating. Check whether the impl in Templating should get
- * deprecated and references replaced by this impl.
+ * TemplateDefinitionProvider that instantiates a dialog from a configuration node.
  */
-public class ParagraphAvailabilityImpl implements ParagraphAvailability {
+public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionProvider {
 
-    private Collection<String> roles = new ArrayList<String>();
+    private Content configNode;
 
-    private String name;
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public ConfiguredTemplateDefinitionProvider(Content configNode) {
+        // session that opened provided content might not be alive by the time we need to use this
+        this.configNode = new LazyContentWrapper(configNode);
     }
 
     @Override
-    public Collection<String> getRoles() {
-        return this.roles;
+    public TemplateDefinition getTemplateDefinition() throws TemplateDefinitionRegistrationException {
+        try {
+            return (TemplateDefinition) Content2BeanUtil.toBean(configNode, true, TemplateDefinition.class);
+        } catch (Content2BeanException e) {
+            throw new TemplateDefinitionRegistrationException(e);
+        }
     }
-
-    public void setRoles(Collection<String> roles) {
-        this.roles = roles;
-    }
-
 }

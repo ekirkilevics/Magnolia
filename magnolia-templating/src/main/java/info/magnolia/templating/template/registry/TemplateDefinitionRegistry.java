@@ -31,42 +31,46 @@
  * intact.
  *
  */
-package info.magnolia.templating.definition;
+package info.magnolia.templating.template.registry;
 
-import java.util.LinkedHashMap;
+import info.magnolia.templating.template.definition.TemplateDefinition;
+
+import java.util.HashMap;
 import java.util.Map;
 
+
 /**
- * Represents an area definition.
- *
  * @version $Id$
  */
-public class AreaDefinitionImpl extends TemplateDefinitionImpl implements AreaDefinition {
+public class TemplateDefinitionRegistry {
+    private final Map<String, TemplateDefinitionProvider> providers = new HashMap<String, TemplateDefinitionProvider>();
 
-    private Map<String, ParagraphAvailabilityImpl> availableParagraphs = new LinkedHashMap<String, ParagraphAvailabilityImpl>();
-
-    // TODO can't this be a primitive boolean instead default set to true? //Tobias
-    private Boolean enabled;
-
-    @Override
-    public Map<String, ParagraphAvailabilityImpl> getAvailableParagraphs() {
-        return availableParagraphs;
+    public void registerTemplateDefinition(String id, TemplateDefinitionProvider provider) {
+        synchronized (providers) {
+            if (providers.containsKey(id)) {
+                throw new IllegalStateException("Template definition already registered for the id [" + id + "]");
+            }
+            providers.put(id, provider);
+        }
     }
 
-    public void setAvailableParagraphs(Map<String, ParagraphAvailabilityImpl> availableParagraphs) {
-        this.availableParagraphs = availableParagraphs;
+    public void unregister(String id) {
+        synchronized (providers) {
+            providers.remove(id);
+        }
     }
 
-    public void addAvailableParagraph(String name, ParagraphAvailabilityImpl paragraphAvailabilityImpl) {
-        this.availableParagraphs.put(name, paragraphAvailabilityImpl);
+    public TemplateDefinition getTemplateDifinition(String id) throws TemplateDefinitionRegistrationException {
+
+        TemplateDefinitionProvider templateDefinitionProvider;
+        synchronized (providers) {
+            templateDefinitionProvider = providers.get(id);
+        }
+        if (templateDefinitionProvider == null) {
+            return null;
+        }
+        return templateDefinitionProvider.getTemplateDefinition();
     }
 
-    @Override
-    public Boolean getEnabled() {
-        return this.enabled;
-    }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
 }

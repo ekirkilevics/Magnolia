@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.definition;
+package info.magnolia.templating.template.definition;
 
 import java.util.Map;
 

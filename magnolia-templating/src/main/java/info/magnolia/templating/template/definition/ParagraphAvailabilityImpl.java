@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,20 +25,48 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.templating.registry;
+package info.magnolia.templating.template.definition;
 
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
- * @author pbaerfuss
+ * Keeps configuration for a paragraph - name and roles it is available for.
+ *
  * @version $Id$
  *
+ * TODO dlipp: implementation copied from info.magnolia.module.templatingkit.templates.ParagraphConfig as
+ * templating-components has no dependency to templating. Check whether the impl in Templating should get
+ * deprecated and references replaced by this impl.
  */
-public class TemplateDefinitionRegistry {
+public class ParagraphAvailabilityImpl implements ParagraphAvailability {
+
+    private Collection<String> roles = new ArrayList<String>();
+
+    private String name;
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Collection<String> getRoles() {
+        return this.roles;
+    }
+
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
+    }
 
 }

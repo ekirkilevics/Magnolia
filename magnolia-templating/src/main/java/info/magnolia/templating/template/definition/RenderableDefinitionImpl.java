@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.definition;
+package info.magnolia.templating.template.definition;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

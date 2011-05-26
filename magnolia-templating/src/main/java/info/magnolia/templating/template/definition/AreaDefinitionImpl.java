@@ -31,44 +31,42 @@
  * intact.
  *
  */
-package info.magnolia.templating.definition;
+package info.magnolia.templating.template.definition;
 
-import info.magnolia.templating.model.RenderingModel;
-
-import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.jcr.Node;
-
-
 /**
- * @author pbaerfuss
- * @version $Id$
+ * Represents an area definition.
  *
+ * @version $Id$
  */
-public interface RenderableDefinition {
+public class AreaDefinitionImpl extends TemplateDefinitionImpl implements AreaDefinition {
 
-    public String getName();
+    private Map<String, ParagraphAvailabilityImpl> availableParagraphs = new LinkedHashMap<String, ParagraphAvailabilityImpl>();
 
-    public String getRenderType();
+    // TODO can't this be a primitive boolean instead default set to true? //Tobias
+    private Boolean enabled;
 
-    public String getTitle();
+    @Override
+    public Map<String, ParagraphAvailabilityImpl> getAvailableParagraphs() {
+        return availableParagraphs;
+    }
 
-    public String getDescription();
+    public void setAvailableParagraphs(Map<String, ParagraphAvailabilityImpl> availableParagraphs) {
+        this.availableParagraphs = availableParagraphs;
+    }
 
-    public String getI18nBasename();
+    public void addAvailableParagraph(String name, ParagraphAvailabilityImpl paragraphAvailabilityImpl) {
+        this.availableParagraphs.put(name, paragraphAvailabilityImpl);
+    }
 
-    public String getTemplateScript();
+    @Override
+    public Boolean getEnabled() {
+        return this.enabled;
+    }
 
-    /**
-     * An arbitrary list of parameters. Used to omit subclass with getters and setters for each
-     * extra parameter.
-     */
-    public Map<String, Object> getParameters();
-
-    /**
-     * Create the model based on the current content.
-     */
-    public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
-
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 }
