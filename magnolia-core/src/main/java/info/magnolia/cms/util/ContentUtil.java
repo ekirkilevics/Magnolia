@@ -54,6 +54,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -621,5 +622,15 @@ public class ContentUtil {
             IOUtils.closeQuietly(inStream);
             FileUtils.deleteQuietly(file);
         }
+    }
+
+    public static Content asContent(Node content) throws RepositoryException {
+        // FIXME try to do better and make sure we use the same session and permissions
+        final Session session = content.getSession();
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(session.getWorkspace().getName());
+        if(!hm.getWorkspace().getSession().equals(session)){
+            throw new IllegalStateException("Can't create a Content object which uses the same session");
+        }
+        return hm.getContent(content.getPath());
     }
 }
