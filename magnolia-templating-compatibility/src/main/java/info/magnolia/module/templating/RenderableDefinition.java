@@ -43,7 +43,7 @@ import info.magnolia.cms.core.Content;
  * @version $Id$
  * @deprecated since 5.0, replaced by {@link info.magnolia.module.templating.definition.RenderableDefinition}
  */
-public interface RenderableDefinition extends info.magnolia.templating.definition.RenderableDefinition{
+public interface RenderableDefinition extends info.magnolia.templating.template.definition.RenderableDefinition{
 
     /**
      * @deprecated since 5.0 - use {@link #getRenderType()} instead
@@ -64,7 +64,7 @@ public interface RenderableDefinition extends info.magnolia.templating.definitio
 
 
     /**
-     * @deprecated since 5.0 - use {@link info.magnolia.templating.definition.RenderableDefinition#newModel(javax.jcr.Node, info.magnolia.templating.definition.RenderableDefinition, info.magnolia.templating.model.RenderingModel)} instead
+     * @deprecated since 5.0 - use {@link info.magnolia.templating.template.definition.RenderableDefinition#newModel(javax.jcr.Node, info.magnolia.templating.template.definition.RenderableDefinition, info.magnolia.templating.model.RenderingModel)} instead
      */
     public RenderingModel<?> newModel(Content wrappedContent, RenderableDefinition definition, RenderingModel<?> parentModel)  throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
 }
