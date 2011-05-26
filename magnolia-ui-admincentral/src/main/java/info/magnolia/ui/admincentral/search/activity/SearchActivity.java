@@ -111,7 +111,8 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
 
             final String queryText = place.getSearchParameters().getQuery();
             //TODO like support for node names, i.e. name(content) LIKE 'foo', will be supported from 2.2.7 https://issues.apache.org/jira/browse/JCR-2956
-            //TODO attempting a join with metadata to search and then applying multiple or constraints will issue a javax.jcr.UnsupportedRepositoryOperationException: Unable to split a constraint that references both sides of a join. Will eb fixed in 2.2.7 https://issues.apache.org/jira/browse/JCR-2852
+            //TODO attempting a join with metadata and then applying multiple or constraints will issue a javax.jcr.UnsupportedRepositoryOperationException: Unable to split a constraint that references both sides of a join.
+            //Will be fixed in 2.2.7 https://issues.apache.org/jira/browse/JCR-2852
             final String stmt = "select * from [mgnl:content] as content where contains(content.title,'*"+queryText+"*')  or name(content) = '"+queryText+"'";
 
             final Query query = jcrQueryManager.createQuery(stmt , Query.JCR_SQL2);
