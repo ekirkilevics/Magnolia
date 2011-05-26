@@ -609,10 +609,11 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     protected int getRowCount() {
         //FIXME cache the size cause at present the query to count rows is extremely slow () with "large" (20000+ nodes) data sets and it's called frequently by Vaadin.
-        //On the other hand caching this value prevents flat container changes (add/remove nodes) to be reflected immediately. See
+        //On the other hand caching this value prevents flat container changes (add/remove nodes) to be reflected immediately. See http://jira.magnolia-cms.com/browse/SCRUM-151
         if(size >= 0){
             return size;
         }
+
         QueryResult result = executeQuery(SELECT_CONTENT, Query.JCR_SQL2, 0, 0);
         try {
             return Long.valueOf(result.getRows().getSize()).intValue();
