@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2008-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,28 +31,27 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.engine;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.module.templating.RenderException;
-
-import java.io.Writer;
+package info.magnolia.templating.rendering;
 
 /**
- * This is the central entry point to render any content.
- * @version $Id$
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.rendering.engine.RenderingEngine}
+ * A generic exception used by subclasses of AbstractRenderer.
  *
+ * @author pbracher
+ * @version $Id$
  */
-public interface RenderingEngine {
+public class RenderException extends Exception {
+    public RenderException() {
+    }
 
-    /**
-     * Determines the {@link RenderableDefinition definition} to use from the passed content.
-     */
-    public void render(Content content, Writer out) throws RenderException;
+    public RenderException(String message) {
+        super(message);
+    }
 
-    /**
-     * Render the content by using the passed {@link RenderableDefinition definition}.
-     */
-    public void render(Content content, String definitionName, Writer out) throws RenderException;
+    public RenderException(Throwable cause) {
+        super(cause);
+    }
+
+    public RenderException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
