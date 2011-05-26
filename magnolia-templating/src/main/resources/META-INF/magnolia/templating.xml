@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>templating</name>
+  <displayName>Magnolia Templating Module</displayName>
+  <class>info.magnolia.templating.module.TemplatingModule</class>
+  <versionHandler>info.magnolia.templating.module.setup.TemplatingModuleVersionHandler</versionHandler>
+  <version>${project.version}</version>
+  <properties>
+    <property>
+      <name>info.magnolia.templating.rendering.RenderingEngine</name>
+      <value>/server/rendering/engine</value>
+    </property>
+    <property>
+      <name>info.magnolia.templating.renderers.registry.RendererRegistry</name>
+      <value>info.magnolia.templating.renderers.registry.RendererRegistry</value>
+    </property>
+    <property>
+      <name>info.magnolia.templating.template.registry.TemplateDefinitionRegistry</name>
+      <value>info.magnolia.templating.template.registry.TemplateDefinitionRegistry</value>
+    </property>
+    <property>
+      <name>info.magnolia.templating.template.RenderableDefinition</name>
+      <value>info.magnolia.templating.template.configured.ConfiguredRenderableDefinition</value>
+    </property>
+    <property>
+      <name>info.magnolia.templating.template.TemplateDefinition</name>
+      <value>info.magnolia.templating.template.configured.ConfiguredTemplateDefinition</value>
+    </property>
+    <property>
+      <name>info.magnolia.templating.template.AreaDefinition</name>
+      <value>info.magnolia.templating.template.configured.ConfiguredAreaDefinition</value>
+    </property>
+    <property>
+      <name>info.magnolia.templating.template.ParagraphAvailability</name>
+      <value>info.magnolia.templating.template.configured.ConfiguredParagraphAvailability</value>
+    </property>
+    <property>
+      <name></name>
+      <value></value>
+    </property>
+    <property>
+      <name></name>
+      <value></value>
+    </property>
+  </properties>
+  <dependencies>
+    <dependency>
+      <name>core</name>
+      <version>5.0/*</version>
+    </dependency>
+  </dependencies>
+</module>
