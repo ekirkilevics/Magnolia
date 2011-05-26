@@ -45,7 +45,7 @@ import org.junit.Test;
 /**
  * @version $Id$
  */
-public class JCRVersionUtilTest {
+public class VersionUtilTest {
 
     @Test
     public void testGetNodeTypeName() throws Exception {

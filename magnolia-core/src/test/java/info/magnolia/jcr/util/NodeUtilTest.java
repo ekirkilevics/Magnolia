@@ -53,7 +53,7 @@ import org.junit.Test;
 /**
  * @version $Id$
  */
-public class JCRUtilTest {
+public class NodeUtilTest {
 
     private static final String firstChild = "1";
     private static final String secondChild = "2";
