@@ -35,7 +35,6 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.jcr.util.JCRMetadataUtil;
 
 import java.util.Calendar;
 
@@ -100,7 +99,7 @@ public class MetaDataUtil {
      * @deprecated - directly use JCRMetaDataUtil instead
      */
     public static String getActivationStatusIcon(Content content) {
-        return JCRMetadataUtil.getActivationStatusIcon(content.getJCRNode());
+        return info.magnolia.jcr.util.MetaDataUtil.getActivationStatusIcon(content.getJCRNode());
     }
 
 }

@@ -38,7 +38,7 @@ import javax.jcr.RepositoryException;
 
 import com.vaadin.Application;
 import info.magnolia.cms.util.PathUtil;
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.PageEditorHacks;
 import info.magnolia.module.wcm.editor.ContentSelection;
@@ -62,7 +62,7 @@ public class AddParagraphBeforeAction extends AbstractAddParagraphAction<AddPara
 
     @Override
     protected void onPreSave(Node node, Paragraph paragraph) throws RepositoryException {
-        JCRUtil.orderBefore(node, PathUtil.getFileName(selection.getPath()));
+        NodeUtil.orderBefore(node, PathUtil.getFileName(selection.getPath()));
         super.onPreSave(node, paragraph);
     }
 }

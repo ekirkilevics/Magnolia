@@ -33,7 +33,7 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.column.definition.MetaDataColumnDefinition;
 
@@ -67,7 +67,7 @@ public class MetaDataColumn extends AbstractColumn<MetaDataColumnDefinition> imp
     protected Component getDefaultComponent(Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
-            Calendar date = JCRMetadataUtil.getMetaData(node).getModificationDate();
+            Calendar date = MetaDataUtil.getMetaData(node).getModificationDate();
             final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : UIUtil.DEFAULT_DATE_PATTERN;
             final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance(pattern);
             return new Label(date != null ? DATE_FORMAT.format(date.getTime()) : "");

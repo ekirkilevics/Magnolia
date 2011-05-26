@@ -33,7 +33,12 @@
  */
 package info.magnolia.ui.framework.editor;
 
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.jcr.util.NodeUtil;
+
 import java.util.Calendar;
+
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -41,10 +46,6 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.jcr.util.JCRUtil;
 
 
 /**
@@ -105,7 +106,7 @@ public class ContentDriver extends AbstractDriver<Node> {
 
                 // TODO it's probably not a good idea to always force this behaviour here
 
-                JCRMetadataUtil.updateMetaData(node);
+                MetaDataUtil.updateMetaData(node);
                 node.getSession().save();
             } else {
 
@@ -129,9 +130,9 @@ public class ContentDriver extends AbstractDriver<Node> {
             path = StringUtils.substringBefore(path, "@name");
             Item item = getItemByRelPath(node, path);
             if (item instanceof Node) {
-                JCRUtil.renameNode(node, (String) value);
+                NodeUtil.renameNode(node, (String) value);
             } else if (item instanceof Property) {
-                JCRUtil.renameProperty((Property) item, (String) value);
+                NodeUtil.renameProperty((Property) item, (String) value);
             }
         } else if (value instanceof String) {
             node.getProperty(path).setValue((String) value);

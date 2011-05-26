@@ -33,14 +33,10 @@
  */
 package info.magnolia.module.wcm.workbench.action;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
@@ -48,6 +44,10 @@ import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.ui.admincentral.tree.action.TreeAction;
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
+
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 
 /**
@@ -71,7 +71,7 @@ public class EditPagePropertiesAction extends ActionBase<EditPagePropertiesActio
 
     @Override
     public boolean isAvailable(Item item) throws RepositoryException {
-        return item.isNode() && JCRUtil.isNodeType((Node) item, ItemType.CONTENT.getSystemName()) && getDialogName() != null;
+        return item.isNode() && NodeUtil.isNodeType((Node) item, ItemType.CONTENT.getSystemName()) && getDialogName() != null;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class EditPagePropertiesAction extends ActionBase<EditPagePropertiesActio
     }
 
     private String getDialogName() {
-        MetaData metaData = JCRMetadataUtil.getMetaData(nodeToEdit);
+        MetaData metaData = MetaDataUtil.getMetaData(nodeToEdit);
         String template = metaData.getTemplate();
         Template templateDefinition = templateManager.getTemplateDefinition(template);
         return templateDefinition != null ? templateDefinition.getDialog() : null;

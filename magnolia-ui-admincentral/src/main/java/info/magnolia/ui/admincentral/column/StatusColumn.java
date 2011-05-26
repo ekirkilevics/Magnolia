@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.column.definition.StatusColumnDefinition;
 
@@ -55,7 +55,7 @@ import com.vaadin.ui.Embedded;
 
 /**
  * A column that displays icons for permissions and activation status.
- * 
+ *
  * @author dlipp
  * @author tmattsson
  * @author mrichert
@@ -95,7 +95,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
             Embedded activationStatus = null;
             Embedded permissionStatus = null;
             if (activation) {
-                status = JCRMetadataUtil.getMetaData(node).getActivationStatus();
+                status = MetaDataUtil.getMetaData(node).getActivationStatus();
                 activationStatus = new Embedded();
                 activationStatus.setType(Embedded.TYPE_IMAGE);
                 activationStatus.setSource(new ExternalResource(UIUtil.getActivationStatusIconURL(node)));

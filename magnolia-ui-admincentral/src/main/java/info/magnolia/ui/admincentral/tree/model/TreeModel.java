@@ -35,7 +35,7 @@ package info.magnolia.ui.admincentral.tree.model;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.container.JcrContainerSource;
 import info.magnolia.ui.admincentral.workbench.action.WorkbenchActionFactory;
@@ -225,7 +225,7 @@ public class TreeModel implements JcrContainerSource {
             return false;
         }
 
-        JCRUtil.moveNode((Node)source, (Node)target);
+        NodeUtil.moveNode((Node)source, (Node)target);
         source.getSession().save();
 
         return true;
@@ -242,7 +242,7 @@ public class TreeModel implements JcrContainerSource {
             return false;
         }
 
-        JCRUtil.moveNodeBefore((Node)source, (Node)target);
+        NodeUtil.moveNodeBefore((Node)source, (Node)target);
         source.getSession().save();
 
         return true;
@@ -259,7 +259,7 @@ public class TreeModel implements JcrContainerSource {
             return false;
         }
 
-        JCRUtil.moveNodeAfter((Node)source, (Node)target);
+        NodeUtil.moveNodeAfter((Node)source, (Node)target);
         source.getSession().save();
 
         return true;

@@ -38,7 +38,7 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.TemplateManager;
@@ -142,7 +142,7 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
     }
 
     protected String getI18BasenameFor(Node node) throws RepositoryException {
-        final String templateName = JCRMetadataUtil.getMetaData(node).getTemplate();
+        final String templateName = MetaDataUtil.getMetaData(node).getTemplate();
         final RenderableDefinition renderable;
         if (node.isNodeType(ItemType.CONTENT.getSystemName())) {
             renderable = templateManager.getTemplateDefinition(templateName);

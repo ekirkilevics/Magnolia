@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.util;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
 
 import javax.jcr.Node;
 
@@ -53,6 +53,6 @@ public class UIUtil {
 
     // TODO should be somewhere in a UI-Utility
     public static String getActivationStatusIconURL(Node node) {
-        return MgnlContext.getContextPath() + RESOURCES_ICONS_16_PATH + JCRMetadataUtil.getActivationStatusIcon(node);
+        return MgnlContext.getContextPath() + RESOURCES_ICONS_16_PATH + MetaDataUtil.getActivationStatusIcon(node);
     }
 }

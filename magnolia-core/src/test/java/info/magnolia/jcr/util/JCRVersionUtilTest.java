@@ -52,13 +52,13 @@ public class JCRVersionUtilTest {
         final MockNode node = new MockNode("test");
         final String primaryTypeValue = "primaryTypeValue";
         node.setProperty(ItemType.JCR_PRIMARY_TYPE, primaryTypeValue);
-        assertEquals(primaryTypeValue, JCRVersionUtil.getNodeTypeName(node));
+        assertEquals(primaryTypeValue, VersionUtil.getNodeTypeName(node));
 
         final String frozenPrimaryTypeValue = "frozenPrimaryTypeValue";
         node.setProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE, frozenPrimaryTypeValue);
-        assertEquals(frozenPrimaryTypeValue, JCRVersionUtil.getNodeTypeName(node));
+        assertEquals(frozenPrimaryTypeValue, VersionUtil.getNodeTypeName(node));
 
         final Node wrapper = new JCRPropertiesFilteringNodeWrapper(node);
-        assertEquals(frozenPrimaryTypeValue, JCRVersionUtil.getNodeTypeName(wrapper));
+        assertEquals(frozenPrimaryTypeValue, VersionUtil.getNodeTypeName(wrapper));
     }
 }

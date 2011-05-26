@@ -36,7 +36,7 @@ package info.magnolia.ui.admincentral.column;
 import static junit.framework.Assert.assertEquals;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.column.definition.MetaDataColumnDefinition;
@@ -73,7 +73,7 @@ public class MetaDataColumnTest {
         Session session = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
         Node node = session.getNode("/parent");
 
-        Calendar cal = JCRMetadataUtil.getMetaData(node).getCreationDate();
+        Calendar cal = MetaDataUtil.getMetaData(node).getCreationDate();
 
         MetaDataColumn column = new MetaDataColumn(new MetaDataColumnDefinition());
         Object result = ((Label) column.getComponent(node)).getValue();

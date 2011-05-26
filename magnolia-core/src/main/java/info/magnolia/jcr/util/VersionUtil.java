@@ -44,7 +44,7 @@ import javax.jcr.RepositoryException;
  *
  * @version $Id$
  */
-public class JCRVersionUtil {
+public class VersionUtil {
 
     /**
      * Return the NodeType-name for the provided Node. It it's a JCPropertiesFilteringNodeWrapper the unwrapped node will be used for retrieving the property from.

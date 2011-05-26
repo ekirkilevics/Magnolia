@@ -35,7 +35,7 @@ package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
 
@@ -73,7 +73,7 @@ public class EditComponent extends AbstractContentComponent {
         if (StringUtils.isNotEmpty(format)) {
             out.append(" format=").append(QUOTE).append(format).append(QUOTE);
         }
-        Paragraph paragraph = ParagraphManager.getInstance().getParagraphDefinition(JCRMetadataUtil.getMetaData(content).getTemplate());
+        Paragraph paragraph = ParagraphManager.getInstance().getParagraphDefinition(MetaDataUtil.getMetaData(content).getTemplate());
         out.append(" label=").append(QUOTE).append(paragraph.getTitle()).append(QUOTE);
 
         out.append(" dialog=").append(QUOTE).append(resolveDialog(paragraph)).append(QUOTE);

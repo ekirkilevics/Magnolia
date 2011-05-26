@@ -52,9 +52,9 @@ import org.apache.commons.lang.UnhandledException;
  * from a caller perspective - independent from Content API. Internally content API is still used for now, but this will
  * most probably change quite soon.
  *
- * @deprecated temporary
+ * $Id$
  */
-public class JCRMetadataUtil {
+public class MetaDataUtil {
 
 
     public static MetaData getMetaData(Node node) {
@@ -70,6 +70,8 @@ public class JCRMetadataUtil {
      *
      * @param node node to read status from
      * @return file name for an icon
+     *
+     * TODO dlipp: move to somewhere in AdminCentral
      */
     public static String getActivationStatusIcon(Node node) {
 

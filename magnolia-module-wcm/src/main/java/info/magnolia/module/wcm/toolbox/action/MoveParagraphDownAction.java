@@ -36,7 +36,7 @@ package info.magnolia.module.wcm.toolbox.action;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.wcm.editor.ContentSelection;
 import info.magnolia.module.wcm.editor.PageChangedEvent;
 import info.magnolia.ui.framework.event.EventBus;
@@ -61,13 +61,13 @@ public class MoveParagraphDownAction extends ActionBase<MoveParagraphDownActionD
 
     @Override
     public boolean isAvailable(ContentSelection selection, Node node) throws RepositoryException {
-        return !JCRUtil.isLastSibling(node);
+        return !NodeUtil.isLastSibling(node);
     }
 
     @Override
     public void execute() throws ActionExecutionException {
         try {
-            JCRUtil.orderNodeDown(node);
+            NodeUtil.orderNodeDown(node);
             node.getSession().save();
             eventBus.fireEvent(new PageChangedEvent());
         } catch (RepositoryException e) {

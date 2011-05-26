@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.jcr.util.JCRVersionUtil;
+import info.magnolia.jcr.util.VersionUtil;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -68,7 +68,7 @@ public class RuleBasedNodePredicate implements Predicate {
         Node content = (Node) object;
         String nodeType = "";
         try {
-            nodeType = JCRVersionUtil.getNodeTypeName(content);
+            nodeType = VersionUtil.getNodeTypeName(content);
         }
         catch (RepositoryException re) {
             if (log.isDebugEnabled()) {

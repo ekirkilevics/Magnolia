@@ -43,7 +43,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.NodeUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -420,8 +420,8 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         if (privilegedUserNode == null) {
             return null;
         }
-        Set<String> roles = JCRUtil.collectUniquePropertyNames(privilegedUserNode, "roles", ContentRepository.USER_ROLES, false);
-        Set<String> groups = JCRUtil.collectUniquePropertyNames(privilegedUserNode, "groups", ContentRepository.USER_GROUPS, false);
+        Set<String> roles = NodeUtil.collectUniquePropertyNames(privilegedUserNode, "roles", ContentRepository.USER_ROLES, false);
+        Set<String> groups = NodeUtil.collectUniquePropertyNames(privilegedUserNode, "groups", ContentRepository.USER_GROUPS, false);
 
         Map<String, String> properties = new HashMap<String, String>();
         for (PropertyIterator iter = privilegedUserNode.getProperties(); iter.hasNext(); ) {

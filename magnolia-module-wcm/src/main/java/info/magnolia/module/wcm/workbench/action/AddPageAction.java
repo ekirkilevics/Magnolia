@@ -33,18 +33,18 @@
  */
 package info.magnolia.module.wcm.workbench.action;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.ui.admincentral.jcr.HackContent;
 import info.magnolia.ui.admincentral.tree.action.AddNodeAction;
 import info.magnolia.ui.admincentral.tree.action.AddNodeActionDefinition;
 import info.magnolia.ui.framework.event.EventBus;
+
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * Tree action for adding a page to the website repository.
@@ -59,8 +59,8 @@ public class AddPageAction extends AddNodeAction {
 
     @Override
     protected void postProcessNode(Node newNode) throws RepositoryException {
-        MetaData metaData = JCRMetadataUtil.getMetaData(newNode);
-        JCRMetadataUtil.updateMetaData(newNode);
+        MetaData metaData = MetaDataUtil.getMetaData(newNode);
+        MetaDataUtil.updateMetaData(newNode);
         Template newTemplate = TemplateManager.getInstance().getDefaultTemplate(new HackContent(newNode));
         if (newTemplate != null) {
             metaData.setTemplate(newTemplate.getName());

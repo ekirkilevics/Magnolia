@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.sidebar.view;
 
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.ui.admincentral.util.UIUtil;
 
 import java.util.Calendar;
@@ -98,9 +98,9 @@ public class PreviewViewImpl implements PreviewView {
                 Node node = (Node) item;
                 uuid.setValue(node.getIdentifier());
 
-                Calendar lastMod = JCRMetadataUtil.getLastModification(node);
+                Calendar lastMod = MetaDataUtil.getLastModification(node);
                 if (lastMod != null) {
-                    lastModField.setValue(DateFormatUtils.format(JCRMetadataUtil.getLastModification(node).getTime(),UIUtil.DEFAULT_DATE_PATTERN));
+                    lastModField.setValue(DateFormatUtils.format(MetaDataUtil.getLastModification(node).getTime(),UIUtil.DEFAULT_DATE_PATTERN));
                 }
 
                 statusField.setIcon(new ExternalResource(UIUtil.getActivationStatusIconURL(node)));

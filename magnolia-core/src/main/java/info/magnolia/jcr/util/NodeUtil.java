@@ -62,10 +62,12 @@ import org.slf4j.LoggerFactory;
  * Various utility methods to collect data from JCR repository.
  *
  * @version $Id$
+ *
+ * TODO dlipp: move Property-related stuff to proper util-impl called PropertyUtil.
  */
-public class JCRUtil {
+public class NodeUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(JCRUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(NodeUtil.class);
 
     /**
      * Collects all property names of given type, sorting them (case insensitive) and removing duplicates in the process.
@@ -132,7 +134,9 @@ public class JCRUtil {
         return false;
     }
 
-
+    /**
+     * TODO dlipp: better name? Clear javadoc! Move to MetaDataUtil
+     */
     public static boolean isNodeType(Node node, String type) throws RepositoryException {
         if (node instanceof DelegateNodeWrapper) {
             node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);

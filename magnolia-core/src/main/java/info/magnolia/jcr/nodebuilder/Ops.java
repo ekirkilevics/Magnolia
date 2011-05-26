@@ -35,7 +35,7 @@ package info.magnolia.jcr.nodebuilder;
 
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.NodeUtil;
 
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
@@ -131,7 +131,7 @@ public abstract class Ops {
         return new AbstractNodeOperation() {
             @Override
             protected Node doExec(Node context, ErrorHandler errorHandler) throws RepositoryException {
-                JCRUtil.renameNode(context.getNode(currentName), newName);
+                NodeUtil.renameNode(context.getNode(currentName), newName);
                 return context;
             }
         };
@@ -166,7 +166,7 @@ public abstract class Ops {
         return new AbstractNodeOperation() {
             @Override
             protected Node doExec(Node context, ErrorHandler errorHandler) throws RepositoryException {
-                JCRUtil.moveNode(context.getNode(nodeName), context.getNode(dest));
+                NodeUtil.moveNode(context.getNode(nodeName), context.getNode(dest));
                 return context;
             }
         };
