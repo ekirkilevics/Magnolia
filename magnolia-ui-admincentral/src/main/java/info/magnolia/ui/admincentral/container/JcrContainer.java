@@ -73,7 +73,7 @@ import com.vaadin.ui.Component;
  * Vaadin container that reads its items from a JCR repository. Implements a simple mechanism for
  * lazy loading items from a JCR repository and a cache for items and item ids. Inspired by
  * http://vaadin.com/directory#addon/vaadin-sqlcontainer.
- * 
+ *
  * @author tmattsson
  */
 public abstract class JcrContainer extends AbstractContainer implements Container.Sortable, Container.Indexed, Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier {
@@ -339,7 +339,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     @Override
     public Object getIdByIndex(int index) {
-        if (index < 0 || index > size() - 1) {
+        if (index < 0 || index > size - 1) {
             return null;
         }
         final Long idx = Long.valueOf(index);
@@ -501,7 +501,7 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     /**
      * Determines a new offset for updating the row cache. The offset is calculated from the given
      * index, and will be fixed to match the start of a page, based on the value of pageLength.
-     * 
+     *
      * @param index Index of the item that was requested, but not found in cache
      */
     private void updateOffsetAndCache(int index) {
@@ -599,7 +599,8 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
     }
 
     protected int getRowCount()  {
-        //cache the size cause at present the query to count rows is extremely slow.
+        //FIXME cache the size cause at present the query to count rows is extremely slow () with "large" (20000+ nodes) data sets and it's called frequently by Vaadin.
+        //On the other hand caching this value prevents flat container changes (add/remove nodes) to be reflected immediately. See
         if(size >= 0){
             return size;
         }
