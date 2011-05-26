@@ -158,7 +158,7 @@ public class NodeUtil {
         while (unwrappedNode instanceof DelegateNodeWrapper) {
             unwrappedNode = ((DelegateNodeWrapper) unwrappedNode).getWrappedNode();
         }
-        return node;
+        return unwrappedNode;
     }
 
     /**
