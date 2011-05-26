@@ -629,7 +629,7 @@ public class ContentUtil {
         final Session session = content.getSession();
         final HierarchyManager hm = MgnlContext.getHierarchyManager(session.getWorkspace().getName());
         if(!hm.getWorkspace().getSession().equals(session)){
-            throw new IllegalStateException("Can't create a Content object which uses the same session");
+            throw new IllegalStateException("Can't create a Content object which lives in the same session as the passed node. This could lead to confusing issues.");
         }
         return hm.getContent(content.getPath());
     }
