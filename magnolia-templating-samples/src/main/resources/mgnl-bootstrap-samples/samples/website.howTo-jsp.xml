@@ -33,7 +33,7 @@
       <sv:value>2009-01-16T10:21:43.131+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:template" sv:type="String">
-      <sv:value>samplesMainJSP</sv:value>
+      <sv:value>samples:pages/jsp</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="text_files">
@@ -112,7 +112,7 @@
           <sv:value>2009-01-16T10:21:43.125+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samplesHowToJSP</sv:value>
+          <sv:value>samples:paragraphs/howToJSP</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="text_files">

@@ -33,7 +33,7 @@
       <sv:value>2009-01-15T13:42:34.839+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:template" sv:type="String">
-      <sv:value>samplesVirtualURI</sv:value>
+      <sv:value>samples:pages/virtualURI</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="text_files">

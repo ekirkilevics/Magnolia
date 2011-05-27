@@ -2,9 +2,9 @@
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>templating</name>
-  <displayName>Magnolia Templating Module</displayName>
-  <class>info.magnolia.module.templating.TemplatingModule</class>
-  <versionHandler>info.magnolia.module.templating.setup.TemplatingModuleVersionHandler</versionHandler>
+  <displayName>Magnolia Templating Compatibility</displayName>
+  <!--<class>info.magnolia.module.templating.TemplatingModule</class>-->
+  <!--<versionHandler>info.magnolia.module.templating.setup.TemplatingModuleVersionHandler</versionHandler>-->
   <version>${project.version}</version>
   <properties>
     <property>

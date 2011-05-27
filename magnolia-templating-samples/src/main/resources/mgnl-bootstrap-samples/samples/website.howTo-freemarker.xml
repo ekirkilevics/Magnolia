@@ -33,7 +33,7 @@
       <sv:value>2009-01-15T15:08:34.238+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:template" sv:type="String">
-      <sv:value>samplesMainFTL</sv:value>
+      <sv:value>samples:pages/ftl</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="text_files">
@@ -112,7 +112,7 @@
           <sv:value>2009-01-15T15:08:34.194+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samplesHowToFTL</sv:value>
+          <sv:value>samples:paragraphs/howToFTL</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="text_files">

@@ -32,7 +32,7 @@
       <sv:value>2011-04-21T13:56:58.785+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:template" sv:type="String">
-      <sv:value>samplesMainFTL2</sv:value>
+      <sv:value>samples:pages/ftl2</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="stage">
@@ -65,7 +65,7 @@
         <sv:value>2011-05-12T21:48:48.167+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:template" sv:type="String">
-        <sv:value>samplesText</sv:value>
+        <sv:value>samples:paragraphs/text</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -109,7 +109,7 @@
           <sv:value>2011-05-12T21:50:14.350+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samplesText</sv:value>
+          <sv:value>samples:paragraphs/text</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -151,7 +151,7 @@
           <sv:value>2011-05-12T21:50:57.075+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samplesText</sv:value>
+          <sv:value>samples:paragraphs/text</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -185,7 +185,7 @@
           <sv:value>2011-05-12T21:51:37.788+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samplesText</sv:value>
+          <sv:value>samples:paragraphs/text</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
