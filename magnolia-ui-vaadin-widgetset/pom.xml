@@ -21,11 +21,11 @@
       <artifactId>magnolia-module-wcm</artifactId>
       <version>${project.version}</version>
     </dependency>
-<!--     <dependency> -->
-<!--       <groupId>info.magnolia</groupId> -->
-<!--       <artifactId>magnolia-ui-admincentral</artifactId> -->
-<!--       <version>${project.version}</version> -->
-<!--     </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>info.magnolia</groupId> -->
+    <!-- <artifactId>magnolia-ui-admincentral</artifactId> -->
+    <!-- <version>${project.version}</version> -->
+    <!-- </dependency> -->
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
@@ -49,6 +49,13 @@
       <artifactId>lazyloadwrapper</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.vaadin.addons</groupId>
+      <artifactId>vaadin-chameleon-theme</artifactId>
+      <version>1.1.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/temp-libs/vaadin-chameleon-theme-1.1.0.jar</systemPath>
+    </dependency>
+    <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
       <scope>provided</scope>
@@ -59,7 +66,7 @@
       <classifier>sources</classifier>
       <scope>compile</scope>
     </dependency>
-     <dependency>
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
@@ -81,8 +88,8 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                   <groupId>com.vaadin</groupId>
-                   <artifactId>vaadin</artifactId>
+                  <groupId>com.vaadin</groupId>
+                  <artifactId>vaadin</artifactId>
                 </artifactItem>
               </artifactItems>
               <outputDirectory>${project.build.directory}/classes/mgnl-resources</outputDirectory>
@@ -99,8 +106,7 @@
         <configuration>
           <!-- put the created resources on the classpath -->
           <webappDirectory>target/classes/mgnl-resources/VAADIN/widgetsets</webappDirectory>
-          <!-- the target/classes directory is cleaned regularly. You can
-            use mvn gwt:compile -Dgwt.inplace to store the output in the resource folder -->
+          <!-- the target/classes directory is cleaned regularly. You can use mvn gwt:compile -Dgwt.inplace to store the output in the resource folder -->
           <warSourceDirectory>src/main/resources/mgnl-resources/VAADIN/widgetsets</warSourceDirectory>
           <!-- this is not a webapp -->
           <noServer>true</noServer>
@@ -143,11 +149,11 @@
         </dependencies>
       </plugin>
       <plugin>
-         <artifactId>maven-checkstyle-plugin</artifactId>
-         <configuration>
-           <suppressionsLocation>${basedir}/checkstyle-suppressions.xml</suppressionsLocation>
-         </configuration>
-       </plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <suppressionsLocation>${basedir}/checkstyle-suppressions.xml</suppressionsLocation>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
