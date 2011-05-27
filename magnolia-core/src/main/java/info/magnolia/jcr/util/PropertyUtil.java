@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,47 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm.toolbox.action;
+package info.magnolia.jcr.util;
 
 import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.module.wcm.editor.ContentSelection;
-import info.magnolia.module.wcm.editor.PageChangedEvent;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.model.action.ActionBase;
-import info.magnolia.ui.model.action.ActionExecutionException;
-
 /**
- * Moves a paragraph down one step within an area.
+ * Property-related utility methods.
  *
  * @version $Id$
  */
-public class MoveParagraphDownAction extends ActionBase<MoveParagraphDownActionDefinition> implements ToolboxAction {
+public class PropertyUtil {
 
-    private Node node;
-    private EventBus eventBus;
-
-    public MoveParagraphDownAction(MoveParagraphDownActionDefinition definition, Node node, EventBus eventBus) {
-        super(definition);
-        this.node = node;
-        this.eventBus = eventBus;
+    public static void renameProperty(Property property, String newName) throws RepositoryException {
+        Node node = property.getNode();
+        node.setProperty(newName, property.getValue());
+        property.remove();
     }
 
-    @Override
-    public boolean isAvailable(ContentSelection selection, Node node) throws RepositoryException {
-        return !NodeUtil.isLastSibling(node);
-    }
-
-    @Override
-    public void execute() throws ActionExecutionException {
-        try {
-            NodeUtil.orderNodeDown(node);
-            node.getSession().save();
-            eventBus.fireEvent(new PageChangedEvent());
-        } catch (RepositoryException e) {
-            throw new ActionExecutionException(e);
-        }
-    }
 }

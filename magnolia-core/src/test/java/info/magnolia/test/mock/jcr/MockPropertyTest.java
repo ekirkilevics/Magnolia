@@ -51,13 +51,13 @@ import org.junit.Test;
 public class MockPropertyTest {
 
     @Test
-    public void isMultiple() throws RepositoryException {
+    public void testIsMultiple() throws RepositoryException {
         Property property = new MockProperty("test", "test");
         assertTrue(!property.isMultiple());
     }
 
     @Test
-    public void isNode() {
+    public void testIsNode() {
         Property property = new MockProperty("test", "test");
         assertTrue(!property.isNode());
     }

@@ -90,12 +90,12 @@ public abstract class AbstractEditableColumn<D extends AbstractColumnDefinition>
                 }
             });
 
-            driver.edit(item instanceof Node ? (Node) item : item.getParent());
+            driver.edit(item.isNode() ? (Node) item : item.getParent());
         }
 
         @Override
         public boolean save(Item item) throws RepositoryException {
-            driver.flush(item instanceof Node ? (Node) item : item.getParent());
+            driver.flush(item.isNode() ? (Node) item : item.getParent());
 
             if (driver.hasErrors()) {
                 List<EditorError> errors = driver.getErrors();

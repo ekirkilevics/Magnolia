@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,47 +31,32 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm.toolbox.action;
+package info.magnolia.jcr.util;
 
-import javax.jcr.Node;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import info.magnolia.test.mock.jcr.MockNode;
+
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.module.wcm.editor.ContentSelection;
-import info.magnolia.module.wcm.editor.PageChangedEvent;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.model.action.ActionBase;
-import info.magnolia.ui.model.action.ActionExecutionException;
+import org.junit.Test;
 
 /**
- * Moves a paragraph down one step within an area.
- *
  * @version $Id$
  */
-public class MoveParagraphDownAction extends ActionBase<MoveParagraphDownActionDefinition> implements ToolboxAction {
+public class PropertyUtilTest {
 
-    private Node node;
-    private EventBus eventBus;
+    @Test
+    public void testOrderLast() throws RepositoryException {
+        final MockNode root = new MockNode("root");
+        final String oldPropertyName = "oldPropertyName";
+        final String newPropertyName = "newPropertyName";
+        final Property property = root.setProperty(oldPropertyName, "value");
 
-    public MoveParagraphDownAction(MoveParagraphDownActionDefinition definition, Node node, EventBus eventBus) {
-        super(definition);
-        this.node = node;
-        this.eventBus = eventBus;
-    }
+        PropertyUtil.renameProperty(property, newPropertyName);
 
-    @Override
-    public boolean isAvailable(ContentSelection selection, Node node) throws RepositoryException {
-        return !NodeUtil.isLastSibling(node);
-    }
-
-    @Override
-    public void execute() throws ActionExecutionException {
-        try {
-            NodeUtil.orderNodeDown(node);
-            node.getSession().save();
-            eventBus.fireEvent(new PageChangedEvent());
-        } catch (RepositoryException e) {
-            throw new ActionExecutionException(e);
-        }
+        assertTrue(!root.hasProperty(oldPropertyName));
+        assertEquals("value", root.getProperty(newPropertyName).getString());
     }
 }

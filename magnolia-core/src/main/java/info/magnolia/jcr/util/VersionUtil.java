@@ -33,32 +33,32 @@
  */
 package info.magnolia.jcr.util;
 
-import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
-import info.magnolia.test.mock.jcr.MockNode;
 
 import javax.jcr.Node;
-
-import org.junit.Test;
+import javax.jcr.RepositoryException;
 
 /**
+ * Various utility methods useful for JCR-Versioning.
+ *
  * @version $Id$
  */
-public class JCRVersionUtilTest {
+public class VersionUtil {
 
-    @Test
-    public void testGetNodeTypeName() throws Exception {
-        final MockNode node = new MockNode("test");
-        final String primaryTypeValue = "primaryTypeValue";
-        node.setProperty(ItemType.JCR_PRIMARY_TYPE, primaryTypeValue);
-        assertEquals(primaryTypeValue, JCRVersionUtil.getNodeTypeName(node));
+    /**
+     * Return the NodeType-name for the provided Node. It it's a JCPropertiesFilteringNodeWrapper the unwrapped node will be used for retrieving the property from.
+     * As it's about versioning, the frozen primary type if existing (else primary type) will be returned.
+     */
+    public static String getNodeTypeName(Node node) throws RepositoryException {
+        Node unwrappedNode = node;
+        if (node instanceof JCRPropertiesFilteringNodeWrapper) {
+            unwrappedNode = ((JCRPropertiesFilteringNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
+        }
 
-        final String frozenPrimaryTypeValue = "frozenPrimaryTypeValue";
-        node.setProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE, frozenPrimaryTypeValue);
-        assertEquals(frozenPrimaryTypeValue, JCRVersionUtil.getNodeTypeName(node));
-
-        final Node wrapper = new JCRPropertiesFilteringNodeWrapper(node);
-        assertEquals(frozenPrimaryTypeValue, JCRVersionUtil.getNodeTypeName(wrapper));
+        if (unwrappedNode.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
+            return unwrappedNode.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString();
+        }
+        return unwrappedNode.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
     }
 }

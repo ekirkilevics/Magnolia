@@ -39,7 +39,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.util.ArrayList;
@@ -447,7 +447,7 @@ public class DefaultContent extends AbstractContent {
      */
     protected boolean isNodeType(Node node, String type) {
         try {
-            return JCRUtil.isNodeType(node, type);
+            return NodeUtil.isNodeType(node, type);
         } catch (RepositoryException re) {
             log.error(re.getMessage());
             log.debug(re.getMessage(), re);

@@ -135,10 +135,6 @@ public abstract class MockItem implements Item {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
-    @Override
-    public void remove() throws VersionException, LockException, ConstraintViolationException, AccessDeniedException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
 
     @Override
     public void save() throws AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException, ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {

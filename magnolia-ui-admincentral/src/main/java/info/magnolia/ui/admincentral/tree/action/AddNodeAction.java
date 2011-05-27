@@ -33,15 +33,15 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.ui.admincentral.jcr.JCRUtil;
+import info.magnolia.ui.framework.event.EventBus;
+
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
-import info.magnolia.ui.framework.event.EventBus;
 
 
 /**
@@ -71,7 +71,7 @@ public class AddNodeAction extends RepositoryOperationAction<AddNodeActionDefini
     }
 
     protected void postProcessNode(Node newNode) throws RepositoryException {
-        MetaData metaData = JCRMetadataUtil.getMetaData(newNode);
+        MetaData metaData = MetaDataUtil.getMetaData(newNode);
 
         metaData.setAuthorId(MgnlContext.getUser().getName());
         metaData.setCreationDate();

@@ -35,11 +35,12 @@ package info.magnolia.cms.core;
 
 import java.io.Serializable;
 
-
 /**
  * The Magnolia equivalent to {@link NodeType}.
  * @author Sameer Charles
  * @version $Revision:2719 $ ($Author:scharles $)
+ *
+ * @deprecated since 5.0 - use {@link NodeType}} or MgnlNodeType (to be created -contains our stuff)
  */
 public final class ItemType implements Serializable {
 

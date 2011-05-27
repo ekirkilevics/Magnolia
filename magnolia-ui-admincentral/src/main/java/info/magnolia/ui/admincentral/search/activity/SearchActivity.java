@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.search.activity;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.jcr.view.JcrView;
 import info.magnolia.ui.admincentral.search.action.SearchActionFactory;
 import info.magnolia.ui.admincentral.search.place.SearchPlace;
@@ -106,10 +107,17 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
         try {
             final Session jcrSession = MgnlContext.getJCRSession(place.getWorkspace());
             final QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
+            final JcrContainer container = jcrView.getContainer();
 
-            //FIXME set limit and offset by getting them from the Container (need to exposed). We would not need this if we chose to refactor JcrContainer.getPage()
-            final String stmt = "select * from [mgnl:content] as content where contains(content.*,'"+place.getSearchParameters().getQuery()+"')";
-            final Query query = jcrQueryManager.createQuery(stmt , Query.JCR_SQL2);;
+            final String queryText = place.getSearchParameters().getQuery();
+            //TODO like support for node names, i.e. name(content) LIKE 'foo', will be available from 2.2.7 https://issues.apache.org/jira/browse/JCR-2956
+            //TODO attempting a join with metadata and then applying multiple or constraints will issue a javax.jcr.UnsupportedRepositoryOperationException: Unable to split a constraint that references both sides of a join.
+            //Will be fixed in 2.2.7 https://issues.apache.org/jira/browse/JCR-2852
+            final String stmt = "select * from [mgnl:content] as content where contains(content.title,'*"+queryText+"*')  or name(content) = '"+queryText+"'";
+
+            final Query query = jcrQueryManager.createQuery(stmt , Query.JCR_SQL2);
+            query.setLimit(container.getCacheRatio() * container.getPageLength());
+            query.setOffset(0);
             log.debug("executing query against workspace [{}] with statement [{}] ", place.getWorkspace(), stmt);
             final QueryResult queryResult = query.execute();
             //TODO how do we get the number of items returned by the query? I tried
@@ -119,7 +127,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             //   this causes "javax.jcr.RepositoryException: This query result has already been iterated through" when updating the container below.
             //Probably we need two queries one for the total count, the other for getting the actual items.
             //log.debug("query returned {} rows", foundItems);
-            jcrView.getContainer().update(queryResult.getRows());
+            container.update(queryResult.getRows());
             view.update(new SearchResult(place.getSearchParameters().getQuery(), foundItems));
 
         } catch (LoginException e) {

@@ -33,15 +33,10 @@
  */
 package info.magnolia.module.wcm.activity;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
-import com.vaadin.ui.Component;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.module.wcm.editor.PageChangedEvent;
@@ -56,6 +51,12 @@ import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import com.vaadin.ui.Component;
 
 /**
  * Activity for page editing.
@@ -97,7 +98,7 @@ public class PageEditorActivity extends AbstractActivity implements PageChangedH
         try {
             Session session = MgnlContext.getJCRSession(workspace);
             Node node = session.getNode(path);
-            String template = JCRMetadataUtil.getMetaData(node).getTemplate();
+            String template = MetaDataUtil.getMetaData(node).getTemplate();
             Template templateDefinition = templateManager.getTemplateDefinition(template);
             return templateDefinition.getDialog();
         } catch (RepositoryException e) {

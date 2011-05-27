@@ -36,7 +36,7 @@ package info.magnolia.module.wcm.toolbox.action;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.wcm.editor.ContentSelection;
 import info.magnolia.module.wcm.editor.PageChangedEvent;
 import info.magnolia.ui.framework.event.EventBus;
@@ -64,13 +64,13 @@ public class MoveParagraphUpAction extends ActionBase<MoveParagraphUpActionDefin
 
         // TODO: this doesn't work because the MetaData node is first...
 
-        return !JCRUtil.isFirstSibling(node);
+        return !NodeUtil.isFirstSibling(node);
     }
 
     @Override
     public void execute() throws ActionExecutionException {
         try {
-            JCRUtil.orderNodeUp(node);
+            NodeUtil.orderNodeUp(node);
             node.getSession().save();
             eventBus.fireEvent(new PageChangedEvent());
         } catch (RepositoryException e) {

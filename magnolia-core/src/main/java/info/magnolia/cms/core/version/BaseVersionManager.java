@@ -40,8 +40,8 @@ import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedNodePredicate;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.jcr.util.JCRVersionUtil;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.VersionUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -151,7 +151,7 @@ public abstract class BaseVersionManager {
     public synchronized Version addVersion(Node node) throws UnsupportedRepositoryOperationException,
     RepositoryException {
         // Rule rule = new Rule(new String[] {node.getNodeType().getName(), ItemType.SYSTEM.getSystemName()});
-        Rule rule = new Rule(JCRVersionUtil.getNodeTypeName(node) + "," + ItemType.SYSTEM.getSystemName(), ",");
+        Rule rule = new Rule(VersionUtil.getNodeTypeName(node) + "," + ItemType.SYSTEM.getSystemName(), ",");
         rule.reverse();
         return this.addVersion(node, rule);
     }
@@ -419,7 +419,7 @@ public abstract class BaseVersionManager {
                     try {
                         synchronized (ExclusiveWrite.getInstance()) {
                             CopyUtil.getInstance().copyFromVersion(versionedNode, node, new RuleBasedNodePredicate(rule));
-                            if (JCRUtil.hasMixin(node, ItemType.DELETED_NODE_MIXIN)) {
+                            if (NodeUtil.hasMixin(node, ItemType.DELETED_NODE_MIXIN)) {
                                 node.removeMixin(ItemType.DELETED_NODE_MIXIN);
                             }
                             node.save();

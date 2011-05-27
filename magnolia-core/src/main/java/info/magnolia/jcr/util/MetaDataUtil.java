@@ -52,9 +52,9 @@ import org.apache.commons.lang.UnhandledException;
  * from a caller perspective - independent from Content API. Internally content API is still used for now, but this will
  * most probably change quite soon.
  *
- * @deprecated temporary
+ * $Id$
  */
-public class JCRMetadataUtil {
+public class MetaDataUtil {
 
 
     public static MetaData getMetaData(Node node) {
@@ -63,30 +63,6 @@ public class JCRMetadataUtil {
         } catch (RepositoryException e) {
             throw new UnhandledException(e);
         }
-    }
-
-    /**
-     * Return iconFileName for a node.
-     *
-     * @param node node to read status from
-     * @return file name for an icon
-     */
-    public static String getActivationStatusIcon(Node node) {
-
-        MetaData metaData = getMetaData(node);
-        String iconFileName;
-        switch (metaData.getActivationStatus()) {
-        case MetaData.ACTIVATION_STATUS_MODIFIED:
-            iconFileName = "indicator_yellow.gif";
-            break;
-        case MetaData.ACTIVATION_STATUS_ACTIVATED:
-            iconFileName = "indicator_green.gif";
-            break;
-        default:
-            iconFileName = "indicator_red.gif";
-        }
-
-        return iconFileName;
     }
 
     public static void updateMetaData(Node node) throws RepositoryException {

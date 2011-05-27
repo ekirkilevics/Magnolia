@@ -35,7 +35,7 @@ package info.magnolia.ui.admincentral.tree.model;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.container.JcrContainerSource;
 import info.magnolia.ui.admincentral.workbench.action.WorkbenchActionFactory;
@@ -84,7 +84,7 @@ public class TreeModel implements JcrContainerSource {
 
     @Override
     public Collection<Item> getChildren(Item item) throws RepositoryException {
-        if (item instanceof Property) {
+        if (!item.isNode()) {
             return Collections.emptySet();
         }
 
@@ -159,7 +159,7 @@ public class TreeModel implements JcrContainerSource {
 
     @Override
     public boolean isRoot(Item item) throws RepositoryException {
-        if (item instanceof Property) {
+        if (!item.isNode()) {
             return false;
         }
         int depthOfRootNodesInTree = getRootNode().getDepth() + 1;
@@ -168,7 +168,7 @@ public class TreeModel implements JcrContainerSource {
 
     @Override
     public boolean hasChildren(Item item) throws RepositoryException {
-        if (item instanceof Property) {
+        if (!item.isNode()) {
             return false;
         }
         return !getChildren(item).isEmpty();
@@ -187,9 +187,9 @@ public class TreeModel implements JcrContainerSource {
     @Override
     public String getItemIcon(Item item) throws RepositoryException {
         for (ItemTypeDefinition itemType : workbenchDefinition.getItemTypes()) {
-            if (item instanceof javax.jcr.Property && itemType.getItemType().equals(ItemTypeDefinition.ITEM_TYPE_NODE_DATA)) {
+            if (!item.isNode() && itemType.getItemType().equals(ItemTypeDefinition.ITEM_TYPE_NODE_DATA)) {
                 return itemType.getIcon();
-            } else if (item instanceof Node) {
+            } else if (item.isNode()) {
                 Node node = (Node) item;
                 if (itemType.getItemType().equals(node.getPrimaryNodeType().getName())) {
                     return itemType.getIcon();
@@ -216,16 +216,16 @@ public class TreeModel implements JcrContainerSource {
 
     public boolean moveItem(Item source, Item target) throws RepositoryException {
 
-        if (target instanceof Property) {
+        if (!target.isNode()) {
             return false;
         }
 
-        if (source instanceof Property) {
+        if (!source.isNode()) {
             // Not yet implemented
             return false;
         }
 
-        JCRUtil.moveNode((Node)source, (Node)target);
+        NodeUtil.moveNode((Node)source, (Node)target);
         source.getSession().save();
 
         return true;
@@ -233,16 +233,16 @@ public class TreeModel implements JcrContainerSource {
 
     public boolean moveItemBefore(Item source, Item target) throws RepositoryException {
 
-        if (target instanceof Property) {
+        if (!target.isNode()) {
             return false;
         }
 
-        if (source instanceof Property) {
+        if (!source.isNode()) {
             // Not yet implemented
             return false;
         }
 
-        JCRUtil.moveNodeBefore((Node)source, (Node)target);
+        NodeUtil.moveNodeBefore((Node)source, (Node)target);
         source.getSession().save();
 
         return true;
@@ -250,16 +250,16 @@ public class TreeModel implements JcrContainerSource {
 
     public boolean moveItemAfter(Item source, Item target) throws RepositoryException {
 
-        if (target instanceof Property) {
+        if (!target.isNode()) {
             return false;
         }
 
-        if (source instanceof Property) {
+        if (!source.isNode()) {
             // Not yet implemented
             return false;
         }
 
-        JCRUtil.moveNodeAfter((Node)source, (Node)target);
+        NodeUtil.moveNodeAfter((Node)source, (Node)target);
         source.getSession().save();
 
         return true;

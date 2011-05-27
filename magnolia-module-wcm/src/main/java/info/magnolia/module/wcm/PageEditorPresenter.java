@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.wcm.editor.ContentSelection;
 import info.magnolia.module.wcm.editor.PageChangedEvent;
 import info.magnolia.module.wcm.editor.PageChangedHandler;
@@ -263,7 +263,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         Session session = MgnlContext.getJCRSession(workspaceName);
         Node source = session.getNode(sourcePath);
         Node destination = session.getNode(destinationPath);
-        JCRUtil.moveNode(source, destination);
+        NodeUtil.moveNode(source, destination);
         session.save();
         eventBus.fireEvent(new PageChangedEvent());
     }
@@ -272,7 +272,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         Session session = MgnlContext.getJCRSession(workspaceName);
         Node source = session.getNode(sourcePath);
         Node destination = session.getNode(destinationPath);
-        JCRUtil.moveNodeBefore(source, destination);
+        NodeUtil.moveNodeBefore(source, destination);
         session.save();
         eventBus.fireEvent(new PageChangedEvent());
     }
@@ -281,7 +281,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         Session session = MgnlContext.getJCRSession(workspaceName);
         Node source = session.getNode(sourcePath);
         Node destination = session.getNode(destinationPath);
-        JCRUtil.moveNodeAfter(source, destination);
+        NodeUtil.moveNodeAfter(source, destination);
         session.save();
         eventBus.fireEvent(new PageChangedEvent());
     }

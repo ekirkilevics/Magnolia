@@ -37,7 +37,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.Application;
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.editor.ContentSelection;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
@@ -56,7 +56,7 @@ public class AddParagraphAtTopAction extends AbstractAddParagraphAction<AddParag
 
     @Override
     protected void onPreSave(Node node, Paragraph paragraph) throws RepositoryException {
-        JCRUtil.orderFirst(node);
+        NodeUtil.orderFirst(node);
         super.onPreSave(node, paragraph);
     }
 }

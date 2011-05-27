@@ -62,13 +62,6 @@ public class FlatJcrContainer extends JcrContainer {
 
     }
 
-    //TODO on item set change we should refresh the data view to reflect the changes.
-//    @Override
-//    public void fireItemSetChange() {
-//        getPage();
-//        super.fireItemSetChange();
-//    }
-
     @Override
     public void update(RowIterator iterator) throws RepositoryException {
         log.debug("updating container...");

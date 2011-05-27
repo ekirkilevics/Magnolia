@@ -33,12 +33,8 @@
  */
 package info.magnolia.module.wcm.toolbox.action;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.Application;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.PageEditorHacks;
 import info.magnolia.module.wcm.editor.ContentSelection;
@@ -51,6 +47,11 @@ import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.Application;
 
 /**
  * Abstract base class for actions that open the paragraph selection dialog followed by the dialog for the selected
@@ -114,7 +115,7 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
     }
 
     protected void onPreSave(Node node, Paragraph paragraph) throws RepositoryException {
-        MetaData metaData = JCRMetadataUtil.getMetaData(node);
+        MetaData metaData = MetaDataUtil.getMetaData(node);
         metaData.setTemplate(paragraph.getName());
     }
 }

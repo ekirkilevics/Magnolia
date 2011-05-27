@@ -34,7 +34,7 @@
 package info.magnolia.module.wcm.workbench.column;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.ui.admincentral.column.AbstractEditableColumn;
@@ -76,7 +76,7 @@ public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinit
             @Override
             protected String getLabelText(Item item) {
                 Node node = (Node) item;
-                String template = JCRMetadataUtil.getMetaData(node).getTemplate();
+                String template = MetaDataUtil.getMetaData(node).getTemplate();
                 TemplateManager templateManager = TemplateManager.getInstance();
                 Template definition = templateManager.getTemplateDefinition(template);
                 return (definition != null) ? definition.getI18NTitle() : "";

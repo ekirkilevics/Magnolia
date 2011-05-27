@@ -113,7 +113,7 @@ public class BinaryNodeData extends AbstractNodeData {
                 return getJCRProperty().getStream();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of node data" + toString());
+                throw new RuntimeException("Can't read value of node data " + toString(), e);
             }
         }
         else {

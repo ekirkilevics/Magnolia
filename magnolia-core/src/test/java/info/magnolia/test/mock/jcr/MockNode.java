@@ -539,7 +539,7 @@ public class MockNode extends MockItem implements Node {
     public Property setProperty(String name, Value value) {
         MockProperty property = (MockProperty) this.properties.get(name);
         if (property == null) {
-            property = new MockProperty(name, (MockValue) value, (MockSession) getSession());
+            property = new MockProperty(name, (MockValue) value, this);
             properties.put(name, property);
         } else {
             property.setValue(value);
@@ -575,5 +575,10 @@ public class MockNode extends MockItem implements Node {
     @Override
     public String toString() {
         return "MockNode [primaryType=" + primaryType + super.toString() + "]";
+    }
+
+    protected boolean removeProperty(String propertyName) {
+        Property property = properties.remove(propertyName);
+        return property != null;
     }
 }
