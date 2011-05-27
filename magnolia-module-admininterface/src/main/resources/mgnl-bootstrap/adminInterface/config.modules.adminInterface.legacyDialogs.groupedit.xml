@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="userpreferences" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
-  xmlns:rep="internal" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fn="http://www.w3.org/2005/xpath-functions"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
-  xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
+<sv:node sv:name="groupedit" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>6e3a8cc2-ab93-41ad-970c-25e795d7e367</sv:value>
+    <sv:value>d4d4c39c-d81a-4288-9ec9-15dbb535a6f5</sv:value>
+  </sv:property>
+  <sv:property sv:name="class" sv:type="String">
+    <sv:value>info.magnolia.module.admininterface.dialogs.GroupEditDialog</sv:value>
   </sv:property>
   <sv:property sv:name="height" sv:type="String">
-    <sv:value>400</sv:value>
+    <sv:value>600</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:createdBy" sv:type="String">
+    <sv:value>admin</sv:value>
   </sv:property>
   <sv:property sv:name="label" sv:type="String">
-    <sv:value>users.edit.edit</sv:value>
+    <sv:value>groups.edit.edit</sv:value>
   </sv:property>
   <sv:property sv:name="width" sv:type="String">
     <sv:value>500</sv:value>
@@ -23,32 +25,50 @@
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+      <sv:value>admin</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:Data" sv:type="String">
+      <sv:value>MetaData</sv:value>
+    </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
     </sv:property>
+    <sv:property sv:name="mgnl:activatorid" sv:type="String">
+      <sv:value>superuser</sv:value>
+    </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
-      <sv:value>admin</sv:value>
+      <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="Date">
       <sv:value>2005-05-06T20:47:46.904+02:00</sv:value>
     </sv:property>
+    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+      <sv:value>2006-05-30T13:29:40.165+02:00</sv:value>
+    </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2009-02-02T13:44:28.991+01:00</sv:value>
+      <sv:value>2006-05-30T13:29:54.765+02:00</sv:value>
     </sv:property>
   </sv:node>
-  <sv:node sv:name="tabUser">
+  <sv:node sv:name="tabGroup">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>e661a859-25aa-4212-880a-2e2c370efbdf</sv:value>
+      <sv:value>69bde896-62af-427f-9627-1bbffd42a73a</sv:value>
     </sv:property>
     <sv:property sv:name="controlType" sv:type="String">
       <sv:value>tab</sv:value>
     </sv:property>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+      <sv:value>admin</sv:value>
+    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:activated" sv:type="Boolean">
         <sv:value>false</sv:value>
@@ -63,28 +83,34 @@
         <sv:value>2006-05-26T09:54:49.694+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-        <sv:value>2006-05-26T09:55:48.146+02:00</sv:value>
+        <sv:value>2006-05-30T13:40:40.326+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2006-05-26T19:16:18.660+02:00</sv:value>
+        <sv:value>2006-05-30T13:40:40.429+02:00</sv:value>
       </sv:property>
     </sv:node>
-    <sv:node sv:name="userName">
+    <sv:node sv:name="groupName">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>31545b89-4a60-45c4-bdfb-b49c980c82eb</sv:value>
+        <sv:value>83a98729-61f6-47d3-ac32-d5864d12ac55</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>info.magnolia.module.admininterface.dialogs.NodeNameControl</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
-        <sv:value>users.edit.username</sv:value>
+        <sv:value>groups.edit.groupname</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activated" sv:type="Boolean">
           <sv:value>false</sv:value>
@@ -99,10 +125,10 @@
           <sv:value>2006-05-26T10:06:44.641+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-          <sv:value>2006-05-26T10:14:45.410+02:00</sv:value>
+          <sv:value>2006-05-30T13:40:40.328+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2006-05-30T13:31:06.381+02:00</sv:value>
+          <sv:value>2006-05-30T13:30:55.177+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -111,17 +137,23 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>203373c2-ec11-4f1b-ab71-ce7cd4aec603</sv:value>
+        <sv:value>d679e3b6-d1e4-49a4-ab20-415d7d363f54</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>edit</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
-        <sv:value>users.edit.fullname</sv:value>
+        <sv:value>groups.edit.fullname</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activated" sv:type="Boolean">
           <sv:value>false</sv:value>
@@ -136,66 +168,38 @@
           <sv:value>2006-05-26T10:06:44.641+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-          <sv:value>2006-05-26T10:06:49.846+02:00</sv:value>
+          <sv:value>2006-05-30T13:40:40.330+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2006-05-26T10:07:41.897+02:00</sv:value>
+          <sv:value>2006-05-30T13:41:58.732+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="pswd">
+    <sv:node sv:name="description">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>1a2f0405-c382-4344-b214-dd726159fd99</sv:value>
-      </sv:property>
-      <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>password</sv:value>
-      </sv:property>
-      <sv:property sv:name="label" sv:type="String">
-        <sv:value>users.edit.password</sv:value>
-      </sv:property>
-      <sv:node sv:name="MetaData">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:metaData</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-          <sv:value>false</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:activatorid" sv:type="String">
-          <sv:value>superuser</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:authorid" sv:type="String">
-          <sv:value>superuser</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-          <sv:value>2006-05-26T10:06:44.641+02:00</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-          <sv:value>2006-05-26T10:08:44.972+02:00</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2006-05-26T10:08:58.972+02:00</sv:value>
-        </sv:property>
-      </sv:node>
-    </sv:node>
-    <sv:node sv:name="email">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>46f314b9-b2b9-4e74-87c0-3d3bb65b4fe4</sv:value>
+        <sv:value>0adfae87-cebe-4361-85b4-8eef7e7d438a</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>edit</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
-        <sv:value>users.edit.email</sv:value>
+        <sv:value>groups.edit.description</sv:value>
+      </sv:property>
+      <sv:property sv:name="rows" sv:type="String">
+        <sv:value>4</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activated" sv:type="Boolean">
           <sv:value>false</sv:value>
@@ -210,29 +214,38 @@
           <sv:value>2006-05-26T10:06:44.641+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-          <sv:value>2006-05-26T10:09:24.241+02:00</sv:value>
+          <sv:value>2006-05-30T13:41:07.524+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2006-05-26T10:09:31.840+02:00</sv:value>
+          <sv:value>2006-05-30T13:41:38.527+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="language">
+    <sv:node sv:name="groups">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>e41dae68-29b8-43b8-9a9d-addfdbc9f74c</sv:value>
+        <sv:value>59f1dbae-8616-49d3-9be9-4d62ab5a1b06</sv:value>
+      </sv:property>
+      <sv:property sv:name="chooseOnclick" sv:type="String">
+        <sv:value>mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>info.magnolia.module.admininterface.dialogs.LanguageSelect</sv:value>
+        <sv:value>multiselect</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
       </sv:property>
       <sv:property sv:name="label" sv:type="String">
-        <sv:value>users.edit.language</sv:value>
+        <sv:value>groups.edit.groups</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activated" sv:type="Boolean">
           <sv:value>false</sv:value>
@@ -244,13 +257,59 @@
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-          <sv:value>2006-05-26T10:25:07.722+02:00</sv:value>
+          <sv:value>2006-05-26T10:06:44.641+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-          <sv:value>2006-05-26T10:25:13.726+02:00</sv:value>
+          <sv:value>2006-05-30T13:40:40.337+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2006-05-26T10:54:22.734+02:00</sv:value>
+          <sv:value>2006-05-30T13:34:44.031+02:00</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
+    <sv:node sv:name="roles">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>ef3d7bf3-378d-4a1c-b299-f58cfb135bdb</sv:value>
+      </sv:property>
+      <sv:property sv:name="chooseOnclick" sv:type="String">
+        <sv:value>mgnlOpenTreeBrowserWithControl($('${prefix}'), 'userroles');</sv:value>
+      </sv:property>
+      <sv:property sv:name="controlType" sv:type="String">
+        <sv:value>multiselect</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
+      <sv:property sv:name="label" sv:type="String">
+        <sv:value>groups.edit.roles</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:activatorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:authorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+          <sv:value>2006-05-26T10:06:44.641+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+          <sv:value>2006-05-30T13:40:40.332+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+          <sv:value>2006-05-30T13:34:23.825+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>

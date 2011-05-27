@@ -62,7 +62,7 @@ public class AdminInterfaceModule implements ModuleLifecycle {
     @Override
     public void start(ModuleLifecycleContext ctx) {
         ctx.registerModuleObservingComponent("controls", ControlsManager.getInstance());
-        ctx.registerModuleObservingComponent("dialogs", DialogHandlerManager.getInstance());
+        ctx.registerModuleObservingComponent("legacyDialogs", DialogHandlerManager.getInstance());
         ctx.registerModuleObservingComponent("pages", PageHandlerManager.getInstance());
         ctx.registerModuleObservingComponent("trees", TreeHandlerManager.getInstance());
 

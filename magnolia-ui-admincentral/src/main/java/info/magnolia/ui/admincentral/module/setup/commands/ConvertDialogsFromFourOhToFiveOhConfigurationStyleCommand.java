@@ -138,7 +138,7 @@ public class ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand extends M
             if (controlClass.endsWith("FckEditorDialog")) {
                 controlTypeName = "FckEditor";
             }
-            String newControlClassName = "info.magnolia.ui.admincentral.control." + controlTypeName + "Control";
+            String newControlClassName = "info.magnolia.ui.admincentral.dialog.field.Dialog" + controlTypeName + "Field";
             try {
                 Class<?> clazz = Class.forName(newControlClassName);
                 controlClass = clazz.getName();
