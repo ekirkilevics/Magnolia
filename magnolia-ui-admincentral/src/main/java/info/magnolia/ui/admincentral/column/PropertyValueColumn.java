@@ -62,7 +62,7 @@ public class PropertyValueColumn extends AbstractEditableColumn<PropertyValueCol
 
     @Override
     protected Component getDefaultComponent(Item item) throws RepositoryException {
-        if (item instanceof Property) {
+        if (!item.isNode()) {
             return new EditableText(item, new PresenterImpl(), item.getName()) {
 
                 @Override

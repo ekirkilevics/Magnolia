@@ -57,7 +57,7 @@ public class PropertyTypeColumn extends AbstractColumn<PropertyTypeColumnDefinit
 
     @Override
     protected Component getDefaultComponent(Item item) throws RepositoryException {
-        if (item instanceof Property) {
+        if (!item.isNode()) {
             Property property = (Property) item;
             return new Label(PropertyType.nameFromValue(property.getType()));
         }

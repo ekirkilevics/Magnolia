@@ -49,16 +49,14 @@ public class ContainerItemId {
     private final String propertyName;
 
     public ContainerItemId(Item item) throws RepositoryException {
-        if (item instanceof Node) {
+        if (item.isNode()) {
             Node node = (Node) item;
             this.nodeIdentifier = node.getIdentifier();
             this.propertyName = null;
-        } else if (item instanceof Property) {
+        } else {
             Property property = (Property) item;
             this.nodeIdentifier = property.getParent().getIdentifier();
             this.propertyName = property.getName();
-        } else {
-            throw new IllegalStateException("Unsupported item type: " + item);
         }
     }
 

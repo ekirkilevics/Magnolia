@@ -47,7 +47,6 @@ import java.util.List;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.query.RowIterator;
 
@@ -87,7 +86,7 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
     public ContainerItemId getParent(Object itemId) {
         try {
             Item item = getJcrItem((ContainerItemId) itemId);
-            if (item instanceof Property) {
+            if (!item.isNode()) {
                 return createContainerId(item.getParent());
             }
             Node node = (Node) item;

@@ -65,7 +65,7 @@ public class MetaDataColumn extends AbstractColumn<MetaDataColumnDefinition> imp
 
     @Override
     protected Component getDefaultComponent(Item item) throws RepositoryException {
-        if (item instanceof Node) {
+        if (item.isNode()) {
             Node node = (Node) item;
             Calendar date = MetaDataUtil.getMetaData(node).getModificationDate();
             final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : UIUtil.DEFAULT_DATE_PATTERN;

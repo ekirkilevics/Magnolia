@@ -130,9 +130,9 @@ public class ContentDriver extends AbstractDriver<Node> {
         if (path.endsWith("@name")) {
             path = StringUtils.substringBefore(path, "@name");
             Item item = getItemByRelPath(node, path);
-            if (item instanceof Node) {
+            if (item.isNode()) {
                 NodeUtil.renameNode(node, (String) value);
-            } else if (item instanceof Property) {
+            } else {
                 PropertyUtil.renameProperty((Property) item, (String) value);
             }
         } else if (value instanceof String) {

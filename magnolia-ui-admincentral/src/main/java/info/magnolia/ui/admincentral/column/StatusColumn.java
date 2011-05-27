@@ -88,7 +88,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
 
     @Override
     protected Component getDefaultComponent(Item item) throws RepositoryException {
-        if (item instanceof Node) {
+        if (item.isNode()) {
             Node node = (Node) item;
             // return new ActivationStatus(node, activation, permissions);
             Integer status;
