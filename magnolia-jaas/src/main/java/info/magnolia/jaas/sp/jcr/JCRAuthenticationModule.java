@@ -161,8 +161,6 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
      */
     @Override
     public void setEntity() {
-        // TODO: cleanup the code !!!
-
         if (isAdmin()) {
             // JR specific principal for repo only authentication. This part will be probably different per repo.
             this.subject.getPrincipals().add(new MagnoliaJRAdminPrincipal(name));
@@ -183,7 +181,6 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
         this.subject.getPrincipals().add(this.realm);
 
 
-        // FIXME: should be removed and set by authorization module only ... check out why it is still here
         collectGroupNames();
         collectRoleNames();
     }
