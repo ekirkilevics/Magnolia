@@ -62,4 +62,43 @@ public class EmbeddedActionDefinition implements PlaceChangeActionDefinition {
         place = new EmbeddedPlace(url);
         return place;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((place == null) ? 0 : place.hashCode());
+        result = prime * result + ((url == null) ? 0 : url.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof EmbeddedActionDefinition)) {
+            return false;
+        }
+        EmbeddedActionDefinition other = (EmbeddedActionDefinition) obj;
+        if (place == null) {
+            if (other.place != null) {
+                return false;
+            }
+        } else if (!place.equals(other.place)) {
+            return false;
+        }
+        if (url == null) {
+            if (other.url != null) {
+                return false;
+            }
+        } else if (!url.equals(other.url)) {
+            return false;
+        }
+        return true;
+    }
+
 }

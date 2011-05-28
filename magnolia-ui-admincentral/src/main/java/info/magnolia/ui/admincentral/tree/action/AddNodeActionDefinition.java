@@ -51,4 +51,22 @@ public class AddNodeActionDefinition implements ActionDefinition {
         this.nodeType = nodeType;
     }
 
+
+    @Override
+    public int hashCode() {
+        return nodeType == null ? 13 : nodeType.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof AddNodeActionDefinition)) {
+            return false;
+        }
+        AddNodeActionDefinition that = (AddNodeActionDefinition) obj;
+        return this.nodeType == null ? that.nodeType == null : this.nodeType
+                .equals(that.nodeType);
+    }
 }

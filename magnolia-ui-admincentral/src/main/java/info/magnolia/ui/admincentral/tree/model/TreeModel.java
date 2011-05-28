@@ -174,6 +174,9 @@ public class TreeModel implements JcrContainerSource {
         return !getChildren(item).isEmpty();
     }
 
+    /**
+     * This method is used by {@link JcrContainer#getColumnValue(String, Object)} to retrieve properties of items.
+     */
     @Override
     public Component getColumnComponent(String columnName, Item item) throws RepositoryException {
         return getColumn(columnName).getComponent(item);
