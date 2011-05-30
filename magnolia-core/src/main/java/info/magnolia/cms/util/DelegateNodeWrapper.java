@@ -74,7 +74,7 @@ import javax.jcr.version.VersionHistory;
  * @author had
  * @version $Id: $
  */
-public abstract class DelegateNodeWrapper implements Node {
+public abstract class DelegateNodeWrapper implements Node, Cloneable {
 
     private Node wrapped;
 
@@ -544,20 +544,43 @@ public abstract class DelegateNodeWrapper implements Node {
 
 
     public Node deepUnwrap(Class wrapper) {
+        return deepUnwrap(wrapper, true);
+    }
+
+    protected Node deepUnwrap(Class wrapper, boolean deepClone) {
         if (this.getClass().equals(wrapper)) {
             return getWrappedNode();
         }
-        if (getWrappedNode() instanceof DelegateNodeWrapper) {
-            // rewrap
-            this.wrapped = ((DelegateNodeWrapper) getWrappedNode()).deepUnwrap(wrapper);
+
+        if (!(getWrappedNode() instanceof DelegateNodeWrapper)) {
+            // it's not us and inner node is not wrapped ... nothing left to do
             return this;
         }
-        // oh well, nothing to unwrap
-        return this;
+
+        try {
+            if (deepClone) {
+                DelegateNodeWrapper tmp = ((DelegateNodeWrapper) this.clone());
+                // wrapped is also DNW, and clone is shallow by default, but we want to go deeper here
+                tmp.wrapped = (Node) ((DelegateNodeWrapper) this.getWrappedNode()).clone();
+                return tmp.deepUnwrap(wrapper, false);
+            } else {
+                // still not at the end ... 
+                wrapped = ((DelegateNodeWrapper) getWrappedNode()).deepUnwrap(wrapper, true);
+                return this;
+            }
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Failed to unwrap " + this.getClass().getName() + " due to " + e.getMessage(), e);
+        }
     }
 
     @Override
     public String toString() {
         return wrapped != null ? wrapped.toString() : "";
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        // just shallow clone ... keep it that way at least for wrappedNode otherwise deepUnwrap generates zillions of objects unnecessarily
+        return super.clone();
     }
 }
