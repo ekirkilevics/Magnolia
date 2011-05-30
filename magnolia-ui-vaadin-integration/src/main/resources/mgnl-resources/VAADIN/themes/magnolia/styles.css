@@ -164,27 +164,27 @@ td.v-datefield-calendarpanel-month,.v-datefield-calendarpanel-weekdays strong,.v
 }
 
 .m-workbench-header {
-  border-top: 1px solid #B6BBBC;
-  border-left: 1px solid #B6BBBC;
+/*   border-top: 1px solid #B6BBBC; */
+/*   border-left: 1px solid #B6BBBC; */
 }
 
-.m-search-box {
+input.v-textfield.m-search-box {
   -moz-border-radius: 15px;
   border-radius: 15px;
   padding-left: 20px !important;
   padding-top: 2px !important;
   padding-bottom: 2px !important;
-  background: #FFF url("img/magnifier.png") no-repeat 2px 4px;
+  background: #FFF url("img/magnifier.png") no-repeat 3px 3px;
   color: #B6BBBC !important;
 }
 
-.m-search-form-expanded {
-  border-top: 1px solid #B6BBBC !important;
-  border-left: 1px solid #B6BBBC !important;
+input.v-textfield.m-search-box:focus {
+  color: #3B4B57 !important;
 }
 
-.m-search-box:focus {
-  color: #3B4B57 !important;
+.m-search-form-expanded {
+/*   border-top: 1px solid #B6BBBC !important; */
+/*   border-left: 1px solid #B6BBBC !important; */
 }
 
 .m-search-form-label {
@@ -192,8 +192,8 @@ td.v-datefield-calendarpanel-month,.v-datefield-calendarpanel-weekdays strong,.v
 }
 
 .m-embedded-view {
-  border-top: 1px solid #B6BBBC;
-  border-left: 1px solid #B6BBBC;
+/*   border-top: 1px solid #B6BBBC; */
+/*   border-left: 1px solid #B6BBBC; */
 }
 
 /**
