@@ -40,6 +40,7 @@ public class EditFieldDefinition extends FieldDefinition {
 
     private int rows;
     private int maxLength = -1;
+    private String width;
 
     public int getRows() {
         return rows;
@@ -55,5 +56,13 @@ public class EditFieldDefinition extends FieldDefinition {
 
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
     }
 }
