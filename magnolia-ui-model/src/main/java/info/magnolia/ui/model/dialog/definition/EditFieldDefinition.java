@@ -39,7 +39,7 @@ package info.magnolia.ui.model.dialog.definition;
 public class EditFieldDefinition extends FieldDefinition {
 
     private int rows;
-    private int maxLength;
+    private int maxLength = -1;
 
     public int getRows() {
         return rows;
