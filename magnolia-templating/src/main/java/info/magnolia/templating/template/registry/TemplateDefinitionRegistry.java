@@ -60,7 +60,7 @@ public class TemplateDefinitionRegistry {
         }
     }
 
-    public TemplateDefinition getTemplateDifinition(String id) throws TemplateDefinitionRegistrationException {
+    public TemplateDefinition getTemplateDefinition(String id) throws TemplateDefinitionRegistrationException {
 
         TemplateDefinitionProvider templateDefinitionProvider;
         synchronized (providers) {
