@@ -67,6 +67,10 @@ public class DialogPresenterFactoryImpl implements DialogPresenterFactory {
             throw new RuntimeRepositoryException(e);
         }
 
+        if (dialogDefinition == null) {
+            throw new IllegalArgumentException("No dialog definition registered for name [" + dialogName + "]");
+        }
+
         DialogBuilder builder = componentProvider.newInstance(DialogBuilder.class);
 
         return new DialogPresenter(builder, dialogDefinition);
