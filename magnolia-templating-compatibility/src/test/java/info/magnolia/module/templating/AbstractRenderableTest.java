@@ -75,7 +75,7 @@ public class AbstractRenderableTest extends TestCase {
     public void testModelNeedSpecificConstructor() {
         final AbstractRenderable renderable = new AbstractRenderable() {
         };
-        renderable.setModelClass((Class< ? extends info.magnolia.templating.model.RenderingModel< ? >>) NoConstructorModel.class);
+        renderable.setModelClass(NoConstructorModel.class);
         try {
             final RenderingModel m = renderable.newModel(dummyContent, dummyDef, dummyParentModel);
             fail("should have failed");

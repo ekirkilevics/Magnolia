@@ -36,13 +36,13 @@ package info.magnolia.module.templatingcomponents.componentsx;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.module.templating.ParagraphManager;
-import info.magnolia.module.templating.RenderableDefinition;
-import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.RenderableDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 
 import java.io.IOException;
 import java.util.List;
@@ -64,15 +64,14 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
 
     private final ServerConfiguration server;
     private final AggregationState aggregationState;
-    private final TemplateManager templateManager;
-    private final ParagraphManager paragraphManagerManager;
+    private final TemplateDefinitionRegistry templateDefinitionRegistry;
 
     protected AbstractAuthoringUiComponent(final ServerConfiguration server, final AggregationState aggregationState) {
         this.server = server;
         this.aggregationState = aggregationState;
 
-        this.templateManager = TemplateManager.getInstance();
-        this.paragraphManagerManager = ParagraphManager.getInstance();
+        // TODO dlipp: better use IoC here.
+        this.templateDefinitionRegistry = Components.getComponent(TemplateDefinitionRegistry.class);
     }
 
     protected ServerConfiguration getServer() {
@@ -135,11 +134,12 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
 
     protected String getI18BasenameFor(Content content) {
         final String templateName = content.getMetaData().getTemplate();
-        final RenderableDefinition renderable;
-        if (content.isNodeType(ItemType.CONTENT.getSystemName())) {
-            renderable = templateManager.getTemplateDefinition(templateName);
-        } else {
-            renderable = paragraphManagerManager.getParagraphDefinition(templateName);
+        RenderableDefinition renderable;
+        try {
+            renderable = templateDefinitionRegistry.getTemplateDefinition(templateName);
+        } catch (TemplateDefinitionRegistrationException e) {
+            // TODO dlipp: apply consistent ExceptionHandling here.
+            throw new RuntimeException(e);
         }
         if (renderable != null && renderable.getI18nBasename() != null) {
             return renderable.getI18nBasename();

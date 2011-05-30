@@ -5,7 +5,13 @@ import info.magnolia.templating.template.configured.ConfiguredParagraphAvailabil
 import java.util.Map;
 
 
-public interface AreaDefinition {
+/**
+ * Definition for a Area.
+ *
+ * @version $Id$
+ */
+
+public interface AreaDefinition extends TemplateDefinition {
 
     public abstract Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs();
 

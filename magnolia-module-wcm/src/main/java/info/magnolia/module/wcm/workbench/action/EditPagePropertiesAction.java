@@ -37,8 +37,9 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.ui.admincentral.tree.action.TreeAction;
@@ -58,11 +59,11 @@ import javax.jcr.RepositoryException;
 public class EditPagePropertiesAction extends ActionBase<EditPagePropertiesActionDefinition> implements TreeAction {
 
     private DialogPresenterFactory dialogPresenterFactory;
-    private TemplateManager templateManager;
+    private TemplateDefinitionRegistry templateManager;
 
     private Node nodeToEdit;
 
-    public EditPagePropertiesAction(EditPagePropertiesActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, TemplateManager templateManager, Node nodeToEdit) {
+    public EditPagePropertiesAction(EditPagePropertiesActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, TemplateDefinitionRegistry templateManager, Node nodeToEdit) {
         super(definition);
         this.dialogPresenterFactory = dialogPresenterFactory;
         this.templateManager = templateManager;
@@ -92,7 +93,13 @@ public class EditPagePropertiesAction extends ActionBase<EditPagePropertiesActio
     private String getDialogName() {
         MetaData metaData = MetaDataUtil.getMetaData(nodeToEdit);
         String template = metaData.getTemplate();
-        Template templateDefinition = templateManager.getTemplateDefinition(template);
+        TemplateDefinition templateDefinition;
+        try {
+            templateDefinition = templateManager.getTemplateDefinition(template);
+        } catch (TemplateDefinitionRegistrationException e) {
+            // TODO dlipp: apply consistent ExceptionHandling.
+            throw new RuntimeException(e);
+        }
         return templateDefinition != null ? templateDefinition.getDialog() : null;
     }
 }

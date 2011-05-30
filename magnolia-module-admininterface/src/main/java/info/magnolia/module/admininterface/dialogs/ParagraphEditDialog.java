@@ -40,9 +40,10 @@ import info.magnolia.module.admininterface.DialogHandlerManager;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 import info.magnolia.module.admininterface.InvalidDialogHandlerException;
 import info.magnolia.module.admininterface.SaveHandler;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 
 import java.io.IOException;
 
@@ -87,7 +88,13 @@ public class ParagraphEditDialog extends ConfiguredDialog {
         if (StringUtils.isEmpty(paragraphName)) {
             throw new IllegalStateException("No paragraph selected.");
         }
-        final Paragraph para = ParagraphManager.getInstance().getParagraphDefinition(paragraphName);
+        TemplateDefinition para;
+        try {
+            para = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(paragraphName);
+        } catch (TemplateDefinitionRegistrationException e) {
+            // TODO dlipp: apply consistent ExceptionHandling.
+            throw new RuntimeException(e);
+        }
         if (para == null) {
             throw new IllegalStateException("No paragraph registered with name " + paragraphName);
         }

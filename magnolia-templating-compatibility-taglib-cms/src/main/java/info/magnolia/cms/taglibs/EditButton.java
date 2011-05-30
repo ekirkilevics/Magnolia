@@ -33,20 +33,23 @@
  */
 package info.magnolia.cms.taglibs;
 
-import java.io.Writer;
-
-import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.ButtonEdit;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+
+import java.io.Writer;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -208,8 +211,14 @@ public class EditButton extends TagSupport {
     public String getTemplate() {
         if (this.displayHandler == null) {
             Content localContainer = MgnlContext.getWebContext().getAggregationState().getCurrentContent();
-            String templateName = localContainer.getNodeData("dialog").getString(); //$NON-NLS-1$
-            return ParagraphManager.getInstance().getParagraphDefinition(templateName).getTemplatePath();
+            String templateName = localContainer.getNodeData("dialog").getString();
+            // TODO - use IoC for TemplateDefinitionRegistry?
+            try {
+                return Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(templateName).getTemplateScript();
+            } catch (TemplateDefinitionRegistrationException e) {
+                // TODO dlipp: implement proper, consisitent ExceptionHandling!
+                throw new RuntimeException(e);
+            }
         }
         return this.displayHandler;
     }

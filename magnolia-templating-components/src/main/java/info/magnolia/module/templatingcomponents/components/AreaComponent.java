@@ -38,12 +38,14 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.Area;
-import info.magnolia.module.templating.ParagraphConfig;
-import info.magnolia.module.templating.RenderException;
-import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.rendering.RenderingEngine;
+import info.magnolia.templating.template.AreaDefinition;
+import info.magnolia.templating.template.configured.ConfiguredAreaDefinition;
+import info.magnolia.templating.template.configured.ConfiguredParagraphAvailability;
 
+import java.awt.geom.Area;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -67,7 +69,7 @@ public class AreaComponent extends AbstractContentComponent {
     public static final String DEFAULT_TYPE = TYPE_LIST;
 
     private String name;
-    private Area area;
+    private AreaDefinition area;
     /**
      * Comma separated list of paragraphs.
      */
@@ -93,7 +95,7 @@ public class AreaComponent extends AbstractContentComponent {
 
         // Can already be set - or not. If not, we set it in order to avoid tons of if statements in the beyond code...
         if (area == null) {
-            area = new Area();
+            area = new ConfiguredAreaDefinition();
         }
 
         param(out, "name", resolveName());
@@ -137,10 +139,9 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     private void renderParagraph(RenderingEngine renderingEngine, PrintWriter writer, Node node) throws RepositoryException {
-        // TODO RenderingEngine should use Node instead of Content
-        Content wrappedContent = MgnlContext.getHierarchyManager(node.getSession().getWorkspace().getName()).getContentByUUID(node.getUUID());
         try {
-            renderingEngine.render(wrappedContent, writer);
+            // FIXME: where to get RenderableDefinition and Context from?
+            renderingEngine.render(node, writer);
         } catch (RenderException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -155,7 +156,7 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     private String resolveType() {
-        return type != null ? type : area != null && area.getType() != null ? area.getType() : DEFAULT_TYPE;
+        return type != null ? type : area != null && area.getRenderType() != null ? area.getRenderType() : DEFAULT_TYPE;
     }
 
     private String resolveName() {
@@ -177,7 +178,7 @@ public class AreaComponent extends AbstractContentComponent {
             return paragraphs;
         }
         if (area != null && area.getAvailableParagraphs().size() > 0) {
-            Iterator<ParagraphConfig> iterator = area.getAvailableParagraphs().values().iterator();
+            Iterator<ConfiguredParagraphAvailability> iterator = area.getAvailableParagraphs().values().iterator();
             StringBuilder builder = new StringBuilder();
             builder.append(iterator.next().getName());
             while (iterator.hasNext()) {
@@ -196,11 +197,11 @@ public class AreaComponent extends AbstractContentComponent {
         this.name = name;
     }
 
-    public Area getArea() {
+    public AreaDefinition getArea() {
         return area;
     }
 
-    public void setArea(Area area) {
+    public void setArea(AreaDefinition area) {
         this.area = area;
     }
 

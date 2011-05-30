@@ -35,8 +35,9 @@ package info.magnolia.module.wcm.workbench.action;
 
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.jcr.util.MetaDataUtil;
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.ui.admincentral.jcr.HackContent;
 import info.magnolia.ui.admincentral.tree.action.AddNodeAction;
 import info.magnolia.ui.admincentral.tree.action.AddNodeActionDefinition;
@@ -61,7 +62,7 @@ public class AddPageAction extends AddNodeAction {
     protected void postProcessNode(Node newNode) throws RepositoryException {
         MetaData metaData = MetaDataUtil.getMetaData(newNode);
         MetaDataUtil.updateMetaData(newNode);
-        Template newTemplate = TemplateManager.getInstance().getDefaultTemplate(new HackContent(newNode));
+        TemplateDefinition newTemplate = Components.getComponent(TemplateDefinitionRegistry.class).getDefaultTemplate(new HackContent(newNode));
         if (newTemplate != null) {
             metaData.setTemplate(newTemplate.getName());
         }

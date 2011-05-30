@@ -33,23 +33,24 @@
  */
 package info.magnolia.module.admininterface.trees;
 
-import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
  * @author philipp
  */
 public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
-    private final TemplateManager templateManager;
+    private final TemplateDefinitionRegistry templateManager;
 
     public TemplateTreeColumnHtmlRenderer() {
-        templateManager = TemplateManager.getInstance();
+        templateManager = Components.getComponent(TemplateDefinitionRegistry.class);
     }
 
     /**
@@ -58,7 +59,7 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
     @Override
     public String renderHtml(TreeColumn treeColumn, Content content) {
         String templateName = content.getMetaData().getTemplate();
-        Template template = templateManager.getTemplateDefinition(templateName);
+        TemplateDefinition template = templateManager.getTemplateDefinition(templateName);
         return template != null ? template.getI18NTitle() : StringUtils.defaultString(templateName);
     }
 

@@ -36,8 +36,10 @@ package info.magnolia.module.templatingcomponents.components;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.jcr.util.MetaDataUtil;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 
 import java.io.IOException;
 
@@ -73,7 +75,13 @@ public class EditComponent extends AbstractContentComponent {
         if (StringUtils.isNotEmpty(format)) {
             out.append(" format=").append(QUOTE).append(format).append(QUOTE);
         }
-        Paragraph paragraph = ParagraphManager.getInstance().getParagraphDefinition(MetaDataUtil.getMetaData(content).getTemplate());
+        TemplateDefinition paragraph;
+        try {
+            paragraph = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(MetaDataUtil.getMetaData(content).getTemplate());
+        } catch (TemplateDefinitionRegistrationException e) {
+            // TODO dlipp: implement consistent ExceptionHandling for these Situations.
+            throw new RuntimeException(e);
+        }
         out.append(" label=").append(QUOTE).append(paragraph.getTitle()).append(QUOTE);
 
         out.append(" dialog=").append(QUOTE).append(resolveDialog(paragraph)).append(QUOTE);
@@ -83,8 +91,8 @@ public class EditComponent extends AbstractContentComponent {
         out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_EDIT).append(GREATER_THAN).append(LINEBREAK);
     }
 
-    // TODO this is used in a few more places (might be a good candidate to add to ParagraphManager)
-    private String resolveDialog(Paragraph paragraph) {
+    // TODO this is used in a few more places - check for a better place to move to.
+    private String resolveDialog(TemplateDefinition paragraph) {
         if (this.dialog != null) {
             return this.dialog;
         }

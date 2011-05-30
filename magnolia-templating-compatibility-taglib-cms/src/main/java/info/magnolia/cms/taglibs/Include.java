@@ -37,8 +37,8 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.rendering.RenderingEngine;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,6 +79,7 @@ public class Include extends BodyTagSupport {
     /**
      * The instance contentNode (i.e. paragraph) you wish to show.
      */
+    // TODO dlipp: use JCR-Api directly
     private transient Content contentNode;
 
     /**
@@ -214,7 +215,8 @@ public class Include extends BodyTagSupport {
                 webContext.setPageContext(pageContext);
                 webContext.push((HttpServletRequest)pageContext.getRequest(), (HttpServletResponse)pageContext.getResponse());
                 try {
-                    renderingEngine.render(content, pageContext.getOut());
+                    //FIMXE dlipp: won't work - have to derive where to get RenderableDefinition and context from
+                    renderingEngine.render(content.getJCRNode(), pageContext.getOut());
                 } finally{
                     webContext.pop();
                     webContext.setPageContext(null);

@@ -33,18 +33,19 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
-import java.io.IOException;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.module.templating.RenderException;
-import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.rendering.RenderingEngine;
+
+import java.io.IOException;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * Renders a piece of content.
@@ -68,14 +69,13 @@ public class RenderComponent extends AbstractContentComponent {
     public void postRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
 
-        Content wrappedContent = MgnlContext.getHierarchyManager(content.getSession().getWorkspace().getName()).getContentByUUID(content.getUUID());
-
         RenderingEngine renderingEngine = Components.getSingleton(RenderingEngine.class);
 
         WebContext webContext = MgnlContext.getWebContext();
         webContext.push(webContext.getRequest(), webContext.getResponse());
         try {
-            renderingEngine.render(wrappedContent, webContext.getResponse().getWriter());
+            // FIXME dlipp: where to get missing arguments (RenderableDefinition, context) from?
+            renderingEngine.render(content, webContext.getResponse().getWriter());
         } catch (RenderException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } finally{

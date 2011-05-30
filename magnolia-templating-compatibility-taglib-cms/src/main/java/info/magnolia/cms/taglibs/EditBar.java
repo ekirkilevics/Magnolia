@@ -33,26 +33,28 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.gui.control.Button;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarEdit;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
 
 import javax.servlet.jsp.tagext.TagSupport;
-import java.io.IOException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Displays Magnolia editBar which allows you to edit a paragraph. This tag is often used within
@@ -281,7 +283,7 @@ public class EditBar extends TagSupport {
                 bar.placeDefaultButtons();
 
                 if (isShowParagraphName() && this.dialog == null) {
-                    final Paragraph paragraphInfo = ParagraphManager.getInstance().getParagraphDefinition(paragraphToUse);
+                    final TemplateDefinition paragraphInfo = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(paragraphToUse);
                     final Messages msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
                     final String label = msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle());
                     bar.setLabel(label);
@@ -290,7 +292,10 @@ public class EditBar extends TagSupport {
                 bar.drawHtml(pageContext.getOut());
             }
             catch (IOException e) {
-                throw new NestableRuntimeException(e);
+                throw new RuntimeException(e);
+            }
+            catch (TemplateDefinitionRegistrationException e1) {
+                throw new RuntimeException(e1);
             }
         }
         reset();

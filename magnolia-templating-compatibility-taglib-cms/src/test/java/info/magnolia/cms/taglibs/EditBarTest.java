@@ -33,20 +33,26 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.templating.template.RenderableDefinition;
+import info.magnolia.templating.template.configured.ConfiguredRenderableDefinition;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTagTestCase;
-import static org.easymock.EasyMock.*;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.Collections;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.poi.hwpf.usermodel.Paragraph;
 
 /**
  * @author gjoseph
@@ -82,7 +88,7 @@ public class EditBarTest extends MgnlTagTestCase {
 
     public void testDisplaysParagraphNameAsLabel() throws Exception {
         final String paraTitle = "testParaTitleKey";
-        final Paragraph paraInfo = new Paragraph();
+        final RenderableDefinition paraInfo = new ConfiguredRenderableDefinition();
         paraInfo.setI18nBasename("test.messages");
         paraInfo.setTitle(paraTitle);
 

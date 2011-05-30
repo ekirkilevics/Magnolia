@@ -33,6 +33,13 @@
  */
 package info.magnolia.module.wcm.editor;
 
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.vaadin.event.ShortcutAction;
@@ -41,10 +48,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
 
 /**
  * Dialog for selecting a paragraph to add.
@@ -58,8 +61,7 @@ public class ParagraphSelectionDialog extends Window {
     public ParagraphSelectionDialog(String paragraphs) {
 
         // TODO use IoC
-        final ParagraphManager paragraphManager = ParagraphManager.getInstance();
-
+        final TemplateDefinitionRegistry paragraphManager = Components.getComponent(TemplateDefinitionRegistry.class);
         setCaption("Select paragraph");
         setModal(true);
         setResizable(true);
@@ -76,7 +78,13 @@ public class ParagraphSelectionDialog extends Window {
                 String paragraphName = (String) optionGroup.getValue();
                 if (paragraphName != null) {
 
-                    Paragraph paragraph = paragraphManager.getParagraphDefinition(paragraphName);
+                    TemplateDefinition paragraph;
+                    try {
+                        paragraph = paragraphManager.getTemplateDefinition(paragraphName);
+                    } catch (TemplateDefinitionRegistrationException e) {
+                        // TODO dlipp: apply consistent ExceptionHandling
+                        throw new RuntimeException(e);
+                    }
                     if (paragraph != null) {
 
                         close();
@@ -111,7 +119,13 @@ public class ParagraphSelectionDialog extends Window {
         String[] paragraphsArray = StringUtils.split(paragraphs, ", \t\n");
 
         for (String paragraph : paragraphsArray) {
-            Paragraph paragraphDefinition = paragraphManager.getParagraphDefinition(paragraph);
+            TemplateDefinition paragraphDefinition;
+            try {
+                paragraphDefinition = paragraphManager.getTemplateDefinition(paragraph);
+            } catch (TemplateDefinitionRegistrationException e) {
+                // TODO dlipp: apply consistent ExceptionHandling
+                throw new RuntimeException(e);
+            }
             if (paragraphDefinition == null) {
                 continue;
             }
@@ -134,6 +148,6 @@ public class ParagraphSelectionDialog extends Window {
         super.getContent().addComponent(layout);
     }
 
-    protected void onClosed(Paragraph paragraph) {
+    protected void onClosed(TemplateDefinition paragraph) {
     }
 }

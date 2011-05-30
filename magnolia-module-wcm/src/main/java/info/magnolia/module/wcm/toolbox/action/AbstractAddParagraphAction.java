@@ -35,11 +35,11 @@ package info.magnolia.module.wcm.toolbox.action;
 
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.jcr.util.MetaDataUtil;
-import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.PageEditorHacks;
 import info.magnolia.module.wcm.editor.ContentSelection;
 import info.magnolia.module.wcm.editor.PageChangedEvent;
 import info.magnolia.module.wcm.editor.ParagraphSelectionDialog;
+import info.magnolia.templating.template.TemplateDefinition;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.admincentral.dialog.DialogSaveCallback;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
@@ -81,7 +81,7 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
 
         ParagraphSelectionDialog paragraphSelectionDialog = new ParagraphSelectionDialog(selection.getParagraphs()) {
             @Override
-            protected void onClosed(final Paragraph paragraph) {
+            protected void onClosed(final TemplateDefinition paragraph) {
                 String dialogName = PageEditorHacks.getDialogUsedByParagraph(paragraph);
                 if (dialogName != null) {
 
@@ -114,7 +114,7 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
         this.selection = selection;
     }
 
-    protected void onPreSave(Node node, Paragraph paragraph) throws RepositoryException {
+    protected void onPreSave(Node node, TemplateDefinition paragraph) throws RepositoryException {
         MetaData metaData = MetaDataUtil.getMetaData(node);
         metaData.setTemplate(paragraph.getName());
     }

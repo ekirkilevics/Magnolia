@@ -33,15 +33,16 @@
  */
 package info.magnolia.module.wcm.toolbox.action;
 
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.module.wcm.editor.ContentSelection;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
+import info.magnolia.ui.framework.event.EventBus;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.Application;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.wcm.editor.ContentSelection;
-import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
-import info.magnolia.ui.framework.event.EventBus;
 
 /**
  * Opens a dialog for adding a paragraph at the top of an area.
@@ -55,7 +56,7 @@ public class AddParagraphAtTopAction extends AbstractAddParagraphAction<AddParag
     }
 
     @Override
-    protected void onPreSave(Node node, Paragraph paragraph) throws RepositoryException {
+    protected void onPreSave(Node node, TemplateDefinition paragraph) throws RepositoryException {
         NodeUtil.orderFirst(node);
         super.onPreSave(node, paragraph);
     }
