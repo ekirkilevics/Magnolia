@@ -19,7 +19,7 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-templating</artifactId>
+      <artifactId>magnolia-templating</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

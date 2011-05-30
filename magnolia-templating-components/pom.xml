@@ -56,7 +56,7 @@
       <version>4.4-SNAPSHOT</version> <scope>provided</scope> </dependency -->
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-templating</artifactId>
+      <artifactId>magnolia-templating</artifactId>
       <version>5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
