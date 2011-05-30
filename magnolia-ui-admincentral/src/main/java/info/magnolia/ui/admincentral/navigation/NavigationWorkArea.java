@@ -64,7 +64,7 @@ public class NavigationWorkArea implements IsVaadinComponent {
         }
 
         //all work areas start not visible
-        customComponent.setVisible(false);
+        // customComponent.setVisible(false);
     }
 
     public List<NavigationGroup> getNavigationGroup() {

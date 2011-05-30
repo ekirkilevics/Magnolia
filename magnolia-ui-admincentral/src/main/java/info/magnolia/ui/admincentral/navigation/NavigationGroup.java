@@ -65,36 +65,49 @@ import com.vaadin.ui.themes.BaseTheme;
 
 
 /**
- * A group of navigation items defined by a collection of NavigationItemDefinitions (e.g. website, data). It's part of a {@link NavigationWorkArea}.
- *
+ * A group of navigation items defined by a collection of NavigationItemDefinitions (e.g. website,
+ * data). It's part of a {@link NavigationWorkArea}.
+ * 
  * @author fgrilli
  */
-public class NavigationGroup implements NavigationView, IsVaadinComponent{
+public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     private static final Logger log = LoggerFactory.getLogger(NavigationGroup.class);
 
     private Map<Component, NavigationItemDefinition> navigationItems = new HashMap<Component, NavigationItemDefinition>();
+
     private Accordion accordion = new Accordion();
+
     private Collection<NavigationItemDefinition> navigationItemDefs;
+
     private NavigationPermissionSchema permissions;
+
     private Presenter presenter;
+
     private NavigationWorkArea navigationWorkarea;
+
     private CustomComponent customComponent;
 
     public NavigationGroup(Collection<NavigationItemDefinition> navigationItemDefs, NavigationPermissionSchema permissions) {
-        customComponent = new CustomComponent(){{setCompositionRoot(accordion);}};
+        customComponent = new CustomComponent() {
+
+            {
+                setCompositionRoot(accordion);
+            }
+        };
         customComponent.setSizeFull();
         this.navigationItemDefs = navigationItemDefs;
         this.permissions = permissions;
 
-        for(NavigationItemDefinition navigationItemDef : this.navigationItemDefs) {
-            if(this.permissions.hasPermission(navigationItemDef)){
+        for (NavigationItemDefinition navigationItemDef : this.navigationItemDefs) {
+            if (this.permissions.hasPermission(navigationItemDef)) {
                 // register new top level menu
                 addTab(navigationItemDef, this.permissions);
             }
         }
 
-        // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items
+        // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs
+        // only for sub menu items
         accordion.addListener(new SelectedNavigationItemTabChangeListener());
     }
 
@@ -113,7 +126,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
         Component subNavigation = addSubNavigationItems(navigationItemDef, permissions);
         Tab tab = accordion.addTab(subNavigation == null ? new Label() : subNavigation, getLabel(navigationItemDef), getIcon(navigationItemDef));
         // store tab reference
-        this.navigationItems.put(tab.getComponent(), navigationItemDef);
+        navigationItems.put(tab.getComponent(), navigationItemDef);
     }
 
     /**
@@ -125,16 +138,16 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
         if (navigationItemDef.getItems().isEmpty()) {
             return null;
         }
-        final GridLayout layout = new GridLayout(1,1);
+        final GridLayout layout = new GridLayout(1, 1);
         layout.setSpacing(true);
         layout.setMargin(true);
         // sub menu items (2 levels only)
-        for (NavigationItemDefinition sub :  navigationItemDef.getItems()) {
+        for (NavigationItemDefinition sub : navigationItemDef.getItems()) {
             if (permissions.hasPermission(sub)) {
                 NavigationItem submenuItem = new NavigationItem(sub);
                 layout.addComponent(submenuItem);
                 // store submenu reference
-                this.navigationItems.put(submenuItem, sub);
+                navigationItems.put(submenuItem, sub);
             }
         }
 
@@ -145,10 +158,10 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
      * Converts label key into i18n-ized string.
      */
     protected String getLabel(NavigationItemDefinition menuItem) {
-        return  MessagesUtil.getWithDefault(menuItem.getLabel(), menuItem.getLabel(), menuItem.getI18nBasename());
+        return MessagesUtil.getWithDefault(menuItem.getLabel(), menuItem.getLabel(), menuItem.getI18nBasename());
     }
 
-    protected Resource getIcon(NavigationItemDefinition menuItem){
+    protected Resource getIcon(NavigationItemDefinition menuItem) {
         if (menuItem.getIcon() == null) {
             return null;
         }
@@ -177,7 +190,8 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
         }
 
         /**
-         * See {@link com.vaadin.ui.AbstractComponent#getApplication()} javadoc as to why we need to do most of the initialization here and not in the constructor.
+         * See {@link com.vaadin.ui.AbstractComponent#getApplication()} javadoc as to why we need to
+         * do most of the initialization here and not in the constructor.
          */
         @Override
         public void attach() {
@@ -186,7 +200,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
             if (icon != null) {
                 setIcon(icon);
             }
-            setCaption(NavigationGroup.this.getLabel(item));
+            setCaption(getLabel(item));
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(20f, Button.UNITS_PIXELS);
 
@@ -194,11 +208,13 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
 
                 @Override
                 public void buttonClick(ClickEvent event) {
-                    NavigationItemDefinition menuConfig = navigationItems.get(event.getComponent());
-                    presenter.onMenuSelection(menuConfig);
+                    if (presenter != null) {
+                        NavigationItemDefinition menuConfig = navigationItems.get(event.getComponent());
+                        presenter.onMenuSelection(menuConfig);
+                    }
                 }
             });
-       }
+        }
     }
 
     /**
@@ -227,12 +243,12 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
 
     @Override
     public void update(Place place) {
-        for(Entry<Component, NavigationItemDefinition> entry : navigationItems.entrySet()){
-            if(!(entry.getValue().getActionDefinition() instanceof PlaceChangeActionDefinition)){
+        for (Entry<Component, NavigationItemDefinition> entry : navigationItems.entrySet()) {
+            if (!(entry.getValue().getActionDefinition() instanceof PlaceChangeActionDefinition)) {
                 continue;
             }
             final PlaceChangeActionDefinition definition = (PlaceChangeActionDefinition) entry.getValue().getActionDefinition();
-            if(definition.getPlace().equals(place)){
+            if (definition.getPlace().equals(place)) {
                 accordion.setSelectedTab(entry.getKey());
                 navigationWorkarea.setVisible(true);
                 log.debug("selected tab {}", entry.getValue().getName());
