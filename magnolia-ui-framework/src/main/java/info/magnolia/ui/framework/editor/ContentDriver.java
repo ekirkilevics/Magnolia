@@ -40,6 +40,7 @@ import info.magnolia.jcr.util.PropertyUtil;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
@@ -48,6 +49,8 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -56,6 +59,8 @@ import org.apache.commons.lang.StringUtils;
  * @author tmattsson
  */
 public class ContentDriver extends AbstractDriver<Node> {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void edit(final Node node) {
@@ -147,16 +152,25 @@ public class ContentDriver extends AbstractDriver<Node> {
                 property.setValue(StringUtils.EMPTY);
             } else if (value instanceof String) {
                 property.setValue((String) value);
+            } else if (value instanceof Calendar) {
+                property.setValue((Calendar) value);
+            } else if (value instanceof Date) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime((Date) value);
+                node.setProperty(path, calendar);
             } else if (value instanceof Long) {
                 property.setValue((Long) value);
             } else if (value instanceof Double) {
                 property.setValue((Double) value);
-            } else if (value instanceof Calendar) {
-                property.setValue((Calendar) value);
             } else if (value instanceof Boolean) {
                 property.setValue((Boolean) value);
             } else if (value instanceof BigDecimal) {
                 property.setValue((BigDecimal) value);
+            } else {
+                logger.error("Unable to write value [" + value +
+                        "] of type [" + value.getClass().getName() +
+                        "] at [" + path +
+                        "]");
             }
 
         } else {
@@ -167,6 +181,10 @@ public class ContentDriver extends AbstractDriver<Node> {
                 node.setProperty(path, (String) value);
             } else if (value instanceof Calendar) {
                 node.setProperty(path, (Calendar) value);
+            } else if (value instanceof Date) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime((Date) value);
+                node.setProperty(path, calendar);
             } else if (value instanceof Long) {
                 node.setProperty(path, (Long) value);
             } else if (value instanceof Double) {
@@ -175,6 +193,11 @@ public class ContentDriver extends AbstractDriver<Node> {
                 node.setProperty(path, (Boolean) value);
             } else if (value instanceof BigDecimal) {
                 node.setProperty(path, (BigDecimal) value);
+            } else {
+                logger.error("Unable to write value [" + value +
+                        "] of type [" + value.getClass().getName() +
+                        "] at [" + path +
+                        "]");
             }
         }
     }
@@ -184,13 +207,28 @@ public class ContentDriver extends AbstractDriver<Node> {
         if (path.endsWith("@name")) {
             path = StringUtils.substringBefore(path, "@name");
             valueEditor.setValue(getItemByRelPath(node, path).getName());
-        } else if (type.equals(String.class)) {
-            if (node.hasProperty(path)) {
+            return;
+        }
+
+        if (node.hasProperty(path)) {
+            if (type.equals(String.class)) {
                 valueEditor.setValue(node.getProperty(path).getString());
-            }
-        } else if (type.equals(Calendar.class)) {
-            if (node.hasProperty(path)) {
+            } else if (type.equals(Calendar.class)) {
                 valueEditor.setValue(node.getProperty(path).getDate());
+            } else if (type.equals(Date.class)) {
+                valueEditor.setValue(node.getProperty(path).getDate().getTime());
+            } else if (type.equals(Long.class)) {
+                valueEditor.setValue(node.getProperty(path).getLong());
+            } else if (type.equals(Double.class)) {
+                valueEditor.setValue(node.getProperty(path).getDouble());
+            } else if (type.equals(Boolean.class)) {
+                valueEditor.setValue(node.getProperty(path).getBoolean());
+            } else if (type.equals(BigDecimal.class)) {
+                valueEditor.setValue(node.getProperty(path).getDecimal());
+            } else {
+                logger.error("Unable to read value at [" + path +
+                        "] as expected type [" + type.getName() +
+                        "]");
             }
         }
     }
