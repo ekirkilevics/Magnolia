@@ -78,9 +78,6 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>ee18ea8e-254e-4694-a6e6-74564c75ba9f</sv:value>
       </sv:property>
-      <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>tab</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
@@ -161,9 +158,6 @@
           </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>Single Row</sv:value>
-          </sv:property>
-          <sv:property sv:name="type" sv:type="String">
-            <sv:value>String</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -532,9 +526,6 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>8762a8c1-b659-459d-9661-e6b328a1e6e7</sv:value>
       </sv:property>
-      <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>tab</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
@@ -698,9 +689,6 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>2230f15e-0801-485b-9a30-bc66bdb1a9d0</sv:value>
       </sv:property>
-      <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>tab</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
@@ -811,9 +799,6 @@
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>38fffcf3-9c26-43ad-84c1-495c11974f28</sv:value>
-      </sv:property>
-      <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>tab</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -974,9 +959,6 @@
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>0749836d-694b-4594-bcca-79b72a8fe6db</sv:value>
-      </sv:property>
-      <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>tab</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -1183,9 +1165,6 @@
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>99afe563-f9a6-4ed5-b50e-c5e031663b66</sv:value>
-      </sv:property>
-      <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>tab</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
