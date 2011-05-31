@@ -38,6 +38,7 @@ import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 
 import javax.jcr.Item;
@@ -135,10 +136,46 @@ public class ContentDriver extends AbstractDriver<Node> {
             } else {
                 PropertyUtil.renameProperty((Property) item, (String) value);
             }
-        } else if (value instanceof String) {
-            node.getProperty(path).setValue((String) value);
-        } else if (value instanceof Calendar) {
-            node.getProperty(path).setValue((Calendar) value);
+            return;
+        }
+
+        if (node.hasProperty(path)) {
+            // This works for path='MetaData/mgnl:template' and 'title'
+            Property property = node.getProperty(path);
+
+            if (value == null) {
+                property.setValue(StringUtils.EMPTY);
+            } else if (value instanceof String) {
+                property.setValue((String) value);
+            } else if (value instanceof Long) {
+                property.setValue((Long) value);
+            } else if (value instanceof Double) {
+                property.setValue((Double) value);
+            } else if (value instanceof Calendar) {
+                property.setValue((Calendar) value);
+            } else if (value instanceof Boolean) {
+                property.setValue((Boolean) value);
+            } else if (value instanceof BigDecimal) {
+                property.setValue((BigDecimal) value);
+            }
+
+        } else {
+            // TODO This only works when path is a simple property name
+            if (value == null) {
+                node.setProperty(path, StringUtils.EMPTY);
+            } else if (value instanceof String) {
+                node.setProperty(path, (String) value);
+            } else if (value instanceof Calendar) {
+                node.setProperty(path, (Calendar) value);
+            } else if (value instanceof Long) {
+                node.setProperty(path, (Long) value);
+            } else if (value instanceof Double) {
+                node.setProperty(path, (Double) value);
+            } else if (value instanceof Boolean) {
+                node.setProperty(path, (Boolean) value);
+            } else if (value instanceof BigDecimal) {
+                node.setProperty(path, (BigDecimal) value);
+            }
         }
     }
 
