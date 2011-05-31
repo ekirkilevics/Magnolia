@@ -70,12 +70,9 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
     }
 
     @Override
-    public void setValue(T object) {
-        // TODO special case for DateField
-        if (type.equals(Date.class) && object instanceof Calendar) {
-            object = (T) ((Calendar)object).getTime();
-        }
-        field.setValue(object);
+    public void setValue(T value) {
+        value = (T) convertToEditorTypeIfNecessary(value, type);
+        field.setValue(value);
     }
 
     @Override
@@ -125,6 +122,8 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
                 return value;
             }
             if (value instanceof String) {
+                if (StringUtils.isEmpty((String) value))
+                    return 0L;
                 return Long.valueOf((String) value);
             }
         } else if (targetType.equals(Double.class)) {
@@ -132,6 +131,8 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
                 return value;
             }
             if (value instanceof String) {
+                if (StringUtils.isEmpty((String) value))
+                    return 0.0d;
                 return Double.valueOf((String) value);
             }
         } else if (targetType.equals(Boolean.class)) {
@@ -146,6 +147,8 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
                 return value;
             }
             if (value instanceof String) {
+                if (StringUtils.isEmpty((String) value))
+                    return BigDecimal.ZERO;
                 return new BigDecimal((String) value);
             }
         }

@@ -55,11 +55,19 @@ public class DialogEditField extends AbstractDialogField {
     }
 
     @Override
+    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
+        return String.class;
+    }
+
+    @Override
     protected Field getField() {
         EditFieldDefinition d = (EditFieldDefinition) getFieldDefinition();
         if (d.getRows() > 1) {
             TextArea textArea = new TextArea();
             textArea.setRows(d.getRows());
+            if (StringUtils.isNotEmpty(d.getWidth())) {
+                textArea.setWidth(d.getWidth());
+            }
             textArea.addListener(new FieldEvents.FocusListener() {
                 @Override
                 public void focus(FieldEvents.FocusEvent event) {

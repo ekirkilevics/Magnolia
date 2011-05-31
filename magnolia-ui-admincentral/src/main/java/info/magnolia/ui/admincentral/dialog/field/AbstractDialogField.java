@@ -121,7 +121,7 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
         box.addComponent(horizontalLayout);
         super.setCompositionRoot(box);
 
-        Class<?> type = getTypeFromDialogControl(fieldDefinition);
+        Class<?> type = getFieldType(fieldDefinition);
 
         this.editor = new VaadinEditorAdapter(field, fieldDefinition, type, this);
     }
@@ -158,7 +158,7 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
         return this.editor;
     }
 
-    private Class<?> getTypeFromDialogControl(FieldDefinition fieldDefinition) {
+    protected Class<?> getFieldType(FieldDefinition fieldDefinition) {
 
         if (StringUtils.isNotEmpty(fieldDefinition.getType())) {
             int valueType = PropertyType.valueFromName(fieldDefinition.getType());
@@ -180,26 +180,11 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
                     throw new IllegalArgumentException("Unsupported property type " + PropertyType.nameFromValue(valueType));
             }
         }
+        return getDefaultFieldType(fieldDefinition);
+    }
 
-        // TODO this defaulting should be up to the field itself
-
-        if ("edit".equals(fieldDefinition.getControlType())) {
-            return String.class;
-        }
-        if ("date".equals(fieldDefinition.getControlType())) {
-            return Date.class;
-        }
-        if ("richText".equals(fieldDefinition.getControlType())) {
-            return String.class;
-        }
-        if ("password".equals(fieldDefinition.getControlType())) {
-            return String.class;
-        }
-        if ("checkboxSwitch".equals(fieldDefinition.getControlType())) {
-            return Boolean.class;
-        }
-        return String.class;
-//        throw new IllegalArgumentException("Unsupported type " + dialogControl.getClass());
+    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
+        throw new IllegalArgumentException("Unsupported type " + fieldDefinition.getClass().getName());
     }
 
     public Messages getMessages() {

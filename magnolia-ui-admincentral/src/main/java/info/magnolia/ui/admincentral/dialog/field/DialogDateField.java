@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
+import java.util.Date;
+
 import com.vaadin.event.FieldEvents;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
@@ -49,6 +51,11 @@ public class DialogDateField extends AbstractDialogField {
 
     public DialogDateField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
+    }
+
+    @Override
+    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
+        return Date.class;
     }
 
     @Override

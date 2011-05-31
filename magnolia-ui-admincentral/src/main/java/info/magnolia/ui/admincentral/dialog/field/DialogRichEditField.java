@@ -50,6 +50,11 @@ public class DialogRichEditField extends AbstractDialogField {
     }
 
     @Override
+    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
+        return String.class;
+    }
+
+    @Override
     protected Field getField() {
         RichTextArea richTextArea = new RichTextArea();
 

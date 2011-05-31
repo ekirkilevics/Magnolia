@@ -33,12 +33,15 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.vaadin.event.FieldEvents;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.PasswordField;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
+import info.magnolia.ui.model.dialog.definition.PasswordFieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
@@ -51,11 +54,21 @@ public class DialogPasswordField extends AbstractDialogField {
     }
 
     @Override
+    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
+        return String.class;
+    }
+
+    @Override
     protected Field getField() {
 
         // TODO if definition.verification is true we should render a verification box and do validation
 
+        PasswordFieldDefinition d = (PasswordFieldDefinition) getFieldDefinition();
+
         PasswordField passwordField = new PasswordField();
+        if (StringUtils.isNotEmpty(d.getWidth())) {
+            passwordField.setWidth(d.getWidth());
+        }
         passwordField.addListener(new FieldEvents.FocusListener() {
             @Override
             public void focus(FieldEvents.FocusEvent event) {

@@ -54,6 +54,11 @@ public class DialogCheckboxField extends AbstractDialogField {
     }
 
     @Override
+    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
+        return Boolean.class;
+    }
+
+    @Override
     protected Field getField() {
         CheckboxFieldDefinition def = (CheckboxFieldDefinition) getFieldDefinition();
         CheckBox checkBox = new CheckBox();

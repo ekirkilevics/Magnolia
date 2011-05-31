@@ -103,7 +103,7 @@ public class VaadinDialogBuilder implements DialogBuilder {
         DialogField dialogField = dialogFieldFactory.getDialogField(dialogDefinition, tabDefinition, fieldDefinition, presenter);
 
         if (dialogField == null) {
-            dialog.addField(tabDefinition.getName(), "Missing UI component for controlType=" + fieldDefinition.getControlType());
+            dialog.addField(tabDefinition.getName(), "Missing UI component for field description " + fieldDefinition.getClass().getName());
             return;
         }
 

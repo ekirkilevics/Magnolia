@@ -38,13 +38,22 @@ package info.magnolia.ui.model.dialog.definition;
  */
 public class PasswordFieldDefinition extends FieldDefinition {
 
-    private int verification;
+    private boolean verification = true;
+    private String width;
 
-    public int getVerification() {
+    public boolean isVerification() {
         return verification;
     }
 
-    public void setVerification(int verification) {
+    public void setVerification(boolean verification) {
         this.verification = verification;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
     }
 }
