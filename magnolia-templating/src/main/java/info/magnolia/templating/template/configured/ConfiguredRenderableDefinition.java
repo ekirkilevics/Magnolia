@@ -62,8 +62,8 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     private String renderType;
     private String description;
     private String i18nBasename;
-    @SuppressWarnings("unchecked")
-    private Class<? extends RenderingModel<?>> modelClass = (Class< ? extends RenderingModel< ? >>) RenderingModelImpl.class;
+    @SuppressWarnings("rawtypes")
+    private Class<? extends RenderingModel> modelClass = RenderingModelImpl.class;
 
     protected Map<String, Object> parameters = new HashMap<String, Object>();
 
@@ -141,7 +141,8 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
         this.i18nBasename = basename;
     }
 
-    public Class<? extends RenderingModel<?>> getModelClass() {
+    @SuppressWarnings("rawtypes")
+    public Class<? extends RenderingModel> getModelClass() {
         return this.modelClass;
     }
 
