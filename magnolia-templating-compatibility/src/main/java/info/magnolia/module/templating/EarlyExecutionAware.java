@@ -34,26 +34,8 @@
 package info.magnolia.module.templating;
 
 /**
- * Implemented by models that want to handle early execution in a separate callback. Also adds a setter for the parent
- * model. It is called after early execution and before rendering.
- *
- * @author tmattsson
- * @see RenderingModel
- * @see ModelExecutionFilter
+ * Deprecated.
+ * @deprecated since 5.0, replaced by {@link info.magnolia.templating.model.EarlyExecutionAware}
  */
-public interface EarlyExecutionAware {
-
-    /**
-     * Called before rendering of the paragraph.
-     *
-     * @param parentModel
-     */
-    void setParent(RenderingModel parentModel);
-
-    /**
-     * Called after all properties were set. Can return a string which is passed
-     * to the method.
-     * {@link RenderableDefinition#determineTemplatePath(String, RenderingModel)}
-     */
-    String executeEarly();
+public interface EarlyExecutionAware extends info.magnolia.templating.model.EarlyExecutionAware{
 }

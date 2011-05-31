@@ -38,8 +38,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.templating.renderer.Renderer;
-import info.magnolia.templating.renderers.registry.RendererRegistrationException;
-import info.magnolia.templating.renderers.registry.RendererRegistry;
+import info.magnolia.templating.renderer.registry.RendererRegistrationException;
+import info.magnolia.templating.renderer.registry.RendererRegistry;
 import info.magnolia.templating.template.RenderableDefinition;
 
 import java.io.Writer;

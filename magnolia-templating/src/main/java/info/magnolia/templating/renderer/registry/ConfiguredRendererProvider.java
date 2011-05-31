@@ -31,15 +31,33 @@
  * intact.
  *
  */
-package info.magnolia.templating.renderers.registry;
+package info.magnolia.templating.renderer.registry;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.templating.renderer.Renderer;
 
-
 /**
- * Provides a {@link Renderer}.
+ * RendererProvider that instantiates a dialog from a configuration node.
  */
-public interface RendererProvider {
+public class ConfiguredRendererProvider implements RendererProvider {
 
-    Renderer getRenderer() throws RendererRegistrationException;
+    private Content configNode;
+
+    public ConfiguredRendererProvider(Content configNode) {
+        // session that opened provided content might not be alive by the time we need to use this
+        this.configNode = new LazyContentWrapper(configNode);
+    }
+
+    @Override
+    public Renderer getRenderer() throws RendererRegistrationException {
+        // FIXME we should not constantly transform the object. the manager re-registers the providers upon changes
+        try {
+            return (Renderer) Content2BeanUtil.toBean(configNode, true, Renderer.class);
+        } catch (Content2BeanException e) {
+            throw new RendererRegistrationException(e);
+        }
+    }
 }

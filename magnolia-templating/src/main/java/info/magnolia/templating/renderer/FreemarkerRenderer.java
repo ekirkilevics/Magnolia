@@ -33,13 +33,20 @@
  */
 package info.magnolia.templating.renderer;
 
+import freemarker.template.TemplateException;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.freemarker.FreemarkerHelper;
+import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.template.RenderableDefinition;
 
-import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.jcr.Node;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 
 /**
@@ -47,11 +54,40 @@ import javax.jcr.Node;
  * @version $Id$
  *
  */
-public class FreemarkerRenderer implements Renderer {
+public class FreemarkerRenderer extends AbstractRenderer {
+    private final FreemarkerHelper fmHelper;
+
+    /**
+     * Constructs a FreemarkerTemplateRenderer that uses the default (singleton)
+     * instance of FreemarkerHelper.
+     */
+    public FreemarkerRenderer() {
+        this(FreemarkerHelper.getInstance());
+    }
+
+    FreemarkerRenderer(FreemarkerHelper fmRenderer) {
+        this.fmHelper = fmRenderer;
+    }
 
     @Override
-    public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws IOException {
-        out.append("Holldrio");
+    protected void onRender(Node content, RenderableDefinition definition, Writer out, Map ctx, String templateScript) throws RenderException {
+        final Locale locale = MgnlContext.getAggregationState().getLocale();
+
+        try {
+            fmHelper.render(templateScript, locale, definition.getI18nBasename(), ctx, out);
+        }
+        catch (TemplateException e) {
+            // TODO should be thrown?
+        }
+        catch (Exception e) {
+            //log.error("Failed to process Freemarker template with " + e.getMessage(), e);
+            throw new RenderException("Can't render template " + templateScript + ": " + ExceptionUtils.getRootCauseMessage(e), e);
+        }
+    }
+
+    @Override
+    protected Map newContext() {
+        return new HashMap();
     }
 
 }

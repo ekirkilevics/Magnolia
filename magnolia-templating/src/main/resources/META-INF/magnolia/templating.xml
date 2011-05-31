@@ -12,12 +12,12 @@
       <value>/server/rendering/engine</value>
     </property>
     <property>
-      <name>info.magnolia.templating.renderers.registry.RendererRegistry</name>
-      <value>info.magnolia.templating.renderers.registry.RendererRegistry</value>
+      <name>info.magnolia.templating.renderer.registry.RendererRegistry</name>
+      <value>info.magnolia.templating.renderer.registry.RendererRegistry</value>
     </property>
     <property>
-      <name>info.magnolia.templating.renderers.registry.ConfiguredRendererManager</name>
-      <value>info.magnolia.templating.renderers.registry.ConfiguredRendererManager</value>
+      <name>info.magnolia.templating.renderer.registry.ConfiguredRendererManager</name>
+      <value>info.magnolia.templating.renderer.registry.ConfiguredRendererManager</value>
     </property>
     <property>
       <name>info.magnolia.templating.template.registry.TemplateDefinitionRegistry</name>

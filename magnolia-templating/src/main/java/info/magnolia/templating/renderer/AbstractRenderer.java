@@ -31,12 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.templating;
+package info.magnolia.templating.renderer;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -44,6 +49,11 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.I18nContentWrapper;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.templating.model.EarlyExecutionAware;
+import info.magnolia.templating.model.ModelExecutionFilter;
+import info.magnolia.templating.model.RenderingModel;
+import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.template.RenderableDefinition;
 
 
 /**
@@ -51,26 +61,33 @@ import info.magnolia.context.MgnlContext;
  * Sets up the context by providing the following objects: content, aggregationState, page, model, actionResult, mgnl
  *
  * @author pbracher
- * @version $Id$
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.renderer.AbstractRenderer}
- * FIXME remove most of the code and and try to extend the new {@link info.magnolia.templating.renderer.AbstractRenderer}
+ * @version $Id: AbstractRenderer.java 45284 2011-05-19 14:53:11Z pbaerfuss $
  *
  */
-public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
+public abstract class AbstractRenderer implements Renderer, RenderingModelBasedRenderer {
 
     private static final String MODEL_ATTRIBUTE = RenderingModel.class.getName();
 
     public AbstractRenderer() {
     }
 
-    protected void render(Content content, RenderableDefinition definition, Writer out) throws RenderException {
+    @Override
+    public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws IOException, RenderException {
 
         final RenderingModel parentModel = (RenderingModel) MgnlContext.getAttribute(MODEL_ATTRIBUTE);
 
         RenderingModel model;
         String actionResult;
 
-        model = (RenderingModel) MgnlContext.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + content.getUUID());
+        String uuid;
+        try {
+            uuid = content.getUUID();
+        }
+        catch (RepositoryException e) {
+            throw new RenderException(e);
+        }
+
+        model = (RenderingModel) MgnlContext.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + uuid);
 
         if (model == null) {
 
@@ -82,7 +99,7 @@ public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
                 return;
             }
         } else {
-            actionResult = (String) MgnlContext.getAttribute(ModelExecutionFilter.ACTION_RESULT_ATTRIBUTE_PREFIX + content.getUUID());
+            actionResult = (String) MgnlContext.getAttribute(ModelExecutionFilter.ACTION_RESULT_ATTRIBUTE_PREFIX + uuid);
             if (model instanceof EarlyExecutionAware) {
                 ((EarlyExecutionAware)model).setParent(parentModel);
             }
@@ -100,22 +117,25 @@ public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
         restoreContext(ctx, savedContextState);
     }
 
-    protected String determineTemplatePath(Content content, RenderableDefinition definition, RenderingModel model, final String actionResult) {
-        String templatePath = definition.determineTemplatePath(actionResult, model);
+    protected String determineTemplatePath(Node content, RenderableDefinition definition, RenderingModel model, final String actionResult) {
 
-        if (templatePath == null) {
-            throw new IllegalStateException("Unable to render " + definition.getClass().getName() + " " + definition.getName() + " in page " + content.getHandle() + ": templatePath not set.");
-        }
-        return templatePath;
+// FIXME reactivate this code
+        return definition.getTemplateScript();
+//        String templatePath = definition.determineTemplatePath(actionResult, model);
+//
+//        if (templatePath == null) {
+//            throw new IllegalStateException("Unable to render " + definition.getClass().getName() + " " + definition.getName() + " in page " + content.getHandle() + ": templatePath not set.");
+//        }
+//        return templatePath;
     }
 
     /**
      * Creates the model for this rendering process. Will set the properties
      */
     @Override
-    public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws RenderException {
+    public RenderingModel newModel(Node content, RenderableDefinition definition, RenderingModel parentModel) throws RenderException {
         try {
-            final Content wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
+            final Node wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
             return definition.newModel(wrappedContent, definition, parentModel);
         } catch (Exception e) {
             throw new RenderException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
@@ -147,14 +167,13 @@ public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
         }
     }
 
-    protected void setupContext(final Map ctx, Content content, RenderableDefinition definition, RenderingModel model, Object actionResult){
-        final Content mainContent = getMainContentSafely(content);
+    protected void setupContext(final Map ctx, Node content, RenderableDefinition definition, RenderingModel model, Object actionResult){
+        final Node mainContent = getMainContentSafely(content);
 
         setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(mainContent, mainContent));
         setContextAttribute(ctx, "content", wrapNodeForTemplate(content, mainContent));
         setContextAttribute(ctx, "def", definition);
         setContextAttribute(ctx, "state", getAggregationStateSafely());
-        setContextAttribute(ctx, "mgnl", getMagnoliaTemplatingUtilities());
         setContextAttribute(ctx, "model", model);
         setContextAttribute(ctx, "actionResult", actionResult);
     }
@@ -162,12 +181,12 @@ public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
     /**
      * Gets the current main contain and treats the situation where the context is not a web context nicely by using the current content instead.
      */
-    protected Content getMainContentSafely(Content current) {
+    protected Node getMainContentSafely(Node content) {
         AggregationState state = getAggregationStateSafely();
         if(state != null){
-            return state.getMainContent();
+            return state.getMainContent().getJCRNode();
         }
-        return current;
+        return content;
     }
 
     /**
@@ -180,28 +199,28 @@ public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
         return null;
     }
 
-    protected MagnoliaTemplatingUtilities getMagnoliaTemplatingUtilities() {
-        return MagnoliaTemplatingUtilities.getInstance();
-    }
-
     /**
      * Wraps the current content node before passing it to the model.
-     * @param currentContent the actual content
+     * @param content the actual content
      * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
      */
-    protected Content wrapNodeForModel(Content currentContent, Content mainContent) {
-        return new I18nContentWrapper(currentContent);
+    protected Node wrapNodeForModel(Node content, Node mainContent) {
+//      FIXME
+        return content;
+//        return new I18nContentWrapper(content);
     }
 
     /**
      * Wraps the current content node before exposing it to the template renderer.
-     * @param currentContent the actual content being exposed to the template
+     * @param content the actual content being exposed to the template
      * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
      * @see info.magnolia.module.templating.paragraphs.JspParagraphRenderer
      * TODO : return an Object instance instead - more flexibility for the template engine ?
      */
-    protected Content wrapNodeForTemplate(Content currentContent, Content mainContent) {
-        return new I18nContentWrapper(currentContent);
+    protected Node wrapNodeForTemplate(Node content, Node mainContent) {
+//        FIXME
+        return content;
+//        return new I18nContentWrapper(content);
     }
 
     protected Object setContextAttribute(final Map ctx, final String name, Object value) {
@@ -224,6 +243,6 @@ public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
      * Finally execute the rendering.
      * @param content TODO
      */
-    protected abstract void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException;
+    protected abstract void onRender(Node content, RenderableDefinition definition, Writer out, Map ctx, String templateScript) throws RenderException;
 
 }

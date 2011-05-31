@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,33 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.templating.renderers.registry;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.LazyContentWrapper;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.templating.renderer.Renderer;
+package info.magnolia.templating.model;
 
 /**
- * RendererProvider that instantiates a dialog from a configuration node.
+ * Implemented by models that want to handle early execution in a separate callback. Also adds a setter for the parent
+ * model. It is called after early execution and before rendering.
+ *
+ * @author tmattsson
+ * @see RenderingModel
+ * @see ModelExecutionFilter
  */
-public class ConfiguredRendererProvider implements RendererProvider {
+public interface EarlyExecutionAware {
 
-    private Content configNode;
+    /**
+     * Called before rendering of the paragraph.
+     *
+     * @param parentModel
+     */
+    void setParent(RenderingModel parentModel);
 
-    public ConfiguredRendererProvider(Content configNode) {
-        // session that opened provided content might not be alive by the time we need to use this
-        this.configNode = new LazyContentWrapper(configNode);
-    }
-
-    @Override
-    public Renderer getRenderer() throws RendererRegistrationException {
-        // FIXME we should not constantly transform the object. the manager re-registers the providers upon changes
-        try {
-            return (Renderer) Content2BeanUtil.toBean(configNode, true, Renderer.class);
-        } catch (Content2BeanException e) {
-            throw new RendererRegistrationException(e);
-        }
-    }
+    /**
+     * Called after all properties were set. Can return a string which is passed
+     * to the method.
+     * {@link RenderableDefinition#determineTemplatePath(String, RenderingModel)}
+     */
+    String executeEarly();
 }

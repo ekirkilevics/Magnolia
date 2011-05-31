@@ -31,12 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.module.templating;
+package info.magnolia.templating.renderer;
+
+import javax.jcr.Node;
+
+import info.magnolia.templating.model.RenderingModel;
+import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.template.RenderableDefinition;
 
 /**
- * Deprecated.
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.model.ModelExecutionFilter}
+ * Implemented by renderers that uses RenderingModel. Used by {@link info.magnolia.module.templating.ModelExecutionFilter}
+ * to create and execute models before the renderer is invoked.
+ *
+ * @author tmattsson
+ * @see info.magnolia.module.templating.ModelExecutionFilter
+ * @see info.magnolia.module.templating.AbstractRenderer
  */
-public class ModelExecutionFilter extends info.magnolia.templating.model.ModelExecutionFilter {
+public interface RenderingModelBasedRenderer {
 
+    RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws RenderException;
 }

@@ -31,12 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.module.templating;
+package info.magnolia.templating.renderer.registry;
+
+import info.magnolia.templating.renderer.Renderer;
+
 
 /**
- * Deprecated.
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.model.ModelExecutionFilter}
+ * Provides a {@link Renderer}.
  */
-public class ModelExecutionFilter extends info.magnolia.templating.model.ModelExecutionFilter {
+public interface RendererProvider {
 
+    Renderer getRenderer() throws RendererRegistrationException;
 }

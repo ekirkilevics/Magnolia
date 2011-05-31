@@ -35,7 +35,7 @@ package info.magnolia.templating.module;
 
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.templating.renderers.registry.ConfiguredRendererManager;
+import info.magnolia.templating.renderer.registry.ConfiguredRendererManager;
 import info.magnolia.templating.template.registry.ConfiguredTemplateDefinitionManager;
 
 

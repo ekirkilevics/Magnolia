@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.renderers.registry;
+package info.magnolia.templating.renderer.registry;
 
 
 import info.magnolia.templating.renderer.Renderer;
