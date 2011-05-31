@@ -72,4 +72,51 @@ public class ChangeViewActionDefinition implements PlaceChangeActionDefinition {
         return place;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((place == null) ? 0 : place.hashCode());
+        result = prime * result
+        + ((viewType == null) ? 0 : viewType.hashCode());
+        result = prime * result
+        + ((workbenchName == null) ? 0 : workbenchName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof ChangeViewActionDefinition)) {
+            return false;
+        }
+        ChangeViewActionDefinition other = (ChangeViewActionDefinition) obj;
+        if (place == null) {
+            if (other.place != null) {
+                return false;
+            }
+        } else if (!place.equals(other.place)) {
+            return false;
+        }
+        if (viewType == null) {
+            if (other.viewType != null) {
+                return false;
+            }
+        } else if (!viewType.equals(other.viewType)) {
+            return false;
+        }
+        if (workbenchName == null) {
+            if (other.workbenchName != null) {
+                return false;
+            }
+        } else if (!workbenchName.equals(other.workbenchName)) {
+            return false;
+        }
+        return true;
+    }
 }

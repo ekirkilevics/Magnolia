@@ -51,4 +51,35 @@ public class OpenEditDialogActionDefinition implements ActionDefinition {
         this.dialogName = dialogName;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+        + ((dialogName == null) ? 0 : dialogName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof OpenEditDialogActionDefinition)) {
+            return false;
+        }
+        OpenEditDialogActionDefinition other = (OpenEditDialogActionDefinition) obj;
+        if (dialogName == null) {
+            if (other.dialogName != null) {
+                return false;
+            }
+        } else if (!dialogName.equals(other.dialogName)) {
+            return false;
+        }
+        return true;
+    }
+
 }

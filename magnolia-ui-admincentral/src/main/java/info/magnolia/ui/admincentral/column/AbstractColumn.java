@@ -42,15 +42,17 @@ import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 
 /**
  * Base class for tree columns.
  *
  * @param <D> type of the definition for this column.
- * @author dlipp
- * @author tmattsson
+ *
+ * @version $Id$
  */
 public abstract class AbstractColumn<D extends AbstractColumnDefinition> implements Column<AbstractColumnDefinition> {
+    protected static final Label EMPTY_LABEL = new Label();
     protected final D definition;
 
     private Map<String, Component> components = new HashMap<String, Component>();

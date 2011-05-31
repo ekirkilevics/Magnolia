@@ -65,6 +65,7 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
 
 
@@ -78,6 +79,8 @@ import com.vaadin.ui.Component;
 public abstract class JcrContainer extends AbstractContainer implements Container.Sortable, Container.Indexed, Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier {
 
     private static final Logger log = LoggerFactory.getLogger(JcrContainer.class);
+
+    public static final String ITEM_ICON_PROPERTY_ID = "mgnl_item_icon";
 
     private Set<ItemSetChangeListener> itemSetChangeListeners;
 
@@ -431,7 +434,12 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
 
     public Object getColumnValue(String propertyId, Object itemId) {
         try {
-            return jcrContainerSource.getColumnComponent(propertyId, getJcrItem(((ContainerItemId) itemId)));
+            final javax.jcr.Item jcrItem = getJcrItem(((ContainerItemId) itemId));
+            if (ITEM_ICON_PROPERTY_ID.equals(propertyId)) {
+                return new ExternalResource(StringUtils.removeEnd(MgnlContext.getContextPath(), "/") + "/" + StringUtils.removeStart(jcrContainerSource.getItemIcon(jcrItem), "/"));
+            }
+                return jcrContainerSource.getColumnComponent(propertyId, jcrItem);
+//            return jcrContainerSource.getColumnComponent(propertyId, getJcrItem(((ContainerItemId) itemId)));
         }
         catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
@@ -458,6 +466,8 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
         }
         return node;
     }
+
+    // Used by JcrBrowser
 
     public ContainerItemId getItemByPath(String path) {
         try {

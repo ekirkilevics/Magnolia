@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.vaadin.event.FieldEvents;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextArea;
@@ -67,6 +69,10 @@ public class DialogEditField extends AbstractDialogField {
             return textArea;
         }
         TextField textField = new TextField();
+        textField.setMaxLength(d.getMaxLength());
+        if (StringUtils.isNotEmpty(d.getWidth())) {
+            textField.setWidth(d.getWidth());
+        }
         textField.addListener(new FieldEvents.FocusListener() {
             @Override
             public void focus(FieldEvents.FocusEvent event) {

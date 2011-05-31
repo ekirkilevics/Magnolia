@@ -10,7 +10,7 @@
 
     <body style="background-color:#ccb">
 
-	<cms:page content="website:/howTo-freemarker2" dialog="mainProperties" label="/howTo-freemarker2 - Sample using the NEW freemarker template"></cms:page>
+	<cms:page content="website:/howTo-freemarker2" dialog="samplesFieldShowRoom" label="/howTo-freemarker2 - Sample using the NEW freemarker template"></cms:page>
 
 		<h1>${content.title}</h1>
 		<h3>${cmsfn.asJCRNode(content).path} (${cmsfn.asJCRNode(content).identifier})</h3>

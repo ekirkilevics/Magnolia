@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="controlsShowRoom" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
-  xmlns:rep="internal" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fn="http://www.w3.org/2005/xpath-functions"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
-  xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
+<sv:node sv:name="controlsShowRoom" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
@@ -13,9 +9,15 @@
   <sv:property sv:name="i18nBasename" sv:type="String">
     <sv:value>info.magnolia.module.samples.messages</sv:value>
   </sv:property>
+  <sv:property sv:name="jcr:createdBy" sv:type="String">
+    <sv:value>admin</sv:value>
+  </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+      <sv:value>admin</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:Data" sv:type="String">
       <sv:value>MetaData</sv:value>
@@ -52,12 +54,18 @@
     <sv:property sv:name="controlType" sv:type="String">
       <sv:value>tab</sv:value>
     </sv:property>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+      <sv:value>admin</sv:value>
+    </sv:property>
     <sv:property sv:name="label" sv:type="String">
       <sv:value>dialog.devShow.allControls.tabEdits.label</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
@@ -94,6 +102,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.text1.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.text1.label</sv:value>
       </sv:property>
@@ -103,6 +114,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -140,6 +154,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.numberLong.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.numberLong.label</sv:value>
       </sv:property>
@@ -152,6 +169,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -189,6 +209,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.numberDouble.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.numberDouble.label</sv:value>
       </sv:property>
@@ -201,6 +224,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -238,6 +264,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.text4.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.text4.label</sv:value>
       </sv:property>
@@ -250,6 +279,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -287,6 +319,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.text3.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.text3.label</sv:value>
       </sv:property>
@@ -299,6 +334,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -336,6 +374,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.text2.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabEdits.text2.label</sv:value>
       </sv:property>
@@ -348,6 +389,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -383,12 +427,18 @@
     <sv:property sv:name="controlType" sv:type="String">
       <sv:value>tab</sv:value>
     </sv:property>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+      <sv:value>admin</sv:value>
+    </sv:property>
     <sv:property sv:name="label" sv:type="String">
       <sv:value>dialog.devShow.allControls.tabSelections.label</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
@@ -425,6 +475,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabSelections.select.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabSelections.select.label</sv:value>
       </sv:property>
@@ -434,6 +487,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -464,9 +520,15 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>21b656c1-b428-442b-8aed-1052557a638d</sv:value>
         </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
+        </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:Data" sv:type="String">
             <sv:value>MetaData</sv:value>
@@ -497,6 +559,9 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>2c4eca2a-a80e-48c3-bfdf-508e84a3bad6</sv:value>
           </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.devShow.allControls.tabSelections.select.option.option1</sv:value>
           </sv:property>
@@ -506,6 +571,9 @@
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:Data" sv:type="String">
               <sv:value>MetaData</sv:value>
@@ -537,6 +605,9 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>030579ba-c514-4170-92cc-7ef0fe79f85f</sv:value>
           </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.devShow.allControls.tabSelections.select.option.option3</sv:value>
           </sv:property>
@@ -549,6 +620,9 @@
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:Data" sv:type="String">
               <sv:value>MetaData</sv:value>
@@ -580,6 +654,9 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>b6e7f4e9-17ae-45b2-87ba-f0fa6197ac16</sv:value>
           </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.devShow.allControls.tabSelections.select.option.option2</sv:value>
           </sv:property>
@@ -589,6 +666,9 @@
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:Data" sv:type="String">
               <sv:value>MetaData</sv:value>
@@ -631,6 +711,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabSelections.radio.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabSelections.radio.label</sv:value>
       </sv:property>
@@ -640,6 +723,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -670,9 +756,15 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>8efa267b-830e-40ed-a8da-2728ef1effb6</sv:value>
         </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
+        </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:Data" sv:type="String">
             <sv:value>MetaData</sv:value>
@@ -703,6 +795,9 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>e93f4de5-389b-400a-94de-113b76917849</sv:value>
           </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.devShow.allControls.tabSelections.radio.option.green</sv:value>
           </sv:property>
@@ -715,6 +810,9 @@
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:Data" sv:type="String">
               <sv:value>MetaData</sv:value>
@@ -746,6 +844,9 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>8d44b4e7-53fb-4bdc-a397-19f49b98bb0c</sv:value>
           </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.devShow.allControls.tabSelections.radio.option.blue</sv:value>
           </sv:property>
@@ -755,6 +856,9 @@
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:Data" sv:type="String">
               <sv:value>MetaData</sv:value>
@@ -786,6 +890,9 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>9f4bd8f3-62a0-470f-9005-42021e5a1f69</sv:value>
           </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.devShow.allControls.tabSelections.radio.option.red</sv:value>
           </sv:property>
@@ -795,6 +902,9 @@
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:Data" sv:type="String">
               <sv:value>MetaData</sv:value>
@@ -826,6 +936,9 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>caabaf9b-2ae3-4b4a-b94c-e34c13d8636b</sv:value>
           </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.devShow.allControls.tabSelections.radio.option.yellow</sv:value>
           </sv:property>
@@ -835,6 +948,9 @@
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:Data" sv:type="String">
               <sv:value>MetaData</sv:value>
@@ -866,6 +982,9 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>ba3b2041-2036-4e63-9f3f-113160a7c976</sv:value>
           </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.devShow.allControls.tabSelections.radio.option.orange</sv:value>
           </sv:property>
@@ -875,6 +994,9 @@
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:Data" sv:type="String">
               <sv:value>MetaData</sv:value>
@@ -914,6 +1036,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabSelections.checkbox.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabSelections.checkbox.label</sv:value>
       </sv:property>
@@ -923,6 +1048,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -953,9 +1081,15 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>b1c0db64-f435-4660-a3a7-b265c8e278cf</sv:value>
         </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
+        </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:Data" sv:type="String">
             <sv:value>MetaData</sv:value>
@@ -986,6 +1120,9 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>a7935b36-c56e-45a4-b972-d8a556219cfb</sv:value>
           </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.devShow.allControls.tabSelections.checkbox.option.bold</sv:value>
           </sv:property>
@@ -995,6 +1132,9 @@
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:Data" sv:type="String">
               <sv:value>MetaData</sv:value>
@@ -1026,6 +1166,9 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>3e9ba2a8-a6e4-4ecb-bd83-4b1624f33fc7</sv:value>
           </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>dialog.devShow.allControls.tabSelections.checkbox.option.italic</sv:value>
           </sv:property>
@@ -1035,6 +1178,9 @@
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
               <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:Data" sv:type="String">
               <sv:value>MetaData</sv:value>
@@ -1077,6 +1223,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabSelections.checkboxSwich.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabSelections.checkboxSwich.label</sv:value>
       </sv:property>
@@ -1086,6 +1235,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -1121,12 +1273,18 @@
     <sv:property sv:name="controlType" sv:type="String">
       <sv:value>tab</sv:value>
     </sv:property>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+      <sv:value>admin</sv:value>
+    </sv:property>
     <sv:property sv:name="label" sv:type="String">
       <sv:value>dialog.devShow.allControls.tabLinks.label</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
@@ -1166,6 +1324,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLinks.link.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLinks.link.label</sv:value>
       </sv:property>
@@ -1175,6 +1336,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -1212,6 +1376,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLinks.date2.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLinks.date2.label</sv:value>
       </sv:property>
@@ -1224,6 +1391,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -1261,6 +1431,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLinks.date1.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLinks.date1.label</sv:value>
       </sv:property>
@@ -1270,6 +1443,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -1305,12 +1481,18 @@
     <sv:property sv:name="controlType" sv:type="String">
       <sv:value>tab</sv:value>
     </sv:property>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+      <sv:value>admin</sv:value>
+    </sv:property>
     <sv:property sv:name="label" sv:type="String">
       <sv:value>dialog.devShow.allControls.tabFile.label</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
@@ -1347,6 +1529,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabFile.file.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabFile.file.label</sv:value>
       </sv:property>
@@ -1356,6 +1541,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -1391,12 +1579,18 @@
     <sv:property sv:name="controlType" sv:type="String">
       <sv:value>tab</sv:value>
     </sv:property>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+      <sv:value>admin</sv:value>
+    </sv:property>
     <sv:property sv:name="label" sv:type="String">
       <sv:value>dialog.devShow.allControls.tabLayout.label</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
@@ -1436,6 +1630,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLayout.boxType.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLayout.boxType.label</sv:value>
       </sv:property>
@@ -1445,6 +1642,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -1482,6 +1682,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLayout.lineSemi.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLayout.lineSemi.label</sv:value>
       </sv:property>
@@ -1494,6 +1697,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -1531,6 +1737,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLayout.line.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabLayout.line.label</sv:value>
       </sv:property>
@@ -1543,6 +1752,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -1578,12 +1790,18 @@
     <sv:property sv:name="controlType" sv:type="String">
       <sv:value>tab</sv:value>
     </sv:property>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+      <sv:value>admin</sv:value>
+    </sv:property>
     <sv:property sv:name="label" sv:type="String">
       <sv:value>dialog.devShow.allControls.tabStatic.label</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
@@ -1620,6 +1838,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabStatic.static1.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabStatic.static1.label</sv:value>
       </sv:property>
@@ -1632,6 +1853,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -1672,6 +1896,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabStatic.buttonSmall.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabStatic.buttonSmall.label</sv:value>
       </sv:property>
@@ -1684,6 +1911,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -1724,6 +1954,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabStatic.buttonLarge.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabStatic.buttonLarge.label</sv:value>
       </sv:property>
@@ -1736,6 +1969,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>
@@ -1773,6 +2009,9 @@
       <sv:property sv:name="description" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabStatic.static2.description</sv:value>
       </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.devShow.allControls.tabStatic.static2.label</sv:value>
       </sv:property>
@@ -1782,6 +2021,9 @@
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:Data" sv:type="String">
           <sv:value>MetaData</sv:value>

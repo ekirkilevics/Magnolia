@@ -45,33 +45,32 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-
 
 /**
  * Definition for a column that displays the value of a property.
  *
- * @author dlipp
- * @author tmattsson
+ * @version $Id$
  */
 public class PropertyValueColumn extends AbstractEditableColumn<PropertyValueColumnDefinition> implements Serializable {
 
-    public PropertyValueColumn(PropertyValueColumnDefinition def, EventBus eventBus, PlaceController placeController, Shell shell) {
+    public PropertyValueColumn(PropertyValueColumnDefinition def, EventBus eventBus, PlaceController placeController,
+            Shell shell) {
         super(def, eventBus, placeController, shell);
     }
 
     @Override
     protected Component getDefaultComponent(Item item) throws RepositoryException {
-        if (!item.isNode()) {
-            return new EditableText(item, new PresenterImpl(), item.getName()) {
-
-                @Override
-                protected String getLabelText(Item item) throws RepositoryException {
-                    Property property = (Property) item;
-                    return property.getString();
-                }
-            };
+        if (item.isNode()) {
+            return EMPTY_LABEL;
         }
-        return new Label();
+
+        return new EditableText(item, new PresenterImpl(), item.getName()) {
+
+            @Override
+            protected String getLabelText(Item item) throws RepositoryException {
+                Property property = (Property) item;
+                return property.getString();
+            }
+        };
     }
 }

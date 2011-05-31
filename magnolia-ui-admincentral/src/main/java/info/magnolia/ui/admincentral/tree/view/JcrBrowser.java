@@ -33,23 +33,8 @@
  */
 package info.magnolia.ui.admincentral.tree.view;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.column.EditHandler;
-import info.magnolia.ui.admincentral.container.ContainerItemId;
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
-import info.magnolia.ui.admincentral.tree.container.HierarchicalJcrContainer;
-import info.magnolia.ui.admincentral.tree.model.TreeModel;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.action.ActionDefinition;
-import info.magnolia.ui.model.action.ActionExecutionException;
-import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
-import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
@@ -65,14 +50,23 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
-
+import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.column.EditHandler;
+import info.magnolia.ui.admincentral.container.ContainerItemId;
+import info.magnolia.ui.admincentral.tree.container.HierarchicalJcrContainer;
+import info.magnolia.ui.admincentral.tree.model.TreeModel;
+import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.action.ActionDefinition;
+import info.magnolia.ui.model.action.ActionExecutionException;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
- * User interface component that extends TreeTable and uses a WorkbenchDefinition for layout and
- * invoking command callbacks.
+ * User interface component that extends TreeTable and uses a WorkbenchDefinition for layout and invoking command callbacks.
  *
  * @author tmattsson
  */
@@ -108,7 +102,7 @@ public class JcrBrowser extends TreeTable {
 
         container = new HierarchicalJcrContainer(treeModel, workbenchDefinition);
 
-        for (Column< ? > treeColumn : treeModel.getColumns().values()) {
+        for (Column<?> treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();
             super.setColumnExpandRatio(columnName, treeColumn.getWidth() <= 0 ? 1 : treeColumn.getWidth());
             container.addContainerProperty(columnName, Component.class, "");
@@ -124,31 +118,45 @@ public class JcrBrowser extends TreeTable {
     public String getPathInTree(Item item) {
         try {
             return treeModel.getPathInTree(item);
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
-    // TODO this should not be needed, JcrBrowser should have event mechanisms that expose the JCR
-    // item not the ContainerItemId
+    // TODO this should not be needed, JcrBrowser should have event mechanisms that expose the JCR item not the ContainerItemId
     public Item getJcrItem(ContainerItemId itemId) {
         try {
             return container.getJcrItem(itemId);
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
-    private class JcrBrowserAction extends Action {
-
+    private  class JcrBrowserAction extends Action {
         private ActionDefinition actionDefinition;
 
         private JcrBrowserAction(MenuItemDefinition menuItemDefinition) {
             super(menuItemDefinition.getLabel());
-            super.setIcon(new ExternalResource(MgnlContext.getContextPath() + menuItemDefinition.getIcon()));
-            actionDefinition = menuItemDefinition.getActionDefinition();
+            // TODO: PERFORMANCE: use ExternalResourceCache
+            // TODO: CODE: impl hashcode & equals
+            super.setIcon(new ExternalResource(MgnlContext.getContextPath() + menuItemDefinition.getIcon()) {
+                @Override
+                public int hashCode() {
+                    return getURL().hashCode();
+                }
+                @Override
+                public boolean equals(Object obj) {
+                    if (this == obj) {
+                        return true;
+                    }
+                    if (obj == null || !(obj instanceof ExternalResource)) {
+                        return false;
+                    }
+                    ExternalResource that = (ExternalResource) obj;
+                    return this.getURL().equals(that.getURL());
+                }
+            });
+            this.actionDefinition = menuItemDefinition.getActionDefinition();
         }
 
         public void handleAction(ContainerItemId itemId) {
@@ -166,6 +174,25 @@ public class JcrBrowser extends TreeTable {
             catch (ActionExecutionException e) {
                 shell.showError("Can't execute action.", e);
             }
+        }
+        
+        @Override
+        public int hashCode() {
+            return (getIcon() == null ? 7 : getIcon().hashCode()) + (getCaption() == null ? 13 : getCaption().hashCode()) + (actionDefinition == null ? 17 : actionDefinition.hashCode());
+        }
+        
+        @Override
+        public boolean equals(Object arg0) {
+            if (arg0 == this) {
+                return true;
+            }
+            if (arg0 == null || !(arg0 instanceof JcrBrowserAction)) {
+                return false;
+            }
+            JcrBrowserAction that = (JcrBrowserAction) arg0;
+            return (this.getIcon() == null ? that.getIcon() == null : this.getIcon().equals(that.getIcon())) 
+                && (this.getCaption() == null ? that.getCaption() == null : this.getCaption().equals(that.getCaption()))
+                && (this.actionDefinition == null ? that.actionDefinition == null : this.actionDefinition.equals(that.actionDefinition));
         }
     }
 
@@ -186,7 +213,7 @@ public class JcrBrowser extends TreeTable {
 
             @Override
             public void handleAction(Action action, Object sender, Object target) {
-                ((JcrBrowserAction) action).handleAction((ContainerItemId) target);
+              ((JcrBrowserAction) action).handleAction((ContainerItemId) target);
             }
         });
     }
@@ -257,8 +284,7 @@ public class JcrBrowser extends TreeTable {
                             }
                         }
                     }
-                }
-                catch (RepositoryException e) {
+                } catch (RepositoryException e) {
                     throw new RuntimeRepositoryException(e);
                 }
             }
@@ -277,13 +303,13 @@ public class JcrBrowser extends TreeTable {
 
         ContainerItemId itemId = container.getItemByPath(path);
 
-        if (!container.isRoot(itemId)) {
+        if(!container.isRoot(itemId)){
             ContainerItemId parent = container.getParent(itemId);
             while (!container.isRoot(parent)) {
                 setCollapsed(parent, false);
                 parent = container.getParent(parent);
             }
-            // finally expand the root else children won't be visible.
+            //finally expand the root else children won't be visibile.
             setCollapsed(parent, false);
         }
 
@@ -291,8 +317,7 @@ public class JcrBrowser extends TreeTable {
         select(itemId);
 
         // Make sure its in view
-        // TODO commented out to avoid flicker on selection via place controller while this should
-        // definitely be called when navigated by the history
+        // TODO commented out to avoid flicker on selection via place controller while this should definitely be called when navigated by the history
         // setCurrentPageFirstItemId(itemId);
     }
 
@@ -300,30 +325,23 @@ public class JcrBrowser extends TreeTable {
         container.fireItemSetChange();
     }
 
-    @Override
-    public Resource getItemIcon(Object itemId) {
-
-        // FIXME this is not the best place to do it, ideally we could set it when we create a new
-        // item (investigate, might not make a difference)
-        try {
-
-            // TODO should getItemIcon be available on JcrContainerSource ?
-
-            String itemIcon = treeModel.getItemIcon(container.getJcrItem((ContainerItemId) itemId));
-            if (itemIcon != null) {
-                String tmp = MgnlContext.getContextPath()
-                    + (!itemIcon.startsWith(JCRUtil.PATH_SEPARATOR) ? JCRUtil.PATH_SEPARATOR + itemIcon : itemIcon);
-                return new ExternalResource(tmp);
-            }
-
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
-        return super.getItemIcon(itemId);
-    }
-
-    public HierarchicalJcrContainer getContainer() {
-        return container;
-    }
+//    @Override
+//    public Resource getItemIcon(Object itemId) {
+//
+//        // FIXME this is not the best place to do it, ideally we could set it when we create a new item (investigate, might not make a difference)
+//        try {
+//
+//            // TODO should getItemIcon be available on JcrContainerSource ?
+//
+//            String itemIcon = treeModel.getItemIcon(container.getJcrItem((ContainerItemId) itemId));
+//            if (itemIcon != null) {
+//                String tmp = MgnlContext.getContextPath() + (!itemIcon.startsWith(JCRUtil.PATH_SEPARATOR) ? JCRUtil.PATH_SEPARATOR + itemIcon : itemIcon);
+//                return new ExternalResource(tmp);
+//            }
+//
+//        } catch (RepositoryException e) {
+//            throw new RuntimeRepositoryException(e);
+//        }
+//        return super.getItemIcon(itemId);
+//    }
 }

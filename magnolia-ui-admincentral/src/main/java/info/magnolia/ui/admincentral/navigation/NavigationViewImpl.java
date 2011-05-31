@@ -43,81 +43,77 @@ import info.magnolia.ui.model.navigation.registry.NavigationProvider;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+
 
 /**
- * ImplementationConfiguration of {@link NavigationView}. It represents the app main navigation and holds {@link NavigationWorkArea}(s).
+ * ImplementationConfiguration of {@link NavigationView}. It represents the app main navigation and
+ * holds {@link NavigationWorkArea}(s).
+ * 
  * @author fgrilli
- *
+ * @author mrichert
  */
-public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
+public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
 
     private static final Logger log = LoggerFactory.getLogger(NavigationViewImpl.class);
 
-    private CustomComponent customComponent;
-    private VerticalLayout outerNavigationContainer = new VerticalLayout();
+    private TabSheet outerNavigationContainer = new TabSheet();
+
     private Presenter presenter;
-    private Map<WorkareaSelector, NavigationWorkArea> registeredNavigationAreas = new HashMap<WorkareaSelector, NavigationWorkArea>();
 
-    //TODO don't pass the registry but the navigation itself
+    private Set<NavigationWorkArea> registeredNavigationAreas = new HashSet<NavigationWorkArea>();
+
+    // TODO don't pass the registry but the navigation itself
     public NavigationViewImpl(NavigationProvider navigationProvider, NavigationPermissionSchema permissions) {
-
-        // Wrapping in a custom component to make it appear in the top of the area
-        customComponent = new CustomComponent() {{setCompositionRoot(outerNavigationContainer);}};
-        customComponent.setSizeFull();
-
-        final HorizontalLayout buttons = new HorizontalLayout();
-        buttons.setSpacing(true);
-        buttons.setMargin(false, false, true, false);
-
-        final VerticalLayout navigationWorkareaContainer = new VerticalLayout();
-        navigationWorkareaContainer.setSizeFull();
-        navigationWorkareaContainer.setMargin(false, false, true, false);
-
         final NavigationDefinition navigation = navigationProvider.getNavigation();
 
-        for(NavigationWorkareaDefinition definition : navigation.getWorkareas()){
+        for (final NavigationWorkareaDefinition definition : navigation.getWorkareas()) {
             log.debug("creating navigation workarea {}", definition.getName());
             List<NavigationGroup> groups = new ArrayList<NavigationGroup>();
 
-            for(NavigationGroupDefinition group : definition.getGroups()){
+            for (NavigationGroupDefinition group : definition.getGroups()) {
                 log.debug("creating navigation group {}", group.getName());
                 groups.add(new NavigationGroup(group.getItems(), permissions));
             }
 
-            final WorkareaSelector button = new WorkareaSelector(definition);
-            buttons.addComponent(button);
-
             final NavigationWorkArea navigationWorkArea = new NavigationWorkArea(groups);
 
-            if(definition.isVisible()){
-                navigationWorkArea.setVisible(true);
-            }
-            registeredNavigationAreas.put(button, navigationWorkArea);
-            navigationWorkareaContainer.addComponent(navigationWorkArea.asVaadinComponent());
+            registeredNavigationAreas.add(navigationWorkArea);
+
+            final Component component = navigationWorkArea.asVaadinComponent();
+            outerNavigationContainer.addTab(
+                component,
+                definition.getLabel(),
+                new ExternalResource(MgnlContext.getContextPath() + definition.getIcon()));
+
+            outerNavigationContainer.addListener(new SelectedTabChangeListener() {
+
+                @Override
+                public void selectedTabChange(SelectedTabChangeEvent event) {
+                    if (component == event.getTabSheet().getSelectedTab() && presenter != null) {
+                        presenter.onMenuSelection(definition);
+                    }
+                }
+            });
         }
-        outerNavigationContainer.addComponent(buttons);
-        outerNavigationContainer.addComponent(navigationWorkareaContainer);
     }
 
     @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
-        for(NavigationWorkArea navigationWorkArea: registeredNavigationAreas.values()){
-            for(NavigationGroup navigationGroup: navigationWorkArea.getNavigationGroup()){
+        for (NavigationWorkArea navigationWorkArea : registeredNavigationAreas) {
+            for (NavigationGroup navigationGroup : navigationWorkArea.getNavigationGroup()) {
                 navigationGroup.setPresenter(presenter);
             }
         }
@@ -125,10 +121,8 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
 
     @Override
     public void update(Place place) {
-        for(NavigationWorkArea workarea: registeredNavigationAreas.values()){
-            //the navigation group will set the correct navigation  area as visible
-            workarea.setVisible(false);
-            for(NavigationGroup group: workarea.getNavigationGroup()){
+        for (NavigationWorkArea workarea : registeredNavigationAreas) {
+            for (NavigationGroup group : workarea.getNavigationGroup()) {
                 group.update(place);
             }
         }
@@ -136,35 +130,6 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
 
     @Override
     public Component asVaadinComponent() {
-        return customComponent;
-    }
-
-    /**
-     * WorkareaSelector.
-     * @author fgrilli
-     *
-     */
-    protected class WorkareaSelector extends Button {
-
-        public WorkareaSelector(final NavigationWorkareaDefinition definition) {
-
-            addListener(new ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    for(NavigationWorkArea navigationWorkArea : registeredNavigationAreas.values()){
-                        navigationWorkArea.setVisible(false);
-                    }
-                    NavigationWorkArea selectedNavigationWorkarea = registeredNavigationAreas.get(event.getButton());
-                    selectedNavigationWorkarea.setVisible(true);
-                    presenter.onMenuSelection(definition);
-                }
-            });
-
-            String icon = definition.getIcon();
-            if(StringUtils.isNotBlank(icon)) {
-                setIcon(new ExternalResource(MgnlContext.getContextPath() + icon));
-            }
-        }
+        return outerNavigationContainer;
     }
 }

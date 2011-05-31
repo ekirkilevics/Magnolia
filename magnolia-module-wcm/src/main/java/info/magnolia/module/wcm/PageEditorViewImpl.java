@@ -64,6 +64,8 @@ public class PageEditorViewImpl implements PageEditorView {
     @Override
     public void init() {
 
+        application.setTheme("magnolia");
+
         pageLayout = new VerticalLayout();
         pageLayout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
 

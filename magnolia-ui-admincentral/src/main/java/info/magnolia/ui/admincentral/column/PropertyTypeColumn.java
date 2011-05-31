@@ -45,9 +45,10 @@ import javax.jcr.RepositoryException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
-
 /**
  * Column that displays the type of a property.
+ *
+ * @version $Id$
  */
 public class PropertyTypeColumn extends AbstractColumn<PropertyTypeColumnDefinition> implements Serializable {
 
@@ -57,10 +58,11 @@ public class PropertyTypeColumn extends AbstractColumn<PropertyTypeColumnDefinit
 
     @Override
     protected Component getDefaultComponent(Item item) throws RepositoryException {
-        if (!item.isNode()) {
-            Property property = (Property) item;
-            return new Label(PropertyType.nameFromValue(property.getType()));
+        if (item.isNode()) {
+            return EMPTY_LABEL;
         }
-        return new Label("");
+
+        Property property = (Property) item;
+        return new Label(PropertyType.nameFromValue(property.getType()));
     }
 }

@@ -51,4 +51,20 @@ public class OpenPageActionDefinition implements ActionDefinition {
     public void setWindowName(String windowName) {
         this.windowName = windowName;
     }
+
+    @Override
+    public int hashCode() {
+        return windowName == null ? 13 : windowName.hashCode();
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof OpenPageActionDefinition)) {
+            return false;
+        }
+        OpenPageActionDefinition that = (OpenPageActionDefinition) obj;
+        return this.windowName == null ? that.windowName == null : this.windowName.equals(that.windowName);
+    }
 }
