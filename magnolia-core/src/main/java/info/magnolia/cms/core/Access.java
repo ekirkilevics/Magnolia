@@ -35,6 +35,7 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 
 import java.text.MessageFormat;
@@ -45,7 +46,7 @@ import javax.jcr.Session;
 /**
  * Simply utility class for AccessManager.
  *
- * @author Sameer Charles $Id$
+ * @version $Id$
  */
 public final class Access {
 
@@ -93,5 +94,22 @@ public final class Access {
         } catch (RepositoryException e) {
             return false;
         }
+    }
+
+    /**
+     * Return String-representation of permissions convert from provided long-permission (old).
+     */
+    public static String convertPermissions(long oldPermissions) {
+        String permissions = "";
+        //TODO: review && convert all the permissions properly
+        if ((oldPermissions & Permission.ALL) == Permission.ALL) {
+            permissions = Session.ACTION_ADD_NODE + "," + Session.ACTION_READ + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY;
+        } else if ((oldPermissions & Permission.WRITE) == Permission.WRITE) {
+            permissions = Session.ACTION_ADD_NODE;
+        }
+        else if ((oldPermissions & Permission.READ) == Permission.READ) {
+            permissions = Session.ACTION_READ;
+        }
+        return permissions;
     }
 }
