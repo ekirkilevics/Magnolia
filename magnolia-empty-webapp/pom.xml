@@ -128,7 +128,7 @@
     </dependency>
     <dependency>
     	<groupId>info.magnolia</groupId>
-    	<artifactId>magnolia-module-samples</artifactId>
+    	<artifactId>magnolia-templating-samples</artifactId>
     	<version>5.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
