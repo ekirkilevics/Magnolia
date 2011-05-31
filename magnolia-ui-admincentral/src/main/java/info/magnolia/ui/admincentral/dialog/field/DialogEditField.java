@@ -70,8 +70,9 @@ public class DialogEditField extends AbstractDialogField {
         }
         TextField textField = new TextField();
         textField.setMaxLength(d.getMaxLength());
-        if (StringUtils.isNotEmpty(d.getWidth()))
-	        textField.setWidth(d.getWidth());
+        if (StringUtils.isNotEmpty(d.getWidth())) {
+            textField.setWidth(d.getWidth());
+        }
         textField.addListener(new FieldEvents.FocusListener() {
             @Override
             public void focus(FieldEvents.FocusEvent event) {
