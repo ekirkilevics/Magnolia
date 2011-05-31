@@ -38,13 +38,4 @@ package info.magnolia.ui.model.dialog.definition;
  */
 public class RichEditFieldDefinition extends FieldDefinition {
 
-    private int rows;
-
-    public int isRows() {
-        return rows;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
 }
