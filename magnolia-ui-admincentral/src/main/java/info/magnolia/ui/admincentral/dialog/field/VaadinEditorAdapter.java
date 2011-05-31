@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -68,12 +71,18 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
 
     @Override
     public void setValue(T object) {
+        // TODO special case for DateField
+        if (type.equals(Date.class) && object instanceof Calendar) {
+            object = (T) ((Calendar)object).getTime();
+        }
         field.setValue(object);
     }
 
     @Override
     public T getValue() {
         T value = (T) field.getValue();
+
+        value = (T) convertToEditorTypeIfNecessary(value, type);
 
         // TODO This is very rudimentary validation
 
@@ -84,6 +93,67 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
             }
         }
         return value;
+    }
+
+    protected Object convertToEditorTypeIfNecessary(Object value, Class<?> targetType) {
+        if (value == null) {
+            return value;
+        }
+        if (targetType.equals(String.class)) {
+            if (value instanceof String) {
+                return value;
+            }
+            return value.toString();
+        } else if (targetType.equals(Date.class)) {
+            if (value instanceof Date) {
+                return value;
+            }
+            if (value instanceof Calendar) {
+                return ((Calendar)value).getTime();
+            }
+        } else if (targetType.equals(Calendar.class)) {
+            if (value instanceof Calendar) {
+                return value;
+            }
+            if (value instanceof Date) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime((Date) value);
+                return calendar;
+            }
+        } else if (targetType.equals(Long.class)) {
+            if (value instanceof Long) {
+                return value;
+            }
+            if (value instanceof String) {
+                return Long.valueOf((String) value);
+            }
+        } else if (targetType.equals(Double.class)) {
+            if (value instanceof Double) {
+                return value;
+            }
+            if (value instanceof String) {
+                return Double.valueOf((String) value);
+            }
+        } else if (targetType.equals(Boolean.class)) {
+            if (value instanceof Boolean) {
+                return value;
+            }
+            if (value instanceof String) {
+                return Boolean.valueOf((String) value);
+            }
+        } else if (targetType.equals(BigDecimal.class)) {
+            if (value instanceof BigDecimal) {
+                return value;
+            }
+            if (value instanceof String) {
+                return new BigDecimal((String) value);
+            }
+        }
+
+        throw new RuntimeException("Conversion failed value [" + value +
+                "] of type [" + value.getClass().getName() +
+                "] could not be converted to target type [" + targetType.getName() +
+                "]");
     }
 
     @Override

@@ -33,7 +33,10 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
-import java.util.Calendar;
+import java.math.BigDecimal;
+import java.util.Date;
+
+import javax.jcr.PropertyType;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -157,13 +160,34 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
 
     private Class<?> getTypeFromDialogControl(FieldDefinition fieldDefinition) {
 
-        // TODO this should look at fieldDefinition.type instead
+        if (StringUtils.isNotEmpty(fieldDefinition.getType())) {
+            int valueType = PropertyType.valueFromName(fieldDefinition.getType());
+            switch (valueType) {
+                case PropertyType.STRING:
+                    return String.class;
+                case PropertyType.LONG:
+                    return Long.class;
+                case PropertyType.DOUBLE:
+                    return Double.class;
+                case PropertyType.DATE:
+                    // TODO we use Date here instead of Calendar simply because the vaadin DateField uses Date not Calendar
+                    return Date.class;
+                case PropertyType.BOOLEAN:
+                    return Boolean.class;
+                case PropertyType.DECIMAL:
+                    return BigDecimal.class;
+                default:
+                    throw new IllegalArgumentException("Unsupported property type " + PropertyType.nameFromValue(valueType));
+            }
+        }
+
+        // TODO this defaulting should be up to the field itself
 
         if ("edit".equals(fieldDefinition.getControlType())) {
             return String.class;
         }
         if ("date".equals(fieldDefinition.getControlType())) {
-            return Calendar.class;
+            return Date.class;
         }
         if ("richText".equals(fieldDefinition.getControlType())) {
             return String.class;
