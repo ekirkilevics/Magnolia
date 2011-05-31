@@ -123,7 +123,7 @@ public class VerticalTabSheet extends CustomComponent {
         Panel tabComponent = new Panel();
         tabComponent.setWidth("100%");
         tabComponent.setSizeFull();
-        Label labelComponent = new Label(name);
+        Label labelComponent = new Label(label);
         labelComponent.setWidth("100%");
         labelComponent.setSizeFull();
         tabComponent.addComponent(labelComponent);
