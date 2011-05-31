@@ -4,7 +4,7 @@
   <name>templating</name>
   <displayName>Magnolia Templating Module</displayName>
   <class>info.magnolia.templating.module.TemplatingModule</class>
-  <versionHandler>info.magnolia.templating.module.setup.TemplatingModuleVersionHandler</versionHandler>
+  <!--<versionHandler>info.magnolia.templating.module.setup.TemplatingModuleVersionHandler</versionHandler>-->
   <version>${project.version}</version>
   <properties>
     <property>
@@ -16,8 +16,16 @@
       <value>info.magnolia.templating.renderers.registry.RendererRegistry</value>
     </property>
     <property>
+      <name>info.magnolia.templating.renderers.registry.ConfiguredRendererManager</name>
+      <value>info.magnolia.templating.renderers.registry.ConfiguredRendererManager</value>
+    </property>
+    <property>
       <name>info.magnolia.templating.template.registry.TemplateDefinitionRegistry</name>
       <value>info.magnolia.templating.template.registry.TemplateDefinitionRegistry</value>
+    </property>
+    <property>
+      <name>info.magnolia.templating.template.registry.ConfiguredTemplateDefinitionManager</name>
+      <value>info.magnolia.templating.template.registry.ConfiguredTemplateDefinitionManager</value>
     </property>
     <property>
       <name>info.magnolia.templating.template.RenderableDefinition</name>
@@ -34,14 +42,6 @@
     <property>
       <name>info.magnolia.templating.template.ParagraphAvailability</name>
       <value>info.magnolia.templating.template.configured.ConfiguredParagraphAvailability</value>
-    </property>
-    <property>
-      <name></name>
-      <value></value>
-    </property>
-    <property>
-      <name></name>
-      <value></value>
     </property>
   </properties>
   <dependencies>

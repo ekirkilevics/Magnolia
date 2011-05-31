@@ -9,8 +9,8 @@
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>
   </sv:property>
-  <sv:property sv:name="renderer" sv:type="String">
-    <sv:value>info.magnolia.module.templating.renderers.FreemarkerTemplateRenderer</sv:value>
+  <sv:property sv:name="class" sv:type="String">
+    <sv:value>info.magnolia.templating.renderer.FreemarkerRenderer</sv:value>
   </sv:property>
   <sv:property sv:name="type" sv:type="String">
     <sv:value>freemarker</sv:value>

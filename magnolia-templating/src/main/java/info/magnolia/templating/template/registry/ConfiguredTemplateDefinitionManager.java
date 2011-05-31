@@ -45,6 +45,7 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.NodeTypeFilter;
 import info.magnolia.templating.template.TemplateDefinition;
 
 /**
@@ -65,23 +66,35 @@ public class ConfiguredTemplateDefinitionManager extends ObservedManager {
     protected void onRegister(Content node) {
         // TODO use the jcr api
 
-        final List<Content> configNodes = ContentUtil.collectAllChildren(node, ItemType.CONTENTNODE);
+        try {
+            ContentUtil.visit(node, new ContentUtil.Visitor() {
 
-        for (Content configNode : configNodes) {
-
-            final String path = configNode.getHandle();
-            final String[] pathElements = path.split("/");
-            final String moduleName = pathElements[1];
-            final String id = moduleName + ":" + StringUtils.removeStart(path, "/modules/" + moduleName + "/templates/");
-
-            synchronized (registeredIds) {
-                try {
-                    ConfiguredTemplateDefinitionProvider templateDefinitionProvider = new ConfiguredTemplateDefinitionProvider(configNode);
-                    templateDefinitionRegistry.registerTemplateDefinition(id, templateDefinitionProvider);
-                    this.registeredIds.add(id);
-                } catch (IllegalStateException e) {
-                    log.error("Unable to register template definition [" + id + "]", e);
+                @Override
+                public void visit(Content node) throws Exception {
+                    for (Content templateDefinitionNode : node.getChildren(ItemType.CONTENTNODE)) {
+                        registerTemplateDefinition(templateDefinitionNode);
+                    }
                 }
+            }, new NodeTypeFilter(ItemType.CONTENT));
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Can't register template definitions defined at " + node, e);
+        }
+    }
+
+    protected void registerTemplateDefinition(Content templateDefinitionNode) {
+        final String path = templateDefinitionNode.getHandle();
+        final String[] pathElements = path.split("/");
+        final String moduleName = pathElements[2];
+        final String id = moduleName + ":" + StringUtils.removeStart(path, "/modules/" + moduleName + "/templates/");
+
+        synchronized (registeredIds) {
+            try {
+                ConfiguredTemplateDefinitionProvider templateDefinitionProvider = new ConfiguredTemplateDefinitionProvider(templateDefinitionNode);
+                templateDefinitionRegistry.registerTemplateDefinition(id, templateDefinitionProvider);
+                this.registeredIds.add(id);
+            } catch (IllegalStateException e) {
+                log.error("Unable to register template definition [" + id + "]", e);
             }
         }
     }

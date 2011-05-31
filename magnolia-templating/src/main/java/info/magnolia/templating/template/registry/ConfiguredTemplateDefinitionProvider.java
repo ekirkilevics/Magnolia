@@ -53,6 +53,7 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
 
     @Override
     public TemplateDefinition getTemplateDefinition() throws TemplateDefinitionRegistrationException {
+        // TODO make sure we are not building the object for every rendering
         try {
             return (TemplateDefinition) Content2BeanUtil.toBean(configNode, true, TemplateDefinition.class);
         } catch (Content2BeanException e) {

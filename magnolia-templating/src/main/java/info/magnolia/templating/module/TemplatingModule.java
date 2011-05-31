@@ -45,7 +45,14 @@ import info.magnolia.templating.template.registry.ConfiguredTemplateDefinitionMa
  *
  */
 public class TemplatingModule implements ModuleLifecycle {
+
     private ConfiguredTemplateDefinitionManager templateDefinitionManager;
+
+    public TemplatingModule(ConfiguredTemplateDefinitionManager templateDefinitionManager, ConfiguredRendererManager rendererManager) {
+        this.templateDefinitionManager = templateDefinitionManager;
+        this.rendererManager = rendererManager;
+    }
+
     private ConfiguredRendererManager rendererManager;
 
     @Override

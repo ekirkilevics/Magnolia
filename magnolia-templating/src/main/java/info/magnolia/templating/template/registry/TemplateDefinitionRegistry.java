@@ -67,7 +67,7 @@ public class TemplateDefinitionRegistry {
             templateDefinitionProvider = providers.get(id);
         }
         if (templateDefinitionProvider == null) {
-            return null;
+            throw new TemplateDefinitionRegistrationException("No TemplateDefinition registered for id: " + id);
         }
         return templateDefinitionProvider.getTemplateDefinition();
     }

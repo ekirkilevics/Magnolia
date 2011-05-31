@@ -38,6 +38,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.templating.renderer.Renderer;
+import info.magnolia.templating.renderers.registry.RendererRegistrationException;
+import info.magnolia.templating.renderers.registry.RendererRegistry;
 import info.magnolia.templating.template.RenderableDefinition;
 
 import java.io.Writer;
@@ -48,6 +50,18 @@ import javax.jcr.RepositoryException;
 
 
 public class DefaultRenderingEngine implements RenderingEngine {
+
+    private RendererRegistry rendererRegistry;
+
+    /**
+     * Proxy.
+     */
+    protected DefaultRenderingEngine() {
+    }
+
+    public DefaultRenderingEngine(RendererRegistry rendererRegistry) {
+        this.rendererRegistry = rendererRegistry;
+    }
 
     @Override
     public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws RenderException {
@@ -76,7 +90,7 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
             renderer.render(content, definition, context, out);
         }
-        catch (RepositoryException e) {
+        catch (Exception e) {
             throw new RenderException("Can't render " + content, e);
         }
 
@@ -86,8 +100,8 @@ public class DefaultRenderingEngine implements RenderingEngine {
         }
     }
 
-    private Renderer getRendererFor(RenderableDefinition definition) {
-        return null;
+    protected Renderer getRendererFor(RenderableDefinition definition) throws RendererRegistrationException {
+        return rendererRegistry.getRenderer(definition.getRenderType());
     }
 
     protected static AggregationState getAggregationStateSafely() {

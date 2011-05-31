@@ -35,6 +35,7 @@ package info.magnolia.templating.renderers.registry;
 
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -60,13 +61,13 @@ public class ConfiguredRendererManager extends ObservedManager {
     protected void onRegister(Content node) {
         // TODO use the jcr api
 
-        for (Content configNode : node.getChildren()) {
+        for (Content rendererNode : node.getChildren(ItemType.CONTENTNODE)) {
 
-            final String id = node.getName();
+            final String id = rendererNode.getName();
 
             synchronized (registeredIds) {
                 try {
-                    ConfiguredRendererProvider provider = new ConfiguredRendererProvider(configNode);
+                    ConfiguredRendererProvider provider = new ConfiguredRendererProvider(rendererNode);
                     registry.registerRenderer(id, provider);
                     this.registeredIds.add(id);
                 } catch (IllegalStateException e) {

@@ -68,7 +68,7 @@ public class RendererRegistry {
             provider = providers.get(id);
         }
         if (provider == null) {
-            return null;
+            throw new RendererRegistrationException("Can't find a renderer for type [" + id + "]");
         }
         return provider.getRenderer();
     }

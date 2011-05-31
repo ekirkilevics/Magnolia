@@ -33,7 +33,6 @@
  */
 package info.magnolia.templating.renderer;
 
-import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.template.RenderableDefinition;
 
 import java.io.IOException;
@@ -48,8 +47,11 @@ import javax.jcr.Node;
  * @version $Id$
  *
  */
-public interface Renderer {
+public class FreemarkerRenderer implements Renderer {
 
-    void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws IOException, RenderException ;
+    @Override
+    public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws IOException {
+        out.append("Holldrio");
+    }
 
 }
