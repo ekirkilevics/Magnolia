@@ -46,7 +46,6 @@ import java.io.Writer;
 import java.util.Map;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 
 public class DefaultRenderingEngine implements RenderingEngine {

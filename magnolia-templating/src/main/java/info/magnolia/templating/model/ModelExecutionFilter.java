@@ -33,23 +33,14 @@
  */
 package info.magnolia.templating.model;
 
+import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
+
 import java.io.IOException;
-import javax.jcr.RepositoryException;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
-import info.magnolia.cms.util.RequestDispatchUtil;
-import info.magnolia.context.MgnlContext;
 
 /**
  * Filter that executes the model for a paragraph before template rendering. Looks for a request parameter containing

@@ -33,6 +33,14 @@
  */
 package info.magnolia.templating.renderer;
 
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.templating.model.EarlyExecutionAware;
+import info.magnolia.templating.model.ModelExecutionFilter;
+import info.magnolia.templating.model.RenderingModel;
+import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.template.RenderableDefinition;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
@@ -41,19 +49,8 @@ import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.i18n.I18nContentWrapper;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.templating.model.EarlyExecutionAware;
-import info.magnolia.templating.model.ModelExecutionFilter;
-import info.magnolia.templating.model.RenderingModel;
-import info.magnolia.templating.rendering.RenderException;
-import info.magnolia.templating.template.RenderableDefinition;
 
 
 /**

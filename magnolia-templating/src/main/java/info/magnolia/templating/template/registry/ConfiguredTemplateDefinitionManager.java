@@ -33,20 +33,19 @@
  */
 package info.magnolia.templating.template.registry;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeTypeFilter;
 import info.magnolia.templating.template.TemplateDefinition;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ObservedManager for {@link TemplateDefinition} configured in repository.
