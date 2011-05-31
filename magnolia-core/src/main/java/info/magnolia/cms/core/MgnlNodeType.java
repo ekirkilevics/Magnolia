@@ -58,7 +58,7 @@ public final class MgnlNodeType {
     public static final String MGNL_PREFIX = "mgnl:";
 
     /**
-     * Prefix for jcr-properties
+     * Prefix for jcr-properties.
      */
     public static final String JCR_PREFIX = "jcr:";
 
