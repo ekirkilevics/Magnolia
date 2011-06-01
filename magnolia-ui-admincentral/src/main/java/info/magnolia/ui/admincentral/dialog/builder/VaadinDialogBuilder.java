@@ -37,14 +37,12 @@ import com.vaadin.Application;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.ui.admincentral.dialog.field.DialogField;
 import info.magnolia.ui.admincentral.dialog.field.DialogFieldFactory;
-import info.magnolia.ui.admincentral.dialog.field.DialogStaticField;
 import info.magnolia.ui.admincentral.dialog.support.DialogLocalizationUtil;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.admincentral.dialog.view.DialogViewImpl;
 import info.magnolia.ui.framework.editor.Editor;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
-import info.magnolia.ui.model.dialog.definition.StaticFieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
