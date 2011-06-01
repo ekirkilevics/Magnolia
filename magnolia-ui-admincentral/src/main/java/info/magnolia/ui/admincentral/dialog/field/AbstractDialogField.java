@@ -47,18 +47,22 @@ import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
- * UI component for a field in a dialog.
+ * Abstract base class for implementing dialog fields using the default visual style.
  *
  * @version $Id$
  */
 public abstract class AbstractDialogField implements DialogField {
 
+    protected DialogDefinition dialogDefinition;
+    protected TabDefinition tabDefinition;
+    protected FieldDefinition fieldDefinition;
     protected DialogView.Presenter presenter;
     protected DialogFieldView view;
-    protected VaadinEditorAdapter editor;
-    protected FieldDefinition fieldDefinition;
+    protected DialogFieldEditorStrategy editor;
 
     protected AbstractDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
+        this.dialogDefinition = dialogDefinition;
+        this.tabDefinition = tabDefinition;
         this.fieldDefinition = fieldDefinition;
         this.presenter = presenter;
         this.view = new DialogFieldView(dialogDefinition, tabDefinition, fieldDefinition);
@@ -79,7 +83,7 @@ public abstract class AbstractDialogField implements DialogField {
         return fieldDefinition;
     }
 
-    public DialogView.Presenter getPresenter() {
+    public DialogView.Presenter getDialogPresenter() {
         return presenter;
     }
 

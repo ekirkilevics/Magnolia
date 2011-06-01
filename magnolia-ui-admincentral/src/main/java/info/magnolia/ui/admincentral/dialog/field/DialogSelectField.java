@@ -77,7 +77,7 @@ public class DialogSelectField extends AbstractVaadinFieldDialogField {
             select.setValue(options.entrySet().iterator().next().getKey());
         }
 
-        // TODO add focus listener
+        // TODO add focus listener, see http://dev.vaadin.com/ticket/6847
 
         return select;
     }

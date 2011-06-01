@@ -48,14 +48,13 @@ import info.magnolia.ui.framework.editor.ValueEditor;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 
 /**
- * Adapter class that adapts a Vaadin Field as an Editor.
- * <p/>
- * TODO: this class no longer related to vaadin components, instead its a full strategy for implementing editors
+ * Strategy for using the editor framework in dialog fields. Agnostic of the actual UI component and displaying errors
+ * by using {@link EditorSource} and {@link ErrorDisplay}.
  *
  * @param <T> the type of the value that the editor works with.
  * @version $Id$
  */
-public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate, HasEditorErrors {
+public class DialogFieldEditorStrategy<T> implements ValueEditor<T>, HasEditorDelegate, HasEditorErrors {
 
     private EditorSource editorSource;
     private FieldDefinition fieldDefinition;
@@ -63,7 +62,7 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
     private Class<T> type;
     private ErrorDisplay errorDisplay;
 
-    public VaadinEditorAdapter(EditorSource editorSource, FieldDefinition fieldDefinition, Class<T> type, ErrorDisplay errorDisplay) {
+    public DialogFieldEditorStrategy(EditorSource editorSource, FieldDefinition fieldDefinition, Class<T> type, ErrorDisplay errorDisplay) {
         this.editorSource = editorSource;
         this.fieldDefinition = fieldDefinition;
         this.type = type;

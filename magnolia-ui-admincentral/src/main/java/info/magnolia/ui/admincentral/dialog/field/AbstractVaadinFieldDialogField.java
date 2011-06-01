@@ -46,27 +46,18 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
  */
 public abstract class AbstractVaadinFieldDialogField extends AbstractDialogField {
 
-    private Field field;
-
     protected AbstractVaadinFieldDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
-        this.field = getField();
-        this.view.setComponent(this.field);
+
+        Field field = getField();
+
+        this.view.setComponent(field);
+
         Class<?> type = getFieldType(fieldDefinition);
-        EditorSource editorSource = new EditorSource() {
-
-            @Override
-            public Object getValue() {
-                return field.getValue();
-            }
-
-            @Override
-            public void setValue(Object value) {
-                field.setValue(value);
-            }
-        };
-        this.editor = new VaadinEditorAdapter(editorSource, fieldDefinition, type, view);
+        EditorSource editorSource = new VaadinFieldEditorSourceAdapter(field);
+        this.editor = new DialogFieldEditorStrategy(editorSource, fieldDefinition, type, view);
     }
 
     protected abstract Field getField();
+
 }

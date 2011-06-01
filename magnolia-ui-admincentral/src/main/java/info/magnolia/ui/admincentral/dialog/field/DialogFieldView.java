@@ -41,6 +41,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.ui.admincentral.dialog.support.DialogLocalizationUtil;
@@ -56,7 +57,7 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
  */
 public class DialogFieldView extends CustomComponent implements ErrorDisplay {
 
-    private CssLayout componentLayout;
+    private Layout componentLayout;
     private Label errorLabel;
     private String errorMessage;
 

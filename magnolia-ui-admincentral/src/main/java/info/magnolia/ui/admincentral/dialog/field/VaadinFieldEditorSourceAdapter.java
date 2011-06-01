@@ -34,34 +34,27 @@
 package info.magnolia.ui.admincentral.dialog.field;
 
 import com.vaadin.ui.Field;
-import com.vaadin.ui.RichTextArea;
-import info.magnolia.ui.admincentral.dialog.view.DialogView;
-import info.magnolia.ui.model.dialog.definition.DialogDefinition;
-import info.magnolia.ui.model.dialog.definition.FieldDefinition;
-import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
- * Dialog field for rich edit.
+ * Adapter for using a Vaadin Field component as an {@link EditorSource} with {@link DialogFieldEditorStrategy}.
  *
  * @version $Id$
  */
-public class DialogRichEditField extends AbstractVaadinFieldDialogField {
+public class VaadinFieldEditorSourceAdapter implements EditorSource {
 
-    public DialogRichEditField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
-        super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
+    private Field field;
+
+    public VaadinFieldEditorSourceAdapter(Field field) {
+        this.field = field;
     }
 
     @Override
-    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
-        return String.class;
+    public Object getValue() {
+        return field.getValue();
     }
 
     @Override
-    protected Field getField() {
-        RichTextArea richTextArea = new RichTextArea();
-
-        // TODO add focus listener, see http://dev.vaadin.com/ticket/7093
-
-        return richTextArea;
+    public void setValue(Object value) {
+        field.setValue(value);
     }
 }

@@ -63,8 +63,8 @@ public class DialogDateField extends AbstractVaadinFieldDialogField {
     @Override
     protected Field getField() {
         DateField dateField = new DateField();
-        DateFieldDefinition def = (DateFieldDefinition) getFieldDefinition();
-        if (def.isTime()) {
+        DateFieldDefinition definition = (DateFieldDefinition) getFieldDefinition();
+        if (definition.isTime()) {
             dateField.setResolution(DateField.RESOLUTION_MIN);
         } else {
             dateField.setResolution(DateField.RESOLUTION_DAY);
@@ -72,7 +72,7 @@ public class DialogDateField extends AbstractVaadinFieldDialogField {
         dateField.addListener(new FieldEvents.FocusListener() {
             @Override
             public void focus(FieldEvents.FocusEvent event) {
-                getPresenter().onFocus(DialogDateField.this);
+                getDialogPresenter().onFocus(DialogDateField.this);
             }
         });
         return dateField;

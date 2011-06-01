@@ -63,32 +63,40 @@ public class DialogEditField extends AbstractVaadinFieldDialogField {
 
     @Override
     protected Field getField() {
-        EditFieldDefinition d = (EditFieldDefinition) getFieldDefinition();
-        if (d.getRows() > 1) {
-            TextArea textArea = new TextArea();
-            textArea.setRows(d.getRows());
-            if (StringUtils.isNotEmpty(d.getWidth())) {
-                textArea.setWidth(d.getWidth());
-            }
-            textArea.addListener(new FieldEvents.FocusListener() {
-                @Override
-                public void focus(FieldEvents.FocusEvent event) {
-                    getPresenter().onFocus(DialogEditField.this);
-                }
-            });
-            return textArea;
+        EditFieldDefinition definition = (EditFieldDefinition) getFieldDefinition();
+        if (definition.getRows() > 1) {
+            return createMultiRowEditField(definition);
         }
+        return createSingleRowEditField(definition);
+    }
+
+    private Field createSingleRowEditField(EditFieldDefinition definition) {
         TextField textField = new TextField();
-        textField.setMaxLength(d.getMaxLength());
-        if (StringUtils.isNotEmpty(d.getWidth())) {
-            textField.setWidth(d.getWidth());
+        textField.setMaxLength(definition.getMaxLength());
+        if (StringUtils.isNotEmpty(definition.getWidth())) {
+            textField.setWidth(definition.getWidth());
         }
         textField.addListener(new FieldEvents.FocusListener() {
             @Override
             public void focus(FieldEvents.FocusEvent event) {
-                getPresenter().onFocus(DialogEditField.this);
+                getDialogPresenter().onFocus(DialogEditField.this);
             }
         });
         return textField;
+    }
+
+    private Field createMultiRowEditField(EditFieldDefinition definition) {
+        TextArea textArea = new TextArea();
+        textArea.setRows(definition.getRows());
+        if (StringUtils.isNotEmpty(definition.getWidth())) {
+            textArea.setWidth(definition.getWidth());
+        }
+        textArea.addListener(new FieldEvents.FocusListener() {
+            @Override
+            public void focus(FieldEvents.FocusEvent event) {
+                getDialogPresenter().onFocus(DialogEditField.this);
+            }
+        });
+        return textArea;
     }
 }
