@@ -34,7 +34,6 @@
 package info.magnolia.templating.template.configured;
 
 import info.magnolia.cms.core.Access;
-import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.MgnlInstantiationException;
