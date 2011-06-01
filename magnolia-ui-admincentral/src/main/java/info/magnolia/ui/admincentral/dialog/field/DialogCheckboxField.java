@@ -44,24 +44,29 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
  * Dialog field for checkbox.
- * <p/>
- * Note: This is the equivalent of controlType=checkboxSwitch
+ *
+ * @version $Id$
  */
-public class DialogCheckboxField extends AbstractDialogField {
+public class DialogCheckboxField extends AbstractVaadinFieldDialogField {
 
     public DialogCheckboxField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
     }
 
     @Override
+    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
+        return Boolean.class;
+    }
+
+    @Override
     protected Field getField() {
-        CheckboxFieldDefinition def = (CheckboxFieldDefinition) getFieldDefinition();
+        CheckboxFieldDefinition definition = (CheckboxFieldDefinition) getFieldDefinition();
         CheckBox checkBox = new CheckBox();
-        checkBox.setValue(def.isDefaultValue());
+        checkBox.setValue(definition.isDefaultValue());
         checkBox.addListener(new FieldEvents.FocusListener() {
             @Override
             public void focus(FieldEvents.FocusEvent event) {
-                getPresenter().onFocus(DialogCheckboxField.this);
+                getDialogPresenter().onFocus(DialogCheckboxField.this);
             }
         });
         return checkBox;

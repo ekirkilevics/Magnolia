@@ -39,6 +39,8 @@ import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 
 /**
  * Dialog field.
+ *
+ * @version $Id$
  */
 public interface DialogField {
 

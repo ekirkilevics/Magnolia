@@ -34,34 +34,30 @@
 package info.magnolia.ui.admincentral.dialog.field;
 
 import com.vaadin.ui.Field;
-import com.vaadin.ui.RichTextArea;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
- * Dialog field for rich edit.
+ * Abstract base class for dialog fields that use a single Vaadin Field component.
  *
  * @version $Id$
  */
-public class DialogRichEditField extends AbstractVaadinFieldDialogField {
+public abstract class AbstractVaadinFieldDialogField extends AbstractDialogField {
 
-    public DialogRichEditField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
+    protected AbstractVaadinFieldDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
+
+        Field field = getField();
+
+        this.view.setComponent(field);
+
+        Class<?> type = getFieldType(fieldDefinition);
+        EditorSource editorSource = new VaadinFieldEditorSourceAdapter(field);
+        this.editor = new DialogFieldEditorStrategy(editorSource, fieldDefinition, type, view);
     }
 
-    @Override
-    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
-        return String.class;
-    }
+    protected abstract Field getField();
 
-    @Override
-    protected Field getField() {
-        RichTextArea richTextArea = new RichTextArea();
-
-        // TODO add focus listener, see http://dev.vaadin.com/ticket/7093
-
-        return richTextArea;
-    }
 }

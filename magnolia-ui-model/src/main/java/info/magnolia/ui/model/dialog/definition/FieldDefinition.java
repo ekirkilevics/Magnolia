@@ -49,8 +49,6 @@ public class FieldDefinition {
     private String description; // not relevant for controlType=static
     private String i18nBasename;
 
-    // TODO we should not be using controlType any more
-    private String controlType;
     private String type; // JCR Property type name see javax.jcr.PropertyType
 
     private boolean required; // Not relevant for checkbox
@@ -95,14 +93,6 @@ public class FieldDefinition {
 
     public void setI18nBasename(String i18nBasename) {
         this.i18nBasename = i18nBasename;
-    }
-
-    public String getControlType() {
-        return controlType;
-    }
-
-    public void setControlType(String controlType) {
-        this.controlType = controlType;
     }
 
     public String getType() {

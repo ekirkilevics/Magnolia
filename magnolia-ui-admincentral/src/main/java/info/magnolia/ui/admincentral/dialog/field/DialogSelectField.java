@@ -45,11 +45,18 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
  * Dialog field for select.
+ *
+ * @version $Id$
  */
-public class DialogSelectField extends AbstractDialogField {
+public class DialogSelectField extends AbstractVaadinFieldDialogField {
 
     public DialogSelectField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
+    }
+
+    @Override
+    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
+        return String.class;
     }
 
     @Override
@@ -70,7 +77,7 @@ public class DialogSelectField extends AbstractDialogField {
             select.setValue(options.entrySet().iterator().next().getKey());
         }
 
-        // TODO add focus listener
+        // TODO add focus listener, see http://dev.vaadin.com/ticket/6847
 
         return select;
     }

@@ -33,22 +33,13 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
-import java.util.Calendar;
+import java.math.BigDecimal;
+import java.util.Date;
+import javax.jcr.PropertyType;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.vaadin.terminal.UserError;
-import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Field;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.ui.admincentral.dialog.support.DialogLocalizationUtil;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.framework.editor.Editor;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
@@ -56,98 +47,30 @@ import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
- * UI component for a field in a dialog.
+ * Abstract base class for implementing dialog fields using the default visual style.
  *
- * @author tmattsson
+ * @version $Id$
  */
-public abstract class AbstractDialogField extends CustomComponent implements DialogField {
+public abstract class AbstractDialogField implements DialogField {
 
-    private DialogDefinition dialogDefinition;
-    private TabDefinition tabDefinition;
-    private FieldDefinition fieldDefinition;
-    private DialogView.Presenter presenter;
-    private Messages messages;
-
-    private String errorMessage;
-    private Label errorLabel;
-    private Field field;
-    private Editor editor;
+    protected DialogDefinition dialogDefinition;
+    protected TabDefinition tabDefinition;
+    protected FieldDefinition fieldDefinition;
+    protected DialogView.Presenter presenter;
+    protected DialogFieldView view;
+    protected DialogFieldEditorStrategy editor;
 
     protected AbstractDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
-
         this.dialogDefinition = dialogDefinition;
         this.tabDefinition = tabDefinition;
         this.fieldDefinition = fieldDefinition;
         this.presenter = presenter;
-        this.messages = DialogLocalizationUtil.getMessages(dialogDefinition, tabDefinition, fieldDefinition);
-
-        this.field = getField();
-
-        String label = messages.getWithDefault(fieldDefinition.getLabel(), fieldDefinition.getLabel());
-        String description = messages.getWithDefault(fieldDefinition.getDescription(), fieldDefinition.getDescription());
-
-        Label labelLabel = new Label(label);
-        errorLabel = new Label();
-        errorLabel.setVisible(false);
-        Label descriptionLabel = new Label(StringUtils.isNotBlank(description) ? description : "(Description not specified)");
-
-        VerticalLayout layout = new VerticalLayout();
-        layout.addComponent(field);
-        layout.addComponent(descriptionLabel);
-        layout.addComponent(errorLabel);
-        layout.setComponentAlignment(errorLabel, Alignment.BOTTOM_RIGHT);
-
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setWidth("100%");
-        horizontalLayout.addComponent(labelLabel);
-        horizontalLayout.setExpandRatio(labelLabel, 1);
-        horizontalLayout.addComponent(layout);
-        horizontalLayout.setExpandRatio(layout, 5);
-
-        CssLayout box = new CssLayout() {
-
-            @Override
-            protected String getCss(Component c) {
-                if (errorMessage != null) {
-                    return "background-color:#ff8080;";
-                }
-                return super.getCss(c);
-            }
-        };
-        box.setWidth("100%");
-        box.addComponent(horizontalLayout);
-        super.setCompositionRoot(box);
-
-        Class<?> type = getTypeFromDialogControl(fieldDefinition);
-
-        this.editor = new VaadinEditorAdapter(field, fieldDefinition, type, this);
-    }
-
-    protected abstract Field getField();
-
-    public void setError(String message) {
-
-        // TODO what about multiple errors on the same editor?
-
-        this.errorMessage = message;
-        if (message != null) {
-            errorLabel.setVisible(true);
-            errorLabel.setCaption(message);
-            if (field instanceof AbstractComponent) {
-                ((AbstractComponent) field).setComponentError(new UserError(message));
-            }
-        } else {
-            errorLabel.setVisible(false);
-            if (field instanceof AbstractComponent) {
-                ((AbstractComponent) field).setComponentError(null); // ??
-            }
-        }
-        requestRepaintAll();
+        this.view = new DialogFieldView(dialogDefinition, tabDefinition, fieldDefinition);
     }
 
     @Override
     public Component getComponent() {
-        return this;
+        return this.view;
     }
 
     @Override
@@ -155,47 +78,41 @@ public abstract class AbstractDialogField extends CustomComponent implements Dia
         return this.editor;
     }
 
-    private Class<?> getTypeFromDialogControl(FieldDefinition fieldDefinition) {
-
-        // TODO this should look at fieldDefinition.type instead
-
-        if ("edit".equals(fieldDefinition.getControlType())) {
-            return String.class;
-        }
-        if ("date".equals(fieldDefinition.getControlType())) {
-            return Calendar.class;
-        }
-        if ("richText".equals(fieldDefinition.getControlType())) {
-            return String.class;
-        }
-        if ("password".equals(fieldDefinition.getControlType())) {
-            return String.class;
-        }
-        if ("checkboxSwitch".equals(fieldDefinition.getControlType())) {
-            return Boolean.class;
-        }
-        return String.class;
-//        throw new IllegalArgumentException("Unsupported type " + dialogControl.getClass());
-    }
-
-    public Messages getMessages() {
-        return messages;
-    }
-
     @Override
     public FieldDefinition getFieldDefinition() {
         return fieldDefinition;
     }
 
-    public TabDefinition getTabDefinition() {
-        return tabDefinition;
-    }
-
-    public DialogDefinition getDialogDefinition() {
-        return dialogDefinition;
-    }
-
-    public DialogView.Presenter getPresenter() {
+    public DialogView.Presenter getDialogPresenter() {
         return presenter;
+    }
+
+    protected Class<?> getFieldType(FieldDefinition fieldDefinition) {
+
+        if (StringUtils.isNotEmpty(fieldDefinition.getType())) {
+            int valueType = PropertyType.valueFromName(fieldDefinition.getType());
+            switch (valueType) {
+                case PropertyType.STRING:
+                    return String.class;
+                case PropertyType.LONG:
+                    return Long.class;
+                case PropertyType.DOUBLE:
+                    return Double.class;
+                case PropertyType.DATE:
+                    // TODO we use Date here instead of Calendar simply because the vaadin DateField uses Date not Calendar
+                    return Date.class;
+                case PropertyType.BOOLEAN:
+                    return Boolean.class;
+                case PropertyType.DECIMAL:
+                    return BigDecimal.class;
+                default:
+                    throw new IllegalArgumentException("Unsupported property type " + PropertyType.nameFromValue(valueType));
+            }
+        }
+        return getDefaultFieldType(fieldDefinition);
+    }
+
+    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
+        throw new IllegalArgumentException("Unsupported type " + fieldDefinition.getClass().getName());
     }
 }
