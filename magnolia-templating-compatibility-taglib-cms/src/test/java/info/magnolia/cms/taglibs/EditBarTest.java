@@ -44,8 +44,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
-import info.magnolia.templating.template.RenderableDefinition;
-import info.magnolia.templating.template.configured.ConfiguredRenderableDefinition;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTagTestCase;
 
