@@ -6,7 +6,7 @@
 
 <suppressions>
   <!-- extra suppression: -->
-  <suppress files="src/main/java/com/vaadin/.*" checks=".*" />
+  <suppress files="src/main/java/org/vaadin/.*" checks=".*" />
 
   <!-- our regular exclusions, as per build-tools:  -->
   <suppress files="src/test/.*" checks="JavadocType" />

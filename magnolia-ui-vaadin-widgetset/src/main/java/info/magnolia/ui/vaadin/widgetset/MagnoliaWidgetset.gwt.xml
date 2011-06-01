@@ -23,4 +23,5 @@
     <!-- <set-property name="user.agent" value="gecko"/> -->
 
     <inherits name="com.vaadin.lazyloadwrapper.widgetset.LazyLoadWrapperWidgetset" />
+    <inherits name="org.vaadin.openesignforms.ckeditor.widgetset.VaadinCKEditorWidgetset" />
 </module>

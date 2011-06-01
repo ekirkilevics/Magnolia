@@ -1,0 +1,12 @@
+File: LICENSE.txt
+
+CKEditor for Vaadin
+
+This software is released under the Apache License 2.0 <http://www.apache.org/licenses/LICENSE-2.0.html>
+
+CKEditor is required and is licensed separately with details at http://ckeditor.com/license.
+
+Icons are from Fat Cow Free Web Icons (http://www.fatcow.com/free-icons/) which are released 
+under the Creative Commons Attribution 3.0 License.
+
+Please report any files that specify any other license.

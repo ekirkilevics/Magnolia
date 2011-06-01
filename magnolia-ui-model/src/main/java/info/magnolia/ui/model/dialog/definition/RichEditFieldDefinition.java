@@ -37,5 +37,13 @@ package info.magnolia.ui.model.dialog.definition;
  * Field definition for a rich edit field.
  */
 public class RichEditFieldDefinition extends FieldDefinition {
+    private String customConfigurationPath;
 
+    public String getCustomConfigurationPath() {
+        return customConfigurationPath;
+    }
+
+    public void setCustomConfigurationPath(String customConfigurationPath) {
+        this.customConfigurationPath = customConfigurationPath;
+    }
 }
