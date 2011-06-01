@@ -57,6 +57,7 @@ public class DialogPasswordField extends AbstractDialogField implements EditorSo
 
     public DialogPasswordField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
+
         PasswordFieldDefinition definition = (PasswordFieldDefinition) getFieldDefinition();
 
         this.passwordField = createField(definition);

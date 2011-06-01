@@ -37,9 +37,11 @@ import com.vaadin.Application;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.ui.admincentral.dialog.field.DialogField;
 import info.magnolia.ui.admincentral.dialog.field.DialogFieldFactory;
+import info.magnolia.ui.admincentral.dialog.field.DialogStaticField;
 import info.magnolia.ui.admincentral.dialog.support.DialogLocalizationUtil;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.admincentral.dialog.view.DialogViewImpl;
+import info.magnolia.ui.framework.editor.Editor;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.StaticFieldDefinition;
@@ -48,7 +50,7 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
 /**
  * Builder for DialogViewImpl.
  *
- * @author tmattsson
+ * @version $Id$
  */
 public class VaadinDialogBuilder implements DialogBuilder {
 
@@ -94,12 +96,6 @@ public class VaadinDialogBuilder implements DialogBuilder {
 
     private void addField(DialogViewImpl dialog, DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
 
-        // Special case for StaticFieldDefinition
-        if (fieldDefinition instanceof StaticFieldDefinition) {
-            dialog.addField(tabDefinition.getName(), fieldDefinition.getLabel());
-            return;
-        }
-
         DialogField dialogField = dialogFieldFactory.getDialogField(dialogDefinition, tabDefinition, fieldDefinition, presenter);
 
         if (dialogField == null) {
@@ -108,6 +104,8 @@ public class VaadinDialogBuilder implements DialogBuilder {
         }
 
         dialog.addField(tabDefinition.getName(), dialogField.getComponent());
-        dialog.addEditor(tabDefinition, dialogField.getEditor());
+        Editor editor = dialogField.getEditor();
+        if (editor != null)
+            dialog.addEditor(tabDefinition, editor);
     }
 }
