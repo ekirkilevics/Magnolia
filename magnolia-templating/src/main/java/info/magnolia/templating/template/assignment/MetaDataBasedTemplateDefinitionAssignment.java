@@ -45,11 +45,11 @@ import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
  * @version $Id$
  *
  */
-public class MetaDataBasedTemplateDefinitionAssignement implements TemplateDefinitionAssignment {
+public class MetaDataBasedTemplateDefinitionAssignment implements TemplateDefinitionAssignment {
 
     TemplateDefinitionRegistry templateDefinitionRegistry;
 
-    public MetaDataBasedTemplateDefinitionAssignement(TemplateDefinitionRegistry templateDefinitionRegistry) {
+    public MetaDataBasedTemplateDefinitionAssignment(TemplateDefinitionRegistry templateDefinitionRegistry) {
         this.templateDefinitionRegistry = templateDefinitionRegistry;
     }
 

@@ -28,6 +28,10 @@
       <value>info.magnolia.templating.template.registry.ConfiguredTemplateDefinitionManager</value>
     </property>
     <property>
+      <name>info.magnolia.templating.template.assignment.TemplateDefinitionAssignment</name>
+      <value>info.magnolia.templating.template.assignment.MetaDataBasedTemplateDefinitionAssignment</value>
+    </property>
+    <property>
       <name>info.magnolia.templating.template.RenderableDefinition</name>
       <value>info.magnolia.templating.template.configured.ConfiguredRenderableDefinition</value>
     </property>
