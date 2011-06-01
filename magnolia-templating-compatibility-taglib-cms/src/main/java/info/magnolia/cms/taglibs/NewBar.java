@@ -39,6 +39,8 @@ import info.magnolia.cms.gui.inline.BarNew;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeUtil;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,7 +190,7 @@ public class NewBar extends TagSupport implements BarTag {
     @Override
     public int doEndTag() {
 
-        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && MgnlContext.getAggregationState().getMainContentAsContent().isGranted(Permission.SET)) {
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && NodeUtil.isGranted(MgnlContext.getAggregationState().getMainContent(),Permission.SET)) {
             try {
                 BarNew bar = new BarNew();
                 bar.setPath(this.getPath());

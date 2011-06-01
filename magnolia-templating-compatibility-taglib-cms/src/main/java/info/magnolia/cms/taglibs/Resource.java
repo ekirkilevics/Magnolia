@@ -36,8 +36,12 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.filters.InterceptFilter;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.SelectorUtil;
 import info.magnolia.context.MgnlContext;
+
+import javax.jcr.Node;
+
 import org.apache.commons.lang.StringUtils;
 
 
@@ -77,7 +81,7 @@ public class Resource {
      * @deprecated use AggregationState
      */
     public static Content getActivePage() {
-        return MgnlContext.getAggregationState().getMainContentAsContent();
+        return ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
     }
 
     /**
@@ -87,11 +91,11 @@ public class Resource {
      * @return currently active page, as requested from the URI
      */
     public static Content getCurrentActivePage() {
-        Content currentActpage = MgnlContext.getAggregationState().getCurrentContentAsContent();
+        Node currentActpage = MgnlContext.getAggregationState().getCurrentContent();
         if (currentActpage == null) {
-            currentActpage = MgnlContext.getAggregationState().getMainContentAsContent();
+            currentActpage = MgnlContext.getAggregationState().getMainContent();
         }
-        return currentActpage;
+        return ContentUtil.asContent(currentActpage);
     }
 
     /**
@@ -116,7 +120,7 @@ public class Resource {
      * @return ContentNode , local container specific to the current JSP/Servlet paragraph
      */
     public static Content getLocalContentNode() {
-        return MgnlContext.getAggregationState().getCurrentContentAsContent();
+        return ContentUtil.asContent(MgnlContext.getAggregationState().getCurrentContent());
     }
 
     /**
@@ -195,7 +199,7 @@ public class Resource {
      * Restores the request's original <code>actpage</code> attribute (i.e. the one specified by the request URI).
      */
     public static void restoreCurrentActivePage() {
-        setCurrentActivePage(MgnlContext.getAggregationState().getMainContentAsContent());
+        setCurrentActivePage(ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent()));
     }
 
     /**

@@ -34,6 +34,7 @@
 package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.taglibs.Resource;
 import info.magnolia.context.MgnlContext;
@@ -243,7 +244,7 @@ public class SimpleMailTag extends TagSupport {
             this.nodeCollectionName = Resource.getLocalContentNodeCollectionName();
         }
 
-        Content activePage = MgnlContext.getAggregationState().getMainContentAsContent();
+        Content activePage = ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
         Content fieldsNode = null;
         Iterator it;
         try {

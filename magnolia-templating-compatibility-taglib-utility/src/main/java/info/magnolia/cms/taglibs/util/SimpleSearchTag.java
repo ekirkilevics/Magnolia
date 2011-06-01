@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -195,7 +196,7 @@ public class SimpleSearchTag extends TagSupport {
         // search only in a specific subtree
         if (this.startLevel > 0) {
             try {
-                Content activePage = MgnlContext.getAggregationState().getMainContentAsContent();
+                Content activePage = ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
                 if (activePage != null) {
                     cleanStartPath = activePage.getAncestor(this.startLevel).getHandle();
                 }

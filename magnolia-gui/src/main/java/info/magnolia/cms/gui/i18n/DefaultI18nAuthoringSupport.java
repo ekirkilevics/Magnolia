@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.gui.i18n;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Control;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.dialog.Dialog;
@@ -43,15 +44,11 @@ import info.magnolia.cms.util.BooleanUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.link.LinkUtil;
+import org.apache.commons.lang.LocaleUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 import java.util.Locale;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.LocaleUtils;
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -76,7 +73,7 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
             select.setName("locale");
             select.setEvent("onchange", "window.location = this.value");
 
-            Node currentPage = MgnlContext.getAggregationState().getMainContent();
+            Content currentPage = ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
             String currentUri = createURI(currentPage, i18nContentSupport.getLocale());
             select.setValue(currentUri);
 
@@ -94,17 +91,14 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
         return null;
     }
 
-    protected String createURI(Node currentPage, Locale locale) {
+    protected String createURI(Content currentPage, Locale locale) {
         // we are going to change the context language, this is ugly but is safe as only the current Thread is modified
         Locale currentLocale = i18nContentSupport.getLocale();
         String uri=null;
         try {
             // this is going to set the local in the aggregation state and hence wont change the i18nSupport object itself
             i18nContentSupport.setLocale(locale);
-            uri = LinkUtil.createAbsoluteLink(ContentUtil.asContent(currentPage));
-        } catch (RepositoryException e) {
-            // TODO dlipp - apply consistent ExceptionHandling
-            throw new RuntimeException(e);
+            uri = LinkUtil.createAbsoluteLink(currentPage);
         }
         // make sure that we always reset to the original locale
         finally{

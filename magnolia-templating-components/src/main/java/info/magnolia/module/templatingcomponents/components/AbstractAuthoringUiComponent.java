@@ -35,7 +35,6 @@ package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.objectfactory.Components;
@@ -113,12 +112,12 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
      */
     // TODO rename to currentNode()
     protected Node currentContent() {
-        final Content currentContent = aggregationState.getCurrentContent();
+        final Node currentContent = aggregationState.getCurrentContent();
         if (currentContent == null) {
             throw new IllegalStateException(
                     "Could not determine currentContent from AggregationState, currentContent is null");
         }
-        return currentContent.getJCRNode();
+        return currentContent;
     }
 
     /**

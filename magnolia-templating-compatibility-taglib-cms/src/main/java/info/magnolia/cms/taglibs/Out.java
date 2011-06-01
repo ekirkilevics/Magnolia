@@ -52,6 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
@@ -373,9 +374,12 @@ public class Out extends BaseContentTag {
                     // ( - see info.magnolia.link.Link for an example of the special format that this next line
                     //    handles )
                     try {
-                        value = LinkUtil.convertLinksFromUUIDPattern(value, LinkTransformerManager.getInstance().getBrowserLink(MgnlContext.getAggregationState().getMainContentAsContent().getHandle())); // static actpage
+                        value = LinkUtil.convertLinksFromUUIDPattern(value, LinkTransformerManager.getInstance().getBrowserLink(MgnlContext.getAggregationState().getMainContent().getPath())); // static actpage
                     } catch (LinkException e) {
                         log.warn("Failed to parse links with from " + nodeData.getName(), e);
+                    } catch (RepositoryException e) {
+                        // TODO dlipp - apply proper ExceptionHandling
+                        throw new RuntimeException(e);
                     }
 
 
@@ -395,9 +399,12 @@ public class Out extends BaseContentTag {
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_RELATIVE)){
                             try {
-                                value = LinkUtil.makePathRelative(MgnlContext.getAggregationState().getMainContentAsContent().getHandle(), LinkFactory.createLink(this.getUuidToLinkRepository(), value).getHandle());
+                                value = LinkUtil.makePathRelative(MgnlContext.getAggregationState().getMainContent().getPath(), LinkFactory.createLink(this.getUuidToLinkRepository(), value).getHandle());
                             } catch (LinkException e) {
                                 log.warn("Failed to parse links with from " + nodeData.getName(), e);
+                            } catch (RepositoryException e) {
+                                // TODO dlipp - apply proper ExceptionHandling
+                                throw new RuntimeException(e);
                             }
                         }
                         else{

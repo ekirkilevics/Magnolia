@@ -93,17 +93,17 @@ public class PageIteratorTest extends MgnlTagTestCase {
      * Test for MAGNOLIA-3007
      * @throws JspException
      */
-    public void testIterateOnCurrentPage() throws JspException {
+    public void testIterateOnCurrentPage() throws JspException, RepositoryException {
         PageIterator tag = new PageIterator();
 
         tag.doStartTag();
-        Assert.assertEquals("/active/activechild", aggregationState.getCurrentContentAsContent().getHandle());
+        Assert.assertEquals("/active/activechild", aggregationState.getCurrentContent().getPath());
     }
 
     /**
      * Test for MAGNOLIA-3209
      */
-    public void testIterateOnPagesNotOnParagraphs() throws JspException {
+    public void testIterateOnPagesNotOnParagraphs() throws JspException, RepositoryException {
         PageIterator tag = new PageIterator();
 
         // create a paragraph and set it as the current paragraph
@@ -116,7 +116,7 @@ public class PageIteratorTest extends MgnlTagTestCase {
 
         tag.doStartTag();
 
-        Assert.assertEquals("Must be the first child of the current page.", "/active/activechild", aggregationState.getCurrentContentAsContent().getHandle());
+        Assert.assertEquals("Must be the first child of the current page.", "/active/activechild", aggregationState.getCurrentContent().getPath());
     }
 
 

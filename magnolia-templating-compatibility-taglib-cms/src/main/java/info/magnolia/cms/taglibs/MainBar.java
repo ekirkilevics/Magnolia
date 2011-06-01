@@ -34,18 +34,21 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarMain;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.jsp.tagext.TagSupport;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -141,8 +144,8 @@ public class MainBar extends TagSupport implements BarTag {
 
     @Override
     public int doEndTag() {
-        Content activePage = MgnlContext.getAggregationState().getMainContentAsContent();
-        if (ServerConfiguration.getInstance().isAdmin() && activePage != null && activePage.isGranted(Permission.SET)) {
+        Node activePage = MgnlContext.getAggregationState().getMainContent();
+        if (ServerConfiguration.getInstance().isAdmin() && activePage != null && NodeUtil.isGranted(activePage,Permission.SET)) {
             try {
                 BarMain bar = new BarMain();
                 bar.setPath(this.getPath());

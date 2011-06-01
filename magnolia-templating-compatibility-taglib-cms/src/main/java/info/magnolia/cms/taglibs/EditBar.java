@@ -42,6 +42,7 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.templating.template.TemplateDefinition;
@@ -190,7 +191,7 @@ public class EditBar extends TagSupport {
     public int doEndTag() {
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && aggregationState.getMainContentAsContent().isGranted(Permission.SET)) {
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && NodeUtil.isGranted(aggregationState.getMainContent(), Permission.SET)) {
             try {
                 BarEdit bar = new BarEdit();
 

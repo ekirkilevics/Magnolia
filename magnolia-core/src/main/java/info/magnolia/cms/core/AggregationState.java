@@ -34,7 +34,6 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.beans.runtime.File;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.UnsupportedEncodingException;
@@ -42,7 +41,6 @@ import java.net.URLDecoder;
 import java.util.Locale;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -255,9 +253,8 @@ public class AggregationState {
         String contextPath = MgnlContext.getContextPath();
         if (uri != null && uri.startsWith(contextPath + "/")) {
             return StringUtils.removeStart(uri, contextPath);
-        } else {
-            return uri;
         }
+        return uri;
     }
 
     /**
@@ -270,31 +267,5 @@ public class AggregationState {
         this.originalBrowserURL=null;
         // current uri have been resolved from the original, but if original changes, current has to follow, otherwise forward: virtual uri mappings will result in infinite loop since currentURI will be the original one forcing forward to act again and again
         this.currentURI = null;
-    }
-
-    /**
-     * New method temporarily introduced in case caller is not yet converting from Content-APU to JCR-API.
-     *
-     * @deprecated since 5.0 - temporarily implemented, use {@link #getMainContent()} instead.
-     */
-    public Content getMainContentAsContent() {
-        return getNodeAsContent(mainContent);
-    }
-
-    /**
-     * New method temporarily introduced in case caller is not yet converting from Content-APU to JCR-API.
-     *
-     * @deprecated since 5.0 - temporarily implemented, use {@link #getCurrentContent()} instead.
-     */
-    public Content getCurrentContentAsContent() {
-        return getNodeAsContent(currentContent);
-    }
-
-    private Content getNodeAsContent(Node node) {
-        try {
-            return ContentUtil.asContent(node);
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

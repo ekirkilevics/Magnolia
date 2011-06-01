@@ -38,6 +38,8 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.templating.template.RenderableDefinition;
@@ -47,6 +49,7 @@ import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import java.io.IOException;
 import java.util.List;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -108,19 +111,19 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
      * different target node.
      */
     protected Content currentContent() {
-        final Content currentContent = aggregationState.getCurrentContent();
+        final Node currentContent = aggregationState.getCurrentContent();
         if (currentContent == null) {
             throw new IllegalStateException(
                     "Could not determine currentContent from AggregationState, currentContent is null");
         }
-        return currentContent;
+        return ContentUtil.asContent(currentContent);
     }
 
     /**
      * Override this method if the component needs to be rendered under different conditions.
      */
     protected boolean shouldRender() {
-        return (server.isAdmin() && aggregationState.getMainContent().isGranted(Permission.SET));
+        return (server.isAdmin() && NodeUtil.isGranted(aggregationState.getMainContent(), Permission.SET));
     }
 
     /**

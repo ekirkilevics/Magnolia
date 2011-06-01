@@ -624,13 +624,19 @@ public class ContentUtil {
         }
     }
 
-    public static Content asContent(Node content) throws RepositoryException {
+    public static Content asContent(Node content) {
         // FIXME try to do better and make sure we use the same session and permissions
-        final Session session = content.getSession();
+        Session session;
+        try {
+            session = content.getSession();
         final HierarchyManager hm = MgnlContext.getHierarchyManager(session.getWorkspace().getName());
         if(!hm.getWorkspace().getSession().equals(session)){
             throw new IllegalStateException("Won't create a Content object, because the session of the passed node and the one used by the hierarchy manager are NOT the same. This could lead to various issues.");
         }
         return hm.getContent(content.getPath());
+        } catch (RepositoryException e) {
+            // TODO dlipp - apply consistent ExceptionHandling
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -33,6 +33,7 @@
  */
 package info.magnolia.jcr.util;
 
+import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
@@ -252,6 +253,18 @@ public class NodeUtil {
         node.getSession().move(node.getPath(), newPath);
     }
 
+    /**
+     * @return Whether the provided node as the provided permission or not.
+     * @throws RuntimeException in case of RepositoryException.
+     */
+    public static boolean isGranted(Node node, long permissions) {
+        try {
+            return Access.isGranted(node.getSession(), node.getPath(), Access.convertPermissions(permissions));
+        } catch (RepositoryException e) {
+            // TODO dlipp - apply consistent ExceptionHandling
+            throw new RuntimeException(e);
+        }
+    }
     /**
      * Returns true if both arguments represents the same node. In case the nodes are wrapped the comparison is done
      * one the actual nodes behind the wrappers.

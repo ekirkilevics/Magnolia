@@ -39,6 +39,7 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -105,8 +106,16 @@ public class ButtonTag extends TagSupport {
 
         Button button = new Button();
         button.setLabel(label);
+        String path;
+        try {
+            path = MgnlContext.getAggregationState().getMainContent().getPath();
+        } catch (RepositoryException e) {
+            // TODO dlipp - apply consistent ExceptionHandling
+            throw new RuntimeException(e);
+        }
+
         button.setOnclick("mgnlOpenDialog('"
-            + MgnlContext.getAggregationState().getMainContentAsContent().getHandle()
+            + path
             + "','','','"
             + dialogName
             + "','"

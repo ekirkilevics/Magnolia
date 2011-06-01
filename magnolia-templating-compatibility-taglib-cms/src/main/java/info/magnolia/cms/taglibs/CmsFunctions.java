@@ -34,18 +34,23 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.SecurityUtil;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.jcr.util.NodeUtil;
 
-import javax.jcr.RepositoryException;
 import java.util.Collection;
 import java.util.Properties;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -61,7 +66,7 @@ public class CmsFunctions {
      * @return current page
      */
     public static Content currentPage() {
-        return MgnlContext.getAggregationState().getCurrentContentAsContent();
+        return ContentUtil.asContent(MgnlContext.getAggregationState().getCurrentContent());
     }
 
     /**
@@ -69,7 +74,7 @@ public class CmsFunctions {
      * @return loaded page
      */
     public static Content mainPage() {
-        return MgnlContext.getAggregationState().getMainContentAsContent();
+        return ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
     }
 
     /**
@@ -119,7 +124,7 @@ public class CmsFunctions {
      * @return true if the current user can edit the active page.
      */
     public static boolean canEdit() {
-        return MgnlContext.getAggregationState().getMainContentAsContent().isGranted(Permission.SET);
+        return NodeUtil.isGranted(MgnlContext.getAggregationState().getMainContent(), Permission.SET);
     }
 
     /**
@@ -129,11 +134,11 @@ public class CmsFunctions {
      */
     public static boolean isEditMode() {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        Content activePage = aggregationState.getMainContentAsContent();
+        Node activePage = aggregationState.getMainContent();
         return ServerConfiguration.getInstance().isAdmin()
             && !aggregationState.isPreviewMode()
             && activePage != null
-            && activePage.isGranted(Permission.SET);
+            && NodeUtil.isGranted(activePage, Permission.SET);
     }
 
     /**

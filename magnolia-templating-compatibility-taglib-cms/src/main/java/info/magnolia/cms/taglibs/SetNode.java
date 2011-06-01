@@ -35,6 +35,7 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.I18nContentWrapper;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 
 import javax.servlet.jsp.PageContext;
@@ -125,7 +126,7 @@ public class SetNode extends BaseContentTag {
 
         // set attribute
         if (contentNode != null) {
-            Content mainContent = MgnlContext.getAggregationState().getMainContentAsContent();
+            Content mainContent = ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
             if (mainContent == null) {
                 mainContent = contentNode;
             }
