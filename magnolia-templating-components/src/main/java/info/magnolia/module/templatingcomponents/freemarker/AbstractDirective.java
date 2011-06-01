@@ -38,8 +38,9 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.models.ContentModel;
+import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.module.templatingcomponents.components.AbstractContentComponent;
-import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
+import info.magnolia.templating.rendering.RenderException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 import freemarker.core.CollectionAndSequence;
 import freemarker.core.Environment;
@@ -82,19 +82,17 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
             throw new TemplateModelException("Unsupported parameter(s): " + params);
         }
 
-        uiComp.render(env.getOut());
-
         try {
-            doBody(env, body);
-        } finally {
+            uiComp.render(env.getOut());
+
             try {
+                doBody(env, body);
+            } finally {
                 uiComp.postRender(env.getOut());
-            } catch (RepositoryException e) {
-
-                // TODO what exception is appropriate to throw
-
-                e.printStackTrace();
             }
+        }
+        catch (RenderException e) {
+            throw new TemplateException(e, env);
         }
     }
 

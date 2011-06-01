@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.template.TemplateDefinition;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
@@ -44,7 +45,6 @@ import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import java.io.IOException;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -65,7 +65,7 @@ public class EditComponent extends AbstractContentComponent {
     }
 
     @Override
-    protected void doRender(Appendable out) throws IOException, RepositoryException {
+    protected void doRender(Appendable out) throws IOException, RenderException {
         Node content = getTargetContent();
 
         // TODO we need to do html attribute escaping on this
@@ -104,7 +104,7 @@ public class EditComponent extends AbstractContentComponent {
     }
 
     @Override
-    public void postRender(Appendable out) throws IOException, RepositoryException {
+    public void postRender(Appendable out) throws IOException, RenderException {
         Node content = getTargetContent();
 
         out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);

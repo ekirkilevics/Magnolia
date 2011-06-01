@@ -215,7 +215,8 @@ public class Include extends BodyTagSupport {
                 webContext.setPageContext(pageContext);
                 webContext.push((HttpServletRequest)pageContext.getRequest(), (HttpServletResponse)pageContext.getResponse());
                 try {
-                    //FIMXE dlipp: won't work - have to derive where to get RenderableDefinition and context from
+                    
+                    
                     renderingEngine.render(content.getJCRNode(), pageContext.getOut());
                 } finally{
                     webContext.pop();

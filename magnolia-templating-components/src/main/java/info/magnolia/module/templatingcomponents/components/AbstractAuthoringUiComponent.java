@@ -37,7 +37,9 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.template.TemplateDefinition;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
@@ -86,24 +88,20 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
     }
 
     @Override
-    public void render(Appendable out) throws IOException {
+    public void render(Appendable out) throws IOException, RenderException {
         if (!shouldRender()) {
             return;
         }
-        try {
-            doRender(out);
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
+        doRender(out);
     }
 
-    protected abstract void doRender(Appendable out) throws IOException, RepositoryException;
+    protected abstract void doRender(Appendable out) throws IOException, RenderException;
 
     /**
      * Override this method if you need to "do something" once the component is rendered, i.e cleanup the context.
      */
     @Override
-    public void postRender(Appendable out) throws IOException, RepositoryException {
+    public void postRender(Appendable out) throws IOException, RenderException {
     }
 
     /**

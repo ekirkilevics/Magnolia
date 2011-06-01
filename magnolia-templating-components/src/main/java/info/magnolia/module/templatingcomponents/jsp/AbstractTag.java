@@ -31,12 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.jspx;
+package info.magnolia.module.templatingcomponents.jsp;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
+import info.magnolia.templating.rendering.RenderException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,12 +67,17 @@ public abstract class AbstractTag extends SimpleTagSupport {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final AuthoringUiComponent uiComp = prepareUIComponent(serverConfiguration, aggregationState);
 
-        uiComp.render(getJspContext().getOut());
-
         try {
-            doBody();
-        } finally {
-            uiComp.postRender();
+            uiComp.render(getJspContext().getOut());
+
+            try {
+                doBody();
+            } finally {
+                uiComp.postRender(getJspContext().getOut());
+            }
+        }
+        catch (RenderException e) {
+            throw new JspException(e);
         }
     }
 

@@ -42,6 +42,8 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.templating.template.RenderableDefinition;
 import info.magnolia.templating.template.configured.ConfiguredRenderableDefinition;
 import info.magnolia.test.ComponentsTestUtil;
@@ -51,8 +53,6 @@ import java.io.IOException;
 import java.util.Collections;
 
 import javax.jcr.RepositoryException;
-
-import org.apache.poi.hwpf.usermodel.Paragraph;
 
 /**
  * @author gjoseph
@@ -88,7 +88,7 @@ public class EditBarTest extends MgnlTagTestCase {
 
     public void testDisplaysParagraphNameAsLabel() throws Exception {
         final String paraTitle = "testParaTitleKey";
-        final RenderableDefinition paraInfo = new ConfiguredRenderableDefinition();
+        final Paragraph paraInfo = new Paragraph();
         paraInfo.setI18nBasename("test.messages");
         paraInfo.setTitle(paraTitle);
 

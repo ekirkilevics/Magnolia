@@ -35,7 +35,6 @@ package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Components;
@@ -45,7 +44,6 @@ import info.magnolia.templating.template.AreaDefinition;
 import info.magnolia.templating.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.templating.template.configured.ConfiguredParagraphAvailability;
 
-import java.awt.geom.Area;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -86,9 +84,8 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     @Override
-    protected void doRender(Appendable out) throws IOException, RepositoryException {
+    protected void doRender(Appendable out) throws IOException, RenderException {
         Node content = getTargetContent();
-
         out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
         out.append(LESS_THAN).append(CMS_AREA);
         param(out, "content", getNodePath(content));
@@ -108,34 +105,39 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     @Override
-    public void postRender(Appendable out) throws IOException, RepositoryException {
+    public void postRender(Appendable out) throws RenderException {
         Node content = currentContent();
 
-        if (isEnabled() && content.hasNode(resolveName())) {
+        try {
+            if (isEnabled() && content.hasNode(resolveName())) {
 
-            // TODO IoC
-            RenderingEngine renderingEngine = Components.getComponent(RenderingEngine.class);
+                // TODO IoC
+                RenderingEngine renderingEngine = Components.getComponent(RenderingEngine.class);
 
-            // TODO need to get writer some other way
-            PrintWriter writer = MgnlContext.getWebContext().getResponse().getWriter();
+                // TODO need to get writer some other way
+                PrintWriter writer = MgnlContext.getWebContext().getResponse().getWriter();
 
-            if (resolveType().equals(TYPE_LIST)) {
-                Node areaNode = content.getNode(resolveName());
-                NodeIterator nodeIterator = areaNode.getNodes();
-                while (nodeIterator.hasNext()) {
-                    Node node = (Node) nodeIterator.next();
-                    if (node.getPrimaryNodeType().getName().equals(ItemType.CONTENTNODE.getSystemName())) {
-                        renderParagraph(renderingEngine, writer, node);
+                if (resolveType().equals(TYPE_LIST)) {
+                    Node areaNode = content.getNode(resolveName());
+                    NodeIterator nodeIterator = areaNode.getNodes();
+                    while (nodeIterator.hasNext()) {
+                        Node node = (Node) nodeIterator.next();
+                        if (node.getPrimaryNodeType().getName().equals(ItemType.CONTENTNODE.getSystemName())) {
+                            renderParagraph(renderingEngine, writer, node);
+                        }
                     }
+                } else if (resolveType().equals(TYPE_SINGLE)) {
+                    // TODO we should suppress any editbar inside the paragraph rendered here
+                    Node paragraphNode = content.getNode(resolveName());
+                    renderParagraph(renderingEngine, writer, paragraphNode);
                 }
-            } else if (resolveType().equals(TYPE_SINGLE)) {
-                // TODO we should suppress any editbar inside the paragraph rendered here
-                Node paragraphNode = content.getNode(resolveName());
-                renderParagraph(renderingEngine, writer, paragraphNode);
             }
-        }
 
-        out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
+            out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
+        }
+        catch (Exception e) {
+            throw new RenderException("Can't render area " + content, e);
+        }
     }
 
     private void renderParagraph(RenderingEngine renderingEngine, PrintWriter writer, Node node) throws RepositoryException {
@@ -163,12 +165,17 @@ public class AreaComponent extends AbstractContentComponent {
         return name != null ? name : area.getName();
     }
 
-    private boolean shouldShowAddButton() throws RepositoryException {
+    private boolean shouldShowAddButton() throws RenderException {
         if (resolveType().equals(TYPE_LIST)) {
             return true;
         }
         if (resolveType().equals(TYPE_SINGLE)) {
-            return !currentContent().hasNode(resolveName());
+            try {
+                return !currentContent().hasNode(resolveName());
+            }
+            catch (RepositoryException e) {
+                throw new RenderException(e);
+            }
         }
         throw new IllegalStateException("Unknown area type [" + type + "]");
     }

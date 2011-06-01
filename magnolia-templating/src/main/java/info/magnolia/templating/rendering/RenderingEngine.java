@@ -48,6 +48,10 @@ import javax.jcr.Node;
  */
 public interface RenderingEngine {
 
+    public void render(Node content, Writer out) throws RenderException;
+
+    public void render(Node content, Map<String, Object> context, Writer out) throws RenderException;
+
     public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws RenderException;
 
 }

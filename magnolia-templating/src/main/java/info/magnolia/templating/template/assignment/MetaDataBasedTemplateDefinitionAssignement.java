@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,34 +25,38 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.components;
+package info.magnolia.templating.template.assignment;
 
-import java.io.IOException;
-import javax.jcr.RepositoryException;
+import javax.jcr.Node;
+
+import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+
 
 /**
- * Implementations of AuthoringUiComponent render specific "components" in templates.
- * They're usually exposed to templating engines via a specific wrapper; see the freemarker and jsp subpackages for examples.
- *
  * @version $Id$
+ *
  */
-public interface AuthoringUiComponent {
+public class MetaDataBasedTemplateDefinitionAssignement implements TemplateDefinitionAssignment {
 
-    // TODO these names should be aligned, begin/end or pre/post
+    TemplateDefinitionRegistry templateDefinitionRegistry;
 
-    void render(Appendable out) throws IOException;
+    public MetaDataBasedTemplateDefinitionAssignement(TemplateDefinitionRegistry templateDefinitionRegistry) {
+        this.templateDefinitionRegistry = templateDefinitionRegistry;
+    }
 
-    /**
-     * This method should be called by templating-engine wrappers after rendering the component AND its body.
-     * Certain components (SingletonParagraphBar for instance) will need to let the wrapper render their body,
-     * and call this afterwards.
-     * Can be used, for instance, as a "cleanup" mechanism, if the component modified the context.
-     */
-    void postRender(Appendable out) throws IOException, RepositoryException;
+    @Override
+    public TemplateDefinition getAssignedTempalteDefinition(Node node) throws TemplateDefinitionRegistrationException {
+        final String templateId = MetaDataUtil.getMetaData(node).getTemplate();
+        return templateDefinitionRegistry.getTemplateDefinition(templateId);
+    }
+
 }

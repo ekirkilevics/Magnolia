@@ -36,6 +36,7 @@ package info.magnolia.module.templatingcomponents.components;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.templating.rendering.RenderException;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -77,11 +78,16 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
         super(server, aggregationState);
     }
 
-    protected String getNodePath(Node node) throws RepositoryException {
-        return node.getSession().getWorkspace().getName() + ":" + node.getPath();
+    protected String getNodePath(Node node) throws RenderException {
+        try {
+            return node.getSession().getWorkspace().getName() + ":" + node.getPath();
+        }
+        catch (RepositoryException e) {
+            throw new RenderException("Can't constcuct node path for node " + node);
+        }
     }
 
-    protected Node getTargetContent() throws RepositoryException {
+    protected Node getTargetContent() throws RenderException {
 
         // TODO should we default workspace to 'website' ?
         // TODO should we be strict and fail on invalid combinations ?
@@ -93,10 +99,20 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
         }
         if (StringUtils.isNotEmpty(workspace)) {
             if (StringUtils.isNotEmpty(nodeIdentifier)) {
-                return MgnlContext.getJCRSession(workspace).getNodeByIdentifier(nodeIdentifier);
+                try {
+                    return MgnlContext.getJCRSession(workspace).getNodeByIdentifier(nodeIdentifier);
+                }
+                catch (RepositoryException e) {
+                    throw new RenderException("Can't read contente from workspace [" + workspace + "] with identifier [" + nodeIdentifier + "].");
+                }
             }
             if (StringUtils.isNotEmpty(path)) {
-                return MgnlContext.getJCRSession(workspace).getNodeByIdentifier(path);
+                try {
+                    return MgnlContext.getJCRSession(workspace).getNode(path);
+                }
+                catch (RepositoryException e) {
+                    throw new RenderException("Can't read contente from workspace [" + workspace + "] with path [" + path + "].");
+                }
             }
             throw new IllegalArgumentException("Need to specify either uuid or path in combination with workspace");
         }

@@ -39,7 +39,7 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
+import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.module.templatingcomponents.components.RenderComponent;
 
 import java.io.IOException;

@@ -31,49 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.components;
+package info.magnolia.templating.template.assignment;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.templating.rendering.RenderException;
+import javax.jcr.Node;
 
-import java.io.IOException;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+
 
 /**
- * Sets a context attribute, used as a sub to ui:render.
- *
  * @version $Id$
+ *
  */
-// TODO naming - ContextMarker seams to be the better fit...
-public class ContextComponent extends AbstractAuthoringUiComponent {
+public interface TemplateDefinitionAssignment {
 
-    private String name;
-    private Object value;
+    TemplateDefinition getAssignedTempalteDefinition(Node node) throws TemplateDefinitionRegistrationException;
 
-    public ContextComponent(ServerConfiguration server, AggregationState aggregationState) {
-        super(server, aggregationState);
-    }
-
-    @Override
-    protected void doRender(Appendable out) throws IOException, RenderException {
-        // TODO save former value and reset it in postRender()
-        MgnlContext.setAttribute(name, value);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
-    }
 }

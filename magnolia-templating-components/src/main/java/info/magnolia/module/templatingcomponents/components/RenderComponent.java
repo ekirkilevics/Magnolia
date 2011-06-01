@@ -35,7 +35,6 @@ package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.objectfactory.Components;
@@ -45,7 +44,6 @@ import info.magnolia.templating.rendering.RenderingEngine;
 import java.io.IOException;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 /**
  * Renders a piece of content.
@@ -62,11 +60,7 @@ public class RenderComponent extends AbstractContentComponent {
     }
 
     @Override
-    protected void doRender(Appendable out) throws IOException, RepositoryException {
-    }
-
-    @Override
-    public void postRender(Appendable out) throws IOException, RepositoryException {
+    protected void doRender(Appendable out) throws IOException, RenderException {
         Node content = getTargetContent();
 
         RenderingEngine renderingEngine = Components.getSingleton(RenderingEngine.class);
@@ -74,7 +68,6 @@ public class RenderComponent extends AbstractContentComponent {
         WebContext webContext = MgnlContext.getWebContext();
         webContext.push(webContext.getRequest(), webContext.getResponse());
         try {
-            // FIXME dlipp: where to get missing arguments (RenderableDefinition, context) from?
             renderingEngine.render(content, webContext.getResponse().getWriter());
         } catch (RenderException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

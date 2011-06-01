@@ -39,8 +39,12 @@ import info.magnolia.templating.renderer.Renderer;
 import info.magnolia.templating.renderer.registry.RendererRegistrationException;
 import info.magnolia.templating.renderer.registry.RendererRegistry;
 import info.magnolia.templating.template.RenderableDefinition;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.assignment.TemplateDefinitionAssignment;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
 
 import java.io.Writer;
+import java.util.Collections;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -48,7 +52,10 @@ import javax.jcr.Node;
 
 public class DefaultRenderingEngine implements RenderingEngine {
 
+    private static final Map<String, Object> EMPTY_CONTEXT = Collections.emptyMap();
+
     private RendererRegistry rendererRegistry;
+    private TemplateDefinitionAssignment templateDefinitionAssignment;
 
     /**
      * Proxy.
@@ -56,8 +63,26 @@ public class DefaultRenderingEngine implements RenderingEngine {
     protected DefaultRenderingEngine() {
     }
 
-    public DefaultRenderingEngine(RendererRegistry rendererRegistry) {
+    public DefaultRenderingEngine(RendererRegistry rendererRegistry, TemplateDefinitionAssignment templateDefinitionAssignment) {
         this.rendererRegistry = rendererRegistry;
+        this.templateDefinitionAssignment = templateDefinitionAssignment;
+    }
+
+    @Override
+    public void render(Node content, Writer out) throws RenderException {
+        render(content, EMPTY_CONTEXT, out);
+    }
+
+    @Override
+    public void render(Node content, Map<String, Object> context, Writer out) throws RenderException {
+        TemplateDefinition templateDefinition;
+        try {
+            templateDefinition = templateDefinitionAssignment.getAssignedTempalteDefinition(content);
+        }
+        catch (TemplateDefinitionRegistrationException e) {
+            throw new RenderException("Can't render node " + content, e);
+        }
+        render(content, templateDefinition, context, out);
     }
 
     @Override
