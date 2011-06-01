@@ -38,8 +38,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.jcr.RepositoryException;
-
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import info.magnolia.cms.core.Content;
@@ -168,12 +166,7 @@ public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
     protected Content getMainContentSafely(Content current) {
         AggregationState state = getAggregationStateSafely();
         if(state != null){
-            try {
-                return ContentUtil.asContent(state.getMainContent());
-            } catch (RepositoryException e) {
-                // TODO dlipp - apply consistent ExceptionHandling.
-               throw new RuntimeException(e);
-            }
+            return ContentUtil.asContent(state.getMainContent());
         }
         return current;
     }
