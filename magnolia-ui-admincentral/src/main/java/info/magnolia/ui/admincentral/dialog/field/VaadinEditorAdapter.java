@@ -40,7 +40,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.vaadin.ui.Field;
 import info.magnolia.ui.framework.editor.EditorDelegate;
 import info.magnolia.ui.framework.editor.EditorError;
 import info.magnolia.ui.framework.editor.HasEditorDelegate;
@@ -50,34 +49,36 @@ import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 
 /**
  * Adapter class that adapts a Vaadin Field as an Editor.
+ * <p/>
+ * TODO: this class no longer related to vaadin components, instead its a full strategy for implementing editors
  *
  * @param <T> the type of the value that the editor works with.
- * @author tmattsson
+ * @version $Id$
  */
 public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate, HasEditorErrors {
 
-    private Field field;
+    private EditorSource editorSource;
     private FieldDefinition fieldDefinition;
     private EditorDelegate delegate;
     private Class<T> type;
-    private AbstractDialogField abstractDialogField;
+    private ErrorDisplay errorDisplay;
 
-    public VaadinEditorAdapter(Field field, FieldDefinition fieldDefinition, Class<T> type, AbstractDialogField abstractDialogField) {
-        this.field = field;
+    public VaadinEditorAdapter(EditorSource editorSource, FieldDefinition fieldDefinition, Class<T> type, ErrorDisplay errorDisplay) {
+        this.editorSource = editorSource;
         this.fieldDefinition = fieldDefinition;
         this.type = type;
-        this.abstractDialogField = abstractDialogField;
+        this.errorDisplay = errorDisplay;
     }
 
     @Override
     public void setValue(T value) {
         value = (T) convertToEditorTypeIfNecessary(value, type);
-        field.setValue(value);
+        internalSetValue(value);
     }
 
     @Override
     public T getValue() {
-        T value = (T) field.getValue();
+        T value = internalGetValue();
 
         value = (T) convertToEditorTypeIfNecessary(value, type);
 
@@ -86,10 +87,22 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
         if (type.equals(String.class)) {
             // TODO quick hack to get us something to test with
             if ((fieldDefinition.isRequired() || fieldDefinition.getName().equals("title")) && StringUtils.isEmpty((String) value)) {
-                delegate.recordError("Required", value);
+                recordError("Required", value);
             }
         }
         return value;
+    }
+
+    public void recordError(String message, T value) {
+        delegate.recordError(message, value);
+    }
+
+    private void internalSetValue(T value) {
+        editorSource.setValue(value);
+    }
+
+    private T internalGetValue() {
+        return (T) editorSource.getValue();
     }
 
     protected Object convertToEditorTypeIfNecessary(Object value, Class<?> targetType) {
@@ -106,7 +119,7 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
                 return value;
             }
             if (value instanceof Calendar) {
-                return ((Calendar)value).getTime();
+                return ((Calendar) value).getTime();
             }
         } else if (targetType.equals(Calendar.class)) {
             if (value instanceof Calendar) {
@@ -122,8 +135,9 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
                 return value;
             }
             if (value instanceof String) {
-                if (StringUtils.isEmpty((String) value))
+                if (StringUtils.isEmpty((String) value)) {
                     return 0L;
+                }
                 return Long.valueOf((String) value);
             }
         } else if (targetType.equals(Double.class)) {
@@ -131,8 +145,9 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
                 return value;
             }
             if (value instanceof String) {
-                if (StringUtils.isEmpty((String) value))
+                if (StringUtils.isEmpty((String) value)) {
                     return 0.0d;
+                }
                 return Double.valueOf((String) value);
             }
         } else if (targetType.equals(Boolean.class)) {
@@ -147,13 +162,14 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
                 return value;
             }
             if (value instanceof String) {
-                if (StringUtils.isEmpty((String) value))
+                if (StringUtils.isEmpty((String) value)) {
                     return BigDecimal.ZERO;
+                }
                 return new BigDecimal((String) value);
             }
         }
 
-        throw new RuntimeException("Conversion failed value [" + value +
+        throw new RuntimeException("Conversion failed, value [" + value +
                 "] of type [" + value.getClass().getName() +
                 "] could not be converted to target type [" + targetType.getName() +
                 "]");
@@ -168,11 +184,11 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
     public void showErrors(List<EditorError> errors) {
 
         // Clear any previous error
-        abstractDialogField.setError(null);
+        errorDisplay.setError(null);
 
         for (EditorError error : errors) {
             if (error.getEditor() == this) {
-                abstractDialogField.setError(error.getMessage());
+                errorDisplay.setError(error.getMessage());
                 error.setConsumed(true);
             }
         }

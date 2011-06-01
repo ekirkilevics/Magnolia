@@ -34,34 +34,39 @@
 package info.magnolia.ui.admincentral.dialog.field;
 
 import com.vaadin.ui.Field;
-import com.vaadin.ui.RichTextArea;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
- * Dialog field for rich edit.
+ * Abstract base class for dialog fields that use a single Vaadin Field component.
  *
  * @version $Id$
  */
-public class DialogRichEditField extends AbstractVaadinFieldDialogField {
+public abstract class AbstractVaadinFieldDialogField extends AbstractDialogField {
 
-    public DialogRichEditField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
+    private Field field;
+
+    protected AbstractVaadinFieldDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
+        this.field = getField();
+        this.view.setComponent(this.field);
+        Class<?> type = getFieldType(fieldDefinition);
+        EditorSource editorSource = new EditorSource() {
+
+            @Override
+            public Object getValue() {
+                return field.getValue();
+            }
+
+            @Override
+            public void setValue(Object value) {
+                field.setValue(value);
+            }
+        };
+        this.editor = new VaadinEditorAdapter(editorSource, fieldDefinition, type, view);
     }
 
-    @Override
-    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
-        return String.class;
-    }
-
-    @Override
-    protected Field getField() {
-        RichTextArea richTextArea = new RichTextArea();
-
-        // TODO add focus listener
-
-        return richTextArea;
-    }
+    protected abstract Field getField();
 }

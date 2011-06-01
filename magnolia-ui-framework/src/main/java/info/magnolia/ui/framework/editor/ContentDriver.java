@@ -216,6 +216,7 @@ public class ContentDriver extends AbstractDriver<Node> {
             } else if (type.equals(Calendar.class)) {
                 valueEditor.setValue(node.getProperty(path).getDate());
             } else if (type.equals(Date.class)) {
+                // TODO when null is saved it becomes an empty string and this fails
                 valueEditor.setValue(node.getProperty(path).getDate().getTime());
             } else if (type.equals(Long.class)) {
                 valueEditor.setValue(node.getProperty(path).getLong());

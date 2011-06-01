@@ -33,35 +33,12 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
-import com.vaadin.ui.Field;
-import com.vaadin.ui.RichTextArea;
-import info.magnolia.ui.admincentral.dialog.view.DialogView;
-import info.magnolia.ui.model.dialog.definition.DialogDefinition;
-import info.magnolia.ui.model.dialog.definition.FieldDefinition;
-import info.magnolia.ui.model.dialog.definition.TabDefinition;
-
 /**
- * Dialog field for rich edit.
+ * Implemented by UI components that can display editor errors.
  *
  * @version $Id$
  */
-public class DialogRichEditField extends AbstractVaadinFieldDialogField {
+public interface ErrorDisplay {
 
-    public DialogRichEditField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
-        super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
-    }
-
-    @Override
-    protected Class<?> getDefaultFieldType(FieldDefinition fieldDefinition) {
-        return String.class;
-    }
-
-    @Override
-    protected Field getField() {
-        RichTextArea richTextArea = new RichTextArea();
-
-        // TODO add focus listener
-
-        return richTextArea;
-    }
+    void setError(String message);
 }

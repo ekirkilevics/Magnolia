@@ -46,8 +46,10 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
  * Dialog field for date.
+ *
+ * @version $Id$
  */
-public class DialogDateField extends AbstractDialogField {
+public class DialogDateField extends AbstractVaadinFieldDialogField {
 
     public DialogDateField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);

@@ -46,6 +46,8 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
  * Factory for creating dialog fields based on definitions. Note that this is vaadin specific.
+ *
+ * @version $Id$
  */
 public class DialogFieldFactoryImpl extends FactoryBase<FieldDefinition, DialogField> implements DialogFieldFactory {
 

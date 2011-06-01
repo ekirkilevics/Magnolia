@@ -47,8 +47,10 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
  * Dialog field for edit.
+ *
+ * @version $Id$
  */
-public class DialogEditField extends AbstractDialogField {
+public class DialogEditField extends AbstractVaadinFieldDialogField {
 
     public DialogEditField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);

@@ -46,8 +46,10 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
  * Dialog field for checkbox.
  * <p/>
  * Note: This is the equivalent of controlType=checkboxSwitch
+ *
+ * @version $Id$
  */
-public class DialogCheckboxField extends AbstractDialogField {
+public class DialogCheckboxField extends AbstractVaadinFieldDialogField {
 
     public DialogCheckboxField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
