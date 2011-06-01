@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.samples.templates;
 
-import info.magnolia.module.templating.Template;
+import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 
 
 /**
@@ -45,7 +45,7 @@ import info.magnolia.module.templating.Template;
  *
  * @author tmiyar
  */
-public class SampleTemplate extends Template {
+public class SampleTemplate extends ConfiguredTemplateDefinition {
 
     private String titleSize = "1";
 

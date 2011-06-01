@@ -59,12 +59,18 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
     @Override
     public TemplateDefinition getTemplateDefinition() throws TemplateDefinitionRegistrationException {
         // TODO make sure we are not building the object for every rendering
+        Object obj = null;
         try {
-            return (TemplateDefinition) Content2BeanUtil.toBean(configNode, true, TemplateDefinition.class);
+            obj = Content2BeanUtil.toBean(configNode, true, TemplateDefinition.class);
+            return (TemplateDefinition) obj;
         } catch (Content2BeanException e) {
             throw new TemplateDefinitionRegistrationException(e);
         } catch (ClassCastException e) {
             log.warn("Failed to read configured template with " + e.getMessage(), e);
+            // not ideal, but don't want to introduce class dependency on compat modules
+            if (obj != null && obj.getClass().getSuperclass().getName().equals("info.magnolia.module.templating.Template")) {
+                log.warn("The template implements old interface and can be loaded in compatibility mode only.");
+            }
             // callee knows how to deal with TDRE, but doesn't expect CCE
             throw new TemplateDefinitionRegistrationException(e);
         }
