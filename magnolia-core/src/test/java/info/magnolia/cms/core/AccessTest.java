@@ -50,9 +50,8 @@ public class AccessTest {
     public void testConvertPermissions() {
         assertEquals(Session.ACTION_READ, Access.convertPermissions(Permission.READ));
         assertEquals(Session.ACTION_ADD_NODE, Access.convertPermissions(Permission.WRITE));
+        assertEquals(Session.ACTION_REMOVE, Access.convertPermissions(Permission.REMOVE));
+        assertEquals(Session.ACTION_SET_PROPERTY, Access.convertPermissions(Permission.SET));
         assertEquals("add_node,read,remove,set_property", Access.convertPermissions(Permission.ALL));
-
-        // TODO dlipp - check whether that's really the desired behavior!
-        assertEquals("", Access.convertPermissions(Permission.SET));
     }
 }

@@ -101,7 +101,7 @@ public final class Access {
      */
     public static String convertPermissions(long oldPermissions) {
         String permissions = "";
-        //TODO: review && convert all the permissions properly
+        //FIXME: treat custom permission that don't exist on Session.
         if ((oldPermissions & Permission.ALL) == Permission.ALL) {
             permissions = Session.ACTION_ADD_NODE + "," + Session.ACTION_READ + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY;
         } else if ((oldPermissions & Permission.WRITE) == Permission.WRITE) {
@@ -109,6 +109,12 @@ public final class Access {
         }
         else if ((oldPermissions & Permission.READ) == Permission.READ) {
             permissions = Session.ACTION_READ;
+        }
+        else if ((oldPermissions & Permission.REMOVE) == Permission.REMOVE) {
+            permissions = Session.ACTION_REMOVE;
+        }
+        else if ((oldPermissions & Permission.SET) == Permission.SET) {
+            permissions = Session.ACTION_SET_PROPERTY;
         }
         return permissions;
     }
