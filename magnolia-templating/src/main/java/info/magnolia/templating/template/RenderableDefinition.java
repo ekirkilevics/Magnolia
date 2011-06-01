@@ -71,4 +71,5 @@ public interface RenderableDefinition {
      */
     public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
 
+    public boolean isAvailable(Node content);
 }

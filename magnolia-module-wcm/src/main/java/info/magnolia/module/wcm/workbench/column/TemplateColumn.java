@@ -33,14 +33,13 @@
  */
 package info.magnolia.module.wcm.workbench.column;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.ui.admincentral.column.AbstractEditableColumn;
 import info.magnolia.ui.admincentral.column.EditableSelect;
-import info.magnolia.ui.admincentral.jcr.TemporaryHackUtil;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
@@ -54,6 +53,8 @@ import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.vaadin.ui.Component;
 
 /**
@@ -64,7 +65,7 @@ import com.vaadin.ui.Component;
  * @version $Id$
  */
 public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinition> implements Serializable {
-    private TemplateDefinitionRegistry templateManager = Components.getComponent(TemplateDefinitionRegistry.class);
+    private final TemplateDefinitionRegistry templateManager = Components.getComponent(TemplateDefinitionRegistry.class);
 
     public TemplateColumn(TemplateColumnDefinition def, EventBus eventBus, PlaceController placeController, Shell shell) {
         super(def, eventBus, placeController, shell);
@@ -72,15 +73,17 @@ public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinit
 
     @Override
     public Component getDefaultComponent(Item item) throws RepositoryException {
-        return new EditableSelect(item, new PresenterImpl(), "MetaData/mgnl:template",
-                getAvailableTemplates((Node) item)) {
+        return new EditableSelect(item, new PresenterImpl(), "MetaData/mgnl:template", getAvailableTemplates((Node) item)) {
 
             @Override
             protected String getLabelText(Item item) {
                 Node node = (Node) item;
                 String template = MetaDataUtil.getMetaData(node).getTemplate();
-                TemplateDefinition definition = templateManager.getTemplateDefinition(template);
-                return (definition != null) ? definition.getI18NTitle() : "";
+                try {
+                    return templateManager.getTemplateDefinition(template).getTitle();
+                } catch (TemplateDefinitionRegistrationException e) {
+                    return StringUtils.EMPTY;
+                }
             }
         };
     }
@@ -88,13 +91,10 @@ public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinit
     private Map<String, String> getAvailableTemplates(Node node) {
         Map<String, String> map = new LinkedHashMap<String, String>();
 
-        // Temp: as long as TemplateManager cannot operate on pure JCR
-        Content content = TemporaryHackUtil.createHackContentFrom(node);
-
-        Iterator<TemplateDefinition> templates = templateManager.getAvailableTemplates(content);
+        Iterator<TemplateDefinition> templates = templateManager.getAvailableTemplates(node);
         while (templates.hasNext()) {
             TemplateDefinition template = templates.next();
-            map.put(template.getI18NTitle(), template.getName());
+            map.put(template.getTitle(), template.getName());
         }
         return map;
     }

@@ -39,12 +39,17 @@ import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.templating.template.TemplateDefinition;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * TemplateDefinitionProvider that instantiates a dialog from a configuration node.
  */
 public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionProvider {
 
-    private Content configNode;
+    private static final Logger log = LoggerFactory.getLogger(ConfiguredTemplateDefinitionProvider.class);
+
+    private final Content configNode;
 
     public ConfiguredTemplateDefinitionProvider(Content configNode) {
         // session that opened provided content might not be alive by the time we need to use this
@@ -57,6 +62,10 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
         try {
             return (TemplateDefinition) Content2BeanUtil.toBean(configNode, true, TemplateDefinition.class);
         } catch (Content2BeanException e) {
+            throw new TemplateDefinitionRegistrationException(e);
+        } catch (ClassCastException e) {
+            log.warn("Failed to read configured template with " + e.getMessage(), e);
+            // callee knows how to deal with TDRE, but doesn't expect CCE
             throw new TemplateDefinitionRegistrationException(e);
         }
     }

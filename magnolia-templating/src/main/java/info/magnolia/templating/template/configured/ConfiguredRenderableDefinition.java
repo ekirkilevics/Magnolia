@@ -33,22 +33,26 @@
  */
 package info.magnolia.templating.template.configured;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jcr.Node;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-
+import info.magnolia.cms.core.Access;
+import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.templating.model.RenderingModel;
 import info.magnolia.templating.model.RenderingModelImpl;
 import info.magnolia.templating.template.RenderableDefinition;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 
 /**
@@ -84,6 +88,17 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
             return model;
         } catch (MgnlInstantiationException e) {
             throw new IllegalArgumentException(MISSING_CONSTRUCTOR_MESSAGE + "Can't instantiate " + getModelClass(), e);
+        }
+    }
+
+    @Override
+    public boolean isAvailable(Node content) {
+        try {
+            // should not fact that we are able to get path already show that we can read this node???
+            // ... unless of course this "content" was created with system session ... so make sure we check using user session and not the node session
+            return Access.isGranted(MgnlContext.getJCRSession(content.getSession().getWorkspace().getName()), content.getPath(), Session.ACTION_READ);
+        } catch (RepositoryException e) {
+            return false;
         }
     }
 
