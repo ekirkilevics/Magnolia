@@ -54,4 +54,9 @@ public class AccessTest {
         assertEquals(Session.ACTION_SET_PROPERTY, Access.convertPermissions(Permission.SET));
         assertEquals("add_node,read,remove,set_property", Access.convertPermissions(Permission.ALL));
     }
+
+    @Test
+    public void testIsGrantedForEmptyPermissionString() {
+        assertEquals("Empty-string must not be granted.", false, Access.isGranted(null, "ignored", ""));
+    }
 }

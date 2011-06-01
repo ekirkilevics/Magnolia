@@ -89,6 +89,9 @@ public final class Access {
      * Return whether given session has requested permission on provided path.
      */
     public static boolean isGranted(Session jcrSession, String path, String action) {
+        if ("".equals(action)) {
+            return false;
+        }
         try {
             return jcrSession.hasPermission( path, action);
         } catch (RepositoryException e) {
