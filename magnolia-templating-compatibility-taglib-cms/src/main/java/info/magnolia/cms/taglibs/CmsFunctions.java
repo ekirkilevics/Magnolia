@@ -61,7 +61,7 @@ public class CmsFunctions {
      * @return current page
      */
     public static Content currentPage() {
-        return MgnlContext.getAggregationState().getCurrentContent();
+        return MgnlContext.getAggregationState().getCurrentContentAsContent();
     }
 
     /**
@@ -69,7 +69,7 @@ public class CmsFunctions {
      * @return loaded page
      */
     public static Content mainPage() {
-        return MgnlContext.getAggregationState().getMainContent();
+        return MgnlContext.getAggregationState().getMainContentAsContent();
     }
 
     /**
@@ -119,7 +119,7 @@ public class CmsFunctions {
      * @return true if the current user can edit the active page.
      */
     public static boolean canEdit() {
-        return MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET);
+        return MgnlContext.getAggregationState().getMainContentAsContent().isGranted(Permission.SET);
     }
 
     /**
@@ -129,7 +129,7 @@ public class CmsFunctions {
      */
     public static boolean isEditMode() {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        Content activePage = aggregationState.getMainContent();
+        Content activePage = aggregationState.getMainContentAsContent();
         return ServerConfiguration.getInstance().isAdmin()
             && !aggregationState.isPreviewMode()
             && activePage != null

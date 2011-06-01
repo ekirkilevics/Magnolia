@@ -34,8 +34,6 @@
 package info.magnolia.templating.rendering;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.templating.renderer.Renderer;
 import info.magnolia.templating.renderer.registry.RendererRegistrationException;
@@ -64,8 +62,8 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
     @Override
     public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws RenderException {
-        Content orgMainContent = null;
-        Content orgCurrentContent = null;
+        Node orgMainContent = null;
+        Node orgCurrentContent = null;
 
         // TODO should we really still support the AggregationState?
         AggregationState state = null;
@@ -75,10 +73,10 @@ public class DefaultRenderingEngine implements RenderingEngine {
                 orgMainContent = state.getMainContent();
                 orgCurrentContent = state.getCurrentContent();
 
-                state.setCurrentContent(ContentUtil.asContent(content));
+                state.setCurrentContent(content);
                 // if not yet set the passed content is the entry point of the rendering
                 if (orgMainContent == null) {
-                    state.setMainContent(ContentUtil.asContent(content));
+                    state.setMainContent(content);
                 }
             }
 

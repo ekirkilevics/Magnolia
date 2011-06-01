@@ -60,7 +60,7 @@ public class BackwardCompatibilityFilter extends OncePerRequestAbstractMgnlFilte
         public Content getWrappedContent() {
             DeprecationUtil.isDeprecated("The request attribute ${" + ACTPAGE_ATTRIBUTE + "} is deprecated please use the new ${" + ACTPAGE_FUNCTION + "} function instead");
 
-            return MgnlContext.getAggregationState().getCurrentContent();
+            return MgnlContext.getAggregationState().getCurrentContentAsContent();
         }
     };
 

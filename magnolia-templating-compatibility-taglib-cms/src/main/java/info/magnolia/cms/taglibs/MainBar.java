@@ -141,7 +141,7 @@ public class MainBar extends TagSupport implements BarTag {
 
     @Override
     public int doEndTag() {
-        Content activePage = MgnlContext.getAggregationState().getMainContent();
+        Content activePage = MgnlContext.getAggregationState().getMainContentAsContent();
         if (ServerConfiguration.getInstance().isAdmin() && activePage != null && activePage.isGranted(Permission.SET)) {
             try {
                 BarMain bar = new BarMain();

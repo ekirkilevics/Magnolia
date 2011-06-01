@@ -77,7 +77,7 @@ public class Resource {
      * @deprecated use AggregationState
      */
     public static Content getActivePage() {
-        return MgnlContext.getAggregationState().getMainContent();
+        return MgnlContext.getAggregationState().getMainContentAsContent();
     }
 
     /**
@@ -87,9 +87,9 @@ public class Resource {
      * @return currently active page, as requested from the URI
      */
     public static Content getCurrentActivePage() {
-        Content currentActpage = MgnlContext.getAggregationState().getCurrentContent();
+        Content currentActpage = MgnlContext.getAggregationState().getCurrentContentAsContent();
         if (currentActpage == null) {
-            currentActpage = MgnlContext.getAggregationState().getMainContent();
+            currentActpage = MgnlContext.getAggregationState().getMainContentAsContent();
         }
         return currentActpage;
     }
@@ -116,7 +116,7 @@ public class Resource {
      * @return ContentNode , local container specific to the current JSP/Servlet paragraph
      */
     public static Content getLocalContentNode() {
-        return MgnlContext.getAggregationState().getCurrentContent();
+        return MgnlContext.getAggregationState().getCurrentContentAsContent();
     }
 
     /**
@@ -195,7 +195,7 @@ public class Resource {
      * Restores the request's original <code>actpage</code> attribute (i.e. the one specified by the request URI).
      */
     public static void restoreCurrentActivePage() {
-        setCurrentActivePage(MgnlContext.getAggregationState().getMainContent());
+        setCurrentActivePage(MgnlContext.getAggregationState().getMainContentAsContent());
     }
 
     /**
@@ -203,7 +203,7 @@ public class Resource {
      * @deprecated since 4.0 - use AggregationState.
      */
     public static void setCurrentActivePage(Content page) {
-        MgnlContext.getAggregationState().setCurrentContent(page);
+        MgnlContext.getAggregationState().setCurrentContent(page.getJCRNode());
     }
 
     /**
@@ -223,7 +223,7 @@ public class Resource {
      * @param node to be set
      */
     public static void setLocalContentNode(Content node) {
-        MgnlContext.getAggregationState().setCurrentContent(node);
+        MgnlContext.getAggregationState().setCurrentContent(node.getJCRNode());
     }
 
     /**

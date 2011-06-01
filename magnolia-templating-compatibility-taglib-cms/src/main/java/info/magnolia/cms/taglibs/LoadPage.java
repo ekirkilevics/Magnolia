@@ -136,7 +136,7 @@ public class LoadPage extends BodyTagSupport {
                 return EVAL_PAGE;
             }
         }
-        MgnlContext.getAggregationState().setCurrentContent(newActpage);
+        MgnlContext.getAggregationState().setCurrentContent(newActpage.getJCRNode());
         return EVAL_PAGE;
     }
 

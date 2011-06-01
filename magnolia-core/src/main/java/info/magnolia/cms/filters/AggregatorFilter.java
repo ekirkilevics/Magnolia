@@ -187,8 +187,8 @@ public class AggregatorFilter extends AbstractMgnlFilter{
 
         // Attach all collected information to the HttpServletRequest.
         if (requestedPage != null) {
-            aggregationState.setMainContent(requestedPage);
-            aggregationState.setCurrentContent(requestedPage);
+            aggregationState.setMainContent(requestedPage.getJCRNode());
+            aggregationState.setCurrentContent(requestedPage.getJCRNode());
         }
         if ((requestedData != null) && (requestedData.getType() == PropertyType.BINARY)) {
             File file = new File(requestedData);

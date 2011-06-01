@@ -106,7 +106,7 @@ public class ButtonTag extends TagSupport {
         Button button = new Button();
         button.setLabel(label);
         button.setOnclick("mgnlOpenDialog('"
-            + MgnlContext.getAggregationState().getMainContent().getHandle()
+            + MgnlContext.getAggregationState().getMainContentAsContent().getHandle()
             + "','','','"
             + dialogName
             + "','"

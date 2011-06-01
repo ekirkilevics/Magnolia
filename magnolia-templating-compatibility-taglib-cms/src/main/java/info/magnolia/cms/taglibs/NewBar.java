@@ -188,7 +188,7 @@ public class NewBar extends TagSupport implements BarTag {
     @Override
     public int doEndTag() {
 
-        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET)) {
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && MgnlContext.getAggregationState().getMainContentAsContent().isGranted(Permission.SET)) {
             try {
                 BarNew bar = new BarNew();
                 bar.setPath(this.getPath());

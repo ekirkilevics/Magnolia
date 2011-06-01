@@ -34,7 +34,6 @@
 package info.magnolia.templating.rendering;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
@@ -48,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 
+import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -97,7 +97,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
                     log.warn("Context response not synced. This may lead to discrepancies in rendering.");
                 }
 
-                Content content = aggregationState.getMainContent();
+                Node content = aggregationState.getMainContent();
 
                 render(content, templateName, response);
 
@@ -138,7 +138,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
         // chain.doFilter(request, response);
     }
 
-    protected void render(Content content, String templateName, HttpServletResponse response) throws IOException, RenderException {
+    protected void render(Node content, String templateName, HttpServletResponse response) throws IOException, RenderException {
 
         // This lazy print writer will only acquire the writer from response if it is going to be used. This allows
         // templates to use the output stream if they wish. See MAGNOLIA-3014.
@@ -151,7 +151,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
         catch (TemplateDefinitionRegistrationException e) {
             throw new RenderException(e);
         }
-        renderingEngine.render(content.getJCRNode(), templateDifinition, Collections.EMPTY_MAP, out);
+        renderingEngine.render(content, templateDifinition, Collections.EMPTY_MAP, out);
     }
 
 

@@ -172,7 +172,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
             coll.addContent(new MockContent("c" + i));
         }
         actPage.addContent(coll);
-        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage);
+        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage.getJCRNode());
         assertEquals(Tag.SKIP_BODY, cni.doStartTag());
     }
 
@@ -186,7 +186,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
             coll.addContent(new MockContent("c" + i));
         }
         actPage.addContent(coll);
-        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage);
+        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage.getJCRNode());
         assertEquals(Tag.EVAL_BODY_INCLUDE, cni.doStartTag());
         assertNotNull(Resource.getLocalContentNode());
         assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
@@ -227,7 +227,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
             coll.addContent(new MockContent("c" + i));
         }
         actParagraph.addContent(coll);
-        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage);
+        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage.getJCRNode());
         Resource.setLocalContentNode(actParagraph);
         assertEquals(Tag.EVAL_BODY_INCLUDE, cni.doStartTag());
         assertNotNull(Resource.getLocalContentNode());

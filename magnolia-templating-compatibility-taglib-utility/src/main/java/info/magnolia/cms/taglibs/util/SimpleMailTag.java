@@ -243,7 +243,7 @@ public class SimpleMailTag extends TagSupport {
             this.nodeCollectionName = Resource.getLocalContentNodeCollectionName();
         }
 
-        Content activePage = MgnlContext.getAggregationState().getMainContent();
+        Content activePage = MgnlContext.getAggregationState().getMainContentAsContent();
         Content fieldsNode = null;
         Iterator it;
         try {

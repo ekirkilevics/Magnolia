@@ -192,7 +192,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
 
     public static final class SimpleTestState extends RenderingModelImpl<RenderableDefinition>{
         public SimpleTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
-            super(content.getJCRNode(), definition, parent);
+            super(content, definition, parent);
         }
 
         private String pouet = "it works";
@@ -223,7 +223,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
     public static final class SkippableTestState extends RenderingModelImpl<RenderableDefinition> {
 
         public SkippableTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
-            super(content.getJCRNode(), definition, parent);
+            super(content, definition, parent);
         }
         @Override
         public String execute() {

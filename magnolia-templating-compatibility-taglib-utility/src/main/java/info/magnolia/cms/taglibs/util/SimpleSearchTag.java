@@ -195,7 +195,7 @@ public class SimpleSearchTag extends TagSupport {
         // search only in a specific subtree
         if (this.startLevel > 0) {
             try {
-                Content activePage = MgnlContext.getAggregationState().getMainContent();
+                Content activePage = MgnlContext.getAggregationState().getMainContentAsContent();
                 if (activePage != null) {
                     cleanStartPath = activePage.getAncestor(this.startLevel).getHandle();
                 }

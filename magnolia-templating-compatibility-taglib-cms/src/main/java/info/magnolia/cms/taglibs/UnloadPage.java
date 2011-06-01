@@ -34,9 +34,9 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 
+import javax.jcr.Node;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 
@@ -54,7 +54,7 @@ public class UnloadPage extends BodyTagSupport {
     @Override
     public int doStartTag() {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final Content mainContent = aggregationState.getMainContent();
+        final Node mainContent = aggregationState.getMainContent();
         aggregationState.setCurrentContent(mainContent);
         return EVAL_PAGE;
     }

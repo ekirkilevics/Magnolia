@@ -86,7 +86,7 @@ public class EditButton extends TagSupport {
 
     @Override
     public int doEndTag() {
-        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET)) {
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && MgnlContext.getAggregationState().getMainContentAsContent().isGranted(Permission.SET)) {
 
             try {
                 if (this.getNodeCollectionName() != null && this.getNodeName() == null) {
@@ -129,7 +129,7 @@ public class EditButton extends TagSupport {
 
     private String getNodeName() {
         if (this.nodeName == null) {
-            Content current = MgnlContext.getWebContext().getAggregationState().getCurrentContent();
+            Content current = MgnlContext.getWebContext().getAggregationState().getCurrentContentAsContent();
             if (current == null) {
                 return null;
             }
@@ -210,7 +210,7 @@ public class EditButton extends TagSupport {
      */
     public String getTemplate() {
         if (this.displayHandler == null) {
-            Content localContainer = MgnlContext.getWebContext().getAggregationState().getCurrentContent();
+            Content localContainer = MgnlContext.getWebContext().getAggregationState().getCurrentContentAsContent();
             String templateName = localContainer.getNodeData("dialog").getString();
             // TODO - use IoC for TemplateDefinitionRegistry?
             try {
@@ -229,7 +229,7 @@ public class EditButton extends TagSupport {
      */
     private String getPath() {
         try {
-            return MgnlContext.getWebContext().getAggregationState().getCurrentContent().getHandle();
+            return MgnlContext.getWebContext().getAggregationState().getCurrentContentAsContent().getHandle();
         }
         catch (Exception re) {
             return StringUtils.EMPTY;

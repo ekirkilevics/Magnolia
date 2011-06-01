@@ -94,7 +94,7 @@ public class MockNode extends MockItem implements Node {
         this.mixins.add(mixinName);
     }
 
-    protected void addNode(MockNode child) {
+    public void addNode(MockNode child) {
         child.setParent(this);
         children.put(child.getName(), child);
     }

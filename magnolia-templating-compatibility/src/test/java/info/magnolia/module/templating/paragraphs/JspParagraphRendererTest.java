@@ -101,7 +101,7 @@ public class JspParagraphRendererTest extends TestCase {
         final Content paragraph = createStrictMock(Content.class);
 
         final AggregationState aggState = new AggregationState();
-        aggState.setMainContent(page);
+        aggState.setMainContent(page.getJCRNode());
         expect(magnoliaCtx.getAggregationState()).andStubReturn(aggState);
 
         replay(magnoliaCtx, page, paragraph);
@@ -240,7 +240,7 @@ public class JspParagraphRendererTest extends TestCase {
     public static final class SkippableTestState extends RenderingModelImpl<RenderableDefinition> {
 
         public SkippableTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
-            super(content.getJCRNode(), definition, parent);
+            super(content, definition, parent);
         }
         @Override
         public String execute() {

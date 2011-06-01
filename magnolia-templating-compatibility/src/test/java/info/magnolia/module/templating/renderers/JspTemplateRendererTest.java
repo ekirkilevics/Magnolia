@@ -77,7 +77,7 @@ public class JspTemplateRendererTest extends TestCase {
         expect(page.getHandle()).andReturn("/myPage").times(2);
 
         final AggregationState aggState = new AggregationState();
-        aggState.setMainContent(page);
+        aggState.setMainContent(page.getJCRNode());
         expect(magnoliaCtx.getAggregationState()).andStubReturn(aggState);
 
         replay(magnoliaCtx, page);

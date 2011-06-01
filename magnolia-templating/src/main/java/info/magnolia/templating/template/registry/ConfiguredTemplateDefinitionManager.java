@@ -38,7 +38,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeTypeFilter;
-import info.magnolia.templating.template.TemplateDefinition;
 
 import java.util.HashSet;
 import java.util.Set;

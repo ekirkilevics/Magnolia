@@ -180,10 +180,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      */
     protected Node getMainContentSafely(Node content) {
         AggregationState state = getAggregationStateSafely();
-        if(state != null){
-            return state.getMainContent().getJCRNode();
-        }
-        return content;
+        return state == null ? content : state.getMainContent();
     }
 
     /**

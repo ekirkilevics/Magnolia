@@ -146,7 +146,7 @@ public class OutTest extends MgnlTagTestCase {
         agState.setCurrentURI("http://www.test.org/");
         agState.setRepository(ContentRepository.WEBSITE);
         agState.setHandle("/main");
-        agState.setMainContent(webContext.getHierarchyManager(ContentRepository.WEBSITE).getContentByUUID("1"));
+        agState.setMainContent(webContext.getHierarchyManager(ContentRepository.WEBSITE).getContentByUUID("1").getJCRNode());
         agState.setLocale(Locale.US);
         return agState;
     }

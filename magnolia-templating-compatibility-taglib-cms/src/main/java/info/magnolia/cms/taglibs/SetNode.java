@@ -125,7 +125,7 @@ public class SetNode extends BaseContentTag {
 
         // set attribute
         if (contentNode != null) {
-            Content mainContent = MgnlContext.getAggregationState().getMainContent();
+            Content mainContent = MgnlContext.getAggregationState().getMainContentAsContent();
             if (mainContent == null) {
                 mainContent = contentNode;
             }

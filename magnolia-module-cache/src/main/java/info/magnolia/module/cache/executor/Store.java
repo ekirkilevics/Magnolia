@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.cache.executor;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicy;
@@ -42,13 +42,15 @@ import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.filter.CacheResponseWrapper;
 import info.magnolia.module.cache.filter.CachedEntry;
 import info.magnolia.module.cache.filter.CachedError;
-import info.magnolia.module.cache.filter.ContentCachedEntry;
 import info.magnolia.module.cache.filter.CachedRedirect;
-import info.magnolia.module.cache.filter.InMemoryCachedEntry;
+import info.magnolia.module.cache.filter.ContentCachedEntry;
 import info.magnolia.module.cache.filter.DelegatingBlobCachedEntry;
+import info.magnolia.module.cache.filter.InMemoryCachedEntry;
 
 import java.io.IOException;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -90,12 +92,18 @@ public class Store extends AbstractExecutor {
         if(cachedEntry != null){
             cachePolicyResult.setCachedEntry(cachedEntry);
             // let policy know the uuid in case it wants to do something with it
-            final Content content = MgnlContext.getAggregationState().getCurrentContent();
-            if (content != null && content.isNodeType("mix:referenceable")) {
-                final String uuid = content.getUUID();
-                String repo = content.getHierarchyManager().getName();
-                getCachePolicy(cache).persistCacheKey(repo, uuid, key);
+            final Node content = MgnlContext.getAggregationState().getCurrentContent();
+            try {
+                if (content != null && NodeUtil.isNodeType(content, "mix:referenceable")) {
+                    final String uuid = content.getIdentifier();
+                    String repo = content.getSession().getWorkspace().getName();
+                    getCachePolicy(cache).persistCacheKey(repo, uuid, key);
+                }
+            } catch (RepositoryException e) {
+                // TODO dlipp: apply consistent ExceptionHandling
+                throw new RuntimeException(e);
             }
+
         }
     }
 

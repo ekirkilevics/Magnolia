@@ -34,6 +34,7 @@
 package info.magnolia.cms.gui.inline;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
@@ -48,6 +49,8 @@ import info.magnolia.context.MgnlContext;
 import java.io.IOException;
 import java.io.Writer;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 
@@ -300,7 +303,15 @@ public class BarMain extends Bar {
         if (ServerConfiguration.getInstance().isAdmin()) {
 
             final AggregationState aggregationState = MgnlContext.getAggregationState();
-            boolean isGranted = aggregationState.getMainContent().isGranted(Permission.SET);
+            final String permission = Access.convertPermissions(Permission.SET);
+            final Node mainContent = aggregationState.getMainContent();
+            boolean isGranted;
+            try {
+                isGranted = Access.isGranted(mainContent.getSession(), mainContent.getPath(), permission);
+            } catch (RepositoryException e) {
+                // TODO dlipp - apply consistent ExceptionHandling
+                throw new RuntimeException(e);
+            }
             if (isGranted) {
 
                 // check if links have already been added.

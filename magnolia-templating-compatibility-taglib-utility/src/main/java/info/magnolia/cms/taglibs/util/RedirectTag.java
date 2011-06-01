@@ -123,7 +123,7 @@ public class RedirectTag extends BodyTagSupport {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         String location = getRedirectLocation(request);
 
-        Content activePage = MgnlContext.getAggregationState().getMainContent();
+        Content activePage = MgnlContext.getAggregationState().getMainContentAsContent();
 
         // on public servers, during preview or when the user can't edit the page, just send the redirect
         if (!ServerConfiguration.getInstance().isAdmin() || MgnlContext.getAggregationState().isPreviewMode() || !activePage.isGranted(Permission.SET)) {
@@ -158,7 +158,7 @@ public class RedirectTag extends BodyTagSupport {
      * @return A URI if a child page is available, or null.
      */
     private String getRedirectLocation(HttpServletRequest request) {
-        Content page = MgnlContext.getAggregationState().getMainContent();
+        Content page = MgnlContext.getAggregationState().getMainContentAsContent();
         Iterator it = page.getChildren().iterator();
         if (it.hasNext()) {
             Content c = (Content) it.next();

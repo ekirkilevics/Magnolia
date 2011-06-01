@@ -75,8 +75,8 @@ public class EditButtonTest extends MgnlTagTestCase {
         currentContent = createMock(Content.class);
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(this.mainContent);
-        aggregationState.setCurrentContent(this.currentContent);
+        aggregationState.setMainContent(this.mainContent.getJCRNode());
+        aggregationState.setCurrentContent(this.currentContent.getJCRNode());
 
         webContext.setAggregationState(aggregationState);
         webContext.setParameters(Collections.singletonMap(Resource.MGNL_PREVIEW_ATTRIBUTE, "false"));

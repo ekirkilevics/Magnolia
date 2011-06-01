@@ -90,7 +90,7 @@ public class SimpleNavigationTagTest extends TestCase {
         PageContext pageContext = new MockPageContext(new MockServletConfig(),new MockHttpServletRequest(), new MockHttpServletResponse());
         MgnlContext.setInstance(ctx);
         expect(ctx.getAggregationState()).andReturn(aggState);
-        aggState.setCurrentContent(current);
+        aggState.setCurrentContent(current.getJCRNode());
         expect(current.getNodeTypeName()).andReturn(ItemType.CONTENT.getSystemName());
         tag.setPageContext(pageContext);
         // start level is 0 by default, so returning 0 here is enough

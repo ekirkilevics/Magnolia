@@ -187,7 +187,7 @@ public abstract class BaseContentTag extends TagSupport {
     }
 
     protected Content resolveNode(Content currentPage) {
-        Content currentParagraph = MgnlContext.getAggregationState().getCurrentContent();
+        Content currentParagraph = MgnlContext.getAggregationState().getCurrentContentAsContent();
 
         try {
             if (StringUtils.isNotEmpty(contentNodeName)) {
@@ -200,7 +200,7 @@ public abstract class BaseContentTag extends TagSupport {
                 // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
                 // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
                 return currentPage.getContent(contentNodeCollectionName).getContent(contentNodeName);
-            } else  if (currentParagraph == null || currentParagraph.getHandle().equals(MgnlContext.getAggregationState().getMainContent().getHandle())) {
+            } else  if (currentParagraph == null || currentParagraph.getHandle().equals(MgnlContext.getAggregationState().getMainContentAsContent().getHandle())) {
                 // outside collection iterator
                 if (StringUtils.isEmpty(contentNodeCollectionName)) {
                     // e.g. <cms:out nodeDataName="title"/>
