@@ -133,9 +133,6 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>789207d1-e036-41cd-aca1-540ab98b12fe</sv:value>
       </sv:property>
-      <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.templating.Area</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
