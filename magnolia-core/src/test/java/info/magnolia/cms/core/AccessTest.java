@@ -34,10 +34,9 @@
 package info.magnolia.cms.core;
 
 import static org.junit.Assert.assertEquals;
+import info.magnolia.cms.security.Permission;
 
 import javax.jcr.Session;
-
-import info.magnolia.cms.security.Permission;
 
 import org.junit.Test;
 
@@ -49,10 +48,15 @@ public class AccessTest {
     @Test
     public void testConvertPermissions() {
         assertEquals(Session.ACTION_READ, Access.convertPermissions(Permission.READ));
-        assertEquals(Session.ACTION_ADD_NODE, Access.convertPermissions(Permission.WRITE));
+        assertEquals("add_node,read,set_property", Access.convertPermissions(Permission.WRITE));
         assertEquals(Session.ACTION_REMOVE, Access.convertPermissions(Permission.REMOVE));
         assertEquals(Session.ACTION_SET_PROPERTY, Access.convertPermissions(Permission.SET));
         assertEquals("add_node,read,remove,set_property", Access.convertPermissions(Permission.ALL));
+        // and any combo of the above
+        assertEquals("read,set_property", Access.convertPermissions(Permission.READ + Permission.SET));
+        // and custom permissions in combo with basic ones (128 => random custom permission which set bit above all (63))
+        assertEquals(Session.ACTION_READ, Access.convertPermissions(Permission.READ + 128));
+
     }
 
     @Test

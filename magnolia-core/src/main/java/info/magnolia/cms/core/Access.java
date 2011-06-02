@@ -43,6 +43,8 @@ import java.text.MessageFormat;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Simply utility class for AccessManager.
  *
@@ -89,7 +91,8 @@ public final class Access {
      * Return whether given session has requested permission on provided path.
      */
     public static boolean isGranted(Session jcrSession, String path, String action) {
-        if ("".equals(action)) {
+        // FIXME: treat custom permission that don't exist on Session.
+        if (StringUtils.isBlank(action)) {
             return false;
         }
         try {
@@ -103,22 +106,36 @@ public final class Access {
      * Return String-representation of permissions convert from provided long-permission (old).
      */
     public static String convertPermissions(long oldPermissions) {
-        String permissions = "";
-        //FIXME: treat custom permission that don't exist on Session.
+        StringBuilder permissions = new StringBuilder();
         if ((oldPermissions & Permission.ALL) == Permission.ALL) {
-            permissions = Session.ACTION_ADD_NODE + "," + Session.ACTION_READ + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY;
-        } else if ((oldPermissions & Permission.WRITE) == Permission.WRITE) {
-            permissions = Session.ACTION_ADD_NODE;
+            permissions.append(Session.ACTION_ADD_NODE).append(",").append(Session.ACTION_READ).append(",").append(Session.ACTION_REMOVE + ",").append(Session.ACTION_SET_PROPERTY);
+            // skip the rest to be sure we don't introduce duplicates.
+            return permissions.toString();
         }
-        else if ((oldPermissions & Permission.READ) == Permission.READ) {
-            permissions = Session.ACTION_READ;
+        if ((oldPermissions & Permission.WRITE) == Permission.WRITE) {
+            if (permissions.length() > 0) {
+                permissions.append(",");
+            }
+            permissions.append(Session.ACTION_ADD_NODE);
         }
-        else if ((oldPermissions & Permission.REMOVE) == Permission.REMOVE) {
-            permissions = Session.ACTION_REMOVE;
+        if ((oldPermissions & Permission.READ) == Permission.READ) {
+            if (permissions.length() > 0) {
+                permissions.append(",");
+            }
+            permissions.append(Session.ACTION_READ);
         }
-        else if ((oldPermissions & Permission.SET) == Permission.SET) {
-            permissions = Session.ACTION_SET_PROPERTY;
+        if ((oldPermissions & Permission.REMOVE) == Permission.REMOVE) {
+            if (permissions.length() > 0) {
+                permissions.append(",");
+            }
+            permissions.append(Session.ACTION_REMOVE);
         }
-        return permissions;
+        if ((oldPermissions & Permission.SET) == Permission.SET) {
+            if (permissions.length() > 0) {
+                permissions.append(",");
+            }
+            permissions.append(Session.ACTION_SET_PROPERTY);
+        }
+        return permissions.toString();
     }
 }
