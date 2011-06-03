@@ -33,14 +33,12 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.verify;
-import static org.easymock.classextension.EasyMock.createNiceMock;
-import static org.easymock.classextension.EasyMock.replay;
-import freemarker.cache.StringTemplateLoader;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.EmptyMessages;
 import info.magnolia.cms.i18n.I18nContentSupport;
@@ -56,7 +54,6 @@ import info.magnolia.module.templating.RenderingModelImpl;
 import info.magnolia.module.templating.engine.DefaultRenderingEngine;
 import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockNodeData;
 
@@ -65,13 +62,22 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.jcr.Node;
+import javax.jcr.Session;
+import javax.jcr.Workspace;
+
+import junit.framework.TestCase;
+import freemarker.cache.StringTemplateLoader;
+
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class FreemarkerParagraphRendererTest extends MgnlTestCase {
+public class FreemarkerParagraphRendererTest extends TestCase {
     private StringTemplateLoader tplLoader;
     private FreemarkerParagraphRenderer renderer;
+    private Content page;
+    private WebContext magnoliaCtx;
 
     @Override
     protected void setUp() throws Exception {
@@ -90,29 +96,46 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         ComponentsTestUtil.setImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
         ComponentsTestUtil.setImplementation(RenderingEngine.class, DefaultRenderingEngine.class);
 
-        final WebContext context = createNiceMock(WebContext.class);
-        AggregationState state = new AggregationState();
-        state.setLocale(Locale.ENGLISH);
-        expect(context.getAggregationState()).andStubReturn(state);
-        expect(context.getLocale()).andReturn(Locale.ENGLISH);
+        magnoliaCtx = mock(WebContext.class);
+        MgnlContext.setInstance(magnoliaCtx);
+        ComponentsTestUtil.setImplementation(RenderingEngine.class, DefaultRenderingEngine.class);
+        // the page node is exposed twice, once as "actpage", once as "content"
+        page = mock(Content.class);
+        when(page.getHandle()).thenReturn("/myPage");
 
-        MgnlContext.setInstance(context);
-        replay(context);
+        final AggregationState aggState = new AggregationState();
+        aggState.setLocale(Locale.ENGLISH);
+        when(magnoliaCtx.getLocale()).thenReturn(Locale.ENGLISH);
+        final Node jcrPage = mock(Node.class);
+        when(page.getJCRNode()).thenReturn(jcrPage);
+        final Session session = mock(Session.class);
+        when(jcrPage.getSession()).thenReturn(session);
+        when(jcrPage.getPath()).thenReturn("/myPage");
+        final Workspace workspace = mock(Workspace.class);
+        when(session.getWorkspace()).thenReturn(workspace);
+        when(workspace.getName()).thenReturn("test");
+
+        aggState.setMainContent(page.getJCRNode());
+        when(magnoliaCtx.getAggregationState()).thenReturn(aggState);
+        final HierarchyManager hm = mock(HierarchyManager.class);
+        when(magnoliaCtx.getHierarchyManager("test")).thenReturn(hm);
+        when(hm.getWorkspace()).thenReturn(workspace);
+        when(hm.getContent("/myPage")).thenReturn(page);
+        when(workspace.getSession()).thenReturn(session);
     }
 
     public void testWorksWithNonActionParagraphAndContentIsExposedToFreemarker() throws Exception {
         tplLoader.putTemplate("test_noclass.ftl", "This is a test template, rendering the content node under ${content.@handle} with UUID ${content.@uuid}.\n" +
                 "The value of the foo property is ${content.foo}.");
 
-        final MockContent c = new MockContent("plop");
-        c.setUUID("123");
-        c.addNodeData(new MockNodeData("foo", "bar"));
+        when(page.getUUID()).thenReturn("123");
+        when(page.getNodeData("foo")).thenReturn(new MockNodeData("foo", "bar"));
 
         final StringWriter out = new StringWriter();
         final Paragraph p = new Paragraph();
         p.setName("test-para");
         p.setTemplatePath("test_noclass.ftl");
-        renderer.render(c, p, out);
+        renderer.render(page, p, out);
 
         assertEquals("This is a test template, rendering the content node under /plop with UUID 123.\n" +
                 "The value of the foo property is bar.", out.toString());
@@ -132,19 +155,15 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
     }
 
     public void testActionGetsPopulated() throws Exception {
-        final WebContext context = createNiceMock(WebContext.class);
         Map<String,String> params=new HashMap<String,String>();
         params.put("blah", "tralala");
         params.put("foo", "bar");
-        expect(context.getParameters()).andReturn(params);
-        expect(context.getMessages("testmessages")).andReturn(new EmptyMessages());
-        expect(context.getMessages()).andReturn(new EmptyMessages());
-        expect(context.getLocale()).andStubReturn(Locale.ENGLISH);
-        expect(context.getContextPath()).andReturn("/pouet");
-        expect(context.getServletContext()).andReturn(null);
-        expect(context.getAggregationState()).andStubReturn(new AggregationState());
-        replay(context);
-        MgnlContext.setInstance(context);
+        when(magnoliaCtx.getParameters()).thenReturn(params);
+        when(magnoliaCtx.getMessages("testmessages")).thenReturn(new EmptyMessages());
+        when(magnoliaCtx.getMessages()).thenReturn(new EmptyMessages());
+        when(magnoliaCtx.getLocale()).thenReturn(Locale.ENGLISH);
+        when(magnoliaCtx.getContextPath()).thenReturn("/pouet");
+        when(magnoliaCtx.getServletContext()).thenReturn(null);
 
         tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${model.pouet} : ${model.blah} : ${actionResult}");
         final Paragraph par = new Paragraph();
@@ -152,10 +171,11 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         par.setI18nBasename("testmessages");
         par.setTemplatePath("test_action.ftl");
         par.setModelClass(SimpleTestState.class);
-        final MockContent c = new MockContent("plop");
-        c.addNodeData(new MockNodeData("boo", "yay"));
+
+        when(page.getNodeData("boo")).thenReturn(new MockNodeData("boo", "yay"));
+
         final StringWriter out = new StringWriter();
-        renderer.render(c, par, out);
+        renderer.render(page, par, out);
         assertEquals("yay : it works : tralala : success", out.toString());
     }
 
@@ -173,21 +193,14 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
     }
 
     public void testSkipRendering() throws Exception {
-        final WebContext webContext = createNiceMock(WebContext.class);
-        MgnlContext.setInstance(webContext);
-        final AggregationState aggState = new AggregationState();
-        expect(webContext.getAggregationState()).andReturn(aggState);
-        replay(webContext);
-        final Content c = new MockContent("pouet");
         final Paragraph par = new Paragraph();
         par.setName("plop");
         par.setTemplatePath("do_not_render_me.ftl");
         par.setModelClass(SkippableTestState.class);
         final FreemarkerParagraphRenderer renderer = new FreemarkerParagraphRenderer(new FreemarkerHelper(new FreemarkerConfig()));
         final StringWriter out = new StringWriter();
-        renderer.render(c, par, out);
+        renderer.render(page, par, out);
         assertTrue(out.getBuffer().length() == 0);
-        verify(webContext);
     }
 
     public static final class SimpleTestState extends RenderingModelImpl<RenderableDefinition>{
