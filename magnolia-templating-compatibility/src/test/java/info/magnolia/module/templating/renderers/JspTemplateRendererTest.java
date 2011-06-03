@@ -33,8 +33,13 @@
  */
 package info.magnolia.module.templating.renderers;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.context.MgnlContext;
@@ -46,45 +51,62 @@ import info.magnolia.module.templating.engine.DefaultRenderingEngine;
 import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.module.templating.paragraphs.JspParagraphRenderer;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import javax.jcr.Node;
+import javax.jcr.Session;
+import javax.jcr.Workspace;
+
+import org.junit.After;
+import org.junit.Test;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class JspTemplateRendererTest extends TestCase {
+public class JspTemplateRendererTest {
 
-    @Override
+    @After
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
         SystemProperty.clear();
-        super.tearDown();
     }
 
+    @Test
     public void testExposesNodesAsMaps() throws Exception {
-        final WebContext magnoliaCtx = createStrictMock(WebContext.class);
+        final WebContext magnoliaCtx = mock(WebContext.class);
         MgnlContext.setInstance(magnoliaCtx);
         ComponentsTestUtil.setImplementation(RenderingEngine.class, DefaultRenderingEngine.class);
         // the page node is exposed twice, once as "actpage", once as "content"
-        final Content page = createStrictMock(Content.class);
-        expect(page.getHandle()).andReturn("/myPage").times(2);
+        final Content page = mock(Content.class);
+        when(page.getHandle()).thenReturn("/myPage");
 
         final AggregationState aggState = new AggregationState();
-        aggState.setMainContent(page.getJCRNode());
-        expect(magnoliaCtx.getAggregationState()).andStubReturn(aggState);
+        final Node jcrPage = mock(Node.class);
+        when(page.getJCRNode()).thenReturn(jcrPage);
+        final Session session = mock(Session.class);
+        when(jcrPage.getSession()).thenReturn(session);
+        when(jcrPage.getPath()).thenReturn("/myPage");
+        final Workspace workspace = mock(Workspace.class);
+        when(session.getWorkspace()).thenReturn(workspace);
+        when(workspace.getName()).thenReturn("test");
 
-        replay(magnoliaCtx, page);
+        aggState.setMainContent(page.getJCRNode());
+        when(magnoliaCtx.getAggregationState()).thenReturn(aggState);
+        final HierarchyManager hm = mock(HierarchyManager.class);
+        when(magnoliaCtx.getHierarchyManager("test")).thenReturn(hm);
+        when(hm.getWorkspace()).thenReturn(workspace);
+        when(hm.getContent("/myPage")).thenReturn(page);
+        when(workspace.getSession()).thenReturn(session);
+
         final Map templateCtx = new HashMap();
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
 
-        // ugly hack to exexute renderer.setupContext()
+        // ugly hack to execute renderer.setupContext()
         Method setupContextMethod = AbstractRenderer.class.getDeclaredMethod("setupContext", new Class[]{Map.class, Content.class, RenderableDefinition.class, RenderingModel.class, Object.class});
         setupContextMethod.setAccessible(true);
         setupContextMethod.invoke(renderer, new Object[]{templateCtx, page, null, null, null});
@@ -97,7 +119,6 @@ public class JspTemplateRendererTest extends TestCase {
         assertTrue(templateCtx.get("content") instanceof Map);
         assertEquals(page, unwrap((Content) templateCtx.get("content")));
 
-        verify(magnoliaCtx, page);
     }
 
     private Content unwrap(Content c) {
