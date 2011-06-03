@@ -197,7 +197,7 @@
             <sv:value>28cb9d6d-9ad0-495c-afd4-125f0d218a38</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.ui.model.dialog.definition.RichEditFieldDefinition</sv:value>
+            <sv:value>info.magnolia.ckeditor.dialog.definition.CKEditorFieldDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="controlType" sv:type="String">
             <sv:value>fckEdit</sv:value>
@@ -228,7 +228,7 @@
               <sv:value>2008-09-25T13:57:00.582+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-05-12T21:39:32.106+02:00</sv:value>
+              <sv:value>2011-06-03T16:31:20.631+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>

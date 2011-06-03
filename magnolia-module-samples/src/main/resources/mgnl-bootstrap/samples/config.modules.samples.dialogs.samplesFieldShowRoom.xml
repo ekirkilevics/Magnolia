@@ -861,16 +861,16 @@
             <sv:value>756e7fee-d4b7-4da4-9098-dc29f8c02642</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.ui.model.dialog.definition.RichEditFieldDefinition</sv:value>
-          </sv:property>
-          <sv:property sv:name="customConfigurationPath" sv:type="String">
-            <sv:value>custom/config/basic.js</sv:value>
+            <sv:value>info.magnolia.ckeditor.dialog.definition.CKEditorFieldDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="description" sv:type="String">
             <sv:value/>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
+          </sv:property>
+          <sv:property sv:name="jsConfigFile" sv:type="String">
+            <sv:value>custom/config/basic.js</sv:value>
           </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>Rich Edit</sv:value>
@@ -892,7 +892,7 @@
               <sv:value>2008-09-25T13:57:00.582+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-06-01T18:41:46.602+02:00</sv:value>
+              <sv:value>2011-06-03T16:22:41.158+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
