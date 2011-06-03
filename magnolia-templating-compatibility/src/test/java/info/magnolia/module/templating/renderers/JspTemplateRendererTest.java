@@ -70,7 +70,7 @@ import org.junit.Test;
 public class JspTemplateRendererTest {
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
         SystemProperty.clear();
