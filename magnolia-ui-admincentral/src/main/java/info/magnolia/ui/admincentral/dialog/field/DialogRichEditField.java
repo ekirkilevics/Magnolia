@@ -33,15 +33,12 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
+import info.magnolia.ckeditor.CKEditorTextField;
+import info.magnolia.ckeditor.dialog.definition.CKEditorFieldDefinition;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
-import info.magnolia.ui.model.dialog.definition.RichEditFieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
-
-import org.apache.commons.lang.StringUtils;
-import org.vaadin.openesignforms.ckeditor.CKEditorConfig;
-import org.vaadin.openesignforms.ckeditor.CKEditorTextField;
 
 import com.vaadin.ui.Field;
 
@@ -64,12 +61,11 @@ public class DialogRichEditField extends AbstractVaadinFieldDialogField {
     @Override
     protected Field getField() {
         //TODO should be instantiated based on configuration, not hardcoded
-        CKEditorConfig config = new CKEditorConfig();
-        final RichEditFieldDefinition definition = (RichEditFieldDefinition) getFieldDefinition();
-        if(definition != null && StringUtils.isNotBlank(definition.getCustomConfigurationPath())){
-            config.setCustomConfig(definition.getCustomConfigurationPath());
+        CKEditorFieldDefinition definition = (CKEditorFieldDefinition) getFieldDefinition();
+        if(definition == null){
+            //create a default value definition
+            definition = new CKEditorFieldDefinition();
         }
-
-        return new CKEditorTextField(config);
+        return new CKEditorTextField(definition);
     }
 }

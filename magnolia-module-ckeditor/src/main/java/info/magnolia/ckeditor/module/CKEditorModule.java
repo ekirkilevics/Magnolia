@@ -31,11 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.dialog.definition;
+package info.magnolia.ckeditor.module;
 
 /**
- * Field definition for a rich edit field.
+ * This class is optional and represents the configuration for the ckeditor module.
+ * By exposing simple getter/setter/adder methods, this bean can be configured via content2bean
+ * using the properties and node from <tt>config:/modules/ckeditor</tt>.
+ * If you don't need this, simply remove the reference to this class in the module descriptor xml.
  */
-public class RichEditFieldDefinition extends FieldDefinition {
+public class CKEditorModule {
+    /* you can optionally implement info.magnolia.module.ModuleLifecycle */
 
 }
