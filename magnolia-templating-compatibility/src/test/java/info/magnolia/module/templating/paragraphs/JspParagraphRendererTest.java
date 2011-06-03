@@ -33,8 +33,14 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.context.Context;
@@ -50,61 +56,82 @@ import info.magnolia.module.templating.engine.DefaultRenderingEngine;
 import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
-import info.magnolia.test.mock.MockContent;
-import junit.framework.TestCase;
 
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.verify;
-import static org.easymock.classextension.EasyMock.createNiceMock;
-import static org.easymock.classextension.EasyMock.replay;
+import javax.jcr.Node;
+import javax.jcr.Session;
+import javax.jcr.Workspace;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class JspParagraphRendererTest extends TestCase {
+public class JspParagraphRendererTest {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    private WebContext magnoliaCtx;
+    private Content page;
+
+    @Before
+    public void setUp() throws Exception {
 
         MgnlContext.setInstance(null);
         SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
+
+        magnoliaCtx = mock(WebContext.class);
+        MgnlContext.setInstance(magnoliaCtx);
+        ComponentsTestUtil.setImplementation(RenderingEngine.class, DefaultRenderingEngine.class);
+        // the page node is exposed twice, once as "actpage", once as "content"
+        page = mock(Content.class);
+        when(page.getHandle()).thenReturn("/myPage");
+
+        final AggregationState aggState = new AggregationState();
+        aggState.setLocale(Locale.ENGLISH);
+        when(magnoliaCtx.getLocale()).thenReturn(Locale.ENGLISH);
+        final Node jcrPage = mock(Node.class);
+        when(page.getJCRNode()).thenReturn(jcrPage);
+        final Session session = mock(Session.class);
+        when(jcrPage.getSession()).thenReturn(session);
+        when(jcrPage.getPath()).thenReturn("/myPage");
+        final Workspace workspace = mock(Workspace.class);
+        when(session.getWorkspace()).thenReturn(workspace);
+        when(workspace.getName()).thenReturn("test");
+
+        aggState.setMainContent(page.getJCRNode());
+        when(magnoliaCtx.getAggregationState()).thenReturn(aggState);
+        final HierarchyManager hm = mock(HierarchyManager.class);
+        when(magnoliaCtx.getHierarchyManager("test")).thenReturn(hm);
+        when(hm.getWorkspace()).thenReturn(workspace);
+        when(hm.getContent("/myPage")).thenReturn(page);
+        when(workspace.getSession()).thenReturn(session);
+
 
         // shunt log4j
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
         SystemProperty.clear();
-        super.tearDown();
     }
 
+    @Test
     public void testExposesNodesAsMaps() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        final WebContext magnoliaCtx = createStrictMock(WebContext.class);
-        MgnlContext.setInstance(magnoliaCtx);
         ComponentsTestUtil.setImplementation(RenderingEngine.class, DefaultRenderingEngine.class);
 
-        final Content page = createStrictMock(Content.class);
         // we have 2 different nodes when rendering a paragraph, but getHandle() is only called on the page node, when using NodeMapWrapper
-        expect(page.getHandle()).andReturn("/myPage").times(2);
-        final Content paragraph = createStrictMock(Content.class);
+        final Content paragraph = mock(Content.class);
 
-        final AggregationState aggState = new AggregationState();
-        aggState.setMainContent(page.getJCRNode());
-        expect(magnoliaCtx.getAggregationState()).andStubReturn(aggState);
-
-        replay(magnoliaCtx, page, paragraph);
         final Map templateCtx = new HashMap();
 
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
@@ -120,8 +147,6 @@ public class JspParagraphRendererTest extends TestCase {
         assertEquals(page, unwrap((Content) templateCtx.get("actpage")));
         assertTrue(templateCtx.get("content") instanceof Map);
         assertEquals(paragraph, unwrap((Content) templateCtx.get("content")));
-
-        verify(magnoliaCtx, page, paragraph);
     }
 
     /*
@@ -156,46 +181,36 @@ public class JspParagraphRendererTest extends TestCase {
     }
     */
 
+    @Test
     public void testCantRenderWithoutParagraphPathCorrectlySet() throws Exception {
-        final WebContext webContext = createNiceMock(WebContext.class);
-        MgnlContext.setInstance(webContext);
-        final AggregationState aggState = new AggregationState();
-        expect(webContext.getAggregationState()).andReturn(aggState);
-        replay(webContext);
-        final Content c = new MockContent("pouet");
         final Paragraph paragraph = new Paragraph();
         paragraph.setName("plop");
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
-            renderer.render(c, paragraph, new StringWriter());
+            renderer.render(page, paragraph, new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
             assertEquals("Unable to render info.magnolia.module.templating.Paragraph plop in page /pouet: templatePath not set.", e.getMessage());
         }
-        verify(webContext);
     }
 
 
+    @Test
     public void testSkipRendering() throws Exception {
-        final WebContext webContext = createNiceMock(WebContext.class);
-        MgnlContext.setInstance(webContext);
-        final AggregationState aggState = new AggregationState();
-        expect(webContext.getAggregationState()).andReturn(aggState);
-        replay(webContext);
-        final Content c = new MockContent("pouet");
         final Paragraph par = new Paragraph();
         par.setName("plop");
         par.setTemplatePath("do_not_render_me.jsp");
         par.setModelClass(SkippableTestState.class);
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         final StringWriter out = new StringWriter();
-        renderer.render(c, par, out);
+        renderer.render(page, par, out);
         assertTrue(out.getBuffer().length() == 0);
-        verify(webContext);
     }
 
 
+    @Test
     public void testShouldFailIfNoContextIsSet() throws Exception {
+        MgnlContext.setInstance(null);
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
             final Paragraph p = new Paragraph();
@@ -208,14 +223,14 @@ public class JspParagraphRendererTest extends TestCase {
         }
     }
 
+    @Test
     public void testShouldFailIfContextIsNotWebContext() throws Exception {
-        Content content = createStrictMock(Content.class);
-        expect(content.getUUID()).andReturn("content-uuid");
+        Content content = mock(Content.class);
+        when(content.getUUID()).thenReturn("content-uuid");
 
-        Context context = createStrictMock(Context.class);
-        expect(context.getAttribute("info.magnolia.module.templating.RenderingModel")).andReturn(null);
-        expect(context.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + "content-uuid")).andReturn(null);
-        replay(content, context);
+        Context context = mock(Context.class);
+        when(context.getAttribute("info.magnolia.module.templating.RenderingModel")).thenReturn(null);
+        when(context.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + "content-uuid")).thenReturn(null);
 
         MgnlContext.setInstance(context);
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
