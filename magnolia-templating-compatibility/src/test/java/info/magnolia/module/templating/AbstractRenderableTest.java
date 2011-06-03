@@ -33,36 +33,42 @@
  */
 package info.magnolia.module.templating;
 
-import javax.jcr.Node;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockContent;
-import junit.framework.TestCase;
+
+import javax.jcr.Node;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class AbstractRenderableTest extends TestCase {
+public class AbstractRenderableTest {
     private MockContent dummyContent = new MockContent("");
     private Paragraph dummyDef = new Paragraph();
-    private final RenderingModel dummyParentModel = new RenderingModelImpl(null, null, null);
+    private RenderingModel dummyParentModel = new RenderingModelImpl(dummyContent, null, null);
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         SystemProperty.clear();
-        super.tearDown();
     }
 
+    @Test
     public void testCanInstantiateModel() throws Exception {
         final AbstractRenderable renderable = new AbstractRenderable() {
         };
@@ -72,6 +78,7 @@ public class AbstractRenderableTest extends TestCase {
         assertTrue(m instanceof StandardConstructorModel);
     }
 
+    @Test
     public void testModelNeedSpecificConstructor() {
         final AbstractRenderable renderable = new AbstractRenderable() {
         };
