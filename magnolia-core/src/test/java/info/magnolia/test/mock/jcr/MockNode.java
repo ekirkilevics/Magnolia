@@ -86,7 +86,7 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public void accept(ItemVisitor visitor) throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        visitor.visit(this);
     }
 
     @Override

@@ -35,9 +35,12 @@ package info.magnolia.test.mock.jcr;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.math.BigDecimal;
 
+import javax.jcr.ItemVisitor;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -90,4 +93,14 @@ public class MockPropertyTest {
         Property property = new MockProperty("test", mockValue);
         assertEquals(mockValue, property.getValue());
     }
+
+    @Test
+    public void testAccept() throws RepositoryException{
+        Property property = new MockProperty("test", "test");
+        ItemVisitor visitor = mock(ItemVisitor.class);
+        property.accept(visitor);
+
+        verify(visitor).visit(property);
+    }
+
 }
