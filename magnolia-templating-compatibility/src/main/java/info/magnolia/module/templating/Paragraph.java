@@ -112,5 +112,7 @@ package info.magnolia.module.templating;
  * @deprecated since 5.0, the differentiation of paragraphs and templates were removed. Use {@link RenderableDefinition} instead.
  */
 public class Paragraph extends AbstractRenderable {
-
+    public Paragraph() {
+       setModelClass((Class< ? extends info.magnolia.templating.model.RenderingModel< ? >>) RenderingModelImpl.class);
+    }
 }
