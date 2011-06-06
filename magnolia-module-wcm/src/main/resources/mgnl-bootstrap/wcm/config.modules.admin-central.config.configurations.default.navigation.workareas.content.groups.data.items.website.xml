@@ -6,6 +6,9 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>cbebd1ca-8eee-41a9-8e88-5fba076f1129</sv:value>
   </sv:property>
+  <sv:property sv:name="description" sv:type="String">
+    <sv:value>menu.website.description</sv:value>
+  </sv:property>
   <sv:property sv:name="icon" sv:type="String">
     <sv:value>/.resources/icons/24/earth.gif</sv:value>
   </sv:property>
@@ -32,7 +35,7 @@
       <sv:value>2005-05-16T20:45:54.530+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-02-14T17:58:04.716+01:00</sv:value>
+      <sv:value>2011-06-06T16:04:37.747+02:00</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="actionDefinition">
