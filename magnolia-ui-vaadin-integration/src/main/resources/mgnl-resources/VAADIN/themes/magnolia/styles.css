@@ -164,27 +164,19 @@ td.v-datefield-calendarpanel-month,.v-datefield-calendarpanel-weekdays strong,.v
 }
 
 .m-workbench-header {
-/*   border-top: 1px solid #B6BBBC; */
-/*   border-left: 1px solid #B6BBBC; */
 }
 
-input.v-textfield.m-search-box {
-  -moz-border-radius: 15px;
-  border-radius: 15px;
-  padding-left: 20px !important;
-  padding-top: 2px !important;
-  padding-bottom: 2px !important;
-  background: #FFF url("img/magnifier.png") no-repeat 3px 3px;
-  color: #B6BBBC !important;
+input.v-textfield-search[type="text"] {
+/*   -moz-border-radius: 15px; */
+/*   border-radius: 15px; */
+  color: #B6BBBC;
 }
 
-input.v-textfield.m-search-box:focus {
+input.v-textfield-search[type="text"]:focus {
   color: #3B4B57 !important;
 }
 
 .m-search-form-expanded {
-/*   border-top: 1px solid #B6BBBC !important; */
-/*   border-left: 1px solid #B6BBBC !important; */
 }
 
 .m-search-form-label {
@@ -192,8 +184,6 @@ input.v-textfield.m-search-box:focus {
 }
 
 .m-embedded-view {
-/*   border-top: 1px solid #B6BBBC; */
-/*   border-left: 1px solid #B6BBBC; */
 }
 
 /**
@@ -205,5 +195,5 @@ input.v-textfield.m-search-box:focus {
 
 /*  remove scrollbars added by lazy load wrapper */
 .v-splitpanel-second-container {
-  overflow: hidden !important;
+/*   overflow: hidden !important; */
 }

@@ -198,6 +198,7 @@ public class SearchForm extends Form implements Handler {
             customComponent.removeStyleName("m-search-form-expanded");
         }
     }
+
     /**
      * A Vaadin-specific field factory for the search form.
      * @author fgrilli
@@ -211,7 +212,7 @@ public class SearchForm extends Form implements Handler {
                 final TextField searchField = new TextField();
                 searchField.setInputPrompt(SEARCH);
                 searchField.setWidth(200, Sizeable.UNITS_PIXELS);
-                searchField.addStyleName("m-search-box");
+                searchField.addStyleName("search");
 
                 searchField.addListener(new FocusListener() {
 
@@ -236,6 +237,7 @@ public class SearchForm extends Form implements Handler {
             return null;
         }
     }
+
     /**
      * Represents a row in the search form. It is typically composed by a label, a filter (in the form of a select) and a button for adding further filters.
      * FIXME filter is hardcoded.

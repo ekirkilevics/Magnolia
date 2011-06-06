@@ -70,7 +70,8 @@ public class PreviewViewImpl implements PreviewView {
     private GridLayout grid = new GridLayout(2,4);
 
     public PreviewViewImpl() {
-        grid.setSizeFull();
+        grid.setSizeUndefined();
+        grid.setWidth(100, Sizeable.UNITS_PERCENTAGE);
         grid.setMargin(true);
 
         pathField.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);

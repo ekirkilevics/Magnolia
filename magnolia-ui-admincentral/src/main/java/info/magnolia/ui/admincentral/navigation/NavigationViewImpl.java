@@ -60,7 +60,7 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 /**
  * ImplementationConfiguration of {@link NavigationView}. It represents the app main navigation and
  * holds {@link NavigationWorkArea}(s).
- * 
+ *
  * @author fgrilli
  * @author mrichert
  */
@@ -84,7 +84,8 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
 
             for (NavigationGroupDefinition group : definition.getGroups()) {
                 log.debug("creating navigation group {}", group.getName());
-                groups.add(new NavigationGroup(group.getItems(), permissions));
+                NavigationGroup navigationGroup = new NavigationGroup(group.getItems(), permissions);
+                groups.add(navigationGroup);
             }
 
             final NavigationWorkArea navigationWorkArea = new NavigationWorkArea(groups);
@@ -92,6 +93,7 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
             registeredNavigationAreas.add(navigationWorkArea);
 
             final Component component = navigationWorkArea.asVaadinComponent();
+            component.addStyleName(definition.getName());
             outerNavigationContainer.addTab(
                 component,
                 definition.getLabel(),

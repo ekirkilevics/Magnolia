@@ -99,11 +99,11 @@
         </configuration>
       </plugin>
       <plugin>
-         <artifactId>maven-checkstyle-plugin</artifactId>
-         <configuration>
-           <suppressionsLocation>${basedir}/checkstyle-suppressions.xml</suppressionsLocation>
-         </configuration>
-       </plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <suppressionsLocation>${basedir}/checkstyle-suppressions.xml</suppressionsLocation>
+        </configuration>
+      </plugin>
     </plugins>
     <resources>
       <resource>

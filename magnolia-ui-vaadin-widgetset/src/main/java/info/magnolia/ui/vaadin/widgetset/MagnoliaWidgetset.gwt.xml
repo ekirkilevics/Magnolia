@@ -3,6 +3,7 @@
 <module>
     <inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" />
     <inherits name="com.vaadin.addon.treetable.TreetableWidgetset" />
+    <inherits name="com.vaadin.lazyloadwrapper.widgetset.LazyLoadWrapperWidgetset" />
     <inherits name="info.magnolia.ui.vaadin.integration.widget.historian.HistorianWidgetset"/>
     <inherits name="info.magnolia.module.wcm.editor.PageEditorWidgetset" />
 
@@ -21,7 +22,5 @@
      Google Chrome.
     -->
     <!-- <set-property name="user.agent" value="gecko"/> -->
-
-    <inherits name="com.vaadin.lazyloadwrapper.widgetset.LazyLoadWrapperWidgetset" />
     <inherits name="info.magnolia.ckeditor.widgetset.VaadinCKEditorWidgetset" />
 </module>
