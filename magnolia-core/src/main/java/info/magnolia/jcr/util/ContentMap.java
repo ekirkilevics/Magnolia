@@ -40,13 +40,14 @@ public class ContentMap implements Map<String, Object> {
             throw new NullPointerException("ContentMap doesn't accept null content");
         }
 
-        // TODO: wrap in lazy load?
         this.content = content;
 
         // one might want to cache property names on instantion, however this would not work as other sessions might add/remove props at any time.
 
         // apache commons? there must be the code doing the same elsewhere.
         // cache method/prop names
+
+        // FIXME don't support this
         for (Method m : content.getClass().getMethods()) {
             if (m.getParameterTypes().length > 0) {
                 continue;
@@ -98,6 +99,8 @@ public class ContentMap implements Map<String, Object> {
     }
 
     private boolean isSpecialProperty(String strKey) {
+        // TODO @nodeType @name, @path @level
+
         if (!strKey.startsWith("@")) {
             return false;
         }
@@ -112,7 +115,6 @@ public class ContentMap implements Map<String, Object> {
         } else if ("@handle".equals(strKey)) {
             return "path";
         }
-
         return StringUtils.removeStart(strKey, "@");
     }
 
@@ -166,6 +168,7 @@ public class ContentMap implements Map<String, Object> {
     private Object getNodeProperty(String keyStr) {
         try {
             // TODO: do we care about assets or just about plain binaries?
+            // philipp: not yet
             if (isAsset(keyStr)) {
                 return getAssetNode(keyStr);
             }
