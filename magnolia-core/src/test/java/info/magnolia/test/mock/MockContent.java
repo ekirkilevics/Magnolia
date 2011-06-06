@@ -152,6 +152,7 @@ public class MockContent extends AbstractContent {
     @Override
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         MockContent c = new MockContent(name, new ItemType(contentType));
+        c.setParent(this);
         c.setHierarchyManager(this.getHierarchyManager());
         addContent(c);
 

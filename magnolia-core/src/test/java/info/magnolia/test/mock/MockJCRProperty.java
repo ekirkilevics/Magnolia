@@ -62,9 +62,11 @@ import javax.jcr.version.VersionException;
  * @deprecated since 5.0 - use {@link info.magnolia.test.mock.jcr.MockProperty} instead.
  */
 
+@Deprecated
 public class MockJCRProperty implements Property {
 
     private final MockNodeData mockNodeData;
+    private boolean multiple;
 
     /**
      * @param mockNodeData
@@ -75,7 +77,7 @@ public class MockJCRProperty implements Property {
 
     @Override
     public void save() throws javax.jcr.AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException,
-        ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
+    ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
         this.mockNodeData.save();
     }
 
@@ -151,19 +153,19 @@ public class MockJCRProperty implements Property {
 
     @Override
     public void setValue(boolean value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
-        RepositoryException {
+    RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
     @Override
     public void setValue(Calendar value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
-        RepositoryException {
+    RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
     @Override
     public void setValue(double value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
-        RepositoryException {
+    RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
@@ -174,24 +176,24 @@ public class MockJCRProperty implements Property {
 
     @Override
     public void setValue(InputStream value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
-        RepositoryException {
+    RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
     @Override
     public void setValue(String[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
-        RepositoryException {
+    RepositoryException {
     }
 
     @Override
     public void setValue(String value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
-        RepositoryException {
+    RepositoryException {
         this.mockNodeData.setValue(value);
     }
 
     @Override
     public void setValue(Value[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
-        RepositoryException {
+    RepositoryException {
         this.mockNodeData.setValue(values);
     }
 
@@ -293,7 +295,11 @@ public class MockJCRProperty implements Property {
 
     @Override
     public boolean isMultiple() throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented");
+        return multiple;
+    }
+
+    public void setMultiple(boolean multiple) {
+        this.multiple = multiple;
     }
 
     @Override
