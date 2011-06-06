@@ -117,9 +117,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
         Component subNavigation = addSubNavigationItems(navigationItemDef, permissions);
         subNavigation = subNavigation == null ? new Label() : subNavigation;
         Tab tab = accordion.addTab(subNavigation, getLabel(navigationItemDef), getIcon(navigationItemDef));
-
-        // TODO: set tooltip, as follows
-        // tab.setDescription(arg0)
+        tab.setDescription(navigationItemDef.getDescription());
 
         // TODO: add notification badges
 
