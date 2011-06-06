@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.importexport.DataTransporter;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -155,6 +156,9 @@ public class ImportPage extends ExportPage {
         }
 
         if (!checkPermissions(request, mgnlRepository, mgnlPath, Permission.WRITE)) {
+
+            AlertUtil.setMessage("Write permission needed for export. User not allowed to WRITE path [" + mgnlPath + "]");
+
             throw new ServletException(new AccessDeniedException(
                 "Write permission needed for import. User not allowed to WRITE path [" //$NON-NLS-1$
                     + mgnlPath

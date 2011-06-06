@@ -40,6 +40,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.DataTransporter;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
@@ -237,6 +238,8 @@ public class ExportPage extends TemplatedMVCHandler {
         }
 
         if (!checkPermissions(request, mgnlRepository, mgnlPath, Permission.WRITE)) {
+
+            AlertUtil.setMessage("Write permission needed for export. User not allowed to WRITE path [" + mgnlPath + "]");
 
             throw new ServletException(new AccessDeniedException(
                 "Write permission needed for export. User not allowed to WRITE path [" //$NON-NLS-1$
