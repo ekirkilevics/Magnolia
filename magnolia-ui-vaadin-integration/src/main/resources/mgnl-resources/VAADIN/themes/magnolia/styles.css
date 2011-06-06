@@ -169,11 +169,11 @@ td.v-datefield-calendarpanel-month,.v-datefield-calendarpanel-weekdays strong,.v
 input.v-textfield-search[type="text"] {
 /*   -moz-border-radius: 15px; */
 /*   border-radius: 15px; */
-  color: #B6BBBC;
+/*   color: #B6BBBC; */
 }
 
 input.v-textfield-search[type="text"]:focus {
-  color: #3B4B57 !important;
+/*   color: #3B4B57 !important; */
 }
 
 .m-search-form-expanded {

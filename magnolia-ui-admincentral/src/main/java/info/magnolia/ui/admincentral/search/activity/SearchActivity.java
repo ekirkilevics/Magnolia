@@ -57,18 +57,26 @@ import javax.jcr.query.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * The search activity.
  * @author fgrilli
  *
  */
-public class SearchActivity extends AbstractActivity implements SearchView.Presenter{
+public class SearchActivity extends AbstractActivity implements SearchView.Presenter {
+
     private static final Logger log = LoggerFactory.getLogger(SearchActivity.class);
+
     private SearchView view;
+
     private SearchActionFactory actionFactory;
+
     private Shell shell;
+
     private SearchPlace place;
+
     private PlaceController placeController;
+
     private JcrView jcrView;
 
     public SearchActivity(SearchView view, SearchActionFactory actionFactory, SearchPlace place, PlaceController placeController, Shell shell) {
@@ -78,7 +86,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
         this.place = place;
         this.placeController = placeController;
         this.view.setPresenter(this);
-        this.jcrView = place.getJcrView();
+        jcrView = place.getJcrView();
     }
 
     @Override
@@ -99,10 +107,10 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
 
     @Override
     public void onPerformSearch() {
-        if(place.getSearchParameters() == null || place.getSearchParameters().getQuery() == null){
+        if (place.getSearchParameters() == null || place.getSearchParameters().getQuery() == null) {
             return;
         }
-        //FIXME do it right.
+        // FIXME do it right.
         long foundItems = 0;
         try {
             final Session jcrSession = MgnlContext.getJCRSession(place.getWorkspace());
@@ -110,33 +118,48 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             final JcrContainer container = jcrView.getContainer();
 
             final String queryText = place.getSearchParameters().getQuery();
-            //TODO like support for node names, i.e. name(content) LIKE 'foo', will be available from 2.2.7 https://issues.apache.org/jira/browse/JCR-2956
-            //TODO attempting a join with metadata and then applying multiple or constraints will issue a javax.jcr.UnsupportedRepositoryOperationException: Unable to split a constraint that references both sides of a join.
-            //Will be fixed in 2.2.7 https://issues.apache.org/jira/browse/JCR-2852
-            final String stmt = "select * from [mgnl:content] as content where contains(content.title,'*"+queryText+"*')  or name(content) = '"+queryText+"'";
+            // TODO like support for node names, i.e. name(content) LIKE 'foo', will be available
+            // from 2.2.7 https://issues.apache.org/jira/browse/JCR-2956
+            // TODO attempting a join with metadata and then applying multiple or constraints will
+            // issue a javax.jcr.UnsupportedRepositoryOperationException: Unable to split a
+            // constraint that references both sides of a join.
+            // Will be fixed in 2.2.7 https://issues.apache.org/jira/browse/JCR-2852
+            String stmt = "select * from [mgnl:content] as content";
+            if (!"".equals(queryText)) {
+                stmt += " where contains(content.title, '*" + queryText + "*') or name(content) = '" + queryText + "'";
+            }
 
-            final Query query = jcrQueryManager.createQuery(stmt , Query.JCR_SQL2);
+            final Query query = jcrQueryManager.createQuery(stmt, Query.JCR_SQL2);
             query.setLimit(container.getCacheRatio() * container.getPageLength());
             query.setOffset(0);
+
             log.debug("executing query against workspace [{}] with statement [{}] ", place.getWorkspace(), stmt);
+
             final QueryResult queryResult = query.execute();
-            //TODO how do we get the number of items returned by the query? I tried
-            //1) foundItems = ((QueryResultImpl)queryResult).getTotalSize();
-            //   this causes "java.lang.ClassCastException: org.apache.jackrabbit.core.query.lucene.join.SimpleQueryResult cannot be cast to org.apache.jackrabbit.core.query.lucene.QueryResultImpl"
-            //2) foundItems = queryResult.getNodes().getSize()
-            //   this causes "javax.jcr.RepositoryException: This query result has already been iterated through" when updating the container below.
-            //Probably we need two queries one for the total count, the other for getting the actual items.
-            //log.debug("query returned {} rows", foundItems);
+            // TODO how do we get the number of items returned by the query? I tried
+            // 1) foundItems = ((QueryResultImpl)queryResult).getTotalSize();
+            // this causes
+            // "java.lang.ClassCastException: org.apache.jackrabbit.core.query.lucene.join.SimpleQueryResult cannot be cast to org.apache.jackrabbit.core.query.lucene.QueryResultImpl"
+            // 2) foundItems = queryResult.getNodes().getSize()
+            // this causes
+            // "javax.jcr.RepositoryException: This query result has already been iterated through"
+            // when updating the container below.
+            // Probably we need two queries one for the total count, the other for getting the
+            // actual items.
+            // log.debug("query returned {} rows", foundItems);
             container.update(queryResult.getRows());
             view.update(new SearchResult(place.getSearchParameters().getQuery(), foundItems));
 
-        } catch (LoginException e) {
+        }
+        catch (LoginException e) {
             log.error(e.getMessage());
             shell.showError("An error occurred", e);
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             shell.showError("An error occurred", e);
             log.error(e.getMessage());
-        } catch (RuntimeException e ){
+        }
+        catch (RuntimeException e) {
             shell.showError("An error occurred", e);
             log.error(e.getMessage());
         }
