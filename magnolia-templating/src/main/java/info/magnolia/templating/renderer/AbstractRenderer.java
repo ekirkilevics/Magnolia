@@ -35,6 +35,7 @@ package info.magnolia.templating.renderer;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.templating.model.EarlyExecutionAware;
 import info.magnolia.templating.model.ModelExecutionFilter;
 import info.magnolia.templating.model.RenderingModel;
@@ -145,7 +146,6 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         saveAttribute(ctx, state, "content");
         saveAttribute(ctx, state, "def");
         saveAttribute(ctx, state, "state");
-        saveAttribute(ctx, state, "mgnl");
         saveAttribute(ctx, state, "model");
         saveAttribute(ctx, state, "actionResult");
 
@@ -168,7 +168,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         final Node mainContent = getMainContentSafely(content);
 
         setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(mainContent, mainContent));
-        setContextAttribute(ctx, "content", wrapNodeForTemplate(content, mainContent));
+        setContextAttribute(ctx, "content", new ContentMap(wrapNodeForTemplate(content, mainContent)));
         setContextAttribute(ctx, "def", definition);
         setContextAttribute(ctx, "state", getAggregationStateSafely());
         setContextAttribute(ctx, "model", model);
