@@ -69,6 +69,9 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>a784022b-5d60-4f70-9caa-9db441c76ac6</sv:value>
       </sv:property>
+      <sv:property sv:name="description" sv:type="String">
+        <sv:value>workarea.content.description</sv:value>
+      </sv:property>
       <sv:property sv:name="icon" sv:type="String">
         <sv:value>/.resources/icons/16/folder_cubes.gif</sv:value>
       </sv:property>
@@ -92,7 +95,7 @@
           <sv:value>2011-03-23T07:07:57.887+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-04-01T12:07:32.452+02:00</sv:value>
+          <sv:value>2011-06-06T13:49:58.354+02:00</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="groups">
@@ -192,6 +195,9 @@
               <sv:property sv:name="jcr:uuid" sv:type="String">
                 <sv:value>cbebd1ca-8eee-41a9-8e88-5fba076f1129</sv:value>
               </sv:property>
+              <sv:property sv:name="description" sv:type="String">
+                <sv:value>menu.website.description</sv:value>
+              </sv:property>
               <sv:property sv:name="icon" sv:type="String">
                 <sv:value>/.resources/icons/24/earth.gif</sv:value>
               </sv:property>
@@ -218,7 +224,7 @@
                   <sv:value>2005-05-16T20:45:54.530+02:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-                  <sv:value>2006-02-14T17:58:04.716+01:00</sv:value>
+                  <sv:value>2011-06-06T13:49:32.786+02:00</sv:value>
                 </sv:property>
               </sv:node>
               <sv:node sv:name="actionDefinition">

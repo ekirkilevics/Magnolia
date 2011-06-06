@@ -161,6 +161,13 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
         return MessagesUtil.getWithDefault(menuItem.getLabel(), menuItem.getLabel(), menuItem.getI18nBasename());
     }
 
+    /**
+     * Converts description key into i18n-ized string.
+     */
+    protected String getDescription(NavigationItemDefinition menuItem) {
+        return MessagesUtil.getWithDefault(menuItem.getDescription(), menuItem.getDescription(), menuItem.getI18nBasename());
+    }
+
     protected Resource getIcon(NavigationItemDefinition menuItem) {
         if (menuItem.getIcon() == null) {
             return null;

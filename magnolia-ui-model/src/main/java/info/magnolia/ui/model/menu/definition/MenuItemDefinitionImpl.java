@@ -50,6 +50,8 @@ public class MenuItemDefinitionImpl implements MenuItemDefinition {
 
     private String icon;
 
+    private String description;
+
     private ActionDefinition actionDefinition;
 
     public void setLabel(String label) {
@@ -94,9 +96,17 @@ public class MenuItemDefinitionImpl implements MenuItemDefinition {
         return i18nBasename;
     }
 
-
     public void setI18nBasename(String i18nBasename) {
         this.i18nBasename = i18nBasename;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 
 }
