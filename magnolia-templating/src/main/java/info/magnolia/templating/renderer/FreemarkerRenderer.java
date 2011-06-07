@@ -33,7 +33,6 @@
  */
 package info.magnolia.templating.renderer;
 
-import freemarker.template.TemplateException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.templating.rendering.RenderException;
@@ -76,11 +75,7 @@ public class FreemarkerRenderer extends AbstractRenderer {
         try {
             fmHelper.render(templateScript, locale, definition.getI18nBasename(), ctx, out);
         }
-        catch (TemplateException e) {
-            // TODO should be thrown?
-        }
         catch (Exception e) {
-            //log.error("Failed to process Freemarker template with " + e.getMessage(), e);
             throw new RenderException("Can't render template " + templateScript + ": " + ExceptionUtils.getRootCauseMessage(e), e);
         }
     }
