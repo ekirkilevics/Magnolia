@@ -64,7 +64,7 @@ public class DialogLinkField extends AbstractVaadinFieldDialogField {
     @Override
     public Field getField() {
         LinkFieldDefinition definition = (LinkFieldDefinition) getFieldDefinition();
-        TextFieldAndButtonComponent linkField = new TextFieldAndButtonComponent();
+        TextAndButtonField linkField = new TextAndButtonField();
 
         linkField.getTextField().addListener(new FieldEvents.FocusListener() {
             @Override
