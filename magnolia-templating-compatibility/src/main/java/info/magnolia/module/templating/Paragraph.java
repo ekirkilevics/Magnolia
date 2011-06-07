@@ -34,7 +34,6 @@
 package info.magnolia.module.templating;
 
 
-
 /**
  * Represents a paragraph definition. Following are most of the properties you can use
  * to configure your paragraphs. Of course, if you're using specific subclasses,
@@ -112,7 +111,8 @@ package info.magnolia.module.templating;
  * @deprecated since 5.0, the differentiation of paragraphs and templates were removed. Use {@link RenderableDefinition} instead.
  */
 public class Paragraph extends AbstractRenderable {
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Paragraph() {
-       setModelClass((Class< ? extends info.magnolia.templating.model.RenderingModel< ? >>) RenderingModelImpl.class);
+       setModelClass((Class) RenderingModelImpl.class);
     }
 }
