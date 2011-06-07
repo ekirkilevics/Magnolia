@@ -34,6 +34,7 @@
 package info.magnolia.module.templatingcomponents.functions;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.jcr.util.ContentMap;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -52,6 +53,10 @@ public class TemplatingFunctions {
 
     public Node asJCRNode(Content content) {
         return content == null ? null : content.getJCRNode();
+    }
+
+    public Node asJCRNode(ContentMap contentMap) {
+        return contentMap == null ? null : contentMap.getJCRNode();
     }
 
     public Content parent(Content content) throws RepositoryException {

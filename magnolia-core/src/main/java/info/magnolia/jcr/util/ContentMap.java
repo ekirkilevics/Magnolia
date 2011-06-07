@@ -5,10 +5,9 @@ import info.magnolia.link.LinkTransformerManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,7 +32,7 @@ public class ContentMap implements Map<String, Object> {
     /**
      * Represents getters of the node itself.
      */
-    private final List<String> attributeNames = new ArrayList<String>();
+    private final Map<String, Method> attributeNames = new HashMap<String, Method>();
 
     public ContentMap(Node content) {
         if (content == null) {
@@ -42,23 +41,17 @@ public class ContentMap implements Map<String, Object> {
 
         this.content = content;
 
-        // one might want to cache property names on instantion, however this would not work as other sessions might add/remove props at any time.
-
-        // apache commons? there must be the code doing the same elsewhere.
-        // cache method/prop names
-
-        // FIXME don't support this
-        for (Method m : content.getClass().getMethods()) {
-            if (m.getParameterTypes().length > 0) {
-                continue;
-            }
-            if (m.getName().startsWith("get")) {
-                attributeNames.add(StringUtils.uncapitalize(m.getName().substring(3)));
-            }
-
-            if (m.getName().startsWith("is")) {
-                attributeNames.add(StringUtils.uncapitalize(m.getName().substring(2)));
-            }
+        // Supported special types are: @nodeType @name, @path @level (and their deprecated forms - see convertDeprecatedProps() for details)
+        Class<? extends Node> clazz = content.getClass();
+        try {
+            attributeNames.put("identifier", clazz.getMethod("getIdentifier", null));
+            attributeNames.put("path", clazz.getMethod("getPath", null));
+            attributeNames.put("level", clazz.getMethod("getLevel", null));
+            attributeNames.put("nodeTypes", clazz.getMethod("getPrimaryNodeType", null));
+        } catch (SecurityException e) {
+            log.debug("Failed to gain access to Node get***() method. Check VM security settings. " + e.getLocalizedMessage(), e);
+        } catch (NoSuchMethodException e) {
+            log.debug("Failed to retrieve get***() method of Node class. Check the classpath for conflicting version of JCR classes. " + e.getLocalizedMessage(), e);
         }
     }
 
@@ -87,11 +80,12 @@ public class ContentMap implements Map<String, Object> {
         if (key == null) {
             return null;
         }
-        if (key instanceof String) {
+        try {
             return (String) key;
+        } catch (ClassCastException e) {
+            log.debug("Invalid key. Expected String, but got {}.", key.getClass().getName());
         }
-        // TODO: should we really be so lenient? Strictly speaking this key is not valid if it has to be converted to string ... even if the toString() produces correct result.
-        return key.toString();
+        return null;
     }
 
     private boolean isValidKey(String strKey) {
@@ -99,13 +93,11 @@ public class ContentMap implements Map<String, Object> {
     }
 
     private boolean isSpecialProperty(String strKey) {
-        // TODO @nodeType @name, @path @level
-
         if (!strKey.startsWith("@")) {
             return false;
         }
         strKey = convertDeprecatedProps(strKey);
-        return attributeNames.contains(strKey.substring(1));
+        return attributeNames.containsKey(StringUtils.removeStart(strKey, "@"));
     }
 
     private String convertDeprecatedProps(String strKey) {
@@ -114,8 +106,10 @@ public class ContentMap implements Map<String, Object> {
             return "identifier";
         } else if ("@handle".equals(strKey)) {
             return "path";
+        } else if ("@depth".equals(strKey)) {
+            return "level";
         }
-        return StringUtils.removeStart(strKey, "@");
+        return strKey;
     }
 
     @Override
@@ -130,7 +124,7 @@ public class ContentMap implements Map<String, Object> {
         Object prop = getNodeProperty(keyStr);
         if (prop == null) {
             keyStr = convertDeprecatedProps(keyStr);
-            return getNodeAttribute(keyStr);
+            return getNodeAttribute(StringUtils.removeStart(keyStr, "@"));
         }
         return prop;
     }
@@ -167,23 +161,19 @@ public class ContentMap implements Map<String, Object> {
 
     private Object getNodeProperty(String keyStr) {
         try {
-            // TODO: do we care about assets or just about plain binaries?
-            // philipp: not yet
-            if (isAsset(keyStr)) {
-                return getAssetNode(keyStr);
+            if (!content.hasProperty(keyStr)) {
+                // property doesn't exist, but maybe child of that name does
+                if (content.hasNode(keyStr)) {
+                    return new ContentMap(content.getNode(keyStr));
+                }
             }
+
             Property prop = content.getProperty(keyStr);
-            if (prop == null) {
-                // no such property exists ... shouldn't exception be thrown instead?
-                return null;
-            }
             int type = prop.getType();
             if (type == PropertyType.DATE) {
                 return prop.getDate();
             } else if (type == PropertyType.BINARY) {
-                // this will actually never happen ... plus DAM is naming binary assets differently
-                // xxx = name of control ... xxxBinary or xxxDMS or xxxYYY for asset source
-                // and on top of that we pbly return binaries as subnodes now
+                // this should actually never happen. there is no reason why anyone should stream binary data into template ... or is there?
             } else if (prop.isMultiple()) {
 
                 Value[] values = prop.getValues();
@@ -217,16 +207,6 @@ public class ContentMap implements Map<String, Object> {
         return null;
     }
 
-    private boolean isAsset(String keyStr) {
-        // does the DAM know?
-        return false;
-    }
-
-    private Node getAssetNode(String keyStr) throws RepositoryException {
-        // get the DAM and have it handle this
-        return null;
-    }
-
     @Override
     public int size() {
         try {
@@ -248,7 +228,7 @@ public class ContentMap implements Map<String, Object> {
         } catch (RepositoryException e) {
             // ignore - has no access
         }
-        for (String name : attributeNames) {
+        for (String name : attributeNames.keySet()) {
             keys.add(name);
         }
         return keys;
@@ -295,5 +275,9 @@ public class ContentMap implements Map<String, Object> {
     public Object remove(Object arg0) {
         // ignore, read only
         return null;
+    }
+
+    public Node getJCRNode() {
+        return content;
     }
 }

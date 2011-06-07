@@ -33,18 +33,20 @@
  */
 package info.magnolia.freemarker.models;
 
+import info.magnolia.context.Context;
+import info.magnolia.freemarker.FreemarkerConfig;
+import info.magnolia.jcr.util.ContentMap;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import freemarker.ext.util.ModelFactory;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.SimpleDate;
 import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.context.Context;
-import info.magnolia.freemarker.FreemarkerConfig;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * A FreeMarker ObjectWrapper that knows about Magnolia specific objects.
@@ -59,6 +61,7 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
     private final static List<MagnoliaModelFactory> DEFAULT_MODEL_FACTORIES = new ArrayList<MagnoliaModelFactory>() {{
         add(NodeDataModelFactory.INSTANCE);
         add(ContentModel.FACTORY);
+        add(ContentMapModel.FACTORY);
         add(CalendarModel.FACTORY);
         add(UserModel.FACTORY);
         add(ContextModelFactory.INSTANCE);
@@ -95,6 +98,10 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
             return getEnumModels().get(enumClassName);
         }
 
+        // since we implement Map FM will always try to use SimpleHash if passed through
+        if (obj != null && (obj instanceof ContentMap)) {
+            return handleUnknownType(obj);
+        }
         return super.wrap(obj);
     }
 
@@ -136,6 +143,7 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
      * Exposes a Calendar as a SimpleDate.
      * @deprecated since 4.3 use CalendarModel instead.
      */
+    @Deprecated
     protected SimpleDate handleCalendar(Calendar cal) {
         return new SimpleDate(cal.getTime(), TemplateDateModel.DATETIME);
     }

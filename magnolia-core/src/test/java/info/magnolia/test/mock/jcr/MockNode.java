@@ -258,8 +258,12 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public Property getProperty(String relPath) {
-        return properties.get(relPath);
+    public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
+        Property prop = properties.get(relPath);
+        if (prop == null) {
+            throw new PathNotFoundException(relPath);
+        }
+        return prop;
     }
 
     @Override

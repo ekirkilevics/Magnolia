@@ -38,6 +38,10 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Property;
@@ -278,5 +282,18 @@ public class NodeUtil {
             return "/" + name;
         }
         return path + "/" + name;
+    }
+
+    public static Collection<Node> getChildCollection(Node jcrNode) {
+        List<Node> children = new ArrayList<Node>();
+        try {
+            NodeIterator iter = jcrNode.getNodes();
+            while (iter.hasNext()) {
+                children.add(iter.nextNode());
+            }
+        } catch (RepositoryException e) {
+            log.error("Failed to read children of " + jcrNode, e);
+        }
+        return children;
     }
 }
