@@ -94,7 +94,7 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
     @Override
     public String show() {
         //show start page if no templates present yet
-        if (!templateManager.getAvailableTemplates().hasNext()) {
+        if (templateManager.getTemplateDefinitions().isEmpty()) {
             try {
                 request.getRequestDispatcher("/.magnolia/pages/quickstart.html").forward(request, response);
                 return "";

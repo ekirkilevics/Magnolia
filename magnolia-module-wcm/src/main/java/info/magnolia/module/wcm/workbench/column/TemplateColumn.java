@@ -45,7 +45,6 @@ import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -91,10 +90,8 @@ public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinit
     private Map<String, String> getAvailableTemplates(Node node) {
         Map<String, String> map = new LinkedHashMap<String, String>();
 
-        Iterator<TemplateDefinition> templates = templateManager.getAvailableTemplates(node);
-        while (templates.hasNext()) {
-            TemplateDefinition template = templates.next();
-            map.put(template.getTitle(), template.getName());
+        for (TemplateDefinition templateDefinition : templateManager.getAvailableTemplates(node)) {
+            map.put(templateDefinition.getTitle(), templateDefinition.getName());
         }
         return map;
     }

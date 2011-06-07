@@ -33,16 +33,6 @@
  */
 package info.magnolia.module.admininterface.templates;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.version.ContentVersion;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.ContentWrapper;
-import info.magnolia.module.admininterface.VersionUtil;
-import info.magnolia.templating.model.RenderingModel;
-import info.magnolia.templating.model.RenderingModelImpl;
-import info.magnolia.templating.template.RenderableDefinition;
-
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -50,38 +40,45 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.version.Version;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.version.ContentVersion;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.ContentWrapper;
+import info.magnolia.module.admininterface.VersionUtil;
+import info.magnolia.templating.model.RenderingModel;
+import info.magnolia.templating.model.RenderingModelImpl;
+import info.magnolia.templating.template.RenderableDefinition;
 
 public class MgnlDeletedTemplateModel extends RenderingModelImpl<RenderableDefinition> {
 
     private static final Logger log = LoggerFactory.getLogger(MgnlDeletedTemplateModel.class);
 
-    // TODO dlipp: pass in JCR-Node not Content
-    public MgnlDeletedTemplateModel(Content content, RenderableDefinition definition, RenderingModel parent) {
-        super(content.getJCRNode(), definition, parent);
+    public MgnlDeletedTemplateModel(Node content, RenderableDefinition definition, RenderingModel<RenderableDefinition> parent) {
+        super(content, definition, parent);
     }
 
     public String getLastVersion() {
         Collection<Version> allVersions = null;
 
         Iterator<Version> iterator = null;
-        Node maybeVersion = getContent();
-        Node content = getContent();
+        Content maybeVersion = ContentUtil.asContent(getContent());
+        Content content = ContentUtil.asContent(getContent());
         try {
             try {
                 allVersions = VersionUtil.getSortedNotDeletedVersions(content);
             } catch (AccessDeniedException e) {
-                // Either change the ContentVersion API to delegate call to getAllVersions() to the underlying real node
-                // or do this. There is no save way of finding the node is a version since it can be wrapped by multiple
-                // different wrappers
+                // Either change the ContentVersion API to delegate call to getAllVersions() to the underlying real node or do this. There is no save way of finding the node is a version since it can be wrapped by multiple different wrappers
                 while (maybeVersion != null && maybeVersion instanceof ContentWrapper) {
-                    maybeVersion = ((ContentWrapper) maybeVersion).getWrappedContent().getJCRNode();
+                    maybeVersion = ((ContentWrapper) maybeVersion).getWrappedContent();
                 }
                 if (maybeVersion instanceof ContentVersion) {
                     String versionName = ((ContentVersion) maybeVersion).getVersionLabel();
-                    content = maybeVersion.getSession().getNode(maybeVersion.getPath());
+                    content = maybeVersion.getHierarchyManager().getContent(maybeVersion.getHandle());
                     allVersions = VersionUtil.getSortedNotDeletedVersionsBefore(content, versionName);
                 }
             }
@@ -91,12 +88,10 @@ public class MgnlDeletedTemplateModel extends RenderingModelImpl<RenderableDefin
             }
             return allVersions.iterator().next().getName();
         } catch (UnsupportedRepositoryOperationException e) {
-            // if this node doesn't support versioning it can't be undeleted ... nor can we display previous version of
-            // the content
-            log.error("Failed to retrieve version history for " + getContent().getPath()
-                    + ". This node doesn't support versioning", e);
+            // if this node doesn't support versioning it can't be undeleted ... nor can we display previous version of the content
+            log.error("Failed to retrieve version history for " + content.getHandle() + ". This node doesn't support versioning", e);
         } catch (RepositoryException e) {
-            log.error("Failed to retrieve version history for " + getContent().getPath() + "", e);
+            log.error("Failed to retrieve version history for " + content.getHandle() + "", e);
         }
         return null;
     }
