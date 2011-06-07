@@ -1,3 +1,36 @@
+/**
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ *
+ *
+ * This file is dual-licensed under both the Magnolia
+ * Network Agreement and the GNU General Public License.
+ * You may elect to use one or the other of these licenses.
+ *
+ * This file is distributed in the hope that it will be
+ * useful, but AS-IS and WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE, TITLE, or NONINFRINGEMENT.
+ * Redistribution, except as permitted by whichever of the GPL
+ * or MNA you select, is prohibited.
+ *
+ * 1. For the GPL license (GPL), you can redistribute and/or
+ * modify this file under the terms of the GNU General
+ * Public License, Version 3, as published by the Free Software
+ * Foundation.  You should have received a copy of the GNU
+ * General Public License, Version 3 along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * 2. For the Magnolia Network Agreement (MNA), this file
+ * and the accompanying materials are made available under the
+ * terms of the MNA which accompanies this distribution, and
+ * is available at http://www.magnolia-cms.com/mna.html
+ *
+ * Any modifications to this file must keep this entire header
+ * intact.
+ *
+ */
 package info.magnolia.jcr.util;
 
 import info.magnolia.link.LinkException;
@@ -23,6 +56,17 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/**
+ * Map based representation of JCR content. This class is for instance used in template scripts to
+ * allow notations like <code>content.propName</code>. It first tries to read a property with name
+ * (key) and if not present checks for the presence of child node. Few special property names map to
+ * the JCR methods: \@name, \@id, \@path, \@level, \@nodeType
+ *
+ *
+ * @version $Id$
+ *
+ */
 public class ContentMap implements Map<String, Object> {
 
     private final static Logger log = LoggerFactory.getLogger(ContentMap.class);
@@ -44,10 +88,10 @@ public class ContentMap implements Map<String, Object> {
         // Supported special types are: @nodeType @name, @path @level (and their deprecated forms - see convertDeprecatedProps() for details)
         Class<? extends Node> clazz = content.getClass();
         try {
-            attributeNames.put("identifier", clazz.getMethod("getIdentifier", null));
+            attributeNames.put("id", clazz.getMethod("getIdentifier", null));
             attributeNames.put("path", clazz.getMethod("getPath", null));
             attributeNames.put("level", clazz.getMethod("getLevel", null));
-            attributeNames.put("nodeTypes", clazz.getMethod("getPrimaryNodeType", null));
+            attributeNames.put("nodeType", clazz.getMethod("getPrimaryNodeType", null));
         } catch (SecurityException e) {
             log.debug("Failed to gain access to Node get***() method. Check VM security settings. " + e.getLocalizedMessage(), e);
         } catch (NoSuchMethodException e) {
