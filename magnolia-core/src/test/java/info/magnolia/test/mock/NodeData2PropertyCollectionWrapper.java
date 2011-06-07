@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 
 /**
@@ -72,11 +73,21 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
     @Override
     public boolean contains(Object arg0) {
         for (NodeData c : col) {
-            if (c.getJCRProperty().equals(arg0)) {
+            if (getPropertyOrThrowException(c).equals(arg0)) {
                 return true;
             }
         }
         return false;
+    }
+
+    protected Property getPropertyOrThrowException(NodeData c) {
+        try {
+            return c.getJCRProperty();
+        }
+        catch (PathNotFoundException e) {
+            // should not happen because we read the NodeData collection first
+            throw new IllegalStateException(e);
+        }
     }
 
     @Override
@@ -86,7 +97,7 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
         }
         Collection<Object> test = new ArrayList(arg0);
         for (NodeData c : col) {
-            test.remove(c.getJCRProperty());
+            test.remove(getPropertyOrThrowException(c));
         }
         return test.isEmpty();
     }
@@ -100,7 +111,7 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
     public Iterator<Property> iterator() {
         Collection<Property> test = new ArrayList<Property>();
         for (NodeData c : col) {
-            test.add(c.getJCRProperty());
+            test.add(getPropertyOrThrowException(c));
         }
 
         return test.iterator();
@@ -109,7 +120,7 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
     @Override
     public boolean remove(Object arg0) {
         for (NodeData c : col) {
-            if (c.getJCRProperty().equals(arg0)) {
+            if (getPropertyOrThrowException(c).equals(arg0)) {
                 col.remove(c);
                 return true;
             }
@@ -133,7 +144,7 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
         Collection<NodeData> test = new ArrayList<NodeData>();
         for (Object o : propertiesToRemove) {
             for (NodeData c : col) {
-                if (c.getJCRProperty().equals(o)) {
+                if (getPropertyOrThrowException(c).equals(o)) {
                     test.add(c);
                 }
             }
@@ -151,7 +162,7 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
     public Object[] toArray() {
         Collection<Property> test = new ArrayList<Property>();
         for (NodeData c : col) {
-            test.add(c.getJCRProperty());
+            test.add(getPropertyOrThrowException(c));
         }
         return test.toArray();
     }
@@ -160,7 +171,7 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
     public <T> T[] toArray(T[] arg0) {
         Collection<Property> test = new ArrayList<Property>();
         for (NodeData c : col) {
-            test.add(c.getJCRProperty());
+            test.add(getPropertyOrThrowException(c));
         }
         return test.toArray(arg0);
     }

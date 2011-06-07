@@ -39,8 +39,8 @@ import info.magnolia.cms.core.NodeData;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
-import javax.jcr.PropertyType;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -53,9 +53,9 @@ import org.junit.Test;
 public class NodeData2PropertyCollectionWrapperTest {
 
     private NodeData2PropertyCollectionWrapper wrapper;
-    private final NodeData nodeData1 = new MockNodeData("1", PropertyType.BINARY);
-    private final NodeData nodeData2 = new MockNodeData("2", PropertyType.NAME);
-    private final NodeData nodeData3 = new MockNodeData("3", PropertyType.DATE);
+    private final NodeData nodeData1 = new MockNodeData("1", "1");
+    private final NodeData nodeData2 = new MockNodeData("2", "2");
+    private final NodeData nodeData3 = new MockNodeData("3", "3");
 
     @Before
     public void initWrapper() {
@@ -68,7 +68,7 @@ public class NodeData2PropertyCollectionWrapperTest {
     }
 
     @Test
-    public void testRemoveAll() {
+    public void testRemoveAll() throws PathNotFoundException {
         Collection<Property> propertiesToRemove = new ArrayList<Property>(2);
         propertiesToRemove.add(nodeData1.getJCRProperty());
         propertiesToRemove.add(nodeData3.getJCRProperty());
@@ -80,7 +80,7 @@ public class NodeData2PropertyCollectionWrapperTest {
     }
 
     @Test
-    public void testRetainAll() {
+    public void testRetainAll() throws PathNotFoundException {
         Collection<Property> propertiesToRetain = new ArrayList<Property>(2);
         propertiesToRetain.add(nodeData1.getJCRProperty());
         wrapper.retainAll(propertiesToRetain);
