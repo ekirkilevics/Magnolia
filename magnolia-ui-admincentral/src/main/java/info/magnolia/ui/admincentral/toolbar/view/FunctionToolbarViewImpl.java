@@ -45,14 +45,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
@@ -64,16 +62,12 @@ import com.vaadin.ui.Label;
 public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinComponent{
 
     private static final Logger log = LoggerFactory.getLogger(FunctionToolbarViewImpl.class);
-    private HorizontalLayout outerContainer = new HorizontalLayout();
-    private CustomComponent customComponent;
+
+    private CssLayout outerContainer = new CssLayout();
     private Presenter presenter;
 
     public FunctionToolbarViewImpl(ToolbarProvider toolbarProvider, ToolbarPermissionSchema permissions) {
-        outerContainer.setMargin(false,true,false,true);
-        outerContainer.addStyleName("m-workbench-header");
-        outerContainer.setHeight(50, Sizeable.UNITS_PIXELS);
-        outerContainer.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-        customComponent = new CustomComponent(){{ setCompositionRoot(outerContainer); }};
+        outerContainer.setStyleName("toolbar");
 
         final ToolbarDefinition toolbarDefinition = toolbarProvider.getToolbar();
         if(toolbarDefinition == null){
@@ -98,13 +92,13 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
 
             final ToolbarItemGroupDefinition itemGroupDefinition = groupItems.get(i);
             final List<ToolbarItemDefinition> items = itemGroupDefinition.getItems();
-            final GridLayout viewGroup = new GridLayout(items.size() + 1, 1);
+            final HorizontalLayout viewGroup = new HorizontalLayout();
 
-            viewGroup.setSpacing(true);
-            viewGroup.setMargin(true, false, false, false);
+            viewGroup.setStyleName("segment");
+            viewGroup.addStyleName("segment-alternate");
 
             final Label label = new Label(itemGroupDefinition.getGroupLabel());
-            viewGroup.addComponent(label, 0, 0);
+            viewGroup.addComponent(label);
             viewGroup.setComponentAlignment(label, Alignment.MIDDLE_CENTER);
 
             for(int j = 0; j < items.size(); j++){
@@ -118,16 +112,18 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
                        presenter.onToolbarItemSelection(item);
                     }
                 });
-                viewGroup.addComponent(button, j + 1, 0);
+                viewGroup.addComponent(button);
                 viewGroup.setComponentAlignment(button, Alignment.MIDDLE_CENTER);
             }
+            viewGroup.getComponent(1).addStyleName("first");
+            viewGroup.getComponent(viewGroup.getComponentCount() - 1).addStyleName("last");
             outerContainer.addComponent(viewGroup);
         }
     }
 
     @Override
     public Component asVaadinComponent() {
-       return customComponent;
+        return outerContainer;
     }
 
     @Override

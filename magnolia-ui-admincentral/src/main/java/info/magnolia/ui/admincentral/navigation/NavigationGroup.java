@@ -54,20 +54,20 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.BaseTheme;
 
 
 /**
  * A group of navigation items defined by a collection of NavigationItemDefinitions (e.g. website,
  * data). It's part of a {@link NavigationWorkArea}.
- * 
+ *
  * @author fgrilli
  */
 public class NavigationGroup implements NavigationView, IsVaadinComponent {
@@ -86,16 +86,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     private NavigationWorkArea navigationWorkarea;
 
-    private CustomComponent customComponent;
-
     public NavigationGroup(Collection<NavigationItemDefinition> navigationItemDefs, NavigationPermissionSchema permissions) {
-        customComponent = new CustomComponent() {
-
-            {
-                setCompositionRoot(accordion);
-            }
-        };
-        customComponent.setSizeFull();
         this.navigationItemDefs = navigationItemDefs;
         this.permissions = permissions;
 
@@ -124,7 +115,12 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
     public void addTab(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
         // layout for sub menu entries
         Component subNavigation = addSubNavigationItems(navigationItemDef, permissions);
-        Tab tab = accordion.addTab(subNavigation == null ? new Label() : subNavigation, getLabel(navigationItemDef), getIcon(navigationItemDef));
+        subNavigation = subNavigation == null ? new Label() : subNavigation;
+        Tab tab = accordion.addTab(subNavigation, getLabel(navigationItemDef), getIcon(navigationItemDef));
+        tab.setDescription(navigationItemDef.getDescription());
+
+        // TODO: add notification badges
+
         // store tab reference
         navigationItems.put(tab.getComponent(), navigationItemDef);
     }
@@ -138,9 +134,11 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
         if (navigationItemDef.getItems().isEmpty()) {
             return null;
         }
-        final GridLayout layout = new GridLayout(1, 1);
-        layout.setSpacing(true);
+        final Layout layout = new VerticalLayout();
+        // layout.setSpacing(true);
         layout.setMargin(true);
+        layout.addStyleName(navigationItemDef.getName());
+
         // sub menu items (2 levels only)
         for (NavigationItemDefinition sub : navigationItemDef.getItems()) {
             if (permissions.hasPermission(sub)) {
@@ -159,6 +157,13 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
      */
     protected String getLabel(NavigationItemDefinition menuItem) {
         return MessagesUtil.getWithDefault(menuItem.getLabel(), menuItem.getLabel(), menuItem.getI18nBasename());
+    }
+
+    /**
+     * Converts description key into i18n-ized string.
+     */
+    protected String getDescription(NavigationItemDefinition menuItem) {
+        return MessagesUtil.getWithDefault(menuItem.getDescription(), menuItem.getDescription(), menuItem.getI18nBasename());
     }
 
     protected Resource getIcon(NavigationItemDefinition menuItem) {
@@ -238,7 +243,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     @Override
     public Component asVaadinComponent() {
-        return customComponent;
+        return accordion;
     }
 
     @Override

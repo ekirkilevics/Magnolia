@@ -77,6 +77,7 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         this.treeModel = treeModel;
         table = new Table();
         table.setSizeFull();
+        table.addStyleName("striped");
 
         // next two lines are required to make the browser (Table) react on selection change via mouse
         table.setImmediate(true);

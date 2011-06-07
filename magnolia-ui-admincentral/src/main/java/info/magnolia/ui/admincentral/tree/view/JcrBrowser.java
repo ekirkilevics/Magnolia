@@ -33,25 +33,6 @@
  */
 package info.magnolia.ui.admincentral.tree.view;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.jcr.Item;
-import javax.jcr.RepositoryException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.vaadin.addon.treetable.HierarchicalContainerOrderedWrapper;
-import com.vaadin.addon.treetable.TreeTable;
-import com.vaadin.event.Action;
-import com.vaadin.event.Transferable;
-import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptAll;
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.Component;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
@@ -64,6 +45,26 @@ import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jcr.Item;
+import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vaadin.addon.treetable.TreeTable;
+import com.vaadin.event.Action;
+import com.vaadin.event.Transferable;
+import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.acceptcriteria.AcceptAll;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.Component;
 
 /**
  * User interface component that extends TreeTable and uses a WorkbenchDefinition for layout and invoking command callbacks.
@@ -94,6 +95,7 @@ public class JcrBrowser extends TreeTable {
         setColumnCollapsingAllowed(true);
         setMultiSelect(false);
         setImmediate(true);
+        addStyleName("striped");
 
         // TODO: check Ticket http://dev.vaadin.com/ticket/5453
         setColumnReorderingAllowed(true);
@@ -153,10 +155,10 @@ public class JcrBrowser extends TreeTable {
                         return false;
                     }
                     ExternalResource that = (ExternalResource) obj;
-                    return this.getURL().equals(that.getURL());
+                    return getURL().equals(that.getURL());
                 }
             });
-            this.actionDefinition = menuItemDefinition.getActionDefinition();
+            actionDefinition = menuItemDefinition.getActionDefinition();
         }
 
         public void handleAction(ContainerItemId itemId) {
@@ -175,12 +177,12 @@ public class JcrBrowser extends TreeTable {
                 shell.showError("Can't execute action.", e);
             }
         }
-        
+
         @Override
         public int hashCode() {
             return (getIcon() == null ? 7 : getIcon().hashCode()) + (getCaption() == null ? 13 : getCaption().hashCode()) + (actionDefinition == null ? 17 : actionDefinition.hashCode());
         }
-        
+
         @Override
         public boolean equals(Object arg0) {
             if (arg0 == this) {
@@ -190,9 +192,9 @@ public class JcrBrowser extends TreeTable {
                 return false;
             }
             JcrBrowserAction that = (JcrBrowserAction) arg0;
-            return (this.getIcon() == null ? that.getIcon() == null : this.getIcon().equals(that.getIcon())) 
-                && (this.getCaption() == null ? that.getCaption() == null : this.getCaption().equals(that.getCaption()))
-                && (this.actionDefinition == null ? that.actionDefinition == null : this.actionDefinition.equals(that.actionDefinition));
+            return (getIcon() == null ? that.getIcon() == null : getIcon().equals(that.getIcon()))
+                && (getCaption() == null ? that.getCaption() == null : getCaption().equals(that.getCaption()))
+                && (actionDefinition == null ? that.actionDefinition == null : actionDefinition.equals(that.actionDefinition));
         }
     }
 
@@ -251,7 +253,7 @@ public class JcrBrowser extends TreeTable {
 
                     log.debug("DropLocation: " + location.name());
 
-                    HierarchicalContainerOrderedWrapper containerWrapper = (HierarchicalContainerOrderedWrapper) getContainerDataSource();
+                    HierarchicalJcrContainer containerWrapper = (HierarchicalJcrContainer) getContainerDataSource();
                     // Drop right on an item -> make it a child -
                     if (location == VerticalDropLocation.MIDDLE) {
                         Item sourceItem = container.getJcrItem((ContainerItemId) sourceItemId);
@@ -294,6 +296,9 @@ public class JcrBrowser extends TreeTable {
              */
             @Override
             public AcceptCriterion getAcceptCriterion() {
+
+                // FIXME: Use com.vaadin.ui.Table.TableDropCriterion
+
                 return AcceptAll.get();
             }
         });

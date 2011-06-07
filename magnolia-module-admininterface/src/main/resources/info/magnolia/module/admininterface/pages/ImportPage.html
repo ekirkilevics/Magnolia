@@ -6,6 +6,10 @@
     <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
   </head>
   <body id="mgnl" class="mgnlBgLight mgnlImportExport">
+    [#if message?exists]
+      <pre>${message}</pre>
+      <hr />
+    [/#if]
     <h2>${this.messages.get("importexport.import")}</h2>
     <form method="post" action="" enctype="multipart/form-data">
       <div class="formelement">

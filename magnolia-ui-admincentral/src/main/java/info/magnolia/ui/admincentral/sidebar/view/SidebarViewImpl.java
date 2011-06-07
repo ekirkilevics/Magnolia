@@ -64,8 +64,9 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
         panel.setSizeFull();
 
         panel.setFirstComponent(actionListView.asVaadinComponent());
+
         LazyLoadWrapper lazyPreview = new LazyLoadWrapper(previewView.asVaadinComponent());
-        lazyPreview.setSizeFull();
+        lazyPreview.setSizeUndefined();
         panel.setSecondComponent(lazyPreview);
     }
 

@@ -34,12 +34,11 @@
 package info.magnolia.cms.util;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
-import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-
 
 /**
  * This class defines the rules to be used by the activation content aggregator this is simply a collection of node
@@ -57,7 +56,7 @@ public class Rule implements Serializable {
     /**
      * list of node types allowed.
      */
-    private String[] allowedTypes = new String[0];
+    private Set<String> allowedTypes = new HashSet<String>();
 
     /**
      * reverse rule.
@@ -95,7 +94,7 @@ public class Rule implements Serializable {
      */
     public void addAllowType(String nodeType) {
         if (nodeType != null) {
-            this.allowedTypes = (String[]) ArrayUtils.add(allowedTypes, nodeType);
+            this.allowedTypes.add(nodeType);
         }
     }
 
@@ -105,12 +104,7 @@ public class Rule implements Serializable {
      */
     public void removeAllowType(String nodeType) {
         if (nodeType != null) {
-            for (int j = 0; j < allowedTypes.length; j++) {
-                if (nodeType.equals(allowedTypes[j])) {
-                    this.allowedTypes = (String[]) ArrayUtils.remove(allowedTypes, j);
-                    break;
-                }
-            }
+            this.allowedTypes.remove(nodeType);
         }
     }
 
@@ -118,7 +112,7 @@ public class Rule implements Serializable {
      * True if given nodeType is allowed.
      */
     public boolean isAllowed(String nodeType) {
-        boolean allowed = ArrayUtils.contains(allowedTypes, nodeType);
+        boolean allowed = this.allowedTypes.contains(nodeType);
         if (this.reverse) {
             return !allowed;
         }
@@ -134,7 +128,7 @@ public class Rule implements Serializable {
     @Override
     public String toString() {
         StringBuffer buffer = new StringBuffer();
-        Iterator typeIterator = IteratorUtils.arrayIterator(allowedTypes);
+        Iterator typeIterator = allowedTypes.iterator();
         while (typeIterator.hasNext()) {
             buffer.append((String) typeIterator.next());
             buffer.append(",");

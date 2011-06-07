@@ -42,13 +42,15 @@ import info.magnolia.ui.model.action.ActionDefinition;
  */
 public interface MenuItemDefinition {
 
-    public String getIcon();
+    String getIcon();
 
-    public String getName();
+    String getName();
 
-    public String getLabel();
+    String getLabel();
 
     String getI18nBasename();
+
+    String getDescription();
 
     public ActionDefinition getActionDefinition();
 

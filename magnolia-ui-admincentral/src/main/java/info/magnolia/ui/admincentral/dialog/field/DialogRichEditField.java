@@ -33,12 +33,14 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
-import com.vaadin.ui.Field;
-import com.vaadin.ui.RichTextArea;
+import info.magnolia.ckeditor.CKEditorTextField;
+import info.magnolia.ckeditor.dialog.definition.CKEditorFieldDefinition;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
+
+import com.vaadin.ui.Field;
 
 /**
  * Dialog field for rich edit.
@@ -58,10 +60,12 @@ public class DialogRichEditField extends AbstractVaadinFieldDialogField {
 
     @Override
     protected Field getField() {
-        RichTextArea richTextArea = new RichTextArea();
-
-        // TODO add focus listener, see http://dev.vaadin.com/ticket/7093
-
-        return richTextArea;
+        //TODO should be instantiated based on configuration, not hardcoded
+        CKEditorFieldDefinition definition = (CKEditorFieldDefinition) getFieldDefinition();
+        if(definition == null){
+            //create a default value definition
+            definition = new CKEditorFieldDefinition();
+        }
+        return new CKEditorTextField(definition);
     }
 }
