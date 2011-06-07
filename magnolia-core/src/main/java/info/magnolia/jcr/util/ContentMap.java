@@ -36,7 +36,6 @@ package info.magnolia.jcr.util;
 import info.magnolia.link.LinkException;
 import info.magnolia.link.LinkTransformerManager;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
@@ -76,7 +75,7 @@ public class ContentMap implements Map<String, Object> {
     /**
      * Represents getters of the node itself.
      */
-    private final Map<String, Method> attributeNames = new HashMap<String, Method>();
+    private final Map<String, Method> specialProperties = new HashMap<String, Method>();
 
     public ContentMap(Node content) {
         if (content == null) {
@@ -88,10 +87,11 @@ public class ContentMap implements Map<String, Object> {
         // Supported special types are: @nodeType @name, @path @level (and their deprecated forms - see convertDeprecatedProps() for details)
         Class<? extends Node> clazz = content.getClass();
         try {
-            attributeNames.put("id", clazz.getMethod("getIdentifier", null));
-            attributeNames.put("path", clazz.getMethod("getPath", null));
-            attributeNames.put("level", clazz.getMethod("getLevel", null));
-            attributeNames.put("nodeType", clazz.getMethod("getPrimaryNodeType", null));
+            specialProperties.put("name", clazz.getMethod("getName", null));
+            specialProperties.put("id", clazz.getMethod("getIdentifier", null));
+            specialProperties.put("path", clazz.getMethod("getPath", null));
+            specialProperties.put("level", clazz.getMethod("getLevel", null));
+            specialProperties.put("nodeType", clazz.getMethod("getPrimaryNodeType", null));
         } catch (SecurityException e) {
             log.debug("Failed to gain access to Node get***() method. Check VM security settings. " + e.getLocalizedMessage(), e);
         } catch (NoSuchMethodException e) {
@@ -141,17 +141,17 @@ public class ContentMap implements Map<String, Object> {
             return false;
         }
         strKey = convertDeprecatedProps(strKey);
-        return attributeNames.containsKey(StringUtils.removeStart(strKey, "@"));
+        return specialProperties.containsKey(StringUtils.removeStart(strKey, "@"));
     }
 
     private String convertDeprecatedProps(String strKey) {
         // in the past we allowed both lower and upper case notation ...
         if ("@UUID".equals(strKey) || "@uuid".equals(strKey)) {
-            return "identifier";
+            return "@id";
         } else if ("@handle".equals(strKey)) {
-            return "path";
+            return "@path";
         } else if ("@depth".equals(strKey)) {
-            return "level";
+            return "@level";
         }
         return strKey;
     }
@@ -168,97 +168,83 @@ public class ContentMap implements Map<String, Object> {
         Object prop = getNodeProperty(keyStr);
         if (prop == null) {
             keyStr = convertDeprecatedProps(keyStr);
-            return getNodeAttribute(StringUtils.removeStart(keyStr, "@"));
+            return getSpecialProperty(keyStr);
         }
         return prop;
     }
 
-    private Object getNodeAttribute(String keyStr) {
-
-        try {
-            return content.getClass().getMethod("get" + StringUtils.capitalize(keyStr), null).invoke(content, null);
-        } catch (IllegalArgumentException e) {
-            // ignore
-        } catch (SecurityException e) {
-            // ignore
-        } catch (IllegalAccessException e) {
-            // ignore
-        } catch (InvocationTargetException e) {
-            // ignore
-        } catch (NoSuchMethodException e) {
+    private Object getSpecialProperty(String strKey) {
+        if(isSpecialProperty(strKey)){
+            final Method method = specialProperties.get(StringUtils.removeStart(strKey, "@"));
             try {
-                return content.getClass().getMethod("is" + StringUtils.capitalize(keyStr), null).invoke(content, null);
-            } catch (IllegalArgumentException e1) {
-                // ignore
-            } catch (SecurityException e1) {
-                // ignore
-            } catch (IllegalAccessException e1) {
-                // ignore
-            } catch (InvocationTargetException e1) {
-                // ignore
-            } catch (NoSuchMethodException e1) {
-                // ignore
+                return method.invoke(content, null);
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
         return null;
+
     }
 
     private Object getNodeProperty(String keyStr) {
         try {
-            if (!content.hasProperty(keyStr)) {
+            if (content.hasProperty(keyStr)) {
+                Property prop = content.getProperty(keyStr);
+                int type = prop.getType();
+                if (type == PropertyType.DATE) {
+                    return prop.getDate();
+                } else if (type == PropertyType.BINARY) {
+                    // this should actually never happen. there is no reason why anyone should stream binary data into template ... or is there?
+                } else if (prop.isMultiple()) {
+
+                    Value[] values = prop.getValues();
+
+                    String[] valueStrings = new String[values.length];
+
+                    for (int j = 0; j < values.length; j++) {
+                        try {
+                            valueStrings[j] = values[j].getString();
+                        } catch (RepositoryException e) {
+                            log.debug(e.getMessage());
+                        }
+                    }
+
+                    return valueStrings;
+                } else {
+                    try {
+                        return info.magnolia.link.LinkUtil.convertLinksFromUUIDPattern(prop.getString(), LinkTransformerManager.getInstance().getBrowserLink(content.getPath()));
+                    } catch (LinkException e) {
+                        log.warn("Failed to parse links with from " + prop.getName(), e);
+                    }
+                }
+                // don't we want to honor other types (e.g. numbers? )
+                return prop.getString();
+            }
+            else{
                 // property doesn't exist, but maybe child of that name does
                 if (content.hasNode(keyStr)) {
                     return new ContentMap(content.getNode(keyStr));
                 }
             }
 
-            Property prop = content.getProperty(keyStr);
-            int type = prop.getType();
-            if (type == PropertyType.DATE) {
-                return prop.getDate();
-            } else if (type == PropertyType.BINARY) {
-                // this should actually never happen. there is no reason why anyone should stream binary data into template ... or is there?
-            } else if (prop.isMultiple()) {
-
-                Value[] values = prop.getValues();
-
-                String[] valueStrings = new String[values.length];
-
-                for (int j = 0; j < values.length; j++) {
-                    try {
-                        valueStrings[j] = values[j].getString();
-                    } catch (RepositoryException e) {
-                        log.debug(e.getMessage());
-                    }
-                }
-
-                return valueStrings;
-            } else {
-                try {
-                    return info.magnolia.link.LinkUtil.convertLinksFromUUIDPattern(prop.getString(), LinkTransformerManager.getInstance().getBrowserLink(content.getPath()));
-                } catch (LinkException e) {
-                    log.warn("Failed to parse links with from " + prop.getName(), e);
-                }
-            }
-            // don't we want to honor other types (e.g. numbers? )
-            return prop.getString();
-
         } catch (PathNotFoundException e) {
             // ignore, property doesn't exist
         } catch (RepositoryException e) {
             log.warn("Failed to retrieve {} on {} with {}", new Object[] { keyStr, content, e.getMessage() });
         }
+
         return null;
     }
 
     @Override
     public int size() {
         try {
-            return (int) (content.getProperties().getSize() + attributeNames.size());
+            return (int) (content.getProperties().getSize() + specialProperties.size());
         } catch (RepositoryException e) {
             // ignore ... no rights to read properties.
         }
-        return attributeNames.size();
+        return specialProperties.size();
     }
 
     @Override
@@ -272,7 +258,7 @@ public class ContentMap implements Map<String, Object> {
         } catch (RepositoryException e) {
             // ignore - has no access
         }
-        for (String name : attributeNames.keySet()) {
+        for (String name : specialProperties.keySet()) {
             keys.add(name);
         }
         return keys;

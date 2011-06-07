@@ -53,9 +53,9 @@ import org.junit.Test;
 
 /**
  * Test for content map functionality.
- * 
+ *
  * @author had
- * 
+ *
  */
 public class ContentMapTest {
 
@@ -71,11 +71,11 @@ public class ContentMapTest {
         assertTrue(map.containsKey("prop1"));
         assertEquals("something", map.get("prop2"));
         assertTrue(map.get("prop2") instanceof String);
-        assertEquals("bla", map.get("name"));
+        assertEquals("bla", map.get("@name"));
         assertEquals("/bla/bla", map.get("@handle"));
         assertEquals("/bla/bla", map.get("@path"));
         assertEquals("12345", map.get("@uuid"));
-        assertEquals("12345", map.get("@identifier"));
+        assertEquals("12345", map.get("@id"));
     }
 
     // @Test
