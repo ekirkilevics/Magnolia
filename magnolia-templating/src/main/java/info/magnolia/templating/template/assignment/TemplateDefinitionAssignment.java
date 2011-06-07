@@ -40,11 +40,10 @@ import info.magnolia.templating.template.registry.TemplateDefinitionRegistration
 
 
 /**
- * @version $Id$
- *
+ * Knows which template to use for the rendering of the content.
  */
 public interface TemplateDefinitionAssignment {
 
-    TemplateDefinition getAssignedTempalteDefinition(Node node) throws TemplateDefinitionRegistrationException;
+    TemplateDefinition getAssignedTempalteDefinition(Node content) throws TemplateDefinitionRegistrationException;
 
 }

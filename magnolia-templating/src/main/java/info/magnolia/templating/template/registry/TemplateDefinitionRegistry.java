@@ -39,9 +39,9 @@ import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.templating.template.TemplateDefinition;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @version $Id$
+ * The central registry of all {@link TemplateDefinition}s.
  */
 public class TemplateDefinitionRegistry {
 
@@ -89,32 +89,41 @@ public class TemplateDefinitionRegistry {
         return templateDefinitionProvider.getTemplateDefinition();
     }
 
+    public Collection<TemplateDefinition> getTemplateDefinitions() {
+        Collection<TemplateDefinition> templateDefinitions = new ArrayList<TemplateDefinition>();
+        for (TemplateDefinitionProvider provider : providers.values()) {
+            try {
+                templateDefinitions.add(provider.getTemplateDefinition());
+            } catch (TemplateDefinitionRegistrationException e) {
+                // one failing provider is no reason to not show any templates
+                log.error("Failed to read template definition from " + provider + ".", e);
+            }
+        }
+        return templateDefinitions;
+
+    }
+
     // TODO move this to an independent template availability component
-    public Iterator<TemplateDefinition> getAvailableTemplates(Node content) {
-        List<TemplateDefinition> templateList = new ArrayList<TemplateDefinition>();
+    public Collection<TemplateDefinition> getAvailableTemplates(Node content) {
 
         try {
             if (content != null && NodeUtil.hasMixin(content, ItemType.DELETED_NODE_MIXIN)) {
-                templateList.add(getTemplateDefinition(DELETED_PAGE_TEMPLATE));
-                return templateList.iterator();
+                return Collections.singleton(getTemplateDefinition(DELETED_PAGE_TEMPLATE));
             }
         } catch (RepositoryException e) {
             log.error("Failed to check node for deletion status.", e);
         } catch (TemplateDefinitionRegistrationException e) {
             log.error("Deleted content template is not correctly registered.", e);
         }
-        for (TemplateDefinitionProvider provider : providers.values()) {
-            try {
-                TemplateDefinition definition = provider.getTemplateDefinition();
-                if (definition.isAvailable(content)) {
-                    templateList.add(definition);
-                }
-            } catch (TemplateDefinitionRegistrationException e) {
-                // one failing provider is no reason to not show any templates
-                log.error("Failed to read template definition from " + provider + ".", e);
+
+        final ArrayList<TemplateDefinition> availableTemplateDefinitions = new ArrayList<TemplateDefinition>();
+        final Collection<TemplateDefinition> templateDefinitions = getTemplateDefinitions();
+        for (TemplateDefinition templateDefinition : templateDefinitions) {
+            if(templateDefinition.isAvailable(content)){
+                availableTemplateDefinitions.add(templateDefinition);
             }
         }
-        return templateList.iterator();
+        return availableTemplateDefinitions;
     }
 
     /**
@@ -131,9 +140,9 @@ public class TemplateDefinitionRegistry {
                 }
                 // otherwise use the first available template
                 else{
-                    Iterator<TemplateDefinition> templates = getAvailableTemplates(content);
-                    if (templates.hasNext()) {
-                        return templates.next();
+                    Collection<TemplateDefinition> templates = getAvailableTemplates(content);
+                    if (!templates.isEmpty()) {
+                        return templates.iterator().next();
                     }
                 }
             }
@@ -142,5 +151,6 @@ public class TemplateDefinitionRegistry {
             }
             return null;
     }
+
 
 }

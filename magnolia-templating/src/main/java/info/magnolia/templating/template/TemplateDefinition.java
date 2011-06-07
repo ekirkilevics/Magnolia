@@ -39,9 +39,7 @@ import java.util.Map;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * A {@link RenderableDefinition} which supports editing in the page editor and can define their areas.
  */
 public interface TemplateDefinition extends RenderableDefinition {
 

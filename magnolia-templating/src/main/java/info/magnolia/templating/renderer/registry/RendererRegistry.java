@@ -41,7 +41,7 @@ import java.util.Map;
 
 
 /**
- * @version $Id$
+ * Central registry of all renderers.
  */
 public class RendererRegistry {
     private final Map<String, RendererProvider> providers = new HashMap<String, RendererProvider>();

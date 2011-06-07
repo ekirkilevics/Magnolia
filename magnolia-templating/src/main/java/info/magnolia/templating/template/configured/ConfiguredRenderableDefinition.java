@@ -55,8 +55,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 
 /**
- * @version $Id$
- *
+ * A {@link RenderableDefinition} configured in the configuration workspace.
  */
 public class ConfiguredRenderableDefinition implements RenderableDefinition {
     private String name;

@@ -39,9 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * A {@link TemplateDefinition} configured in the configuration workspace.
  */
 public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition implements TemplateDefinition {
 

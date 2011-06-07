@@ -49,7 +49,11 @@ import java.util.Map;
 
 import javax.jcr.Node;
 
-
+/**
+ * Default implementation of {@link RenderingEngine}. Maintains the {@link AggregationState}.
+ * @version $Id$
+ *
+ */
 public class DefaultRenderingEngine implements RenderingEngine {
 
     private static final Map<String, Object> EMPTY_CONTEXT = Collections.emptyMap();
@@ -58,7 +62,7 @@ public class DefaultRenderingEngine implements RenderingEngine {
     private TemplateDefinitionAssignment templateDefinitionAssignment;
 
     /**
-     * Proxy.
+     * Used to create an observed proxy object.
      */
     protected DefaultRenderingEngine() {
     }

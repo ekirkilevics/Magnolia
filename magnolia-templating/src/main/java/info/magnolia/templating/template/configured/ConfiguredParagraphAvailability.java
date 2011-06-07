@@ -39,13 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Keeps configuration for a paragraph - name and roles it is available for.
- *
- * @version $Id$
- *
- * TODO dlipp: implementation copied from info.magnolia.module.templatingkit.templates.ParagraphConfig as
- * templating-components has no dependency to templating. Check whether the impl in Templating should get
- * deprecated and references replaced by this impl.
+ * A {@link ParagraphAvailability} configured in the configuration workspace.
  */
 public class ConfiguredParagraphAvailability implements ParagraphAvailability {
 

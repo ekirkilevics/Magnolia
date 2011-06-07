@@ -42,9 +42,7 @@ import javax.jcr.Node;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * Base interface for all renderables. Defines for instance the template's title, template script and render type.
  */
 public interface RenderableDefinition {
 
@@ -69,7 +67,9 @@ public interface RenderableDefinition {
     /**
      * Create the model based on the current content.
      */
+    // FIXME get rid of this method
     public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
 
+    // FIXME get rid of this method
     public boolean isAvailable(Node content);
 }

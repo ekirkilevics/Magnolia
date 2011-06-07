@@ -40,9 +40,7 @@ import info.magnolia.templating.template.registry.ConfiguredTemplateDefinitionMa
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * Registers the observed managers: {@link ConfiguredTemplateDefinitionManager}, {@link ConfiguredRendererManager}.
  */
 public class TemplatingModule implements ModuleLifecycle {
 

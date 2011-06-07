@@ -39,9 +39,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Represents an area definition.
- *
- * @version $Id$
+ * A {@link AreaDefinition} configured in the configuration workspace.
  */
 public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition implements AreaDefinition {
 

@@ -42,16 +42,23 @@ import javax.jcr.Node;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * Renders content to a writer.
  */
 public interface RenderingEngine {
 
+    /**
+     * Renders the content with its assigned template. Uses {@link info.magnolia.templating.template.assignment.TemplateDefinitionAssignment}.
+     */
     public void render(Node content, Writer out) throws RenderException;
 
+    /**
+     * The context is exposed to the template script.
+     */
     public void render(Node content, Map<String, Object> context, Writer out) throws RenderException;
 
+    /**
+     * Uses a specific {@link RenderableDefinition} to render the content.
+     */
     public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws RenderException;
 
 }
