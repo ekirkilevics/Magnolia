@@ -41,6 +41,7 @@ import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.BooleanUtil;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.link.LinkUtil;
 import org.apache.commons.lang.LocaleUtils;
@@ -72,7 +73,7 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
             select.setName("locale");
             select.setEvent("onchange", "window.location = this.value");
 
-            Content currentPage = MgnlContext.getAggregationState().getMainContent();
+            Content currentPage = ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
             String currentUri = createURI(currentPage, i18nContentSupport.getLocale());
             select.setValue(currentUri);
 

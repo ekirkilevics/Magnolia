@@ -158,14 +158,14 @@
         <item name="Source Xref" href="/magnolia-module-admininterface/jxr.html" />
         <item name="JDepend Report" href="/magnolia-module-admininterface/jdepend-report.html" />
       </item>
-      <item name="templating" href="/magnolia-module-templating/index.html" collapse="true">
-        <item name="Dependencies" href="/magnolia-module-templating/dependencies.html" />
-        <item name="Javadoc" href="/magnolia-module-templating/apidocs/index.html" />
-        <item name="Checkstyle" href="/magnolia-module-templating/checkstyle.html" />
-        <item name="PMD" href="/magnolia-module-templating/pmd.html" />
-        <item name="Maven Surefire Report" href="/magnolia-module-templating/surefire-report.html" />
-        <item name="Source Xref" href="/magnolia-module-templating/jxr.html" />
-        <item name="JDepend Report" href="/magnolia-module-templating/jdepend-report.html" />
+      <item name="templating" href="/magnolia-templating/index.html" collapse="true">
+        <item name="Dependencies" href="/magnolia-templating/dependencies.html" />
+        <item name="Javadoc" href="/magnolia-templating/apidocs/index.html" />
+        <item name="Checkstyle" href="/magnolia-templating/checkstyle.html" />
+        <item name="PMD" href="/magnolia-templating/pmd.html" />
+        <item name="Maven Surefire Report" href="/magnolia-templating/surefire-report.html" />
+        <item name="Source Xref" href="/magnolia-templating/jxr.html" />
+        <item name="JDepend Report" href="/magnolia-templating/jdepend-report.html" />
       </item>
       <item name="cms taglib" href="/magnolia-taglib-cms/index.html" collapse="true">
         <item name="Javadoc" href="/magnolia-taglib-cms/apidocs/index.html" />

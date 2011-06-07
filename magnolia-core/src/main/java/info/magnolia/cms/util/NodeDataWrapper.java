@@ -128,7 +128,7 @@ public abstract class NodeDataWrapper implements NodeData {
     }
 
     @Override
-    public Property getJCRProperty() {
+    public Property getJCRProperty() throws PathNotFoundException {
         return getWrappedNodeData().getJCRProperty();
     }
 

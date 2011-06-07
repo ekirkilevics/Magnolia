@@ -33,19 +33,18 @@
  */
 package info.magnolia.module.wcm.workbench.column;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.jcr.util.MetaDataUtil;
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.ui.admincentral.column.AbstractEditableColumn;
 import info.magnolia.ui.admincentral.column.EditableSelect;
-import info.magnolia.ui.admincentral.jcr.TemporaryHackUtil;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -53,17 +52,19 @@ import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.vaadin.ui.Component;
 
 /**
- * A column that displays the currently selected template for a page and allows the editor to choose
- * from a list of available templates. Used in the website tree. Be aware that the value displayed
- * in the Widget is the I18NTitle - the value stored is the templates name.
+ * A column that displays the currently selected template for a page and allows the editor to choose from a list of
+ * available templates. Used in the website tree. Be aware that the value displayed in the Widget is the I18NTitle - the
+ * value stored is the templates name.
  *
- * @author dlipp
- * @author tmattsson
+ * @version $Id$
  */
 public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinition> implements Serializable {
+    private final TemplateDefinitionRegistry templateManager = Components.getComponent(TemplateDefinitionRegistry.class);
 
     public TemplateColumn(TemplateColumnDefinition def, EventBus eventBus, PlaceController placeController, Shell shell) {
         super(def, eventBus, placeController, shell);
@@ -77,24 +78,20 @@ public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinit
             protected String getLabelText(Item item) {
                 Node node = (Node) item;
                 String template = MetaDataUtil.getMetaData(node).getTemplate();
-                TemplateManager templateManager = TemplateManager.getInstance();
-                Template definition = templateManager.getTemplateDefinition(template);
-                return (definition != null) ? definition.getI18NTitle() : "";
+                try {
+                    return templateManager.getTemplateDefinition(template).getTitle();
+                } catch (TemplateDefinitionRegistrationException e) {
+                    return StringUtils.EMPTY;
+                }
             }
         };
     }
 
     private Map<String, String> getAvailableTemplates(Node node) {
         Map<String, String> map = new LinkedHashMap<String, String>();
-        TemplateManager templateManager = TemplateManager.getInstance();
 
-        // Temp: as long as TemplateManager cannot operate on pure JCR
-        Content content = TemporaryHackUtil.createHackContentFrom(node);
-
-        Iterator<Template> templates = templateManager.getAvailableTemplates(content);
-        while (templates.hasNext()) {
-            Template template = templates.next();
-            map.put(template.getI18NTitle(), template.getName());
+        for (TemplateDefinition templateDefinition : templateManager.getAvailableTemplates(node)) {
+            map.put(templateDefinition.getTitle(), templateDefinition.getName());
         }
         return map;
     }

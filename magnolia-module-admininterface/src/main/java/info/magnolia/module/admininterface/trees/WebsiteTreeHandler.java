@@ -36,14 +36,17 @@ package info.magnolia.module.admininterface.trees;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -54,11 +57,12 @@ import javax.servlet.http.HttpServletResponse;
 public class WebsiteTreeHandler extends AdminTreeMVCHandler {
     private static final Logger log = LoggerFactory.getLogger(WebsiteTreeHandler.class);
 
-    private final TemplateManager templateManager;
+    private final TemplateDefinitionRegistry templateManager;
 
     public WebsiteTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
-        templateManager = TemplateManager.getInstance();
+        // TODO dlipp: use IoC.
+        templateManager = Components.getComponent(TemplateDefinitionRegistry.class);
     }
 
     @Override
@@ -67,9 +71,10 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
         try {
             // todo: default template
             if (this.getCreateItemType().equals(ItemType.CONTENT.getSystemName())) {
+                // TODO dlipp: use JCR-API directly
                 Content parentNode = this.getHierarchyManager().getContent(this.getPath());
                 Content newNode = parentNode.getContent(this.getNewNodeName());
-                Template newTemplate = getDefaultTemplate(newNode);
+                TemplateDefinition newTemplate = getDefaultTemplate(newNode.getJCRNode());
                 if (newTemplate != null) {
                     newNode.getMetaData().setTemplate(newTemplate.getName());
                     newNode.save();
@@ -82,14 +87,14 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
         return view;
     }
 
-    protected Template getDefaultTemplate(Content node) {
+    protected TemplateDefinition getDefaultTemplate(Node node) {
         return templateManager.getDefaultTemplate(node);
     }
 
     @Override
     public String show() {
         //show start page if no templates present yet
-        if (!templateManager.getAvailableTemplates().hasNext()) {
+        if (templateManager.getTemplateDefinitions().isEmpty()) {
             try {
                 request.getRequestDispatcher("/.magnolia/pages/quickstart.html").forward(request, response);
                 return "";

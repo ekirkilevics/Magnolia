@@ -34,18 +34,23 @@
 package info.magnolia.cms.gui.inline;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.Access;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.io.Writer;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -199,7 +204,15 @@ public class BarEdit extends Bar {
      */
     public void drawHtml(Writer out) throws IOException {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        boolean isGranted = aggregationState.getMainContent().isGranted(Permission.SET);
+        final String stringPermissions = Access.convertPermissions(Permission.SET);
+        final Node mainContent = aggregationState.getMainContent();
+        boolean isGranted;
+        try {
+            isGranted = Access.isGranted(mainContent.getSession(), mainContent.getPath(), stringPermissions);
+        } catch (RepositoryException e) {
+            // TODO dlipp - apply consistent ExceptionHandling
+            throw new RuntimeException(e);
+        }
         if (!aggregationState.isPreviewMode() && isGranted && ServerConfiguration.getInstance().isAdmin()) {
             this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);"); //$NON-NLS-1$ //$NON-NLS-2$

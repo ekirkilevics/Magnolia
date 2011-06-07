@@ -34,8 +34,8 @@
 package info.magnolia.module.wcm;
 
 import info.magnolia.cms.util.PathUtil;
-import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.wcm.editor.ContentSelection;
+import info.magnolia.templating.template.TemplateDefinition;
 
 /**
  * Utility methods for the page editor that should be reviewed and placed elsewhere.
@@ -50,7 +50,7 @@ public class PageEditorHacks {
      * TODO this is used in a few more places (might be a good candidate to add to ParagraphManager)
      * See also {@link info.magnolia.module.admininterface.dialogs.ParagraphEditDialog}
      */
-    public static String getDialogUsedByParagraph(Paragraph paragraph) {
+    public static String getDialogUsedByParagraph(TemplateDefinition paragraph) {
         String dialogToUse = paragraph.getDialog();
         if (dialogToUse == null) {
             return paragraph.getName();

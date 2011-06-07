@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.wcm.toolbox.action;
 
-import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.module.wcm.editor.ContentSelection;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.framework.event.EventBus;
 
@@ -45,10 +45,10 @@ import info.magnolia.ui.framework.event.EventBus;
  */
 public class EditAreaAction extends AbstractEditAction<EditAreaActionDefinition> {
 
-    private TemplateManager templateManager;
+    private TemplateDefinitionRegistry templateDefinitionRegistry;
 
-    public EditAreaAction(EditAreaActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus, TemplateManager templateManager) {
+    public EditAreaAction(EditAreaActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus, TemplateDefinitionRegistry templateDefinitionRegistry) {
         super(definition, dialogPresenterFactory, selection, eventBus);
-        this.templateManager = templateManager;
+        this.templateDefinitionRegistry = templateDefinitionRegistry;
     }
 }

@@ -458,7 +458,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         final MockHierarchyManager hm = prepareHM(page);
 
         final AggregationState agg = new AggregationState();
-        agg.setMainContent(page);
+        agg.setMainContent(page.getJCRNode());
         final WebContext context = createStrictMock(WebContext.class);
         MgnlContext.setInstance(context);
         expect(context.getContextPath()).andReturn("/");

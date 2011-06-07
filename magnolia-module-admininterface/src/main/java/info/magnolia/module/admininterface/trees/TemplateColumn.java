@@ -33,16 +33,21 @@
  */
 package info.magnolia.module.admininterface.trees;
 
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.MessagesUtil;
-import org.apache.commons.lang.StringUtils;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Iterator;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.UnhandledException;
 
 /**
  * @author pbracher
@@ -50,12 +55,13 @@ import java.util.Iterator;
  *
  */
 public class TemplateColumn extends TreeColumn {
-    private final TemplateManager templateManager;
+    private final TemplateDefinitionRegistry templateManager;
     Select templateSelect;
 
     public TemplateColumn(String javascriptTree, HttpServletRequest request) {
         super(javascriptTree, request);
-        this.templateManager = TemplateManager.getInstance();
+        // TODO dlipp: use IoC here.
+        this.templateManager = Components.getComponent(TemplateDefinitionRegistry.class);
 
         templateSelect = new Select();
         templateSelect.setName(javascriptTree + TreeColumn.EDIT_NAMEADDITION);
@@ -76,21 +82,26 @@ public class TemplateColumn extends TreeColumn {
     public String getHtml() {
         Content content = this.getWebsiteNode();
         String templateName = content.getMetaData().getTemplate();
-        Template template = templateManager.getTemplateDefinition(templateName);
-        return template != null ? template.getI18NTitle() : StringUtils.defaultString(templateName);
+        TemplateDefinition template;
+        try {
+            template = templateManager.getTemplateDefinition(templateName);
+        }
+        catch (TemplateDefinitionRegistrationException e) {
+            throw new UnhandledException(e);
+        }
+        return template != null ? template.getTitle() : StringUtils.defaultString(templateName);
 
     }
 
     @Override
     public String getHtmlEdit() {
-        Iterator<Template> templates = templateManager.getAvailableTemplates(this.getWebsiteNode());
+        Collection<TemplateDefinition> templateDefinitons = templateManager.getAvailableTemplates(this.getWebsiteNode().getJCRNode());
 
         templateSelect.getOptions().clear();
 
-        while (templates.hasNext()) {
-            Template template = templates.next();
-            String title = MessagesUtil.javaScriptString(template.getI18NTitle());
-            templateSelect.setOptions(title, template.getName());
+        for (TemplateDefinition templateDefinition : templateDefinitons) {
+            String title = MessagesUtil.javaScriptString(templateDefinition.getTitle());
+            templateSelect.setOptions(title, templateDefinition.getName());
         }
         return templateSelect.getHtml();
     }

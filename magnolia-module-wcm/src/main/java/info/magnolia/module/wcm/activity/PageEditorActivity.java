@@ -37,8 +37,6 @@ import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.MetaDataUtil;
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.module.wcm.editor.PageChangedEvent;
 import info.magnolia.module.wcm.editor.PageChangedHandler;
 import info.magnolia.module.wcm.editor.PageEditor;
@@ -46,6 +44,9 @@ import info.magnolia.module.wcm.editor.SelectionChangedEvent;
 import info.magnolia.module.wcm.editor.SelectionType;
 import info.magnolia.module.wcm.place.PageEditorPlace;
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.View;
@@ -68,14 +69,14 @@ public class PageEditorActivity extends AbstractActivity implements PageChangedH
     private EventBus eventBus;
     private EditorView editorView;
     private URI2RepositoryManager uri2RepositoryManager;
-    private TemplateManager templateManager;
+    private TemplateDefinitionRegistry templateDefinitionRegistry;
 
-    public PageEditorActivity(ComponentProvider componentProvider, PageEditorPlace place, EventBus eventBus, URI2RepositoryManager uri2RepositoryManager, TemplateManager templateManager) {
+    public PageEditorActivity(ComponentProvider componentProvider, PageEditorPlace place, EventBus eventBus, URI2RepositoryManager uri2RepositoryManager, TemplateDefinitionRegistry templateDefinitionRegistry) {
         this.componentProvider = componentProvider;
         this.place = place;
         this.eventBus = eventBus;
         this.uri2RepositoryManager = uri2RepositoryManager;
-        this.templateManager = templateManager;
+        this.templateDefinitionRegistry = templateDefinitionRegistry;
 
         this.eventBus.addHandler(PageChangedEvent.class, this);
     }
@@ -99,10 +100,13 @@ public class PageEditorActivity extends AbstractActivity implements PageChangedH
             Session session = MgnlContext.getJCRSession(workspace);
             Node node = session.getNode(path);
             String template = MetaDataUtil.getMetaData(node).getTemplate();
-            Template templateDefinition = templateManager.getTemplateDefinition(template);
+            TemplateDefinition templateDefinition = templateDefinitionRegistry.getTemplateDefinition(template);
             return templateDefinition.getDialog();
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
+        } catch (TemplateDefinitionRegistrationException e1) {
+            // TODO dlipp: apply consistent ExceptionHandling.
+            throw new RuntimeException(e1);
         }
     }
 

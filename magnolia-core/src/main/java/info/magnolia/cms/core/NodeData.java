@@ -165,8 +165,9 @@ public interface NodeData extends Cloneable {
     /**
      * Access to property at the JCR level. Available only to be available, should not be used in normal circumstances!
      * @return Property
+     * @throws PathNotFoundException
      */
-    Property getJCRProperty();
+    Property getJCRProperty() throws PathNotFoundException;
 
     /**
      * set value of type <code>String</code>.

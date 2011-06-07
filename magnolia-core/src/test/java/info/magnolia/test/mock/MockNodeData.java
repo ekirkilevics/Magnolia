@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -151,7 +152,12 @@ public class MockNodeData extends AbstractNodeData {
     @Override
     public String getHandle() {
         try {
-            return getParent().getHandle() + "/" + this.getName();
+            if(getParent() != null){
+                return getParent().getHandle() + "/" + this.getName();
+            }
+            else{
+                return this.getName();
+            }
         }
         catch (RepositoryException e) {
             throw new RuntimeException("Can't build handle", e);
@@ -227,8 +233,11 @@ public class MockNodeData extends AbstractNodeData {
     }
 
     @Override
-    public Property getJCRProperty() {
-        return new MockJCRProperty(this);
+    public Property getJCRProperty() throws PathNotFoundException {
+        if(isExist()){
+            return new MockJCRProperty(this);
+        }
+        throw new PathNotFoundException(getHandle());
     }
 
     @Override

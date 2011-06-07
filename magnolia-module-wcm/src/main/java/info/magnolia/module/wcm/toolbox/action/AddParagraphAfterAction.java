@@ -33,17 +33,18 @@
  */
 package info.magnolia.module.wcm.toolbox.action;
 
+import info.magnolia.cms.util.PathUtil;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.module.wcm.PageEditorHacks;
+import info.magnolia.module.wcm.editor.ContentSelection;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
+import info.magnolia.ui.framework.event.EventBus;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.Application;
-import info.magnolia.cms.util.PathUtil;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.wcm.PageEditorHacks;
-import info.magnolia.module.wcm.editor.ContentSelection;
-import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
-import info.magnolia.ui.framework.event.EventBus;
 
 /**
  * Opens a dialog for adding a paragraph after another paragraph.
@@ -61,7 +62,7 @@ public class AddParagraphAfterAction extends AbstractAddParagraphAction<AddParag
     }
 
     @Override
-    protected void onPreSave(Node node, Paragraph paragraph) throws RepositoryException {
+    protected void onPreSave(Node node, TemplateDefinition paragraph) throws RepositoryException {
         NodeUtil.orderAfter(node, PathUtil.getFileName(selection.getPath()));
         super.onPreSave(node, paragraph);
     }

@@ -37,7 +37,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
@@ -406,18 +405,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     @Override
     public boolean isGranted(String path, long oldPermissions) {
-        String permissions = "";
-        //TODO: review && convert all the permissions properly
-        if ((oldPermissions & Permission.ALL) == Permission.ALL) {
-            permissions = Session.ACTION_ADD_NODE + "," + Session.ACTION_READ + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY;
-        } else if ((oldPermissions & Permission.WRITE) == Permission.WRITE) {
-            permissions = Session.ACTION_ADD_NODE;
-        }
-        else if ((oldPermissions & Permission.READ) == Permission.READ) {
-            permissions = Session.ACTION_READ;
-        }
-
-        return (Access.isGranted(jcrSession, path, permissions));
+        return (Access.isGranted(jcrSession, path, Access.convertPermissions(oldPermissions)));
     }
 
     /**

@@ -33,9 +33,14 @@
  */
 package info.magnolia.jcr.util;
 
+import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -253,6 +258,18 @@ public class NodeUtil {
     }
 
     /**
+     * @return Whether the provided node as the provided permission or not.
+     * @throws RuntimeException in case of RepositoryException.
+     */
+    public static boolean isGranted(Node node, long permissions) {
+        try {
+            return Access.isGranted(node.getSession(), node.getPath(), Access.convertPermissions(permissions));
+        } catch (RepositoryException e) {
+            // TODO dlipp - apply consistent ExceptionHandling
+            throw new RuntimeException(e);
+        }
+    }
+    /**
      * Returns true if both arguments represents the same node. In case the nodes are wrapped the comparison is done
      * one the actual nodes behind the wrappers.
      */
@@ -265,5 +282,18 @@ public class NodeUtil {
             return "/" + name;
         }
         return path + "/" + name;
+    }
+
+    public static Collection<Node> getChildCollection(Node jcrNode) {
+        List<Node> children = new ArrayList<Node>();
+        try {
+            NodeIterator iter = jcrNode.getNodes();
+            while (iter.hasNext()) {
+                children.add(iter.nextNode());
+            }
+        } catch (RepositoryException e) {
+            log.error("Failed to read children of " + jcrNode, e);
+        }
+        return children;
     }
 }

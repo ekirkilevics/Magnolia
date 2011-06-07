@@ -46,18 +46,22 @@ import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.DialogMVCHandler;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.Iterator;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -124,8 +128,14 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         return dialog;
     }
 
-    protected void addParagraph(DialogButtonSet radioButtonSet, String paragraph) {
-        final Paragraph paragraphInfo = ParagraphManager.getInstance().getParagraphDefinition(paragraph);
+    protected void addParagraph(DialogButtonSet radioButtonSet, String paragraphName) {
+        TemplateDefinition paragraphInfo;
+        try {
+            paragraphInfo = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(paragraphName);
+        } catch (TemplateDefinitionRegistrationException e) {
+            // TODO dlipp: apply consistent ExceptionHandling.
+            throw new RuntimeException(e);
+        }
 
         // prevent NPEs
         if (paragraphInfo == null) {

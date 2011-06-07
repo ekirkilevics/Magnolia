@@ -83,4 +83,8 @@ public class MetaDataUtil {
         return (meta.hasProperty(lastMod)) ? meta.getProperty(lastMod).getDate() : null;
     }
 
+    public static String getTemplate(Node node) {
+        return getMetaData(node).getTemplate();
+    }
+
 }

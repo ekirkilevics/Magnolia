@@ -35,6 +35,7 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 
 import java.text.MessageFormat;
@@ -42,10 +43,12 @@ import java.text.MessageFormat;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Simply utility class for AccessManager.
  *
- * @author Sameer Charles $Id$
+ * @version $Id$
  */
 public final class Access {
 
@@ -88,10 +91,51 @@ public final class Access {
      * Return whether given session has requested permission on provided path.
      */
     public static boolean isGranted(Session jcrSession, String path, String action) {
+        // FIXME: treat custom permission that don't exist on Session.
+        if (StringUtils.isBlank(action)) {
+            return false;
+        }
         try {
             return jcrSession.hasPermission( path, action);
         } catch (RepositoryException e) {
             return false;
         }
+    }
+
+    /**
+     * Return String-representation of permissions convert from provided long-permission (old).
+     */
+    public static String convertPermissions(long oldPermissions) {
+        StringBuilder permissions = new StringBuilder();
+        if ((oldPermissions & Permission.ALL) == Permission.ALL) {
+            permissions.append(Session.ACTION_ADD_NODE).append(",").append(Session.ACTION_READ).append(",").append(Session.ACTION_REMOVE + ",").append(Session.ACTION_SET_PROPERTY);
+            // skip the rest to be sure we don't introduce duplicates.
+            return permissions.toString();
+        }
+        if ((oldPermissions & Permission.WRITE) == Permission.WRITE) {
+            if (permissions.length() > 0) {
+                permissions.append(",");
+            }
+            permissions.append(Session.ACTION_ADD_NODE);
+        }
+        if ((oldPermissions & Permission.READ) == Permission.READ) {
+            if (permissions.length() > 0) {
+                permissions.append(",");
+            }
+            permissions.append(Session.ACTION_READ);
+        }
+        if ((oldPermissions & Permission.REMOVE) == Permission.REMOVE) {
+            if (permissions.length() > 0) {
+                permissions.append(",");
+            }
+            permissions.append(Session.ACTION_REMOVE);
+        }
+        if ((oldPermissions & Permission.SET) == Permission.SET) {
+            if (permissions.length() > 0) {
+                permissions.append(",");
+            }
+            permissions.append(Session.ACTION_SET_PROPERTY);
+        }
+        return permissions.toString();
     }
 }

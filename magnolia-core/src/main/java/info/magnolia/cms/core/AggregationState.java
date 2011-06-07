@@ -36,9 +36,11 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.context.MgnlContext;
 
-import java.util.Locale;
-import java.net.URLDecoder;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Locale;
+
+import javax.jcr.Node;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -58,8 +60,8 @@ public class AggregationState {
     private String extension;
     private File file;
     private String handle;
-    private Content mainContent;
-    private Content currentContent;
+    private Node mainContent;
+    private Node currentContent;
     private String repository;
     private String selector;
     private String templateName;
@@ -162,19 +164,19 @@ public class AggregationState {
         this.handle = handle;
     }
 
-    public Content getMainContent() {
+    public Node getMainContent() {
         return mainContent;
     }
 
-    public void setMainContent(Content mainContent) {
+    public void setMainContent(Node mainContent) {
         this.mainContent = mainContent;
     }
 
-    public Content getCurrentContent() {
+    public Node getCurrentContent() {
         return currentContent;
     }
 
-    public void setCurrentContent(Content currentContent) {
+    public void setCurrentContent(Node currentContent) {
         this.currentContent = currentContent;
     }
 
@@ -251,9 +253,8 @@ public class AggregationState {
         String contextPath = MgnlContext.getContextPath();
         if (uri != null && uri.startsWith(contextPath + "/")) {
             return StringUtils.removeStart(uri, contextPath);
-        } else {
-            return uri;
         }
+        return uri;
     }
 
     /**

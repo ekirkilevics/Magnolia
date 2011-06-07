@@ -55,6 +55,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,6 +122,9 @@ public class ClasspathResourcesUtil {
         if (cl instanceof URLClassLoader) {
             final URLClassLoader urlClassLoader = (URLClassLoader) cl;
             final URL[] urls = urlClassLoader.getURLs();
+            if(log.isDebugEnabled()){
+                log.debug("Loading resources from: " + ArrayUtils.toString(urls));
+            }
             if (urls.length == 1 && urls[0].getPath().endsWith("WEB-INF/classes/")) {
                 // working around MAGNOLIA-2577
                 log.warn("Looks like we're in a JBoss 5 expanded war directory, will attempt to load resources from the file system instead; see MAGNOLIA-2577.");
