@@ -342,6 +342,46 @@
         </sv:property>
       </sv:node>
     </sv:node>
+    <sv:node sv:name="link">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
+        <sv:value>mix:lockable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>312ef8eb-033b-4ae9-ad3b-4724cec4a1e4</sv:value>
+      </sv:property>
+      <sv:property sv:name="definition" sv:type="String">
+        <sv:value>info.magnolia.ui.model.dialog.definition.LinkFieldDefinition</sv:value>
+      </sv:property>
+      <sv:property sv:name="implementation" sv:type="String">
+        <sv:value>info.magnolia.ui.admincentral.dialog.field.DialogLinkField</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:authorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+          <sv:value>2011-06-01T15:19:44.678+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+          <sv:value>2011-06-07T13:49:47.337+02:00</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
     <sv:node sv:name="upload">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
