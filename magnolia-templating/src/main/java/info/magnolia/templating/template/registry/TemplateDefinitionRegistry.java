@@ -34,6 +34,7 @@
 package info.magnolia.templating.template.registry;
 
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.templating.template.TemplateDefinition;
 
@@ -88,6 +89,7 @@ public class TemplateDefinitionRegistry {
         return templateDefinitionProvider.getTemplateDefinition();
     }
 
+    // TODO move this to an independent template availability component
     public Iterator<TemplateDefinition> getAvailableTemplates(Node content) {
         List<TemplateDefinition> templateList = new ArrayList<TemplateDefinition>();
 
@@ -113,6 +115,32 @@ public class TemplateDefinitionRegistry {
             }
         }
         return templateList.iterator();
+    }
+
+    /**
+     * Get the Template that could be used for the provided Content as a default.
+     */
+    // TODO move this to an independent template availability component
+    public TemplateDefinition getDefaultTemplate(Node content) {
+        TemplateDefinition tmpl;
+            try {
+                // try to use the same as the parent
+                tmpl = this.getTemplateDefinition(MetaDataUtil.getTemplate(content));
+                if(tmpl != null && tmpl.isAvailable(content)){
+                    return tmpl;
+                }
+                // otherwise use the first available template
+                else{
+                    Iterator<TemplateDefinition> templates = getAvailableTemplates(content);
+                    if (templates.hasNext()) {
+                        return templates.next();
+                    }
+                }
+            }
+            catch (TemplateDefinitionRegistrationException e) {
+                log.error("Can't resolve default template for node " + content, e);
+            }
+            return null;
     }
 
 }
