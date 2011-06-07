@@ -41,8 +41,11 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.rendering.RenderingEngine;
 import info.magnolia.templating.template.AreaDefinition;
+import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.templating.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.templating.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.templating.template.configured.ConfiguredParagraphAvailability;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -92,7 +95,7 @@ public class AreaComponent extends AbstractContentComponent {
 
         // Can already be set - or not. If not, we set it in order to avoid tons of if statements in the beyond code...
         if (area == null) {
-            area = new ConfiguredAreaDefinition();
+            area = resolveAreaDefinition();
         }
 
         param(out, "name", resolveName());
@@ -102,6 +105,26 @@ public class AreaComponent extends AbstractContentComponent {
         param(out, "showAddButton", String.valueOf(shouldShowAddButton()));
 
         out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_AREA).append(GREATER_THAN).append(LINEBREAK);
+    }
+
+    protected AreaDefinition resolveAreaDefinition() throws RenderException  {
+        if(!StringUtils.isEmpty(name)){
+
+            // FIXME the actual template definition is not necessery bound to the the current content
+            // we have to set the template definition on a RenderingContext or similar
+            final TemplateDefinitionAssignment templateDefinitionAssignment = Components.getComponent(TemplateDefinitionAssignment.class);
+            TemplateDefinition templateDefinition;
+            try {
+                templateDefinition = templateDefinitionAssignment.getAssignedTempalteDefinition(getAggregationState().getCurrentContent());
+            }
+            catch (TemplateDefinitionRegistrationException e) {
+                throw new RenderException("Can't render area", e);
+            }
+            if(templateDefinition.getAreas().containsKey(name)){
+                return templateDefinition.getAreas().get(name);
+            }
+        }
+        return new ConfiguredAreaDefinition();
     }
 
     @Override
@@ -114,10 +137,11 @@ public class AreaComponent extends AbstractContentComponent {
                 // TODO IoC
                 RenderingEngine renderingEngine = Components.getComponent(RenderingEngine.class);
 
-                // TODO need to get writer some other way
+                // FIXME should use the passed out Appendable
                 PrintWriter writer = MgnlContext.getWebContext().getResponse().getWriter();
 
                 if (resolveType().equals(TYPE_LIST)) {
+                    // FIXME delegate to the area's script or use a default script
                     Node areaNode = content.getNode(resolveName());
                     NodeIterator nodeIterator = areaNode.getNodes();
                     while (nodeIterator.hasNext()) {
@@ -127,6 +151,7 @@ public class AreaComponent extends AbstractContentComponent {
                         }
                     }
                 } else if (resolveType().equals(TYPE_SINGLE)) {
+                    // FIXME delegate to the area's script or use a default script
                     // TODO we should suppress any editbar inside the paragraph rendered here
                     Node paragraphNode = content.getNode(resolveName());
                     renderParagraph(renderingEngine, writer, paragraphNode);
