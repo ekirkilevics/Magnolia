@@ -35,7 +35,9 @@ package info.magnolia.module.templatingcomponents.functions;
 
 import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.Content;
+import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.jcr.MockNode;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -50,11 +52,21 @@ import org.junit.Test;
 public class TemplatingFunctionsTest {
 
     @Test
-    public void testAsJCRNode() throws RepositoryException {
+    public void testAsJCRNodeFromContent() throws RepositoryException {
         TemplatingFunctions functions = new TemplatingFunctions();
         String name = "test";
         MockContent content = new MockContent(name);
         Node node = functions.asJCRNode(content);
+        assertEquals(name, node.getName());
+    }
+
+    @Test
+    public void testAsJCRNodeFromContentMap() throws RepositoryException {
+        TemplatingFunctions functions = new TemplatingFunctions();
+        String name = "test";
+        MockNode root = new MockNode(name);
+        ContentMap map = new ContentMap(root);
+        Node node = functions.asJCRNode(map);
         assertEquals(name, node.getName());
     }
 
