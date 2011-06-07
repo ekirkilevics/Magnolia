@@ -39,7 +39,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
@@ -62,6 +66,8 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
  */
 public class DialogViewImpl extends Window implements DialogView {
 
+    private static final Logger log = LoggerFactory.getLogger(DialogViewImpl.class);
+
     private static class Tab implements HasEditors, HasEditorErrors {
 
         private String name;
@@ -75,7 +81,7 @@ public class DialogViewImpl extends Window implements DialogView {
         public void showErrors(List<EditorError> errors) {
             for (EditorError error : errors) {
                 if (editors.indexOf(error.getEditor()) != -1) {
-                    System.out.println("Error in tab " + name);
+                    log.error("Error in tab {}", name);
                     // TODO should highlight the tab to indicate the error
                 }
             }
@@ -119,7 +125,7 @@ public class DialogViewImpl extends Window implements DialogView {
         save.addStyleName("primary");
         save.setClickShortcut(ShortcutAction.KeyCode.ENTER, ShortcutAction.ModifierKey.CTRL);
         buttons.addComponent(save);
-        buttons.setComponentAlignment(save, "right");
+        buttons.setComponentAlignment(save, Alignment.MIDDLE_RIGHT);
 
         Button cancel = new Button("Cancel", new Button.ClickListener() {
 
@@ -130,7 +136,7 @@ public class DialogViewImpl extends Window implements DialogView {
         });
         cancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
         buttons.addComponent(cancel);
-        buttons.setComponentAlignment(cancel, "right");
+        buttons.setComponentAlignment(cancel, Alignment.MIDDLE_RIGHT);
 
         tabSheet = new VerticalTabSheet();
         tabSheet.setSizeFull();
@@ -146,7 +152,7 @@ public class DialogViewImpl extends Window implements DialogView {
         layout.addComponent(tabSheet);
         layout.addComponent(description);
         layout.addComponent(buttons);
-        layout.setComponentAlignment(buttons, "right");
+        layout.setComponentAlignment(buttons, Alignment.MIDDLE_RIGHT);
 
         super.getContent().addComponent(layout);
     }
