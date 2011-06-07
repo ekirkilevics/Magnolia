@@ -222,7 +222,7 @@ public class TextFieldAndButtonComponent extends CustomComponent implements Fiel
         return field.getRequiredError();
     }
 
-    public TextField getField() {
+    public TextField getTextField() {
         return field;
     }
 

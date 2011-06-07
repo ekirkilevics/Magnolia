@@ -66,7 +66,7 @@ public class DialogLinkField extends AbstractVaadinFieldDialogField {
         LinkFieldDefinition definition = (LinkFieldDefinition) getFieldDefinition();
         TextFieldAndButtonComponent linkField = new TextFieldAndButtonComponent();
 
-        linkField.getField().addListener(new FieldEvents.FocusListener() {
+        linkField.getTextField().addListener(new FieldEvents.FocusListener() {
             @Override
             public void focus(FieldEvents.FocusEvent event) {
                 getDialogPresenter().onFocus(DialogLinkField.this);
