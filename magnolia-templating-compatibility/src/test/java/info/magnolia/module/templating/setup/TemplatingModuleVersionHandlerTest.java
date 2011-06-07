@@ -73,37 +73,6 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
     }
 
     // fixed by 4.0.3 or 4.1.1
-    public void testPre4_0TemplatesAreFixedProperly() throws Exception {
-        // fake pre-install
-        setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter"); // old RenderingFilter fqn
-        setupConfigProperty("/server/filters/cms/backwardCompatibility", "class", BackwardCompatibilityFilter.class.getName());
-        setupConfigNode("/server/rendering/freemarker/sharedVariables"); // this is assumed to have been created by CoreModuleVersionHandler
-
-        // setup a template, with pre-4.0 properties
-        final String tplPath = "/modules/test/templates/myTemplate";
-        setupTemplateNode("test", "myTemplate");
-        setupConfigProperty(tplPath, "title", "My Test Template");
-        setupConfigProperty(tplPath, "path", "/some/path.ftl");
-        setupConfigProperty(tplPath, "someProperty", "someValue");
-
-        final InstallContext ctx = executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("3.7"));
-
-        final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
-        assertConfig("My Test Template", tplPath + "/title");
-        
-        // 5.0 renames templatePath to templateScript
-        assertConfig("/some/path.ftl", tplPath + "/templateScript");
-        // non-standard props are supposed to be moved to the "parameters" subnode
-        assertConfig("someValue", tplPath + "/parameters/someProperty");
-        assertFalse("path property should have been removed", hm.isExist(tplPath + "/path"));
-        assertFalse("path property should have been removed", hm.isExist(tplPath + "/parameters/path"));
-        assertFalse("path property should have been removed", hm.isExist(tplPath + "/parameters/templatePath"));
-        assertFalse("path property should have been renamed to templatePath and be in the template's def. node", hm.isExist(tplPath + "/parameters/templatePath"));
-
-        assertNoMessages(ctx);
-    }
-
-    // fixed by 4.0.3 or 4.1.1
     public void testMisfixedTemplatesFrom402AreFixed() throws Exception {
         // fake pre-install
         setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter"); // old RenderingFilter fqn
