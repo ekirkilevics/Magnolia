@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+bot4oj * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -38,7 +38,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.gui.i18n.DefaultI18nAuthoringSupport;
 import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
@@ -49,15 +48,18 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.module.templating.RenderException;
-import info.magnolia.module.templating.engine.RenderingEngine;
+import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.rendering.RenderingEngine;
+import info.magnolia.templating.template.RenderableDefinition;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Map;
 
+import javax.jcr.Node;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -70,14 +72,30 @@ import org.junit.Test;
  * @version $Id$
  */
 public class RenderComponentTest {
+    private static final class DummyRenderingEngine implements RenderingEngine {
+        @Override
+        public void render(Node content, Writer out) throws RenderException {
+        }
+
+        @Override
+        public void render(Node content, Map<String, Object> context, Writer out) throws RenderException {
+        }
+
+        @Override
+        public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws RenderException {
+        }
+    }
+
     @Test
     public void testDoRender() throws Exception {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
+        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
+        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
         final WebContext ctx = mock(WebContext.class);
+        final HttpServletResponse response = mock(HttpServletResponse.class);
+        when(ctx.getResponse()).thenReturn(response);
         MgnlContext.setInstance(ctx);
 
         final ServerConfiguration serverCfg = new ServerConfiguration();
@@ -87,6 +105,7 @@ public class RenderComponentTest {
         ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
+        ComponentsTestUtil.setInstance(RenderingEngine.class, new DummyRenderingEngine());
 
         final RenderComponent marker = new RenderComponent(serverCfg, aggregationState);
         final StringWriter out = new StringWriter();
@@ -105,8 +124,8 @@ public class RenderComponentTest {
                 "/foo/bar/baz/paragraphs/01@uuid=100");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
+        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
+        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
 
         HttpServletRequest req = mock(HttpServletRequest.class);
         req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
@@ -129,15 +148,7 @@ public class RenderComponentTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        ComponentsTestUtil.setInstance(RenderingEngine.class, new RenderingEngine() {
-            @Override
-            public void render(Content content, Writer out) throws RenderException {
-
-            }
-            @Override
-            public void render(Content content, String definitionName, Writer out) throws RenderException {
-            }
-        });
+        ComponentsTestUtil.setInstance(RenderingEngine.class, new DummyRenderingEngine());
 
         final RenderComponent marker = new RenderComponent(serverCfg, aggregationState);
 

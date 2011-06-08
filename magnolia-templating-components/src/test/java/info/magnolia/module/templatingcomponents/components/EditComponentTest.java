@@ -34,7 +34,8 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -46,8 +47,8 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
+import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
+import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -71,8 +72,8 @@ public class EditComponentTest {
         );
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
+        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
+        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
         final WebContext ctx = mock(WebContext.class);
         MgnlContext.setInstance(ctx);
 
@@ -84,13 +85,13 @@ public class EditComponentTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        Paragraph testParagraph0 = new Paragraph();
+        ConfiguredTemplateDefinition testParagraph0 = new ConfiguredTemplateDefinition();
         testParagraph0.setName("testParagraph0");
         testParagraph0.setTitle("Test Paragraph 0");
 
-        ParagraphManager paragraphManager = mock(ParagraphManager.class);
-        when(paragraphManager.getParagraphDefinition("testParagraph0")).thenReturn(testParagraph0);
-        ComponentsTestUtil.setInstance(ParagraphManager.class, paragraphManager);
+        TemplateDefinitionRegistry paragraphManager = mock(TemplateDefinitionRegistry.class);
+        when(paragraphManager.getTemplateDefinition("testParagraph0")).thenReturn(testParagraph0);
+        ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, paragraphManager);
 
         final EditComponent marker = new EditComponent(serverCfg, aggregationState);
         StringWriter out = new StringWriter();
@@ -122,8 +123,8 @@ public class EditComponentTest {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
+        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
+        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
         final WebContext ctx = mock(WebContext.class);
         MgnlContext.setInstance(ctx);
 
