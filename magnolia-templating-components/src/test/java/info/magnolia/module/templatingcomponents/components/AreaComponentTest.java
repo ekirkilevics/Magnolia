@@ -35,6 +35,7 @@ package info.magnolia.module.templatingcomponents.components;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -46,11 +47,15 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.templating.template.assignment.TemplateDefinitionAssignment;
+import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.StringWriter;
+
+import javax.jcr.Node;
 
 import org.junit.After;
 import org.junit.Test;
@@ -66,8 +71,9 @@ public class AreaComponentTest {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
+        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
+        final Node paragraph01 = hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode();
+        aggregationState.setCurrentContent(paragraph01);
         final WebContext ctx = mock(WebContext.class);
         MgnlContext.setInstance(ctx);
 
@@ -78,6 +84,13 @@ public class AreaComponentTest {
         ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
+
+        final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
+        final ConfiguredTemplateDefinition templateDefinition = new ConfiguredTemplateDefinition();
+        when(templateDefinitionAssignment.getAssignedTempalteDefinition(paragraph01)).thenReturn(templateDefinition);
+
+        ComponentsTestUtil.setInstance(TemplateDefinitionAssignment.class, templateDefinitionAssignment);
+
 
         final AreaComponent marker = new AreaComponent(serverCfg, aggregationState);
         marker.setName("test");
@@ -117,8 +130,8 @@ public class AreaComponentTest {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
+        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
+        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
         final WebContext ctx = mock(WebContext.class);
         MgnlContext.setInstance(ctx);
 

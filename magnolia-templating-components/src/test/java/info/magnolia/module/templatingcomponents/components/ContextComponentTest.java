@@ -67,8 +67,8 @@ public class ContextComponentTest {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
+        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
+        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
         final WebContext ctx = mock(WebContext.class);
         final String name = "name1";
         final String value = "value1";
