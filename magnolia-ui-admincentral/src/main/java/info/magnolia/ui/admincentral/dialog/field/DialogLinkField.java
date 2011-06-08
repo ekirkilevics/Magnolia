@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
+import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.ui.admincentral.dialog.view.DialogView.Presenter;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
@@ -73,7 +74,7 @@ public class DialogLinkField extends AbstractVaadinFieldDialogField {
             }
         });
 
-        linkField.getButton().setCaption(definition.getButtonLabel());
+        linkField.getButton().setCaption(MessagesUtil.getWithDefault(definition.getButtonLabel(), definition.getButtonLabel()));
         linkField.getButton().addListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
