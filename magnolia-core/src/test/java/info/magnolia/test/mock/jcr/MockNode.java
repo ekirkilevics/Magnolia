@@ -84,6 +84,21 @@ public class MockNode extends MockItem implements Node {
         super(name);
     }
 
+    public MockNode(String name, Map<String, MockValue> properties, Map<String, MockNode> children) {
+        this(name);
+        Iterator<String> propertiesIterator = properties.keySet().iterator();
+        while (propertiesIterator.hasNext()) {
+            String propertyName = propertiesIterator.next();
+            setProperty(propertyName, properties.get(propertyName));
+
+        }
+        Iterator<MockNode> childrenIterator = children.values().iterator();
+        while(childrenIterator.hasNext()) {
+            MockNode child = childrenIterator.next();
+            addNode(child);
+        }
+    }
+
     @Override
     public void accept(ItemVisitor visitor) throws RepositoryException {
         visitor.visit(this);

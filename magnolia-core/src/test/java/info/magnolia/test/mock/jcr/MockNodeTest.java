@@ -39,6 +39,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.jcr.ItemVisitor;
 import javax.jcr.Node;
@@ -59,6 +61,36 @@ public class MockNodeTest {
     @Before
     public void init() {
         root = new MockNode("root");
+    }
+
+    @Test
+    public void testConstructionFromNamePropertiesAndChildren() throws Exception {
+        Map<String, MockValue> properties = new LinkedHashMap<String, MockValue>();
+        Map<String, MockNode> children = new LinkedHashMap<String, MockNode>();
+        final String nodeName = "name";
+        final MockNode node = new MockNode(nodeName, properties, children);
+        assertTrue(!node.hasProperties());
+        assertTrue(!node.hasNodes());
+
+        // now add property
+        MockValue sampleValue = new MockValue("test");
+        final String propertyName = "property";
+        properties.put(propertyName, sampleValue);
+        final MockNode nodeWithProperty = new MockNode(nodeName, properties, children);
+        assertTrue(!nodeWithProperty.hasNodes());
+        assertTrue(nodeWithProperty.hasProperties());
+        assertEquals(sampleValue, nodeWithProperty.getProperty(propertyName).getValue());
+
+        // and finally a child
+        final String childName = "childOne";
+        final MockNode child = new MockNode(childName);
+        children.put(childName, child);
+
+        final MockNode nodeWithPropertyAndChild = new MockNode(nodeName, properties, children);
+        assertTrue(nodeWithPropertyAndChild.hasProperties());
+        assertEquals(sampleValue, nodeWithPropertyAndChild.getProperty(propertyName).getValue());
+        assertTrue(nodeWithPropertyAndChild.hasNodes());
+        assertEquals(child, nodeWithPropertyAndChild.getNode(childName));
     }
 
     @Test
