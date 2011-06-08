@@ -37,7 +37,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
+import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 
 import java.io.IOException;
 import java.io.Writer;
