@@ -63,7 +63,7 @@ public class DialogLinkField extends AbstractVaadinFieldDialogField {
 
     @Override
     public Field getField() {
-        LinkFieldDefinition definition = (LinkFieldDefinition) getFieldDefinition();
+        final LinkFieldDefinition definition = (LinkFieldDefinition) getFieldDefinition();
         TextAndButtonField linkField = new TextAndButtonField();
 
         linkField.getTextField().addListener(new FieldEvents.FocusListener() {
@@ -77,7 +77,8 @@ public class DialogLinkField extends AbstractVaadinFieldDialogField {
         linkField.getButton().addListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                //TODO open a modal dialog to browse configured workspace.
+                //TODO open a modal dialog to browse configured workspace. We need a reference to the modal holding this field and open on top on this.
+                //Adding to the main application window does not seem to work.
             }
         });
         return linkField;

@@ -103,7 +103,8 @@ public class VaadinDialogBuilder implements DialogBuilder {
 
         dialog.addField(tabDefinition.getName(), dialogField.getComponent());
         Editor editor = dialogField.getEditor();
-        if (editor != null)
+        if (editor != null) {
             dialog.addEditor(tabDefinition, editor);
+        }
     }
 }
