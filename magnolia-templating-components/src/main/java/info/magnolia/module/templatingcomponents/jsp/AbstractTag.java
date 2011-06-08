@@ -52,12 +52,11 @@ import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.commons.collections.EnumerationUtils;
-;
 
 /**
  * Base class for jsp tags. Subclasses need to implement the {@link AbstractTag#prepareUIComponent(ServerConfiguration, AggregationState)} method.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ *
+ * @version $Id$
  */
 public abstract class AbstractTag extends SimpleTagSupport {
 
