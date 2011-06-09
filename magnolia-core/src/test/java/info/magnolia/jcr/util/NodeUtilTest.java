@@ -84,6 +84,11 @@ public class NodeUtilTest {
         assertFalse(NodeUtil.hasMixin(node, "mixin2"));
     }
 
+    @Test(expected=IllegalArgumentException.class)
+    public void testHasMixinFailsWithEmptyMixin() throws Exception {
+        NodeUtil.hasMixin(root, null);
+    }
+
     @Test
     public void testUnwrap() throws Exception {
         final MockNode wrapped = new MockNode("wrapped");
