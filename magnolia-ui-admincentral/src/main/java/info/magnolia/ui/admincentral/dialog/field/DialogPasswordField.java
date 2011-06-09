@@ -54,6 +54,7 @@ public class DialogPasswordField extends AbstractDialogField implements EditorSo
 
     private PasswordField passwordField;
     private PasswordField verificationField;
+    private DialogFieldEditorStrategy editorStrategy;
 
     public DialogPasswordField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
@@ -74,7 +75,8 @@ public class DialogPasswordField extends AbstractDialogField implements EditorSo
         }
 
         Class<?> type = getFieldType(fieldDefinition);
-        this.editor = new DialogFieldEditorStrategy(this, fieldDefinition, type, view);
+        editorStrategy = new DialogFieldEditorStrategy(this, fieldDefinition, type, view);
+        this.editor = editorStrategy;
     }
 
     @Override
@@ -83,7 +85,7 @@ public class DialogPasswordField extends AbstractDialogField implements EditorSo
         if (verificationField != null) {
             Object verificationFieldValue = verificationField.getValue();
             if (!value.equals(verificationFieldValue)) {
-                this.editor.recordError("Passwords do not match", value);
+                this.editorStrategy.recordError("Passwords do not match", value);
             }
         }
         return value;

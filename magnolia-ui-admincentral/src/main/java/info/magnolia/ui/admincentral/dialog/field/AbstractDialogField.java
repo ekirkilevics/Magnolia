@@ -58,7 +58,7 @@ public abstract class AbstractDialogField implements DialogField {
     protected FieldDefinition fieldDefinition;
     protected DialogView.Presenter presenter;
     protected DialogFieldView view;
-    protected DialogFieldEditorStrategy editor;
+    protected Editor editor;
 
     protected AbstractDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         this.dialogDefinition = dialogDefinition;

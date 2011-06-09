@@ -108,31 +108,22 @@ public class DialogFieldEditorStrategy<T> implements ValueEditor<T>, HasEditorDe
         if (value == null) {
             return value;
         }
+        if (targetType.isAssignableFrom(value.getClass())) {
+            return value;
+        }
         if (targetType.equals(String.class)) {
-            if (value instanceof String) {
-                return value;
-            }
             return value.toString();
         } else if (targetType.equals(Date.class)) {
-            if (value instanceof Date) {
-                return value;
-            }
             if (value instanceof Calendar) {
                 return ((Calendar) value).getTime();
             }
         } else if (targetType.equals(Calendar.class)) {
-            if (value instanceof Calendar) {
-                return value;
-            }
             if (value instanceof Date) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime((Date) value);
                 return calendar;
             }
         } else if (targetType.equals(Long.class)) {
-            if (value instanceof Long) {
-                return value;
-            }
             if (value instanceof String) {
                 if (StringUtils.isEmpty((String) value)) {
                     return 0L;
@@ -140,9 +131,6 @@ public class DialogFieldEditorStrategy<T> implements ValueEditor<T>, HasEditorDe
                 return Long.valueOf((String) value);
             }
         } else if (targetType.equals(Double.class)) {
-            if (value instanceof Double) {
-                return value;
-            }
             if (value instanceof String) {
                 if (StringUtils.isEmpty((String) value)) {
                     return 0.0d;
@@ -150,16 +138,10 @@ public class DialogFieldEditorStrategy<T> implements ValueEditor<T>, HasEditorDe
                 return Double.valueOf((String) value);
             }
         } else if (targetType.equals(Boolean.class)) {
-            if (value instanceof Boolean) {
-                return value;
-            }
             if (value instanceof String) {
                 return Boolean.valueOf((String) value);
             }
         } else if (targetType.equals(BigDecimal.class)) {
-            if (value instanceof BigDecimal) {
-                return value;
-            }
             if (value instanceof String) {
                 if (StringUtils.isEmpty((String) value)) {
                     return BigDecimal.ZERO;

@@ -33,21 +33,146 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
-import com.vaadin.ui.Upload;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.io.IOUtils;
+import org.devlib.schmidt.imageinfo.ImageInfo;
+
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Button;
+import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.util.PathUtil;
+import info.magnolia.jcr.util.BinaryInFile;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
+import info.magnolia.ui.framework.editor.NodeEditor;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
-import info.magnolia.ui.model.dialog.definition.FieldDefinition;
+import info.magnolia.ui.model.dialog.definition.FileUploadFieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
  * Dialog field for uploading files.
  *
+ * TODO: should support width
+ * TODO: should support SWF in its preview
+ * TODO: preview should have an icon mode
+ *
  * @version $Id$
  */
-public class DialogFileUploadField extends AbstractDialogField {
+public class DialogFileUploadField extends AbstractDialogField implements NodeEditor {
 
-    public DialogFileUploadField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, DialogView.Presenter presenter) {
+    private FileUploadView uploadView;
+    private FileUploadFieldDefinition fieldDefinition;
+    private List imageExtensions = new ArrayList();
+    private boolean removed = false;
+
+    public DialogFileUploadField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FileUploadFieldDefinition fieldDefinition, DialogView.Presenter presenter) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
-        this.view.setComponent(new Upload());
+        uploadView = new FileUploadView();
+        this.view.setComponent(uploadView);
+        this.editor = this;
+        this.fieldDefinition = fieldDefinition;
+        initImageExtensions();
+    }
+
+    public List getImageExtensions() {
+        return this.imageExtensions;
+    }
+
+    public void setImageExtensions(List l) {
+        this.imageExtensions = l;
+    }
+
+    public void initImageExtensions() {
+        this.getImageExtensions().add("jpg"); //$NON-NLS-1$
+        this.getImageExtensions().add("jpeg"); //$NON-NLS-1$
+        this.getImageExtensions().add("gif"); //$NON-NLS-1$
+        this.getImageExtensions().add("png"); //$NON-NLS-1$
+        this.getImageExtensions().add("bpm"); //$NON-NLS-1$
+        this.getImageExtensions().add("swf"); //$NON-NLS-1$
+    }
+
+    @Override
+    public void edit(final Node node) throws RepositoryException {
+        final String name = fieldDefinition.getName();
+
+        if (node.hasNode(name)) {
+            Node binaryNode = node.getNode(name);
+
+            final boolean preview = fieldDefinition.isPreview();
+            final boolean extensionIsDisplayableImage = this.getImageExtensions().contains(binaryNode.getProperty(FileProperties.EXTENSION).getString().toLowerCase());
+            final boolean showImage = extensionIsDisplayableImage && preview;
+
+            if (showImage) {
+                String uri = URI2RepositoryManager.getInstance().getURI(binaryNode.getSession().getWorkspace().getName(), binaryNode.getPath());
+                uploadView.setThumbnail(new ExternalResource(uri));
+            }
+
+            uploadView.addRemoveButton(new Button.ClickListener() {
+                @Override
+                public void buttonClick(Button.ClickEvent event) {
+                    removed = true;
+                }
+            });
+        }
+    }
+
+    @Override
+    public void save(Node node) throws RepositoryException {
+        File file = uploadView.getFile();
+        if (file != null) {
+            String fileName = PathUtil.stripExtension(uploadView.getFileName());
+            String extension = PathUtil.getExtension(uploadView.getFileName());
+            saveBinary(node, fieldDefinition.getName(), file, fileName, uploadView.getMimeType(), extension, file.length(), fieldDefinition.getNodeDataTemplate());
+        } else if (removed) {
+            if (node.hasNode(fieldDefinition.getName())) {
+                node.getNode(fieldDefinition.getName()).remove();
+            }
+        }
+    }
+
+    public static void saveBinary(Node node, String name, File file, String fileName, String contentType, String extension, long size, String template) throws RepositoryException {
+
+        Node child;
+        if (node.hasNode(name)) {
+            child = node.getNode(name);
+        } else {
+            child = node.addNode(name, MgnlNodeType.NT_RESOURCE);
+        }
+
+        child.setProperty(FileProperties.PROPERTY_FILENAME, fileName);
+        child.setProperty(FileProperties.PROPERTY_CONTENTTYPE, contentType);
+        child.setProperty(FileProperties.PROPERTY_LASTMODIFIED, new GregorianCalendar(TimeZone.getDefault()));
+        child.setProperty(FileProperties.PROPERTY_SIZE, Long.toString(size));
+        child.setProperty(FileProperties.PROPERTY_EXTENSION, extension);
+        child.setProperty(FileProperties.PROPERTY_TEMPLATE, template);
+
+        child.setProperty(MgnlNodeType.JCR_DATA, new BinaryInFile(file));
+
+        InputStream stream = null;
+        try {
+            ImageInfo imageInfo = new ImageInfo();
+            stream = new FileInputStream(file);
+            imageInfo.setInput(stream);
+            if (imageInfo.check()) {
+                child.setProperty(FileProperties.PROPERTY_WIDTH, Long.toString(imageInfo.getWidth()));
+                child.setProperty(FileProperties.PROPERTY_HEIGHT, Long.toString(imageInfo.getHeight()));
+                // data.setAttribute(FileProperties.x, Long.toString(ii.getBitsPerPixel()));
+            }
+        } catch (FileNotFoundException e) {
+            throw new RepositoryException(e);
+        } finally {
+            IOUtils.closeQuietly(stream);
+        }
     }
 }
