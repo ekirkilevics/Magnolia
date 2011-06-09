@@ -136,7 +136,7 @@ public final class MgnlNodeType {
 
     public static final String JCR_PRIMARY_TYPE = JCR_PREFIX + "primaryType";
 
-    public static final String JCR_DATA = JCR_PREFIX + "jcr:data";
+    public static final String JCR_DATA = JCR_PREFIX + "data";
 
     /**
      * Magnolia content node.
