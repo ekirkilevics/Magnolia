@@ -54,8 +54,12 @@ public class MockValue implements Value {
     private Object value;
 
     public MockValue(Object value) {
+        this(value, NodeDataUtil.getJCRPropertyType(value));
+    }
+
+    public MockValue(Object value, int type) {
         this.value = value;
-        this.type = NodeDataUtil.getJCRPropertyType(value);
+        this.type = type;
     }
 
     @Override

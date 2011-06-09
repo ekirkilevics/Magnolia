@@ -125,14 +125,14 @@ public class MockUtilTest extends TestCase {
     public void testSyntax() throws IOException, RepositoryException{
         String content =
             "/parent1/sub1.prop1=one\n"+
-            "parent2/sub2.prop1=two\n"+
-            "parent3.sub3.prop1=three"; // TODO : this syntax is deprecated
+            "parent1/sub1.prop2=two\n"+
+            "parent1.sub1.prop3=three"; // TODO : this syntax is deprecated
         // TODO : "/parent3/sub2.prop2" should be supported, should create a property in node parent3/sub2, with no value
 
         HierarchyManager hm = MockUtil.createHierarchyManager(content);
         assertEquals("one", hm.getContent("/parent1/sub1").getNodeData("prop1").getString());
-        assertEquals("two", hm.getContent("/parent2/sub2").getNodeData("prop1").getString());
-        assertEquals("three", hm.getContent("/parent3/sub3").getNodeData("prop1").getString());
+        assertEquals("two", hm.getContent("/parent1/sub1").getNodeData("prop2").getString());
+        assertEquals("three", hm.getContent("/parent1/sub1").getNodeData("prop3").getString());
 
         content =
             "/parent1/sub1@uuid=1\n"+

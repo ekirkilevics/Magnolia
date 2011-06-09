@@ -33,9 +33,14 @@
  */
 package info.magnolia.jcr.util;
 
+import java.math.BigDecimal;
+import java.util.Calendar;
+
+import javax.jcr.Binary;
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 
 /**
  * Property-related utility methods.
@@ -50,4 +55,37 @@ public class PropertyUtil {
         property.remove();
     }
 
+    /**
+     * Allows setting a Node's property from an object.
+     */
+    public static void setProperty(Node node, String propertyName, Object propertyValue) throws RepositoryException {
+        if (node == null) {
+            throw new IllegalArgumentException("Cannot set a property on a null-node!");
+        }
+        if (propertyName == null) {
+            throw new IllegalArgumentException("Cannot set a property without a provided name");
+        }
+
+        // let's find out what type of value we got
+        if (propertyValue instanceof Value) {
+            node.setProperty(propertyName, (Value) propertyValue);
+        } else if (propertyValue instanceof Node) {
+            node.setProperty(propertyName, (Node) propertyValue);
+        } else if (propertyValue instanceof Binary) {
+            node.setProperty(propertyName, (Binary) propertyValue);
+        } else if (propertyValue instanceof Calendar) {
+            node.setProperty(propertyName, (Calendar) propertyValue);
+        } else if (propertyValue instanceof BigDecimal) {
+            node.setProperty(propertyName, (BigDecimal) propertyValue);
+        } else if (propertyValue instanceof String) {
+            node.setProperty(propertyName, (String) propertyValue);
+        } else if (propertyValue instanceof Long) {
+            node.setProperty(propertyName, ((Long) propertyValue).longValue());
+        } else if (propertyValue instanceof Double) {
+            node.setProperty(propertyName, ((Double) propertyValue).doubleValue());
+        } else if (propertyValue instanceof Boolean) {
+            node.setProperty(propertyName, ((Boolean) propertyValue).booleanValue());
+        } else
+            throw new IllegalArgumentException("Cannot set property to a value of type " + propertyValue.getClass());
+    }
 }

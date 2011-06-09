@@ -35,6 +35,7 @@ package info.magnolia.jcr.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -44,6 +45,7 @@ import info.magnolia.test.mock.jcr.MockNode;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
 
@@ -149,6 +151,21 @@ public class NodeUtilTest {
         assertEquals(first, orderedKids.next());
         assertEquals(third, orderedKids.next());
         assertEquals(second, orderedKids.next());
+    }
+
+    @Test
+    public void testCreatePath() throws RepositoryException {
+        final String pathToCreate = "/xxx/yyy/zzz";
+        Node zzz = NodeUtil.createPath(root, pathToCreate, PropertyType.TYPENAME_STRING);
+        assertNotNull(zzz);
+        assertEquals(PropertyType.TYPENAME_STRING, zzz.getPrimaryNodeType().getName());
+    }
+
+    @Test
+    public void testCreatePathDoesntCreateNewWhenExisting() throws RepositoryException {
+        Node returnedNode = NodeUtil.createPath(root, firstChild, PropertyType.TYPENAME_STRING);
+        assertNotNull(returnedNode);
+        assertEquals("createPath was called with existing subpath: existing node should be returned - not a new instance!", first, returnedNode);
     }
 
 }

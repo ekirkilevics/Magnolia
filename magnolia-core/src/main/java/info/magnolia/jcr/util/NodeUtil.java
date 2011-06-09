@@ -35,6 +35,7 @@ package info.magnolia.jcr.util;
 
 import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 
@@ -44,6 +45,7 @@ import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.NodeType;
@@ -84,7 +86,8 @@ public class NodeUtil {
             node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
         }
         final String actualType = node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
-        // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original node type
+        // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original
+        // node type
         if (ItemType.NT_FROZENNODE.equals(actualType) && !(ItemType.NT_FROZENNODE.equals(type))) {
             final Property p = node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE);
             final String s = p.getString();
@@ -113,8 +116,10 @@ public class NodeUtil {
     /**
      * Orders the node directly after a given sibling. If no sibling is specified the node is placed first.
      *
-     * @param node        the node to order
-     * @param siblingName the name of the sibling which the name should be after or null if the node should be first
+     * @param node
+     *            the node to order
+     * @param siblingName
+     *            the name of the sibling which the name should be after or null if the node should be first
      * @throws RepositoryException
      */
     public static void orderAfter(Node node, String siblingName) throws RepositoryException {
@@ -140,7 +145,8 @@ public class NodeUtil {
     /**
      * Orders the node first among its siblings.
      *
-     * @param node the node to order
+     * @param node
+     *            the node to order
      * @throws RepositoryException
      */
     public static void orderFirst(Node node) throws RepositoryException {
@@ -155,7 +161,8 @@ public class NodeUtil {
     /**
      * Orders the node last among its siblings.
      *
-     * @param node the node to order
+     * @param node
+     *            the node to order
      * @throws RepositoryException
      */
     public static void orderLast(Node node) throws RepositoryException {
@@ -166,7 +173,8 @@ public class NodeUtil {
      * Orders the node up one step among its siblings. If the node is the only sibling or the first sibling this method
      * has no effect.
      *
-     * @param node the node to order
+     * @param node
+     *            the node to order
      * @throws RepositoryException
      */
     public static void orderNodeUp(Node node) throws RepositoryException {
@@ -180,7 +188,8 @@ public class NodeUtil {
      * Orders the node down one step among its siblings. If the node is the only sibling or the last sibling this method
      * has no effect.
      *
-     * @param node the node to order
+     * @param node
+     *            the node to order
      * @throws RepositoryException
      */
     public static void orderNodeDown(Node node) throws RepositoryException {
@@ -259,7 +268,8 @@ public class NodeUtil {
 
     /**
      * @return Whether the provided node as the provided permission or not.
-     * @throws RuntimeException in case of RepositoryException.
+     * @throws RuntimeException
+     *             in case of RepositoryException.
      */
     public static boolean isGranted(Node node, long permissions) {
         try {
@@ -269,9 +279,10 @@ public class NodeUtil {
             throw new RuntimeException(e);
         }
     }
+
     /**
-     * Returns true if both arguments represents the same node. In case the nodes are wrapped the comparison is done
-     * one the actual nodes behind the wrappers.
+     * Returns true if both arguments represents the same node. In case the nodes are wrapped the comparison is done one
+     * the actual nodes behind the wrappers.
      */
     private static boolean isSame(Node lhs, Node rhs) throws RepositoryException {
         return unwrap(lhs).isSame(unwrap(rhs));
@@ -295,5 +306,35 @@ public class NodeUtil {
             log.error("Failed to read children of " + jcrNode, e);
         }
         return children;
+    }
+
+    public static Node createPath(Node parent, String path, String type) throws RepositoryException, PathNotFoundException, AccessDeniedException {
+        return createPath(parent, path, type, false);
+    }
+
+    public static Node createPath(Node parent, String path, String primaryNodeTypeName, boolean save) throws RepositoryException, PathNotFoundException, AccessDeniedException {
+        // remove leading /
+        String currentPath = StringUtils.removeStart(path, "/");
+
+        if (StringUtils.isEmpty(currentPath)) {
+            return parent;
+        }
+
+        Node root = parent;
+        String[] names = currentPath.split("/"); //$NON-NLS-1$
+
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
+            if (root.hasNode(name)) {
+                root = root.getNode(name);
+            } else {
+                final Node newNode = root.addNode(name, primaryNodeTypeName);
+                if (save) {
+                    root.save();
+                }
+                root = newNode;
+            }
+        }
+        return root;
     }
 }

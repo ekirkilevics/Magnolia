@@ -53,6 +53,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.lock.Lock;
@@ -496,7 +497,7 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public Property setProperty(String name, BigDecimal value) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return setProperty(name, new MockValue(value));
     }
 
     @Override
@@ -530,8 +531,8 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public Property setProperty(String name, Node value) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public Property setProperty(String name, Node value) throws RepositoryException {
+        return setProperty(name, value.getIdentifier(), PropertyType.REFERENCE);
     }
 
     @Override
@@ -541,7 +542,7 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public Property setProperty(String name, String value, int type) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return setProperty(name, new MockValue(value, PropertyType.REFERENCE));
     }
 
     @Override

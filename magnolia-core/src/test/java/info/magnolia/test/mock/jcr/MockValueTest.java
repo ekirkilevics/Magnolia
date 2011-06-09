@@ -52,8 +52,17 @@ import org.junit.Test;
  */
 public class MockValueTest {
 
+
+    @Test
+    public void testConstructionWithProvidedType() throws RepositoryException {
+        final String reference = "identifier";
+        final MockValue value = new MockValue(reference, PropertyType.REFERENCE);
+        assertEquals(PropertyType.REFERENCE, value.getType());
+        assertEquals(reference, value.getString());
+    }
+
     protected void doTestGetType(Object objectValue, int expectedType) {
-        MockValue jcrValue = new MockValue(objectValue);
+        final MockValue jcrValue = new MockValue(objectValue);
         assertEquals(expectedType, jcrValue.getType());
     }
 
