@@ -19,7 +19,7 @@
     <sv:value>admin</sv:value>
   </sv:property>
   <sv:property sv:name="templateScript" sv:type="String">
-    <sv:value>/samples/paragraphs/samplesText.ftl</sv:value>
+    <sv:value>/samples/paragraphs/text.ftl</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
     <sv:value>Text paragraph</sv:value>
