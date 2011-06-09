@@ -62,22 +62,15 @@ import javax.jcr.observation.ObservationManager;
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  * Util to create mock objects. Use createHierarchyManager() to build mock content based on a property file. Property
  * values can have prefixes like boolean: int: for creating typed nodedatas.
- * @author philipp
+ *
  * @version $Id$
  */
 public class MockUtil {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(MockContext.class);
 
     /**
      * Mocks the current and system context
