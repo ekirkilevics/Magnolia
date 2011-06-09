@@ -79,4 +79,21 @@ public class PathUtil {
         }
     }
 
+    /**
+     * Returns the extension of the file denoted by the path excluding the dot. More specifically returns the part of
+     * the string after the last dot. If there's no dot in the path it returns the empty string.
+     */
+    public static String getExtension(String path) {
+        if (path == null) {
+            return null;
+        }
+        return StringUtils.substringAfterLast(getFileName(path), ".");
+    }
+
+    /**
+     * Removes the extension from a path if one exists.
+     */
+    public static String stripExtension(String path) {
+        return StringUtils.substringBeforeLast(path, ".");
+    }
 }
