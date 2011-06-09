@@ -73,7 +73,4 @@ public class SampleParagraphModel extends RenderingModelImpl {
         this.query = query;
     }
 
-
-
-
 }

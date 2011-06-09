@@ -60,7 +60,7 @@ public class Dummy {
     private Map parameters = new HashMap();
 
     public String getName() {
-        log.info("No need to define name node data, will take the name of the node for this property: " + name);
+        log.info("No need to define name node data, will take the name of the node for this property: {}", name);
         return name;
     }
 
@@ -78,14 +78,11 @@ public class Dummy {
     }
 
     public Map getParameters() {
-        log.info("Need to define parameters node data: " + parameters);
+        log.info("Need to define parameters node data: {}", parameters);
         return parameters;
     }
 
     public void setParameters(Map parameters) {
         this.parameters = parameters;
     }
-
-
-
 }

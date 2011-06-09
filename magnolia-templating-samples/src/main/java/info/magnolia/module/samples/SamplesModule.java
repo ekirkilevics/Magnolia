@@ -63,7 +63,7 @@ public class SamplesModule implements ModuleLifecycle {
 
     final private static Logger log = LoggerFactory.getLogger(SamplesModule.class);
 
-    private List items = new ArrayList();
+    private List<Dummy> items = new ArrayList<Dummy>();
 
     private Map sampleMap = new HashMap();
 
@@ -81,17 +81,17 @@ public class SamplesModule implements ModuleLifecycle {
 
     }
 
-    public List getItems() {
+    public List<Dummy> getItems() {
         log.info("this is a node of type content");
         return items;
     }
 
-    public void setItems(List items) {
+    public void setItems(List<Dummy> items) {
         this.items = items;
     }
 
     public void addItem(Dummy dummy) {
-        log.info("Adds the items to the list, a 'Dummy' class:" + dummy.getName());
+        log.info("Adds the items to the list, a 'Dummy' class: {}", dummy.getName());
         this.items.add(dummy);
     }
 
@@ -105,7 +105,7 @@ public class SamplesModule implements ModuleLifecycle {
     }
 
     public String getSampleProperty() {
-        log.info("This is a node of type node data: " + sampleProperty);
+        log.info("This is a node of type node data: {}", sampleProperty);
         return sampleProperty;
     }
 

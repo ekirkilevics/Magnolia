@@ -1,57 +1,33 @@
 [#-------------- Sample FTL Template --------------]
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-[#assign cms=JspTaglibs["cms-taglib"]]
-[#assign cmsu=JspTaglibs["cms-util-taglib"]]
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title>${content.title!content.@name}</title>
-        <link rel="stylesheet" type="text/css" href="${contextPath}/docroot/samples/samples.css"/>
-        [@cms.links /]
     </head>
 
-    <body>
+    <body style="background-color:#ccb">
 
-    [#-- Page Dialog --]
-    [@cms.mainBar dialog="mainProperties" /]
+	<cms:page content="website:/howTo-freemarker" dialog="samplesFieldShowRoom" label="/howTo-freemarker - Sample using the NEW freemarker template"></cms:page>
 
-    <div id="header">
-        <h1>Magnolia Samples</h1>
-    </div>
+		<h1>${content.title}</h1>
+        <h3>${content.@path} (${content.@id})</h3>
+        <h3>From JCR NODE: ${cmsfn.asJCRNode(content).path} </h3>
 
-    [#-- Simple Navigation Tag --]
-    <div id="navigation">[@cmsu.simpleNavigation /]</div>
+		<div id="main" style="padding:15px;">
 
-    <div id="main">
+			<h2>Singleton Area (foobar)</h2>
+			[@cms.area name="foobar" type="single" paragraphs="samplesText"/]
 
-        [#-- Variable titleSize is set in the template definition, if empty sets it to 1 --]
-        <h${def.titleSize!"1"}>${content.title!content.@name}</h${def.titleSize!"1"}><br />
+			<h2>Singleton Area (stage)</h2>
+			[@cms.area name="stage" type="single" paragraphs="samplesText"/]
 
-        <p>${content.text!""}</p><br />
+			<h2>Area (main)</h2>
+			[@cms.area name="main" dialog="mainProperties" paragraphs="samplesHowToFTL,samplesText"/]
 
-        [#-- Variable dummy is set in the template definition parameters content node --]
-        <p>dummy: ${def.dummy!""}</p><br />
+		</div>
 
-        <div>
-            <h3>Display Sources</h3><br />
-            <ul>
-                <li><a href="${ctx.contextPath}/.sources/templates/main.ftl">Main template</a></li>
-            </ul>
-        </div><br />
-
-        [@cms.contentNodeIterator contentNodeCollectionName="main"]
-            [@cms.includeTemplate /]
-        [/@cms.contentNodeIterator]
-
-        [@cms.newBar contentNodeCollectionName="main" paragraph="samplesHowToFTL, samplesHowToJSP, samplesControlsShowRoom, samplesSearchResult" /]
-    </div>
-
-    <div id="footer">
-        <p>This page was last edited by <span class="author">${content.metaData.authorId}</span>
-            on <span class="modificationdate">${content.metaData.modificationDate}</span>
-        </p>
-    </div>
-    </body>
+	</body>
 </html>

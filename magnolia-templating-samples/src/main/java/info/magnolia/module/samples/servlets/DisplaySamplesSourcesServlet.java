@@ -51,9 +51,6 @@ import java.io.InputStream;
  */
 public class DisplaySamplesSourcesServlet extends HttpServlet {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     @Override
