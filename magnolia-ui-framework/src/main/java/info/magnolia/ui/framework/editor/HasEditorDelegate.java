@@ -36,7 +36,7 @@ package info.magnolia.ui.framework.editor;
 /**
  * Indicates that an editor requires an EditorDelegate.
  *
- * @author tmattsson
+ * @version $Id$
  */
 public interface HasEditorDelegate extends Editor {
 

@@ -41,14 +41,14 @@ import java.util.List;
  * Abstract support class for classes implementing the Driver interface.
  *
  * @param <T> the type of entity to edit
- * @author tmattsson
+ * @version $Id$
  */
 public abstract class AbstractDriver<T> implements Driver<T> {
 
     /**
      * Trivial implementation of EditorError.
      *
-     * @author tmattsson
+     * @version $Id$
      */
     private static class SimpleEditorError implements EditorError {
 
@@ -115,11 +115,12 @@ public abstract class AbstractDriver<T> implements Driver<T> {
         visitEditors(view, new EditorVisitor() {
             @Override
             public void visit(final Editor editor) {
-                if ((editor instanceof HasEditorDelegate) && (editor instanceof ValueEditor)) {
-                    ((HasEditorDelegate)editor).setDelegate(new EditorDelegate() {
+                if ((editor instanceof HasEditorDelegate)) {
+                    ((HasEditorDelegate) editor).setDelegate(new EditorDelegate() {
                         @Override
                         public void recordError(String message, Object value) {
-                            addError(((ValueEditor)editor).getPath(), editor, message, value);
+                            String path = editor instanceof HasEditorPath ? ((HasEditorPath) editor).getPath() : "";
+                            addError(path, editor, message, value);
                         }
                     });
                 }
@@ -172,7 +173,7 @@ public abstract class AbstractDriver<T> implements Driver<T> {
      * Iterates an editor hierarchy in a depth-first bottom-up fashion.
      *
      * @param hasEditors editor to start iterating at
-     * @param visitor visitor to invoke for each editor
+     * @param visitor    visitor to invoke for each editor
      */
     protected void visitEditors(HasEditors hasEditors, EditorVisitor visitor) {
         for (Editor editor : hasEditors.getEditors()) {

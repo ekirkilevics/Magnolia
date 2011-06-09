@@ -33,43 +33,17 @@
  */
 package info.magnolia.ui.framework.editor;
 
-import java.util.List;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
- * Automates editing of entities defined by the content model.
+ * An editor that implements its own strategy for persistence.
  *
- * @param <T> the type of entity to edit
  * @version $Id$
  */
-public interface Driver<T> {
+public interface NodeEditor extends Editor {
 
-    void initialize(HasEditors editors);
+    void edit(Node node) throws RepositoryException;
 
-    /**
-     * Push the data in an object into the dialog prepared by the initialize() method.
-     *
-     * @param object
-     */
-    void edit(T object);
-
-    /**
-     * Update the object with values from the dialog.
-     *
-     * @param object
-     */
-    void flush(T object);
-
-    /**
-     * Indicates if the last call to flush() resulted in any errors.
-     *
-     * @return
-     */
-    boolean hasErrors();
-
-    /**
-     * Returns any unconsumed(?) errors from the last call to flush().
-     *
-     * @return
-     */
-    List<EditorError> getErrors();
+    void save(Node node) throws RepositoryException;
 }

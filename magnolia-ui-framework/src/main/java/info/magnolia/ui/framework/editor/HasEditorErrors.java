@@ -39,7 +39,7 @@ import java.util.List;
  * Editors that wish to be notified about ConstraintViolations in the value
  * being edited should implement this interface.
  *
- * @author tmattsson
+ * @version $Id$
  */
 public interface HasEditorErrors {
 

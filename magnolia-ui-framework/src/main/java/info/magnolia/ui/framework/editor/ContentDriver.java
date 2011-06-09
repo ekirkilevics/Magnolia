@@ -33,30 +33,31 @@
  */
 package info.magnolia.ui.framework.editor;
 
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.MetaDataUtil;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.jcr.util.PropertyUtil;
-
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
-
+import javax.jcr.Binary;
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+import javax.jcr.ValueFormatException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.PropertyUtil;
+
 
 /**
  * Automates editing of entities defined by the content model.
  *
- * @author tmattsson
+ * @version $Id$
  */
 public class ContentDriver extends AbstractDriver<Node> {
 
@@ -72,12 +73,10 @@ public class ContentDriver extends AbstractDriver<Node> {
             public void visit(Editor editor) {
                 try {
                     if (editor instanceof ValueEditor) {
-                        ValueEditor valueEditor = (ValueEditor) editor;
-                        String path = valueEditor.getPath();
-                        Class type = valueEditor.getType();
-                        setEditorValue(valueEditor, path, type, node);
+                        setValueEditorValue((ValueEditor) editor, node);
+                    } else if (editor instanceof NodeEditor) {
+                        ((NodeEditor) editor).edit(node);
                     }
-
                 } catch (RepositoryException e) {
                     throw new RuntimeRepositoryException(e);
                 }
@@ -106,16 +105,17 @@ public class ContentDriver extends AbstractDriver<Node> {
                                 throw new RuntimeRepositoryException(e);
                             }
                         }
+                    } else if (editor instanceof NodeEditor) {
+                        NodeEditor nodeEditor = (NodeEditor) editor;
+                        try {
+                            nodeEditor.save(node);
+                        } catch (RepositoryException e) {
+                            throw new RuntimeRepositoryException(e);
+                        }
                     }
                 }
             });
-            if (!hasErrors()) {
-
-                // TODO it's probably not a good idea to always force this behaviour here
-
-                MetaDataUtil.updateMetaData(node);
-                node.getSession().save();
-            } else {
+            if (hasErrors()) {
 
                 visitEditors(getView(), new EditorVisitor() {
                     @Override
@@ -125,6 +125,12 @@ public class ContentDriver extends AbstractDriver<Node> {
                         }
                     }
                 });
+            } else {
+
+                // TODO it's probably not a good idea to always force this behaviour here
+
+                MetaDataUtil.updateMetaData(node);
+                node.getSession().save();
             }
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
@@ -166,6 +172,8 @@ public class ContentDriver extends AbstractDriver<Node> {
                 property.setValue((Boolean) value);
             } else if (value instanceof BigDecimal) {
                 property.setValue((BigDecimal) value);
+            } else if (value instanceof Binary) {
+                property.setValue((Binary) value);
             } else {
                 logger.error("Unable to write value [" + value +
                         "] of type [" + value.getClass().getName() +
@@ -193,6 +201,8 @@ public class ContentDriver extends AbstractDriver<Node> {
                 node.setProperty(path, (Boolean) value);
             } else if (value instanceof BigDecimal) {
                 node.setProperty(path, (BigDecimal) value);
+            } else if (value instanceof Binary) {
+                node.setProperty(path, (Binary) value);
             } else {
                 logger.error("Unable to write value [" + value +
                         "] of type [" + value.getClass().getName() +
@@ -202,30 +212,40 @@ public class ContentDriver extends AbstractDriver<Node> {
         }
     }
 
-    private void setEditorValue(ValueEditor valueEditor, String path, Class type, Node node) throws RepositoryException {
+    private void setValueEditorValue(ValueEditor editor, Node node) throws RepositoryException {
+
+        String path = editor.getPath();
 
         if (path.endsWith("@name")) {
             path = StringUtils.substringBefore(path, "@name");
-            valueEditor.setValue(getItemByRelPath(node, path).getName());
+            editor.setValue(getItemByRelPath(node, path).getName());
             return;
         }
 
+        Class type = editor.getType();
+
         if (node.hasProperty(path)) {
             if (type.equals(String.class)) {
-                valueEditor.setValue(node.getProperty(path).getString());
+                editor.setValue(node.getProperty(path).getString());
             } else if (type.equals(Calendar.class)) {
-                valueEditor.setValue(node.getProperty(path).getDate());
+                editor.setValue(node.getProperty(path).getDate());
             } else if (type.equals(Date.class)) {
                 // TODO when null is saved it becomes an empty string and this fails
-                valueEditor.setValue(node.getProperty(path).getDate().getTime());
+                try {
+                    editor.setValue(node.getProperty(path).getDate().getTime());
+                } catch (ValueFormatException e) {
+                    logger.error("Error reading date value for property [" + path + "]", e);
+                }
             } else if (type.equals(Long.class)) {
-                valueEditor.setValue(node.getProperty(path).getLong());
+                editor.setValue(node.getProperty(path).getLong());
             } else if (type.equals(Double.class)) {
-                valueEditor.setValue(node.getProperty(path).getDouble());
+                editor.setValue(node.getProperty(path).getDouble());
             } else if (type.equals(Boolean.class)) {
-                valueEditor.setValue(node.getProperty(path).getBoolean());
+                editor.setValue(node.getProperty(path).getBoolean());
             } else if (type.equals(BigDecimal.class)) {
-                valueEditor.setValue(node.getProperty(path).getDecimal());
+                editor.setValue(node.getProperty(path).getDecimal());
+            } else if (type.equals(Binary.class)) {
+                editor.setValue(node.getProperty(path).getBinary());
             } else {
                 logger.error("Unable to read value at [" + path +
                         "] as expected type [" + type.getName() +
@@ -244,6 +264,6 @@ public class ContentDriver extends AbstractDriver<Node> {
         if (node.hasProperty(relPath)) {
             return node.getProperty(relPath);
         }
-        throw new PathNotFoundException(node.getPath() + " "  + relPath);
+        throw new PathNotFoundException(node.getPath() + " " + relPath);
     }
 }

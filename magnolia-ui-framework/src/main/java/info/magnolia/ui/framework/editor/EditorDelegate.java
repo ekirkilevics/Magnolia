@@ -36,7 +36,7 @@ package info.magnolia.ui.framework.editor;
 /**
  * This is basically the presenter for an Editor.
  *
- * @author tmattsson
+ * @version $Id$
  */
 public interface EditorDelegate {
 
