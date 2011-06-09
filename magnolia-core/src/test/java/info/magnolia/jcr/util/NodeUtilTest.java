@@ -76,12 +76,11 @@ public class NodeUtilTest {
 
     @Test
     public void testHasMixin() throws Exception {
-        final MockNode node = new MockNode("test");
         final String mixin1 = "mixin1";
-        node.addMixin(mixin1);
+        root.addMixin(mixin1);
 
-        assertTrue(NodeUtil.hasMixin(node, mixin1));
-        assertFalse(NodeUtil.hasMixin(node, "mixin2"));
+        assertTrue(NodeUtil.hasMixin(root, mixin1));
+        assertFalse(NodeUtil.hasMixin(root, "mixin2"));
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -91,12 +90,11 @@ public class NodeUtilTest {
 
     @Test
     public void testUnwrap() throws Exception {
-        final MockNode wrapped = new MockNode("wrapped");
         final Version version = mock(Version.class);
-        when(version.getNode(ItemType.JCR_FROZENNODE)).thenReturn(wrapped);
+        when(version.getNode(ItemType.JCR_FROZENNODE)).thenReturn(root);
         final VersionedNode wrapper = new VersionedNode(version);
 
-        assertEquals(wrapped, NodeUtil.unwrap(wrapper));
+        assertEquals(root, NodeUtil.unwrap(wrapper));
     }
 
     @Test
