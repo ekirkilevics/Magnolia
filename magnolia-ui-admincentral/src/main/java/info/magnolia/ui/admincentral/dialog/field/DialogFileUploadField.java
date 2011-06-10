@@ -34,18 +34,13 @@
 package info.magnolia.ui.admincentral.dialog.field;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-
-import org.apache.commons.io.IOUtils;
-import org.devlib.schmidt.imageinfo.ImageInfo;
 
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
@@ -115,7 +110,9 @@ public class DialogFileUploadField extends AbstractDialogField implements NodeEd
 
             if (showImage) {
                 String uri = URI2RepositoryManager.getInstance().getURI(binaryNode.getSession().getWorkspace().getName(), binaryNode.getPath());
-                uploadView.setThumbnail(new ExternalResource(uri));
+                // TODO we should handle the case of these properties being missing on the node better
+                ImageSize imageSize = new ImageSize(binaryNode.getProperty(FileProperties.PROPERTY_WIDTH).getLong(), binaryNode.getProperty(FileProperties.PROPERTY_HEIGHT).getLong());
+                uploadView.setThumbnail(imageSize, new ExternalResource(uri));
             }
 
             uploadView.addRemoveButton(new Button.ClickListener() {
@@ -150,6 +147,8 @@ public class DialogFileUploadField extends AbstractDialogField implements NodeEd
             child = node.addNode(name, MgnlNodeType.NT_RESOURCE);
         }
 
+        child.setProperty(MgnlNodeType.JCR_DATA, new BinaryInFile(file));
+
         child.setProperty(FileProperties.PROPERTY_FILENAME, fileName);
         child.setProperty(FileProperties.PROPERTY_CONTENTTYPE, contentType);
         child.setProperty(FileProperties.PROPERTY_LASTMODIFIED, new GregorianCalendar(TimeZone.getDefault()));
@@ -157,22 +156,13 @@ public class DialogFileUploadField extends AbstractDialogField implements NodeEd
         child.setProperty(FileProperties.PROPERTY_EXTENSION, extension);
         child.setProperty(FileProperties.PROPERTY_TEMPLATE, template);
 
-        child.setProperty(MgnlNodeType.JCR_DATA, new BinaryInFile(file));
-
-        InputStream stream = null;
+        ImageSize imageSize;
         try {
-            ImageInfo imageInfo = new ImageInfo();
-            stream = new FileInputStream(file);
-            imageInfo.setInput(stream);
-            if (imageInfo.check()) {
-                child.setProperty(FileProperties.PROPERTY_WIDTH, Long.toString(imageInfo.getWidth()));
-                child.setProperty(FileProperties.PROPERTY_HEIGHT, Long.toString(imageInfo.getHeight()));
-                // data.setAttribute(FileProperties.x, Long.toString(ii.getBitsPerPixel()));
-            }
+            imageSize = ImageSize.valueOf(file);
         } catch (FileNotFoundException e) {
             throw new RepositoryException(e);
-        } finally {
-            IOUtils.closeQuietly(stream);
         }
+        child.setProperty(FileProperties.PROPERTY_WIDTH, Long.toString(imageSize.getWidth()));
+        child.setProperty(FileProperties.PROPERTY_HEIGHT, Long.toString(imageSize.getHeight()));
     }
 }

@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.dialog.field;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -106,7 +107,11 @@ public class FileUploadView extends CustomComponent implements Upload.SucceededL
     @Override
     public void uploadSucceeded(Upload.SucceededEvent event) {
         // TODO: if the preview is switched off in the field definition we shouldn't do this
-        setThumbnail(file);
+        try {
+            setThumbnail(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     /**
@@ -127,11 +132,12 @@ public class FileUploadView extends CustomComponent implements Upload.SucceededL
         this.mimeType = null;
     }
 
-    public void setThumbnail(File file) {
-        setThumbnail(new FileResource(file, getApplication()));
+    public void setThumbnail(File file) throws FileNotFoundException {
+        ImageSize imageSize = ImageSize.valueOf(file);
+        setThumbnail(imageSize, new FileResource(file, getApplication()));
     }
 
-    public void setThumbnail(Resource imageResource) {
+    public void setThumbnail(ImageSize imageSize, Resource imageResource) {
 
         // TODO: should filter based on supported file extension just like in DialogFileUploadField
 
@@ -139,7 +145,11 @@ public class FileUploadView extends CustomComponent implements Upload.SucceededL
 
         thumbnailLayout.removeAllComponents();
         Embedded embedded = new Embedded("", imageResource);
-        // TODO: should adjust scale of the thumbnail
+
+        imageSize = imageSize.scaleToFitIfLarger(150, 150);
+
+        embedded.setWidth(imageSize.getWidth() + "px");
+        embedded.setHeight(imageSize.getHeight() + "px");
         thumbnailLayout.addComponent(embedded);
     }
 
