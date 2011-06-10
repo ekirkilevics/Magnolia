@@ -34,16 +34,15 @@
 package info.magnolia.ui.admincentral.dialog.field;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.vaadin.terminal.FileResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Embedded;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
@@ -55,24 +54,38 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class FileUploadView extends CustomComponent implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver {
 
-    private Layout root;
+    /**
+     * Presenter for FileUploadView.
+     *
+     * @version $Id$
+     */
+    public interface Presenter {
+
+        void uploadSucceeded(File file, String fileName, String mimeType) throws IOException;
+
+        void previewRemoved();
+    }
+
     private Layout thumbnailLayout;
+    private Presenter presenter;
 
     private File file;
     private String fileName;
     private String mimeType;
 
-    public FileUploadView() {
-        root = new VerticalLayout();
-        setCompositionRoot(root);
+    public FileUploadView(Presenter presenter) {
+        this.presenter = presenter;
 
         Upload upload = new Upload(null, this);
         upload.addListener((Upload.SucceededListener) this);
         upload.addListener((Upload.FailedListener) this);
-        root.addComponent(upload);
 
         thumbnailLayout = new VerticalLayout();
+
+        Layout root = new VerticalLayout();
+        root.addComponent(upload);
         root.addComponent(thumbnailLayout);
+        setCompositionRoot(root);
     }
 
     /**
@@ -101,28 +114,23 @@ public class FileUploadView extends CustomComponent implements Upload.SucceededL
         return fos;
     }
 
-    /**
-     * This is called if the upload is finished.
-     */
     @Override
     public void uploadSucceeded(Upload.SucceededEvent event) {
-        // TODO: if the preview is switched off in the field definition we shouldn't do this
         try {
-            setThumbnail(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            presenter.uploadSucceeded(file, fileName, mimeType);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    /**
-     * This is called if the upload fails.
-     */
     @Override
     public void uploadFailed(Upload.FailedEvent event) {
-        reset();
+        this.file = null;
+        this.fileName = null;
+        this.mimeType = null;
     }
 
-    private void reset() {
+    public void removeThumbnail() {
         thumbnailLayout.removeAllComponents();
         if (file != null) {
             file.delete();
@@ -132,48 +140,31 @@ public class FileUploadView extends CustomComponent implements Upload.SucceededL
         this.mimeType = null;
     }
 
-    public void setThumbnail(File file) throws FileNotFoundException {
-        ImageSize imageSize = ImageSize.valueOf(file);
-        setThumbnail(imageSize, new FileResource(file, getApplication()));
+    public boolean isShowingThumbnail() {
+        return !thumbnailLayout.getComponentIterator().hasNext();
     }
 
     public void setThumbnail(ImageSize imageSize, Resource imageResource) {
-
-        // TODO: should filter based on supported file extension just like in DialogFileUploadField
-
         // TODO: should support showing SWF in the preview
 
-        thumbnailLayout.removeAllComponents();
+        ImageSize scaledImageSize = imageSize.scaleToFitIfLarger(150, 150);
+
         Embedded embedded = new Embedded("", imageResource);
+        embedded.setWidth(scaledImageSize.getWidth() + "px");
+        embedded.setHeight(scaledImageSize.getHeight() + "px");
 
-        imageSize = imageSize.scaleToFitIfLarger(150, 150);
-
-        embedded.setWidth(imageSize.getWidth() + "px");
-        embedded.setHeight(imageSize.getHeight() + "px");
-        thumbnailLayout.addComponent(embedded);
-    }
-
-    public File getFile() {
-        return file;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public String getMimeType() {
-        return mimeType;
-    }
-
-    public void addRemoveButton(final Button.ClickListener clickListener) {
-        Button button = new Button("Remove");
-        button.addListener(new Button.ClickListener() {
+        Button removeButton = new Button("Remove");
+        removeButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                reset();
-                clickListener.buttonClick(event);
+                removeThumbnail();
+                presenter.previewRemoved();
             }
         });
-        root.addComponent(button);
+
+        thumbnailLayout.removeAllComponents();
+        thumbnailLayout.addComponent(embedded);
+        thumbnailLayout.addComponent(new Label("width: " + imageSize.getWidth() + " height: " + imageSize.getHeight()));
+        thumbnailLayout.addComponent(removeButton);
     }
 }
