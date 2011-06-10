@@ -51,26 +51,17 @@ public class SessionTestUtilTest {
 
     @Test
     public void testSyntax() throws IOException, RepositoryException {
-        // TODO :this syntax is deprecated
-        String content = "/parent1/sub1.prop1=one\n"
-            + "parent2/sub2.prop1=two\n"
-            + "parent3.sub3.prop1=three";
+        String content = "/parent1/sub1.prop1=one";
 
         MockSession session = SessionTestUtil.createSession(content);
         assertEquals("one", session.getNode("/parent1/sub1").getProperty("prop1").getString());
-        assertEquals("two", session.getNode("/parent2/sub2").getProperty("prop1").getString());
-        assertEquals("three", session.getNode("/parent3/sub3").getProperty("prop1").getString());
 
-        content = "/parent1/sub1@uuid=1\n" +
-                "parent2/sub2.@uuid=2\n" + // TODO : this syntax is deprecated
-                "parent3.sub3@uuid=3\n" + // TODO : this syntax is deprecated
-                "parent4.sub4.@uuid=4"; // TODO : this syntax is deprecated
+        content = "/parent1/sub1.@uuid=1\n" +
+                "/parent2/sub2.@uuid=2";
 
         session = SessionTestUtil.createSession(content);
         assertEquals("1", session.getNode("/parent1/sub1").getIdentifier());
         assertEquals("2", session.getNode("/parent2/sub2").getIdentifier());
-        assertEquals("3", session.getNode("/parent3/sub3").getIdentifier());
-        assertEquals("4", session.getNode("/parent4/sub4").getIdentifier());
     }
 
     @Test
@@ -86,21 +77,7 @@ public class SessionTestUtilTest {
     @Test
     public void testSingleMonkeyTail() throws Exception {
         final String pathToNode = "/parent1/sub1";
-        final MockSession session = SessionTestUtil.createSession(pathToNode + "@uuid=100");
+        final MockSession session = SessionTestUtil.createSession(pathToNode + ".@uuid=100");
         assertEquals("100", session.getNode(pathToNode).getIdentifier());
-    }
-
-    @Test
-    public void testCombined() throws Exception {
-        final MockSession session =
-                SessionTestUtil.createSession("/parent1/sub1.prop1=one\n"+
-                        "parent1/sub1.prop2=two\n"+
-                        "parent1.sub1.prop3=three");
-
-        assertEquals("one", session.getNode("/parent1/sub1").getProperty("prop1").getString());
-        assertEquals("two", session.getNode("/parent1/sub1").getProperty("prop2").getString());
-        assertEquals("three", session.getNode("/parent1/sub1").getProperty("prop3").getString());
-
-
     }
 }
