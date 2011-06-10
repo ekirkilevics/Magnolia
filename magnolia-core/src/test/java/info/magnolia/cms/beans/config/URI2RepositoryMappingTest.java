@@ -92,6 +92,7 @@ public class URI2RepositoryMappingTest {
         when(hm.getContent("/Test")).thenReturn(cnt);
         when(cnt.getNodeData("image")).thenReturn(docu);
         when(cnt.getHierarchyManager()).thenReturn(hm);
+        when(cnt.isNodeType("mix:referenceable")).thenReturn(true);
 
         when(docu.getType()).thenReturn(PropertyType.BINARY);
         when(docu.getAttribute("extension")).thenReturn("jpg");
