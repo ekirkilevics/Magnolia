@@ -45,13 +45,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.addon.chameleon.Segment;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
 /**
@@ -92,7 +92,7 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
 
             final ToolbarItemGroupDefinition itemGroupDefinition = groupItems.get(i);
             final List<ToolbarItemDefinition> items = itemGroupDefinition.getItems();
-            final HorizontalLayout viewGroup = new HorizontalLayout();
+            final Segment viewGroup = new Segment();
 
             viewGroup.setStyleName("segment");
             viewGroup.addStyleName("segment-alternate");
@@ -112,11 +112,11 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
                        presenter.onToolbarItemSelection(item);
                     }
                 });
-                viewGroup.addComponent(button);
+                viewGroup.addButton(button);
                 viewGroup.setComponentAlignment(button, Alignment.MIDDLE_CENTER);
             }
             viewGroup.getComponent(1).addStyleName("first");
-            viewGroup.getComponent(viewGroup.getComponentCount() - 1).addStyleName("last");
+            // viewGroup.getComponent(viewGroup.getComponentCount() - 1).addStyleName("last");
             outerContainer.addComponent(viewGroup);
         }
     }

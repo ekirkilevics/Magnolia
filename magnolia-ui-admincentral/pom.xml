@@ -25,6 +25,11 @@
       <artifactId>lazyloadwrapper</artifactId>
     </dependency>
     <dependency>
+      <groupId>temp.org.vaadin.addons</groupId>
+      <artifactId>vaadin-chameleon-theme</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+    <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
       <scope>provided</scope>
