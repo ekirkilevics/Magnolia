@@ -97,7 +97,7 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
             viewGroup.setStyleName("segment");
             viewGroup.addStyleName("segment-alternate");
 
-            final Label label = new Label(itemGroupDefinition.getGroupLabel());
+            final Label label = new Label(itemGroupDefinition.getGroupLabel() + "&nbsp;", Label.CONTENT_XML);
             viewGroup.addComponent(label);
             viewGroup.setComponentAlignment(label, Alignment.MIDDLE_CENTER);
 
