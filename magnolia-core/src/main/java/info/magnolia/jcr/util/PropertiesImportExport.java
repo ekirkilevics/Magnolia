@@ -138,12 +138,19 @@ public class PropertiesImportExport {
         if (name.equals("@type")) {
             // do nothing, this has been taken into account when creating the node.
         } else if (name.equals("@uuid")) {
-            throw new UnsupportedOperationException(
-                    "Can't see UUIDs on real node.");
+            setIdentifier(node, valueStr);
         } else {
             Object valueObj = convertPropertyStringToObject(valueStr);
             PropertyUtil.setProperty(node, name, valueObj);
         }
+    }
+
+    /**
+     * Intentionally created this method to allow simple creation of sublcasses actually setting the identifier (e.g. in tests).
+     */
+    protected void setIdentifier(Node ignoredNode, String ignoredString) {
+        throw new UnsupportedOperationException(
+                "Can't see UUIDs on real node.");
     }
 
     protected Object convertPropertyStringToObject(String valueStr) {

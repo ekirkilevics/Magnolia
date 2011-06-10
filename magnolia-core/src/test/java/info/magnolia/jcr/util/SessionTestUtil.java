@@ -49,10 +49,9 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
-
 /**
- * Utility to setUp mock-jcr-structures for tests.. Use createSession() to build mock content based on a property file. Property
- * values can have prefixes like boolean: int: for creating typed properties.
+ * Utility to setUp mock-jcr-structures for tests.. Use createSession() to build mock content based on a property file.
+ * Property values can have prefixes like boolean: int: for creating typed properties.
  *
  * @version $Id$
  */
@@ -77,12 +76,8 @@ public class SessionTestUtil {
     public static void createContent(Node root, InputStream propertiesStream) throws IOException, RepositoryException {
         final PropertiesImportExport importer = new PropertiesImportExport() {
             @Override
-            protected void populateContent(Node c, String name, String valueStr) throws RepositoryException {
-                if ("@uuid".equals(name)) {
-                    ((MockNode) c).setIdentifier(valueStr);
-                } else {
-                    super.populateContent(c, name, valueStr);
-                }
+            protected void setIdentifier(Node c, String valueStr) {
+                ((MockNode) c).setIdentifier(valueStr);
             }
         };
         importer.createContent(root, propertiesStream);
@@ -100,7 +95,7 @@ public class SessionTestUtil {
     }
 
     public static MockNode createNode(String name, Object[][] data) throws RepositoryException {
-        return createContent(name, data, new MockNode[]{});
+        return createContent(name, data, new MockNode[] {});
     }
 
     public static Map<String, MockValue> createNodeDatas(Object[][] data) {
@@ -114,9 +109,9 @@ public class SessionTestUtil {
     }
 
     /**
-     * Utility method similar to other create* methods; takes a vararg string argument to avoid concatening long strings and \n's.
-     * Creates a HierarchyManager based on the given properties, and the first argument is the path to the node which
-     * we want to get from this HierarchyManager.
+     * Utility method similar to other create* methods; takes a vararg string argument to avoid concatening long strings
+     * and \n's. Creates a HierarchyManager based on the given properties, and the first argument is the path to the
+     * node which we want to get from this HierarchyManager.
      */
     public static Node createNode(String returnFromPath, String... propertiesFormat) throws RepositoryException, IOException {
         return createSession(propsStr(propertiesFormat)).getNode(returnFromPath);
