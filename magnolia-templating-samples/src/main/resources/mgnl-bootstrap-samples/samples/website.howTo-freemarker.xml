@@ -13,7 +13,7 @@
     <sv:value>admin</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
-    <sv:value>Sample using the NEW freemarker template</sv:value>
+    <sv:value>Sample using the freemarker template</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

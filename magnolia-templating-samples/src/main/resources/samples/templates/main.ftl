@@ -10,24 +10,24 @@
 
     <body style="background-color:#ccb">
 
-	<cms:page content="website:/howTo-freemarker" dialog="samplesFieldShowRoom" label="/howTo-freemarker - Sample using the NEW freemarker template"></cms:page>
+    <cms:page content="website:/howTo-freemarker" dialog="samplesFieldShowRoom" label="/howTo-freemarker - Sample using the NEW freemarker template"></cms:page>
 
-		<h1>${content.title}</h1>
+    <h1>${content.title}</h1>
         <h3>${content.@path} (${content.@id})</h3>
         <h3>From JCR NODE: ${cmsfn.asJCRNode(content).path} </h3>
 
-		<div id="main" style="padding:15px;">
+    <div id="main" style="padding:15px;">
 
-			<h2>Singleton Area (foobar)</h2>
-			[@cms.area name="foobar" type="single" paragraphs="text"/]
+      <h2>Singleton Area (foobar)</h2>
+      [@cms.area name="foobar" type="single" paragraphs="samples:paragraphs/text"/]
 
-			<h2>Singleton Area (stage)</h2>
-			[@cms.area name="stage" type="single" paragraphs="text"/]
+      <h2>Singleton Area (stage)</h2>
+      [@cms.area name="stage" type="single" paragraphs="samples:paragraphs/text"/]
 
-			<h2>Area (main)</h2>
-			[@cms.area name="main" dialog="mainProperties" paragraphs="howToFTL,text"/]
+      <h2>Area (main)</h2>
+      [@cms.area name="main" dialog="mainProperties" paragraphs="samples:paragraphs/howToFTL,samples:paragraphs/text"/]
 
-		</div>
+    </div>
 
-	</body>
+  </body>
 </html>
