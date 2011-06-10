@@ -24,7 +24,7 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-taglib-cms</artifactId>
+      <artifactId>magnolia-templating-compatibility-taglib-cms</artifactId>
       <version>5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
