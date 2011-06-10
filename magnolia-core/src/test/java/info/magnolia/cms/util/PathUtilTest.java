@@ -33,25 +33,23 @@
  */
 package info.magnolia.cms.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests for {@link PathUtil}.
  *
  * @version $Id$
  */
-public class PathUtilTest extends TestCase {
+public class PathUtilTest {
 
-    public void testCreatePath() throws Exception {
+    @Test
+    public void testCreatePath() {
         assertEquals("/foo/bar", PathUtil.createPath("/foo", "bar"));
         assertEquals("/bar", PathUtil.createPath("/", "bar"));
         assertEquals("/bar", PathUtil.createPath("", "bar"));
         assertEquals("/bar", PathUtil.createPath(null, "bar"));
-        try {
-            PathUtil.createPath(null, null);
-            fail();
-        } catch (NullPointerException expected) {
-        }
 
         // Trailing slash not supported
         assertEquals("/foo//bar", PathUtil.createPath("/foo/", "bar"));
@@ -61,19 +59,26 @@ public class PathUtilTest extends TestCase {
         assertEquals("/foo///bar/zed", PathUtil.createPath("/foo/", "/bar/zed"));
     }
 
-    public void testAddLeadingSlash() throws Exception {
+    @Test(expected = NullPointerException.class)
+    public void testCreatePathDoesNotSupportNullArgument() {
+        PathUtil.createPath(null, null);
+    }
+
+    @Test
+    public void testAddLeadingSlash() {
         assertEquals("/", PathUtil.addLeadingSlash("/"));
         assertEquals("/", PathUtil.addLeadingSlash(""));
         assertEquals("/foo", PathUtil.addLeadingSlash("foo"));
         assertEquals("/foo", PathUtil.addLeadingSlash("/foo"));
-        try {
-            PathUtil.addLeadingSlash(null);
-            fail();
-        } catch (NullPointerException expected) {
-        }
     }
 
-    public void testGetFolder() throws Exception {
+    @Test(expected = NullPointerException.class)
+    public void testAddLeadingSlashDoesNotSupportNullArgument() {
+        PathUtil.addLeadingSlash(null);
+    }
+
+    @Test
+    public void testGetFolder() {
         assertEquals("/", PathUtil.getFolder(""));
         assertEquals("/", PathUtil.getFolder("/"));
         assertEquals("/", PathUtil.getFolder(null));
@@ -89,15 +94,11 @@ public class PathUtilTest extends TestCase {
         assertEquals("/foo/bar", PathUtil.getFolder("/foo/bar/"));
     }
 
-    public void testGetFileName() throws Exception {
+    @Test
+    public void testGetFileName() {
         assertEquals("bar", PathUtil.getFileName("/foo/bar"));
         assertEquals("bar", PathUtil.getFileName("foo/bar"));
         assertEquals("foo", PathUtil.getFileName("/foo"));
-        try {
-            PathUtil.getFileName(null);
-            fail();
-        } catch (NullPointerException expected) {
-        }
 
         // Trailing slash not supported
         assertEquals("", PathUtil.getFileName("foo/"));
@@ -105,7 +106,13 @@ public class PathUtilTest extends TestCase {
         assertEquals("", PathUtil.getFileName("foo/bar/"));
     }
 
-    public void testGetExtension() throws Exception {
+    @Test(expected = NullPointerException.class)
+    public void testGetFileNameDoesNotSupportNullArgument() {
+        PathUtil.getFileName(null);
+    }
+
+    @Test
+    public void testGetExtension() {
         assertEquals("html", PathUtil.getExtension("index.html"));
         assertEquals("", PathUtil.getExtension("index"));
         assertEquals("html", PathUtil.getExtension("/home/index.html"));
@@ -115,6 +122,7 @@ public class PathUtilTest extends TestCase {
         assertEquals(null, PathUtil.getExtension(null));
     }
 
+    @Test
     public void testStripExtension() {
         assertEquals("index", PathUtil.stripExtension("index.html"));
         assertEquals("index", PathUtil.stripExtension("index"));
