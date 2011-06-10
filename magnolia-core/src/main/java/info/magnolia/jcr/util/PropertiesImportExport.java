@@ -89,41 +89,42 @@ public class PropertiesImportExport {
     }
 
     /**
-     * Transforms the keys to the following inner notation: <code>some/path/node.prop</code> or
-     * <code>some/path/node.@type</code>.
+     * Transforms the keys to the following inner notation: <code>/some/path/node.prop</code> or
+     * <code>/some/path/node.@type</code>.
      */
     private Properties keysToInnerFormat(Properties properties) {
         Properties cleaned = new OrderedProperties();
 
         for (Object o : properties.keySet()) {
             String orgKey = (String) o;
-
+            // explicitely enforce certain syntax
+            if (!orgKey.startsWith("/")) {
+                throw new IllegalArgumentException("Missing trailing '/' for key: " + orgKey);
+            }
+            if (StringUtils.countMatches(orgKey, ".") > 1) {
+                throw new IllegalArgumentException("Key must not contain more than one '.': " + orgKey);
+            }
+            if (orgKey.contains("@") && !orgKey.contains(".@")) {
+                throw new IllegalArgumentException("Key containing '@' must be preceeded by a '.': " + orgKey);
+            }
             // if this is a node definition (no property)
             String newKey = orgKey;
 
-            // make sure we have a dot as a property separator
-            newKey = StringUtils.replace(newKey, "@", ".@");
-            // avoid double dots
-            newKey = StringUtils.replace(newKey, "..@", ".@");
-
             String propertyName = StringUtils.substringAfterLast(newKey, ".");
             String keySuffix = StringUtils.substringBeforeLast(newKey, ".");
-            String path = StringUtils.replace(keySuffix, ".", "/");
-            path = StringUtils.removeStart(path, "/");
+            String path = StringUtils.removeStart(keySuffix, "/");
 
             // if this is a path (no property)
             if (StringUtils.isEmpty(propertyName)) {
                 // no value --> is a node
                 if (StringUtils.isEmpty(properties.getProperty(orgKey))) {
                     // make this the type property if not defined otherwise
-                    if (!properties.containsKey(orgKey + "@type")) {
+                    if (!properties.containsKey(orgKey + ".@type")) {
                         cleaned.put(path + ".@type", MgnlNodeType.NT_CONTENTNODE);
                     }
                     continue;
                 }
-                // /some/path/prop = hello will be treated as a property
-                propertyName = StringUtils.substringAfterLast(path, "/");
-                path = StringUtils.substringBeforeLast(path, "/");
+                throw new IllegalArgumentException("Key for a path (no '.') must not contain a value ('='): " + orgKey);
             }
             cleaned.put(path + "." + propertyName, properties.get(orgKey));
         }
@@ -146,11 +147,11 @@ public class PropertiesImportExport {
     }
 
     /**
-     * Intentionally created this method to allow simple creation of sublcasses actually setting the identifier (e.g. in tests).
+     * Intentionally created this method to allow simple creation of sublcasses actually setting the identifier (e.g. in
+     * tests).
      */
     protected void setIdentifier(Node ignoredNode, String ignoredString) {
-        throw new UnsupportedOperationException(
-                "Can't see UUIDs on real node.");
+        throw new UnsupportedOperationException("Can't see UUIDs on real node.");
     }
 
     protected Object convertPropertyStringToObject(String valueStr) {
