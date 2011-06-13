@@ -36,53 +36,56 @@ package info.magnolia.ui.model.dialog.registry;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.cms.beans.config.ObservedManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.NodeTypeFilter;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.util.ModuleConfigurationObservingManager;
+import info.magnolia.jcr.util.NodeTypeFilter;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.NodeVisitor;
+import info.magnolia.module.ModuleRegistry;
 
 /**
  * ObservedManager for dialogs configured in repository.
  *
  * @version $Id$
  */
-public class ConfiguredDialogManager extends ObservedManager {
-
-    // TODO use jcr api
+public class ConfiguredDialogManager extends ModuleConfigurationObservingManager {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Set<String> registeredDialogs = new HashSet<String>();
     private final DialogDefinitionRegistry dialogDefinitionRegistry;
 
-    public ConfiguredDialogManager(DialogDefinitionRegistry dialogDefinitionRegistry) {
+    public ConfiguredDialogManager(ModuleRegistry moduleRegistry, DialogDefinitionRegistry dialogDefinitionRegistry) {
+        super("dialogs", moduleRegistry);
         this.dialogDefinitionRegistry = dialogDefinitionRegistry;
     }
 
     @Override
-    protected void onRegister(Content node) {
+    protected void onRegister(Node node) {
 
-        try {
-            ContentUtil.visit(node, new ContentUtil.Visitor() {
+		try {
+			NodeUtil.visit(node, new NodeVisitor() {
 
-                @Override
-                public void visit(Content node) throws Exception {
-                    for (Content dialogNode : node.getChildren(ItemType.CONTENTNODE)) {
-                        registerDialog(dialogNode);
-                    }
-                }
-            }, new NodeTypeFilter(ItemType.CONTENT));
-        } catch (Exception e) {
-            throw new RuntimeException("Can't register dialog defined at " + node, e);
-        }
-    }
+				@Override
+				public void visit(Node node) throws RepositoryException {
+					for (Node dialogNode : NodeUtil.getChildren(node, MgnlNodeType.NT_CONTENTNODE)) {
+						registerDialog(dialogNode);
+					}
+				}
+			}, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
+		} catch (Exception e) {
+			throw new RuntimeException("Can't register dialog defined at " + node, e);
+		}
+	}
 
-    private void registerDialog(Content dialogNode) {
+    private void registerDialog(Node dialogNode) throws RepositoryException {
         final String id = createId(dialogNode);
         try {
             ConfiguredDialogProvider dialogProvider = new ConfiguredDialogProvider(dialogNode);
@@ -95,8 +98,8 @@ public class ConfiguredDialogManager extends ObservedManager {
         }
     }
 
-    protected String createId(Content templateDefinitionNode) {
-        final String path = templateDefinitionNode.getHandle();
+    protected String createId(Node templateDefinitionNode) throws RepositoryException {
+        final String path = templateDefinitionNode.getPath();
         final String[] pathElements = path.split("/");
         final String moduleName = pathElements[2];
         return moduleName + ":" + StringUtils.removeStart(path, "/modules/" + moduleName + "/dialogs/");
