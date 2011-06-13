@@ -33,6 +33,9 @@
  */
 package info.magnolia.context;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
@@ -48,6 +51,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class LifeTimeJCRSessionUtil {
+
     private static final Logger log = LoggerFactory.getLogger(LifeTimeJCRSessionUtil.class);
 
     private static SystemRepositoryStrategy repositoryStrategy;
@@ -70,6 +74,16 @@ public class LifeTimeJCRSessionUtil {
         else {
             // we handle the session
             return repositoryStrategy.getHierarchyManager(repository, ContentRepository.getDefaultWorkspace(repository));
+        }
+    }
+
+    public static Session getSession(String workspace) throws RepositoryException {
+        if (useSystemContext) {
+            return MgnlContext.getSystemContext().getJCRSession(workspace, workspace);
+        }
+        else {
+            // we handle the session
+            return repositoryStrategy.getSession(workspace, ContentRepository.getDefaultWorkspace(workspace));
         }
     }
 

@@ -509,10 +509,10 @@ public class MgnlContext {
     /**
      * Note: this is the way to go, if you no longer want to rely on the Content-API.
      *
-     * @param repository - repository to get session for
-     * @return a JCR session to the provided repository
+     * @param workspace - workspace to get session for
+     * @return a JCR session to the provided workspace
      */
-    public static Session getJCRSession(String repository) throws LoginException, RepositoryException {
-        return getInstance().getJCRSession(repository, repository);
+    public static Session getJCRSession(String workspace) throws LoginException, RepositoryException {
+        return getInstance().getJCRSession(workspace, workspace);
     }
 }
