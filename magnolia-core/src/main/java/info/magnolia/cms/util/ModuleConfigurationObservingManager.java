@@ -96,14 +96,8 @@ public abstract class ModuleConfigurationObservingManager {
     }
 
     protected void reload() {
-        List<Node> nodes;
         try {
-            nodes = getObservedNodes();
-        } catch (RepositoryException e) {
-            log.error("Failed to acquire nodes", e);
-            return;
-        }
-        try {
+            List<Node> nodes = getObservedNodes();
             reload(nodes);
         } catch (RepositoryException e) {
             log.error("Reload of observed nodes failed", e);
@@ -146,5 +140,13 @@ public abstract class ModuleConfigurationObservingManager {
 
     protected List<String> getObservedPaths() {
         return Collections.unmodifiableList(observedPaths);
+    }
+
+    /**
+     * Returns the object used to synchronize on to keep multiple reload operations to occur at the same time. Useful
+     * in subclasses to block calls while the reload is in progress.
+     */
+    protected Object getReloadMonitor() {
+        return monitor;
     }
 }
