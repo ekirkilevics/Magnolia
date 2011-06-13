@@ -55,7 +55,7 @@ import info.magnolia.module.ModuleRegistry;
  * is read from a sub path of each modules configuration node. Subclasses override either reload(List<Node>) or the pair
  * onClear() and onRegister().
  *
- * @vesion $Id$
+ * @version $Id$
  */
 public abstract class ModuleConfigurationObservingManager {
 
