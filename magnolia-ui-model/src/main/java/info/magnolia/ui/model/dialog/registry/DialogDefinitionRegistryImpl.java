@@ -40,7 +40,7 @@ import javax.jcr.RepositoryException;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
 /**
- * Maintains a registry of dialog providers registered by name.
+ * Maintains a registry of dialog providers registered by id.
  *
  * @version $Id$
  */
@@ -49,28 +49,28 @@ public class DialogDefinitionRegistryImpl implements DialogDefinitionRegistry {
     private final Map<String, DialogProvider> providers = new HashMap<String, DialogProvider>();
 
     @Override
-    public void registerDialog(String dialogName, DialogProvider provider) {
+    public void registerDialog(String id, DialogProvider provider) {
         synchronized (providers) {
-            if (providers.containsKey(dialogName)) {
-                throw new IllegalStateException("Dialog already registered for name [" + dialogName + "]");
+            if (providers.containsKey(id)) {
+                throw new IllegalStateException("Dialog already registered with id [" + id + "]");
             }
-            providers.put(dialogName, provider);
+            providers.put(id, provider);
         }
     }
 
     @Override
-    public void unregisterDialog(String dialogName) {
+    public void unregisterDialog(String id) {
         synchronized (providers) {
-            providers.remove(dialogName);
+            providers.remove(id);
         }
     }
 
     @Override
-    public DialogDefinition getDialogDefinition(String dialogName) throws RepositoryException {
+    public DialogDefinition getDialogDefinition(String id) throws RepositoryException {
 
         DialogProvider dialogProvider;
         synchronized (providers) {
-            dialogProvider = providers.get(dialogName);
+            dialogProvider = providers.get(id);
         }
         if (dialogProvider == null) {
             return null;

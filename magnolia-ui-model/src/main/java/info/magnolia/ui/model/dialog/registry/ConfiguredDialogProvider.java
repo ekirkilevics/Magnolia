@@ -48,6 +48,8 @@ import info.magnolia.ui.model.dialog.definition.DialogDefinition;
  */
 public class ConfiguredDialogProvider implements DialogProvider {
 
+    // TODO use jcr api
+
     private Content configNode;
 
     public ConfiguredDialogProvider(Content configNode) {

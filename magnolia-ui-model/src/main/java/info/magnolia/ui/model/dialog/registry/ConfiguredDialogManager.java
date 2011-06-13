@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.model.dialog.registry;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,6 +43,8 @@ import org.slf4j.LoggerFactory;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.NodeTypeFilter;
 
 /**
  * ObservedManager for dialogs configured in repository.
@@ -52,10 +53,12 @@ import info.magnolia.cms.core.ItemType;
  */
 public class ConfiguredDialogManager extends ObservedManager {
 
+    // TODO use jcr api
+
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Set<String> registeredDialogs = new HashSet<String>();
-    private DialogDefinitionRegistry dialogDefinitionRegistry;
+    private final DialogDefinitionRegistry dialogDefinitionRegistry;
 
     public ConfiguredDialogManager(DialogDefinitionRegistry dialogDefinitionRegistry) {
         this.dialogDefinitionRegistry = dialogDefinitionRegistry;
@@ -64,25 +67,39 @@ public class ConfiguredDialogManager extends ObservedManager {
     @Override
     protected void onRegister(Content node) {
 
-        Collection<Content> children = node.getChildren(ItemType.CONTENTNODE);
+        try {
+            ContentUtil.visit(node, new ContentUtil.Visitor() {
 
-        for (Content dialogNode : children) {
-
-            String name = dialogNode.getNodeData("name").getString();
-            if (StringUtils.isEmpty(name)) {
-                name = dialogNode.getName();
-            }
-
-            synchronized (registeredDialogs) {
-                try {
-                    ConfiguredDialogProvider dialogProvider = new ConfiguredDialogProvider(dialogNode);
-                    dialogDefinitionRegistry.registerDialog(name, dialogProvider);
-                    this.registeredDialogs.add(name);
-                } catch (IllegalStateException e) {
-                    log.error("Unable to register dialog [" + name + "]", e);
+                @Override
+                public void visit(Content node) throws Exception {
+                    for (Content dialogNode : node.getChildren(ItemType.CONTENTNODE)) {
+                        registerDialog(dialogNode);
+                    }
                 }
-            }
+            }, new NodeTypeFilter(ItemType.CONTENT));
+        } catch (Exception e) {
+            throw new RuntimeException("Can't register dialog defined at " + node, e);
         }
+    }
+
+    private void registerDialog(Content dialogNode) {
+        final String id = createId(dialogNode);
+        try {
+            ConfiguredDialogProvider dialogProvider = new ConfiguredDialogProvider(dialogNode);
+            synchronized (registeredDialogs) {
+                dialogDefinitionRegistry.registerDialog(id, dialogProvider);
+                this.registeredDialogs.add(id);
+            }
+        } catch (IllegalStateException e) {
+            log.error("Unable to register dialog [" + id + "]", e);
+        }
+    }
+
+    protected String createId(Content templateDefinitionNode) {
+        final String path = templateDefinitionNode.getHandle();
+        final String[] pathElements = path.split("/");
+        final String moduleName = pathElements[2];
+        return moduleName + ":" + StringUtils.removeStart(path, "/modules/" + moduleName + "/dialogs/");
     }
 
     @Override

@@ -38,21 +38,21 @@ import javax.jcr.RepositoryException;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
 /**
- * Maintains a registry of dialog providers registered by name.
+ * Maintains a registry of dialog providers registered by id.
  *
  * @version $Id$
  */
 public interface DialogDefinitionRegistry {
 
-    void registerDialog(String dialogName, DialogProvider provider);
+    void registerDialog(String id, DialogProvider provider);
 
-    void unregisterDialog(String dialogName);
+    void unregisterDialog(String id);
 
     /**
-     * Gets dialog definition for dialog of provided name or null when such dialog is not registered.
+     * Gets dialog definition for dialog of provided id or null when such dialog is not registered.
      *
-     * @param dialogName name of the dialog to retrieve. Case sensitive. Null is not allowed.
-     * @return dialog definition or null when dialog of requested name doesn't exist.
+     * @param id of the dialog to retrieve. Case sensitive. Null is not allowed.
+     * @return dialog definition or null when dialog of requested id doesn't exist.
      */
-    DialogDefinition getDialogDefinition(String dialogName) throws RepositoryException;
+    DialogDefinition getDialogDefinition(String id) throws RepositoryException;
 }
