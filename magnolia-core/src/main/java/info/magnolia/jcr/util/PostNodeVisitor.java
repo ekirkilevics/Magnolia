@@ -37,8 +37,8 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 /**
- * Used in {@link NodeUtil#visit(Node,NodeVisitor)} if the visitor wants to use post order. That is, children will be
- * visited before their parents.
+ * Used in {@link NodeUtil#visit(Node, NodeVisitor)} if the visitor wants to use post order. The interface provides a
+ * method that is called for a node after the visitor has visited its children.
  *
  * @version $Id$
  * @see NodeUtil#visit(Node, NodeVisitor)
