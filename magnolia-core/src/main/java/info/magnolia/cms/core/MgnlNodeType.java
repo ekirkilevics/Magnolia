@@ -141,7 +141,7 @@ public final class MgnlNodeType {
 
     public static final String MIX_LOCKABLE = MIX_PREFIX + "lockable";
 
-    public static final String DELETED_NODE_MIXIN = MGNL_PREFIX + "deleted";
+    public static final String MIX_DELETED = MGNL_PREFIX + "deleted";
 
     // JCR properties.
 
