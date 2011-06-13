@@ -33,56 +33,61 @@
  */
 package info.magnolia.templating.template.registry;
 
-import info.magnolia.cms.beans.config.ObservedManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.NodeTypeFilter;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.util.ModuleConfigurationObservingManager;
+import info.magnolia.jcr.util.NodeTypeFilter;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.NodeVisitor;
+import info.magnolia.module.ModuleRegistry;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * ObservedManager for {@link TemplateDefinition} configured in repository.
+ * ObservedManager for {@link info.magnolia.templating.template.TemplateDefinition} configured in repository.
  *
  * @version $Id$
  */
-public class ConfiguredTemplateDefinitionManager extends ObservedManager {
+public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObservingManager {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Set<String> registeredIds = new HashSet<String>();
     private TemplateDefinitionRegistry templateDefinitionRegistry;
 
-    public ConfiguredTemplateDefinitionManager(TemplateDefinitionRegistry registry) {
-        this.templateDefinitionRegistry = registry;
+    public ConfiguredTemplateDefinitionManager(ModuleRegistry moduleRegistry, TemplateDefinitionRegistry templateDefinitionRegistry) {
+        super("templates", moduleRegistry);
+        this.templateDefinitionRegistry = templateDefinitionRegistry;
     }
 
     @Override
-    protected void onRegister(Content node) {
+    protected void onRegister(Node node) {
         // TODO use the jcr api
 
         try {
-            ContentUtil.visit(node, new ContentUtil.Visitor() {
+            NodeUtil.visit(node, new NodeVisitor() {
 
                 @Override
-                public void visit(Content node) throws Exception {
-                    for (Content templateDefinitionNode : node.getChildren(ItemType.CONTENTNODE)) {
+                public void visit(Node node) throws RepositoryException {
+                    for (Node templateDefinitionNode : NodeUtil.getChildren(node, MgnlNodeType.NT_CONTENTNODE)) {
                         registerTemplateDefinition(templateDefinitionNode);
                     }
                 }
-            }, new NodeTypeFilter(ItemType.CONTENT));
+            }, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
         }
         catch (Exception e) {
             throw new RuntimeException("Can't register template definitions defined at " + node, e);
         }
     }
 
-    protected void registerTemplateDefinition(Content templateDefinitionNode) {
+    protected void registerTemplateDefinition(Node templateDefinitionNode) throws RepositoryException {
         final String id = createId(templateDefinitionNode);
 
         synchronized (registeredIds) {
@@ -96,8 +101,8 @@ public class ConfiguredTemplateDefinitionManager extends ObservedManager {
         }
     }
 
-    protected String createId(Content templateDefinitionNode) {
-        final String path = templateDefinitionNode.getHandle();
+    protected String createId(Node templateDefinitionNode) throws RepositoryException {
+        final String path = templateDefinitionNode.getPath();
         final String[] pathElements = path.split("/");
         final String moduleName = pathElements[2];
         return moduleName + ":" + StringUtils.removeStart(path, "/modules/" + moduleName + "/templates/");

@@ -73,7 +73,7 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
 
     /**
      * Instantiates the model based on the class defined by the {@link #modelClass} property. The class must provide a
-     * constructor similar to {@link RenderingModelImpl#RenderingModelImpl(Content, RenderableDefinition, RenderingModel)}.
+     * constructor similar to {@link RenderingModelImpl#RenderingModelImpl(Node, RenderableDefinition, RenderingModel)}.
      * All the request parameters are then mapped to the model's properties.
      */
     @Override

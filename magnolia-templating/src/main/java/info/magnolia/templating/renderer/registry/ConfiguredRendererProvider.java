@@ -33,10 +33,15 @@
  */
 package info.magnolia.templating.renderer.registry;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.cms.core.DefaultContent;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.jcr.wrapper.LazyNodeWrapper;
 import info.magnolia.templating.renderer.Renderer;
 
 /**
@@ -46,19 +51,24 @@ import info.magnolia.templating.renderer.Renderer;
  */
 public class ConfiguredRendererProvider implements RendererProvider {
 
-    private Content configNode;
+    private Node configNode;
 
-    public ConfiguredRendererProvider(Content configNode) {
+    public ConfiguredRendererProvider(Node configNode) throws RepositoryException {
         // session that opened provided content might not be alive by the time we need to use this
-        this.configNode = new LazyContentWrapper(configNode);
+        this.configNode = new LazyNodeWrapper(configNode);
     }
 
     @Override
     public Renderer getRenderer() throws RendererRegistrationException {
         // FIXME we should not constantly transform the object. the manager re-registers the providers upon changes
         try {
-            return (Renderer) Content2BeanUtil.toBean(configNode, true, Renderer.class);
+            Content content = new DefaultContent(configNode, null);
+            return (Renderer) Content2BeanUtil.toBean(content, true, Renderer.class);
         } catch (Content2BeanException e) {
+            throw new RendererRegistrationException(e);
+        } catch (AccessDeniedException e) {
+            throw new RendererRegistrationException(e);
+        } catch (RepositoryException e) {
             throw new RendererRegistrationException(e);
         }
     }

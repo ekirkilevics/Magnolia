@@ -33,7 +33,7 @@
  */
 package info.magnolia.templating.template.registry;
 
-import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.templating.template.TemplateDefinition;
@@ -109,7 +109,7 @@ public class TemplateDefinitionRegistry {
     public Collection<TemplateDefinition> getAvailableTemplates(Node content) {
 
         try {
-            if (content != null && NodeUtil.hasMixin(content, ItemType.DELETED_NODE_MIXIN)) {
+            if (content != null && NodeUtil.hasMixin(content, MgnlNodeType.MIX_DELETED)) {
                 return Collections.singleton(getTemplateDefinition(DELETED_PAGE_TEMPLATE));
             }
         } catch (RepositoryException e) {
@@ -129,7 +129,7 @@ public class TemplateDefinitionRegistry {
     }
 
     /**
-     * Get the Template that could be used for the provided Content as a default.
+     * Get the Template that could be used for the provided content as a default.
      */
     // TODO move this to an independent template availability component
     public TemplateDefinition getDefaultTemplate(Node content) {

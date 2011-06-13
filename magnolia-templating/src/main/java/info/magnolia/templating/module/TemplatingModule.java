@@ -56,8 +56,8 @@ public class TemplatingModule implements ModuleLifecycle {
 
     @Override
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
-        moduleLifecycleContext.registerModuleObservingComponent("templates", templateDefinitionManager);
-        moduleLifecycleContext.registerModuleObservingComponent("renderers", rendererManager);
+        templateDefinitionManager.start();
+        rendererManager.start();
     }
 
     @Override

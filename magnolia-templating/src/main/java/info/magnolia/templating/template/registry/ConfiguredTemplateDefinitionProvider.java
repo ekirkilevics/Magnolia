@@ -33,14 +33,19 @@
  */
 package info.magnolia.templating.template.registry;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.LazyContentWrapper;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.templating.template.TemplateDefinition;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.jcr.wrapper.LazyNodeWrapper;
+import info.magnolia.templating.template.TemplateDefinition;
 
 /**
  * TemplateDefinitionProvider that instantiates a dialog from a configuration node.
@@ -51,11 +56,11 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
 
     private static final Logger log = LoggerFactory.getLogger(ConfiguredTemplateDefinitionProvider.class);
 
-    private final Content configNode;
+    private final Node configNode;
 
-    public ConfiguredTemplateDefinitionProvider(Content configNode) {
+    public ConfiguredTemplateDefinitionProvider(Node configNode) throws RepositoryException {
         // session that opened provided content might not be alive by the time we need to use this
-        this.configNode = new LazyContentWrapper(configNode);
+        this.configNode = new LazyNodeWrapper(configNode);
     }
 
     @Override
@@ -63,7 +68,8 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
         // TODO make sure we are not building the object for every rendering
         Object obj = null;
         try {
-            obj = Content2BeanUtil.toBean(configNode, true, TemplateDefinition.class);
+            Content content = new DefaultContent(configNode, null);
+            obj = Content2BeanUtil.toBean(content, true, TemplateDefinition.class);
             return (TemplateDefinition) obj;
         } catch (Content2BeanException e) {
             throw new TemplateDefinitionRegistrationException(e);
@@ -74,6 +80,10 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
                 log.warn("The template implements old interface and can be loaded in compatibility mode only.");
             }
             // callee knows how to deal with TDRE, but doesn't expect CCE
+            throw new TemplateDefinitionRegistrationException(e);
+        } catch (AccessDeniedException e) {
+            throw new TemplateDefinitionRegistrationException(e);
+        } catch (RepositoryException e) {
             throw new TemplateDefinitionRegistrationException(e);
         }
     }

@@ -33,37 +33,40 @@
  */
 package info.magnolia.templating.renderer.registry;
 
-import info.magnolia.cms.beans.config.ObservedManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-
 import java.util.HashSet;
 import java.util.Set;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.util.ModuleConfigurationObservingManager;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.module.ModuleRegistry;
 
 /**
  * ObservedManager for {@link info.magnolia.templating.renderer.Renderer} configured in repository.
  *
  * @version $Id$
  */
-public class ConfiguredRendererManager extends ObservedManager {
+public class ConfiguredRendererManager extends ModuleConfigurationObservingManager {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Set<String> registeredIds = new HashSet<String>();
     private RendererRegistry registry;
 
-    public ConfiguredRendererManager(RendererRegistry registry) {
+    public ConfiguredRendererManager(ModuleRegistry moduleRegistry, RendererRegistry registry) {
+        super("renderers", moduleRegistry);
         this.registry = registry;
     }
 
     @Override
-    protected void onRegister(Content node) {
-        // TODO use the jcr api
+    protected void onRegister(Node node) throws RepositoryException {
 
-        for (Content rendererNode : node.getChildren(ItemType.CONTENTNODE)) {
+        for (Node rendererNode : NodeUtil.getChildren(node, MgnlNodeType.NT_CONTENTNODE)) {
 
             final String id = rendererNode.getName();
 
