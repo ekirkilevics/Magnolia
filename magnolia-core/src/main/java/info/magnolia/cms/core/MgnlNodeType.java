@@ -33,10 +33,8 @@
  */
 package info.magnolia.cms.core;
 
-import javax.jcr.nodetype.NodeType;
-
 /**
- * Constant for node-types used within Magnolia - the equivalent to {@link NodeType}.
+ * Constant for node-types used within Magnolia.
  *
  * @version $Id$
  */
@@ -65,21 +63,21 @@ public final class MgnlNodeType {
     /**
      * Node type: base.
      */
-    public static final String NT_BASE = NodeType.NT_BASE;
+    public static final String NT_BASE = NT_PREFIX + "base";
 
     /**
      * Node type: unstructured.
      */
-    public static final String NT_UNSTRUCTURED = NodeType.NT_UNSTRUCTURED;
+    public static final String NT_UNSTRUCTURED = NT_PREFIX + "unstructured";
 
     /**
      * Node type: hierarchyNode.
      */
-    public static final String NT_HIERARCHY = NodeType.NT_HIERARCHY_NODE;
+    public static final String NT_HIERARCHY = NT_PREFIX + "hierarchyNode";
 
     /**
      * Node type: folder.
-     *
+     * <p/>
      * TODO dlipp: why not NodeType.NT_FOLDER - why prefixed with mgnl???
      */
     public static final String NT_FOLDER = MGNL_PREFIX + "folder";
@@ -87,61 +85,34 @@ public final class MgnlNodeType {
     /**
      * Node type: file.
      */
-    public static final String NT_FILE = NodeType.NT_FILE;
+    public static final String NT_FILE = NT_PREFIX + "file";
 
     /**
      * Node type: resource.
      */
-    public static final String NT_RESOURCE = MGNL_PREFIX+ "resource";
+    public static final String NT_RESOURCE = MGNL_PREFIX + "resource";
 
     /**
      * Node type: metadata.
      */
-    public static final String NT_METADATA = MGNL_PREFIX+ "metaData";
+    public static final String NT_METADATA = MGNL_PREFIX + "metaData";
 
     /**
-     * Mixin: node has access control.
-     */
-    public static final String MIX_ACCESSCONTROLLABLE = MIX_PREFIX + "accessControllable";
-
-    /**
-     * Mixin: node can be referenced.
-     */
-    public static final String MIX_REFERENCEABLE = NodeType.MIX_REFERENCEABLE;
-
-    /**
-     * Mixin: node can be versioned.
-     */
-    public static final String MIX_VERSIONABLE = NodeType.MIX_VERSIONABLE;
-
-    public static final String MIX_LOCKABLE = NodeType.MIX_LOCKABLE;
-
-    public static final String DELETED_NODE_MIXIN = MGNL_PREFIX + "deleted";
-
-    /**
-     * Magnolia content.
+     * Node type: content.
      */
     public static final String NT_CONTENT = MGNL_PREFIX + "content";
+
+    /**
+     * Node tye: content node.
+     */
+    public static final String NT_CONTENTNODE = MGNL_PREFIX + "contentNode";
 
     /**
      * TODO dlipp: to be replaced by mgnl:property? NodeData is Content-API term...
      */
     public static final String MGNL_NODE_DATA = MGNL_PREFIX + "nodeData";
 
-    public static final String NT_FROZENNODE = NodeType.NT_FROZEN_NODE;
-
-    public static final String JCR_FROZENNODE = JCR_PREFIX + "frozenNode";
-
-    public static final String JCR_FROZEN_PRIMARY_TYPE = JCR_PREFIX + "frozenPrimaryType";
-
-    public static final String JCR_PRIMARY_TYPE = JCR_PREFIX + "primaryType";
-
-    public static final String JCR_DATA = JCR_PREFIX + "data";
-
-    /**
-     * Magnolia content node.
-     */
-    public static final String NT_CONTENTNODE = MGNL_PREFIX + "contentNode";
+    public static final String NT_FROZENNODE = NT_PREFIX + "frozenNode";
 
     public static final String USER = MGNL_PREFIX + "user";
 
@@ -151,5 +122,37 @@ public final class MgnlNodeType {
 
     public static final String SYSTEM = MGNL_PREFIX + "reserve";
 
+    // Mixins
+
+    /**
+     * Mixin: node has access control.
+     */
+    public static final String MIX_ACCESSCONTROLLABLE = MIX_PREFIX + "accessControllable";
+
+    /**
+     * Mixin: node can be referenced.
+     */
+    public static final String MIX_REFERENCEABLE = MIX_PREFIX + "referenceable";
+
+    /**
+     * Mixin: node can be versioned.
+     */
+    public static final String MIX_VERSIONABLE = MIX_PREFIX + "versionable";
+
+    public static final String MIX_LOCKABLE = MIX_PREFIX + "lockable";
+
+    public static final String DELETED_NODE_MIXIN = MGNL_PREFIX + "deleted";
+
+    // JCR properties.
+
+    public static final String JCR_FROZENNODE = JCR_PREFIX + "frozenNode";
+
+    public static final String JCR_FROZEN_PRIMARY_TYPE = JCR_PREFIX + "frozenPrimaryType";
+
+    public static final String JCR_PRIMARY_TYPE = JCR_PREFIX + "primaryType";
+
+    public static final String JCR_DATA = JCR_PREFIX + "data";
+
     public static final String JCR_CONTENT = JCR_PREFIX + "content";
+
 }
