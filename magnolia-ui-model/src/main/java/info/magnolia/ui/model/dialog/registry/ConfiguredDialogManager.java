@@ -35,7 +35,6 @@ package info.magnolia.ui.model.dialog.registry;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -70,20 +69,20 @@ public class ConfiguredDialogManager extends ModuleConfigurationObservingManager
     @Override
     protected void onRegister(Node node) {
 
-		try {
-			NodeUtil.visit(node, new NodeVisitor() {
+        try {
+            NodeUtil.visit(node, new NodeVisitor() {
 
-				@Override
-				public void visit(Node node) throws RepositoryException {
-					for (Node dialogNode : NodeUtil.getChildren(node, MgnlNodeType.NT_CONTENTNODE)) {
-						registerDialog(dialogNode);
-					}
-				}
-			}, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
-		} catch (Exception e) {
-			throw new RuntimeException("Can't register dialog defined at " + node, e);
-		}
-	}
+                @Override
+                public void visit(Node node) throws RepositoryException {
+                    for (Node dialogNode : NodeUtil.getChildren(node, MgnlNodeType.NT_CONTENTNODE)) {
+                        registerDialog(dialogNode);
+                    }
+                }
+            }, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
+        } catch (Exception e) {
+            throw new RuntimeException("Can't register dialog defined at " + node, e);
+        }
+    }
 
     private void registerDialog(Node dialogNode) throws RepositoryException {
         final String id = createId(dialogNode);
