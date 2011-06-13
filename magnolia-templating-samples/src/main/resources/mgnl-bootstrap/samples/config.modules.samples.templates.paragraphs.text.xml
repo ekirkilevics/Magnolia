@@ -13,7 +13,7 @@
     <sv:value>Displays a title and a body of text</sv:value>
   </sv:property>
   <sv:property sv:name="dialog" sv:type="String">
-    <sv:value>samplesTextDialog</sv:value>
+    <sv:value>samples:samplesTextDialog</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>

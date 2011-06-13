@@ -78,9 +78,6 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>8e4da7a0-5af6-4386-b1ad-c93d49beb72b</sv:value>
       </sv:property>
-      <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>tab</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
@@ -153,9 +150,6 @@
           <sv:property sv:name="class" sv:type="String">
             <sv:value>info.magnolia.ui.model.dialog.definition.EditFieldDefinition</sv:value>
           </sv:property>
-          <sv:property sv:name="controlType" sv:type="String">
-            <sv:value>edit</sv:value>
-          </sv:property>
           <sv:property sv:name="description" sv:type="String">
             <sv:value/>
           </sv:property>
@@ -198,9 +192,6 @@
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
             <sv:value>info.magnolia.ckeditor.dialog.definition.CKEditorFieldDefinition</sv:value>
-          </sv:property>
-          <sv:property sv:name="controlType" sv:type="String">
-            <sv:value>fckEdit</sv:value>
           </sv:property>
           <sv:property sv:name="description" sv:type="String">
             <sv:value>dialog.sampleProperties.description</sv:value>

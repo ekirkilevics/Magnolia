@@ -10,7 +10,7 @@
 
     <body style="background-color:#ccb">
 
-    <cms:page content="website:/howTo-freemarker" dialog="samplesFieldShowRoom" label="/howTo-freemarker - Sample using the NEW freemarker template"></cms:page>
+    <cms:page content="website:/howTo-freemarker" dialog="samples:samplesFieldShowRoom" label="/howTo-freemarker - Sample using the NEW freemarker template"></cms:page>
 
     <h1>${content.title}</h1>
         <h3>${content.@path} (${content.@id})</h3>
@@ -25,7 +25,7 @@
       [@cms.area name="stage" type="single" paragraphs="samples:paragraphs/text"/]
 
       <h2>Area (main)</h2>
-      [@cms.area name="main" dialog="mainProperties" paragraphs="samples:paragraphs/howToFTL,samples:paragraphs/text"/]
+      [@cms.area name="main" dialog="samples:mainProperties" paragraphs="samples:paragraphs/howToFTL,samples:paragraphs/text"/]
 
     </div>
 

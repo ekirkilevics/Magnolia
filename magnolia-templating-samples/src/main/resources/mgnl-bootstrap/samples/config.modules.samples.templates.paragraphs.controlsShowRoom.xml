@@ -17,7 +17,7 @@
     <sv:value>paragraphs.samplesControlsShowRoom.description</sv:value>
   </sv:property>
   <sv:property sv:name="dialog" sv:type="String">
-    <sv:value>controlsShowRoom</sv:value>
+    <sv:value>samples:controlsShowRoom</sv:value>
   </sv:property>
   <sv:property sv:name="i18nBasename" sv:type="String">
     <sv:value>info.magnolia.module.samples.messages</sv:value>
