@@ -41,27 +41,25 @@ import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.addon.chameleon.SidebarMenu;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
-import com.vaadin.ui.Accordion;
-import com.vaadin.ui.Button;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
-import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
-import com.vaadin.ui.TabSheet.Tab;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.BaseTheme;
+import com.vaadin.ui.NativeButton;
 
 
 /**
@@ -69,6 +67,7 @@ import com.vaadin.ui.themes.BaseTheme;
  * data). It's part of a {@link NavigationWorkArea}.
  *
  * @author fgrilli
+ * @author mrichert
  */
 public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
@@ -76,7 +75,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     private Map<Component, NavigationItemDefinition> navigationItems = new HashMap<Component, NavigationItemDefinition>();
 
-    private Accordion accordion = new Accordion();
+    private SidebarMenu accordion = new SidebarMenu();
 
     private Collection<NavigationItemDefinition> navigationItemDefs;
 
@@ -97,9 +96,19 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
             }
         }
 
-        // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs
-        // only for sub menu items
-        accordion.addListener(new SelectedNavigationItemTabChangeListener());
+        accordion.addListener(new LayoutClickListener() {
+
+            @Override
+            public void layoutClick(LayoutClickEvent event) {
+                Component child = event.getChildComponent();
+                if (child != null) {
+                    presenter.onMenuSelection(navigationItems.get(child));
+                }
+            }
+        });
+
+        accordion.setSizeUndefined();
+        accordion.setWidth(100, Sizeable.UNITS_PERCENTAGE);
     }
 
     @Override
@@ -114,15 +123,24 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
      */
     public void addTab(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
         // layout for sub menu entries
-        Component subNavigation = addSubNavigationItems(navigationItemDef, permissions);
-        subNavigation = subNavigation == null ? new Label() : subNavigation;
-        Tab tab = accordion.addTab(subNavigation, getLabel(navigationItemDef), getIcon(navigationItemDef));
+        Collection<NativeButton> subNavigation = addSubNavigationItems(navigationItemDef, permissions);
+
+        Label tab = new Label("<img src='"
+            + MgnlContext.getContextPath()
+            + navigationItemDef.getIcon()
+            + "'>"
+            + getLabel(navigationItemDef), Label.CONTENT_XHTML);
         tab.setDescription(navigationItemDef.getDescription());
+
+        accordion.addComponent(tab);
+        for (NativeButton button : subNavigation) {
+            accordion.addComponent(button);
+        }
 
         // TODO: add notification badges
 
         // store tab reference
-        navigationItems.put(tab.getComponent(), navigationItemDef);
+        navigationItems.put(tab, navigationItemDef);
     }
 
     /**
@@ -130,26 +148,21 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
      * @param permissions
      * @return View with all relevant sub menu entries or null when none exists.
      */
-    private Component addSubNavigationItems(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
-        if (navigationItemDef.getItems().isEmpty()) {
-            return null;
-        }
-        final Layout layout = new VerticalLayout();
-        // layout.setSpacing(true);
-        layout.setMargin(true);
-        layout.addStyleName(navigationItemDef.getName());
+    private Collection<NativeButton> addSubNavigationItems(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
+        List<NativeButton> list = new ArrayList<NativeButton>();
 
         // sub menu items (2 levels only)
         for (NavigationItemDefinition sub : navigationItemDef.getItems()) {
             if (permissions.hasPermission(sub)) {
                 NavigationItem submenuItem = new NavigationItem(sub);
-                layout.addComponent(submenuItem);
+                list.add(submenuItem);
+
                 // store submenu reference
                 navigationItems.put(submenuItem, sub);
             }
         }
 
-        return layout;
+        return list;
     }
 
     /**
@@ -183,10 +196,11 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     /**
      * Menu item button implementation.
-     *
+     * 
      * @author fgrilli
+     * @author mrichert
      */
-    public class NavigationItem extends Button {
+    public class NavigationItem extends NativeButton {
 
         private NavigationItemDefinition item;
 
@@ -206,8 +220,6 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
                 setIcon(icon);
             }
             setCaption(getLabel(item));
-            setStyleName(BaseTheme.BUTTON_LINK);
-            setHeight(20f, Button.UNITS_PIXELS);
 
             this.addListener(new ClickListener() {
 
@@ -219,25 +231,6 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
                     }
                 }
             });
-        }
-    }
-
-    /**
-     * Trigger for all menu actions.
-     *
-     * @author fgrilli
-     */
-    public class SelectedNavigationItemTabChangeListener implements SelectedTabChangeListener {
-
-        @Override
-        public void selectedTabChange(SelectedTabChangeEvent event) {
-            TabSheet tabsheet = event.getTabSheet();
-            Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
-
-            if (tab != null) {
-                NavigationItemDefinition menuConfig = navigationItems.get(tab.getComponent());
-                presenter.onMenuSelection(menuConfig);
-            }
         }
     }
 
@@ -254,9 +247,17 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
             }
             final PlaceChangeActionDefinition definition = (PlaceChangeActionDefinition) entry.getValue().getActionDefinition();
             if (definition.getPlace().equals(place)) {
-                accordion.setSelectedTab(entry.getKey());
+
+                // accordion.setSelectedTab(entry.getKey());
+                Component key = entry.getKey();
+                if (key instanceof NativeButton) {
+                    accordion.setSelected((NativeButton) key);
+                }
+
                 navigationWorkarea.setVisible(true);
+
                 log.debug("selected tab {}", entry.getValue().getName());
+
                 break;
             }
         }
