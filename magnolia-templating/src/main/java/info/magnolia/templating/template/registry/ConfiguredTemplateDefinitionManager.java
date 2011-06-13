@@ -48,6 +48,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * ObservedManager for {@link TemplateDefinition} configured in repository.
+ *
+ * @version $Id$
  */
 public class ConfiguredTemplateDefinitionManager extends ObservedManager {
 
@@ -81,10 +83,7 @@ public class ConfiguredTemplateDefinitionManager extends ObservedManager {
     }
 
     protected void registerTemplateDefinition(Content templateDefinitionNode) {
-        final String path = templateDefinitionNode.getHandle();
-        final String[] pathElements = path.split("/");
-        final String moduleName = pathElements[2];
-        final String id = moduleName + ":" + StringUtils.removeStart(path, "/modules/" + moduleName + "/templates/");
+        final String id = createId(templateDefinitionNode);
 
         synchronized (registeredIds) {
             try {
@@ -95,6 +94,13 @@ public class ConfiguredTemplateDefinitionManager extends ObservedManager {
                 log.error("Unable to register template definition [" + id + "]", e);
             }
         }
+    }
+
+    protected String createId(Content templateDefinitionNode) {
+        final String path = templateDefinitionNode.getHandle();
+        final String[] pathElements = path.split("/");
+        final String moduleName = pathElements[2];
+        return moduleName + ":" + StringUtils.removeStart(path, "/modules/" + moduleName + "/templates/");
     }
 
     @Override

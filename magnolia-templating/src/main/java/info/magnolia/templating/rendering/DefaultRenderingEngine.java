@@ -51,8 +51,8 @@ import javax.jcr.Node;
 
 /**
  * Default implementation of {@link RenderingEngine}. Maintains the {@link AggregationState}.
- * @version $Id$
  *
+ * @version $Id$
  */
 public class DefaultRenderingEngine implements RenderingEngine {
 
@@ -81,7 +81,7 @@ public class DefaultRenderingEngine implements RenderingEngine {
     public void render(Node content, Map<String, Object> context, Writer out) throws RenderException {
         TemplateDefinition templateDefinition;
         try {
-            templateDefinition = templateDefinitionAssignment.getAssignedTempalteDefinition(content);
+            templateDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(content);
         }
         catch (TemplateDefinitionRegistrationException e) {
             throw new RenderException("Can't render node " + content, e);
@@ -91,6 +91,7 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
     @Override
     public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws RenderException {
+
         Node orgMainContent = null;
         Node orgCurrentContent = null;
 
@@ -118,11 +119,11 @@ public class DefaultRenderingEngine implements RenderingEngine {
         }
         catch (Exception e) {
             throw new RenderException("Can't render " + content, e);
-        }
-
-        if (state != null) {
-            state.setMainContent(orgMainContent);
-            state.setCurrentContent(orgCurrentContent);
+        } finally {
+            if (state != null) {
+                state.setMainContent(orgMainContent);
+                state.setCurrentContent(orgCurrentContent);
+            }
         }
     }
 

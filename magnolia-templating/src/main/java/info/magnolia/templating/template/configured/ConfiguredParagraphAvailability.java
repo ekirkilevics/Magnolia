@@ -40,6 +40,8 @@ import java.util.Collection;
 
 /**
  * A {@link ParagraphAvailability} configured in the configuration workspace.
+ *
+ * @version $Id$
  */
 public class ConfiguredParagraphAvailability implements ParagraphAvailability {
 

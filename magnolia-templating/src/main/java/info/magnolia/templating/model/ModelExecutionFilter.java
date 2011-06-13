@@ -55,8 +55,8 @@ import javax.servlet.http.HttpServletResponse;
  * To provide proper semantics this class mirrors functionality in RenderingEngine and AbstractRender, specifically in
  * how it sets up the current content in aggregation state and creation and execution of the model.
  *
- * @author tmattsson
- * @see info.magnolia.module.templating.AbstractRenderer
+ * @version $Id$
+ * @see info.magnolia.templating.renderer.AbstractRenderer
  * @see info.magnolia.cms.util.RequestDispatchUtil
  * @see EarlyExecutionAware
  */

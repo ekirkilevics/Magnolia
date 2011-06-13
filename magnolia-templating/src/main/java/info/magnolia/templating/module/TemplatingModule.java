@@ -41,17 +41,18 @@ import info.magnolia.templating.template.registry.ConfiguredTemplateDefinitionMa
 
 /**
  * Registers the observed managers: {@link ConfiguredTemplateDefinitionManager}, {@link ConfiguredRendererManager}.
+ *
+ * @version $Id$
  */
 public class TemplatingModule implements ModuleLifecycle {
 
     private ConfiguredTemplateDefinitionManager templateDefinitionManager;
+    private ConfiguredRendererManager rendererManager;
 
     public TemplatingModule(ConfiguredTemplateDefinitionManager templateDefinitionManager, ConfiguredRendererManager rendererManager) {
         this.templateDefinitionManager = templateDefinitionManager;
         this.rendererManager = rendererManager;
     }
-
-    private ConfiguredRendererManager rendererManager;
 
     @Override
     public void start(ModuleLifecycleContext moduleLifecycleContext) {

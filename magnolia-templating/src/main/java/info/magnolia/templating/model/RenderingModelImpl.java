@@ -40,10 +40,9 @@ import info.magnolia.templating.template.RenderableDefinition;
 
 /**
  * The default concrete rendering definition used for templates and paragraphs.
- * @author pbracher
- * @param <RD> - an instance of {@link RenderableDefinition}
- * @version $Id: RenderingModelImpl.java 44893 2011-05-10 07:33:22Z dlipp $
  *
+ * @param <RD> - an instance of {@link RenderableDefinition}
+ * @version $Id$
  */
 public class RenderingModelImpl<RD extends RenderableDefinition> implements RenderingModel<RD> {
     protected RenderingModel<?> parentModel;

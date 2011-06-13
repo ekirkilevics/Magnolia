@@ -37,7 +37,7 @@ package info.magnolia.templating.model;
  * Implemented by models that want to handle early execution in a separate callback. Also adds a setter for the parent
  * model. It is called after early execution and before rendering.
  *
- * @author tmattsson
+ * @version $Id$
  * @see RenderingModel
  * @see ModelExecutionFilter
  */

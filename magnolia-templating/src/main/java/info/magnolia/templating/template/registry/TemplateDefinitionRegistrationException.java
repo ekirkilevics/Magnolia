@@ -36,35 +36,24 @@ package info.magnolia.templating.template.registry;
 
 /**
  * Thrown in case a template definition can't be found or if the registration fails.
+ *
+ * @version $Id$
  */
 public class TemplateDefinitionRegistrationException extends Exception {
 
-    /**
-     *
-     */
     public TemplateDefinitionRegistrationException() {
     }
 
-    /**
-     * @param arg0
-     */
-    public TemplateDefinitionRegistrationException(String arg0) {
-        super(arg0);
+    public TemplateDefinitionRegistrationException(String message) {
+        super(message);
     }
 
-    /**
-     * @param arg0
-     */
-    public TemplateDefinitionRegistrationException(Throwable arg0) {
-        super(arg0);
+    public TemplateDefinitionRegistrationException(Throwable throwable) {
+        super(throwable);
     }
 
-    /**
-     * @param arg0
-     * @param arg1
-     */
-    public TemplateDefinitionRegistrationException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
+    public TemplateDefinitionRegistrationException(String message, Throwable throwable) {
+        super(message, throwable);
     }
 
 }

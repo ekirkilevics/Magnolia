@@ -58,8 +58,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * Abstract renderer which can be used to implement paragraph or template renderers.
  * Sets up the context by providing the following objects: content, aggregationState, page, model, actionResult, mgnl
  *
- * @author pbracher
- * @version $Id: AbstractRenderer.java 45284 2011-05-19 14:53:11Z pbaerfuss $
+ * @version $Id$
  *
  */
 public abstract class AbstractRenderer implements Renderer, RenderingModelBasedRenderer {

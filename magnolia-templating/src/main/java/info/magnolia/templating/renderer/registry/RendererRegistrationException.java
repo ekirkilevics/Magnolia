@@ -36,35 +36,24 @@ package info.magnolia.templating.renderer.registry;
 
 /**
  * Thrown in case a renderer can't be found or if the registration fails.
+ *
+ * @version $Id$
  */
 public class RendererRegistrationException extends Exception {
 
-    /**
-     *
-     */
     public RendererRegistrationException() {
     }
 
-    /**
-     * @param arg0
-     */
-    public RendererRegistrationException(String arg0) {
-        super(arg0);
+    public RendererRegistrationException(String message) {
+        super(message);
     }
 
-    /**
-     * @param arg0
-     */
-    public RendererRegistrationException(Throwable arg0) {
-        super(arg0);
+    public RendererRegistrationException(Throwable throwable) {
+        super(throwable);
     }
 
-    /**
-     * @param arg0
-     * @param arg1
-     */
-    public RendererRegistrationException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
+    public RendererRegistrationException(String message, Throwable throwable) {
+        super(message, throwable);
     }
 
 }

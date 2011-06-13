@@ -44,7 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * ObservedManager for {@link Renderer} configured in repository.
+ * ObservedManager for {@link info.magnolia.templating.renderer.Renderer} configured in repository.
+ *
+ * @version $Id$
  */
 public class ConfiguredRendererManager extends ObservedManager {
 

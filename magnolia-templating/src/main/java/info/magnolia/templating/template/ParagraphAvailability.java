@@ -37,11 +37,13 @@ import java.util.Collection;
 
 /**
  * An entry of {@link AreaDefinition#getAvailableParagraphs()}.
+ *
+ * @version $Id$
  */
 public interface ParagraphAvailability {
 
-    public abstract String getName();
+    String getName();
 
-    public abstract Collection<String> getRoles();
+    Collection<String> getRoles();
 
 }

@@ -37,6 +37,8 @@ import info.magnolia.templating.template.TemplateDefinition;
 
 /**
  * Provides a {@link TemplateDefinition}.
+ *
+ * @version $Id$
  */
 public interface TemplateDefinitionProvider {
 

@@ -43,11 +43,10 @@ import java.util.Map;
  *
  * @version $Id$
  */
-
 public interface AreaDefinition extends TemplateDefinition {
 
-    public abstract Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs();
+    Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs();
 
-    public abstract Boolean getEnabled();
+    Boolean getEnabled();
 
 }

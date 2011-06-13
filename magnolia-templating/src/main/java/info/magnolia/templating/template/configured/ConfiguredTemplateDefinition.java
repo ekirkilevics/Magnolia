@@ -40,6 +40,8 @@ import java.util.Map;
 
 /**
  * A {@link TemplateDefinition} configured in the configuration workspace.
+ *
+ * @version $Id$
  */
 public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition implements TemplateDefinition {
 

@@ -43,38 +43,40 @@ import info.magnolia.templating.template.RenderableDefinition;
  * will provide helper methods to the template. The {@link #execute()} method is
  * executed before the rendering starts. The model is available under the name
  * <code>model</code>.
+ *
  * @param <RD> - an instance of {@link RenderableDefinition}
- * @author pbracher
- * @version $Id: RenderingModel.java 41135 2011-01-06 18:12:01Z gjoseph $
+ * @version $Id$
  */
 public interface RenderingModel <RD extends RenderableDefinition> {
+
     /**
      * A constant used in some special cases where rendering must be skipped, i.e. a redirect template.
      * It can be used by template models as a return value for the {@link RenderingModel#execute()} method to inform
-     * {@link AbstractRenderer} that it should not render anything in that particular case.
+     * {@link info.magnolia.templating.renderer.AbstractRenderer} that it should not render anything in that particular
+     * case.
      */
     public static final String SKIP_RENDERING = "skip-rendering";
 
     /**
      * The model of the parent paragraph or template.
      */
-    public RenderingModel< ? > getParent();
+    RenderingModel< ? > getParent();
 
     /**
      * The content node tied to this model.
      */
-    public Node getContent();
+    Node getContent();
 
     /**
      * The renderable (paragraph/template) tied to this model.
      */
-    public RD getDefinition();
+    RD getDefinition();
 
     /**
      * Called after all properties were set. Can return a string which is passed
      * to the method.
      * {@link RenderableDefinition#determineTemplatePath(String, RenderingModel)}
      */
-    public String execute();
+    String execute();
 
 }

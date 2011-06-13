@@ -53,6 +53,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The central registry of all {@link TemplateDefinition}s.
+ *
+ * @version $Id$
  */
 public class TemplateDefinitionRegistry {
 
@@ -151,6 +153,5 @@ public class TemplateDefinitionRegistry {
             }
             return null;
     }
-
 
 }

@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * TemplateDefinitionProvider that instantiates a dialog from a configuration node.
+ *
+ * @version $Id$
  */
 public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionProvider {
 

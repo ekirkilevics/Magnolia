@@ -43,33 +43,35 @@ import javax.jcr.Node;
 
 /**
  * Base interface for all renderables. Defines for instance the template's title, template script and render type.
+ *
+ * @version $Id$
  */
 public interface RenderableDefinition {
 
-    public String getName();
+    String getName();
 
-    public String getRenderType();
+    String getRenderType();
 
-    public String getTitle();
+    String getTitle();
 
-    public String getDescription();
+    String getDescription();
 
-    public String getI18nBasename();
+    String getI18nBasename();
 
-    public String getTemplateScript();
+    String getTemplateScript();
 
     /**
      * An arbitrary list of parameters. Used to omit subclass with getters and setters for each
      * extra parameter.
      */
-    public Map<String, Object> getParameters();
+    Map<String, Object> getParameters();
 
     /**
      * Create the model based on the current content.
      */
     // FIXME get rid of this method
-    public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
+    RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
 
     // FIXME get rid of this method
-    public boolean isAvailable(Node content);
+    boolean isAvailable(Node content);
 }

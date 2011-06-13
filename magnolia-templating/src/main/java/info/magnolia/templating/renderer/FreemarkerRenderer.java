@@ -50,8 +50,11 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * Uses FreeMarker to render the content.
+ *
+ * @version $Id$
  */
 public class FreemarkerRenderer extends AbstractRenderer {
+
     private final FreemarkerHelper fmHelper;
 
     /**

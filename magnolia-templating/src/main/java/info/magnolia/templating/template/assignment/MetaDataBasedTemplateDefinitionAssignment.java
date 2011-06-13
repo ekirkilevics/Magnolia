@@ -43,17 +43,19 @@ import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 
 /**
  * Uses the template id stored in the node's meta data.
+ *
+ * @version $Id$
  */
 public class MetaDataBasedTemplateDefinitionAssignment implements TemplateDefinitionAssignment {
 
-    TemplateDefinitionRegistry templateDefinitionRegistry;
+    private TemplateDefinitionRegistry templateDefinitionRegistry;
 
     public MetaDataBasedTemplateDefinitionAssignment(TemplateDefinitionRegistry templateDefinitionRegistry) {
         this.templateDefinitionRegistry = templateDefinitionRegistry;
     }
 
     @Override
-    public TemplateDefinition getAssignedTempalteDefinition(Node content) throws TemplateDefinitionRegistrationException {
+    public TemplateDefinition getAssignedTemplateDefinition(Node content) throws TemplateDefinitionRegistrationException {
         final String templateId = MetaDataUtil.getMetaData(content).getTemplate();
         return templateDefinitionRegistry.getTemplateDefinition(templateId);
     }

@@ -40,11 +40,13 @@ import java.util.Map;
 
 /**
  * A {@link RenderableDefinition} which supports editing in the page editor and can define their areas.
+ *
+ * @version $Id$
  */
 public interface TemplateDefinition extends RenderableDefinition {
 
-    public String getDialog();
+    String getDialog();
 
-    public Map<String, ConfiguredAreaDefinition> getAreas();
+    Map<String, ConfiguredAreaDefinition> getAreas();
 
 }

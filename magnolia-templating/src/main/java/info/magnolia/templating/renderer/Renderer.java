@@ -45,6 +45,8 @@ import javax.jcr.Node;
 
 /**
  * Renders a content with the passed {@link RenderableDefinition}.
+ *
+ * @version $Id$
  */
 public interface Renderer {
 

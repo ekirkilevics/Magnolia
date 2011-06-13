@@ -33,7 +33,6 @@
  */
 package info.magnolia.templating.renderer.registry;
 
-
 import info.magnolia.templating.renderer.Renderer;
 
 import java.util.HashMap;
@@ -42,8 +41,11 @@ import java.util.Map;
 
 /**
  * Central registry of all renderers.
+ *
+ * @version $Id$
  */
 public class RendererRegistry {
+
     private final Map<String, RendererProvider> providers = new HashMap<String, RendererProvider>();
 
     public void registerRenderer(String id, RendererProvider provider) {
@@ -72,6 +74,5 @@ public class RendererRegistry {
         }
         return provider.getRenderer();
     }
-
 
 }

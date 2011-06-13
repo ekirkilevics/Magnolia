@@ -56,15 +56,17 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * A {@link RenderableDefinition} configured in the configuration workspace.
+ *
+ * @version $Id$
  */
 public class ConfiguredRenderableDefinition implements RenderableDefinition {
+
     private String name;
     private String title;
     private String templateScript;
     private String renderType;
     private String description;
     private String i18nBasename;
-    @SuppressWarnings("rawtypes")
     private Class<? extends RenderingModel> modelClass = RenderingModelImpl.class;
 
     protected Map<String, Object> parameters = new HashMap<String, Object>();
@@ -172,8 +174,8 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
         this.parameters = params;
     }
 
-    public void addParameter(String name, Object parmeter) {
-        this.parameters.put(name, parmeter);
+    public void addParameter(String name, Object parameter) {
+        this.parameters.put(name, parameter);
     }
 
     @Override

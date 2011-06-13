@@ -115,7 +115,7 @@ public class AreaComponent extends AbstractContentComponent {
             final TemplateDefinitionAssignment templateDefinitionAssignment = Components.getComponent(TemplateDefinitionAssignment.class);
             TemplateDefinition templateDefinition;
             try {
-                templateDefinition = templateDefinitionAssignment.getAssignedTempalteDefinition(getAggregationState().getCurrentContent());
+                templateDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(getAggregationState().getCurrentContent());
             }
             catch (TemplateDefinitionRegistrationException e) {
                 throw new RenderException("Can't render area", e);

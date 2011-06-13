@@ -87,7 +87,7 @@ public class AreaComponentTest {
 
         final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
         final ConfiguredTemplateDefinition templateDefinition = new ConfiguredTemplateDefinition();
-        when(templateDefinitionAssignment.getAssignedTempalteDefinition(paragraph01)).thenReturn(templateDefinition);
+        when(templateDefinitionAssignment.getAssignedTemplateDefinition(paragraph01)).thenReturn(templateDefinition);
 
         ComponentsTestUtil.setInstance(TemplateDefinitionAssignment.class, templateDefinitionAssignment);
 

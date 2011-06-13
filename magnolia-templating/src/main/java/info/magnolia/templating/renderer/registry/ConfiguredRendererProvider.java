@@ -41,6 +41,8 @@ import info.magnolia.templating.renderer.Renderer;
 
 /**
  * RendererProvider that instantiates a dialog from a configuration node.
+ *
+ * @version $Id$
  */
 public class ConfiguredRendererProvider implements RendererProvider {
 

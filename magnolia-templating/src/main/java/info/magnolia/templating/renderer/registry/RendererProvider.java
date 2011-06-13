@@ -38,6 +38,8 @@ import info.magnolia.templating.renderer.Renderer;
 
 /**
  * Provides a {@link Renderer}.
+ *
+ * @version $Id$
  */
 public interface RendererProvider {
 

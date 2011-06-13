@@ -69,10 +69,10 @@ import org.slf4j.LoggerFactory;
  * by delegating to the appropriate TemplateRenderer or by serving
  * binary content.
  *
- * @author Philipp Bracher
- * @version $Revision: 45281 $ ($Author: pbaerfuss $)
+ * @version $Id$
  */
 public class RenderingFilter extends AbstractMgnlFilter {
+
     private static final Logger log = LoggerFactory.getLogger(RenderingFilter.class);
 
     private final RenderingEngine renderingEngine;
@@ -262,6 +262,5 @@ public class RenderingFilter extends AbstractMgnlFilter {
         }
         return null;
     }
-
 
 }

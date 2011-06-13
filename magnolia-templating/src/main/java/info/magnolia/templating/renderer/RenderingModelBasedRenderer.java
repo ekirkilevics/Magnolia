@@ -40,12 +40,12 @@ import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.template.RenderableDefinition;
 
 /**
- * Implemented by renderers that uses RenderingModel. Used by {@link info.magnolia.module.templating.ModelExecutionFilter}
+ * Implemented by renderers that uses RenderingModel. Used by {@link info.magnolia.templating.model.ModelExecutionFilter}
  * to create and execute models before the renderer is invoked.
  *
- * @author tmattsson
- * @see info.magnolia.module.templating.ModelExecutionFilter
- * @see info.magnolia.module.templating.AbstractRenderer
+ * @version $Id$
+ * @see info.magnolia.templating.model.ModelExecutionFilter
+ * @see info.magnolia.templating.renderer.AbstractRenderer
  */
 public interface RenderingModelBasedRenderer {
 

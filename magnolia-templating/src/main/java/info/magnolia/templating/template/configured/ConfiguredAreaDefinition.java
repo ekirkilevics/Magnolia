@@ -40,6 +40,8 @@ import java.util.Map;
 
 /**
  * A {@link AreaDefinition} configured in the configuration workspace.
+ *
+ * @version $Id$
  */
 public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition implements AreaDefinition {
 
