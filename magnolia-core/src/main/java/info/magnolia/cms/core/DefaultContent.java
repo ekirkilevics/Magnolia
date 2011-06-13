@@ -173,7 +173,7 @@ public class DefaultContent extends AbstractContent {
     /**
      * @param node
      */
-    protected void setNode(Node node) {
+    protected void setNode(Node node) throws RepositoryException {
         if (node instanceof DelegateNodeWrapper) {
             // Default content takes care of filtering jcr properties on its own
             this.node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);

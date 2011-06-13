@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.junit.Test;
 
@@ -55,7 +56,7 @@ import org.junit.Test;
 public class DelegateNodeWrapperTest {
 
     @Test
-    public void testDeepUnwrap() {
+    public void testDeepUnwrap() throws RepositoryException {
 
         DelegateNodeWrapper test = new FirstDelegate(new SecondDelegate(new MockNode("test")));
         // preconditions
@@ -96,7 +97,7 @@ public class DelegateNodeWrapperTest {
     }
 
     @Test
-    public void test4LevelDeepUnwrap() {
+    public void test4LevelDeepUnwrap() throws RepositoryException {
 
         DelegateNodeWrapper test = new FirstDelegate(new SecondDelegate(new ThirdDelegate(new FourthDelegate(new MockNode("test")))));
         // preconditions
@@ -126,7 +127,7 @@ public class DelegateNodeWrapperTest {
     }
 
     @Test
-    public void test4LevelDeepUnwrapAtLastLevel() {
+    public void test4LevelDeepUnwrapAtLastLevel() throws RepositoryException {
 
         DelegateNodeWrapper test = new FirstDelegate(new SecondDelegate(new ThirdDelegate(new FourthDelegate(new MockNode("test")))));
         // preconditions

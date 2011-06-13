@@ -69,14 +69,19 @@ import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 
+import info.magnolia.exception.RuntimeRepositoryException;
+
 /**
  * Wrapper for JCR node.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
 public abstract class DelegateNodeWrapper implements Node, Cloneable {
 
     private Node wrapped;
+
+    protected DelegateNodeWrapper() {
+    }
 
     public DelegateNodeWrapper(Node wrapped) {
         this.wrapped = wrapped;
@@ -504,17 +509,32 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
 
     @Override
     public boolean isModified() {
-        return getWrappedNode().isModified();
+        try {
+            return getWrappedNode().isModified();
+        } catch (RepositoryException e) {
+            // isModified() does not throw RepositoryException but getWrappedNode() may.
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     @Override
     public boolean isNew() {
-        return getWrappedNode().isNew();
+        try {
+            return getWrappedNode().isNew();
+        } catch (RepositoryException e) {
+            // isNew() does not throw RepositoryException but getWrappedNode() may.
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     @Override
     public boolean isNode() {
-        return getWrappedNode().isNode();
+        try {
+            return getWrappedNode().isNode();
+        } catch (RepositoryException e) {
+            // isNode() does not throw RepositoryException but getWrappedNode() may.
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     @Override
@@ -538,16 +558,16 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
         getWrappedNode().save();
     }
 
-    public Node getWrappedNode() {
+    public Node getWrappedNode() throws RepositoryException {
         return this.wrapped;
     }
 
 
-    public Node deepUnwrap(Class wrapper) {
+    public Node deepUnwrap(Class wrapper) throws RepositoryException {
         return deepUnwrap(wrapper, true);
     }
 
-    protected Node deepUnwrap(Class wrapper, boolean deepClone) {
+    protected Node deepUnwrap(Class wrapper, boolean deepClone) throws RepositoryException {
         if (this.getClass().equals(wrapper)) {
             return getWrappedNode();
         }

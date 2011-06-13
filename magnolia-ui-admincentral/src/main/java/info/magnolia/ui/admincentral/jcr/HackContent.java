@@ -49,7 +49,7 @@ import javax.jcr.RepositoryException;
  */
 public class HackContent extends DefaultContent {
 
-    public HackContent(Node node) {
+    public HackContent(Node node) throws RepositoryException {
         super();
         setNode(node);
     }

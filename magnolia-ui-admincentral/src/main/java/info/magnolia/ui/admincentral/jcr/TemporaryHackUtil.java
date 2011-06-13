@@ -36,6 +36,7 @@ package info.magnolia.ui.admincentral.jcr;
 import info.magnolia.cms.core.Content;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 
 /**
@@ -46,7 +47,7 @@ import javax.jcr.Node;
  */
 public class TemporaryHackUtil {
 
-    public static Content createHackContentFrom(Node node) {
+    public static Content createHackContentFrom(Node node) throws RepositoryException {
         return new HackContent(node);
     }
 }
