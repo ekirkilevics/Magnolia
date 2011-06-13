@@ -33,33 +33,27 @@
  */
 package info.magnolia.ui.admincentral.module;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
 import info.magnolia.ui.model.dialog.registry.ConfiguredDialogManager;
 import info.magnolia.ui.model.workbench.registry.ConfiguredWorkbenchManager;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Magnolia's AdminCentral Module.
  *
- *
- * TODO things configured on the module is always part of the _global_ ComponentProvider, this means that they cannot refer to components in the UI componentProvider, hence, factories and builders are not good candidates for being configured on the module
- *
- * @author fgrilli
+ * @version $Id$
  */
 public class AdminCentralModule implements ModuleLifecycle {
 
-    private static final Logger log = LoggerFactory.getLogger(AdminCentralModule.class);
+    // TODO things configured on the module is always part of the _global_ ComponentProvider, this means that they cannot refer to components in the UI componentProvider, hence, factories and builders are not good candidates for being configured on the module
 
     private ConfiguredDialogManager configuredDialogManager;
     private ConfiguredWorkbenchManager configuredWorkbenchManager;
-    // content2bean
+
     private Map<String, AdminCentralConfiguration> configurations = new HashMap<String, AdminCentralConfiguration>();
 
     public AdminCentralModule(ConfiguredDialogManager configuredDialogManager, ConfiguredWorkbenchManager configuredWorkbenchManager) {
@@ -69,20 +63,8 @@ public class AdminCentralModule implements ModuleLifecycle {
 
     @Override
     public void start(ModuleLifecycleContext ctx) {
-        ctx.registerModuleObservingComponent("dialogs", configuredDialogManager);
+        configuredDialogManager.start();
         ctx.registerModuleObservingComponent("workbenches", configuredWorkbenchManager);
-
-        /*if (ctx.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_STARTUP) {
-            try {
-                // TODO: convert dialogs during upgrade process and not everytime on startup, but not on restart. To be revised. Now loads from bootstrap file.
-                //new ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
-                //FIXME command to convert old menu must be revised after architectural changes. For the time being reads menu config from bootstrap file.
-                //new ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
-            } catch (Exception e) {
-                log.error("Failed to convert dialog structure.", e);
-            }
-        }*/
-        // DialogDefinitionRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
     }
 
     @Override
@@ -97,7 +79,7 @@ public class AdminCentralModule implements ModuleLifecycle {
         this.configurations = configurations;
     }
 
-    public void addConfiguration(String name, AdminCentralConfiguration configuration){
+    public void addConfiguration(String name, AdminCentralConfiguration configuration) {
         this.configurations.put(name, configuration);
     }
 
