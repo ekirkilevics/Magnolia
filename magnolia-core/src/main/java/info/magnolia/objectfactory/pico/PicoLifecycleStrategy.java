@@ -33,18 +33,22 @@
  */
 package info.magnolia.objectfactory.pico;
 
-import info.magnolia.objectfactory.AtStartup;
+import java.lang.annotation.Annotation;
+
 import org.picocontainer.ComponentAdapter;
 import org.picocontainer.ComponentMonitor;
+import org.picocontainer.lifecycle.CompositeLifecycleStrategy;
 import org.picocontainer.lifecycle.JavaEE5LifecycleStrategy;
 
+import info.magnolia.objectfactory.AtStartup;
+
+
 /**
- * Magnolia's LifecycleStrategy strategy for PicoContainer: delegates to
- * {@link JavaEE5LifecycleStrategy} then {@link StartableLifecycleStrategy}.
- * Components will be started eagerly (i.e when their container starts) if they
- * have the @AtStartup annotation, otherwise they will be started lazily (i.e
- * when they are first requested)
+ * Magnolia's LifecycleStrategy strategy for PicoContainer: delegates to {@link JavaEE5LifecycleStrategy} then
+ * {@link StartableLifecycleStrategy}. Components will be started eagerly (i.e when their container starts) if they
+ * have the @AtStartup annotation, otherwise they will be started lazily (i.e when they are first requested).
  *
+ * @version $Id$
  * @see AtStartup
  * @see javax.annotation.PostConstruct
  * @see javax.annotation.PreDestroy
@@ -52,12 +56,9 @@ import org.picocontainer.lifecycle.JavaEE5LifecycleStrategy;
  * @see info.magnolia.objectfactory.Disposable
  * @see JavaEE5LifecycleStrategy
  * @see StartableLifecycleStrategy
- *
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
  */
 public class PicoLifecycleStrategy extends CompositeLifecycleStrategy {
+
     public PicoLifecycleStrategy(ComponentMonitor componentMonitor) {
         super(
                 new JavaEE5LifecycleStrategy(componentMonitor),
@@ -67,6 +68,18 @@ public class PicoLifecycleStrategy extends CompositeLifecycleStrategy {
 
     @Override
     public boolean isLazy(ComponentAdapter<?> adapter) {
-        return !adapter.getComponentImplementation().isAnnotationPresent(AtStartup.class);
+        return findAnnotation(adapter.getComponentImplementation(), AtStartup.class) == null;
+    }
+
+    private static <T extends Annotation> T findAnnotation(Class<?> clazz, Class<T> annotationClass) {
+        T annotation = clazz.getAnnotation(annotationClass);
+        if (annotation != null) {
+            return annotation;
+        }
+        Class<?> superClass = clazz.getSuperclass();
+        if (superClass != null) {
+            return findAnnotation(superClass, annotationClass);
+        }
+        return null;
     }
 }

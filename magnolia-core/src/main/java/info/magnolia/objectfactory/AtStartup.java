@@ -41,11 +41,11 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * A component marked with this annotation will be started at the startup of Magnolia.
- * Such component must be otherwise startable, i.e. have a @PostConstruct annotation or implement the {@link Startable} interface.
+ * A component marked with this annotation will be started at the startup of Magnolia. Such components must be otherwise
+ * startable, i.e. have a @PostConstruct annotation or implement the {@link Startable} interface. This annotation takes
+ * effect when present in a super class.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 @Documented
 @Retention(RUNTIME)
