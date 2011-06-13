@@ -33,16 +33,9 @@
  */
 package info.magnolia.jcr.util;
 
-import info.magnolia.cms.core.Access;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.DelegateNodeWrapper;
-import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
@@ -54,6 +47,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.magnolia.cms.core.Access;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.DelegateNodeWrapper;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
+
 /**
  * Various utility methods to collect data from JCR repository.
  *
@@ -62,6 +61,59 @@ import org.slf4j.LoggerFactory;
 public class NodeUtil {
 
     private static final Logger log = LoggerFactory.getLogger(NodeUtil.class);
+
+    /**
+     * Node filter accepting everything.
+     */
+    public static NodeFilter ALL_NODES_FILTER = new NodeFilter() {
+
+        @Override
+        public boolean accept(Node node) {
+            return true;
+        }
+    };
+
+    /**
+     * Node filter accepting everything except nodes with namespace jcr (version and system store).
+     */
+    public static NodeFilter ALL_NODES_EXCEPT_JCR_FILTER = new NodeFilter() {
+
+        @Override
+        public boolean accept(Node node) throws RepositoryException {
+            return !node.getName().startsWith("jcr:");
+        }
+    };
+
+    /**
+     * Node filter accepting everything except meta data and jcr types.
+     */
+    public static NodeFilter EXCLUDE_META_DATA_FILTER = new NodeFilter() {
+
+        @Override
+        public boolean accept(Node node) throws RepositoryException {
+            return !node.getName().startsWith("jcr:") && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
+        }
+    };
+
+    /**
+     * Node filter accepting all nodes of a type with namespace mgnl.
+     */
+    public static NodeFilter MAGNOLIA_FILTER = new NodeFilter() {
+
+        @Override
+        public boolean accept(Node node) throws RepositoryException {
+
+            try {
+                String nodeTypeName = node.getPrimaryNodeType().getName();
+                // accept only "magnolia" nodes
+                return nodeTypeName.startsWith("mgnl:");
+            } catch (RepositoryException e) {
+                // TODO should we really mask this error? shouldn't it be thrown instead?
+                log.error("Unable to read nodetype for node {}", node.getPath());
+            }
+            return false;
+        }
+    };
 
     /**
      * from default content.
@@ -85,11 +137,11 @@ public class NodeUtil {
         if (node instanceof DelegateNodeWrapper) {
             node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
         }
-        final String actualType = node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
+        final String actualType = node.getProperty(MgnlNodeType.JCR_PRIMARY_TYPE).getString();
         // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original
         // node type
-        if (ItemType.NT_FROZENNODE.equals(actualType) && !(ItemType.NT_FROZENNODE.equals(type))) {
-            final Property p = node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE);
+        if (MgnlNodeType.NT_FROZENNODE.equals(actualType) && !(MgnlNodeType.NT_FROZENNODE.equals(type))) {
+            final Property p = node.getProperty(MgnlNodeType.JCR_FROZEN_PRIMARY_TYPE);
             final String s = p.getString();
             return s.equalsIgnoreCase(type);
 
@@ -98,7 +150,7 @@ public class NodeUtil {
         return node.isNodeType(type);
     }
 
-    public static Node unwrap(Node node) {
+    public static Node unwrap(Node node) throws RepositoryException {
         Node unwrappedNode = node;
         while (unwrappedNode instanceof DelegateNodeWrapper) {
             unwrappedNode = ((DelegateNodeWrapper) unwrappedNode).getWrappedNode();
@@ -116,10 +168,8 @@ public class NodeUtil {
     /**
      * Orders the node directly after a given sibling. If no sibling is specified the node is placed first.
      *
-     * @param node
-     *            the node to order
-     * @param siblingName
-     *            the name of the sibling which the name should be after or null if the node should be first
+     * @param node        the node to order
+     * @param siblingName the name of the sibling which the name should be after or null if the node should be first
      * @throws RepositoryException
      */
     public static void orderAfter(Node node, String siblingName) throws RepositoryException {
@@ -145,8 +195,7 @@ public class NodeUtil {
     /**
      * Orders the node first among its siblings.
      *
-     * @param node
-     *            the node to order
+     * @param node the node to order
      * @throws RepositoryException
      */
     public static void orderFirst(Node node) throws RepositoryException {
@@ -161,8 +210,7 @@ public class NodeUtil {
     /**
      * Orders the node last among its siblings.
      *
-     * @param node
-     *            the node to order
+     * @param node the node to order
      * @throws RepositoryException
      */
     public static void orderLast(Node node) throws RepositoryException {
@@ -173,8 +221,7 @@ public class NodeUtil {
      * Orders the node up one step among its siblings. If the node is the only sibling or the first sibling this method
      * has no effect.
      *
-     * @param node
-     *            the node to order
+     * @param node the node to order
      * @throws RepositoryException
      */
     public static void orderNodeUp(Node node) throws RepositoryException {
@@ -188,8 +235,7 @@ public class NodeUtil {
      * Orders the node down one step among its siblings. If the node is the only sibling or the last sibling this method
      * has no effect.
      *
-     * @param node
-     *            the node to order
+     * @param node the node to order
      * @throws RepositoryException
      */
     public static void orderNodeDown(Node node) throws RepositoryException {
@@ -268,8 +314,7 @@ public class NodeUtil {
 
     /**
      * @return Whether the provided node as the provided permission or not.
-     * @throws RuntimeException
-     *             in case of RepositoryException.
+     * @throws RuntimeException in case of RepositoryException.
      */
     public static boolean isGranted(Node node, long permissions) {
         try {
@@ -336,5 +381,39 @@ public class NodeUtil {
             }
         }
         return root;
+    }
+
+    /**
+     * Visits the given node and then all of nodes beneath it except for metadata nodes and nodes of jcr type.
+     */
+    public static void visit(Node node, NodeVisitor visitor) throws RepositoryException {
+        visit(node, visitor, EXCLUDE_META_DATA_FILTER);
+    }
+
+    public static void visit(Node node, NodeVisitor visitor, NodeFilter filter) throws RepositoryException {
+        // TODO should it really visit the start node even if it doesn't match the filter?
+        visitor.visit(node);
+        for (Node child : getChildren(node, filter)) {
+            visit(child, visitor, filter);
+        }
+        if (visitor instanceof PostNodeVisitor) {
+            ((PostNodeVisitor) visitor).postVisit(node);
+        }
+    }
+
+    public static List<Node> getChildren(Node node, NodeFilter filter) throws RepositoryException {
+        List<Node> nodes = new ArrayList<Node>();
+        NodeIterator children = node.getNodes();
+        while (children.hasNext()) {
+            Node child = children.nextNode();
+            if (filter.accept(child)) {
+                nodes.add(child);
+            }
+        }
+        return nodes;
+    }
+
+    public static List<Node> getChildren(Node node, String nodeType) throws RepositoryException {
+        return getChildren(node, new NodeTypeFilter(nodeType));
     }
 }
