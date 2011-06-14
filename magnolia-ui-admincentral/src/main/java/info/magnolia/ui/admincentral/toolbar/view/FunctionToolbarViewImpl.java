@@ -33,6 +33,11 @@
  */
 package info.magnolia.ui.admincentral.toolbar.view;
 
+import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
+import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
+import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.model.action.ActionDefinition;
+import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 import info.magnolia.ui.model.toolbar.ToolbarDefinition;
 import info.magnolia.ui.model.toolbar.ToolbarItemDefinition;
 import info.magnolia.ui.model.toolbar.ToolbarItemGroupDefinition;
@@ -40,7 +45,9 @@ import info.magnolia.ui.model.toolbar.registry.ToolbarPermissionSchema;
 import info.magnolia.ui.model.toolbar.registry.ToolbarProvider;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,23 +61,27 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 
+
 /**
  * Implementation for {@link FunctionToolbarView}.
  * @author fgrilli
- *
+ * @author mrichert
  */
-public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinComponent{
+public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinComponent {
 
     private static final Logger log = LoggerFactory.getLogger(FunctionToolbarViewImpl.class);
 
     private CssLayout outerContainer = new CssLayout();
+
     private Presenter presenter;
+
+    private Map<ViewType, Button> viewButtons = new HashMap<ViewType, Button>();
 
     public FunctionToolbarViewImpl(ToolbarProvider toolbarProvider, ToolbarPermissionSchema permissions) {
         outerContainer.setStyleName("toolbar");
 
         final ToolbarDefinition toolbarDefinition = toolbarProvider.getToolbar();
-        if(toolbarDefinition == null){
+        if (toolbarDefinition == null) {
             log.warn("No function toolbar definition found, won't render it.");
             final Label label = new Label("No function toolbar definition found. Please, check your configuration.");
             label.setSizeFull();
@@ -80,7 +91,7 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
 
         final List<ToolbarItemGroupDefinition> groupItems = toolbarDefinition.getGroups();
 
-        if(groupItems == null || groupItems.isEmpty()){
+        if (groupItems == null || groupItems.isEmpty()) {
             log.warn("No function toolbar groups found, won't render them.");
             final Label label = new Label("No function toolbar groups found. Please, check your configuration.");
             label.setSizeFull();
@@ -88,7 +99,7 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
             return;
         }
 
-        for(int i = 0; i < groupItems.size(); i++){
+        for (int i = 0; i < groupItems.size(); i++) {
 
             final ToolbarItemGroupDefinition itemGroupDefinition = groupItems.get(i);
             final List<ToolbarItemDefinition> items = itemGroupDefinition.getItems();
@@ -101,17 +112,30 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
             viewGroup.addComponent(label);
             viewGroup.setComponentAlignment(label, Alignment.MIDDLE_CENTER);
 
-            for(int j = 0; j < items.size(); j++){
-                 final ToolbarItemDefinition item = items.get(j);
+            for (int j = 0; j < items.size(); j++) {
+                final ToolbarItemDefinition item = items.get(j);
 
-                 final Button button = new Button(item.getLabel());
-                 button.addListener(new ClickListener() {
+                final Button button = new Button(item.getLabel());
+                button.addListener(new ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                       presenter.onToolbarItemSelection(item);
+                        presenter.onToolbarItemSelection(item);
                     }
                 });
+
+                ActionDefinition actionDefinition = item.getActionDefinition();
+                if (actionDefinition instanceof PlaceChangeActionDefinition) {
+                    Place place = ((PlaceChangeActionDefinition) actionDefinition).getPlace();
+                    if (place instanceof ItemSelectedPlace) {
+                        ViewType viewType = ((ItemSelectedPlace) place).getViewType();
+
+                        System.out.println(item.getLabel() + ".viewType = " + viewType);
+
+                        viewButtons.put(viewType, button);
+                    }
+                }
+
                 viewGroup.addButton(button);
                 viewGroup.setComponentAlignment(button, Alignment.MIDDLE_CENTER);
             }
@@ -131,4 +155,14 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
         this.presenter = presenter;
     }
 
+    @Override
+    public void update(Place newPlace) {
+        if (newPlace instanceof ItemSelectedPlace) {
+            for (Button button : viewButtons.values()) {
+                button.removeStyleName("down");
+            }
+            ViewType viewType = ((ItemSelectedPlace) newPlace).getViewType();
+            viewButtons.get(viewType).addStyleName("down");
+        }
+    }
 }

@@ -37,6 +37,7 @@ import info.magnolia.ui.admincentral.toolbar.action.FunctionToolbarActionFactory
 import info.magnolia.ui.admincentral.toolbar.view.FunctionToolbarView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.PlaceChangeEvent;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.action.Action;
@@ -64,6 +65,13 @@ public class FunctionToolbarActivity extends AbstractActivity implements Functio
 
     @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
+        eventBus.addHandler(PlaceChangeEvent.class, new PlaceChangeEvent.Handler() {
+
+            @Override
+            public void onPlaceChange(PlaceChangeEvent event) {
+                functionToolbarView.update(event.getNewPlace());
+            }
+        });
         viewPort.setView(functionToolbarView);
     }
 

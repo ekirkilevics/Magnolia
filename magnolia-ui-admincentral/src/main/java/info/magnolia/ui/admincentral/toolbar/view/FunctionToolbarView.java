@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.toolbar.view;
 
+import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.model.toolbar.ToolbarItemDefinition;
 
@@ -51,5 +52,7 @@ public interface FunctionToolbarView extends View {
     }
 
     void setPresenter(Presenter presenter);
+
+    void update(Place newPlace);
 
 }
