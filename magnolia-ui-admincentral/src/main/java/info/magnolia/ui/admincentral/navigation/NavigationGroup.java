@@ -136,7 +136,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
             + navigationItemDef.getIcon()
             + "'>"
             + getLabel(navigationItemDef));
-        tab.setDescription(navigationItemDef.getDescription());
+        tab.setDescription(getDescription(navigationItemDef));
 
         accordion.addComponent(tab);
 
@@ -175,6 +175,8 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
     }
 
     /**
+     * TODO: would it make sense to move the i18n logic to a more generic place, i.e. in the getters of MenuItemDefinition so that client classes need not worry about i18n and this kind
+     * of utility code is not spread all over the place?
      * Converts label key into i18n-ized string.
      */
     protected String getLabel(NavigationItemDefinition menuItem) {
@@ -205,7 +207,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     /**
      * Menu item button implementation.
-     * 
+     *
      * @author fgrilli
      * @author mrichert
      */
