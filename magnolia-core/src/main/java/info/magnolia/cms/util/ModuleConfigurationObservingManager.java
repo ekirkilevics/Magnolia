@@ -46,7 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.context.LifeTimeJCRSessionUtil;
 import info.magnolia.module.ModuleRegistry;
 
 
@@ -78,16 +78,18 @@ public abstract class ModuleConfigurationObservingManager {
             observedPaths.add(path);
         }
 
-        for (String observedPath : observedPaths) {
-            ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, observedPath, new EventListener() {
+        EventListener eventListener = ObservationUtil.instanciateDeferredEventListener(new EventListener() {
 
-                @Override
-                public void onEvent(EventIterator events) {
-                    synchronized (monitor) {
-                        reload();
-                    }
+            @Override
+            public void onEvent(EventIterator events) {
+                synchronized (monitor) {
+                    reload();
                 }
-            }, 1000, 5000);
+            }
+        }, 1000, 5000);
+
+        for (String observedPath : observedPaths) {
+            ObservationUtil.registerChangeListener(ContentRepository.CONFIG, observedPath, eventListener);
         }
 
         synchronized (monitor) {
@@ -123,7 +125,7 @@ public abstract class ModuleConfigurationObservingManager {
 
     private List<Node> getObservedNodes() throws RepositoryException {
 
-        Session session = MgnlContext.getJCRSession(ContentRepository.CONFIG);
+        Session session = getSession();
 
         List<Node> nodes = new ArrayList<Node>();
         for (String observedPath : observedPaths) {
@@ -136,6 +138,10 @@ public abstract class ModuleConfigurationObservingManager {
             }
         }
         return nodes;
+    }
+
+    protected Session getSession() throws RepositoryException {
+        return LifeTimeJCRSessionUtil.getSession(ContentRepository.CONFIG);
     }
 
     protected List<String> getObservedPaths() {
