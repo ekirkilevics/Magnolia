@@ -33,14 +33,14 @@
  */
 package info.magnolia.jcr.util;
 
-import static org.junit.Assert.assertEquals;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
-import info.magnolia.test.mock.jcr.MockNode;
-
 import javax.jcr.Node;
 
 import org.junit.Test;
+
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
+import info.magnolia.test.mock.jcr.MockNode;
+import static org.junit.Assert.*;
 
 /**
  * @version $Id$
@@ -49,16 +49,16 @@ public class VersionUtilTest {
 
     @Test
     public void testGetNodeTypeName() throws Exception {
-        final MockNode node = new MockNode("test");
-        final String primaryTypeValue = "primaryTypeValue";
-        node.setProperty(ItemType.JCR_PRIMARY_TYPE, primaryTypeValue);
-        assertEquals(primaryTypeValue, VersionUtil.getNodeTypeName(node));
 
-        final String frozenPrimaryTypeValue = "frozenPrimaryTypeValue";
-        node.setProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE, frozenPrimaryTypeValue);
-        assertEquals(frozenPrimaryTypeValue, VersionUtil.getNodeTypeName(node));
+        String primaryTypeName = "primaryTypeValue";
+        final MockNode node = new MockNode("test", primaryTypeName);
+        assertEquals(primaryTypeName, VersionUtil.getNodeTypeName(node));
+
+        final String frozenPrimaryTypeName = "frozenPrimaryTypeValue";
+        node.setProperty(MgnlNodeType.JCR_FROZEN_PRIMARY_TYPE, frozenPrimaryTypeName);
+        assertEquals(frozenPrimaryTypeName, VersionUtil.getNodeTypeName(node));
 
         final Node wrapper = new JCRPropertiesFilteringNodeWrapper(node);
-        assertEquals(frozenPrimaryTypeValue, VersionUtil.getNodeTypeName(wrapper));
+        assertEquals(frozenPrimaryTypeName, VersionUtil.getNodeTypeName(wrapper));
     }
 }

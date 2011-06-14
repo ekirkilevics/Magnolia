@@ -36,10 +36,14 @@ package info.magnolia.freemarker.models;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.ObjectWrapper;
@@ -60,6 +64,9 @@ import freemarker.template.TemplateSequenceModel;
  * @version $Revision: $ ($Author: $)
  */
 public class ContentMapModel implements TemplateHashModelEx, TemplateNodeModel, TemplateScalarModel, AdapterTemplateModel {
+
+    private static final Logger log = LoggerFactory.getLogger(ContentMapModel.class);
+
     static final MagnoliaModelFactory FACTORY = new MagnoliaModelFactory() {
         @Override
         public Class factoryFor() {
@@ -127,7 +134,13 @@ public class ContentMapModel implements TemplateHashModelEx, TemplateNodeModel, 
      */
     @Override
     public TemplateSequenceModel getChildNodes() throws TemplateModelException {
-        final Collection<Node> children = NodeUtil.getChildCollection(content.getJCRNode());
+        Collection<Node> children;
+        try {
+            children = NodeUtil.getChildren(content.getJCRNode());
+        } catch (RepositoryException e) {
+            log.error("Failed to read children of " + content.getJCRNode(), e);
+            children = new ArrayList<Node>();
+        }
         return (TemplateSequenceModel) wrapper.wrap(children);
     }
 

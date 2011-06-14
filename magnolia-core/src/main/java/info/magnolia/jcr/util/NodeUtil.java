@@ -340,19 +340,6 @@ public class NodeUtil {
         return path + "/" + name;
     }
 
-    public static Collection<Node> getChildCollection(Node jcrNode) {
-        List<Node> children = new ArrayList<Node>();
-        try {
-            NodeIterator iter = jcrNode.getNodes();
-            while (iter.hasNext()) {
-                children.add(iter.nextNode());
-            }
-        } catch (RepositoryException e) {
-            log.error("Failed to read children of " + jcrNode, e);
-        }
-        return children;
-    }
-
     public static Node createPath(Node parent, String path, String type) throws RepositoryException, PathNotFoundException, AccessDeniedException {
         return createPath(parent, path, type, false);
     }
@@ -415,5 +402,9 @@ public class NodeUtil {
 
     public static List<Node> getChildren(Node node, String nodeType) throws RepositoryException {
         return getChildren(node, new NodeTypeFilter(nodeType));
+    }
+
+    public static Collection<Node> getChildren(Node node) throws RepositoryException {
+        return getChildren(node, EXCLUDE_META_DATA_FILTER);
     }
 }

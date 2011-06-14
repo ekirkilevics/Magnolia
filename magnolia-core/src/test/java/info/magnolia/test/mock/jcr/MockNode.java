@@ -85,6 +85,11 @@ public class MockNode extends MockItem implements Node {
         super(name);
     }
 
+    public MockNode(String name, String primaryType) {
+        super(name);
+        this.primaryType = primaryType;
+    }
+
     public MockNode(String name, Map<String, MockValue> properties, Map<String, MockNode> children) {
         this(name);
         Iterator<String> propertiesIterator = properties.keySet().iterator();
@@ -275,6 +280,9 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
+        if ("jcr:primaryType".equals(relPath)) {
+           return new MockProperty(relPath, primaryType);
+        }
         Property prop = properties.get(relPath);
         if (prop == null) {
             throw new PathNotFoundException(relPath);
