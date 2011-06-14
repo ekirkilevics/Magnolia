@@ -37,10 +37,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.LifeTimeJCRSessionUtil;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Workspace;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
@@ -50,12 +50,16 @@ import javax.jcr.observation.ObservationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * Util to register JCR observations. Supports delayed execution of the listener to handle event bursts.
- * @version $Revision$ ($Author$)
+ *
+ * @version $Id$
  */
 public class ObservationUtil {
+
     private final static Logger log = LoggerFactory.getLogger(ObservationUtil.class);
+
     private static final int ALL_EVENT_TYPES_MASK = Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED;
 
     /**
@@ -63,8 +67,8 @@ public class ObservationUtil {
      *
      * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
      */
-    public static void registerChangeListener(String repository, String observationPath, EventListener listener) {
-        registerChangeListener(repository, observationPath, true, listener);
+    public static void registerChangeListener(String workspace, String observationPath, EventListener listener) {
+        registerChangeListener(workspace, observationPath, true, listener);
     }
 
     /**
@@ -72,8 +76,8 @@ public class ObservationUtil {
      *
      * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
      */
-    public static void registerChangeListener(String repository, String observationPath, boolean includeSubnodes, EventListener listener) {
-        registerChangeListener(repository, observationPath, includeSubnodes, (String[]) null, listener);
+    public static void registerChangeListener(String workspace, String observationPath, boolean includeSubnodes, EventListener listener) {
+        registerChangeListener(workspace, observationPath, includeSubnodes, (String[]) null, listener);
     }
 
     /**
@@ -81,8 +85,8 @@ public class ObservationUtil {
      *
      * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
      */
-    public static void registerChangeListener(String repository, String observationPath, boolean includeSubnodes, String nodeType, EventListener listener) {
-        registerChangeListener(repository, observationPath, includeSubnodes, new String[] { nodeType }, listener);
+    public static void registerChangeListener(String workspace, String observationPath, boolean includeSubnodes, String nodeType, EventListener listener) {
+        registerChangeListener(workspace, observationPath, includeSubnodes, new String[] { nodeType }, listener);
     }
 
     /**
@@ -90,11 +94,11 @@ public class ObservationUtil {
      *
      * @see #registerChangeListener(String,String,boolean,String[],int,javax.jcr.observation.EventListener)
      */
-    public static void registerChangeListener(String repository, String observationPath, boolean includeSubnodes, String nodeType, int eventTypesMask, EventListener listener) {
+    public static void registerChangeListener(String workspace, String observationPath, boolean includeSubnodes, String nodeType, int eventTypesMask, EventListener listener) {
         if (nodeType == null) {
-            registerChangeListener(repository, observationPath, includeSubnodes, (String[]) null, eventTypesMask, listener);
+            registerChangeListener(workspace, observationPath, includeSubnodes, (String[]) null, eventTypesMask, listener);
         } else {
-            registerChangeListener(repository, observationPath, includeSubnodes, new String[] { nodeType }, eventTypesMask, listener);
+            registerChangeListener(workspace, observationPath, includeSubnodes, new String[] { nodeType }, eventTypesMask, listener);
         }
     }
 
@@ -103,8 +107,8 @@ public class ObservationUtil {
      *
      * @see #registerChangeListener(String, String, boolean, String[], int, javax.jcr.observation.EventListener)
      */
-    public static void registerChangeListener(String repository, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener) {
-        registerChangeListener(repository, observationPath, includeSubnodes, nodeTypes, ALL_EVENT_TYPES_MASK, listener);
+    public static void registerChangeListener(String workspace, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener) {
+        registerChangeListener(workspace, observationPath, includeSubnodes, nodeTypes, ALL_EVENT_TYPES_MASK, listener);
     }
 
     /**
@@ -112,8 +116,8 @@ public class ObservationUtil {
      * that if you observe "/", events are going to be generated for jcr:system,
      * which is "shared" across all workspaces.
      *
-     * @param repository
-     * @param observationPath repository path
+     * @param workspace
+     * @param observationPath workspace path
      * @param includeSubnodes the isDeep parameter of ObservationManager.addEventListener()
      * @param nodeTypes the node types to filter events for
      * @param eventTypesMask an ORed mask of even types (Event constants)
@@ -121,11 +125,11 @@ public class ObservationUtil {
      * @see ObservationManager#addEventListener
      * @see Event
      */
-    public static void registerChangeListener(String repository, String observationPath, boolean includeSubnodes, String[] nodeTypes, int eventTypesMask, EventListener listener) {
+    public static void registerChangeListener(String workspace, String observationPath, boolean includeSubnodes, String[] nodeTypes, int eventTypesMask, EventListener listener) {
         log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$
 
         try {
-            ObservationManager observationManager = getObservationManager(repository);
+            ObservationManager observationManager = getObservationManager(workspace);
             if (observationManager == null) {
                 log.error("Unable to add event listeners for " + observationPath); //$NON-NLS-1$
                 throw new IllegalStateException("Observation manager can't be obtained due to invalid session.");
@@ -137,26 +141,26 @@ public class ObservationUtil {
         }
     }
 
-    public static void registerDeferredChangeListener(String repository, String observationPath, EventListener listener, long delay, long maxDelay) {
-        registerDeferredChangeListener(repository, observationPath, true, (String[]) null, listener, delay, maxDelay);
+    public static void registerDeferredChangeListener(String workspace, String observationPath, EventListener listener, long delay, long maxDelay) {
+        registerDeferredChangeListener(workspace, observationPath, true, (String[]) null, listener, delay, maxDelay);
     }
 
-    public static void registerDeferredChangeListener(String repository, String observationPath, boolean includeSubnodes, EventListener listener, long delay, long maxDelay) {
-        registerDeferredChangeListener(repository, observationPath, includeSubnodes, (String[]) null, listener, delay, maxDelay);
+    public static void registerDeferredChangeListener(String workspace, String observationPath, boolean includeSubnodes, EventListener listener, long delay, long maxDelay) {
+        registerDeferredChangeListener(workspace, observationPath, includeSubnodes, (String[]) null, listener, delay, maxDelay);
     }
 
-    public static void registerDeferredChangeListener(String repository, String observationPath, boolean includeSubnodes, String nodeType, EventListener listener, long delay, long maxDelay) {
-        registerDeferredChangeListener(repository, observationPath, includeSubnodes, new String[] { nodeType }, listener, delay, maxDelay);
+    public static void registerDeferredChangeListener(String workspace, String observationPath, boolean includeSubnodes, String nodeType, EventListener listener, long delay, long maxDelay) {
+        registerDeferredChangeListener(workspace, observationPath, includeSubnodes, new String[] { nodeType }, listener, delay, maxDelay);
     }
 
     /**
-     * The event firing is deferred in case there is a serie of fired events.
+     * The event firing is deferred in case there is a series of fired events.
      *
      * @return the wrapped EventListener so that one can unregister it.
      */
-    public static void registerDeferredChangeListener(String repository, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener, long delay, long maxDelay) {
-        final EventListener deferedListener = instanciateDeferredEventListener(listener, delay, maxDelay);
-        registerChangeListener(repository, observationPath, includeSubnodes, nodeTypes, deferedListener);
+    public static void registerDeferredChangeListener(String workspace, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener, long delay, long maxDelay) {
+        final EventListener deferredListener = instanciateDeferredEventListener(listener, delay, maxDelay);
+        registerChangeListener(workspace, observationPath, includeSubnodes, nodeTypes, deferredListener);
     }
 
     /**
@@ -168,26 +172,26 @@ public class ObservationUtil {
         return new DeferringEventListener(listener, delay, maxDelay);
     }
 
-    public static void unregisterChangeListener(String repository, EventListener listener) {
+    public static void unregisterChangeListener(String workspace, EventListener listener) {
         try {
-            ObservationManager om = getObservationManager(repository);
+            ObservationManager om = getObservationManager(workspace);
             if (om == null) {
                 // session have been invalidated and Observation manager is disconnected. Nothing to unregister. Bail out.
                 return;
             }
             om.removeEventListener(listener);
         } catch (RepositoryException e) {
-            log.error("Unable to remove event listener [" + listener + "] from repository " + repository, e);
+            log.error("Unable to remove event listener [" + listener + "] from workspace " + workspace, e);
         }
     }
 
-    private static ObservationManager getObservationManager(String repository) throws RepositoryException {
-        Workspace wks = getHierarchyManager(repository).getWorkspace();
+    private static ObservationManager getObservationManager(String workspace) throws RepositoryException {
+        Workspace wks = getSession(workspace).getWorkspace();
         return wks.getSession().isLive() ? wks.getObservationManager() : null;
     }
 
-    private static HierarchyManager getHierarchyManager(String repository) {
-        return LifeTimeJCRSessionUtil.getHierarchyManager(repository);
+    private static Session getSession(String workspace) throws RepositoryException {
+        return LifeTimeJCRSessionUtil.getSession(workspace);
     }
 
     /**
@@ -219,6 +223,7 @@ public class ObservationUtil {
      * Deferred event handling. Uses the DelayedExecutor class.
      */
     public static class ObservationBasedDelayedExecutor {
+
         private final DelayedExecutor delayedExecutor;
         private final List eventsBuffer = new ArrayList();
 
@@ -250,6 +255,7 @@ public class ObservationUtil {
      * later on passed to the listener.
      */
     public static class ListBasedEventIterator implements EventIterator {
+
         private Iterator iterator;
         private List events;
         private int pos = 0;

@@ -33,115 +33,104 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.test.MgnlTestCase;
-import info.magnolia.test.mock.MockUtil;
-import static org.easymock.classextension.EasyMock.*;
-
-import javax.jcr.Session;
-import javax.jcr.Workspace;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
 
+import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.jcr.MockWorkspace;
+import static org.mockito.Mockito.*;
+
 /**
- * @author had
- * @version $Id:$
- *
+ * @version $Id$
  */
 public class ObservationUtilTest extends MgnlTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
     public void testFailRegisterWhenSessionInvalid() throws Exception {
-        final HierarchyManager hm = createStrictMock(HierarchyManager.class);
-        MockUtil.getSystemMockContext().addHierarchyManager("some-repo", hm);
-        final Workspace wks = createStrictMock(Workspace.class);
-        final Session session = createStrictMock(Session.class);
-        expect(hm.getWorkspace()).andReturn(wks);
-        expect(wks.getSession()).andReturn(session);
-        expect(session.isLive()).andReturn(false);
 
-        replay( hm, wks);
+        setupMockSession(false);
+
         try {
             ObservationUtil.registerChangeListener("some-repo", "/parent", new EventListener() {
 
                 @Override
                 public void onEvent(EventIterator events) {
                     // do nothing
-                }});
+                }
+            });
             fail("Expected exception not thrown.");
         } catch (IllegalStateException e) {
             assertEquals("Observation manager can't be obtained due to invalid session.", e.getMessage());
         }
-
-        verify( hm, wks);
     }
 
     public void testRegisterWhenSessionValid() throws Exception {
-        final HierarchyManager hm = createStrictMock(HierarchyManager.class);
-        MockUtil.getSystemMockContext().addHierarchyManager("some-repo", hm);
-        final Workspace wks = createStrictMock(Workspace.class);
-        final Session session = createStrictMock(Session.class);
-        final ObservationManager observationManager = createStrictMock(ObservationManager.class);
+
+        MockSession session = setupMockSession(true);
+        ObservationManager observationManager = setupMockObservationManager(session);
+
         EventListener listener = new EventListener() {
 
             @Override
             public void onEvent(EventIterator events) {
                 // do nothing
-            }};
-        expect(hm.getWorkspace()).andReturn(wks);
-        expect(wks.getSession()).andReturn(session);
-        expect(session.isLive()).andReturn(true);
-        expect(wks.getObservationManager()).andReturn(observationManager);
-        observationManager.addEventListener(listener, 31, "/parent", true, null, null, false);
+            }
+        };
 
-        replay( hm, wks, session, observationManager);
         ObservationUtil.registerChangeListener("some-repo", "/parent", listener);
-        verify( hm, wks, session, observationManager);
-    }
-    public void testDontFailUnRegisterWhenSessionInvalid() throws Exception {
-        final HierarchyManager hm = createStrictMock(HierarchyManager.class);
-        MockUtil.getSystemMockContext().addHierarchyManager("some-repo", hm);
-        final Workspace wks = createStrictMock(Workspace.class);
-        final Session session = createStrictMock(Session.class);
-        expect(hm.getWorkspace()).andReturn(wks);
-        expect(wks.getSession()).andReturn(session);
-        expect(session.isLive()).andReturn(false);
 
-        replay( hm, wks);
-            ObservationUtil.unregisterChangeListener("some-repo", new EventListener() {
-
-                @Override
-                public void onEvent(EventIterator events) {
-                    // do nothing
-                }});
-        verify( hm, wks);
+        verify(observationManager).addEventListener(listener, 31, "/parent", true, null, null, false);
     }
 
-    public void testUnRegisterWhenSessionValid() throws Exception {
-        final HierarchyManager hm = createStrictMock(HierarchyManager.class);
-        MockUtil.getSystemMockContext().addHierarchyManager("some-repo", hm);
-        final Workspace wks = createStrictMock(Workspace.class);
-        final Session session = createStrictMock(Session.class);
-        final ObservationManager observationManager = createStrictMock(ObservationManager.class);
+    public void testDontFailUnregisterWhenSessionInvalid() throws Exception {
+
+        MockSession session = setupMockSession(false);
+        ObservationManager observationManager = setupMockObservationManager(session);
+
         EventListener listener = new EventListener() {
 
             @Override
             public void onEvent(EventIterator events) {
                 // do nothing
-            }};
-        expect(hm.getWorkspace()).andReturn(wks);
-        expect(wks.getSession()).andReturn(session);
-        expect(session.isLive()).andReturn(true);
-        expect(wks.getObservationManager()).andReturn(observationManager);
-        observationManager.removeEventListener(listener);
+            }
+        };
 
-        replay( hm, wks, session, observationManager);
         ObservationUtil.unregisterChangeListener("some-repo", listener);
-        verify( hm, wks, session, observationManager);
+
+        verify(observationManager, times(0)).removeEventListener(listener);
+    }
+
+    public void testUnregisterWhenSessionValid() throws Exception {
+
+        MockSession session = setupMockSession(true);
+        ObservationManager observationManager = setupMockObservationManager(session);
+
+        EventListener listener = new EventListener() {
+
+            @Override
+            public void onEvent(EventIterator events) {
+                // do nothing
+            }
+        };
+
+        ObservationUtil.unregisterChangeListener("some-repo", listener);
+
+        verify(observationManager).removeEventListener(listener);
+    }
+
+    private MockSession setupMockSession(boolean live) {
+        MockSession session = new MockSession("some-repo");
+        session.setLive(live);
+        MockUtil.getSystemMockContext().addSession(session.getWorkspace().getName(), session);
+        return session;
+    }
+
+    private ObservationManager setupMockObservationManager(MockSession session) {
+        ObservationManager observationManager = mock(ObservationManager.class);
+        MockWorkspace workspace = (MockWorkspace) session.getWorkspace();
+        workspace.setObservationManager(observationManager);
+        return observationManager;
     }
 }
