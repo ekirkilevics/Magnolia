@@ -130,7 +130,7 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
                     if (place instanceof ItemSelectedPlace) {
                         ViewType viewType = ((ItemSelectedPlace) place).getViewType();
 
-                        System.out.println(item.getLabel() + ".viewType = " + viewType);
+                        log.debug("{}.viewType = {}", item.getLabel(), viewType);
 
                         viewButtons.put(viewType, button);
                     }
