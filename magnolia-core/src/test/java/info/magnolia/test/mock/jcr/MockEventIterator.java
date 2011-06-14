@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -34,23 +34,20 @@
 package info.magnolia.test.mock.jcr;
 
 import java.util.Collection;
-
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
 
 /**
- * Iterates over a collections of MockProperties.
- *
  * @version $Id$
  */
-public class MockPropertyIterator extends MockRangeIterator<Property> implements PropertyIterator {
+public class MockEventIterator extends MockRangeIterator<Event> implements EventIterator {
 
-    public MockPropertyIterator(Collection<? extends Property> children) {
-        super((Collection<Property>) children);
+    public MockEventIterator(Collection<Event> collection) {
+        super(collection);
     }
 
     @Override
-    public Property nextProperty() {
+    public Event nextEvent() {
         return nextElement();
     }
 }

@@ -34,26 +34,18 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.test.mock.jcr.MockItemIterator;
+import info.magnolia.test.mock.jcr.MockPropertyIterator;
 
 import java.util.Collection;
-
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
 
 /**
  * @version $Id$
  *
  * @deprecated since 5.0 - use {@link  info.magnolia.test.mock.jcr.MockPropertyIterator}
  */
-public class MockJCRPropertyIterator extends MockItemIterator<Property> implements PropertyIterator {
+public class MockJCRPropertyIterator extends MockPropertyIterator {
 
     public MockJCRPropertyIterator(Collection children) {
         super(children.size() > 0 && children.iterator().next() instanceof NodeData ? new NodeData2PropertyCollectionWrapper(children) : children);
-    }
-
-    @Override
-    public Property nextProperty() {
-        return super.nextItem();
     }
 }

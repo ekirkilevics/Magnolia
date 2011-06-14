@@ -55,6 +55,7 @@ public class MockWorkspace implements Workspace {
     final private String name;
 
     private MockSession session;
+    private ObservationManager observationManager;
 
     public MockWorkspace(String name) {
         this.name = name;
@@ -63,37 +64,31 @@ public class MockWorkspace implements Workspace {
     @Override
     public void clone(String srcWorkspace, String srcAbsPath, String destAbsPath, boolean removeExisting) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-
     }
 
     @Override
     public void copy(String srcAbsPath, String destAbsPath) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-
     }
 
     @Override
     public void copy(String srcWorkspace, String srcAbsPath, String destAbsPath) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-
     }
 
     @Override
     public void createWorkspace(String name) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-
     }
 
     @Override
     public void createWorkspace(String name, String srcWorkspace) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
 
     }
 
     @Override
     public void deleteWorkspace(String name) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-
     }
 
     @Override
@@ -128,7 +123,10 @@ public class MockWorkspace implements Workspace {
 
     @Override
     public ObservationManager getObservationManager() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        if (this.observationManager == null) {
+            this.observationManager = new MockObservationManager();
+        }
+        return this.observationManager;
     }
 
     @Override
@@ -149,19 +147,16 @@ public class MockWorkspace implements Workspace {
     @Override
     public void importXML(String parentAbsPath, InputStream in, int uuidBehavior) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-
     }
 
     @Override
     public void move(String srcAbsPath, String destAbsPath) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-
     }
 
     @Override
     public void restore(Version[] versions, boolean removeExisting) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-
     }
 
     protected void setSession(MockSession session) {
@@ -173,4 +168,7 @@ public class MockWorkspace implements Workspace {
         return "MockWorkspace [name=" + name + "]";
     }
 
+    public void setObservationManager(ObservationManager observationManager) {
+        this.observationManager = observationManager;
+    }
 }

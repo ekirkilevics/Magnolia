@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -34,23 +34,64 @@
 package info.magnolia.test.mock.jcr;
 
 import java.util.Collection;
-
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
+import java.util.Iterator;
+import javax.jcr.RangeIterator;
 
 /**
- * Iterates over a collections of MockProperties.
- *
  * @version $Id$
  */
-public class MockPropertyIterator extends MockRangeIterator<Property> implements PropertyIterator {
+public class MockRangeIterator<T> implements RangeIterator {
 
-    public MockPropertyIterator(Collection<? extends Property> children) {
-        super((Collection<Property>) children);
+    private Iterator<T> iterator;
+    private int size;
+    private int position = 0;
+
+    public MockRangeIterator(Collection<T> collection) {
+        this.iterator = collection.iterator();
+        this.size = collection.size();
+    }
+
+    public MockRangeIterator(Iterator<T> iterator, int size) {
+        this.iterator = iterator;
+        this.size = size;
     }
 
     @Override
-    public Property nextProperty() {
+    public void skip(long skipNum) {
+        while (skipNum > 0) {
+            next();
+            skipNum--;
+        }
+    }
+
+    @Override
+    public long getSize() {
+        return size;
+    }
+
+    @Override
+    public long getPosition() {
+        return position;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
+
+    @Override
+    public Object next() {
         return nextElement();
+    }
+
+    @Override
+    public void remove() {
+        iterator.remove();
+    }
+
+    protected T nextElement() {
+        T element = iterator.next();
+        position++;
+        return element;
     }
 }

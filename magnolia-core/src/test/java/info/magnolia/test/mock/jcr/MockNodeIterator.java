@@ -43,14 +43,14 @@ import javax.jcr.NodeIterator;
  *
  * @version $Id$
  */
-public class MockNodeIterator extends MockItemIterator<MockNode> implements NodeIterator {
+public class MockNodeIterator extends MockRangeIterator<Node> implements NodeIterator {
 
-    public MockNodeIterator(Collection<MockNode> children) {
-        super(children);
+    public MockNodeIterator(Collection<? extends Node> children) {
+        super((Collection<Node>) children);
     }
 
     @Override
     public Node nextNode() {
-        return nextItem();
+        return nextElement();
     }
 }

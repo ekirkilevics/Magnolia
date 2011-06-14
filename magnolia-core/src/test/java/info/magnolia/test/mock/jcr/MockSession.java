@@ -65,6 +65,7 @@ public class MockSession implements Session {
 
     private MockNode rootNode = null;
     private ValueFactory valueFactory = null;
+    private boolean live = true;
 
     final private Workspace workspace;
 
@@ -245,7 +246,7 @@ public class MockSession implements Session {
 
     @Override
     public boolean isLive() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return live;
     }
 
     @Override
@@ -315,5 +316,9 @@ public class MockSession implements Session {
     @Override
     public String toString() {
         return "MockSession [rootNode=" + rootNode + ", workspace=" + workspace + "]";
+    }
+
+    public void setLive(boolean live) {
+        this.live = live;
     }
 }

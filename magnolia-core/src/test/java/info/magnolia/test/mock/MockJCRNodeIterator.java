@@ -34,12 +34,9 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.test.mock.jcr.MockItemIterator;
+import info.magnolia.test.mock.jcr.MockNodeIterator;
 
 import java.util.Collection;
-
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 
 /**
  * Iterator allowing to iterate over collection of nodes or content. Due to runtime erasure, constructor allows generic collection, but will fail with CCE in case of passing in other collection then Content or Node.
@@ -48,14 +45,9 @@ import javax.jcr.NodeIterator;
  *
  * @deprecated since 5.0 - use {@link  info.magnolia.test.mock.jcr.MockNodeIterator}
  */
-public class MockJCRNodeIterator extends MockItemIterator<Node> implements NodeIterator {
+public class MockJCRNodeIterator extends MockNodeIterator {
 
     public MockJCRNodeIterator(Collection children) {
         super(children.size() > 0 && children.iterator().next() instanceof Content ? new Content2NodeCollectionWrapper(children) : children);
-    }
-
-    @Override
-    public Node nextNode() {
-        return nextItem();
     }
 }
