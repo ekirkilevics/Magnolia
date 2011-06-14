@@ -58,8 +58,9 @@ import javax.jcr.Node;
  * Default implementation which determines the definition (template/paragraph) from the content's
  * meta data. Based on the node type (mgln:contentNode for paragraphs) a paragraph rendering or a
  * template rendering is performed.
- * @author pbaerfuss
+ *
  * @version $Id$
+ * @deprecated since 5.0, replaced by {@link info.magnolia.templating.rendering.DefaultRenderingEngine}
  *
  */
 public class DefaultRenderingEngine implements RenderingEngine {
