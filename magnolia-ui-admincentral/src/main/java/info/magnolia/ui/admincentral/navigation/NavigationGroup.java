@@ -50,6 +50,7 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vaadin.jouni.animator.Disclosure;
 
 import com.vaadin.addon.chameleon.SidebarMenu;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -58,8 +59,8 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.VerticalLayout;
 
 
 /**
@@ -125,17 +126,25 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
         // layout for sub menu entries
         Collection<NativeButton> subNavigation = addSubNavigationItems(navigationItemDef, permissions);
 
-        Label tab = new Label("<img src='"
+        // Label tab = new Label("<img src='"
+        // + MgnlContext.getContextPath()
+        // + navigationItemDef.getIcon()
+        // + "'>"
+        // + getLabel(navigationItemDef), Label.CONTENT_XHTML);
+        Disclosure tab = new Disclosure("<img src='"
             + MgnlContext.getContextPath()
             + navigationItemDef.getIcon()
             + "'>"
-            + getLabel(navigationItemDef), Label.CONTENT_XHTML);
+            + getLabel(navigationItemDef));
         tab.setDescription(navigationItemDef.getDescription());
 
         accordion.addComponent(tab);
+
+        VerticalLayout layout = new VerticalLayout();
         for (NativeButton button : subNavigation) {
-            accordion.addComponent(button);
+            layout.addComponent(button);
         }
+        tab.setContent(layout);
 
         // TODO: add notification badges
 

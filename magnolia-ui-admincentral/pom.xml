@@ -18,11 +18,14 @@
     <dependency>
       <groupId>org.vaadin.addons</groupId>
       <artifactId>vaadin-treetable</artifactId>
-      <version>1.2.0</version>
     </dependency>
     <dependency>
       <groupId>org.vaadin.addons</groupId>
       <artifactId>lazyloadwrapper</artifactId>
+    </dependency>
+    <dependency>
+       <groupId>org.vaadin.addons</groupId>
+       <artifactId>animator</artifactId>
     </dependency>
     <dependency>
       <groupId>temp.org.vaadin.addons</groupId>

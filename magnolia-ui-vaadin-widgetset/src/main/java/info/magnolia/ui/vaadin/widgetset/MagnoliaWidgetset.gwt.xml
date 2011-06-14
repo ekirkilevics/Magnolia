@@ -4,6 +4,7 @@
     <inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" />
     <inherits name="com.vaadin.addon.treetable.TreetableWidgetset" />
     <inherits name="com.vaadin.lazyloadwrapper.widgetset.LazyLoadWrapperWidgetset" />
+    <inherits name="org.vaadin.jouni.animator.AnimatorWidgetset"/>
     <inherits name="info.magnolia.ui.vaadin.integration.widget.historian.HistorianWidgetset"/>
     <inherits name="info.magnolia.module.wcm.editor.PageEditorWidgetset" />
 
