@@ -33,7 +33,6 @@
  */
 package info.magnolia.jcr.nodebuilder;
 
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 
@@ -64,18 +63,6 @@ public abstract class Ops {
             @Override
             protected Node doExec(Node context, ErrorHandler errorHandler) throws RepositoryException {
                 return context.addNode(name, type);
-            }
-        };
-    }
-
-    /**
-     * TODO dlipp: check whether we want to keep that method - or ItemType itself...
-     */
-    public static NodeOperation addNode(final String name, final ItemType type) {
-        return new AbstractNodeOperation() {
-            @Override
-            protected Node doExec(Node context, ErrorHandler errorHandler) throws RepositoryException {
-                return context.addNode(name, type.getSystemName());
             }
         };
     }
