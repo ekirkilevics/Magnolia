@@ -36,7 +36,6 @@ package info.magnolia.module.templating;
 import javax.jcr.Node;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.templating.RenderingModel;
 
 
 /**
