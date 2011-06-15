@@ -94,8 +94,9 @@ public class ModuleConfigurationObservingManagerTest extends MgnlTestCase {
             @Override
             protected void onRegister(Node node) throws RepositoryException {
                 pathsOfReloadedNodes.add(node.getPath());
-                if (latch != null)
+                if (latch != null) {
                     latch.countDown();
+                }
             }
         };
 
@@ -106,14 +107,32 @@ public class ModuleConfigurationObservingManagerTest extends MgnlTestCase {
         assertEquals("/modules/foo/components", pathsOfReloadedNodes.get(0));
         assertEquals("/modules/bar/components", pathsOfReloadedNodes.get(1));
 
+        session.getNode("/modules/zed").addNode("components");
+
+        MockObservationManager observationManager = (MockObservationManager) session.getWorkspace().getObservationManager();
+
+        for (String moduleName : moduleNames) {
+            String path = "/modules/" + moduleName + "/components/a";
+            MockEvent event = new MockEvent();
+            event.setPath(path);
+            verifyReloadsAllNodesOnEvent(clearCounter, pathsOfReloadedNodes, observationManager, event);
+        }
+
+        for (String moduleName : moduleNames) {
+            String path = "/modules/" + moduleName + "/components";
+            MockEvent event = new MockEvent();
+            event.setPath(path);
+            verifyReloadsAllNodesOnEvent(clearCounter, pathsOfReloadedNodes, observationManager, event);
+        }
+    }
+
+    private void verifyReloadsAllNodesOnEvent(AtomicInteger clearCounter, List<String> pathsOfReloadedNodes, MockObservationManager observationManager, MockEvent event) throws RepositoryException, InterruptedException {
+
         clearCounter.set(0);
         pathsOfReloadedNodes.clear();
         latch = new CountDownLatch(3);
 
-        session.getNode("/modules/zed").addNode("components");
-
-        MockObservationManager observationManager = (MockObservationManager) session.getWorkspace().getObservationManager();
-        observationManager.fireEventToAllListeners(new MockEvent());
+        observationManager.fireEvent(event);
 
         // We use a count down latch with a timeout set to 1 second more than the max delay to make the test quick
         latch.await(6000, TimeUnit.MILLISECONDS);
@@ -122,5 +141,6 @@ public class ModuleConfigurationObservingManagerTest extends MgnlTestCase {
         assertEquals(3, pathsOfReloadedNodes.size());
         assertEquals("/modules/foo/components", pathsOfReloadedNodes.get(0));
         assertEquals("/modules/bar/components", pathsOfReloadedNodes.get(1));
+        assertEquals("/modules/zed/components", pathsOfReloadedNodes.get(2));
     }
 }

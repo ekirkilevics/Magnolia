@@ -78,7 +78,7 @@ public abstract class ModuleConfigurationObservingManager {
             observedPaths.add(path);
         }
 
-        EventListener eventListener = ObservationUtil.instanciateDeferredEventListener(new EventListener() {
+        final EventListener eventListener = ObservationUtil.instanciateDeferredEventListener(new EventListener() {
 
             @Override
             public void onEvent(EventIterator events) {
@@ -89,7 +89,13 @@ public abstract class ModuleConfigurationObservingManager {
         }, 1000, 5000);
 
         for (String observedPath : observedPaths) {
-            ObservationUtil.registerChangeListener(ContentRepository.CONFIG, observedPath, eventListener);
+            ObservationUtil.registerChangeListener(ContentRepository.CONFIG, observedPath, new EventListener(){
+
+                @Override
+                public void onEvent(EventIterator events) {
+                    eventListener.onEvent(events);
+                }
+            });
         }
 
         synchronized (monitor) {
