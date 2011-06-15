@@ -81,7 +81,7 @@ public class ObservationUtilTest extends MgnlTestCase {
 
         ObservationUtil.registerChangeListener("some-repo", "/parent", listener);
 
-        verify(observationManager).addEventListener(listener, 31, "/parent", true, null, null, false);
+        verify(observationManager).addEventListener(listener, 63, "/parent", true, null, null, false);
     }
 
     public void testDontFailUnregisterWhenSessionInvalid() throws Exception {

@@ -60,7 +60,7 @@ public class ObservationUtil {
 
     private final static Logger log = LoggerFactory.getLogger(ObservationUtil.class);
 
-    private static final int ALL_EVENT_TYPES_MASK = Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED;
+    private static final int ALL_EVENT_TYPES_MASK = Event.NODE_ADDED | Event.NODE_REMOVED | Event.NODE_MOVED | Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED;
 
     /**
      * Registers an EventListener for any node type.
