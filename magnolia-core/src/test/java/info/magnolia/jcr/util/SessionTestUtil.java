@@ -94,7 +94,7 @@ public class SessionTestUtil {
         return new MockNode(name, nodeDatas, childrenMap);
     }
 
-    public static MockNode createNode(String name, Object[][] data) throws RepositoryException {
+    public static MockNode createNode(String name, Object[][] data) {
         return createContent(name, data, new MockNode[] {});
     }
 

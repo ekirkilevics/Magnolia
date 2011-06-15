@@ -43,7 +43,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -97,7 +96,7 @@ public class NodeUtilTest {
     @Test
     public void testUnwrap() throws Exception {
         final Version version = mock(Version.class);
-        when(version.getNode(ItemType.JCR_FROZENNODE)).thenReturn(root);
+        when(version.getNode(MgnlNodeType.JCR_FROZENNODE)).thenReturn(root);
         final VersionedNode wrapper = new VersionedNode(version);
 
         assertEquals(root, NodeUtil.unwrap(wrapper));

@@ -37,8 +37,6 @@ import static org.junit.Assert.assertNotNull;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.test.mock.jcr.MockNode;
 
-import javax.jcr.Node;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,7 +54,7 @@ public class MetaDataUtilTest {
 
     @Test
     public void testGetMetaData() throws Exception {
-        Node metaNode = root.addNode(MetaData.DEFAULT_META_NODE);
+        root.addNode(MetaData.DEFAULT_META_NODE);
         MetaData md = MetaDataUtil.getMetaData(root);
         assertNotNull(md);
     }
