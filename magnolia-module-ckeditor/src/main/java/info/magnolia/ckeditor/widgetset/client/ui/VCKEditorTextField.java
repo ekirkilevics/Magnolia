@@ -116,6 +116,7 @@ public class VCKEditorTextField extends Widget implements Paintable, CKEditorSer
     /**
      * Called whenever an update is received from the server.
      */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         clientToServer = client;
         paintableId = uidl.getId();
