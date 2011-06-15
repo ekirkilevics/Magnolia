@@ -47,6 +47,7 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -82,7 +83,7 @@ public class ContextComponentTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        final ContextComponent marker = new ContextComponent(serverCfg, aggregationState);
+        final ContextComponent marker = new ContextComponent(serverCfg, new AggregationStateBasedRenderingContext(aggregationState));
         marker.setName(name);
         marker.setValue(value);
 

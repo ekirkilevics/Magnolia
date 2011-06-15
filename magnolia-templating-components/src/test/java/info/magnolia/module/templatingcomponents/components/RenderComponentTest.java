@@ -46,17 +46,24 @@ import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.templating.renderer.Renderer;
+import info.magnolia.templating.renderer.registry.RendererRegistry;
+import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
+import info.magnolia.templating.rendering.DefaultRenderingEngine;
 import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.rendering.RenderingContext;
 import info.magnolia.templating.rendering.RenderingEngine;
 import info.magnolia.templating.template.RenderableDefinition;
+import info.magnolia.templating.template.assignment.TemplateDefinitionAssignment;
+import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -74,15 +81,20 @@ import org.junit.Test;
 public class RenderComponentTest {
     private static final class DummyRenderingEngine implements RenderingEngine {
         @Override
-        public void render(Node content, Writer out) throws RenderException {
+        public void render(Node content, Appendable out) throws RenderException {
         }
 
         @Override
-        public void render(Node content, Map<String, Object> context, Writer out) throws RenderException {
+        public void render(Node content, Map<String, Object> contextObjects, Appendable out) throws RenderException {
         }
 
         @Override
-        public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws RenderException {
+        public void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws RenderException {
+        }
+
+        @Override
+        public RenderingContext getRenderingContext() {
+            return null;
         }
     }
 
@@ -92,7 +104,8 @@ public class RenderComponentTest {
 
         final AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
+        Node currentContent = hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode();
+        aggregationState.setCurrentContent(currentContent);
         final WebContext ctx = mock(WebContext.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         when(ctx.getResponse()).thenReturn(response);
@@ -107,7 +120,19 @@ public class RenderComponentTest {
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
         ComponentsTestUtil.setInstance(RenderingEngine.class, new DummyRenderingEngine());
 
-        final RenderComponent marker = new RenderComponent(serverCfg, aggregationState);
+        final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
+        final ConfiguredTemplateDefinition templateDefinition = new ConfiguredTemplateDefinition();
+        templateDefinition.setRenderType("blah");
+        when(templateDefinitionAssignment.getAssignedTemplateDefinition(currentContent)).thenReturn(templateDefinition);
+
+        RendererRegistry registry = mock(RendererRegistry.class);
+        Renderer renderer = mock(Renderer.class);
+        when(registry.getRenderer("blah")).thenReturn(renderer);
+        DefaultRenderingEngine engine = new DefaultRenderingEngine(registry, templateDefinitionAssignment);
+        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        when(ctx.getAttribute(RenderingContext.class.getName(), Context.LOCAL_SCOPE)).thenReturn(context);
+        when(ctx.getAttribute(RenderingContext.class.getName())).thenReturn(context);
+        final RenderComponent marker = new RenderComponent(serverCfg, context, engine);
         final StringWriter out = new StringWriter();
         marker.doRender(out);
 
@@ -121,7 +146,7 @@ public class RenderComponentTest {
     public void testPostRender() throws Exception {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager(
                 "/foo/bar/baz/paragraphs/01.text=dummy\n" +
-                "/foo/bar/baz/paragraphs/01@uuid=100");
+        "/foo/bar/baz/paragraphs/01@uuid=100");
 
         final AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
@@ -150,7 +175,9 @@ public class RenderComponentTest {
 
         ComponentsTestUtil.setInstance(RenderingEngine.class, new DummyRenderingEngine());
 
-        final RenderComponent marker = new RenderComponent(serverCfg, aggregationState);
+        final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
+        DefaultRenderingEngine engine = new DefaultRenderingEngine(new RendererRegistry(), templateDefinitionAssignment);
+        final RenderComponent marker = new RenderComponent(serverCfg, new AggregationStateBasedRenderingContext(aggregationState), engine);
 
         final StringWriter out = new StringWriter();
         marker.postRender(out);

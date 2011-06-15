@@ -47,6 +47,7 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
 import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentsTestUtil;
@@ -93,13 +94,13 @@ public class EditComponentTest {
         when(paragraphManager.getTemplateDefinition("testParagraph0")).thenReturn(testParagraph0);
         ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, paragraphManager);
 
-        final EditComponent marker = new EditComponent(serverCfg, aggregationState);
+        final EditComponent marker = new EditComponent(serverCfg, new AggregationStateBasedRenderingContext(aggregationState));
         StringWriter out = new StringWriter();
         marker.doRender(out);
 
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
-                        + AbstractContentComponent.LINEBREAK
+                + AbstractContentComponent.LINEBREAK
                 + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" dialog=\"testParagraph0\" paragraph=\"testParagraph0\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK, out.toString());
 
@@ -112,8 +113,8 @@ public class EditComponentTest {
 
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
-                        + AbstractContentComponent.LINEBREAK
-                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" format=\"testFormat\" label=\"Test Paragraph 0\" dialog=\"testDialog\" paragraph=\"testParagraph0\"></cms:edit>"
+                + AbstractContentComponent.LINEBREAK
+                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" format=\"testFormat\" label=\"Test Paragraph 0\" dialog=\"testDialog\" paragraph=\"testParagraph0\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK, out.toString());
 
     }
@@ -136,7 +137,7 @@ public class EditComponentTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        final EditComponent marker = new EditComponent(serverCfg, aggregationState);
+        final EditComponent marker = new EditComponent(serverCfg, new AggregationStateBasedRenderingContext(aggregationState));
         StringWriter out = new StringWriter();
         marker.postRender(out);
 
