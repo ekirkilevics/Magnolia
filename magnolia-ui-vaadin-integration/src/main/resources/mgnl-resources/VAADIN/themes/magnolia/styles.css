@@ -150,6 +150,10 @@ input.v-textfield,textarea.v-textarea,.v-filterselect {
   vertical-align: middle;
 }
 
+.sidebar-menu .v-tree-node {
+  background: none;
+}
+
 .m-workbench-header {
 
 }
