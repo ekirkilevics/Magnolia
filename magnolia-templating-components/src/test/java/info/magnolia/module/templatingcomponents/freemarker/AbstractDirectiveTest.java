@@ -35,8 +35,6 @@ package info.magnolia.module.templatingcomponents.freemarker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 
 import java.io.IOException;
@@ -63,6 +61,7 @@ public class AbstractDirectiveTest {
         final TemplateDirectiveBody dummyDirBody = new TemplateDirectiveBody() {
             @Override
             public void render(Writer out) throws TemplateException, IOException {
+                // no action required
             }
         };
 
@@ -88,8 +87,8 @@ public class AbstractDirectiveTest {
 
     private static class TestAbstractDirective extends AbstractDirective {
         @Override
-        protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
-            return null;
+        protected void prepareUIComponent(AuthoringUiComponent uiComponent, Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+            // no action required
         }
     }
 }
