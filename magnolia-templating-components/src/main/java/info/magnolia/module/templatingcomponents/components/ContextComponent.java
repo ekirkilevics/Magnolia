@@ -34,9 +34,9 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.rendering.RenderingContext;
 
 import java.io.IOException;
 
@@ -51,8 +51,8 @@ public class ContextComponent extends AbstractAuthoringUiComponent {
     private String name;
     private Object value;
 
-    public ContextComponent(ServerConfiguration server, AggregationState aggregationState) {
-        super(server, aggregationState);
+    public ContextComponent(ServerConfiguration server, RenderingContext renderingContext) {
+        super(server, renderingContext);
     }
 
     @Override

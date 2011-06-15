@@ -31,34 +31,36 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.freemarker;
-
-import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import info.magnolia.module.templatingcomponents.components.EditComponent;
+package info.magnolia.templating.util;
 
 import java.io.IOException;
-import java.util.Map;
+import java.io.Writer;
 
 /**
- * A freemarker directive for the edit bar UI component.
- *
- * @version $Id$
+ * Simple writer that outputs all the text to provided {@link Appendable}.
  */
-public class EditDirective extends AbstractDirective<EditComponent> {
+public class AppendableWriter extends Writer {
+
+    private final Appendable appendable;
+
+    public AppendableWriter(Appendable appendable) {
+        this.appendable = appendable;
+    }
 
     @Override
-    protected void prepareUIComponent(EditComponent uiComponent, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
-        checkBody(body, false);
-
-        initContentComponent(params, uiComponent);
-
-        String format = string(params, "format", null);
-        String dialog = string(params, "dialog", null);
-
-        uiComponent.setFormat(format);
-        uiComponent.setDialog(dialog);
+    public void close() throws IOException {
+        // void op
     }
+
+    @Override
+    public void flush() throws IOException {
+        // void op
+    }
+
+    @Override
+    public void write(char[] chars, int start, int end) throws IOException {
+
+        appendable.append(new String(chars), start, end);
+    }
+
 }

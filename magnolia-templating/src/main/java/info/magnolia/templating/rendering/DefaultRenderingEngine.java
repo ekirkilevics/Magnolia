@@ -35,6 +35,7 @@ package info.magnolia.templating.rendering;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.templating.renderer.Renderer;
 import info.magnolia.templating.renderer.registry.RendererRegistrationException;
 import info.magnolia.templating.renderer.registry.RendererRegistry;
@@ -43,7 +44,7 @@ import info.magnolia.templating.template.TemplateDefinition;
 import info.magnolia.templating.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
 
-import java.io.Writer;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -51,10 +52,12 @@ import javax.jcr.Node;
 
 /**
  * Default implementation of {@link RenderingEngine}. Maintains the {@link AggregationState}.
- *
  * @version $Id$
+ *
  */
 public class DefaultRenderingEngine implements RenderingEngine {
+
+    private static final String RENDERING_CONTEXT_ATTRIBUTE = RenderingContext.class.getName();
 
     private static final Map<String, Object> EMPTY_CONTEXT = Collections.emptyMap();
 
@@ -73,12 +76,12 @@ public class DefaultRenderingEngine implements RenderingEngine {
     }
 
     @Override
-    public void render(Node content, Writer out) throws RenderException {
+    public void render(Node content, Appendable out) throws RenderException {
         render(content, EMPTY_CONTEXT, out);
     }
 
     @Override
-    public void render(Node content, Map<String, Object> context, Writer out) throws RenderException {
+    public void render(Node content, Map<String, Object> contextObjects, Appendable out) throws RenderException {
         TemplateDefinition templateDefinition;
         try {
             templateDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(content);
@@ -86,49 +89,34 @@ public class DefaultRenderingEngine implements RenderingEngine {
         catch (TemplateDefinitionRegistrationException e) {
             throw new RenderException("Can't render node " + content, e);
         }
-        render(content, templateDefinition, context, out);
+        render(content, templateDefinition, contextObjects, out);
     }
 
     @Override
-    public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws RenderException {
+    public void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws RenderException {
+        final RenderingContext renderingContext = getRenderingContext();
+        renderingContext.push(content, definition);
 
-        Node orgMainContent = null;
-        Node orgCurrentContent = null;
+        Renderer renderer = getRendererFor(definition);
 
-        // TODO should we really still support the AggregationState?
-        AggregationState state = null;
         try {
-            state = getAggregationStateSafely();
-            if (state != null) {
-                orgMainContent = state.getMainContent();
-                orgCurrentContent = state.getCurrentContent();
-
-                state.setCurrentContent(content);
-                // if not yet set the passed content is the entry point of the rendering
-                if (orgMainContent == null) {
-                    state.setMainContent(content);
-                }
-            }
-
-            Renderer renderer = getRendererFor(definition);
-            if (renderer == null) {
-                throw new RenderException("Can't find renderer for type " + definition.getRenderType());
-            }
-
-            renderer.render(content, definition, context, out);
+            renderer.render(content, definition, contextObjects, out);
         }
-        catch (Exception e) {
-            throw new RenderException("Can't render " + content, e);
-        } finally {
-            if (state != null) {
-                state.setMainContent(orgMainContent);
-                state.setCurrentContent(orgCurrentContent);
-            }
+        catch (IOException e) {
+            throw new RenderException(e);
+        }
+        finally{
+            renderingContext.pop();
         }
     }
 
-    protected Renderer getRendererFor(RenderableDefinition definition) throws RendererRegistrationException {
-        return rendererRegistry.getRenderer(definition.getRenderType());
+    protected Renderer getRendererFor(RenderableDefinition definition) throws RenderException {
+        try {
+            return rendererRegistry.getRenderer(definition.getRenderType());
+        }
+        catch (RendererRegistrationException e) {
+            throw new RenderException("Can't find renderer for type " + definition.getRenderType(), e);
+        }
     }
 
     protected static AggregationState getAggregationStateSafely() {
@@ -136,6 +124,19 @@ public class DefaultRenderingEngine implements RenderingEngine {
             return MgnlContext.getAggregationState();
         }
         return null;
+    }
+
+    @Override
+    public RenderingContext getRenderingContext() {
+        if(MgnlContext.hasAttribute(RENDERING_CONTEXT_ATTRIBUTE)){
+            return MgnlContext.getAttribute(RENDERING_CONTEXT_ATTRIBUTE);
+        }
+        else {
+            // FIXME don't use the concrete class here but if we do the registration in the module descriptor the context also gets created it the main container
+            final RenderingContext renderingContext = Components.getComponentProvider().newInstance(AggregationStateBasedRenderingContext.class, getAggregationStateSafely());
+            MgnlContext.setAttribute(RENDERING_CONTEXT_ATTRIBUTE, renderingContext);
+            return renderingContext;
+        }
     }
 
 }

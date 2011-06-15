@@ -53,5 +53,6 @@ public interface AuthoringUiComponent {
      * and call this afterwards.
      * Can be used, for instance, as a "cleanup" mechanism, if the component modified the context.
      */
+    // FIXME now that we pass the appendable and render this method needs a different name (or we need another method)
     void postRender(Appendable out) throws IOException, RenderException;
 }

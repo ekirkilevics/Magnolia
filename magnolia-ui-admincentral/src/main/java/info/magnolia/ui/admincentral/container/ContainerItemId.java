@@ -38,6 +38,8 @@ import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Id of an item kept in JcrContainer. Can be used for a node or a property.
  *
@@ -45,23 +47,23 @@ import javax.jcr.RepositoryException;
  */
 public class ContainerItemId {
 
-    private final String nodeIdentifier;
+    private final Object nodeIdentifier;
     private final String propertyName;
 
     public ContainerItemId(Item item) throws RepositoryException {
         if (item.isNode()) {
             Node node = (Node) item;
-            this.nodeIdentifier = node.getIdentifier();
+            this.nodeIdentifier = uuid2int(node.getIdentifier());
             this.propertyName = null;
         } else {
             Property property = (Property) item;
-            this.nodeIdentifier = property.getParent().getIdentifier();
+            this.nodeIdentifier = uuid2int(property.getParent().getIdentifier());
             this.propertyName = property.getName();
         }
     }
 
     public String getNodeIdentifier() {
-        return nodeIdentifier;
+        return int2uuid(nodeIdentifier);
     }
 
     public String getPropertyName() {
@@ -87,7 +89,7 @@ public class ContainerItemId {
 
         ContainerItemId that = (ContainerItemId) o;
 
-        if (nodeIdentifier != null ? !nodeIdentifier.equals(that.nodeIdentifier) : that.nodeIdentifier != null) {
+        if (nodeIdentifier != null ? !getNodeIdentifier().equals((that.getNodeIdentifier())) : that.nodeIdentifier != null) {
             return false;
         }
         if (propertyName != null ? !propertyName.equals(that.propertyName) : that.propertyName != null) {
@@ -100,7 +102,42 @@ public class ContainerItemId {
     @Override
     public int hashCode() {
         int result = propertyName != null ? propertyName.hashCode() : 0;
-        result = 31 * result + (nodeIdentifier != null ? nodeIdentifier.hashCode() : 0);
+        result = 31 * result + (nodeIdentifier != null ? getNodeIdentifier().hashCode() : 0);
         return result;
+    }
+
+    protected final Object uuid2int(String uuidStr) {
+        if (StringUtils.isBlank(uuidStr) || uuidStr.length() != 36) {
+            return uuidStr;
+        }
+        char[] uuidChar = uuidStr.toCharArray();
+        // ex: 159bc523-fa30-40e6-965d-4ab91a4bdd9a
+        int[] uuidInt = new int[8];
+        int idx = 0;
+        for (int i = 0; i < 36; i++) {
+            char ch = uuidChar[i];
+            if ('-' == ch) {
+                continue;
+            }
+            uuidInt[idx++] = Integer.parseInt("" + ch + uuidChar[++i] + uuidChar[++i] + uuidChar[++i], 16);
+        }
+        return uuidInt;
+    }
+
+    protected final String int2uuid(Object uuidIntArg) {
+        if (uuidIntArg instanceof String) {
+            return (String) uuidIntArg;
+        }
+        int[] uuidInt = (int[]) uuidIntArg;
+        StringBuilder sb = new StringBuilder();
+        for (int i : uuidInt) {
+            // for those not in love with formatter: convert number to hex and left pad with zero to the length of 4 digits/chars
+            sb.append(String.format("%04x", i));
+            int len = sb.length();
+            if (len == 8 || len == 13 || len == 18 || len == 23) {
+                sb.append("-");
+            }
+        }
+        return sb.toString();
     }
 }

@@ -34,10 +34,10 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.rendering.RenderingContext;
 import info.magnolia.templating.template.TemplateDefinition;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
@@ -60,8 +60,8 @@ public class EditComponent extends AbstractContentComponent {
     private String dialog;
     private String format;
 
-    public EditComponent(ServerConfiguration server, AggregationState aggregationState) {
-        super(server, aggregationState);
+    public EditComponent(ServerConfiguration server, RenderingContext renderingContext) {
+        super(server, renderingContext);
     }
 
     @Override

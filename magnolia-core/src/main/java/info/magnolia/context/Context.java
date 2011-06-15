@@ -33,11 +33,11 @@
  */
 package info.magnolia.context;
 
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.core.HierarchyManager;
 
 import java.util.Locale;
 import java.util.Map;
@@ -163,7 +163,7 @@ public interface Context extends org.apache.commons.chain.Context {
      * @param scope the scope (request, session, application)
      * @return attribute value
      */
-    public Object getAttribute(String name, int scope);
+    public <T> T getAttribute(String name, int scope);
 
     /**
      * Get attribute value without passing a scope. the scopes are searched from bottom up (request, session,
@@ -171,7 +171,7 @@ public interface Context extends org.apache.commons.chain.Context {
      * @param name to which value is associated to
      * @return attribute value
      */
-    public Object getAttribute(String name);
+    public <T> T getAttribute(String name);
 
     /**
      * Get a map of a attributes set in the scope.

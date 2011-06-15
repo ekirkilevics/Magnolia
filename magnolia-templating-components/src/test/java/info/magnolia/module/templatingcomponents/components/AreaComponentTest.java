@@ -47,6 +47,9 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.templating.renderer.registry.RendererRegistry;
+import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
+import info.magnolia.templating.rendering.DefaultRenderingEngine;
 import info.magnolia.templating.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.ComponentsTestUtil;
@@ -91,8 +94,10 @@ public class AreaComponentTest {
 
         ComponentsTestUtil.setInstance(TemplateDefinitionAssignment.class, templateDefinitionAssignment);
 
-
-        final AreaComponent marker = new AreaComponent(serverCfg, aggregationState);
+        DefaultRenderingEngine engine = new DefaultRenderingEngine(new RendererRegistry(), templateDefinitionAssignment);
+        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        final AreaComponent marker = new AreaComponent(serverCfg, context, engine);
+        context.push(paragraph01, templateDefinition);
         marker.setName("test");
 
         StringWriter out = new StringWriter();
@@ -100,7 +105,7 @@ public class AreaComponentTest {
 
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
+                + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // with paragraph set
@@ -110,7 +115,7 @@ public class AreaComponentTest {
 
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
+                + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // as collection == false (= singleton)
@@ -120,9 +125,9 @@ public class AreaComponentTest {
 
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
-                        + EditComponent.LINEBREAK
-                        + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
-                        + EditComponent.LINEBREAK, out.toString());
+                + EditComponent.LINEBREAK
+                + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
+                + EditComponent.LINEBREAK, out.toString());
     }
 
     @Test
@@ -143,7 +148,15 @@ public class AreaComponentTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        final AreaComponent marker = new AreaComponent(serverCfg, aggregationState);
+        final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
+        final ConfiguredTemplateDefinition templateDefinition = new ConfiguredTemplateDefinition();
+
+        // when(templateDefinitionAssignment.getAssignedTemplateDefinition(paragraph01)).thenReturn(templateDefinition);
+
+        ComponentsTestUtil.setInstance(TemplateDefinitionAssignment.class, templateDefinitionAssignment);
+
+        DefaultRenderingEngine engine = new DefaultRenderingEngine(new RendererRegistry(), templateDefinitionAssignment);
+        final AreaComponent marker = new AreaComponent(serverCfg, new AggregationStateBasedRenderingContext(aggregationState), engine);
         marker.setName("main");
 
         final StringWriter out = new StringWriter();

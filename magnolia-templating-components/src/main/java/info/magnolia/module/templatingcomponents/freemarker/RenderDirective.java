@@ -37,9 +37,6 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.module.templatingcomponents.components.RenderComponent;
 
 import java.io.IOException;
@@ -50,19 +47,16 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public class RenderDirective extends AbstractDirective {
+public class RenderDirective extends AbstractDirective<RenderComponent> {
 
     @Override
-    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+    protected void prepareUIComponent(RenderComponent uiComponent, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
 
-        RenderComponent marker = new RenderComponent(serverCfg, aggState);
-        initContentComponent(params, marker);
+        initContentComponent(params, uiComponent);
 
         boolean editable = bool(params, "editable", false);
         String template = string(params, "template", null);
-        marker.setEditable(editable);
-        marker.setTemplate(template);
-
-        return marker;
+        uiComponent.setEditable(editable);
+        uiComponent.setTemplate(template);
     }
 }

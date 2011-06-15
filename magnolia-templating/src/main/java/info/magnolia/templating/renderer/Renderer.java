@@ -37,7 +37,6 @@ import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.template.RenderableDefinition;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -50,6 +49,6 @@ import javax.jcr.Node;
  */
 public interface Renderer {
 
-    void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws IOException, RenderException ;
+    void render(Node content, RenderableDefinition definition, Map<String, Object> context, Appendable out) throws IOException, RenderException ;
 
 }

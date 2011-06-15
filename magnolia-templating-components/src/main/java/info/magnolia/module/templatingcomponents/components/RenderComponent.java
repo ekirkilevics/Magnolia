@@ -34,11 +34,10 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.rendering.RenderingContext;
 import info.magnolia.templating.rendering.RenderingEngine;
 
 import java.io.IOException;
@@ -54,21 +53,21 @@ public class RenderComponent extends AbstractContentComponent {
 
     private boolean editable;
     private String template;
+    private RenderingEngine renderingEngine;
 
-    public RenderComponent(ServerConfiguration server, AggregationState aggregationState) {
-        super(server, aggregationState);
+    public RenderComponent(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
+        super(server, renderingContext);
+        this.renderingEngine = renderingEngine;
     }
 
     @Override
     protected void doRender(Appendable out) throws IOException, RenderException {
         Node content = getTargetContent();
 
-        RenderingEngine renderingEngine = Components.getSingleton(RenderingEngine.class);
-
         WebContext webContext = MgnlContext.getWebContext();
         webContext.push(webContext.getRequest(), webContext.getResponse());
         try {
-            renderingEngine.render(content, webContext.getResponse().getWriter());
+            renderingEngine.render(content, out);
         } catch (RenderException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } finally{

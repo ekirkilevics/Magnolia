@@ -34,12 +34,12 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.rendering.RenderingContext;
 import info.magnolia.templating.template.TemplateDefinition;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
@@ -69,22 +69,18 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
     private static final String DEFAULT_I18N_BASENAME = "info.magnolia.module.templatingcomponents.messages";
 
     private final ServerConfiguration server;
-    private final AggregationState aggregationState;
     private final TemplateDefinitionRegistry templateDefinitionRegistry;
+    private RenderingContext renderingContext;
 
-    protected AbstractAuthoringUiComponent(final ServerConfiguration server, final AggregationState aggregationState) {
+    protected AbstractAuthoringUiComponent(final ServerConfiguration server, final RenderingContext renderingContext) {
         this.server = server;
-        this.aggregationState = aggregationState;
+        this.renderingContext = renderingContext;
 
         this.templateDefinitionRegistry = Components.getComponent(TemplateDefinitionRegistry.class);
     }
 
     protected ServerConfiguration getServer() {
         return server;
-    }
-
-    protected AggregationState getAggregationState() {
-        return aggregationState;
     }
 
     @Override
@@ -110,7 +106,7 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
      */
     // TODO rename to currentNode()
     protected Node currentContent() {
-        final Node currentContent = aggregationState.getCurrentContent();
+        final Node currentContent = renderingContext.getCurrentContent();
         if (currentContent == null) {
             throw new IllegalStateException(
                     "Could not determine currentContent from AggregationState, currentContent is null");
@@ -172,5 +168,10 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
         // TODO we need to do html attribute escaping on the value
         if (value != null)
             out.append(SPACE).append(name).append(EQUALS).append(QUOTE).append(value).append(QUOTE);
+    }
+
+
+    protected RenderingContext getRenderingContext() {
+        return renderingContext;
     }
 }

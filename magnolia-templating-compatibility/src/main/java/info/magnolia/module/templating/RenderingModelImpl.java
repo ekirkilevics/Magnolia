@@ -33,16 +33,16 @@
  */
 package info.magnolia.module.templating;
 
-import javax.jcr.Node;
-
 import info.magnolia.cms.core.Content;
 
+import javax.jcr.Node;
 
 /**
  * Deprecated.
  * @deprecated since 5.0, use {@link info.magnolia.templating.model.RenderingModelImpl} instead.
  * @param <RD> the {@link RenderableDefinition} bound to the model
  */
+@Deprecated
 public class RenderingModelImpl<RD extends RenderableDefinition> extends info.magnolia.templating.model.RenderingModelImpl<RD> implements info.magnolia.module.templating.RenderingModel<RD>{
 
     public RenderingModelImpl(Content content, RD definition, RenderingModel< ? > parent) {

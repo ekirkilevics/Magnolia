@@ -40,9 +40,6 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.module.templatingcomponents.components.ContextComponent;
 
 /**
@@ -50,19 +47,17 @@ import info.magnolia.module.templatingcomponents.components.ContextComponent;
  *
  * @version $Id$
  */
-public class ContextDirective extends AbstractDirective {
+public class ContextDirective extends AbstractDirective<ContextComponent> {
+
 
     @Override
-    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+    protected void prepareUIComponent(ContextComponent uiComponent, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
         checkBody(body, false);
 
         String name = mandatoryString(params, "name");
         Object value = mandatoryObject(params, "value");
 
-        ContextComponent marker = new ContextComponent(serverCfg, aggState);
-        marker.setName(name);
-        marker.setValue(value);
-
-        return marker;
+        uiComponent.setName(name);
+        uiComponent.setValue(value);
     }
 }

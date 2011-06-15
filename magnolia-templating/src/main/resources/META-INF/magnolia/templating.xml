@@ -10,8 +10,12 @@
     <property>
       <name>info.magnolia.templating.rendering.RenderingEngine</name>
       <value>/server/rendering/engine</value>
-    </property>
+    </property><!--
     <property>
+      <name>info.magnolia.templating.rendering.RenderingContext</name>
+      <value>info.magnolia.templating.rendering.AggregationStateBasedRenderingContext</value>
+    </property>
+    --><property>
       <name>info.magnolia.templating.renderer.registry.RendererRegistry</name>
       <value>info.magnolia.templating.renderer.registry.RendererRegistry</value>
     </property>

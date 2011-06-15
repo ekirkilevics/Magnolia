@@ -37,9 +37,6 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.module.templatingcomponents.components.AreaComponent;
 import info.magnolia.templating.template.AreaDefinition;
 
@@ -51,13 +48,12 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public class AreaDirective extends AbstractDirective {
+public class AreaDirective extends AbstractDirective<AreaComponent> {
 
     @Override
-    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+    protected void prepareUIComponent(AreaComponent uiComponent, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
 
-        AreaComponent marker = new AreaComponent(serverCfg, aggState);
-        initContentComponent(params, marker);
+        initContentComponent(params, uiComponent);
 
         AreaDefinition area = (AreaDefinition) object(params, "area");
         String name = string(params, "name", null);
@@ -65,12 +61,10 @@ public class AreaDirective extends AbstractDirective {
         String dialog = string(params, "dialog", null);
         String type = string(params, "type", AreaComponent.DEFAULT_TYPE);
 
-        marker.setArea(area);
-        marker.setName(name);
-        marker.setParagraphs(paragraphs);
-        marker.setDialog(dialog);
-        marker.setType(type);
-
-        return marker;
+        uiComponent.setArea(area);
+        uiComponent.setName(name);
+        uiComponent.setParagraphs(paragraphs);
+        uiComponent.setDialog(dialog);
+        uiComponent.setType(type);
     }
 }

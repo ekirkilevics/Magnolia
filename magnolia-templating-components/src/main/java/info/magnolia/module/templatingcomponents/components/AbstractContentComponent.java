@@ -34,9 +34,9 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.rendering.RenderingContext;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -74,8 +74,8 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
     private String nodeIdentifier;
     private String path;
 
-    public AbstractContentComponent(ServerConfiguration server, AggregationState aggregationState) {
-        super(server, aggregationState);
+    public AbstractContentComponent(ServerConfiguration server, RenderingContext renderingContext) {
+        super(server, renderingContext);
     }
 
     protected String getNodePath(Node node) throws RenderException {

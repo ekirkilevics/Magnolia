@@ -34,21 +34,17 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.rendering.RenderingContext;
 import info.magnolia.templating.rendering.RenderingEngine;
 import info.magnolia.templating.template.AreaDefinition;
+import info.magnolia.templating.template.RenderableDefinition;
 import info.magnolia.templating.template.TemplateDefinition;
-import info.magnolia.templating.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.templating.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.templating.template.configured.ConfiguredParagraphAvailability;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Iterator;
 
 import javax.jcr.Node;
@@ -77,13 +73,15 @@ public class AreaComponent extends AbstractContentComponent {
     private String paragraphs;
     private String type;
     private String dialog;
+    private RenderingEngine renderingEngine;
 
     // TODO implement support for script and placeholderScript
     // private String script;
     // private String placeholderScript;
 
-    public AreaComponent(ServerConfiguration server, AggregationState aggregationState) {
-        super(server, aggregationState);
+    public AreaComponent(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
+        super(server, renderingContext);
+        this.renderingEngine = renderingEngine;
     }
 
     @Override
@@ -109,22 +107,20 @@ public class AreaComponent extends AbstractContentComponent {
 
     protected AreaDefinition resolveAreaDefinition() throws RenderException  {
         if(!StringUtils.isEmpty(name)){
-
-            // FIXME the actual template definition is not necessery bound to the the current content
-            // we have to set the template definition on a RenderingContext or similar
-            final TemplateDefinitionAssignment templateDefinitionAssignment = Components.getComponent(TemplateDefinitionAssignment.class);
-            TemplateDefinition templateDefinition;
-            try {
-                templateDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(getAggregationState().getCurrentContent());
-            }
-            catch (TemplateDefinitionRegistrationException e) {
-                throw new RenderException("Can't render area", e);
-            }
+            TemplateDefinition templateDefinition = resolveTemplateDefinition();
             if(templateDefinition.getAreas().containsKey(name)){
                 return templateDefinition.getAreas().get(name);
             }
         }
         return new ConfiguredAreaDefinition();
+    }
+
+    protected TemplateDefinition resolveTemplateDefinition() throws RenderException {
+        final RenderableDefinition renderableDefinition = getRenderingContext().getRenderableDefinition();
+        if(renderableDefinition instanceof TemplateDefinition){
+            return (TemplateDefinition) renderableDefinition;
+        }
+        throw new RenderException("Current RenderableDefinition [" + renderableDefinition + "] is not of type TemplateDefinition. Areas cannot be supported");
     }
 
     @Override
@@ -134,27 +130,20 @@ public class AreaComponent extends AbstractContentComponent {
         try {
             if (isEnabled() && content.hasNode(resolveName())) {
 
-                // TODO IoC
-                RenderingEngine renderingEngine = Components.getComponent(RenderingEngine.class);
-
-                // FIXME should use the passed out Appendable
-                PrintWriter writer = MgnlContext.getWebContext().getResponse().getWriter();
-
                 if (resolveType().equals(TYPE_LIST)) {
-                    // FIXME delegate to the area's script or use a default script
                     Node areaNode = content.getNode(resolveName());
                     NodeIterator nodeIterator = areaNode.getNodes();
                     while (nodeIterator.hasNext()) {
                         Node node = (Node) nodeIterator.next();
                         if (node.getPrimaryNodeType().getName().equals(ItemType.CONTENTNODE.getSystemName())) {
-                            renderParagraph(renderingEngine, writer, node);
+                            renderingEngine.render(node, out);
                         }
                     }
                 } else if (resolveType().equals(TYPE_SINGLE)) {
                     // FIXME delegate to the area's script or use a default script
                     // TODO we should suppress any editbar inside the paragraph rendered here
                     Node paragraphNode = content.getNode(resolveName());
-                    renderParagraph(renderingEngine, writer, paragraphNode);
+                    renderingEngine.render(paragraphNode, out);
                 }
             }
 
@@ -162,15 +151,6 @@ public class AreaComponent extends AbstractContentComponent {
         }
         catch (Exception e) {
             throw new RenderException("Can't render area " + content, e);
-        }
-    }
-
-    private void renderParagraph(RenderingEngine renderingEngine, PrintWriter writer, Node node) throws RepositoryException {
-        try {
-            // FIXME: where to get RenderableDefinition and Context from?
-            renderingEngine.render(node, writer);
-        } catch (RenderException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 

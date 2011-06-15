@@ -40,8 +40,9 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Locale;
+import java.util.Map;
 
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
@@ -49,8 +50,9 @@ import javax.jcr.Session;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
-import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -260,15 +262,15 @@ public class MgnlContext {
     /**
      * Get attribute value.
      */
-    public static Object getAttribute(String name) {
-        return getInstance().getAttribute(name);
+    public static <T> T getAttribute(String name) {
+        return (T) getInstance().getAttribute(name);
     }
 
     /**
      * Get the attribute from the specified scope.
      */
-    public static Object getAttribute(String name, int scope) {
-        return getInstance().getAttribute(name, scope);
+    public static <T> T getAttribute(String name, int scope) {
+        return (T) getInstance().getAttribute(name, scope);
     }
 
     /**

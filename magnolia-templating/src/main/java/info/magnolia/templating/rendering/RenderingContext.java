@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,40 +25,31 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.freemarker;
+package info.magnolia.templating.rendering;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import info.magnolia.module.templatingcomponents.components.EditComponent;
+import info.magnolia.templating.template.RenderableDefinition;
 
-import java.io.IOException;
-import java.util.Map;
+import javax.jcr.Node;
+
 
 /**
- * A freemarker directive for the edit bar UI component.
- *
- * @version $Id$
+ * Provides all information needed in the rendering process.
  */
-public class EditDirective extends AbstractDirective<EditComponent> {
+public interface RenderingContext {
 
-    @Override
-    protected void prepareUIComponent(EditComponent uiComponent, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
-        checkBody(body, false);
+    Node getMainContent();
 
-        initContentComponent(params, uiComponent);
+    Node getCurrentContent();
 
-        String format = string(params, "format", null);
-        String dialog = string(params, "dialog", null);
+    RenderableDefinition getRenderableDefinition();
 
-        uiComponent.setFormat(format);
-        uiComponent.setDialog(dialog);
-    }
+    void push(Node content, RenderableDefinition renderableDefinition);
+
+    void pop();
 }

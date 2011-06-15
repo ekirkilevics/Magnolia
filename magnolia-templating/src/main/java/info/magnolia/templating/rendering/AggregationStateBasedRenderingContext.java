@@ -33,38 +33,56 @@
  */
 package info.magnolia.templating.rendering;
 
-import java.util.Map;
+import java.util.Stack;
 
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.templating.template.RenderableDefinition;
 
 import javax.jcr.Node;
 
 
 /**
- * Renders content to a writer.
- *
- * @version $Id$
+ * Uses and updates the {@link AggregationState}.
+ * FIXME we should not use the AggregationState anymore
  */
-public interface RenderingEngine {
+public class AggregationStateBasedRenderingContext implements RenderingContext {
+    private AggregationState aggregationState;
+    private Stack<Node> contentStack = new Stack<Node>();
+    private Stack<RenderableDefinition> definitionStack = new Stack<RenderableDefinition>();
 
-    /**
-     * Renders the content with its assigned template. Uses {@link info.magnolia.templating.template.assignment.TemplateDefinitionAssignment}.
-     */
-    void render(Node content, Appendable out) throws RenderException;
+    public AggregationStateBasedRenderingContext(AggregationState aggregationState) {
+        this.aggregationState = aggregationState;
+    }
 
-    /**
-     * The context is exposed to the template script.
-     */
-    void render(Node content, Map<String, Object> contextObjects, Appendable out) throws RenderException;
+    @Override
+    public Node getMainContent() {
+        return aggregationState.getMainContent();
+    }
 
-    /**
-     * Uses a specific {@link RenderableDefinition} to render the content.
-     */
-    void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws RenderException;
+    @Override
+    public Node getCurrentContent() {
+        return aggregationState.getCurrentContent();
+    }
 
-    /**
-     * Returns the current {@link RenderingContext}.
-     * FIXME is this the right place? should we use IoC
-     */
-    public RenderingContext getRenderingContext();
+    @Override
+    public RenderableDefinition getRenderableDefinition() {
+        return definitionStack.peek();
+    }
+
+    @Override
+    public void push(Node content, RenderableDefinition renderableDefinition) {
+        if (aggregationState.getMainContent() == null) {
+            aggregationState.setMainContent(content);
+        }
+        aggregationState.setCurrentContent(content);
+        contentStack.push(content);
+        definitionStack.push(renderableDefinition);
+    }
+
+    @Override
+    public void pop() {
+        aggregationState.setCurrentContent(contentStack.pop());
+        definitionStack.pop();
+    }
+
 }

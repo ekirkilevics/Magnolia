@@ -33,16 +33,19 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.models.ContentModel;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.module.templatingcomponents.components.AbstractContentComponent;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.templating.rendering.RenderingContext;
+import info.magnolia.templating.rendering.RenderingEngine;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,17 +68,17 @@ import freemarker.template.utility.DeepUnwrap;
 
 /**
  * A base class for freemarker directives used in Magnolia.
- * Subclasses need to implement the {@link info.magnolia.module.templatingcomponents.freemarker.AbstractDirective#prepareUIComponent(info.magnolia.cms.beans.config.ServerConfiguration, info.magnolia.cms.core.AggregationState, freemarker.core.Environment, java.util.Map, freemarker.template.TemplateModel[], freemarker.template.TemplateDirectiveBody)} method.
+ * Subclasses need to implement the {@link info.magnolia.module.templatingcomponents.freemarker.AbstractDirective#prepareUIComponent(RenderingContext, info.magnolia.cms.core.AggregationState, freemarker.core.Environment, java.util.Map, freemarker.template.TemplateModel[], freemarker.template.TemplateDirectiveBody)} method.
  *
  * @version $Id$
  */
-public abstract class AbstractDirective implements TemplateDirectiveModel {
+public abstract class AbstractDirective<C extends AuthoringUiComponent> implements TemplateDirectiveModel {
 
     @Override
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
-        final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
-        final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final AuthoringUiComponent uiComp = prepareUIComponent(serverConfiguration, aggregationState, env, params, loopVars, body);
+        final C uiComp = createUIComponent();
+
+        prepareUIComponent(uiComp, env, params, loopVars, body);
 
         // prepareUIComponent should have removed the parameters it knows about.
         if (!params.isEmpty()) {
@@ -96,6 +99,18 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
         }
     }
 
+    protected C createUIComponent() {
+        // FIXME use scope instead of fetching the objects and pass them as parameters
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        final RenderingContext renderingContext = Components.getComponent(RenderingEngine.class).getRenderingContext();
+
+            return Components.getComponentProvider().newInstance(getUIComponentClass(), aggregationState, renderingContext);
+    }
+
+    protected Class<C> getUIComponentClass() {
+        return (Class<C>) ((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
     /**
      * Implementations of this method should return a AuthoringUiComponent, prepared with the known parameters.
      * If parameters have been grabbed using the methods provided by this class, they should be removed from
@@ -108,7 +123,7 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
      * this behavior is not mandated by their API, nor documented (at the time of writing, with FreeMarker 2.3.16), we
      * should exert caution. Unit tests hopefully cover this, so we'll be safe when updating to newer FreeMarker versions.
      */
-    protected abstract AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException;
+    protected abstract void prepareUIComponent(C uiComponent, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException;
 
     protected void doBody(Environment env, TemplateDirectiveBody body) throws TemplateException, IOException {
         if (body != null) {

@@ -37,8 +37,8 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.template.RenderableDefinition;
+import info.magnolia.templating.util.AppendableWriter;
 
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -70,11 +70,11 @@ public class FreemarkerRenderer extends AbstractRenderer {
     }
 
     @Override
-    protected void onRender(Node content, RenderableDefinition definition, Writer out, Map ctx, String templateScript) throws RenderException {
+    protected void onRender(Node content, RenderableDefinition definition, Appendable out, Map ctx, String templateScript) throws RenderException {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
-            fmHelper.render(templateScript, locale, definition.getI18nBasename(), ctx, out);
+            fmHelper.render(templateScript, locale, definition.getI18nBasename(), ctx, new AppendableWriter(out));
         }
         catch (Exception e) {
             throw new RenderException("Can't render template " + templateScript + ": " + ExceptionUtils.getRootCauseMessage(e), e);

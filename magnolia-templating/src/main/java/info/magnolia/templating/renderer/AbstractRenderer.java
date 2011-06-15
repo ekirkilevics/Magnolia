@@ -43,7 +43,6 @@ import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.template.RenderableDefinition;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -69,7 +68,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     }
 
     @Override
-    public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Writer out) throws IOException, RenderException {
+    public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Appendable out) throws IOException, RenderException {
 
         final RenderingModel parentModel = (RenderingModel) MgnlContext.getAttribute(MODEL_ATTRIBUTE);
 
@@ -236,6 +235,6 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * Finally execute the rendering.
      * @param content TODO
      */
-    protected abstract void onRender(Node content, RenderableDefinition definition, Writer out, Map ctx, String templateScript) throws RenderException;
+    protected abstract void onRender(Node content, RenderableDefinition definition, Appendable out, Map ctx, String templateScript) throws RenderException;
 
 }
