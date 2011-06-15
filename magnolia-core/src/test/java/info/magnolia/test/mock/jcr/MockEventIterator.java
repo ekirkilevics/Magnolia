@@ -33,6 +33,7 @@
  */
 package info.magnolia.test.mock.jcr;
 
+import java.util.Arrays;
 import java.util.Collection;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
@@ -44,6 +45,10 @@ public class MockEventIterator extends MockRangeIterator<Event> implements Event
 
     public MockEventIterator(Collection<Event> collection) {
         super(collection);
+    }
+
+    public MockEventIterator(Event... events) {
+        super(Arrays.asList(events));
     }
 
     @Override

@@ -33,12 +33,9 @@
  */
 package info.magnolia.test.mock.jcr;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import javax.jcr.RepositoryException;
-import javax.jcr.observation.Event;
 import javax.jcr.observation.EventJournal;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
@@ -49,12 +46,54 @@ import javax.jcr.observation.ObservationManager;
  */
 public class MockObservationManager implements ObservationManager {
 
-    private Set<EventListener> listeners = new HashSet<EventListener>();
+    private static class EventFilter {
+
+        private int eventTypes;
+        private String absPath;
+        private boolean isDeep;
+
+        private EventFilter(int eventTypes, String absPath, boolean isDeep) {
+            this.eventTypes = eventTypes;
+            this.absPath = absPath;
+            this.isDeep = isDeep;
+        }
+
+        public boolean matches(MockEvent event) {
+            if (eventTypes != 0) {
+                if ((event.getType() | this.eventTypes) == 0) {
+                    return false;
+                }
+            }
+            if (this.absPath != null) {
+                if (event.getPath() == null) {
+                    return false;
+                }
+                if (isDeep && !event.getPath().startsWith(this.absPath)) {
+                    return false;
+                }
+                if (!isDeep && !event.getPath().equals(this.absPath)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    private IdentityHashMap<EventListener, EventFilter> listeners = new IdentityHashMap<EventListener, EventFilter>();
     private String userData;
 
     @Override
     public void addEventListener(EventListener listener, int eventTypes, String absPath, boolean isDeep, String[] uuid, String[] nodeTypeName, boolean noLocal) throws RepositoryException {
-        listeners.add(listener);
+        if (uuid != null) {
+            throw new UnsupportedOperationException("Filtering on uuid is not supported");
+        }
+        if (nodeTypeName != null) {
+            throw new UnsupportedOperationException("Filtering on nodeTypeName is not supported");
+        }
+        if (noLocal) {
+            throw new UnsupportedOperationException("Excluding events from the same session is not supported");
+        }
+        listeners.put(listener, new EventFilter(eventTypes, absPath, isDeep));
     }
 
     @Override
@@ -64,18 +103,28 @@ public class MockObservationManager implements ObservationManager {
 
     @Override
     public EventListenerIterator getRegisteredEventListeners() throws RepositoryException {
-        return new MockEventListenerIterator(listeners);
+        return new MockEventListenerIterator(listeners.keySet());
     }
 
-    public void fireEventToAllListeners(MockEvent event) throws RepositoryException {
+    public void fireEvent(MockEvent event) {
         if (this.userData != null && event.getUserData() != null) {
-           event.setUserData(this.userData);
+            event.setUserData(this.userData);
         }
-        List<Event> events = new ArrayList<Event>();
-        events.add(event);
-        MockEventIterator iterator = new MockEventIterator(events);
-        for (EventListener listener : listeners) {
-            listener.onEvent(iterator);
+        for (Map.Entry<EventListener, EventFilter> entry : listeners.entrySet()) {
+            EventListener listener = entry.getKey();
+            EventFilter filter = entry.getValue();
+            if (filter.matches(event)) {
+                listener.onEvent(new MockEventIterator(event));
+            }
+        }
+    }
+
+    public void fireEventBypassingFilters(MockEvent event) throws RepositoryException {
+        if (this.userData != null && event.getUserData() != null) {
+            event.setUserData(this.userData);
+        }
+        for (EventListener listener : listeners.keySet()) {
+            listener.onEvent(new MockEventIterator(event));
         }
     }
 
@@ -92,9 +141,5 @@ public class MockObservationManager implements ObservationManager {
     @Override
     public EventJournal getEventJournal(int eventTypes, String absPath, boolean isDeep, String[] uuid, String[] nodeTypeName) throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    public Set<EventListener> getListeners() {
-        return listeners;
     }
 }
