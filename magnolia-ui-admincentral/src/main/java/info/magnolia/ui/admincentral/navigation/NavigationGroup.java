@@ -41,18 +41,26 @@ import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vaadin.jouni.animator.Disclosure;
 
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.addon.chameleon.SidebarMenu;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Tree;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.NativeButton;
 
 
 /**
@@ -66,10 +74,9 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     private static final Logger log = LoggerFactory.getLogger(NavigationGroup.class);
 
-    // private Map<Component, NavigationItemDefinition> navigationItems = new HashMap<Component,
-    // NavigationItemDefinition>();
+    private Map<Component, NavigationItemDefinition> navigationItems = new HashMap<Component, NavigationItemDefinition>();
 
-    private Tree accordion = new Tree();
+    private SidebarMenu accordion = new SidebarMenu();
 
     private Collection<NavigationItemDefinition> navigationItemDefs;
 
@@ -90,22 +97,6 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
             }
         }
 
-        accordion.addListener(new ItemClickListener() {
-
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                NavigationItemDefinition navItem = (NavigationItemDefinition) event.getItemId();
-                if (navItem != null) {
-                    expand(navItem);
-                    select(navItem);
-                    presenter.onMenuSelection(navItem);
-                }
-            }
-        });
-
-        accordion.addStyleName("sidebar-menu");
-        accordion.setMultiSelect(false);
-        accordion.setNullSelectionAllowed(false);
         accordion.setSizeUndefined();
         accordion.setWidth(100, Sizeable.UNITS_PERCENTAGE);
     }
@@ -121,21 +112,52 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
      * @param permissions
      */
     public void addTab(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
-        accordion.addItem(navigationItemDef);
-        accordion.setItemCaption(navigationItemDef, getLabel(navigationItemDef));
-        accordion.setItemIcon(navigationItemDef, getIcon(navigationItemDef));
+        // layout for sub menu entries
+        Collection<NativeButton> subNavigation = addSubNavigationItems(navigationItemDef, permissions);
 
-        for (NavigationItemDefinition item : navigationItemDef.getItems()) {
-            if (permissions.hasPermission(item)) {
-                accordion.addItem(item);
-                accordion.setItemCaption(item, getLabel(item));
-                accordion.setItemIcon(item, getIcon(item));
-                accordion.setParent(item, navigationItemDef);
-                accordion.setChildrenAllowed(item, false);
+        // Label tab = new Label("<img src='"
+        // + MgnlContext.getContextPath()
+        // + navigationItemDef.getIcon()
+        // + "'>"
+        // + getLabel(navigationItemDef), Label.CONTENT_XHTML);
+
+        NavDisclosure tab = new NavDisclosure(getLabel(navigationItemDef));
+        tab.setDescription(getDescription(navigationItemDef));
+
+        accordion.addComponent(tab);
+
+        CssLayout layout = new CssLayout();
+        for (NativeButton button : subNavigation) {
+            layout.addComponent(button);
+        }
+        tab.setContent(layout);
+
+        // TODO: add notification badges
+
+        // store tab reference
+        navigationItems.put(tab, navigationItemDef);
+    }
+
+    /**
+     * Iterates over sub menu entries and adds them to the layout.
+     * @param permissions
+     * @return View with all relevant sub menu entries or null when none exists.
+     */
+    private Collection<NativeButton> addSubNavigationItems(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
+        List<NativeButton> list = new ArrayList<NativeButton>();
+
+        // sub menu items (2 levels only)
+        for (NavigationItemDefinition sub : navigationItemDef.getItems()) {
+            if (permissions.hasPermission(sub)) {
+                NavigationItem submenuItem = new NavigationItem(sub);
+                list.add(submenuItem);
+
+                // store submenu reference
+                navigationItems.put(submenuItem, sub);
             }
         }
 
-        // TODO: add notification badges
+        return list;
     }
 
     /**
@@ -169,6 +191,99 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
         return navigationWorkarea;
     }
 
+    private class NavDisclosure extends Disclosure {
+
+        public NavDisclosure(String caption) {
+            super(caption);
+            addListener(new LayoutClickListener() {
+
+                @Override
+                public void layoutClick(LayoutClickEvent event) {
+                    Component clicked = event.getClickedComponent();
+
+                    if (event.getChildComponent() != null) {
+                        System.out.println("event.getChildComponent(): "
+                            + event.getChildComponent().getClass()
+                            + ", "
+                            + event.getChildComponent().getCaption());
+                    }
+                    else {
+                        System.out.println("event.getChildComponent(): null");
+                    }
+                    if (clicked != null) {
+                        System.out.println("event.getClickedComponent(): " + clicked.getClass() + ", " + clicked.getCaption());
+                    }
+                    else {
+                        System.out.println("event.getClickedComponent(): null");
+                    }
+
+                    if (clicked != null && (clicked instanceof NavDisclosure || clicked instanceof NavigationItem)) {
+                        presenter.onMenuSelection(navigationItems.get(clicked));
+                    }
+                }
+            });
+
+        }
+
+        public Component getCaptionComponent() {
+            return caption;
+        }
+
+        @Override
+        public Disclosure open() {
+            super.open();
+            presenter.onMenuSelection(navigationItems.get(this));
+            return this;
+        }
+
+        @Override
+        public Disclosure close() {
+            super.close();
+            presenter.onMenuSelection(navigationItems.get(this));
+            return this;
+        }
+    }
+
+    /**
+     * Menu item button implementation.
+     *
+     * @author fgrilli
+     * @author mrichert
+     */
+    public class NavigationItem extends NativeButton {
+
+        private NavigationItemDefinition item;
+
+        public NavigationItem(final NavigationItemDefinition item) {
+            this.item = item;
+        }
+
+        /**
+         * See {@link com.vaadin.ui.AbstractComponent#getApplication()} javadoc as to why we need to
+         * do most of the initialization here and not in the constructor.
+         */
+        @Override
+        public void attach() {
+            super.attach();
+            Resource icon = NavigationGroup.this.getIcon(item);
+            if (icon != null) {
+                setIcon(icon);
+            }
+            setCaption(getLabel(item));
+
+            this.addListener(new ClickListener() {
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    if (presenter != null) {
+                        NavigationItemDefinition menuConfig = navigationItems.get(event.getComponent());
+                        presenter.onMenuSelection(menuConfig);
+                    }
+                }
+            });
+        }
+    }
+
     @Override
     public Component asVaadinComponent() {
         return accordion;
@@ -176,47 +291,24 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     @Override
     public void update(Place place) {
-        NavigationItemDefinition selection = null;
-        for (Object itemId : accordion.getItemIds()) {
-            NavigationItemDefinition navItem = (NavigationItemDefinition) itemId;
-            if (!(navItem.getActionDefinition() instanceof PlaceChangeActionDefinition)) {
+        for (Entry<Component, NavigationItemDefinition> entry : navigationItems.entrySet()) {
+            if (!(entry.getValue().getActionDefinition() instanceof PlaceChangeActionDefinition)) {
                 continue;
             }
-            final PlaceChangeActionDefinition definition = (PlaceChangeActionDefinition) navItem.getActionDefinition();
+            final PlaceChangeActionDefinition definition = (PlaceChangeActionDefinition) entry.getValue().getActionDefinition();
             if (definition.getPlace().equals(place)) {
 
-                selection = navItem;
+                // accordion.setSelectedTab(entry.getKey());
+                Component key = entry.getKey();
+                if (key instanceof NativeButton) {
+                    accordion.setSelected((NativeButton) key);
+                }
 
                 navigationWorkarea.setVisible(true);
 
-                log.debug("selected tab {}", navItem.getName());
+                log.debug("selected tab {}", entry.getValue().getName());
 
-                if (!accordion.hasChildren(navItem)) {
-                    break;
-                }
-            }
-        }
-        if (selection != null) {
-            select(selection);
-            expand(selection);
-        }
-    }
-
-    private void select(NavigationItemDefinition navItem) {
-        if (!accordion.isSelected(navItem)) {
-            accordion.select(navItem);
-        }
-    }
-
-    private void expand(NavigationItemDefinition navItem) {
-        for (Object itemId : accordion.getItemIds()) {
-            if (accordion.isRoot(itemId)) {
-                if (itemId.equals(navItem) || itemId.equals(accordion.getParent(navItem))) {
-                    accordion.expandItem(itemId);
-                }
-                else {
-                    accordion.collapseItem(itemId);
-                }
+                break;
             }
         }
     }
