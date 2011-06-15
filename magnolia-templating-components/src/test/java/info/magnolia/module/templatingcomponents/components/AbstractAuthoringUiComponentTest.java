@@ -40,33 +40,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.i18n.DefaultMessagesManager;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 import info.magnolia.templating.rendering.RenderingContext;
-import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
-import info.magnolia.templating.template.registry.TemplateDefinitionProvider;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -75,79 +60,7 @@ import org.junit.Test;
  *
  * @version $Id$
  */
-public class AbstractAuthoringUiComponentTest {
-    private static final String CONTENT = StringUtils.join(Arrays.asList("/foo/bar@type=mgnl:content",
-            "/foo/bar/MetaData@type=mgnl:metadata", "/foo/bar/MetaData/mgnl\\:template=testPageTemplate0",
-            "/foo/bar/paragraphs@type=mgnl:contentNode", "/foo/bar/paragraphs/0@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/0/text=hello 0", "/foo/bar/paragraphs/0/MetaData@type=mgnl:metadata",
-            "/foo/bar/paragraphs/0/MetaData/mgnl\\:template=testParagraph0",
-            "/foo/bar/paragraphs/1@type=mgnl:contentNode", "/foo/bar/paragraphs/1/text=hello 1",
-            "/foo/bar/paragraphs/1/MetaData@type=mgnl:metadata",
-            "/foo/bar/paragraphs/1/MetaData/mgnl\\:template=testParagraph1",
-            "/foo/bar/paragraphs/2@type=mgnl:contentNode", "/foo/bar/paragraphs/2/text=hello 2",
-            "/foo/bar/paragraphs/2/MetaData@type=mgnl:metadata",
-            "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2", "/pouet/lol@type=mgnl:content",
-            "/pouet/lol/MetaData@type=mgnl:metadata", "/pouet/lol/MetaData/mgnl\\:template=testPageTemplate1",
-            "/no/metadata/here@type=mgnl:content", ""), "\n");
-    private MockHierarchyManager hm;
-
-    @After
-    public void tearDown() throws Exception {
-        ComponentsTestUtil.clear();
-        MgnlContext.setInstance(null);
-        SystemProperty.clear();
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
-
-        final Context ctx = mock(WebContext.class);
-        when(ctx.getLocale()).thenReturn(Locale.US);
-
-        MgnlContext.setInstance(ctx);
-        final ConfiguredTemplateDefinition p0 = new ConfiguredTemplateDefinition();
-        p0.setName("testParagraph0");
-        final ConfiguredTemplateDefinition p1 = new ConfiguredTemplateDefinition();
-        p1.setName("testParagraph1");
-        p1.setI18nBasename("info.magnolia.module.templatingcomponents.test_messages");
-
-        final TemplateDefinitionProvider p0provider = mock(TemplateDefinitionProvider.class);
-        final TemplateDefinitionProvider p1provider = mock(TemplateDefinitionProvider.class);
-
-        when(p0provider.getTemplateDefinition()).thenReturn(p0);
-        when(p1provider.getTemplateDefinition()).thenReturn(p1);
-
-        final TemplateDefinitionRegistry pman = new TemplateDefinitionRegistry();
-        pman.registerTemplateDefinition(p0.getName(), p0provider);
-        pman.registerTemplateDefinition(p1.getName(), p1provider);
-
-        ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, pman);
-
-        final ConfiguredTemplateDefinition t0 = new ConfiguredTemplateDefinition();
-        t0.setName("testPageTemplate0");
-        final ConfiguredTemplateDefinition t1 = new ConfiguredTemplateDefinition();
-        t1.setName("testPageTemplate1");
-        t1.setI18nBasename("info.magnolia.module.templatingcomponents.test_messages");
-
-        final TemplateDefinitionProvider t0provider = mock(TemplateDefinitionProvider.class);
-        final TemplateDefinitionProvider t1provider = mock(TemplateDefinitionProvider.class);
-
-        when(t0provider.getTemplateDefinition()).thenReturn(t0);
-        when(t1provider.getTemplateDefinition()).thenReturn(t1);
-
-        pman.registerTemplateDefinition(t0.getName(), t0provider);
-        pman.registerTemplateDefinition(t1.getName(), t1provider);
-
-
-//        final TestableTemplateManager tman = new TestableTemplateManager();
-//        tman.register(t0);
-//        tman.register(t1);
-//        ComponentsTestUtil.setInstance(TemplateManager.class, tman);
-
-        hm = MockUtil.createHierarchyManager(CONTENT);
-    }
-
+public class AbstractAuthoringUiComponentTest extends AbstractAbstractComponentTest {
     @Test
     public void testGetsCustomMessageCustomBundleWithPageTemplate() throws Exception {
         doTestMessage("Incredibly custom Foo label", "/pouet/lol", "custom.foo.label");
@@ -247,7 +160,7 @@ public class AbstractAuthoringUiComponentTest {
 
     private void doTestMessage(String expected, String contentPath, String key) throws RepositoryException {
         final AbstractAuthoringUiComponent compo = new DummyComponent();
-        assertEquals(expected, compo.getMessage(hm.getContent(contentPath).getJCRNode(), key));
+        assertEquals(expected, compo.getMessage(getHM().getContent(contentPath).getJCRNode(), key));
     }
 
     private static class DummyComponent extends AbstractAuthoringUiComponent {
