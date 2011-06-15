@@ -48,6 +48,10 @@ import javax.jcr.Node;
  */
 public interface RenderableDefinition {
 
+    String getId();
+
+    void setId(String id);
+
     String getName();
 
     String getRenderType();

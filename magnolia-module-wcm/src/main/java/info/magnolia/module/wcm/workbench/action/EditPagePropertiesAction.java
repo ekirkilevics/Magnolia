@@ -97,8 +97,8 @@ public class EditPagePropertiesAction extends ActionBase<EditPagePropertiesActio
         try {
             templateDefinition = templateManager.getTemplateDefinition(template);
         } catch (TemplateDefinitionRegistrationException e) {
-            // TODO dlipp: apply consistent ExceptionHandling.
-            throw new RuntimeException(e);
+            // The node uses a template which is not registered
+            return null;
         }
         return templateDefinition != null ? templateDefinition.getDialog() : null;
     }

@@ -64,6 +64,7 @@ import com.vaadin.ui.Component;
  * @version $Id$
  */
 public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinition> implements Serializable {
+
     private final TemplateDefinitionRegistry templateManager = Components.getComponent(TemplateDefinitionRegistry.class);
 
     public TemplateColumn(TemplateColumnDefinition def, EventBus eventBus, PlaceController placeController, Shell shell) {
@@ -91,7 +92,7 @@ public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinit
         Map<String, String> map = new LinkedHashMap<String, String>();
 
         for (TemplateDefinition templateDefinition : templateManager.getAvailableTemplates(node)) {
-            map.put(templateDefinition.getTitle(), templateDefinition.getName());
+            map.put(templateDefinition.getTitle(), templateDefinition.getId());
         }
         return map;
     }

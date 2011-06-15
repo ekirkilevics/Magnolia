@@ -44,20 +44,6 @@ import info.magnolia.templating.template.TemplateDefinition;
  */
 public class PageEditorHacks {
 
-    /**
-     * Returns the name of the dialog that the paragraph uses.
-     * <p/>
-     * TODO this is used in a few more places (might be a good candidate to add to ParagraphManager)
-     * See also {@link info.magnolia.module.admininterface.dialogs.ParagraphEditDialog}
-     */
-    public static String getDialogUsedByParagraph(TemplateDefinition paragraph) {
-        String dialogToUse = paragraph.getDialog();
-        if (dialogToUse == null) {
-            return paragraph.getName();
-        }
-        return dialogToUse;
-    }
-
     public static ContentSelection convertFromPointingToParagraphToCollection(ContentSelection selection) {
         String collectionPath = PathUtil.getFolder(selection.getPath());
         String collectionName = PathUtil.getFileName(collectionPath);

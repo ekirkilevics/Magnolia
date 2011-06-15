@@ -127,7 +127,7 @@ public class PageEditor extends AbstractComponent {
     }
 
     public void reload() {
-        // this.requestRepaint();
+        this.requestRepaint();
     }
 
     @Override

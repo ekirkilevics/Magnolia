@@ -63,7 +63,7 @@ public class AddPageAction extends AddNodeAction {
         MetaDataUtil.updateMetaData(newNode);
         TemplateDefinition newTemplate = Components.getComponent(TemplateDefinitionRegistry.class).getDefaultTemplate(newNode);
         if (newTemplate != null) {
-            metaData.setTemplate(newTemplate.getName());
+            metaData.setTemplate(newTemplate.getId());
         }
     }
 }

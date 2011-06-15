@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import com.vaadin.ui.Field;
 import info.magnolia.ui.framework.editor.ValueEditor;
 
 import java.util.Map;
@@ -64,24 +65,41 @@ public abstract class EditableSelect extends Editable {
         this.options = options;
     }
 
-    private static class SelectEditor extends ComboBox implements ValueEditor {
+    private static class SelectEditor implements ValueEditor<String> {
 
         private String path;
+        private Field field;
 
-        public SelectEditor(String path) {
+        public SelectEditor(String path, Field field) {
             this.path = path;
+            this.field = field;
         }
 
         @Override
         public String getPath() {
             return path;
         }
+
+        @Override
+        public void setValue(String value) {
+            field.setValue(value);
+        }
+
+        @Override
+        public String getValue() {
+            return (String) field.getValue();
+        }
+
+        @Override
+        public Class<String> getType() {
+            return String.class;
+        }
     }
 
     @Override
     protected ComponentAndEditor getComponentAndEditor(Item item) {
 
-        SelectEditor select = new SelectEditor(path);
+        ComboBox select = new ComboBox();
         select.setNullSelectionAllowed(false);
         select.setNewItemsAllowed(false);
 
@@ -125,6 +143,6 @@ public abstract class EditableSelect extends Editable {
         layout.setWidth(100, UNITS_PERCENTAGE);
         layout.addComponent(select);
         layout.addStyleName("m-inline-div");
-        return new ComponentAndEditor(layout, select);
+        return new ComponentAndEditor(layout, new SelectEditor(path, select));
     }
 }

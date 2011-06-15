@@ -137,7 +137,11 @@ public class AreaBarWidget extends AbstractBarWidget {
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                pageEditor.openDialog(dialog, workspace, path, null, name);
+                if (showAddButton) {
+                    pageEditor.openDialog(dialog, workspace, path, null, name);
+                } else {
+                    pageEditor.openDialog(dialog, workspace, path, null, null);
+                }
             }
         });
         addButton(button);

@@ -86,21 +86,16 @@ public class EditComponent extends AbstractContentComponent {
 
         out.append(" dialog=").append(QUOTE).append(resolveDialog(paragraph)).append(QUOTE);
 
-        out.append(" paragraph=").append(QUOTE).append(paragraph.getName()).append(QUOTE);
+        out.append(" paragraph=").append(QUOTE).append(paragraph.getId()).append(QUOTE);
 
         out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_EDIT).append(GREATER_THAN).append(LINEBREAK);
     }
 
-    // TODO this is used in a few more places - check for a better place to move to.
     private String resolveDialog(TemplateDefinition paragraph) {
         if (this.dialog != null) {
             return this.dialog;
         }
-        String dialogToUse = paragraph.getDialog();
-        if (dialogToUse == null) {
-            return paragraph.getName();
-        }
-        return dialogToUse;
+        return paragraph.getDialog();
     }
 
     @Override

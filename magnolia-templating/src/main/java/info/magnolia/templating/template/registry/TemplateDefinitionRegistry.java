@@ -88,21 +88,28 @@ public class TemplateDefinitionRegistry {
         if (templateDefinitionProvider == null) {
             throw new TemplateDefinitionRegistrationException("No TemplateDefinition registered for id: " + id);
         }
-        return templateDefinitionProvider.getTemplateDefinition();
+        TemplateDefinition templateDefinition = templateDefinitionProvider.getTemplateDefinition();
+        templateDefinition.setId(id);
+        return templateDefinition;
     }
 
     public Collection<TemplateDefinition> getTemplateDefinitions() {
         Collection<TemplateDefinition> templateDefinitions = new ArrayList<TemplateDefinition>();
-        for (TemplateDefinitionProvider provider : providers.values()) {
-            try {
-                templateDefinitions.add(provider.getTemplateDefinition());
-            } catch (TemplateDefinitionRegistrationException e) {
-                // one failing provider is no reason to not show any templates
-                log.error("Failed to read template definition from " + provider + ".", e);
+        synchronized (providers) {
+            for (Map.Entry<String, TemplateDefinitionProvider> entry : providers.entrySet()) {
+                String id = entry.getKey();
+                TemplateDefinitionProvider provider = entry.getValue();
+                try {
+                    TemplateDefinition templateDefinition = provider.getTemplateDefinition();
+                    templateDefinition.setId(id);
+                    templateDefinitions.add(templateDefinition);
+                } catch (TemplateDefinitionRegistrationException e) {
+                    // one failing provider is no reason to not show any templates
+                    log.error("Failed to read template definition from " + provider + ".", e);
+                }
             }
         }
         return templateDefinitions;
-
     }
 
     // TODO move this to an independent template availability component
@@ -133,25 +140,25 @@ public class TemplateDefinitionRegistry {
      */
     // TODO move this to an independent template availability component
     public TemplateDefinition getDefaultTemplate(Node content) {
-        TemplateDefinition tmpl;
-            try {
-                // try to use the same as the parent
-                tmpl = this.getTemplateDefinition(MetaDataUtil.getTemplate(content));
-                if(tmpl != null && tmpl.isAvailable(content)){
-                    return tmpl;
-                }
-                // otherwise use the first available template
-                else{
-                    Collection<TemplateDefinition> templates = getAvailableTemplates(content);
-                    if (!templates.isEmpty()) {
-                        return templates.iterator().next();
-                    }
-                }
-            }
-            catch (TemplateDefinitionRegistrationException e) {
-                log.error("Can't resolve default template for node " + content, e);
-            }
-            return null;
+
+        // try to use the same as the parent
+        TemplateDefinition definition = null;
+        try {
+            definition = this.getTemplateDefinition(MetaDataUtil.getTemplate(content));
+        } catch (TemplateDefinitionRegistrationException e) {
+            log.warn("Can't resolve default template for node " + content, e);
+        }
+        if (definition != null && definition.isAvailable(content)){
+            return definition;
+        }
+
+        // otherwise use the first available template
+        Collection<TemplateDefinition> templates = getAvailableTemplates(content);
+        if (!templates.isEmpty()) {
+            return templates.iterator().next();
+        }
+
+        return null;
     }
 
 }

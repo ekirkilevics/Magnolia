@@ -61,6 +61,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class ConfiguredRenderableDefinition implements RenderableDefinition {
 
+    private String id;
     private String name;
     private String title;
     private String templateScript;
@@ -100,6 +101,16 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
         } catch (RepositoryException e) {
             return false;
         }
+    }
+
+    @Override
+    public String getId() {
+        return this.id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override
