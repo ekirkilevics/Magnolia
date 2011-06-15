@@ -70,6 +70,8 @@ import freemarker.template.utility.DeepUnwrap;
  * A base class for freemarker directives used in Magnolia.
  * Subclasses need to implement the {@link info.magnolia.module.templatingcomponents.freemarker.AbstractDirective#prepareUIComponent(RenderingContext, info.magnolia.cms.core.AggregationState, freemarker.core.Environment, java.util.Map, freemarker.template.TemplateModel[], freemarker.template.TemplateDirectiveBody)} method.
  *
+ * @param <C> the UI component the directive is operating on
+ *
  * @version $Id$
  */
 public abstract class AbstractDirective<C extends AuthoringUiComponent> implements TemplateDirectiveModel {
