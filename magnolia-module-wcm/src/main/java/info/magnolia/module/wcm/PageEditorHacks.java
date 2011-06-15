@@ -35,7 +35,7 @@ package info.magnolia.module.wcm;
 
 import info.magnolia.cms.util.PathUtil;
 import info.magnolia.module.wcm.editor.ContentSelection;
-import info.magnolia.templating.template.TemplateDefinition;
+
 
 /**
  * Utility methods for the page editor that should be reviewed and placed elsewhere.
