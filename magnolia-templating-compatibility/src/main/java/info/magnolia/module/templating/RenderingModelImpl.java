@@ -33,8 +33,10 @@
  */
 package info.magnolia.module.templating;
 
+import javax.jcr.Node;
+
 import info.magnolia.cms.core.Content;
-import info.magnolia.templating.model.RenderingModel;
+import info.magnolia.module.templating.RenderingModel;
 
 
 /**
@@ -46,5 +48,8 @@ public class RenderingModelImpl<RD extends RenderableDefinition> extends info.ma
 
     public RenderingModelImpl(Content content, RD definition, RenderingModel< ? > parent) {
         super(content.getJCRNode(), definition, parent);
+    }
+    public RenderingModelImpl(Node content, info.magnolia.templating.template.RenderableDefinition definition, info.magnolia.templating.model.RenderingModel parent) {
+        super(content, (RD) definition, parent);
     }
 }

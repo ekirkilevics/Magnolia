@@ -46,7 +46,6 @@ import javax.jcr.Node;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -70,7 +69,6 @@ public class AbstractRenderableTest {
     }
 
     @Test
-    @Ignore("The new model should take a Node not a Content object")
     public void testCanInstantiateModel() throws Exception {
         final AbstractRenderable renderable = new AbstractRenderable() {
         };
@@ -81,7 +79,6 @@ public class AbstractRenderableTest {
     }
 
     @Test
-    @Ignore("The new model should take a Node not a Content object")
     public void testModelNeedSpecificConstructor() {
         final AbstractRenderable renderable = new AbstractRenderable() {
         };
@@ -90,7 +87,7 @@ public class AbstractRenderableTest {
             final RenderingModel m = renderable.newModel(dummyContent, dummyDef, dummyParentModel);
             fail("should have failed");
         } catch (Exception e) {
-            assertEquals("A model class must define a constructor with types {interface info.magnolia.cms.core.Content,interface info.magnolia.module.templating.RenderableDefinition,interface info.magnolia.module.templating.RenderingModel}. Can't instantiate class info.magnolia.module.templating.AbstractRenderableTest$NoConstructorModel", e.getMessage());
+            assertEquals("A model class must define a constructor with types {interface javax.jcr.Node,interface info.magnolia.templating.template.RenderableDefinition,interface info.magnolia.templating.model.RenderingModel}. Can't instantiate class info.magnolia.module.templating.AbstractRenderableTest$NoConstructorModel", e.getMessage());
             assertTrue(e instanceof IllegalArgumentException);
         }
 
@@ -99,8 +96,7 @@ public class AbstractRenderableTest {
             final RenderingModel m = renderable.newModel(dummyContent, dummyDef, dummyParentModel);
             fail("should have failed");
         } catch (Exception e) {
-            assertEquals("A model class must define a constructor with types {interface info.magnolia.cms.core.Content,interface info.magnolia.module.templating.RenderableDefinition,interface info.magnolia.module.templating.RenderingModel}. " +
-                    "Can't instantiate class info.magnolia.module.templating.AbstractRenderableTest$WrongConstructorModel", e.getMessage());
+            assertEquals("A model class must define a constructor with types {interface javax.jcr.Node,interface info.magnolia.templating.template.RenderableDefinition,interface info.magnolia.templating.model.RenderingModel}. Can't instantiate class info.magnolia.module.templating.AbstractRenderableTest$WrongConstructorModel", e.getMessage());
             assertTrue(e instanceof IllegalArgumentException);
         }
     }
@@ -134,7 +130,7 @@ public class AbstractRenderableTest {
     }
 
     public static class StandardConstructorModel implements RenderingModel {
-        public StandardConstructorModel(Content content, RenderableDefinition definition, RenderingModel parent) {
+        public StandardConstructorModel(Node content, info.magnolia.templating.template.RenderableDefinition definition, info.magnolia.templating.model.RenderingModel<RenderableDefinition> parent) {
 
         }
 

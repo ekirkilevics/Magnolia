@@ -67,7 +67,6 @@ import javax.jcr.Session;
 import javax.jcr.Workspace;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -75,8 +74,7 @@ import static org.junit.Assert.*;
 import freemarker.cache.StringTemplateLoader;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class FreemarkerParagraphRendererTest {
     private StringTemplateLoader tplLoader;
@@ -128,7 +126,6 @@ public class FreemarkerParagraphRendererTest {
         when(workspace.getSession()).thenReturn(session);
     }
 
-    @Ignore("The new model should take a Node not a Content object")
     @Test
     public void testWorksWithNonActionParagraphAndContentIsExposedToFreemarker() throws Exception {
         tplLoader.putTemplate("test_noclass.ftl", "This is a test template, rendering the content node under ${content.@handle} with UUID ${content.@uuid}.\n" +
@@ -143,11 +140,10 @@ public class FreemarkerParagraphRendererTest {
         p.setTemplatePath("test_noclass.ftl");
         renderer.render(page, p, out);
 
-        assertEquals("This is a test template, rendering the content node under /plop with UUID 123.\n" +
+        assertEquals("This is a test template, rendering the content node under /myPage with UUID 123.\n" +
                 "The value of the foo property is bar.", out.toString());
     }
 
-    @Ignore("The new model should take a Node not a Content object")
     @Test
     public void testActionClassGetsExecutedAndIsPutOnContextAlongWithResultAndContent() throws Exception {
         tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${model.pouet} : ${actionResult}");
@@ -162,7 +158,6 @@ public class FreemarkerParagraphRendererTest {
         assertEquals("yay : it works : success", out.toString());
     }
 
-    @Ignore("The new model should take a Node not a Content object")
     @Test
     public void testActionGetsPopulated() throws Exception {
         Map<String,String> params=new HashMap<String,String>();
@@ -178,7 +173,6 @@ public class FreemarkerParagraphRendererTest {
         tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${model.pouet} : ${model.blah} : ${actionResult}");
         final Paragraph par = new Paragraph();
         par.setName("test-with-action");
-        par.setI18nBasename("testmessages");
         par.setTemplatePath("test_action.ftl");
         par.setModelClass(SimpleTestState.class);
 
@@ -189,7 +183,6 @@ public class FreemarkerParagraphRendererTest {
         assertEquals("yay : it works : tralala : success", out.toString());
     }
 
-    @Ignore("The new model should take a Node not a Content object")
     @Test
     public void testCantRenderWithoutParagraphPathCorrectlySet() throws Exception {
         tplLoader.putTemplate("foo", "");
@@ -204,7 +197,6 @@ public class FreemarkerParagraphRendererTest {
         }
     }
 
-    @Ignore("The new model should take a Node not a Content object")
     @Test
     public void testSkipRendering() throws Exception {
         final Paragraph par = new Paragraph();
@@ -218,7 +210,7 @@ public class FreemarkerParagraphRendererTest {
     }
 
     public static final class SimpleTestState extends RenderingModelImpl<RenderableDefinition>{
-        public SimpleTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
+        public SimpleTestState(Node content, info.magnolia.templating.template.RenderableDefinition definition, info.magnolia.templating.model.RenderingModel<RenderableDefinition> parent) {
             super(content, definition, parent);
         }
 
@@ -249,7 +241,7 @@ public class FreemarkerParagraphRendererTest {
 
     public static final class SkippableTestState extends RenderingModelImpl<RenderableDefinition> {
 
-        public SkippableTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
+        public SkippableTestState(Node content, info.magnolia.templating.template.RenderableDefinition definition, info.magnolia.templating.model.RenderingModel<RenderableDefinition> parent) {
             super(content, definition, parent);
         }
         @Override

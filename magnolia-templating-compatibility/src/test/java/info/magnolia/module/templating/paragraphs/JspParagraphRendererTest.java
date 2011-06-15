@@ -70,7 +70,6 @@ import javax.jcr.Workspace;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -183,7 +182,6 @@ public class JspParagraphRendererTest {
     */
 
     @Test
-    @Ignore("The new model should take a Node not a Content object")
     public void testCantRenderWithoutParagraphPathCorrectlySet() throws Exception {
         final Paragraph paragraph = new Paragraph();
         paragraph.setName("plop");
@@ -192,13 +190,12 @@ public class JspParagraphRendererTest {
             renderer.render(page, paragraph, new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
-            assertEquals("Unable to render info.magnolia.module.templating.Paragraph plop in page /pouet: templatePath not set.", e.getMessage());
+            assertEquals("Unable to render info.magnolia.module.templating.Paragraph plop in page /myPage: templatePath not set.", e.getMessage());
         }
     }
 
 
     @Test
-    @Ignore("The new model should take a Node not a Content object")
     public void testSkipRendering() throws Exception {
         final Paragraph par = new Paragraph();
         par.setName("plop");
@@ -226,7 +223,6 @@ public class JspParagraphRendererTest {
         }
     }
 
-    @Ignore("The new model should take a Node not a Content object")
     @Test
     public void testShouldFailIfContextIsNotWebContext() throws Exception {
         Content content = mock(Content.class);
@@ -258,7 +254,7 @@ public class JspParagraphRendererTest {
 
     public static final class SkippableTestState extends RenderingModelImpl<RenderableDefinition> {
 
-        public SkippableTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
+        public SkippableTestState(Node content, info.magnolia.templating.template.RenderableDefinition definition, info.magnolia.templating.model.RenderingModel<RenderableDefinition> parent) {
             super(content, definition, parent);
         }
         @Override
