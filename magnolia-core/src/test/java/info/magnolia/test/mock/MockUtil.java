@@ -45,7 +45,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.importexport.PropertiesImportExport;
-import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.test.ComponentsTestUtil;
 
 import java.io.ByteArrayInputStream;
