@@ -225,6 +225,7 @@ public abstract class AbstractDirectiveTestCase {
      * Hook method - overwrite if you want to set up special expectations.
      */
     protected void setupExpectations(WebContext ctx, HttpServletRequest req) {
+        // no specific expectations here
     }
 
     public void tearDown() throws Exception {

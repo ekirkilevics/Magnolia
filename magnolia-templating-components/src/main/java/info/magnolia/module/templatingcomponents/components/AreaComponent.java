@@ -34,7 +34,7 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.rendering.RenderingContext;
 import info.magnolia.templating.rendering.RenderingEngine;
@@ -135,7 +135,7 @@ public class AreaComponent extends AbstractContentComponent {
                     NodeIterator nodeIterator = areaNode.getNodes();
                     while (nodeIterator.hasNext()) {
                         Node node = (Node) nodeIterator.next();
-                        if (node.getPrimaryNodeType().getName().equals(ItemType.CONTENTNODE.getSystemName())) {
+                        if (node.getPrimaryNodeType().getName().equals(MgnlNodeType.NT_CONTENTNODE)) {
                             renderingEngine.render(node, out);
                         }
                     }

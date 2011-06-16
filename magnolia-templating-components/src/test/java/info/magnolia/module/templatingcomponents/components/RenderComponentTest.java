@@ -53,10 +53,8 @@ import info.magnolia.templating.renderer.Renderer;
 import info.magnolia.templating.renderer.registry.RendererRegistry;
 import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
 import info.magnolia.templating.rendering.DefaultRenderingEngine;
-import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.rendering.RenderingContext;
 import info.magnolia.templating.rendering.RenderingEngine;
-import info.magnolia.templating.template.RenderableDefinition;
 import info.magnolia.templating.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.ComponentsTestUtil;
@@ -64,7 +62,6 @@ import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.StringWriter;
-import java.util.Map;
 
 import javax.jcr.Node;
 import javax.servlet.http.HttpServletRequest;
@@ -79,24 +76,6 @@ import org.junit.Test;
  * @version $Id$
  */
 public class RenderComponentTest {
-    private static final class DummyRenderingEngine implements RenderingEngine {
-        @Override
-        public void render(Node content, Appendable out) throws RenderException {
-        }
-
-        @Override
-        public void render(Node content, Map<String, Object> contextObjects, Appendable out) throws RenderException {
-        }
-
-        @Override
-        public void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws RenderException {
-        }
-
-        @Override
-        public RenderingContext getRenderingContext() {
-            return null;
-        }
-    }
 
     @Test
     public void testDoRender() throws Exception {
@@ -118,7 +97,8 @@ public class RenderComponentTest {
         ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
-        ComponentsTestUtil.setInstance(RenderingEngine.class, new DummyRenderingEngine());
+        RenderingEngine renderingEngine = mock(RenderingEngine.class);
+        ComponentsTestUtil.setInstance(RenderingEngine.class, renderingEngine);
 
         final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
         final ConfiguredTemplateDefinition templateDefinition = new ConfiguredTemplateDefinition();
@@ -173,7 +153,8 @@ public class RenderComponentTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        ComponentsTestUtil.setInstance(RenderingEngine.class, new DummyRenderingEngine());
+        RenderingEngine renderingEngine = mock(RenderingEngine.class);
+        ComponentsTestUtil.setInstance(RenderingEngine.class, renderingEngine);
 
         final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
         DefaultRenderingEngine engine = new DefaultRenderingEngine(new RendererRegistry(), templateDefinitionAssignment);
