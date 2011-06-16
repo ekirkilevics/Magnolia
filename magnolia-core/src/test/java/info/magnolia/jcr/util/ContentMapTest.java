@@ -37,10 +37,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -52,9 +51,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test for content map functionality.
- *
- * @author had
+ * @version $Id$
  *
  */
 public class ContentMapTest {
@@ -65,8 +62,13 @@ public class ContentMapTest {
     }
     @Test
     public void testGetBasicProps() throws Exception {
-        HierarchyManager hm = MockUtil.createHierarchyManager("/bla/prop1=test\n" + "/bla/bla/prop1=test\n" + "/bla/bla/prop2=something\n" + "/bla/bla@uuid=12345\n" + "/bla/bla/jcr/@type=mgnl:contentNode");
-        ContentMap map = new ContentMap(hm.getContent("/bla/bla").getJCRNode());
+        MockSession hm = SessionTestUtil.createSession(
+                "/bla.prop1=test\n" +
+                "/bla/bla.prop1=test\n" +
+                "/bla/bla.prop2=something\n" +
+                "/bla/bla.@uuid=12345\n" +
+                "/bla/bla/jcr.@type=mgnl:contentNode");
+        ContentMap map = new ContentMap(hm.getNode("/bla/bla"));
         assertFalse(map.keySet().isEmpty());
         assertTrue(map.containsKey("prop1"));
         assertEquals("something", map.get("prop2"));
@@ -82,45 +84,45 @@ public class ContentMapTest {
     public void testGetBinaryProps() throws Exception {
         // FIXME: yes, you!
         String contentProperties = StringUtils.join(Arrays.asList(
-                "/somepage/mypage@type=mgnl:content",
-                "/somepage/mypage/paragraphs@type=mgnl:contentNode",
-                "/somepage/mypage/paragraphs/0@type=mgnl:contentNode",
-                "/somepage/mypage/paragraphs/0@type=mgnl:contentNode",
+                "/somepage/mypage.@type=mgnl:content",
+                "/somepage/mypage/paragraphs.@type=mgnl:contentNode",
+                "/somepage/mypage/paragraphs/0.@type=mgnl:contentNode",
+                "/somepage/mypage/paragraphs/0.@type=mgnl:contentNode",
 
-                "/somepage/mypage/paragraphs/0/attachment1@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0/attachment1.@type=mgnl:resource",
                 "/somepage/mypage/paragraphs/0/attachment1.fileName=hello",
                 "/somepage/mypage/paragraphs/0/attachment1.extension=gif",
                 // being a binary node, magnolia knows to store data as jcr:data w/o need to be explicitly told so
-                "/somepage/mypage/paragraphs/0/attachment1=binary:X",
+                "/somepage/mypage/paragraphs/0.attachment1=binary:X",
                 "/somepage/mypage/paragraphs/0/attachment1.jcr\\:mimeType=image/gif",
                 "/somepage/mypage/paragraphs/0/attachment1.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00",
 
-                "/somepage/mypage/paragraphs/0/attachment2@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0.attachment2=binary:X",
+                "/somepage/mypage/paragraphs/0/attachment2.@type=mgnl:resource",
                 "/somepage/mypage/paragraphs/0/attachment2.fileName=test",
                 "/somepage/mypage/paragraphs/0/attachment2.extension=jpeg",
-                "/somepage/mypage/paragraphs/0/attachment2=binary:X",
                 "/somepage/mypage/paragraphs/0/attachment2.jcr\\:mimeType=image/jpeg",
                 "/somepage/mypage/paragraphs/0/attachment2.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00",
 
-                "/somepage/mypage/paragraphs/0/image3@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0.image3=binary:X",
+                "/somepage/mypage/paragraphs/0/image3.@type=mgnl:resource",
                 "/somepage/mypage/paragraphs/0/image3.fileName=third",
                 "/somepage/mypage/paragraphs/0/image3.extension=png",
-                "/somepage/mypage/paragraphs/0/image3=binary:X",
                 "/somepage/mypage/paragraphs/0/image3.jcr\\:mimeType=image/png",
                 "/somepage/mypage/paragraphs/0/image3.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00",
 
                 // and more which should not match
-                "/somepage/mypage/paragraphs/0/foo=bar",
-                "/somepage/mypage/paragraphs/0/mybool=boolean:true",
-                "/somepage/mypage/paragraphs/0/rand@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0.foo=bar",
+                "/somepage/mypage/paragraphs/0.mybool=boolean:true",
+                "/somepage/mypage/paragraphs/0.rand=binary:X",
+                "/somepage/mypage/paragraphs/0/rand.@type=mgnl:resource",
                 "/somepage/mypage/paragraphs/0/rand.fileName=randdddd",
                 "/somepage/mypage/paragraphs/0/rand.extension=png",
-                "/somepage/mypage/paragraphs/0/rand=binary:X",
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:mimeType=image/png",
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00"
         ), "\n");
-        HierarchyManager hm = MockUtil.createHierarchyManager(contentProperties);
-        ContentMap map = new ContentMap(hm.getContent("/somepage/mypage/paragraphs/0").getJCRNode());
+        MockSession hm = SessionTestUtil.createSession(contentProperties);
+        ContentMap map = new ContentMap(hm.getNode("/somepage/mypage/paragraphs/0"));
         assertNotNull(map.get("attachment1"));
         assertTrue(map.get("attachment1") instanceof Node);
         System.out.println(map.get("attachment1").getClass());
@@ -128,18 +130,18 @@ public class ContentMapTest {
     @Test
     public void testGetOtherProps() throws Exception {
         String contentProperties = StringUtils.join(Arrays.asList(
-                "/somepage/mypage@type=mgnl:content",
-                "/somepage/mypage/paragraphs@type=mgnl:contentNode",
-                "/somepage/mypage/paragraphs/0@type=mgnl:contentNode",
-                "/somepage/mypage/paragraphs/0@type=mgnl:contentNode",
+                "/somepage/mypage.@type=mgnl:content",
+                "/somepage/mypage/paragraphs.@type=mgnl:contentNode",
+                "/somepage/mypage/paragraphs/0.@type=mgnl:contentNode",
+                "/somepage/mypage/paragraphs/0.@type=mgnl:contentNode",
 
                 // 2 regular props
-                "/somepage/mypage/paragraphs/0/attention=booyah",
-                "/somepage/mypage/paragraphs/0/imaginary=date:2009-10-14T08:59:01.227-04:00"
+                "/somepage/mypage/paragraphs/0.attention=booyah",
+                "/somepage/mypage/paragraphs/0.imaginary=date:2009-10-14T08:59:01.227-04:00"
 
         ), "\n");
-        HierarchyManager hm = MockUtil.createHierarchyManager(contentProperties);
-        ContentMap map = new ContentMap(hm.getContent("/somepage/mypage/paragraphs/0").getJCRNode());
+        MockSession hm = SessionTestUtil.createSession(contentProperties);
+        ContentMap map = new ContentMap(hm.getNode("/somepage/mypage/paragraphs/0"));
         assertNotNull(map.get("imaginary"));
         assertTrue(map.get("imaginary") instanceof Calendar);
     }
