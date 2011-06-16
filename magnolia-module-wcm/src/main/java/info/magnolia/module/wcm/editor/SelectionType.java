@@ -42,5 +42,5 @@ package info.magnolia.module.wcm.editor;
  */
 public enum SelectionType {
 
-    PAGE, AREA_COLLECTION, AREA_SINGLE, COMPONENT_IN_COLLECTION, COMPONENT_IN_SINGLE
+    PAGE, AREA_LIST, AREA_SINGLE, COMPONENT_IN_LIST, COMPONENT_IN_SINGLE
 }

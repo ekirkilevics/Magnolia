@@ -81,7 +81,7 @@ public class EditBarWidget extends AbstractBarWidget {
     @Override
     protected void onSelect() {
         super.onSelect();
-        pageEditor.updateSelection(this, VPageEditor.SELECTION_COMPONENT, workspace, path, null, null, getComponentsAvailableInThisArea(), dialog);
+        pageEditor.updateSelection(this, VPageEditor.SELECTION_COMPONENT_IN_LIST, workspace, path, null, null, getComponentsAvailableInThisArea(), dialog);
     }
 
     private String getComponentsAvailableInThisArea() {

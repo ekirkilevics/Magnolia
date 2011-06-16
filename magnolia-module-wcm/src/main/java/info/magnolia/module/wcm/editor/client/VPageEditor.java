@@ -59,9 +59,9 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
     public static final String AREA_TYPE_SINGLE = "single";
 
     public static final String SELECTION_PAGE = "page";
-    public static final String SELECTION_AREA = "area_collection";
-    public static final String SELECTION_SINGLE = "area_single";
-    public static final String SELECTION_COMPONENT = "component_in_collection";
+    public static final String SELECTION_AREA_LIST = "area_list";
+    public static final String SELECTION_AREA_SINGLE = "area_single";
+    public static final String SELECTION_COMPONENT_IN_LIST = "component_in_list";
     public static final String SELECTION_COMPONENT_IN_SINGLE = "component_in_single";
 
     public static final String SELECTED_WORKSPACE = "selectedWorkspace";

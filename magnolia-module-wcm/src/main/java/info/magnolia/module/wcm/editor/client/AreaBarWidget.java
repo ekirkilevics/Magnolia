@@ -106,10 +106,10 @@ public class AreaBarWidget extends AbstractBarWidget {
     protected void onSelect() {
         super.onSelect();
         if (type.equals(VPageEditor.AREA_TYPE_LIST)) {
-            pageEditor.updateSelection(this, VPageEditor.SELECTION_AREA, workspace, path, name, null, availableComponents, dialog);
+            pageEditor.updateSelection(this, VPageEditor.SELECTION_AREA_LIST, workspace, path, name, null, availableComponents, dialog);
         } else if (type.equals(VPageEditor.AREA_TYPE_SINGLE)) {
             if (showAddButton) {
-                pageEditor.updateSelection(this, VPageEditor.SELECTION_SINGLE, workspace, path, null, name, availableComponents, dialog);
+                pageEditor.updateSelection(this, VPageEditor.SELECTION_AREA_SINGLE, workspace, path, null, name, availableComponents, dialog);
             } else {
                 pageEditor.updateSelection(this, VPageEditor.SELECTION_COMPONENT_IN_SINGLE, workspace, path, null, null, availableComponents, dialog);
             }

@@ -44,7 +44,7 @@ import info.magnolia.module.wcm.editor.ContentSelection;
  */
 public class PageEditorHacks {
 
-    public static ContentSelection convertFromPointingToComponentToCollectionArea(ContentSelection selection) {
+    public static ContentSelection convertFromPointingAtComponentToListArea(ContentSelection selection) {
 
         String parentPath = PathUtil.getFolder(selection.getPath());
         String parentName = PathUtil.getFileName(parentPath);

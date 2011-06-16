@@ -146,13 +146,13 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
             case PAGE:
                 menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getPage();
                 break;
-            case AREA_COLLECTION:
+            case AREA_LIST:
                 menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getArea();
                 break;
             case AREA_SINGLE:
                 menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getSingle();
                 break;
-            case COMPONENT_IN_COLLECTION:
+            case COMPONENT_IN_LIST:
                 menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getComponent();
                 break;
             case COMPONENT_IN_SINGLE:
