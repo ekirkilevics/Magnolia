@@ -104,7 +104,6 @@ public abstract class AbstractDirective<C extends AuthoringUiComponent> implemen
         final RenderingEngine renderingEngine = Components.getComponent(RenderingEngine.class);
         final RenderingContext renderingContext = renderingEngine.getRenderingContext();
 
-        // TODO dlipp - is that really what we want? Why provided renderingContext and -Engine if context can always be retrieved via RenderingEngine#getRenderingContext()??
         return Components.getComponentProvider().newInstance(getUIComponentClass(), ServerConfiguration.getInstance(), renderingContext, renderingEngine);
     }
 
