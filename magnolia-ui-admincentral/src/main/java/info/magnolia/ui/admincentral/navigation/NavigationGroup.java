@@ -36,8 +36,7 @@ package info.magnolia.ui.admincentral.navigation;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.admincentral.navigation.Melodion.Tab;
-import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
+import info.magnolia.ui.admincentral.navigation.action.WorkbenchActionDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
@@ -45,8 +44,8 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +84,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     private Presenter presenter;
 
-    private Map<Component, NavigationItemDefinition> navigationItems = new HashMap<Component, NavigationItemDefinition>();
+    private Map<String, Component> navigationItems = new HashMap<String, Component>();
 
     private NavigationWorkArea navigationWorkarea;
 
@@ -122,7 +121,11 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
             + getLabel(item), Label.CONTENT_XHTML);
         label.setDescription(getDescription(item));
         Tab tab = melodion.addTab(label);
-        navigationItems.put(tab, item);
+        String workbenchName = null;
+        if(item.getActionDefinition() instanceof WorkbenchActionDefinition) {
+            workbenchName = ((WorkbenchActionDefinition)item.getActionDefinition()).getWorkbenchName();
+            navigationItems.put(workbenchName, tab);
+        }
 
         tab.addListener(new LayoutClickListener() {
 
@@ -140,7 +143,10 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
             if (permissions.hasPermission(subItem)) {
                 NavButton button = new NavButton(subItem);
                 tab.addButton(button);
-                navigationItems.put(button, subItem);
+                if(StringUtils.isNotBlank(workbenchName)){
+                    //TODO how do we select submenu items by id?
+                    navigationItems.put(workbenchName+":"+subItem.getName(), button);
+                }
             }
         }
 
@@ -219,25 +225,15 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
     }
 
     @Override
-    public void update(Place place) {
-        for (Entry<Component, NavigationItemDefinition> entry : navigationItems.entrySet()) {
-            if (!(entry.getValue().getActionDefinition() instanceof PlaceChangeActionDefinition)) {
-                continue;
-            }
-            final PlaceChangeActionDefinition definition = (PlaceChangeActionDefinition) entry.getValue().getActionDefinition();
-            if (definition.getPlace().equals(place)) {
-                Component c = entry.getKey();
-                melodion.setSelected(c);
-                if (c instanceof Melodion.Tab) {
-                    ((Melodion.Tab) c).open();
-                }
-
-                navigationWorkarea.setVisible(true);
-
-                log.debug("selected tab {}", entry.getValue().getName());
-
-                break;
-            }
+    public void update(String id) {
+        Component c = navigationItems.get(id);
+        if(c == null){
+            return;
+        }
+        log.debug("selecting menu item {}", id);
+        melodion.setSelected(c);
+        if (c instanceof Melodion.Tab) {
+            ((Melodion.Tab) c).open();
         }
     }
 }

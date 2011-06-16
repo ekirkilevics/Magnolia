@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.navigation.activity;
 
 import info.magnolia.ui.admincentral.navigation.NavigationView;
 import info.magnolia.ui.admincentral.navigation.action.NavigationActionFactory;
+import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.Place;
@@ -84,7 +85,10 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
     }
 
     public void update(Place place) {
-        view.update(place);
+        if(WorkbenchPlace.class.isAssignableFrom(place.getClass())){
+            WorkbenchPlace workbenchPlace = (WorkbenchPlace)place;
+            view.update(workbenchPlace.getWorkbenchName());
+        }
     }
 
 }

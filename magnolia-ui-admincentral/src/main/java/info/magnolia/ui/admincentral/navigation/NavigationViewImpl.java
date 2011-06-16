@@ -34,7 +34,6 @@
 package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition;
@@ -122,10 +121,10 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
     }
 
     @Override
-    public void update(Place place) {
+    public void update(String id) {
         for (NavigationWorkArea workarea : registeredNavigationAreas) {
             for (NavigationGroup group : workarea.getNavigationGroup()) {
-                group.update(place);
+                group.update(id);
             }
         }
     }
