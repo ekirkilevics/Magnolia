@@ -48,7 +48,7 @@ public class EditBarWidget extends AbstractBarWidget {
     private String workspace;
     private String path;
 
-    private String paragraph; // name of the paragraph, needed for drag n drop
+    private String componentId; // name of the component, needed for drag n drop
     private String label;
     private String dialog;
     private String format; // bar or button (its likely too late to make a decision here)
@@ -62,13 +62,13 @@ public class EditBarWidget extends AbstractBarWidget {
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
 
-        this.paragraph = element.getAttribute("paragraph");
+        this.componentId = element.getAttribute("paragraph");
         this.label = element.getAttribute("label");
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
 
-        setLabelText(label + "(" + paragraph + ")");
-        Button button = new Button("Edit&nbsp;paragraph");
+        setLabelText(label + "(" + componentId + ")");
+        Button button = new Button("Edit&nbsp;component");
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -81,13 +81,13 @@ public class EditBarWidget extends AbstractBarWidget {
     @Override
     protected void onSelect() {
         super.onSelect();
-        pageEditor.updateSelection(this, VPageEditor.SELECTION_PARAGRAPH, workspace, path, null, null, getParagraphsInsertableAtThisLocation(), dialog);
+        pageEditor.updateSelection(this, VPageEditor.SELECTION_COMPONENT, workspace, path, null, null, getComponentsAvailableInThisArea(), dialog);
     }
 
-    private String getParagraphsInsertableAtThisLocation() {
+    private String getComponentsAvailableInThisArea() {
         AbstractBarWidget parentBar = getParentBar();
         if (parentBar instanceof AreaBarWidget) {
-            return ((AreaBarWidget) parentBar).getParagraphs();
+            return ((AreaBarWidget) parentBar).getAvailableComponents();
         }
         return "";
     }

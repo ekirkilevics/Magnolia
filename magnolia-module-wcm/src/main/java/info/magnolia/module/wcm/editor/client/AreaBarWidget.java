@@ -50,7 +50,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
     private String label;
     private String name;
-    private String paragraphs;
+    private String availableComponents;
     private String type;
     private String dialog;
     private boolean showAddButton = true;
@@ -66,7 +66,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         this.label = element.getAttribute("label");
         this.name = element.getAttribute("name");
-        this.paragraphs = element.getAttribute("paragraphs");
+        this.availableComponents = element.getAttribute("paragraphs");
         this.type = element.getAttribute("type");
         this.dialog = element.getAttribute("dialog");
         if (element.hasAttribute("showAddButton")) {
@@ -87,14 +87,14 @@ public class AreaBarWidget extends AbstractBarWidget {
         }
 
         if (showAddButton) {
-            Button addButton = new Button("Add&nbsp;paragraph");
+            Button addButton = new Button("Add&nbsp;component");
             addButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
                     if (type.equals(VPageEditor.AREA_TYPE_LIST)) {
-                        pageEditor.addParagraph(workspace, path, name, null, paragraphs);
+                        pageEditor.addComponent(workspace, path, name, null, availableComponents);
                     } else if (type.equals(VPageEditor.AREA_TYPE_SINGLE)) {
-                        pageEditor.addParagraph(workspace, path, null, name, paragraphs);
+                        pageEditor.addComponent(workspace, path, null, name, availableComponents);
                     }
                 }
             });
@@ -106,12 +106,12 @@ public class AreaBarWidget extends AbstractBarWidget {
     protected void onSelect() {
         super.onSelect();
         if (type.equals(VPageEditor.AREA_TYPE_LIST)) {
-            pageEditor.updateSelection(this, VPageEditor.SELECTION_AREA, workspace, path, name, null, paragraphs, dialog);
+            pageEditor.updateSelection(this, VPageEditor.SELECTION_AREA, workspace, path, name, null, availableComponents, dialog);
         } else if (type.equals(VPageEditor.AREA_TYPE_SINGLE)) {
             if (showAddButton) {
-                pageEditor.updateSelection(this, VPageEditor.SELECTION_SINGLE, workspace, path, null, name, paragraphs, dialog);
+                pageEditor.updateSelection(this, VPageEditor.SELECTION_SINGLE, workspace, path, null, name, availableComponents, dialog);
             } else {
-                pageEditor.updateSelection(this, VPageEditor.SELECTION_PARAGRAPH_IN_SINGLE, workspace, path, null, null, paragraphs, dialog);
+                pageEditor.updateSelection(this, VPageEditor.SELECTION_COMPONENT_IN_SINGLE, workspace, path, null, null, availableComponents, dialog);
             }
         }
     }
@@ -125,15 +125,15 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         this.label = element.getAttribute("label");
         this.dialog = element.getAttribute("dialog");
-        this.paragraphs = "";
+        this.availableComponents = "";
 
         // TODO this also changes the area bar from being a drop-target to a drag-anchor, we need to know the name
-        // TODO of the paragraph to implement that
-        String paragraph = element.getAttribute("paragraph");
+        // TODO of the component to implement that
+        String component = element.getAttribute("paragraph");
 
-        setLabelText(label + "(" + paragraph + ")");
+        setLabelText(label + "(" + component + ")");
 
-        Button button = new Button("Edit&nbsp;Paragraph");
+        Button button = new Button("Edit&nbsp;component");
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -156,8 +156,8 @@ public class AreaBarWidget extends AbstractBarWidget {
         onAttach();
     }
 
-    public String getParagraphs() {
-        return paragraphs;
+    public String getAvailableComponents() {
+        return availableComponents;
     }
 
     public String getType() {

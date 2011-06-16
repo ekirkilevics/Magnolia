@@ -44,17 +44,18 @@ import info.magnolia.module.wcm.editor.ContentSelection;
  */
 public class PageEditorHacks {
 
-    public static ContentSelection convertFromPointingToParagraphToCollection(ContentSelection selection) {
-        String collectionPath = PathUtil.getFolder(selection.getPath());
-        String collectionName = PathUtil.getFileName(collectionPath);
-        String path = PathUtil.getFolder(collectionPath);
+    public static ContentSelection convertFromPointingToComponentToCollectionArea(ContentSelection selection) {
+
+        String parentPath = PathUtil.getFolder(selection.getPath());
+        String parentName = PathUtil.getFileName(parentPath);
+        String parentsParentPath = PathUtil.getFolder(parentPath);
 
         ContentSelection contentSelection = new ContentSelection();
         contentSelection.setType(selection.getType());
         contentSelection.setWorkspace(selection.getWorkspace());
-        contentSelection.setPath(path);
-        contentSelection.setCollectionName(collectionName);
-        contentSelection.setParagraphs(selection.getParagraphs());
+        contentSelection.setPath(parentsParentPath);
+        contentSelection.setCollectionName(parentName);
+        contentSelection.setAvailableComponents(selection.getAvailableComponents());
         contentSelection.setDialog(selection.getDialog());
         return contentSelection;
     }

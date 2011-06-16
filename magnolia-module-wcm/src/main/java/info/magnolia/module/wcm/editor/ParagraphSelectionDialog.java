@@ -50,7 +50,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 /**
- * Dialog for selecting a paragraph to add.
+ * Dialog for selecting a component to add.
  *
  * @version $Id$
  */
@@ -58,11 +58,11 @@ public class ParagraphSelectionDialog extends Window {
 
     private OptionGroup optionGroup;
 
-    public ParagraphSelectionDialog(String paragraphs) {
+    public ParagraphSelectionDialog(String components) {
 
         // TODO use IoC
-        final TemplateDefinitionRegistry paragraphManager = Components.getComponent(TemplateDefinitionRegistry.class);
-        setCaption("Select paragraph");
+        final TemplateDefinitionRegistry definitionRegistry = Components.getComponent(TemplateDefinitionRegistry.class);
+        setCaption("Select component");
         setModal(true);
         setResizable(true);
         setClosable(false);
@@ -75,20 +75,20 @@ public class ParagraphSelectionDialog extends Window {
             @Override
             public void buttonClick(Button.ClickEvent event) {
 
-                String paragraphName = (String) optionGroup.getValue();
-                if (paragraphName != null) {
+                String componentId = (String) optionGroup.getValue();
+                if (componentId != null) {
 
-                    TemplateDefinition paragraph;
+                    TemplateDefinition definition;
                     try {
-                        paragraph = paragraphManager.getTemplateDefinition(paragraphName);
+                        definition = definitionRegistry.getTemplateDefinition(componentId);
                     } catch (TemplateDefinitionRegistrationException e) {
                         // TODO dlipp: apply consistent ExceptionHandling
                         throw new RuntimeException(e);
                     }
-                    if (paragraph != null) {
+                    if (definition != null) {
 
                         close();
-                        onClosed(paragraph);
+                        onClosed(definition);
                     }
                 }
             }
@@ -116,26 +116,26 @@ public class ParagraphSelectionDialog extends Window {
 
         optionGroup = new OptionGroup();
 
-        String[] paragraphsArray = StringUtils.split(paragraphs, ", \t\n");
+        String[] componentIds = StringUtils.split(components, ", \t\n");
 
-        for (String paragraph : paragraphsArray) {
-            TemplateDefinition paragraphDefinition;
+        for (String componentId : componentIds) {
+            TemplateDefinition definition;
             try {
-                paragraphDefinition = paragraphManager.getTemplateDefinition(paragraph);
+                definition = definitionRegistry.getTemplateDefinition(componentId);
             } catch (TemplateDefinitionRegistrationException e) {
                 // TODO dlipp: apply consistent ExceptionHandling
                 throw new RuntimeException(e);
             }
-            if (paragraphDefinition == null) {
+            if (definition == null) {
                 continue;
             }
 
-            optionGroup.addItem(paragraph);
+            optionGroup.addItem(componentId);
 
-            Messages messages = MessagesManager.getMessages(paragraphDefinition.getI18nBasename());
-            String title = messages.getWithDefault(paragraphDefinition.getTitle(), paragraphDefinition.getTitle());
+            Messages messages = MessagesManager.getMessages(definition.getI18nBasename());
+            String title = messages.getWithDefault(definition.getTitle(), definition.getTitle());
 
-            optionGroup.setItemCaption(paragraph, title);
+            optionGroup.setItemCaption(componentId, title);
         }
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -148,6 +148,6 @@ public class ParagraphSelectionDialog extends Window {
         super.getContent().addComponent(layout);
     }
 
-    protected void onClosed(TemplateDefinition paragraph) {
+    protected void onClosed(TemplateDefinition definition) {
     }
 }

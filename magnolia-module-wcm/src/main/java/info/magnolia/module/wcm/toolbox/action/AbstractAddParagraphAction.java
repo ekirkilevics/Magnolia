@@ -78,10 +78,10 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
     @Override
     public void execute() throws ActionExecutionException {
 
-        ParagraphSelectionDialog paragraphSelectionDialog = new ParagraphSelectionDialog(selection.getParagraphs()) {
+        ParagraphSelectionDialog paragraphSelectionDialog = new ParagraphSelectionDialog(selection.getAvailableComponents()) {
             @Override
-            protected void onClosed(final TemplateDefinition paragraph) {
-                String dialogName = paragraph.getDialog();
+            protected void onClosed(final TemplateDefinition definition) {
+                String dialogName = definition.getDialog();
                 if (dialogName != null) {
 
                     DialogPresenter dialogPresenter = dialogPresenterFactory.createDialog(dialogName);
@@ -93,7 +93,7 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
                         @Override
                         public void onSave(Node node) {
                             try {
-                                onPreSave(node, paragraph);
+                                onPreSave(node, definition);
                                 node.getSession().save();
                                 eventBus.fireEvent(new PageChangedEvent());
                             } catch (RepositoryException e) {

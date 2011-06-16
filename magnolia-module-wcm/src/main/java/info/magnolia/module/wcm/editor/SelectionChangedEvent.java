@@ -47,16 +47,16 @@ public class SelectionChangedEvent implements Event<SelectionChangedHandler> {
     private String path;
     private String collectionName;
     private String nodeName;
-    private String paragraphs;
+    private String availableComponents;
     private String dialog;
 
-    public SelectionChangedEvent(SelectionType type, String workspace, String path, String collectionName, String nodeName, String paragraphs, String dialog) {
+    public SelectionChangedEvent(SelectionType type, String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {
         this.type = type;
         this.workspace = workspace;
         this.path = path;
         this.collectionName = collectionName;
         this.nodeName = nodeName;
-        this.paragraphs = paragraphs;
+        this.availableComponents = availableComponents;
         this.dialog = dialog;
     }
 
@@ -80,12 +80,12 @@ public class SelectionChangedEvent implements Event<SelectionChangedHandler> {
         return nodeName;
     }
 
-    public String getParagraphs() {
-        return paragraphs;
+    public String getAvailableComponents() {
+        return availableComponents;
     }
 
-    public void setParagraphs(String paragraphs) {
-        this.paragraphs = paragraphs;
+    public void setAvailableComponents(String availableComponents) {
+        this.availableComponents = availableComponents;
     }
 
     public String getDialog() {

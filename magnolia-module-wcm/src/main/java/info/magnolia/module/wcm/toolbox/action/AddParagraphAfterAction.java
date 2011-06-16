@@ -58,7 +58,7 @@ public class AddParagraphAfterAction extends AbstractAddParagraphAction<AddParag
     public AddParagraphAfterAction(AddParagraphAfterActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
         super(definition, application, dialogPresenterFactory, selection, eventBus);
         this.selection = selection;
-        super.setSelection(PageEditorHacks.convertFromPointingToParagraphToCollection(selection));
+        super.setSelection(PageEditorHacks.convertFromPointingToComponentToCollectionArea(selection));
     }
 
     @Override

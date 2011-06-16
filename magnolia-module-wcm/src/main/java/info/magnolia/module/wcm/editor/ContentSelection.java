@@ -45,7 +45,7 @@ public class ContentSelection {
     private String path;
     private String collectionName;
     private String nodeName;
-    private String paragraphs;
+    private String availableComponents;
     private String dialog;
 
     public SelectionType getType() {
@@ -88,12 +88,12 @@ public class ContentSelection {
         this.nodeName = nodeName;
     }
 
-    public String getParagraphs() {
-        return paragraphs;
+    public String getAvailableComponents() {
+        return availableComponents;
     }
 
-    public void setParagraphs(String paragraphs) {
-        this.paragraphs = paragraphs;
+    public void setAvailableComponents(String availableComponents) {
+        this.availableComponents = availableComponents;
     }
 
     public String getDialog() {

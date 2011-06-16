@@ -138,7 +138,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         this.contentSelection.setPath(event.getPath());
         this.contentSelection.setCollectionName(event.getCollectionName());
         this.contentSelection.setNodeName(event.getNodeName());
-        this.contentSelection.setParagraphs(event.getParagraphs());
+        this.contentSelection.setAvailableComponents(event.getAvailableComponents());
         this.contentSelection.setDialog(event.getDialog());
 
         List<MenuItemDefinition> menuItemDefinitions = null;
@@ -146,17 +146,17 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
             case PAGE:
                 menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getPage();
                 break;
-            case AREA:
+            case AREA_COLLECTION:
                 menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getArea();
                 break;
-            case SINGLE:
+            case AREA_SINGLE:
                 menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getSingle();
                 break;
-            case PARAGRAPH:
-                menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getParagraph();
+            case COMPONENT_IN_COLLECTION:
+                menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getComponent();
                 break;
-            case PARAGRAPH_IN_SINGLE:
-                menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getParagraphInSingle();
+            case COMPONENT_IN_SINGLE:
+                menuItemDefinitions = toolboxConfigurationProvider.getToolboxConfiguration().getComponentInSingle();
                 break;
         }
 
@@ -234,7 +234,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         dialogPresenter.showDialog();
     }
 
-    public void addParagraph(String workspace, String path, String collectionName, String nodeName, String paragraphs, String dialog) {
+    public void addComponent(String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {
 
         ContentSelection selection = new ContentSelection();
         selection.setDialog(dialog);
@@ -242,15 +242,15 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         selection.setPath(path);
         selection.setCollectionName(collectionName);
         selection.setNodeName(nodeName);
-        selection.setParagraphs(paragraphs);
+        selection.setAvailableComponents(availableComponents);
         selection.setDialog(dialog);
 
         executeAction(new AddParagraphActionDefinition(), selection);
     }
 
-    public void selectionChanged(SelectionType type, String workspace, String path, String collectionName, String nodeName, String paragraphs, String dialog) {
+    public void selectionChanged(SelectionType type, String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {
         // TODO we fire the event from this class and receives it in this class, not really necessary
-        eventBus.fireEvent(new SelectionChangedEvent(type, workspace, path, collectionName, nodeName, paragraphs, dialog));
+        eventBus.fireEvent(new SelectionChangedEvent(type, workspace, path, collectionName, nodeName, availableComponents, dialog));
     }
 
     @Override
@@ -259,7 +259,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         this.toolboxView.showRack(toolboxConfigurationProvider.getToolboxConfiguration().getPage());
     }
 
-    public void moveParagraph(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
+    public void moveComponent(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
         Session session = MgnlContext.getJCRSession(workspaceName);
         Node source = session.getNode(sourcePath);
         Node destination = session.getNode(destinationPath);
@@ -268,7 +268,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         eventBus.fireEvent(new PageChangedEvent());
     }
 
-    public void moveParagraphBefore(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
+    public void moveComponentBefore(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
         Session session = MgnlContext.getJCRSession(workspaceName);
         Node source = session.getNode(sourcePath);
         Node destination = session.getNode(destinationPath);
@@ -277,7 +277,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         eventBus.fireEvent(new PageChangedEvent());
     }
 
-    public void moveParagraphAfter(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
+    public void moveComponentAfter(String workspaceName, String sourcePath, String destinationPath) throws RepositoryException {
         Session session = MgnlContext.getJCRSession(workspaceName);
         Node source = session.getNode(sourcePath);
         Node destination = session.getNode(destinationPath);

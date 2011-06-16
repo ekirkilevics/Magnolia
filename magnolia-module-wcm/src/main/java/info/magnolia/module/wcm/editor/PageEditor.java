@@ -81,25 +81,25 @@ public class PageEditor extends AbstractComponent {
             String path = (String) variables.get(VPageEditor.SELECTED_PATH);
             String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
             String nodeName = (String) variables.get(VPageEditor.SELECTED_NODE_NAME);
-            String paragraphs = (String) variables.get(VPageEditor.PARAGRAPHS);
+            String availableComponents = (String) variables.get(VPageEditor.AVAILABLE_COMPONENTS);
             String dialog = (String) variables.get(VPageEditor.DIALOG);
-            pageEditorPresenter.selectionChanged(SelectionType.valueOf(type.toUpperCase()), workspace, path, collectionName, nodeName, paragraphs, dialog);
+            pageEditorPresenter.selectionChanged(SelectionType.valueOf(type.toUpperCase()), workspace, path, collectionName, nodeName, availableComponents, dialog);
         }
-        if (variables.containsKey(VPageEditor.ADD_PARAGRAPH)) {
+        if (variables.containsKey(VPageEditor.ADD_COMPONENT)) {
             String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
             String path = (String) variables.get(VPageEditor.SELECTED_PATH);
             String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
             String nodeName = (String) variables.get(VPageEditor.SELECTED_NODE_NAME);
-            String paragraphs = (String) variables.get(VPageEditor.PARAGRAPHS);
+            String availableComponents = (String) variables.get(VPageEditor.AVAILABLE_COMPONENTS);
             String dialog = (String) variables.get(VPageEditor.DIALOG);
-            pageEditorPresenter.addParagraph(workspace, path, collectionName, nodeName, paragraphs, dialog);
+            pageEditorPresenter.addComponent(workspace, path, collectionName, nodeName, availableComponents, dialog);
         }
         if (variables.containsKey(VPageEditor.MOVE)) {
             String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
             String sourcePath = (String) variables.get(VPageEditor.SOURCE_PATH);
             String destinationPath = (String) variables.get(VPageEditor.DESTINATION_PATH);
             try {
-                pageEditorPresenter.moveParagraph(workspace, sourcePath, destinationPath);
+                pageEditorPresenter.moveComponent(workspace, sourcePath, destinationPath);
             } catch (RepositoryException e) {
                 throw new RuntimeRepositoryException(e);
             }
@@ -109,7 +109,7 @@ public class PageEditor extends AbstractComponent {
             String sourcePath = (String) variables.get(VPageEditor.SOURCE_PATH);
             String destinationPath = (String) variables.get(VPageEditor.DESTINATION_PATH);
             try {
-                pageEditorPresenter.moveParagraphBefore(workspace, sourcePath, destinationPath);
+                pageEditorPresenter.moveComponentBefore(workspace, sourcePath, destinationPath);
             } catch (RepositoryException e) {
                 throw new RuntimeRepositoryException(e);
             }
@@ -119,7 +119,7 @@ public class PageEditor extends AbstractComponent {
             String sourcePath = (String) variables.get(VPageEditor.SOURCE_PATH);
             String destinationPath = (String) variables.get(VPageEditor.DESTINATION_PATH);
             try {
-                pageEditorPresenter.moveParagraphAfter(workspace, sourcePath, destinationPath);
+                pageEditorPresenter.moveComponentAfter(workspace, sourcePath, destinationPath);
             } catch (RepositoryException e) {
                 throw new RuntimeRepositoryException(e);
             }

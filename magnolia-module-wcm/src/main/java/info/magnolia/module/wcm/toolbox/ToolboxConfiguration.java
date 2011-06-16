@@ -46,8 +46,8 @@ public class ToolboxConfiguration {
     private List<MenuItemDefinition> page = new ArrayList<MenuItemDefinition>();
     private List<MenuItemDefinition> area = new ArrayList<MenuItemDefinition>();
     private List<MenuItemDefinition> single = new ArrayList<MenuItemDefinition>();
-    private List<MenuItemDefinition> paragraph = new ArrayList<MenuItemDefinition>();
-    private List<MenuItemDefinition> paragraphInSingle = new ArrayList<MenuItemDefinition>();
+    private List<MenuItemDefinition> component = new ArrayList<MenuItemDefinition>();
+    private List<MenuItemDefinition> componentInSingle = new ArrayList<MenuItemDefinition>();
 
     public List<MenuItemDefinition> getPage() {
         return page;
@@ -57,12 +57,12 @@ public class ToolboxConfiguration {
         this.page = page;
     }
 
-    public List<MenuItemDefinition> getParagraph() {
-        return paragraph;
+    public List<MenuItemDefinition> getComponent() {
+        return component;
     }
 
-    public void setParagraph(List<MenuItemDefinition> paragraph) {
-        this.paragraph = paragraph;
+    public void setComponent(List<MenuItemDefinition> component) {
+        this.component = component;
     }
 
     public List<MenuItemDefinition> getArea() {
@@ -73,8 +73,8 @@ public class ToolboxConfiguration {
         this.area = area;
     }
 
-    public List<MenuItemDefinition> getParagraphInSingle() {
-        return paragraphInSingle;
+    public List<MenuItemDefinition> getComponentInSingle() {
+        return componentInSingle;
     }
 
     public List<MenuItemDefinition> getSingle() {
@@ -85,24 +85,24 @@ public class ToolboxConfiguration {
         this.single = single;
     }
 
-    public void setParagraphInSingle(List<MenuItemDefinition> paragraphInSingle) {
-        this.paragraphInSingle = paragraphInSingle;
+    public void setComponentInSingle(List<MenuItemDefinition> componentInSingle) {
+        this.componentInSingle = componentInSingle;
     }
 
     public boolean addPage(MenuItemDefinition menuItemDefinition) {
         return page.add(menuItemDefinition);
     }
 
-    public boolean addParagraph(MenuItemDefinition menuItemDefinition) {
-        return paragraph.add(menuItemDefinition);
+    public boolean addComponent(MenuItemDefinition menuItemDefinition) {
+        return component.add(menuItemDefinition);
     }
 
     public boolean addArea(MenuItemDefinition menuItemDefinition) {
         return area.add(menuItemDefinition);
     }
 
-    public boolean addParagraphInSingle(MenuItemDefinition menuItemDefinition) {
-        return paragraphInSingle.add(menuItemDefinition);
+    public boolean addComponentInSingle(MenuItemDefinition menuItemDefinition) {
+        return componentInSingle.add(menuItemDefinition);
     }
 
     public boolean addSingle(MenuItemDefinition menuItemDefinition) {
