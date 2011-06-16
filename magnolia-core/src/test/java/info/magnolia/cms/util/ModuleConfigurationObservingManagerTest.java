@@ -112,16 +112,12 @@ public class ModuleConfigurationObservingManagerTest extends MgnlTestCase {
         MockObservationManager observationManager = (MockObservationManager) session.getWorkspace().getObservationManager();
 
         for (String moduleName : moduleNames) {
-            String path = "/modules/" + moduleName + "/components/a";
-            MockEvent event = new MockEvent();
-            event.setPath(path);
+            MockEvent event = MockEvent.nodeAdded("/modules/" + moduleName + "/components/a");
             verifyReloadsAllNodesOnEvent(clearCounter, pathsOfReloadedNodes, observationManager, event);
         }
 
         for (String moduleName : moduleNames) {
-            String path = "/modules/" + moduleName + "/components";
-            MockEvent event = new MockEvent();
-            event.setPath(path);
+            MockEvent event = MockEvent.propertyAdded("/modules/" + moduleName + "/components" + "@property");
             verifyReloadsAllNodesOnEvent(clearCounter, pathsOfReloadedNodes, observationManager, event);
         }
     }

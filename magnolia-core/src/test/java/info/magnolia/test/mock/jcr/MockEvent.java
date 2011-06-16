@@ -126,4 +126,11 @@ public class MockEvent implements Event {
         event.setPath(absPath);
         return event;
     }
+
+    public static MockEvent propertyAdded(String path) {
+        MockEvent event = new MockEvent();
+        event.setType(Event.PROPERTY_ADDED);
+        event.setPath(path);
+        return event;
+    }
 }
