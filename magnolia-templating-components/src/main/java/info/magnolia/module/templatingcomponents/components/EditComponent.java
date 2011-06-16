@@ -91,11 +91,16 @@ public class EditComponent extends AbstractContentComponent {
         out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_EDIT).append(GREATER_THAN).append(LINEBREAK);
     }
 
-    private String resolveDialog(TemplateDefinition paragraph) {
+    private String resolveDialog(TemplateDefinition paragraph) throws RenderException {
+        String dialog = null;
         if (this.dialog != null) {
-            return this.dialog;
+            dialog = this.dialog;
         }
-        return paragraph.getDialog();
+        dialog = paragraph.getDialog();
+        if (StringUtils.isBlank(dialog)) {
+            throw new RenderException("Please set dialog for paragraph id=" + paragraph.getId() + ", name=" + paragraph.getName());
+        }
+        return dialog;
     }
 
     @Override

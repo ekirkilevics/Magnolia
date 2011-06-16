@@ -34,6 +34,7 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
@@ -48,6 +49,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
+import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentsTestUtil;
@@ -57,6 +59,7 @@ import info.magnolia.test.mock.MockUtil;
 import java.io.StringWriter;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -65,8 +68,12 @@ import org.junit.Test;
  * @version $Id$
  */
 public class EditComponentTest {
-    @Test
-    public void testDoRender() throws Exception {
+
+    private EditComponent marker;
+    private StringWriter out;
+
+    @Before
+    public void setUp() throws Exception {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager(
                 "/foo/bar/baz/paragraphs/01.text=dummy\n" +
                 "/foo/bar/baz/paragraphs/01/MetaData/mgnl\\:template=testParagraph0"
@@ -86,22 +93,30 @@ public class EditComponentTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
+        marker = new EditComponent(serverCfg, new AggregationStateBasedRenderingContext(aggregationState));
+        out = new StringWriter();
+    }
+
+    @Test
+    public void testDoRender() throws Exception {
+
         ConfiguredTemplateDefinition testParagraph0 = new ConfiguredTemplateDefinition();
-        testParagraph0.setName("testParagraph0");
+
+        testParagraph0.setId("testParagraph0");
+        testParagraph0.setDialog("testDialog");
+
         testParagraph0.setTitle("Test Paragraph 0");
 
         TemplateDefinitionRegistry paragraphManager = mock(TemplateDefinitionRegistry.class);
         when(paragraphManager.getTemplateDefinition("testParagraph0")).thenReturn(testParagraph0);
         ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, paragraphManager);
 
-        final EditComponent marker = new EditComponent(serverCfg, new AggregationStateBasedRenderingContext(aggregationState));
-        StringWriter out = new StringWriter();
         marker.doRender(out);
 
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + AbstractContentComponent.LINEBREAK
-                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" dialog=\"testParagraph0\" paragraph=\"testParagraph0\"></cms:edit>"
+                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" dialog=\"testDialog\" paragraph=\"testParagraph0\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK, out.toString());
 
         // now with format & dialog
@@ -120,25 +135,29 @@ public class EditComponentTest {
     }
 
     @Test
+    public void testDoRenderMissingDialogDef() throws Exception {
+
+        ConfiguredTemplateDefinition testParagraph0 = new ConfiguredTemplateDefinition();
+
+        testParagraph0.setId("testParagraph0");
+        testParagraph0.setName("testParagraph0Name");
+
+        testParagraph0.setTitle("Test Paragraph 0");
+
+        TemplateDefinitionRegistry paragraphManager = mock(TemplateDefinitionRegistry.class);
+        when(paragraphManager.getTemplateDefinition("testParagraph0")).thenReturn(testParagraph0);
+        ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, paragraphManager);
+
+        try {
+            marker.doRender(out);
+            fail("Expected exception to be thrown but passed.");
+        } catch (RenderException ex) {
+            assertEquals("Please set dialog for paragraph id=testParagraph0, name=testParagraph0Name", ex.getMessage());
+        }
+    }
+
+    @Test
     public void testPostRender() throws Exception {
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
-
-        final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
-        final WebContext ctx = mock(WebContext.class);
-        MgnlContext.setInstance(ctx);
-
-        final ServerConfiguration serverCfg = new ServerConfiguration();
-        serverCfg.setAdmin(true);
-        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
-        // register some default components used internally
-        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
-        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
-
-        final EditComponent marker = new EditComponent(serverCfg, new AggregationStateBasedRenderingContext(aggregationState));
-        StringWriter out = new StringWriter();
         marker.postRender(out);
 
         assertEquals("<!-- cms:end cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
