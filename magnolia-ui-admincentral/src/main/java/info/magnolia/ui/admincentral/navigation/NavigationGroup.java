@@ -35,8 +35,6 @@ package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
@@ -46,7 +44,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,8 +80,6 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
     private NavigationPermissionSchema permissions;
 
     private Presenter presenter;
-
-    private NavigationWorkArea navigationWorkarea;
 
     public NavigationGroup(Collection<NavigationItemDefinition> navigationItemDefs, NavigationPermissionSchema permissions) {
         this.navigationItemDefs = navigationItemDefs;
@@ -183,14 +178,6 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
         return new ExternalResource(MgnlContext.getContextPath() + menuItem.getIcon());
     }
 
-    public void setNavigationWorkarea(NavigationWorkArea navigationWorkarea) {
-        this.navigationWorkarea = navigationWorkarea;
-    }
-
-    public NavigationWorkArea getNavigationWorkarea() {
-        return navigationWorkarea;
-    }
-
     private class NavDisclosure extends Disclosure {
 
         public NavDisclosure(String caption) {
@@ -287,29 +274,5 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
     @Override
     public Component asVaadinComponent() {
         return accordion;
-    }
-
-    @Override
-    public void update(Place place) {
-        for (Entry<Component, NavigationItemDefinition> entry : navigationItems.entrySet()) {
-            if (!(entry.getValue().getActionDefinition() instanceof PlaceChangeActionDefinition)) {
-                continue;
-            }
-            final PlaceChangeActionDefinition definition = (PlaceChangeActionDefinition) entry.getValue().getActionDefinition();
-            if (definition.getPlace().equals(place)) {
-
-                // accordion.setSelectedTab(entry.getKey());
-                Component key = entry.getKey();
-                if (key instanceof NativeButton) {
-                    accordion.setSelected((NativeButton) key);
-                }
-
-                navigationWorkarea.setVisible(true);
-
-                log.debug("selected tab {}", entry.getValue().getName());
-
-                break;
-            }
-        }
     }
 }

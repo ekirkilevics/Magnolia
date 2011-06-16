@@ -56,7 +56,6 @@ public class NavigationWorkArea implements IsVaadinComponent {
 
         for(NavigationGroup group: navigationGroupView){
             container.addComponent(group.asVaadinComponent());
-            group.setNavigationWorkarea(this);
         }
         // container.setMargin(true);
     }
@@ -68,9 +67,5 @@ public class NavigationWorkArea implements IsVaadinComponent {
     @Override
     public Component asVaadinComponent() {
         return container;
-    }
-
-    public void setVisible(boolean visible){
-        container.setVisible(visible);
     }
 }

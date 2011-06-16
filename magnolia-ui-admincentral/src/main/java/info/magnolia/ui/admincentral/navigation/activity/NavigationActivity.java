@@ -37,7 +37,6 @@ import info.magnolia.ui.admincentral.navigation.NavigationView;
 import info.magnolia.ui.admincentral.navigation.action.NavigationActionFactory;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.action.Action;
@@ -81,10 +80,6 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
         else{
             shell.showNotification("No action defined for " + menuItem.getName());
         }
-    }
-
-    public void update(Place place) {
-        view.update(place);
     }
 
 }
