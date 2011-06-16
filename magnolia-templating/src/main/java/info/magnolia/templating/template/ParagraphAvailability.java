@@ -35,6 +35,7 @@ package info.magnolia.templating.template;
 
 import java.util.Collection;
 
+
 /**
  * An entry of {@link AreaDefinition#getAvailableParagraphs()}.
  *

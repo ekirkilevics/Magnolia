@@ -45,6 +45,8 @@ import java.util.Map;
  */
 public interface AreaDefinition extends TemplateDefinition {
 
+    // TODO should be components
+    // TODO should use ParagraphAvailability
     Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs();
 
     Boolean getEnabled();

@@ -47,6 +47,7 @@ public class ConfiguredParagraphAvailability implements ParagraphAvailability {
 
     private Collection<String> roles = new ArrayList<String>();
 
+    // TODO should be id
     private String name;
 
     @Override

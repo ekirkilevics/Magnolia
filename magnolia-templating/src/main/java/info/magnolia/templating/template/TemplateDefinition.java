@@ -47,6 +47,7 @@ public interface TemplateDefinition extends RenderableDefinition {
 
     String getDialog();
 
+    // TODO should be AreaDefinition
     Map<String, ConfiguredAreaDefinition> getAreas();
 
 }

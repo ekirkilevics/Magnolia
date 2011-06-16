@@ -37,9 +37,10 @@ import java.io.IOException;
 
 import info.magnolia.templating.rendering.RenderException;
 
+
 /**
- * Implementations of AuthoringUiComponent render specific "components" in templates.
- * They're usually exposed to templating engines via a specific wrapper; see the freemarker and jsp subpackages for examples.
+ * Implementations of AuthoringUiComponent render specific "components" in templates. They're usually exposed to
+ * templating engines via a specific wrapper; see the freemarker and jsp sub-packages for examples.
  *
  * @version $Id$
  */
@@ -47,12 +48,6 @@ public interface AuthoringUiComponent {
 
     void render(Appendable out) throws IOException, RenderException;
 
-    /**
-     * This method should be called by templating-engine wrappers after rendering the component AND its body.
-     * Certain components (SingletonParagraphBar for instance) will need to let the wrapper render their body,
-     * and call this afterwards.
-     * Can be used, for instance, as a "cleanup" mechanism, if the component modified the context.
-     */
     // FIXME now that we pass the appendable and render this method needs a different name (or we need another method)
     void postRender(Appendable out) throws IOException, RenderException;
 }
