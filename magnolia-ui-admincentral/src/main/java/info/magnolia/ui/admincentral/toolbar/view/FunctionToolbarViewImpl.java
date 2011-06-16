@@ -121,6 +121,7 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
                     @Override
                     public void buttonClick(ClickEvent event) {
                         presenter.onToolbarItemSelection(item);
+                        setViewButtonStyle(button);
                     }
                 });
 
@@ -158,11 +159,17 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
     @Override
     public void update(Place newPlace) {
         if (newPlace instanceof ItemSelectedPlace) {
-            for (Button button : viewButtons.values()) {
-                button.removeStyleName("down");
-            }
             ViewType viewType = ((ItemSelectedPlace) newPlace).getViewType();
-            viewButtons.get(viewType).addStyleName("down");
+            setViewButtonStyle(viewButtons.get(viewType));
         }
+    }
+
+    private void setViewButtonStyle(Button button){
+        for (Button btn : viewButtons.values()) {
+            btn.removeStyleName("v-button-down");
+        }
+        //log.debug("applying 'down' style to button {}", button.getCaption());
+        //FIXME adding a style with the complete name is not recommended (shoudl be simply "down"), however it's the only way it works now.
+        button.addStyleName("v-button-down");
     }
 }
