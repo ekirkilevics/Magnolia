@@ -59,10 +59,8 @@ public class MockObservationManager implements ObservationManager {
         }
 
         public boolean matches(MockEvent event) {
-            if (eventTypes != 0) {
-                if ((event.getType() | this.eventTypes) == 0) {
-                    return false;
-                }
+            if ((event.getType() & this.eventTypes) == 0) {
+                return false;
             }
             if (this.absPath != null) {
                 if (event.getPath() == null) {
@@ -107,24 +105,13 @@ public class MockObservationManager implements ObservationManager {
     }
 
     public void fireEvent(MockEvent event) {
-        if (this.userData != null && event.getUserData() != null) {
-            event.setUserData(this.userData);
-        }
+        event.setUserData(this.userData);
         for (Map.Entry<EventListener, EventFilter> entry : listeners.entrySet()) {
             EventListener listener = entry.getKey();
             EventFilter filter = entry.getValue();
             if (filter.matches(event)) {
                 listener.onEvent(new MockEventIterator(event));
             }
-        }
-    }
-
-    public void fireEventBypassingFilters(MockEvent event) throws RepositoryException {
-        if (this.userData != null && event.getUserData() != null) {
-            event.setUserData(this.userData);
-        }
-        for (EventListener listener : listeners.keySet()) {
-            listener.onEvent(new MockEventIterator(event));
         }
     }
 

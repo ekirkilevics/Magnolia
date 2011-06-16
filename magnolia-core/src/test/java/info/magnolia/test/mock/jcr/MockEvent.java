@@ -112,4 +112,18 @@ public class MockEvent implements Event {
     public void setInfo(Map info) {
         this.info = info;
     }
+
+    public static MockEvent nodeAdded(String absPath) {
+        MockEvent event = new MockEvent();
+        event.setType(Event.NODE_ADDED);
+        event.setPath(absPath);
+        return event;
+    }
+
+    public static MockEvent nodeRemoved(String absPath) {
+        MockEvent event = new MockEvent();
+        event.setType(Event.NODE_REMOVED);
+        event.setPath(absPath);
+        return event;
+    }
 }
