@@ -45,6 +45,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.importexport.PropertiesImportExport;
+import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.test.ComponentsTestUtil;
 
 import java.io.ByteArrayInputStream;
@@ -106,10 +107,16 @@ public class MockUtil {
         return ctx;
     }
 
+    /**
+     * @deprecated since 5.0 - use {@link SessionTestUtil#createSession(InputStream)} instead.
+     */
     public static MockHierarchyManager createHierarchyManager(InputStream propertiesStream) throws IOException, RepositoryException {
         return createHierarchyManager(null, propertiesStream);
     }
 
+    /**
+     * @deprecated since 5.0 - use {@link SessionTestUtil#createSession(String, InputStream)} instead.
+     */
     public static MockHierarchyManager createHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
         MockHierarchyManager hm = new MockHierarchyManager(repository);
         Content root = hm.getRoot();
@@ -117,6 +124,9 @@ public class MockUtil {
         return hm;
     }
 
+    /**
+     * @deprecated since 5.0 - use {@link SessionTestUtil#createSession(String)} instead.
+     */
     public static MockHierarchyManager createHierarchyManager(String propertiesStr) throws IOException, RepositoryException {
         final ByteArrayInputStream in = new ByteArrayInputStream(propertiesStr.getBytes());
         return createHierarchyManager(null, in);
