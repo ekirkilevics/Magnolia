@@ -42,6 +42,7 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.jcr.ItemVisitor;
 import javax.jcr.Node;
@@ -262,5 +263,14 @@ public class MockNodeTest {
         root.accept(visitor);
 
         verify(visitor).visit(root);
+    }
+
+    @Test
+    public void setsIdentifierOnConstruction() {
+        MockNode node = new MockNode("foobar");
+        assertTrue(node.getIdentifier().length() == 36);
+
+        // throws IllegalArgumentException if its not a valid uuid
+        UUID.fromString(node.getIdentifier());
     }
 }

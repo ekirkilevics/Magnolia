@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.jcr.Binary;
 import javax.jcr.Item;
@@ -71,7 +72,7 @@ public class MockNode extends MockItem implements Node {
 
     private final LinkedHashMap<String, MockNode> children = new LinkedHashMap<String, MockNode>();
 
-    private String identifier;
+    private String identifier = generateIdentifier();
 
     private int index = 1;
 
@@ -608,5 +609,9 @@ public class MockNode extends MockItem implements Node {
     protected boolean removeProperty(String propertyName) {
         Property property = properties.remove(propertyName);
         return property != null;
+    }
+
+    public static String generateIdentifier() {
+        return UUID.randomUUID().toString();
     }
 }
