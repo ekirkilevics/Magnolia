@@ -34,7 +34,6 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
@@ -134,7 +133,7 @@ public class EditComponentTest {
 
     }
 
-    @Test
+    @Test(expected=RenderException.class)
     public void testDoRenderMissingDialogDef() throws Exception {
 
         ConfiguredTemplateDefinition testParagraph0 = new ConfiguredTemplateDefinition();
@@ -148,12 +147,7 @@ public class EditComponentTest {
         when(paragraphManager.getTemplateDefinition("testParagraph0")).thenReturn(testParagraph0);
         ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, paragraphManager);
 
-        try {
-            marker.doRender(out);
-            fail("Expected exception to be thrown but passed.");
-        } catch (RenderException ex) {
-            assertEquals("Please set dialog for paragraph id=testParagraph0, name=testParagraph0Name", ex.getMessage());
-        }
+        marker.doRender(out);
     }
 
     @Test
