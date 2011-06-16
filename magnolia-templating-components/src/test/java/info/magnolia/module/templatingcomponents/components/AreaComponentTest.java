@@ -47,14 +47,14 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.templating.renderer.registry.RendererRegistry;
 import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
 import info.magnolia.templating.rendering.DefaultRenderingEngine;
 import info.magnolia.templating.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.StringWriter;
 
@@ -64,18 +64,16 @@ import org.junit.After;
 import org.junit.Test;
 
 /**
- * Tests for AreaMarker.
- *
  * @version $Id$
  */
 public class AreaComponentTest {
     @Test
     public void testDoRender() throws Exception {
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
+        final MockSession session = SessionTestUtil.createSession("testRepository", "/foo/bar/baz/paragraphs/01.text=dummy");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
-        final Node paragraph01 = hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode();
+        aggregationState.setMainContent(session.getNode("/foo/bar/baz"));
+        final Node paragraph01 = session.getNode("/foo/bar/baz/paragraphs/01");
         aggregationState.setCurrentContent(paragraph01);
         final WebContext ctx = mock(WebContext.class);
         MgnlContext.setInstance(ctx);
@@ -103,9 +101,9 @@ public class AreaComponentTest {
         StringWriter out = new StringWriter();
         marker.doRender(out);
 
-        assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
+        assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
+                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // with paragraph set
@@ -113,9 +111,9 @@ public class AreaComponentTest {
         marker.setParagraphs("paragraphs/myParagraph");
         marker.doRender(out);
 
-        assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
+        assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
+                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // as collection == false (= singleton)
@@ -124,19 +122,19 @@ public class AreaComponentTest {
         marker.doRender(out);
 
         assertEquals(
-                "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
+                "<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                + "<cms:area content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
+                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
     }
 
     @Test
     public void testPostRender() throws Exception {
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
+        final MockSession session = SessionTestUtil.createSession("testRepository", "/foo/bar/baz/paragraphs/01.text=dummy");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
+        aggregationState.setMainContent(session.getNode("/foo/bar/baz"));
+        aggregationState.setCurrentContent(session.getNode("/foo/bar/baz/paragraphs/01"));
         final WebContext ctx = mock(WebContext.class);
         MgnlContext.setInstance(ctx);
 
@@ -164,7 +162,7 @@ public class AreaComponentTest {
 
         String outString = out.toString();
 
-        assertEquals(outString, "<!-- cms:end cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
+        assertEquals(outString, "<!-- cms:end cms:content=\"testRepository:/foo/bar/baz/paragraphs/01\" -->"
                 + AbstractContentComponent.LINEBREAK, outString);
     }
 

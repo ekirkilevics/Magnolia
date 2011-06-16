@@ -39,10 +39,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.Content;
 import info.magnolia.templating.rendering.RenderingContext;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -136,10 +133,8 @@ public class AbstractAuthoringUiComponentTest extends AbstractComponentTestCase 
     @Test
     public void testCurrentContent() throws Exception {
 
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
-
         final RenderingContext aggregationState = mock(RenderingContext.class);
-        when(aggregationState.getMainContent()).thenReturn(hm.getContent("/foo/bar/baz").getJCRNode());
+        when(aggregationState.getMainContent()).thenReturn(getHM().getNode("/foo/bar"));
 
         final AbstractAuthoringUiComponent compo = new DummyComponent(null, aggregationState);
         try {
@@ -149,8 +144,7 @@ public class AbstractAuthoringUiComponentTest extends AbstractComponentTestCase 
             assertTrue(true);
         }
 
-        final Content content = hm.getContent("/foo/bar/baz/paragraphs/01");
-        final Node expectedNode = content.getJCRNode();
+        final Node expectedNode = getHM().getNode("/foo/bar/paragraphs/1");
 
         when(aggregationState.getCurrentContent()).thenReturn(expectedNode);
 
@@ -160,7 +154,7 @@ public class AbstractAuthoringUiComponentTest extends AbstractComponentTestCase 
 
     private void doTestMessage(String expected, String contentPath, String key) throws RepositoryException {
         final AbstractAuthoringUiComponent compo = new DummyComponent();
-        assertEquals(expected, compo.getMessage(getHM().getContent(contentPath).getJCRNode(), key));
+        assertEquals(expected, compo.getMessage(getHM().getNode(contentPath), key));
     }
 
     private static class DummyComponent extends AbstractAuthoringUiComponent {

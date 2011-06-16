@@ -47,10 +47,10 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.StringWriter;
 
@@ -58,18 +58,16 @@ import org.junit.After;
 import org.junit.Test;
 
 /**
- * Tests for ContextAttributeMarker.
- *
  * @version $Id$
  */
 public class ContextComponentTest {
     @Test
     public void testDoRender() throws Exception {
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
+        final MockSession hm = SessionTestUtil.createSession("/foo/bar/baz/paragraphs/01.text=dummy");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
+        aggregationState.setMainContent(hm.getNode("/foo/bar/baz"));
+        aggregationState.setCurrentContent(hm.getNode("/foo/bar/baz/paragraphs/01"));
         final WebContext ctx = mock(WebContext.class);
         final String name = "name1";
         final String value = "value1";

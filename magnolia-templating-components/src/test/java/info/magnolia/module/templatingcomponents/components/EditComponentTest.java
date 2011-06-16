@@ -47,13 +47,13 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
 import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.StringWriter;
 
@@ -73,14 +73,14 @@ public class EditComponentTest {
 
     @Before
     public void setUp() throws Exception {
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager(
+        final MockSession hm = SessionTestUtil.createSession("TestMockHierarchyManager",
                 "/foo/bar/baz/paragraphs/01.text=dummy\n" +
-                "/foo/bar/baz/paragraphs/01/MetaData/mgnl\\:template=testParagraph0"
+                "/foo/bar/baz/paragraphs/01/MetaData.mgnl\\:template=testParagraph0"
         );
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
+        aggregationState.setMainContent(hm.getNode("/foo/bar/baz"));
+        aggregationState.setCurrentContent(hm.getNode("/foo/bar/baz/paragraphs/01"));
         final WebContext ctx = mock(WebContext.class);
         MgnlContext.setInstance(ctx);
 

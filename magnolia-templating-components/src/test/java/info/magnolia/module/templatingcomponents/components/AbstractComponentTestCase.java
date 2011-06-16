@@ -35,19 +35,18 @@ package info.magnolia.module.templatingcomponents.components;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.templating.template.registry.TemplateDefinitionProvider;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -61,27 +60,27 @@ import org.junit.Before;
  */
 public abstract class AbstractComponentTestCase {
     private static final String CONTENT = StringUtils.join(Arrays.asList(
-            "/foo/bar@type=mgnl:content",
-            "/foo/bar/MetaData@type=mgnl:metadata",
-            "/foo/bar/MetaData/mgnl\\:template=testPageTemplate0",
-            "/foo/bar/paragraphs@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/0@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/0/text=hello 0",
-            "/foo/bar/paragraphs/0/MetaData@type=mgnl:metadata",
-            "/foo/bar/paragraphs/0/MetaData/mgnl\\:template=testParagraph0",
-            "/foo/bar/paragraphs/1@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/1/text=hello 1",
-            "/foo/bar/paragraphs/1/MetaData@type=mgnl:metadata",
-            "/foo/bar/paragraphs/1/MetaData/mgnl\\:template=testParagraph1",
-            "/foo/bar/paragraphs/2@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/2/text=hello 2",
-            "/foo/bar/paragraphs/2/MetaData@type=mgnl:metadata",
-            "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2",
-            "/pouet/lol@type=mgnl:content",
-            "/pouet/lol/MetaData@type=mgnl:metadata",
-            "/pouet/lol/MetaData/mgnl\\:template=testPageTemplate1",
-            "/no/metadata/here@type=mgnl:content", ""), "\n");
-    private MockHierarchyManager hm;
+            "/foo/bar.@type=mgnl:content",
+            "/foo/bar/MetaData.@type=mgnl:metadata",
+            "/foo/bar/MetaData.mgnl\\:template=testPageTemplate0",
+            "/foo/bar/paragraphs.@type=mgnl:contentNode",
+            "/foo/bar/paragraphs/0.@type=mgnl:contentNode",
+            "/foo/bar/paragraphs/0.text=hello 0",
+            "/foo/bar/paragraphs/0/MetaData.@type=mgnl:metadata",
+            "/foo/bar/paragraphs/0/MetaData.mgnl\\:template=testParagraph0",
+            "/foo/bar/paragraphs/1.@type=mgnl:contentNode",
+            "/foo/bar/paragraphs/1.text=hello 1",
+            "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
+            "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1",
+            "/foo/bar/paragraphs/2.@type=mgnl:contentNode",
+            "/foo/bar/paragraphs/2.text=hello 2",
+            "/foo/bar/paragraphs/2/MetaData.@type=mgnl:metadata",
+            "/foo/bar/paragraphs/2/MetaData.mgnl\\:template=testParagraph2",
+            "/pouet/lol.@type=mgnl:content",
+            "/pouet/lol/MetaData.@type=mgnl:metadata",
+            "/pouet/lol/MetaData.mgnl\\:template=testPageTemplate1",
+            "/no/metadata/here.@type=mgnl:content", ""), "\n");
+    private MockSession session;
 
     @After
     public void tearDown() throws Exception {
@@ -131,10 +130,10 @@ public abstract class AbstractComponentTestCase {
         pman.registerTemplateDefinition(t0.getName(), t0provider);
         pman.registerTemplateDefinition(t1.getName(), t1provider);
 
-        hm = MockUtil.createHierarchyManager(CONTENT);
+        session = SessionTestUtil.createSession(CONTENT);
     }
 
-    protected HierarchyManager getHM() {
-        return hm;
+    protected MockSession getHM() {
+        return session;
     }
 }

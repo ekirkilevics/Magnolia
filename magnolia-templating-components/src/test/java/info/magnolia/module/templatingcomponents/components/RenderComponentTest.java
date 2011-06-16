@@ -49,6 +49,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.templating.renderer.Renderer;
 import info.magnolia.templating.renderer.registry.RendererRegistry;
 import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
@@ -58,8 +59,7 @@ import info.magnolia.templating.rendering.RenderingEngine;
 import info.magnolia.templating.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.StringWriter;
 
@@ -79,11 +79,11 @@ public class RenderComponentTest {
 
     @Test
     public void testDoRender() throws Exception {
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
+        final MockSession session = SessionTestUtil.createSession("/foo/bar/baz/paragraphs/01.text=dummy");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
-        Node currentContent = hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode();
+        aggregationState.setMainContent(session.getNode("/foo/bar/baz"));
+        Node currentContent = session.getNode("/foo/bar/baz/paragraphs/01");
         aggregationState.setCurrentContent(currentContent);
         final WebContext ctx = mock(WebContext.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
@@ -124,13 +124,13 @@ public class RenderComponentTest {
 
     @Test
     public void testPostRender() throws Exception {
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager(
+        final MockSession session = SessionTestUtil.createSession(
                 "/foo/bar/baz/paragraphs/01.text=dummy\n" +
-        "/foo/bar/baz/paragraphs/01@uuid=100");
+                "/foo/bar/baz/paragraphs/01.@uuid=100");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getContent("/foo/bar/baz").getJCRNode());
-        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01").getJCRNode());
+        aggregationState.setMainContent(session.getNode("/foo/bar/baz"));
+        aggregationState.setCurrentContent(session.getNode("/foo/bar/baz/paragraphs/01"));
 
         HttpServletRequest req = mock(HttpServletRequest.class);
         req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
@@ -139,7 +139,7 @@ public class RenderComponentTest {
         when(res.getWriter()).thenReturn(null);
 
         final WebContext ctx = mock(WebContext.class);
-        when(ctx.getHierarchyManager(hm.getName())).thenReturn(hm);
+        //when(ctx.getHierarchyManager(session.getName())).thenReturn(session);
         MgnlContext.setInstance(ctx);
         when(ctx.getResponse()).thenReturn(res);
         when(ctx.getRequest()).thenReturn(req);

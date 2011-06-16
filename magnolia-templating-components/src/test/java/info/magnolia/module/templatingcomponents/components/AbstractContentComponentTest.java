@@ -39,10 +39,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.Content;
 import info.magnolia.templating.rendering.RenderingContext;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 
@@ -53,17 +50,14 @@ import org.junit.Test;
 /**
  * @version $Id$
  */
-public class AbstractContentComponentTest extends AbstractComponentTestCase{
+public class AbstractContentComponentTest extends AbstractComponentTestCase {
     @Test
     public void testGetTargetContent() throws Exception {
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
-
         final RenderingContext aggregationState = mock(RenderingContext.class);
-        when(aggregationState.getMainContent()).thenReturn(hm.getContent("/foo/bar/baz").getJCRNode());
+        when(aggregationState.getMainContent()).thenReturn(getHM().getNode("/foo/bar"));
 
         final AbstractContentComponent compo = new DummyComponent(null, aggregationState);
-        final Content content = hm.getContent("/foo/bar/baz/paragraphs/01");
-        final Node expectedNode = content.getJCRNode();
+        final Node expectedNode = getHM().getNode("/foo/bar/paragraphs/1");
 
         when(aggregationState.getCurrentContent()).thenReturn(expectedNode);
 
