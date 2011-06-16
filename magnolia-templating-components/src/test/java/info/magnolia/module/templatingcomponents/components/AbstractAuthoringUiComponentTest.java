@@ -60,7 +60,7 @@ import org.junit.Test;
  *
  * @version $Id$
  */
-public class AbstractAuthoringUiComponentTest extends AbstractAbstractComponentTest {
+public class AbstractAuthoringUiComponentTest extends AbstractComponentTestCase {
     @Test
     public void testGetsCustomMessageCustomBundleWithPageTemplate() throws Exception {
         doTestMessage("Incredibly custom Foo label", "/pouet/lol", "custom.foo.label");
