@@ -165,6 +165,9 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
     }
 
     private void setViewButtonStyle(Button button){
+        if(button == null){
+            return;
+        }
         for (Button btn : viewButtons.values()) {
             btn.removeStyleName("v-button-down");
         }
