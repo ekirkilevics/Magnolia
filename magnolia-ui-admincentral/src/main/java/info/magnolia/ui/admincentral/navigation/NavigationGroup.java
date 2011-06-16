@@ -35,31 +35,28 @@ package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.admincentral.navigation.Melodion.Tab;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.jouni.animator.Disclosure;
 
-import com.vaadin.addon.chameleon.SidebarMenu;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
 
 
@@ -74,15 +71,21 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     private static final Logger log = LoggerFactory.getLogger(NavigationGroup.class);
 
-    private Map<Component, NavigationItemDefinition> navigationItems = new HashMap<Component, NavigationItemDefinition>();
-
-    private SidebarMenu accordion = new SidebarMenu();
+    // FIXME: When you click in one group to navigate somewhere, only that group gets updated:
+    // 1. Select an item in one NavigationGroup.
+    // 2. Select one in another NavigationGroup.
+    // 3. Now you have a selected item in each group.
+    // FIXME: Move UI logic to NavigationWorkArea/Melodion. Let NavigationGroup be just a data
+    // structure.
+    private Melodion melodion = new Melodion();
 
     private Collection<NavigationItemDefinition> navigationItemDefs;
 
     private NavigationPermissionSchema permissions;
 
     private Presenter presenter;
+
+    private Map<Component, NavigationItemDefinition> navigationItems = new HashMap<Component, NavigationItemDefinition>();
 
     private NavigationWorkArea navigationWorkarea;
 
@@ -97,8 +100,8 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
             }
         }
 
-        accordion.setSizeUndefined();
-        accordion.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+        melodion.setSizeUndefined();
+        melodion.setWidth(100, Sizeable.UNITS_PERCENTAGE);
     }
 
     @Override
@@ -108,62 +111,47 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     /**
      * The only way to add tabs to Magnolia menu - ensure he have references to all items.
-     * @param navigationItemDef menu item configuration entry
+     * @param item menu item configuration entry
      * @param permissions
      */
-    public void addTab(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
-        // layout for sub menu entries
-        Collection<NativeButton> subNavigation = addSubNavigationItems(navigationItemDef, permissions);
+    public void addTab(final NavigationItemDefinition item, NavigationPermissionSchema permissions) {
+        final Label label = new Label("<img src='"
+            + MgnlContext.getContextPath()
+            + item.getIcon()
+            + "'>"
+            + getLabel(item), Label.CONTENT_XHTML);
+        label.setDescription(getDescription(item));
+        Tab tab = melodion.addTab(label);
+        navigationItems.put(tab, item);
 
-        // Label tab = new Label("<img src='"
-        // + MgnlContext.getContextPath()
-        // + navigationItemDef.getIcon()
-        // + "'>"
-        // + getLabel(navigationItemDef), Label.CONTENT_XHTML);
+        tab.addListener(new LayoutClickListener() {
 
-        NavDisclosure tab = new NavDisclosure(getLabel(navigationItemDef));
-        tab.setDescription(getDescription(navigationItemDef));
+            @Override
+            public void layoutClick(LayoutClickEvent event) {
+                if (event.getChildComponent() == label) {
+                    if (presenter != null) {
+                        presenter.onMenuSelection(item);
+                    }
+                }
+            }
+        });
 
-        accordion.addComponent(tab);
-
-        CssLayout layout = new CssLayout();
-        for (NativeButton button : subNavigation) {
-            layout.addComponent(button);
-        }
-        tab.setContent(layout);
-
-        // TODO: add notification badges
-
-        // store tab reference
-        navigationItems.put(tab, navigationItemDef);
-    }
-
-    /**
-     * Iterates over sub menu entries and adds them to the layout.
-     * @param permissions
-     * @return View with all relevant sub menu entries or null when none exists.
-     */
-    private Collection<NativeButton> addSubNavigationItems(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
-        List<NativeButton> list = new ArrayList<NativeButton>();
-
-        // sub menu items (2 levels only)
-        for (NavigationItemDefinition sub : navigationItemDef.getItems()) {
-            if (permissions.hasPermission(sub)) {
-                NavigationItem submenuItem = new NavigationItem(sub);
-                list.add(submenuItem);
-
-                // store submenu reference
-                navigationItems.put(submenuItem, sub);
+        for (NavigationItemDefinition subItem : item.getItems()) {
+            if (permissions.hasPermission(subItem)) {
+                NavButton button = new NavButton(subItem);
+                tab.addButton(button);
+                navigationItems.put(button, subItem);
             }
         }
 
-        return list;
+        // TODO: add notification badges
     }
 
+    // TODO: Would it make sense to move the i18n logic to a more generic place?
+    // For example, in the getters of MenuItemDefinition so that client classes need not worry about
+    // i18n and this kind of utility code is not spread all over the place?
     /**
-     * TODO: would it make sense to move the i18n logic to a more generic place, i.e. in the getters
-     * of MenuItemDefinition so that client classes need not worry about i18n and this kind of
-     * utility code is not spread all over the place? Converts label key into i18n-ized string.
+     * Converts label key into i18n-ized string.
      */
     protected String getLabel(NavigationItemDefinition menuItem) {
         return MessagesUtil.getWithDefault(menuItem.getLabel(), menuItem.getLabel(), menuItem.getI18nBasename());
@@ -192,70 +180,11 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
         return navigationWorkarea;
     }
 
-    private class NavDisclosure extends Disclosure {
-
-        public NavDisclosure(String caption) {
-            super(caption);
-            addListener(new LayoutClickListener() {
-
-                @Override
-                public void layoutClick(LayoutClickEvent event) {
-                    Component clicked = event.getClickedComponent();
-
-                    if (event.getChildComponent() != null) {
-                        System.out.println("event.getChildComponent(): "
-                            + event.getChildComponent().getClass()
-                            + ", "
-                            + event.getChildComponent().getCaption());
-                    }
-                    else {
-                        System.out.println("event.getChildComponent(): null");
-                    }
-                    if (clicked != null) {
-                        System.out.println("event.getClickedComponent(): " + clicked.getClass() + ", " + clicked.getCaption());
-                    }
-                    else {
-                        System.out.println("event.getClickedComponent(): null");
-                    }
-
-                    if (clicked != null && (clicked instanceof NavDisclosure || clicked instanceof NavigationItem)) {
-                        presenter.onMenuSelection(navigationItems.get(clicked));
-                    }
-                }
-            });
-
-        }
-
-        public Component getCaptionComponent() {
-            return caption;
-        }
-
-        @Override
-        public Disclosure open() {
-            super.open();
-            presenter.onMenuSelection(navigationItems.get(this));
-            return this;
-        }
-
-        @Override
-        public Disclosure close() {
-            super.close();
-            presenter.onMenuSelection(navigationItems.get(this));
-            return this;
-        }
-    }
-
-    /**
-     * Menu item button implementation.
-     *
-     * @author fgrilli
-     * @author mrichert
-     */
-    public class NavigationItem extends NativeButton {
+    private class NavButton extends NativeButton {
 
         private NavigationItemDefinition item;
 
-        public NavigationItem(final NavigationItemDefinition item) {
+        public NavButton(NavigationItemDefinition item) {
             this.item = item;
         }
 
@@ -277,8 +206,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     if (presenter != null) {
-                        NavigationItemDefinition menuConfig = navigationItems.get(event.getComponent());
-                        presenter.onMenuSelection(menuConfig);
+                        presenter.onMenuSelection(item);
                     }
                 }
             });
@@ -287,7 +215,7 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
 
     @Override
     public Component asVaadinComponent() {
-        return accordion;
+        return melodion;
     }
 
     @Override
@@ -298,11 +226,10 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent {
             }
             final PlaceChangeActionDefinition definition = (PlaceChangeActionDefinition) entry.getValue().getActionDefinition();
             if (definition.getPlace().equals(place)) {
-
-                // accordion.setSelectedTab(entry.getKey());
-                Component key = entry.getKey();
-                if (key instanceof NativeButton) {
-                    accordion.setSelected((NativeButton) key);
+                Component c = entry.getKey();
+                melodion.setSelected(c);
+                if (c instanceof Melodion.Tab) {
+                    ((Melodion.Tab) c).open();
                 }
 
                 navigationWorkarea.setVisible(true);

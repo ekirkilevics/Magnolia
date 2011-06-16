@@ -267,7 +267,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin</artifactId>
-        <version>6.6.1</version>
+        <version>6.6.2</version>
       </dependency>
       <dependency>
         <groupId>org.vaadin.addons</groupId>
@@ -713,6 +713,16 @@ for Java Content Repositories (JCR).
       <url>http://nexus.magnolia-cms.com/content/repositories/magnolia.public.releases/</url>
       <snapshots>
         <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>vaadin-snapshots</id>
+      <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
       </snapshots>
     </repository>
   </repositories>
