@@ -265,7 +265,7 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public PropertyIterator getProperties() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return new MockPropertyIterator(properties.values());
     }
 
     @Override

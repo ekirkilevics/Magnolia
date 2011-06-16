@@ -38,6 +38,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -45,6 +46,8 @@ import java.util.Map;
 import javax.jcr.ItemVisitor;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.NodeType;
 
@@ -159,6 +162,25 @@ public class MockNodeTest {
         root.setProperty("property", "string");
         assertTrue(root.hasProperties());
     }
+
+    @Test
+    public void testGetProperties() throws Exception {
+        root.setProperty("property1", "string");
+        root.setProperty("property2", BigDecimal.TEN);
+
+        PropertyIterator iterator = root.getProperties();
+        assertTrue(iterator.hasNext());
+        Property current = iterator.nextProperty();
+        assertEquals("property1", current.getName());
+        assertEquals("string", current.getString());
+
+        current = iterator.nextProperty();
+        assertEquals("property2", current.getName());
+        assertEquals(BigDecimal.TEN, current.getDecimal());
+
+        assertTrue(!iterator.hasNext());
+    }
+
 
     @Test
     public void testSetPropertyWithStringAndBoolean() throws Exception {
