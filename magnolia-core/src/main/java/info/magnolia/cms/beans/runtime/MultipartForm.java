@@ -33,11 +33,12 @@
  */
 package info.magnolia.cms.beans.runtime;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -64,6 +65,64 @@ public class MultipartForm {
         this.parameterList = new Hashtable();
     }
 
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
+    public void addParameter(String name, Object value) {
+        if (value instanceof String[]) {
+            this.parameters.put(name, (String[]) value);
+        } else {
+            this.parameters.put(name, new String[]{(String) value });
+        }
+    }
+
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
+    public void removeParameter(String name) {
+        this.parameters.remove(name);
+    }
+
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
+    public Map<String, String[]> getParameters() {
+        return this.parameters;
+    }
+
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
+    public String getParameter(String name) {
+        try {
+            String[] params = this.parameters.get(name);
+            if (params != null && params.length > 0) {
+                return params[0];
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
+    public String[] getParameterValues(String name) {
+        try {
+            return ((String[]) this.parameterList.get(name));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
+    public void addparameterValues(String name, String[] values) {
+        this.parameterList.put(name, values);
+    }
+
     public void addDocument(String atomName, String fileName, String type, File file) {
         if (StringUtils.isEmpty(fileName)) {
             return;
@@ -88,5 +147,12 @@ public class MultipartForm {
 
     public Map<String, Document> getDocuments() {
         return this.documents;
+    }
+
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
+    public Enumeration<String> getParameterNames() {
+        return ((Hashtable<String, String[]>) this.parameters).keys();
     }
 }
