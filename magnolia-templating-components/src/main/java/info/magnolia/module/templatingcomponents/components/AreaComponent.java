@@ -67,10 +67,7 @@ public class AreaComponent extends AbstractContentComponent {
 
     private String name;
     private AreaDefinition area;
-    /**
-     * Comma separated list of paragraphs.
-     */
-    private String paragraphs;
+    private String availableComponents;
     private String type;
     private String dialog;
     private RenderingEngine renderingEngine;
@@ -97,7 +94,7 @@ public class AreaComponent extends AbstractContentComponent {
         }
 
         param(out, "name", resolveName());
-        param(out, "paragraphs", resolveParagraphNames());
+        param(out, "availableComponents", resolveAvailableComponents());
         param(out, "type", resolveType());
         param(out, "dialog", resolveDialog());
         param(out, "showAddButton", String.valueOf(shouldShowAddButton()));
@@ -185,9 +182,9 @@ public class AreaComponent extends AbstractContentComponent {
         throw new IllegalStateException("Unknown area type [" + type + "]");
     }
 
-    protected String resolveParagraphNames() {
-        if (StringUtils.isNotEmpty(paragraphs)) {
-            return paragraphs;
+    protected String resolveAvailableComponents() {
+        if (StringUtils.isNotEmpty(availableComponents)) {
+            return availableComponents;
         }
         if (area != null && area.getAvailableParagraphs().size() > 0) {
             Iterator<ConfiguredParagraphAvailability> iterator = area.getAvailableParagraphs().values().iterator();
@@ -217,12 +214,12 @@ public class AreaComponent extends AbstractContentComponent {
         this.area = area;
     }
 
-    public String getParagraphs() {
-        return paragraphs;
+    public String getAvailableComponents() {
+        return availableComponents;
     }
 
-    public void setParagraphs(String paragraphs) {
-        this.paragraphs = paragraphs;
+    public void setAvailableComponents(String availableComponents) {
+        this.availableComponents = availableComponents;
     }
 
     public String getType() {

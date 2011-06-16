@@ -62,7 +62,7 @@ public class EditBarWidget extends AbstractBarWidget {
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
 
-        this.componentId = element.getAttribute("paragraph");
+        this.componentId = element.getAttribute("template");
         this.label = element.getAttribute("label");
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
@@ -81,7 +81,7 @@ public class EditBarWidget extends AbstractBarWidget {
     @Override
     protected void onSelect() {
         super.onSelect();
-        pageEditor.updateSelection(this, VPageEditor.SELECTION_COMPONENT_IN_LIST, workspace, path, null, null, getComponentsAvailableInThisArea(), dialog);
+        pageEditor.updateSelection(this, VPageEditor.SELECTION_TYPE_COMPONENT_IN_LIST, workspace, path, null, null, getComponentsAvailableInThisArea(), dialog);
     }
 
     private String getComponentsAvailableInThisArea() {

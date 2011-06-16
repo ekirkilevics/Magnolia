@@ -63,7 +63,7 @@ public class AreaDirective extends AbstractDirective<AreaComponent> {
 
         uiComponent.setArea(area);
         uiComponent.setName(name);
-        uiComponent.setParagraphs(paragraphs);
+        uiComponent.setAvailableComponents(paragraphs);
         uiComponent.setDialog(dialog);
         uiComponent.setType(type);
     }

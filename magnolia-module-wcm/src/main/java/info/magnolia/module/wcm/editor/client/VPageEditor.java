@@ -51,33 +51,34 @@ import com.vaadin.terminal.gwt.client.UIDL;
  */
 public class VPageEditor extends HTML implements Paintable, EventListener {
 
-    public static final String PAGE_MARKER = "cms:page";
-    public static final String EDIT_MARKER = "cms:edit";
-    public static final String AREA_MARKER = "cms:area";
+    public static final String MARKER_PAGE = "cms:page";
+    public static final String MARKER_EDIT = "cms:edit";
+    public static final String MARKER_AREA = "cms:area";
 
     public static final String AREA_TYPE_LIST = "list";
     public static final String AREA_TYPE_SINGLE = "single";
 
-    public static final String SELECTION_PAGE = "page";
-    public static final String SELECTION_AREA_LIST = "area_list";
-    public static final String SELECTION_AREA_SINGLE = "area_single";
-    public static final String SELECTION_COMPONENT_IN_LIST = "component_in_list";
-    public static final String SELECTION_COMPONENT_IN_SINGLE = "component_in_single";
+    public static final String SELECTION_TYPE_PAGE = "PAGE";
+    public static final String SELECTION_TYPE_AREA_LIST = "AREA_LIST";
+    public static final String SELECTION_TYPE_AREA_SINGLE = "AREA_SINGLE";
+    public static final String SELECTION_TYPE_COMPONENT_IN_LIST = "COMPONENT_IN_LIST";
+    public static final String SELECTION_TYPE_COMPONENT_IN_SINGLE = "COMPONENT_IN_SINGLE";
 
-    public static final String SELECTED_WORKSPACE = "selectedWorkspace";
-    public static final String SELECTED_PATH = "selectedPath";
-    public static final String SELECTED_COLLECTION_NAME = "selectedCollectionName";
-    public static final String SELECTED_NODE_NAME = "selectedNodeName";
-    public static final String OPEN_DIALOG = "open-dialog";
-    public static final String UPDATE_SELECTION = "update-selection";
-    public static final String ADD_COMPONENT = "addComponent";
-    public static final String MOVE_BEFORE = "moveBefore";
-    public static final String SOURCE_PATH = "sourcePath";
-    public static final String DESTINATION_PATH = "destinationPath";
-    public static final String MOVE_AFTER = "moveAfter";
-    public static final String MOVE = "move";
-    public static final String AVAILABLE_COMPONENTS = "components";
-    public static final String DIALOG = "dialog";
+    public static final String ACTION_OPEN_DIALOG = "openDialog";
+    public static final String ACTION_UPDATE_SELECTION = "updateSelection";
+    public static final String ACTION_ADD_COMPONENT = "addComponent";
+    public static final String ACTION_MOVE = "move";
+    public static final String ACTION_MOVE_BEFORE = "moveBefore";
+    public static final String ACTION_MOVE_AFTER = "moveAfter";
+
+    public static final String PARAM_SELECTED_WORKSPACE = "selectedWorkspace";
+    public static final String PARAM_SELECTED_PATH = "selectedPath";
+    public static final String PARAM_SELECTED_COLLECTION_NAME = "selectedCollectionName";
+    public static final String PARAM_SELECTED_NODE_NAME = "selectedNodeName";
+    public static final String PARAM_AVAILABLE_COMPONENTS = "components";
+    public static final String PARAM_DIALOG = "dialog";
+    public static final String PARAM_SOURCE_PATH = "sourcePath";
+    public static final String PARAM_DESTINATION_PATH = "destinationPath";
 
     private IFrameElement iFrameElement;
     private ApplicationConnection client;
@@ -145,17 +146,17 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
             if (childNode.getNodeType() == Element.ELEMENT_NODE) {
                 Element child = (Element) childNode;
 
-                if (child.getTagName().equalsIgnoreCase(PAGE_MARKER)) {
+                if (child.getTagName().equalsIgnoreCase(MARKER_PAGE)) {
                     PageBarWidget pageBarWidget = new PageBarWidget(this, child);
                     pageBarWidget.attach(child);
-                } else if (child.getTagName().equalsIgnoreCase(EDIT_MARKER)) {
+                } else if (child.getTagName().equalsIgnoreCase(MARKER_EDIT)) {
                     if (parentBar != null && parentBar.getType().equals(AREA_TYPE_SINGLE)) {
                         parentBar.mutateIntoSingleBar(child);
                     } else {
                         EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
                         editBarWidget.attach(child);
                     }
-                } else if (child.getTagName().equalsIgnoreCase(AREA_MARKER)) {
+                } else if (child.getTagName().equalsIgnoreCase(MARKER_AREA)) {
                     AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, child);
                     areaBarWidget.attach(child);
                     parentBar = areaBarWidget;
@@ -167,12 +168,12 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
     }
 
     public void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName) {
-        updateVariable(OPEN_DIALOG, "dummy");
-        updateVariable(SELECTED_WORKSPACE, workspace);
-        updateVariable(SELECTED_PATH, path);
-        updateVariable(SELECTED_COLLECTION_NAME, collectionName);
-        updateVariable(SELECTED_NODE_NAME, nodeName);
-        updateVariable(DIALOG, dialog);
+        updateVariable(ACTION_OPEN_DIALOG, "dummy");
+        updateVariable(PARAM_SELECTED_WORKSPACE, workspace);
+        updateVariable(PARAM_SELECTED_PATH, path);
+        updateVariable(PARAM_SELECTED_COLLECTION_NAME, collectionName);
+        updateVariable(PARAM_SELECTED_NODE_NAME, nodeName);
+        updateVariable(PARAM_DIALOG, dialog);
         client.sendPendingVariableChanges();
     }
 
@@ -181,47 +182,47 @@ public class VPageEditor extends HTML implements Paintable, EventListener {
             this.selectedBar.deselect();
         }
         this.selectedBar = selectedBar;
-        updateVariable(UPDATE_SELECTION, type);
-        updateVariable(SELECTED_WORKSPACE, workspace);
-        updateVariable(SELECTED_PATH, path);
-        updateVariable(SELECTED_COLLECTION_NAME, collectionName);
-        updateVariable(SELECTED_NODE_NAME, nodeName);
-        updateVariable(AVAILABLE_COMPONENTS, availableComponents);
-        updateVariable(DIALOG, dialog);
+        updateVariable(ACTION_UPDATE_SELECTION, type);
+        updateVariable(PARAM_SELECTED_WORKSPACE, workspace);
+        updateVariable(PARAM_SELECTED_PATH, path);
+        updateVariable(PARAM_SELECTED_COLLECTION_NAME, collectionName);
+        updateVariable(PARAM_SELECTED_NODE_NAME, nodeName);
+        updateVariable(PARAM_AVAILABLE_COMPONENTS, availableComponents);
+        updateVariable(PARAM_DIALOG, dialog);
         client.sendPendingVariableChanges();
     }
 
     public void addComponent(String workspace, String path, String collectionName, String nodeName, String availableComponents) {
-        updateVariable(ADD_COMPONENT, "dummy");
-        updateVariable(SELECTED_WORKSPACE, workspace);
-        updateVariable(SELECTED_PATH, path);
-        updateVariable(SELECTED_COLLECTION_NAME, collectionName);
-        updateVariable(SELECTED_NODE_NAME, nodeName);
-        updateVariable(AVAILABLE_COMPONENTS, availableComponents);
+        updateVariable(ACTION_ADD_COMPONENT, "dummy");
+        updateVariable(PARAM_SELECTED_WORKSPACE, workspace);
+        updateVariable(PARAM_SELECTED_PATH, path);
+        updateVariable(PARAM_SELECTED_COLLECTION_NAME, collectionName);
+        updateVariable(PARAM_SELECTED_NODE_NAME, nodeName);
+        updateVariable(PARAM_AVAILABLE_COMPONENTS, availableComponents);
         client.sendPendingVariableChanges();
     }
 
     public void moveComponent(String workspaceName, String sourcePath, String destinationPath) {
-        updateVariable(MOVE, "dummy");
-        updateVariable(SELECTED_WORKSPACE, workspaceName);
-        updateVariable(SOURCE_PATH, sourcePath);
-        updateVariable(DESTINATION_PATH, destinationPath);
+        updateVariable(ACTION_MOVE, "dummy");
+        updateVariable(PARAM_SELECTED_WORKSPACE, workspaceName);
+        updateVariable(PARAM_SOURCE_PATH, sourcePath);
+        updateVariable(PARAM_DESTINATION_PATH, destinationPath);
         client.sendPendingVariableChanges();
     }
 
     public void moveComponentBefore(String workspaceName, String sourcePath, String destinationPath) {
-        updateVariable(MOVE_BEFORE, "dummy");
-        updateVariable(SELECTED_WORKSPACE, workspaceName);
-        updateVariable(SOURCE_PATH, sourcePath);
-        updateVariable(DESTINATION_PATH, destinationPath);
+        updateVariable(ACTION_MOVE_BEFORE, "dummy");
+        updateVariable(PARAM_SELECTED_WORKSPACE, workspaceName);
+        updateVariable(PARAM_SOURCE_PATH, sourcePath);
+        updateVariable(PARAM_DESTINATION_PATH, destinationPath);
         client.sendPendingVariableChanges();
     }
 
     public void moveComponentAfter(String workspaceName, String sourcePath, String destinationPath) {
-        updateVariable(MOVE_AFTER, "dummy");
-        updateVariable(SELECTED_WORKSPACE, workspaceName);
-        updateVariable(SOURCE_PATH, sourcePath);
-        updateVariable(DESTINATION_PATH, destinationPath);
+        updateVariable(ACTION_MOVE_AFTER, "dummy");
+        updateVariable(PARAM_SELECTED_WORKSPACE, workspaceName);
+        updateVariable(PARAM_SOURCE_PATH, sourcePath);
+        updateVariable(PARAM_DESTINATION_PATH, destinationPath);
         client.sendPendingVariableChanges();
     }
 

@@ -67,57 +67,57 @@ public class PageEditor extends AbstractComponent {
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
 
-        if (variables.containsKey(VPageEditor.OPEN_DIALOG)) {
-            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
-            String path = (String) variables.get(VPageEditor.SELECTED_PATH);
-            String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
-            String nodeName = (String) variables.get(VPageEditor.SELECTED_NODE_NAME);
-            String dialog = (String) variables.get(VPageEditor.DIALOG);
+        if (variables.containsKey(VPageEditor.ACTION_OPEN_DIALOG)) {
+            String workspace = (String) variables.get(VPageEditor.PARAM_SELECTED_WORKSPACE);
+            String path = (String) variables.get(VPageEditor.PARAM_SELECTED_PATH);
+            String collectionName = (String) variables.get(VPageEditor.PARAM_SELECTED_COLLECTION_NAME);
+            String nodeName = (String) variables.get(VPageEditor.PARAM_SELECTED_NODE_NAME);
+            String dialog = (String) variables.get(VPageEditor.PARAM_DIALOG);
             pageEditorPresenter.openDialog(dialog, workspace, path, collectionName, nodeName);
         }
-        if (variables.containsKey(VPageEditor.UPDATE_SELECTION)) {
-            String type = (String) variables.get(VPageEditor.UPDATE_SELECTION);
-            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
-            String path = (String) variables.get(VPageEditor.SELECTED_PATH);
-            String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
-            String nodeName = (String) variables.get(VPageEditor.SELECTED_NODE_NAME);
-            String availableComponents = (String) variables.get(VPageEditor.AVAILABLE_COMPONENTS);
-            String dialog = (String) variables.get(VPageEditor.DIALOG);
+        if (variables.containsKey(VPageEditor.ACTION_UPDATE_SELECTION)) {
+            String type = (String) variables.get(VPageEditor.ACTION_UPDATE_SELECTION);
+            String workspace = (String) variables.get(VPageEditor.PARAM_SELECTED_WORKSPACE);
+            String path = (String) variables.get(VPageEditor.PARAM_SELECTED_PATH);
+            String collectionName = (String) variables.get(VPageEditor.PARAM_SELECTED_COLLECTION_NAME);
+            String nodeName = (String) variables.get(VPageEditor.PARAM_SELECTED_NODE_NAME);
+            String availableComponents = (String) variables.get(VPageEditor.PARAM_AVAILABLE_COMPONENTS);
+            String dialog = (String) variables.get(VPageEditor.PARAM_DIALOG);
             pageEditorPresenter.selectionChanged(SelectionType.valueOf(type.toUpperCase()), workspace, path, collectionName, nodeName, availableComponents, dialog);
         }
-        if (variables.containsKey(VPageEditor.ADD_COMPONENT)) {
-            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
-            String path = (String) variables.get(VPageEditor.SELECTED_PATH);
-            String collectionName = (String) variables.get(VPageEditor.SELECTED_COLLECTION_NAME);
-            String nodeName = (String) variables.get(VPageEditor.SELECTED_NODE_NAME);
-            String availableComponents = (String) variables.get(VPageEditor.AVAILABLE_COMPONENTS);
-            String dialog = (String) variables.get(VPageEditor.DIALOG);
+        if (variables.containsKey(VPageEditor.ACTION_ADD_COMPONENT)) {
+            String workspace = (String) variables.get(VPageEditor.PARAM_SELECTED_WORKSPACE);
+            String path = (String) variables.get(VPageEditor.PARAM_SELECTED_PATH);
+            String collectionName = (String) variables.get(VPageEditor.PARAM_SELECTED_COLLECTION_NAME);
+            String nodeName = (String) variables.get(VPageEditor.PARAM_SELECTED_NODE_NAME);
+            String availableComponents = (String) variables.get(VPageEditor.PARAM_AVAILABLE_COMPONENTS);
+            String dialog = (String) variables.get(VPageEditor.PARAM_DIALOG);
             pageEditorPresenter.addComponent(workspace, path, collectionName, nodeName, availableComponents, dialog);
         }
-        if (variables.containsKey(VPageEditor.MOVE)) {
-            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
-            String sourcePath = (String) variables.get(VPageEditor.SOURCE_PATH);
-            String destinationPath = (String) variables.get(VPageEditor.DESTINATION_PATH);
+        if (variables.containsKey(VPageEditor.ACTION_MOVE)) {
+            String workspace = (String) variables.get(VPageEditor.PARAM_SELECTED_WORKSPACE);
+            String sourcePath = (String) variables.get(VPageEditor.PARAM_SOURCE_PATH);
+            String destinationPath = (String) variables.get(VPageEditor.PARAM_DESTINATION_PATH);
             try {
                 pageEditorPresenter.moveComponent(workspace, sourcePath, destinationPath);
             } catch (RepositoryException e) {
                 throw new RuntimeRepositoryException(e);
             }
         }
-        if (variables.containsKey(VPageEditor.MOVE_BEFORE)) {
-            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
-            String sourcePath = (String) variables.get(VPageEditor.SOURCE_PATH);
-            String destinationPath = (String) variables.get(VPageEditor.DESTINATION_PATH);
+        if (variables.containsKey(VPageEditor.ACTION_MOVE_BEFORE)) {
+            String workspace = (String) variables.get(VPageEditor.PARAM_SELECTED_WORKSPACE);
+            String sourcePath = (String) variables.get(VPageEditor.PARAM_SOURCE_PATH);
+            String destinationPath = (String) variables.get(VPageEditor.PARAM_DESTINATION_PATH);
             try {
                 pageEditorPresenter.moveComponentBefore(workspace, sourcePath, destinationPath);
             } catch (RepositoryException e) {
                 throw new RuntimeRepositoryException(e);
             }
         }
-        if (variables.containsKey(VPageEditor.MOVE_AFTER)) {
-            String workspace = (String) variables.get(VPageEditor.SELECTED_WORKSPACE);
-            String sourcePath = (String) variables.get(VPageEditor.SOURCE_PATH);
-            String destinationPath = (String) variables.get(VPageEditor.DESTINATION_PATH);
+        if (variables.containsKey(VPageEditor.ACTION_MOVE_AFTER)) {
+            String workspace = (String) variables.get(VPageEditor.PARAM_SELECTED_WORKSPACE);
+            String sourcePath = (String) variables.get(VPageEditor.PARAM_SOURCE_PATH);
+            String destinationPath = (String) variables.get(VPageEditor.PARAM_DESTINATION_PATH);
             try {
                 pageEditorPresenter.moveComponentAfter(workspace, sourcePath, destinationPath);
             } catch (RepositoryException e) {

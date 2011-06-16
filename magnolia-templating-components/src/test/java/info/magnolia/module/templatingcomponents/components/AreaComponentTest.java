@@ -103,17 +103,17 @@ public class AreaComponentTest {
 
         assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
+                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphs/01\" name=\"test\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // with paragraph set
         out = new StringWriter();
-        marker.setParagraphs("paragraphs/myParagraph");
+        marker.setAvailableComponents("paragraphs/myParagraph");
         marker.doRender(out);
 
         assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
+                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphs/01\" name=\"test\" availableComponents=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // as collection == false (= singleton)
@@ -124,7 +124,7 @@ public class AreaComponentTest {
         assertEquals(
                 "<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphs/01\" -->"
                 + EditComponent.LINEBREAK
-                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphs/01\" name=\"test\" paragraphs=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
+                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphs/01\" name=\"test\" availableComponents=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
     }
 

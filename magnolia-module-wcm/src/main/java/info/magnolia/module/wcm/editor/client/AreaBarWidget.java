@@ -66,7 +66,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         this.label = element.getAttribute("label");
         this.name = element.getAttribute("name");
-        this.availableComponents = element.getAttribute("paragraphs");
+        this.availableComponents = element.getAttribute("availableComponents");
         this.type = element.getAttribute("type");
         this.dialog = element.getAttribute("dialog");
         if (element.hasAttribute("showAddButton")) {
@@ -106,12 +106,12 @@ public class AreaBarWidget extends AbstractBarWidget {
     protected void onSelect() {
         super.onSelect();
         if (type.equals(VPageEditor.AREA_TYPE_LIST)) {
-            pageEditor.updateSelection(this, VPageEditor.SELECTION_AREA_LIST, workspace, path, name, null, availableComponents, dialog);
+            pageEditor.updateSelection(this, VPageEditor.SELECTION_TYPE_AREA_LIST, workspace, path, name, null, availableComponents, dialog);
         } else if (type.equals(VPageEditor.AREA_TYPE_SINGLE)) {
             if (showAddButton) {
-                pageEditor.updateSelection(this, VPageEditor.SELECTION_AREA_SINGLE, workspace, path, null, name, availableComponents, dialog);
+                pageEditor.updateSelection(this, VPageEditor.SELECTION_TYPE_AREA_SINGLE, workspace, path, null, name, availableComponents, dialog);
             } else {
-                pageEditor.updateSelection(this, VPageEditor.SELECTION_COMPONENT_IN_SINGLE, workspace, path, null, null, availableComponents, dialog);
+                pageEditor.updateSelection(this, VPageEditor.SELECTION_TYPE_COMPONENT_IN_SINGLE, workspace, path, null, null, availableComponents, dialog);
             }
         }
     }
@@ -129,7 +129,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         // TODO this also changes the area bar from being a drop-target to a drag-anchor, we need to know the name
         // TODO of the component to implement that
-        String component = element.getAttribute("paragraph");
+        String component = element.getAttribute("template");
 
         setLabelText(label + "(" + component + ")");
 

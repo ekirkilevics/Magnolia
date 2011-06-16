@@ -51,7 +51,7 @@ public class EditDirectiveTest extends AbstractDirectiveTestCase {
         String result = renderForTest("[@cms.edit /]");
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK
-                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" paragraph=\"testParagraph1\"></cms:edit>"
+                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK
                 + "<!-- cms:end cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK, result);
@@ -62,7 +62,7 @@ public class EditDirectiveTest extends AbstractDirectiveTestCase {
         final String result = renderForTest("[@cms.edit dialog='testDialog' /]");
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK
-                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" paragraph=\"testParagraph1\"></cms:edit>"
+                        + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK
                 + "<!-- cms:end cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK, result);

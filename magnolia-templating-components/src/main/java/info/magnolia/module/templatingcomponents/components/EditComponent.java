@@ -75,30 +75,30 @@ public class EditComponent extends AbstractContentComponent {
         if (StringUtils.isNotEmpty(format)) {
             out.append(" format=").append(QUOTE).append(format).append(QUOTE);
         }
-        TemplateDefinition paragraph;
+        TemplateDefinition templateDefinition;
         try {
-            paragraph = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(MetaDataUtil.getMetaData(content).getTemplate());
+            templateDefinition = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(MetaDataUtil.getMetaData(content).getTemplate());
         } catch (TemplateDefinitionRegistrationException e) {
             // TODO dlipp: implement consistent ExceptionHandling for these Situations.
             throw new RuntimeException(e);
         }
-        out.append(" label=").append(QUOTE).append(paragraph.getTitle()).append(QUOTE);
+        out.append(" label=").append(QUOTE).append(templateDefinition.getTitle()).append(QUOTE);
 
-        out.append(" dialog=").append(QUOTE).append(resolveDialog(paragraph)).append(QUOTE);
+        out.append(" dialog=").append(QUOTE).append(resolveDialog(templateDefinition)).append(QUOTE);
 
-        out.append(" paragraph=").append(QUOTE).append(paragraph.getId()).append(QUOTE);
+        out.append(" template=").append(QUOTE).append(templateDefinition.getId()).append(QUOTE);
 
         out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_EDIT).append(GREATER_THAN).append(LINEBREAK);
     }
 
-    private String resolveDialog(TemplateDefinition paragraph) throws RenderException {
+    private String resolveDialog(TemplateDefinition component) throws RenderException {
         String dialog = null;
         if (this.dialog != null) {
             dialog = this.dialog;
         }
-        dialog = paragraph.getDialog();
+        dialog = component.getDialog();
         if (StringUtils.isBlank(dialog)) {
-            throw new RenderException("Please set dialog for paragraph id=" + paragraph.getId() + ", name=" + paragraph.getName());
+            throw new RenderException("Please set dialog for component id=" + component.getId() + ", name=" + component.getName());
         }
         return dialog;
     }
