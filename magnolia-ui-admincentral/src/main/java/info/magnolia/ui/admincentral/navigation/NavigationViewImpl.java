@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition;
@@ -76,25 +77,6 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
     // TODO don't pass the registry but the navigation itself
     public NavigationViewImpl(NavigationProvider navigationProvider, NavigationPermissionSchema permissions) {
         final NavigationDefinition navigation = navigationProvider.getNavigation();
-        createNavigation(navigation, permissions);
-    }
-
-    @Override
-    public void setPresenter(Presenter presenter) {
-        this.presenter = presenter;
-        for (NavigationWorkArea navigationWorkArea : registeredNavigationAreas) {
-            for (NavigationGroup navigationGroup : navigationWorkArea.getNavigationGroup()) {
-                navigationGroup.setPresenter(presenter);
-            }
-        }
-    }
-
-    @Override
-    public Component asVaadinComponent() {
-        return outerNavigationContainer;
-    }
-
-    private void createNavigation(NavigationDefinition navigation, NavigationPermissionSchema permissions) {
 
         for (final NavigationWorkareaDefinition definition : navigation.getWorkareas()) {
             log.debug("creating navigation workarea {}", definition.getName());
@@ -127,5 +109,29 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
                 }
             });
         }
+    }
+
+    @Override
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
+        for (NavigationWorkArea navigationWorkArea : registeredNavigationAreas) {
+            for (NavigationGroup navigationGroup : navigationWorkArea.getNavigationGroup()) {
+                navigationGroup.setPresenter(presenter);
+            }
+        }
+    }
+
+    @Override
+    public void update(Place place) {
+        for (NavigationWorkArea workarea : registeredNavigationAreas) {
+            for (NavigationGroup group : workarea.getNavigationGroup()) {
+                group.update(place);
+            }
+        }
+    }
+
+    @Override
+    public Component asVaadinComponent() {
+        return outerNavigationContainer;
     }
 }

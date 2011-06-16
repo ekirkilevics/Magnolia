@@ -52,6 +52,7 @@ public class NavigationActivityMapper implements ActivityMapper {
 
     @Override
     public Activity getActivity(Place place) {
+        navigationActivity.update(place);
         return navigationActivity;
     }
 
