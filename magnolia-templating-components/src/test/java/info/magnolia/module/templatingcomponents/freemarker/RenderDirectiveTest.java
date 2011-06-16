@@ -33,24 +33,19 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
-import info.magnolia.context.WebContext;
+import static org.junit.Assert.assertEquals;
 
-import javax.servlet.http.HttpServletRequest;
+import org.junit.Test;
+
 
 /**
- * Tests for ContextAttributeDirective.
- *
  * $Id$
  */
-public class ContextDirectiveTest extends AbstractDirectiveTestCase {
-    @Override
-    protected void setupExpectations(WebContext ctx, HttpServletRequest req) {
-        ctx.setAttribute("shoeSize", "213", 1);
-    }
+public class RenderDirectiveTest extends AbstractDirectiveTestCase {
 
+    @Test
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@cms.context name=\"shoeSize\" value=\"213\" /]");
-        // TODO result is empty - how to verify everything worked as expected?
+        final String result = renderForTest("[@cms.render /]");
         assertEquals("", result);
     }
 }

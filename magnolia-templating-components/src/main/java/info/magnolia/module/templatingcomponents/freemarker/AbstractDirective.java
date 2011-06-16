@@ -33,9 +33,20 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
-import info.magnolia.cms.core.AggregationState;
+import freemarker.core.CollectionAndSequence;
+import freemarker.core.Environment;
+import freemarker.template.TemplateBooleanModel;
+import freemarker.template.TemplateCollectionModel;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateDirectiveModel;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
+import freemarker.template.TemplateSequenceModel;
+import freemarker.template.utility.DeepUnwrap;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.models.ContentModel;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.module.templatingcomponents.components.AbstractContentComponent;
@@ -52,19 +63,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
-
-import freemarker.core.CollectionAndSequence;
-import freemarker.core.Environment;
-import freemarker.template.TemplateBooleanModel;
-import freemarker.template.TemplateCollectionModel;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateDirectiveModel;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateScalarModel;
-import freemarker.template.TemplateSequenceModel;
-import freemarker.template.utility.DeepUnwrap;
 
 /**
  * A base class for freemarker directives used in Magnolia.
@@ -103,10 +101,11 @@ public abstract class AbstractDirective<C extends AuthoringUiComponent> implemen
 
     protected C createUIComponent() {
         // FIXME use scope instead of fetching the objects and pass them as parameters
-        final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final RenderingContext renderingContext = Components.getComponent(RenderingEngine.class).getRenderingContext();
+        final RenderingEngine renderingEngine = Components.getComponent(RenderingEngine.class);
+        final RenderingContext renderingContext = renderingEngine.getRenderingContext();
 
-            return Components.getComponentProvider().newInstance(getUIComponentClass(), aggregationState, renderingContext);
+        // TODO dlipp - is that really what we want? Why provided renderingContext and -Engine if context can always be retrieved via RenderingEngine#getRenderingContext()??
+        return Components.getComponentProvider().newInstance(getUIComponentClass(), ServerConfiguration.getInstance(), renderingContext, renderingEngine);
     }
 
     protected Class<C> getUIComponentClass() {

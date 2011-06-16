@@ -33,43 +33,27 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
-import java.io.Writer;
-
-import info.magnolia.cms.core.Content;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.context.WebContext;
-import info.magnolia.module.templating.RenderException;
-import info.magnolia.module.templating.engine.RenderingEngine;
-import info.magnolia.test.ComponentsTestUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.junit.Test;
+
 /**
- * Tests for RenderDirective.
- *
  * $Id$
  */
-public class RenderDirectiveTest extends AbstractDirectiveTestCase {
+public class ContextDirectiveTest extends AbstractDirectiveTestCase {
 
     @Override
     protected void setupExpectations(WebContext ctx, HttpServletRequest req) {
+        ctx.setAttribute("shoeSize", "213", 1);
     }
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        ComponentsTestUtil.setInstance(RenderingEngine.class, new RenderingEngine() {
-            @Override
-            public void render(Content content, Writer out) throws RenderException {
-
-            }
-            @Override
-            public void render(Content content, String definitionName, Writer out) throws RenderException {
-            }
-        });
-    }
-
+    @Test
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@cms.render /]");
+        final String result = renderForTest("[@cms.context name=\"shoeSize\" value=\"213\" /]");
+        // TODO result is empty - how to verify everything worked as expected?
         assertEquals("", result);
     }
 }

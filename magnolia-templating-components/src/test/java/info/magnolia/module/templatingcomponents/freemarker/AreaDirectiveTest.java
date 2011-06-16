@@ -33,15 +33,18 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
 import info.magnolia.module.templatingcomponents.components.AbstractContentComponent;
 
 /**
- * Tests for AreaDirective.
- *
  * $Id$
  */
 public class AreaDirectiveTest extends AbstractDirectiveTestCase {
 
+    @Test
     public void testRenderSimpleBar() throws Exception {
         final String result = renderForTest("[@cms.area name=\"stage\" /]");
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"

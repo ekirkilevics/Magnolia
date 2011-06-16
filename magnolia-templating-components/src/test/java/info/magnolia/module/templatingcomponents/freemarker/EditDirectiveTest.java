@@ -33,26 +33,31 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
+
 import freemarker.template.TemplateModelException;
 import info.magnolia.module.templatingcomponents.components.AbstractContentComponent;
 
 /**
- * Tests for EditDirective.
- *
  * $Id$
  */
 public class EditDirectiveTest extends AbstractDirectiveTestCase {
 
+    @Test
     public void testRenderSimpleBar() throws Exception {
         String result = renderForTest("[@cms.edit /]");
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK
-                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testParagraph1\" paragraph=\"testParagraph1\"></cms:edit>"
+                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" paragraph=\"testParagraph1\"></cms:edit>"
                 + AbstractContentComponent.LINEBREAK
                 + "<!-- cms:end cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
                 + AbstractContentComponent.LINEBREAK, result);
     }
 
+    @Test
     public void testRenderWithDialog() throws Exception {
         final String result = renderForTest("[@cms.edit dialog='testDialog' /]");
         assertEquals("<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/paragraphs/1\" -->"
@@ -63,6 +68,7 @@ public class EditDirectiveTest extends AbstractDirectiveTestCase {
                 + AbstractContentComponent.LINEBREAK, result);
     }
 
+    @Test
     public void testThrowsExceptionForUnknownParameters() throws Exception {
         try {
             renderForTest("[@cms.edit fake='lol' /]");
