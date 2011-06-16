@@ -98,6 +98,7 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
      */
     @Override
     public void postRender(Appendable out) throws IOException, RenderException {
+        // hook for subclasses
     }
 
     /**
@@ -109,7 +110,7 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
         final Node currentContent = renderingContext.getCurrentContent();
         if (currentContent == null) {
             throw new IllegalStateException(
-                    "Could not determine currentContent from AggregationState, currentContent is null");
+                    "Could not determine currentContent from RenderingContext, currentContent is null");
         }
         return currentContent;
     }
