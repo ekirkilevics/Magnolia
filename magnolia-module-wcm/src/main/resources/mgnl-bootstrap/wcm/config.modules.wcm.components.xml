@@ -289,7 +289,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="addParagraph">
+      <sv:node sv:name="addComponent">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -300,10 +300,10 @@
           <sv:value>9592daf7-adbb-44a4-8407-b5fd7110e718</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddComponentActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddComponentAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -329,7 +329,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="addParagraphAfter">
+      <sv:node sv:name="addComponentAfter">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -340,10 +340,10 @@
           <sv:value>3557c702-cba9-46cd-804c-54c2fc98bc91</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAfterActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddComponentAfterActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAfterAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddComponentAfterAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -369,7 +369,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="addParagraphAtBottom">
+      <sv:node sv:name="addComponentAtBottom">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -380,10 +380,10 @@
           <sv:value>c5967f2c-cf98-4405-a0ad-4dd0062e1f20</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAtBottomActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddComponentAtBottomActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAtBottomAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddComponentAtBottomAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -409,7 +409,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="addParagraphAtTop">
+      <sv:node sv:name="addComponentAtTop">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -420,10 +420,10 @@
           <sv:value>08ecb4e6-83a9-4a72-894a-447749962cc6</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAtTopActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddComponentAtTopActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphAtTopAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddComponentAtTopAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -449,7 +449,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="addParagraphBefore">
+      <sv:node sv:name="addComponentBefore">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -460,10 +460,10 @@
           <sv:value>12f9a43b-9cef-45a6-91eb-dcd484b667fa</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphBeforeActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddComponentBeforeActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.AddParagraphBeforeAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.AddComponentBeforeAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -569,7 +569,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="deleteParagraph">
+      <sv:node sv:name="deleteComponent">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -580,10 +580,10 @@
           <sv:value>1f86b283-1daa-4850-bfaf-f4d6ca161147</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.DeleteParagraphActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.DeleteComponentActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.DeleteParagraphAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.DeleteComponentAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -689,7 +689,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="editParagraph">
+      <sv:node sv:name="editComponent">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -700,10 +700,10 @@
           <sv:value>eb04de31-3d5b-401e-be8f-a4e902b40563</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.EditParagraphActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.EditComponentActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.EditParagraphAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.EditComponentAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -729,7 +729,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="moveParagraphDown">
+      <sv:node sv:name="moveComponentDown">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -740,10 +740,10 @@
           <sv:value>5bfabb37-3f95-4c60-8b12-67c1559c7800</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveParagraphDownActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveComponentDownActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveParagraphDownAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveComponentDownAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -769,7 +769,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="moveParagraphUp">
+      <sv:node sv:name="moveComponentUp">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -780,10 +780,10 @@
           <sv:value>81a9fb6b-e13d-49ba-89c7-bd4a707af59d</sv:value>
         </sv:property>
         <sv:property sv:name="definition" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveParagraphUpActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveComponentUpActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveParagraphUpAction</sv:value>
+          <sv:value>info.magnolia.module.wcm.toolbox.action.MoveComponentUpAction</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>

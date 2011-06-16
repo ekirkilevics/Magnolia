@@ -55,7 +55,7 @@ import info.magnolia.module.wcm.place.PageEditorPlace;
 import info.magnolia.module.wcm.toolbox.ToolboxActionFactory;
 import info.magnolia.module.wcm.toolbox.ToolboxConfigurationProvider;
 import info.magnolia.module.wcm.toolbox.ToolboxView;
-import info.magnolia.module.wcm.toolbox.action.AddParagraphActionDefinition;
+import info.magnolia.module.wcm.toolbox.action.AddComponentActionDefinition;
 import info.magnolia.module.wcm.toolbox.action.ToolboxAction;
 import info.magnolia.ui.admincentral.MainActivityMapper;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
@@ -245,7 +245,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         selection.setAvailableComponents(availableComponents);
         selection.setDialog(dialog);
 
-        executeAction(new AddParagraphActionDefinition(), selection);
+        executeAction(new AddComponentActionDefinition(), selection);
     }
 
     public void selectionChanged(SelectionType type, String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {

@@ -35,9 +35,9 @@ package info.magnolia.module.wcm.toolbox.action;
 
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.module.wcm.editor.ComponentSelectionDialog;
 import info.magnolia.module.wcm.editor.ContentSelection;
 import info.magnolia.module.wcm.editor.PageChangedEvent;
-import info.magnolia.module.wcm.editor.ParagraphSelectionDialog;
 import info.magnolia.templating.template.TemplateDefinition;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.admincentral.dialog.DialogSaveCallback;
@@ -53,21 +53,21 @@ import javax.jcr.RepositoryException;
 import com.vaadin.Application;
 
 /**
- * Abstract base class for actions that open the paragraph selection dialog followed by the dialog for the selected
- * paragraph and finally add the paragraph to the page. Subclasses can do last minute changes to the node before it is
+ * Abstract base class for actions that open the component selection dialog followed by the dialog for the selected
+ * component and finally add the component to the page. Subclasses can do last minute changes to the node before it is
  * saved.
  *
  * @param <D> the definition type
  * @version $Id$
  */
-public class AbstractAddParagraphAction<D extends ActionDefinition> extends ActionBase<D> {
+public class AbstractAddComponentAction<D extends ActionDefinition> extends ActionBase<D> {
 
     private Application application;
     private DialogPresenterFactory dialogPresenterFactory;
     private ContentSelection selection;
     private EventBus eventBus;
 
-    public AbstractAddParagraphAction(D definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
+    public AbstractAddComponentAction(D definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
         super(definition);
         this.application = application;
         this.dialogPresenterFactory = dialogPresenterFactory;
@@ -78,7 +78,7 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
     @Override
     public void execute() throws ActionExecutionException {
 
-        ParagraphSelectionDialog paragraphSelectionDialog = new ParagraphSelectionDialog(selection.getAvailableComponents()) {
+        ComponentSelectionDialog componentSelectionDialog = new ComponentSelectionDialog(selection.getAvailableComponents()) {
             @Override
             protected void onClosed(final TemplateDefinition definition) {
                 String dialogName = definition.getDialog();
@@ -106,15 +106,15 @@ public class AbstractAddParagraphAction<D extends ActionDefinition> extends Acti
             }
         };
 
-        application.getMainWindow().addWindow(paragraphSelectionDialog);
+        application.getMainWindow().addWindow(componentSelectionDialog);
     }
 
     public void setSelection(ContentSelection selection) {
         this.selection = selection;
     }
 
-    protected void onPreSave(Node node, TemplateDefinition paragraph) throws RepositoryException {
+    protected void onPreSave(Node node, TemplateDefinition templateDefinition) throws RepositoryException {
         MetaData metaData = MetaDataUtil.getMetaData(node);
-        metaData.setTemplate(paragraph.getId());
+        metaData.setTemplate(templateDefinition.getId());
     }
 }

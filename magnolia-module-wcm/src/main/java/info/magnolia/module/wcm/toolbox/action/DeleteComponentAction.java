@@ -33,37 +33,55 @@
  */
 package info.magnolia.module.wcm.toolbox.action;
 
-import info.magnolia.cms.util.PathUtil;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.module.wcm.PageEditorHacks;
-import info.magnolia.module.wcm.editor.ContentSelection;
-import info.magnolia.templating.template.TemplateDefinition;
-import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
-import info.magnolia.ui.framework.event.EventBus;
-
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
-import com.vaadin.Application;
+import org.apache.commons.lang.StringUtils;
+
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.wcm.editor.ContentSelection;
+import info.magnolia.module.wcm.editor.PageChangedEvent;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.model.action.ActionBase;
+import info.magnolia.ui.model.action.ActionExecutionException;
 
 /**
- * Opens a dialog for adding a paragraph before another paragraph.
+ * Deletes a component.
  *
  * @version $Id$
  */
-public class AddParagraphBeforeAction extends AbstractAddParagraphAction<AddParagraphBeforeActionDefinition> {
+public class DeleteComponentAction extends ActionBase<DeleteComponentActionDefinition> {
 
     private ContentSelection selection;
+    private EventBus eventBus;
 
-    public AddParagraphBeforeAction(AddParagraphBeforeActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
-        super(definition, application, dialogPresenterFactory, selection, eventBus);
+    public DeleteComponentAction(DeleteComponentActionDefinition definition, ContentSelection selection, EventBus eventBus) {
+        super(definition);
         this.selection = selection;
-        super.setSelection(PageEditorHacks.convertFromPointingAtComponentToListArea(selection));
+        this.eventBus = eventBus;
     }
 
     @Override
-    protected void onPreSave(Node node, TemplateDefinition paragraph) throws RepositoryException {
-        NodeUtil.orderBefore(node, PathUtil.getFileName(selection.getPath()));
-        super.onPreSave(node, paragraph);
+    public void execute() throws ActionExecutionException {
+        try {
+
+            Session session = MgnlContext.getJCRSession(selection.getWorkspace());
+            Node node = session.getNode(selection.getPath());
+            if (StringUtils.isNotEmpty(selection.getNodeName())) {
+                if (StringUtils.isNotEmpty(selection.getCollectionName())) {
+                    node = node.getNode(selection.getCollectionName());
+                }
+                node = node.getNode(selection.getNodeName());
+            }
+
+            node.remove();
+            node.getSession().save();
+
+            eventBus.fireEvent(new PageChangedEvent());
+
+        } catch (RepositoryException e) {
+            throw new ActionExecutionException(e);
+        }
     }
 }

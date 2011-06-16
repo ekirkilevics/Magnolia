@@ -54,11 +54,11 @@ import com.vaadin.ui.Window;
  *
  * @version $Id$
  */
-public class ParagraphSelectionDialog extends Window {
+public class ComponentSelectionDialog extends Window {
 
     private OptionGroup optionGroup;
 
-    public ParagraphSelectionDialog(String components) {
+    public ComponentSelectionDialog(String components) {
 
         // TODO use IoC
         final TemplateDefinitionRegistry definitionRegistry = Components.getComponent(TemplateDefinitionRegistry.class);

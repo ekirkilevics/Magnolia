@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,31 +33,13 @@
  */
 package info.magnolia.module.wcm.toolbox.action;
 
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.module.wcm.editor.ContentSelection;
-import info.magnolia.templating.template.TemplateDefinition;
-import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
-import info.magnolia.ui.framework.event.EventBus;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.Application;
+import info.magnolia.ui.model.action.ActionDefinition;
 
 /**
- * Opens a dialog for adding a paragraph at the top of an area.
+ * Action definition for {@link MoveComponentUpAction}.
  *
  * @version $Id$
  */
-public class AddParagraphAtTopAction extends AbstractAddParagraphAction<AddParagraphAtTopActionDefinition> {
+public class MoveComponentUpActionDefinition implements ActionDefinition {
 
-    public AddParagraphAtTopAction(AddParagraphAtTopActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
-        super(definition, application, dialogPresenterFactory, selection, eventBus);
-    }
-
-    @Override
-    protected void onPreSave(Node node, TemplateDefinition paragraph) throws RepositoryException {
-        NodeUtil.orderFirst(node);
-        super.onPreSave(node, paragraph);
-    }
 }

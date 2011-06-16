@@ -39,13 +39,13 @@ import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.framework.event.EventBus;
 
 /**
- * Opens a dialog for adding a paragraph at the bottom of an area.
+ * Opens a dialog for adding a component.
  *
  * @version $Id$
  */
-public class AddParagraphAtBottomAction extends AbstractAddParagraphAction<AddParagraphAtBottomActionDefinition> {
+public class AddComponentAction extends AbstractAddComponentAction<AddComponentActionDefinition> {
 
-    public AddParagraphAtBottomAction(AddParagraphAtBottomActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
+    public AddComponentAction(AddComponentActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
         super(definition, application, dialogPresenterFactory, selection, eventBus);
     }
 }

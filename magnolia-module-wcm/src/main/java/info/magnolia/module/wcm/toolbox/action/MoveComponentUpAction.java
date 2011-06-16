@@ -33,37 +33,48 @@
  */
 package info.magnolia.module.wcm.toolbox.action;
 
-import info.magnolia.cms.util.PathUtil;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.module.wcm.PageEditorHacks;
-import info.magnolia.module.wcm.editor.ContentSelection;
-import info.magnolia.templating.template.TemplateDefinition;
-import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
-import info.magnolia.ui.framework.event.EventBus;
-
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.Application;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.module.wcm.editor.ContentSelection;
+import info.magnolia.module.wcm.editor.PageChangedEvent;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.model.action.ActionBase;
+import info.magnolia.ui.model.action.ActionExecutionException;
 
 /**
- * Opens a dialog for adding a paragraph after another paragraph.
+ * Moves a component up one step within an area.
  *
  * @version $Id$
  */
-public class AddParagraphAfterAction extends AbstractAddParagraphAction<AddParagraphAfterActionDefinition> {
+public class MoveComponentUpAction extends ActionBase<MoveComponentUpActionDefinition> implements ToolboxAction {
 
-    private ContentSelection selection;
+    private Node node;
+    private EventBus eventBus;
 
-    public AddParagraphAfterAction(AddParagraphAfterActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
-        super(definition, application, dialogPresenterFactory, selection, eventBus);
-        this.selection = selection;
-        super.setSelection(PageEditorHacks.convertFromPointingAtComponentToListArea(selection));
+    public MoveComponentUpAction(MoveComponentUpActionDefinition definition, Node node, EventBus eventBus) {
+        super(definition);
+        this.node = node;
+        this.eventBus = eventBus;
     }
 
     @Override
-    protected void onPreSave(Node node, TemplateDefinition paragraph) throws RepositoryException {
-        NodeUtil.orderAfter(node, PathUtil.getFileName(selection.getPath()));
-        super.onPreSave(node, paragraph);
+    public boolean isAvailable(ContentSelection selection, Node node) throws RepositoryException {
+
+        // TODO: this doesn't work because the MetaData node is first...
+
+        return !NodeUtil.isFirstSibling(node);
+    }
+
+    @Override
+    public void execute() throws ActionExecutionException {
+        try {
+            NodeUtil.orderNodeUp(node);
+            node.getSession().save();
+            eventBus.fireEvent(new PageChangedEvent());
+        } catch (RepositoryException e) {
+            throw new ActionExecutionException(e);
+        }
     }
 }

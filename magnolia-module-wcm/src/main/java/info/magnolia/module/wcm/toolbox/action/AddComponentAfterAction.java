@@ -33,18 +33,37 @@
  */
 package info.magnolia.module.wcm.toolbox.action;
 
+import info.magnolia.cms.util.PathUtil;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.module.wcm.PageEditorHacks;
 import info.magnolia.module.wcm.editor.ContentSelection;
+import info.magnolia.templating.template.TemplateDefinition;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.framework.event.EventBus;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.Application;
+
 /**
- * Opens a dialog for editing a paragraph.
+ * Opens a dialog for adding a component after another component.
  *
  * @version $Id$
  */
-public class EditParagraphAction extends AbstractEditAction<EditParagraphActionDefinition> {
+public class AddComponentAfterAction extends AbstractAddComponentAction<AddComponentAfterActionDefinition> {
 
-    public EditParagraphAction(EditParagraphActionDefinition definition, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
-        super(definition, dialogPresenterFactory, selection, eventBus);
+    private ContentSelection selection;
+
+    public AddComponentAfterAction(AddComponentAfterActionDefinition definition, Application application, DialogPresenterFactory dialogPresenterFactory, ContentSelection selection, EventBus eventBus) {
+        super(definition, application, dialogPresenterFactory, selection, eventBus);
+        this.selection = selection;
+        super.setSelection(PageEditorHacks.convertFromPointingAtComponentToListArea(selection));
+    }
+
+    @Override
+    protected void onPreSave(Node node, TemplateDefinition templateDefinition) throws RepositoryException {
+        NodeUtil.orderAfter(node, PathUtil.getFileName(selection.getPath()));
+        super.onPreSave(node, templateDefinition);
     }
 }

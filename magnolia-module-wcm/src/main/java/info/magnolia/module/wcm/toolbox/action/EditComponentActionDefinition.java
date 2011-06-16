@@ -36,10 +36,10 @@ package info.magnolia.module.wcm.toolbox.action;
 import info.magnolia.ui.model.action.ActionDefinition;
 
 /**
- * Action definition for {@link AddParagraphAfterAction}.
+ * Action definition for {@link EditComponentAction}.
  *
  * @version $Id$
  */
-public class AddParagraphAfterActionDefinition implements ActionDefinition {
+public class EditComponentActionDefinition implements ActionDefinition {
 
 }

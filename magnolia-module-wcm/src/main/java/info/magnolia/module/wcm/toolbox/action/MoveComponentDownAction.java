@@ -44,16 +44,16 @@ import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
 
 /**
- * Moves a paragraph down one step within an area.
+ * Moves a component down one step within an area.
  *
  * @version $Id$
  */
-public class MoveParagraphDownAction extends ActionBase<MoveParagraphDownActionDefinition> implements ToolboxAction {
+public class MoveComponentDownAction extends ActionBase<MoveComponentDownActionDefinition> implements ToolboxAction {
 
     private Node node;
     private EventBus eventBus;
 
-    public MoveParagraphDownAction(MoveParagraphDownActionDefinition definition, Node node, EventBus eventBus) {
+    public MoveComponentDownAction(MoveComponentDownActionDefinition definition, Node node, EventBus eventBus) {
         super(definition);
         this.node = node;
         this.eventBus = eventBus;
