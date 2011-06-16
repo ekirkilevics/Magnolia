@@ -97,7 +97,7 @@ public class MockComponentProvider extends PropertiesComponentProvider {
     /**
      * Used only in tests.
      * <strong>Warning:</strong> this does NOT clear the *mappings*. With the current/default implementation,
-     * this means tests also have to call SystemProperty.clearr()
+     * this means tests also have to call SystemProperty.clear()
      * @see {@link info.magnolia.test.ComponentsTestUtil}
      */
     @Override
