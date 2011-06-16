@@ -124,7 +124,7 @@ public class PropertiesImportExport {
                     }
                     continue;
                 }
-                throw new IllegalArgumentException("Key for a path (no '.') must not contain a value ('='): " + orgKey);
+                throw new IllegalArgumentException("Key for a path (everything without a '.' is considered to be a path) must not contain a value ('='): " + orgKey);
             }
             cleaned.put(path + "." + propertyName, properties.get(orgKey));
         }
