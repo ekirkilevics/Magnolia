@@ -56,8 +56,7 @@ public class SessionTestUtilTest {
         MockSession session = SessionTestUtil.createSession(content);
         assertEquals("one", session.getNode("/parent1/sub1").getProperty("prop1").getString());
 
-        content = "/parent1/sub1.@uuid=1\n" +
-                "/parent2/sub2.@uuid=2";
+        content = "/parent1/sub1.@uuid=1\n" + "/parent2/sub2.@uuid=2";
 
         session = SessionTestUtil.createSession(content);
         assertEquals("1", session.getNode("/parent1/sub1").getIdentifier());
@@ -79,5 +78,11 @@ public class SessionTestUtilTest {
         final String pathToNode = "/parent1/sub1";
         final MockSession session = SessionTestUtil.createSession(pathToNode + ".@uuid=100");
         assertEquals("100", session.getNode(pathToNode).getIdentifier());
+    }
+
+    @Test
+    public void testMockSessionSetsProperWorkspaceName() throws Exception {
+        final MockSession session = SessionTestUtil.createSession("testSession", "/foo/bar/baz/01.text=dummy");
+        assertEquals("testSession", session.getWorkspace().getName());
     }
 }

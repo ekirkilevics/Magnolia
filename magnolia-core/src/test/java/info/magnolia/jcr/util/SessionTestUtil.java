@@ -61,9 +61,13 @@ public class SessionTestUtil {
         return createSession(null, propertiesStream);
     }
 
-    public static MockSession createSession(String propertiesStr) throws IOException, RepositoryException {
+    public static MockSession createSession(String repository, String propertiesStr) throws IOException, RepositoryException {
         final ByteArrayInputStream in = new ByteArrayInputStream(propertiesStr.getBytes());
-        return createSession(null, in);
+        return createSession(repository, in);
+    }
+
+    public static MockSession createSession(String propertiesStr) throws IOException, RepositoryException {
+        return createSession(null, propertiesStr);
     }
 
     public static MockSession createSession(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
