@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,16 +33,19 @@
  */
 package info.magnolia.ui.model.dialog.registry;
 
-import javax.jcr.RepositoryException;
-
-import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
 /**
- * Provides a dialog definition.
+ * Thrown in case a dialog definition can't be found or if the registration fails.
  *
  * @version $Id$
  */
-public interface DialogProvider {
+public class DialogDefinitionRegistrationException extends Exception {
 
-    DialogDefinition getDialogDefinition() throws RepositoryException;
+    public DialogDefinitionRegistrationException(String message) {
+        super(message);
+    }
+
+    public DialogDefinitionRegistrationException(String message, Throwable throwable) {
+        super(message, throwable);
+    }
 }

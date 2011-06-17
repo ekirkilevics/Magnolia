@@ -37,6 +37,7 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
+
 /**
  * Maintains a registry of dialog providers registered by id.
  *
@@ -44,7 +45,7 @@ import info.magnolia.ui.model.dialog.definition.DialogDefinition;
  */
 public interface DialogDefinitionRegistry {
 
-    void registerDialog(String id, DialogProvider provider);
+    void registerDialog(DialogDefinitionProvider provider) throws DialogDefinitionRegistrationException;
 
     void unregisterDialog(String id);
 

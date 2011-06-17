@@ -41,10 +41,19 @@ import java.util.List;
  */
 public class DialogDefinition {
 
+    private String id;
     private String name;
     private String label;
     private String i18nBasename;
     private List<TabDefinition> tabs = new ArrayList<TabDefinition>();
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

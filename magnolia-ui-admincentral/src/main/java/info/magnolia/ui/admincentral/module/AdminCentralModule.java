@@ -39,7 +39,7 @@ import java.util.Map;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
-import info.magnolia.ui.model.dialog.registry.ConfiguredDialogManager;
+import info.magnolia.ui.model.dialog.registry.ConfiguredDialogDefinitionManager;
 import info.magnolia.ui.model.workbench.registry.ConfiguredWorkbenchManager;
 
 /**
@@ -51,12 +51,12 @@ public class AdminCentralModule implements ModuleLifecycle {
 
     // TODO things configured on the module is always part of the _global_ ComponentProvider, this means that they cannot refer to components in the UI componentProvider, hence, factories and builders are not good candidates for being configured on the module
 
-    private ConfiguredDialogManager configuredDialogManager;
+    private ConfiguredDialogDefinitionManager configuredDialogManager;
     private ConfiguredWorkbenchManager configuredWorkbenchManager;
 
     private Map<String, AdminCentralConfiguration> configurations = new HashMap<String, AdminCentralConfiguration>();
 
-    public AdminCentralModule(ConfiguredDialogManager configuredDialogManager, ConfiguredWorkbenchManager configuredWorkbenchManager) {
+    public AdminCentralModule(ConfiguredDialogDefinitionManager configuredDialogManager, ConfiguredWorkbenchManager configuredWorkbenchManager) {
         this.configuredDialogManager = configuredDialogManager;
         this.configuredWorkbenchManager = configuredWorkbenchManager;
     }

@@ -33,37 +33,19 @@
  */
 package info.magnolia.ui.model.dialog.registry;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.cms.core.DefaultContent;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.jcr.wrapper.LazyNodeWrapper;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
+
 /**
- * DialogProvider that instantiates a dialog from a configuration node.
+ * Provides a dialog definition.
  *
  * @version $Id$
  */
-public class ConfiguredDialogProvider implements DialogProvider {
+public interface DialogDefinitionProvider {
 
-    private Node configNode;
+    String getId();
 
-    public ConfiguredDialogProvider(Node configNode) throws RepositoryException {
-        // session that opened provided content might not be alive by the time we need to use this
-        this.configNode = new LazyNodeWrapper(configNode);
-    }
-
-    @Override
-    public DialogDefinition getDialogDefinition() throws RepositoryException {
-        try {
-            DefaultContent content = new DefaultContent(configNode, null);
-            DialogDefinition definition = (DialogDefinition) Content2BeanUtil.toBean(content, true, DialogDefinition.class);
-            return definition;
-        } catch (Content2BeanException e) {
-            throw new RepositoryException(e);
-        }
-    }
+    DialogDefinition getDialogDefinition() throws RepositoryException;
 }

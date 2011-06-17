@@ -33,52 +33,38 @@
  */
 package info.magnolia.ui.model.dialog.registry;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
 
 /**
- * Maintains a registry of dialog providers registered by id.
+ * DialogProvider that instantiates a dialog from a configuration node.
  *
  * @version $Id$
  */
-public class DialogDefinitionRegistryImpl implements DialogDefinitionRegistry {
+public class ConfiguredDialogDefinitionProvider implements DialogDefinitionProvider {
 
-    private final Map<String, DialogDefinitionProvider> providers = new HashMap<String, DialogDefinitionProvider>();
+    private String id;
+    private DialogDefinition dialogDefinition;
 
-    @Override
-    public void registerDialog(DialogDefinitionProvider provider) throws DialogDefinitionRegistrationException {
-        String id = provider.getId();
-        synchronized (providers) {
-            if (providers.containsKey(id)) {
-                throw new DialogDefinitionRegistrationException("Dialog already registered with id [" + id + "]");
-            }
-            providers.put(id, provider);
-        }
+    public ConfiguredDialogDefinitionProvider(String id, Node configNode) throws RepositoryException, Content2BeanException {
+        this.id = id;
+        this.dialogDefinition = (DialogDefinition) Content2BeanUtil.toBean(ContentUtil.asContent(configNode), true, DialogDefinition.class);
+        this.dialogDefinition.setId(id);
     }
 
     @Override
-    public void unregisterDialog(String id) {
-        synchronized (providers) {
-            providers.remove(id);
-        }
+    public String getId() {
+        return id;
     }
 
     @Override
-    public DialogDefinition getDialogDefinition(String id) throws RepositoryException {
-
-        // TODO should throw DialogDefinitionRegistrationException
-
-        DialogDefinitionProvider dialogProvider;
-        synchronized (providers) {
-            dialogProvider = providers.get(id);
-        }
-        if (dialogProvider == null) {
-            return null;
-        }
-        return dialogProvider.getDialogDefinition();
+    public DialogDefinition getDialogDefinition() throws RepositoryException {
+        return dialogDefinition;
     }
 }

@@ -22,8 +22,8 @@
       <value>info.magnolia.ui.model.dialog.registry.DialogDefinitionRegistryImpl</value>
     </property>
     <property>
-      <name>info.magnolia.ui.model.dialog.registry.ConfiguredDialogManager</name>
-      <value>info.magnolia.ui.model.dialog.registry.ConfiguredDialogManager</value>
+      <name>info.magnolia.ui.model.dialog.registry.ConfiguredDialogDefinitionManager</name>
+      <value>info.magnolia.ui.model.dialog.registry.ConfiguredDialogDefinitionManager</value>
     </property>
     <property>
       <name>info.magnolia.ui.model.tree.registry.ConfiguredTreeManager</name>

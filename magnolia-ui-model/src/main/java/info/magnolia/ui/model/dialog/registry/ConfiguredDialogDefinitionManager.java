@@ -44,24 +44,26 @@ import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.ModuleConfigurationObservingManager;
+import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.jcr.util.NodeTypeFilter;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.NodeVisitor;
 import info.magnolia.module.ModuleRegistry;
+
 
 /**
  * ObservedManager for dialogs configured in repository.
  *
  * @version $Id$
  */
-public class ConfiguredDialogManager extends ModuleConfigurationObservingManager {
+public class ConfiguredDialogDefinitionManager extends ModuleConfigurationObservingManager {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Set<String> registeredDialogs = new HashSet<String>();
     private final DialogDefinitionRegistry dialogDefinitionRegistry;
 
-    public ConfiguredDialogManager(ModuleRegistry moduleRegistry, DialogDefinitionRegistry dialogDefinitionRegistry) {
+    public ConfiguredDialogDefinitionManager(ModuleRegistry moduleRegistry, DialogDefinitionRegistry dialogDefinitionRegistry) {
         super("dialogs", moduleRegistry);
         this.dialogDefinitionRegistry = dialogDefinitionRegistry;
     }
@@ -87,12 +89,19 @@ public class ConfiguredDialogManager extends ModuleConfigurationObservingManager
     private void registerDialog(Node dialogNode) throws RepositoryException {
         final String id = createId(dialogNode);
         try {
-            ConfiguredDialogProvider dialogProvider = new ConfiguredDialogProvider(dialogNode);
-            synchronized (registeredDialogs) {
-                dialogDefinitionRegistry.registerDialog(id, dialogProvider);
-                this.registeredDialogs.add(id);
+            ConfiguredDialogDefinitionProvider dialogProvider = null;
+            try {
+                dialogProvider = new ConfiguredDialogDefinitionProvider(id, dialogNode);
+            } catch (Content2BeanException e) {
+                log.error("Unable to create provider for dialog [" + id + "]", e);
             }
-        } catch (IllegalStateException e) {
+            if (dialogProvider != null) {
+                synchronized (registeredDialogs) {
+                    dialogDefinitionRegistry.registerDialog(dialogProvider);
+                    this.registeredDialogs.add(id);
+                }
+            }
+        } catch (DialogDefinitionRegistrationException e) {
             log.error("Unable to register dialog [" + id + "]", e);
         }
     }
