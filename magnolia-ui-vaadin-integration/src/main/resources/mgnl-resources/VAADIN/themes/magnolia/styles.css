@@ -146,6 +146,10 @@ input.v-textfield,textarea.v-textarea,.v-filterselect {
   cursor: pointer;
 }
 
+.sidebar-menu .v-label-spacer:hover {
+  cursor: auto;
+}
+
 .sidebar-menu .v-label img {
   vertical-align: middle;
 }
