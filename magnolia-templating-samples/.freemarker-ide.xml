@@ -1,0 +1,13 @@
+<config>
+  <context-values>
+    <resource path="">
+      <value key="cms" object-class="info.magnolia.module.templatingcomponents.freemarker.Directives"/>
+      <value key="cmsfn" object-class="info.magnolia.module.templatingcomponents.functions.TemplatingFunctions"/>
+      <value key="mgnl" object-class="info.magnolia.module.templating.MagnoliaTemplatingUtilities"/>
+      <value key="ctx" object-class="info.magnolia.context.MgnlContext"/>
+      <value key="state" object-class="info.magnolia.cms.core.AggregationState"/>
+    </resource>
+  </context-values>
+  <macro-library>
+  </macro-library>
+</config>
