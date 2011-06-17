@@ -158,6 +158,10 @@ input.v-textfield,textarea.v-textarea,.v-filterselect {
   background: none;
 }
 
+.sidebar-menu .v-caption {
+  float: right;
+}
+
 .m-workbench-header {
 
 }

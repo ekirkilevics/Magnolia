@@ -45,6 +45,7 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -111,7 +112,16 @@ public class NavigationWorkArea implements NavigationView, IsVaadinComponent {
             + "'>"
             + getLabel(item), Label.CONTENT_XHTML);
         label.setDescription(getDescription(item));
+
+        // FIXME: Show real notifications instead of random ones.
+        // Both setCaption and setIcon can be used.
+        int notif = new Random().nextInt(10);
+        if (notif > 0) {
+            label.setCaption(notif + " new");
+        }
+
         Tab tab = melodion.addTab(label);
+
         String workbenchName = null;
         if (item.getActionDefinition() instanceof WorkbenchActionDefinition) {
             workbenchName = ((WorkbenchActionDefinition) item.getActionDefinition()).getWorkbenchName();
@@ -140,8 +150,6 @@ public class NavigationWorkArea implements NavigationView, IsVaadinComponent {
                 }
             }
         }
-
-        // TODO: add notification badges
     }
 
     // TODO: Would it make sense to move the i18n logic to a more generic place?
@@ -215,7 +223,8 @@ public class NavigationWorkArea implements NavigationView, IsVaadinComponent {
             if (icon != null) {
                 setIcon(icon);
             }
-            setCaption(getLabel(item));
+            setCaption(NavigationWorkArea.getLabel(item));
+            setDescription(NavigationWorkArea.getDescription(item));
 
             this.addListener(new ClickListener() {
 
