@@ -54,7 +54,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -140,9 +139,8 @@ public class AreaComponent extends AbstractContentComponent {
                 if (resolveType().equals(TYPE_LIST)) {
                     renderedNode = content.getNode(resolveName());
                     List<ContentMap> components = new ArrayList<ContentMap>();
-                    NodeIterator iter = NodeUtil.getNodeIterator(renderedNode, NT_CONTENTNODE);
-                    while (iter.hasNext()) {
-                        components.add(new ContentMap(iter.nextNode()));
+                    for (Node node : NodeUtil.getNodes(renderedNode, NT_CONTENTNODE)) {
+                        components.add(new ContentMap(node));
                     }
                     contextObjects.put(COMPONENTS, components);
 

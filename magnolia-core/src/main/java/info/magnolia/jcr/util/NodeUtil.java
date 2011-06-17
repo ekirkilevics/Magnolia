@@ -40,7 +40,6 @@ import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -52,6 +51,7 @@ import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
+import org.apache.jackrabbit.commons.iterator.NodeIterable;
 import org.apache.jackrabbit.commons.predicate.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -407,12 +407,13 @@ public class NodeUtil {
         return getChildren(node, new NodeTypeFilter(nodeType));
     }
 
-    public static Collection<Node> getChildren(Node node) throws RepositoryException {
+    public static List<Node> getChildren(Node node) throws RepositoryException {
         return getChildren(node, EXCLUDE_META_DATA_FILTER);
     }
 
-    public static NodeIterator getNodeIterator(Node parentNode, final String nodeType) throws RepositoryException {
-        return new FilteringNodeIterator(parentNode.getNodes(), new Predicate() {
+    // TODO dlipp - rename to getNodes (here as well)
+    public static Iterable<Node> getNodes(Node parentNode, final String nodeType) throws RepositoryException {
+        NodeIterator iterator = new FilteringNodeIterator(parentNode.getNodes(), new Predicate() {
             @Override
             public boolean evaluate(Object node) {
                 try {
@@ -422,5 +423,6 @@ public class NodeUtil {
                 }
             }
         });
+        return new NodeIterable(iterator);
     }
 }

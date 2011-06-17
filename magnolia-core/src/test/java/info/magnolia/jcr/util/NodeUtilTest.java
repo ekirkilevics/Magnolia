@@ -34,6 +34,7 @@
 package info.magnolia.jcr.util;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -217,19 +218,32 @@ public class NodeUtilTest {
 
     @Test
     public void testGetChildren() throws RepositoryException {
-        Node parent = new MockNode("");
-        parent.addNode("alpha", MgnlNodeType.NT_CONTENT);
-        parent.addNode("beta", MgnlNodeType.NT_CONTENTNODE);
-        parent.addNode("gamma", MgnlNodeType.NT_CONTENTNODE);
-        parent.addNode("metaData", MgnlNodeType.NT_METADATA);
-        parent.addNode("jcr:system", MgnlNodeType.NT_FILE);
+        first.addNode("alpha", MgnlNodeType.NT_CONTENT);
+        first.addNode("beta", MgnlNodeType.NT_CONTENTNODE);
+        first.addNode("gamma", MgnlNodeType.NT_CONTENTNODE);
+        first.addNode("metaData", MgnlNodeType.NT_METADATA);
+        first.addNode("jcr:system", MgnlNodeType.NT_FILE);
 
-        assertEquals(1, NodeUtil.getChildren(parent, MgnlNodeType.NT_CONTENT).size());
-        assertEquals(2, NodeUtil.getChildren(parent, MgnlNodeType.NT_CONTENTNODE).size());
-        assertEquals(3, NodeUtil.getChildren(parent).size());
+        assertEquals(1, NodeUtil.getChildren(first, MgnlNodeType.NT_CONTENT).size());
+        assertEquals(2, NodeUtil.getChildren(first, MgnlNodeType.NT_CONTENTNODE).size());
+        assertEquals(3, NodeUtil.getChildren(first).size());
 
-        assertEquals(4, NodeUtil.getChildren(parent, NodeUtil.ALL_NODES_EXCEPT_JCR_FILTER).size());
-        assertEquals(5, NodeUtil.getChildren(parent, NodeUtil.ALL_NODES_FILTER).size());
-        assertEquals(4, NodeUtil.getChildren(parent, NodeUtil.MAGNOLIA_FILTER).size());
+        assertEquals(4, NodeUtil.getChildren(first, NodeUtil.ALL_NODES_EXCEPT_JCR_FILTER).size());
+        assertEquals(5, NodeUtil.getChildren(first, NodeUtil.ALL_NODES_FILTER).size());
+        assertEquals(4, NodeUtil.getChildren(first, NodeUtil.MAGNOLIA_FILTER).size());
     }
+
+    @Test
+    public void testGetNodes() throws RepositoryException {
+        root.addNode("alpha", MgnlNodeType.NT_CONTENT);
+        root.addNode("beta", MgnlNodeType.NT_FOLDER);
+        root.addNode("gamma", MgnlNodeType.NT_CONTENT);
+
+        Iterable<Node> iterable = NodeUtil.getNodes(root, MgnlNodeType.NT_CONTENT);
+        Iterator<Node> iterator = iterable.iterator();
+        assertEquals("alpha",iterator.next().getName());
+        assertEquals("gamma", iterator.next().getName());
+        assertTrue(!iterator.hasNext());
+    }
+
 }
