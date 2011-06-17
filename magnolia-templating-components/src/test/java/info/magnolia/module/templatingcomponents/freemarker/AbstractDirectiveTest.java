@@ -35,10 +35,13 @@ package info.magnolia.module.templatingcomponents.freemarker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
+import info.magnolia.module.templatingcomponents.components.AbstractContentComponent;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.junit.Test;
@@ -83,6 +86,14 @@ public class AbstractDirectiveTest {
         } catch (TemplateModelException e) {
             assertEquals("This directive does not support a body", e.getMessage());
         }
+    }
+
+    @Test
+    public void testInitContentComponent() throws TemplateModelException {
+        final AbstractDirective dir = new TestAbstractDirective();
+        AbstractContentComponent component = mock(AbstractContentComponent.class);
+        Map<String, TemplateModel> params = new LinkedHashMap<String, TemplateModel>();
+        dir.initContentComponent(params, component);
     }
 
     private static class TestAbstractDirective extends AbstractDirective {

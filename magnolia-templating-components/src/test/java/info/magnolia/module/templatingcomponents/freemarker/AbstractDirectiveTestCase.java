@@ -50,18 +50,15 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.FreemarkerConfig;
 import info.magnolia.freemarker.FreemarkerHelper;
+import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.pico.ModuleAdapterFactory;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
-import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.rendering.RenderingContext;
 import info.magnolia.templating.rendering.RenderingEngine;
-import info.magnolia.templating.template.RenderableDefinition;
 import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.templating.template.registry.TemplateDefinitionProvider;
 import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -69,7 +66,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.jcr.Node;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -87,7 +83,7 @@ import org.picocontainer.PicoBuilder;
 public abstract class AbstractDirectiveTestCase {
 
     private WebContext ctx;
-    protected MockHierarchyManager hm;
+    protected MockSession hm;
     private HttpServletRequest req;
     private HttpServletResponse res;
     protected StringTemplateLoader tplLoader;
@@ -105,10 +101,9 @@ public abstract class AbstractDirectiveTestCase {
         fmConfig.addTemplateLoader(tplLoader);
 
         fmHelper = new FreemarkerHelper(fmConfig);
-        // fmHelper.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
 
         hm =
-            MockUtil.createHierarchyManager(StringUtils.join(Arrays.asList(
+            SessionTestUtil.createSession("testWorkspace", StringUtils.join(Arrays.asList(
                     "/foo/bar.@type=mgnl:content",
                     "/foo/bar/MetaData.@type=mgnl:metadata",
                     "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
@@ -136,11 +131,8 @@ public abstract class AbstractDirectiveTestCase {
         final ServerConfiguration serverCfg = new ServerConfiguration();
         serverCfg.setAdmin(true);
 
-        // setUp Pico
-        final PicoBuilder picoBuilder =
-            new PicoBuilder().withConstructorInjection().withAnnotatedFieldInjection().withCaching()
-            .withBehaviors(new ModuleAdapterFactory());
-        final MutablePicoContainer container = picoBuilder.build();
+        // setUp minimal Pico
+        final MutablePicoContainer container = new PicoBuilder().withConstructorInjection().build();
 
         PicoComponentProvider provider = new PicoComponentProvider(container);
         Components.setProvider(provider);
@@ -186,7 +178,6 @@ public abstract class AbstractDirectiveTestCase {
         ctx = mock(WebContext.class);
         when(ctx.getAggregationState()).thenReturn(aggState);
         when(ctx.getLocale()).thenReturn(Locale.US);
-        when(ctx.getHierarchyManager(hm.getName())).thenReturn(hm);
         when(ctx.getResponse()).thenReturn(res);
         when(ctx.getRequest()).thenReturn(req);
 
@@ -195,30 +186,12 @@ public abstract class AbstractDirectiveTestCase {
         MgnlContext.setInstance(ctx);
 
         final RenderingContext renderingContext = mock(RenderingContext.class);
-        when(renderingContext.getCurrentContent()).thenReturn(hm.getContent("/foo/bar/paragraphs/1").getJCRNode());
+        when(renderingContext.getCurrentContent()).thenReturn(hm.getNode("/foo/bar/paragraphs/1"));
         when(renderingContext.getRenderableDefinition()).thenReturn(new ConfiguredTemplateDefinition());
 
-        provider.registerInstance(RenderingEngine.class, new RenderingEngine() {
-            @Override
-            public void render(Node content, Appendable out) throws RenderException {
-                // no impl required
-            }
-
-            @Override
-            public void render(Node content, Map<String, Object> contextObjects, Appendable out) throws RenderException {
-                // no impl required
-            }
-
-            @Override
-            public void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws RenderException {
-                // no impl required
-            }
-
-            @Override
-            public RenderingContext getRenderingContext() {
-                return renderingContext;
-            }
-        });
+        final RenderingEngine renderingEngine = mock(RenderingEngine.class);
+        when(renderingEngine.getRenderingContext()).thenReturn(renderingContext);
+        provider.registerInstance(RenderingEngine.class, renderingEngine);
     }
 
     /**
@@ -237,7 +210,7 @@ public abstract class AbstractDirectiveTestCase {
         tplLoader.putTemplate("test.ftl", templateSource);
 
         final Map<String, Object> map = contextWithDirectives();
-        map.put("content", hm.getContent("/foo/bar/"));
+        map.put("content", hm.getNode("/foo/bar/"));
 
         final StringWriter out = new StringWriter();
         fmHelper.render("test.ftl", map, out);
