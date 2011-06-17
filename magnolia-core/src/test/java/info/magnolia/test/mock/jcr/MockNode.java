@@ -33,7 +33,7 @@
  */
 package info.magnolia.test.mock.jcr;
 
-import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.test.mock.MockNodeType;
 
 import java.io.InputStream;
@@ -78,12 +78,12 @@ public class MockNode extends MockItem implements Node {
 
     private final List<String> mixins = new ArrayList<String>();
 
-    private String primaryType = ItemType.CONTENTNODE.getSystemName();
+    private String primaryType;
 
     private final LinkedHashMap<String, Property> properties = new LinkedHashMap<String, Property>();
 
     public MockNode(String name) {
-        super(name);
+        this(name, MgnlNodeType.NT_CONTENTNODE);
     }
 
     public MockNode(String name, String primaryType) {
