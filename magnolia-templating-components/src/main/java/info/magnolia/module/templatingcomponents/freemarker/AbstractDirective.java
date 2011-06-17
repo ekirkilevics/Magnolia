@@ -74,6 +74,11 @@ import javax.jcr.Node;
  */
 public abstract class AbstractDirective<C extends AuthoringUiComponent> implements TemplateDirectiveModel {
 
+    public static final String PATH_ATTRIBUTE = "path";
+    public static final String UUID_ATTRIBUTE = "uuid";
+    public static final String WORKSPACE_ATTRIBUTE = "workspace";
+    public static final String CONTENT_ATTRIBUTE = "content";
+
     @Override
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
         final C uiComp = createUIComponent();
@@ -255,10 +260,10 @@ public abstract class AbstractDirective<C extends AuthoringUiComponent> implemen
      * Init attributes common to all AbstractContentComponents.
      */
     protected void initContentComponent(Map<String, TemplateModel> params, AbstractContentComponent component) throws TemplateModelException {
-        Node target = node(params, "content", null);
-        String workspace = string(params, "workspace", null);
-        String nodeIdentifier = string(params, "uuid", null);
-        String path = string(params, "path", null);
+        Node target = node(params, CONTENT_ATTRIBUTE, null);
+        String workspace = string(params, WORKSPACE_ATTRIBUTE, null);
+        String nodeIdentifier = string(params, UUID_ATTRIBUTE, null);
+        String path = string(params, PATH_ATTRIBUTE, null);
 
         component.setContent(target);
         component.setWorkspace(workspace);
