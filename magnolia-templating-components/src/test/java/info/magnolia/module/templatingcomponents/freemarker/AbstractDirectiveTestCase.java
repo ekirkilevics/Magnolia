@@ -149,13 +149,16 @@ public abstract class AbstractDirectiveTestCase {
         final TemplateDefinitionProvider p2provider = mock(TemplateDefinitionProvider.class);
 
         when(p0provider.getTemplateDefinition()).thenReturn(testParagraph0);
+        when(p0provider.getId()).thenReturn(testParagraph0.getName());
         when(p1provider.getTemplateDefinition()).thenReturn(testParagraph1);
+        when(p1provider.getId()).thenReturn(testParagraph1.getName());
         when(p2provider.getTemplateDefinition()).thenReturn(testParagraph2);
+        when(p2provider.getId()).thenReturn(testParagraph2.getName());
 
         final TemplateDefinitionRegistry tdr = new TemplateDefinitionRegistry();
-        tdr.registerTemplateDefinition(testParagraph0.getName(), p0provider);
-        tdr.registerTemplateDefinition(testParagraph1.getName(), p1provider);
-        tdr.registerTemplateDefinition(testParagraph2.getName(), p2provider);
+        tdr.registerTemplateDefinition(p0provider);
+        tdr.registerTemplateDefinition(p1provider);
+        tdr.registerTemplateDefinition(p2provider);
 
         provider.registerInstance(TemplateDefinitionRegistry.class, tdr);
 

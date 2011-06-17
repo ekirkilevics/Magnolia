@@ -107,11 +107,13 @@ public abstract class AbstractComponentTestCase {
         final TemplateDefinitionProvider p1provider = mock(TemplateDefinitionProvider.class);
 
         when(p0provider.getTemplateDefinition()).thenReturn(p0);
+        when(p0provider.getId()).thenReturn(p0.getName());
         when(p1provider.getTemplateDefinition()).thenReturn(p1);
+        when(p1provider.getId()).thenReturn(p1.getName());
 
         final TemplateDefinitionRegistry pman = new TemplateDefinitionRegistry();
-        pman.registerTemplateDefinition(p0.getName(), p0provider);
-        pman.registerTemplateDefinition(p1.getName(), p1provider);
+        pman.registerTemplateDefinition(p0provider);
+        pman.registerTemplateDefinition(p1provider);
 
         ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, pman);
 
@@ -125,10 +127,12 @@ public abstract class AbstractComponentTestCase {
         final TemplateDefinitionProvider t1provider = mock(TemplateDefinitionProvider.class);
 
         when(t0provider.getTemplateDefinition()).thenReturn(t0);
+        when(t0provider.getId()).thenReturn(t0.getName());
         when(t1provider.getTemplateDefinition()).thenReturn(t1);
+        when(t1provider.getId()).thenReturn(t1.getName());
 
-        pman.registerTemplateDefinition(t0.getName(), t0provider);
-        pman.registerTemplateDefinition(t1.getName(), t1provider);
+        pman.registerTemplateDefinition(t0provider);
+        pman.registerTemplateDefinition(t1provider);
 
         session = SessionTestUtil.createSession(CONTENT);
     }
