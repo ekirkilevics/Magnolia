@@ -70,12 +70,20 @@ public class ConfiguredRendererManager extends ModuleConfigurationObservingManag
 
             final String id = rendererNode.getName();
 
-            synchronized (registeredIds) {
+            ConfiguredRendererProvider provider = null;
+            try {
+                provider = new ConfiguredRendererProvider(rendererNode);
+            } catch (Exception e) {
+                log.error("Unable to create provider for template [" + id + "]", e);
+            }
+
+            if (provider != null) {
                 try {
-                    ConfiguredRendererProvider provider = new ConfiguredRendererProvider(rendererNode);
-                    registry.registerRenderer(id, provider);
-                    this.registeredIds.add(id);
-                } catch (IllegalStateException e) {
+                    synchronized (registeredIds) {
+                        registry.registerRenderer(id, provider);
+                        this.registeredIds.add(id);
+                    }
+                } catch (RendererRegistrationException e) {
                     log.error("Unable to register renderer [" + id + "]", e);
                 }
             }

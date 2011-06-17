@@ -69,7 +69,6 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
 
     @Override
     protected void onRegister(Node node) {
-        // TODO use the jcr api
 
         try {
             NodeUtil.visit(node, new NodeVisitor() {
@@ -88,15 +87,24 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
     }
 
     protected void registerTemplateDefinition(Node templateDefinitionNode) throws RepositoryException {
+
         final String id = createId(templateDefinitionNode);
 
-        synchronized (registeredIds) {
+        ConfiguredTemplateDefinitionProvider provider = null;
+        try {
+            provider = new ConfiguredTemplateDefinitionProvider(id, templateDefinitionNode);
+        } catch (Exception e) {
+            log.error("Unable to create provider for template [" + id + "]", e);
+        }
+
+        if (provider != null) {
             try {
-                ConfiguredTemplateDefinitionProvider templateDefinitionProvider = new ConfiguredTemplateDefinitionProvider(templateDefinitionNode);
-                templateDefinitionRegistry.registerTemplateDefinition(id, templateDefinitionProvider);
-                this.registeredIds.add(id);
-            } catch (IllegalStateException e) {
-                log.error("Unable to register template definition [" + id + "]", e);
+                synchronized (registeredIds) {
+                    templateDefinitionRegistry.registerTemplateDefinition(provider);
+                    this.registeredIds.add(id);
+                }
+            } catch (TemplateDefinitionRegistrationException e) {
+                log.error("Unable to register template [" + id + "]", e);
             }
         }
     }

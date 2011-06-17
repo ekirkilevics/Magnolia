@@ -42,5 +42,7 @@ import info.magnolia.templating.template.TemplateDefinition;
  */
 public interface TemplateDefinitionProvider {
 
+    String getId();
+
     TemplateDefinition getTemplateDefinition() throws TemplateDefinitionRegistrationException;
 }

@@ -41,10 +41,8 @@ import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.jcr.wrapper.LazyNodeWrapper;
 import info.magnolia.templating.template.TemplateDefinition;
 
 /**
@@ -56,35 +54,22 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
 
     private static final Logger log = LoggerFactory.getLogger(ConfiguredTemplateDefinitionProvider.class);
 
-    private final Node configNode;
+    private String id;
+    private TemplateDefinition templateDefinition;
 
-    public ConfiguredTemplateDefinitionProvider(Node configNode) throws RepositoryException {
-        // session that opened provided content might not be alive by the time we need to use this
-        this.configNode = new LazyNodeWrapper(configNode);
+    public ConfiguredTemplateDefinitionProvider(String id, Node configNode) throws RepositoryException, Content2BeanException {
+        this.id = id;
+        Content content = new DefaultContent(configNode, null);
+        this.templateDefinition = (TemplateDefinition) Content2BeanUtil.toBean(content, true, TemplateDefinition.class);
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override
     public TemplateDefinition getTemplateDefinition() throws TemplateDefinitionRegistrationException {
-        // TODO make sure we are not building the object for every rendering
-        Object obj = null;
-        try {
-            Content content = new DefaultContent(configNode, null);
-            obj = Content2BeanUtil.toBean(content, true, TemplateDefinition.class);
-            return (TemplateDefinition) obj;
-        } catch (Content2BeanException e) {
-            throw new TemplateDefinitionRegistrationException(e);
-        } catch (ClassCastException e) {
-            log.warn("Failed to read configured template with " + e.getMessage(), e);
-            // not ideal, but don't want to introduce class dependency on compat modules
-            if (obj != null && obj.getClass().getSuperclass().getName().equals("info.magnolia.module.templating.Template")) {
-                log.warn("The template implements old interface and can be loaded in compatibility mode only.");
-            }
-            // callee knows how to deal with TDRE, but doesn't expect CCE
-            throw new TemplateDefinitionRegistrationException(e);
-        } catch (AccessDeniedException e) {
-            throw new TemplateDefinitionRegistrationException(e);
-        } catch (RepositoryException e) {
-            throw new TemplateDefinitionRegistrationException(e);
-        }
+        return templateDefinition;
     }
 }

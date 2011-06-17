@@ -58,16 +58,19 @@ import org.slf4j.LoggerFactory;
  */
 public class TemplateDefinitionRegistry {
 
+    // TODO should be an interface
+
     private static final Logger log = LoggerFactory.getLogger(TemplateDefinitionRegistry.class);
 
     private static final String DELETED_PAGE_TEMPLATE = "mgnlDeleted";
 
     private final Map<String, TemplateDefinitionProvider> providers = new HashMap<String, TemplateDefinitionProvider>();
 
-    public void registerTemplateDefinition(String id, TemplateDefinitionProvider provider) {
+    public void registerTemplateDefinition(TemplateDefinitionProvider provider) throws TemplateDefinitionRegistrationException {
+        String id = provider.getId();
         synchronized (providers) {
             if (providers.containsKey(id)) {
-                throw new IllegalStateException("Template definition already registered for the id [" + id + "]");
+                throw new TemplateDefinitionRegistrationException("Template definition already registered for the id [" + id + "]");
             }
             providers.put(id, provider);
         }

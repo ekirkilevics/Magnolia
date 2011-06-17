@@ -48,10 +48,10 @@ public class RendererRegistry {
 
     private final Map<String, RendererProvider> providers = new HashMap<String, RendererProvider>();
 
-    public void registerRenderer(String id, RendererProvider provider) {
+    public void registerRenderer(String id, RendererProvider provider) throws RendererRegistrationException {
         synchronized (providers) {
             if (providers.containsKey(id)) {
-                throw new IllegalStateException("Renderer already registered for the id [" + id + "]");
+                throw new RendererRegistrationException("Renderer already registered for the id [" + id + "]");
             }
             providers.put(id, provider);
         }
