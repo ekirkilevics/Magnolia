@@ -94,12 +94,12 @@ public class DialogFileUploadField extends AbstractDialogField implements NodeEd
     }
 
     public void initImageExtensions() {
-        this.getImageExtensions().add("jpg"); //$NON-NLS-1$
-        this.getImageExtensions().add("jpeg"); //$NON-NLS-1$
-        this.getImageExtensions().add("gif"); //$NON-NLS-1$
-        this.getImageExtensions().add("png"); //$NON-NLS-1$
-        this.getImageExtensions().add("bpm"); //$NON-NLS-1$
-        this.getImageExtensions().add("swf"); //$NON-NLS-1$
+        this.getImageExtensions().add("jpg");
+        this.getImageExtensions().add("jpeg");
+        this.getImageExtensions().add("gif");
+        this.getImageExtensions().add("png");
+        this.getImageExtensions().add("bmp");
+        this.getImageExtensions().add("swf");
     }
 
     @Override

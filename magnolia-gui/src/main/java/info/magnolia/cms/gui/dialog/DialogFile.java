@@ -85,7 +85,7 @@ public class DialogFile extends DialogBox {
         this.getImageExtensions().add("jpeg"); //$NON-NLS-1$
         this.getImageExtensions().add("gif"); //$NON-NLS-1$
         this.getImageExtensions().add("png"); //$NON-NLS-1$
-        this.getImageExtensions().add("bpm"); //$NON-NLS-1$
+        this.getImageExtensions().add("bmp"); //$NON-NLS-1$
         this.getImageExtensions().add("swf"); //$NON-NLS-1$
     }
 
