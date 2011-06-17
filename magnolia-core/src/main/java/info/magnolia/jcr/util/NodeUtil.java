@@ -383,24 +383,12 @@ public class NodeUtil {
     public static void visit(Node node, NodeVisitor visitor, NodeFilter filter) throws RepositoryException {
         // TODO should it really visit the start node even if it doesn't match the filter?
         visitor.visit(node);
-        for (Node child : getChildren(node, filter)) {
+        for (Node child : getNodes(node, filter)) {
             visit(child, visitor, filter);
         }
         if (visitor instanceof PostNodeVisitor) {
             ((PostNodeVisitor) visitor).postVisit(node);
         }
-    }
-
-    public static List<Node> getChildren(Node node, NodeFilter filter) throws RepositoryException {
-        List<Node> nodes = new ArrayList<Node>();
-        NodeIterator children = node.getNodes();
-        while (children.hasNext()) {
-            Node child = children.nextNode();
-            if (filter.accept(child)) {
-                nodes.add(child);
-            }
-        }
-        return nodes;
     }
 
     public static Iterable<Node> getNodes(Node parent, final NodeFilter filter) throws RepositoryException {
@@ -418,20 +406,12 @@ public class NodeUtil {
         return new NodeIterable(iterator);
     }
 
-    public static List<Node> getChildren(Node node, String nodeType) throws RepositoryException {
-        return getChildren(node, new NodeTypeFilter(nodeType));
-    }
-
     public static List<Node> asList(Iterable<Node> nodes) {
         List<Node> nodesList = new ArrayList<Node>();
         for (Node node : nodes) {
             nodesList.add(node);
         }
         return nodesList;
-    }
-
-    public static List<Node> getChildren(Node node) throws RepositoryException {
-        return getChildren(node, EXCLUDE_META_DATA_FILTER);
     }
 
     public static Iterable<Node> getNodes(Node node) throws RepositoryException {

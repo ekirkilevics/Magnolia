@@ -66,7 +66,7 @@ public class ConfiguredRendererManager extends ModuleConfigurationObservingManag
     @Override
     protected void onRegister(Node node) throws RepositoryException {
 
-        for (Node rendererNode : NodeUtil.getChildren(node, MgnlNodeType.NT_CONTENTNODE)) {
+        for (Node rendererNode : NodeUtil.getNodes(node, MgnlNodeType.NT_CONTENTNODE)) {
 
             final String id = rendererNode.getName();
 

@@ -217,23 +217,6 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testGetChildren() throws RepositoryException {
-        first.addNode("alpha", MgnlNodeType.NT_CONTENT);
-        first.addNode("beta", MgnlNodeType.NT_CONTENTNODE);
-        first.addNode("gamma", MgnlNodeType.NT_CONTENTNODE);
-        first.addNode("metaData", MgnlNodeType.NT_METADATA);
-        first.addNode("jcr:system", MgnlNodeType.NT_FILE);
-
-        assertEquals(1, NodeUtil.getChildren(first, MgnlNodeType.NT_CONTENT).size());
-        assertEquals(2, NodeUtil.getChildren(first, MgnlNodeType.NT_CONTENTNODE).size());
-        assertEquals(3, NodeUtil.getChildren(first).size());
-
-        assertEquals(4, NodeUtil.getChildren(first, NodeUtil.ALL_NODES_EXCEPT_JCR_FILTER).size());
-        assertEquals(5, NodeUtil.getChildren(first, NodeUtil.ALL_NODES_FILTER).size());
-        assertEquals(4, NodeUtil.getChildren(first, NodeUtil.MAGNOLIA_FILTER).size());
-    }
-
-    @Test
     public void testGetNodes() throws RepositoryException {
         first.addNode("alpha", MgnlNodeType.NT_CONTENT);
         first.addNode("meta", MgnlNodeType.NT_METADATA);

@@ -76,7 +76,7 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
 
                 @Override
                 public void visit(Node node) throws RepositoryException {
-                    for (Node templateDefinitionNode : NodeUtil.getChildren(node, MgnlNodeType.NT_CONTENTNODE)) {
+                    for (Node templateDefinitionNode : NodeUtil.getNodes(node, MgnlNodeType.NT_CONTENTNODE)) {
                         registerTemplateDefinition(templateDefinitionNode);
                     }
                 }

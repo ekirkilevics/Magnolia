@@ -58,7 +58,7 @@ import freemarker.template.TemplateSequenceModel;
 
 /**
  * A wrapper for Content nodes. Exposes properties using an HashModel (.property, ?size, ...) a hierarchy (TemplateNodeModel: ?children, ?parent, ...) and as a scalar (returns the node name)
- * 
+ *
  * @author Chris Miner
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -136,7 +136,7 @@ public class ContentMapModel implements TemplateHashModelEx, TemplateNodeModel, 
     public TemplateSequenceModel getChildNodes() throws TemplateModelException {
         Collection<Node> children;
         try {
-            children = NodeUtil.getChildren(content.getJCRNode());
+            children = NodeUtil.asList(NodeUtil.getNodes(content.getJCRNode()));
         } catch (RepositoryException e) {
             log.error("Failed to read children of " + content.getJCRNode(), e);
             children = new ArrayList<Node>();

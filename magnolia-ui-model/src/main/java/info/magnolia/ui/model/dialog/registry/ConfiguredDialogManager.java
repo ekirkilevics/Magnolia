@@ -74,7 +74,7 @@ public class ConfiguredDialogManager extends ModuleConfigurationObservingManager
 
                 @Override
                 public void visit(Node node) throws RepositoryException {
-                    for (Node dialogNode : NodeUtil.getChildren(node, MgnlNodeType.NT_CONTENTNODE)) {
+                    for (Node dialogNode : NodeUtil.getNodes(node, MgnlNodeType.NT_CONTENTNODE)) {
                         registerDialog(dialogNode);
                     }
                 }
