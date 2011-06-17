@@ -71,7 +71,7 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
     public static final String DIALOG = SPACE + "dialog";
 
     // TODO should also support a JSP ContentMap
-    private Node node;
+    private Node content;
     private String workspace;
     private String nodeIdentifier;
     private String path;
@@ -96,8 +96,8 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
 
         // TODO we can safely keep the node around after we've resolved it
 
-        if (node != null) {
-            return node;
+        if (content != null) {
+            return content;
         }
         if (StringUtils.isNotEmpty(workspace)) {
             if (StringUtils.isNotEmpty(nodeIdentifier)) {
@@ -125,11 +125,11 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
     }
 
     public Node getContent() {
-        return node;
+        return content;
     }
 
     public void setContent(Node node) {
-        this.node = node;
+        this.content = node;
     }
 
     public String getWorkspace() {
@@ -156,8 +156,8 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
         this.path = path;
     }
 
-    protected Appendable appendElementStart(Appendable out, Node content, String tag) throws IOException, RenderException {
-        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
+    protected Appendable appendElementStart(Appendable out, Node node, String tag) throws IOException, RenderException {
+        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(node)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
         out.append(LESS_THAN).append(tag);
         return out;
     }
