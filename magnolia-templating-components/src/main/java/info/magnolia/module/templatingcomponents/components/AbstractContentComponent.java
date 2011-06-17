@@ -38,6 +38,8 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.rendering.RenderingContext;
 
+import java.io.IOException;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -152,5 +154,15 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    protected Appendable appendElementStart(Appendable out, Node content, String tag) throws IOException, RenderException {
+        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
+        out.append(LESS_THAN).append(tag);
+        return out;
+    }
+
+    protected void appendElementEnd(Appendable out, String tag) throws IOException {
+        out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(tag).append(GREATER_THAN).append(LINEBREAK);
     }
 }

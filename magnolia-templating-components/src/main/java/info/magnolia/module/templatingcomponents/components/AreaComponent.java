@@ -33,8 +33,10 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
+import static info.magnolia.cms.core.MgnlNodeType.NT_CONTENTNODE;
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.templating.rendering.RenderException;
 import info.magnolia.templating.rendering.RenderingContext;
 import info.magnolia.templating.rendering.RenderingEngine;
@@ -45,7 +47,11 @@ import info.magnolia.templating.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.templating.template.configured.ConfiguredParagraphAvailability;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -64,13 +70,15 @@ public class AreaComponent extends AbstractContentComponent {
     public static final String TYPE_LIST = "list";
     public static final String TYPE_SINGLE = "single";
     public static final String DEFAULT_TYPE = TYPE_LIST;
+    public static final String COMPONENT = "component";
+    public static final String COMPONENTS = "components";
 
     private String name;
     private AreaDefinition area;
     private String availableComponents;
     private String type;
     private String dialog;
-    private RenderingEngine renderingEngine;
+    private final RenderingEngine renderingEngine;
 
     // TODO implement support for script and placeholderScript
     // private String script;
@@ -84,8 +92,7 @@ public class AreaComponent extends AbstractContentComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RenderException {
         Node content = getTargetContent();
-        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
-        out.append(LESS_THAN).append(CMS_AREA);
+        appendElementStart(out, content, CMS_AREA);
         param(out, "content", getNodePath(content));
 
         // Can already be set - or not. If not, we set it in order to avoid tons of if statements in the beyond code...
@@ -99,7 +106,7 @@ public class AreaComponent extends AbstractContentComponent {
         param(out, "dialog", resolveDialog());
         param(out, "showAddButton", String.valueOf(shouldShowAddButton()));
 
-        out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_AREA).append(GREATER_THAN).append(LINEBREAK);
+        appendElementEnd(out, CMS_AREA);
     }
 
     protected AreaDefinition resolveAreaDefinition() throws RenderException  {
@@ -127,20 +134,24 @@ public class AreaComponent extends AbstractContentComponent {
         try {
             if (isEnabled() && content.hasNode(resolveName())) {
 
+                AreaDefinition areaDef = resolveAreaDefinition();
+                Map<String, Object> contextObjects = new HashMap<String, Object>();
+                Node renderedNode = null;
                 if (resolveType().equals(TYPE_LIST)) {
-                    Node areaNode = content.getNode(resolveName());
-                    NodeIterator nodeIterator = areaNode.getNodes();
-                    while (nodeIterator.hasNext()) {
-                        Node node = (Node) nodeIterator.next();
-                        if (node.getPrimaryNodeType().getName().equals(MgnlNodeType.NT_CONTENTNODE)) {
-                            renderingEngine.render(node, out);
-                        }
+                    renderedNode = content.getNode(resolveName());
+                    List<ContentMap> components = new ArrayList<ContentMap>();
+                    NodeIterator iter = NodeUtil.getNodeIterator(renderedNode, NT_CONTENTNODE);
+                    while (iter.hasNext()) {
+                        components.add(new ContentMap(iter.nextNode()));
                     }
+                    contextObjects.put(COMPONENTS, components);
+
                 } else if (resolveType().equals(TYPE_SINGLE)) {
-                    // FIXME delegate to the area's script or use a default script
-                    // TODO we should suppress any editbar inside the paragraph rendered here
-                    Node paragraphNode = content.getNode(resolveName());
-                    renderingEngine.render(paragraphNode, out);
+                    renderedNode = content.getNode(resolveName());
+                    contextObjects.put(COMPONENT, new ContentMap(renderedNode));
+                }
+                if (renderedNode != null) {
+                    renderingEngine.render(renderedNode, areaDef, contextObjects, out);
                 }
             }
 

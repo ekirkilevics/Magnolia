@@ -70,8 +70,7 @@ public class EditComponent extends AbstractContentComponent {
 
         // TODO we need to do html attribute escaping on this
 
-        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
-        out.append(LESS_THAN).append(CMS_EDIT).append(" content=").append(QUOTE).append(getNodePath(content)).append(QUOTE);
+        appendElementStart(out, content, CMS_EDIT).append(" content=").append(QUOTE).append(getNodePath(content)).append(QUOTE);
         if (StringUtils.isNotEmpty(format)) {
             out.append(" format=").append(QUOTE).append(format).append(QUOTE);
         }
@@ -88,7 +87,7 @@ public class EditComponent extends AbstractContentComponent {
 
         out.append(" template=").append(QUOTE).append(templateDefinition.getId()).append(QUOTE);
 
-        out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(CMS_EDIT).append(GREATER_THAN).append(LINEBREAK);
+        appendElementEnd(out, CMS_EDIT);
     }
 
     private String resolveDialog(TemplateDefinition component) throws RenderException {
