@@ -108,27 +108,27 @@ public abstract class AbstractDirectiveTestCase {
         // fmHelper.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
 
         hm =
-                MockUtil.createHierarchyManager(StringUtils.join(Arrays.asList(
-                        "/foo/bar.@type=mgnl:content",
-                        "/foo/bar/MetaData.@type=mgnl:metadata",
-                        "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
-                        "/foo/bar/paragraphs.@type=mgnl:contentNode",
-                        "/foo/bar/paragraphs/0.@type=mgnl:contentNode",
-                        "/foo/bar/paragraphs/0.@uuid=100",
-                        "/foo/bar/paragraphs/0.text=hello 0",
-                        "/foo/bar/paragraphs/0/MetaData.@type=mgnl:metadata",
-                        "/foo/bar/paragraphs/0/MetaData.mgnl\\:template=testParagraph0",
-                        "/foo/bar/paragraphs/1.@type=mgnl:contentNode",
-                        "/foo/bar/paragraphs/1.@uuid=101",
-                        "/foo/bar/paragraphs/1.text=hello 1",
-                        "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
-                        "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1",
-                        "/foo/bar/paragraphs/2.@type=mgnl:contentNode",
-                        "/foo/bar/paragraphs/2.@uuid=102",
-                        "/foo/bar/paragraphs/2.text=hello 2",
-                        "/foo/bar/paragraphs/2/MetaData.@type=mgnl:metadata",
-                        "/foo/bar/paragraphs/2/MetaData.mgnl\\:template=testParagraph2",
-                        ""), "\n"));
+            MockUtil.createHierarchyManager(StringUtils.join(Arrays.asList(
+                    "/foo/bar.@type=mgnl:content",
+                    "/foo/bar/MetaData.@type=mgnl:metadata",
+                    "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
+                    "/foo/bar/paragraphs.@type=mgnl:contentNode",
+                    "/foo/bar/paragraphs/0.@type=mgnl:contentNode",
+                    "/foo/bar/paragraphs/0.@uuid=100",
+                    "/foo/bar/paragraphs/0.text=hello 0",
+                    "/foo/bar/paragraphs/0/MetaData.@type=mgnl:metadata",
+                    "/foo/bar/paragraphs/0/MetaData.mgnl\\:template=testParagraph0",
+                    "/foo/bar/paragraphs/1.@type=mgnl:contentNode",
+                    "/foo/bar/paragraphs/1.@uuid=101",
+                    "/foo/bar/paragraphs/1.text=hello 1",
+                    "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
+                    "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1",
+                    "/foo/bar/paragraphs/2.@type=mgnl:contentNode",
+                    "/foo/bar/paragraphs/2.@uuid=102",
+                    "/foo/bar/paragraphs/2.text=hello 2",
+                    "/foo/bar/paragraphs/2/MetaData.@type=mgnl:metadata",
+                    "/foo/bar/paragraphs/2/MetaData.mgnl\\:template=testParagraph2",
+            ""), "\n"));
 
         final AggregationState aggState = new AggregationState();
         // let's make sure we render stuff on an author instance
@@ -138,8 +138,8 @@ public abstract class AbstractDirectiveTestCase {
 
         // setUp Pico
         final PicoBuilder picoBuilder =
-                new PicoBuilder().withConstructorInjection().withAnnotatedFieldInjection().withCaching()
-                        .withBehaviors(new ModuleAdapterFactory());
+            new PicoBuilder().withConstructorInjection().withAnnotatedFieldInjection().withCaching()
+            .withBehaviors(new ModuleAdapterFactory());
         final MutablePicoContainer container = picoBuilder.build();
 
         PicoComponentProvider provider = new PicoComponentProvider(container);
