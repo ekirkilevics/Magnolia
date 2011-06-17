@@ -47,7 +47,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.themes.BaseTheme;
 
 
 /**
@@ -102,6 +101,13 @@ public class Melodion extends CssLayout {
         return tab;
     }
 
+    public Component addSpacer() {
+        Component spacer = new Label();
+        spacer.setStyleName("spacer");
+        addComponent(spacer);
+        return spacer;
+    }
+
     /**
      * Top-level menu item in the Melodion.
      * 
@@ -125,9 +131,9 @@ public class Melodion extends CssLayout {
 
         private Tab(Label caption) {
             this.caption = caption;
-            setStyleName(STYLE);
-            caption.addStyleName(BaseTheme.BUTTON_LINK);
-            caption.addStyleName(STYLE_CAPTION);
+            // setStyleName(STYLE);
+            // caption.addStyleName(BaseTheme.BUTTON_LINK);
+            // caption.addStyleName(STYLE_CAPTION);
             addComponent(animator);
             addComponent(caption);
 
@@ -177,7 +183,7 @@ public class Melodion extends CssLayout {
                         addComponent(content);
                     }
                     animator.animate(content, AnimType.ROLL_DOWN_OPEN_POP);
-                    caption.addStyleName(STYLE_CAPTION_OPEN);
+                    // caption.addStyleName(STYLE_CAPTION_OPEN);
                     open = true;
                 }
             }
@@ -191,7 +197,7 @@ public class Melodion extends CssLayout {
             if (content != null) {
                 // ap.animate(content, AnimType.ROLL_UP_CLOSE_REMOVE);
                 removeComponent(content);
-                caption.removeStyleName(STYLE_CAPTION_OPEN);
+                // caption.removeStyleName(STYLE_CAPTION_OPEN);
                 open = false;
             }
         }

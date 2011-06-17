@@ -93,6 +93,13 @@ for Java Content Repositories (JCR).
       <timezone>+1</timezone>
     </developer>
     <developer>
+      <id>mrichert</id>
+      <name>Marlon Richert</name>
+      <email>marlon(at)vaadin.com</email>
+      <organization>Vaadin Ltd.</organization>
+      <timezone>+2</timezone>
+    </developer>
+    <developer>
       <id>fgiust</id>
       <name>Fabrizio Giustina</name>
       <email>fgiust(at)openmindonline.it</email>
@@ -267,7 +274,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin</artifactId>
-        <version>6.6.2</version>
+        <version>6.7-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.vaadin.addons</groupId>

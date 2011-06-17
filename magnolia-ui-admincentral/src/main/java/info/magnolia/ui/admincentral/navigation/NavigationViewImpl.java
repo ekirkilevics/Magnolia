@@ -35,15 +35,12 @@ package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
-import info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.model.navigation.registry.NavigationProvider;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -79,20 +76,12 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
 
         for (final NavigationWorkareaDefinition definition : navigation.getWorkareas()) {
             log.debug("creating navigation workarea {}", definition.getName());
-            List<NavigationGroup> groups = new ArrayList<NavigationGroup>();
 
-            for (NavigationGroupDefinition group : definition.getGroups()) {
-                log.debug("creating navigation group {}", group.getName());
-                NavigationGroup navigationGroup = new NavigationGroup(group.getItems(), permissions);
-                groups.add(navigationGroup);
-            }
-
-            final NavigationWorkArea navigationWorkArea = new NavigationWorkArea(groups);
+            final NavigationWorkArea navigationWorkArea = new NavigationWorkArea(definition, permissions);
 
             registeredNavigationAreas.add(navigationWorkArea);
 
             final Component component = navigationWorkArea.asVaadinComponent();
-            component.addStyleName(definition.getName());
             outerNavigationContainer.addTab(
                 component,
                 definition.getLabel(),
@@ -114,18 +103,14 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
         for (NavigationWorkArea navigationWorkArea : registeredNavigationAreas) {
-            for (NavigationGroup navigationGroup : navigationWorkArea.getNavigationGroup()) {
-                navigationGroup.setPresenter(presenter);
-            }
+            navigationWorkArea.setPresenter(presenter);
         }
     }
 
     @Override
     public void update(String id) {
         for (NavigationWorkArea workarea : registeredNavigationAreas) {
-            for (NavigationGroup group : workarea.getNavigationGroup()) {
-                group.update(id);
-            }
+            workarea.update(id);
         }
     }
 
