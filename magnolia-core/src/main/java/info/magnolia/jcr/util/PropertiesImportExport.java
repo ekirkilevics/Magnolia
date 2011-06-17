@@ -53,7 +53,7 @@ import org.apache.jackrabbit.util.ISO8601;
  * needs to be bootstrapped, for instance, and the jcr xml format is too cumbersome to maintain.
  *
  * TODO : handle conflicts (already existing nodes, properties, what to do with existing properties if we don't create
- * new nodes, ...) TODO : consolidate syntax
+ * new nodes, ...)
  *
  * TODO dlipp - export is not yet implemented
  *
@@ -97,7 +97,7 @@ public class PropertiesImportExport {
 
         for (Object o : properties.keySet()) {
             String orgKey = (String) o;
-            // explicitely enforce certain syntax
+            // explicitly enforce certain syntax
             if (!orgKey.startsWith("/")) {
                 throw new IllegalArgumentException("Missing trailing '/' for key: " + orgKey);
             }
