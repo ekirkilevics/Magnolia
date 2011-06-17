@@ -33,9 +33,9 @@
  */
 package info.magnolia.templating.rendering;
 
-import java.util.Map;
-
 import info.magnolia.templating.template.RenderableDefinition;
+
+import java.util.Map;
 
 import javax.jcr.Node;
 
