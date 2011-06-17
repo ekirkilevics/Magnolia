@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.ModuleConfigurationObservingManager;
-import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.jcr.util.NodeTypeFilter;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.NodeVisitor;
@@ -87,22 +86,25 @@ public class ConfiguredDialogDefinitionManager extends ModuleConfigurationObserv
     }
 
     private void registerDialog(Node dialogNode) throws RepositoryException {
+
         final String id = createId(dialogNode);
+
+        ConfiguredDialogDefinitionProvider dialogProvider = null;
         try {
-            ConfiguredDialogDefinitionProvider dialogProvider = null;
+            dialogProvider = new ConfiguredDialogDefinitionProvider(id, dialogNode);
+        } catch (Exception e) {
+            log.error("Unable to create provider for dialog [" + id + "]", e);
+        }
+
+        if (dialogProvider != null) {
             try {
-                dialogProvider = new ConfiguredDialogDefinitionProvider(id, dialogNode);
-            } catch (Content2BeanException e) {
-                log.error("Unable to create provider for dialog [" + id + "]", e);
-            }
-            if (dialogProvider != null) {
                 synchronized (registeredDialogs) {
                     dialogDefinitionRegistry.registerDialog(dialogProvider);
                     this.registeredDialogs.add(id);
                 }
+            } catch (DialogDefinitionRegistrationException e) {
+                log.error("Unable to register dialog [" + id + "]", e);
             }
-        } catch (DialogDefinitionRegistrationException e) {
-            log.error("Unable to register dialog [" + id + "]", e);
         }
     }
 
