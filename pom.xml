@@ -277,11 +277,6 @@ for Java Content Repositories (JCR).
         <version>6.7-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>org.vaadin.addons</groupId>
-        <artifactId>vaadin-treetable</artifactId>
-        <version>1.2.0</version>
-      </dependency>
-      <dependency>
 	    <groupId>org.vaadin.addons</groupId>
 	    <artifactId>confirmdialog</artifactId>
 	    <version>1.1.0</version>
