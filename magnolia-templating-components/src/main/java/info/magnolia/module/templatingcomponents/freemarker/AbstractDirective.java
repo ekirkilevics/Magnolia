@@ -185,6 +185,7 @@ public abstract class AbstractDirective<C extends AuthoringUiComponent> implemen
     }
 
     protected Node node(Map<String, TemplateModel> params, String key, Node defaultValue) throws TemplateModelException {
+        // TODO - depends on Content-API - to be changed to directly use JCR
         final ContentModel m = _param(params, key, ContentModel.class, false);
         if (m == null) {
             return defaultValue;
