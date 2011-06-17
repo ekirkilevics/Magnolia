@@ -92,7 +92,8 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
                                 "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesMainFTL.xml",
                                 "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesMainJSP.xml",
                                 "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesVirtualURI.xml",
-                                "/mgnl-bootstrap/samples/config.server.filters.sample.xml",
+                                // TODO filter is not working at the moment, comes from 4.4 sample module. Uncomment again when ready to use.
+                                //"/mgnl-bootstrap/samples/config.server.filters.sample.xml",
                         };
                     }
                 })
@@ -143,10 +144,10 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
         commonTasks.add(new AddMainMenuItemTask("samples", "samples.menu.label", I18N_BASENAME, "", "/.resources/icons/24/compass.gif", "security"));
 
         commonTasks.add(submenu("config", "/modules/samples"));
-        commonTasks.add(submenu("filter", "/server/filters/sample"));
-        commonTasks.add(submenu("servlet", "/server/filters/servlets/DisplaySamplesSourcesServlet"));
-
-        commonTasks.add(new FilterOrderingTask("sample", new String[]{"servlets"}));
+        // TODO filter & servlet is not working at the moment, comes from the 4.4 samples. Uncomment again when ready to use.
+        //commonTasks.add(submenu("filter", "/server/filters/sample"));
+        //commonTasks.add(submenu("servlet", "/server/filters/servlets/DisplaySamplesSourcesServlet"));
+        //commonTasks.add(new FilterOrderingTask("sample", new String[]{"servlets"}));
 
         commonTasks.add(new SetDefaultPublicURI("defaultPublicURI"));
 

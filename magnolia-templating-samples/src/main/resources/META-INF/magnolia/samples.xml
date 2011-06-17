@@ -23,6 +23,7 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
+  <!-- TODO: servlet is not working at the moment, comes from the 4.4 samples. Uncomment again when ready to use.
   <servlets>
     <servlet>
       <name>DisplaySamplesSourcesServlet</name>
@@ -33,4 +34,5 @@
       </mappings>
     </servlet>
   </servlets>
+  -->
 </module>
