@@ -83,7 +83,7 @@ public class NodeUtil {
 
         @Override
         public boolean accept(Node node) throws RepositoryException {
-            return !node.getName().startsWith("jcr:");
+            return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX);
         }
     };
 
@@ -94,7 +94,7 @@ public class NodeUtil {
 
         @Override
         public boolean accept(Node node) throws RepositoryException {
-            return !node.getName().startsWith("jcr:") && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
+            return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX) && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
         }
     };
 
@@ -403,17 +403,29 @@ public class NodeUtil {
         return nodes;
     }
 
+    public static Iterable<Node> getNodes(Node parent, NodeFilter filter) throws RepositoryException {
+        NodeIterator iterator = new FilteringNodeIterator(parent.getNodes(), null);
+        return new NodeIterable(iterator);
+    }
+
     public static List<Node> getChildren(Node node, String nodeType) throws RepositoryException {
         return getChildren(node, new NodeTypeFilter(nodeType));
+    }
+
+    public static List<Node> asList(Iterable<Node> nodes) {
+        List<Node> nodesList = new ArrayList<Node>();
+        for (Node node : nodes) {
+            nodesList.add(node);
+        }
+        return nodesList;
     }
 
     public static List<Node> getChildren(Node node) throws RepositoryException {
         return getChildren(node, EXCLUDE_META_DATA_FILTER);
     }
 
-    // TODO dlipp - rename to getNodes (here as well)
-    public static Iterable<Node> getNodes(Node parentNode, final String nodeType) throws RepositoryException {
-        NodeIterator iterator = new FilteringNodeIterator(parentNode.getNodes(), new Predicate() {
+    public static Iterable<Node> getNodes(Node parent, final String nodeType) throws RepositoryException {
+        NodeIterator iterator = new FilteringNodeIterator(parent.getNodes(), new Predicate() {
             @Override
             public boolean evaluate(Object node) {
                 try {

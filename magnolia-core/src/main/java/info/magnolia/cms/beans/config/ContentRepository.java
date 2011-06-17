@@ -35,6 +35,7 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ConfigUtil;
@@ -255,7 +256,7 @@ public final class ContentRepository {
         Collection<Content> children = startPage.getChildren(new Content.ContentFilter() {
             @Override
             public boolean accept(Content content) {
-                return (!content.getName().startsWith("jcr:") && !content.getName().startsWith("rep:"));
+                return (!content.getName().startsWith(MgnlNodeType.JCR_PREFIX) && !content.getName().startsWith("rep:"));
             }
         });
 

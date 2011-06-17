@@ -39,6 +39,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -428,7 +429,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         Map<String, String> properties = new HashMap<String, String>();
         for (PropertyIterator iter = privilegedUserNode.getProperties(); iter.hasNext(); ) {
             Property prop = iter.nextProperty();
-            if (prop.getName().startsWith("jcr:") || prop.getName().startsWith("mgnl:")) {
+            if (prop.getName().startsWith(MgnlNodeType.JCR_PREFIX) || prop.getName().startsWith(MgnlNodeType.MGNL_PREFIX)) {
                 // skip special props
                 continue;
             }
@@ -492,7 +493,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
             public Void exec(Session session) throws RepositoryException {
                 for (PropertyIterator props = node.getProperties(); props.hasNext();) {
                     Property property = props.nextProperty();
-                    if (property.getName().startsWith("jcr:")) {
+                    if (property.getName().startsWith(MgnlNodeType.JCR_PREFIX)) {
                         continue;
                     }
                     final String uuid = property.getString();

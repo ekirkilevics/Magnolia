@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.core.MgnlNodeType;
+
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
@@ -51,7 +53,7 @@ public class JCRPropertyHidingPredicate implements Predicate {
             return false;
         }
         try {
-            return !((Property) object).getName().startsWith("jcr:");
+            return !((Property) object).getName().startsWith(MgnlNodeType.JCR_PREFIX);
         } catch (RepositoryException e) {
             // either invalid or not accessible to the current user
             return false;

@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.tree.model;
 
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.NodeUtil;
@@ -130,7 +131,7 @@ public class TreeModel implements JcrContainerSource {
             PropertyIterator propertyIterator = node.getProperties();
             while (propertyIterator.hasNext()) {
                 Property property = propertyIterator.nextProperty();
-                if (!property.getName().startsWith("jcr:")) {
+                if (!property.getName().startsWith(MgnlNodeType.JCR_PREFIX)) {
                     properties.add(property);
                 }
             }
