@@ -109,7 +109,7 @@ public class NodeUtil {
             try {
                 String nodeTypeName = node.getPrimaryNodeType().getName();
                 // accept only "magnolia" nodes
-                return nodeTypeName.startsWith("mgnl:");
+                return nodeTypeName.startsWith(MgnlNodeType.MGNL_PREFIX);
             } catch (RepositoryException e) {
                 // TODO should we really mask this error? shouldn't it be thrown instead?
                 log.error("Unable to read nodetype for node {}", node.getPath());
@@ -134,7 +134,7 @@ public class NodeUtil {
     }
 
     /**
-     * TODO dlipp: better name? Clear javadoc! Move to MetaDataUtil
+     * TODO dlipp: better name? Clear javadoc! Move to MetaDataUtil, do not assign method-param!
      */
     public static boolean isNodeType(Node node, String type) throws RepositoryException {
         if (node instanceof DelegateNodeWrapper) {
@@ -403,8 +403,18 @@ public class NodeUtil {
         return nodes;
     }
 
-    public static Iterable<Node> getNodes(Node parent, NodeFilter filter) throws RepositoryException {
-        NodeIterator iterator = new FilteringNodeIterator(parent.getNodes(), null);
+    public static Iterable<Node> getNodes(Node parent, final NodeFilter filter) throws RepositoryException {
+        NodeIterator iterator = new FilteringNodeIterator(parent.getNodes(), new Predicate() {
+            @Override
+            public boolean evaluate(Object node) {
+                try {
+                    return filter.accept((Node) node);
+                } catch (RepositoryException e) {
+                    // TODO dlipp - is that what we want? Shouldn't we rethrow the exception?
+                    return false;
+                }
+            }
+        });
         return new NodeIterable(iterator);
     }
 
@@ -431,6 +441,7 @@ public class NodeUtil {
                 try {
                     return ((Node) node).isNodeType(nodeType);
                 } catch (RepositoryException e) {
+                    // TODO dlipp - is that what we want? Shouldn't we rethrow the exception?
                     return false;
                 }
             }

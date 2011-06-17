@@ -246,4 +246,15 @@ public class NodeUtilTest {
         assertTrue(!iterator.hasNext());
     }
 
+    @Test
+    public void testGetNodesWithNodeFilter() throws RepositoryException {
+        first.addNode("alpha", MgnlNodeType.NT_CONTENT);
+        first.addNode("beta", MgnlNodeType.JCR_CONTENT);
+
+        Iterable<Node> iterable = NodeUtil.getNodes(first, NodeUtil.MAGNOLIA_FILTER);
+        Iterator<Node> iterator = iterable.iterator();
+
+        assertEquals("alpha",iterator.next().getName());
+        assertTrue(!iterator.hasNext());
+    }
 }
