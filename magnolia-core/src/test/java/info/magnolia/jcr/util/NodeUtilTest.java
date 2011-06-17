@@ -235,6 +235,19 @@ public class NodeUtilTest {
 
     @Test
     public void testGetNodes() throws RepositoryException {
+        first.addNode("alpha", MgnlNodeType.NT_CONTENT);
+        first.addNode("meta", MgnlNodeType.NT_METADATA);
+        first.addNode("gamma", MgnlNodeType.NT_CONTENT);
+
+        Iterable<Node> iterable = NodeUtil.getNodes(first);
+        Iterator<Node> iterator = iterable.iterator();
+        assertEquals("alpha",iterator.next().getName());
+        assertEquals("gamma", iterator.next().getName());
+        assertTrue(!iterator.hasNext());
+    }
+
+    @Test
+    public void testGetNodeWithContentType() throws RepositoryException {
         root.addNode("alpha", MgnlNodeType.NT_CONTENT);
         root.addNode("beta", MgnlNodeType.NT_FOLDER);
         root.addNode("gamma", MgnlNodeType.NT_CONTENT);

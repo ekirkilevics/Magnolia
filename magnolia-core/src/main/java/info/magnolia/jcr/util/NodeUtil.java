@@ -434,6 +434,10 @@ public class NodeUtil {
         return getChildren(node, EXCLUDE_META_DATA_FILTER);
     }
 
+    public static Iterable<Node> getNodes(Node node) throws RepositoryException {
+        return getNodes(node, EXCLUDE_META_DATA_FILTER);
+    }
+
     public static Iterable<Node> getNodes(Node parent, final String nodeType) throws RepositoryException {
         NodeIterator iterator = new FilteringNodeIterator(parent.getNodes(), new Predicate() {
             @Override
