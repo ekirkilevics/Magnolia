@@ -61,7 +61,6 @@ import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -69,7 +68,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
@@ -103,27 +101,18 @@ public abstract class AbstractDirectiveTestCase {
         fmHelper = new FreemarkerHelper(fmConfig);
 
         hm =
-            SessionTestUtil.createSession("testWorkspace", StringUtils.join(Arrays.asList(
-                    "/foo/bar.@type=mgnl:content",
-                    "/foo/bar/MetaData.@type=mgnl:metadata",
-                    "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
-                    "/foo/bar/paragraphs.@type=mgnl:contentNode",
-                    "/foo/bar/paragraphs/0.@type=mgnl:contentNode",
-                    "/foo/bar/paragraphs/0.@uuid=100",
-                    "/foo/bar/paragraphs/0.text=hello 0",
-                    "/foo/bar/paragraphs/0/MetaData.@type=mgnl:metadata",
-                    "/foo/bar/paragraphs/0/MetaData.mgnl\\:template=testParagraph0",
-                    "/foo/bar/paragraphs/1.@type=mgnl:contentNode",
-                    "/foo/bar/paragraphs/1.@uuid=101",
-                    "/foo/bar/paragraphs/1.text=hello 1",
-                    "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
-                    "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1",
-                    "/foo/bar/paragraphs/2.@type=mgnl:contentNode",
-                    "/foo/bar/paragraphs/2.@uuid=102",
-                    "/foo/bar/paragraphs/2.text=hello 2",
-                    "/foo/bar/paragraphs/2/MetaData.@type=mgnl:metadata",
-                    "/foo/bar/paragraphs/2/MetaData.mgnl\\:template=testParagraph2",
-            ""), "\n"));
+            SessionTestUtil.createSession("testWorkspace",
+            "/foo/bar.@type=mgnl:content",
+            "/foo/bar/MetaData.@type=mgnl:metadata",
+            "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
+            "/foo/bar/paragraphs.@type=mgnl:contentNode",
+            "/foo/bar/paragraphs/0.@type=mgnl:contentNode",
+            "/foo/bar/paragraphs/0.@uuid=100",
+            "/foo/bar/paragraphs/1.@type=mgnl:contentNode",
+            "/foo/bar/paragraphs/1.@uuid=101",
+            "/foo/bar/paragraphs/1.text=hello 1",
+            "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
+            "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1");
 
         final AggregationState aggState = new AggregationState();
         // let's make sure we render stuff on an author instance
