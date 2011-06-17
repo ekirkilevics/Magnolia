@@ -274,7 +274,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin</artifactId>
-        <version>6.6.2</version>
+        <version>6.7-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.vaadin.addons</groupId>
