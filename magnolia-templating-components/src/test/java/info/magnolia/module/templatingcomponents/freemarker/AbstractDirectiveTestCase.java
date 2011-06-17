@@ -120,6 +120,7 @@ public abstract class AbstractDirectiveTestCase {
         final ServerConfiguration serverCfg = new ServerConfiguration();
         serverCfg.setAdmin(true);
 
+        // TODO dlipp: next lines could switched back to ComponentTestUtils as soon as SCRUM-201 is solved.
         // setUp minimal Pico
         final MutablePicoContainer container = new PicoBuilder().withConstructorInjection().build();
 
