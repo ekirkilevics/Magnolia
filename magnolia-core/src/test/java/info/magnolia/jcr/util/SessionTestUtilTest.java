@@ -64,6 +64,17 @@ public class SessionTestUtilTest {
     }
 
     @Test
+    public void testCreateSessionWithStringVarargs() throws Exception {
+        MockSession session = SessionTestUtil.createSession("testWorkspace",
+            "/foo/bar.@type=mgnl:content",
+            "/foo/bar/sub1.@uuid=1",
+            "/foo/bar/subpath.property=testName");
+
+        assertEquals("1", session.getNode("/foo/bar/sub1").getIdentifier());
+        assertEquals("testName", session.getNode("/foo/bar/subpath").getProperty("property").getString());
+    }
+
+    @Test
     public void testSingleDot() throws Exception {
         final MockSession session = SessionTestUtil.createSession("/foo/bar/baz/paragraphs/01.text=dummy\n");
 

@@ -61,17 +61,25 @@ public class SessionTestUtil {
         return createSession(null, propertiesStream);
     }
 
-    public static MockSession createSession(String repository, String propertiesStr) throws IOException, RepositoryException {
+    public static MockSession createSession(String workspace, String propertiesStr) throws IOException, RepositoryException {
         final ByteArrayInputStream in = new ByteArrayInputStream(propertiesStr.getBytes());
-        return createSession(repository, in);
+        return createSession(workspace, in);
     }
+
 
     public static MockSession createSession(String propertiesStr) throws IOException, RepositoryException {
         return createSession(null, propertiesStr);
     }
 
-    public static MockSession createSession(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
-        MockSession hm = new MockSession(repository);
+    /**
+     * Create and return a MockSession for the provided workspace by merging all provided lines to a linefeed separated String.
+     */
+    public static MockSession createSession(String workspace, String... lines) throws IOException, RepositoryException {
+        return createSession(workspace, StringUtils.join(lines, "\n"));
+    }
+
+    public static MockSession createSession(String workspace, InputStream propertiesStream) throws IOException, RepositoryException {
+        MockSession hm = new MockSession(workspace);
         Node root = hm.getRootNode();
         createContent(root, propertiesStream);
         return hm;
