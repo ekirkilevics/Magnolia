@@ -72,10 +72,10 @@ public class SessionTestUtil {
     }
 
     /**
-     * Create and return a MockSession for the provided workspace by merging all provided lines to a linefeed separated String.
+     * Create and return a MockSession for the provided workspace by merging all provided propertiesFormat to a linefeed separated String.
      */
-    public static MockSession createSession(String workspace, String... lines) throws IOException, RepositoryException {
-        return createSession(workspace, StringUtils.join(lines, "\n"));
+    public static MockSession createSession(String workspace, String... propertiesFormat) throws IOException, RepositoryException {
+        return createSession(workspace, asLineFeedSeparatedString(propertiesFormat));
     }
 
     public static MockSession createSession(String workspace, InputStream propertiesStream) throws IOException, RepositoryException {
@@ -121,15 +121,15 @@ public class SessionTestUtil {
     }
 
     /**
-     * Utility method similar to other create* methods; takes a vararg string argument to avoid concatening long strings
+     * Utility method similar to other create* methods; takes a vararg string argument to avoid concatenating long strings
      * and \n's. Creates a HierarchyManager based on the given properties, and the first argument is the path to the
      * node which we want to get from this HierarchyManager.
      */
     public static Node createNode(String returnFromPath, String... propertiesFormat) throws RepositoryException, IOException {
-        return createSession(propsStr(propertiesFormat)).getNode(returnFromPath);
+        return createSession(asLineFeedSeparatedString(propertiesFormat)).getNode(returnFromPath);
     }
 
-    private static String propsStr(String... s) {
+    private static String asLineFeedSeparatedString(String... s) {
         return StringUtils.join(Arrays.asList(s), "\n");
     }
 

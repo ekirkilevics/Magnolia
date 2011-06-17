@@ -34,12 +34,10 @@
 package info.magnolia.jcr.util;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.IOException;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.junit.Test;
@@ -50,7 +48,7 @@ import org.junit.Test;
 public class SessionTestUtilTest {
 
     @Test
-    public void testSyntax() throws IOException, RepositoryException {
+    public void testCreateSessionFromString() throws IOException, RepositoryException {
         String content = "/parent1/sub1.prop1=one";
 
         MockSession session = SessionTestUtil.createSession(content);
@@ -75,25 +73,9 @@ public class SessionTestUtilTest {
     }
 
     @Test
-    public void testSingleDot() throws Exception {
-        final MockSession session = SessionTestUtil.createSession("/foo/bar/baz/paragraphs/01.text=dummy\n");
-
-        final Node root = session.getRootNode();
-        assertNotNull(root.getNode("/foo/bar/baz"));
-
-        assertEquals("dummy", session.getNode("/foo/bar/baz/paragraphs/01").getProperty("text").getString());
-    }
-
-    @Test
-    public void testSingleMonkeyTail() throws Exception {
-        final String pathToNode = "/parent1/sub1";
-        final MockSession session = SessionTestUtil.createSession(pathToNode + ".@uuid=100");
-        assertEquals("100", session.getNode(pathToNode).getIdentifier());
-    }
-
-    @Test
     public void testMockSessionSetsProperWorkspaceName() throws Exception {
-        final MockSession session = SessionTestUtil.createSession("testSession", "/foo/bar/baz/01.text=dummy");
-        assertEquals("testSession", session.getWorkspace().getName());
+        final String workspaceName = "workspace";
+        final MockSession session = SessionTestUtil.createSession(workspaceName, "/foo/bar/baz/01.text=dummy");
+        assertEquals(workspaceName, session.getWorkspace().getName());
     }
 }
