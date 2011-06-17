@@ -2,7 +2,6 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.1.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.1.1/distro-source/core/src/gwt-module.dtd">
 <module>
     <inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" />
-    <inherits name="com.vaadin.addon.treetable.TreetableWidgetset" />
     <inherits name="com.vaadin.lazyloadwrapper.widgetset.LazyLoadWrapperWidgetset" />
     <inherits name="org.vaadin.jouni.animator.AnimatorWidgetset"/>
     <inherits name="info.magnolia.ui.vaadin.integration.widget.historian.HistorianWidgetset"/>

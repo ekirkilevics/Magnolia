@@ -55,7 +55,6 @@ import javax.jcr.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.event.Action;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -65,6 +64,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.TreeTable;
 
 /**
  * User interface component that extends TreeTable and uses a WorkbenchDefinition for layout and invoking command callbacks.
