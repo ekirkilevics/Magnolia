@@ -33,9 +33,16 @@
  */
 package info.magnolia.jcr.util;
 
+import info.magnolia.cms.core.Access;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.DelegateNodeWrapper;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
@@ -44,14 +51,10 @@ import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
+import org.apache.jackrabbit.commons.predicate.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import info.magnolia.cms.core.Access;
-import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.DelegateNodeWrapper;
-import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 
 /**
  * Various utility methods to collect data from JCR repository.
@@ -406,5 +409,18 @@ public class NodeUtil {
 
     public static Collection<Node> getChildren(Node node) throws RepositoryException {
         return getChildren(node, EXCLUDE_META_DATA_FILTER);
+    }
+
+    public static NodeIterator getNodeIterator(Node parentNode, final String nodeType) throws RepositoryException {
+        return new FilteringNodeIterator(parentNode.getNodes(), new Predicate() {
+            @Override
+            public boolean evaluate(Object node) {
+                try {
+                    return ((Node) node).isNodeType(nodeType);
+                } catch (RepositoryException e) {
+                    return false;
+                }
+            }
+        });
     }
 }
