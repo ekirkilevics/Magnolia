@@ -101,6 +101,7 @@ public class AreaComponentTest {
         paragraph01 = session.getNode("/foo/bar/baz/paragraphsArea/01");
 
         final WebContext ctx = mock(WebContext.class);
+        when(ctx.getJCRSession("testRepository", "testRepository")).thenReturn(session);
         MgnlContext.setInstance(ctx);
 
         serverCfg = new ServerConfiguration();
@@ -130,13 +131,12 @@ public class AreaComponentTest {
     @Test
     public void testComponent() throws Exception {
         // input TYPE_SINLGE, output componentMap of current area/paragraph
-        // confusing bit about this test is that the area IS paragraph
-        context.push(paragraph01.getParent(), templateDefinition);
+        // confusing bit about this test is that the area IS paragraph and it's named 01 NOT the paragraphsArea
+        context.push(paragraph01, templateDefinition);
 
         DefaultRenderingEngine engine = mock(DefaultRenderingEngine.class);
         areaComponent = new AreaComponent(serverCfg, context, engine);
         areaComponent.setArea(area);
-        areaComponent.setName("01");
 
         areaComponent.setType(AreaComponent.TYPE_SINGLE);
 
@@ -164,14 +164,49 @@ public class AreaComponentTest {
     }
 
     @Test
-    public void testComponents() throws Exception {
+    public void testComponentsResolvedFromPathAndWorkspace() throws Exception {
         // input TYPE_LIST, output componentMap with all paragraphs
-        context.push(currentPage, templateDefinition);
 
         DefaultRenderingEngine engine = mock(DefaultRenderingEngine.class);
         areaComponent = new AreaComponent(serverCfg, context, engine);
         areaComponent.setArea(area);
-        areaComponent.setName("paragraphsArea");
+        // areaComponent.setName("paragraphsArea");
+        areaComponent.setWorkspace("testRepository");
+        areaComponent.setPath("/foo/bar/baz/paragraphsArea");
+
+        areaComponent.setType(AreaComponent.TYPE_LIST);
+
+        final StringWriter out = new StringWriter();
+        areaComponent.postRender(out);
+
+        verify(engine).render(eq(paragraph01.getParent()), eq(new ConfiguredAreaDefinition()), argThat(new ArgumentMatcher<Map<String, Object>>() {
+            @Override
+            public boolean matches(Object componentsMap) {
+                List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaComponent.COMPONENTS);
+                boolean result = false;
+                try {
+                    result = componentList != null && componentList.size() == 1 && (componentList.get(0)).getJCRNode().getName().equals(paragraph01.getName());
+                } catch (RepositoryException e) {
+                    e.printStackTrace();
+                }
+                return result;
+            }
+        }), eq(out));
+
+        String outString = out.toString();
+
+        assertEquals(outString, "<!-- cms:end cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
+                + AbstractContentComponent.LINEBREAK, outString);
+    }
+
+    @Test
+    public void testComponentsResolvedFromAggregationState() throws Exception {
+        // input TYPE_LIST, output componentMap with all paragraphs
+        context.push(paragraph01.getParent(), templateDefinition);
+
+        DefaultRenderingEngine engine = mock(DefaultRenderingEngine.class);
+        areaComponent = new AreaComponent(serverCfg, context, engine);
+        areaComponent.setArea(area);
 
         areaComponent.setType(AreaComponent.TYPE_LIST);
 
@@ -205,14 +240,14 @@ public class AreaComponentTest {
 
     @Test
     public void testDoRender() throws Exception {
-        context.push(paragraph01, templateDefinition);
+        context.push(paragraph01.getParent(), templateDefinition);
 
         StringWriter out = new StringWriter();
         areaComponent.doRender(out);
 
-        assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea/01\" -->"
+        assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
                 + EditComponent.LINEBREAK
-                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea/01\" name=\"paragraphsArea\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
+                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" name=\"paragraphsArea\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // with paragraph set
@@ -220,9 +255,9 @@ public class AreaComponentTest {
         areaComponent.setAvailableComponents("paragraphs/myParagraph");
         areaComponent.doRender(out);
 
-        assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea/01\" -->"
+        assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
                 + EditComponent.LINEBREAK
-                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea/01\" name=\"paragraphsArea\" availableComponents=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
+                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" name=\"paragraphsArea\" availableComponents=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
 
         // as collection == false (= singleton)
@@ -231,22 +266,24 @@ public class AreaComponentTest {
         areaComponent.doRender(out);
 
         assertEquals(
-                "<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea/01\" -->"
+                "<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
                 + EditComponent.LINEBREAK
-                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea/01\" name=\"paragraphsArea\" availableComponents=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
+                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" name=\"paragraphsArea\" availableComponents=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
                 + EditComponent.LINEBREAK, out.toString());
     }
 
     @Test
     public void testPostRender() throws Exception {
-        context.push(paragraph01, templateDefinition);
+        context.push(paragraph01.getParent(), templateDefinition);
+
+        when(area.getEnabled()).thenReturn(Boolean.FALSE);
 
         final StringWriter out = new StringWriter();
         areaComponent.postRender(out);
 
         String outString = out.toString();
 
-        assertEquals(outString, "<!-- cms:end cms:content=\"testRepository:/foo/bar/baz/paragraphsArea/01\" -->"
+        assertEquals(outString, "<!-- cms:end cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
                 + AbstractContentComponent.LINEBREAK, outString);
     }
 

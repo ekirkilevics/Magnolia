@@ -128,35 +128,36 @@ public class AreaComponent extends AbstractContentComponent {
 
     @Override
     public void postRender(Appendable out) throws RenderException {
-        Node content = currentContent();
+        Node areaNode = getTargetContent();
 
         try {
-            if (isEnabled() && content.hasNode(resolveName())) {
+            if (isEnabled()) {
 
                 AreaDefinition areaDef = resolveAreaDefinition();
+                // TODO: clone/wrap def
+                // TODO: change settings using the resolveXXXX()
+                // TODO: pass in such modified area def
+
                 Map<String, Object> contextObjects = new HashMap<String, Object>();
-                Node renderedNode = null;
                 if (resolveType().equals(TYPE_LIST)) {
-                    renderedNode = content.getNode(resolveName());
                     List<ContentMap> components = new ArrayList<ContentMap>();
-                    for (Node node : NodeUtil.getNodes(renderedNode, NT_CONTENTNODE)) {
+                    for (Node node : NodeUtil.getNodes(areaNode, NT_CONTENTNODE)) {
                         components.add(new ContentMap(node));
                     }
                     contextObjects.put(COMPONENTS, components);
 
                 } else if (resolveType().equals(TYPE_SINGLE)) {
-                    renderedNode = content.getNode(resolveName());
-                    contextObjects.put(COMPONENT, new ContentMap(renderedNode));
+                    contextObjects.put(COMPONENT, new ContentMap(areaNode));
                 }
-                if (renderedNode != null) {
-                    renderingEngine.render(renderedNode, areaDef, contextObjects, out);
+                if (areaNode != null) {
+                    renderingEngine.render(areaNode, areaDef, contextObjects, out);
                 }
             }
 
-            out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
+            out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(areaNode)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
         }
         catch (Exception e) {
-            throw new RenderException("Can't render area " + content, e);
+            throw new RenderException("Can't render area " + areaNode, e);
         }
     }
 
