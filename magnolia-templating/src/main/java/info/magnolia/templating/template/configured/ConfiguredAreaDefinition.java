@@ -71,4 +71,42 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((availableParagraphs == null) ? 0 : availableParagraphs.hashCode());
+        result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof ConfiguredAreaDefinition)) {
+            return false;
+        }
+        ConfiguredAreaDefinition other = (ConfiguredAreaDefinition) obj;
+        if (availableParagraphs == null) {
+            if (other.availableParagraphs != null) {
+                return false;
+            }
+        } else if (!availableParagraphs.equals(other.availableParagraphs)) {
+            return false;
+        }
+        if (enabled == null) {
+            if (other.enabled != null) {
+                return false;
+            }
+        } else if (!enabled.equals(other.enabled)) {
+            return false;
+        }
+        return true;
+    }
 }
