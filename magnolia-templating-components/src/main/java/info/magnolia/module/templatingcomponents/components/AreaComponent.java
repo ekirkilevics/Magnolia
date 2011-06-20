@@ -95,9 +95,7 @@ public class AreaComponent extends AbstractContentComponent {
         param(out, "content", getNodePath(content));
 
         // Can already be set - or not. If not, we set it in order to avoid tons of if statements in the beyond code...
-        if (area == null) {
-            area = resolveAreaDefinition();
-        }
+        area = resolveAreaDefinition();
 
         param(out, "name", resolveName());
         param(out, "availableComponents", resolveAvailableComponents());
@@ -109,6 +107,9 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     protected AreaDefinition resolveAreaDefinition() throws RenderException  {
+        if (area != null) {
+            return area;
+        }
         if(!StringUtils.isEmpty(name)){
             TemplateDefinition templateDefinition = resolveTemplateDefinition();
             if(templateDefinition.getAreas().containsKey(name)){
@@ -174,7 +175,7 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     private String resolveName() {
-        return name != null ? name : area.getName();
+        return name != null ? name : (area != null ? area.getName() : null);
     }
 
     private boolean shouldShowAddButton() throws RenderException {

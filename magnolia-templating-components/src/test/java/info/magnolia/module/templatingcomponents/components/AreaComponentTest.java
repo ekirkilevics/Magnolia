@@ -34,6 +34,8 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -143,7 +145,7 @@ public class AreaComponentTest {
         final StringWriter out = new StringWriter();
         areaComponent.postRender(out);
 
-        verify(engine).render(eq(paragraph01), eq(new ConfiguredAreaDefinition()), argThat(new ArgumentMatcher<Map<String, Object>>() {
+        verify(engine).render(eq(paragraph01), eq(area), argThat(new ArgumentMatcher<Map<String, Object>>() {
             @Override
             public boolean matches(Object componentsMap) {
                 Object component = ((Map<String, Object>) componentsMap).get(AreaComponent.COMPONENT);
@@ -179,7 +181,7 @@ public class AreaComponentTest {
         final StringWriter out = new StringWriter();
         areaComponent.postRender(out);
 
-        verify(engine).render(eq(paragraph01.getParent()), eq(new ConfiguredAreaDefinition()), argThat(new ArgumentMatcher<Map<String, Object>>() {
+        verify(engine).render(eq(paragraph01.getParent()), eq(area), argThat(new ArgumentMatcher<Map<String, Object>>() {
             @Override
             public boolean matches(Object componentsMap) {
                 List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaComponent.COMPONENTS);
@@ -213,7 +215,7 @@ public class AreaComponentTest {
         final StringWriter out = new StringWriter();
         areaComponent.postRender(out);
 
-        verify(engine).render(eq(paragraph01.getParent()), eq(new ConfiguredAreaDefinition()), argThat(new ArgumentMatcher<Map<String, Object>>() {
+        verify(engine).render(eq(paragraph01.getParent()), eq(area), argThat(new ArgumentMatcher<Map<String, Object>>() {
             @Override
             public boolean matches(Object componentsMap) {
                 List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaComponent.COMPONENTS);
@@ -287,16 +289,18 @@ public class AreaComponentTest {
                 + AbstractContentComponent.LINEBREAK, outString);
     }
 
+    public void testResolveMethods() throws Exception {
+        ConfiguredAreaDefinition areaDef = new ConfiguredAreaDefinition();
+        areaComponent.setArea(areaDef);
+        assertSame(areaDef, areaComponent.resolveAreaDefinition());
+        areaComponent.setArea(null);
+        assertNotSame(areaDef, areaComponent.resolveAreaDefinition());
+    }
+
     @After
     public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         SystemProperty.clear();
     }
-
-    // public class NodeNameArgumentMatcher extends ArgumentMatcher<Node> {
-    // public boolean matches(Object node) {
-    // return ((Node) node).getName().equals(super.)
-    // }
-    // }
 }
