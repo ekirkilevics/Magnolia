@@ -52,7 +52,9 @@ public interface NavigationView extends View {
     public static interface Presenter{
         void onMenuSelection(MenuItemDefinition menuItem);
     }
-
-    void update(String id);
+    /**
+     * Selects a menu item in the navigation based on its definition.
+     */
+    void select(MenuItemDefinition menuItemDefinition);
 
 }

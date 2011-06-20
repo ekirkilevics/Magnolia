@@ -35,7 +35,6 @@ package info.magnolia.ui.admincentral.navigation.activity;
 
 import info.magnolia.ui.admincentral.navigation.NavigationView;
 import info.magnolia.ui.admincentral.navigation.action.NavigationActionFactory;
-import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.Place;
@@ -44,23 +43,39 @@ import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
+import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
+import info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition;
+import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
+import info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition;
+import info.magnolia.ui.model.navigation.registry.NavigationProvider;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * NavigationActivity.
+ * Navigation activity.
  * @author fgrilli
  *
  */
 public class NavigationActivity extends AbstractActivity implements NavigationView.Presenter {
+
+    private static final Logger log = LoggerFactory.getLogger(NavigationActivity.class);
     private NavigationView view;
     private NavigationActionFactory actionFactory;
     private Shell shell;
+    private Map<Place, MenuItemDefinition> menuItemPlaceMappings = new HashMap<Place, MenuItemDefinition>();
 
-    public NavigationActivity(NavigationView view, NavigationActionFactory actionFactory, Shell shell) {
+    public NavigationActivity(NavigationView view, NavigationActionFactory actionFactory, NavigationProvider navigationProvider, Shell shell) {
         this.actionFactory = actionFactory;
         this.view = view;
         this.shell = shell;
         view.setPresenter(this);
+        createMenuItemPlaceMappings(navigationProvider.getNavigation());
     }
     @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
@@ -85,10 +100,51 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
     }
 
     public void update(Place place) {
-        if(WorkbenchPlace.class.isAssignableFrom(place.getClass())){
-            WorkbenchPlace workbenchPlace = (WorkbenchPlace)place;
-            view.update(workbenchPlace.getWorkbenchName());
+        MenuItemDefinition menuItemDefinition = getAssignedNavigationItem(place);
+        if(menuItemDefinition != null){
+            view.select(menuItemDefinition);
         }
+    }
+
+    private MenuItemDefinition getAssignedNavigationItem(Place place) {
+        return menuItemPlaceMappings.get(place);
+    }
+
+    private void createMenuItemPlaceMappings(NavigationDefinition navigationDefinition) {
+
+        for(NavigationWorkareaDefinition workareaDefinition:navigationDefinition.getWorkareas()){
+            if(!checkActionDefinition(workareaDefinition)){
+                continue;
+            }
+            final Place workareaPlace = ((PlaceChangeActionDefinition)workareaDefinition.getActionDefinition()).getPlace();
+            //log.debug("mapping place {} to menu item {}", workareaPlace, workareaDefinition.getName());
+            menuItemPlaceMappings.put(workareaPlace, workareaDefinition);
+
+            for(NavigationGroupDefinition groupDefinition: workareaDefinition.getGroups()){
+                for(NavigationItemDefinition navigationItem : groupDefinition.getItems()){
+                    if(!checkActionDefinition(navigationItem)){
+                        continue;
+                    }
+                    final Place menuItemPlace = ((PlaceChangeActionDefinition)navigationItem.getActionDefinition()).getPlace();
+                    //log.debug("mapping place {} to menu item {}", menuItemPlace, navigationItem.getName());
+                    menuItemPlaceMappings.put(menuItemPlace, navigationItem);
+                }
+            }
+        }
+    }
+
+    private boolean checkActionDefinition(MenuItemDefinition menuItemDefinition) {
+        ActionDefinition actionDefinition = menuItemDefinition.getActionDefinition();
+        if(actionDefinition == null) {
+            log.warn("No action definition defined for navigation item [{}]. The item will be rendered but nothing will happen when clicking on it. Is this intended?", menuItemDefinition.getName());
+            return false;
+        }
+        if(!PlaceChangeActionDefinition.class.isAssignableFrom(actionDefinition.getClass())){
+            log.warn("Type for action definition [{}] does not implement [{}]. Menu item [{}] won't work correctly.",
+                    new Object[]{actionDefinition.getClass().getName(), PlaceChangeActionDefinition.class.getName(), menuItemDefinition.getName()});
+            return false;
+        }
+        return true;
     }
 
 }

@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
@@ -109,9 +110,9 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
     }
 
     @Override
-    public void update(String id) {
+    public void select(MenuItemDefinition menuItemDefinition) {
         for (NavigationWorkArea workarea : registeredNavigationAreas) {
-            workarea.update(id);
+            workarea.select(menuItemDefinition);
         }
     }
 
