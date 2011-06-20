@@ -160,6 +160,7 @@ input.v-textfield,textarea.v-textarea,.v-filterselect {
 
 .sidebar-menu .v-caption {
   float: right;
+  padding-top: 2ex;
 }
 
 .m-workbench-header {

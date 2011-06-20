@@ -73,6 +73,7 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
     // TODO don't pass the registry but the navigation itself
     public NavigationViewImpl(NavigationProvider navigationProvider, NavigationPermissionSchema permissions) {
         final NavigationDefinition navigation = navigationProvider.getNavigation();
+        outerNavigationContainer.setSizeFull();
 
         for (final NavigationWorkareaDefinition definition : navigation.getWorkareas()) {
             log.debug("creating navigation workarea {}", definition.getName());

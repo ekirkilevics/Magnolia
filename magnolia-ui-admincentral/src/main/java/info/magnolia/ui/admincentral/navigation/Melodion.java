@@ -131,9 +131,6 @@ public class Melodion extends CssLayout {
 
         private Tab(Label caption) {
             this.caption = caption;
-            // setStyleName(STYLE);
-            // caption.addStyleName(BaseTheme.BUTTON_LINK);
-            // caption.addStyleName(STYLE_CAPTION);
             addComponent(animator);
             addComponent(caption);
 
@@ -183,7 +180,6 @@ public class Melodion extends CssLayout {
                         addComponent(content);
                     }
                     animator.animate(content, AnimType.ROLL_DOWN_OPEN_POP);
-                    // caption.addStyleName(STYLE_CAPTION_OPEN);
                     open = true;
                 }
             }
@@ -195,9 +191,8 @@ public class Melodion extends CssLayout {
 
         public void close() {
             if (content != null) {
-                // ap.animate(content, AnimType.ROLL_UP_CLOSE_REMOVE);
-                removeComponent(content);
-                // caption.removeStyleName(STYLE_CAPTION_OPEN);
+                animator.animate(content, AnimType.ROLL_UP_CLOSE_REMOVE);
+                // removeComponent(content);
                 open = false;
             }
         }
