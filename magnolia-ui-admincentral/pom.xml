@@ -17,6 +17,10 @@
     </dependency>
     <dependency>
       <groupId>org.vaadin.addons</groupId>
+      <artifactId>vaadin-treetable</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.vaadin.addons</groupId>
       <artifactId>lazyloadwrapper</artifactId>
     </dependency>
     <dependency>

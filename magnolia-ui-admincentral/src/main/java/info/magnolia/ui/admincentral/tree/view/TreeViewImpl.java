@@ -43,10 +43,10 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import javax.jcr.Item;
 
+import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.TreeTable;
 
 /**
  * Vaadin UI component that displays a tree.
