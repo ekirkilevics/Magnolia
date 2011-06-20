@@ -35,8 +35,11 @@ package info.magnolia.templating.renderer.registry;
 
 import info.magnolia.templating.renderer.Renderer;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -60,6 +63,25 @@ public class RendererRegistry {
     public void unregister(String id) {
         synchronized (providers) {
             providers.remove(id);
+        }
+    }
+
+    public Set<String> removeAndRegister(Collection<String> remove, Collection<RendererProvider> providers2) {
+        synchronized (providers) {
+            final Set<String> ids = new HashSet<String>();
+            for (String id : remove) {
+                providers.remove(id);
+            }
+            for (RendererProvider provider : providers2) {
+                String id = provider.getId();
+                if (providers.containsKey(id)) {
+                    // TODO log
+                } else {
+                    providers.put(id, provider);
+                }
+                ids.add(provider.getId());
+            }
+            return ids;
         }
     }
 

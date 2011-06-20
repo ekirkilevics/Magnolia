@@ -40,7 +40,9 @@ import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.NodeVisitor;
 import info.magnolia.module.ModuleRegistry;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.jcr.Node;
@@ -59,7 +61,7 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final Set<String> registeredIds = new HashSet<String>();
+    private Set<String> registeredIds = new HashSet<String>();
     private TemplateDefinitionRegistry templateDefinitionRegistry;
 
     public ConfiguredTemplateDefinitionManager(ModuleRegistry moduleRegistry, TemplateDefinitionRegistry templateDefinitionRegistry) {
@@ -68,44 +70,38 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
     }
 
     @Override
-    protected void onRegister(Node node) {
+    protected void reload(List<Node> nodes) throws RepositoryException {
 
-        try {
+        final List<TemplateDefinitionProvider> providers = new ArrayList<TemplateDefinitionProvider>();
+
+        for (Node node : nodes) {
+
             NodeUtil.visit(node, new NodeVisitor() {
 
                 @Override
                 public void visit(Node node) throws RepositoryException {
-                    for (Node templateDefinitionNode : NodeUtil.getNodes(node, MgnlNodeType.NT_CONTENTNODE)) {
-                        registerTemplateDefinition(templateDefinitionNode);
+                    for (Node configNode : NodeUtil.getNodes(node, MgnlNodeType.NT_CONTENTNODE)) {
+                        TemplateDefinitionProvider provider = readProvider(configNode);
+                        if (provider != null) {
+                            providers.add(provider);
+                        }
                     }
                 }
             }, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
         }
-        catch (Exception e) {
-            throw new RuntimeException("Can't register template definitions defined at " + node, e);
-        }
+
+        this.registeredIds = templateDefinitionRegistry.removeAndRegister(registeredIds, providers);
     }
 
-    protected void registerTemplateDefinition(Node templateDefinitionNode) throws RepositoryException {
+    protected TemplateDefinitionProvider readProvider(Node templateDefinitionNode) throws RepositoryException {
 
         final String id = createId(templateDefinitionNode);
 
-        ConfiguredTemplateDefinitionProvider provider = null;
         try {
-            provider = new ConfiguredTemplateDefinitionProvider(id, templateDefinitionNode);
+            return new ConfiguredTemplateDefinitionProvider(id, templateDefinitionNode);
         } catch (Exception e) {
             log.error("Unable to create provider for template [" + id + "]", e);
-        }
-
-        if (provider != null) {
-            try {
-                synchronized (registeredIds) {
-                    templateDefinitionRegistry.registerTemplateDefinition(provider);
-                    this.registeredIds.add(id);
-                }
-            } catch (TemplateDefinitionRegistrationException e) {
-                log.error("Unable to register template [" + id + "]", e);
-            }
+            return null;
         }
     }
 
@@ -114,15 +110,5 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
         final String[] pathElements = path.split("/");
         final String moduleName = pathElements[2];
         return moduleName + ":" + StringUtils.removeStart(path, "/modules/" + moduleName + "/templates/");
-    }
-
-    @Override
-    protected void onClear() {
-        synchronized (registeredIds) {
-            for (String id : registeredIds) {
-                templateDefinitionRegistry.unregister(id);
-            }
-            this.registeredIds.clear();
-        }
     }
 }

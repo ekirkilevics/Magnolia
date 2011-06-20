@@ -37,23 +37,30 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultContent;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.templating.renderer.Renderer;
 
 /**
- * RendererProvider that instantiates a dialog from a configuration node.
+ * RendererProvider that instantiates a renderer from a configuration node.
  *
  * @version $Id$
  */
 public class ConfiguredRendererProvider implements RendererProvider {
 
+    private String id;
     private Renderer renderer;
 
-    public ConfiguredRendererProvider(Node configNode) throws RepositoryException, Content2BeanException {
-        Content content = new DefaultContent(configNode, null);
+    public ConfiguredRendererProvider(String id, Node configNode) throws RepositoryException, Content2BeanException {
+        this.id = id;
+        Content content = ContentUtil.wrapAsContent(configNode);
         this.renderer = (Renderer) Content2BeanUtil.toBean(content, true, Renderer.class);
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override

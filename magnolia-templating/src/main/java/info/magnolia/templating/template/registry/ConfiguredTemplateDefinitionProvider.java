@@ -36,31 +36,29 @@ package info.magnolia.templating.template.registry;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultContent;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.templating.template.TemplateDefinition;
 
 /**
- * TemplateDefinitionProvider that instantiates a dialog from a configuration node.
+ * TemplateDefinitionProvider that instantiates a template from a configuration node.
  *
  * @version $Id$
  */
 public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionProvider {
-
-    private static final Logger log = LoggerFactory.getLogger(ConfiguredTemplateDefinitionProvider.class);
 
     private String id;
     private TemplateDefinition templateDefinition;
 
     public ConfiguredTemplateDefinitionProvider(String id, Node configNode) throws RepositoryException, Content2BeanException {
         this.id = id;
-        Content content = new DefaultContent(configNode, null);
+        Content content = ContentUtil.wrapAsContent(configNode);
         this.templateDefinition = (TemplateDefinition) Content2BeanUtil.toBean(content, true, TemplateDefinition.class);
+        if (templateDefinition != null) {
+            templateDefinition.setId(id);
+        }
     }
 
     @Override

@@ -43,5 +43,7 @@ import info.magnolia.templating.renderer.Renderer;
  */
 public interface RendererProvider {
 
+    String getId();
+
     Renderer getRenderer() throws RendererRegistrationException;
 }

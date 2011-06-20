@@ -42,7 +42,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -79,6 +81,25 @@ public class TemplateDefinitionRegistry {
     public void unregister(String id) {
         synchronized (providers) {
             providers.remove(id);
+        }
+    }
+
+    public Set<String> removeAndRegister(Collection<String> remove, Collection<TemplateDefinitionProvider> providers2) {
+        synchronized (providers) {
+            final Set<String> ids = new HashSet<String>();
+            for (String id : remove) {
+                providers.remove(id);
+            }
+            for (TemplateDefinitionProvider provider : providers2) {
+                String id = provider.getId();
+                if (providers.containsKey(id)) {
+                    // TODO log
+                } else {
+                    providers.put(id, provider);
+                }
+                ids.add(provider.getId());
+            }
+            return ids;
         }
     }
 

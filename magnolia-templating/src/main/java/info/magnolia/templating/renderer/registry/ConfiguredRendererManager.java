@@ -33,7 +33,9 @@
  */
 package info.magnolia.templating.renderer.registry;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -43,7 +45,9 @@ import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.ModuleConfigurationObservingManager;
+import info.magnolia.jcr.util.NodeTypeFilter;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.NodeVisitor;
 import info.magnolia.module.ModuleRegistry;
 
 /**
@@ -55,7 +59,7 @@ public class ConfiguredRendererManager extends ModuleConfigurationObservingManag
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final Set<String> registeredIds = new HashSet<String>();
+    private Set<String> registeredIds = new HashSet<String>();
     private RendererRegistry registry;
 
     public ConfiguredRendererManager(ModuleRegistry moduleRegistry, RendererRegistry registry) {
@@ -64,39 +68,42 @@ public class ConfiguredRendererManager extends ModuleConfigurationObservingManag
     }
 
     @Override
-    protected void onRegister(Node node) throws RepositoryException {
+    protected void reload(List<Node> nodes) throws RepositoryException {
 
-        for (Node rendererNode : NodeUtil.getNodes(node, MgnlNodeType.NT_CONTENTNODE)) {
+        final List<RendererProvider> providers = new ArrayList<RendererProvider>();
 
-            final String id = rendererNode.getName();
+        for (Node node : nodes) {
 
-            ConfiguredRendererProvider provider = null;
-            try {
-                provider = new ConfiguredRendererProvider(rendererNode);
-            } catch (Exception e) {
-                log.error("Unable to create provider for template [" + id + "]", e);
-            }
+            NodeUtil.visit(node, new NodeVisitor() {
 
-            if (provider != null) {
-                try {
-                    synchronized (registeredIds) {
-                        registry.registerRenderer(id, provider);
-                        this.registeredIds.add(id);
+                @Override
+                public void visit(Node node) throws RepositoryException {
+                    for (Node configNode : NodeUtil.getNodes(node, MgnlNodeType.NT_CONTENTNODE)) {
+                        RendererProvider provider = readProvider(configNode);
+                        if (provider != null) {
+                            providers.add(provider);
+                        }
                     }
-                } catch (RendererRegistrationException e) {
-                    log.error("Unable to register renderer [" + id + "]", e);
                 }
-            }
+            }, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
+        }
+
+        this.registeredIds = registry.removeAndRegister(registeredIds, providers);
+    }
+
+    protected RendererProvider readProvider(Node rendererNode) throws RepositoryException {
+
+        final String id = createId(rendererNode);
+
+        try {
+            return new ConfiguredRendererProvider(id, rendererNode);
+        } catch (Exception e) {
+            log.error("Unable to create provider renderer [" + id + "]", e);
+            return null;
         }
     }
 
-    @Override
-    protected void onClear() {
-        synchronized (registeredIds) {
-            for (String id : registeredIds) {
-                registry.unregister(id);
-            }
-            this.registeredIds.clear();
-        }
+    private String createId(Node rendererNode) throws RepositoryException {
+        return rendererNode.getName();
     }
 }
