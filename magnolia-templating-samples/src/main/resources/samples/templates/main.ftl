@@ -18,10 +18,14 @@
 
     <div id="main" style="padding:15px;">
 
+      <h2>Singleton Area (foobar)</h2>
+      [@cms.area name="foobar" type="single" paragraphs="samples:paragraphs/text"/]
 
+      <h2>Singleton Area (stage)</h2>
+      [@cms.area name="stage" type="single" paragraphs="samples:paragraphs/text"/]
 
       <h2>Area (main)</h2>
-      [@cms.area name="main" /]
+      [@cms.area name="main" dialog="samples:mainProperties" paragraphs="samples:paragraphs/howToFTL,samples:paragraphs/text"/]
 
     </div>
 
