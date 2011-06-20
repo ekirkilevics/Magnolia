@@ -70,7 +70,7 @@ public class Melodion extends CssLayout {
         if (c instanceof Tab) {
             Tab t = (Tab) c;
             t.caption.addStyleName("selected");
-            t.open();
+            t.expand();
         }
         else {
             c.addStyleName("selected");
@@ -86,10 +86,10 @@ public class Melodion extends CssLayout {
         }
     }
 
-    public void closeOthers(Tab tab) {
+    public void collapseOthers(Tab tab) {
         for (Tab t : tabs) {
             if (t != tab) {
-                t.close();
+                t.collapse();
             }
         }
     }
@@ -115,19 +115,13 @@ public class Melodion extends CssLayout {
      */
     public class Tab extends CssLayout {
 
-        public static final String STYLE = "v-disclosure";
+        private AnimatorProxy animator = new AnimatorProxy();
 
-        public static final String STYLE_CAPTION = STYLE + "-caption";
+        private Label caption;
 
-        public static final String STYLE_CAPTION_OPEN = STYLE_CAPTION + "-open";
+        private CssLayout content = null;
 
-        protected AnimatorProxy animator = new AnimatorProxy();
-
-        protected CssLayout content = null;
-
-        protected Label caption;
-
-        protected boolean open = false;
+        private boolean expanded = false;
 
         private Tab(Label caption) {
             this.caption = caption;
@@ -140,8 +134,8 @@ public class Melodion extends CssLayout {
                 public void layoutClick(LayoutClickEvent event) {
                     if (event.getChildComponent() == Tab.this.caption) {
                         setSelected(Tab.this);
-                        if (!open) {
-                            open();
+                        if (!expanded) {
+                            expand();
                         }
                     }
                 }
@@ -154,6 +148,7 @@ public class Melodion extends CssLayout {
             }
             buttons.add(b);
             content.addComponent(b);
+
             b.addListener(new Button.ClickListener() {
 
                 @Override
@@ -164,36 +159,27 @@ public class Melodion extends CssLayout {
             });
         }
 
-        public String getDisclosureCaption() {
-            return caption.getCaption();
-        }
-
-        public void setDisclosureCaption(String caption) {
-            this.caption.setCaption(caption);
-        }
-
-        public void open() {
-            if (!isOpen()) {
-                closeOthers(this);
+        public void expand() {
+            if (!isExpanded()) {
+                collapseOthers(this);
                 if (content != null) {
                     if (content.getParent() != this) {
                         addComponent(content);
                     }
                     animator.animate(content, AnimType.ROLL_DOWN_OPEN_POP);
-                    open = true;
+                    expanded = true;
                 }
             }
         }
 
-        public boolean isOpen() {
-            return open;
+        public boolean isExpanded() {
+            return expanded;
         }
 
-        public void close() {
+        public void collapse() {
             if (content != null) {
                 animator.animate(content, AnimType.ROLL_UP_CLOSE_REMOVE);
-                // removeComponent(content);
-                open = false;
+                expanded = false;
             }
         }
     }

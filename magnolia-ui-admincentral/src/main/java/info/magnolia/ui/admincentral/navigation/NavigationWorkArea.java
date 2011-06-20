@@ -193,7 +193,7 @@ public class NavigationWorkArea implements NavigationView, IsVaadinComponent {
         log.debug("selecting menu item {}", id);
         melodion.setSelected(c);
         if (c instanceof Melodion.Tab) {
-            ((Melodion.Tab) c).open();
+            ((Melodion.Tab) c).expand();
         }
     }
 
