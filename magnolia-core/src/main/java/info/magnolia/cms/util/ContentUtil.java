@@ -34,6 +34,7 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
@@ -639,4 +640,9 @@ public class ContentUtil {
             throw new RuntimeException(e);
         }
     }
+
+    public static Content wrapAsContent(Node node) throws RepositoryException {
+        return new DefaultContent(node, null);
+    }
+
 }
