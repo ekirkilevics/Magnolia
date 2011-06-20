@@ -33,7 +33,9 @@
  */
 package info.magnolia.ui.model.dialog.registry;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -59,7 +61,7 @@ public class ConfiguredDialogDefinitionManager extends ModuleConfigurationObserv
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final Set<String> registeredDialogs = new HashSet<String>();
+    private Set<String> registeredIds = new HashSet<String>();
     private final DialogDefinitionRegistry dialogDefinitionRegistry;
 
     public ConfiguredDialogDefinitionManager(ModuleRegistry moduleRegistry, DialogDefinitionRegistry dialogDefinitionRegistry) {
@@ -68,43 +70,38 @@ public class ConfiguredDialogDefinitionManager extends ModuleConfigurationObserv
     }
 
     @Override
-    protected void onRegister(Node node) {
+    protected void reload(List<Node> nodes) throws RepositoryException {
 
-        try {
+        final List<DialogDefinitionProvider> providers = new ArrayList<DialogDefinitionProvider>();
+
+        for (Node node : nodes) {
+
             NodeUtil.visit(node, new NodeVisitor() {
 
                 @Override
                 public void visit(Node node) throws RepositoryException {
                     for (Node dialogNode : NodeUtil.getNodes(node, MgnlNodeType.NT_CONTENTNODE)) {
-                        registerDialog(dialogNode);
+                        DialogDefinitionProvider provider = readProvider(dialogNode);
+                        if (provider != null) {
+                            providers.add(provider);
+                        }
                     }
                 }
             }, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
-        } catch (Exception e) {
-            throw new RuntimeException("Can't register dialog defined at " + node, e);
         }
+
+        this.registeredIds = dialogDefinitionRegistry.removeAndRegister(registeredIds, providers);
     }
 
-    private void registerDialog(Node dialogNode) throws RepositoryException {
+    protected DialogDefinitionProvider readProvider(Node dialogNode) throws RepositoryException {
 
         final String id = createId(dialogNode);
 
-        ConfiguredDialogDefinitionProvider dialogProvider = null;
         try {
-            dialogProvider = new ConfiguredDialogDefinitionProvider(id, dialogNode);
+            return new ConfiguredDialogDefinitionProvider(id, dialogNode);
         } catch (Exception e) {
             log.error("Unable to create provider for dialog [" + id + "]", e);
-        }
-
-        if (dialogProvider != null) {
-            try {
-                synchronized (registeredDialogs) {
-                    dialogDefinitionRegistry.registerDialog(dialogProvider);
-                    this.registeredDialogs.add(id);
-                }
-            } catch (DialogDefinitionRegistrationException e) {
-                log.error("Unable to register dialog [" + id + "]", e);
-            }
+            return null;
         }
     }
 
@@ -113,15 +110,5 @@ public class ConfiguredDialogDefinitionManager extends ModuleConfigurationObserv
         final String[] pathElements = path.split("/");
         final String moduleName = pathElements[2];
         return moduleName + ":" + StringUtils.removeStart(path, "/modules/" + moduleName + "/dialogs/");
-    }
-
-    @Override
-    protected void onClear() {
-        synchronized (registeredDialogs) {
-            for (String dialogName : registeredDialogs) {
-                dialogDefinitionRegistry.unregisterDialog(dialogName);
-            }
-            this.registeredDialogs.clear();
-        }
     }
 }

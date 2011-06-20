@@ -36,6 +36,7 @@ package info.magnolia.ui.model.dialog.registry;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
@@ -54,8 +55,11 @@ public class ConfiguredDialogDefinitionProvider implements DialogDefinitionProvi
 
     public ConfiguredDialogDefinitionProvider(String id, Node configNode) throws RepositoryException, Content2BeanException {
         this.id = id;
-        this.dialogDefinition = (DialogDefinition) Content2BeanUtil.toBean(ContentUtil.asContent(configNode), true, DialogDefinition.class);
-        this.dialogDefinition.setId(id);
+        Content content = ContentUtil.wrapAsContent(configNode);
+        this.dialogDefinition = (DialogDefinition) Content2BeanUtil.toBean(content, true, DialogDefinition.class);
+        if (this.dialogDefinition != null) {
+            this.dialogDefinition.setId(id);
+        }
     }
 
     @Override

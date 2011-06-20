@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.model.dialog.registry;
 
+import java.util.Collection;
+import java.util.Set;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
@@ -48,6 +50,8 @@ public interface DialogDefinitionRegistry {
     void registerDialog(DialogDefinitionProvider provider) throws DialogDefinitionRegistrationException;
 
     void unregisterDialog(String id);
+
+    Set<String> removeAndRegister(Collection<String> remove, Collection<DialogDefinitionProvider> providers2);
 
     /**
      * Gets dialog definition for dialog of provided id or null when such dialog is not registered.
