@@ -68,14 +68,14 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
     private NavigationView view;
     private NavigationActionFactory actionFactory;
     private Shell shell;
-    private Map<Place, MenuItemDefinition> menuItemPlaceMappings = new HashMap<Place, MenuItemDefinition>();
+    private Map<Place, MenuItemDefinition> placeToMenuItemDefinitionMappings = new HashMap<Place, MenuItemDefinition>();
 
     public NavigationActivity(NavigationView view, NavigationActionFactory actionFactory, NavigationProvider navigationProvider, Shell shell) {
         this.actionFactory = actionFactory;
         this.view = view;
         this.shell = shell;
         view.setPresenter(this);
-        createMenuItemPlaceMappings(navigationProvider.getNavigation());
+        createPlaceToMenuItemDefinitionMappings(navigationProvider.getNavigation());
     }
     @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
@@ -107,36 +107,36 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
     }
 
     private MenuItemDefinition getAssignedNavigationItem(Place place) {
-        return menuItemPlaceMappings.get(place);
+        return placeToMenuItemDefinitionMappings.get(place);
     }
 
-    private void createMenuItemPlaceMappings(NavigationDefinition navigationDefinition) {
+    private void createPlaceToMenuItemDefinitionMappings(NavigationDefinition navigationDefinition) {
 
         for(NavigationWorkareaDefinition workareaDefinition:navigationDefinition.getWorkareas()){
-            if(!checkActionDefinition(workareaDefinition)){
+            if(!checkMenuItemDefinition(workareaDefinition)){
                 continue;
             }
             final Place workareaPlace = ((PlaceChangeActionDefinition)workareaDefinition.getActionDefinition()).getPlace();
             //log.debug("mapping place {} to menu item {}", workareaPlace, workareaDefinition.getName());
-            menuItemPlaceMappings.put(workareaPlace, workareaDefinition);
+            placeToMenuItemDefinitionMappings.put(workareaPlace, workareaDefinition);
 
             for(NavigationGroupDefinition groupDefinition: workareaDefinition.getGroups()){
                 for(NavigationItemDefinition navigationItem : groupDefinition.getItems()){
-                    if(!checkActionDefinition(navigationItem)){
+                    if(!checkMenuItemDefinition(navigationItem)){
                         continue;
                     }
                     final Place menuItemPlace = ((PlaceChangeActionDefinition)navigationItem.getActionDefinition()).getPlace();
                     //log.debug("mapping place {} to menu item {}", menuItemPlace, navigationItem.getName());
-                    menuItemPlaceMappings.put(menuItemPlace, navigationItem);
+                    placeToMenuItemDefinitionMappings.put(menuItemPlace, navigationItem);
                 }
             }
         }
     }
 
-    private boolean checkActionDefinition(MenuItemDefinition menuItemDefinition) {
+    private boolean checkMenuItemDefinition(MenuItemDefinition menuItemDefinition) {
         ActionDefinition actionDefinition = menuItemDefinition.getActionDefinition();
         if(actionDefinition == null) {
-            log.warn("No action definition defined for navigation item [{}]. The item will be rendered but nothing will happen when clicking on it. Is this intended?", menuItemDefinition.getName());
+            log.warn("No action definition defined for navigation item [{}]. The item will be rendered but nothing will happen when clicking on it. Is that intended?", menuItemDefinition.getName());
             return false;
         }
         if(!PlaceChangeActionDefinition.class.isAssignableFrom(actionDefinition.getClass())){
