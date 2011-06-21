@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.components;
+package info.magnolia.templating.elements;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

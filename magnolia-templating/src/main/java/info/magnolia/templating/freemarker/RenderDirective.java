@@ -40,7 +40,7 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.templating.components.RenderElement;
+import info.magnolia.templating.elements.RenderElement;
 
 /**
  * A freemarker directive for rendering an arbitrary piece of content.

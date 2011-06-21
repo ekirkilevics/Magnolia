@@ -36,7 +36,7 @@ package info.magnolia.templating.freemarker;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
-import info.magnolia.templating.components.AbstractContentTemplatingElement;
+import info.magnolia.templating.elements.AbstractContentTemplatingElement;
 import info.magnolia.templating.elements.TemplatingElement;
 
 import java.io.IOException;

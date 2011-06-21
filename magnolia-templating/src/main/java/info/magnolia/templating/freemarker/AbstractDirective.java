@@ -60,7 +60,7 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
-import info.magnolia.templating.components.AbstractContentTemplatingElement;
+import info.magnolia.templating.elements.AbstractContentTemplatingElement;
 import info.magnolia.templating.elements.TemplatingElement;
 
 /**

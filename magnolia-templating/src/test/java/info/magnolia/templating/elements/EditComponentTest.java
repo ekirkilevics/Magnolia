@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.components;
+package info.magnolia.templating.elements;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -52,6 +52,7 @@ import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.templating.elements.EditElement;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
 

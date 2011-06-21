@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.components;
+package info.magnolia.templating.elements;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;

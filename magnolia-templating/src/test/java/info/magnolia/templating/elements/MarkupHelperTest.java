@@ -38,7 +38,6 @@ import java.io.StringWriter;
 
 import org.junit.Test;
 
-import info.magnolia.templating.components.MarkupHelper;
 import static org.junit.Assert.*;
 
 /**

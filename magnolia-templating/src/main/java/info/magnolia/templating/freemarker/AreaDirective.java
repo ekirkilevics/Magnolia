@@ -41,7 +41,7 @@ import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.templating.components.AreaElement;
+import info.magnolia.templating.elements.AreaElement;
 
 /**
  * A freemarker directive for rendering an area.

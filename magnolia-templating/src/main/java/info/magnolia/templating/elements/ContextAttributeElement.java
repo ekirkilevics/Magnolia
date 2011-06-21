@@ -31,63 +31,52 @@
  * intact.
  *
  */
-package info.magnolia.templating.components;
+package info.magnolia.templating.elements;
 
 import java.io.IOException;
-import javax.jcr.Node;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
-import info.magnolia.rendering.engine.RenderingEngine;
+import info.magnolia.templating.elements.TemplatingElement;
 
 /**
- * Renders a piece of content.
+ * Sets a context attribute, used as a sub to ui:render.
  *
  * @version $Id$
  */
-public class RenderElement extends AbstractContentTemplatingElement {
+public class ContextAttributeElement implements TemplatingElement {
 
-    private boolean editable;
-    private String template;
-    private RenderingEngine renderingEngine;
+    private String name;
+    private Object value;
+    private Object previousValue;
 
-    public RenderElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
-        super(server, renderingContext);
-        this.renderingEngine = renderingEngine;
+    public ContextAttributeElement() {
     }
 
     @Override
     public void begin(Appendable out) throws IOException, RenderException {
-        Node content = getTargetContent();
-
-        // TODO not sure how to pass editable
-
-        WebContext webContext = MgnlContext.getWebContext();
-        webContext.push(webContext.getRequest(), webContext.getResponse());
-        try {
-            renderingEngine.render(content, out);
-        } finally {
-            webContext.pop();
-            webContext.setPageContext(null);
-        }
+        previousValue = MgnlContext.getAttribute(name);
+        MgnlContext.setAttribute(name, value);
     }
 
-    public boolean getEditable() {
-        return editable;
+    @Override
+    public void end(Appendable out) throws IOException, RenderException {
+        MgnlContext.setAttribute(name, previousValue);
     }
 
-    public void setEditable(boolean editable) {
-        this.editable = editable;
+    public String getName() {
+        return name;
     }
 
-    public String getTemplate() {
-        return template;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setTemplate(String template) {
-        this.template = template;
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
     }
 }

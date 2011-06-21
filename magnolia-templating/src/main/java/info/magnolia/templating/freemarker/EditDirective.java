@@ -40,7 +40,7 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.templating.components.EditElement;
+import info.magnolia.templating.elements.EditElement;
 
 /**
  * A freemarker directive for the edit bar UI component.

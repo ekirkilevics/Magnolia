@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.components;
+package info.magnolia.templating.elements;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -39,6 +39,7 @@ import static org.mockito.Mockito.verify;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.templating.elements.ContextAttributeElement;
 import info.magnolia.test.ComponentsTestUtil;
 
 import java.io.StringWriter;

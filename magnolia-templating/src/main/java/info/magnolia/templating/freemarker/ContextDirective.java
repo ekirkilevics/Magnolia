@@ -40,7 +40,7 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.templating.components.ContextAttributeElement;
+import info.magnolia.templating.elements.ContextAttributeElement;
 
 /**
  * A freemarker directive for setting a context attribute.
