@@ -37,8 +37,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.templating.template.TemplateDefinition;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;

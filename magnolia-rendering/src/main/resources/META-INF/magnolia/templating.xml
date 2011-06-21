@@ -3,53 +3,53 @@
 <module>
   <name>templating</name>
   <displayName>Magnolia Templating Module</displayName>
-  <class>info.magnolia.templating.module.TemplatingModule</class>
-  <!--<versionHandler>info.magnolia.templating.module.setup.TemplatingModuleVersionHandler</versionHandler>-->
+  <class>info.magnolia.rendering.module.TemplatingModule</class>
+  <!--<versionHandler>info.magnolia.rendering.module.setup.TemplatingModuleVersionHandler</versionHandler>-->
   <version>${project.version}</version>
   <properties>
     <property>
-      <name>info.magnolia.templating.rendering.RenderingEngine</name>
+      <name>info.magnolia.rendering.engine.RenderingEngine</name>
       <value>/server/rendering/engine</value>
     </property><!--
     <property>
-      <name>info.magnolia.templating.rendering.RenderingContext</name>
-      <value>info.magnolia.templating.rendering.AggregationStateBasedRenderingContext</value>
+      <name>info.magnolia.rendering.context.RenderingContext</name>
+      <value>info.magnolia.rendering.context.AggregationStateBasedRenderingContext</value>
     </property>
     --><property>
-      <name>info.magnolia.templating.renderer.registry.RendererRegistry</name>
-      <value>info.magnolia.templating.renderer.registry.RendererRegistry</value>
+      <name>info.magnolia.rendering.renderer.registry.RendererRegistry</name>
+      <value>info.magnolia.rendering.renderer.registry.RendererRegistry</value>
     </property>
     <property>
-      <name>info.magnolia.templating.renderer.registry.ConfiguredRendererManager</name>
-      <value>info.magnolia.templating.renderer.registry.ConfiguredRendererManager</value>
+      <name>info.magnolia.rendering.renderer.registry.ConfiguredRendererManager</name>
+      <value>info.magnolia.rendering.renderer.registry.ConfiguredRendererManager</value>
     </property>
     <property>
-      <name>info.magnolia.templating.template.registry.TemplateDefinitionRegistry</name>
-      <value>info.magnolia.templating.template.registry.TemplateDefinitionRegistry</value>
+      <name>info.magnolia.rendering.template.registry.TemplateDefinitionRegistry</name>
+      <value>info.magnolia.rendering.template.registry.TemplateDefinitionRegistry</value>
     </property>
     <property>
-      <name>info.magnolia.templating.template.registry.ConfiguredTemplateDefinitionManager</name>
-      <value>info.magnolia.templating.template.registry.ConfiguredTemplateDefinitionManager</value>
+      <name>info.magnolia.rendering.template.registry.ConfiguredTemplateDefinitionManager</name>
+      <value>info.magnolia.rendering.template.registry.ConfiguredTemplateDefinitionManager</value>
     </property>
     <property>
-      <name>info.magnolia.templating.template.assignment.TemplateDefinitionAssignment</name>
-      <value>info.magnolia.templating.template.assignment.MetaDataBasedTemplateDefinitionAssignment</value>
+      <name>info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment</name>
+      <value>info.magnolia.rendering.template.assignment.MetaDataBasedTemplateDefinitionAssignment</value>
     </property>
     <property>
-      <name>info.magnolia.templating.template.RenderableDefinition</name>
-      <value>info.magnolia.templating.template.configured.ConfiguredRenderableDefinition</value>
+      <name>info.magnolia.rendering.template.RenderableDefinition</name>
+      <value>info.magnolia.rendering.template.configured.ConfiguredRenderableDefinition</value>
     </property>
     <property>
-      <name>info.magnolia.templating.template.TemplateDefinition</name>
-      <value>info.magnolia.templating.template.configured.ConfiguredTemplateDefinition</value>
+      <name>info.magnolia.rendering.template.TemplateDefinition</name>
+      <value>info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition</value>
     </property>
     <property>
-      <name>info.magnolia.templating.template.AreaDefinition</name>
-      <value>info.magnolia.templating.template.configured.ConfiguredAreaDefinition</value>
+      <name>info.magnolia.rendering.template.AreaDefinition</name>
+      <value>info.magnolia.rendering.template.configured.ConfiguredAreaDefinition</value>
     </property>
     <property>
-      <name>info.magnolia.templating.template.ParagraphAvailability</name>
-      <value>info.magnolia.templating.template.configured.ConfiguredParagraphAvailability</value>
+      <name>info.magnolia.rendering.template.ParagraphAvailability</name>
+      <value>info.magnolia.rendering.template.configured.ConfiguredParagraphAvailability</value>
     </property>
   </properties>
   <dependencies>

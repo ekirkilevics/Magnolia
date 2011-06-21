@@ -38,7 +38,7 @@ import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import info.magnolia.module.templatingcomponents.components.AreaComponent;
-import info.magnolia.templating.template.AreaDefinition;
+import info.magnolia.rendering.template.AreaDefinition;
 
 import java.io.IOException;
 import java.util.Map;

@@ -48,10 +48,10 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.jcr.util.SessionTestUtil;
-import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
-import info.magnolia.templating.rendering.RenderException;
-import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
 

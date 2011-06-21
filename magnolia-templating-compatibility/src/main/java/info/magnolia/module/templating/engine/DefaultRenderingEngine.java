@@ -60,7 +60,7 @@ import javax.jcr.Node;
  * template rendering is performed.
  *
  * @version $Id$
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.rendering.DefaultRenderingEngine}
+ * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.engine.DefaultRenderingEngine}
  *
  */
 public class DefaultRenderingEngine implements RenderingEngine {

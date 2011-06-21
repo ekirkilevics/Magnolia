@@ -37,9 +37,9 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.templating.template.TemplateDefinition;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.UnhandledException;

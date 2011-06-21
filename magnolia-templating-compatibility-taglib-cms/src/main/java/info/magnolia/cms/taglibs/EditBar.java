@@ -45,9 +45,9 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.templating.template.TemplateDefinition;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import java.io.IOException;
 

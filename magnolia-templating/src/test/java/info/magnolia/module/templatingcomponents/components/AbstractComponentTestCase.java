@@ -42,9 +42,9 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.jcr.util.SessionTestUtil;
-import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
-import info.magnolia.templating.template.registry.TemplateDefinitionProvider;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
 

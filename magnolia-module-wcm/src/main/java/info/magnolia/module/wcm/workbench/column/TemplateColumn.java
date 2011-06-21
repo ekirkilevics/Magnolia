@@ -35,9 +35,9 @@ package info.magnolia.module.wcm.workbench.column;
 
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.templating.template.TemplateDefinition;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.ui.admincentral.column.AbstractEditableColumn;
 import info.magnolia.ui.admincentral.column.EditableSelect;
 import info.magnolia.ui.framework.event.EventBus;

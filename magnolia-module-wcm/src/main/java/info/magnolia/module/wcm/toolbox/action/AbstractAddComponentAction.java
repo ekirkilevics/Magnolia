@@ -38,7 +38,7 @@ import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.module.wcm.editor.ComponentSelectionDialog;
 import info.magnolia.module.wcm.editor.ContentSelection;
 import info.magnolia.module.wcm.editor.PageChangedEvent;
-import info.magnolia.templating.template.TemplateDefinition;
+import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.admincentral.dialog.DialogSaveCallback;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;

@@ -51,9 +51,9 @@ import info.magnolia.freemarker.models.ContentModel;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.module.templatingcomponents.components.AbstractContentComponent;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.templating.rendering.RenderException;
-import info.magnolia.templating.rendering.RenderingContext;
-import info.magnolia.templating.rendering.RenderingEngine;
+import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.engine.RenderingEngine;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;

@@ -53,11 +53,11 @@ import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
-import info.magnolia.templating.rendering.RenderingContext;
-import info.magnolia.templating.rendering.RenderingEngine;
-import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
-import info.magnolia.templating.template.registry.TemplateDefinitionProvider;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.RenderingEngine;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.StringWriter;

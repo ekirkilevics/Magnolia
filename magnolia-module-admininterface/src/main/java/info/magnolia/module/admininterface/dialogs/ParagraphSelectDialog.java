@@ -47,9 +47,9 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.templating.template.TemplateDefinition;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import java.io.IOException;
 import java.net.URLEncoder;

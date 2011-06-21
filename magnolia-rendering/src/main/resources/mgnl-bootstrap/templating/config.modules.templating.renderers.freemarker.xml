@@ -10,7 +10,7 @@
     <sv:value>admin</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.templating.renderer.FreemarkerRenderer</sv:value>
+    <sv:value>info.magnolia.rendering.renderer.FreemarkerRenderer</sv:value>
   </sv:property>
   <sv:property sv:name="type" sv:type="String">
     <sv:value>freemarker</sv:value>

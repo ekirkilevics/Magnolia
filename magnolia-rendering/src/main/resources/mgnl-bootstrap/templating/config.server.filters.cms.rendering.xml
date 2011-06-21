@@ -11,7 +11,7 @@
     <sv:value>2d189ce0-23b3-40b4-a6d7-324140748002</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.templating.rendering.RenderingFilter</sv:value>
+    <sv:value>info.magnolia.rendering.engine.RenderingFilter</sv:value>
   </sv:property>
   <sv:property sv:name="enabled" sv:type="Boolean">
     <sv:value>true</sv:value>

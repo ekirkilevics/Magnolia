@@ -38,7 +38,7 @@ import info.magnolia.module.ModuleLifecycleContext;
 
 /**
  * Deprecated.
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.module.TemplatingModule}
+ * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.module.TemplatingModule}
  */
 public class TemplatingModule implements ModuleLifecycle {
 

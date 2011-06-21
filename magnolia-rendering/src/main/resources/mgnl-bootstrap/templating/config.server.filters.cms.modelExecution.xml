@@ -10,7 +10,7 @@
     <sv:value>62289312-e1ed-4c13-b6d5-6e0ded9052a3</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.templating.model.ModelExecutionFilter</sv:value>
+    <sv:value>info.magnolia.rendering.model.ModelExecutionFilter</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

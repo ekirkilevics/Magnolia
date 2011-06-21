@@ -36,11 +36,11 @@ package info.magnolia.module.templatingcomponents.components;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.templating.rendering.RenderException;
-import info.magnolia.templating.rendering.RenderingContext;
-import info.magnolia.templating.template.TemplateDefinition;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import java.io.IOException;
 

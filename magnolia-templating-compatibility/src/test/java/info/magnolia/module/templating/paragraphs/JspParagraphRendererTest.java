@@ -254,7 +254,7 @@ public class JspParagraphRendererTest {
 
     public static final class SkippableTestState extends RenderingModelImpl<RenderableDefinition> {
 
-        public SkippableTestState(Node content, info.magnolia.templating.template.RenderableDefinition definition, info.magnolia.templating.model.RenderingModel<RenderableDefinition> parent) {
+        public SkippableTestState(Node content, info.magnolia.rendering.template.RenderableDefinition definition, info.magnolia.rendering.model.RenderingModel<RenderableDefinition> parent) {
             super(content, definition, parent);
         }
         @Override

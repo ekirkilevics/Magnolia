@@ -35,7 +35,7 @@ package info.magnolia.module.templatingcomponents;
 
 import java.io.IOException;
 
-import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.rendering.engine.RenderException;
 
 
 /**

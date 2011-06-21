@@ -38,11 +38,11 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.templating.rendering.RenderException;
-import info.magnolia.templating.rendering.RenderingContext;
-import info.magnolia.templating.template.TemplateDefinition;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistrationException;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import java.io.IOException;
 import java.util.List;

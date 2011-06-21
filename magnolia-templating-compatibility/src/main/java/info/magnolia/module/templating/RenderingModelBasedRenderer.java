@@ -42,7 +42,7 @@ import info.magnolia.cms.core.Content;
  * @author tmattsson
  * @see info.magnolia.module.templating.ModelExecutionFilter
  * @see info.magnolia.module.templating.AbstractRenderer
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.renderer.RenderingModelBasedRenderer}
+ * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.renderer.RenderingModelBasedRenderer}
  */
 public interface RenderingModelBasedRenderer {
 

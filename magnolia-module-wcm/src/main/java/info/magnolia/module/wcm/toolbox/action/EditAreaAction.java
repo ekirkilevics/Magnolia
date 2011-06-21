@@ -34,7 +34,7 @@
 package info.magnolia.module.wcm.toolbox.action;
 
 import info.magnolia.module.wcm.editor.ContentSelection;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.framework.event.EventBus;
 

@@ -35,8 +35,8 @@ package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.templating.rendering.RenderException;
-import info.magnolia.templating.rendering.RenderingContext;
+import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.RenderException;
 
 import java.io.IOException;
 

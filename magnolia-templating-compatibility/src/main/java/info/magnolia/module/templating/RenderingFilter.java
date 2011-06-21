@@ -33,14 +33,14 @@
  */
 package info.magnolia.module.templating;
 
-import info.magnolia.templating.rendering.RenderingEngine;
-import info.magnolia.templating.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.engine.RenderingEngine;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 /**
  * Depricated.
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.rendering.RenderingFilter}
+ * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.engine.RenderingFilter}
  */
-public class RenderingFilter extends info.magnolia.templating.rendering.RenderingFilter {
+public class RenderingFilter extends info.magnolia.rendering.engine.RenderingFilter {
 
     public RenderingFilter(RenderingEngine renderingEngine, TemplateDefinitionRegistry templateDefinitionRegistry) {
         super(renderingEngine, templateDefinitionRegistry);

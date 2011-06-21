@@ -35,7 +35,7 @@ package info.magnolia.module.templating;
 
 /**
  * Deprecated.
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.model.EarlyExecutionAware}
+ * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.model.EarlyExecutionAware}
  */
-public interface EarlyExecutionAware extends info.magnolia.templating.model.EarlyExecutionAware{
+public interface EarlyExecutionAware extends info.magnolia.rendering.model.EarlyExecutionAware{
 }

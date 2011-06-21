@@ -37,7 +37,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
-import info.magnolia.templating.rendering.RenderException;
+import info.magnolia.rendering.engine.RenderException;
 
 import java.io.IOException;
 import java.util.ArrayList;

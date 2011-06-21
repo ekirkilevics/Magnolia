@@ -35,8 +35,8 @@ package info.magnolia.module.templating;
 
 /**
  * Deprecated.
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.model.ModelExecutionFilter}
+ * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.model.ModelExecutionFilter}
  */
-public class ModelExecutionFilter extends info.magnolia.templating.model.ModelExecutionFilter {
+public class ModelExecutionFilter extends info.magnolia.rendering.model.ModelExecutionFilter {
 
 }

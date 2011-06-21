@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.samples.templates;
 
-import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 
 
 /**

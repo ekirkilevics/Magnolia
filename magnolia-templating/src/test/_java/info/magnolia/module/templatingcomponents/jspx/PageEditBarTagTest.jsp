@@ -1,10 +1,11 @@
-<%@ page import="info.magnolia.module.templating.Template" %>
+<%@page import="info.magnolia.templating.template.configured.ConfiguredTemplateDefinition"%>
+<%@page import="info.magnolia.templating.template.TemplateDefinition"%>
 <%@ taglib prefix="ui" uri="http://magnolia-cms.com/taglib/templating-components" %>
 <%
-    Template dialogLessTpl = new Template();
+    TemplateDefinition dialogLessTpl = new ConfiguredTemplateDefinition();
     pageContext.setAttribute("dialogLessTpl", dialogLessTpl);
 
-    Template def = new Template();
+    ConfiguredTemplateDefinition def = new ConfiguredTemplateDefinition();
     def.setDialog("dialogFromDef");
     pageContext.setAttribute("def", def);
 %>

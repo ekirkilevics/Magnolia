@@ -50,9 +50,9 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.module.admininterface.VersionUtil;
-import info.magnolia.templating.model.RenderingModel;
-import info.magnolia.templating.model.RenderingModelImpl;
-import info.magnolia.templating.template.RenderableDefinition;
+import info.magnolia.rendering.model.RenderingModel;
+import info.magnolia.rendering.model.RenderingModelImpl;
+import info.magnolia.rendering.template.RenderableDefinition;
 
 public class MgnlDeletedTemplateModel extends RenderingModelImpl<RenderableDefinition> {
 

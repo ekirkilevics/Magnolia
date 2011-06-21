@@ -39,16 +39,16 @@ import javax.jcr.Node;
 
 /**
  * Deprecated.
- * @deprecated since 5.0, use {@link info.magnolia.templating.model.RenderingModelImpl} instead.
+ * @deprecated since 5.0, use {@link info.magnolia.rendering.model.RenderingModelImpl} instead.
  * @param <RD> the {@link RenderableDefinition} bound to the model
  */
 @Deprecated
-public class RenderingModelImpl<RD extends RenderableDefinition> extends info.magnolia.templating.model.RenderingModelImpl<RD> implements info.magnolia.module.templating.RenderingModel<RD>{
+public class RenderingModelImpl<RD extends RenderableDefinition> extends info.magnolia.rendering.model.RenderingModelImpl<RD> implements info.magnolia.module.templating.RenderingModel<RD>{
 
     public RenderingModelImpl(Content content, RD definition, RenderingModel< ? > parent) {
         super(content.getJCRNode(), definition, parent);
     }
-    public RenderingModelImpl(Node content, info.magnolia.templating.template.RenderableDefinition definition, info.magnolia.templating.model.RenderingModel parent) {
+    public RenderingModelImpl(Node content, info.magnolia.rendering.template.RenderableDefinition definition, info.magnolia.rendering.model.RenderingModel parent) {
         super(content, (RD) definition, parent);
     }
 }

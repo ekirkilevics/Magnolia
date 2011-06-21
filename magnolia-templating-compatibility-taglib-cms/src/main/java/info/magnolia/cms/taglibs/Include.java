@@ -38,7 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.templating.rendering.RenderingEngine;
+import info.magnolia.rendering.engine.RenderingEngine;
 
 import java.io.IOException;
 import java.util.ArrayList;

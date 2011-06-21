@@ -53,8 +53,8 @@ import info.magnolia.context.MgnlContext;
  *
  * @author pbracher
  * @version $Id$
- * @deprecated since 5.0, replaced by {@link info.magnolia.templating.renderer.AbstractRenderer}
- * FIXME remove most of the code and and try to extend the new {@link info.magnolia.templating.renderer.AbstractRenderer}
+ * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.renderer.AbstractRenderer}
+ * FIXME remove most of the code and and try to extend the new {@link info.magnolia.rendering.renderer.AbstractRenderer}
  *
  */
 public abstract class AbstractRenderer implements RenderingModelBasedRenderer {

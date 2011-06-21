@@ -36,7 +36,7 @@ package info.magnolia.module.templating;
 import java.lang.reflect.InvocationTargetException;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 
 /**
  * Base implementation for paragraph and template definitions. Provides the
