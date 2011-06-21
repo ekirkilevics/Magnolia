@@ -49,6 +49,6 @@ import javax.jcr.Node;
  */
 public interface Renderer {
 
-    void render(Node content, RenderableDefinition definition, Map<String, Object> context, Appendable out) throws IOException, RenderException ;
+    void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws IOException, RenderException ;
 
 }
