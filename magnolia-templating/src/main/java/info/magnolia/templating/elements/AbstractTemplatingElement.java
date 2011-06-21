@@ -52,7 +52,7 @@ import info.magnolia.rendering.template.RenderableDefinition;
  */
 public abstract class AbstractTemplatingElement implements TemplatingElement {
 
-    private static final String DEFAULT_I18N_BASENAME = "info.magnolia.module.templating.messages";
+    private static final String DEFAULT_I18N_BASENAME = "info.magnolia.templating.messages";
 
     private final ServerConfiguration server;
     private final RenderingContext renderingContext;
