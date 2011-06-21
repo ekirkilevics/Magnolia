@@ -33,16 +33,14 @@
  */
 package info.magnolia.cms.util;
 
-import java.io.Serializable;
-
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
+import java.io.Serializable;
 
 
 /**
@@ -51,28 +49,23 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class LazyContentWrapper extends ContentWrapper implements Serializable {
+    private static final Logger log = LoggerFactory.getLogger(LazyContentWrapper.class);
 
     private String repository;
 
     private String uuid;
 
-    protected transient Content node;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(LazyContentWrapper.class);
+    private transient Content node;
 
     public LazyContentWrapper(String repository, String uuid) {
         this.setRepository(repository);
         this.setUuid(uuid);
     }
 
-    public LazyContentWrapper(Content node){
+    public LazyContentWrapper(Content node) {
         try {
             this.setRepository(node.getWorkspace().getName());
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             log.error("can't read repository name from wrapping node", e);
         }
         this.setUuid(node.getUUID());
@@ -82,11 +75,10 @@ public class LazyContentWrapper extends ContentWrapper implements Serializable {
     @Override
     public synchronized Content getWrappedContent() {
         try {
-            if(node == null || !node.getJCRNode().getSession().isLive()){
+            if (node == null || !node.getJCRNode().getSession().isLive()) {
                 node = getHierarchyManager().getContentByUUID(getUuid());
             }
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             log.error("can't reinitialize node " + getUuid(), e);
         }
         return node;
