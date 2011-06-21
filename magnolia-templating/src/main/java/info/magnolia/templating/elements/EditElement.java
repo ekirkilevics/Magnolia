@@ -47,17 +47,21 @@ import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
+
 /**
- * Outputs an edit bar.
+ * Embeds a marker within the page that instructs the page editor to place an edit bar/button at this location.
  *
  * @version $Id$
  */
 public class EditElement extends AbstractContentTemplatingElement {
 
     public static final String CMS_EDIT = "cms:edit";
+    public static final String FORMAT_BAR = "bar";
+    public static final String FORMAT_BUTTON = "button";
+    public static final String DEFAULT_FORMAT = FORMAT_BAR;
 
     private String dialog;
-    private String format;
+    private String format = DEFAULT_FORMAT;
 
     public EditElement(ServerConfiguration server, RenderingContext renderingContext) {
         super(server, renderingContext);
@@ -65,30 +69,32 @@ public class EditElement extends AbstractContentTemplatingElement {
 
     @Override
     public void begin(Appendable out) throws IOException, RenderException {
+        if (!isAdmin()) {
+            return;
+        }
         Node content = getTargetContent();
 
-        MarkupHelper helper = new MarkupHelper(out);
+        TemplateDefinition templateDefinition = getRequiredTemplateDefinition(content);
 
+        MarkupHelper helper = new MarkupHelper(out);
         helper.startContent(content);
         helper.openTag(CMS_EDIT).attribute("content", getNodePath(content));
         if (StringUtils.isNotEmpty(format)) {
             helper.attribute("format", format);
         }
-        TemplateDefinition templateDefinition = getRequiredTemplateDefinition(content);
         helper.attribute("label", templateDefinition.getTitle());
         helper.attribute("dialog", resolveDialog(templateDefinition));
         helper.attribute("template", templateDefinition.getId());
         helper.closeTag(CMS_EDIT);
     }
 
-    private TemplateDefinition getRequiredTemplateDefinition(Node content) {
+    private TemplateDefinition getRequiredTemplateDefinition(Node content) throws RenderException {
         try {
             TemplateDefinitionRegistry registry = Components.getComponent(TemplateDefinitionRegistry.class);
             String template = MetaDataUtil.getMetaData(content).getTemplate();
             return registry.getTemplateDefinition(template);
         } catch (TemplateDefinitionRegistrationException e) {
-            // TODO dlipp: implement consistent ExceptionHandling for these situations.
-            throw new RuntimeException(e);
+            throw new RenderException("No template found for [" + content + "]", e);
         }
     }
 
@@ -105,6 +111,9 @@ public class EditElement extends AbstractContentTemplatingElement {
 
     @Override
     public void end(Appendable out) throws IOException, RenderException {
+        if (!isAdmin()) {
+            return;
+        }
         Node content = getTargetContent();
         MarkupHelper helper = new MarkupHelper(out);
         helper.endContent(content);

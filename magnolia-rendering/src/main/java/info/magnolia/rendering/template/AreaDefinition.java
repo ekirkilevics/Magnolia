@@ -45,6 +45,10 @@ import java.util.Map;
  */
 public interface AreaDefinition extends TemplateDefinition, Cloneable {
 
+    String TYPE_LIST = "list";
+    String TYPE_SINGLE = "single";
+    String DEFAULT_TYPE = TYPE_LIST;
+
     // TODO should be components
     // TODO should use ParagraphAvailability
     Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs();

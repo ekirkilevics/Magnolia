@@ -53,7 +53,6 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
 import freemarker.template.utility.DeepUnwrap;
-import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.freemarker.models.ContentModel;
 import info.magnolia.objectfactory.Components;
@@ -65,9 +64,8 @@ import info.magnolia.templating.elements.TemplatingElement;
 
 /**
  * A base class for freemarker directives used in Magnolia.
- * Subclasses need to implement the {@link info.magnolia.templating.freemarker.AbstractDirective#prepareUIComponent(RenderingContext, info.magnolia.cms.core.AggregationState, freemarker.core.Environment, java.util.Map, freemarker.template.TemplateModel[], freemarker.template.TemplateDirectiveBody)} method.
  *
- * @param <C> the UI component the directive is operating on
+ * @param <C> the templating element the directive is operating on
  * @version $Id$
  */
 public abstract class AbstractDirective<C extends TemplatingElement> implements TemplateDirectiveModel {
@@ -103,11 +101,12 @@ public abstract class AbstractDirective<C extends TemplatingElement> implements 
     }
 
     protected C createTemplatingElement() {
-        // FIXME use scope instead of fetching the objects and pass them as parameters
+
+        // FIXME use scope instead of fetching the RenderingContext for passing it as an argument
         final RenderingEngine renderingEngine = Components.getComponent(RenderingEngine.class);
         final RenderingContext renderingContext = renderingEngine.getRenderingContext();
 
-        return Components.getComponentProvider().newInstance(getTemplatingElementClass(), ServerConfiguration.getInstance(), renderingContext, renderingEngine);
+        return Components.getComponentProvider().newInstance(getTemplatingElementClass(), renderingContext);
     }
 
     protected Class<C> getTemplatingElementClass() {
@@ -116,7 +115,7 @@ public abstract class AbstractDirective<C extends TemplatingElement> implements 
     }
 
     /**
-     * Implementations of this method should return a AuthoringUiComponent, prepared with the known parameters.
+     * Implementations of this method should prepare the TemplatingElement with the known parameters.
      * If parameters have been grabbed using the methods provided by this class, they should be removed from
      * the map, thus leaving an empty map once the method returns. {@link #execute(freemarker.core.Environment, java.util.Map, freemarker.template.TemplateModel[], freemarker.template.TemplateDirectiveBody)}
      * will throw a TemplateModelException if there are leftover parameters.

@@ -57,13 +57,13 @@ public class AreaDirective extends AbstractDirective<AreaElement> {
 
         AreaDefinition area = (AreaDefinition) object(params, "area");
         String name = string(params, "name", null);
-        String paragraphs = string(params, "paragraphs", null); // TODO
+        String availableComponents = string(params, "components", null);
         String dialog = string(params, "dialog", null);
-        String type = string(params, "type", AreaElement.DEFAULT_TYPE);
+        String type = string(params, "type", AreaDefinition.DEFAULT_TYPE);
 
         templatingElement.setArea(area);
         templatingElement.setName(name);
-        templatingElement.setAvailableComponents(paragraphs);
+        templatingElement.setAvailableComponents(availableComponents);
         templatingElement.setDialog(dialog);
         templatingElement.setType(type);
     }

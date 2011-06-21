@@ -44,11 +44,9 @@ import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.RenderableDefinition;
 
+
 /**
- * Common superclass for ui components, provides utility methods and defaults. Implementations should expose setter
- * methods for their specific parameters (so that template-specific wrappers can set parameters). (no need to clutter
- * things up with getters). Implementation might also expose static factory methods, which can take care of default
- * values, i.e for labels.
+ * Common super class for templating elements, provides utility methods and defaults.
  *
  * @version $Id$
  */
@@ -62,10 +60,6 @@ public abstract class AbstractTemplatingElement implements TemplatingElement {
     protected AbstractTemplatingElement(final ServerConfiguration server, final RenderingContext renderingContext) {
         this.server = server;
         this.renderingContext = renderingContext;
-    }
-
-    protected ServerConfiguration getServer() {
-        return server;
     }
 
     @Override
@@ -97,8 +91,16 @@ public abstract class AbstractTemplatingElement implements TemplatingElement {
         return messages.getWithDefault(key, key);
     }
 
-    protected String getInterfaceMessage(String i18nBasename, String key) {
+    protected String getInterfaceMessage(String key) {
         return MessagesUtil.chainWithDefault(DEFAULT_I18N_BASENAME).getWithDefault(key, key);
+    }
+
+    protected boolean isAdmin() {
+        return server.isAdmin();
+    }
+
+    protected ServerConfiguration getServer() {
+        return server;
     }
 
     protected RenderingContext getRenderingContext() {

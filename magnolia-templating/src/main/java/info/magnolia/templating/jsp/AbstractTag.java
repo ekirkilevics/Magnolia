@@ -34,6 +34,7 @@
 package info.magnolia.templating.jsp;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,32 +47,32 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.commons.collections.EnumerationUtils;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.templating.elements.TemplatingElement;
 
 /**
- * Base class for jsp tags. Subclasses need to implement the {@link AbstractTag#prepareUIComponent(ServerConfiguration, AggregationState)} method.
+ * Base class for jsp tags.
  *
+ * @param <C> the templating element the tag is operating on
  * @version $Id$
  */
-public abstract class AbstractTag extends SimpleTagSupport {
+public abstract class AbstractTag<C extends TemplatingElement> extends SimpleTagSupport {
 
     @Override
     public void doTag() throws JspException, IOException {
-        final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
-        final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final TemplatingElement uiComp = prepareUIComponent(serverConfiguration, aggregationState);
+
+        final TemplatingElement element = createTemplatingElement();
 
         try {
-            uiComp.begin(getJspContext().getOut());
+            element.begin(getJspContext().getOut());
 
             try {
                 doBody();
             } finally {
-                uiComp.end(getJspContext().getOut());
+                element.end(getJspContext().getOut());
             }
         } catch (RenderException e) {
             throw new JspException(e);
@@ -85,10 +86,20 @@ public abstract class AbstractTag extends SimpleTagSupport {
         }
     }
 
-    /**
-     * Validate parameters and return a ready-to-output instance of an AuthoringUiComponent.
-     */
-    protected abstract TemplatingElement prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException;
+    protected C createTemplatingElement() {
+
+        // FIXME use scope instead of fetching the RenderingContext for passing it as an argument
+        final RenderingEngine renderingEngine = Components.getComponent(RenderingEngine.class);
+        final RenderingContext renderingContext = renderingEngine.getRenderingContext();
+
+        return Components.getComponentProvider().newInstance(getTemplatingElementClass(), renderingContext);
+    }
+
+    protected Class<C> getTemplatingElementClass() {
+        // TODO does this support more than one level of subclasses?
+        return (Class<C>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
 
     // ---- utility methods to convert parameters ----
 

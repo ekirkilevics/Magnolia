@@ -38,8 +38,9 @@ import java.io.IOException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.rendering.engine.RenderException;
 
+
 /**
- * Sets a context attribute, used as a sub to ui:render.
+ * Sets a context attribute, used as a sub-element to ui:render.
  *
  * @version $Id$
  */

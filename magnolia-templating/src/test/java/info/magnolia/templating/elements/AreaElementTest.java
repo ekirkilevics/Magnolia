@@ -141,7 +141,7 @@ public class AreaElementTest {
         areaComponent.setArea(area);
         areaComponent.setName("paragraphsArea");
 
-        areaComponent.setType(AreaElement.TYPE_SINGLE);
+        areaComponent.setType(AreaDefinition.TYPE_SINGLE);
 
         final StringWriter out = new StringWriter();
         areaComponent.begin(out);
@@ -150,7 +150,7 @@ public class AreaElementTest {
         verify(engine).render(eq(paragraph01), eq(area), argThat(new ArgumentMatcher<Map<String, Object>>() {
             @Override
             public boolean matches(Object componentsMap) {
-                Object component = ((Map<String, Object>) componentsMap).get(AreaElement.COMPONENT);
+                Object component = ((Map<String, Object>) componentsMap).get(AreaElement.ATTRIBUTE_COMPONENT);
                 boolean result = false;
                 try {
                     result = component != null && ((ContentMap) component).getJCRNode().getName().equals(paragraph01.getName());
@@ -183,7 +183,7 @@ public class AreaElementTest {
         areaComponent.setWorkspace("testRepository");
         areaComponent.setPath("/foo/bar/baz/paragraphsArea");
 
-        areaComponent.setType(AreaElement.TYPE_LIST);
+        areaComponent.setType(AreaDefinition.TYPE_LIST);
 
         final StringWriter out = new StringWriter();
         areaComponent.begin(out);
@@ -192,7 +192,7 @@ public class AreaElementTest {
         verify(engine).render(eq(paragraph01.getParent()), eq(area), argThat(new ArgumentMatcher<Map<String, Object>>() {
             @Override
             public boolean matches(Object componentsMap) {
-                List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaElement.COMPONENTS);
+                List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaElement.ATTRIBUTE_COMPONENTS);
                 boolean result = false;
                 try {
                     result = componentList != null && componentList.size() == 1 && (componentList.get(0)).getJCRNode().getName().equals(paragraph01.getName());
@@ -223,7 +223,7 @@ public class AreaElementTest {
         areaComponent = new AreaElement(serverCfg, context, engine);
         areaComponent.setArea(area);
 
-        areaComponent.setType(AreaElement.TYPE_LIST);
+        areaComponent.setType(AreaDefinition.TYPE_LIST);
 
         final StringWriter out = new StringWriter();
         areaComponent.begin(out);
@@ -232,7 +232,7 @@ public class AreaElementTest {
         verify(engine).render(eq(paragraph01.getParent()), eq(area), argThat(new ArgumentMatcher<Map<String, Object>>() {
             @Override
             public boolean matches(Object componentsMap) {
-                List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaElement.COMPONENTS);
+                List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaElement.ATTRIBUTE_COMPONENTS);
                 boolean result = false;
                 try {
                     result = componentList != null && componentList.size() == 1 && (componentList.get(0)).getJCRNode().getName().equals(paragraph01.getName());
@@ -284,7 +284,7 @@ public class AreaElementTest {
 
         // as collection == false (= singleton)
         out = new StringWriter();
-        areaComponent.setType(AreaElement.TYPE_SINGLE);
+        areaComponent.setType(AreaDefinition.TYPE_SINGLE);
         areaComponent.begin(out);
 
         assertEquals(

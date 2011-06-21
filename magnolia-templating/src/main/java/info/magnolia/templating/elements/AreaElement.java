@@ -57,19 +57,18 @@ import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredParagraphAvailability;
 import static info.magnolia.cms.core.MgnlNodeType.*;
 
+
 /**
- * Outputs an area.
+ * Renders an area and outputs a marker that instructs the page editor to place a bar at this location.
  *
  * @version $Id$
  */
 public class AreaElement extends AbstractContentTemplatingElement {
 
     public static final String CMS_AREA = "cms:area";
-    public static final String TYPE_LIST = "list";
-    public static final String TYPE_SINGLE = "single";
-    public static final String DEFAULT_TYPE = TYPE_LIST;
-    public static final String COMPONENT = "component";
-    public static final String COMPONENTS = "components";
+
+    public static final String ATTRIBUTE_COMPONENT = "component";
+    public static final String ATTRIBUTE_COMPONENTS = "components";
 
     private String name;
     private AreaDefinition areaDefinition;
@@ -93,18 +92,19 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
         areaDefinition = getMergedAreaDefinition();
 
-        MarkupHelper helper = new MarkupHelper(out);
-        helper.startContent(content);
-        helper.openTag(CMS_AREA).attribute("content", getNodePath(content));
-
         System.out.println("this:" + this.name + ", area:" + areaDefinition.getName());
 
-        helper.attribute("name", areaDefinition.getName());
-        helper.attribute("availableComponents", areaDefinition.getAvailableComponentNames());
-        helper.attribute("type", areaDefinition.getType());
-        helper.attribute("dialog", areaDefinition.getDialog());
-        helper.attribute("showAddButton", String.valueOf(shouldShowAddButton()));
-        helper.closeTag(CMS_AREA);
+        if (isAdmin()) {
+            MarkupHelper helper = new MarkupHelper(out);
+            helper.startContent(content);
+            helper.openTag(CMS_AREA).attribute("content", getNodePath(content));
+            helper.attribute("name", areaDefinition.getName());
+            helper.attribute("availableComponents", areaDefinition.getAvailableComponentNames());
+            helper.attribute("type", areaDefinition.getType());
+            helper.attribute("dialog", areaDefinition.getDialog());
+            helper.attribute("showAddButton", String.valueOf(shouldShowAddButton()));
+            helper.closeTag(CMS_AREA);
+        }
     }
 
     @Override
@@ -115,23 +115,25 @@ public class AreaElement extends AbstractContentTemplatingElement {
             if (isEnabled()) {
 
                 Map<String, Object> contextObjects = new HashMap<String, Object>();
-                if (areaDefinition.getType().equals(TYPE_LIST)) {
+                if (areaDefinition.getType().equals(AreaDefinition.TYPE_LIST)) {
                     List<ContentMap> components = new ArrayList<ContentMap>();
                     for (Node node : NodeUtil.getNodes(areaNode, NT_CONTENTNODE)) {
                         components.add(new ContentMap(node));
                     }
-                    contextObjects.put(COMPONENTS, components);
+                    contextObjects.put(ATTRIBUTE_COMPONENTS, components);
 
-                } else if (areaDefinition.getType().equals(TYPE_SINGLE)) {
-                    contextObjects.put(COMPONENT, new ContentMap(areaNode));
+                } else if (areaDefinition.getType().equals(AreaDefinition.TYPE_SINGLE)) {
+                    contextObjects.put(ATTRIBUTE_COMPONENT, new ContentMap(areaNode));
                 }
                 if (areaNode != null) {
                     renderingEngine.render(areaNode, areaDefinition, contextObjects, out);
                 }
             }
 
-            MarkupHelper helper = new MarkupHelper(out);
-            helper.endContent(areaNode);
+            if (isAdmin()) {
+                MarkupHelper helper = new MarkupHelper(out);
+                helper.endContent(areaNode);
+            }
         } catch (Exception e) {
             throw new RenderException("Can't render area " + areaNode, e);
         }
@@ -195,7 +197,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
     }
 
     private String resolveType() {
-        return type != null ? type : areaDefinition != null && areaDefinition.getType() != null ? areaDefinition.getType() : DEFAULT_TYPE;
+        return type != null ? type : areaDefinition != null && areaDefinition.getType() != null ? areaDefinition.getType() : AreaDefinition.DEFAULT_TYPE;
     }
 
     private String resolveName() {
@@ -218,10 +220,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
     }
 
     private boolean shouldShowAddButton() throws RenderException {
-        if (areaDefinition.getType().equals(TYPE_LIST)) {
+        if (areaDefinition.getType().equals(AreaDefinition.TYPE_LIST)) {
             return true;
         }
-        if (areaDefinition.getType().equals(TYPE_SINGLE)) {
+        if (areaDefinition.getType().equals(AreaDefinition.TYPE_SINGLE)) {
             try {
                 // TODO this should not test using the current users permissions
                 return !currentContent().hasNode(areaDefinition.getName());
@@ -229,7 +231,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 throw new RenderException(e);
             }
         }
-        throw new IllegalStateException("Unknown area type [" + areaDefinition.getType() + "]");
+        throw new RenderException("Unknown area type [" + areaDefinition.getType() + "]");
     }
 
     public String getName() {

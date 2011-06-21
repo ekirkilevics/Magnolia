@@ -43,8 +43,9 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 
+
 /**
- * Abstract base class for components that operate on a specified piece of content.
+ * Abstract base class for elements that operate on a specified piece of content.
  *
  * @version $Id$
  */
@@ -64,7 +65,7 @@ public abstract class AbstractContentTemplatingElement extends AbstractTemplatin
         try {
             return node.getSession().getWorkspace().getName() + ":" + node.getPath();
         } catch (RepositoryException e) {
-            throw new RenderException("Can't constcuct node path for node " + node);
+            throw new RenderException("Can't construct node path for node " + node);
         }
     }
 
@@ -83,14 +84,14 @@ public abstract class AbstractContentTemplatingElement extends AbstractTemplatin
                 try {
                     return MgnlContext.getJCRSession(workspace).getNodeByIdentifier(nodeIdentifier);
                 } catch (RepositoryException e) {
-                    throw new RenderException("Can't read contente from workspace [" + workspace + "] with identifier [" + nodeIdentifier + "].");
+                    throw new RenderException("Can't read content from workspace [" + workspace + "] with identifier [" + nodeIdentifier + "].");
                 }
             }
             if (StringUtils.isNotEmpty(path)) {
                 try {
                     return MgnlContext.getJCRSession(workspace).getNode(path);
                 } catch (RepositoryException e) {
-                    throw new RenderException("Can't read contente from workspace [" + workspace + "] with path [" + path + "].");
+                    throw new RenderException("Can't read content from workspace [" + workspace + "] with path [" + path + "].");
                 }
             }
             throw new IllegalArgumentException("Need to specify either uuid or path in combination with workspace");

@@ -39,8 +39,8 @@ import info.magnolia.rendering.engine.RenderException;
 
 
 /**
- * Implementations of AuthoringUiComponent render specific "components" in templates. They're usually exposed to
- * templating engines via a specific wrapper; see the freemarker and jsp sub-packages for examples.
+ * Templating elements implement basic building blocks for template scripts. They are exposed as for use in templating
+ * engines; see the freemarker and jsp sub-packages.
  *
  * @version $Id$
  */
