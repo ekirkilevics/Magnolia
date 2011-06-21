@@ -58,6 +58,7 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.TabSheet;
 
 
 /**
@@ -182,7 +183,11 @@ public class NavigationWorkArea implements NavigationView, IsVaadinComponent {
         if (c == null) {
             return;
         }
+        //first set the selected menu item
         melodion.setSelected(c);
+        //then set the correct tab in the tabsheet holding this melodion
+        ((TabSheet)melodion.getParent()).setSelectedTab(melodion);
+
         if (c instanceof Melodion.Tab) {
             ((Melodion.Tab) c).expand();
         }
