@@ -94,10 +94,10 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
     @Override
     public void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws RenderException {
+
+        final Renderer renderer = getRendererFor(definition);
         final RenderingContext renderingContext = getRenderingContext();
         renderingContext.push(content, definition);
-
-        Renderer renderer = getRendererFor(definition);
 
         try {
             renderer.render(content, definition, contextObjects, out);
