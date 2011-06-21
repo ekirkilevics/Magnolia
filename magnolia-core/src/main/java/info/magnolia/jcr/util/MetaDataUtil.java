@@ -36,6 +36,7 @@ package info.magnolia.jcr.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.util.Calendar;
@@ -44,8 +45,6 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFormatException;
-
-import org.apache.commons.lang.UnhandledException;
 
 /**
  * Collection of utilities to simplify working with the JCR API. In contrast to info.magnolia.cms.core.Content it is -
@@ -56,12 +55,11 @@ import org.apache.commons.lang.UnhandledException;
  */
 public class MetaDataUtil {
 
-
     public static MetaData getMetaData(Node node) {
         try {
             return new MetaData(node, node.getSession());
         } catch (RepositoryException e) {
-            throw new UnhandledException(e);
+            throw new RuntimeRepositoryException(e);
         }
     }
 
@@ -72,7 +70,6 @@ public class MetaDataUtil {
         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, node.getSession().getWorkspace().getName(), node
                 .getPrimaryNodeType().getName(), node.getName());
     }
-
 
     /**
      * @return the lastModification or null it it was not set in JCR.
