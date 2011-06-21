@@ -52,8 +52,6 @@ import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
-import info.magnolia.templating.components.AbstractContentComponent;
-import info.magnolia.templating.components.EditComponent;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
 

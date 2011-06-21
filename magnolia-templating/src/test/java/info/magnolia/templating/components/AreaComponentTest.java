@@ -64,9 +64,6 @@ import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredParagraphAvailability;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
-import info.magnolia.templating.components.AbstractContentComponent;
-import info.magnolia.templating.components.AreaComponent;
-import info.magnolia.templating.components.EditComponent;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
 

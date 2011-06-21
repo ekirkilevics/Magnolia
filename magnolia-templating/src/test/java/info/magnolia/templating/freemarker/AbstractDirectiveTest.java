@@ -38,7 +38,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import info.magnolia.templating.AuthoringUiComponent;
 import info.magnolia.templating.components.AbstractContentComponent;
-import info.magnolia.templating.freemarker.AbstractDirective;
 
 import java.io.IOException;
 import java.io.Writer;

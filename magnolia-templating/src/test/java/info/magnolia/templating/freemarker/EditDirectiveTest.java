@@ -35,11 +35,10 @@ package info.magnolia.templating.freemarker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
 import freemarker.template.TemplateModelException;
 import info.magnolia.templating.components.AbstractContentComponent;
+
+import org.junit.Test;
 
 /**
  * $Id$

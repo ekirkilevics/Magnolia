@@ -34,10 +34,9 @@
 package info.magnolia.templating.freemarker;
 
 import static org.junit.Assert.assertEquals;
+import info.magnolia.templating.components.AbstractContentComponent;
 
 import org.junit.Test;
-
-import info.magnolia.templating.components.AbstractContentComponent;
 
 /**
  * $Id$

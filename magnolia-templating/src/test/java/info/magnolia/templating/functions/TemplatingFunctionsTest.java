@@ -36,7 +36,6 @@ package info.magnolia.templating.functions;
 import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.Content;
 import info.magnolia.jcr.util.ContentMap;
-import info.magnolia.templating.functions.TemplatingFunctions;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.jcr.MockNode;
 

@@ -58,7 +58,6 @@ import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
-import info.magnolia.templating.freemarker.Directives;
 import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.StringWriter;

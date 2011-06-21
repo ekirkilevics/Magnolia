@@ -49,7 +49,6 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
-import info.magnolia.templating.components.ContextComponent;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
 
