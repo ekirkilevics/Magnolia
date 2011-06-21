@@ -139,7 +139,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     protected AreaDefinition getMergedAreaDefinition() throws RenderException {
 
-        AreaDefinition clonedArea;
+        AreaDefinition clonedArea = null;
         if (areaDefinition != null) {
             clonedArea = areaDefinition;
         } else {
@@ -149,7 +149,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
                     clonedArea = (AreaDefinition) templateDefinition.getAreas().get(name).clone();
                 }
             }
-            clonedArea = new ConfiguredAreaDefinition();
+            if (clonedArea == null) {
+                clonedArea = new ConfiguredAreaDefinition();
+            }
         }
 
         // override defaults with settings custom for this instance
