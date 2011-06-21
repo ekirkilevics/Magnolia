@@ -43,12 +43,24 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public interface AreaDefinition extends TemplateDefinition {
+public interface AreaDefinition extends TemplateDefinition, Cloneable {
 
     // TODO should be components
     // TODO should use ParagraphAvailability
     Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs();
 
     Boolean getEnabled();
+
+    Object clone();
+
+    void setName(String name);
+
+    void setAvailableComponentNames(String availableComponentNames);
+
+    String getAvailableComponentNames();
+
+    void setDialog(String dialog);
+
+    void setRenderType(String renderType);
 
 }

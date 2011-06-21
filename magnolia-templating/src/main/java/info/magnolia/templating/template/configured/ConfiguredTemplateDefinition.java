@@ -33,6 +33,7 @@
  */
 package info.magnolia.templating.template.configured;
 
+import info.magnolia.templating.template.AreaDefinition;
 import info.magnolia.templating.template.TemplateDefinition;
 
 import java.util.HashMap;
@@ -46,7 +47,7 @@ import java.util.Map;
 public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition implements TemplateDefinition {
 
     private String dialog;
-    private Map<String, ConfiguredAreaDefinition> configuredAreaDefinitions = new HashMap<String, ConfiguredAreaDefinition>();
+    private Map<String, AreaDefinition> configuredAreaDefinitions = new HashMap<String, AreaDefinition>();
 
     @Override
     public String getDialog() {
@@ -58,11 +59,11 @@ public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition
     }
 
     @Override
-    public Map<String, ConfiguredAreaDefinition> getAreas() {
+    public Map<String, AreaDefinition> getAreas() {
         return this.configuredAreaDefinitions;
     }
 
-    public void setAreas(Map<String, ConfiguredAreaDefinition> configuredAreaDefinitions) {
+    public void setAreas(Map<String, AreaDefinition> configuredAreaDefinitions) {
         this.configuredAreaDefinitions = configuredAreaDefinitions;
     }
 

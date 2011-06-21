@@ -35,8 +35,13 @@ package info.magnolia.templating.template.configured;
 
 import info.magnolia.templating.template.AreaDefinition;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A {@link AreaDefinition} configured in the configuration workspace.
@@ -49,6 +54,8 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
 
     // TODO can't this be a primitive boolean instead default set to true? //Tobias
     private Boolean enabled;
+
+    private String availableComponentNames;
 
     @Override
     public Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs() {
@@ -108,5 +115,33 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void setAvailableComponentNames(String availableComponentNames) {
+        this.availableComponentNames = availableComponentNames;
+    }
+
+    @Override
+    public String getAvailableComponentNames() {
+        if (!StringUtils.isBlank(this.availableComponentNames)) {
+            return this.availableComponentNames;
+        }
+        Iterator<ConfiguredParagraphAvailability> iterator = getAvailableParagraphs().values().iterator();
+        List<String> componentNames = new ArrayList<String>();
+        while (iterator.hasNext()) {
+            componentNames.add(iterator.next().getName());
+        }
+        return StringUtils.join(componentNames, ',');
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            // should never happen
+            throw new RuntimeException(e);
+        }
     }
 }

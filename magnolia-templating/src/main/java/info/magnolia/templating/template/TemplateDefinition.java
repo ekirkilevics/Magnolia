@@ -33,8 +33,6 @@
  */
 package info.magnolia.templating.template;
 
-import info.magnolia.templating.template.configured.ConfiguredAreaDefinition;
-
 import java.util.Map;
 
 
@@ -47,7 +45,6 @@ public interface TemplateDefinition extends RenderableDefinition {
 
     String getDialog();
 
-    // TODO should be AreaDefinition
-    Map<String, ConfiguredAreaDefinition> getAreas();
+    Map<String, AreaDefinition> getAreas();
 
 }

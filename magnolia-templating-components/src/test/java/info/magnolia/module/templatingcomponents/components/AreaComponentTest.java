@@ -34,8 +34,8 @@
 package info.magnolia.module.templatingcomponents.components;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -54,17 +54,22 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.SessionTestUtil;
+import info.magnolia.templating.model.RenderingModel;
 import info.magnolia.templating.renderer.registry.RendererRegistry;
 import info.magnolia.templating.rendering.AggregationStateBasedRenderingContext;
 import info.magnolia.templating.rendering.DefaultRenderingEngine;
 import info.magnolia.templating.template.AreaDefinition;
+import info.magnolia.templating.template.RenderableDefinition;
 import info.magnolia.templating.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.templating.template.configured.ConfiguredAreaDefinition;
+import info.magnolia.templating.template.configured.ConfiguredParagraphAvailability;
 import info.magnolia.templating.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -121,8 +126,8 @@ public class AreaComponentTest {
         DefaultRenderingEngine engine = new DefaultRenderingEngine(new RendererRegistry(), templateDefinitionAssignment);
         context = new AggregationStateBasedRenderingContext(aggregationState);
         areaComponent = new AreaComponent(serverCfg, context, engine);
-        area = mock(AreaDefinition.class);
-        when(area.getEnabled()).thenReturn(Boolean.TRUE);
+        area = new ConfiguredAreaDefinition();
+        ((ConfiguredAreaDefinition) area).setEnabled(true);
         areaComponent.setArea(area);
         areaComponent.setName("paragraphsArea");
 
@@ -245,6 +250,7 @@ public class AreaComponentTest {
         context.push(paragraph01.getParent(), templateDefinition);
 
         StringWriter out = new StringWriter();
+        areaComponent.setName("paragraphsArea");
         areaComponent.doRender(out);
 
         assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
@@ -278,7 +284,7 @@ public class AreaComponentTest {
     public void testPostRender() throws Exception {
         context.push(paragraph01.getParent(), templateDefinition);
 
-        when(area.getEnabled()).thenReturn(Boolean.FALSE);
+        ((ConfiguredAreaDefinition) area).setEnabled(false);
 
         final StringWriter out = new StringWriter();
         areaComponent.postRender(out);
@@ -289,12 +295,138 @@ public class AreaComponentTest {
                 + AbstractContentComponent.LINEBREAK, outString);
     }
 
+    @Test
     public void testResolveMethods() throws Exception {
-        ConfiguredAreaDefinition areaDef = new ConfiguredAreaDefinition();
+        context.push(paragraph01.getParent(), templateDefinition);
+        AreaDefinition areaDef = new AreaDefinition() {
+
+            @Override
+            public Object clone() {
+                try {
+                    return super.clone();
+                } catch (CloneNotSupportedException e) {
+                    return null;
+                }
+            }
+
+            public String getDialog() {
+                return null;
+            }
+
+            public Map<String, AreaDefinition> getAreas() {
+                return null;
+            }
+
+            public String getId() {
+                return null;
+            }
+
+            public void setId(String id) {
+            }
+
+            public String getName() {
+                return null;
+            }
+
+            public String getRenderType() {
+                return null;
+            }
+
+            public String getTitle() {
+                return null;
+            }
+
+            public String getDescription() {
+                return null;
+            }
+
+            public String getI18nBasename() {
+                return null;
+            }
+
+            public String getTemplateScript() {
+                return null;
+            }
+
+            public Map<String, Object> getParameters() {
+                return null;
+            }
+
+            public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+                return null;
+            }
+
+            public boolean isAvailable(Node content) {
+                return false;
+            }
+
+            public Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs() {
+                return Collections.EMPTY_MAP;
+            }
+
+            public Boolean getEnabled() {
+                return null;
+            }
+
+            public void setName(String resolvedName) {
+            }
+
+            public void setAvailableComponentNames(String availableComponentNames) {
+            }
+
+            public String getAvailableComponentNames() {
+                return null;
+            }
+
+            public void setDialog(String resolvedDialog) {
+            }
+
+            public void setRenderType(String renderType) {
+            }
+        };
         areaComponent.setArea(areaDef);
-        assertSame(areaDef, areaComponent.resolveAreaDefinition());
+        assertFalse(areaComponent.resolveAreaDefinition() instanceof ConfiguredAreaDefinition);
         areaComponent.setArea(null);
-        assertNotSame(areaDef, areaComponent.resolveAreaDefinition());
+        assertTrue(areaComponent.resolveAreaDefinition() instanceof ConfiguredAreaDefinition);
+    }
+
+    @Test
+    public void testNotCloningOfExplicitlySetAreaDefinition() throws Exception {
+        context.push(paragraph01.getParent(), templateDefinition);
+        ConfiguredAreaDefinition defaultArea = new ConfiguredAreaDefinition();
+        defaultArea.setDescription("unmodified_description");
+        defaultArea.setDialog("unmodified_dialog");
+        defaultArea.setName("unmodified_name");
+
+        areaComponent.setArea(defaultArea);
+        areaComponent.setDialog("boo");
+        areaComponent.setName("baz");
+
+        final StringWriter out = new StringWriter();
+        areaComponent.doRender(out);
+
+        assertEquals("boo", defaultArea.getDialog());
+        assertEquals("baz", defaultArea.getName());
+        assertEquals("list", defaultArea.getRenderType());
+        assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
+                + EditComponent.LINEBREAK
+                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" name=\"baz\" availableComponents=\"\" type=\"list\" dialog=\"boo\" showAddButton=\"true\"></cms:area>"
+                + EditComponent.LINEBREAK, out.toString());
+    }
+
+    @Test
+    public void testCloningOfDynamicallyResolvedAreaDefinition() throws Exception {
+        context.push(paragraph01.getParent(), templateDefinition);
+
+        areaComponent.setName("boo");
+
+        final StringWriter out = new StringWriter();
+        areaComponent.doRender(out);
+
+        assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
+                + EditComponent.LINEBREAK
+                + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" name=\"boo\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
+                + EditComponent.LINEBREAK, out.toString());
     }
 
     @After

@@ -70,7 +70,7 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
 
     private final ServerConfiguration server;
     private final TemplateDefinitionRegistry templateDefinitionRegistry;
-    private RenderingContext renderingContext;
+    private final RenderingContext renderingContext;
 
     protected AbstractAuthoringUiComponent(final ServerConfiguration server, final RenderingContext renderingContext) {
         this.server = server;
@@ -167,8 +167,9 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
 
     protected void param(Appendable out, String name, String value) throws IOException {
         // TODO we need to do html attribute escaping on the value
-        if (value != null)
+        if (value != null) {
             out.append(SPACE).append(name).append(EQUALS).append(QUOTE).append(value).append(QUOTE);
+        }
     }
 
 

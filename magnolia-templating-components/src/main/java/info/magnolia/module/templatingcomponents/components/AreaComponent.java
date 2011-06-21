@@ -73,7 +73,7 @@ public class AreaComponent extends AbstractContentComponent {
     public static final String COMPONENTS = "components";
 
     private String name;
-    private AreaDefinition area;
+    private AreaDefinition areaDefinition;
     private String availableComponents;
     private String type;
     private String dialog;
@@ -95,28 +95,58 @@ public class AreaComponent extends AbstractContentComponent {
         param(out, "content", getNodePath(content));
 
         // Can already be set - or not. If not, we set it in order to avoid tons of if statements in the beyond code...
-        area = resolveAreaDefinition();
+        areaDefinition = resolveAreaDefinition();
 
-        param(out, "name", resolveName());
-        param(out, "availableComponents", resolveAvailableComponents());
-        param(out, "type", resolveType());
-        param(out, "dialog", resolveDialog());
-        param(out, "showAddButton", String.valueOf(shouldShowAddButton()));
+        appendParams(areaDefinition, out);
 
         appendElementEnd(out, CMS_AREA);
     }
 
+    private void appendParams(AreaDefinition area, Appendable out) throws IOException, RenderException {
+        System.out.println("this:" + this.name + ", area:" + area.getName());
+        param(out, "name", area.getName());
+        param(out, "availableComponents", resolveAvailableComponents());
+        param(out, "type", resolveType());
+        param(out, "dialog", area.getDialog());
+        param(out, "showAddButton", String.valueOf(shouldShowAddButton()));
+    }
+
     protected AreaDefinition resolveAreaDefinition() throws RenderException  {
-        if (area != null) {
-            return area;
-        }
-        if(!StringUtils.isEmpty(name)){
-            TemplateDefinition templateDefinition = resolveTemplateDefinition();
-            if(templateDefinition.getAreas().containsKey(name)){
-                return templateDefinition.getAreas().get(name);
+        AreaDefinition clonedArea;
+        if (areaDefinition != null) {
+            clonedArea = areaDefinition;
+        } else {
+            if(!StringUtils.isEmpty(name)){
+                TemplateDefinition templateDefinition = resolveTemplateDefinition();
+                if(templateDefinition.getAreas().containsKey(name)){
+                    clonedArea = (AreaDefinition) templateDefinition.getAreas().get(name).clone();
+                }
             }
+            clonedArea = new ConfiguredAreaDefinition();
         }
-        return new ConfiguredAreaDefinition();
+
+        // override defaults with settings custom for this instance
+        String resolvedName = resolveName();
+        System.out.println("resolved name:" + resolvedName);
+        if (!StringUtils.isBlank(resolvedName)) {
+            clonedArea.setName(resolvedName);
+        }
+
+        String resolvedAvailableComponents = resolveAvailableComponents();
+        if (!StringUtils.isBlank(resolvedAvailableComponents)) {
+            // TODO: see SCRUM-219 for details
+            clonedArea.setAvailableComponentNames(resolvedAvailableComponents);
+        }
+        String resolvedDialog = resolveDialog();
+        if (!StringUtils.isBlank(resolvedDialog)) {
+            clonedArea.setDialog(resolvedDialog);
+        }
+
+        String resolvedType = resolveType();
+        if (!StringUtils.isBlank(resolvedType)) {
+            clonedArea.setRenderType(resolvedType);
+        }
+        return clonedArea;
     }
 
     protected TemplateDefinition resolveTemplateDefinition() throws RenderException {
@@ -134,11 +164,6 @@ public class AreaComponent extends AbstractContentComponent {
         try {
             if (isEnabled()) {
 
-                AreaDefinition areaDef = resolveAreaDefinition();
-                // TODO: clone/wrap def
-                // TODO: change settings using the resolveXXXX()
-                // TODO: pass in such modified area def
-
                 Map<String, Object> contextObjects = new HashMap<String, Object>();
                 if (resolveType().equals(TYPE_LIST)) {
                     List<ContentMap> components = new ArrayList<ContentMap>();
@@ -151,7 +176,7 @@ public class AreaComponent extends AbstractContentComponent {
                     contextObjects.put(COMPONENT, new ContentMap(areaNode));
                 }
                 if (areaNode != null) {
-                    renderingEngine.render(areaNode, areaDef, contextObjects, out);
+                    renderingEngine.render(areaNode, areaDefinition, contextObjects, out);
                 }
             }
 
@@ -163,19 +188,19 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     private boolean isEnabled() {
-        return (area != null && (area.getEnabled() == null || area.getEnabled()));
+        return (areaDefinition != null && (areaDefinition.getEnabled() == null || areaDefinition.getEnabled()));
     }
 
     private String resolveDialog() {
-        return dialog != null ? dialog : area != null ? area.getDialog() : null;
+        return dialog != null ? dialog : areaDefinition != null ? areaDefinition.getDialog() : null;
     }
 
     private String resolveType() {
-        return type != null ? type : area != null && area.getRenderType() != null ? area.getRenderType() : DEFAULT_TYPE;
+        return type != null ? type : areaDefinition != null && areaDefinition.getRenderType() != null ? areaDefinition.getRenderType() : DEFAULT_TYPE;
     }
 
     private String resolveName() {
-        return name != null ? name : (area != null ? area.getName() : null);
+        return name != null ? name : (areaDefinition != null ? areaDefinition.getName() : null);
     }
 
     private boolean shouldShowAddButton() throws RenderException {
@@ -197,14 +222,13 @@ public class AreaComponent extends AbstractContentComponent {
         if (StringUtils.isNotEmpty(availableComponents)) {
             return availableComponents;
         }
-        if (area != null && area.getAvailableParagraphs().size() > 0) {
-            Iterator<ConfiguredParagraphAvailability> iterator = area.getAvailableParagraphs().values().iterator();
-            StringBuilder builder = new StringBuilder();
-            builder.append(iterator.next().getName());
+        if (areaDefinition != null && areaDefinition.getAvailableParagraphs().size() > 0) {
+            Iterator<ConfiguredParagraphAvailability> iterator = areaDefinition.getAvailableParagraphs().values().iterator();
+            List<String> componentNames = new ArrayList<String>();
             while (iterator.hasNext()) {
-                builder.append(",").append(iterator.next().getName());
+                componentNames.add(iterator.next().getName());
             }
-            return builder.toString();
+            return StringUtils.join(componentNames, ',');
         }
         return "";
     }
@@ -218,11 +242,11 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     public AreaDefinition getArea() {
-        return area;
+        return areaDefinition;
     }
 
     public void setArea(AreaDefinition area) {
-        this.area = area;
+        this.areaDefinition = area;
     }
 
     public String getAvailableComponents() {
