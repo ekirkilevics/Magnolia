@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
-  <name>templating</name>
-  <displayName>Magnolia Templating Module</displayName>
-  <class>info.magnolia.rendering.module.TemplatingModule</class>
+  <name>rendering</name>
+  <displayName>Magnolia Rendering Module</displayName>
+  <class>info.magnolia.rendering.module.RenderingModule</class>
   <!--<versionHandler>info.magnolia.rendering.module.setup.TemplatingModuleVersionHandler</versionHandler>-->
   <version>${project.version}</version>
   <properties>

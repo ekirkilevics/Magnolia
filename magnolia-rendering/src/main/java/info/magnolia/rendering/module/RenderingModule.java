@@ -44,12 +44,12 @@ import info.magnolia.rendering.template.registry.ConfiguredTemplateDefinitionMan
  *
  * @version $Id$
  */
-public class TemplatingModule implements ModuleLifecycle {
+public class RenderingModule implements ModuleLifecycle {
 
     private ConfiguredTemplateDefinitionManager templateDefinitionManager;
     private ConfiguredRendererManager rendererManager;
 
-    public TemplatingModule(ConfiguredTemplateDefinitionManager templateDefinitionManager, ConfiguredRendererManager rendererManager) {
+    public RenderingModule(ConfiguredTemplateDefinitionManager templateDefinitionManager, ConfiguredRendererManager rendererManager) {
         this.templateDefinitionManager = templateDefinitionManager;
         this.rendererManager = rendererManager;
     }
