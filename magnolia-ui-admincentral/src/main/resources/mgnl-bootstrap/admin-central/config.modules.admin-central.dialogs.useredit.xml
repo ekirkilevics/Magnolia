@@ -6,9 +6,6 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>5789d8fa-e9b8-4125-9fbc-87bbe4d9753f</sv:value>
   </sv:property>
-  <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.dialogs.UserEditDialog</sv:value>
-  </sv:property>
   <sv:property sv:name="height" sv:type="String">
     <sv:value>600</sv:value>
   </sv:property>

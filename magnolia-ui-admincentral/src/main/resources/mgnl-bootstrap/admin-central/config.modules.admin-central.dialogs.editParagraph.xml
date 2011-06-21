@@ -9,9 +9,6 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>e349e2e7-0f37-49f2-b30c-450e8fd4bbf5</sv:value>
   </sv:property>
-  <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.dialogs.ParagraphEditDialog</sv:value>
-  </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>
   </sv:property>

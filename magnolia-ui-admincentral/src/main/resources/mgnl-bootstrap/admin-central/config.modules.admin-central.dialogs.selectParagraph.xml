@@ -6,9 +6,6 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>b137f808-1bf5-45dd-a548-8d55d21a7335</sv:value>
   </sv:property>
-  <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog</sv:value>
-  </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>
   </sv:property>
