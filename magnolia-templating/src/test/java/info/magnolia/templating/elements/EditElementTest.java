@@ -67,7 +67,7 @@ import org.junit.Test;
  *
  * @version $Id$
  */
-public class EditComponentTest {
+public class EditElementTest {
 
     private EditElement marker;
     private StringWriter out;

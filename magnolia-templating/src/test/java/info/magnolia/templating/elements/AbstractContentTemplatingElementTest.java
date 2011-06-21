@@ -50,7 +50,7 @@ import org.junit.Test;
 /**
  * @version $Id$
  */
-public class AbstractContentComponentTest extends AbstractComponentTestCase {
+public class AbstractContentTemplatingElementTest extends AbstractElementTestCase {
     @Test
     public void testGetTargetContent() throws Exception {
         final RenderingContext aggregationState = mock(RenderingContext.class);

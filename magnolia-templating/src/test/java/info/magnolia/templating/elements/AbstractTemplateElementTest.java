@@ -58,7 +58,7 @@ import org.junit.Test;
  *
  * @version $Id$
  */
-public class AbstractAuthoringUiComponentTest extends AbstractComponentTestCase {
+public class AbstractTemplateElementTest extends AbstractElementTestCase {
 
     @Test
     public void testGetsCustomMessageCustomBundleWithPageTemplate() throws Exception {

@@ -50,7 +50,7 @@ import org.junit.Test;
 /**
  * @version $Id$
  */
-public class ContextComponentTest {
+public class ContextAttributeElementTest {
     @Test
     public void testDoRender() throws Exception {
 

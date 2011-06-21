@@ -76,7 +76,7 @@ import org.junit.Test;
  *
  * @version $Id$
  */
-public class RenderComponentTest {
+public class RenderElementTest {
 
     @Test
     public void testDoRender() throws Exception {

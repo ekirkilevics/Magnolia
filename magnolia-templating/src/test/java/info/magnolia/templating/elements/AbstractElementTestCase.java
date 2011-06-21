@@ -58,7 +58,7 @@ import org.junit.Before;
 /**
  * @version $Id$
  */
-public abstract class AbstractComponentTestCase {
+public abstract class AbstractElementTestCase {
     private static final String CONTENT = StringUtils.join(Arrays.asList(
             "/foo/bar.@type=mgnl:content",
             "/foo/bar/MetaData.@type=mgnl:metadata",

@@ -87,7 +87,7 @@ import org.mockito.ArgumentMatcher;
  *
  * @version $Id$
  */
-public class AreaComponentTest {
+public class AreaElementTest {
 
     private TemplateDefinitionAssignment templateDefinitionAssignment;
     private ConfiguredTemplateDefinition templateDefinition;
