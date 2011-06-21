@@ -52,8 +52,8 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
 
     private Map<String, ConfiguredParagraphAvailability> availableParagraphs = new LinkedHashMap<String, ConfiguredParagraphAvailability>();
 
-    // TODO can't this be a primitive boolean instead default set to true? //Tobias
-    private Boolean enabled;
+    private boolean enabled = true;
+    private String type;
 
     private String availableComponentNames;
 
@@ -71,50 +71,54 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
     }
 
     @Override
-    public Boolean getEnabled() {
+    public boolean isEnabled() {
         return this.enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((availableParagraphs == null) ? 0 : availableParagraphs.hashCode());
-        result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
-        return result;
+    public String getType() {
+        return type;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (obj == null) {
+        if (!(o instanceof ConfiguredAreaDefinition)) {
             return false;
         }
-        if (!(obj instanceof ConfiguredAreaDefinition)) {
+
+        ConfiguredAreaDefinition that = (ConfiguredAreaDefinition) o;
+
+        if (enabled != that.enabled) {
             return false;
         }
-        ConfiguredAreaDefinition other = (ConfiguredAreaDefinition) obj;
-        if (availableParagraphs == null) {
-            if (other.availableParagraphs != null) {
-                return false;
-            }
-        } else if (!availableParagraphs.equals(other.availableParagraphs)) {
+        if (availableParagraphs != null ? !availableParagraphs.equals(that.availableParagraphs) : that.availableParagraphs != null) {
             return false;
         }
-        if (enabled == null) {
-            if (other.enabled != null) {
-                return false;
-            }
-        } else if (!enabled.equals(other.enabled)) {
+        if (type != null ? !type.equals(that.type) : that.type != null) {
             return false;
         }
+
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = availableParagraphs != null ? availableParagraphs.hashCode() : 0;
+        result = 31 * result + (enabled ? 1 : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
     }
 
     @Override

@@ -49,7 +49,7 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
     // TODO should use ParagraphAvailability
     Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs();
 
-    Boolean getEnabled();
+    boolean isEnabled();
 
     Object clone();
 
@@ -61,6 +61,7 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
 
     void setDialog(String dialog);
 
-    void setRenderType(String renderType);
+    String getType();
 
+    void setType(String type);
 }
