@@ -37,7 +37,6 @@ import java.io.IOException;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.rendering.engine.RenderException;
-import info.magnolia.templating.elements.TemplatingElement;
 
 /**
  * Sets a context attribute, used as a sub to ui:render.

@@ -33,8 +33,13 @@
  */
 package info.magnolia.templating.elements;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import java.util.Arrays;
+import java.util.Locale;
+
+import org.apache.commons.lang.StringUtils;
+import org.junit.After;
+import org.junit.Before;
+
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -47,13 +52,7 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
-
-import java.util.Arrays;
-import java.util.Locale;
-
-import org.apache.commons.lang.StringUtils;
-import org.junit.After;
-import org.junit.Before;
+import static org.mockito.Mockito.*;
 
 /**
  * @version $Id$

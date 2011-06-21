@@ -33,19 +33,15 @@
  */
 package info.magnolia.templating.elements;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.rendering.context.RenderingContext;
-
 import java.io.IOException;
-
 import javax.jcr.Node;
 
 import org.junit.Test;
+
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.rendering.context.RenderingContext;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @version $Id$

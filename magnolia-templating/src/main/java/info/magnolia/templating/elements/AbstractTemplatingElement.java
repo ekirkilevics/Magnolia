@@ -43,7 +43,6 @@ import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.RenderableDefinition;
-import info.magnolia.templating.elements.TemplatingElement;
 
 /**
  * Common superclass for ui components, provides utility methods and defaults. Implementations should expose setter

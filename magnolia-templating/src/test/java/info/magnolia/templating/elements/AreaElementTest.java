@@ -33,14 +33,19 @@
  */
 package info.magnolia.templating.elements;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentMatcher;
+
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -64,23 +69,12 @@ import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredParagraphAvailability;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
-import info.magnolia.templating.elements.AreaElement;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
-
-import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentMatcher;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for AreaMarker.

@@ -33,19 +33,17 @@
  */
 package info.magnolia.templating.elements;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.templating.elements.ContextAttributeElement;
-import info.magnolia.test.ComponentsTestUtil;
-
 import java.io.StringWriter;
 
 import org.junit.After;
 import org.junit.Test;
+
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
+import info.magnolia.test.ComponentsTestUtil;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @version $Id$

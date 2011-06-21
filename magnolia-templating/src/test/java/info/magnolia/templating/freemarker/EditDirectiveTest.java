@@ -33,11 +33,10 @@
  */
 package info.magnolia.templating.freemarker;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import freemarker.template.TemplateModelException;
-
 import org.junit.Test;
+
+import freemarker.template.TemplateModelException;
+import static org.junit.Assert.*;
 
 /**
  * $Id$

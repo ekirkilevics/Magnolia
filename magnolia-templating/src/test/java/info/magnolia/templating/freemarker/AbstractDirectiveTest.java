@@ -33,12 +33,6 @@
  */
 package info.magnolia.templating.freemarker;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import info.magnolia.templating.elements.AbstractContentTemplatingElement;
-import info.magnolia.templating.elements.TemplatingElement;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.LinkedHashMap;
@@ -51,6 +45,10 @@ import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import info.magnolia.templating.elements.AbstractContentTemplatingElement;
+import info.magnolia.templating.elements.TemplatingElement;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for AbstractDirective's utility methods.

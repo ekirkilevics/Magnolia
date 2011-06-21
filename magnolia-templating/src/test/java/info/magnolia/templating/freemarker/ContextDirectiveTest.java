@@ -33,12 +33,12 @@
  */
 package info.magnolia.templating.freemarker;
 
-import static org.junit.Assert.assertEquals;
-import info.magnolia.context.WebContext;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Test;
+
+import info.magnolia.context.WebContext;
+import static org.junit.Assert.*;
 
 /**
  * $Id$

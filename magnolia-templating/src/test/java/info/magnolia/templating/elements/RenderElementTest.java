@@ -33,9 +33,14 @@
  */
 package info.magnolia.templating.elements;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import java.io.StringWriter;
+import javax.jcr.Node;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.junit.After;
+import org.junit.Test;
+
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -58,18 +63,10 @@ import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
-import info.magnolia.templating.elements.RenderElement;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
-
-import java.io.StringWriter;
-
-import javax.jcr.Node;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.junit.After;
-import org.junit.Test;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for ParagraphMarker.

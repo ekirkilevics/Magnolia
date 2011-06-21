@@ -33,8 +33,17 @@
  */
 package info.magnolia.templating.freemarker;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Before;
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.PicoBuilder;
+
 import freemarker.cache.StringTemplateLoader;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
@@ -59,18 +68,7 @@ import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.mock.jcr.MockSession;
-
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.junit.Before;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
+import static org.mockito.Mockito.*;
 
 /**
  * In contrast to related tests, this one can't use ComponentsTestUtils & MockComponentProvider (doesn't support determining appropriate constructor to be called) but
