@@ -759,8 +759,8 @@ for Java Content Repositories (JCR).
     <module>magnolia-ui-admincentral</module>
 
     <!-- Templating -->
+    <module>magnolia-rendering</module>
     <module>magnolia-templating</module>
-    <module>magnolia-templating-components</module>
     <module>magnolia-templating-samples</module>
 
     <module>magnolia-templating-compatibility</module>

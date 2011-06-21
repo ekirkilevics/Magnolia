@@ -7,8 +7,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>magnolia-templating</artifactId>
-  <name>magnolia-templating</name>
+  <artifactId>magnolia-rendering</artifactId>
+  <name>magnolia-rendering</name>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
