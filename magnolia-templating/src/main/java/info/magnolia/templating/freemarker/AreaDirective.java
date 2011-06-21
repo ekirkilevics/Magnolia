@@ -33,38 +33,38 @@
  */
 package info.magnolia.templating.freemarker;
 
+import java.io.IOException;
+import java.util.Map;
+
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.templating.components.AreaComponent;
-
-import java.io.IOException;
-import java.util.Map;
+import info.magnolia.templating.components.AreaElement;
 
 /**
  * A freemarker directive for rendering an area.
  *
  * @version $Id$
  */
-public class AreaDirective extends AbstractDirective<AreaComponent> {
+public class AreaDirective extends AbstractDirective<AreaElement> {
 
     @Override
-    protected void prepareUIComponent(AreaComponent uiComponent, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+    protected void prepareTemplatingElement(AreaElement templatingElement, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
 
-        initContentComponent(params, uiComponent);
+        initContentElement(params, templatingElement);
 
         AreaDefinition area = (AreaDefinition) object(params, "area");
         String name = string(params, "name", null);
-        String paragraphs = string(params, "paragraphs", null);
+        String paragraphs = string(params, "paragraphs", null); // TODO
         String dialog = string(params, "dialog", null);
-        String type = string(params, "type", AreaComponent.DEFAULT_TYPE);
+        String type = string(params, "type", AreaElement.DEFAULT_TYPE);
 
-        uiComponent.setArea(area);
-        uiComponent.setName(name);
-        uiComponent.setAvailableComponents(paragraphs);
-        uiComponent.setDialog(dialog);
-        uiComponent.setType(type);
+        templatingElement.setArea(area);
+        templatingElement.setName(name);
+        templatingElement.setAvailableComponents(paragraphs);
+        templatingElement.setDialog(dialog);
+        templatingElement.setType(type);
     }
 }

@@ -36,8 +36,8 @@ package info.magnolia.templating.freemarker;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
-import info.magnolia.templating.AuthoringUiComponent;
-import info.magnolia.templating.components.AbstractContentComponent;
+import info.magnolia.templating.components.AbstractContentTemplatingElement;
+import info.magnolia.templating.elements.TemplatingElement;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -91,14 +91,14 @@ public class AbstractDirectiveTest {
     @Test
     public void testInitContentComponent() throws TemplateModelException {
         final AbstractDirective dir = new TestAbstractDirective();
-        AbstractContentComponent component = mock(AbstractContentComponent.class);
+        AbstractContentTemplatingElement component = mock(AbstractContentTemplatingElement.class);
         Map<String, TemplateModel> params = new LinkedHashMap<String, TemplateModel>();
-        dir.initContentComponent(params, component);
+        dir.initContentElement(params, component);
     }
 
     private static class TestAbstractDirective extends AbstractDirective {
         @Override
-        protected void prepareUIComponent(AuthoringUiComponent uiComponent, Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+        protected void prepareTemplatingElement(TemplatingElement templatingElement, Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
             // no action required
         }
     }

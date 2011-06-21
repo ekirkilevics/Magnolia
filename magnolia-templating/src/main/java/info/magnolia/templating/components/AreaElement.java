@@ -33,7 +33,17 @@
  */
 package info.magnolia.templating.components;
 
-import static info.magnolia.cms.core.MgnlNodeType.NT_CONTENTNODE;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
@@ -45,25 +55,14 @@ import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredParagraphAvailability;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
+import static info.magnolia.cms.core.MgnlNodeType.*;
 
 /**
  * Outputs an area.
  *
  * @version $Id$
  */
-public class AreaComponent extends AbstractContentComponent {
+public class AreaElement extends AbstractContentTemplatingElement {
 
     public static final String CMS_AREA = "cms:area";
     public static final String TYPE_LIST = "list";
@@ -83,42 +82,70 @@ public class AreaComponent extends AbstractContentComponent {
     // private String script;
     // private String placeholderScript;
 
-    public AreaComponent(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
+    public AreaElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
         super(server, renderingContext);
         this.renderingEngine = renderingEngine;
     }
 
     @Override
-    protected void doRender(Appendable out) throws IOException, RenderException {
+    public void begin(Appendable out) throws IOException, RenderException {
         Node content = getTargetContent();
-        appendElementStart(out, content, CMS_AREA);
-        param(out, "content", getNodePath(content));
 
-        // Can already be set - or not. If not, we set it in order to avoid tons of if statements in the beyond code...
-        areaDefinition = resolveAreaDefinition();
+        areaDefinition = getMergedAreaDefinition();
 
-        appendParams(areaDefinition, out);
+        MarkupHelper helper = new MarkupHelper(out);
+        helper.startContent(content);
+        helper.openTag(CMS_AREA).attribute("content", getNodePath(content));
 
-        appendElementEnd(out, CMS_AREA);
+        System.out.println("this:" + this.name + ", area:" + areaDefinition.getName());
+
+        helper.attribute("name", areaDefinition.getName());
+        helper.attribute("availableComponents", areaDefinition.getAvailableComponentNames());
+        helper.attribute("type", areaDefinition.getType());
+        helper.attribute("dialog", areaDefinition.getDialog());
+        helper.attribute("showAddButton", String.valueOf(shouldShowAddButton()));
+        helper.closeTag(CMS_AREA);
     }
 
-    private void appendParams(AreaDefinition area, Appendable out) throws IOException, RenderException {
-        System.out.println("this:" + this.name + ", area:" + area.getName());
-        param(out, "name", area.getName());
-        param(out, "availableComponents", resolveAvailableComponents());
-        param(out, "type", resolveType());
-        param(out, "dialog", area.getDialog());
-        param(out, "showAddButton", String.valueOf(shouldShowAddButton()));
+    @Override
+    public void end(Appendable out) throws RenderException {
+        Node areaNode = getTargetContent();
+
+        try {
+            if (isEnabled()) {
+
+                Map<String, Object> contextObjects = new HashMap<String, Object>();
+                if (areaDefinition.getType().equals(TYPE_LIST)) {
+                    List<ContentMap> components = new ArrayList<ContentMap>();
+                    for (Node node : NodeUtil.getNodes(areaNode, NT_CONTENTNODE)) {
+                        components.add(new ContentMap(node));
+                    }
+                    contextObjects.put(COMPONENTS, components);
+
+                } else if (areaDefinition.getType().equals(TYPE_SINGLE)) {
+                    contextObjects.put(COMPONENT, new ContentMap(areaNode));
+                }
+                if (areaNode != null) {
+                    renderingEngine.render(areaNode, areaDefinition, contextObjects, out);
+                }
+            }
+
+            MarkupHelper helper = new MarkupHelper(out);
+            helper.endContent(areaNode);
+        } catch (Exception e) {
+            throw new RenderException("Can't render area " + areaNode, e);
+        }
     }
 
-    protected AreaDefinition resolveAreaDefinition() throws RenderException  {
+    protected AreaDefinition getMergedAreaDefinition() throws RenderException {
+
         AreaDefinition clonedArea;
         if (areaDefinition != null) {
             clonedArea = areaDefinition;
         } else {
-            if(!StringUtils.isEmpty(name)){
+            if (!StringUtils.isEmpty(name)) {
                 TemplateDefinition templateDefinition = resolveTemplateDefinition();
-                if(templateDefinition.getAreas().containsKey(name)){
+                if (templateDefinition.getAreas().containsKey(name)) {
                     clonedArea = (AreaDefinition) templateDefinition.getAreas().get(name).clone();
                 }
             }
@@ -144,51 +171,21 @@ public class AreaComponent extends AbstractContentComponent {
 
         String resolvedType = resolveType();
         if (!StringUtils.isBlank(resolvedType)) {
-            clonedArea.setRenderType(resolvedType);
+            clonedArea.setType(resolvedType);
         }
         return clonedArea;
     }
 
     protected TemplateDefinition resolveTemplateDefinition() throws RenderException {
         final RenderableDefinition renderableDefinition = getRenderingContext().getRenderableDefinition();
-        if(renderableDefinition instanceof TemplateDefinition){
+        if (renderableDefinition instanceof TemplateDefinition) {
             return (TemplateDefinition) renderableDefinition;
         }
         throw new RenderException("Current RenderableDefinition [" + renderableDefinition + "] is not of type TemplateDefinition. Areas cannot be supported");
     }
 
-    @Override
-    public void postRender(Appendable out) throws RenderException {
-        Node areaNode = getTargetContent();
-
-        try {
-            if (isEnabled()) {
-
-                Map<String, Object> contextObjects = new HashMap<String, Object>();
-                if (resolveType().equals(TYPE_LIST)) {
-                    List<ContentMap> components = new ArrayList<ContentMap>();
-                    for (Node node : NodeUtil.getNodes(areaNode, NT_CONTENTNODE)) {
-                        components.add(new ContentMap(node));
-                    }
-                    contextObjects.put(COMPONENTS, components);
-
-                } else if (resolveType().equals(TYPE_SINGLE)) {
-                    contextObjects.put(COMPONENT, new ContentMap(areaNode));
-                }
-                if (areaNode != null) {
-                    renderingEngine.render(areaNode, areaDefinition, contextObjects, out);
-                }
-            }
-
-            out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(areaNode)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
-        }
-        catch (Exception e) {
-            throw new RenderException("Can't render area " + areaNode, e);
-        }
-    }
-
     private boolean isEnabled() {
-        return (areaDefinition != null && (areaDefinition.getEnabled() == null || areaDefinition.getEnabled()));
+        return areaDefinition != null && areaDefinition.isEnabled();
     }
 
     private String resolveDialog() {
@@ -196,26 +193,11 @@ public class AreaComponent extends AbstractContentComponent {
     }
 
     private String resolveType() {
-        return type != null ? type : areaDefinition != null && areaDefinition.getRenderType() != null ? areaDefinition.getRenderType() : DEFAULT_TYPE;
+        return type != null ? type : areaDefinition != null && areaDefinition.getType() != null ? areaDefinition.getType() : DEFAULT_TYPE;
     }
 
     private String resolveName() {
         return name != null ? name : (areaDefinition != null ? areaDefinition.getName() : null);
-    }
-
-    private boolean shouldShowAddButton() throws RenderException {
-        if (resolveType().equals(TYPE_LIST)) {
-            return true;
-        }
-        if (resolveType().equals(TYPE_SINGLE)) {
-            try {
-                return !currentContent().hasNode(resolveName());
-            }
-            catch (RepositoryException e) {
-                throw new RenderException(e);
-            }
-        }
-        throw new IllegalStateException("Unknown area type [" + type + "]");
     }
 
     protected String resolveAvailableComponents() {
@@ -231,6 +213,21 @@ public class AreaComponent extends AbstractContentComponent {
             return StringUtils.join(componentNames, ',');
         }
         return "";
+    }
+
+    private boolean shouldShowAddButton() throws RenderException {
+        if (areaDefinition.getType().equals(TYPE_LIST)) {
+            return true;
+        }
+        if (areaDefinition.getType().equals(TYPE_SINGLE)) {
+            try {
+                // TODO this should not test using the current users permissions
+                return !currentContent().hasNode(areaDefinition.getName());
+            } catch (RepositoryException e) {
+                throw new RenderException(e);
+            }
+        }
+        throw new IllegalStateException("Unknown area type [" + areaDefinition.getType() + "]");
     }
 
     public String getName() {

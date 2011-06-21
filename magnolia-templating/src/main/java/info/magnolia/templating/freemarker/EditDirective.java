@@ -33,32 +33,32 @@
  */
 package info.magnolia.templating.freemarker;
 
+import java.io.IOException;
+import java.util.Map;
+
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.templating.components.EditComponent;
-
-import java.io.IOException;
-import java.util.Map;
+import info.magnolia.templating.components.EditElement;
 
 /**
  * A freemarker directive for the edit bar UI component.
  *
  * @version $Id$
  */
-public class EditDirective extends AbstractDirective<EditComponent> {
+public class EditDirective extends AbstractDirective<EditElement> {
 
     @Override
-    protected void prepareUIComponent(EditComponent uiComponent, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+    protected void prepareTemplatingElement(EditElement templatingElement, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
         checkBody(body, false);
 
-        initContentComponent(params, uiComponent);
+        initContentElement(params, templatingElement);
 
         String format = string(params, "format", null);
         String dialog = string(params, "dialog", null);
 
-        uiComponent.setFormat(format);
-        uiComponent.setDialog(dialog);
+        templatingElement.setFormat(format);
+        templatingElement.setDialog(dialog);
     }
 }

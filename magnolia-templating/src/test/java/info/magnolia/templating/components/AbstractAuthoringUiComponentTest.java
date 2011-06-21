@@ -39,12 +39,13 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -58,6 +59,7 @@ import org.junit.Test;
  * @version $Id$
  */
 public class AbstractAuthoringUiComponentTest extends AbstractComponentTestCase {
+
     @Test
     public void testGetsCustomMessageCustomBundleWithPageTemplate() throws Exception {
         doTestMessage("Incredibly custom Foo label", "/pouet/lol", "custom.foo.label");
@@ -98,45 +100,12 @@ public class AbstractAuthoringUiComponentTest extends AbstractComponentTestCase 
     }
 
     @Test
-    public void testParam() throws IOException {
-        final AbstractAuthoringUiComponent compo = new DummyComponent();
-        final StringWriter out = new StringWriter();
-        final String paramName = "param1";
-        final String paramValue = "value1";
-        compo.param(out, paramName, paramValue);
-        assertEquals(out.toString(), " param1=\"value1\"", out.toString());
-    }
-
-    @Test
-    public void testAsList() {
-        final AbstractAuthoringUiComponent compo = new DummyComponent();
-        List<String> strings = new ArrayList<String>();
-        strings.add("one");
-        strings.add("two");
-        String listAsString = compo.asString(strings);
-        assertEquals("one,two", listAsString);
-    }
-
-    @Test
-    public void testRender() throws Exception {
-        final AbstractAuthoringUiComponent compo = new DummyComponent();
-        final StringWriter out = new StringWriter();
-        compo.render(out);
-        // per default it's no Admin-ServerConfig and we won't render anything
-        assertEquals("", out.toString());
-
-        compo.getServer().setAdmin(true);
-        compo.render(out);
-        assertEquals("hello world", out.toString());
-    }
-
-    @Test
     public void testCurrentContent() throws Exception {
 
         final RenderingContext aggregationState = mock(RenderingContext.class);
         when(aggregationState.getMainContent()).thenReturn(getHM().getNode("/foo/bar"));
 
-        final AbstractAuthoringUiComponent compo = new DummyComponent(null, aggregationState);
+        final AbstractTemplatingElement compo = new DummyComponent(null, aggregationState);
         try {
             compo.currentContent();
             fail("Expceted IllegalStateException here");
@@ -152,12 +121,20 @@ public class AbstractAuthoringUiComponentTest extends AbstractComponentTestCase 
         assertEquals(expectedNode, current);
     }
 
-    private void doTestMessage(String expected, String contentPath, String key) throws RepositoryException {
-        final AbstractAuthoringUiComponent compo = new DummyComponent();
-        assertEquals(expected, compo.getMessage(getHM().getNode(contentPath), key));
+    private void doTestMessage(String expected, String contentPath, String key) throws RepositoryException, TemplateDefinitionRegistrationException {
+        final AbstractTemplatingElement compo = new DummyComponent();
+
+        Node content = getHM().getNode(contentPath);
+
+        TemplateDefinitionRegistry registry = Components.getComponent(TemplateDefinitionRegistry.class);
+        String template = info.magnolia.jcr.util.MetaDataUtil.getMetaData(content).getTemplate();
+        TemplateDefinition definition = registry.getTemplateDefinition(template);
+
+        assertEquals(expected, compo.getDefinitionMessage(definition, key));
     }
 
-    private static class DummyComponent extends AbstractAuthoringUiComponent {
+    private static class DummyComponent extends AbstractTemplatingElement {
+
         public DummyComponent() {
             super(new ServerConfiguration(), null);
         }
@@ -167,7 +144,7 @@ public class AbstractAuthoringUiComponentTest extends AbstractComponentTestCase 
         }
 
         @Override
-        protected void doRender(Appendable out) throws IOException {
+        public void begin(Appendable out) throws IOException {
             out.append("hello world");
         }
     }

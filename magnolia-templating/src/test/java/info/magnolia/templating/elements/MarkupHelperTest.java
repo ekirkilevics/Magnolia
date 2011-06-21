@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,24 +31,30 @@
  * intact.
  *
  */
-package info.magnolia.templating.freemarker;
+package info.magnolia.templating.elements;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.StringWriter;
 
-import freemarker.template.TemplateDirectiveModel;
+import org.junit.Test;
+
+import info.magnolia.templating.components.MarkupHelper;
+import static org.junit.Assert.*;
 
 /**
- * A map with freemarker directives specific to Magnolia.
+ * Test case for MarkupHelper.
  *
  * @version $Id$
  */
-public class Directives extends HashMap<String, TemplateDirectiveModel> {
+public class MarkupHelperTest {
 
-    public Directives() {
-        super();
-        put("edit", new EditDirective());
-        put("context", new ContextDirective());
-        put("render", new RenderDirective());
-        put("area", new AreaDirective());
+    @Test
+    public void testParam() throws IOException {
+        final StringWriter out = new StringWriter();
+        final MarkupHelper compo = new MarkupHelper(out);
+        final String paramName = "param1";
+        final String paramValue = "value1";
+        compo.attribute(paramName, paramValue);
+        assertEquals(out.toString(), " param1=\"value1\"", out.toString());
     }
 }

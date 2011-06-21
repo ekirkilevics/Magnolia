@@ -33,12 +33,6 @@
  */
 package info.magnolia.templating.jsp;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.rendering.engine.RenderException;
-import info.magnolia.templating.AuthoringUiComponent;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,12 +40,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.commons.collections.EnumerationUtils;
+
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.templating.elements.TemplatingElement;
 
 /**
  * Base class for jsp tags. Subclasses need to implement the {@link AbstractTag#prepareUIComponent(ServerConfiguration, AggregationState)} method.
@@ -64,18 +63,17 @@ public abstract class AbstractTag extends SimpleTagSupport {
     public void doTag() throws JspException, IOException {
         final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final AuthoringUiComponent uiComp = prepareUIComponent(serverConfiguration, aggregationState);
+        final TemplatingElement uiComp = prepareUIComponent(serverConfiguration, aggregationState);
 
         try {
-            uiComp.render(getJspContext().getOut());
+            uiComp.begin(getJspContext().getOut());
 
             try {
                 doBody();
             } finally {
-                uiComp.postRender(getJspContext().getOut());
+                uiComp.end(getJspContext().getOut());
             }
-        }
-        catch (RenderException e) {
+        } catch (RenderException e) {
             throw new JspException(e);
         }
     }
@@ -90,7 +88,7 @@ public abstract class AbstractTag extends SimpleTagSupport {
     /**
      * Validate parameters and return a ready-to-output instance of an AuthoringUiComponent.
      */
-    protected abstract AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException;
+    protected abstract TemplatingElement prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException;
 
     // ---- utility methods to convert parameters ----
 

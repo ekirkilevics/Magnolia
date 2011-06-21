@@ -40,24 +40,23 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.templating.components.ContextComponent;
+import info.magnolia.templating.components.ContextAttributeElement;
 
 /**
  * A freemarker directive for setting a context attribute.
  *
  * @version $Id$
  */
-public class ContextDirective extends AbstractDirective<ContextComponent> {
-
+public class ContextDirective extends AbstractDirective<ContextAttributeElement> {
 
     @Override
-    protected void prepareUIComponent(ContextComponent uiComponent, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+    protected void prepareTemplatingElement(ContextAttributeElement templatingElement, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
         checkBody(body, false);
 
         String name = mandatoryString(params, "name");
         Object value = mandatoryObject(params, "value");
 
-        uiComponent.setName(name);
-        uiComponent.setValue(value);
+        templatingElement.setName(name);
+        templatingElement.setValue(value);
     }
 }

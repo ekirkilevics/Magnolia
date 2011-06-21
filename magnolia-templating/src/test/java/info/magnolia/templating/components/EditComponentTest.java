@@ -68,7 +68,7 @@ import org.junit.Test;
  */
 public class EditComponentTest {
 
-    private EditComponent marker;
+    private EditElement marker;
     private StringWriter out;
 
     @Before
@@ -92,7 +92,7 @@ public class EditComponentTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        marker = new EditComponent(serverCfg, new AggregationStateBasedRenderingContext(aggregationState));
+        marker = new EditElement(serverCfg, new AggregationStateBasedRenderingContext(aggregationState));
         out = new StringWriter();
     }
 
@@ -110,26 +110,26 @@ public class EditComponentTest {
         when(paragraphManager.getTemplateDefinition("testParagraph0")).thenReturn(testParagraph0);
         ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, paragraphManager);
 
-        marker.doRender(out);
+        marker.begin(out);
 
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
-                + AbstractContentComponent.LINEBREAK
+                + "\r\n"
                 + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" dialog=\"testDialog\" template=\"testParagraph0\"></cms:edit>"
-                + AbstractContentComponent.LINEBREAK, out.toString());
+                + "\r\n", out.toString());
 
         // now with format & dialog
         marker.setFormat("testFormat");
         marker.setDialog("testDialog");
 
         out = new StringWriter();
-        marker.doRender(out);
+        marker.begin(out);
 
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
-                + AbstractContentComponent.LINEBREAK
+                + "\r\n"
                 + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" format=\"testFormat\" label=\"Test Paragraph 0\" dialog=\"testDialog\" template=\"testParagraph0\"></cms:edit>"
-                + AbstractContentComponent.LINEBREAK, out.toString());
+                + "\r\n", out.toString());
 
     }
 
@@ -147,15 +147,15 @@ public class EditComponentTest {
         when(paragraphManager.getTemplateDefinition("testParagraph0")).thenReturn(testParagraph0);
         ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, paragraphManager);
 
-        marker.doRender(out);
+        marker.begin(out);
     }
 
     @Test
     public void testPostRender() throws Exception {
-        marker.postRender(out);
+        marker.end(out);
 
         assertEquals("<!-- cms:end cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
-                + AbstractContentComponent.LINEBREAK, out.toString());
+                + "\r\n", out.toString());
     }
 
     @After

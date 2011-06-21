@@ -33,6 +33,11 @@
  */
 package info.magnolia.templating.components;
 
+import java.io.IOException;
+import javax.jcr.Node;
+
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.objectfactory.Components;
@@ -42,71 +47,67 @@ import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
-import java.io.IOException;
-
-import javax.jcr.Node;
-
-import org.apache.commons.lang.StringUtils;
-
 /**
  * Outputs an edit bar.
  *
  * @version $Id$
  */
-public class EditComponent extends AbstractContentComponent {
+public class EditElement extends AbstractContentTemplatingElement {
 
     public static final String CMS_EDIT = "cms:edit";
 
     private String dialog;
     private String format;
 
-    public EditComponent(ServerConfiguration server, RenderingContext renderingContext) {
+    public EditElement(ServerConfiguration server, RenderingContext renderingContext) {
         super(server, renderingContext);
     }
 
     @Override
-    protected void doRender(Appendable out) throws IOException, RenderException {
+    public void begin(Appendable out) throws IOException, RenderException {
         Node content = getTargetContent();
 
-        // TODO we need to do html attribute escaping on this
+        MarkupHelper helper = new MarkupHelper(out);
 
-        appendElementStart(out, content, CMS_EDIT).append(" content=").append(QUOTE).append(getNodePath(content)).append(QUOTE);
+        helper.startContent(content);
+        helper.openTag(CMS_EDIT).attribute("content", getNodePath(content));
         if (StringUtils.isNotEmpty(format)) {
-            out.append(" format=").append(QUOTE).append(format).append(QUOTE);
+            helper.attribute("format", format);
         }
-        TemplateDefinition templateDefinition;
+        TemplateDefinition templateDefinition = getRequiredTemplateDefinition(content);
+        helper.attribute("label", templateDefinition.getTitle());
+        helper.attribute("dialog", resolveDialog(templateDefinition));
+        helper.attribute("template", templateDefinition.getId());
+        helper.closeTag(CMS_EDIT);
+    }
+
+    private TemplateDefinition getRequiredTemplateDefinition(Node content) {
         try {
-            templateDefinition = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(MetaDataUtil.getMetaData(content).getTemplate());
+            TemplateDefinitionRegistry registry = Components.getComponent(TemplateDefinitionRegistry.class);
+            String template = MetaDataUtil.getMetaData(content).getTemplate();
+            return registry.getTemplateDefinition(template);
         } catch (TemplateDefinitionRegistrationException e) {
-            // TODO dlipp: implement consistent ExceptionHandling for these Situations.
+            // TODO dlipp: implement consistent ExceptionHandling for these situations.
             throw new RuntimeException(e);
         }
-        out.append(" label=").append(QUOTE).append(templateDefinition.getTitle()).append(QUOTE);
-
-        out.append(" dialog=").append(QUOTE).append(resolveDialog(templateDefinition)).append(QUOTE);
-
-        out.append(" template=").append(QUOTE).append(templateDefinition.getId()).append(QUOTE);
-
-        appendElementEnd(out, CMS_EDIT);
     }
 
     private String resolveDialog(TemplateDefinition component) throws RenderException {
-        String dialog = null;
-        if (this.dialog != null) {
-            dialog = this.dialog;
+        if (StringUtils.isNotEmpty(this.dialog)) {
+            return this.dialog;
         }
-        dialog = component.getDialog();
-        if (StringUtils.isBlank(dialog)) {
-            throw new RenderException("Please set dialog for component id=" + component.getId() + ", name=" + component.getName());
+        String dialog = component.getDialog();
+        if (StringUtils.isNotEmpty(dialog)) {
+            return dialog;
         }
-        return dialog;
+        throw new RenderException("Please set dialog for component id=" + component.getId() + ", name=" + component.getName());
     }
 
     @Override
-    public void postRender(Appendable out) throws IOException, RenderException {
+    public void end(Appendable out) throws IOException, RenderException {
         Node content = getTargetContent();
-
-        out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
+        MarkupHelper helper = new MarkupHelper(out);
+        helper.endContent(content);
     }
 
     public String getDialog() {

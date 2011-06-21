@@ -112,9 +112,9 @@ public class RenderComponentTest {
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
         when(ctx.getAttribute(RenderingContext.class.getName(), Context.LOCAL_SCOPE)).thenReturn(context);
         when(ctx.getAttribute(RenderingContext.class.getName())).thenReturn(context);
-        final RenderComponent marker = new RenderComponent(serverCfg, context, engine);
+        final RenderElement marker = new RenderElement(serverCfg, context, engine);
         final StringWriter out = new StringWriter();
-        marker.doRender(out);
+        marker.begin(out);
 
         String outString = out.toString();
 
@@ -158,10 +158,10 @@ public class RenderComponentTest {
 
         final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
         DefaultRenderingEngine engine = new DefaultRenderingEngine(new RendererRegistry(), templateDefinitionAssignment);
-        final RenderComponent marker = new RenderComponent(serverCfg, new AggregationStateBasedRenderingContext(aggregationState), engine);
+        final RenderElement marker = new RenderElement(serverCfg, new AggregationStateBasedRenderingContext(aggregationState), engine);
 
         final StringWriter out = new StringWriter();
-        marker.postRender(out);
+        marker.end(out);
 
         String outString = out.toString();
 

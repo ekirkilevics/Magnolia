@@ -33,42 +33,22 @@
  */
 package info.magnolia.templating.components;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.rendering.context.RenderingContext;
-import info.magnolia.rendering.engine.RenderException;
-
-import java.io.IOException;
-
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.RenderException;
 
 /**
  * Abstract base class for components that operate on a specified piece of content.
  *
  * @version $Id$
  */
-public abstract class AbstractContentComponent extends AbstractAuthoringUiComponent {
-
-    public static final String LINEBREAK = "\r\n";
-    public static final String GREATER_THAN = ">";
-    public static final String LESS_THAN = "<";
-    public static final String SLASH = "/";
-
-    public static final String XML_BEGINN_COMMENT = LESS_THAN + "!--" + SPACE;
-    public static final String XML_END_COMMENT = SPACE + "--" + GREATER_THAN;
-
-    public static final String CMS_BEGIN_CONTENT = "cms:begin cms:content";
-    public static final String CMS_END_CONTENT = "cms:end cms:content";
-
-    public static final String CMS_BEGIN_CONTENT_COMMENT = XML_BEGINN_COMMENT + CMS_BEGIN_CONTENT + EQUALS + QUOTE;
-
-    public static final String CMS_END_CONTENT_COMMENT = XML_BEGINN_COMMENT + CMS_END_CONTENT + EQUALS + QUOTE;
-
-    public static final String FORMAT = SPACE + "format";
-    public static final String DIALOG = SPACE + "dialog";
+public abstract class AbstractContentTemplatingElement extends AbstractTemplatingElement {
 
     // TODO should also support a JSP ContentMap
     private Node content;
@@ -76,15 +56,14 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
     private String nodeIdentifier;
     private String path;
 
-    public AbstractContentComponent(ServerConfiguration server, RenderingContext renderingContext) {
+    public AbstractContentTemplatingElement(ServerConfiguration server, RenderingContext renderingContext) {
         super(server, renderingContext);
     }
 
     protected String getNodePath(Node node) throws RenderException {
         try {
             return node.getSession().getWorkspace().getName() + ":" + node.getPath();
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             throw new RenderException("Can't constcuct node path for node " + node);
         }
     }
@@ -103,16 +82,14 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
             if (StringUtils.isNotEmpty(nodeIdentifier)) {
                 try {
                     return MgnlContext.getJCRSession(workspace).getNodeByIdentifier(nodeIdentifier);
-                }
-                catch (RepositoryException e) {
+                } catch (RepositoryException e) {
                     throw new RenderException("Can't read contente from workspace [" + workspace + "] with identifier [" + nodeIdentifier + "].");
                 }
             }
             if (StringUtils.isNotEmpty(path)) {
                 try {
                     return MgnlContext.getJCRSession(workspace).getNode(path);
-                }
-                catch (RepositoryException e) {
+                } catch (RepositoryException e) {
                     throw new RenderException("Can't read contente from workspace [" + workspace + "] with path [" + path + "].");
                 }
             }
@@ -154,15 +131,5 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    protected Appendable appendElementStart(Appendable out, Node node, String tag) throws IOException, RenderException {
-        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(node)).append(QUOTE).append(XML_END_COMMENT).append(LINEBREAK);
-        out.append(LESS_THAN).append(tag);
-        return out;
-    }
-
-    protected void appendElementEnd(Appendable out, String tag) throws IOException {
-        out.append(GREATER_THAN).append(LESS_THAN).append(SLASH).append(tag).append(GREATER_THAN).append(LINEBREAK);
     }
 }

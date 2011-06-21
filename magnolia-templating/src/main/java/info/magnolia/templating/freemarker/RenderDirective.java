@@ -33,30 +33,30 @@
  */
 package info.magnolia.templating.freemarker;
 
+import java.io.IOException;
+import java.util.Map;
+
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.templating.components.RenderComponent;
-
-import java.io.IOException;
-import java.util.Map;
+import info.magnolia.templating.components.RenderElement;
 
 /**
  * A freemarker directive for rendering an arbitrary piece of content.
  *
  * @version $Id$
  */
-public class RenderDirective extends AbstractDirective<RenderComponent> {
+public class RenderDirective extends AbstractDirective<RenderElement> {
 
     @Override
-    protected void prepareUIComponent(RenderComponent uiComponent, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+    protected void prepareTemplatingElement(RenderElement templatingElement, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
 
-        initContentComponent(params, uiComponent);
+        initContentElement(params, templatingElement);
 
         boolean editable = bool(params, "editable", false);
         String template = string(params, "template", null);
-        uiComponent.setEditable(editable);
-        uiComponent.setTemplate(template);
+        templatingElement.setEditable(editable);
+        templatingElement.setTemplate(template);
     }
 }

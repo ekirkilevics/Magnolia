@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,29 +25,58 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.templating;
+package info.magnolia.templating.components;
 
 import java.io.IOException;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.rendering.engine.RenderException;
-
+import info.magnolia.templating.elements.TemplatingElement;
 
 /**
- * Implementations of AuthoringUiComponent render specific "components" in templates. They're usually exposed to
- * templating engines via a specific wrapper; see the freemarker and jsp sub-packages for examples.
+ * Sets a context attribute, used as a sub to ui:render.
  *
  * @version $Id$
  */
-public interface AuthoringUiComponent {
+public class ContextAttributeElement implements TemplatingElement {
 
-    void render(Appendable out) throws IOException, RenderException;
+    private String name;
+    private Object value;
+    private Object previousValue;
 
-    // FIXME now that we pass the appendable and render this method needs a different name (or we need another method)
-    void postRender(Appendable out) throws IOException, RenderException;
+    public ContextAttributeElement() {
+    }
+
+    @Override
+    public void begin(Appendable out) throws IOException, RenderException {
+        previousValue = MgnlContext.getAttribute(name);
+        MgnlContext.setAttribute(name, value);
+    }
+
+    @Override
+    public void end(Appendable out) throws IOException, RenderException {
+        MgnlContext.setAttribute(name, previousValue);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
 }

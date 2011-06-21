@@ -93,7 +93,7 @@ public class AreaComponentTest {
     private Node paragraph01;
     private AggregationState aggregationState;
     private ServerConfiguration serverCfg;
-    private AreaComponent areaComponent;
+    private AreaElement areaComponent;
     private AggregationStateBasedRenderingContext context;
     private AreaDefinition area;
     private Node currentPage;
@@ -125,7 +125,7 @@ public class AreaComponentTest {
         ComponentsTestUtil.setInstance(TemplateDefinitionAssignment.class, templateDefinitionAssignment);
         DefaultRenderingEngine engine = new DefaultRenderingEngine(new RendererRegistry(), templateDefinitionAssignment);
         context = new AggregationStateBasedRenderingContext(aggregationState);
-        areaComponent = new AreaComponent(serverCfg, context, engine);
+        areaComponent = new AreaElement(serverCfg, context, engine);
         area = new ConfiguredAreaDefinition();
         ((ConfiguredAreaDefinition) area).setEnabled(true);
         areaComponent.setArea(area);
@@ -142,18 +142,20 @@ public class AreaComponentTest {
         context.push(paragraph01, templateDefinition);
 
         DefaultRenderingEngine engine = mock(DefaultRenderingEngine.class);
-        areaComponent = new AreaComponent(serverCfg, context, engine);
+        areaComponent = new AreaElement(serverCfg, context, engine);
         areaComponent.setArea(area);
+        areaComponent.setName("paragraphsArea");
 
-        areaComponent.setType(AreaComponent.TYPE_SINGLE);
+        areaComponent.setType(AreaElement.TYPE_SINGLE);
 
         final StringWriter out = new StringWriter();
-        areaComponent.postRender(out);
+        areaComponent.begin(out);
+        areaComponent.end(out);
 
         verify(engine).render(eq(paragraph01), eq(area), argThat(new ArgumentMatcher<Map<String, Object>>() {
             @Override
             public boolean matches(Object componentsMap) {
-                Object component = ((Map<String, Object>) componentsMap).get(AreaComponent.COMPONENT);
+                Object component = ((Map<String, Object>) componentsMap).get(AreaElement.COMPONENT);
                 boolean result = false;
                 try {
                     result = component != null && ((ContentMap) component).getJCRNode().getName().equals(paragraph01.getName());
@@ -166,8 +168,13 @@ public class AreaComponentTest {
 
         String outString = out.toString();
 
-        assertEquals(outString, "<!-- cms:end cms:content=\"testRepository:/foo/bar/baz/paragraphsArea/01\" -->"
-                + AbstractContentComponent.LINEBREAK, outString);
+        assertEquals(outString,
+                "<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea/01\" -->" +
+                "\r\n" +
+                "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea/01\" name=\"paragraphsArea\" availableComponents=\"\" type=\"single\" showAddButton=\"true\"></cms:area>" +
+                "\r\n" +
+                "<!-- cms:end cms:content=\"testRepository:/foo/bar/baz/paragraphsArea/01\" -->"
+                + "\r\n", outString);
     }
 
     @Test
@@ -175,21 +182,22 @@ public class AreaComponentTest {
         // input TYPE_LIST, output componentMap with all paragraphs
 
         DefaultRenderingEngine engine = mock(DefaultRenderingEngine.class);
-        areaComponent = new AreaComponent(serverCfg, context, engine);
+        areaComponent = new AreaElement(serverCfg, context, engine);
         areaComponent.setArea(area);
         // areaComponent.setName("paragraphsArea");
         areaComponent.setWorkspace("testRepository");
         areaComponent.setPath("/foo/bar/baz/paragraphsArea");
 
-        areaComponent.setType(AreaComponent.TYPE_LIST);
+        areaComponent.setType(AreaElement.TYPE_LIST);
 
         final StringWriter out = new StringWriter();
-        areaComponent.postRender(out);
+        areaComponent.begin(out);
+        areaComponent.end(out);
 
         verify(engine).render(eq(paragraph01.getParent()), eq(area), argThat(new ArgumentMatcher<Map<String, Object>>() {
             @Override
             public boolean matches(Object componentsMap) {
-                List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaComponent.COMPONENTS);
+                List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaElement.COMPONENTS);
                 boolean result = false;
                 try {
                     result = componentList != null && componentList.size() == 1 && (componentList.get(0)).getJCRNode().getName().equals(paragraph01.getName());
@@ -202,8 +210,13 @@ public class AreaComponentTest {
 
         String outString = out.toString();
 
-        assertEquals(outString, "<!-- cms:end cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
-                + AbstractContentComponent.LINEBREAK, outString);
+        assertEquals(outString,
+            "<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->" +
+            "\r\n" +
+            "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>" +
+            "\r\n" +
+            "<!-- cms:end cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
+            + "\r\n", outString);
     }
 
     @Test
@@ -212,18 +225,19 @@ public class AreaComponentTest {
         context.push(paragraph01.getParent(), templateDefinition);
 
         DefaultRenderingEngine engine = mock(DefaultRenderingEngine.class);
-        areaComponent = new AreaComponent(serverCfg, context, engine);
+        areaComponent = new AreaElement(serverCfg, context, engine);
         areaComponent.setArea(area);
 
-        areaComponent.setType(AreaComponent.TYPE_LIST);
+        areaComponent.setType(AreaElement.TYPE_LIST);
 
         final StringWriter out = new StringWriter();
-        areaComponent.postRender(out);
+        areaComponent.begin(out);
+        areaComponent.end(out);
 
         verify(engine).render(eq(paragraph01.getParent()), eq(area), argThat(new ArgumentMatcher<Map<String, Object>>() {
             @Override
             public boolean matches(Object componentsMap) {
-                List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaComponent.COMPONENTS);
+                List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaElement.COMPONENTS);
                 boolean result = false;
                 try {
                     result = componentList != null && componentList.size() == 1 && (componentList.get(0)).getJCRNode().getName().equals(paragraph01.getName());
@@ -236,8 +250,13 @@ public class AreaComponentTest {
 
         String outString = out.toString();
 
-        assertEquals(outString, "<!-- cms:end cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
-                + AbstractContentComponent.LINEBREAK, outString);
+        assertEquals(outString,
+            "<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->" +
+            "\r\n" +
+            "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>" +
+            "\r\n"+
+            "<!-- cms:end cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
+            + "\r\n", outString);
     }
 
     @Test
@@ -251,33 +270,33 @@ public class AreaComponentTest {
 
         StringWriter out = new StringWriter();
         areaComponent.setName("paragraphsArea");
-        areaComponent.doRender(out);
+        areaComponent.begin(out);
 
         assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
-                + EditComponent.LINEBREAK
+                + "\r\n"
                 + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" name=\"paragraphsArea\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                + EditComponent.LINEBREAK, out.toString());
+                + "\r\n", out.toString());
 
         // with paragraph set
         out = new StringWriter();
         areaComponent.setAvailableComponents("paragraphs/myParagraph");
-        areaComponent.doRender(out);
+        areaComponent.begin(out);
 
         assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
-                + EditComponent.LINEBREAK
+                + "\r\n"
                 + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" name=\"paragraphsArea\" availableComponents=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                + EditComponent.LINEBREAK, out.toString());
+                + "\r\n", out.toString());
 
         // as collection == false (= singleton)
         out = new StringWriter();
-        areaComponent.setType(AreaComponent.TYPE_SINGLE);
-        areaComponent.doRender(out);
+        areaComponent.setType(AreaElement.TYPE_SINGLE);
+        areaComponent.begin(out);
 
         assertEquals(
                 "<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
-                + EditComponent.LINEBREAK
+                + "\r\n"
                 + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" name=\"paragraphsArea\" availableComponents=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
-                + EditComponent.LINEBREAK, out.toString());
+                + "\r\n", out.toString());
     }
 
     @Test
@@ -287,12 +306,12 @@ public class AreaComponentTest {
         ((ConfiguredAreaDefinition) area).setEnabled(false);
 
         final StringWriter out = new StringWriter();
-        areaComponent.postRender(out);
+        areaComponent.end(out);
 
         String outString = out.toString();
 
         assertEquals(outString, "<!-- cms:end cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
-                + AbstractContentComponent.LINEBREAK, outString);
+                + "\r\n", outString);
     }
 
     @Test
@@ -309,85 +328,110 @@ public class AreaComponentTest {
                 }
             }
 
+            @Override
             public String getDialog() {
                 return null;
             }
 
+            @Override
             public Map<String, AreaDefinition> getAreas() {
                 return null;
             }
 
+            @Override
             public String getId() {
                 return null;
             }
 
+            @Override
             public void setId(String id) {
             }
 
+            @Override
             public String getName() {
                 return null;
             }
 
+            @Override
             public String getRenderType() {
                 return null;
             }
 
+            @Override
             public String getTitle() {
                 return null;
             }
 
+            @Override
             public String getDescription() {
                 return null;
             }
 
+            @Override
             public String getI18nBasename() {
                 return null;
             }
 
+            @Override
             public String getTemplateScript() {
                 return null;
             }
 
+            @Override
             public Map<String, Object> getParameters() {
                 return null;
             }
 
+            @Override
             public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
                 return null;
             }
 
+            @Override
             public boolean isAvailable(Node content) {
                 return false;
             }
 
+            @Override
             public Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs() {
                 return Collections.EMPTY_MAP;
             }
 
-            public Boolean getEnabled() {
-                return null;
+            @Override
+            public boolean isEnabled() {
+                return true;
             }
 
+            @Override
             public void setName(String resolvedName) {
             }
 
+            @Override
             public void setAvailableComponentNames(String availableComponentNames) {
             }
 
+            @Override
             public String getAvailableComponentNames() {
                 return null;
             }
 
+            @Override
             public void setDialog(String resolvedDialog) {
             }
 
-            public void setRenderType(String renderType) {
+            @Override
+            public String getType() {
+                return null;
+            }
+
+            @Override
+            public void setType(String type) {
             }
         };
         areaComponent.setArea(areaDef);
-        assertFalse(areaComponent.resolveAreaDefinition() instanceof ConfiguredAreaDefinition);
+        assertFalse(areaComponent.getMergedAreaDefinition() instanceof ConfiguredAreaDefinition);
         areaComponent.setArea(null);
-        assertTrue(areaComponent.resolveAreaDefinition() instanceof ConfiguredAreaDefinition);
+        assertTrue(areaComponent.getMergedAreaDefinition() instanceof ConfiguredAreaDefinition);
     }
 
     @Test
@@ -403,15 +447,15 @@ public class AreaComponentTest {
         areaComponent.setName("baz");
 
         final StringWriter out = new StringWriter();
-        areaComponent.doRender(out);
+        areaComponent.begin(out);
 
         assertEquals("boo", defaultArea.getDialog());
         assertEquals("baz", defaultArea.getName());
-        assertEquals("list", defaultArea.getRenderType());
+        assertEquals("list", defaultArea.getType());
         assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
-                + EditComponent.LINEBREAK
+                + "\r\n"
                 + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" name=\"baz\" availableComponents=\"\" type=\"list\" dialog=\"boo\" showAddButton=\"true\"></cms:area>"
-                + EditComponent.LINEBREAK, out.toString());
+                + "\r\n", out.toString());
     }
 
     @Test
@@ -421,12 +465,12 @@ public class AreaComponentTest {
         areaComponent.setName("boo");
 
         final StringWriter out = new StringWriter();
-        areaComponent.doRender(out);
+        areaComponent.begin(out);
 
         assertEquals("<!-- cms:begin cms:content=\"testRepository:/foo/bar/baz/paragraphsArea\" -->"
-                + EditComponent.LINEBREAK
+                + "\r\n"
                 + "<cms:area content=\"testRepository:/foo/bar/baz/paragraphsArea\" name=\"boo\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                + EditComponent.LINEBREAK, out.toString());
+                + "\r\n", out.toString());
     }
 
     @After

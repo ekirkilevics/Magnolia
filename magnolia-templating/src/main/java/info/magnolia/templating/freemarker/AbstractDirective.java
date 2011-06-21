@@ -33,6 +33,14 @@
  */
 package info.magnolia.templating.freemarker;
 
+import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import javax.jcr.Node;
+
 import freemarker.core.CollectionAndSequence;
 import freemarker.core.Environment;
 import freemarker.template.TemplateBooleanModel;
@@ -52,27 +60,17 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
-import info.magnolia.templating.AuthoringUiComponent;
-import info.magnolia.templating.components.AbstractContentComponent;
-
-import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.jcr.Node;
+import info.magnolia.templating.components.AbstractContentTemplatingElement;
+import info.magnolia.templating.elements.TemplatingElement;
 
 /**
  * A base class for freemarker directives used in Magnolia.
  * Subclasses need to implement the {@link info.magnolia.templating.freemarker.AbstractDirective#prepareUIComponent(RenderingContext, info.magnolia.cms.core.AggregationState, freemarker.core.Environment, java.util.Map, freemarker.template.TemplateModel[], freemarker.template.TemplateDirectiveBody)} method.
  *
  * @param <C> the UI component the directive is operating on
- *
  * @version $Id$
  */
-public abstract class AbstractDirective<C extends AuthoringUiComponent> implements TemplateDirectiveModel {
+public abstract class AbstractDirective<C extends TemplatingElement> implements TemplateDirectiveModel {
 
     public static final String PATH_ATTRIBUTE = "path";
     public static final String UUID_ATTRIBUTE = "uuid";
@@ -81,39 +79,40 @@ public abstract class AbstractDirective<C extends AuthoringUiComponent> implemen
 
     @Override
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
-        final C uiComp = createUIComponent();
 
-        prepareUIComponent(uiComp, env, params, loopVars, body);
+        final C templatingElement = createTemplatingElement();
 
-        // prepareUIComponent should have removed the parameters it knows about.
+        prepareTemplatingElement(templatingElement, env, params, loopVars, body);
+
+        // prepareTemplatingElement should have removed the parameters it knows about.
         if (!params.isEmpty()) {
             throw new TemplateModelException("Unsupported parameter(s): " + params);
         }
 
         try {
-            uiComp.render(env.getOut());
+            templatingElement.begin(env.getOut());
 
             try {
                 doBody(env, body);
             } finally {
-                uiComp.postRender(env.getOut());
+                templatingElement.end(env.getOut());
             }
-        }
-        catch (RenderException e) {
+        } catch (RenderException e) {
             throw new TemplateException(e, env);
         }
     }
 
-    protected C createUIComponent() {
+    protected C createTemplatingElement() {
         // FIXME use scope instead of fetching the objects and pass them as parameters
         final RenderingEngine renderingEngine = Components.getComponent(RenderingEngine.class);
         final RenderingContext renderingContext = renderingEngine.getRenderingContext();
 
-        return Components.getComponentProvider().newInstance(getUIComponentClass(), ServerConfiguration.getInstance(), renderingContext, renderingEngine);
+        return Components.getComponentProvider().newInstance(getTemplatingElementClass(), ServerConfiguration.getInstance(), renderingContext, renderingEngine);
     }
 
-    protected Class<C> getUIComponentClass() {
-        return (Class<C>) ((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    protected Class<C> getTemplatingElementClass() {
+        // TODO does this support more than one level of subclasses?
+        return (Class<C>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
     /**
@@ -128,7 +127,7 @@ public abstract class AbstractDirective<C extends AuthoringUiComponent> implemen
      * this behavior is not mandated by their API, nor documented (at the time of writing, with FreeMarker 2.3.16), we
      * should exert caution. Unit tests hopefully cover this, so we'll be safe when updating to newer FreeMarker versions.
      */
-    protected abstract void prepareUIComponent(C uiComponent, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException;
+    protected abstract void prepareTemplatingElement(C templatingElement, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException;
 
     protected void doBody(Environment env, TemplateDirectiveBody body) throws TemplateException, IOException {
         if (body != null) {
@@ -258,9 +257,9 @@ public abstract class AbstractDirective<C extends AuthoringUiComponent> implemen
     }
 
     /**
-     * Init attributes common to all AbstractContentComponents.
+     * Init attributes common to all {@link AbstractContentTemplatingElement}.
      */
-    protected void initContentComponent(Map<String, TemplateModel> params, AbstractContentComponent component) throws TemplateModelException {
+    protected void initContentElement(Map<String, TemplateModel> params, AbstractContentTemplatingElement component) throws TemplateModelException {
         Node target = node(params, CONTENT_ATTRIBUTE, null);
         String workspace = string(params, WORKSPACE_ATTRIBUTE, null);
         String nodeIdentifier = string(params, UUID_ATTRIBUTE, null);

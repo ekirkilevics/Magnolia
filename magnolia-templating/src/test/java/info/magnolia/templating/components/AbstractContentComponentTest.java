@@ -56,7 +56,7 @@ public class AbstractContentComponentTest extends AbstractComponentTestCase {
         final RenderingContext aggregationState = mock(RenderingContext.class);
         when(aggregationState.getMainContent()).thenReturn(getHM().getNode("/foo/bar"));
 
-        final AbstractContentComponent compo = new DummyComponent(null, aggregationState);
+        final AbstractContentTemplatingElement compo = new DummyComponent(null, aggregationState);
         final Node expectedNode = getHM().getNode("/foo/bar/paragraphs/1");
 
         when(aggregationState.getCurrentContent()).thenReturn(expectedNode);
@@ -74,13 +74,13 @@ public class AbstractContentComponentTest extends AbstractComponentTestCase {
         }
     }
 
-    private static class DummyComponent extends AbstractContentComponent {
+    private static class DummyComponent extends AbstractContentTemplatingElement {
         public DummyComponent(ServerConfiguration serverConfiguration, RenderingContext renderingContext) {
             super(serverConfiguration, renderingContext);
         }
 
         @Override
-        protected void doRender(Appendable out) throws IOException {
+        public void begin(Appendable out) throws IOException {
             out.append("hello world");
         }
     }

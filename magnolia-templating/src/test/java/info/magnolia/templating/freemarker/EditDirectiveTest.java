@@ -36,7 +36,6 @@ package info.magnolia.templating.freemarker;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import freemarker.template.TemplateModelException;
-import info.magnolia.templating.components.AbstractContentComponent;
 
 import org.junit.Test;
 
@@ -49,22 +48,22 @@ public class EditDirectiveTest extends AbstractDirectiveTestCase {
     public void testRenderSimpleBar() throws Exception {
         String result = renderForTest("[@cms.edit /]");
         assertEquals("<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + AbstractContentComponent.LINEBREAK
+                + "\r\n"
                 + "<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
-                + AbstractContentComponent.LINEBREAK
+                + "\r\n"
                 + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + AbstractContentComponent.LINEBREAK, result);
+                + "\r\n", result);
     }
 
     @Test
     public void testRenderWithDialog() throws Exception {
         final String result = renderForTest("[@cms.edit dialog='testDialog' /]");
         assertEquals("<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + AbstractContentComponent.LINEBREAK
+                + "\r\n"
                         + "<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
-                + AbstractContentComponent.LINEBREAK
+                + "\r\n"
                 + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + AbstractContentComponent.LINEBREAK, result);
+                + "\r\n", result);
     }
 
     @Test

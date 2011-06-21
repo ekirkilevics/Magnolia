@@ -36,21 +36,10 @@ package info.magnolia.templating.components;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.gui.i18n.DefaultI18nAuthoringSupport;
-import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
-import info.magnolia.cms.i18n.DefaultI18nContentSupport;
-import info.magnolia.cms.i18n.DefaultMessagesManager;
-import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.jcr.util.SessionTestUtil;
-import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.StringWriter;
 
@@ -63,32 +52,19 @@ import org.junit.Test;
 public class ContextComponentTest {
     @Test
     public void testDoRender() throws Exception {
-        final MockSession hm = SessionTestUtil.createSession("/foo/bar/baz/paragraphs/01.text=dummy");
 
-        final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getNode("/foo/bar/baz"));
-        aggregationState.setCurrentContent(hm.getNode("/foo/bar/baz/paragraphs/01"));
         final WebContext ctx = mock(WebContext.class);
         final String name = "name1";
         final String value = "value1";
         MgnlContext.setInstance(ctx);
 
-        final ServerConfiguration serverCfg = new ServerConfiguration();
-        serverCfg.setAdmin(true);
-        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
-        // register some default components used internally
-        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
-        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
-
-        final ContextComponent marker = new ContextComponent(serverCfg, new AggregationStateBasedRenderingContext(aggregationState));
+        final ContextAttributeElement marker = new ContextAttributeElement();
         marker.setName(name);
         marker.setValue(value);
 
         final StringWriter out = new StringWriter();
-        marker.doRender(out);
+        marker.begin(out);
 
-        // TODO - string is empty: what can we test in addition?
         assertEquals("", out.toString());
         verify(ctx).setAttribute(name, value, 1);
     }

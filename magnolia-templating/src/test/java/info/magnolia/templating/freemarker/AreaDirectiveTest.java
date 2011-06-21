@@ -47,10 +47,10 @@ public class AreaDirectiveTest extends AbstractDirectiveTestCase {
     public void testRenderSimpleBar() throws Exception {
         final String result = renderForTest("[@cms.area name=\"stage\" /]");
         assertEquals("<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + AbstractContentComponent.LINEBREAK
+                + "\r\n"
                         + "<cms:area content=\"testWorkspace:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                + AbstractContentComponent.LINEBREAK
+                + "\r\n"
                 + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + AbstractContentComponent.LINEBREAK, result);
+                + "\r\n", result);
     }
 }
