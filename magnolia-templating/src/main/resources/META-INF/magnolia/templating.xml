@@ -11,7 +11,7 @@
       <version>5.0/*</version>
     </dependency>
     <dependency>
-      <name>templating</name>
+      <name>rendering</name>
       <version>5.0/*</version>
     </dependency>
   </dependencies>
