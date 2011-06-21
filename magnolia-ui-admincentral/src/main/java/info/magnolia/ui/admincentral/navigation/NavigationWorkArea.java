@@ -183,10 +183,10 @@ public class NavigationWorkArea implements NavigationView, IsVaadinComponent {
         if (c == null) {
             return;
         }
-        //first set the selected menu item
-        melodion.setSelected(c);
-        //then set the correct tab in the tabsheet holding this melodion
+        //first set the correct tab in the tabsheet holding this melodion
         ((TabSheet)melodion.getParent()).setSelectedTab(melodion);
+        //then set the selected menu item
+        melodion.setSelected(c);
 
         if (c instanceof Melodion.Tab) {
             ((Melodion.Tab) c).expand();
