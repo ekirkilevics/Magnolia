@@ -44,8 +44,8 @@ import info.magnolia.templating.template.RenderableDefinition;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -68,11 +68,11 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     }
 
     @Override
-    public void render(Node content, RenderableDefinition definition, Map<String, Object> context, Appendable out) throws IOException, RenderException {
+    public void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws IOException, RenderException {
 
-        final RenderingModel parentModel = (RenderingModel) MgnlContext.getAttribute(MODEL_ATTRIBUTE);
+        final RenderingModel<?> parentModel = MgnlContext.getAttribute(MODEL_ATTRIBUTE);
 
-        RenderingModel model;
+        RenderingModel<?> model;
         String actionResult;
 
         String uuid;
@@ -83,7 +83,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
             throw new RenderException(e);
         }
 
-        model = (RenderingModel) MgnlContext.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + uuid);
+        model = MgnlContext.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + uuid);
 
         if (model == null) {
 
@@ -103,9 +103,10 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
 
         String templatePath = determineTemplatePath(content, definition, model, actionResult);
 
-        final Map ctx = newContext();
-        final Map savedContextState = saveContextState(ctx);
+        final Map<String, Object> ctx = newContext();
+        final Map<String, Object> savedContextState = saveContextState(ctx);
         setupContext(ctx, content, definition, model, actionResult);
+        ctx.putAll(contextObjects);
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, model);
         onRender(content, definition, out, ctx, templatePath);
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, parentModel);
@@ -113,7 +114,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         restoreContext(ctx, savedContextState);
     }
 
-    protected String determineTemplatePath(Node content, RenderableDefinition definition, RenderingModel model, final String actionResult) {
+    protected String determineTemplatePath(Node content, RenderableDefinition definition, RenderingModel<?> model, final String actionResult) {
 
 // FIXME reactivate this code
         return definition.getTemplateScript();
@@ -129,7 +130,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * Creates the model for this rendering process. Will set the properties
      */
     @Override
-    public RenderingModel newModel(Node content, RenderableDefinition definition, RenderingModel parentModel) throws RenderException {
+    public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws RenderException {
         try {
             final Node wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
             return definition.newModel(wrappedContent, definition, parentModel);
@@ -138,8 +139,8 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         }
     }
 
-    protected Map saveContextState(final Map ctx) {
-        Map state = new HashMap();
+    protected Map<String, Object> saveContextState(final Map<String, Object> ctx) {
+        Map<String, Object> state = new HashMap<String, Object>();
         // save former values
         saveAttribute(ctx, state, "content");
         saveAttribute(ctx, state, "def");
@@ -151,18 +152,17 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         return state;
     }
 
-    protected void saveAttribute(final Map ctx, Map state, String name) {
+    protected void saveAttribute(final Map<String, Object> ctx, Map<String, Object> state, String name) {
         state.put(name, ctx.get(name));
     }
 
-    protected void restoreContext(final Map ctx, Map state) {
-        for (Iterator iterator = state.keySet().iterator(); iterator.hasNext();) {
-            String name = (String) iterator.next();
-            setContextAttribute(ctx, name, state.get(name));
+    protected void restoreContext(final Map<String, Object> ctx, Map<String, Object> state) {
+        for (Entry<String, Object> entry : state.entrySet()) {
+            setContextAttribute(ctx, entry.getKey(), entry.getValue());
         }
     }
 
-    protected void setupContext(final Map ctx, Node content, RenderableDefinition definition, RenderingModel model, Object actionResult){
+    protected void setupContext(final Map<String, Object> ctx, Node content, RenderableDefinition definition, RenderingModel<?> model, Object actionResult){
         final Node mainContent = getMainContentSafely(content);
 
         setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(mainContent, mainContent));
@@ -215,7 +215,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
 //        return new I18nContentWrapper(content);
     }
 
-    protected Object setContextAttribute(final Map ctx, final String name, Object value) {
+    protected Object setContextAttribute(final Map<String, Object> ctx, final String name, Object value) {
         return ctx.put(name, value);
     }
 
@@ -229,12 +229,12 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     /**
      * Create a new context object which is a map.
      */
-    protected abstract Map newContext();
+    protected abstract Map<String, Object> newContext();
 
     /**
      * Finally execute the rendering.
      * @param content TODO
      */
-    protected abstract void onRender(Node content, RenderableDefinition definition, Appendable out, Map ctx, String templateScript) throws RenderException;
+    protected abstract void onRender(Node content, RenderableDefinition definition, Appendable out, Map<String, Object> ctx, String templateScript) throws RenderException;
 
 }
