@@ -77,8 +77,8 @@ public class PlaceChangeRequestEvent implements Event<PlaceChangeRequestEvent.Ha
 
     /**
      * Set a message to warn the user that it might be unwise to navigate away from the current
-     * place, e.g. due to unsaved changes. If the user clicks okay to that message, navigation will
-     * be canceled.
+     * place, i.e. due to unsaved changes. If the user clicks okay to that message, navigation will
+     * proceed to the requested place.
      * <p>
      * Calling with a null warning is the same as not calling the method at all -- the user will not
      * be prompted.
