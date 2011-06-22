@@ -153,22 +153,18 @@ public class Navigation implements NavigationView, IsVaadinComponent {
         }
     }
 
-    // TODO: Would it make sense to move the i18n logic to a more generic place?
-    // For example, in the getters of MenuItemDefinition so that client classes need not worry
-    // about
-    // i18n and this kind of utility code is not spread all over the place?
     /**
      * Converts label key into i18n-ized string.
      */
-    private static String getLabel(NavigationItemDefinition menuItem) {
-        return MessagesUtil.getWithDefault(menuItem.getLabel(), menuItem.getLabel(), menuItem.getI18nBasename());
+    protected static String getLabel(NavigationItemDefinition menuItem) {
+        return MessagesUtil.chainWithDefault(menuItem.getI18nBasename()).getWithDefault(menuItem.getLabel(), menuItem.getLabel());
     }
 
     /**
      * Converts description key into i18n-ized string.
      */
-    private static String getDescription(NavigationItemDefinition menuItem) {
-        return MessagesUtil.getWithDefault(menuItem.getDescription(), menuItem.getDescription(), menuItem.getI18nBasename());
+    protected static String getDescription(NavigationItemDefinition menuItem) {
+        return MessagesUtil.chainWithDefault(menuItem.getI18nBasename()).getWithDefault(menuItem.getDescription(), menuItem.getDescription());
     }
 
     @Override
