@@ -99,13 +99,13 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
     }
 
     public void update(Place place) {
-        MenuItemDefinition menuItemDefinition = getAssignedNavigationItem(place);
+        final MenuItemDefinition menuItemDefinition = getAssignedMenuItemDefinition(place);
         if(menuItemDefinition != null){
             view.select(menuItemDefinition);
         }
     }
 
-    private MenuItemDefinition getAssignedNavigationItem(Place place) {
+    private MenuItemDefinition getAssignedMenuItemDefinition(Place place) {
         return placeToMenuItemDefinitionMappings.get(place);
     }
 
