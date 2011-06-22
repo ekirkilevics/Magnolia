@@ -80,7 +80,7 @@ public class Navigation implements NavigationView, IsVaadinComponent {
 
     public Navigation(NavigationDefinition definition, NavigationPermissionSchema permissions) {
 
-        //melodion.addStyleName(definition.getName());
+        melodion.addStyleName(definition.getName());
         melodion.setSizeUndefined();
         melodion.setWidth(100, Sizeable.UNITS_PERCENTAGE);
 

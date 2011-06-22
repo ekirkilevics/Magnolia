@@ -42,4 +42,5 @@ import java.util.List;
  */
 public interface NavigationDefinition {
     List<NavigationGroupDefinition> getGroups();
+    String getName();
 }

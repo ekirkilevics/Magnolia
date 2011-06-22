@@ -43,6 +43,7 @@ import java.util.List;
 public class NavigationDefinitionImpl implements NavigationDefinition {
 
     private List<NavigationGroupDefinition> groups = new ArrayList<NavigationGroupDefinition>();
+    private String name;
 
     @Override
     public List<NavigationGroupDefinition> getGroups() {
@@ -51,5 +52,13 @@ public class NavigationDefinitionImpl implements NavigationDefinition {
 
     public void addGroup(NavigationGroupDefinition navigationGroupDefinition){
         groups.add(navigationGroupDefinition);
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 }

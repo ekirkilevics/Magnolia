@@ -184,7 +184,8 @@ input.v-textfield-search[type="text"]:focus {
 }
 
 .m-embedded-view {
-
+  border-top: 1px solid #B6BBBC;
+  border-left: 1px solid #B6BBBC;
 }
 
 /**
