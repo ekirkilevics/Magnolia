@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.ui.Component;
 
 
-
 /**
  * ImplementationConfiguration of {@link NavigationView}.
  *

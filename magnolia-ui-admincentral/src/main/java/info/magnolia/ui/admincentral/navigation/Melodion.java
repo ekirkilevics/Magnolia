@@ -39,8 +39,6 @@ import java.util.HashSet;
 import org.vaadin.jouni.animator.AnimatorProxy;
 import org.vaadin.jouni.animator.client.ui.VAnimatorProxy.AnimType;
 
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -110,7 +108,7 @@ public class Melodion extends CssLayout {
 
     /**
      * Top-level menu item in the Melodion.
-     * 
+     *
      * @author mrichert
      */
     public class Tab extends CssLayout {
@@ -127,19 +125,6 @@ public class Melodion extends CssLayout {
             this.caption = caption;
             addComponent(animator);
             addComponent(caption);
-
-            addListener(new LayoutClickListener() {
-
-                @Override
-                public void layoutClick(LayoutClickEvent event) {
-                    if (event.getChildComponent() == Tab.this.caption) {
-                        setSelected(Tab.this);
-                        if (!expanded) {
-                            expand();
-                        }
-                    }
-                }
-            });
         }
 
         public void addButton(NativeButton b) {

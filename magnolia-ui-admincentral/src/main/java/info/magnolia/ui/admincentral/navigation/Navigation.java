@@ -85,6 +85,7 @@ public class Navigation implements NavigationView, IsVaadinComponent {
         melodion.setWidth(100, Sizeable.UNITS_PERCENTAGE);
 
         Component lastSpacer = null;
+
         if(definition.getGroups().isEmpty()){
             log.error(NO_NAVIGATION_GROUPS_FOUND_ERROR);
             final Label label = new Label(NO_NAVIGATION_GROUPS_FOUND_ERROR, Label.CONTENT_XHTML);
@@ -130,7 +131,6 @@ public class Navigation implements NavigationView, IsVaadinComponent {
         Tab tab = melodion.addTab(label);
 
         navigationItems.put(item, tab);
-
 
         tab.addListener(new LayoutClickListener() {
 
