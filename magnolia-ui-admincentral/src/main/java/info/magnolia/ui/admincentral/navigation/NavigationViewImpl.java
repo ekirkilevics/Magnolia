@@ -47,8 +47,7 @@ import com.vaadin.ui.Component;
 
 
 /**
- * ImplementationConfiguration of {@link NavigationView}. It represents the app main navigation and
- * holds {@link Navigation}(s).
+ * ImplementationConfiguration of {@link NavigationView}.
  *
  * @author fgrilli
  * @author mrichert

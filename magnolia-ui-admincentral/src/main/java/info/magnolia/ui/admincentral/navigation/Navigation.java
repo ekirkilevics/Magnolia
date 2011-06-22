@@ -61,7 +61,7 @@ import com.vaadin.ui.NativeButton;
 
 /**
  * Represents a collection of menus (that is {@link NavigationGroup} objects). The type and number
- * of work areas will depend on user's privileges.
+ * of groups shown will depend on user's privileges.
  *
  * @author fgrilli
  * @author mrichert
