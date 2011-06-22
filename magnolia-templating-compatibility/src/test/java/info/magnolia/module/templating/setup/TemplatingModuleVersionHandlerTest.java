@@ -57,13 +57,13 @@ import javax.jcr.RepositoryException;
 public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     @Override
     protected String getModuleDescriptorPath() {
-        return "/META-INF/magnolia/templating.xml";
+        return "/META-INF/magnolia/rendering.xml";
     }
 
     @Override
     protected List<String> getModuleDescriptorPathsForTests() {
         return Arrays.asList(
-                "/META-INF/magnolia/templating.xml",
+                "/META-INF/magnolia/rendering.xml",
                 "/META-INF/magnolia/core.xml"
         );
     }

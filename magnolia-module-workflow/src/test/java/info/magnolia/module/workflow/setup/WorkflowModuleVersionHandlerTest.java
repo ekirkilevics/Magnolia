@@ -80,7 +80,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         return Arrays.asList(
                 "/META-INF/magnolia/workflow.xml",
                 "/META-INF/magnolia/admininterface.xml",
-                "/META-INF/magnolia/templating.xml",
+                "/META-INF/magnolia/rendering.xml",
                 "/META-INF/magnolia/core.xml"
         );
     }

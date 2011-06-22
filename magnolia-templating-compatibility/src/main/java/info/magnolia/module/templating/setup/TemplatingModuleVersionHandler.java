@@ -45,7 +45,6 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.delta.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.delta.Task;
-import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
 import info.magnolia.module.templating.setup.for4_0.DeprecateDialogPathAllModules;
 import info.magnolia.module.templating.setup.for4_0.FixTemplatePathTask;
 import info.magnolia.module.templating.setup.for4_0.NestPropertiesAllModulesNodeTask;
@@ -65,20 +64,6 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
     private OrderNodeBeforeTask orderBackwardCompatibilityFilter = new OrderNodeBeforeTask("Move backward compatibility filter", "", ContentRepository.CONFIG, "/server/filters/cms/backwardCompatibility", "rendering");
 
     public TemplatingModuleVersionHandler() {
-        register(DeltaBuilder.update("3.5", "")
-                .addTask(new IntroduceParagraphRenderers())
-                .addTask(new BootstrapSingleResourceAndOrderBefore(
-                "Compatibility Filter",
-                "${actpage} is deprecated. Adds a compatibility filter still supporting it but writing warn messages to the log.",
-                "/mgnl-bootstrap/templating/config.server.filters.cms.backwardCompatibility.xml",
-                "rendering"))
-        );
-
-        // move the filter in case it is in the wrong place
-        // this happened in case of a fresh install of former version
-        register(DeltaBuilder.update("3.5.4", "")
-                .addTask(orderBackwardCompatibilityFilter)
-        );
 
         register(DeltaBuilder.update("4.0", "")
                 .addTask(new BootstrapSingleResource("Freemarker Template Renderer", "Adds Freemarker template renderer configuration.", "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"))
@@ -118,7 +103,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
             .addTask(new BootstrapSingleResourceAndOrderBefore(
                         "Model Execution Filter",
                         "Add Model Execution Filter",
-                        "/mgnl-bootstrap/templating/config.server.filters.cms.modelExecution.xml",
+                        "/mgnl-bootstrap/rendering/config.server.filters.cms.modelExecution.xml",
                         "backwardCompatibility"))
         );
 

@@ -83,7 +83,7 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         return Arrays.asList(
                 "/META-INF/magnolia/mail.xml",
                 "/META-INF/magnolia/admininterface.xml",
-                "/META-INF/magnolia/templating.xml",
+                "/META-INF/magnolia/rendering.xml",
                 "/META-INF/magnolia/core.xml"
         );
     }

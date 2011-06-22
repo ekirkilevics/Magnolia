@@ -37,5 +37,9 @@
       <name>core</name>
       <version>5.0/*</version>
     </dependency>
+    <dependency>
+      <name>rendering</name>
+      <version>5.0/*</version>
+    </dependency>
   </dependencies>
 </module>

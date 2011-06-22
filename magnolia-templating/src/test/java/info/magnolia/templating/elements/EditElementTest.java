@@ -114,7 +114,7 @@ public class EditElementTest {
         assertEquals(
                 "<!-- cms:begin cms:content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" -->"
                 + "\r\n"
-                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" dialog=\"testDialog\" template=\"testParagraph0\"></cms:edit>"
+                + "<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" format=\"bar\" label=\"Test Paragraph 0\" dialog=\"testDialog\" template=\"testParagraph0\"></cms:edit>"
                 + "\r\n", out.toString());
 
         // now with format & dialog

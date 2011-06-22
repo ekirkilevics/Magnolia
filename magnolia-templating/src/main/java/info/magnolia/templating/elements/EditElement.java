@@ -79,9 +79,7 @@ public class EditElement extends AbstractContentTemplatingElement {
         MarkupHelper helper = new MarkupHelper(out);
         helper.startContent(content);
         helper.openTag(CMS_EDIT).attribute("content", getNodePath(content));
-        if (StringUtils.isNotEmpty(format)) {
-            helper.attribute("format", format);
-        }
+        helper.attribute("format", format);
         helper.attribute("label", templateDefinition.getTitle());
         helper.attribute("dialog", resolveDialog(templateDefinition));
         helper.attribute("template", templateDefinition.getId());
