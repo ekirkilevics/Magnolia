@@ -156,14 +156,14 @@ public class Navigation implements NavigationView, IsVaadinComponent {
     /**
      * Converts label key into i18n-ized string.
      */
-    protected static String getLabel(NavigationItemDefinition menuItem) {
+    protected final String getLabel(NavigationItemDefinition menuItem) {
         return MessagesUtil.chainWithDefault(menuItem.getI18nBasename()).getWithDefault(menuItem.getLabel(), menuItem.getLabel());
     }
 
     /**
      * Converts description key into i18n-ized string.
      */
-    protected static String getDescription(NavigationItemDefinition menuItem) {
+    protected final String getDescription(NavigationItemDefinition menuItem) {
         return MessagesUtil.chainWithDefault(menuItem.getI18nBasename()).getWithDefault(menuItem.getDescription(), menuItem.getDescription());
     }
 
@@ -220,8 +220,8 @@ public class Navigation implements NavigationView, IsVaadinComponent {
             if (icon != null) {
                 setIcon(icon);
             }
-            setCaption(Navigation.getLabel(item));
-            setDescription(Navigation.getDescription(item));
+            setCaption(getLabel(item));
+            setDescription(Navigation.this.getDescription(item));
 
             this.addListener(new ClickListener() {
 
