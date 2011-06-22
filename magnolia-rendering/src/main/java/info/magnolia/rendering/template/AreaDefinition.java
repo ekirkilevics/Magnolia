@@ -50,7 +50,6 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
     String DEFAULT_TYPE = TYPE_LIST;
 
     // TODO should be components
-    // TODO should use ParagraphAvailability
     Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs();
 
     boolean isEnabled();

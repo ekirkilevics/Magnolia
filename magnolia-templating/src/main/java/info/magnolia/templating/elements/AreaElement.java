@@ -88,13 +88,12 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     @Override
     public void begin(Appendable out) throws IOException, RenderException {
-        Node content = getTargetContent();
 
         areaDefinition = getMergedAreaDefinition();
 
-        System.out.println("this:" + this.name + ", area:" + areaDefinition.getName());
-
         if (isAdmin()) {
+            Node content = getTargetContent();
+
             MarkupHelper helper = new MarkupHelper(out);
             helper.startContent(content);
             helper.openTag(CMS_AREA).attribute("content", getNodePath(content));
