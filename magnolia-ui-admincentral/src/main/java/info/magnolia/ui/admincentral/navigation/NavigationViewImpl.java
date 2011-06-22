@@ -62,6 +62,9 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
     // TODO don't pass the registry but the navigation itself
     public NavigationViewImpl(NavigationProvider navigationProvider, NavigationPermissionSchema permissions) {
         final NavigationDefinition navigationDefinition = navigationProvider.getNavigation();
+        if(navigationDefinition == null) {
+            throw new IllegalStateException("Navigation definition cannot be null. Please check your configuration.");
+        }
         navigation = new Navigation(navigationDefinition, permissions);
     }
 
