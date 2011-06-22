@@ -125,7 +125,7 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
     private boolean checkMenuItemDefinition(MenuItemDefinition menuItemDefinition) {
         ActionDefinition actionDefinition = menuItemDefinition.getActionDefinition();
         if(actionDefinition == null) {
-            log.warn("No action definition defined for navigation item [{}]. The item will be rendered but nothing will happen when clicking on it. Is that intended?", menuItemDefinition.getName());
+            log.warn("No action definition for navigation item [{}]. The item will be rendered but nothing will happen when clicking on it. Is that intended?", menuItemDefinition.getName());
             return false;
         }
         if(!PlaceChangeActionDefinition.class.isAssignableFrom(actionDefinition.getClass())){
