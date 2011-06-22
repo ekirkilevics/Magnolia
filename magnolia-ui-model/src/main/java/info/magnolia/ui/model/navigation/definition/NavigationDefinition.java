@@ -35,8 +35,6 @@ package info.magnolia.ui.model.navigation.definition;
 
 import java.util.List;
 
-
-
 /**
  * The definition of the navigation. Navigation is structured in groups.
  */
