@@ -33,30 +33,22 @@
  */
 package info.magnolia.ui.admincentral.navigation;
 
-import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
-import info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.model.navigation.registry.NavigationProvider;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
-import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+
 
 
 /**
  * ImplementationConfiguration of {@link NavigationView}. It represents the app main navigation and
- * holds {@link NavigationWorkArea}(s).
+ * holds {@link Navigation}(s).
  *
  * @author fgrilli
  * @author mrichert
@@ -65,59 +57,29 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
 
     private static final Logger log = LoggerFactory.getLogger(NavigationViewImpl.class);
 
-    private TabSheet outerNavigationContainer = new TabSheet();
-
     private Presenter presenter;
 
-    private Set<NavigationWorkArea> registeredNavigationAreas = new HashSet<NavigationWorkArea>();
+    private Navigation navigation;
 
     // TODO don't pass the registry but the navigation itself
     public NavigationViewImpl(NavigationProvider navigationProvider, NavigationPermissionSchema permissions) {
-        final NavigationDefinition navigation = navigationProvider.getNavigation();
-        outerNavigationContainer.setSizeFull();
-
-        for (final NavigationWorkareaDefinition definition : navigation.getWorkareas()) {
-            log.debug("creating navigation workarea {}", definition.getName());
-
-            final NavigationWorkArea navigationWorkArea = new NavigationWorkArea(definition, permissions);
-
-            registeredNavigationAreas.add(navigationWorkArea);
-
-            final Component component = navigationWorkArea.asVaadinComponent();
-            outerNavigationContainer.addTab(
-                component,
-                definition.getLabel(),
-                new ExternalResource(MgnlContext.getContextPath() + definition.getIcon()));
-
-            outerNavigationContainer.addListener(new SelectedTabChangeListener() {
-
-                @Override
-                public void selectedTabChange(SelectedTabChangeEvent event) {
-                    if (component == event.getTabSheet().getSelectedTab() && presenter != null) {
-                        presenter.onMenuSelection(definition);
-                    }
-                }
-            });
-        }
+        final NavigationDefinition navigationDefinition = navigationProvider.getNavigation();
+        navigation = new Navigation(navigationDefinition, permissions);
     }
 
     @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
-        for (NavigationWorkArea navigationWorkArea : registeredNavigationAreas) {
-            navigationWorkArea.setPresenter(presenter);
-        }
+        navigation.setPresenter(this.presenter);
     }
 
     @Override
     public void select(MenuItemDefinition menuItemDefinition) {
-        for (NavigationWorkArea workarea : registeredNavigationAreas) {
-            workarea.select(menuItemDefinition);
-        }
+        navigation.select(menuItemDefinition);
     }
 
     @Override
     public Component asVaadinComponent() {
-        return outerNavigationContainer;
+        return navigation.asVaadinComponent();
     }
 }

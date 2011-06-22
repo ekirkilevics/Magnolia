@@ -42,14 +42,14 @@ import java.util.List;
  */
 public class NavigationDefinitionImpl implements NavigationDefinition {
 
-    private List<NavigationWorkareaDefinition> workareas = new ArrayList<NavigationWorkareaDefinition>();
+    private List<NavigationGroupDefinition> groups = new ArrayList<NavigationGroupDefinition>();
 
     @Override
-    public List<NavigationWorkareaDefinition> getWorkareas() {
-        return Collections.unmodifiableList(workareas);
+    public List<NavigationGroupDefinition> getGroups() {
+        return Collections.unmodifiableList(groups);
     }
 
-    public void addWorkarea(NavigationWorkareaDefinition navigationWorkareaDefinition){
-        workareas.add(navigationWorkareaDefinition);
+    public void addGroup(NavigationGroupDefinition navigationGroupDefinition){
+        groups.add(navigationGroupDefinition);
     }
 }

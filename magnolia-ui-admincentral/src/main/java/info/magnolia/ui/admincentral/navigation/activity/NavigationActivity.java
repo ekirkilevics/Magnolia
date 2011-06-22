@@ -48,7 +48,6 @@ import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
-import info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationProvider;
 
 import java.util.HashMap;
@@ -111,24 +110,14 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
     }
 
     private void createPlaceToMenuItemDefinitionMappings(NavigationDefinition navigationDefinition) {
-
-        for(NavigationWorkareaDefinition workareaDefinition:navigationDefinition.getWorkareas()){
-            if(!checkMenuItemDefinition(workareaDefinition)){
-                continue;
-            }
-            final Place workareaPlace = ((PlaceChangeActionDefinition)workareaDefinition.getActionDefinition()).getPlace();
-            //log.debug("mapping place {} to menu item {}", workareaPlace, workareaDefinition.getName());
-            placeToMenuItemDefinitionMappings.put(workareaPlace, workareaDefinition);
-
-            for(NavigationGroupDefinition groupDefinition: workareaDefinition.getGroups()){
-                for(NavigationItemDefinition navigationItem : groupDefinition.getItems()){
-                    if(!checkMenuItemDefinition(navigationItem)){
-                        continue;
-                    }
-                    final Place menuItemPlace = ((PlaceChangeActionDefinition)navigationItem.getActionDefinition()).getPlace();
-                    //log.debug("mapping place {} to menu item {}", menuItemPlace, navigationItem.getName());
-                    placeToMenuItemDefinitionMappings.put(menuItemPlace, navigationItem);
+        for(NavigationGroupDefinition groupDefinition: navigationDefinition.getGroups()){
+            for(NavigationItemDefinition navigationItem : groupDefinition.getItems()){
+                if(!checkMenuItemDefinition(navigationItem)){
+                    continue;
                 }
+                final Place menuItemPlace = ((PlaceChangeActionDefinition)navigationItem.getActionDefinition()).getPlace();
+                //log.debug("mapping place {} to menu item {}", menuItemPlace, navigationItem.getName());
+                placeToMenuItemDefinitionMappings.put(menuItemPlace, navigationItem);
             }
         }
     }

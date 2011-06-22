@@ -38,9 +38,8 @@ import java.util.List;
 
 
 /**
- * The definition of the navigation. Navigation is structured by work areas (e.g. content, settings, personal, etc.).
+ * The definition of the navigation. Navigation is structured in groups.
  */
 public interface NavigationDefinition {
-    List<NavigationWorkareaDefinition> getWorkareas();
-
+    List<NavigationGroupDefinition> getGroups();
 }

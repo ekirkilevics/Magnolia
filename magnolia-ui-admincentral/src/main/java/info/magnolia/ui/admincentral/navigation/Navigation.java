@@ -37,15 +37,14 @@ import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.admincentral.navigation.Melodion.Tab;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
-import info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +57,6 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.TabSheet;
 
 
 /**
@@ -68,9 +66,11 @@ import com.vaadin.ui.TabSheet;
  * @author fgrilli
  * @author mrichert
  */
-public class NavigationWorkArea implements NavigationView, IsVaadinComponent {
+public class Navigation implements NavigationView, IsVaadinComponent {
 
-    private static final Logger log = LoggerFactory.getLogger(NavigationWorkArea.class);
+    private static final String NO_NAVIGATION_GROUPS_FOUND_ERROR = "No navigation groups found in navigation definition. Please check your configuration.";
+
+    private static final Logger log = LoggerFactory.getLogger(Navigation.class);
 
     private Melodion melodion = new Melodion();
 
@@ -78,13 +78,20 @@ public class NavigationWorkArea implements NavigationView, IsVaadinComponent {
 
     private Presenter presenter;
 
-    public NavigationWorkArea(NavigationWorkareaDefinition definition, NavigationPermissionSchema permissions) {
+    public Navigation(NavigationDefinition definition, NavigationPermissionSchema permissions) {
 
-        melodion.addStyleName(definition.getName());
+        //melodion.addStyleName(definition.getName());
         melodion.setSizeUndefined();
         melodion.setWidth(100, Sizeable.UNITS_PERCENTAGE);
 
         Component lastSpacer = null;
+        if(definition.getGroups().isEmpty()){
+            log.error(NO_NAVIGATION_GROUPS_FOUND_ERROR);
+            final Label label = new Label(NO_NAVIGATION_GROUPS_FOUND_ERROR, Label.CONTENT_XHTML);
+            //label.addStyleName("error");
+            melodion.addTab(label);
+            return;
+        }
         for (NavigationGroupDefinition group : definition.getGroups()) {
 
             log.debug("creating navigation group {}", group.getName());
@@ -115,14 +122,15 @@ public class NavigationWorkArea implements NavigationView, IsVaadinComponent {
 
         // FIXME: Show real notifications instead of random ones.
         // Both setCaption and setIcon can be used.
-        int notif = new Random().nextInt(10);
-        if (notif > 0) {
-            label.setCaption(notif + " new");
-        }
+        //int notif = new Random().nextInt(10);
+        //if (notif > 0) {
+        //    label.setCaption(notif + " new");
+       // }
 
         Tab tab = melodion.addTab(label);
 
         navigationItems.put(item, tab);
+
 
         tab.addListener(new LayoutClickListener() {
 
@@ -183,9 +191,6 @@ public class NavigationWorkArea implements NavigationView, IsVaadinComponent {
         if (c == null) {
             return;
         }
-        //first set the correct tab in the tabsheet holding this melodion
-        ((TabSheet)melodion.getParent()).setSelectedTab(melodion);
-        //then set the selected menu item
         melodion.setSelected(c);
 
         if (c instanceof Melodion.Tab) {
@@ -215,12 +220,12 @@ public class NavigationWorkArea implements NavigationView, IsVaadinComponent {
         @Override
         public void attach() {
             super.attach();
-            Resource icon = NavigationWorkArea.getIcon(item);
+            Resource icon = Navigation.getIcon(item);
             if (icon != null) {
                 setIcon(icon);
             }
-            setCaption(NavigationWorkArea.getLabel(item));
-            setDescription(NavigationWorkArea.getDescription(item));
+            setCaption(Navigation.getLabel(item));
+            setDescription(Navigation.getDescription(item));
 
             this.addListener(new ClickListener() {
 
