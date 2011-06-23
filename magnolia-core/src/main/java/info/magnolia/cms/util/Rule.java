@@ -128,12 +128,12 @@ public class Rule implements Serializable {
     @Override
     public String toString() {
         StringBuffer buffer = new StringBuffer();
-        Iterator typeIterator = allowedTypes.iterator();
+        Iterator<String> typeIterator = allowedTypes.iterator();
         while (typeIterator.hasNext()) {
-            buffer.append((String) typeIterator.next());
+            buffer.append(typeIterator.next());
             buffer.append(",");
         }
-        return new String(buffer);
+        return buffer.toString();
     }
 
     /**
