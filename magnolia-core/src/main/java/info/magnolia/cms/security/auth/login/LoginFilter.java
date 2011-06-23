@@ -74,6 +74,8 @@ public class LoginFilter extends AbstractMgnlFilter {
                     request.getSession().invalidate();
                 }
                 MgnlContext.login(loginResult.getUser());
+                // do not continue after successful login ... otherwise previous success will be invalidated by above session wipeout
+                break;
             }
 
         }
