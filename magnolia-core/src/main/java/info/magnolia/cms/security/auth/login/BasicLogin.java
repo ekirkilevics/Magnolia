@@ -52,7 +52,7 @@ public class BasicLogin extends LoginHandlerBase {
     @Override
     public LoginResult handle(HttpServletRequest request, HttpServletResponse response) {
         String credentials = request.getHeader("Authorization");
-        if (StringUtils.isNotEmpty(credentials) && !credentials.startsWith("NTLM ")) {
+        if (StringUtils.isNotEmpty(credentials) && !credentials.startsWith("NTLM ") && !credentials.startsWith("Negotiate ") && !credentials.startsWith("Digest ") && !credentials.startsWith("Passport ")) {
             // its a basic authentication request
             CredentialsCallbackHandler callbackHandler = new Base64CallbackHandler(credentials);
             return authenticate(callbackHandler, null);
