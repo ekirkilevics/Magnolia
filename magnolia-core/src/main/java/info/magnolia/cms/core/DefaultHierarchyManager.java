@@ -396,9 +396,14 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         try {
             this.getJcrSession().refresh(true);
             return this.getJcrSession().itemExists(path);
-        }
-        catch (RepositoryException re) {
-            log.error("Exception caught", re);
+        } catch (RepositoryException re) {
+            // do not create hard dependency on JR API. The path validity check is not exposed via JCR API
+            if (re.getCause().getClass().getName().equals("org.apache.jackrabbit.spi.commons.conversion.MalformedPathException")) {
+                // do not log invalid path by default
+                log.debug("{} is not valid jcr path.", path);
+            } else {
+                log.error("Exception caught", re);
+            }
             return false;
         }
     }
