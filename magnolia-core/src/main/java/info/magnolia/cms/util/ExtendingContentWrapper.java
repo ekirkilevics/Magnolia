@@ -41,6 +41,8 @@ import java.util.TreeMap;
 
 import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
@@ -76,8 +78,11 @@ public class ExtendingContentWrapper extends ContentWrapper {
     private boolean extending;
 
     private Content extendedContent;
-
-    public ExtendingContentWrapper(Content wrappedContent) {
+    
+    private static final Logger log = LoggerFactory.getLogger(ExtendingContentWrapper.class);
+    
+    //This is just for test purposes. Use ExtendingContentWrapper(Content wrappedContent) as was here before.
+    ExtendingContentWrapper(Content wrappedContent, boolean failOnError) {
         super(wrappedContent);
         try {
             extending = getWrappedContent().hasNodeData(EXTENDING_NODE_DATA);
@@ -86,8 +91,36 @@ public class ExtendingContentWrapper extends ContentWrapper {
 
                 // check if override is not forced
                 String extendedNode = extendingNodeData.getString();
+
+                Content parent = extendingNodeData.getParent();
+                boolean absolute = true;
+                
+                if(!extendedNode.isEmpty()){
+                    if(!extendedNode.startsWith("/")){ 
+                        if(parent.hasContent(extendedNode)){
+                            extendedNode = parent.getContent(extendedNode).getHandle();
+                        }else{
+                            absolute = false;
+                        }
+                    }
+                }
+                
                 if (StringUtils.isBlank(extendedNode)) {
-                    // there is nothing to do, extending node is not define ... probably caught in middle of config
+                    // there is nothing to do, extending node is not defined ... probably caught in middle of config
+                    extending = false;
+                } else if (absolute && !getWrappedContent().getHierarchyManager().isExist(extendedNode)){
+                    String message = "Can't find referenced node for value: " + wrappedContent;
+                    log.error(message);
+                    if (failOnError){
+                        throw new RuntimeException(message);
+                    }
+                    extending = false;
+                } else if (!absolute && !parent.hasContent(extendedNode)){
+                    String message = "Can't find referenced node for value: " + wrappedContent;
+                    log.error(message);
+                    if (failOnError){
+                        throw new RuntimeException(message);
+                    }
                     extending = false;
                 } else if (EXTENDING_NODE_DATA_OVERRIDE.equals(extendedNode)) {
                     extending = false;
@@ -100,6 +133,10 @@ public class ExtendingContentWrapper extends ContentWrapper {
         catch (RepositoryException e) {
             throw new RuntimeException("Can't wrap node [" + wrappedContent + "]", e);
         }
+    }
+
+    public ExtendingContentWrapper(Content wrappedContent) {
+        this(wrappedContent, false);
     }
 
     /**

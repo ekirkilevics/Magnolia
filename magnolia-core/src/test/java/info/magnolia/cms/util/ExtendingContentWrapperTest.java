@@ -296,4 +296,30 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
 
         assertEquals(3, subnode.getNodeDataCollection().size());
     }
+    
+    public void testWrongSettingsInExtendsNode() throws IOException, RepositoryException{
+        HierarchyManager hm = MockUtil.createHierarchyManager(
+                "/superbase/nodeData1=org1\n" +
+                "/superbase/uglyChild/nodeDataX=over1\n" +
+                "/impl/node/extends=/superbase\n" +
+                "/impl/node2/extends=../../superbase/uglyChild\n" + 
+                "/impl/node3/extends=../../superbase/wrongNode");    
+        
+        try {
+            Content plainContent = hm.getContent("/impl/node3");
+            Content extendedContent = new ExtendingContentWrapper(plainContent, true);
+        } catch (RuntimeException e) {
+            assertEquals(e.getMessage(), "Can't find referenced node for value: TestMockHierarchyManager:/impl/node3[mgnl:contentNode]");
+        }
+
+        Content plainContent = hm.getContent("/impl/node");
+        Content extendedContent = new ExtendingContentWrapper(plainContent);
+        NodeData subnode = extendedContent.getNodeData("extends");
+        assertEquals("/superbase/extends", subnode.getHandle().toString());
+
+        plainContent = hm.getContent("/impl/node2");
+        extendedContent = new ExtendingContentWrapper(plainContent);
+        subnode = extendedContent.getNodeData("extends");
+        assertEquals("/superbase/uglyChild/extends", subnode.getHandle().toString());
+    }
 }
