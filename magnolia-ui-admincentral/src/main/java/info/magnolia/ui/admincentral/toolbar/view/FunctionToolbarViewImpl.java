@@ -33,7 +33,11 @@
  */
 package info.magnolia.ui.admincentral.toolbar.view;
 
+import info.magnolia.ui.admincentral.jcr.view.JcrView;
 import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
+import info.magnolia.ui.admincentral.search.view.SearchParameters;
+import info.magnolia.ui.admincentral.search.view.SearchResult;
+import info.magnolia.ui.admincentral.search.view.SearchView;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.model.action.ActionDefinition;
@@ -43,6 +47,7 @@ import info.magnolia.ui.model.toolbar.ToolbarItemDefinition;
 import info.magnolia.ui.model.toolbar.ToolbarItemGroupDefinition;
 import info.magnolia.ui.model.toolbar.registry.ToolbarPermissionSchema;
 import info.magnolia.ui.model.toolbar.registry.ToolbarProvider;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import java.util.HashMap;
@@ -53,6 +58,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.addon.chameleon.Segment;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -60,6 +67,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
 
 
 /**
@@ -73,13 +81,16 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
 
     private CssLayout outerContainer = new CssLayout();
 
-    private Presenter presenter;
+    private FunctionToolbarView.Presenter presenter;
+
 
     private Map<ViewType, Button> viewButtons = new HashMap<ViewType, Button>();
 
-    public FunctionToolbarViewImpl(ToolbarProvider toolbarProvider, ToolbarPermissionSchema permissions) {
-        outerContainer.setStyleName("toolbar");
+    private SearchView.Presenter searchPresenter;
 
+    public FunctionToolbarViewImpl(ToolbarProvider toolbarProvider, ToolbarPermissionSchema permissions, WorkbenchDefinition definition) {
+        outerContainer.setStyleName("toolbar");
+        final String workspace = definition.getWorkspace();
         final ToolbarDefinition toolbarDefinition = toolbarProvider.getToolbar();
         if (toolbarDefinition == null) {
             log.warn("No function toolbar definition found, won't render it.");
@@ -143,6 +154,21 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
             viewGroup.getComponent(1).addStyleName("first");
             // viewGroup.getComponent(viewGroup.getComponentCount() - 1).addStyleName("last");
             outerContainer.addComponent(viewGroup);
+
+            final TextField searchBox = new TextField();
+            //FIXME get the text from messages.properties
+            searchBox.setInputPrompt("Search");
+            searchBox.addStyleName("search");
+            searchBox.addShortcutListener(new ShortcutListener("",ShortcutAction.KeyCode.ENTER, null) {
+
+                @Override
+                public void handleAction(Object sender, Object target) {
+                    SearchParameters params = new SearchParameters(workspace, searchBox.getValue().toString());
+                    //TODO add filters to params if we're in advanced search mode
+                    searchPresenter.onStartSearch(params);
+                }
+            });
+            outerContainer.addComponent(searchBox);
         }
     }
 
@@ -152,8 +178,14 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
     }
 
     @Override
-    public void setPresenter(Presenter presenter) {
+    public void setPresenter(FunctionToolbarView.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void setPresenter(SearchView.Presenter presenter) {
+        this.searchPresenter = presenter;
+
     }
 
     @Override
@@ -162,6 +194,11 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
             ViewType viewType = ((ItemSelectedPlace) newPlace).getViewType();
             setViewButtonStyle(viewButtons.get(viewType));
         }
+    }
+
+    @Override
+    public void search(SearchParameters searchParameters, JcrView jcrView) {
+        searchPresenter.onPerformSearch(searchParameters, jcrView);
     }
 
     private void setViewButtonStyle(Button button){
@@ -175,4 +212,12 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
         //FIXME adding a style with the complete name is not recommended (shoudl be simply "down"), however it's the only way it works now.
         button.addStyleName("v-button-down");
     }
+
+
+    @Override
+    public void update(SearchResult result) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

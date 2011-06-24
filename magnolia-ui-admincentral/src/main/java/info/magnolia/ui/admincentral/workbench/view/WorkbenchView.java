@@ -49,6 +49,4 @@ public interface WorkbenchView extends View, IsVaadinComponent{
 
     ViewPort getFunctionToolbarViewPort();
 
-    ViewPort getSearchViewPort();
-
 }

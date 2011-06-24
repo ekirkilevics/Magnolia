@@ -87,7 +87,6 @@ public class WorkbenchViewImpl implements WorkbenchView{
         outerLayout = new  VerticalLayout();
         outerLayout.setSizeFull();
 
-        outerLayout.addComponent(searchViewPort);
         outerLayout.addComponent(functionToolbarViewPort);
         outerLayout.addComponent(splitPanel);
 
@@ -113,11 +112,6 @@ public class WorkbenchViewImpl implements WorkbenchView{
     @Override
     public ViewPort getFunctionToolbarViewPort() {
         return functionToolbarViewPort;
-    }
-
-    @Override
-    public ViewPort getSearchViewPort() {
-        return searchViewPort;
     }
 
 }

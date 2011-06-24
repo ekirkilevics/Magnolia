@@ -33,8 +33,8 @@
  */
 package info.magnolia.ui.admincentral.toolbar.view;
 
+import info.magnolia.ui.admincentral.search.view.SearchView;
 import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.model.toolbar.ToolbarItemDefinition;
 
 /**
@@ -42,7 +42,7 @@ import info.magnolia.ui.model.toolbar.ToolbarItemDefinition;
  * @author fgrilli
  *
  */
-public interface FunctionToolbarView extends View {
+public interface FunctionToolbarView extends SearchView {
     /**
      * Presenter that is called when the user selects an item in the toolbar.
      */

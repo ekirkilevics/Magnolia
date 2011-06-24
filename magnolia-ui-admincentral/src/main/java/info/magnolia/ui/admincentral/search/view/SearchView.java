@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.search.view;
 
+import info.magnolia.ui.admincentral.jcr.view.JcrView;
 import info.magnolia.ui.framework.view.View;
 
 /**
@@ -46,10 +47,9 @@ public interface SearchView extends View {
      * Presenter interface for the search actions.
      */
     public interface Presenter {
+        void onStartSearch(SearchParameters searchParameters);
 
-        void onStartSearch(SearchParameters params);
-
-        void onPerformSearch();
+        void onPerformSearch(SearchParameters searchParameters, JcrView jcrView);
 
         void onAddFilter();
     }
@@ -60,5 +60,9 @@ public interface SearchView extends View {
      * Updates the view by showing search results.
      */
     void update(SearchResult result);
+    /**
+     * Performs a search with the provided search parameters and updates the proper container.
+     */
+    void search(SearchParameters searchParameters, JcrView jcrView);
 
 }

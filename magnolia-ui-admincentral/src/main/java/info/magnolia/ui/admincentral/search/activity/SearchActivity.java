@@ -39,10 +39,11 @@ import info.magnolia.ui.admincentral.jcr.view.JcrView;
 import info.magnolia.ui.admincentral.search.action.SearchActionFactory;
 import info.magnolia.ui.admincentral.search.place.SearchPlace;
 import info.magnolia.ui.admincentral.search.view.SearchParameters;
-import info.magnolia.ui.admincentral.search.view.SearchResult;
 import info.magnolia.ui.admincentral.search.view.SearchView;
+import info.magnolia.ui.admincentral.toolbar.view.FunctionToolbarView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
@@ -67,33 +68,37 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
 
     private static final Logger log = LoggerFactory.getLogger(SearchActivity.class);
 
-    private SearchView view;
+    private FunctionToolbarView view;
 
     private SearchActionFactory actionFactory;
 
     private Shell shell;
 
-    private SearchPlace place;
+    private SearchPlace initialSearchPlace;
 
     private PlaceController placeController;
 
-    private JcrView jcrView;
-
-    public SearchActivity(SearchView view, SearchActionFactory actionFactory, SearchPlace place, PlaceController placeController, Shell shell) {
+    public SearchActivity(FunctionToolbarView view, SearchActionFactory actionFactory, PlaceController placeController, Shell shell) {
         this.view = view;
         this.actionFactory = actionFactory;
         this.shell = shell;
-        this.place = place;
         this.placeController = placeController;
         this.view.setPresenter(this);
-        jcrView = place.getJcrView();
+        Place place = placeController.getWhere();
+
+        if(place instanceof SearchPlace) {
+            initialSearchPlace = (SearchPlace)place;
+        }
     }
 
     @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
         viewPort.setView(view);
-        onPerformSearch();
+        if(initialSearchPlace != null){
+            view.search(initialSearchPlace.getSearchParameters(), initialSearchPlace.getJcrView());
+        }
     }
+
 
     @Override
     public void onStartSearch(SearchParameters params) {
@@ -106,18 +111,18 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
     }
 
     @Override
-    public void onPerformSearch() {
-        if (place.getSearchParameters() == null || place.getSearchParameters().getQuery() == null) {
+    public void onPerformSearch(SearchParameters searchParameters, JcrView jcrView) {
+        if (searchParameters == null || searchParameters.getQuery() == null) {
             return;
         }
         // FIXME do it right.
         long foundItems = 0;
         try {
-            final Session jcrSession = MgnlContext.getJCRSession(place.getWorkspace());
+            final Session jcrSession = MgnlContext.getJCRSession(searchParameters.getWorkspace());
             final QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
             final JcrContainer container = jcrView.getContainer();
 
-            final String queryText = place.getSearchParameters().getQuery();
+            final String queryText = searchParameters.getQuery();
             // TODO like support for node names, i.e. name(content) LIKE 'foo', will be available
             // from 2.2.7 https://issues.apache.org/jira/browse/JCR-2956
             // TODO attempting a join with metadata and then applying multiple or constraints will
@@ -133,7 +138,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             query.setLimit(container.getCacheRatio() * container.getPageLength());
             query.setOffset(0);
 
-            log.debug("executing query against workspace [{}] with statement [{}] ", place.getWorkspace(), stmt);
+            log.debug("executing query against workspace [{}] with statement [{}] ", searchParameters.getWorkspace(), stmt);
 
             final QueryResult queryResult = query.execute();
             // TODO how do we get the number of items returned by the query? I tried
@@ -148,8 +153,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             // actual items.
             // log.debug("query returned {} rows", foundItems);
             container.update(queryResult.getRows());
-            view.update(new SearchResult(place.getSearchParameters().getQuery(), foundItems));
-
+            //functionToolbarView.update(new SearchResult(place.getSearchParameters().getQuery(), foundItems));
         }
         catch (LoginException e) {
             log.error(e.getMessage());
@@ -164,4 +168,5 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             log.error(e.getMessage());
         }
     }
+
 }

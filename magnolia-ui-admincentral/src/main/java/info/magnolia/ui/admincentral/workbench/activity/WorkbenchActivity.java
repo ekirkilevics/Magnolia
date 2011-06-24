@@ -75,7 +75,8 @@ public class WorkbenchActivity extends AbstractActivity {
         jcrActivityManager.setViewPort(view.getItemListViewPort());
         sidebarActivityManager.setViewPort(view.getSidebarViewPort());
         functionToolbarViewActivityManager.setViewPort(view.getFunctionToolbarViewPort());
-        searchActivityManager.setViewPort(view.getSearchViewPort());
+        //search activity is displayed by the function toolbar
+        searchActivityManager.setViewPort(view.getFunctionToolbarViewPort());
 
         display.setView(view);
     }
