@@ -133,6 +133,9 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>48f0413d-2053-4f55-808c-26eaf91f3be5</sv:value>
       </sv:property>
+      <sv:property sv:name="dialog" sv:type="String">
+        <sv:value>samples:areas/divIDAndClass</sv:value>
+      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
@@ -162,7 +165,7 @@
           <sv:value>2011-04-27T15:54:40.884+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-06-24T14:48:20.982+02:00</sv:value>
+          <sv:value>2011-06-27T13:27:59.359+02:00</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="availableParagraphs">
@@ -284,6 +287,9 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>789207d1-e036-41cd-aca1-540ab98b12fe</sv:value>
       </sv:property>
+      <sv:property sv:name="dialog" sv:type="String">
+        <sv:value>samples:areas/divIDAndClass</sv:value>
+      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
@@ -310,7 +316,7 @@
           <sv:value>2011-04-27T15:54:40.884+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-06-24T14:48:31.014+02:00</sv:value>
+          <sv:value>2011-06-27T13:28:02.365+02:00</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="availableParagraphs">
