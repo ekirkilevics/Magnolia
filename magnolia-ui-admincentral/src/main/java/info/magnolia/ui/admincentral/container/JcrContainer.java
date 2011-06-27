@@ -157,9 +157,10 @@ public abstract class JcrContainer extends AbstractContainer implements Containe
      * Updates the container with the items pointed to by the {@link RowIterator} passed as
      * argument.
      * @param iterator
+     * @return the number of rows updated
      * @throws RepositoryException
      */
-    public abstract void update(RowIterator iterator) throws RepositoryException;
+    public abstract long update(RowIterator iterator) throws RepositoryException;
 
     @Override
     public void addListener(ItemSetChangeListener listener) {

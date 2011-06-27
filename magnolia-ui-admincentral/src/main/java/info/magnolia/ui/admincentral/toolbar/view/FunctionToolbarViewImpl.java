@@ -71,6 +71,7 @@ import com.vaadin.ui.TextField;
 
 
 /**
+ * TODO show search results and advanced search options.
  * Implementation for {@link FunctionToolbarView}.
  * @author fgrilli
  * @author mrichert
@@ -82,7 +83,6 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
     private CssLayout outerContainer = new CssLayout();
 
     private FunctionToolbarView.Presenter presenter;
-
 
     private Map<ViewType, Button> viewButtons = new HashMap<ViewType, Button>();
 
@@ -155,6 +155,16 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
             // viewGroup.getComponent(viewGroup.getComponentCount() - 1).addStyleName("last");
             outerContainer.addComponent(viewGroup);
 
+            final Button advancedSearchButton = new Button("+");
+            advancedSearchButton.addListener(new ClickListener() {
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    //TODO show advanced search
+                }
+            });
+            outerContainer.addComponent(advancedSearchButton);
+
             final TextField searchBox = new TextField();
             //FIXME get the text from messages.properties
             searchBox.setInputPrompt("Search");
@@ -164,7 +174,8 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
                 @Override
                 public void handleAction(Object sender, Object target) {
                     SearchParameters params = new SearchParameters(workspace, searchBox.getValue().toString());
-                    //TODO add filters to params if we're in advanced search mode
+                    //TODO show advanced search
+                    //TODO add filters to params if search started in advanced mode.
                     searchPresenter.onStartSearch(params);
                 }
             });
@@ -216,8 +227,7 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
 
     @Override
     public void update(SearchResult result) {
-        // TODO Auto-generated method stub
-
+        // TODO update UI showing the number of results
     }
 
 }

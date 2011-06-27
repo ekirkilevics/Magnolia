@@ -39,6 +39,7 @@ import info.magnolia.ui.admincentral.jcr.view.JcrView;
 import info.magnolia.ui.admincentral.search.action.SearchActionFactory;
 import info.magnolia.ui.admincentral.search.place.SearchPlace;
 import info.magnolia.ui.admincentral.search.view.SearchParameters;
+import info.magnolia.ui.admincentral.search.view.SearchResult;
 import info.magnolia.ui.admincentral.search.view.SearchView;
 import info.magnolia.ui.admincentral.toolbar.view.FunctionToolbarView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
@@ -115,8 +116,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
         if (searchParameters == null || searchParameters.getQuery() == null) {
             return;
         }
-        // FIXME do it right.
-        long foundItems = 0;
+
         try {
             final Session jcrSession = MgnlContext.getJCRSession(searchParameters.getWorkspace());
             final QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
@@ -140,19 +140,11 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             log.debug("executing query against workspace [{}] with statement [{}] ", searchParameters.getWorkspace(), stmt);
 
             final QueryResult queryResult = query.execute();
-            // TODO how do we get the number of items returned by the query? I tried
-            // 1) foundItems = ((QueryResultImpl)queryResult).getTotalSize();
-            // this causes
-            // "java.lang.ClassCastException: org.apache.jackrabbit.core.query.lucene.join.SimpleQueryResult cannot be cast to org.apache.jackrabbit.core.query.lucene.QueryResultImpl"
-            // 2) foundItems = queryResult.getNodes().getSize()
-            // this causes
-            // "javax.jcr.RepositoryException: This query result has already been iterated through"
-            // when updating the container below.
-            // Probably we need two queries one for the total count, the other for getting the
-            // actual items.
-            // log.debug("query returned {} rows", foundItems);
-            container.update(queryResult.getRows());
-            //functionToolbarView.update(new SearchResult(place.getSearchParameters().getQuery(), foundItems));
+            long itemsCount = container.update(queryResult.getRows());
+
+            log.debug("search found {} item(s)", itemsCount);
+
+            view.update(new SearchResult(queryText, itemsCount));
         }
         catch (LoginException e) {
             log.error(e.getMessage());

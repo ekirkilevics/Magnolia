@@ -63,7 +63,7 @@ public class FlatJcrContainer extends JcrContainer {
     }
 
     @Override
-    public void update(RowIterator iterator) throws RepositoryException {
+    public long update(RowIterator iterator) throws RepositoryException {
         log.debug("updating container...");
         getItemIndexes().clear();
         getCachedItems().clear();
@@ -79,5 +79,6 @@ public class FlatJcrContainer extends JcrContainer {
         }
         setSize(Long.valueOf(rowCount).intValue());
         super.fireItemSetChange();
+        return rowCount;
     }
 }

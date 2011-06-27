@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.admincentral.search.view;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * An object representing search results. Mostly used to update the UI with info related to the search just performed.
  * @author fgrilli
@@ -52,6 +54,11 @@ public class SearchResult {
 
     public String getQuery() {
         return query;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

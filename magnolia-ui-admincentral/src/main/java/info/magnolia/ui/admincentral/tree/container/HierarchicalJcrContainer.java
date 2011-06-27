@@ -144,7 +144,7 @@ public class HierarchicalJcrContainer extends JcrContainer implements Container.
     }
 
     @Override
-    public void update(RowIterator iterator) throws RepositoryException, UnsupportedOperationException {
+    public long update(RowIterator iterator) throws RepositoryException, UnsupportedOperationException {
         throw new UnsupportedOperationException(getClass().getName() + " does not support this operation.");
 
     }
