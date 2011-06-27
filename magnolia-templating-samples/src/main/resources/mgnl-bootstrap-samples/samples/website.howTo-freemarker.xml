@@ -35,40 +35,6 @@
       <sv:value>samples:pages/ftl</sv:value>
     </sv:property>
   </sv:node>
-  <sv:node sv:name="stage">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>6d8bab0e-c760-48ae-8068-adda967928a5</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:createdBy" sv:type="String">
-      <sv:value>admin</sv:value>
-    </sv:property>
-    <sv:property sv:name="text" sv:type="String">
-      <sv:value>This is a paragraph in a slot area, if you can read this you won't see the "Add paragraph" button in the blue bar above. Neither should there be a green bar above this text.</sv:value>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>This is stage</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:createdBy" sv:type="String">
-        <sv:value>admin</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2011-05-12T21:48:48.167+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:template" sv:type="String">
-        <sv:value>samples:paragraphs/text</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
   <sv:node sv:name="main">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
