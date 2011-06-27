@@ -71,7 +71,7 @@ public class FlatJcrContainer extends JcrContainer {
         long rowCount = 0;
         while(iterator.hasNext()){
 
-            final ContainerItemId id = createContainerId(iterator.nextRow().getNode());
+            final ContainerItemId id = createContainerId(iterator.nextRow().getNode("content"));
             /* Cache item */
             getItemIndexes().put(rowCount++, id);
             getCachedItems().put(id, new ContainerItem(id, this));

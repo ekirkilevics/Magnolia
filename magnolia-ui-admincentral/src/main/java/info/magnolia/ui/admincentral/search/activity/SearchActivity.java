@@ -123,15 +123,14 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             final JcrContainer container = jcrView.getContainer();
 
             final String queryText = searchParameters.getQuery();
-            // TODO like support for node names, i.e. name(content) LIKE 'foo', will be available
-            // from 2.2.7 https://issues.apache.org/jira/browse/JCR-2956
-            // TODO attempting a join with metadata and then applying multiple or constraints will
-            // issue a javax.jcr.UnsupportedRepositoryOperationException: Unable to split a
-            // constraint that references both sides of a join.
-            // Will be fixed in 2.2.7 https://issues.apache.org/jira/browse/JCR-2852
+            // TODO like support for node names, i.e. name(content) LIKE 'foo'. They claim it is solved in 2.2.7 https://issues.apache.org/jira/browse/JCR-2956
+            // but still the error occurs "javax.jcr.UnsupportedRepositoryOperationException"
+            // TODO attempting a join with metadata and then applying multiple or constraints seems not be working, i.e. all dataset is returned.
+            // Try for instance with [select * from [mgnl:content] as content inner join [mgnl:metaData] as metaData on ischildnode (metaData, content)
+            // where contains(content.title, '*foo*') or contains(metaData.*, '*foo*') or name(content) = 'foo'
             String stmt = "select * from [mgnl:content] as content";
             if (!"".equals(queryText)) {
-                stmt += " where contains(content.title, '*" + queryText + "*') or name(content) = '" + queryText + "'";
+                stmt += " where contains(content.title, '*" + queryText + "*') or name(content) like '" + queryText + "'";
             }
 
             final Query query = jcrQueryManager.createQuery(stmt, Query.JCR_SQL2);
