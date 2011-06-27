@@ -130,7 +130,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             // where contains(content.title, '*foo*') or contains(metaData.*, '*foo*') or name(content) = 'foo'
             String stmt = "select * from [mgnl:content] as content";
             if (!"".equals(queryText)) {
-                stmt += " where contains(content.title, '*" + queryText + "*') or name(content) like '" + queryText + "'";
+                stmt += " where contains(content.title, '*" + queryText + "*') or name(content) = '" + queryText + "'";
             }
 
             final Query query = jcrQueryManager.createQuery(stmt, Query.JCR_SQL2);
