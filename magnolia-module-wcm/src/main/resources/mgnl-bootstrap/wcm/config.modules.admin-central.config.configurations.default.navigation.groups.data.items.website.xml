@@ -4,7 +4,7 @@
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>cbebd1ca-8eee-41a9-8e88-5fba076f1129</sv:value>
+    <sv:value>6e9861e3-4573-41b8-93b7-34655087ca07</sv:value>
   </sv:property>
   <sv:property sv:name="description" sv:type="String">
     <sv:value>menu.website.description</sv:value>
@@ -46,7 +46,7 @@
       <sv:value>mix:lockable</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>873d4535-75aa-4603-8e5b-fa80032ae503</sv:value>
+      <sv:value>e3c6e60f-b6be-4b66-a06b-1268bcec5b32</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.ui.admincentral.navigation.action.WorkbenchActionDefinition</sv:value>
