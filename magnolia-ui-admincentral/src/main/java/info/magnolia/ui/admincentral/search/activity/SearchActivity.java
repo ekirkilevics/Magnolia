@@ -97,6 +97,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
         viewPort.setView(view);
         if(initialSearchPlace != null){
             view.search(initialSearchPlace.getSearchParameters(), initialSearchPlace.getJcrView());
+            view.update(initialSearchPlace);
         }
     }
 

@@ -37,7 +37,9 @@ import info.magnolia.ui.admincentral.toolbar.action.FunctionToolbarActionFactory
 import info.magnolia.ui.admincentral.toolbar.view.FunctionToolbarView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.place.PlaceChangeEvent;
+import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.action.Action;
@@ -55,24 +57,27 @@ public class FunctionToolbarActivity extends AbstractActivity implements Functio
     private FunctionToolbarView functionToolbarView;
     private FunctionToolbarActionFactory actionFactory;
     private Shell shell;
+    private Place initialPlace;
 
-    public FunctionToolbarActivity(FunctionToolbarView functionToolbarView, FunctionToolbarActionFactory actionFactory, Shell shell) {
+    public FunctionToolbarActivity(FunctionToolbarView functionToolbarView, FunctionToolbarActionFactory actionFactory, PlaceController placeController, Shell shell) {
         this.functionToolbarView = functionToolbarView;
         this.actionFactory = actionFactory;
         this.shell = shell;
         this.functionToolbarView.setPresenter(this);
+        this.initialPlace = placeController.getWhere();
     }
 
     @Override
     public void start(ViewPort viewPort, EventBus eventBus) {
-        eventBus.addHandler(PlaceChangeEvent.class, new PlaceChangeEvent.Handler() {
 
+        eventBus.addHandler(PlaceChangeEvent.class, new PlaceChangeEvent.Handler() {
             @Override
             public void onPlaceChange(PlaceChangeEvent event) {
                 functionToolbarView.update(event.getNewPlace());
             }
         });
         viewPort.setView(functionToolbarView);
+        functionToolbarView.update(initialPlace);
     }
 
     @Override

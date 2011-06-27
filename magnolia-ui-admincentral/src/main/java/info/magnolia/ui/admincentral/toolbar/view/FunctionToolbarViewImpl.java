@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.toolbar.view;
 
 import info.magnolia.ui.admincentral.jcr.view.JcrView;
 import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
+import info.magnolia.ui.admincentral.search.place.SearchPlace;
 import info.magnolia.ui.admincentral.search.view.SearchParameters;
 import info.magnolia.ui.admincentral.search.view.SearchResult;
 import info.magnolia.ui.admincentral.search.view.SearchView;
@@ -204,6 +205,10 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
         if (newPlace instanceof ItemSelectedPlace) {
             ViewType viewType = ((ItemSelectedPlace) newPlace).getViewType();
             setViewButtonStyle(viewButtons.get(viewType));
+        } else if (newPlace instanceof SearchPlace){
+            setViewButtonStyle(viewButtons.get(ViewType.LIST));
+        } else {
+            setViewButtonStyle(viewButtons.get(ViewType.TREE));
         }
     }
 
