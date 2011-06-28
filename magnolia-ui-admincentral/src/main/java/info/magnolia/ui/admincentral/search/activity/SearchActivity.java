@@ -125,7 +125,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             // where contains(content.title, '*foo*') or contains(metaData.*, '*foo*') or localname(content) = 'foo'. See also my comment on https://issues.apache.org/jira/browse/JCR-2852.
             String stmt = "select * from [mgnl:content] as content";
             if (!"".equals(queryText)) {
-                stmt += " where contains(content.title, '*" + queryText + "*') or localname(content) like '%" + queryText + "%'";
+                stmt += " where contains(content.title, '" + queryText + "') or localname(content) like '%" + queryText + "%'";
             }
 
             final Query query = jcrQueryManager.createQuery(stmt, Query.JCR_SQL2);
