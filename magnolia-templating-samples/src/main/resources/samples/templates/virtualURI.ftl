@@ -7,7 +7,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title>${content.title!content.@name}</title>
-        <link rel="stylesheet" type="text/css" href="${contextPath}/docroot/samples/samples.css"/>
+        <link rel="stylesheet" type="text/css" href="${contextPath}/.resouces/samples/css/samples.css"/>
         [@cms.links /]
     </head>
 
