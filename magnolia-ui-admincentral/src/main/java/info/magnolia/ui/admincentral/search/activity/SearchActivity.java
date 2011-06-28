@@ -36,7 +36,6 @@ package info.magnolia.ui.admincentral.search.activity;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 import info.magnolia.ui.admincentral.jcr.view.JcrView;
-import info.magnolia.ui.admincentral.search.action.SearchActionFactory;
 import info.magnolia.ui.admincentral.search.place.SearchPlace;
 import info.magnolia.ui.admincentral.search.view.SearchParameters;
 import info.magnolia.ui.admincentral.search.view.SearchResult;
@@ -71,7 +70,6 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
 
     private FunctionToolbarView view;
 
-    private SearchActionFactory actionFactory;
 
     private Shell shell;
 
@@ -79,9 +77,8 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
 
     private PlaceController placeController;
 
-    public SearchActivity(FunctionToolbarView view, SearchActionFactory actionFactory, PlaceController placeController, Shell shell) {
+    public SearchActivity(FunctionToolbarView view, PlaceController placeController, Shell shell) {
         this.view = view;
-        this.actionFactory = actionFactory;
         this.shell = shell;
         this.placeController = placeController;
         this.view.setPresenter(this);
