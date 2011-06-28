@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.model.toolbar;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class ToolbarItemFilterDefinitionImpl implements ToolbarItemFilterDefinit
 
     @Override
     public Map<String, String> getOptions() {
-        return options;
+        return Collections.unmodifiableMap(options);
     }
 
     public void setOptions(Map<String, String> options) {
@@ -67,6 +68,7 @@ public class ToolbarItemFilterDefinitionImpl implements ToolbarItemFilterDefinit
     public void setFilterLabel(String filterLabel) {
         this.filterLabel = filterLabel;
     }
+
     @Override
     public String getFilterLabel() {
         return filterLabel;
