@@ -122,7 +122,7 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
             final String queryText = searchParameters.getQuery();
             // TODO attempting a join with metadata and then applying multiple or constraints seems not be working, i.e. all dataset is returned.
             // Try for instance with [select * from [mgnl:content] as content inner join [mgnl:metaData] as metaData on ischildnode (metaData, content)
-            // where contains(content.title, '*foo*') or contains(metaData.*, '*foo*') or localname(content) = 'foo'
+            // where contains(content.title, '*foo*') or contains(metaData.*, '*foo*') or localname(content) = 'foo'. See also my comment on https://issues.apache.org/jira/browse/JCR-2852.
             String stmt = "select * from [mgnl:content] as content";
             if (!"".equals(queryText)) {
                 stmt += " where contains(content.title, '*" + queryText + "*') or localname(content) like '%" + queryText + "%'";
