@@ -10,6 +10,9 @@
   <name>magnolia-ui-model</name>
   <packaging>jar</packaging>
   <description>Registration and definition of ui components like dialogs and trees.</description>
+  <properties>
+  	<cloverCoverageThreshold>5</cloverCoverageThreshold>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>

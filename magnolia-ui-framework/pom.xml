@@ -9,6 +9,9 @@
   </parent>
   <artifactId>magnolia-ui-framework</artifactId>
   <name>magnolia-ui-framework</name>
+  <properties>
+    <cloverCoverageThreshold>3</cloverCoverageThreshold>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
