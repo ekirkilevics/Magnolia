@@ -59,11 +59,7 @@ public class TemplatingFunctions {
         return contentMap == null ? null : contentMap.getJCRNode();
     }
 
-    public Node parent(Node node) throws RepositoryException {
-        return node == null ? null : node.getParent();
-    }
-
-    public ContentMap parent(ContentMap contentMap) throws RepositoryException {
-        return contentMap == null ? null : new ContentMap(this.parent(contentMap.getJCRNode()));
+    public Content parent(Content content) throws RepositoryException {
+        return content == null ? null : content.getParent();
     }
 }
