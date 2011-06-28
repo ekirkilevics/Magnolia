@@ -70,7 +70,6 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
 
     private FunctionToolbarView view;
 
-
     private Shell shell;
 
     private SearchPlace initialSearchPlace;
