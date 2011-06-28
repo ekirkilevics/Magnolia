@@ -306,6 +306,9 @@ public class MockNode extends MockItem implements Node {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
+    /**
+     * @deprecated as on {@link Node} - use getIdentifier instead
+     */
     @Override
     public String getUUID() {
         return getIdentifier();
