@@ -65,6 +65,10 @@
       <name>info.magnolia.ui.model.toolbar.ToolbarItemDefinition</name>
       <value>info.magnolia.ui.model.toolbar.ToolbarItemDefinitionImpl</value>
     </property>
+    <property>
+      <name>info.magnolia.ui.model.toolbar.ToolbarItemFilterDefinition</name>
+      <value>info.magnolia.ui.model.toolbar.ToolbarItemFilterDefinitionImpl</value>
+    </property>
   </properties>
 
   <dependencies>

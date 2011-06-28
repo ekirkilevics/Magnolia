@@ -101,6 +101,9 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
             return;
         }
 
+        //TODO build UI filters for advanced search
+        //final List<ToolbarItemFilterDefinition> filters = toolbarDefinition.getFilters();
+
         final List<ToolbarItemGroupDefinition> groupItems = toolbarDefinition.getGroups();
 
         if (groupItems == null || groupItems.isEmpty()) {
@@ -174,10 +177,17 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
 
                 @Override
                 public void handleAction(Object sender, Object target) {
+
                     SearchParameters params = new SearchParameters(workspace, searchBox.getValue().toString());
-                    //TODO show advanced search
                     //TODO add filters to params if search started in advanced mode.
+                    //presumably iterate over UI select widgets, get the selected options, get the boolean op chosen for a given selection and build the filters. Something like the following:
+                    //params.addFilter(new SearchFilter(selection, SearchFilter.LIKE, foo)) //addFilter(..), or(..) etc. could be chainable and return the current instance of SearchParameters
+                    //.or()
+                    //.addFilter(new SearchFilter(anotherSelection, SearchFilter.EQ, bar))
+                    //.and()
+                    //.addFilter(new SearchFilter(yetAnotherSelection, SearchFilter.NEQ, baz));
                     searchPresenter.onStartSearch(params);
+                    //TODO show advanced search
                 }
             });
             outerContainer.addComponent(searchBox);

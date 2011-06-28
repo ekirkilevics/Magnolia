@@ -33,35 +33,15 @@
  */
 package info.magnolia.ui.model.toolbar;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 
 /**
- * Implementation for {@link ToolbarDefinition}.
+ * A search filter definition used to build a UI element showing possible constraints for an advanced search.
  * @version $Id$
  *
  */
-public class ToolbarDefinitionImpl implements ToolbarDefinition {
-
-    private List<ToolbarItemGroupDefinition> groups = new ArrayList<ToolbarItemGroupDefinition>();
-    private List<ToolbarItemFilterDefinition> filters = new ArrayList<ToolbarItemFilterDefinition>();
-
-    @Override
-    public List<ToolbarItemGroupDefinition> getGroups() {
-        return Collections.unmodifiableList(groups);
-    }
-
-    public void addGroup(ToolbarItemGroupDefinition toolbarItemGroup){
-       groups.add(toolbarItemGroup);
-   }
-
-    @Override
-    public List<ToolbarItemFilterDefinition> getFilters() {
-        return Collections.unmodifiableList(filters);
-    }
-
-    public void addFilter(ToolbarItemFilterDefinition toolbarItemFilter){
-        filters.add(toolbarItemFilter);
-    }
+public interface ToolbarItemFilterDefinition {
+    Map<String, String> getOptions();
+    String getName();
+    String getFilterLabel();
 }

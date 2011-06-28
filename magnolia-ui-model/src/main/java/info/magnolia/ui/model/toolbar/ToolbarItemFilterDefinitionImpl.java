@@ -33,35 +33,42 @@
  */
 package info.magnolia.ui.model.toolbar;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Implementation for {@link ToolbarDefinition}.
+ * Implementation of ToolbarItemFilterDefinition.
  * @version $Id$
  *
  */
-public class ToolbarDefinitionImpl implements ToolbarDefinition {
-
-    private List<ToolbarItemGroupDefinition> groups = new ArrayList<ToolbarItemGroupDefinition>();
-    private List<ToolbarItemFilterDefinition> filters = new ArrayList<ToolbarItemFilterDefinition>();
-
-    @Override
-    public List<ToolbarItemGroupDefinition> getGroups() {
-        return Collections.unmodifiableList(groups);
-    }
-
-    public void addGroup(ToolbarItemGroupDefinition toolbarItemGroup){
-       groups.add(toolbarItemGroup);
-   }
+public class ToolbarItemFilterDefinitionImpl implements ToolbarItemFilterDefinition {
+    private Map<String, String> options = new HashMap<String, String>();
+    private String name;
+    private String filterLabel;
 
     @Override
-    public List<ToolbarItemFilterDefinition> getFilters() {
-        return Collections.unmodifiableList(filters);
+    public Map<String, String> getOptions() {
+        return options;
     }
 
-    public void addFilter(ToolbarItemFilterDefinition toolbarItemFilter){
-        filters.add(toolbarItemFilter);
+    public void setOptions(Map<String, String> options) {
+        this.options = options;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setFilterLabel(String filterLabel) {
+        this.filterLabel = filterLabel;
+    }
+    @Override
+    public String getFilterLabel() {
+        return filterLabel;
     }
 }
