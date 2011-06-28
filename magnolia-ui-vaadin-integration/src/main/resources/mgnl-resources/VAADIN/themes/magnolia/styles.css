@@ -163,24 +163,12 @@ input.v-textfield,textarea.v-textarea,.v-filterselect {
   padding-top: 2ex;
 }
 
-.m-workbench-header {
-
-}
-
 input.v-textfield-search[type="text"] {
   float: right;
 }
 
 input.v-textfield-search[type="text"]:focus {
 
-}
-
-.m-search-form-expanded {
-
-}
-
-.m-search-form-label {
-  font-weight: bold;
 }
 
 .m-embedded-view {
