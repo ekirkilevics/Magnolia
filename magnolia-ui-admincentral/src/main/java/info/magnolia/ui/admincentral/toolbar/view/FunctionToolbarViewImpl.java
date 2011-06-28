@@ -187,7 +187,7 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
                     //.and()
                     //.addFilter(new SearchFilter(yetAnotherSelection, SearchFilter.NEQ, baz));
                     searchPresenter.onStartSearch(params);
-                    //TODO show advanced search
+                    //TODO show expanded/advanced search
                 }
             });
             outerContainer.addComponent(searchBox);
