@@ -22,7 +22,7 @@
     <sv:value>info.magnolia.module.samples.model.SampleParagraphModel</sv:value>
   </sv:property>
   <sv:property sv:name="templateScript" sv:type="String">
-    <sv:value>samples/paragraphs/howTo.ftl</sv:value>
+    <sv:value>samples/components/howTo.ftl</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
     <sv:value>paragraphs.samplesHowToFTL.title</sv:value>
