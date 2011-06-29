@@ -81,12 +81,21 @@ public class TemplatingFunctionsTest {
         MockNode child = new MockNode("child");
         parent.addNode(child);
         //the tested function
-        Node result = functions.parent(child);
+        Node result = functions.parent(parent);
 
         assertEquals(parent.getName(), result.getName());
         assertEquals(parent.getUUID(), result.getUUID());
         assertEquals(parent.getIdentifier(), result.getIdentifier());
         assertEquals(parent.getPath(), result.getPath());
+    }
+
+    @Test
+    public void testParentFromRootNodeShouldBeNull() throws RepositoryException {
+        TemplatingFunctions functions = new TemplatingFunctions();
+        MockNode parent = new MockNode("parent");
+        //the tested function
+        Node result = functions.parent(parent);
+        assertEquals(result, null);
     }
 
     @Test
