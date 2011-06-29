@@ -33,36 +33,38 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
 
 /**
  * Tests for {@link ImageSize}.
  *
  * @version $Id$
  */
-public class ImageSizeTest extends TestCase {
-
+public class ImageSizeTest {
+    @Test
     public void testScaleToFitIfLarger() throws Exception {
 
         // If it's equal it shouldn't change
-        assertEquals(150, 150, new ImageSize(150, 150).scaleToFitIfLarger(150, 150));
+        assertEqualsToImageSize(150, 150, new ImageSize(150, 150).scaleToFitIfLarger(150, 150));
 
         // If it's the same proportions it should equal the bounding rectangle
-        assertEquals(200, 300, new ImageSize(400, 600).scaleToFitIfLarger(200, 300));
+        assertEqualsToImageSize(200, 300, new ImageSize(400, 600).scaleToFitIfLarger(200, 300));
 
         // If it's smaller it shouldn't change
-        assertEquals(50, 50, new ImageSize(50, 50).scaleToFitIfLarger(150, 150));
+        assertEqualsToImageSize(50, 50, new ImageSize(50, 50).scaleToFitIfLarger(150, 150));
 
         // If it's taller than the height should match and the width be scaled to keep aspect ratio
-        assertEquals(30, 150, new ImageSize(100, 500).scaleToFitIfLarger(150, 150));
-        assertEquals(30, 150, new ImageSize(1000, 5000).scaleToFitIfLarger(150, 150));
+        assertEqualsToImageSize(30, 150, new ImageSize(100, 500).scaleToFitIfLarger(150, 150));
+        assertEqualsToImageSize(30, 150, new ImageSize(1000, 5000).scaleToFitIfLarger(150, 150));
 
         // If it's wider than the width should match and the height be scaled to keep aspect ratio
-        assertEquals(150, 30, new ImageSize(500, 100).scaleToFitIfLarger(150, 150));
-        assertEquals(150, 30, new ImageSize(5000, 1000).scaleToFitIfLarger(150, 150));
+        assertEqualsToImageSize(150, 30, new ImageSize(500, 100).scaleToFitIfLarger(150, 150));
+        assertEqualsToImageSize(150, 30, new ImageSize(5000, 1000).scaleToFitIfLarger(150, 150));
     }
 
-    private void assertEquals(long expectedWidth, long expectedHeight, ImageSize imageSize) {
+    private void assertEqualsToImageSize(long expectedWidth, long expectedHeight, ImageSize imageSize) {
         assertEquals(expectedWidth, imageSize.getWidth());
         assertEquals(expectedHeight, imageSize.getHeight());
     }
