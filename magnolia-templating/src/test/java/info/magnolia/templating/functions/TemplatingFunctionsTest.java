@@ -34,7 +34,7 @@
 package info.magnolia.templating.functions;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -56,7 +56,9 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
         String name = "test";
         MockContent content = new MockContent(name);
+        //the tested function
         Node result = functions.asJCRNode(content);
+
         assertEquals(name, result.getName());
     }
 
@@ -66,7 +68,9 @@ public class TemplatingFunctionsTest {
         String name = "test";
         MockNode root = new MockNode(name);
         ContentMap map = new ContentMap(root);
+        //the tested function
         Node result = functions.asJCRNode(map);
+
         assertEquals(name, result.getName());
     }
 
@@ -76,6 +80,7 @@ public class TemplatingFunctionsTest {
         MockNode parent = new MockNode("parent");
         MockNode child = new MockNode("child");
         parent.addNode(child);
+        //the tested function
         Node result = functions.parent(child);
 
         assertEquals(parent.getName(), result.getName());
@@ -84,7 +89,7 @@ public class TemplatingFunctionsTest {
         assertEquals(parent.getPath(), result.getPath());
     }
 
-
+    @Test
     public void testParentFromContentMap() throws RepositoryException {
         TemplatingFunctions functions = new TemplatingFunctions();
         MockNode parent = new MockNode("parent");
@@ -92,13 +97,20 @@ public class TemplatingFunctionsTest {
         parent.addNode(child);
         ContentMap childMap = new ContentMap(child);
         ContentMap parentMap = new ContentMap(parent);
-
+        //the tested function
         ContentMap resultMap = functions.parent(childMap);
 
-        assertTrue(parentMap.equals(resultMap));
-        assertEquals(parentMap.get("name"), resultMap.get("name"));
-        assertEquals(parentMap.get("id"), resultMap.get("id"));
-        assertEquals(parentMap.get("path"), resultMap.get("path"));
+        assertNotNull(resultMap.get("@name"));
+        assertEquals(parentMap.get("@name"), resultMap.get("@name"));
+        assertNotNull(resultMap.get("@id"));
+        assertEquals(parentMap.get("@id"), resultMap.get("@id"));
+        assertNotNull(resultMap.get("@path"));
+        assertEquals(parentMap.get("@path"), resultMap.get("@path"));
+        //TODO cringele: should they work too?
+//        assertNotNull(resultMap.get("@level"));
+//        assertEquals(parentMap.get("@level"), resultMap.get("@level"));
+//        assertNotNull(resultMap.get("@nodeType"));
+//        assertEquals(parentMap.get("@nodeType"), resultMap.get("@nodeType"));
     }
 
 }
