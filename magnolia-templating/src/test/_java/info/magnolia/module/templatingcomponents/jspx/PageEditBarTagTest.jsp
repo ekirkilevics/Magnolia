@@ -1,5 +1,5 @@
-<%@page import="info.magnolia.templating.template.configured.ConfiguredTemplateDefinition"%>
-<%@page import="info.magnolia.templating.template.TemplateDefinition"%>
+<%@page import="info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition"%>
+<%@page import="info.magnolia.rendering.template.TemplateDefinition"%>
 <%@ taglib prefix="ui" uri="http://magnolia-cms.com/taglib/templating-components" %>
 <%
     TemplateDefinition dialogLessTpl = new ConfiguredTemplateDefinition();
