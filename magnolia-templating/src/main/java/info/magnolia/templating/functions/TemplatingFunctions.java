@@ -92,12 +92,8 @@ public class TemplatingFunctions {
 
     //TODO cringele : test missing
     public String link(Node content) throws RepositoryException{
-        if(content == null) {
-            return null;
-        }
-        //TODO cringele : LinkUtil should accept Node and not Content
-        Content asContent = this.asContent(content);
-        return LinkUtil.createLink(asContent);
+        //TODO cringele : LinkUtil should accept Node and not only Content
+        return content == null ? null : LinkUtil.createLink(asContent(content));
     }
 
     //TODO cringele : test missing
@@ -107,12 +103,8 @@ public class TemplatingFunctions {
 
     //TODO cringele : test missing
     public String linkExteral(Node content) throws RepositoryException{
-        if(content == null) {
-            return null;
-        }
-        //TODO cringele : LinkUtil should accept Node and not Content
-        Content asContent = this.asContent(content);
-        return LinkUtil.createExternalLink(asContent);
+        //TODO cringele : LinkUtil should accept Node and not only Content
+        return content == null ? null : LinkUtil.createExternalLink(asContent(content));
     }
 
     //TODO cringele : test missing
@@ -122,12 +114,8 @@ public class TemplatingFunctions {
 
     //TODO cringele : test missing
     public String linkAbsolute(Node content) throws RepositoryException{
-        if(content == null) {
-            return null;
-        }
-        //TODO cringele : LinkUtil should accept Node and not Content
-        Content asContent = this.asContent(content);
-        return LinkUtil.createAbsoluteLink(asContent);
+        //TODO cringele : LinkUtil should accept Node and not only Content
+        return content == null ? null : LinkUtil.createAbsoluteLink(asContent(content));
     }
 
     //TODO cringele : test missing
