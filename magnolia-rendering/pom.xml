@@ -9,6 +9,9 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-rendering</artifactId>
   <name>magnolia-rendering</name>
+  <properties>
+  	<cloverCoverageThreshold>5</cloverCoverageThreshold>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -51,10 +54,11 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit-dep</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.easymock</groupId>
-      <artifactId>easymockclassextension</artifactId>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
