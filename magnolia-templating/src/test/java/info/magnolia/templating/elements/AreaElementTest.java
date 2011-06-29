@@ -389,7 +389,7 @@ public class AreaElementTest {
 
             @Override
             public Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs() {
-                return Collections.EMPTY_MAP;
+                return Collections.emptyMap();
             }
 
             @Override
