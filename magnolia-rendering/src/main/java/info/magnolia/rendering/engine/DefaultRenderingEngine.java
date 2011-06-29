@@ -59,7 +59,7 @@ import javax.jcr.Node;
  */
 public class DefaultRenderingEngine implements RenderingEngine {
 
-    private static final String RENDERING_CONTEXT_ATTRIBUTE = RenderingContext.class.getName();
+    protected static final String RENDERING_CONTEXT_ATTRIBUTE = RenderingContext.class.getName();
 
     private static final Map<String, Object> EMPTY_CONTEXT = Collections.emptyMap();
 
@@ -122,23 +122,18 @@ public class DefaultRenderingEngine implements RenderingEngine {
     }
 
     protected static AggregationState getAggregationStateSafely() {
-        if (MgnlContext.isWebContext()) {
-            return MgnlContext.getAggregationState();
-        }
-        return null;
-    }
+        return MgnlContext.isWebContext() ? MgnlContext.getAggregationState() : null;
+     }
 
     @Override
     public RenderingContext getRenderingContext() {
         if(MgnlContext.hasAttribute(RENDERING_CONTEXT_ATTRIBUTE)){
             return MgnlContext.getAttribute(RENDERING_CONTEXT_ATTRIBUTE);
         }
-        else {
-            // FIXME don't use the concrete class here but if we do the registration in the module descriptor the context also gets created it the main container
-            final RenderingContext renderingContext = Components.getComponentProvider().newInstance(AggregationStateBasedRenderingContext.class, getAggregationStateSafely());
-            MgnlContext.setAttribute(RENDERING_CONTEXT_ATTRIBUTE, renderingContext);
-            return renderingContext;
-        }
+        // FIXME don't use the concrete class here but if we do the registration in the module descriptor the context also gets created it the main container
+        final RenderingContext renderingContext = Components.getComponentProvider().newInstance(AggregationStateBasedRenderingContext.class, getAggregationStateSafely());
+        MgnlContext.setAttribute(RENDERING_CONTEXT_ATTRIBUTE, renderingContext);
+        return renderingContext;
     }
 
 }
