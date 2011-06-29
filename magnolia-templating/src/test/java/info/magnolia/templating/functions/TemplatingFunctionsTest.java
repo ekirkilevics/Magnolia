@@ -82,7 +82,7 @@ public class TemplatingFunctionsTest {
         MockNode child = new MockNode("child");
         parent.addNode(child);
         //the tested function
-        Node result = functions.parent(parent);
+        Node result = functions.parent(child);
 
         assertEquals(parent.getName(), result.getName());
         assertEquals(parent.getUUID(), result.getUUID());
