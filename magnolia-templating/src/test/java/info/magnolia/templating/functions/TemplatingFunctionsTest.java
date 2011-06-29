@@ -35,6 +35,7 @@ package info.magnolia.templating.functions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -95,7 +96,7 @@ public class TemplatingFunctionsTest {
         MockNode parent = new MockNode("parent");
         //the tested function
         Node result = functions.parent(parent);
-        assertEquals(result, null);
+        assertNull(result);
     }
 
     @Test
