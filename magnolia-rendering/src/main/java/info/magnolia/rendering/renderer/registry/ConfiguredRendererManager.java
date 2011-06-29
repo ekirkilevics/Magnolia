@@ -77,8 +77,8 @@ public class ConfiguredRendererManager extends ModuleConfigurationObservingManag
             NodeUtil.visit(node, new NodeVisitor() {
 
                 @Override
-                public void visit(Node node) throws RepositoryException {
-                    for (Node configNode : NodeUtil.getNodes(node, MgnlNodeType.NT_CONTENTNODE)) {
+                public void visit(Node parent) throws RepositoryException {
+                    for (Node configNode : NodeUtil.getNodes(parent, MgnlNodeType.NT_CONTENTNODE)) {
                         RendererProvider provider = readProvider(configNode);
                         if (provider != null) {
                             providers.add(provider);
@@ -88,7 +88,12 @@ public class ConfiguredRendererManager extends ModuleConfigurationObservingManag
             }, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
         }
 
-        this.registeredIds = registry.removeAndRegister(registeredIds, providers);
+        try {
+            this.registeredIds = registry.unregisterAndRegister(registeredIds, providers);
+        } catch (RendererRegistrationException e) {
+            // TODO dlipp: implement proper exception handling
+            throw new RuntimeException(e);
+        }
     }
 
     protected RendererProvider readProvider(Node rendererNode) throws RepositoryException {

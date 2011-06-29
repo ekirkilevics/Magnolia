@@ -41,7 +41,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
  * Central registry of all renderers.
  *
@@ -51,13 +50,17 @@ public class RendererRegistry {
 
     private final Map<String, RendererProvider> providers = new HashMap<String, RendererProvider>();
 
-    public void registerRenderer(String id, RendererProvider provider) throws RendererRegistrationException {
+    public void register(String id, RendererProvider provider) throws RendererRegistrationException {
         synchronized (providers) {
-            if (providers.containsKey(id)) {
-                throw new RendererRegistrationException("Renderer already registered for the id [" + id + "]");
-            }
-            providers.put(id, provider);
+            doRegister(id, provider);
         }
+    }
+
+    private void doRegister(String id, RendererProvider provider) throws RendererRegistrationException {
+        if (providers.containsKey(id)) {
+            throw new RendererRegistrationException("Renderer already registered for the id [" + id + "]");
+        }
+        providers.put(id, provider);
     }
 
     public void unregister(String id) {
@@ -66,7 +69,7 @@ public class RendererRegistry {
         }
     }
 
-    public Set<String> removeAndRegister(Collection<String> remove, Collection<RendererProvider> providers2) {
+    public Set<String> unregisterAndRegister(Collection<String> remove, Collection<RendererProvider> providers2) throws RendererRegistrationException {
         synchronized (providers) {
             final Set<String> ids = new HashSet<String>();
             for (String id : remove) {
@@ -74,11 +77,7 @@ public class RendererRegistry {
             }
             for (RendererProvider provider : providers2) {
                 String id = provider.getId();
-                if (providers.containsKey(id)) {
-                    // TODO log
-                } else {
-                    providers.put(id, provider);
-                }
+                doRegister(id, provider);
                 ids.add(provider.getId());
             }
             return ids;
