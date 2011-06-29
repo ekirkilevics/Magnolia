@@ -56,8 +56,8 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
         String name = "test";
         MockContent content = new MockContent(name);
-        Node node = functions.asJCRNode(content);
-        assertEquals(name, node.getName());
+        Node result = functions.asJCRNode(content);
+        assertEquals(name, result.getName());
     }
 
     @Test
@@ -66,18 +66,39 @@ public class TemplatingFunctionsTest {
         String name = "test";
         MockNode root = new MockNode(name);
         ContentMap map = new ContentMap(root);
-        Node node = functions.asJCRNode(map);
-        assertEquals(name, node.getName());
+        Node result = functions.asJCRNode(map);
+        assertEquals(name, result.getName());
     }
 
     @Test
-    public void testParent() throws RepositoryException {
+    public void testParentFromNode() throws RepositoryException {
         TemplatingFunctions functions = new TemplatingFunctions();
-        MockContent parent = new MockContent("parent");
-        MockContent child = new MockContent("child");
-        parent.addContent(child);
-        Content content = functions.parent(child);
-        assertEquals(parent.getName(), content.getName());
+        MockNode parent = new MockNode("parent");
+        MockNode child = new MockNode("child");
+        parent.addNode(child);
+        Node result = functions.parent(child);
+
+        assertEquals(parent.getName(), result.getName());
+        assertEquals(parent.getUUID(), result.getUUID());
+        assertEquals(parent.getIdentifier(), result.getIdentifier());
+        assertEquals(parent.getPath(), result.getPath());
+    }
+
+
+    public void testParentFromContentMap() throws RepositoryException {
+        TemplatingFunctions functions = new TemplatingFunctions();
+        MockNode parent = new MockNode("parent");
+        MockNode child = new MockNode("child");
+        parent.addNode(child);
+        ContentMap childMap = new ContentMap(child);
+        ContentMap parentMap = new ContentMap(parent);
+
+        ContentMap resultMap = functions.parent(childMap);
+
+        assertTrue(parentMap.equals(resultMap));
+        assertEquals(parentMap.get("name"), resultMap.get("name"));
+        assertEquals(parentMap.get("id"), resultMap.get("id"));
+        assertEquals(parentMap.get("path"), resultMap.get("path"));
     }
 
 }

@@ -33,14 +33,14 @@
  */
 package info.magnolia.templating.functions;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.jcr.util.ContentMap;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.jcr.util.ContentMap;
 
 /**
  * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
@@ -59,7 +59,16 @@ public class TemplatingFunctions {
         return contentMap == null ? null : contentMap.getJCRNode();
     }
 
-    public Content parent(Content content) throws RepositoryException {
+    public Node parent(Node content) throws RepositoryException {
         return content == null ? null : content.getParent();
     }
+
+    public ContentMap parent(ContentMap contentMap) throws RepositoryException {
+        if(contentMap == null) {
+            return null;
+        }
+        Node parentContent = this.parent(contentMap.getJCRNode());
+        return new ContentMap(parentContent);
+    }
+
 }
