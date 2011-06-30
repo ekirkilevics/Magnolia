@@ -37,7 +37,7 @@ package info.magnolia.objectfactory.configuration;
  * A configuration providing a concrete instance.
  * @param <T> the type
  */
-public class InstanceConfiguration<T> {
+public class InstanceConfiguration<T> implements Cloneable {
 
     private Class<T> type;
 
@@ -62,5 +62,22 @@ public class InstanceConfiguration<T> {
 
     public void setInstance(T instance) {
         this.instance = instance;
+    }
+
+    @Override
+    public InstanceConfiguration<T> clone() {
+        try {
+            InstanceConfiguration<T> clone = (InstanceConfiguration<T>) super.clone();
+            clone.type = type;
+            clone.instance = instance;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            // should never happen
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <Y> InstanceConfiguration<Y> valueOf(Class<Y> clazz, Y instance) {
+        return new InstanceConfiguration<Y>(clazz, instance);
     }
 }

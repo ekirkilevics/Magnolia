@@ -37,7 +37,7 @@ package info.magnolia.objectfactory.configuration;
  * A simple type mapping.
  * @param <T> the type
  */
-public class ImplementationConfiguration<T> {
+public class ImplementationConfiguration<T> implements Cloneable {
 
     private Class<T> type;
 
@@ -68,4 +68,20 @@ public class ImplementationConfiguration<T> {
         this.implementation = implementation;
     }
 
+    @Override
+    public ImplementationConfiguration<T> clone() {
+            try {
+                ImplementationConfiguration<T> clone = (ImplementationConfiguration<T>) super.clone();
+                clone.implementation = implementation;
+                clone.type = type;
+                return clone;
+            } catch (CloneNotSupportedException e) {
+                // should never happen
+                throw new RuntimeException(e);
+            }
+        }
+
+    public static <T> ImplementationConfiguration<T> valueOf(Class<T> type, Class<? extends T> implementation) {
+        return new ImplementationConfiguration<T>(type, implementation);
+    }
 }

@@ -39,7 +39,7 @@ import java.util.Collection;
 /**
  * Configuration passed to {@link info.magnolia.objectfactory.MutableComponentProvider#configure(ComponentProviderConfiguration)}.
  */
-public class ComponentProviderConfiguration {
+public class ComponentProviderConfiguration implements Cloneable {
 
     private Collection<ImplementationConfiguration<?>> implementations = new ArrayList<ImplementationConfiguration<?>>();
 
@@ -97,4 +97,46 @@ public class ComponentProviderConfiguration {
         configured.add(configuration);
     }
 
+    @Override
+    public ComponentProviderConfiguration clone() {
+            try {
+                ComponentProviderConfiguration clone = (ComponentProviderConfiguration) super.clone();
+                clone.implementations = new ArrayList<ImplementationConfiguration<?>>();
+                for (ImplementationConfiguration<?> implementation : implementations) {
+                    clone.implementations.add(implementation.clone());
+                }
+                clone.instances = new ArrayList<InstanceConfiguration<?>>();
+                for (InstanceConfiguration<?> instance : instances) {
+                    clone.instances.add(instance.clone());
+                }
+                clone.factories = new ArrayList<ComponentFactoryConfiguration<?>>();
+                for (ComponentFactoryConfiguration<?> factory : factories) {
+                    clone.factories.add(factory.clone());
+                }
+                clone.configured = new ArrayList<ConfiguredComponentConfiguration<?>>();
+                for (ConfiguredComponentConfiguration<?> componentConfiguration : configured) {
+                    clone.configured.add(componentConfiguration.clone());
+                }
+                return clone;
+            } catch (CloneNotSupportedException e) {
+                // should never happen
+                throw new RuntimeException(e);
+            }
+        }
+
+    public <T> void registerImplementation(Class<T> type, Class<? extends T> implementation) {
+        addImplementation(ImplementationConfiguration.valueOf(type, implementation));
+    }
+
+    public <T> void registerInstance(Class<T> type, T instance) {
+        addInstance(InstanceConfiguration.valueOf(type, instance));
+    }
+
+    public void combine(ComponentProviderConfiguration components) {
+        components = components.clone();
+        this.implementations.addAll(components.implementations);
+        this.instances.addAll(components.instances);
+        this.factories.addAll(components.factories);
+        this.configured.addAll(components.configured);
+    }
 }

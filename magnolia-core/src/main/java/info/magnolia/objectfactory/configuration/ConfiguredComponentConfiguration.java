@@ -40,7 +40,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
  * Configuration for a components which is configured in a workspace. Will be loaded by content2bean.
  * @param <T> the type
  */
-public class ConfiguredComponentConfiguration<T> {
+public class ConfiguredComponentConfiguration<T> implements Cloneable {
 
     private Class<T> type;
 
@@ -98,4 +98,18 @@ public class ConfiguredComponentConfiguration<T> {
         this.observed = observed;
     }
 
+    @Override
+    public ConfiguredComponentConfiguration<T> clone() {
+        try {
+            ConfiguredComponentConfiguration<T> clone = (ConfiguredComponentConfiguration<T>) super.clone();
+            clone.type = type;
+            clone.workspace = workspace;
+            clone.path = path;
+            clone.observed = observed;
+            return clone;
+            } catch (CloneNotSupportedException e) {
+                // should never happen
+                throw new RuntimeException(e);
+            }
+        }
 }
