@@ -54,6 +54,7 @@ import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
 import freemarker.template.utility.DeepUnwrap;
 import info.magnolia.cms.core.Content;
+import info.magnolia.freemarker.models.ContentMapModel;
 import info.magnolia.freemarker.models.ContentModel;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.context.RenderingContext;
@@ -183,12 +184,11 @@ public abstract class AbstractDirective<C extends TemplatingElement> implements 
     }
 
     protected Node node(Map<String, TemplateModel> params, String key, Node defaultValue) throws TemplateModelException {
-        // TODO - depends on Content-API - to be changed to directly use JCR
-        final ContentModel m = _param(params, key, ContentModel.class, false);
+        final ContentMapModel m = _param(params, key, ContentMapModel.class, false);
         if (m == null) {
             return defaultValue;
         }
-        return m.asContent().getJCRNode();
+        return m.getJCRNode();
     }
 
     protected Object object(Map<String, TemplateModel> params, String key) throws TemplateModelException {
