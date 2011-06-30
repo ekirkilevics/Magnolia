@@ -111,7 +111,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
         if (isAdmin()) {
             MarkupHelper helper = new MarkupHelper(out);
-            helper.startContent(areaNode);
+            if(areaNode != null){
+                helper.startContent(areaNode);
+            }
             helper.openTag(CMS_AREA).attribute("content", getNodePath(parentNode));
             helper.attribute("name", this.name);
             helper.attribute("availableComponents", this.availableComponents);
@@ -134,8 +136,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
     @Override
     public void end(Appendable out) throws RenderException {
         try {
-            if (isEnabled()) {
-
+            if (isEnabled() && areaNode != null) {
                 Map<String, Object> contextObjects = new HashMap<String, Object>();
                 if (type.equals(AreaDefinition.TYPE_LIST)) {
                     List<ContentMap> components = new ArrayList<ContentMap>();
@@ -147,14 +148,14 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 } else if (type.equals(AreaDefinition.TYPE_SINGLE)) {
                     contextObjects.put(ATTRIBUTE_COMPONENT, new ContentMap(areaNode));
                 }
-                if (areaNode != null) {
-                    renderingEngine.render(areaNode, areaDefinition, contextObjects, out);
-                }
+                renderingEngine.render(areaNode, areaDefinition, contextObjects, out);
             }
 
             if (isAdmin()) {
                 MarkupHelper helper = new MarkupHelper(out);
-                helper.endContent(areaNode);
+                if(areaNode != null){
+                    helper.endContent(areaNode);
+                }
             }
         } catch (Exception e) {
             throw new RenderException("Can't render area " + areaNode, e);
@@ -164,11 +165,14 @@ public class AreaElement extends AbstractContentTemplatingElement {
     protected Node resolveAreaNode() throws RenderException {
         final Node content = getTargetContent();
         try {
-            return content.getNode(name);
+            if(content.hasNode(name)){
+                return content.getNode(name);
+            }
         }
         catch (RepositoryException e) {
             throw new RenderException("Can't access area node [" + name + "] on [" + content + "]", e);
         }
+        return null;
     }
 
     protected AreaDefinition resolveAreaDefinition() throws RenderException {
