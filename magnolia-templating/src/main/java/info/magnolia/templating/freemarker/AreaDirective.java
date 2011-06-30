@@ -59,7 +59,7 @@ public class AreaDirective extends AbstractDirective<AreaElement> {
         String name = string(params, "name", null);
         String availableComponents = string(params, "components", null);
         String dialog = string(params, "dialog", null);
-        String type = string(params, "type", AreaDefinition.DEFAULT_TYPE);
+        String type = string(params, "type", null);
 
         templatingElement.setArea(area);
         templatingElement.setName(name);
