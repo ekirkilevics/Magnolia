@@ -110,9 +110,9 @@ public class RenderElementTest {
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
         when(ctx.getAttribute(RenderingContext.class.getName(), Context.LOCAL_SCOPE)).thenReturn(context);
         when(ctx.getAttribute(RenderingContext.class.getName())).thenReturn(context);
-        final RenderElement marker = new RenderElement(serverCfg, context, engine);
+        final RenderElement renderElement = new RenderElement(serverCfg, context, engine);
         final StringWriter out = new StringWriter();
-        marker.begin(out);
+        renderElement.begin(out);
 
         String outString = out.toString();
 
