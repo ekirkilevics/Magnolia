@@ -70,7 +70,10 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
 
     @Override
     public RenderableDefinition getRenderableDefinition() {
-        return definitionStack.peek();
+        if(!definitionStack.isEmpty()){
+            return definitionStack.peek();
+        }
+        return null;
     }
 
     @Override
@@ -78,15 +81,27 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
         if (aggregationState.getMainContent() == null) {
             aggregationState.setMainContent(content);
         }
-        aggregationState.setCurrentContent(content);
+
+        if(contentStack.isEmpty()){
+            contentStack.push(aggregationState.getCurrentContent());
+        }
+
         contentStack.push(content);
         definitionStack.push(renderableDefinition);
+
+        aggregationState.setCurrentContent(content);
     }
 
     @Override
     public void pop() {
-        aggregationState.setCurrentContent(contentStack.pop());
+        contentStack.pop();
         definitionStack.pop();
+        if(!contentStack.isEmpty()){
+            aggregationState.setCurrentContent(contentStack.peek());
+        }
+        else{
+            aggregationState.setCurrentContent(null);
+        }
     }
 
 }
