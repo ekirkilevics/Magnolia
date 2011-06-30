@@ -168,7 +168,7 @@
           <sv:value>2011-07-01T01:36:13.286+02:00</sv:value>
         </sv:property>
       </sv:node>
-      <sv:node sv:name="availableParagraphs">
+      <sv:node sv:name="availableComponents">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -319,7 +319,7 @@
           <sv:value>2011-07-01T01:32:12.545+02:00</sv:value>
         </sv:property>
       </sv:node>
-      <sv:node sv:name="availableParagraphs">
+      <sv:node sv:name="availableComponents">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
