@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.cache.RegisterWorkspaceForCacheFlushingTask;
@@ -52,6 +53,7 @@ import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
+import info.magnolia.module.delta.MoveAndRenamePropertyTask;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
@@ -193,6 +195,14 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("4.4.2", "Update cache configuration")
             .addTask(new IsModuleInstalledOrRegistered("FlushByComments", "Checks for unwanted presence of FlushByComments node.", "commenting", null, new NodeExistsDelegateTask("FlushByComments", "Checks if FlushByComments node exists.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments", new RemoveNodeTask("FlushByComments", "Removes FlushByComments node.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments"))))
         );
+        
+        register(DeltaBuilder.update("5.0", "Update cache configuration")
+                .addTask(new NodeExistsDelegateTask("Bypass executor", "Check for existence of bypass executor and add setExpirationHeader if found.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", new ArrayDelegateTask("", "",
+                        new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "bypass", MgnlNodeType.NT_CONTENTNODE),
+                        new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "setExpirationHeader", MgnlNodeType.NT_CONTENTNODE),
+                        new NewPropertyTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass/setExpirationHeader", "class", "info.magnolia.module.cache.executor.SetExpirationHeaders"),
+                        new MoveAndRenamePropertyTask("", "/modules/cache/config/configurations/default/executors/bypass", "class", "/modules/cache/config/configurations/default/executors/bypass/bypass", "class"))))
+            );
     }
 
     private List<Task> getTasksFor364() {

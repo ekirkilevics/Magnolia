@@ -47,7 +47,6 @@ import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.CachePolicyExecutor;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.cachepolicy.Default;
-import info.magnolia.module.cache.executor.Bypass;
 import info.magnolia.module.cache.executor.CompositeExecutor;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
@@ -123,7 +122,7 @@ public class CacheConfigurationSetupTest extends RepositoryTestCase {
     public void testExecutorSetup(){
         // this test is mainly testing if the content2bean transformation does what we expect
         CachePolicyExecutor executor = cacheConf.getExecutor(CachePolicyResult.bypass);
-        assertTrue(executor instanceof Bypass);
+        assertTrue(executor instanceof CompositeExecutor);
         executor = cacheConf.getExecutor(CachePolicyResult.useCache);
         assertTrue(executor instanceof CompositeExecutor);
         assertEquals(((CompositeExecutor)executor).getExecutors().length, 2);
