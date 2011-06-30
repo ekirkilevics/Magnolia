@@ -36,7 +36,11 @@ package info.magnolia.templating.functions;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.link.LinkUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -54,18 +58,26 @@ public class TemplatingFunctions {
     private static final Logger log = LoggerFactory.getLogger(TemplatingFunctions.class);
 
 
+    /**********************************
+     ********* base functions *********
+     **********************************/
+
     //TODO cringele : test missing
-    //TODO cringele : check with PH, if it can be done without using deprecated objects
     public Content asContent(Node node) throws RepositoryException {
         return node == null ? null : new DefaultContent(node, null);
     }
 
-    public Node asJCRNode(Content content) {
-        return content == null ? null : content.getJCRNode();
+    //TODO cringele : test missing
+    public ContentMap asContentMap(Node content) {
+        return content == null ? null : new ContentMap(content);
     }
 
     public Node asJCRNode(ContentMap contentMap) {
         return contentMap == null ? null : contentMap.getJCRNode();
+    }
+
+    public Node asJCRNode(Content content) {
+        return content == null ? null : content.getJCRNode();
     }
 
     public Node parent(Node content) throws RepositoryException {
@@ -77,7 +89,7 @@ public class TemplatingFunctions {
             return null;
         }
         Node parentContent = this.parent(contentMap.getJCRNode());
-        return new ContentMap(parentContent);
+        return asContentMap(parentContent);
     }
 
     //TODO cringele : test missing
@@ -100,6 +112,49 @@ public class TemplatingFunctions {
     public String link(ContentMap contentMap) throws RepositoryException{
         return contentMap == null ? null : this.link(asJCRNode(contentMap));
     }
+
+    //TODO cringele : test missing
+    public List<ContentMap> children(ContentMap content) throws RepositoryException{
+        return content == null ? null : this.children(content, asJCRNode(content).getPrimaryNodeType().getName());
+    }
+
+    //TODO cringele : test missing
+    public List<ContentMap> children(ContentMap content, String nodeType) throws RepositoryException{
+        if(content == null) {
+            return null;
+        }
+        List<ContentMap> childList = new ArrayList<ContentMap>();
+        for(Node child : NodeUtil.getNodes(content.getJCRNode(), nodeType) ){
+            childList.add(new ContentMap(child));
+        }
+      //TODO cringele : If no child nodes exist JCR API return empty iterator. Shall we pass an empty List or null?
+        return childList;
+    }
+
+    //TODO cringele : test missing
+    public List<Node> children(Node content) throws RepositoryException{
+        return content == null ? null : this.children(content, content.getPrimaryNodeType().getName());
+    }
+
+    //TODO cringele : test missing
+    public List<Node> children(Node content, String nodeType) throws RepositoryException{
+        if(content == null) {
+            return null;
+        }
+        List<Node> childList = new ArrayList<Node>();
+        for(Node child : NodeUtil.getNodes(content, nodeType) ){
+            childList.add(child);
+        }
+
+        //TODO cringele : If no child nodes exist JCR API return empty iterator. Shall we pass an empty List or null?
+        return childList;
+    }
+
+
+
+    /***********************************************
+     ********* possible optional functions ********* TODO cringele : May all be optional. Descide on weather to provide them or not
+     ***********************************************/
 
     //TODO cringele : test missing
     public String linkExteral(Node content) throws RepositoryException{
