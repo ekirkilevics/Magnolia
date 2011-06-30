@@ -113,11 +113,15 @@ public class DefaultRenderingEngine implements RenderingEngine {
     }
 
     protected Renderer getRendererFor(RenderableDefinition definition) throws RenderException {
+        final String renderType = definition.getRenderType();
+        if(renderType == null){
+            throw new RenderException("No renderType defined for definition [" + definition + "]");
+        }
         try {
-            return rendererRegistry.getRenderer(definition.getRenderType());
+            return rendererRegistry.getRenderer(renderType);
         }
         catch (RendererRegistrationException e) {
-            throw new RenderException("Can't find renderer for type " + definition.getRenderType(), e);
+            throw new RenderException("Can't find renderer for type " + renderType, e);
         }
     }
 
