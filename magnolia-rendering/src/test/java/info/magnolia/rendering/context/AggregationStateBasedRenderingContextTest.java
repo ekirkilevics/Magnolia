@@ -143,18 +143,18 @@ public class AggregationStateBasedRenderingContextTest {
         // given
         AggregationState aggregationState = new AggregationState();
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
-        Node content = mock(Node.class);
-        Node content2 = mock(Node.class);
-        RenderableDefinition renderableDefinition = mock(RenderableDefinition.class);
-        RenderableDefinition renderableDefinition2 = mock(RenderableDefinition.class);
-        context.push(content, renderableDefinition);
-        context.push(content2, renderableDefinition2);
+        Node first = mock(Node.class);
+        Node second = mock(Node.class);
+        RenderableDefinition firstRenderableDefinition = mock(RenderableDefinition.class);
+        RenderableDefinition secondRenderableDefinition = mock(RenderableDefinition.class);
+        context.push(first, firstRenderableDefinition);
+        context.push(second, secondRenderableDefinition);
         // when
         context.pop();
 
         // then
-        assertEquals(content2, context.getCurrentContent());
-        assertEquals(renderableDefinition, context.getRenderableDefinition());
+        assertEquals(first, context.getCurrentContent());
+        assertEquals(firstRenderableDefinition, context.getRenderableDefinition());
     }
 
 
