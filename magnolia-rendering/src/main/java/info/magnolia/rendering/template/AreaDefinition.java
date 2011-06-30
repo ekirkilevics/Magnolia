@@ -33,8 +33,6 @@
  */
 package info.magnolia.rendering.template;
 
-import info.magnolia.rendering.template.configured.ConfiguredParagraphAvailability;
-
 import java.util.Map;
 
 
@@ -49,22 +47,9 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
     String TYPE_SINGLE = "single";
     String DEFAULT_TYPE = TYPE_LIST;
 
-    // TODO should be components
-    Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs();
+    Map<String, ComponentAvailability> getAvailableComponents();
 
     boolean isEnabled();
 
-    Object clone();
-
-    void setName(String name);
-
-    void setAvailableComponentNames(String availableComponentNames);
-
-    String getAvailableComponentNames();
-
-    void setDialog(String dialog);
-
     String getType();
-
-    void setType(String type);
 }
