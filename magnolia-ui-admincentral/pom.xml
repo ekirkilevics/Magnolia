@@ -127,4 +127,7 @@
       </resource>
     </resources>
   </build>
+  <properties>
+  	<cloverCoverageThreshold>3</cloverCoverageThreshold>
+  </properties>
 </project>
