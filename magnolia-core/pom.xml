@@ -198,6 +198,14 @@
       <artifactId>jstl</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.mycila</groupId>
+      <artifactId>mycila-guice</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.mockrunner</groupId>
       <artifactId>mockrunner</artifactId>
       <scope>test</scope>
