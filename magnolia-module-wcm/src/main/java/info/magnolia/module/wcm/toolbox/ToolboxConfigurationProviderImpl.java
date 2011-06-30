@@ -31,43 +31,30 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.toolbox;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.wcm.toolbox.ToolboxConfiguration;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import info.magnolia.module.wcm.WcmModule;
 
 /**
- * Module class for WCM module.
+ * Provides configuration for the toolbox by getting it from the WCM module class.
  *
  * @version $Id$
  */
-public class WcmModule implements ModuleLifecycle {
+@Singleton
+public class ToolboxConfigurationProviderImpl implements ToolboxConfigurationProvider {
 
-    private WcmModuleConfiguration configurations;
-    private ToolboxConfiguration toolboxConfiguration;
+    private WcmModule wcmModule;
 
-    public WcmModuleConfiguration getConfigurations() {
-        return configurations;
+    @Inject
+    public ToolboxConfigurationProviderImpl(WcmModule wcmModule) {
+        this.wcmModule = wcmModule;
     }
 
-    public void setConfigurations(WcmModuleConfiguration configurations) {
-        this.configurations = configurations;
-    }
-
+    @Override
     public ToolboxConfiguration getToolboxConfiguration() {
-        return toolboxConfiguration;
-    }
-
-    public void setToolboxConfiguration(ToolboxConfiguration toolboxConfiguration) {
-        this.toolboxConfiguration = toolboxConfiguration;
-    }
-
-    @Override
-    public void start(ModuleLifecycleContext moduleLifecycleContext) {
-    }
-
-    @Override
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+        return wcmModule.getToolboxConfiguration();
     }
 }
