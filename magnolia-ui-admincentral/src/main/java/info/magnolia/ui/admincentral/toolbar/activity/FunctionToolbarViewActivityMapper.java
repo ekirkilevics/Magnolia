@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.toolbar.activity;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
@@ -42,10 +45,12 @@ import info.magnolia.ui.framework.place.Place;
  * @author fgrilli
  *
  */
+@Singleton
 public class FunctionToolbarViewActivityMapper implements ActivityMapper {
 
     private FunctionToolbarActivity functionToolbarActivity;
 
+    @Inject
     public FunctionToolbarViewActivityMapper(FunctionToolbarActivity functionToolbarActivity) {
         this.functionToolbarActivity = functionToolbarActivity;
     }

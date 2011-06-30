@@ -38,6 +38,8 @@ import info.magnolia.init.properties.FileSystemPropertySource;
 import info.magnolia.init.properties.ServletContextPropertySource;
 import org.apache.commons.lang.StringUtils;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -52,6 +54,7 @@ import static info.magnolia.cms.beans.config.PropertiesInitializer.processProper
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class DefaultMagnoliaPropertiesResolver implements MagnoliaPropertiesResolver {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DefaultMagnoliaPropertiesResolver.class);
 
@@ -74,6 +77,7 @@ public class DefaultMagnoliaPropertiesResolver implements MagnoliaPropertiesReso
     private final ServletContext context;
     private final List<String> locations;
 
+    @Inject
     public DefaultMagnoliaPropertiesResolver(ServletContext context, MagnoliaInitPaths initPaths) {
         this.context = context;
         String propertiesFilesString = getInitParameter(context, MAGNOLIA_INITIALIZATION_FILE, DEFAULT_INITIALIZATION_PARAMETER);

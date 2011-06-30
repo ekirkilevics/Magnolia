@@ -44,6 +44,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.inject.Singleton;
+
 import org.apache.commons.lang.StringUtils;
 
 
@@ -52,6 +54,7 @@ import org.apache.commons.lang.StringUtils;
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
+@Singleton
 public class TemplateRendererManager extends ObservedManager {
 
     private static final String ND_RENDERER = "renderer";

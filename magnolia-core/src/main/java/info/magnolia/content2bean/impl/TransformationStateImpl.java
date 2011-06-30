@@ -33,6 +33,8 @@
  */
 package info.magnolia.content2bean.impl;
 
+import javax.inject.Singleton;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
@@ -45,6 +47,7 @@ import org.apache.commons.collections.ArrayStack;
  * @author had
  * @version $Id$
  */
+@Singleton
 public class TransformationStateImpl implements TransformationState {
 
     protected ArrayStack typeStack = new ArrayStack();

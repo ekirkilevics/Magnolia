@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.inject.Singleton;
 
 /**
  * Manages the paragraph renderers on the system. Modules can register the nodes where
@@ -53,6 +54,7 @@ import java.util.Map;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class ParagraphRendererManager extends ObservedManager {
 
     public static ParagraphRendererManager getInstance() {

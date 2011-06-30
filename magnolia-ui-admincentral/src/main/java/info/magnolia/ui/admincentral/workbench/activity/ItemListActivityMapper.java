@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.workbench.activity;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
 import info.magnolia.ui.admincentral.list.activity.ListActivity;
 import info.magnolia.ui.admincentral.search.place.SearchPlace;
@@ -47,11 +50,13 @@ import info.magnolia.ui.framework.place.Place;
  * @author fgrilli
  *
  */
+@Singleton
 public class ItemListActivityMapper implements ActivityMapper {
 
     private TreeActivity treeActivity;
     private ListActivity listActivity;
 
+    @Inject
     public ItemListActivityMapper(TreeActivity treeActivity, ListActivity listActivity) {
         this.treeActivity = treeActivity;
         this.listActivity = listActivity;

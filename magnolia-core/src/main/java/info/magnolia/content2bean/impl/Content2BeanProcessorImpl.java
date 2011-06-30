@@ -48,6 +48,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.content2bean.TypeMapping;
@@ -62,6 +64,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  *
  */
+@Singleton
 public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     private static final Logger log = LoggerFactory.getLogger(Content2BeanProcessorImpl.class);
 
@@ -69,6 +72,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
 
     private boolean forceCreation = true;
 
+    @Inject
     public Content2BeanProcessorImpl(TypeMapping typeMapping) {
         this.typeMapping = typeMapping;
     }

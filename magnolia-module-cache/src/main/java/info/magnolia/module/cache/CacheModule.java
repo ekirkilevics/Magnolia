@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
 
 /**
  * The CacheModule holds several named CacheConfiguration instances and a CacheFactory.
@@ -67,6 +68,7 @@ public class CacheModule implements ModuleLifecycle {
     /**
      * @deprecated TODO since 5.0 - find another, cleaner, mechanism to provide the information this module needs instead of using ModuleManager.
      */
+    @Inject
     public CacheModule(ModuleManager moduleManager, CacheMonitor cacheMonitor) {
         this.moduleManager = moduleManager;
         this.cacheMonitor = cacheMonitor;

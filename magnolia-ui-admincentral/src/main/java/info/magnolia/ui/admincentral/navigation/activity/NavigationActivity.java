@@ -53,6 +53,9 @@ import info.magnolia.ui.model.navigation.registry.NavigationProvider;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +64,7 @@ import org.slf4j.LoggerFactory;
  * @author fgrilli
  *
  */
+@Singleton
 public class NavigationActivity extends AbstractActivity implements NavigationView.Presenter {
 
     private static final Logger log = LoggerFactory.getLogger(NavigationActivity.class);
@@ -69,6 +73,7 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
     private Shell shell;
     private Map<Place, MenuItemDefinition> placeToMenuItemDefinitionMappings = new HashMap<Place, MenuItemDefinition>();
 
+    @Inject
     public NavigationActivity(NavigationView view, NavigationActionFactory actionFactory, NavigationProvider navigationProvider, Shell shell) {
         this.actionFactory = actionFactory;
         this.view = view;

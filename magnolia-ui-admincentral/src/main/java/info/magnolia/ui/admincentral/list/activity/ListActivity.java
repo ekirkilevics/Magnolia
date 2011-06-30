@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.list.activity;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.ui.admincentral.jcr.view.activity.AbstractJcrActivity;
 import info.magnolia.ui.admincentral.jcr.view.builder.JcrViewBuilderProvider;
 import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
@@ -45,8 +48,10 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
  * @author fgrilli
  *
  */
+@Singleton
 public class ListActivity extends AbstractJcrActivity {
 
+    @Inject
     public ListActivity(WorkbenchDefinition workbenchDefinition, JcrViewBuilderProvider jcrViewBuilderProvider, PlaceController placeController, Shell shell) {
         super(workbenchDefinition, jcrViewBuilderProvider, placeController, shell);
         jcrView = jcrViewBuilderProvider.getBuilder().build(workbenchDefinition, ViewType.LIST);

@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.admincentral.dialog;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.exception.RuntimeRepositoryException;
@@ -47,11 +49,13 @@ import info.magnolia.ui.model.dialog.registry.DialogDefinitionRegistry;
  *
  * @version $Id$
  */
+@Singleton
 public class DialogPresenterFactoryImpl implements DialogPresenterFactory {
 
     private ComponentProvider componentProvider;
     private DialogDefinitionRegistry dialogDefinitionRegistry;
 
+    @Inject
     public DialogPresenterFactoryImpl(ComponentProvider componentProvider, DialogDefinitionRegistry dialogDefinitionRegistry) {
         this.componentProvider = componentProvider;
         this.dialogDefinitionRegistry = dialogDefinitionRegistry;

@@ -37,6 +37,8 @@ import info.magnolia.cms.util.DeprecationUtil;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -49,6 +51,7 @@ import java.net.UnknownHostException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class DefaultMagnoliaInitPaths implements MagnoliaInitPaths {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DefaultMagnoliaInitPaths.class);
 
@@ -67,6 +70,7 @@ public class DefaultMagnoliaInitPaths implements MagnoliaInitPaths {
     private final String webappFolderName;
     private final String contextPath;
 
+    @Inject
     public DefaultMagnoliaInitPaths(MagnoliaServletContextListener magnoliaServletContextListener, final ServletContext servletContext) {
         this.magnoliaServletContextListener = magnoliaServletContextListener;
         this.serverName = determineServerName(servletContext);

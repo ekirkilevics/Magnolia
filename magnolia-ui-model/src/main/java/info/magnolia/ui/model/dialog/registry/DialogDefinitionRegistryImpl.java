@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
@@ -48,6 +49,7 @@ import info.magnolia.ui.model.dialog.definition.DialogDefinition;
  *
  * @version $Id$
  */
+@Singleton
 public class DialogDefinitionRegistryImpl implements DialogDefinitionRegistry {
 
     private final Map<String, DialogDefinitionProvider> providers = new HashMap<String, DialogDefinitionProvider>();

@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.navigation.registry;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
 import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationProvider;
@@ -41,9 +44,12 @@ import info.magnolia.ui.model.navigation.registry.NavigationProvider;
 /**
  * Binds the navigation configuration to the AdminCentral configuration.
  */
+@Singleton
 public class NavigationProviderImpl implements NavigationProvider {
+
     private AdminCentralConfiguration configuration;
 
+    @Inject
     public NavigationProviderImpl(AdminCentralConfiguration configuration) {
         this.configuration = configuration;
     }

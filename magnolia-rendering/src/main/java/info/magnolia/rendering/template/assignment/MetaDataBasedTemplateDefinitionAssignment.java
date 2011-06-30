@@ -33,6 +33,8 @@
  */
 package info.magnolia.rendering.template.assignment;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jcr.Node;
 
 import info.magnolia.jcr.util.MetaDataUtil;
@@ -46,10 +48,12 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
  *
  * @version $Id$
  */
+@Singleton
 public class MetaDataBasedTemplateDefinitionAssignment implements TemplateDefinitionAssignment {
 
     private TemplateDefinitionRegistry templateDefinitionRegistry;
 
+    @Inject
     public MetaDataBasedTemplateDefinitionAssignment(TemplateDefinitionRegistry templateDefinitionRegistry) {
         this.templateDefinitionRegistry = templateDefinitionRegistry;
     }

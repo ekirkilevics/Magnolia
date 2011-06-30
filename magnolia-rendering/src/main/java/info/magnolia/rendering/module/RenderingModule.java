@@ -33,6 +33,8 @@
  */
 package info.magnolia.rendering.module;
 
+import javax.inject.Inject;
+
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.rendering.renderer.registry.ConfiguredRendererManager;
@@ -49,6 +51,7 @@ public class RenderingModule implements ModuleLifecycle {
     private ConfiguredTemplateDefinitionManager templateDefinitionManager;
     private ConfiguredRendererManager rendererManager;
 
+    @Inject
     public RenderingModule(ConfiguredTemplateDefinitionManager templateDefinitionManager, ConfiguredRendererManager rendererManager) {
         this.templateDefinitionManager = templateDefinitionManager;
         this.rendererManager = rendererManager;

@@ -41,6 +41,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Singleton;
 
 
 /**
@@ -49,6 +50,7 @@ import java.util.Set;
  * @author philipp
  * @version $Id$
  */
+@Singleton
 public class ModuleRegistryImpl implements ModuleRegistry {
     private final Map<String, ModuleEntry> entries;
 

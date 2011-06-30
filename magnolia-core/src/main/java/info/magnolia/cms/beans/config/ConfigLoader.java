@@ -42,6 +42,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 
 
@@ -51,6 +53,7 @@ import javax.servlet.ServletContext;
  * @author Sameer Charles
  * @version 1.1
  */
+@Singleton
 public class ConfigLoader {
     private static final Logger log = LoggerFactory.getLogger(ConfigLoader.class);
     private static final String JAAS_PROPERTYNAME = "java.security.auth.login.config";
@@ -69,6 +72,7 @@ public class ConfigLoader {
      *
      * TODO - some of the dependencies here don't belong, we're only calling init() on those, which should be moved to a lifecycle management api (pico has one)
      */
+    @Inject
     public ConfigLoader(ModuleManager moduleManager, LicenseFileExtractor licenseFileExtractor, MessagesManager messagesManager, VersionConfig versionConfig, ServletContext context) {
         this.moduleManager = moduleManager;
         this.license = licenseFileExtractor;

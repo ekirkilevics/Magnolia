@@ -33,6 +33,8 @@
  */
 package info.magnolia.setup;
 
+import javax.inject.Inject;
+
 import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.commands.CommandsManager;
@@ -51,6 +53,7 @@ public class CoreModule implements ModuleLifecycle {
     private final CommandsManager commandsManager;
     private final ShutdownManager shutdownManager;
 
+    @Inject
     public CoreModule(VirtualURIManager virtualURIManager, CommandsManager commandsManager, ShutdownManager shutdownManager) {
         this.virtualURIManager = virtualURIManager;
         this.commandsManager = commandsManager;

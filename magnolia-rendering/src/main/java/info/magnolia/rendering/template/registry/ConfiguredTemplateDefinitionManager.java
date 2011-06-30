@@ -45,6 +45,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -57,6 +59,7 @@ import org.slf4j.LoggerFactory;
  *
  * @version $Id$
  */
+@Singleton
 public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObservingManager {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -64,6 +67,7 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
     private Set<String> registeredIds = new HashSet<String>();
     private TemplateDefinitionRegistry templateDefinitionRegistry;
 
+    @Inject
     public ConfiguredTemplateDefinitionManager(ModuleRegistry moduleRegistry, TemplateDefinitionRegistry templateDefinitionRegistry) {
         super("templates", moduleRegistry);
         this.templateDefinitionRegistry = templateDefinitionRegistry;

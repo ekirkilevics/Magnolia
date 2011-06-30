@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Singleton;
 
 /**
  * Default implementation of DependencyChecker.
@@ -49,6 +50,7 @@ import java.util.Map;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class DependencyCheckerImpl implements DependencyChecker {
 
     @Override

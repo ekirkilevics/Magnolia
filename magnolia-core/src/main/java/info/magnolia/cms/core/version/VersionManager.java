@@ -36,6 +36,7 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.objectfactory.Components;
 
+import javax.inject.Singleton;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.version.VersionHistory;
@@ -50,6 +51,7 @@ import org.slf4j.LoggerFactory;
  *
  * @version $Id$
  */
+@Singleton
 public final class VersionManager extends BaseVersionManager {
 
     /**

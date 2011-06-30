@@ -40,12 +40,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Singleton;
 
 /**
  * Central registry of all renderers.
  *
  * @version $Id$
  */
+@Singleton
 public class RendererRegistry {
 
     private final Map<String, RendererProvider> providers = new HashMap<String, RendererProvider>();

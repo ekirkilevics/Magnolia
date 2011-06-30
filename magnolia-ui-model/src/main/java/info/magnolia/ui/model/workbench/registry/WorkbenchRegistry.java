@@ -37,10 +37,12 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Singleton;
 
 /**
  * Maintains a registry of configured workbench providers by name.
  */
+@Singleton
 public class WorkbenchRegistry {
 
     private final Map<String, WorkbenchProvider> providers = new HashMap<String, WorkbenchProvider>();

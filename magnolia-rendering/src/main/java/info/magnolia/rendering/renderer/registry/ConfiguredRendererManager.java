@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -55,6 +57,7 @@ import info.magnolia.module.ModuleRegistry;
  *
  * @version $Id$
  */
+@Singleton
 public class ConfiguredRendererManager extends ModuleConfigurationObservingManager {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -62,6 +65,7 @@ public class ConfiguredRendererManager extends ModuleConfigurationObservingManag
     private Set<String> registeredIds = new HashSet<String>();
     private RendererRegistry registry;
 
+    @Inject
     public ConfiguredRendererManager(ModuleRegistry moduleRegistry, RendererRegistry registry) {
         super("renderers", moduleRegistry);
         this.registry = registry;

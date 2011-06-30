@@ -36,6 +36,8 @@ package info.magnolia.ui.admincentral.module;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
@@ -56,6 +58,7 @@ public class AdminCentralModule implements ModuleLifecycle {
 
     private Map<String, AdminCentralConfiguration> configurations = new HashMap<String, AdminCentralConfiguration>();
 
+    @Inject
     public AdminCentralModule(ConfiguredDialogDefinitionManager configuredDialogManager, ConfiguredWorkbenchManager configuredWorkbenchManager) {
         this.configuredDialogManager = configuredDialogManager;
         this.configuredWorkbenchManager = configuredWorkbenchManager;

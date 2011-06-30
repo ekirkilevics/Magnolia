@@ -35,6 +35,7 @@ package info.magnolia.context;
 
 import info.magnolia.objectfactory.Components;
 
+import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +47,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @deprecated since 5.0, use IoC.
  */
+@Singleton
 public class ContextFactory {
 
     /**

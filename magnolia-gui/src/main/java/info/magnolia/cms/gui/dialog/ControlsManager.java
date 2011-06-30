@@ -41,6 +41,8 @@ import info.magnolia.objectfactory.Components;
 
 import java.util.Iterator;
 
+import javax.inject.Singleton;
+
 import org.apache.commons.lang.StringUtils;
 
 
@@ -48,6 +50,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
+@Singleton
 public final class ControlsManager extends ObservedManager {
 
     /**

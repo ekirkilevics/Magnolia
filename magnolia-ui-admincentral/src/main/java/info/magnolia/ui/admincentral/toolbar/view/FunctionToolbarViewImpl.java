@@ -55,6 +55,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +80,7 @@ import com.vaadin.ui.TextField;
  * @author fgrilli
  * @author mrichert
  */
+@Singleton
 public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinComponent {
 
     private static final Logger log = LoggerFactory.getLogger(FunctionToolbarViewImpl.class);
@@ -89,6 +93,7 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
 
     private SearchView.Presenter searchPresenter;
 
+    @Inject
     public FunctionToolbarViewImpl(ToolbarProvider toolbarProvider, ToolbarPermissionSchema permissions, WorkbenchDefinition definition) {
         outerContainer.setStyleName("toolbar");
         final String workspace = definition.getWorkspace();

@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.toolbar.activity;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.ui.admincentral.toolbar.action.FunctionToolbarActionFactory;
 import info.magnolia.ui.admincentral.toolbar.view.FunctionToolbarView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
@@ -52,6 +55,7 @@ import info.magnolia.ui.model.toolbar.ToolbarItemDefinition;
  * @author fgrilli
  *
  */
+@Singleton
 public class FunctionToolbarActivity extends AbstractActivity implements FunctionToolbarView.Presenter{
 
     private FunctionToolbarView functionToolbarView;
@@ -59,6 +63,7 @@ public class FunctionToolbarActivity extends AbstractActivity implements Functio
     private Shell shell;
     private Place initialPlace;
 
+    @Inject
     public FunctionToolbarActivity(FunctionToolbarView functionToolbarView, FunctionToolbarActionFactory actionFactory, PlaceController placeController, Shell shell) {
         this.functionToolbarView = functionToolbarView;
         this.actionFactory = actionFactory;

@@ -39,6 +39,8 @@ import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.ExternalResource;
@@ -50,6 +52,7 @@ import com.vaadin.ui.Table;
  *
  * @author fgrilli
  */
+@Singleton
 public class ActionListViewImpl implements ActionListView {
 
     private Presenter presenter;

@@ -41,6 +41,8 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.model.ModuleDefinition;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -53,6 +55,7 @@ import java.util.Map;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class InstallContextImpl implements InstallContext {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstallContextImpl.class);
 
@@ -67,6 +70,7 @@ public class InstallContextImpl implements InstallContext {
     // ensure we'll keep messages in the order they were added
     private final Map<String, List<Message>> messages = new LinkedHashMap<String, List<Message>>();
 
+    @Inject
     public InstallContextImpl(ModuleRegistry moduleRegistry) {
         this.moduleRegistry = moduleRegistry;
     }

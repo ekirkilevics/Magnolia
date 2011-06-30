@@ -36,6 +36,8 @@ package info.magnolia.ui.framework.event;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +48,7 @@ import com.google.common.collect.Multimap;
  * A very simplistic event bus.
  * Check event bus project: http://www.eventbus.org/
  */
+@Singleton
 public class SimpleEventBus implements EventBus {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleEventBus.class);

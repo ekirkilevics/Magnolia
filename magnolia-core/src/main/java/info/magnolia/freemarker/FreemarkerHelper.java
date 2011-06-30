@@ -49,6 +49,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.objectfactory.Components;
 
+import javax.inject.Singleton;
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -68,6 +69,7 @@ import java.util.Set;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class FreemarkerHelper {
 
     /**

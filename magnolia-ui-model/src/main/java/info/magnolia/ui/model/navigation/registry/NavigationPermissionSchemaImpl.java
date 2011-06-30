@@ -33,12 +33,15 @@
  */
 package info.magnolia.ui.model.navigation.registry;
 
+import javax.inject.Singleton;
+
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 
 /**
  * ImplementationConfiguration of {@link NavigationPermissionSchema}.
  */
+@Singleton
 public class NavigationPermissionSchemaImpl implements NavigationPermissionSchema {
 
     // TODO real implementation

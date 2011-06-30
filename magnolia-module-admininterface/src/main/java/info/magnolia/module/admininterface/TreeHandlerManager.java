@@ -46,12 +46,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
+@Singleton
 public class TreeHandlerManager<H extends AdminTreeMVCHandler> extends ObservedManager {
 
     private static final String ND_CLASS = "class";

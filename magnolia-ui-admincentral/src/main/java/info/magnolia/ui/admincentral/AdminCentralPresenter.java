@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace;
 import info.magnolia.ui.admincentral.navigation.activity.NavigationActivityMapper;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
@@ -48,6 +51,7 @@ import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
 /**
  * Provides the MVP infrastructure for AdminCentral.
  */
+@Singleton
 public class AdminCentralPresenter {
 
     private Shell shell;
@@ -57,6 +61,7 @@ public class AdminCentralPresenter {
     private NavigationActivityMapper navigationActivityMapper;
     private MainActivityMapper mainActivityMapper;
 
+    @Inject
     public AdminCentralPresenter(Shell shell, EventBus eventBus, PlaceController placeController, AdminCentralView adminCentralView, NavigationActivityMapper navigationActivityMapper, MainActivityMapper mainActivityMapper) {
         this.shell = shell;
         this.eventBus = eventBus;

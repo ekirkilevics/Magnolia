@@ -33,18 +33,25 @@
  */
 package info.magnolia.ui.admincentral.toolbar.action;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.navigation.action.ChangeViewActionDefinition;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.builder.FactoryBase;
+
+
 /**
  * Action factory for the function toolbar.
  * @author fgrilli
  *
  */
+@Singleton
 public class FunctionToolbarActionFactory extends FactoryBase<ActionDefinition, Action> {
 
+    @Inject
     public FunctionToolbarActionFactory(ComponentProvider componentProvider) {
         super(componentProvider);
         addMapping(ChangeViewActionDefinition.class, ChangeViewAction.class);

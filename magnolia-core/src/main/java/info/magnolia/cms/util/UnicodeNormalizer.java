@@ -38,6 +38,7 @@ import info.magnolia.objectfactory.Components;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import javax.inject.Singleton;
 
 /**
  * A wrapper around java.text.Normalizer and com.ibm.icu.text.Normalizer; uses the former if present, or none
@@ -106,6 +107,7 @@ public class UnicodeNormalizer {
      * This uses reflection, since we're still compiling with Java 5.
      * This implementation could be externalized to a "java 6 only" module if needed.
      */
+    @Singleton
     public static final class Java6ReflectionNormalizer implements Normalizer {
         private final Method normalize;
         private final Object nfc;
@@ -143,6 +145,7 @@ public class UnicodeNormalizer {
     /**
      * Uses {@link com.ibm.icu.text.Normalizer} to normalize the string.
      */
+    @Singleton
     public static final class ICUNormalizer implements UnicodeNormalizer.Normalizer {
         @Override
         public String normalizeNFC(String in) {
@@ -153,6 +156,7 @@ public class UnicodeNormalizer {
     /**
      * Returns the original value unchanged.
      */
+    @Singleton
     public static final class NonNormalizer implements UnicodeNormalizer.Normalizer {
         @Override
         public String normalizeNFC(String in) {
@@ -163,6 +167,7 @@ public class UnicodeNormalizer {
     /**
      * Tries to load the normalizer dynamically and respects the property {@link SystemProperty#MAGNOLIA_UTF8_ENABLED}.
      */
+    @Singleton
     public static final class AutoDetectNormalizer implements Normalizer {
         private final Normalizer delegate;
 

@@ -63,6 +63,8 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,6 +80,7 @@ import java.util.Map;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class ModuleManagerImpl implements ModuleManager {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ModuleManagerImpl.class);
@@ -117,6 +120,7 @@ public class ModuleManagerImpl implements ModuleManager {
         this(installContext, moduleDefinitionReader, ModuleRegistry.Factory.getInstance(), new DependencyCheckerImpl());
     }
 
+    @Inject
     public ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry moduleRegistry, DependencyChecker dependencyChecker) {
         this.installContext = installContext;
         this.moduleDefinitionReader = moduleDefinitionReader;

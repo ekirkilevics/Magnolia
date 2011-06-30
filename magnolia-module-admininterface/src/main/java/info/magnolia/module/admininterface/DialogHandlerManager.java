@@ -53,6 +53,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,6 +67,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  *
  * @author philipp
  */
+@Singleton
 public class DialogHandlerManager extends ObservedManager {
 
     private static final String CLASS = "class";

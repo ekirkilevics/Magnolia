@@ -36,6 +36,9 @@ package info.magnolia.module.wcm.toolbox;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.jcr.view.builder.DefinitionToImplementationMapping;
 import info.magnolia.ui.model.action.Action;
@@ -45,10 +48,12 @@ import info.magnolia.ui.model.builder.FactoryBase;
 /**
  * Creates actions for items defined in the toolbox.
  */
+@Singleton
 public class ToolboxActionFactoryImpl extends FactoryBase<ActionDefinition, Action> implements ToolboxActionFactory {
 
     private List<DefinitionToImplementationMapping<ActionDefinition, Action>> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping<ActionDefinition, Action>>();
 
+    @Inject
     public ToolboxActionFactoryImpl(ComponentProvider componentProvider) {
         super(componentProvider);
     }

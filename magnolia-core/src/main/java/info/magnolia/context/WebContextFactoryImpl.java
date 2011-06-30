@@ -35,6 +35,7 @@ package info.magnolia.context;
 
 import info.magnolia.cms.core.AggregationState;
 
+import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +47,7 @@ import java.io.Serializable;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class WebContextFactoryImpl implements WebContextFactory, Serializable {
     /* TODO - do we really need to implement Serializable - see MAGNOLIA-3523 */
 

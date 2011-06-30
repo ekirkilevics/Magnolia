@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -61,6 +62,7 @@ import org.apache.commons.beanutils.ConstructorUtils;
  * Manages the page handlers. A page is a very simple dialog without any configuration.
  * @author philipp
  */
+@Singleton
 public class PageHandlerManager extends ObservedManager {
 
     /**

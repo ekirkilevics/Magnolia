@@ -43,6 +43,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * This implementation of {@link MagnoliaConfigurationProperties} sets up the following list of {@link PropertySource}:
@@ -61,12 +63,14 @@ import java.util.List;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class DefaultMagnoliaConfigurationProperties extends AbstractMagnoliaConfigurationProperties {
 
     private MagnoliaInitPaths initPaths;
     private ModuleRegistry moduleRegistry;
     private MagnoliaPropertiesResolver resolver;
 
+    @Inject
     public DefaultMagnoliaConfigurationProperties(MagnoliaInitPaths initPaths, ModuleRegistry moduleRegistry, MagnoliaPropertiesResolver resolver) {
         super(null);
         this.initPaths = initPaths;

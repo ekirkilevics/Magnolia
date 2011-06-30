@@ -55,6 +55,7 @@ import org.picocontainer.annotations.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -69,6 +70,7 @@ import java.util.Map;
  * @author philipp
  * @version $Id$
  */
+@Singleton
 public class Content2BeanTransformerImpl implements Content2BeanTransformer, Content.ContentFilter {
 
     private static final Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);

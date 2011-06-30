@@ -48,6 +48,9 @@ import info.magnolia.module.cache.cachepolicy.Default;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.apache.commons.chain.Command;
 
 /**
@@ -55,6 +58,7 @@ import org.apache.commons.chain.Command;
  * @author had
  * @version $Id:$
  */
+@Singleton
 public class CacheMonitor implements CacheMonitorMBean {
 
     private static CacheMonitor instance;
@@ -66,6 +70,7 @@ public class CacheMonitor implements CacheMonitorMBean {
     private Map<String, Integer> caches = new HashMap<String, Integer>();
     private Map<String, Integer> domains = new HashMap<String, Integer>();
 
+    @Inject
     public CacheMonitor(CommandsManager commandsManager) {
         MBeanUtil.registerMBean("CacheMonitor", this);
         this.commandsManager = commandsManager;

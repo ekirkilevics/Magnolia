@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.search.activity;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.search.place.SearchPlace;
 import info.magnolia.ui.admincentral.search.view.SearchParameters;
@@ -46,7 +49,10 @@ import info.magnolia.ui.model.builder.FactoryBase;
  * @author fgrilli
  *
  */
+@Singleton
 public class SearchActivityMapper extends FactoryBase<Place, Activity> implements ActivityMapper{
+
+    @Inject
     public SearchActivityMapper(ComponentProvider componentProvider) {
         super(componentProvider);
         addMapping(SearchPlace.class, SearchActivity.class);

@@ -45,6 +45,8 @@ import info.magnolia.context.SystemContext;
 import info.magnolia.module.ModuleManager;
 import org.apache.commons.lang.StringUtils;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
@@ -60,6 +62,7 @@ import java.util.Collections;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class FilterManagerImpl implements FilterManager {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FilterManagerImpl.class);
 
@@ -80,6 +83,7 @@ public class FilterManagerImpl implements FilterManager {
     private MgnlFilter rootFilter;
     private FilterConfig filterConfig;
 
+    @Inject
     public FilterManagerImpl(ModuleManager moduleManager, SystemContext systemContext) {
         this.moduleManager = moduleManager;
         this.systemContext = systemContext;

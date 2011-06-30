@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
+import javax.inject.Singleton;
 
 /**
  * <p>
@@ -74,6 +75,7 @@ import java.util.Properties;
  * @author Fabrizio Giustina
  * @version $Id$
  */
+@Singleton
 @AtStartup
 public class Log4jConfigurer implements Startable {
 

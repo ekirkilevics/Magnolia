@@ -35,6 +35,8 @@ package info.magnolia.commands;
 
 import java.util.Iterator;
 
+import javax.inject.Singleton;
+
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -54,6 +56,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
+@Singleton
 public class CommandsManager extends ObservedManager {
 
     public static final String DEFAULT_CATALOG = "default";

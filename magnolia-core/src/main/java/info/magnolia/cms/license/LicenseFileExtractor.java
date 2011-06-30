@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Singleton;
 
 
 /**
@@ -54,6 +55,7 @@ import java.util.Map;
  * @author Sameer Charles
  * @version 1.1
  */
+@Singleton
 public class LicenseFileExtractor {
     private static final Logger log = LoggerFactory.getLogger(LicenseFileExtractor.class);
 

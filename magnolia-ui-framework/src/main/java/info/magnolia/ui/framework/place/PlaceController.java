@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.framework.place;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.shell.ConfirmationHandler;
 import info.magnolia.ui.framework.shell.Shell;
@@ -41,6 +44,7 @@ import info.magnolia.ui.framework.shell.Shell;
 /**
  * In charge of the user's location in the app.
  */
+@Singleton
 public class PlaceController {
 
     private final EventBus eventBus;
@@ -49,6 +53,7 @@ public class PlaceController {
 
     private Place where = Place.NOWHERE;
 
+    @Inject
     public PlaceController(final EventBus eventBus, Shell shell) {
         this.eventBus = eventBus;
         this.shell = shell;

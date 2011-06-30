@@ -47,6 +47,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Singleton;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -59,6 +61,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  *
  */
+@Singleton
 public class TypeMappingImpl implements TypeMapping {
 
     private static Logger log = LoggerFactory.getLogger(TypeMappingImpl.class);

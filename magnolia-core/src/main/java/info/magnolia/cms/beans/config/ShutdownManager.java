@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.beans.config;
 
+import javax.inject.Singleton;
+
 import info.magnolia.cms.core.Content;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
+@Singleton
 public class ShutdownManager extends ObservedManager {
     private static final Logger log = LoggerFactory.getLogger(ShutdownManager.class);
     private static ShutdownManager instance = new ShutdownManager();

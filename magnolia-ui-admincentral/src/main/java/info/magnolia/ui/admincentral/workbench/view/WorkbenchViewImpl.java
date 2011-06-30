@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.admincentral.workbench.view;
 
+import javax.inject.Singleton;
+
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.vaadin.integration.view.ComponentViewPort;
 
@@ -47,6 +49,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Implementation for {@link WorkbenchView}.
  */
+@Singleton
 public class WorkbenchViewImpl implements WorkbenchView{
 
     private VerticalLayout outerLayout;

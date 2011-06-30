@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.navigation.activity;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
@@ -42,10 +45,12 @@ import info.magnolia.ui.framework.place.Place;
  * @author fgrilli
  *
  */
+@Singleton
 public class NavigationActivityMapper implements ActivityMapper {
 
     private NavigationActivity navigationActivity;
 
+    @Inject
     public NavigationActivityMapper(NavigationActivity navigationActivity) {
         this.navigationActivity = navigationActivity;
     }

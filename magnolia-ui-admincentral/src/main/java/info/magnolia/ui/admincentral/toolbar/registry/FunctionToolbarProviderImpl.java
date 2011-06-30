@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.toolbar.registry;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.ui.model.toolbar.ToolbarDefinition;
 import info.magnolia.ui.model.toolbar.registry.ToolbarProvider;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
@@ -43,9 +46,12 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
  * @author fgrilli
  *
  */
+@Singleton
 public class FunctionToolbarProviderImpl implements ToolbarProvider {
+
     private WorkbenchDefinition configuration;
 
+    @Inject
     public FunctionToolbarProviderImpl(WorkbenchDefinition configuration) {
         this.configuration = configuration;
     }

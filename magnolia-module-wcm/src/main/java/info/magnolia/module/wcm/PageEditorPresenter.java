@@ -35,6 +35,8 @@ package info.magnolia.module.wcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -80,6 +82,7 @@ import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
  *
  * @version $Id$
  */
+@Singleton
 public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChangedHandler, PageChangedHandler {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -94,6 +97,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
     private DialogPresenterFactory dialogPresenterFactory;
     private ToolboxActionFactory toolboxActionFactory;
 
+    @Inject
     public PageEditorPresenter(Shell shell, EventBus eventBus, PlaceController placeController, MainActivityMapper mainActivityMapper, PageEditorView pageEditorView, DialogPresenterFactory dialogPresenterFactory, ToolboxActionFactory toolboxActionFactory, ToolboxConfigurationProvider toolboxConfigurationProvider) {
         this.shell = shell;
         this.eventBus = eventBus;

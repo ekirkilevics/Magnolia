@@ -34,6 +34,9 @@
 package info.magnolia.ui.admincentral.navigation.action;
 
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
@@ -46,8 +49,10 @@ import info.magnolia.ui.model.builder.FactoryBase;
  * @author fgrilli
  *
  */
+@Singleton
 public class NavigationActionFactory extends FactoryBase<ActionDefinition, Action> {
 
+    @Inject
     public NavigationActionFactory(ComponentProvider componentProvider) {
         super(componentProvider);
         addMapping(PlaceChangeActionDefinition.class, PlaceChangeAction.class);

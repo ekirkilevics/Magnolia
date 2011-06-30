@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.sidebar.activity;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.activity.Activity;
@@ -46,8 +49,10 @@ import info.magnolia.ui.model.builder.FactoryBase;
  * @author fgrilli
  *
  */
+@Singleton
 public class SidebarActivityMapper extends FactoryBase<Place, Activity> implements ActivityMapper {
 
+    @Inject
     public SidebarActivityMapper(ComponentProvider componentProvider) {
         super(componentProvider);
         addMapping(ItemSelectedPlace.class, SidebarActivity.class);

@@ -46,6 +46,7 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Components;
 
+import javax.inject.Singleton;
 import javax.jcr.Credentials;
 import javax.jcr.LoginException;
 import javax.jcr.NoSuchWorkspaceException;
@@ -66,6 +67,7 @@ import java.util.List;
  * @author Sameer Charles
  * $Id$
  */
+@Singleton
 public class WorkspaceAccessUtil {
 
     public WorkspaceAccessUtil() {

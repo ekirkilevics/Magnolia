@@ -46,6 +46,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Singleton;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -58,6 +59,7 @@ import org.slf4j.LoggerFactory;
  *
  * @version $Id$
  */
+@Singleton
 public class TemplateDefinitionRegistry {
 
     // TODO should be an interface

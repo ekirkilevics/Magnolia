@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 
 
@@ -54,6 +55,7 @@ import javax.jcr.RepositoryException;
  * Manages the templates of the system.
  * @deprecated since 5.0, use the {@link TemplateDefinitionRegistry} instead
  */
+@Singleton
 public class TemplateManager extends ObservedManager {
 
     private static final String DELETED_PAGE_TEMPLATE = "mgnlDeleted";

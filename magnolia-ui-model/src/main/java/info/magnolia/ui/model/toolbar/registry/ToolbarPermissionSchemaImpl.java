@@ -33,12 +33,15 @@
  */
 package info.magnolia.ui.model.toolbar.registry;
 
+import javax.inject.Singleton;
+
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 
 /**
  * ImplementationConfiguration of {@link ToolbarPermissionSchema}.
  */
+@Singleton
 public class ToolbarPermissionSchemaImpl implements ToolbarPermissionSchema {
 
     // TODO real implementation

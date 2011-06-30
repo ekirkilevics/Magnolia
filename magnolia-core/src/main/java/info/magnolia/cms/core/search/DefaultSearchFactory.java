@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.core.search;
 
+import javax.inject.Singleton;
+
 import info.magnolia.cms.core.HierarchyManager;
 
 
@@ -40,6 +42,7 @@ import info.magnolia.cms.core.HierarchyManager;
  * Default search factory implementation.
  * @author fgiust
  */
+@Singleton
 public class DefaultSearchFactory extends SearchFactory {
 
     @Override

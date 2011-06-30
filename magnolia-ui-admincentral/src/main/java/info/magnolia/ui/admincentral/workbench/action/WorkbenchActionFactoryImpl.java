@@ -35,6 +35,8 @@ package info.magnolia.ui.admincentral.workbench.action;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jcr.Item;
 
 import info.magnolia.objectfactory.ComponentProvider;
@@ -46,10 +48,12 @@ import info.magnolia.ui.model.builder.FactoryBase;
 /**
  * Creates an action based on an {@link info.magnolia.ui.model.action.ActionDefinition}.
  */
+@Singleton
 public class WorkbenchActionFactoryImpl extends FactoryBase<ActionDefinition, Action> implements WorkbenchActionFactory {
 
     private List<DefinitionToImplementationMapping<ActionDefinition, Action>> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping<ActionDefinition, Action>>();
 
+    @Inject
     public WorkbenchActionFactoryImpl(ComponentProvider componentProvider) {
         super(componentProvider);
     }

@@ -37,6 +37,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +51,7 @@ import info.magnolia.cms.core.ItemType;
 /**
  * ObservedManager for trees configured in the repository.
  */
+@Singleton
 public class ConfiguredWorkbenchManager extends ObservedManager {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -55,6 +59,7 @@ public class ConfiguredWorkbenchManager extends ObservedManager {
     private final Set<String> registeredWorkbenches = new HashSet<String>();
     private WorkbenchRegistry workbenchRegistry;
 
+    @Inject
     public ConfiguredWorkbenchManager(WorkbenchRegistry workbenchRegistry) {
         this.workbenchRegistry = workbenchRegistry;
     }

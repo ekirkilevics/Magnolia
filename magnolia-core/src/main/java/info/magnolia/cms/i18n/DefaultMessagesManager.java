@@ -47,6 +47,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import java.util.ArrayList;
@@ -62,6 +63,7 @@ import java.util.Map;
  * Default MessagesManager implementation.
  * @author philipp
  */
+@Singleton
 public class DefaultMessagesManager extends MessagesManager {
     private final static Logger log = LoggerFactory.getLogger(DefaultMessagesManager.class);
 

@@ -39,6 +39,7 @@ import info.magnolia.ui.admincentral.util.UIUtil;
 
 import java.util.Calendar;
 
+import javax.inject.Singleton;
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -56,6 +57,7 @@ import com.vaadin.ui.Label;
  *
  * @author fgrilli
  */
+@Singleton
 public class PreviewViewImpl implements PreviewView {
 
     private static final String STATUS = "Status";

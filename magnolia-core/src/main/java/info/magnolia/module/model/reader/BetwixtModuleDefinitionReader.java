@@ -58,6 +58,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Singleton;
 
 /**
  * This implementation of ModuleDefinitionReader uses Betwixt to read and convert module
@@ -66,6 +67,7 @@ import java.util.regex.Pattern;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BetwixtModuleDefinitionReader.class);
 

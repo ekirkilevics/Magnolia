@@ -37,6 +37,9 @@ package info.magnolia.ui.admincentral;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.place.Place;
@@ -45,6 +48,7 @@ import info.magnolia.ui.model.builder.FactoryBase;
 /**
  * Maps the main places to main activities.
  */
+@Singleton
 public class MainActivityMapperImpl extends FactoryBase<Place, Activity> implements MainActivityMapper {
 
     /**
@@ -78,6 +82,7 @@ public class MainActivityMapperImpl extends FactoryBase<Place, Activity> impleme
 
     private List<PlaceToActivityMapping<Place, Activity>> placeToActivityMappings = new ArrayList<PlaceToActivityMapping<Place, Activity>>();
 
+    @Inject
     public MainActivityMapperImpl(ComponentProvider componentProvider) {
         super(componentProvider);
     }

@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.configuration;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.magnolia.cms.security.User;
 import info.magnolia.ui.admincentral.module.AdminCentralModule;
 import info.magnolia.ui.model.settings.UISettings;
@@ -40,10 +43,12 @@ import info.magnolia.ui.model.settings.UISettings;
 /**
  * Gets the {@link AdminCentralConfiguration} from the {@link AdminCentralModule}.
  */
+@Singleton
 public class AdminCentralConfigurationProviderImpl implements AdminCentralConfigurationProvider{
 
     private AdminCentralModule module;
 
+    @Inject
     public AdminCentralConfigurationProviderImpl(AdminCentralModule module) {
         this.module = module;
     }

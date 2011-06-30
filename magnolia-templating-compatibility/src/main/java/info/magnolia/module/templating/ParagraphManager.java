@@ -44,6 +44,8 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Map;
 
+import javax.inject.Singleton;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -52,6 +54,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @deprecated since 5.0, use the {@link TemplateDefinitionRegistry} instead
  */
+@Singleton
 public class ParagraphManager extends ObservedManager {
 
     private static final String DEFAULT_PARA_TYPE = "jsp";

@@ -39,6 +39,9 @@ import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.model.navigation.registry.NavigationProvider;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +54,7 @@ import com.vaadin.ui.Component;
  * @author fgrilli
  * @author mrichert
  */
+@Singleton
 public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
 
     private static final Logger log = LoggerFactory.getLogger(NavigationViewImpl.class);
@@ -60,6 +64,7 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent {
     private Navigation navigation;
 
     // TODO don't pass the registry but the navigation itself
+    @Inject
     public NavigationViewImpl(NavigationProvider navigationProvider, NavigationPermissionSchema permissions) {
         final NavigationDefinition navigationDefinition = navigationProvider.getNavigation();
         if(navigationDefinition == null) {
