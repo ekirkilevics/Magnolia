@@ -72,7 +72,7 @@ public class MockProperty extends MockItem implements Property {
     }
 
     public MockProperty(String name, MockValue value, MockNode node) {
-        super(name, (MockSession) node.getSession());
+        super(name, node.getSession());
         this.value = value;
         this.node = node;
     }

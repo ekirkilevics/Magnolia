@@ -55,13 +55,13 @@ public abstract class MockItem implements Item {
 
     final private String name;
     private MockNode parent;
-    private MockSession session;
+    private Session session;
 
     public MockItem(String name) {
         this(name, null);
     }
 
-    public MockItem(String name, MockSession session) {
+    public MockItem(String name, Session session) {
         this.name = name;
         this.session = session;
     }
@@ -107,7 +107,7 @@ public abstract class MockItem implements Item {
         return session;
     }
 
-    public void setSession(MockSession session) {
+    public void setSession(Session session) {
         this.session = session;
     }
 
@@ -143,7 +143,7 @@ public abstract class MockItem implements Item {
 
     public void setParent(MockNode parent) {
         this.parent = parent;
-        setSession((MockSession) parent.getSession());
+        setSession(parent.getSession());
     }
 
     @Override
