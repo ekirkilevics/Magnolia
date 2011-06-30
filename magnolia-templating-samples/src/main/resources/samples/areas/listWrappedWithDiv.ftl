@@ -1,5 +1,6 @@
-<div id="${def.name!"def.name not found"}">
+[#-- def object is the Area definition --]
+<div id="${content.divID!def.name!"noDiv"}">
 
     [#include "/samples/areas/list.ftl" ]
 
-</div><!-- end  ${def.name!}  -->
+</div><!-- end  ${content.divID!def.name!"noDiv"}  -->

@@ -1,5 +1,5 @@
-<div id="${content.divID!def.name!"def.name not found"}">
+<div id="${content.divID!def.name!"noDiv"}">
 
     [#include "/samples/areas/single.ftl" ]
 
-</div><!-- end  ${def.name!} -->
+</div><!-- end  ${content.divID!def.name!"noDiv"} -->
