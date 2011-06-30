@@ -42,8 +42,12 @@ import javax.jcr.Node;
 
 
 /**
+ *
+ * TODO dlipp: add reasonable javadoc!
  * Uses and updates the {@link AggregationState}.
  * FIXME we should not use the AggregationState anymore
+ *
+ * @version $Id$
  */
 public class AggregationStateBasedRenderingContext implements RenderingContext {
     private AggregationState aggregationState;

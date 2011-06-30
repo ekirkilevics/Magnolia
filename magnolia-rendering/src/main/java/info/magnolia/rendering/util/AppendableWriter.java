@@ -59,7 +59,6 @@ public class AppendableWriter extends Writer {
 
     @Override
     public void write(char[] chars, int start, int end) throws IOException {
-
         appendable.append(new String(chars), start, end);
     }
 

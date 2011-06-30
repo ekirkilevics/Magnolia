@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,28 +25,40 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.rendering.renderer.registry;
+package info.magnolia.rendering.model;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import javax.servlet.FilterChain;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Test;
 
 /**
- * Thrown in case a renderer can't be found or if the registration fails.
- *
  * @version $Id$
  */
-public class RendererRegistrationException extends Exception {
+public class ModelExecutionFilterTest {
 
-    public RendererRegistrationException(String message) {
-        super(message);
+    @Test
+    public void testDoFilter() throws Exception {
+        // given
+        FilterChain chain = mock(FilterChain.class);
+        ModelExecutionFilter filter = new ModelExecutionFilter();
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        // when
+        filter.doFilter(request, response, chain);
+
+        // then
+        verify(chain).doFilter(request, response);
     }
-
-    public RendererRegistrationException(String message, Throwable throwable) {
-        super(message, throwable);
-    }
-
 }

@@ -52,6 +52,7 @@ import info.magnolia.rendering.renderer.registry.RendererProvider;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.test.mock.jcr.MockNode;
 
 import java.io.IOException;
@@ -190,5 +191,27 @@ public class DefaultRenderingEngineTest {
 
         // when
         renderingEngine.render(content, builder);
+
+        // then - no code here as we expect an Exception
     }
+
+    @Test(expected = RenderException.class)
+    public void testRenderThrowsRenderExceptionInCaseOfInternalTemplateDefinitionRegistrationException() throws Exception {
+        // given
+        final Node content = new MockNode("parent");
+        final Context context = mock(Context.class);
+        final RenderingContext renderingContext = mock(RenderingContext.class);
+        given(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE, Context.LOCAL_SCOPE))
+                .willReturn(renderingContext);
+        given(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE)).willReturn(renderingContext);
+        MgnlContext.setInstance(context);
+
+        willThrow(new TemplateDefinitionRegistrationException()).given(templateDefinitionAssignment).getAssignedTemplateDefinition(content);
+
+        // when
+        renderingEngine.render(content, null);
+
+        // then - no code here as we expect an Exception
+    }
+
 }

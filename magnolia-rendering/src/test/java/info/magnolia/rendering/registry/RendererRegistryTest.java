@@ -35,8 +35,8 @@ package info.magnolia.rendering.registry;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.rendering.renderer.registry.RendererProvider;
 import info.magnolia.rendering.renderer.registry.RendererRegistrationException;
@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -54,18 +53,13 @@ import org.junit.Test;
  */
 public class RendererRegistryTest {
 
-    private RendererRegistry rendererRegistry;
-
-    @Before
-    public void setUp() {
-        rendererRegistry = new RendererRegistry();
-    }
-
     @Test
     public void testUnregisterAndRegister() throws RendererRegistrationException {
+        // given
         String rendererId = "onlyOneToRemove";
+        final RendererRegistry rendererRegistry = new RendererRegistry();
         RendererProvider rendererProvider = mock(RendererProvider.class);
-        when(rendererProvider.getId()).thenReturn(rendererId);
+        given(rendererProvider.getId()).willReturn(rendererId);
         rendererRegistry.register(rendererId, rendererProvider);
 
         List<String> idsToRemove = new ArrayList<String>();
@@ -79,16 +73,20 @@ public class RendererRegistryTest {
         List<RendererProvider> rendererProviders = new ArrayList<RendererProvider>();
         rendererProviders.add(rendererProvider);
 
+        // when
         Set<String> idsOfNewRegisteredProviders = rendererRegistry.unregisterAndRegister(idsToRemove, rendererProviders);
 
+        // then
         assertTrue(idsOfNewRegisteredProviders.contains(rendererId));
         assertEquals(1, idsOfNewRegisteredProviders.size());
     }
 
     @Test(expected=RendererRegistrationException.class)
-    public void testUnregisterAndRegisterThrowsExceptionWhenTryingToRegisterExistingId() throws RendererRegistrationException {
+    public void testUnregisterAndRegisterThrowsExceptiongivenTryingToRegisterExistingId() throws RendererRegistrationException {
+        // given
         String rendererId = "onlyOneToRemove";
         RendererProvider rendererProvider = mock(RendererProvider.class);
+        final RendererRegistry rendererRegistry = new RendererRegistry();
         rendererRegistry.register(rendererId, rendererProvider);
 
         List<String> idsToRemove = new ArrayList<String>();
@@ -101,32 +99,40 @@ public class RendererRegistryTest {
         rendererProviders.add(rendererProvider);
         rendererProviders.add(rp1);
 
+        // when
         Set<String> idsOfNewRegisteredProviders = rendererRegistry.unregisterAndRegister(idsToRemove, rendererProviders);
 
+        // then
         assertTrue(idsOfNewRegisteredProviders.contains(rendererId));
         assertEquals(1, idsOfNewRegisteredProviders.size());
     }
     @Test
     public void testGetRenderer() throws RendererRegistrationException {
+        // given
         String rendererId = "test";
         RendererProvider rendererProvider = mock(RendererProvider.class);
         Renderer mockRenderer = mock(Renderer.class);
-        when(rendererProvider.getRenderer()).thenReturn(mockRenderer);
+        given(rendererProvider.getRenderer()).willReturn(mockRenderer);
+        final RendererRegistry rendererRegistry = new RendererRegistry();
         rendererRegistry.register(rendererId, rendererProvider);
 
-        assertEquals(mockRenderer, rendererRegistry.getRenderer(rendererId));
+        // when
+        Renderer result = rendererRegistry.getRenderer(rendererId);
+
+        // then
+        assertEquals(mockRenderer, result);
     }
 
     @Test(expected = RendererRegistrationException.class)
-    public void testGetRendererThrowsExceptionAfterUnregister() throws RendererRegistrationException {
-        String rendererId = "test";
-        RendererProvider rendererProvider = mock(RendererProvider.class);
-        rendererRegistry.register(rendererId, rendererProvider);
+    public void testGetRendererThrowsExceptionIfIdIsNotRegistered() throws RendererRegistrationException {
+        // given
+        final RendererRegistry rendererRegistry = new RendererRegistry();
+        final String rendererId = "notRegistered";
 
-        rendererRegistry.unregister(rendererId);
-
-        // as rendererId has been unregistered we expect an RendererRegistrationException now...
+        // when
         rendererRegistry.getRenderer(rendererId);
+
+        // then - empty as rendererId has not been registered and hence we expect an RendererRegistrationException...
     }
 
 }
