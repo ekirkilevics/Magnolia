@@ -33,6 +33,8 @@
  */
 package info.magnolia.objectfactory;
 
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+
 /**
  * ComponentProvider that can participate in a hierarchical structure. Use {@link #createChild()} to create a sub container.
  *
@@ -49,4 +51,5 @@ public interface HierarchicalComponentProvider extends ComponentProvider {
      */
     MutableComponentProvider createChild();
 
+    ComponentProvider createChild(ComponentProviderConfiguration componentsConfiguration);
 }

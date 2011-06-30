@@ -114,4 +114,11 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
     public PropertiesComponentProvider createChild() {
         return new PropertiesComponentProvider(this);
     }
+
+    @Override
+    public PropertiesComponentProvider createChild(ComponentProviderConfiguration componentsConfiguration) {
+        PropertiesComponentProvider componentProvider = createChild();
+        componentProvider.configure(componentsConfiguration);
+        return componentProvider;
+    }
 }
