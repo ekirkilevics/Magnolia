@@ -135,6 +135,7 @@ public class NodeUtil {
 
     /**
      * TODO dlipp: better name? Clear javadoc! Move to MetaDataUtil, do not assign method-param!
+     * TODO cringele : shouldn't @param nodeType be aligned to JCR API? There it is nodeTypeName, nodeType is used for NodeType object
      */
     public static boolean isNodeType(Node node, String type) throws RepositoryException {
         if (node instanceof DelegateNodeWrapper) {
@@ -418,6 +419,9 @@ public class NodeUtil {
         return getNodes(node, EXCLUDE_META_DATA_FILTER);
     }
 
+    /**
+     * TODO cringele : shouldn't @param nodeType be aligned to JCR API? There it is nodeTypeName, nodeType is used for NodeType object
+     */
     public static Iterable<Node> getNodes(Node parent, final String nodeType) throws RepositoryException {
         NodeIterator iterator = new FilteringNodeIterator(parent.getNodes(), new Predicate() {
             @Override
