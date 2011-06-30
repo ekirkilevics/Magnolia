@@ -33,36 +33,37 @@
  */
 package info.magnolia.module.wcm;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.vaadin.Application;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import info.magnolia.module.wcm.toolbox.ToolboxView;
 import info.magnolia.module.wcm.toolbox.ToolboxViewImpl;
+import info.magnolia.ui.vaadin.integration.view.MainWindow;
 
 /**
  * Main page editor view.
  *
  * @version $Id$
  */
+@Singleton
 public class PageEditorViewImpl implements PageEditorView {
 
+    private MainWindow mainWindow;
     private Application application;
     private HorizontalLayout layout;
     private VerticalLayout pageLayout;
     private VerticalLayout toolboxLayout;
-    private WcmModule wcmModule;
     private ToolboxView toolboxView;
 
-    public PageEditorViewImpl(Application application, WcmModule wcmModule) {
+    @Inject
+    public PageEditorViewImpl(MainWindow mainWindow, Application application) {
+        this.mainWindow = mainWindow;
         this.application = application;
-        this.wcmModule = wcmModule;
-    }
-
-    @Override
-    public void init() {
 
         application.setTheme("magnolia");
 
@@ -82,8 +83,7 @@ public class PageEditorViewImpl implements PageEditorView {
         layout.setExpandRatio(pageLayout, 5);
         layout.setExpandRatio(toolboxLayout, 1);
 
-        Window window = new Window("Page Editor", layout);
-        this.application.setMainWindow(window);
+        mainWindow.getMainWindow().addComponent(layout);
     }
 
     @Override

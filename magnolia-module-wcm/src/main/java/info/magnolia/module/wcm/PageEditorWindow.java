@@ -31,18 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral;
+package info.magnolia.module.wcm;
 
-import java.io.Serializable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.Application;
+import info.magnolia.ui.vaadin.integration.view.MainWindow;
 
 /**
- * Main application view layout.
+ * Creates the main window for the page editor.
  */
-public interface AdminCentralView extends Serializable {
+@Singleton
+public class PageEditorWindow extends MainWindow {
 
-    VerticalLayout getMainContainer();
-
-    VerticalLayout getMenuDisplay();
+    @Inject
+    public PageEditorWindow(Application application) {
+        super(application);
+        setCaption("Page Editor");
+    }
 }

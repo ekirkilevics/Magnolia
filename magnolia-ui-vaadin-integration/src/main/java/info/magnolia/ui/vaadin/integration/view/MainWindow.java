@@ -31,18 +31,38 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral;
+package info.magnolia.ui.vaadin.integration.view;
 
-import java.io.Serializable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.Application;
+import com.vaadin.ui.Window;
+
 
 /**
- * Main application view layout.
+ * Creates the main window. Classes that depend on having a window created can depend on this class.
+ *
+ * @version $Id$
  */
-public interface AdminCentralView extends Serializable {
+@Singleton
+public class MainWindow {
 
-    VerticalLayout getMainContainer();
+    // TODO this class needs a better name, MainWindow.getMainWindow() isn't so nice
 
-    VerticalLayout getMenuDisplay();
+    private Application application;
+
+    @Inject
+    public MainWindow(Application application) {
+        this.application = application;
+        this.application.setMainWindow(new Window());
+    }
+
+    public Window getMainWindow() {
+        return application.getMainWindow();
+    }
+
+    public void setCaption(String caption) {
+        this.application.getMainWindow().setCaption(caption);
+    }
 }

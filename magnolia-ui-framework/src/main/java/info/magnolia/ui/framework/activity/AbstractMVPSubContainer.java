@@ -34,8 +34,8 @@
 package info.magnolia.ui.framework.activity;
 
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.ComponentProviderUtil;
-import info.magnolia.objectfactory.MutableComponentProvider;
+import info.magnolia.objectfactory.HierarchicalComponentProvider;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.HandlerRegistration;
 import info.magnolia.ui.framework.event.SimpleEventBus;
@@ -72,36 +72,34 @@ public abstract class AbstractMVPSubContainer<A extends Activity> extends Abstra
 
     private A activity;
 
-    private MutableComponentProvider componentProvider;
+    private ComponentProvider componentProvider;
+    private ComponentProvider parentComponentProvider;
 
 
     public AbstractMVPSubContainer(String id, Shell shell, ComponentProvider parentComponentProvider) {
         this.id = id;
         this.shell = shell;
-        this.componentProvider = ComponentProviderUtil.createChild(parentComponentProvider);
+        this.parentComponentProvider = parentComponentProvider;
     }
 
     @Override
     public void start(ViewPort viewPort, EventBus outerEventBus) {
 
-        componentProvider.registerImplementation(EventBus.class, SimpleEventBus.class);
-        // TODO use IoC with parameters instead? newInstance(SubShell.class, id)
-        componentProvider.registerInstance(Shell.class, shell.createSubShell(id));
-        componentProvider.registerImplementation(PlaceController.class, PlaceController.class);
-
         // configure the component provider
-        configureComponentProvider(componentProvider);
+        ComponentProviderConfiguration configuration = configureComponentProvider();
+
+        configuration.registerImplementation(EventBus.class, SimpleEventBus.class);
+        // TODO use IoC with parameters instead? newInstance(SubShell.class, id)
+        configuration.registerInstance(Shell.class, shell.createSubShell(id));
+        configuration.registerImplementation(PlaceController.class, PlaceController.class);
+
+        this.componentProvider = ((HierarchicalComponentProvider)parentComponentProvider).createChild(configuration);
 
         subShell = componentProvider.getComponent(Shell.class);
         innerEventBus = componentProvider.getComponent(EventBus.class);
         innerPlaceController = componentProvider.getComponent(PlaceController.class);
 
-        final Class<A> activityClass = getActivityClass();
-
-        activity = componentProvider.newInstance(activityClass, getActivityParameters());
-        // add the activity we built so that sub components can ask for injection
-        componentProvider.registerInstance(activityClass, activity);
-
+        activity = this.componentProvider.newInstance(getActivityClass(), getActivityParameters());
         activity.start(viewPort, innerEventBus);
 
         historyHandler = new PlaceHistoryHandler(new PlaceHistoryMapperImpl(getSupportedPlaces()), subShell);
@@ -133,7 +131,7 @@ public abstract class AbstractMVPSubContainer<A extends Activity> extends Abstra
     /**
      * Prepare the IoC container.
      */
-    protected abstract void configureComponentProvider(MutableComponentProvider mutableComponentProvider);
+    protected abstract ComponentProviderConfiguration configureComponentProvider();
 
     protected abstract Class< ? extends Place>[] getSupportedPlaces();
 

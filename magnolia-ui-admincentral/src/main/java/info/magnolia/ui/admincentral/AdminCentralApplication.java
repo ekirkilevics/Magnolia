@@ -34,24 +34,25 @@
 package info.magnolia.ui.admincentral;
 
 
-import info.magnolia.cms.security.User;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.ComponentProviderUtil;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.MutableComponentProvider;
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
-import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
-import info.magnolia.ui.admincentral.configuration.AdminCentralConfigurationProvider;
-import info.magnolia.ui.model.settings.Direction;
-import info.magnolia.ui.model.settings.InputDevice;
-import info.magnolia.ui.model.settings.UISettings;
-
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
+import info.magnolia.cms.security.User;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.HierarchicalComponentProvider;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
+import info.magnolia.objectfactory.configuration.InstanceConfiguration;
+import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
+import info.magnolia.ui.admincentral.configuration.AdminCentralConfigurationProvider;
+import info.magnolia.ui.model.settings.Direction;
+import info.magnolia.ui.model.settings.InputDevice;
+import info.magnolia.ui.model.settings.UISettings;
+import info.magnolia.ui.vaadin.integration.view.MainWindow;
 
 /**
  * Application class for AdminCentral. Provides a scoped IoC container and performs initialization of the UI.
@@ -59,15 +60,10 @@ import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 @SuppressWarnings("serial")
 public class AdminCentralApplication extends Application implements HttpServletRequestListener {
 
-    private MutableComponentProvider componentProvider;
+    private ComponentProvider componentProvider;
 
     @Override
     public void init() {
-
-        // Initialize the view first since ShellImpl depends on it being set up when it's constructor is called
-        componentProvider.getComponent(AdminCentralView.class).init();
-
-        // Now initialize the presenter to start up MVP
         componentProvider.getComponent(AdminCentralPresenter.class).init();
     }
 
@@ -78,14 +74,17 @@ public class AdminCentralApplication extends Application implements HttpServletR
         final UISettings uiSettings = new UISettings(Direction.LTR, InputDevice.MOUSE);
 
         final AdminCentralConfiguration configuration = configurationProvider.getConfiguration(user, uiSettings);
-        final ComponentProviderConfiguration componentsConfiguration = configuration.getApplication().getComponents();
+        ComponentProviderConfiguration componentsConfiguration = configuration.getApplication().getComponents();
+
+        componentsConfiguration = componentsConfiguration.clone();
+        componentsConfiguration.addInstance(InstanceConfiguration.valueOf(Application.class, this));
+        componentsConfiguration.addInstance(InstanceConfiguration.valueOf(User.class, user));
+        componentsConfiguration.addInstance(InstanceConfiguration.valueOf(UISettings.class, uiSettings));
+        componentsConfiguration.addInstance(InstanceConfiguration.valueOf(AdminCentralConfiguration.class, configuration));
+        componentsConfiguration.addImplementation(ImplementationConfiguration.valueOf(MainWindow.class, AdminCentralWindow.class));
 
         // now create the ui componentProvider
-        componentProvider = ComponentProviderUtil.createChild(Components.getComponentProvider(), componentsConfiguration);
-        componentProvider.registerInstance(Application.class, this);
-        componentProvider.registerInstance(User.class, user);
-        componentProvider.registerInstance(UISettings.class, uiSettings);
-        componentProvider.registerInstance(AdminCentralConfiguration.class, configuration);
+        componentProvider = ((HierarchicalComponentProvider)Components.getComponentProvider()).createChild(componentsConfiguration);
 
 
 // TODO remove, but kept if something with the configuration goes wrong

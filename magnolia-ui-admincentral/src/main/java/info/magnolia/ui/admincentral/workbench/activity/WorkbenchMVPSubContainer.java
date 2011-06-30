@@ -35,8 +35,8 @@ package info.magnolia.ui.admincentral.workbench.activity;
 
 
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.MutableComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.configuration.InstanceConfiguration;
 import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
 import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
 import info.magnolia.ui.admincentral.search.place.SearchPlace;
@@ -63,7 +63,6 @@ public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer<WorkbenchA
         this.place = place;
         this.workbenchRegistry = workbenchRegistry;
         this.adminCentralConfiguration = adminCentralConfiguration;
-
     }
 
     @Override
@@ -77,23 +76,26 @@ public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer<WorkbenchA
     }
 
     @Override
-    protected void configureComponentProvider(MutableComponentProvider componentProvider) {
+    protected ComponentProviderConfiguration configureComponentProvider() {
 
-        final ComponentProviderConfiguration defaultComponentsConfiguration = adminCentralConfiguration.getWorkbench().getComponents();
-        componentProvider.configure(defaultComponentsConfiguration);
+        ComponentProviderConfiguration defaultComponentsConfiguration = adminCentralConfiguration.getWorkbench().getComponents();
 
         // load the workbench specific configuration if existing
         final WorkbenchDefinition workbenchDefinition = workbenchRegistry.getWorkbench(place.getWorkbenchName());
 
-        if(workbenchDefinition == null){
+        if (workbenchDefinition == null){
             throw new IllegalStateException("No definition could be found for workbench [" + place.getWorkbenchName() + "]");
         }
 
-        if(workbenchDefinition.getComponents() != null) {
-            componentProvider.configure(workbenchDefinition.getComponents());
+        ComponentProviderConfiguration componentProviderConfiguration = defaultComponentsConfiguration.clone();
+
+        if (workbenchDefinition.getComponents() != null) {
+            componentProviderConfiguration.combine(workbenchDefinition.getComponents());
         }
 
-        componentProvider.registerInstance(WorkbenchDefinition.class, workbenchDefinition);
+        componentProviderConfiguration.addInstance(InstanceConfiguration.valueOf(WorkbenchDefinition.class, workbenchDefinition));
+
+        return componentProviderConfiguration;
     }
 
     @Override

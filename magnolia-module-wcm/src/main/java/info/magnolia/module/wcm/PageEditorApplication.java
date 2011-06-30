@@ -35,10 +35,11 @@ package info.magnolia.module.wcm;
 
 import com.vaadin.Application;
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.ComponentProviderUtil;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.MutableComponentProvider;
+import info.magnolia.objectfactory.HierarchicalComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
+import info.magnolia.ui.vaadin.integration.view.MainWindow;
 
 /**
  * Note: This Application does not install its component provider as a scope in Components.
@@ -50,16 +51,16 @@ public class PageEditorApplication extends Application {
     @Override
     public void init() {
 
-        ComponentProvider parent = Components.getComponentProvider();
+        HierarchicalComponentProvider parent = (HierarchicalComponentProvider)Components.getComponentProvider();
 
         WcmModule wcmModule = parent.getComponent(WcmModule.class);
-        ComponentProviderConfiguration components = wcmModule.getConfigurations().getComponents();
+        ComponentProviderConfiguration components = wcmModule.getConfigurations().getComponents().clone();
 
-        MutableComponentProvider componentProvider = ComponentProviderUtil.createChild(parent, components);
+        components.registerInstance(Application.class, this);
+        components.addImplementation(ImplementationConfiguration.valueOf(MainWindow.class, PageEditorWindow.class));
 
-        componentProvider.registerInstance(Application.class, this);
+        ComponentProvider componentProvider = parent.createChild(components);
 
-        componentProvider.getComponent(PageEditorView.class).init();
         componentProvider.getComponent(PageEditorPresenter.class).init();
     }
 }

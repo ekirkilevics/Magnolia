@@ -43,8 +43,6 @@ import info.magnolia.module.wcm.toolbox.ToolboxView;
  */
 public interface PageEditorView {
 
-    void init();
-
     ComponentContainer getEditorContainer();
 
     ToolboxView getToolboxView();

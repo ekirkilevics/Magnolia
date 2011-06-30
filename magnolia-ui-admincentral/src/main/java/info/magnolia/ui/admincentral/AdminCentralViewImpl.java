@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.admincentral;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -46,7 +48,6 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -55,25 +56,26 @@ import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
+import info.magnolia.ui.vaadin.integration.view.MainWindow;
 
 /**
  * Main application view layout.
  */
+@Singleton
 public class AdminCentralViewImpl implements AdminCentralView {
 
+    private MainWindow mainWindow;
     private Application application;
     private DialogPresenterFactory dialogPresenterFactory;
 
     private VerticalLayout mainContainer;
     private VerticalLayout menuDisplay;
 
-    public AdminCentralViewImpl(Application application, DialogPresenterFactory dialogPresenterFactory) {
+    @Inject
+    public AdminCentralViewImpl(MainWindow mainWindow, Application application, DialogPresenterFactory dialogPresenterFactory) {
+        this.mainWindow = mainWindow;
         this.application = application;
         this.dialogPresenterFactory = dialogPresenterFactory;
-    }
-
-    @Override
-    public void init() {
 
         application.setTheme("magnolia");
         application.setLogoutURL(MgnlContext.getContextPath() + "/?mgnlLogout=true");
@@ -109,7 +111,7 @@ public class AdminCentralViewImpl implements AdminCentralView {
         outerContainer.setExpandRatio(headerLayout, 1.0f);
         outerContainer.setExpandRatio(innerContainer, 90.0f);
 
-        application.setMainWindow(new Window(messages.get("central.title"), outerContainer));
+        mainWindow.getMainWindow().addComponent(outerContainer);
     }
 
     private AbsoluteLayout createHeaderLayout(Messages messages) {
@@ -164,7 +166,7 @@ public class AdminCentralViewImpl implements AdminCentralView {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 ((WebApplicationContext)application.getContext()).getHttpSession().invalidate();
-                application.getMainWindow().getApplication().close();
+                application.close();
             }
         });
         headerLayout.addComponent(logout, "right: 20px; top: 20px;");

@@ -33,16 +33,28 @@
  */
 package info.magnolia.ui.admincentral;
 
-import java.io.Serializable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.Application;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.ui.vaadin.integration.view.MainWindow;
 
 /**
- * Main application view layout.
+ * Creates the main window admin central.
+ *
+ * @version $Id$
  */
-public interface AdminCentralView extends Serializable {
+@Singleton
+public class AdminCentralWindow extends MainWindow {
 
-    VerticalLayout getMainContainer();
+    private static final String I18N_BASENAME = "info.magnolia.ui.admincentral.messages";
 
-    VerticalLayout getMenuDisplay();
+    @Inject
+    public AdminCentralWindow(Application application) {
+        super(application);
+        Messages messages = MessagesManager.getMessages(I18N_BASENAME);
+        setCaption(messages.get("central.title"));
+    }
 }

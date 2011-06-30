@@ -33,23 +33,25 @@
  */
 package info.magnolia.ui.vaadin.integration.shell;
 
-import info.magnolia.ui.framework.shell.ConfirmationHandler;
-import info.magnolia.ui.vaadin.integration.widget.historian.Historian;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.dialogs.ConfirmDialog;
 
-import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.UriFragmentUtility;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
+import info.magnolia.ui.framework.shell.ConfirmationHandler;
+import info.magnolia.ui.vaadin.integration.view.MainWindow;
+import info.magnolia.ui.vaadin.integration.widget.historian.Historian;
 
 
 /**
  * Wraps the Vaadin application.
  */
+@Singleton
 public class ShellImpl extends AbstractShell {
 
     private static final long serialVersionUID = 5700621522722171068L;
@@ -58,26 +60,25 @@ public class ShellImpl extends AbstractShell {
 
     private static Logger log = LoggerFactory.getLogger(ShellImpl.class);
 
-    private Application application;
+    private UriFragmentUtility uriFragmentUtility = new Historian();
+    private MainWindow mainWindow;
 
-    protected UriFragmentUtility uriFragmentUtility = new Historian();
-
-    public ShellImpl(Application application) {
+    @Inject
+    public ShellImpl(MainWindow mainWindow) {
         super(APPLICATION_FRAGMENT_ID);
-        this.application = application;
-        application.getMainWindow().addComponent(uriFragmentUtility);
+        this.mainWindow = mainWindow;
+        mainWindow.getMainWindow().addComponent(uriFragmentUtility);
     }
 
     @Override
     public void askForConfirmation(String message, final ConfirmationHandler listener) {
-        ConfirmDialog.show(application.getMainWindow(), message, new ConfirmDialog.Listener() {
+        ConfirmDialog.show(mainWindow.getMainWindow(), message, new ConfirmDialog.Listener() {
 
             @Override
             public void onClose(ConfirmDialog dialog) {
                 if (dialog.isConfirmed()) {
                     listener.onConfirm();
-                }
-                else{
+                } else {
                     listener.onCancel();
                 }
             }
@@ -86,19 +87,18 @@ public class ShellImpl extends AbstractShell {
 
     @Override
     public void showNotification(String message) {
-        application.getMainWindow().showNotification(message);
+        mainWindow.getMainWindow().showNotification(message);
     }
 
     @Override
     public void showError(String message, Exception e) {
         log.error(message, e);
-        application.getMainWindow().showNotification(message, e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
+        mainWindow.getMainWindow().showNotification(message, e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
     }
 
     @Override
     public void openWindow(String uri, String windowName) {
-        Window window = application.getMainWindow();
-        window.open(new ExternalResource(uri), windowName);
+        mainWindow.getMainWindow().open(new ExternalResource(uri), windowName);
     }
 
     @Override
