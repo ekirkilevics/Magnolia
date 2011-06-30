@@ -35,6 +35,7 @@ package info.magnolia.objectfactory.pico;
 
 
 import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.HierarchicalComponentProvider;
 import info.magnolia.objectfactory.PropertiesComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -154,8 +155,9 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
 
     @Override
     public PicoComponentProvider createChild(ComponentProviderConfiguration componentsConfiguration) {
-        PicoComponentProvider picoComponentProvider = createChild();
-        picoComponentProvider.configure(componentsConfiguration);
-        return picoComponentProvider;
+        PicoComponentProvider child = createChild();
+        child.configure(componentsConfiguration);
+        child.registerInstance(ComponentProvider.class, child);
+        return child;
     }
 }
