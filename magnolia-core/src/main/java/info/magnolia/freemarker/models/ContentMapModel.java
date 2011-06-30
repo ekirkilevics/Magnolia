@@ -163,4 +163,8 @@ public class ContentMapModel implements TemplateHashModelEx, TemplateNodeModel, 
     public Object getAdaptedObject(Class hint) {
         return this.content;
     }
+
+    public Node getJCRNode() {
+        return content.getJCRNode();
+    }
 }
