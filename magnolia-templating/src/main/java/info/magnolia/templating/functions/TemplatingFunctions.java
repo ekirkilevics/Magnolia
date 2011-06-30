@@ -58,9 +58,9 @@ public class TemplatingFunctions {
     private static final Logger log = LoggerFactory.getLogger(TemplatingFunctions.class);
 
 
-    /**********************************
-     ********* base functions *********
-     **********************************/
+    /*
+     * base functions
+     */
 
     //TODO cringele : test missing
     public Content asContent(Node node) throws RepositoryException {
@@ -152,9 +152,9 @@ public class TemplatingFunctions {
 
 
 
-    /***********************************************
-     ********* possible optional functions ********* TODO cringele : May all be optional. Descide on weather to provide them or not
-     ***********************************************/
+    /*
+     * possible optional functions  TODO cringele : May all be optional. Descide on weather to provide them or not
+     */
 
     //TODO cringele : test missing
     public String linkExteral(Node content) throws RepositoryException{
