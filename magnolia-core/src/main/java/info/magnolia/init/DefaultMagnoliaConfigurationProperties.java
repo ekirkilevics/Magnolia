@@ -63,8 +63,19 @@ import java.util.List;
  */
 public class DefaultMagnoliaConfigurationProperties extends AbstractMagnoliaConfigurationProperties {
 
-    public DefaultMagnoliaConfigurationProperties(MagnoliaInitPaths initPaths, ModuleRegistry moduleRegistry, MagnoliaPropertiesResolver resolver) throws IOException {
-        super(makeSources(initPaths, moduleRegistry, resolver));
+    private MagnoliaInitPaths initPaths;
+    private ModuleRegistry moduleRegistry;
+    private MagnoliaPropertiesResolver resolver;
+
+    public DefaultMagnoliaConfigurationProperties(MagnoliaInitPaths initPaths, ModuleRegistry moduleRegistry, MagnoliaPropertiesResolver resolver) {
+        super(null);
+        this.initPaths = initPaths;
+        this.moduleRegistry = moduleRegistry;
+        this.resolver = resolver;
+    }
+
+    public void init() throws IOException {
+        this.sources = makeSources(initPaths, moduleRegistry, resolver);
     }
 
     protected static List<PropertySource> makeSources(MagnoliaInitPaths initPaths, ModuleRegistry moduleRegistry, MagnoliaPropertiesResolver resolver) throws IOException {

@@ -48,7 +48,7 @@ import java.util.Set;
 public abstract class AbstractMagnoliaConfigurationProperties implements MagnoliaConfigurationProperties {
     protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DefaultMagnoliaConfigurationProperties.class);
 
-    protected final List<PropertySource> sources;
+    protected List<PropertySource> sources;
 
     protected AbstractMagnoliaConfigurationProperties(List<PropertySource> propertySources) {
         this.sources = propertySources;

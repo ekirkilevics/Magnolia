@@ -223,6 +223,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
 
             // this needs to happen *after* module definitions have been loaded (although this might change if ModuleRegistry gets a lifecycle)
             final MagnoliaConfigurationProperties configurationProperties = root.getComponent(MagnoliaConfigurationProperties.class);
+            ((DefaultMagnoliaConfigurationProperties)configurationProperties).init();
             SystemProperty.setMagnoliaConfigurationProperties(configurationProperties);
 
             // TODO: This is a temporary ComponentProvider attempting to get the groovy module to work -- currently fails (depends on SysCtx)
