@@ -71,6 +71,11 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
     }
 
     public <T> void parseConfiguration(Properties mappings) {
+        final ComponentProviderConfiguration config = createConfigurationFromProperties(mappings);
+        configure(config);
+    }
+
+    public static <T> ComponentProviderConfiguration createConfigurationFromProperties(Properties mappings) {
         final ComponentProviderConfiguration config = new ComponentProviderConfiguration();
 
         for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
@@ -94,10 +99,10 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
                 }
             }
         }
-        configure(config);
+        return config;
     }
 
-    protected Class<?> classForName(String value) {
+    protected static Class<?> classForName(String value) {
         try {
             return Classes.getClassFactory().forName(value);
         } catch (ClassNotFoundException e) {
