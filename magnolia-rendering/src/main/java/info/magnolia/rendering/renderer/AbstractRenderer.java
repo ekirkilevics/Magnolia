@@ -102,6 +102,9 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         }
 
         String templatePath = determineTemplatePath(content, definition, model, actionResult);
+        if(templatePath == null){
+            throw new RenderException("No template script defined for the template definition [" + definition + "]");
+        }
 
         final Map<String, Object> ctx = newContext();
         final Map<String, Object> savedContextState = saveContextState(ctx);
