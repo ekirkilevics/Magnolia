@@ -172,10 +172,6 @@ public class Navigation implements NavigationView, IsVaadinComponent {
         return melodion;
     }
 
-    public void setVisible(boolean visible) {
-        melodion.setVisible(visible);
-    }
-
     @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
