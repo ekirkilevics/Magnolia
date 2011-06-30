@@ -9,20 +9,28 @@
     </head>
 
     <body style="background-color:#ccb">
-        <cms:page content="website:/howTo-freemarker" dialog="samples:samplesFieldShowRoom" label="/howTo-freemarker - Sample using the NEW freemarker template"></cms:page>
-
-        <h1>${content.title!content.@name}</h1>
-        <h3>${content.@path} (${content.@id})</h3>
-        <h3>From JCR NODE: ${cmsfn.asJCRNode(content).path} </h3>
-
         <div id="wrapper" style="padding:15px;">
 
-            <h2>Singleton Area (stage)</h2>
-            [@cms.area name="stage" /]
+            <cms:page content="website:/howTo-freemarker" dialog="samples:samplesFieldShowRoom" label="/howTo-freemarker - Sample using the NEW freemarker template"></cms:page>
+
+            <h1>${content.title!content.@name}</h1>
+            <p>${content.@path} (${content.@id})</p>
+            <p>From JCR NODE: ${cmsfn.asJCRNode(content).path} </p>
 
 
-            <h2>List Area (main)</h2>
-            [@cms.area name="main" /]
+            [#-- ****** stage ****** --]
+            <div id="stage">
+                <h3>Single Area Stage</h3>
+                [@cms.area name="stage" /]
+            </div><!-- end stage -->
+
+
+            [#-- ****** main ****** --]
+            <h3>List Area Main</h3>
+            <div id="main">
+                [@cms.area name="main" /]
+            </div><!-- end main -->
+
 
         </div><!-- end wrapper -->
 

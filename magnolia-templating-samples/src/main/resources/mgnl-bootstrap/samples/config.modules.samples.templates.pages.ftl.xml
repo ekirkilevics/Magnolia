@@ -143,7 +143,7 @@
         <sv:value>freemarker</sv:value>
       </sv:property>
       <sv:property sv:name="templateScript" sv:type="String">
-        <sv:value>/samples/areas/singleWrappedWithDiv.ftl</sv:value>
+        <sv:value>/samples/areas/single.ftl</sv:value>
       </sv:property>
       <sv:property sv:name="type" sv:type="String">
         <sv:value>single</sv:value>
@@ -165,7 +165,7 @@
           <sv:value>2011-04-27T15:54:40.884+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-06-27T13:27:59.359+02:00</sv:value>
+          <sv:value>2011-07-01T01:36:13.286+02:00</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="availableParagraphs">
@@ -297,7 +297,7 @@
         <sv:value>freemarker</sv:value>
       </sv:property>
       <sv:property sv:name="templateScript" sv:type="String">
-        <sv:value>/samples/areas/listWrappedWithDiv.ftl</sv:value>
+        <sv:value>/samples/areas/list.ftl</sv:value>
       </sv:property>
       <sv:property sv:name="type" sv:type="String">
         <sv:value>list</sv:value>
@@ -316,7 +316,7 @@
           <sv:value>2011-04-27T15:54:40.884+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-06-27T13:28:02.365+02:00</sv:value>
+          <sv:value>2011-07-01T01:32:12.545+02:00</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="availableParagraphs">
