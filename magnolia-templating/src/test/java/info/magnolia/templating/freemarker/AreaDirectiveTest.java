@@ -33,6 +33,7 @@
  */
 package info.magnolia.templating.freemarker;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -42,7 +43,7 @@ import static org.junit.Assert.*;
  */
 public class AreaDirectiveTest extends AbstractDirectiveTestCase {
 
-    @Test
+    @Test @Ignore
     public void testRenderSimpleBar() throws Exception {
         final String result = renderForTest("[@cms.area name=\"stage\" /]");
         assertEquals("<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
