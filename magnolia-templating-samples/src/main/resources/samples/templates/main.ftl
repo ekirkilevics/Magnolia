@@ -18,16 +18,11 @@
 	    <div id="wrapper" style="padding:15px;">
 
 		    <h2>Singleton Area (stage)</h2>
-			[@cms.area name="stage" type="single"/]
-			[#-- TODO: should work without the need to define the type single, cause its already defined on the area's def
-		    [@cms.area name="stage" /] --]
-		    [#-- TODO: components-availability on the tag overwrites the defined ones on the area. Shpuld that be this way or just add it??
-		    [@cms.area name="stage" type="single" components="samples:paragraphs/text"/] --]
+			[@cms.area name="stage" /]]
 
 
 		    <h2>List Area (main)</h2>
 		    [@cms.area name="main" /]
-		    [#-- [@cms.area name="main" dialog="samples:mainProperties" components="samples:paragraphs/howToFTL,samples:paragraphs/text"/] --]
 
 	    </div><!-- end wrapper -->
 
