@@ -1,3 +1,7 @@
 [@cms.edit /]
-<div style="font-weight:bold;font-size:18px;">${content.title!}</div>
-<div>${content.text!}</div>
+
+[#if content.title?has_content]
+    <div style="font-weight:bold;font-size:16px;">${content.title}</div>
+[/#if]
+
+${content.text!}
