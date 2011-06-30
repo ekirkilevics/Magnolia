@@ -58,9 +58,9 @@ public class TemplatingFunctions {
     private static final Logger log = LoggerFactory.getLogger(TemplatingFunctions.class);
 
 
-    /*
-     * base functions
-     */
+    /**********************************
+     ********* base functions *********
+     **********************************/
 
     //TODO cringele : test missing
     public Content asContent(Node node) throws RepositoryException {
@@ -152,30 +152,24 @@ public class TemplatingFunctions {
 
 
 
-    /*
-     * possible optional functions  TODO cringele : May all be optional. Descide on weather to provide them or not
-     */
+    /***********************************************
+     ********* possible optional functions ********* TODO cringele : May all be optional. Descide on weather to provide them or not
+     ***********************************************/
 
-    //TODO cringele : test missing
-    public String linkExteral(Node content) throws RepositoryException{
-        //TODO cringele : LinkUtil should accept Node and not only Content
-        return content == null ? null : LinkUtil.createExternalLink(asContent(content));
-    }
-
-    //TODO cringele : test missing
-    public String linkExternal(ContentMap contentMap) throws RepositoryException{
-        return contentMap == null ? null : this.linkExteral(asJCRNode(contentMap));
-    }
-
-    //TODO cringele : test missing
-    public String linkAbsolute(Node content) throws RepositoryException{
-        //TODO cringele : LinkUtil should accept Node and not only Content
-        return content == null ? null : LinkUtil.createAbsoluteLink(asContent(content));
-    }
-
-    //TODO cringele : test missing
-    public String linkAbsolute(ContentMap contentMap) throws RepositoryException{
-        return contentMap == null ? null : this.linkAbsolute(asJCRNode(contentMap));
-    }
+//    public String linkExteral(Node content) throws RepositoryException{
+//        return content == null ? null : LinkUtil.createExternalLink(asContent(content));
+//    }
+//
+//    public String linkExternal(ContentMap contentMap) throws RepositoryException{
+//        return contentMap == null ? null : this.linkExteral(asJCRNode(contentMap));
+//    }
+//
+//    public String linkAbsolute(Node content) throws RepositoryException{
+//        return content == null ? null : LinkUtil.createAbsoluteLink(asContent(content));
+//    }
+//
+//    public String linkAbsolute(ContentMap contentMap) throws RepositoryException{
+//        return contentMap == null ? null : this.linkAbsolute(asJCRNode(contentMap));
+//    }
 
 }
