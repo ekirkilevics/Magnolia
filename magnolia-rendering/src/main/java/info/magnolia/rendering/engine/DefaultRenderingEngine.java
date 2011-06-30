@@ -61,7 +61,7 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
     protected static final String RENDERING_CONTEXT_ATTRIBUTE = RenderingContext.class.getName();
 
-    private static final Map<String, Object> EMPTY_CONTEXT = Collections.emptyMap();
+    protected static final Map<String, Object> EMPTY_CONTEXT = Collections.emptyMap();
 
     private RendererRegistry rendererRegistry;
     private TemplateDefinitionAssignment templateDefinitionAssignment;
