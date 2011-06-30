@@ -34,14 +34,10 @@
 package info.magnolia.rendering.template.configured;
 
 import info.magnolia.rendering.template.AreaDefinition;
+import info.magnolia.rendering.template.ComponentAvailability;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * A {@link AreaDefinition} configured in the configuration workspace.
@@ -50,24 +46,22 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition implements AreaDefinition {
 
-    private Map<String, ConfiguredParagraphAvailability> availableParagraphs = new LinkedHashMap<String, ConfiguredParagraphAvailability>();
+    private Map<String, ComponentAvailability> availableComponents = new LinkedHashMap<String, ComponentAvailability>();
 
     private boolean enabled = true;
     private String type;
 
-    private String availableComponentNames;
-
     @Override
-    public Map<String, ConfiguredParagraphAvailability> getAvailableParagraphs() {
-        return availableParagraphs;
+    public Map<String, ComponentAvailability> getAvailableComponents() {
+        return availableComponents;
     }
 
-    public void setAvailableParagraphs(Map<String, ConfiguredParagraphAvailability> availableParagraphs) {
-        this.availableParagraphs = availableParagraphs;
+    public void setAvailableComponents(Map<String, ComponentAvailability> availableParagraphs) {
+        this.availableComponents = availableParagraphs;
     }
 
-    public void addAvailableParagraph(String name, ConfiguredParagraphAvailability configuredParagraphAvailability) {
-        this.availableParagraphs.put(name, configuredParagraphAvailability);
+    public void addAvailableComponent(String name, ComponentAvailability configuredComponentAvailability) {
+        this.availableComponents.put(name, configuredComponentAvailability);
     }
 
     @Override
@@ -84,7 +78,6 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
         return type;
     }
 
-    @Override
     public void setType(String type) {
         this.type = type;
     }
@@ -103,7 +96,7 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
         if (enabled != that.enabled) {
             return false;
         }
-        if (availableParagraphs != null ? !availableParagraphs.equals(that.availableParagraphs) : that.availableParagraphs != null) {
+        if (availableComponents != null ? !availableComponents.equals(that.availableComponents) : that.availableComponents != null) {
             return false;
         }
         if (type != null ? !type.equals(that.type) : that.type != null) {
@@ -115,28 +108,10 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
 
     @Override
     public int hashCode() {
-        int result = availableParagraphs != null ? availableParagraphs.hashCode() : 0;
+        int result = availableComponents != null ? availableComponents.hashCode() : 0;
         result = 31 * result + (enabled ? 1 : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public void setAvailableComponentNames(String availableComponentNames) {
-        this.availableComponentNames = availableComponentNames;
-    }
-
-    @Override
-    public String getAvailableComponentNames() {
-        if (!StringUtils.isBlank(this.availableComponentNames)) {
-            return this.availableComponentNames;
-        }
-        Iterator<ConfiguredParagraphAvailability> iterator = getAvailableParagraphs().values().iterator();
-        List<String> componentNames = new ArrayList<String>();
-        while (iterator.hasNext()) {
-            componentNames.add(iterator.next().getName());
-        }
-        return StringUtils.join(componentNames, ',');
     }
 
     @Override

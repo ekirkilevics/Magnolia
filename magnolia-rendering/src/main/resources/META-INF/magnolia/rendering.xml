@@ -48,8 +48,8 @@
       <value>info.magnolia.rendering.template.configured.ConfiguredAreaDefinition</value>
     </property>
     <property>
-      <name>info.magnolia.rendering.template.ParagraphAvailability</name>
-      <value>info.magnolia.rendering.template.configured.ConfiguredParagraphAvailability</value>
+      <name>info.magnolia.rendering.template.ComponentAvailability</name>
+      <value>info.magnolia.rendering.template.configured.ConfiguredComponentAvailability</value>
     </property>
   </properties>
   <dependencies>

@@ -31,47 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template.configured;
+package info.magnolia.rendering.template;
 
-import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.rendering.template.TemplateDefinition;
+import java.util.Collection;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * A {@link TemplateDefinition} configured in the configuration workspace.
+ * An entry of {@link AreaDefinition#getAvailableComponents()}.
  *
  * @version $Id$
  */
-public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition implements TemplateDefinition {
+public interface ComponentAvailability {
 
-    private String dialog;
-    private Map<String, AreaDefinition> areaDefinitions = new HashMap<String, AreaDefinition>();
+    String getName();
 
-    @Override
-    public String getDialog() {
-        return this.dialog;
-    }
+    Collection<String> getRoles();
 
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
-    }
-
-    @Override
-    public Map<String, AreaDefinition> getAreas() {
-        return this.areaDefinitions;
-    }
-
-    public void setAreas(Map<String, AreaDefinition> areaDefinitions) {
-        this.areaDefinitions = areaDefinitions;
-    }
-
-    public void addArea(String name, AreaDefinition areaDefinition){
-        this.areaDefinitions.put(name, areaDefinition);
-        // TODO is this really the right place for setting this fallback value?
-        if(areaDefinition.getRenderType() == null && areaDefinition instanceof ConfiguredAreaDefinition){
-            ((ConfiguredAreaDefinition)areaDefinition).setRenderType(getRenderType());
-        }
-    }
 }
