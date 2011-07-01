@@ -122,7 +122,7 @@ public class TemplatingFunctions {
 
     //TODO cringele : test missing
     public List<Node> children(Node content) throws RepositoryException{
-        return content == null ? null : this.children(content, content.getPrimaryNodeType().getName());
+        return content == null ? null : this.children(content, null);
     }
 
     //TODO cringele : test missing
@@ -131,11 +131,19 @@ public class TemplatingFunctions {
             return null;
         }
         List<Node> childList = new ArrayList<Node>();
+
+        //all child nodes
+        if(nodeTypeName == null){
+            for(Node child : NodeUtil.getNodes(content, NodeUtil.EXCLUDE_META_DATA_FILTER) ){
+                childList.add(child);
+            }
+            return childList;
+        }
+
+        //children by given type
         for(Node child : NodeUtil.getNodes(content, nodeTypeName) ){
             childList.add(child);
         }
-
-        //TODO cringele : If no child nodes exist JCR API return empty iterator. Shall we pass an empty List or null?
         return childList;
     }
 
