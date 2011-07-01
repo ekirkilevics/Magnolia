@@ -36,6 +36,7 @@ package info.magnolia.templating.functions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import info.magnolia.cms.core.Content;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -64,7 +65,10 @@ public class TemplatingFunctionsTest {
 
         // then
         assertEquals(name, result.getName());
+        assertNodeEqualsContent(result, content);
     }
+
+
 
     @Test
     public void testAsJCRNodeFromContentMap() throws RepositoryException {
@@ -79,7 +83,10 @@ public class TemplatingFunctionsTest {
 
         // then
         assertEquals(name, result.getName());
+        assertNodeEqualsMap(result, map);
     }
+
+
 
     @Test
     public void testParentFromNode() throws RepositoryException {
@@ -93,7 +100,7 @@ public class TemplatingFunctionsTest {
         Node result = functions.parent(child);
 
         // then
-        assertNodeEquals(result, parent);
+        assertNodeEqualsNode(result, parent);
     }
 
     @Test
@@ -123,37 +130,19 @@ public class TemplatingFunctionsTest {
         ContentMap resultMap = functions.parent(childMap);
 
         // then
-        assertMapEquals(resultMap, parentMap);
+        assertMapEqualsMap(resultMap, parentMap);
     }
 
-    /**
-     * Checks all mandatory ContentMap values. None should be null and all should equal
-     *
-     * @param resultMap ContentMap generated during // when
-     * @param originMap ContentMAp generated during // then
-     */
-    private void assertMapEquals(ContentMap resultMap, ContentMap originMap) {
-        assertNotNull(resultMap.get("@name"));
-        assertEquals(resultMap.get("@name"), originMap.get("@name"));
-        assertNotNull(resultMap.get("@id"));
-        assertEquals(resultMap.get("@id"), originMap.get("@id"));
-        assertNotNull(resultMap.get("@path"));
-        assertEquals(resultMap.get("@path"), originMap.get("@path"));
-        //TODO cringele: should they work too?
-//        assertNotNull(resultMap.get("@level"));
-//        assertEquals(resultMap.get("@level"), parentMap.get("@level"));
-//        assertNotNull(resultMap.get("@nodeType"));
-//        assertEquals(resultMap.get("@nodeType"), parentMap.get("@nodeType"));
-    }
+
 
     /**
-     * Checks all mandatory node values. None should be null and all should equal
+     * Checks all mandatory ContentMap values. None should be null and all values should equal.
      *
      * @param result Node generate during // when
      * @param origin Node generated during // given
      * @throws RepositoryException
      */
-    private void assertNodeEquals(Node result, Node origin) throws RepositoryException {
+    private void assertNodeEqualsNode(Node result, Node origin) throws RepositoryException {
         assertNotNull(result.getName());
         assertEquals(result.getName(), origin.getName());
         assertNotNull(result.getUUID());
@@ -162,6 +151,72 @@ public class TemplatingFunctionsTest {
         assertEquals(result.getIdentifier(), origin.getIdentifier());
         assertNotNull(result.getPath());
         assertEquals(result.getPath(), origin.getPath());
+    }
+
+    /**
+     * Checks all mandatory ContentMap values. None should be null and all values should equal.
+     *
+     * @param resultMap ContentMap generated during // when
+     * @param originMap ContentMAp generated during // then
+     */
+    private void assertMapEqualsMap(ContentMap resultMap, ContentMap originMap) {
+        assertNotNull(resultMap.get("@name"));
+        assertEquals(resultMap.get("@name"), originMap.get("@name"));
+        assertNotNull(resultMap.get("@id"));
+        assertEquals(resultMap.get("@id"), originMap.get("@id"));
+        assertNotNull(resultMap.get("@uuid"));
+        assertEquals(resultMap.get("@uuid"), originMap.get("@uuid"));
+        assertNotNull(resultMap.get("@path"));
+        assertEquals(resultMap.get("@path"), originMap.get("@path"));
+        assertNotNull(resultMap.get("@handle"));
+        assertEquals(resultMap.get("@handle"), originMap.get("@handle"));
+
+        //TODO cringele: should they work too?
+//        assertNotNull(resultMap.get("@nodeType"));
+//        assertEquals(resultMap.get("@nodeType"), originMap.get("@nodeType"));
+//        assertNotNull(resultMap.get("@level"));
+//        assertEquals(resultMap.get("@level"), originMap.get("@level"));
+//        assertNotNull(resultMap.get("@nodeType"));
+//        assertEquals(resultMap.get("@nodeType"), originMap.get("@nodeType"));
+    }
+
+    /**
+     * Checks all mandatory ContentMap values. None should be null and all values should equal.
+     *
+     * @param result Node generate during // when
+     * @param origin ContentMap generated during // then
+     * @throws RepositoryException
+     */
+    private void assertNodeEqualsMap(Node result, ContentMap origin) throws RepositoryException {
+        assertNotNull(result.getName());
+        assertEquals(result.getName(), origin.get("@name"));
+        assertNotNull(result.getUUID());
+        assertEquals(result.getUUID(), origin.get("@uuid"));
+        assertNotNull(result.getIdentifier());
+        assertEquals(result.getIdentifier(), origin.get("@id"));
+        assertEquals(result.getIdentifier(), origin.get("@uuid"));
+        assertNotNull(result.getPath());
+        assertEquals(result.getPath(), origin.get("@path"));
+        assertEquals(result.getPath(), origin.get("@handle"));
+    }
+
+    /**
+     * Checks all mandatory Content values. None should be null and all values should equal.
+     *
+     * @param result Node generate during // when
+     * @param origin Content generated during // then
+     * @throws RepositoryException
+     */
+    private void assertNodeEqualsContent(Node result, Content origin) throws RepositoryException {
+        assertNotNull(result.getName());
+        assertEquals(result.getName(), origin.getName());
+        //TODO cringele: this should work!!
+//        assertNotNull(result.getUUID());
+//        assertEquals(result.getUUID(), origin.getUUID());
+//        assertNotNull(result.getIdentifier());
+//        assertEquals(result.getIdentifier(), origin.getUUID());
+        assertNotNull(result.getPath());
+        assertEquals(result.getPath(), origin.getHandle());
     }
 
 
