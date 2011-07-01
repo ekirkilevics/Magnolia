@@ -231,7 +231,7 @@ public class MockSession implements Session {
 
     @Override
     public boolean hasPermission(String absPath, String actions) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return true;
     }
 
     @Override
