@@ -108,12 +108,12 @@ public class TemplatingFunctions {
     }
 
     //TODO cringele : test missing
-    public List<ContentMap> children(ContentMap content, String nodeType) throws RepositoryException{
+    public List<ContentMap> children(ContentMap content, String nodeTypeName) throws RepositoryException{
         if(content == null) {
             return null;
         }
         List<ContentMap> childList = new ArrayList<ContentMap>();
-        for(Node child : NodeUtil.getNodes(content.getJCRNode(), nodeType) ){
+        for(Node child : NodeUtil.getNodes(content.getJCRNode(), nodeTypeName) ){
             childList.add(new ContentMap(child));
         }
       //TODO cringele : If no child nodes exist JCR API return empty iterator. Shall we pass an empty List or null?
@@ -126,12 +126,12 @@ public class TemplatingFunctions {
     }
 
     //TODO cringele : test missing
-    public List<Node> children(Node content, String nodeType) throws RepositoryException{
+    public List<Node> children(Node content, String nodeTypeName) throws RepositoryException{
         if(content == null) {
             return null;
         }
         List<Node> childList = new ArrayList<Node>();
-        for(Node child : NodeUtil.getNodes(content, nodeType) ){
+        for(Node child : NodeUtil.getNodes(content, nodeTypeName) ){
             childList.add(child);
         }
 
