@@ -236,7 +236,7 @@ public class TemplatingFunctionsTest {
     private void assertNodeEqualsContent(Node result, Content origin) throws RepositoryException {
         assertNotNull(result.getName());
         assertEquals(result.getName(), origin.getName());
-        //TODO cringele: this should work!!
+        //TODO cringele: this should work!! I'll have a look at them with dlipp
 //        assertNotNull(result.getUUID());
 //        assertEquals(result.getUUID(), origin.getUUID());
 //        assertNotNull(result.getIdentifier());
