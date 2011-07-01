@@ -98,6 +98,9 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <version>2.3.0</version>
         <configuration>
+          <compileSourcesArtifacts>
+            <compileSourcesArtifact>javax.validation:validation-api</compileSourcesArtifact>
+          </compileSourcesArtifacts>
           <!-- put the created resources on the classpath -->
           <webappDirectory>target/classes/mgnl-resources/VAADIN/widgetsets</webappDirectory>
           <!-- the target/classes directory is cleaned regularly. You can use mvn gwt:compile -Dgwt.inplace to store the output in the resource folder -->
@@ -108,9 +111,6 @@
           <!-- <draftCompile>true</draftCompile> -->
           <!-- <style>PRETTY</style> -->
           <runTarget>.magnolia/admin-central</runTarget>
-          <compileSourcesArtifacts>
-            <compileSourcesArtifact>javax.validation:validation-api</compileSourcesArtifact>
-          </compileSourcesArtifacts>
         </configuration>
         <executions>
           <execution>
