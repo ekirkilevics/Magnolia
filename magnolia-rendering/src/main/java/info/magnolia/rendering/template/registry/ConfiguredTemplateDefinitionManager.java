@@ -39,7 +39,6 @@ import info.magnolia.jcr.util.NodeTypeFilter;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.NodeVisitor;
 import info.magnolia.module.ModuleRegistry;
-import info.magnolia.registry.RegistrationException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -95,13 +94,7 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
             }, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
         }
 
-        try {
-            this.registeredIds = templateDefinitionRegistry.unregisterAndRegister(registeredIds, providers);
-        } catch (RegistrationException e) {
-            // TODO dlipp: implement proper exception handling
-            throw new RuntimeException(e);
-        }
-
+        this.registeredIds = templateDefinitionRegistry.unregisterAndRegister(registeredIds, providers);
     }
 
     protected TemplateDefinitionProvider readProvider(Node templateDefinitionNode) throws RepositoryException {

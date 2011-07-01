@@ -95,32 +95,25 @@ public class AbstractRegistryTest {
         assertEquals(1, idsOfNewRegisteredProviders.size());
     }
 
-    @Test(expected=RegistrationException.class)
-    public void testUnregisterAndRegisterThrowsExceptiongivenTryingToRegisterExistingId() throws RegistrationException {
+    @Test
+    public void testRegisteringSameProviderMultipleTimesOverwritesOldSetting() throws RegistrationException {
         // GIVEN
-        String rendererId = "onlyOneToRemove";
-        DummyProvider DummyProvider = mock(DummyProvider.class);
-        when(DummyProvider.getId()).thenReturn(rendererId);
+        String providerId = "toBeOverwritte";
         final DummyRegistry rendererRegistry = new DummyRegistry();
-        rendererRegistry.register(DummyProvider);
-
-        List<String> idsToRemove = new ArrayList<String>();
-        idsToRemove.add(rendererId);
-
-        DummyProvider rp1 = mock(DummyProvider.class);
-        when(rp1.getId()).thenReturn("rp1");
-        rendererRegistry.register(rp1);
-
-        List<DummyProvider> DummyProviders = new ArrayList<DummyProvider>();
-        DummyProviders.add(DummyProvider);
-        DummyProviders.add(rp1);
+        DummyProvider initialProvider = mock(DummyProvider.class);
+        when(initialProvider.getId()).thenReturn(providerId);
+        when(initialProvider.getDefinition()).thenReturn("initialDefinition");
+        rendererRegistry.register(initialProvider);
+        DummyProvider newProvider = mock(DummyProvider.class);
+        when(newProvider.getId()).thenReturn(providerId);
+        when(newProvider.getDefinition()).thenReturn("newDefinition");
+        rendererRegistry.register(newProvider);
 
         // WHEN
-        Set<String> idsOfNewRegisteredProviders = rendererRegistry.unregisterAndRegister(idsToRemove, DummyProviders);
+        String result = rendererRegistry.get(providerId);
 
         // THEN
-        assertTrue(idsOfNewRegisteredProviders.contains(rendererId));
-        assertEquals(1, idsOfNewRegisteredProviders.size());
+        assertEquals("newDefinition", result);
     }
     @Test
     public void testGetRenderer() throws RegistrationException {

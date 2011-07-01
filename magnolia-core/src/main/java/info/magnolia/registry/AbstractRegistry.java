@@ -58,16 +58,8 @@ public abstract class AbstractRegistry<D, P extends Provider<D>> {
 
     public void register(P provider) throws RegistrationException {
         synchronized (providers) {
-            doRegister(provider.getId(), provider);
+            providers.put(provider.getId(), provider);
         }
-    }
-
-    private void doRegister(String id, P provider) throws RegistrationException {
-        // TODO dlipp: remove that check & exception -> overwriting is wanted here!
-        if (providers.containsKey(id)) {
-            throw new RegistrationException("Key already registered for the id [" + id + "]");
-        }
-        providers.put(id, provider);
     }
 
     public void unregister(String id) {
@@ -76,7 +68,7 @@ public abstract class AbstractRegistry<D, P extends Provider<D>> {
         }
     }
 
-    public Set<String> unregisterAndRegister(Collection<String> remove, Collection<P> providers2) throws RegistrationException {
+    public Set<String> unregisterAndRegister(Collection<String> remove, Collection<P> providers2) {
         synchronized (providers) {
             final Set<String> ids = new HashSet<String>();
             for (String id : remove) {
@@ -84,8 +76,8 @@ public abstract class AbstractRegistry<D, P extends Provider<D>> {
             }
             for (P provider : providers2) {
                 String id = provider.getId();
-                doRegister(id, provider);
-                ids.add(provider.getId());
+                providers.put(provider.getId(), provider);
+                ids.add(id);
             }
             return ids;
         }
