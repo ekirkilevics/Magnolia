@@ -154,9 +154,9 @@ public abstract class AbstractDirectiveTestCase {
         when(p2provider.getId()).thenReturn(testParagraph2.getName());
 
         final TemplateDefinitionRegistry tdr = new TemplateDefinitionRegistry();
-        tdr.registerTemplateDefinition(p0provider);
-        tdr.registerTemplateDefinition(p1provider);
-        tdr.registerTemplateDefinition(p2provider);
+        tdr.register(p0provider);
+        tdr.register(p1provider);
+        tdr.register(p2provider);
 
         provider.registerInstance(TemplateDefinitionRegistry.class, tdr);
 

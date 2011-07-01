@@ -111,8 +111,8 @@ public abstract class AbstractElementTestCase {
         when(p1provider.getId()).thenReturn(p1.getName());
 
         final TemplateDefinitionRegistry pman = new TemplateDefinitionRegistry();
-        pman.registerTemplateDefinition(p0provider);
-        pman.registerTemplateDefinition(p1provider);
+        pman.register(p0provider);
+        pman.register(p1provider);
 
         ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, pman);
 
@@ -130,8 +130,8 @@ public abstract class AbstractElementTestCase {
         when(t1provider.getTemplateDefinition()).thenReturn(t1);
         when(t1provider.getId()).thenReturn(t1.getName());
 
-        pman.registerTemplateDefinition(t0provider);
-        pman.registerTemplateDefinition(t1provider);
+        pman.register(t0provider);
+        pman.register(t1provider);
 
         session = SessionTestUtil.createSession(CONTENT);
     }
