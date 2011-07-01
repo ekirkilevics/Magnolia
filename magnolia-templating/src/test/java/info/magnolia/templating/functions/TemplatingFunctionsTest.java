@@ -42,6 +42,7 @@ import info.magnolia.test.mock.jcr.MockNode;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
 
 import org.junit.Test;
 
@@ -54,73 +55,116 @@ public class TemplatingFunctionsTest {
 
     @Test
     public void testAsJCRNodeFromContent() throws RepositoryException {
+        // given
         TemplatingFunctions functions = new TemplatingFunctions();
         String name = "test";
         MockContent content = new MockContent(name);
-        //the tested function
+
+        // when
         Node result = functions.asJCRNode(content);
 
+        // then
         assertEquals(name, result.getName());
     }
 
     @Test
     public void testAsJCRNodeFromContentMap() throws RepositoryException {
+        // given
         TemplatingFunctions functions = new TemplatingFunctions();
         String name = "test";
         MockNode root = new MockNode(name);
         ContentMap map = new ContentMap(root);
-        //the tested function
+
+        // when
         Node result = functions.asJCRNode(map);
 
+        // then
         assertEquals(name, result.getName());
     }
 
     @Test
     public void testParentFromNode() throws RepositoryException {
+        // given
         TemplatingFunctions functions = new TemplatingFunctions();
         MockNode parent = new MockNode("parent");
         MockNode child = new MockNode("child");
         parent.addNode(child);
-        //the tested function
+
+        // when
         Node result = functions.parent(child);
 
-        assertEquals(parent.getName(), result.getName());
-        assertEquals(parent.getUUID(), result.getUUID());
-        assertEquals(parent.getIdentifier(), result.getIdentifier());
-        assertEquals(parent.getPath(), result.getPath());
+        // then
+        assertNodeEquals(result, parent);
     }
 
     @Test
     public void testParentFromRootNodeShouldBeNull() throws RepositoryException {
+        // given
         TemplatingFunctions functions = new TemplatingFunctions();
         MockNode parent = new MockNode("parent");
-        //the tested function
+
+        // when
         Node result = functions.parent(parent);
+
+        // then
         assertNull(result);
     }
 
     @Test
     public void testParentFromContentMap() throws RepositoryException {
+        // given
         TemplatingFunctions functions = new TemplatingFunctions();
         MockNode parent = new MockNode("parent");
         MockNode child = new MockNode("child");
         parent.addNode(child);
         ContentMap childMap = new ContentMap(child);
         ContentMap parentMap = new ContentMap(parent);
-        //the tested function
+
+        // when
         ContentMap resultMap = functions.parent(childMap);
 
+        // then
+        assertMapEquals(resultMap, parentMap);
+    }
+
+    /**
+     * Checks all mandatory ContentMap values. None should be null and all should equal
+     *
+     * @param resultMap ContentMap generated during // when
+     * @param originMap ContentMAp generated during // then
+     */
+    private void assertMapEquals(ContentMap resultMap, ContentMap originMap) {
         assertNotNull(resultMap.get("@name"));
-        assertEquals(parentMap.get("@name"), resultMap.get("@name"));
+        assertEquals(resultMap.get("@name"), originMap.get("@name"));
         assertNotNull(resultMap.get("@id"));
-        assertEquals(parentMap.get("@id"), resultMap.get("@id"));
+        assertEquals(resultMap.get("@id"), originMap.get("@id"));
         assertNotNull(resultMap.get("@path"));
-        assertEquals(parentMap.get("@path"), resultMap.get("@path"));
+        assertEquals(resultMap.get("@path"), originMap.get("@path"));
         //TODO cringele: should they work too?
 //        assertNotNull(resultMap.get("@level"));
-//        assertEquals(parentMap.get("@level"), resultMap.get("@level"));
+//        assertEquals(resultMap.get("@level"), parentMap.get("@level"));
 //        assertNotNull(resultMap.get("@nodeType"));
-//        assertEquals(parentMap.get("@nodeType"), resultMap.get("@nodeType"));
+//        assertEquals(resultMap.get("@nodeType"), parentMap.get("@nodeType"));
     }
+
+    /**
+     * Checks all mandatory node values. None should be null and all should equal
+     *
+     * @param result Node generate during // when
+     * @param origin Node generated during // given
+     * @throws RepositoryException
+     */
+    private void assertNodeEquals(Node result, Node origin) throws RepositoryException {
+        assertNotNull(result.getName());
+        assertEquals(result.getName(), origin.getName());
+        assertNotNull(result.getUUID());
+        assertEquals(result.getUUID(), origin.getUUID());
+        assertNotNull(result.getIdentifier());
+        assertEquals(result.getIdentifier(), origin.getIdentifier());
+        assertNotNull(result.getPath());
+        assertEquals(result.getPath(), origin.getPath());
+    }
+
+
 
 }
