@@ -31,13 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.rendering.renderer.registry;
+package info.magnolia.rendering.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.rendering.renderer.Renderer;
+import info.magnolia.rendering.renderer.registry.RendererProvider;
+import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.util.RegistrationException;
 
 import java.util.ArrayList;
@@ -49,7 +51,23 @@ import org.junit.Test;
 /**
  * @version $Id$
  */
-public class RendererRegistryTest {
+public class AbstractRegistryTest {
+
+    @Test
+    public void testUnregister() throws RegistrationException{
+        // GIVEN
+        String id2Unregister = "onlyOneToRemove";
+        final RendererRegistry rendererRegistry = new RendererRegistry();
+        RendererProvider rendererProvider = mock(RendererProvider.class);
+        when(rendererProvider.getId()).thenReturn(id2Unregister);
+        rendererRegistry.register(rendererProvider);
+
+        // WHEN
+        rendererRegistry.unregister(id2Unregister);
+
+        // THEN
+        assertEquals(0, rendererRegistry.getProviders().values().size());
+    }
 
     @Test
     public void testUnregisterAndRegister() throws RegistrationException {
