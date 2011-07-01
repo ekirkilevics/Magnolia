@@ -143,7 +143,7 @@ public class TemplatingFunctions {
     //TODO cringele : May all be optional. Descide on weather to provide them or not
 
     /**
-     * Could be private
+     * Could be private.
      * TODO cringele : test missing
      */
     public ContentMap asContentMap(Node content) {

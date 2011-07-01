@@ -33,9 +33,9 @@
  */
 package info.magnolia.templating.module.setup;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import static info.magnolia.nodebuilder.Ops.addNode;
+import static info.magnolia.nodebuilder.Ops.addProperty;
+import static info.magnolia.nodebuilder.Ops.getNode;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
@@ -43,7 +43,9 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.Task;
 import info.magnolia.nodebuilder.task.ErrorHandling;
 import info.magnolia.nodebuilder.task.NodeBuilderTask;
-import static info.magnolia.nodebuilder.Ops.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The module's version handler.
