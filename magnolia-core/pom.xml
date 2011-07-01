@@ -10,7 +10,7 @@
   <artifactId>magnolia-core</artifactId>
   <name>magnolia-core</name>
   <properties>
-    <cloverCoverageThreshold>44</cloverCoverageThreshold>
+    <cloverCoverageThreshold>40</cloverCoverageThreshold>
   </properties>
   <dependencies>
     <dependency>
