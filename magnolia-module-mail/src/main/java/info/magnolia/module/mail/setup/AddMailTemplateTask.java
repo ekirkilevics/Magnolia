@@ -41,19 +41,19 @@ import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.Task;
 
 /**
- * AddMail Template Task.
+ * Adds a mail template configuration.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class AddMailTemplateTask extends ArrayDelegateTask {
-
 
     public AddMailTemplateTask(String templateName, String description, String from, String subject, String templatePath, String type) {
         super("Mail template", "Adds the " + templateName + " " + description + ".", new Task[]{
                 new CreateNodeTask(null, null, ContentRepository.CONFIG, "/modules/mail/config/templatesConfiguration", templateName, ItemType.CONTENTNODE.getSystemName()),
                 new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "from", from),
                 new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "subject", subject),
-                new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "body", templatePath),
+                new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "templateFile", templatePath),
                 new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "type", type)
         });
     }
