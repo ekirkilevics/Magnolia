@@ -33,8 +33,8 @@
  */
 package info.magnolia.rendering.template.registry;
 
+import info.magnolia.registry.Provider;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.util.Provider;
 
 /**
  * Provides a {@link TemplateDefinition}.

@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.field.DialogField;
 import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
@@ -81,7 +82,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
             Node node = getNode();
 
             String dialogName = place.getDialogName();
-            DialogDefinition dialogDefinition = dialogDefinitionRegistry.getDialogDefinition(dialogName);
+            DialogDefinition dialogDefinition = dialogDefinitionRegistry.get(dialogName);
 
             // TODO get the builder injected
             DialogBuilder builder = componentProvider.newInstance(DialogBuilder.class);
@@ -97,6 +98,8 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
 
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
+        } catch (RegistrationException e1) {
+            throw new RuntimeException(e1);
         }
     }
 

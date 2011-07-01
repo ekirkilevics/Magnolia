@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,25 +25,23 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.rendering.util;
+package info.magnolia.registry;
+
 
 /**
- * Superinterface for Providers that want to interact with AbstractProviderRegistry.
- *
- * @param <T> the type to be provided
+ * Thrown in case a renderer can't be found or if the registration fails.
  *
  * @version $Id$
  */
-public interface Provider<T> {
+public class RegistrationException extends Exception {
 
-    String getId();
-
-    // TODO dlipp: naming does currently not match for Renderers :-(
-    T getDefinition() throws RegistrationException;
+    public RegistrationException(String message) {
+        super(message);
+    }
 }

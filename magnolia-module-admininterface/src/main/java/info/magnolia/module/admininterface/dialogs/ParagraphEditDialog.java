@@ -41,9 +41,9 @@ import info.magnolia.module.admininterface.DialogMVCHandler;
 import info.magnolia.module.admininterface.InvalidDialogHandlerException;
 import info.magnolia.module.admininterface.SaveHandler;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
-import info.magnolia.rendering.util.RegistrationException;
 
 import java.io.IOException;
 

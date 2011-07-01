@@ -34,9 +34,9 @@
 package info.magnolia.rendering.template.assignment;
 
 import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
-import info.magnolia.rendering.util.RegistrationException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

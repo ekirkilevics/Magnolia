@@ -36,9 +36,9 @@ package info.magnolia.rendering.template.registry;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.registry.AbstractRegistry;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.util.AbstractRegistry;
-import info.magnolia.rendering.util.RegistrationException;
 
 import java.util.ArrayList;
 import java.util.Collection;

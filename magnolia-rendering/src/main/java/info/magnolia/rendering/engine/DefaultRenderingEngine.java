@@ -36,6 +36,7 @@ package info.magnolia.rendering.engine;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.renderer.Renderer;
@@ -43,7 +44,6 @@ import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
-import info.magnolia.rendering.util.RegistrationException;
 
 import java.io.IOException;
 import java.util.Collections;

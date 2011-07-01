@@ -33,16 +33,15 @@
  */
 package info.magnolia.ui.admincentral.dialog;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.jcr.RepositoryException;
-
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.registry.DialogDefinitionRegistry;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Implementation of {@link DialogPresenterFactory}.
@@ -66,9 +65,9 @@ public class DialogPresenterFactoryImpl implements DialogPresenterFactory {
 
         DialogDefinition dialogDefinition;
         try {
-            dialogDefinition = dialogDefinitionRegistry.getDialogDefinition(dialogName);
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
+            dialogDefinition = dialogDefinitionRegistry.get(dialogName);
+        } catch (RegistrationException e1) {
+            throw new RuntimeException(e1);
         }
 
         if (dialogDefinition == null) {

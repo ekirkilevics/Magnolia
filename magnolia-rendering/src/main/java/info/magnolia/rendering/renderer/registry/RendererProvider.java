@@ -33,8 +33,8 @@
  */
 package info.magnolia.rendering.renderer.registry;
 
+import info.magnolia.registry.Provider;
 import info.magnolia.rendering.renderer.Renderer;
-import info.magnolia.rendering.util.Provider;
 
 
 /**

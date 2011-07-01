@@ -39,9 +39,9 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.util.LazyInitPrintWriter;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
-import info.magnolia.rendering.util.RegistrationException;
 
 import java.io.IOException;
 import java.io.InputStream;

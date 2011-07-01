@@ -39,7 +39,7 @@ import info.magnolia.jcr.util.NodeTypeFilter;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.NodeVisitor;
 import info.magnolia.module.ModuleRegistry;
-import info.magnolia.rendering.util.RegistrationException;
+import info.magnolia.registry.RegistrationException;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -33,11 +33,10 @@
  */
 package info.magnolia.ui.model.dialog.registry;
 
-import java.util.Collection;
-import java.util.Set;
-import javax.jcr.RepositoryException;
-
+import info.magnolia.registry.AbstractRegistry;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+
+import javax.inject.Singleton;
 
 
 /**
@@ -45,19 +44,6 @@ import info.magnolia.ui.model.dialog.definition.DialogDefinition;
  *
  * @version $Id$
  */
-public interface DialogDefinitionRegistry {
-
-    void registerDialog(DialogDefinitionProvider provider) throws DialogDefinitionRegistrationException;
-
-    void unregisterDialog(String id);
-
-    Set<String> removeAndRegister(Collection<String> remove, Collection<DialogDefinitionProvider> providers2);
-
-    /**
-     * Gets dialog definition for dialog of provided id or null when such dialog is not registered.
-     *
-     * @param id of the dialog to retrieve. Case sensitive. Null is not allowed.
-     * @return dialog definition or null when dialog of requested id doesn't exist.
-     */
-    DialogDefinition getDialogDefinition(String id) throws RepositoryException;
+@Singleton
+public class DialogDefinitionRegistry extends AbstractRegistry<DialogDefinition, DialogDefinitionProvider> {
 }

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.rendering.util;
+package info.magnolia.registry;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Superclass for Definition/Provider-Registries.
+ * Superclass for Registries storing providers to generate definitions from.
  *
  * @param <D> the definition that can be created by the provider
  * @param <P> the provider to be registered
@@ -56,9 +56,6 @@ public abstract class AbstractRegistry<D, P extends Provider<D>> {
         return providers;
     }
 
-    /**
-     * TODO dlipp: remove id here - call getId() on provider as in TemplateDefinitionRegistry...
-     */
     public void register(P provider) throws RegistrationException {
         synchronized (providers) {
             doRegister(provider.getId(), provider);
@@ -68,7 +65,7 @@ public abstract class AbstractRegistry<D, P extends Provider<D>> {
     private void doRegister(String id, P provider) throws RegistrationException {
         // TODO dlipp: remove that check & exception -> overwriting is wanted here!
         if (providers.containsKey(id)) {
-            throw new RegistrationException("Renderer already registered for the id [" + id + "]");
+            throw new RegistrationException("Key already registered for the id [" + id + "]");
         }
         providers.put(id, provider);
     }
@@ -101,7 +98,7 @@ public abstract class AbstractRegistry<D, P extends Provider<D>> {
             provider = providers.get(id);
         }
         if (provider == null) {
-            throw new RegistrationException("Can't find a renderer for type [" + id + "]");
+            throw new RegistrationException("Can't find a registration for type [" + id + "]");
         }
         return provider.getDefinition();
     }

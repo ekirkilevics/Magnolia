@@ -52,6 +52,7 @@ import info.magnolia.jcr.util.NodeTypeFilter;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.NodeVisitor;
 import info.magnolia.module.ModuleRegistry;
+import info.magnolia.registry.RegistrationException;
 
 
 /**
@@ -94,7 +95,11 @@ public class ConfiguredDialogDefinitionManager extends ModuleConfigurationObserv
             }, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
         }
 
-        this.registeredIds = dialogDefinitionRegistry.removeAndRegister(registeredIds, providers);
+        try {
+            this.registeredIds = dialogDefinitionRegistry.unregisterAndRegister(registeredIds, providers);
+        } catch (RegistrationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected DialogDefinitionProvider readProvider(Node dialogNode) throws RepositoryException {

@@ -33,8 +33,7 @@
  */
 package info.magnolia.ui.model.dialog.registry;
 
-import javax.jcr.RepositoryException;
-
+import info.magnolia.registry.Provider;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
 
@@ -43,9 +42,5 @@ import info.magnolia.ui.model.dialog.definition.DialogDefinition;
  *
  * @version $Id$
  */
-public interface DialogDefinitionProvider {
-
-    String getId();
-
-    DialogDefinition getDialogDefinition() throws RepositoryException;
+public interface DialogDefinitionProvider extends Provider<DialogDefinition>{
 }

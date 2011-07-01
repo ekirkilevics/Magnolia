@@ -36,7 +36,7 @@ package info.magnolia.rendering.template.registry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-import info.magnolia.rendering.util.RegistrationException;
+import info.magnolia.registry.RegistrationException;
 
 import java.util.ArrayList;
 import java.util.List;

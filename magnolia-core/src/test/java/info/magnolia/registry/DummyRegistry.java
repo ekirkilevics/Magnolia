@@ -31,19 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.rendering.renderer.registry;
+package info.magnolia.registry;
 
-import info.magnolia.registry.AbstractRegistry;
-import info.magnolia.rendering.renderer.Renderer;
-
-import javax.inject.Singleton;
 
 /**
- * Central registry of all renderers.
- *
  * @version $Id$
  */
-@Singleton
-public class RendererRegistry extends AbstractRegistry<Renderer, RendererProvider>{
+public class DummyRegistry extends AbstractRegistry<String, DummyProvider>{
 
 }

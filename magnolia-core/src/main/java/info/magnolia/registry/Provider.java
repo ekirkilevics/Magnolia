@@ -31,45 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.dialog.registry;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.registry.RegistrationException;
-import info.magnolia.ui.model.dialog.definition.DialogDefinition;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
+package info.magnolia.registry;
 
 /**
- * DialogProvider that instantiates a dialog from a configuration node.
+ * Superinterface for Providers that want to interact with AbstractProviderRegistry.
+ *
+ * @param <T> the type to be provided
  *
  * @version $Id$
  */
-public class ConfiguredDialogDefinitionProvider implements DialogDefinitionProvider {
+public interface Provider<T> {
 
-    private String id;
-    private DialogDefinition dialogDefinition;
+    String getId();
 
-    public ConfiguredDialogDefinitionProvider(String id, Node configNode) throws RepositoryException, Content2BeanException {
-        this.id = id;
-        Content content = ContentUtil.wrapAsContent(configNode);
-        this.dialogDefinition = (DialogDefinition) Content2BeanUtil.toBean(content, true, DialogDefinition.class);
-        if (this.dialogDefinition != null) {
-            this.dialogDefinition.setId(id);
-        }
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public DialogDefinition getDefinition() throws RegistrationException {
-        return dialogDefinition;
-    }
+    // TODO dlipp: naming does currently not match for Renderers :-(
+    T getDefinition() throws RegistrationException;
 }

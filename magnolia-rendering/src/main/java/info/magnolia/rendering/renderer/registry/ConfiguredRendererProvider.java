@@ -37,8 +37,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.renderer.Renderer;
-import info.magnolia.rendering.util.RegistrationException;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;

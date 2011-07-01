@@ -33,8 +33,8 @@
  */
 package info.magnolia.rendering.template.assignment;
 
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.util.RegistrationException;
 
 import javax.jcr.Node;
 
