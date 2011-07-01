@@ -82,12 +82,6 @@ public class WorkbenchActivity extends AbstractActivity {
     }
 
     @Override
-    public String mayStop() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

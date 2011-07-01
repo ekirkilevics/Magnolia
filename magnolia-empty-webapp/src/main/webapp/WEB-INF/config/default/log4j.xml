@@ -142,11 +142,6 @@ Number of occurrences: %o%n
     <appender-ref ref="log-bootstrap" />
     <appender-ref ref="console" />
   </category>
-  <category name="info.magnolia.ui.admincentral" additivity="false">
-    <priority value="DEBUG" />
-    <appender-ref ref="log-bootstrap" />
-    <appender-ref ref="console" />
-  </category>
 
   <!-- for ioc:
   <category name="org.picocontainer">
