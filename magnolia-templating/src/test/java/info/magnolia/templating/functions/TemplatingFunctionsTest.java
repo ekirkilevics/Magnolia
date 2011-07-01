@@ -68,8 +68,6 @@ public class TemplatingFunctionsTest {
         assertNodeEqualsContent(result, content);
     }
 
-
-
     @Test
     public void testAsJCRNodeFromContentMap() throws RepositoryException {
         // given
@@ -85,8 +83,6 @@ public class TemplatingFunctionsTest {
         assertEquals(name, result.getName());
         assertNodeEqualsMap(result, map);
     }
-
-
 
     @Test
     public void testParentFromNode() throws RepositoryException {
@@ -132,7 +128,6 @@ public class TemplatingFunctionsTest {
         // then
         assertMapEqualsMap(resultMap, parentMap);
     }
-
 
 
     /**
