@@ -34,13 +34,15 @@
 package info.magnolia.objectfactory.guice;
 
 import javax.inject.Inject;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import com.google.inject.Provider;
 import com.google.inject.ProvisionException;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.ComponentProvider;
 
 
@@ -64,18 +66,24 @@ public class GuiceConfiguredComponentProvider<T> implements Provider<T> {
 
     @Override
     public T get() {
-        final Content node = ContentUtil.getContent(workspace, path);
-        if (node == null) {
+        final Node node;
+        try {
+            node = MgnlContext.getJCRSession(workspace).getNode(path);
+        } catch (RepositoryException e) {
             throw new ProvisionException("Can't find a the node [" + workspace + ":" + path + "] to create an instance");
         }
+
         try {
             return transformNode(node);
         } catch (Content2BeanException e) {
             throw new ProvisionException(e.getMessage(), e);
+        } catch (RepositoryException e) {
+            throw new ProvisionException(e.getMessage(), e);
         }
     }
 
-    protected T transformNode(Content node) throws Content2BeanException {
-        return (T) Content2BeanUtil.toBean(node, true, componentProvider);
+    @SuppressWarnings("unchecked")
+    protected T transformNode(Node node) throws Content2BeanException, RepositoryException {
+        return (T) Content2BeanUtil.toBean(ContentUtil.wrapAsContent(node), true, componentProvider);
     }
 }
