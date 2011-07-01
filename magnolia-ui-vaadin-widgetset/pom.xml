@@ -55,16 +55,10 @@
       <groupId>temp.org.vaadin.addons</groupId>
       <artifactId>vaadin-chameleon-theme</artifactId>
     </dependency>
+    <!-- javax.validation dep is needed by GWT 2.3.0 -->
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <classifier>sources</classifier>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -102,7 +96,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>2.2.0</version>
+        <version>2.3.0</version>
         <configuration>
           <!-- put the created resources on the classpath -->
           <webappDirectory>target/classes/mgnl-resources/VAADIN/widgetsets</webappDirectory>
@@ -114,6 +108,9 @@
           <!-- <draftCompile>true</draftCompile> -->
           <!-- <style>PRETTY</style> -->
           <runTarget>.magnolia/admin-central</runTarget>
+          <compileSourcesArtifacts>
+            <compileSourcesArtifact>javax.validation:validation-api</compileSourcesArtifact>
+          </compileSourcesArtifacts>
         </configuration>
         <executions>
           <execution>
@@ -134,17 +131,6 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
             <version>2.3.0</version>
-          </dependency>
-          <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-          </dependency>
-          <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-            <classifier>sources</classifier>
           </dependency>
         </dependencies>
       </plugin>
