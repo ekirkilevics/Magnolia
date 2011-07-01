@@ -50,9 +50,12 @@ import com.vaadin.ui.UriFragmentUtility;
 
 /**
  * Implements the methods to handle URI fragment changes.
+ *
+ * @version $Id$
  */
 @SuppressWarnings("serial")
 public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentUtility.FragmentChangedListener{
+
     private static final Logger log = LoggerFactory.getLogger(AbstractShell.class);
 
     private Collection<info.magnolia.ui.framework.shell.FragmentChangedHandler> handlers = new ArrayList<FragmentChangedHandler>();

@@ -53,8 +53,6 @@ import info.magnolia.ui.vaadin.integration.view.MainWindow;
 @Singleton
 public class PageEditorViewImpl implements PageEditorView {
 
-    private MainWindow mainWindow;
-    private Application application;
     private HorizontalLayout layout;
     private VerticalLayout pageLayout;
     private VerticalLayout toolboxLayout;
@@ -62,8 +60,6 @@ public class PageEditorViewImpl implements PageEditorView {
 
     @Inject
     public PageEditorViewImpl(MainWindow mainWindow, Application application) {
-        this.mainWindow = mainWindow;
-        this.application = application;
 
         application.setTheme("magnolia");
 
@@ -83,7 +79,7 @@ public class PageEditorViewImpl implements PageEditorView {
         layout.setExpandRatio(pageLayout, 5);
         layout.setExpandRatio(toolboxLayout, 1);
 
-        mainWindow.getMainWindow().addComponent(layout);
+        mainWindow.setContent(layout);
     }
 
     @Override

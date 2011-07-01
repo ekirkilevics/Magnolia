@@ -50,24 +50,26 @@ import info.magnolia.ui.vaadin.integration.widget.historian.Historian;
 
 /**
  * Wraps the Vaadin application.
+ *
+ * @version $Id$
  */
 @Singleton
 public class ShellImpl extends AbstractShell {
+
+    private static Logger log = LoggerFactory.getLogger(ShellImpl.class);
 
     private static final long serialVersionUID = 5700621522722171068L;
 
     private static final String APPLICATION_FRAGMENT_ID = "app";
 
-    private static Logger log = LoggerFactory.getLogger(ShellImpl.class);
-
-    private UriFragmentUtility uriFragmentUtility = new Historian();
     private MainWindow mainWindow;
+    private UriFragmentUtility uriFragmentUtility = new Historian();
 
     @Inject
     public ShellImpl(MainWindow mainWindow) {
         super(APPLICATION_FRAGMENT_ID);
         this.mainWindow = mainWindow;
-        mainWindow.getMainWindow().addComponent(uriFragmentUtility);
+        this.mainWindow.addPermanentComponent(uriFragmentUtility);
     }
 
     @Override

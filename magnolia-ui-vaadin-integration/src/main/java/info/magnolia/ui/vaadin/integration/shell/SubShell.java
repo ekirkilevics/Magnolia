@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.vaadin.integration.shell;
 
-
 import info.magnolia.ui.framework.shell.ConfirmationHandler;
 import info.magnolia.ui.framework.shell.Shell;
 
@@ -42,9 +41,12 @@ import com.vaadin.ui.UriFragmentUtility;
 
 /**
  * A shell working only with a sub fragment of the URL fragment. Used to build sub containers by using {@link info.magnolia.ui.framework.activity.AbstractMVPSubContainer}.
+ *
+ * @version $Id$
  */
 @SuppressWarnings("serial")
 public class SubShell extends AbstractShell {
+
     private Shell parent;
 
     public SubShell(String id, Shell parent) {
@@ -78,5 +80,3 @@ public class SubShell extends AbstractShell {
         parent.openWindow(uri, windowName);
     }
 }
-
-

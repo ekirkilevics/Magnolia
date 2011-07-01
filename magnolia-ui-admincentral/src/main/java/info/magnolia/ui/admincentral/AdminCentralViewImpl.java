@@ -64,7 +64,6 @@ import info.magnolia.ui.vaadin.integration.view.MainWindow;
 @Singleton
 public class AdminCentralViewImpl implements AdminCentralView {
 
-    private MainWindow mainWindow;
     private Application application;
     private DialogPresenterFactory dialogPresenterFactory;
 
@@ -73,7 +72,6 @@ public class AdminCentralViewImpl implements AdminCentralView {
 
     @Inject
     public AdminCentralViewImpl(MainWindow mainWindow, Application application, DialogPresenterFactory dialogPresenterFactory) {
-        this.mainWindow = mainWindow;
         this.application = application;
         this.dialogPresenterFactory = dialogPresenterFactory;
 
@@ -111,7 +109,7 @@ public class AdminCentralViewImpl implements AdminCentralView {
         outerContainer.setExpandRatio(headerLayout, 1.0f);
         outerContainer.setExpandRatio(innerContainer, 90.0f);
 
-        mainWindow.getMainWindow().addComponent(outerContainer);
+        mainWindow.setContent(outerContainer);
     }
 
     private AbsoluteLayout createHeaderLayout(Messages messages) {

@@ -33,10 +33,14 @@
  */
 package info.magnolia.ui.vaadin.integration.view;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.vaadin.Application;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Window;
 
 
@@ -51,6 +55,7 @@ public class MainWindow {
     // TODO this class needs a better name, MainWindow.getMainWindow() isn't so nice
 
     private Application application;
+    private Collection<Component> permanentComponents = new ArrayList<Component>();
 
     @Inject
     public MainWindow(Application application) {
@@ -62,7 +67,27 @@ public class MainWindow {
         return application.getMainWindow();
     }
 
+    public void setContent(ComponentContainer newContent) {
+        getMainWindow().setContent(newContent);
+        for (Component component : permanentComponents) {
+            newContent.addComponent(component);
+        }
+    }
+
+    public void addPermanentComponent(Component component) {
+        permanentComponents.add(component);
+        getMainWindow().addComponent(component);
+    }
+
     public void setCaption(String caption) {
-        this.application.getMainWindow().setCaption(caption);
+        getMainWindow().setCaption(caption);
+    }
+
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setTheme(String theme) {
+        application.setTheme(theme);
     }
 }
