@@ -142,8 +142,8 @@ public class UserEditDialog extends ConfiguredDialog {
         return dialog;
     }
 
-	private void replaceUUIDsWithNames(DialogControlImpl control, HierarchyManager hm) throws RepositoryException {
-		List values = new ArrayList<String>();
+    private void replaceUUIDsWithNames(DialogControlImpl control, HierarchyManager hm) throws RepositoryException {
+        List values = new ArrayList<String>();
         Iterator it = control.getValues().iterator();
         while(it.hasNext()){
             String uuid = (String) it.next();
@@ -159,7 +159,7 @@ public class UserEditDialog extends ConfiguredDialog {
         }
         control.getValues().clear();
         control.getValues().addAll(values);
-	}
+    }
 
     /**
      * Write ACL entries under the given user node
