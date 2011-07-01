@@ -42,7 +42,6 @@ import info.magnolia.test.mock.jcr.MockNode;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
 
 import org.junit.Test;
 
