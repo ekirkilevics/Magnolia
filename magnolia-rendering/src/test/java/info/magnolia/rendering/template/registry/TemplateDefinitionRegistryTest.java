@@ -35,8 +35,7 @@ package info.magnolia.rendering.template.registry;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import info.magnolia.rendering.util.RegistrationException;
 
 import java.util.ArrayList;
@@ -52,30 +51,30 @@ public class TemplateDefinitionRegistryTest {
 
     @Test
     public void testUnregisterAndRegister() throws RegistrationException {
-        // given
+        // GIVEN
         String rendererId = "onlyOneToRemove";
         final TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         TemplateDefinitionProvider rendererProvider = mock(TemplateDefinitionProvider.class);
-        given(rendererProvider.getId()).willReturn(rendererId);
+        when(rendererProvider.getId()).thenReturn(rendererId);
         registry.register(rendererProvider);
 
         List<String> idsToRemove = new ArrayList<String>();
         idsToRemove.add(rendererId);
 
         TemplateDefinitionProvider rp1 = mock(TemplateDefinitionProvider.class);
-        given(rp1.getId()).willReturn("rp1");
+        when(rp1.getId()).thenReturn("rp1");
         TemplateDefinitionProvider rp2 = mock(TemplateDefinitionProvider.class);
-        given(rp2.getId()).willReturn("rp2");
+        when(rp2.getId()).thenReturn("rp2");
         registry.register(rp1);
         registry.register(rp2);
 
         List<TemplateDefinitionProvider> rendererProviders = new ArrayList<TemplateDefinitionProvider>();
         rendererProviders.add(rendererProvider);
 
-        // when
+        // WHEN
         Set<String> idsOfNewRegisteredProviders = registry.unregisterAndRegister(idsToRemove, rendererProviders);
 
-        // then
+        // THEN
         assertTrue(idsOfNewRegisteredProviders.contains(rendererId));
         assertEquals(1, idsOfNewRegisteredProviders.size());
     }

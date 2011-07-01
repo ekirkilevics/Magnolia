@@ -35,10 +35,10 @@ package info.magnolia.rendering.engine;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -82,138 +82,138 @@ public class DefaultRenderingEngineTest {
 
     @Test
     public void testGetAggregationStateSafely() {
-        // given
+        // GIVEN
         final WebContext context = mock(WebContext.class);
         final AggregationState aggregationState = new AggregationState();
-        given(context.getAggregationState()).willReturn(aggregationState);
+        when(context.getAggregationState()).thenReturn(aggregationState);
         MgnlContext.setInstance(context);
 
-        // when
+        // WHEN
         AggregationState result = DefaultRenderingEngine.getAggregationStateSafely();
 
-        // then
+        // THEN
         assertEquals(aggregationState, result);
     }
 
     @Test
     public void testGetAggregationStateSafelyWithNonWebContext() {
-        // given
+        // GIVEN
         final Context context = mock(Context.class);
         MgnlContext.setInstance(context);
 
-        // when
+        // WHEN
         AggregationState result = DefaultRenderingEngine.getAggregationStateSafely();
 
-        // then
+        // THEN
         assertNull(result);
     }
 
     @Test(expected = RenderException.class)
     public void testGetRendererForThrowsExceptionWhenNoneIsRegistered() throws RenderException {
-        // given
+        // GIVEN
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
-        given(templateDefinition.getRenderType()).willReturn(FREEMARKER_RENDERER_TYPE);
+        when(templateDefinition.getRenderType()).thenReturn(FREEMARKER_RENDERER_TYPE);
 
-        // when
+        // WHEN
         renderingEngine.getRendererFor(templateDefinition);
     }
 
     @Test
     public void testGetRenderingContextWhenNotYetSet() {
-        // given
+        // GIVEN
         ComponentProvider componentProvider = mock(ComponentProvider.class);
         AggregationStateBasedRenderingContext renderingContext = mock(AggregationStateBasedRenderingContext.class);
-        given(componentProvider.newInstance(AggregationStateBasedRenderingContext.class, (Object) null)).willReturn(
+        when(componentProvider.newInstance(AggregationStateBasedRenderingContext.class, (Object) null)).thenReturn(
                 renderingContext);
         Components.setProvider(componentProvider);
 
-        // when
+        // WHEN
         RenderingContext result = renderingEngine.getRenderingContext();
 
-        // then
+        // THEN
         assertEquals(renderingContext, result);
     }
 
     @Test
     public void testRenderFromNodeAndAppendable() throws Exception {
-        // given
+        // GIVEN
         final Node content = new MockNode("parent");
         final Context context = mock(Context.class);
         final RenderingContext renderingContext = mock(RenderingContext.class);
-        given(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE, Context.LOCAL_SCOPE))
-                .willReturn(renderingContext);
-        given(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE)).willReturn(renderingContext);
+        when(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE, Context.LOCAL_SCOPE))
+                .thenReturn(renderingContext);
+        when(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE)).thenReturn(renderingContext);
 
         MgnlContext.setInstance(context);
 
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
-        given(templateDefinitionAssignment.getAssignedTemplateDefinition(content)).willReturn(templateDefinition);
+        when(templateDefinitionAssignment.getAssignedTemplateDefinition(content)).thenReturn(templateDefinition);
 
         Renderer freemarkerRenderer = mock(Renderer.class);
         RendererProvider freemarkerRendererProvider = mock(RendererProvider.class);
-        given(freemarkerRendererProvider.getId()).willReturn(FREEMARKER_RENDERER_TYPE);
-        given(freemarkerRendererProvider.getDefinition()).willReturn(freemarkerRenderer);
+        when(freemarkerRendererProvider.getId()).thenReturn(FREEMARKER_RENDERER_TYPE);
+        when(freemarkerRendererProvider.getDefinition()).thenReturn(freemarkerRenderer);
         rendererRegistry.register(freemarkerRendererProvider);
 
         StringBuilder builder = new StringBuilder();
-        given(templateDefinition.getRenderType()).willReturn(FREEMARKER_RENDERER_TYPE);
+        when(templateDefinition.getRenderType()).thenReturn(FREEMARKER_RENDERER_TYPE);
 
-        // when
+        // WHEN
         renderingEngine.render(content, builder);
 
-        // then
+        // THEN
         verify(freemarkerRenderer).render(content, templateDefinition, DefaultRenderingEngine.EMPTY_CONTEXT, builder);
     }
 
     @Test(expected = RenderException.class)
     public void testRenderThrowsRenderExceptionInCaseOfInternalIOException() throws Exception {
-        // given
+        // GIVEN
         final Node content = new MockNode("parent");
         final Context context = mock(Context.class);
         final RenderingContext renderingContext = mock(RenderingContext.class);
-        given(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE, Context.LOCAL_SCOPE))
-                .willReturn(renderingContext);
-        given(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE)).willReturn(renderingContext);
+        when(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE, Context.LOCAL_SCOPE))
+                .thenReturn(renderingContext);
+        when(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE)).thenReturn(renderingContext);
 
         MgnlContext.setInstance(context);
 
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
-        given(templateDefinitionAssignment.getAssignedTemplateDefinition(content)).willReturn(templateDefinition);
+        when(templateDefinitionAssignment.getAssignedTemplateDefinition(content)).thenReturn(templateDefinition);
 
         Renderer freemarkerRenderer = mock(Renderer.class);
         RendererProvider freemarkerRendererProvider = mock(RendererProvider.class);
-        given(freemarkerRendererProvider.getId()).willReturn(FREEMARKER_RENDERER_TYPE);
-        given(freemarkerRendererProvider.getDefinition()).willReturn(freemarkerRenderer);
+        when(freemarkerRendererProvider.getId()).thenReturn(FREEMARKER_RENDERER_TYPE);
+        when(freemarkerRendererProvider.getDefinition()).thenReturn(freemarkerRenderer);
         rendererRegistry.register(freemarkerRendererProvider);
 
         StringBuilder builder = new StringBuilder();
-        given(templateDefinition.getRenderType()).willReturn(FREEMARKER_RENDERER_TYPE);
-        willThrow(new IOException()).given(freemarkerRenderer).render(content, templateDefinition,
+        when(templateDefinition.getRenderType()).thenReturn(FREEMARKER_RENDERER_TYPE);
+        doThrow(new IOException()).when(freemarkerRenderer).render(content, templateDefinition,
                 DefaultRenderingEngine.EMPTY_CONTEXT, builder);
 
-        // when
+        // WHEN
         renderingEngine.render(content, builder);
 
-        // then - no code here as we expect an Exception
+        // THEN - no code here as we expect an Exception
     }
 
     @Test(expected = RenderException.class)
     public void testRenderThrowsRenderExceptionInCaseOfInternalRegistrationException() throws Exception {
-        // given
+        // GIVEN
         final Node content = new MockNode("parent");
         final Context context = mock(Context.class);
         final RenderingContext renderingContext = mock(RenderingContext.class);
-        given(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE, Context.LOCAL_SCOPE))
-                .willReturn(renderingContext);
-        given(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE)).willReturn(renderingContext);
+        when(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE, Context.LOCAL_SCOPE))
+                .thenReturn(renderingContext);
+        when(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE)).thenReturn(renderingContext);
         MgnlContext.setInstance(context);
 
-        willThrow(new RegistrationException("test")).given(templateDefinitionAssignment).getAssignedTemplateDefinition(content);
+        doThrow(new RegistrationException("test")).when(templateDefinitionAssignment).getAssignedTemplateDefinition(content);
 
-        // when
+        // WHEN
         renderingEngine.render(content, null);
 
-        // then - no code here as we expect an Exception
+        // THEN - no code here as we expect an Exception
     }
 
 }
