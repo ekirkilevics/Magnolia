@@ -161,7 +161,7 @@ public class GuiceComponentProviderModule extends AbstractModule {
             return;
         }
         if (ComponentFactory.class.isAssignableFrom(implementation)) {
-            bind(type).toProvider(new GuiceComponentFactoryProviderAdapter((Class<ComponentFactory<?>>) implementation));
+            bind(type).toProvider(new GuiceComponentFactoryProviderAdapter(implementation));
         } else {
 
             // FIXME for now we keep only singletons in Guice, short living objects can be created using newInstance
