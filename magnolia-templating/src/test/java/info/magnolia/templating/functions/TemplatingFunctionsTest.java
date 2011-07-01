@@ -55,66 +55,66 @@ public class TemplatingFunctionsTest {
 
     @Test
     public void testAsJCRNodeFromContent() throws RepositoryException {
-        // given
+        // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
         String name = "test";
         MockContent content = new MockContent(name);
 
-        // when
+        // WHEN
         Node result = functions.asJCRNode(content);
 
-        // then
+        // THEN
         assertEquals(name, result.getName());
         assertNodeEqualsContent(result, content);
     }
 
     @Test
     public void testAsJCRNodeFromContentMap() throws RepositoryException {
-        // given
+        // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
         String name = "test";
         MockNode node = new MockNode(name);
         ContentMap map = new ContentMap(node);
 
-        // when
+        // WHEN
         Node result = functions.asJCRNode(map);
 
-        // then
+        // THEN
         assertEquals(name, result.getName());
         assertNodeEqualsMap(result, map);
     }
 
     @Test
     public void testParentFromNode() throws RepositoryException {
-        // given
+        // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
         MockNode parent = new MockNode("parent");
         MockNode child = new MockNode("child");
         parent.addNode(child);
 
-        // when
+        // WHEN
         Node result = functions.parent(child);
 
-        // then
+        // THEN
         assertNodeEqualsNode(result, parent);
     }
 
     @Test
     public void testParentFromRootNodeShouldBeNull() throws RepositoryException {
-        // given
+        // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
         MockNode root = new MockNode("root");
 
-        // when
+        // WHEN
         Node result = functions.parent(root);
 
-        // then
+        // THEN
         assertNull(result);
     }
 
     @Test
     public void testParentFromContentMap() throws RepositoryException {
-        // given
+        // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
         MockNode parent = new MockNode("parent");
         MockNode child = new MockNode("child");
@@ -122,40 +122,40 @@ public class TemplatingFunctionsTest {
         ContentMap childMap = new ContentMap(child);
         ContentMap parentMap = new ContentMap(parent);
 
-        // when
+        // WHEN
         ContentMap resultMap = functions.parent(childMap);
 
-        // then
+        // THEN
         assertMapEqualsMap(resultMap, parentMap);
     }
 
     @Test
     public void testUuidFromNode() throws RepositoryException {
-        // given
+        // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
         String name = "test";
         MockNode node = new MockNode(name);
 
-        // when
+        // WHEN
         String uuid = functions.uuid(node);
 
-        // then
+        // THEN
         assertEquals(uuid, node.getIdentifier());
         assertEquals(uuid, node.getUUID());
     }
 
     @Test
     public void testUuidFromMap() throws RepositoryException {
-        // given
+        // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
         String name = "test";
         MockNode node = new MockNode(name);
         ContentMap map = new ContentMap(node);
 
-        // when
+        // WHEN
         String uuid = functions.uuid(map);
 
-        // then
+        // THEN
         assertEquals(uuid, map.get("@id"));
         assertEquals(uuid, map.get("@uuid"));
     }
@@ -164,8 +164,8 @@ public class TemplatingFunctionsTest {
     /**
      * Checks all mandatory ContentMap values. None should be null and all values should equal.
      *
-     * @param result Node generate during // when
-     * @param origin Node generated during // given
+     * @param result Node generate during // WHEN
+     * @param origin Node generated during // GIVEN
      * @throws RepositoryException
      */
     private void assertNodeEqualsNode(Node result, Node origin) throws RepositoryException {
@@ -182,8 +182,8 @@ public class TemplatingFunctionsTest {
     /**
      * Checks all mandatory ContentMap values. None should be null and all values should equal.
      *
-     * @param resultMap ContentMap generated during // when
-     * @param originMap ContentMAp generated during // then
+     * @param resultMap ContentMap generated during // WHEN
+     * @param originMap ContentMAp generated during // THEN
      */
     private void assertMapEqualsMap(ContentMap resultMap, ContentMap originMap) {
         assertNotNull(resultMap.get("@name"));
@@ -209,8 +209,8 @@ public class TemplatingFunctionsTest {
     /**
      * Checks all mandatory ContentMap values. None should be null and all values should equal.
      *
-     * @param result Node generate during // when
-     * @param origin ContentMap generated during // then
+     * @param result Node generate during // WHEN
+     * @param origin ContentMap generated during // THEN
      * @throws RepositoryException
      */
     private void assertNodeEqualsMap(Node result, ContentMap origin) throws RepositoryException {
@@ -229,8 +229,8 @@ public class TemplatingFunctionsTest {
     /**
      * Checks all mandatory Content values. None should be null and all values should equal.
      *
-     * @param result Node generate during // when
-     * @param origin Content generated during // then
+     * @param result Node generate during // WHEN
+     * @param origin Content generated during // THEN
      * @throws RepositoryException
      */
     private void assertNodeEqualsContent(Node result, Content origin) throws RepositoryException {
