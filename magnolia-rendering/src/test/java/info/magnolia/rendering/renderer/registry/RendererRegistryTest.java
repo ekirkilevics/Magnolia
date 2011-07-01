@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.rendering.registry;
+package info.magnolia.rendering.renderer.registry;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
