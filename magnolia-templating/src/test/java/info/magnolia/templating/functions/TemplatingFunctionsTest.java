@@ -73,8 +73,8 @@ public class TemplatingFunctionsTest {
         // given
         TemplatingFunctions functions = new TemplatingFunctions();
         String name = "test";
-        MockNode root = new MockNode(name);
-        ContentMap map = new ContentMap(root);
+        MockNode node = new MockNode(name);
+        ContentMap map = new ContentMap(node);
 
         // when
         Node result = functions.asJCRNode(map);
@@ -103,10 +103,10 @@ public class TemplatingFunctionsTest {
     public void testParentFromRootNodeShouldBeNull() throws RepositoryException {
         // given
         TemplatingFunctions functions = new TemplatingFunctions();
-        MockNode parent = new MockNode("parent");
+        MockNode root = new MockNode("root");
 
         // when
-        Node result = functions.parent(parent);
+        Node result = functions.parent(root);
 
         // then
         assertNull(result);
@@ -127,6 +127,37 @@ public class TemplatingFunctionsTest {
 
         // then
         assertMapEqualsMap(resultMap, parentMap);
+    }
+
+    @Test
+    public void testUuidFromNode() throws RepositoryException {
+        // given
+        TemplatingFunctions functions = new TemplatingFunctions();
+        String name = "test";
+        MockNode node = new MockNode(name);
+
+        // when
+        String uuid = functions.uuid(node);
+
+        // then
+        assertEquals(uuid, node.getIdentifier());
+        assertEquals(uuid, node.getUUID());
+    }
+
+    @Test
+    public void testUuidFromMap() throws RepositoryException {
+        // given
+        TemplatingFunctions functions = new TemplatingFunctions();
+        String name = "test";
+        MockNode node = new MockNode(name);
+        ContentMap map = new ContentMap(node);
+
+        // when
+        String uuid = functions.uuid(map);
+
+        // then
+        assertEquals(uuid, map.get("@id"));
+        assertEquals(uuid, map.get("@uuid"));
     }
 
 

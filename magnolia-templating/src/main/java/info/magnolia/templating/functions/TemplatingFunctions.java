@@ -63,11 +63,6 @@ public class TemplatingFunctions {
         return node == null ? null : new DefaultContent(node, null);
     }
 
-    //TODO cringele : test missing
-    public ContentMap asContentMap(Node content) {
-        return content == null ? null : new ContentMap(content);
-    }
-
     public Node asJCRNode(ContentMap contentMap) {
         return contentMap == null ? null : contentMap.getJCRNode();
     }
@@ -88,12 +83,10 @@ public class TemplatingFunctions {
         return asContentMap(parentContent);
     }
 
-    //TODO cringele : test missing
     public String uuid(Node content) throws RepositoryException {
         return content == null ? null : content.getIdentifier();
     }
 
-    //TODO cringele : test missing
     public String uuid(ContentMap contentMap) throws RepositoryException {
         return contentMap == null ? null : this.uuid(asJCRNode(contentMap));
     }
@@ -148,6 +141,14 @@ public class TemplatingFunctions {
 
 
     //TODO cringele : May all be optional. Descide on weather to provide them or not
+
+    /**
+     * Could be private
+     * TODO cringele : test missing
+     */
+    public ContentMap asContentMap(Node content) {
+        return content == null ? null : new ContentMap(content);
+    }
 
 //    public String linkExteral(Node content) throws RepositoryException{
 //        return content == null ? null : LinkUtil.createExternalLink(asContent(content));
