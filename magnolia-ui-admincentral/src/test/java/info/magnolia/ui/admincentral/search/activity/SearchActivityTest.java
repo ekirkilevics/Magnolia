@@ -69,10 +69,11 @@ public class SearchActivityTest{
 
     @Test
     public void testAfterOnStartSearchIsInvokedCurrentPlaceIsSearchPlace() throws Exception {
-
+        //GIVEN
         searchActivity = new SearchActivity(view, placeController, shell);
+        //WHEN
         searchActivity.onStartSearch(params);
-
+        //THEN
         Assert.assertTrue(placeController.getWhere() instanceof SearchPlace);
     }
 }

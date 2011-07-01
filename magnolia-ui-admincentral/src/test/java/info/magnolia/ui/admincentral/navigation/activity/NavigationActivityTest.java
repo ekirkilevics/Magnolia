@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.admincentral.navigation.activity;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.ui.admincentral.navigation.NavigationView;
@@ -80,14 +79,15 @@ public class NavigationActivityTest {
     @Test
     public void testOnMenuSelectionNonNullActionIsExecuted() throws Exception {
 
-        //given that action definition isn't null
+        //GIVEN that action definition isn't null
         NavigationItemDefinition navigationItemDefinition = mock(NavigationItemDefinition.class);
-        given(navigationItemDefinition.getActionDefinition()).willReturn(actionDefinition);
-        given(actionFactory.createAction(actionDefinition)).willReturn(action);
+        when(navigationItemDefinition.getActionDefinition()).thenReturn(actionDefinition);
+        when(actionFactory.createAction(actionDefinition)).thenReturn(action);
 
-        //when onMenuSelection() is called
+        //WHEN onMenuSelection() is called
         activity.onMenuSelection(navigationItemDefinition);
-        //then no exception should be raised
+
+        //THEN no exception should be raised
     }
 
 }
