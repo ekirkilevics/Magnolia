@@ -62,22 +62,24 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class TemplateDefinitionRegistry {
 
-    // TODO should be an interface
-
     private static final Logger log = LoggerFactory.getLogger(TemplateDefinitionRegistry.class);
 
     private static final String DELETED_PAGE_TEMPLATE = "mgnlDeleted";
 
     private final Map<String, TemplateDefinitionProvider> providers = new HashMap<String, TemplateDefinitionProvider>();
 
-    public void registerTemplateDefinition(TemplateDefinitionProvider provider) throws TemplateDefinitionRegistrationException {
+    public void register(TemplateDefinitionProvider provider) throws TemplateDefinitionRegistrationException {
         String id = provider.getId();
         synchronized (providers) {
-            if (providers.containsKey(id)) {
-                throw new TemplateDefinitionRegistrationException("Template definition already registered for the id [" + id + "]");
-            }
-            providers.put(id, provider);
+            doRegister(id, provider);
         }
+    }
+
+    private void doRegister(String id, TemplateDefinitionProvider provider) throws TemplateDefinitionRegistrationException {
+        if (providers.containsKey(id)) {
+            throw new TemplateDefinitionRegistrationException("Template definition already registered for the id [" + id + "]");
+        }
+        providers.put(id, provider);
     }
 
     public void unregister(String id) {
@@ -86,7 +88,7 @@ public class TemplateDefinitionRegistry {
         }
     }
 
-    public Set<String> removeAndRegister(Collection<String> remove, Collection<TemplateDefinitionProvider> providers2) {
+    public Set<String> unregisterAndRegister(Collection<String> remove, Collection<TemplateDefinitionProvider> providers2) throws TemplateDefinitionRegistrationException{
         synchronized (providers) {
             final Set<String> ids = new HashSet<String>();
             for (String id : remove) {
@@ -94,12 +96,8 @@ public class TemplateDefinitionRegistry {
             }
             for (TemplateDefinitionProvider provider : providers2) {
                 String id = provider.getId();
-                if (providers.containsKey(id)) {
-                    // TODO log
-                } else {
-                    providers.put(id, provider);
-                }
-                ids.add(provider.getId());
+                doRegister(id, provider);
+                ids.add(id);
             }
             return ids;
         }

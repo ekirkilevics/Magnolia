@@ -52,6 +52,10 @@ public class RendererRegistry {
 
     private final Map<String, RendererProvider> providers = new HashMap<String, RendererProvider>();
 
+
+    /**
+     * TODO dlipp: remove id here - call getId() on provider as in TemplateDefinitionRegistry...
+     */
     public void register(String id, RendererProvider provider) throws RendererRegistrationException {
         synchronized (providers) {
             doRegister(id, provider);

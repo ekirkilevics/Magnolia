@@ -83,8 +83,8 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
             NodeUtil.visit(node, new NodeVisitor() {
 
                 @Override
-                public void visit(Node node) throws RepositoryException {
-                    for (Node configNode : NodeUtil.getNodes(node, MgnlNodeType.NT_CONTENTNODE)) {
+                public void visit(Node nodeToVisit) throws RepositoryException {
+                    for (Node configNode : NodeUtil.getNodes(nodeToVisit, MgnlNodeType.NT_CONTENTNODE)) {
                         TemplateDefinitionProvider provider = readProvider(configNode);
                         if (provider != null) {
                             providers.add(provider);
@@ -94,7 +94,13 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
             }, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
         }
 
-        this.registeredIds = templateDefinitionRegistry.removeAndRegister(registeredIds, providers);
+        try {
+            this.registeredIds = templateDefinitionRegistry.unregisterAndRegister(registeredIds, providers);
+        } catch (TemplateDefinitionRegistrationException e) {
+            // TODO dlipp: implement proper exception handling
+            throw new RuntimeException(e);
+        }
+
     }
 
     protected TemplateDefinitionProvider readProvider(Node templateDefinitionNode) throws RepositoryException {
