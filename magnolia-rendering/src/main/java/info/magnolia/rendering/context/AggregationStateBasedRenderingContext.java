@@ -40,12 +40,10 @@ import info.magnolia.rendering.template.RenderableDefinition;
 
 import javax.jcr.Node;
 
-
 /**
  *
- * TODO dlipp: add reasonable javadoc!
- * Uses and updates the {@link AggregationState}.
- * FIXME we should not use the AggregationState anymore
+ * TODO dlipp: add reasonable javadoc! Uses and updates the {@link AggregationState}. FIXME we should not use the
+ * AggregationState anymore
  *
  * @version $Id$
  */
@@ -70,7 +68,7 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
 
     @Override
     public RenderableDefinition getRenderableDefinition() {
-        if(!definitionStack.isEmpty()){
+        if (!definitionStack.isEmpty()) {
             return definitionStack.peek();
         }
         return null;
@@ -82,7 +80,7 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
             aggregationState.setMainContent(content);
         }
 
-        if(contentStack.isEmpty()){
+        if (contentStack.isEmpty()) {
             contentStack.push(aggregationState.getCurrentContent());
         }
 
@@ -96,10 +94,12 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
     public void pop() {
         contentStack.pop();
         definitionStack.pop();
-        if(!contentStack.isEmpty()){
+        if (!contentStack.isEmpty()) {
             aggregationState.setCurrentContent(contentStack.peek());
-        }
-        else{
+        } else {
+            // TODO dlipp: can never be reached - initial push (on empty stacks) adds one element to definitionStack but
+            // TWO to contentStack. Before contentStack could be empty we'd get a EmptyStackException on
+            // definitionStack!!! ->
             aggregationState.setCurrentContent(null);
         }
     }

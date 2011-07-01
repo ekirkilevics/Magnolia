@@ -34,6 +34,7 @@
 package info.magnolia.rendering.context;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
 import java.util.EmptyStackException;
@@ -131,6 +132,7 @@ public class AggregationStateBasedRenderingContextTest {
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
         Node content = mock(Node.class);
         RenderableDefinition renderableDefinition = mock(RenderableDefinition.class);
+
         // when
         context.push(content, renderableDefinition);
 
@@ -149,6 +151,7 @@ public class AggregationStateBasedRenderingContextTest {
         RenderableDefinition secondRenderableDefinition = mock(RenderableDefinition.class);
         context.push(first, firstRenderableDefinition);
         context.push(second, secondRenderableDefinition);
+
         // when
         context.pop();
 
@@ -157,16 +160,66 @@ public class AggregationStateBasedRenderingContextTest {
         assertEquals(firstRenderableDefinition, context.getRenderableDefinition());
     }
 
+    //@Test - can be used to verify wrong behavior of  AggregationStateBasedRenderingContenxt#pop - so TODO there...
+    public void testPopOnContentStackWithOneElementSetsCurrentContentToNull() {
+        // given
+        AggregationState aggregationState = new AggregationState();
+        Node current = mock(Node.class);
+        aggregationState.setCurrentContent(current);
+        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        Node first = mock(Node.class);
+        RenderableDefinition firstRenderableDefinition = mock(RenderableDefinition.class);
+        context.push(first, firstRenderableDefinition);
+        context.pop(); // line above actually adds to elements to contentStack - we have to remove one first in order to generate proper setUp
+
+        // when
+        context.pop();
+
+        // then
+        assertNull(context.getCurrentContent());
+    }
+
 
     @Test(expected=EmptyStackException.class)
     public void testPopWithoutProceedingPush() {
         // given
         AggregationState aggregationState = new AggregationState();
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+
         // when
         context.pop();
 
         // then - nothing on stack to there should be a Exception
     }
 
+    @Test
+    public void testGetRenderableDefinition() {
+        // given
+        AggregationState aggregationState = new AggregationState();
+        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        Node first = mock(Node.class);
+        Node second = mock(Node.class);
+        RenderableDefinition firstRenderableDefinition = mock(RenderableDefinition.class);
+        RenderableDefinition secondRenderableDefinition = mock(RenderableDefinition.class);
+        context.push(first, firstRenderableDefinition);
+        context.push(second, secondRenderableDefinition);
+
+        // when
+        RenderableDefinition result = context.getRenderableDefinition();
+
+        // then
+        assertEquals(result, secondRenderableDefinition);
+    }
+
+    @Test
+    public void testGetRenderableDefinitionOnEmptyDefinitionStackReturnsNull() {
+        // given
+        AggregationState aggregationState = new AggregationState();
+        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        // when
+        RenderableDefinition result = context.getRenderableDefinition();
+
+        // then
+        assertNull(result);
+    }
 }
