@@ -11,7 +11,7 @@
   <artifactId>magnolia-module-ckeditor</artifactId>
   <version>5.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>CKEditor Magnolia Module</name>
+  <name>magnolia-module-ckeditor </name>
 
   <dependencies>
     <dependency>
