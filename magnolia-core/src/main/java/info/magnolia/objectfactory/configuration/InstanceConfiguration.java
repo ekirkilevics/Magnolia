@@ -35,7 +35,9 @@ package info.magnolia.objectfactory.configuration;
 
 /**
  * A configuration providing a concrete instance.
+ *
  * @param <T> the type
+ * @version $Id$
  */
 public class InstanceConfiguration<T> implements Cloneable {
 

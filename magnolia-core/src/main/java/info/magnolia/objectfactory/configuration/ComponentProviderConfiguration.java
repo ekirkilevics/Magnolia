@@ -36,8 +36,11 @@ package info.magnolia.objectfactory.configuration;
 import java.util.ArrayList;
 import java.util.Collection;
 
+
 /**
  * Configuration passed to {@link info.magnolia.objectfactory.MutableComponentProvider#configure(ComponentProviderConfiguration)}.
+ *
+ * @version $Id$
  */
 public class ComponentProviderConfiguration implements Cloneable {
 
@@ -99,30 +102,30 @@ public class ComponentProviderConfiguration implements Cloneable {
 
     @Override
     public ComponentProviderConfiguration clone() {
-            try {
-                ComponentProviderConfiguration clone = (ComponentProviderConfiguration) super.clone();
-                clone.implementations = new ArrayList<ImplementationConfiguration<?>>();
-                for (ImplementationConfiguration<?> implementation : implementations) {
-                    clone.implementations.add(implementation.clone());
-                }
-                clone.instances = new ArrayList<InstanceConfiguration<?>>();
-                for (InstanceConfiguration<?> instance : instances) {
-                    clone.instances.add(instance.clone());
-                }
-                clone.factories = new ArrayList<ComponentFactoryConfiguration<?>>();
-                for (ComponentFactoryConfiguration<?> factory : factories) {
-                    clone.factories.add(factory.clone());
-                }
-                clone.configured = new ArrayList<ConfiguredComponentConfiguration<?>>();
-                for (ConfiguredComponentConfiguration<?> componentConfiguration : configured) {
-                    clone.configured.add(componentConfiguration.clone());
-                }
-                return clone;
-            } catch (CloneNotSupportedException e) {
-                // should never happen
-                throw new RuntimeException(e);
+        try {
+            ComponentProviderConfiguration clone = (ComponentProviderConfiguration) super.clone();
+            clone.implementations = new ArrayList<ImplementationConfiguration<?>>();
+            for (ImplementationConfiguration<?> implementation : implementations) {
+                clone.implementations.add(implementation.clone());
             }
+            clone.instances = new ArrayList<InstanceConfiguration<?>>();
+            for (InstanceConfiguration<?> instance : instances) {
+                clone.instances.add(instance.clone());
+            }
+            clone.factories = new ArrayList<ComponentFactoryConfiguration<?>>();
+            for (ComponentFactoryConfiguration<?> factory : factories) {
+                clone.factories.add(factory.clone());
+            }
+            clone.configured = new ArrayList<ConfiguredComponentConfiguration<?>>();
+            for (ConfiguredComponentConfiguration<?> componentConfiguration : configured) {
+                clone.configured.add(componentConfiguration.clone());
+            }
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            // should never happen
+            throw new RuntimeException(e);
         }
+    }
 
     public <T> void registerImplementation(Class<T> type, Class<? extends T> implementation) {
         addImplementation(ImplementationConfiguration.valueOf(type, implementation));

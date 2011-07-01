@@ -36,16 +36,17 @@ package info.magnolia.objectfactory.configuration;
 import info.magnolia.objectfactory.ComponentFactory;
 
 
-
 /**
  * Configuration for {@link ComponentFactory}s.
+ *
  * @param <T> the type
+ * @version $Id$
  */
 public class ComponentFactoryConfiguration<T> implements Cloneable {
 
     private Class<T> type;
 
-    private Class<? extends ComponentFactory<T>>  factoryClass;
+    private Class<? extends ComponentFactory<T>> factoryClass;
 
     // content2bean
     public ComponentFactoryConfiguration() {
@@ -74,14 +75,14 @@ public class ComponentFactoryConfiguration<T> implements Cloneable {
 
     @Override
     public ComponentFactoryConfiguration clone() {
-            try {
-                ComponentFactoryConfiguration clone = (ComponentFactoryConfiguration) super.clone();
-                clone.type = type;
-                clone.factoryClass = factoryClass;
-                return clone;
-            } catch (CloneNotSupportedException e) {
-                // should never happen
-                throw new RuntimeException(e);
-            }
+        try {
+            ComponentFactoryConfiguration clone = (ComponentFactoryConfiguration) super.clone();
+            clone.type = type;
+            clone.factoryClass = factoryClass;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            // should never happen
+            throw new RuntimeException(e);
         }
+    }
 }

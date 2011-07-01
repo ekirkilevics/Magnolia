@@ -38,7 +38,9 @@ import info.magnolia.cms.beans.config.ContentRepository;
 
 /**
  * Configuration for a components which is configured in a workspace. Will be loaded by content2bean.
+ *
  * @param <T> the type
+ * @version $Id$
  */
 public class ConfiguredComponentConfiguration<T> implements Cloneable {
 
@@ -107,9 +109,9 @@ public class ConfiguredComponentConfiguration<T> implements Cloneable {
             clone.path = path;
             clone.observed = observed;
             return clone;
-            } catch (CloneNotSupportedException e) {
-                // should never happen
-                throw new RuntimeException(e);
-            }
+        } catch (CloneNotSupportedException e) {
+            // should never happen
+            throw new RuntimeException(e);
         }
+    }
 }
