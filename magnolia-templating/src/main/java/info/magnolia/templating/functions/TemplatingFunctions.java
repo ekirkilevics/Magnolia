@@ -104,7 +104,14 @@ public class TemplatingFunctions {
 
     //TODO cringele : test missing
     public List<ContentMap> children(ContentMap content) throws RepositoryException{
-        return content == null ? null : this.children(content, asJCRNode(content).getPrimaryNodeType().getName());
+        if(content == null) {
+            return null;
+        }
+        List<ContentMap> childList = new ArrayList<ContentMap>();
+        for(Node child : NodeUtil.getNodes(asJCRNode(content), NodeUtil.EXCLUDE_META_DATA_FILTER)){
+            childList.add(new ContentMap(child));
+        }
+        return childList;
     }
 
     //TODO cringele : test missing
@@ -113,16 +120,22 @@ public class TemplatingFunctions {
             return null;
         }
         List<ContentMap> childList = new ArrayList<ContentMap>();
-        for(Node child : NodeUtil.getNodes(content.getJCRNode(), nodeTypeName) ){
+        for(Node child : NodeUtil.getNodes(asJCRNode(content), nodeTypeName)){
             childList.add(new ContentMap(child));
         }
-      //TODO cringele : If no child nodes exist JCR API return empty iterator. Shall we pass an empty List or null?
         return childList;
     }
 
     //TODO cringele : test missing
     public List<Node> children(Node content) throws RepositoryException{
-        return content == null ? null : this.children(content, null);
+        if(content == null) {
+            return null;
+        }
+        List<Node> childList = new ArrayList<Node>();
+        for(Node child : NodeUtil.getNodes(content, NodeUtil.EXCLUDE_META_DATA_FILTER) ){
+            childList.add(child);
+        }
+        return childList;
     }
 
     //TODO cringele : test missing
@@ -131,22 +144,11 @@ public class TemplatingFunctions {
             return null;
         }
         List<Node> childList = new ArrayList<Node>();
-
-        //all child nodes
-        if(nodeTypeName == null){
-            for(Node child : NodeUtil.getNodes(content, NodeUtil.EXCLUDE_META_DATA_FILTER) ){
-                childList.add(child);
-            }
-            return childList;
-        }
-
-        //children by given type
         for(Node child : NodeUtil.getNodes(content, nodeTypeName) ){
             childList.add(child);
         }
         return childList;
     }
-
 
     //TODO cringele : May all be optional. Descide on weather to provide them or not
 
