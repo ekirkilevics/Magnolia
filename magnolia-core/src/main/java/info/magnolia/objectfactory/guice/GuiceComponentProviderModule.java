@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -114,14 +115,14 @@ public class GuiceComponentProviderModule extends AbstractModule {
 
     private <T> void registerConfiguredComponent(Class<T> type, String workspace, String path, boolean observed) {
         if (observed) {
-            bind(type).toProvider(new GuiceObservedComponentProvider<T>(workspace, path, type));
+            bind(type).toProvider(new GuiceObservedComponentProvider<T>(workspace, path, type)).in(Scopes.SINGLETON);
         } else {
-            bind(type).toProvider(new GuiceConfiguredComponentProvider(path, workspace));
+            bind(type).toProvider(new GuiceConfiguredComponentProvider(path, workspace)).in(Scopes.SINGLETON);
         }
     }
 
     private void registerComponentFactory(Class type, ComponentFactory<?> factory) {
-        bind(type).toProvider(new GuiceComponentFactoryProviderAdapter(factory));
+        bind(type).toProvider(new GuiceComponentFactoryProviderAdapter(factory)).in(Scopes.SINGLETON);
     }
 
     private void registerInstance(Class type, Object instance) {
