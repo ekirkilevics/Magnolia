@@ -55,7 +55,7 @@
       <groupId>temp.org.vaadin.addons</groupId>
       <artifactId>vaadin-chameleon-theme</artifactId>
     </dependency>
-    <!-- javax.validation dep is needed by GWT 2.3.0 -->
+    <!-- validation-api dep is needed by GWT 2.3.0 during gwt compilation-->
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
