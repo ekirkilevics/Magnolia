@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.navigation.activity;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import info.magnolia.ui.admincentral.navigation.NavigationView;
 import info.magnolia.ui.admincentral.navigation.action.NavigationActionFactory;
 import info.magnolia.ui.framework.shell.Shell;
@@ -87,7 +88,8 @@ public class NavigationActivityTest {
         //WHEN onMenuSelection() is called
         activity.onMenuSelection(navigationItemDefinition);
 
-        //THEN no exception should be raised
+        //THEN action is executed once
+        verify(action).execute();
     }
 
 }
