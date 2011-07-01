@@ -45,7 +45,7 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Move NodeContent Task.
+ * WARNING: In spite of its name, this class will actually rename all node data <code>body</code> found under the source path as <code>templateFile</code>.
  * @author tmiyar
  *
  */
