@@ -48,8 +48,8 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -132,7 +132,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         TemplateDefinition paragraphInfo;
         try {
             paragraphInfo = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(paragraphName);
-        } catch (TemplateDefinitionRegistrationException e) {
+        } catch (RegistrationException e) {
             // TODO dlipp: apply consistent ExceptionHandling.
             throw new RuntimeException(e);
         }

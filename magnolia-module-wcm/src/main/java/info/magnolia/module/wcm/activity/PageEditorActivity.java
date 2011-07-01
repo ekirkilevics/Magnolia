@@ -45,8 +45,8 @@ import info.magnolia.module.wcm.editor.SelectionType;
 import info.magnolia.module.wcm.place.PageEditorPlace;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.View;
@@ -104,7 +104,7 @@ public class PageEditorActivity extends AbstractActivity implements PageChangedH
             return templateDefinition.getDialog();
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
-        } catch (TemplateDefinitionRegistrationException e1) {
+        } catch (RegistrationException e1) {
             // TODO dlipp: apply consistent ExceptionHandling.
             throw new RuntimeException(e1);
         }

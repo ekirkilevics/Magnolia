@@ -46,8 +46,8 @@ import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
 
 import java.io.IOException;
 
@@ -284,7 +284,7 @@ public class EditBar extends TagSupport {
                 bar.placeDefaultButtons();
 
                 if (isShowParagraphName() && this.dialog == null) {
-                    final TemplateDefinition paragraphInfo = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(paragraphToUse);
+                    final TemplateDefinition paragraphInfo = Components.getComponent(TemplateDefinitionRegistry.class).get(paragraphToUse);
                     final Messages msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
                     final String label = msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle());
                     bar.setLabel(label);
@@ -295,7 +295,7 @@ public class EditBar extends TagSupport {
             catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            catch (TemplateDefinitionRegistrationException e1) {
+            catch (RegistrationException e1) {
                 throw new RuntimeException(e1);
             }
         }

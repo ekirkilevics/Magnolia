@@ -52,7 +52,7 @@ import info.magnolia.rendering.renderer.registry.RendererProvider;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.rendering.util.RegistrationException;
 import info.magnolia.test.mock.jcr.MockNode;
 
 import java.io.IOException;
@@ -151,8 +151,9 @@ public class DefaultRenderingEngineTest {
 
         Renderer freemarkerRenderer = mock(Renderer.class);
         RendererProvider freemarkerRendererProvider = mock(RendererProvider.class);
-        given(freemarkerRendererProvider.getRenderer()).willReturn(freemarkerRenderer);
-        rendererRegistry.register(FREEMARKER_RENDERER_TYPE, freemarkerRendererProvider);
+        given(freemarkerRendererProvider.getId()).willReturn(FREEMARKER_RENDERER_TYPE);
+        given(freemarkerRendererProvider.getDefinition()).willReturn(freemarkerRenderer);
+        rendererRegistry.register(freemarkerRendererProvider);
 
         StringBuilder builder = new StringBuilder();
         given(templateDefinition.getRenderType()).willReturn(FREEMARKER_RENDERER_TYPE);
@@ -181,8 +182,9 @@ public class DefaultRenderingEngineTest {
 
         Renderer freemarkerRenderer = mock(Renderer.class);
         RendererProvider freemarkerRendererProvider = mock(RendererProvider.class);
-        given(freemarkerRendererProvider.getRenderer()).willReturn(freemarkerRenderer);
-        rendererRegistry.register(FREEMARKER_RENDERER_TYPE, freemarkerRendererProvider);
+        given(freemarkerRendererProvider.getId()).willReturn(FREEMARKER_RENDERER_TYPE);
+        given(freemarkerRendererProvider.getDefinition()).willReturn(freemarkerRenderer);
+        rendererRegistry.register(freemarkerRendererProvider);
 
         StringBuilder builder = new StringBuilder();
         given(templateDefinition.getRenderType()).willReturn(FREEMARKER_RENDERER_TYPE);
@@ -196,7 +198,7 @@ public class DefaultRenderingEngineTest {
     }
 
     @Test(expected = RenderException.class)
-    public void testRenderThrowsRenderExceptionInCaseOfInternalTemplateDefinitionRegistrationException() throws Exception {
+    public void testRenderThrowsRenderExceptionInCaseOfInternalRegistrationException() throws Exception {
         // given
         final Node content = new MockNode("parent");
         final Context context = mock(Context.class);
@@ -206,7 +208,7 @@ public class DefaultRenderingEngineTest {
         given(context.getAttribute(DefaultRenderingEngine.RENDERING_CONTEXT_ATTRIBUTE)).willReturn(renderingContext);
         MgnlContext.setInstance(context);
 
-        willThrow(new TemplateDefinitionRegistrationException()).given(templateDefinitionAssignment).getAssignedTemplateDefinition(content);
+        willThrow(new RegistrationException("test")).given(templateDefinitionAssignment).getAssignedTemplateDefinition(content);
 
         // when
         renderingEngine.render(content, null);

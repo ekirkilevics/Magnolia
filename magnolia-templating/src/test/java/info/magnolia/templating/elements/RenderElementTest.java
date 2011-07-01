@@ -105,7 +105,7 @@ public class RenderElementTest {
 
         RendererRegistry registry = mock(RendererRegistry.class);
         Renderer renderer = mock(Renderer.class);
-        when(registry.getRenderer("blah")).thenReturn(renderer);
+        when(registry.get("blah")).thenReturn(renderer);
         DefaultRenderingEngine engine = new DefaultRenderingEngine(registry, templateDefinitionAssignment);
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
         when(ctx.getAttribute(RenderingContext.class.getName(), Context.LOCAL_SCOPE)).thenReturn(context);

@@ -33,10 +33,10 @@
  */
 package info.magnolia.rendering.template.assignment;
 
-import javax.jcr.Node;
-
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.rendering.util.RegistrationException;
+
+import javax.jcr.Node;
 
 
 /**
@@ -46,6 +46,6 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationE
  */
 public interface TemplateDefinitionAssignment {
 
-    TemplateDefinition getAssignedTemplateDefinition(Node content) throws TemplateDefinitionRegistrationException;
+    TemplateDefinition getAssignedTemplateDefinition(Node content) throws RegistrationException;
 
 }

@@ -41,8 +41,8 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
 
 import java.io.Writer;
 
@@ -223,8 +223,8 @@ public class EditButton extends TagSupport {
             String templateName = localContainer.getNodeData("dialog").getString();
             // TODO - use IoC for TemplateDefinitionRegistry?
             try {
-                return Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(templateName).getTemplateScript();
-            } catch (TemplateDefinitionRegistrationException e) {
+                return Components.getComponent(TemplateDefinitionRegistry.class).get(templateName).getTemplateScript();
+            } catch (RegistrationException e) {
                 // TODO dlipp: implement proper, consisitent ExceptionHandling!
                 throw new RuntimeException(e);
             }

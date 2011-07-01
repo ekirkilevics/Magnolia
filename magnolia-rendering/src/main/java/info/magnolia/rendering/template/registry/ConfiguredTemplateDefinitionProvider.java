@@ -33,14 +33,15 @@
  */
 package info.magnolia.rendering.template.registry;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.util.RegistrationException;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * TemplateDefinitionProvider that instantiates a template from a configuration node.
@@ -67,7 +68,7 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
     }
 
     @Override
-    public TemplateDefinition getTemplateDefinition() throws TemplateDefinitionRegistrationException {
+    public TemplateDefinition getDefinition() throws RegistrationException {
         return templateDefinition;
     }
 }

@@ -39,8 +39,8 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
 
 import java.util.Collection;
 
@@ -84,9 +84,9 @@ public class TemplateColumn extends TreeColumn {
         String templateName = content.getMetaData().getTemplate();
         TemplateDefinition template;
         try {
-            template = templateManager.getTemplateDefinition(templateName);
+            template = templateManager.get(templateName);
         }
-        catch (TemplateDefinitionRegistrationException e) {
+        catch (RegistrationException e) {
             throw new UnhandledException(e);
         }
         return template != null ? template.getTitle() : StringUtils.defaultString(templateName);

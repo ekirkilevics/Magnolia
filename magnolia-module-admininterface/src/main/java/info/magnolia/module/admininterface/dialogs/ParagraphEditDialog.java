@@ -42,8 +42,8 @@ import info.magnolia.module.admininterface.InvalidDialogHandlerException;
 import info.magnolia.module.admininterface.SaveHandler;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
 
 import java.io.IOException;
 
@@ -91,7 +91,7 @@ public class ParagraphEditDialog extends ConfiguredDialog {
         TemplateDefinition para;
         try {
             para = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(paragraphName);
-        } catch (TemplateDefinitionRegistrationException e) {
+        } catch (RegistrationException e) {
             // TODO dlipp: apply consistent ExceptionHandling.
             throw new RuntimeException(e);
         }

@@ -34,15 +34,12 @@
 package info.magnolia.rendering.template.registry;
 
 import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.util.Provider;
 
 /**
  * Provides a {@link TemplateDefinition}.
  *
  * @version $Id$
  */
-public interface TemplateDefinitionProvider {
-
-    String getId();
-
-    TemplateDefinition getTemplateDefinition() throws TemplateDefinitionRegistrationException;
+public interface TemplateDefinitionProvider extends Provider<TemplateDefinition>{
 }

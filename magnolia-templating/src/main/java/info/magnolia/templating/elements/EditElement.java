@@ -33,19 +33,20 @@
  */
 package info.magnolia.templating.elements;
 
-import java.io.IOException;
-import javax.jcr.Node;
-
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
+
+import java.io.IOException;
+
+import javax.jcr.Node;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -91,7 +92,7 @@ public class EditElement extends AbstractContentTemplatingElement {
             TemplateDefinitionRegistry registry = Components.getComponent(TemplateDefinitionRegistry.class);
             String template = MetaDataUtil.getMetaData(content).getTemplate();
             return registry.getTemplateDefinition(template);
-        } catch (TemplateDefinitionRegistrationException e) {
+        } catch (RegistrationException e) {
             throw new RenderException("No template found for [" + content + "]", e);
         }
     }

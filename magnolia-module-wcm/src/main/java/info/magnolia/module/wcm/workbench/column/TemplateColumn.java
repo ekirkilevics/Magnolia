@@ -36,8 +36,8 @@ package info.magnolia.module.wcm.workbench.column;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
 import info.magnolia.ui.admincentral.column.AbstractEditableColumn;
 import info.magnolia.ui.admincentral.column.EditableSelect;
 import info.magnolia.ui.framework.event.EventBus;
@@ -80,8 +80,8 @@ public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinit
                 Node node = (Node) item;
                 String template = MetaDataUtil.getMetaData(node).getTemplate();
                 try {
-                    return templateManager.getTemplateDefinition(template).getTitle();
-                } catch (TemplateDefinitionRegistrationException e) {
+                    return templateManager.get(template).getTitle();
+                } catch (RegistrationException e) {
                     return StringUtils.EMPTY;
                 }
             }

@@ -39,12 +39,11 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.renderer.Renderer;
-import info.magnolia.rendering.renderer.registry.RendererRegistrationException;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
+import info.magnolia.rendering.util.RegistrationException;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -88,7 +87,7 @@ public class DefaultRenderingEngine implements RenderingEngine {
         try {
             templateDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(content);
         }
-        catch (TemplateDefinitionRegistrationException e) {
+        catch (RegistrationException e) {
             throw new RenderException("Can't render node " + content, e);
         }
         render(content, templateDefinition, contextObjects, out);
@@ -118,9 +117,9 @@ public class DefaultRenderingEngine implements RenderingEngine {
             throw new RenderException("No renderType defined for definition [" + definition + "]");
         }
         try {
-            return rendererRegistry.getRenderer(renderType);
+            return rendererRegistry.get(renderType);
         }
-        catch (RendererRegistrationException e) {
+        catch (RegistrationException e) {
             throw new RenderException("Can't find renderer for type " + renderType, e);
         }
     }

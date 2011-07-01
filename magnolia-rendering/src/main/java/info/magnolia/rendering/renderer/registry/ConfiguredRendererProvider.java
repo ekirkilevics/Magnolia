@@ -33,14 +33,15 @@
  */
 package info.magnolia.rendering.renderer.registry;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.rendering.renderer.Renderer;
+import info.magnolia.rendering.util.RegistrationException;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * RendererProvider that instantiates a renderer from a configuration node.
@@ -64,7 +65,7 @@ public class ConfiguredRendererProvider implements RendererProvider {
     }
 
     @Override
-    public Renderer getRenderer() throws RendererRegistrationException {
+    public Renderer getDefinition() throws RegistrationException {
         return renderer;
     }
 }

@@ -38,8 +38,8 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.UnhandledException;
@@ -63,9 +63,9 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
         String templateName = content.getMetaData().getTemplate();
         TemplateDefinition template;
         try {
-            template = templateManager.getTemplateDefinition(templateName);
+            template = templateManager.get(templateName);
         }
-        catch (TemplateDefinitionRegistrationException e) {
+        catch (RegistrationException e) {
             throw new UnhandledException(e);
         }
         return template != null ? template.getTitle() : StringUtils.defaultString(templateName);

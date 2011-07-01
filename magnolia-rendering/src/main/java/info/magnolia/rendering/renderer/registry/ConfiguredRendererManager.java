@@ -33,10 +33,19 @@
  */
 package info.magnolia.rendering.renderer.registry;
 
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.util.ModuleConfigurationObservingManager;
+import info.magnolia.jcr.util.NodeTypeFilter;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.NodeVisitor;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.rendering.util.RegistrationException;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.Node;
@@ -44,13 +53,6 @@ import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.cms.util.ModuleConfigurationObservingManager;
-import info.magnolia.jcr.util.NodeTypeFilter;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.jcr.util.NodeVisitor;
-import info.magnolia.module.ModuleRegistry;
 
 /**
  * ObservedManager for {@link info.magnolia.rendering.renderer.Renderer} configured in repository.
@@ -94,7 +96,7 @@ public class ConfiguredRendererManager extends ModuleConfigurationObservingManag
 
         try {
             this.registeredIds = registry.unregisterAndRegister(registeredIds, providers);
-        } catch (RendererRegistrationException e) {
+        } catch (RegistrationException e) {
             // TODO dlipp: implement proper exception handling
             throw new RuntimeException(e);
         }

@@ -34,12 +34,8 @@
 package info.magnolia.rendering.renderer.registry;
 
 import info.magnolia.rendering.renderer.Renderer;
+import info.magnolia.rendering.util.AbstractRegistry;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import javax.inject.Singleton;
 
 /**
@@ -48,58 +44,6 @@ import javax.inject.Singleton;
  * @version $Id$
  */
 @Singleton
-public class RendererRegistry {
-
-    private final Map<String, RendererProvider> providers = new HashMap<String, RendererProvider>();
-
-
-    /**
-     * TODO dlipp: remove id here - call getId() on provider as in TemplateDefinitionRegistry...
-     */
-    public void register(String id, RendererProvider provider) throws RendererRegistrationException {
-        synchronized (providers) {
-            doRegister(id, provider);
-        }
-    }
-
-    private void doRegister(String id, RendererProvider provider) throws RendererRegistrationException {
-        if (providers.containsKey(id)) {
-            throw new RendererRegistrationException("Renderer already registered for the id [" + id + "]");
-        }
-        providers.put(id, provider);
-    }
-
-    public void unregister(String id) {
-        synchronized (providers) {
-            providers.remove(id);
-        }
-    }
-
-    public Set<String> unregisterAndRegister(Collection<String> remove, Collection<RendererProvider> providers2) throws RendererRegistrationException {
-        synchronized (providers) {
-            final Set<String> ids = new HashSet<String>();
-            for (String id : remove) {
-                providers.remove(id);
-            }
-            for (RendererProvider provider : providers2) {
-                String id = provider.getId();
-                doRegister(id, provider);
-                ids.add(provider.getId());
-            }
-            return ids;
-        }
-    }
-
-    public Renderer getRenderer(String id) throws RendererRegistrationException {
-
-        RendererProvider provider;
-        synchronized (providers) {
-            provider = providers.get(id);
-        }
-        if (provider == null) {
-            throw new RendererRegistrationException("Can't find a renderer for type [" + id + "]");
-        }
-        return provider.getRenderer();
-    }
+public class RendererRegistry extends AbstractRegistry<Renderer, RendererProvider>{
 
 }

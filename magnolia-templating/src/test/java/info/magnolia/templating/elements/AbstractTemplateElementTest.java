@@ -33,21 +33,25 @@
  */
 package info.magnolia.templating.elements;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
+
 import java.io.IOException;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.junit.Ignore;
 import org.junit.Test;
-
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.rendering.context.RenderingContext;
-import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Tests for AbstractAuthoringUiComponent.
@@ -117,14 +121,14 @@ public class AbstractTemplateElementTest extends AbstractElementTestCase {
         assertEquals(expectedNode, current);
     }
 
-    private void doTestMessage(String expected, String contentPath, String key) throws RepositoryException, TemplateDefinitionRegistrationException {
+    private void doTestMessage(String expected, String contentPath, String key) throws RepositoryException, RegistrationException {
         final AbstractTemplatingElement compo = new DummyComponent();
 
         Node content = getHM().getNode(contentPath);
 
         TemplateDefinitionRegistry registry = Components.getComponent(TemplateDefinitionRegistry.class);
         String template = info.magnolia.jcr.util.MetaDataUtil.getMetaData(content).getTemplate();
-        TemplateDefinition definition = registry.getTemplateDefinition(template);
+        TemplateDefinition definition = registry.get(template);
 
         assertEquals(expected, compo.getDefinitionMessage(definition, key));
     }

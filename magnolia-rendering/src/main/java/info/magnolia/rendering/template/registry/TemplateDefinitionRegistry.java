@@ -37,14 +37,13 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.util.AbstractRegistry;
+import info.magnolia.rendering.util.RegistrationException;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Singleton;
 import javax.jcr.Node;
@@ -60,74 +59,40 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 @Singleton
-public class TemplateDefinitionRegistry {
+public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinition, TemplateDefinitionProvider>{
 
     private static final Logger log = LoggerFactory.getLogger(TemplateDefinitionRegistry.class);
 
     private static final String DELETED_PAGE_TEMPLATE = "mgnlDeleted";
 
-    private final Map<String, TemplateDefinitionProvider> providers = new HashMap<String, TemplateDefinitionProvider>();
 
-    public void register(TemplateDefinitionProvider provider) throws TemplateDefinitionRegistrationException {
-        String id = provider.getId();
-        synchronized (providers) {
-            doRegister(id, provider);
-        }
-    }
-
-    private void doRegister(String id, TemplateDefinitionProvider provider) throws TemplateDefinitionRegistrationException {
-        if (providers.containsKey(id)) {
-            throw new TemplateDefinitionRegistrationException("Template definition already registered for the id [" + id + "]");
-        }
-        providers.put(id, provider);
-    }
-
-    public void unregister(String id) {
-        synchronized (providers) {
-            providers.remove(id);
-        }
-    }
-
-    public Set<String> unregisterAndRegister(Collection<String> remove, Collection<TemplateDefinitionProvider> providers2) throws TemplateDefinitionRegistrationException{
-        synchronized (providers) {
-            final Set<String> ids = new HashSet<String>();
-            for (String id : remove) {
-                providers.remove(id);
-            }
-            for (TemplateDefinitionProvider provider : providers2) {
-                String id = provider.getId();
-                doRegister(id, provider);
-                ids.add(id);
-            }
-            return ids;
-        }
-    }
-
-    public TemplateDefinition getTemplateDefinition(String id) throws TemplateDefinitionRegistrationException {
+    public TemplateDefinition getTemplateDefinition(String id) throws RegistrationException {
 
         TemplateDefinitionProvider templateDefinitionProvider;
+        Map<String, TemplateDefinitionProvider> providers = getProviders();
         synchronized (providers) {
             templateDefinitionProvider = providers.get(id);
         }
         if (templateDefinitionProvider == null) {
-            throw new TemplateDefinitionRegistrationException("No TemplateDefinition registered for id: " + id);
+            throw new RegistrationException("No TemplateDefinition registered for id: " + id);
         }
-        TemplateDefinition templateDefinition = templateDefinitionProvider.getTemplateDefinition();
+        TemplateDefinition templateDefinition = templateDefinitionProvider.getDefinition();
         templateDefinition.setId(id);
         return templateDefinition;
     }
 
     public Collection<TemplateDefinition> getTemplateDefinitions() {
         Collection<TemplateDefinition> templateDefinitions = new ArrayList<TemplateDefinition>();
+        Map<String, TemplateDefinitionProvider> providers = getProviders();
         synchronized (providers) {
             for (Map.Entry<String, TemplateDefinitionProvider> entry : providers.entrySet()) {
                 String id = entry.getKey();
                 TemplateDefinitionProvider provider = entry.getValue();
                 try {
-                    TemplateDefinition templateDefinition = provider.getTemplateDefinition();
+                    TemplateDefinition templateDefinition = provider.getDefinition();
                     templateDefinition.setId(id);
                     templateDefinitions.add(templateDefinition);
-                } catch (TemplateDefinitionRegistrationException e) {
+                } catch (RegistrationException e) {
                     // one failing provider is no reason to not show any templates
                     log.error("Failed to read template definition from " + provider + ".", e);
                 }
@@ -141,11 +106,11 @@ public class TemplateDefinitionRegistry {
 
         try {
             if (content != null && NodeUtil.hasMixin(content, MgnlNodeType.MIX_DELETED)) {
-                return Collections.singleton(getTemplateDefinition(DELETED_PAGE_TEMPLATE));
+                return Collections.singleton(get(DELETED_PAGE_TEMPLATE));
             }
         } catch (RepositoryException e) {
             log.error("Failed to check node for deletion status.", e);
-        } catch (TemplateDefinitionRegistrationException e) {
+        } catch (RegistrationException e) {
             log.error("Deleted content template is not correctly registered.", e);
         }
 
@@ -168,8 +133,8 @@ public class TemplateDefinitionRegistry {
         // try to use the same as the parent
         TemplateDefinition definition = null;
         try {
-            definition = this.getTemplateDefinition(MetaDataUtil.getTemplate(content));
-        } catch (TemplateDefinitionRegistrationException e) {
+            definition = this.get(MetaDataUtil.getTemplate(content));
+        } catch (RegistrationException e) {
             log.warn("Can't resolve default template for node " + content, e);
         }
         if (definition != null && definition.isAvailable(content)){

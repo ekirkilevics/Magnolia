@@ -95,12 +95,7 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
         contentStack.pop();
         definitionStack.pop();
         if (!contentStack.isEmpty()) {
-            aggregationState.setCurrentContent(contentStack.peek());
-        } else {
-            // TODO dlipp: can never be reached - initial push (on empty stacks) adds one element to definitionStack but
-            // TWO to contentStack. Before contentStack could be empty we'd get a EmptyStackException on
-            // definitionStack!!! ->
-            aggregationState.setCurrentContent(null);
+            aggregationState.setCurrentContent(contentStack.pop());
         }
     }
 

@@ -31,28 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template.registry;
+package info.magnolia.rendering.util;
 
 
 /**
- * Thrown in case a template definition can't be found or if the registration fails.
+ * Thrown in case a renderer can't be found or if the registration fails.
  *
  * @version $Id$
  */
-public class TemplateDefinitionRegistrationException extends Exception {
+public class RegistrationException extends Exception {
 
-    public TemplateDefinitionRegistrationException() {
-    }
-
-    public TemplateDefinitionRegistrationException(String message) {
+    public RegistrationException(String message) {
         super(message);
     }
 
-    public TemplateDefinitionRegistrationException(Throwable throwable) {
-        super(throwable);
-    }
-
-    public TemplateDefinitionRegistrationException(String message, Throwable throwable) {
+    public RegistrationException(String message, Throwable throwable) {
         super(message, throwable);
     }
 

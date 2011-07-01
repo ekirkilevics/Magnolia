@@ -38,8 +38,8 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
 import info.magnolia.ui.admincentral.dialog.DialogPresenterFactory;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.ui.admincentral.tree.action.TreeAction;
@@ -95,8 +95,8 @@ public class EditPagePropertiesAction extends ActionBase<EditPagePropertiesActio
         String template = metaData.getTemplate();
         TemplateDefinition templateDefinition;
         try {
-            templateDefinition = templateManager.getTemplateDefinition(template);
-        } catch (TemplateDefinitionRegistrationException e) {
+            templateDefinition = templateManager.get(template);
+        } catch (RegistrationException e) {
             // The node uses a template which is not registered
             return null;
         }

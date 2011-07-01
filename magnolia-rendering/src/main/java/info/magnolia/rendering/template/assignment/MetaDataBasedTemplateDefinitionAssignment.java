@@ -33,14 +33,14 @@
  */
 package info.magnolia.rendering.template.assignment;
 
+import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.Node;
-
-import info.magnolia.jcr.util.MetaDataUtil;
-import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 
 /**
@@ -59,7 +59,7 @@ public class MetaDataBasedTemplateDefinitionAssignment implements TemplateDefini
     }
 
     @Override
-    public TemplateDefinition getAssignedTemplateDefinition(Node content) throws TemplateDefinitionRegistrationException {
+    public TemplateDefinition getAssignedTemplateDefinition(Node content) throws RegistrationException {
         final String templateId = MetaDataUtil.getMetaData(content).getTemplate();
         return templateDefinitionRegistry.getTemplateDefinition(templateId);
     }

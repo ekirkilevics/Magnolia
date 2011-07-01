@@ -40,8 +40,8 @@ import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.util.LazyInitPrintWriter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistrationException;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.util.RegistrationException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -146,9 +146,9 @@ public class RenderingFilter extends AbstractMgnlFilter {
 
         TemplateDefinition templateDifinition;
         try {
-            templateDifinition = templateDefinitionRegistry.getTemplateDefinition(templateName);
+            templateDifinition = templateDefinitionRegistry.get(templateName);
         }
-        catch (TemplateDefinitionRegistrationException e) {
+        catch (RegistrationException e) {
             throw new RenderException(e);
         }
         renderingEngine.render(content, templateDifinition, Collections.EMPTY_MAP, out);
