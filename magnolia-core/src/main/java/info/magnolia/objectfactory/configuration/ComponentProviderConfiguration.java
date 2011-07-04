@@ -131,6 +131,10 @@ public class ComponentProviderConfiguration implements Cloneable {
         addImplementation(ImplementationConfiguration.valueOf(type, implementation));
     }
 
+    public <T> void registerImplementation(Class<T> type) {
+        registerImplementation(type, type);
+    }
+
     public <T> void registerInstance(Class<T> type, T instance) {
         addInstance(InstanceConfiguration.valueOf(type, instance));
     }
@@ -141,5 +145,21 @@ public class ComponentProviderConfiguration implements Cloneable {
         this.instances.addAll(components.instances);
         this.factories.addAll(components.factories);
         this.configured.addAll(components.configured);
+    }
+
+    public boolean hasConfigFor(Class<?> type) {
+        for (ImplementationConfiguration<?> implementation : implementations) {
+            if (implementation.getType().equals(type)) return true;
+        }
+        for (InstanceConfiguration<?> instance : instances) {
+            if (instance.getType().equals(type)) return true;
+        }
+        for (ComponentFactoryConfiguration<?> factory : factories) {
+            if (factory.getType().equals(type)) return true;
+        }
+        for (ConfiguredComponentConfiguration<?> configuration : configured) {
+            if (configuration.getType().equals(type)) return true;
+        }
+        return false;
     }
 }

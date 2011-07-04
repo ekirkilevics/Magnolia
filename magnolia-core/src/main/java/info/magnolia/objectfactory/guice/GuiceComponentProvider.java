@@ -37,11 +37,9 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Stage;
+import com.google.inject.Key;
 import info.magnolia.objectfactory.ComponentFactory;
-import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.HierarchicalComponentProvider;
 import info.magnolia.objectfactory.MutableComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -61,13 +59,10 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
     private final Map<Class<?>, Class<?>> implementations = new HashMap<Class<?>, Class<?>>();
     private GuiceComponentProvider parentComponentProvider;
 
-    public GuiceComponentProvider(Injector injector, ComponentProviderConfiguration configuration, GuiceComponentProvider parentComponentProvider) {
-        this.injector = injector;
+    GuiceComponentProvider(ComponentProviderConfiguration configuration, GuiceComponentProvider parentComponentProvider) {
         this.parentComponentProvider = parentComponentProvider;
-        if (configuration != null) {
-            for (ImplementationConfiguration<?> implementationConfiguration : configuration.getImplementations()) {
-                implementations.put(implementationConfiguration.getType(), implementationConfiguration.getImplementation());
-            }
+        for (ImplementationConfiguration<?> implementationConfiguration : configuration.getImplementations()) {
+            implementations.put(implementationConfiguration.getType(), implementationConfiguration.getImplementation());
         }
     }
 
@@ -87,12 +82,16 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
     }
 
     @Override
+    @Deprecated
     public <T> T getSingleton(Class<T> type) {
-        return injector.getInstance(type);
+        return getComponent(type);
     }
 
     @Override
     public <T> T getComponent(Class<T> type) {
+        if (!hasExplicitBindingFor(injector, type)) {
+            return null;
+        }
         return injector.getInstance(type);
     }
 
@@ -105,14 +104,8 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
     }
 
     @Override
-    public ComponentProvider createChild(ComponentProviderConfiguration componentsConfiguration) {
-
-        Injector child = Guice.createInjector(
-                injector.getInstance(Stage.class),
-                new GuiceParentBindingsModule(injector),
-                new GuiceComponentProviderModule(componentsConfiguration, false, this));
-
-        return new GuiceComponentProvider(child, componentsConfiguration, this);
+    public GuiceComponentProvider createChild(ComponentProviderConfiguration componentsConfiguration) {
+        return new GuiceComponentProviderBuilder().withConfiguration(componentsConfiguration).withParent(this).build();
     }
 
     public Injector getInjector() {
@@ -132,5 +125,16 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
     @Override
     public MutableComponentProvider createChild() {
         throw new UnsupportedOperationException();
+    }
+
+    private static boolean hasExplicitBindingFor(Injector injector, Class<?> type) {
+        Injector target = injector;
+        do {
+            if (target.getBindings().containsKey(Key.get(type))) {
+                return true;
+            }
+            target = target.getParent();
+        } while (target != null);
+        return false;
     }
 }

@@ -40,15 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.VersionConfig;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.license.LicenseFileExtractor;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
-import info.magnolia.context.SystemContext;
 import info.magnolia.objectfactory.ComponentFactory;
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentFactoryConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
@@ -57,7 +49,7 @@ import info.magnolia.objectfactory.configuration.InstanceConfiguration;
 
 
 /**
- * Guice configuration module that uses a ComponentProviderConfiguration to create and bind a ComponentProvider.
+ * Guice configuration module that adds bindings based on a ComponentProviderConfiguration.
  *
  * @version $Id$
  */
@@ -65,24 +57,14 @@ public class GuiceComponentProviderModule extends AbstractModule {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private GuiceComponentProvider parentComponentProvider;
     private ComponentProviderConfiguration configuration;
-    private boolean exposeGlobally = false;
 
-    public GuiceComponentProviderModule(ComponentProviderConfiguration configuration, boolean exposeGlobally, GuiceComponentProvider parentComponentProvider) {
-        this.parentComponentProvider = parentComponentProvider;
+    public GuiceComponentProviderModule(ComponentProviderConfiguration configuration) {
         this.configuration = configuration;
-        this.exposeGlobally = exposeGlobally;
     }
 
     @Override
     protected void configure() {
-
-        GuiceComponentProvider componentProvider = new GuiceComponentProvider(null, configuration, parentComponentProvider);
-        if (exposeGlobally) {
-            Components.setProvider(componentProvider);
-        }
-        bind(ComponentProvider.class).toInstance(componentProvider);
 
         for (ImplementationConfiguration config : configuration.getImplementations()) {
             if (config.getImplementation() == null && config.getType() == null) {
@@ -134,38 +116,11 @@ public class GuiceComponentProviderModule extends AbstractModule {
     }
 
     private void registerImplementation(Class type, Class implementation) {
-
-        // FIXME this is hard coded because these are the components configured in mgnl-beans.properties and in module descriptors that are now part of the startup and no longer configurable
-
-        if (type.equals(MessagesManager.class)) {
-            return;
-        }
-        if (type.equals(SystemContext.class)) {
-            return;
-        }
-        if (type.equals(info.magnolia.cms.util.UnicodeNormalizer.Normalizer.class)) {
-            return;
-        }
-        if (type.equals(SystemContext.class)) {
-            return;
-        }
-        if (type.equals(VersionConfig.class)) {
-            return;
-        }
-        if (type.equals(WorkspaceAccessUtil.class)) {
-            return;
-        }
-        if (type.equals(ConfigLoader.class)) {
-            return;
-        }
-        if (type.equals(LicenseFileExtractor.class)) {
-            return;
-        }
         if (ComponentFactory.class.isAssignableFrom(implementation)) {
             bind(type).toProvider(new GuiceComponentFactoryProviderAdapter(implementation));
         } else {
 
-            // FIXME for now we keep only singletons in Guice, short living objects can be created using newInstance
+            // FIXME some of our non-singleton classes have extra ctor arguments that guice cant fulfill, so we skip any non-singletons and trust that client code will use newInstance() for these
 
             if (type.equals(implementation)) {
                 if (implementation.isAnnotationPresent(Singleton.class)) {

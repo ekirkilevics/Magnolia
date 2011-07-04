@@ -33,73 +33,63 @@
  */
 package info.magnolia.objectfactory.guice;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
-
-import org.apache.commons.lang.UnhandledException;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Provider;
-import com.google.inject.Scopes;
 import com.google.inject.Stage;
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 
 /**
- * Bridges a Guice Injector to another Injector by adding bindings for all explicit bindings in the injector bridging to.
+ * Bridges a Guice Injector to another Injector by adding bindings for all explicit bindings in the injector being
+ * used as parent. Bindings in the parent injector which will be configured locally are skipped.
  *
  * @version $Id$
  */
 public class GuiceParentBindingsModule extends AbstractModule {
 
-    // FIXME hardcoded exclusions should be changed
-
     private Injector parentInjector;
-    private Set<Key> excluded = new HashSet<Key>();
+    private ComponentProviderConfiguration configuration;
 
-    public GuiceParentBindingsModule(Injector parentInjector) {
+    public GuiceParentBindingsModule(Injector parentInjector, ComponentProviderConfiguration configuration) {
         this.parentInjector = parentInjector;
-        excluded.add(Key.get(ComponentProvider.class));
-        excluded.add(Key.get(Injector.class));
-        excluded.add(Key.get(Stage.class));
-        excluded.add(Key.get(Logger.class));
-        excluded.add(Key.get(classForName("info.magnolia.ui.framework.shell.Shell")));
-        excluded.add(Key.get(classForName("info.magnolia.ui.framework.place.PlaceController")));
-        excluded.add(Key.get(classForName("info.magnolia.ui.framework.event.EventBus")));
-    }
-
-    private Class<?> classForName(String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new UnhandledException(e);
-        }
+        this.configuration = configuration;
     }
 
     @Override
     protected void configure() {
 
-        Injector targetInjector = parentInjector;
-        do {
-            Map<Key<?>, Binding<?>> bindings = targetInjector.getBindings();
-            for (Map.Entry<Key<?>, Binding<?>> bindingEntry : bindings.entrySet()) {
-                Key<?> key = bindingEntry.getKey();
-                if (!excluded.contains(key)) {
-                    final Provider<?> provider = bindingEntry.getValue().getProvider();
-                    bind(key).toProvider(new Provider() {
-                        @Override
-                        public Object get() {
-                            return provider.get();
-                        }
-                    }).in(Scopes.NO_SCOPE);
-                }
+        for (Map.Entry<Key<?>, Binding<?>> entry : parentInjector.getBindings().entrySet()) {
+            Key<?> key = entry.getKey();
+            if (Key.get(ComponentProvider.class).equals(key)) {
+                continue;
             }
-            targetInjector = targetInjector.getParent();
-        } while (targetInjector != null);
+            if (Key.get(Injector.class).equals(key)) {
+                continue;
+            }
+            if (Key.get(Stage.class).equals(key)) {
+                continue;
+            }
+            if (Key.get(Logger.class).equals(key)) {
+                continue;
+            }
+            if (configuration.hasConfigFor(key.getTypeLiteral().getRawType())) {
+                System.out.println("Skipping parent binding " + key.getTypeLiteral().getRawType());
+                continue;
+            }
+            final Provider<?> provider = entry.getValue().getProvider();
+            bind(key).toProvider(new Provider() {
+                @Override
+                public Object get() {
+                    return provider.get();
+                }
+            });
+        }
     }
 }

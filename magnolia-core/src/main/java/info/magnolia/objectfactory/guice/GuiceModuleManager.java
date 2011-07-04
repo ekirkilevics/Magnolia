@@ -46,9 +46,15 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.ProvisionException;
+import info.magnolia.cms.beans.config.ConfigLoader;
+import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.cms.util.UnicodeNormalizer;
+import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
@@ -64,6 +70,7 @@ import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentConfigurationPath;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.PropertiesComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -77,7 +84,7 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 @Singleton
 public class GuiceModuleManager extends ModuleManagerImpl {
 
-    private Injector main;
+    private ComponentProvider main;
     private ModuleRegistry moduleRegistry;
     private MagnoliaConfigurationProperties configurationProperties;
     private Map<String, ModuleInstanceProvider<?>> moduleProviders = new HashMap<String, ModuleInstanceProvider<?>>();
@@ -116,13 +123,26 @@ public class GuiceModuleManager extends ModuleManagerImpl {
         for (String key : configurationProperties.getKeys()) {
             properties.put(key, configurationProperties.getProperty(key));
         }
+
+        // FIXME These are defined in mgnl-beans.properties and if allowed would override those hard-coded in GuiceServletContextListener
+        properties.remove(LicenseFileExtractor.class.getName());
+        properties.remove(VersionConfig.class.getName());
+        properties.remove(MessagesManager.class.getName());
+        properties.remove(SystemContext.class.getName());
+        properties.remove(WorkspaceAccessUtil.class.getName());
+        properties.remove(ConfigLoader.class.getName());
+        properties.remove(UnicodeNormalizer.Normalizer.class.getName());
+
         ComponentProviderConfiguration configuration = PropertiesComponentProvider.createConfigurationFromProperties(properties);
 
         GuiceComponentProvider componentProvider = (GuiceComponentProvider) Components.getComponentProvider();
-        Injector injector = componentProvider.getInjector();
-        main = injector.createChildInjector(new ModuleClassesModule(), new GuiceComponentProviderModule(configuration, true, componentProvider));
+        GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
+        builder.withConfiguration(configuration);
+        builder.exposeGlobally();
+        builder.withParent(componentProvider);
+        builder.addModule(new ModuleClassesModule());
 
-        // TODO should we set the new injector in the component provider? or even create a new CP for this injector? or is it the same instance?
+        main = builder.build();
     }
 
     @Override
@@ -133,8 +153,13 @@ public class GuiceModuleManager extends ModuleManagerImpl {
 
     @Override
     protected void startModule(Object moduleInstance, ModuleDefinition moduleDefinition, ModuleLifecycleContextImpl lifecycleContext) {
+
+        // Populate the instance before startup in case the repository has changed during install/update
         moduleProviders.get(moduleDefinition.getName()).populate();
+
         super.startModule(moduleInstance, moduleDefinition, lifecycleContext);
+
+        // Start observation now that the module has started
         moduleProviders.get(moduleDefinition.getName()).startObservation();
     }
 

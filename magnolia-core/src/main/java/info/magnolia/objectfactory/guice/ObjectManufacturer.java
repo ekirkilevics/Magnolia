@@ -107,7 +107,7 @@ public class ObjectManufacturer {
 
     private Object invoke(Constructor constructor, Object[] parameters) {
         try {
-            Object instance = constructor.newInstance(resolveParameters(constructor.getDeclaringClass(), constructor.getParameterTypes(), parameters));
+            Object instance = constructor.newInstance(parameters);
             injector.injectMembers(instance);
             return instance;
         } catch (InstantiationException e) {
