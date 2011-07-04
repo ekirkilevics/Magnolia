@@ -166,6 +166,62 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
+    public void testChildrenFromContentMap() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        String[] firstLevelPages       = {"page1", "page2", "page3"};
+        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
+        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
+        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
+
+        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
+
+        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+
+        ContentMap rootPageContentMap = new ContentMap(rootPage);
+
+        // WHEN
+        List<ContentMap> resultChildNodes = functions.children(rootPageContentMap);
+
+        // THEN
+        String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(firstLevelPages, firstLevelComponents);
+        assertChildrenEqualStringDefinition(resultChildNodes, allFirstLevelNames);
+    }
+
+    @Test
+    public void testChildrenFromContentMapAndType() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        String[] firstLevelPages       = {"page1", "page2", "page3"};
+        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
+        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
+        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
+
+        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
+
+        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+
+        ContentMap rootPageContentMap = new ContentMap(rootPage);
+
+
+        // WHEN
+        List<ContentMap> resultChildPagesMap = functions.children(rootPageContentMap, MgnlNodeType.NT_CONTENT);
+        List<ContentMap> resultChildComponentsMap = functions.children(rootPageContentMap, MgnlNodeType.NT_CONTENTNODE);
+
+        // THEN
+        assertChildrenEqualStringDefinition(resultChildPagesMap, firstLevelPages);
+        assertChildrenEqualStringDefinition(resultChildComponentsMap, firstLevelComponents);
+    }
+
+    @Test
     public void testChildrenFromNode() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
@@ -218,22 +274,26 @@ public class TemplatingFunctionsTest {
 
 
 
-
     /**
-     * Checks each node name with the passes nodeNames in @param originNodeNames.
-     * Check the amount of nodes compared of the amount of passed namesNames in @param originNodeNames.
+     * Checks each object of the list @param resultNodesOrContentMaps with the passes nodeNames in @param originNodeNames.
+     * The checked object can be an instance of Node or ContentMap.
+     * Check also the amount of nodes compared of the amount of passed namesNames in @param originNodeNames.
      *
-     * @param resultNodes List of Nodes generate during // WHEN
+     * @param resultNodesOrContentMaps List of Nodes generate during // WHEN
      * @param originNodeNames String[] containing the node names which were base of generating the node list @param resultNodes during //GIVEN
      * @throws RepositoryException
      */
-    private void assertChildrenEqualStringDefinition(List<Node> resultNodes, String[] originNodeNames) throws RepositoryException {
+    private void assertChildrenEqualStringDefinition(List resultNodesOrContentMaps, String[] originNodeNames) throws RepositoryException {
         int i = 0;
-        for(Node nodeNode : resultNodes){
-            assertEquals(nodeNode.getName(), originNodeNames[i]);
-            i++;
+        for ( Iterator it = resultNodesOrContentMaps.iterator(); it.hasNext(); i++) {
+            Object object = it.next();
+            if(object instanceof Node){
+                assertEquals((((Node)object).getName()), originNodeNames[i]);
+            }
+            if(object instanceof ContentMap){
+                assertEquals((((ContentMap)object).get("@name")), originNodeNames[i]);
+            }
         }
-        assertEquals(originNodeNames.length, i);
     }
 
     /**

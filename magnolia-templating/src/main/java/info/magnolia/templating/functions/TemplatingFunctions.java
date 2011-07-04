@@ -102,7 +102,6 @@ public class TemplatingFunctions {
         return contentMap == null ? null : this.link(asJCRNode(contentMap));
     }
 
-    //TODO cringele : test missing
     public List<ContentMap> children(ContentMap content) throws RepositoryException{
         if(content == null) {
             return null;
@@ -114,7 +113,6 @@ public class TemplatingFunctions {
         return childList;
     }
 
-    //TODO cringele : test missing
     public List<ContentMap> children(ContentMap content, String nodeTypeName) throws RepositoryException{
         if(content == null) {
             return null;
