@@ -48,6 +48,7 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.junit.Test;
 
 /**
@@ -165,6 +166,31 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
+    public void testChildrenFromNode() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        String[] firstLevelPages       = {"page1", "page2", "page3"};
+        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
+        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
+        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
+
+        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
+
+        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+
+        // WHEN
+        List<Node> resultChildNodes = functions.children(rootPage);
+
+        // THEN
+        String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(firstLevelPages, firstLevelComponents);
+        assertChildrenEqualStringDefinition(resultChildNodes, allFirstLevelNames);
+    }
+
+    @Test
     public void testChildrenFromNodeAndType() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
@@ -182,12 +208,12 @@ public class TemplatingFunctionsTest {
         createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
 
         // WHEN
-        List<Node> childPages = functions.children(rootPage, MgnlNodeType.NT_CONTENT);
-        List<Node> childComponents = functions.children(rootPage, MgnlNodeType.NT_CONTENTNODE);
+        List<Node> resultChildPages = functions.children(rootPage, MgnlNodeType.NT_CONTENT);
+        List<Node> resultChildComponents = functions.children(rootPage, MgnlNodeType.NT_CONTENTNODE);
 
         // THEN
-        assertChildrenEqualStringDefinition(childPages, firstLevelPages);
-        assertChildrenEqualStringDefinition(childComponents, firstLevelComponents);
+        assertChildrenEqualStringDefinition(resultChildPages, firstLevelPages);
+        assertChildrenEqualStringDefinition(resultChildComponents, firstLevelComponents);
     }
 
 

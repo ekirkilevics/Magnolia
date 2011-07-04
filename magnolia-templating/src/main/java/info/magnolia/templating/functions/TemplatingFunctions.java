@@ -126,7 +126,6 @@ public class TemplatingFunctions {
         return childList;
     }
 
-    //TODO cringele : test missing
     public List<Node> children(Node content) throws RepositoryException{
         if(content == null) {
             return null;
