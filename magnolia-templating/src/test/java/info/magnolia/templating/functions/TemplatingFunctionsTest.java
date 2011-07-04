@@ -37,9 +37,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.jcr.MockNode;
+
+import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -160,6 +164,51 @@ public class TemplatingFunctionsTest {
         assertEquals(uuid, map.get("@uuid"));
     }
 
+    @Test
+    public void testChildrenFromNodeAndType() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        String[] firstLevelPages       = {"page1", "page2", "page3"};
+        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
+        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
+        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
+
+        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
+
+        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+
+        // WHEN
+        List<Node> childPages = functions.children(rootPage, MgnlNodeType.NT_CONTENT);
+        List<Node> childComponents = functions.children(rootPage, MgnlNodeType.NT_CONTENTNODE);
+
+        // THEN
+        assertChildrenEqualStringDefinition(childPages, firstLevelPages);
+        assertChildrenEqualStringDefinition(childComponents, firstLevelComponents);
+    }
+
+
+
+
+    /**
+     * Checks each node name with the passes nodeNames in @param originNodeNames.
+     * Check the amount of nodes compared of the amount of passed namesNames in @param originNodeNames.
+     *
+     * @param resultNodes List of Nodes generate during // WHEN
+     * @param originNodeNames String[] containing the node names which were base of generating the node list @param resultNodes during //GIVEN
+     * @throws RepositoryException
+     */
+    private void assertChildrenEqualStringDefinition(List<Node> resultNodes, String[] originNodeNames) throws RepositoryException {
+        int i = 0;
+        for(Node nodeNode : resultNodes){
+            assertEquals(nodeNode.getName(), originNodeNames[i]);
+            i++;
+        }
+        assertEquals(originNodeNames.length, i);
+    }
 
     /**
      * Checks all mandatory ContentMap values. None should be null and all values should equal.
@@ -245,6 +294,18 @@ public class TemplatingFunctionsTest {
         assertEquals(result.getPath(), origin.getHandle());
     }
 
-
+    /**
+     * Add to the give root node child nodes by the name and type passed.
+     *
+     * @param root node where child nodes are added to
+     * @param childNodeNames names of the children to create
+     * @param nodeTypeName of the children to create
+     */
+    private void createChildNodes(MockNode root, String[] childNodeNames, String nodeTypeName) {
+        for(String nodeName : childNodeNames){
+            MockNode child = new MockNode(nodeName, nodeTypeName);
+            root.addNode(child);
+        }
+    }
 
 }

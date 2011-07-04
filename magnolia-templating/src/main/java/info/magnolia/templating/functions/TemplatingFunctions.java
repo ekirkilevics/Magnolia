@@ -138,7 +138,6 @@ public class TemplatingFunctions {
         return childList;
     }
 
-    //TODO cringele : test missing
     public List<Node> children(Node content, String nodeTypeName) throws RepositoryException{
         if(content == null) {
             return null;
@@ -150,7 +149,7 @@ public class TemplatingFunctions {
         return childList;
     }
 
-    //TODO cringele : May all be optional. Descide on weather to provide them or not
+    //TODO cringele : May all be optional. Decide on weather to provide them or not
 
     /**
      * Could be private.
