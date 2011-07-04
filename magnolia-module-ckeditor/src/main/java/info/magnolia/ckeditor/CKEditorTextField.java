@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -54,7 +54,7 @@ import com.vaadin.ui.AbstractField;
  *
  * Currently, this widget doesn't support being read-only because CKEditor doesn't.  But perhaps need the widgets
  * to only emit a DIV with the HTML code inside if it's read-only.
- * Adapted verbatim from http://vaadin.com/directory#addon/ckeditor-wrapper-for-vaadin.
+ * Copied verbatim from http://vaadin.com/directory#addon/ckeditor-wrapper-for-vaadin.
  */
 @com.vaadin.ui.ClientWidget(VCKEditorTextField.class)
 public class CKEditorTextField extends AbstractField

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -36,7 +36,7 @@ package info.magnolia.ckeditor.widgetset.client.ui;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * Wrapper around CKEDITOR.editor js object. Copied verbatim from source from addon http://vaadin.com/directory#addon/ckeditor-wrapper-for-vaadin.
+ * Wrapper around CKEDITOR.editor js object. Copied verbatim from addon http://vaadin.com/directory#addon/ckeditor-wrapper-for-vaadin.
  */
 public class CKEditor extends JavaScriptObject {
 

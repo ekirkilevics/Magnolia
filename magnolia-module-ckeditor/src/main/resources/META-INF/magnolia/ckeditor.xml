@@ -5,7 +5,6 @@
   <displayName>${project.name}</displayName>
   <description>${project.description}</description>
   <class>info.magnolia.ckeditor.module.CKEditorModule</class>
-  <versionHandler>info.magnolia.ckeditor.module.setup.CKEditorModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
 
   <dependencies>
@@ -13,12 +12,5 @@
       <name>core</name>
       <version>5.0/*</version>
     </dependency>
-  <!-- Use the extended-templating-kit with the enterprise edition. -->
-  <!--
-    <dependency>
-      <name>extended-templating-kit</name>
-      <version>1.3/*</version>
-    </dependency>
-  -->
   </dependencies>
 </module>
