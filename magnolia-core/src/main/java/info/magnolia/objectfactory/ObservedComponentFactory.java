@@ -34,8 +34,8 @@
 package info.magnolia.objectfactory;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.SilentSessionOp;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanTransformer;
@@ -48,7 +48,6 @@ import org.apache.commons.proxy.factory.cglib.CglibProxyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.observation.EventIterator;
@@ -147,12 +146,13 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
 
             @Override
             public Void doExec(Session session) throws RepositoryException {
-                session = MgnlContext.getJCRSession(session.getWorkspace().getName());
+                // create hm from session
+                HierarchyManager hm = MgnlContext.getHierarchyManager(session.getWorkspace().getName());
                 if (session.nodeExists(path)) {
                     try {
                         // TODO: change this once c2b is n2b ...
-                        final Node node = session.getNode(path);
-                        onRegister(ContentUtil.wrapAsContent(node));
+                        final Content node = hm.getContent(path);
+                        onRegister(node);
                     } catch (RepositoryException e) {
                         log.error("Can't read configuration for " + interf + " from [" + repository + ":" + path + "], will return null.", e);
                     }
