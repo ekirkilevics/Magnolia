@@ -48,6 +48,8 @@ import info.magnolia.ui.vaadin.integration.view.MainWindow;
  */
 public class PageEditorApplication extends Application {
 
+    // FIXME this should be identical to what is done in AdminCentralApplication
+
     @Override
     public void init() {
 
