@@ -57,8 +57,6 @@ public class TemplatingFunctions {
 
     private static final Logger log = LoggerFactory.getLogger(TemplatingFunctions.class);
 
-
-    //TODO cringele : test missing
     public Content asContent(Node node) throws RepositoryException {
         return node == null ? null : new DefaultContent(node, null);
     }

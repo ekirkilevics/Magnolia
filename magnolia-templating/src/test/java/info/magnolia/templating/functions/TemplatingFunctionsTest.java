@@ -36,17 +36,21 @@ package info.magnolia.templating.functions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.Test;
@@ -57,6 +61,24 @@ import org.junit.Test;
  * @version $Id$
  */
 public class TemplatingFunctionsTest {
+
+    @Test
+    public void testAsContentFromNode() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+        String name = "test";
+        MockNode origin = new MockNode(name);
+        MockSession session = mock(MockSession.class);
+        when(session.hasPermission("/"+name, Session.ACTION_READ)).thenReturn(Boolean.TRUE);
+        origin.setSession(session);
+
+        // WHEN
+        Content result = functions.asContent(origin);
+
+        // THEN
+        //Added check on not null, cause equals is true between nulls. But these values should never be null.
+        assertContentEqualsNode(result, origin);
+    }
 
     @Test
     public void testAsJCRNodeFromContent() throws RepositoryException {
@@ -297,7 +319,24 @@ public class TemplatingFunctionsTest {
     }
 
     /**
-     * Checks all mandatory ContentMap values. None should be null and all values should equal.
+     * Checks all mandatory Content values. None should be null and all values should equal.
+     *
+     * @param result Content generate during // WHEN
+     * @param origin Node generated during // GIVEN
+     * @throws RepositoryException
+     */
+    private void assertContentEqualsNode(Content result, Node origin) throws RepositoryException {
+        assertNotNull(result.getName());
+        assertEquals(result.getName(), origin.getName());
+        assertNotNull(result.getUUID());
+        assertEquals(result.getUUID(), origin.getUUID());
+        assertEquals(result.getUUID(), origin.getIdentifier());
+        assertNotNull(result.getHandle());
+        assertEquals(result.getHandle(), origin.getPath());
+    }
+
+    /**
+     * Checks all mandatory Node values. None should be null and all values should equal.
      *
      * @param result Node generate during // WHEN
      * @param origin Node generated during // GIVEN
