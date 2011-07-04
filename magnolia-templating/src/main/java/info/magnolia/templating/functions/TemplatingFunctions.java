@@ -150,8 +150,8 @@ public class TemplatingFunctions {
             return null;
         }
         Node root = content;
-        while(this.parent(content) != null){
-            root = this.parent(content);
+        while(this.parent(root) != null){
+            root = this.parent(root);
         }
         return root;
     }
