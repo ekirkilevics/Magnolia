@@ -49,7 +49,12 @@ public class OpsTest extends RepositoryTestCase {
     private final ErrorHandler eh = new ErrorHandler() {
         @Override
         public void report(String message) {
-            throw new RuntimeException(message); // TODO
+            throw new RuntimeException(message);
+        }
+
+        @Override
+        public void report(String message, Throwable cause) {
+            throw new RuntimeException(message, cause);
         }
 
         @Override

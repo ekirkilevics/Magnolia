@@ -33,6 +33,10 @@
  */
 package info.magnolia.module;
 
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -52,13 +56,12 @@ import info.magnolia.module.model.reader.ModuleDependencyException;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
 
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import javax.jcr.RepositoryException;
 
 /**
  * A base class for testing implementations of ModuleVersionHandler.

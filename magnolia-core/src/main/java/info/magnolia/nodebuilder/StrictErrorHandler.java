@@ -45,4 +45,8 @@ public class StrictErrorHandler extends AbstractErrorHandler {
     public void report(String message) throws NodeOperationException {
         throw new NodeOperationException(message);
     }
+
+    public void report(String message, Throwable cause) throws NodeOperationException {
+        throw new NodeOperationException(message, cause);
+    }
 }

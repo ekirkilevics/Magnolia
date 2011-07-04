@@ -69,7 +69,7 @@ public abstract class AbstractNodeBuilderTask extends AbstractRepositoryTask {
         try {
             nodeBuilder.exec();
         } catch (NodeOperationException e) {
-            throw new TaskExecutionException(e.getMessage(), e.getCause());
+            throw new TaskExecutionException(e.getMessage(), e);
         }
     }
 
@@ -78,10 +78,10 @@ public abstract class AbstractNodeBuilderTask extends AbstractRepositoryTask {
 
     protected ErrorHandler newErrorHandler(InstallContext ctx) {
         switch (errorHandling) {
-            case logging:
-                return new TaskLogErrorHandler(ctx);
-            case strict:
-                return new StrictErrorHandler();
+        case logging:
+            return new TaskLogErrorHandler(ctx);
+        case strict:
+            return new StrictErrorHandler();
         }
         throw new IllegalStateException("Improbable errorHandling: " + errorHandling);
     }

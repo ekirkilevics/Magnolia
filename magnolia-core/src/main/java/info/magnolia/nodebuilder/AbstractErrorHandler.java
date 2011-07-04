@@ -62,11 +62,11 @@ public abstract class AbstractErrorHandler implements ErrorHandler {
     @Override
     public void handle(RepositoryException e, Content context) throws NodeOperationException {
         if (e instanceof ItemExistsException) {
-            report(e.getMessage() + " already exists at " + context.getHandle() + ".");
+            report(e.getMessage() + " already exists at " + context.getHandle() + ".", e);
         } else if (e instanceof ItemNotFoundException) {
-            report(e.getMessage() + " can't be found at " + context.getHandle() + ".");
+            report(e.getMessage() + " can't be found at " + context.getHandle() + ".", e);
         } else if (e instanceof PathNotFoundException) {
-            report(e.getMessage() + " can't be found at " + context.getHandle() + ".");
+            report(e.getMessage() + " can't be found at " + context.getHandle() + ".", e);
         } else {
             unhandledRepositoryException(e, context);
         }
@@ -78,5 +78,12 @@ public abstract class AbstractErrorHandler implements ErrorHandler {
      */
     protected void unhandledRepositoryException(RepositoryException e, Content context) throws NodeOperationException {
         throw new NodeOperationException("Failed to operate on " + context.getHandle() + " with message: " + e.getMessage(), e);
+    }
+
+    /**
+     * Default implementation dropping the cause for those handlers that care only about the message.
+     */
+    public void report(String message, Throwable cause) throws NodeOperationException {
+        report(message);
     }
 }

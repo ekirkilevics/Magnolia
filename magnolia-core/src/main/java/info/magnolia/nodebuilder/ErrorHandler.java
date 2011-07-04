@@ -57,9 +57,12 @@ public interface ErrorHandler {
     void report(String message) throws NodeOperationException;
 
     /**
-     * The operation calling this method isn't expected to do anything here;
-     * the ErrorHandler implementation will attempt to build a fully formed message,
-     * then decide what to do with it. (log, throw a NodeOperationException, ...)
+     * The operation calling this method is expected to pass a fully formed message; it should ideally contain some context information about the operation that caused an issue. The ErrorHandler implementation will decide what to do with it. (log, throw a NodeOperationException, ...)
+     */
+    void report(String message, Throwable cause) throws NodeOperationException;
+
+    /**
+     * The operation calling this method isn't expected to do anything here; the ErrorHandler implementation will attempt to build a fully formed message, then decide what to do with it. (log, throw a NodeOperationException, ...)
      */
     void handle(RepositoryException e, Content context) throws NodeOperationException;
 
