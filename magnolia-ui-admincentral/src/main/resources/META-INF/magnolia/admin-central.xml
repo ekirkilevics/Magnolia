@@ -19,7 +19,7 @@
     </property>
     <property>
       <name>info.magnolia.ui.model.dialog.registry.DialogDefinitionRegistry</name>
-      <value>info.magnolia.ui.model.dialog.registry.DialogDefinitionRegistryImpl</value>
+      <value>info.magnolia.ui.model.dialog.registry.DialogDefinitionRegistry</value>
     </property>
     <property>
       <name>info.magnolia.ui.model.dialog.registry.ConfiguredDialogDefinitionManager</name>
