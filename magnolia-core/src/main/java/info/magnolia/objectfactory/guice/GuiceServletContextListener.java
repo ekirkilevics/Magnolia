@@ -83,7 +83,7 @@ public class GuiceServletContextListener implements ServletContextListener {
 
         try {
             ComponentProviderConfiguration rootConfiguration = getRootConfiguration();
-            GuiceComponentProvider root = new GuiceComponentProviderBuilder().withConfiguration(rootConfiguration).useStage(Stage.PRODUCTION).build();
+            GuiceComponentProvider root = new GuiceComponentProviderBuilder().withConfiguration(rootConfiguration).useStage(Stage.DEVELOPMENT).build();
 
             System.setProperty("server", root.getComponent(MagnoliaInitPaths.class).getServerName());
             final ModuleManager moduleManager = root.getComponent(ModuleManager.class);
