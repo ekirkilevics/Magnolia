@@ -41,6 +41,11 @@ import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.ContentMap;
+//import info.magnolia.link.LinkFactory;
+//import info.magnolia.link.LinkTransformerManager;
+//import info.magnolia.link.LinkUtil;
+//import info.magnolia.objectfactory.ComponentProvider;
+//import info.magnolia.objectfactory.Components;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
@@ -61,6 +66,29 @@ import org.junit.Test;
  * @version $Id$
  */
 public class TemplatingFunctionsTest {
+
+//  @Test
+//  public void testLinkFromNode() throws RepositoryException {
+//      // given
+//      TemplatingFunctions functions = new TemplatingFunctions();
+//      MockSession session = mock(MockSession.class);
+//
+//      String name = "test";
+//      MockNode node = new MockNode(name);
+//      node.setSession(session);
+//      when(session.hasPermission("/"+name, Session.ACTION_READ)).thenReturn(Boolean.TRUE);
+//
+//      ComponentProvider componentProvider = mock(ComponentProvider.class);
+//      Components.setProvider(componentProvider);
+//      componentProvider.newInstance(LinkTransformerManager.class);
+//      //componentProvider.newInstance(LinkFactory.class);
+//
+//      // when
+//      String result = functions.link(node);
+//
+//      // then
+//      assertEquals("", result);
+//  }
 
     @Test
     public void testAsContentFromNode() throws RepositoryException {
