@@ -160,6 +160,40 @@ public class AggregationStateBasedRenderingContextTest {
         assertEquals(firstRenderableDefinition, context.getRenderableDefinition());
     }
 
+    @Test
+    public void testPopWithThreeLevels() {
+        // given
+        AggregationState aggregationState = new AggregationState();
+        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        Node first = mock(Node.class);
+        Node second = mock(Node.class);
+        Node third = mock(Node.class);
+        RenderableDefinition firstRenderableDefinition = mock(RenderableDefinition.class);
+        RenderableDefinition secondRenderableDefinition = mock(RenderableDefinition.class);
+        RenderableDefinition thirdRenderableDefinition = mock(RenderableDefinition.class);
+        context.push(first, firstRenderableDefinition);
+        context.push(second, secondRenderableDefinition);
+        context.push(third, thirdRenderableDefinition);
+
+        // then
+        assertEquals(third, context.getCurrentContent());
+        assertEquals(thirdRenderableDefinition, context.getRenderableDefinition());
+
+        // when
+        context.pop();
+
+        // then
+        assertEquals(second, context.getCurrentContent());
+        assertEquals(secondRenderableDefinition, context.getRenderableDefinition());
+
+        // when
+        context.pop();
+
+        // then
+        assertEquals(first, context.getCurrentContent());
+        assertEquals(firstRenderableDefinition, context.getRenderableDefinition());
+    }
+
     @Test(expected=EmptyStackException.class)
     public void testPopWithoutProceedingPush() {
         // given

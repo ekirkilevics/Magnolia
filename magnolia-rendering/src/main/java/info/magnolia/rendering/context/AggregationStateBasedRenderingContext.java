@@ -80,11 +80,8 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
             aggregationState.setMainContent(content);
         }
 
-        if (contentStack.isEmpty()) {
-            contentStack.push(aggregationState.getCurrentContent());
-        }
+        contentStack.push(aggregationState.getCurrentContent());
 
-        contentStack.push(content);
         definitionStack.push(renderableDefinition);
 
         aggregationState.setCurrentContent(content);
@@ -92,11 +89,8 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
 
     @Override
     public void pop() {
-        contentStack.pop();
+        aggregationState.setCurrentContent(contentStack.pop());
         definitionStack.pop();
-        if (!contentStack.isEmpty()) {
-            aggregationState.setCurrentContent(contentStack.pop());
-        }
     }
 
 }
