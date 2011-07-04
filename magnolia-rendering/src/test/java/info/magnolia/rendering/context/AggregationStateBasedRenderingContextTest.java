@@ -33,23 +33,23 @@
  */
 package info.magnolia.rendering.context;
 
+import java.util.EmptyStackException;
+import javax.jcr.Node;
+
+import org.junit.Test;
+
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.rendering.template.RenderableDefinition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
-import java.util.EmptyStackException;
-
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.rendering.template.RenderableDefinition;
-
-import javax.jcr.Node;
-
-import org.junit.Test;
 
 /**
  * @version $Id$
  */
 public class AggregationStateBasedRenderingContextTest {
+
     @Test
     public void testGetMainContent() {
         // given
@@ -95,7 +95,7 @@ public class AggregationStateBasedRenderingContextTest {
     }
 
     @Test
-    public void testPushDoeNotSetMainContentIfItsNotNull() {
+    public void testPushDoesNotSetMainContentIfItsNotNull() {
         // given
         Node mainContent = mock(Node.class);
         AggregationState aggregationState = new AggregationState();
@@ -126,7 +126,7 @@ public class AggregationStateBasedRenderingContextTest {
     }
 
     @Test
-    public void testPushAddsToDefinitionStack() {
+    public void testPushSetsRenderableDefinition() {
         // given
         AggregationState aggregationState = new AggregationState();
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
@@ -194,8 +194,8 @@ public class AggregationStateBasedRenderingContextTest {
         assertEquals(firstRenderableDefinition, context.getRenderableDefinition());
     }
 
-    @Test(expected=EmptyStackException.class)
-    public void testPopWithoutProceedingPush() {
+    @Test(expected = EmptyStackException.class)
+    public void testPopWithoutPrecedingPush() {
         // given
         AggregationState aggregationState = new AggregationState();
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
@@ -203,7 +203,7 @@ public class AggregationStateBasedRenderingContextTest {
         // when
         context.pop();
 
-        // then - nothing on stack to there should be a Exception
+        // then - nothing on stack so there should be a Exception
     }
 
     @Test
@@ -226,7 +226,7 @@ public class AggregationStateBasedRenderingContextTest {
     }
 
     @Test
-    public void testGetRenderableDefinitionOnEmptyDefinitionStackReturnsNull() {
+    public void testGetRenderableDefinitionBeforePushReturnsNull() {
         // given
         AggregationState aggregationState = new AggregationState();
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);

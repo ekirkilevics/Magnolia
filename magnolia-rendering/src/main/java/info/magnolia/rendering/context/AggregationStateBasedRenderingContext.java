@@ -34,21 +34,23 @@
 package info.magnolia.rendering.context;
 
 import java.util.Stack;
+import javax.jcr.Node;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.rendering.template.RenderableDefinition;
 
-import javax.jcr.Node;
-
 /**
- *
- * TODO dlipp: add reasonable javadoc! Uses and updates the {@link AggregationState}. FIXME we should not use the
- * AggregationState anymore
+ * RenderingContext implementation that uses AggregationState.
  *
  * @version $Id$
  */
 public class AggregationStateBasedRenderingContext implements RenderingContext {
+
+    // TODO dlipp: add reasonable javadoc! Uses and updates the {@link AggregationState}.
+    // FIXME we should not use the AggregationState anymore
+
     private AggregationState aggregationState;
+    private RenderableDefinition currentRenderableDefinition;
     private Stack<Node> contentStack = new Stack<Node>();
     private Stack<RenderableDefinition> definitionStack = new Stack<RenderableDefinition>();
 
@@ -68,10 +70,7 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
 
     @Override
     public RenderableDefinition getRenderableDefinition() {
-        if (!definitionStack.isEmpty()) {
-            return definitionStack.peek();
-        }
-        return null;
+        return currentRenderableDefinition;
     }
 
     @Override
@@ -81,16 +80,17 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
         }
 
         contentStack.push(aggregationState.getCurrentContent());
-
-        definitionStack.push(renderableDefinition);
+        definitionStack.push(currentRenderableDefinition);
 
         aggregationState.setCurrentContent(content);
+        currentRenderableDefinition = renderableDefinition;
     }
 
     @Override
     public void pop() {
+        currentRenderableDefinition = definitionStack.pop();
         aggregationState.setCurrentContent(contentStack.pop());
-        definitionStack.pop();
+        // Note that we do not restore main content
     }
 
 }
