@@ -35,6 +35,7 @@ package info.magnolia.templating.functions;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.link.LinkUtil;
@@ -145,6 +146,9 @@ public class TemplatingFunctions {
     }
 
     public Node root(Node content) throws RepositoryException{
+        if(content == null) {
+            return null;
+        }
         Node root = content;
         while(this.parent(content) != null){
             root = this.parent(content);
