@@ -144,6 +144,15 @@ public class TemplatingFunctions {
         return childList;
     }
 
+    public Node root(Node content) throws RepositoryException{
+        Node root = content;
+        while(this.parent(content) != null){
+            root = this.parent(content);
+        }
+        return root;
+    }
+
+
     //TODO cringele : May all be optional. Decide on weather to provide them or not
 
     /**
