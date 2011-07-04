@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.beans.config;
 
+import javax.inject.Singleton;
+
 import info.magnolia.objectfactory.Components;
 
 
@@ -41,6 +43,7 @@ import info.magnolia.objectfactory.Components;
  * @author Sameer Charles
  * $Id$
  */
+@Singleton
 public class VersionConfig {
 
     /**

@@ -59,6 +59,7 @@ import org.picocontainer.gems.monitors.Slf4jComponentMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -149,6 +150,7 @@ import java.util.Properties;
  *
  * TODO : javadoc - update javadoc to reflect current code and point to references instead of duplicating.
  */
+@Singleton
 public class MagnoliaServletContextListener implements ServletContextListener {
     private static final Logger log = LoggerFactory.getLogger(MagnoliaServletContextListener.class);
 
