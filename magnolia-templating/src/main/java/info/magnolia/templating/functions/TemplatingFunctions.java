@@ -156,6 +156,21 @@ public class TemplatingFunctions {
         return root;
     }
 
+    public Node page(Node content) throws RepositoryException{
+        if(content == null) {
+            return null;
+        }
+        Node page = content;
+        while(!isPageNode(page) && this.parent(page) != null){
+            page = this.parent(page);
+        }
+        return page;
+    }
+
+    private boolean isPageNode(Node page) throws RepositoryException {
+        return page.getPrimaryNodeType().getName() == MgnlNodeType.NT_CONTENT;
+    }
+
 
     //TODO cringele : May all be optional. Decide on weather to provide them or not
 
