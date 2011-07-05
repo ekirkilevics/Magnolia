@@ -421,6 +421,39 @@ public class TemplatingFunctionsTest {
         assertNodeEqualsNode(resultFromComponentL2, rootPage.getNode("page1"));
     }
 
+    @Test
+    public void testPageFromContentMap() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        String[] firstLevelPages       = {"page1", "page2", "page3"};
+        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
+        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
+        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
+
+        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
+        ContentMap rootPageMap = functions.asContentMap(rootPage);
+
+        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+
+        // WHEN
+        ContentMap resultFromRootMap = functions.page(rootPageMap);
+        ContentMap resultFromPageL1Map = functions.page(new ContentMap(rootPage.getNode("page1")));
+        ContentMap resultFromComponentL1Map = functions.page(new ContentMap(rootPage.getNode("comp1")));
+        ContentMap resultFromPageL2Map = functions.page(new ContentMap(rootPage.getNode("page1").getNode("page1-1")));
+        ContentMap resultFromComponentL2Map = functions.page(new ContentMap(rootPage.getNode("page1").getNode("comp1-1")));
+
+        // THEN
+        assertMapEqualsMap(resultFromRootMap, rootPageMap);
+        assertMapEqualsMap(resultFromPageL1Map, new ContentMap(rootPage.getNode("page1")));
+        assertMapEqualsMap(resultFromComponentL1Map, rootPageMap);
+        assertMapEqualsMap(resultFromPageL2Map, new ContentMap(rootPage.getNode("page1").getNode("page1-1")));
+        assertMapEqualsMap(resultFromComponentL2Map, new ContentMap(rootPage.getNode("page1")));
+    }
+
 
     /**
      * Checks each object of the list @param resultNodesOrContentMaps with the passes nodeNames in @param originNodeNames.

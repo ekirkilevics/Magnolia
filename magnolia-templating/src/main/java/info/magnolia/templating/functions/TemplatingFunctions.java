@@ -146,7 +146,7 @@ public class TemplatingFunctions {
     }
 
     public ContentMap root(ContentMap content) throws RepositoryException{
-        return content == null ? null : asContentMap(root(asJCRNode(content)));
+        return content == null ? null : asContentMap(this.root(asJCRNode(content)));
     }
 
     public Node root(Node content) throws RepositoryException{
@@ -160,6 +160,10 @@ public class TemplatingFunctions {
         return root;
     }
 
+    public ContentMap page(ContentMap content) throws RepositoryException{
+        return content == null ? null : asContentMap(this.page(asJCRNode(content)));
+    }
+
     public Node page(Node content) throws RepositoryException{
         if(content == null) {
             return null;
@@ -171,9 +175,10 @@ public class TemplatingFunctions {
         return page;
     }
 
-    private boolean isPageNode(Node page) throws RepositoryException {
-        return page.getPrimaryNodeType().getName() == MgnlNodeType.NT_CONTENT;
+    private boolean isPageNode(Node node) throws RepositoryException {
+        return node.getPrimaryNodeType().getName() == MgnlNodeType.NT_CONTENT;
     }
+
 
 
     //TODO cringele : May all be optional. Decide on weather to provide them or not
