@@ -41,6 +41,8 @@ import com.google.inject.Stage;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.filters.FilterManager;
+import info.magnolia.cms.filters.FilterManagerImpl;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
@@ -62,7 +64,6 @@ import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 
@@ -82,8 +83,11 @@ public class GuiceServletContextListener implements ServletContextListener {
         servletContext = sce.getServletContext();
 
         try {
-            ComponentProviderConfiguration rootConfiguration = getRootConfiguration();
-            GuiceComponentProvider root = new GuiceComponentProviderBuilder().withConfiguration(rootConfiguration).useStage(Stage.DEVELOPMENT).build();
+            GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
+            builder.withConfiguration(getRootConfiguration());
+            builder.useStage(Stage.PRODUCTION);
+            builder.exposeGlobally();
+            GuiceComponentProvider root = builder.build();
 
             System.setProperty("server", root.getComponent(MagnoliaInitPaths.class).getServerName());
             final ModuleManager moduleManager = root.getComponent(ModuleManager.class);
@@ -92,9 +96,11 @@ public class GuiceServletContextListener implements ServletContextListener {
             ((DefaultMagnoliaConfigurationProperties) configurationProperties).init();
             SystemProperty.setMagnoliaConfigurationProperties(configurationProperties);
 
-            ComponentProviderConfiguration platformConfiguration = getPlatformConfiguration();
-            GuiceComponentProvider platform = root.createChild(platformConfiguration);
-            Components.setProvider(platform);
+            builder = new GuiceComponentProviderBuilder();
+            builder.withConfiguration(getPlatformConfiguration());
+            builder.withParent(root);
+            builder.exposeGlobally();
+            GuiceComponentProvider platform = builder.build();
 
             platform.getComponent(Log4jConfigurer.class).start();
 
@@ -110,6 +116,7 @@ public class GuiceServletContextListener implements ServletContextListener {
             if (e instanceof RuntimeException) {
                 throw (RuntimeException) e;
             }
+            throw new RuntimeException(e);
         }
     }
 
@@ -185,6 +192,9 @@ public class GuiceServletContextListener implements ServletContextListener {
         configuration.registerImplementation(ConfigLoader.class);
 
         configuration.registerImplementation(info.magnolia.cms.util.UnicodeNormalizer.Normalizer.class, info.magnolia.cms.util.UnicodeNormalizer.AutoDetectNormalizer.class);
+
+        configuration.registerImplementation(FilterManager.class, FilterManagerImpl.class);
+
         return configuration;
     }
 }

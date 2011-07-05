@@ -50,6 +50,7 @@ import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.filters.FilterManager;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.cms.util.ObservationUtil;
@@ -97,18 +98,6 @@ public class GuiceModuleManager extends ModuleManagerImpl {
     }
 
     @Override
-    public void checkForInstallOrUpdates() {
-        initialize();
-        super.checkForInstallOrUpdates();
-    }
-
-    @Override
-    public void performInstallOrUpdate() {
-        initialize();
-        super.performInstallOrUpdate();
-    }
-
-    @Override
     public void startModules() {
         initialize();
         super.startModules();
@@ -132,14 +121,14 @@ public class GuiceModuleManager extends ModuleManagerImpl {
         properties.remove(WorkspaceAccessUtil.class.getName());
         properties.remove(ConfigLoader.class.getName());
         properties.remove(UnicodeNormalizer.Normalizer.class.getName());
+        properties.remove(FilterManager.class.getName());
 
         ComponentProviderConfiguration configuration = PropertiesComponentProvider.createConfigurationFromProperties(properties);
 
-        GuiceComponentProvider componentProvider = (GuiceComponentProvider) Components.getComponentProvider();
         GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
         builder.withConfiguration(configuration);
+        builder.withParent((GuiceComponentProvider) Components.getComponentProvider());
         builder.exposeGlobally();
-        builder.withParent(componentProvider);
         builder.addModule(new ModuleClassesModule());
 
         main = builder.build();
@@ -153,9 +142,6 @@ public class GuiceModuleManager extends ModuleManagerImpl {
 
     @Override
     protected void startModule(Object moduleInstance, ModuleDefinition moduleDefinition, ModuleLifecycleContextImpl lifecycleContext) {
-
-        // Populate the instance before startup in case the repository has changed during install/update
-        moduleProviders.get(moduleDefinition.getName()).populate();
 
         super.startModule(moduleInstance, moduleDefinition, lifecycleContext);
 
