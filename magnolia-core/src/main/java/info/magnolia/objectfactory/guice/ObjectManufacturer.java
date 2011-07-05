@@ -36,10 +36,14 @@ package info.magnolia.objectfactory.guice;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 
 
 /**
@@ -77,7 +81,7 @@ public class ObjectManufacturer {
         }
         if (selectedConstructor != null) {
             selectedConstructor.setAccessible(true);
-            return invoke(selectedConstructor, resolveParameters(clazz, selectedConstructor.getParameterTypes(), extraCandidates));
+            return invoke(selectedConstructor, resolveParameters(selectedConstructor, extraCandidates));
         }
 
         // Find greediest satisfiable constructor
@@ -91,7 +95,7 @@ public class ObjectManufacturer {
             if (score < bestScore) {
                 continue;
             }
-            Object[] parameters = resolveParameters(clazz, constructor.getParameterTypes(), extraCandidates);
+            Object[] parameters = resolveParameters(constructor, extraCandidates);
             if (parameters == null) {
                 continue;
             }
@@ -119,11 +123,22 @@ public class ObjectManufacturer {
         }
     }
 
-    private Object[] resolveParameters(Class<?> clazz, Class[] parameterTypes, Object[] extraCandidates) {
-        // FIXME we might be creating objects with guice here only to throw them away
+    private Object[] resolveParameters(Constructor<?> constructor, Object[] extraCandidates) {
+        Class<?>[] parameterTypes = constructor.getParameterTypes();
+        Type[] genericParameterTypes = constructor.getGenericParameterTypes();
+
         Object[] parameters = new Object[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
-            Object parameter = resolveParameter(parameterTypes[i], extraCandidates);
+
+            Class parameterType = parameterTypes[i];
+            Type genericParameterType = genericParameterTypes[i];
+
+            Object parameter = findExtraCandidate(parameterType, genericParameterType, extraCandidates);
+
+            if (parameter == NOTHING) {
+                parameter = getParameterFromInjector(parameterType, genericParameterType);
+            }
+
             if (parameter == NOTHING) {
                 return null;
             }
@@ -132,20 +147,43 @@ public class ObjectManufacturer {
         return parameters;
     }
 
-    private Object resolveParameter(Class<?> parameterType, Object[] extraCandidates) {
-        Object parameter = findExtraCandidate(parameterType, extraCandidates);
-        if (parameter != NOTHING) {
-            return parameter;
-        }
+    private Object getParameterFromInjector(Class<?> parameterType, Type genericParameterType) {
+        // FIXME we might be creating objects with guice here only to throw them away
         try {
-            // FIXME should maybe check if there's an explicit binding for this type
+            // If the parameter is javax.inject.Provider<T> we will look for a provider of T instead
+            if (genericParameterType instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) genericParameterType;
+                if (parameterizedType.getRawType() == javax.inject.Provider.class) {
+                    Type actualType = parameterizedType.getActualTypeArguments()[0];
+                    return injector.getProvider(Key.get(actualType));
+                }
+            }
             return injector.getInstance(parameterType);
         } catch (ConfigurationException e) {
+            // TODO we might want to log this
             return NOTHING;
         }
     }
 
-    private Object findExtraCandidate(Class<?> parameterType, Object[] extraCandidates) {
+    private Object findExtraCandidate(Class<?> parameterType, Type genericParameterType, Object[] extraCandidates) {
+        // If the parameter is javax.inject.Provider<T> we will look for T instead and return a provider for it
+        if (genericParameterType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) genericParameterType;
+            if (parameterizedType.getRawType() == javax.inject.Provider.class) {
+                Class<?> actualType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                for (final Object extraCandidate : extraCandidates) {
+                    if (actualType.isAssignableFrom(extraCandidate.getClass())) {
+                        return new Provider() {
+                            @Override
+                            public Object get() {
+                                return extraCandidate;
+                            }
+                        };
+                    }
+                }
+                return NOTHING;
+            }
+        }
         for (Object extraCandidate : extraCandidates) {
             if (parameterType.isAssignableFrom(extraCandidate.getClass())) {
                 return extraCandidate;
