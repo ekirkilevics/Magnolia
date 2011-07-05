@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import com.google.inject.servlet.RequestScoped;
+import com.google.inject.servlet.SessionScoped;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.configuration.ComponentFactoryConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -125,10 +127,22 @@ public class GuiceComponentProviderModule extends AbstractModule {
             if (type.equals(implementation)) {
                 if (implementation.isAnnotationPresent(Singleton.class)) {
                     bind(implementation);
+                } else
+                if (implementation.isAnnotationPresent(RequestScoped.class)) {
+                    bind(implementation).in(MagnoliaServletScopes.REQUEST);
+                } else
+                if (implementation.isAnnotationPresent(SessionScoped.class)) {
+                    bind(implementation).in(MagnoliaServletScopes.SESSION);
                 }
             } else {
                 if (implementation.isAnnotationPresent(Singleton.class)) {
                     bind(type).to(implementation);
+                } else
+                if (implementation.isAnnotationPresent(RequestScoped.class)) {
+                    bind(type).to(implementation).in(MagnoliaServletScopes.REQUEST);
+                } else
+                if (implementation.isAnnotationPresent(SessionScoped.class)) {
+                    bind(type).to(implementation).in(MagnoliaServletScopes.SESSION);
                 }
             }
         }

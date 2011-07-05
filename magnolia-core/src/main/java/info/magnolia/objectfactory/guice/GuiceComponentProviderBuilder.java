@@ -35,13 +35,23 @@ package info.magnolia.objectfactory.guice;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.Provider;
 import com.google.inject.Stage;
+import com.google.inject.servlet.RequestScoped;
+import com.google.inject.servlet.SessionScoped;
 import com.google.inject.util.Modules;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -101,6 +111,47 @@ public class GuiceComponentProviderBuilder {
                 for (Module extraModule : extraModules) {
                     binder().install(extraModule);
                 }
+
+                // We don't need to register these providers at every level, would be enough to do it in the top parent
+                // TODO: maybe we should throw CreationException in these providers, plus what happens on an Exception, does it seep through or is it wrapped?
+                bind(Context.class).toProvider(new Provider<Context>() {
+                    @Override
+                    public Context get() {
+                        return MgnlContext.getInstance();
+                    }
+                });
+                bind(WebContext.class).toProvider(new Provider<WebContext>() {
+                    @Override
+                    public WebContext get() {
+                        return MgnlContext.getWebContext();
+                    }
+                });
+                bind(AggregationState.class).toProvider(new Provider<AggregationState>() {
+                    @Override
+                    public AggregationState get() {
+                        return MgnlContext.getAggregationState();
+                    }
+                });
+                bind(HttpSession.class).toProvider(new Provider<HttpSession>() {
+                    @Override
+                    public HttpSession get() {
+                        return MgnlContext.getWebContext().getRequest().getSession();
+                    }
+                });
+                bind(HttpServletRequest.class).toProvider(new Provider<HttpServletRequest>() {
+                    @Override
+                    public HttpServletRequest get() {
+                        return MgnlContext.getWebContext().getRequest();
+                    }
+                });
+                bind(HttpServletResponse.class).toProvider(new Provider<HttpServletResponse>() {
+                    @Override
+                    public HttpServletResponse get() {
+                        return MgnlContext.getWebContext().getResponse();
+                    }
+                });
+                bindScope(RequestScoped.class, MagnoliaServletScopes.REQUEST);
+                bindScope(SessionScoped.class, MagnoliaServletScopes.SESSION);
             }
         };
 

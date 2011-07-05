@@ -47,6 +47,18 @@
       <artifactId>picocontainer-logging</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-servlet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.mycila</groupId>
+      <artifactId>mycila-guice</artifactId>
+    </dependency>
+    <dependency>
       <groupId>concurrent</groupId>
       <artifactId>concurrent</artifactId>
     </dependency>
@@ -196,14 +208,6 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.inject</groupId>
-      <artifactId>guice</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.mycila</groupId>
-      <artifactId>mycila-guice</artifactId>
     </dependency>
     <dependency>
       <groupId>com.mockrunner</groupId>
