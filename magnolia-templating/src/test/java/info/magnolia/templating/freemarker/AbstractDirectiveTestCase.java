@@ -195,6 +195,7 @@ public abstract class AbstractDirectiveTestCase {
     public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         SystemProperty.clear();
+        Components.setProvider(null);
     }
 
     public String renderForTest(final String templateSource) throws Exception {

@@ -34,8 +34,11 @@
 package info.magnolia.rendering.context;
 
 import java.util.Stack;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.jcr.Node;
 
+import com.google.inject.servlet.RequestScoped;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.rendering.template.RenderableDefinition;
 
@@ -44,6 +47,7 @@ import info.magnolia.rendering.template.RenderableDefinition;
  *
  * @version $Id$
  */
+@RequestScoped
 public class AggregationStateBasedRenderingContext implements RenderingContext {
 
     // TODO dlipp: add reasonable javadoc! Uses and updates the {@link AggregationState}.
@@ -53,6 +57,11 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
     private RenderableDefinition currentRenderableDefinition;
     private Stack<Node> contentStack = new Stack<Node>();
     private Stack<RenderableDefinition> definitionStack = new Stack<RenderableDefinition>();
+
+    @Inject
+    public AggregationStateBasedRenderingContext(Provider<AggregationState> aggregationStateProvider) {
+        this.aggregationState = aggregationStateProvider.get();
+    }
 
     public AggregationStateBasedRenderingContext(AggregationState aggregationState) {
         this.aggregationState = aggregationState;

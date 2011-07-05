@@ -34,6 +34,7 @@
 package info.magnolia.templating.elements;
 
 import java.io.StringWriter;
+import javax.inject.Provider;
 import javax.jcr.Node;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +52,6 @@ import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.jcr.util.SessionTestUtil;
@@ -106,10 +106,13 @@ public class RenderElementTest {
         RendererRegistry registry = mock(RendererRegistry.class);
         Renderer renderer = mock(Renderer.class);
         when(registry.get("blah")).thenReturn(renderer);
-        DefaultRenderingEngine engine = new DefaultRenderingEngine(registry, templateDefinitionAssignment);
-        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
-        when(ctx.getAttribute(RenderingContext.class.getName(), Context.LOCAL_SCOPE)).thenReturn(context);
-        when(ctx.getAttribute(RenderingContext.class.getName())).thenReturn(context);
+        final AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        DefaultRenderingEngine engine = new DefaultRenderingEngine(registry, templateDefinitionAssignment, new Provider<RenderingContext>() {
+            @Override
+            public RenderingContext get() {
+                return context;
+            }
+        });
         final RenderElement renderElement = new RenderElement(serverCfg, context, engine);
         final StringWriter out = new StringWriter();
         renderElement.begin(out);
@@ -155,7 +158,7 @@ public class RenderElementTest {
         ComponentsTestUtil.setInstance(RenderingEngine.class, renderingEngine);
 
         final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
-        DefaultRenderingEngine engine = new DefaultRenderingEngine(new RendererRegistry(), templateDefinitionAssignment);
+        DefaultRenderingEngine engine = new DefaultRenderingEngine(new RendererRegistry(), templateDefinitionAssignment, null);
         final RenderElement marker = new RenderElement(serverCfg, new AggregationStateBasedRenderingContext(aggregationState), engine);
 
         final StringWriter out = new StringWriter();

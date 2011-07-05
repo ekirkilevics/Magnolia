@@ -35,9 +35,7 @@ package info.magnolia.rendering.engine;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
-import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
@@ -49,6 +47,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.inject.Provider;
 import javax.jcr.Node;
 
 /**
@@ -58,12 +57,11 @@ import javax.jcr.Node;
  */
 public class DefaultRenderingEngine implements RenderingEngine {
 
-    protected static final String RENDERING_CONTEXT_ATTRIBUTE = RenderingContext.class.getName();
-
     protected static final Map<String, Object> EMPTY_CONTEXT = Collections.emptyMap();
 
     private RendererRegistry rendererRegistry;
     private TemplateDefinitionAssignment templateDefinitionAssignment;
+    private Provider<RenderingContext> renderingContextProvider;
 
     /**
      * Used to create an observed proxy object.
@@ -71,9 +69,10 @@ public class DefaultRenderingEngine implements RenderingEngine {
     protected DefaultRenderingEngine() {
     }
 
-    public DefaultRenderingEngine(RendererRegistry rendererRegistry, TemplateDefinitionAssignment templateDefinitionAssignment) {
+    public DefaultRenderingEngine(RendererRegistry rendererRegistry, TemplateDefinitionAssignment templateDefinitionAssignment, Provider<RenderingContext> renderingContextProvider) {
         this.rendererRegistry = rendererRegistry;
         this.templateDefinitionAssignment = templateDefinitionAssignment;
+        this.renderingContextProvider = renderingContextProvider;
     }
 
     @Override
@@ -126,17 +125,11 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
     protected static AggregationState getAggregationStateSafely() {
         return MgnlContext.isWebContext() ? MgnlContext.getAggregationState() : null;
-     }
+    }
 
     @Override
     public RenderingContext getRenderingContext() {
-        if(MgnlContext.hasAttribute(RENDERING_CONTEXT_ATTRIBUTE)){
-            return MgnlContext.getAttribute(RENDERING_CONTEXT_ATTRIBUTE);
-        }
-        // FIXME don't use the concrete class here but if we do the registration in the module descriptor the context also gets created it the main container
-        final RenderingContext renderingContext = Components.getComponentProvider().newInstance(AggregationStateBasedRenderingContext.class, getAggregationStateSafely());
-        MgnlContext.setAttribute(RENDERING_CONTEXT_ATTRIBUTE, renderingContext);
-        return renderingContext;
+        return renderingContextProvider.get();
     }
 
 }
