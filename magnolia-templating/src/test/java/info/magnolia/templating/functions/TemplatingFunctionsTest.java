@@ -344,7 +344,7 @@ public class TemplatingFunctionsTest {
         Node resultFromPageL1 = functions.root(rootPage.getNode("page1"));
         Node resultFromComponentL1 = functions.root(rootPage.getNode("comp1"));
         Node resultFromPageL2 = functions.root(rootPage.getNode("page1").getNode("page1-1"));
-        Node resultFromComponentL2 = functions.root(rootPage.getNode("comp1-1"));
+        Node resultFromComponentL2 = functions.root(rootPage.getNode("page1").getNode("comp1-1"));
 
         // THEN
         assertNodeEqualsNode(resultFromRoot, rootPage);
