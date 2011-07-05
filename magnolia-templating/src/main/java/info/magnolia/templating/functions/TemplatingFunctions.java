@@ -145,6 +145,10 @@ public class TemplatingFunctions {
         return childList;
     }
 
+    public ContentMap root(ContentMap content) throws RepositoryException{
+        return content == null ? null : asContentMap(root(asJCRNode(content)));
+    }
+
     public Node root(Node content) throws RepositoryException{
         if(content == null) {
             return null;
