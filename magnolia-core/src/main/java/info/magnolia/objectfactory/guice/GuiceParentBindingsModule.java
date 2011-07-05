@@ -33,7 +33,10 @@
  */
 package info.magnolia.objectfactory.guice;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.inject.AbstractModule;
@@ -42,54 +45,53 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Provider;
 import com.google.inject.Stage;
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 
 /**
  * Bridges a Guice Injector to another Injector by adding bindings for all explicit bindings in the injector being
- * used as parent. Bindings in the parent injector which will be configured locally are skipped.
+ * used as parent.
  *
  * @version $Id$
  */
 public class GuiceParentBindingsModule extends AbstractModule {
 
     private Injector parentInjector;
-    private ComponentProviderConfiguration configuration;
+    private Set<Key<?>> excluded = new HashSet<Key<?>>();
 
-    public GuiceParentBindingsModule(Injector parentInjector, ComponentProviderConfiguration configuration) {
+    public GuiceParentBindingsModule(Injector parentInjector) {
         this.parentInjector = parentInjector;
-        this.configuration = configuration;
+        exclude(Injector.class, Stage.class, Logger.class);
+    }
+
+    public void exclude(Key<?>... keys) {
+        this.excluded.addAll(Arrays.asList(keys));
+    }
+
+    public void exclude(Class<?>... classes) {
+        for (Class<?> clazz : classes) {
+            this.excluded.add(Key.get(clazz));
+        }
     }
 
     @Override
     protected void configure() {
 
-        for (Map.Entry<Key<?>, Binding<?>> entry : parentInjector.getBindings().entrySet()) {
-            Key<?> key = entry.getKey();
-            if (Key.get(ComponentProvider.class).equals(key)) {
-                continue;
-            }
-            if (Key.get(Injector.class).equals(key)) {
-                continue;
-            }
-            if (Key.get(Stage.class).equals(key)) {
-                continue;
-            }
-            if (Key.get(Logger.class).equals(key)) {
-                continue;
-            }
-            if (configuration.hasConfigFor(key.getTypeLiteral().getRawType())) {
-                System.out.println("Skipping parent binding " + key.getTypeLiteral().getRawType());
-                continue;
-            }
-            final Provider<?> provider = entry.getValue().getProvider();
-            bind(key).toProvider(new Provider() {
-                @Override
-                public Object get() {
-                    return provider.get();
+        Injector injector = parentInjector;
+        do {
+            Map<Key<?>, Binding<?>> explicitBindings = injector.getBindings();
+            for (Map.Entry<Key<?>, Binding<?>> entry : explicitBindings.entrySet()) {
+                Key<?> key = entry.getKey();
+                if (!excluded.contains(key)) {
+                    final Provider<?> provider = entry.getValue().getProvider();
+                    bind(key).toProvider(new Provider() {
+                        @Override
+                        public Object get() {
+                            return provider.get();
+                        }
+                    });
                 }
-            });
-        }
+            }
+            injector = injector.getParent();
+        } while (injector != null);
     }
 }

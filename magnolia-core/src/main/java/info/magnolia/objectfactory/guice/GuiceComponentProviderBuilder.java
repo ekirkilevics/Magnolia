@@ -41,6 +41,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Stage;
+import com.google.inject.util.Modules;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -74,6 +75,7 @@ public class GuiceComponentProviderBuilder {
         return this;
     }
 
+    // TODO should be inStage()
     public GuiceComponentProviderBuilder useStage(Stage stage) {
         this.stage = stage;
         return this;
@@ -90,30 +92,28 @@ public class GuiceComponentProviderBuilder {
             Components.setProvider(componentProvider);
         }
 
-        ArrayList<Module> modules = new ArrayList<Module>();
-        modules.add(new AbstractModule() {
+        Module module = new AbstractModule() {
             @Override
             protected void configure() {
                 binder().requireExplicitBindings();
-            }
-        });
-        modules.add(new AbstractModule() {
-            @Override
-            protected void configure() {
                 bind(ComponentProvider.class).toInstance(componentProvider);
+                install(new GuiceComponentProviderModule(configuration));
+                for (Module extraModule : extraModules) {
+                    binder().install(extraModule);
+                }
             }
-        });
+        };
+
+        Stage stageToUse;
         if (parent != null) {
-            modules.add(new GuiceParentBindingsModule(parent.getInjector(), configuration));
-        }
-        modules.add(new GuiceComponentProviderModule(configuration));
-        if (extraModules != null) {
-            modules.addAll(extraModules);
+            stageToUse = stage != null ? stage : parent.getInjector().getInstance(Stage.class);
+            GuiceParentBindingsModule parentBindingsModule = new GuiceParentBindingsModule(parent.getInjector());
+            module = Modules.override(parentBindingsModule).with(module);
+        } else {
+            stageToUse = stage != null ? stage : Stage.PRODUCTION;
         }
 
-        Injector injector = Guice.createInjector(
-                stage != null ? stage : parent != null ? parent.getInjector().getInstance(Stage.class) : Stage.PRODUCTION,
-                modules.toArray(new Module[modules.size()]));
+        Injector injector = Guice.createInjector(stageToUse, module);
 
         return (GuiceComponentProvider) injector.getInstance(ComponentProvider.class);
     }
