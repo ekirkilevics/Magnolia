@@ -253,7 +253,7 @@ public class TemplatingFunctionsTest {
 
         // THEN
         String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(firstLevelPages, firstLevelComponents);
-        assertChildrenEqualStringDefinition(resultChildNodes, allFirstLevelNames);
+        assertListOfNodesOrMapsEqualStringDefinitions(resultChildNodes, allFirstLevelNames);
     }
 
     @Test
@@ -281,8 +281,8 @@ public class TemplatingFunctionsTest {
         List<ContentMap> resultChildComponentsMap = functions.children(rootPageContentMap, MgnlNodeType.NT_CONTENTNODE);
 
         // THEN
-        assertChildrenEqualStringDefinition(resultChildPagesMap, firstLevelPages);
-        assertChildrenEqualStringDefinition(resultChildComponentsMap, firstLevelComponents);
+        assertListOfNodesOrMapsEqualStringDefinitions(resultChildPagesMap, firstLevelPages);
+        assertListOfNodesOrMapsEqualStringDefinitions(resultChildComponentsMap, firstLevelComponents);
     }
 
     @Test
@@ -307,7 +307,7 @@ public class TemplatingFunctionsTest {
 
         // THEN
         String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(firstLevelPages, firstLevelComponents);
-        assertChildrenEqualStringDefinition(resultChildNodes, allFirstLevelNames);
+        assertListOfNodesOrMapsEqualStringDefinitions(resultChildNodes, allFirstLevelNames);
     }
 
     @Test
@@ -332,8 +332,8 @@ public class TemplatingFunctionsTest {
         List<Node> resultChildComponents = functions.children(rootPage, MgnlNodeType.NT_CONTENTNODE);
 
         // THEN
-        assertChildrenEqualStringDefinition(resultChildPages, firstLevelPages);
-        assertChildrenEqualStringDefinition(resultChildComponents, firstLevelComponents);
+        assertListOfNodesOrMapsEqualStringDefinitions(resultChildPages, firstLevelPages);
+        assertListOfNodesOrMapsEqualStringDefinitions(resultChildComponents, firstLevelComponents);
     }
 
 
@@ -470,17 +470,17 @@ public class TemplatingFunctionsTest {
 
 
     /**
-     * Checks each object of the list @param resultNodesOrContentMaps with the passes nodeNames in @param originNodeNames.
-     * The checked object can be an instance of Node or ContentMap.
+     * Checks each object of the list @param resultNodesOrContentMaps with the passed nodeNames in @param originNodeNames.
+     * The checked object in the List can be an instance of Node or ContentMap.
      * Check also the amount of nodes compared of the amount of passed namesNames in @param originNodeNames.
      *
-     * @param resultNodesOrContentMaps List of Nodes generate during // WHEN
-     * @param originNodeNames String[] containing the node names which were base of generating the node list @param resultNodes during //GIVEN
+     * @param listOfNodesOrContentMaps List of Nodes or ContentMaps to compare to the names defined in @param originNodeNames
+     * @param originNodeNames containing the node names to compare to the Nodes or ContentMap in  @param resultNodes
      * @throws RepositoryException
      */
-    private void assertChildrenEqualStringDefinition(List resultNodesOrContentMaps, String[] originNodeNames) throws RepositoryException {
+    private void assertListOfNodesOrMapsEqualStringDefinitions(List listOfNodesOrContentMaps, String[] originNodeNames) throws RepositoryException {
         int i = 0;
-        for ( Iterator it = resultNodesOrContentMaps.iterator(); it.hasNext(); i++) {
+        for ( Iterator it = listOfNodesOrContentMaps.iterator(); it.hasNext(); i++) {
             Object object = it.next();
             if(object instanceof Node){
                 assertEquals((((Node)object).getName()), originNodeNames[i]);
@@ -494,115 +494,115 @@ public class TemplatingFunctionsTest {
     /**
      * Checks all mandatory Content values. None should be null and all values should equal.
      *
-     * @param result Content generate during // WHEN
-     * @param origin Node generated during // GIVEN
+     * @param content Content to compare with Node
+     * @param node Node to compare with Content
      * @throws RepositoryException
      */
-    private void assertContentEqualsNode(Content result, Node origin) throws RepositoryException {
-        assertNotNull(result.getName());
-        assertEquals(result.getName(), origin.getName());
-        assertNotNull(result.getUUID());
-        assertEquals(result.getUUID(), origin.getUUID());
-        assertEquals(result.getUUID(), origin.getIdentifier());
-        assertNotNull(result.getHandle());
-        assertEquals(result.getHandle(), origin.getPath());
+    private void assertContentEqualsNode(Content content, Node node) throws RepositoryException {
+        assertNotNull(content.getName());
+        assertEquals(content.getName(), node.getName());
+        assertNotNull(content.getUUID());
+        assertEquals(content.getUUID(), node.getUUID());
+        assertEquals(content.getUUID(), node.getIdentifier());
+        assertNotNull(content.getHandle());
+        assertEquals(content.getHandle(), node.getPath());
     }
 
     /**
      * Checks all mandatory Node values. None should be null and all values should equal.
      *
-     * @param result Node generate during // WHEN
-     * @param origin Node generated during // GIVEN
+     * @param node1 Node to compare with Node-2
+     * @param node2 Node to compare with Node-1
      * @throws RepositoryException
      */
-    private void assertNodeEqualsNode(Node result, Node origin) throws RepositoryException {
-        assertNotNull(result.getName());
-        assertEquals(result.getName(), origin.getName());
-        assertNotNull(result.getUUID());
-        assertEquals(result.getUUID(), origin.getUUID());
-        assertNotNull(result.getIdentifier());
-        assertEquals(result.getIdentifier(), origin.getIdentifier());
-        assertNotNull(result.getPath());
-        assertEquals(result.getPath(), origin.getPath());
+    private void assertNodeEqualsNode(Node node1, Node node2) throws RepositoryException {
+        assertNotNull(node1.getName());
+        assertEquals(node1.getName(), node2.getName());
+        assertNotNull(node1.getUUID());
+        assertEquals(node1.getUUID(), node2.getUUID());
+        assertNotNull(node1.getIdentifier());
+        assertEquals(node1.getIdentifier(), node2.getIdentifier());
+        assertNotNull(node1.getPath());
+        assertEquals(node1.getPath(), node2.getPath());
     }
 
     /**
      * Checks all mandatory ContentMap values. None should be null and all values should equal.
      *
-     * @param resultMap ContentMap generated during // WHEN
-     * @param originMap ContentMAp generated during // THEN
+     * @param map1 ContentMap to compare with ContentMap-2
+     * @param map2 ContentMap to compare with ContentMap-1
      */
-    private void assertMapEqualsMap(ContentMap resultMap, ContentMap originMap) {
-        assertNotNull(resultMap.get("@name"));
-        assertEquals(resultMap.get("@name"), originMap.get("@name"));
-        assertNotNull(resultMap.get("@id"));
-        assertEquals(resultMap.get("@id"), originMap.get("@id"));
-        assertNotNull(resultMap.get("@uuid"));
-        assertEquals(resultMap.get("@uuid"), originMap.get("@uuid"));
-        assertNotNull(resultMap.get("@path"));
-        assertEquals(resultMap.get("@path"), originMap.get("@path"));
-        assertNotNull(resultMap.get("@handle"));
-        assertEquals(resultMap.get("@handle"), originMap.get("@handle"));
+    private void assertMapEqualsMap(ContentMap map1, ContentMap map2) {
+        assertNotNull(map1.get("@name"));
+        assertEquals(map1.get("@name"), map2.get("@name"));
+        assertNotNull(map1.get("@id"));
+        assertEquals(map1.get("@id"), map2.get("@id"));
+        assertNotNull(map1.get("@uuid"));
+        assertEquals(map1.get("@uuid"), map2.get("@uuid"));
+        assertNotNull(map1.get("@path"));
+        assertEquals(map1.get("@path"), map2.get("@path"));
+        assertNotNull(map1.get("@handle"));
+        assertEquals(map1.get("@handle"), map2.get("@handle"));
 
         //TODO cringele: should they work too?
-//        assertNotNull(resultMap.get("@nodeType"));
-//        assertEquals(resultMap.get("@nodeType"), originMap.get("@nodeType"));
-//        assertNotNull(resultMap.get("@level"));
-//        assertEquals(resultMap.get("@level"), originMap.get("@level"));
-//        assertNotNull(resultMap.get("@nodeType"));
-//        assertEquals(resultMap.get("@nodeType"), originMap.get("@nodeType"));
+//        assertNotNull(map1.get("@nodeType"));
+//        assertEquals(map1.get("@nodeType"), map2.get("@nodeType"));
+//        assertNotNull(map1.get("@level"));
+//        assertEquals(map1.get("@level"), map2.get("@level"));
+//        assertNotNull(map1.get("@nodeType"));
+//        assertEquals(map1.get("@nodeType"), map2.get("@nodeType"));
     }
 
     /**
      * Checks all mandatory ContentMap values. None should be null and all values should equal.
      *
-     * @param result Node generate during // WHEN
-     * @param origin ContentMap generated during // THEN
+     * @param node Node to compare with ContentMap
+     * @param map ContentMap to compare with Node
      * @throws RepositoryException
      */
-    private void assertNodeEqualsMap(Node result, ContentMap origin) throws RepositoryException {
-        assertNotNull(result.getName());
-        assertEquals(result.getName(), origin.get("@name"));
-        assertNotNull(result.getUUID());
-        assertEquals(result.getUUID(), origin.get("@uuid"));
-        assertNotNull(result.getIdentifier());
-        assertEquals(result.getIdentifier(), origin.get("@id"));
-        assertEquals(result.getIdentifier(), origin.get("@uuid"));
-        assertNotNull(result.getPath());
-        assertEquals(result.getPath(), origin.get("@path"));
-        assertEquals(result.getPath(), origin.get("@handle"));
+    private void assertNodeEqualsMap(Node node, ContentMap map) throws RepositoryException {
+        assertNotNull(node.getName());
+        assertEquals(node.getName(), map.get("@name"));
+        assertNotNull(node.getUUID());
+        assertEquals(node.getUUID(), map.get("@uuid"));
+        assertNotNull(node.getIdentifier());
+        assertEquals(node.getIdentifier(), map.get("@id"));
+        assertEquals(node.getIdentifier(), map.get("@uuid"));
+        assertNotNull(node.getPath());
+        assertEquals(node.getPath(), map.get("@path"));
+        assertEquals(node.getPath(), map.get("@handle"));
     }
 
     /**
      * Checks all mandatory Content values. None should be null and all values should equal.
      *
-     * @param result Node generate during // WHEN
-     * @param origin Content generated during // THEN
+     * @param node Node to compare with Content
+     * @param content Content to compare with Node
      * @throws RepositoryException
      */
-    private void assertNodeEqualsContent(Node result, Content origin) throws RepositoryException {
-        assertNotNull(result.getName());
-        assertEquals(result.getName(), origin.getName());
+    private void assertNodeEqualsContent(Node node, Content content) throws RepositoryException {
+        assertNotNull(node.getName());
+        assertEquals(node.getName(), content.getName());
         //TODO cringele: this should work!! I'll have a look at them with dlipp
-//        assertNotNull(result.getUUID());
-//        assertEquals(result.getUUID(), origin.getUUID());
-//        assertNotNull(result.getIdentifier());
-//        assertEquals(result.getIdentifier(), origin.getUUID());
-        assertNotNull(result.getPath());
-        assertEquals(result.getPath(), origin.getHandle());
+//        assertNotNull(node.getUUID());
+//        assertEquals(node.getUUID(), content.getUUID());
+//        assertNotNull(node.getIdentifier());
+//        assertEquals(node.getIdentifier(), content.getUUID());
+        assertNotNull(node.getPath());
+        assertEquals(node.getPath(), content.getHandle());
     }
 
     /**
-     * Add to the give root node child nodes by the name and type passed.
+     * Add to the give node child nodes by the name and type passed.
      *
-     * @param root node where child nodes are added to
-     * @param childNodeNames names of the children to create
-     * @param nodeTypeName of the children to create
+     * @param parent Node where child nodes are added to
+     * @param childNodeNames names of the child nodes to create
+     * @param nodeTypeName primary type of the child nodes to create
      */
-    private void createChildNodes(MockNode root, String[] childNodeNames, String nodeTypeName) {
+    private void createChildNodes(MockNode parent, String[] childNodeNames, String nodeTypeName) {
         for(String nodeName : childNodeNames){
             MockNode child = new MockNode(nodeName, nodeTypeName);
-            root.addNode(child);
+            parent.addNode(child);
         }
     }
 
