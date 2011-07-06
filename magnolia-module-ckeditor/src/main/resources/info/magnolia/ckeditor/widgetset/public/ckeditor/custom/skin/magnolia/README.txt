@@ -1,0 +1,1 @@
+Skin must be re-written from scratch as breaking changes were introduced by CKEditor in that respect.
