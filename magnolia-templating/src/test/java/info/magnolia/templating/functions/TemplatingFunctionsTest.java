@@ -124,6 +124,20 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
+    public void testAsContentMapfromNode() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+        String name = "test";
+        MockNode content = new MockNode(name);
+
+        // WHEN
+        ContentMap result = functions.asContentMap(content);
+
+        // THEN
+        assertNodeEqualsMap(content, result);
+    }
+
+    @Test
     public void testAsJCRNodeFromContentMap() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();

@@ -70,6 +70,10 @@ public class TemplatingFunctions {
         return content == null ? null : content.getJCRNode();
     }
 
+    public ContentMap asContentMap(Node content) {
+        return content == null ? null : new ContentMap(content);
+    }
+
     public Node parent(Node content) throws RepositoryException {
         return content == null ? null : content.getParent();
     }
@@ -182,14 +186,6 @@ public class TemplatingFunctions {
 
 
     //TODO cringele : May all be optional. Decide on weather to provide them or not
-
-    /**
-     * Could be private.
-     * TODO cringele : test missing
-     */
-    public ContentMap asContentMap(Node content) {
-        return content == null ? null : new ContentMap(content);
-    }
 
 //    public String linkExteral(Node content) throws RepositoryException{
 //        return content == null ? null : LinkUtil.createExternalLink(asContent(content));
