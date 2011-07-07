@@ -5,7 +5,7 @@
 // set the css to use in the editor
 CKEDITOR.config.contentCss = CKEDITOR.basePath + 'custom/css/magnoliaStandard.css';
 
-// TODO skin mechanism, files and naming seem to have changed so we probably need to write it from scratch.
+// TODO skin mechanism, files and naming seem to have changed so we probably need to re-write our skin from scratch.
 //However, CKEditor provided no docs about that so far.
 // Magnolia skin. It may be the name of the skin folder inside the editor installation path, or the name and the path separated by a comma.
 //CKEDITOR.config.skin = 'magnolia,'+ CKEDITOR.basePath + 'custom/skin/magnolia/';
