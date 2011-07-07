@@ -38,10 +38,12 @@ import javax.jcr.Node;
 
 import org.junit.Test;
 
+import com.google.inject.util.Providers;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.rendering.template.RenderableDefinition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 
 
@@ -49,6 +51,21 @@ import static org.mockito.Mockito.mock;
  * @version $Id$
  */
 public class AggregationStateBasedRenderingContextTest {
+
+    @Test
+    public void usesAggregationStateFromProvider() {
+        // Given
+        Node mainContent = mock(Node.class);
+        AggregationState aggregationState = new AggregationState();
+        aggregationState.setMainContent(mainContent);
+        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(Providers.of(aggregationState));
+
+        // When
+        Node returnedMainContent = context.getMainContent();
+
+        // Then
+        assertSame(mainContent, returnedMainContent);
+    }
 
     @Test
     public void testGetMainContent() {
