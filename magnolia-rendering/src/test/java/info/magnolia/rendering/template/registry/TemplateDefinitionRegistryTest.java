@@ -33,33 +33,111 @@
  */
 package info.magnolia.rendering.template.registry;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
-import info.magnolia.registry.RegistrationException;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
+
+import info.magnolia.registry.RegistrationException;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @version $Id$
  */
 public class TemplateDefinitionRegistryTest {
 
+    private static class SimpleTemplateDefinitionProvider implements TemplateDefinitionProvider {
+
+        private String id;
+        private TemplateDefinition templateDefinition;
+
+        private SimpleTemplateDefinitionProvider(String id, TemplateDefinition templateDefinition) {
+            this.id = id;
+            this.templateDefinition = templateDefinition;
+        }
+
+        @Override
+        public String getId() {
+            return id;
+        }
+
+        @Override
+        public TemplateDefinition getDefinition() throws RegistrationException {
+            return templateDefinition;
+        }
+    }
+
+    @Test
+    public void testRegisterAndGetTemplateDefinition() throws RegistrationException {
+
+        // Given
+        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
+        ConfiguredTemplateDefinition definition = new ConfiguredTemplateDefinition();
+
+        // When
+        registry.register(new SimpleTemplateDefinitionProvider("foobar", definition));
+
+        // Then
+        assertSame(definition, registry.getTemplateDefinition("foobar"));
+        assertEquals(1, registry.getTemplateDefinitions().size());
+        assertSame(definition, registry.getTemplateDefinitions().iterator().next());
+    }
+
+    @Test(expected = RegistrationException.class)
+    public void testGetTemplateDefinitionThrowsOnBadId() throws RegistrationException {
+
+        // Given
+        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
+
+        // When
+        registry.getTemplateDefinition("nonExistingId");
+
+        // Then we get RegistrationException
+    }
+
+    @Test
+    public void testGetTemplateDefinitionsIgnoresFailingProvider() throws RegistrationException {
+
+        // Given
+        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
+        registry.register(new TemplateDefinitionProvider() {
+            @Override
+            public String getId() {
+                return null;
+            }
+
+            @Override
+            public TemplateDefinition getDefinition() throws RegistrationException {
+                throw new RegistrationException("failing provider");
+            }
+        });
+
+        // When
+        Collection<TemplateDefinition> templateDefinitions = registry.getTemplateDefinitions();
+
+        // Then
+        assertTrue(templateDefinitions.isEmpty());
+    }
+
     @Test
     public void testUnregisterAndRegister() throws RegistrationException {
         // GIVEN
-        String rendererId = "onlyOneToRemove";
+        String providerId = "onlyOneToRemove";
         final TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
-        TemplateDefinitionProvider rendererProvider = mock(TemplateDefinitionProvider.class);
-        when(rendererProvider.getId()).thenReturn(rendererId);
-        registry.register(rendererProvider);
+        TemplateDefinitionProvider provider = mock(TemplateDefinitionProvider.class);
+        when(provider.getId()).thenReturn(providerId);
+        registry.register(provider);
 
         List<String> idsToRemove = new ArrayList<String>();
-        idsToRemove.add(rendererId);
+        idsToRemove.add(providerId);
 
         TemplateDefinitionProvider rp1 = mock(TemplateDefinitionProvider.class);
         when(rp1.getId()).thenReturn("rp1");
@@ -69,13 +147,13 @@ public class TemplateDefinitionRegistryTest {
         registry.register(rp2);
 
         List<TemplateDefinitionProvider> rendererProviders = new ArrayList<TemplateDefinitionProvider>();
-        rendererProviders.add(rendererProvider);
+        rendererProviders.add(provider);
 
         // WHEN
         Set<String> idsOfNewRegisteredProviders = registry.unregisterAndRegister(idsToRemove, rendererProviders);
 
         // THEN
-        assertTrue(idsOfNewRegisteredProviders.contains(rendererId));
+        assertTrue(idsOfNewRegisteredProviders.contains(providerId));
         assertEquals(1, idsOfNewRegisteredProviders.size());
     }
 }
