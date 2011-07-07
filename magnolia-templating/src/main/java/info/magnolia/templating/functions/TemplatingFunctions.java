@@ -43,7 +43,6 @@ import info.magnolia.link.LinkUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
