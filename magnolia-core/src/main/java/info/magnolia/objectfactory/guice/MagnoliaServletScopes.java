@@ -148,8 +148,8 @@ public class MagnoliaServletScopes {
             webContext = MgnlContext.getWebContext();
         } catch (IllegalStateException e) {
             throw new OutOfScopeException("Cannot access scoped object." +
-                    " MgnlContext does not a WebContext set, this is most likely " +
-                    "because we are not currently processing an HTTP request.", e);
+                    " MgnlContext does not have a WebContext set, this is most likely" +
+                    " because we are not currently processing a HTTP request.", e);
         }
         return webContext.getRequest();
     }
