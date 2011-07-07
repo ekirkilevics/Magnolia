@@ -48,6 +48,7 @@ import com.google.inject.Stage;
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.SessionScoped;
 import com.google.inject.util.Modules;
+import com.mycila.inject.jsr250.Jsr250;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -105,7 +106,8 @@ public class GuiceComponentProviderBuilder {
         Module module = new AbstractModule() {
             @Override
             protected void configure() {
-                binder().requireExplicitBindings();
+                // requireExplicitBindings is switched off because Guice internally creates jit bindings and those are called for @PreDestroy, which fails if this is turned on
+//                binder().requireExplicitBindings();
                 bind(ComponentProvider.class).toInstance(componentProvider);
                 install(new GuiceComponentProviderModule(configuration));
                 for (Module extraModule : extraModules) {
@@ -152,6 +154,14 @@ public class GuiceComponentProviderBuilder {
                 });
                 bindScope(RequestScoped.class, MagnoliaServletScopes.REQUEST);
                 bindScope(SessionScoped.class, MagnoliaServletScopes.SESSION);
+
+                try {
+                    bind(Class.forName("com.mycila.inject.jsr250.Jsr250KeyProvider"));
+                    bind(Class.forName("com.mycila.inject.jsr250.Jsr250PostConstructHandler"));
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                install(Jsr250.newJsr250Module());
             }
         };
 

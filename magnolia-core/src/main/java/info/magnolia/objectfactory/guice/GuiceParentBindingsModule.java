@@ -83,6 +83,7 @@ public class GuiceParentBindingsModule extends AbstractModule {
                 Key<?> key = entry.getKey();
                 if (!excluded.contains(key)) {
                     final Provider<?> provider = entry.getValue().getProvider();
+                    // We wrap in a nop provider here to hide details like scope
                     bind(key).toProvider(new Provider() {
                         @Override
                         public Object get() {

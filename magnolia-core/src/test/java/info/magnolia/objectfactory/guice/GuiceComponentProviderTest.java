@@ -33,13 +33,17 @@
  */
 package info.magnolia.objectfactory.guice;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.ContextFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -52,7 +56,11 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockSession;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 public class GuiceComponentProviderTest {
 
@@ -84,6 +92,7 @@ public class GuiceComponentProviderTest {
     @After
     public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
+        SystemProperty.clear();
         MgnlContext.setInstance(null);
         Components.setProvider(null);
     }
@@ -186,11 +195,71 @@ public class GuiceComponentProviderTest {
         childConfig.registerImplementation(OtherSingletonObject.class, OtherSingletonObject.class);
         ComponentProvider child = parent.createChild(childConfig);
 
+        assertNotSame(parent, child);
+
         assertNotNull(parent.getComponent(SingletonObject.class));
         assertNotNull(child.getComponent(SingletonObject.class));
         assertSame(parent.getComponent(SingletonObject.class), child.getComponent(SingletonObject.class));
 
         assertNull(parent.getComponent(OtherSingletonObject.class));
         assertNotNull(child.getComponent(OtherSingletonObject.class));
+    }
+
+    public interface SomeInterface {
+    }
+
+    @Singleton
+    public static class LifecycleSuperClass implements SomeInterface {
+        public int initialized;
+        public int destroyed;
+
+        @PostConstruct
+        public void init() {
+            initialized++;
+        }
+
+        @PreDestroy
+        public void destroy() {
+            destroyed++;
+        }
+    }
+
+    @Test
+    @Ignore
+    public void testLifecycle() {
+
+        // This fails because Guice creates an extra internal binding and Mycila destroys each of them
+        // Issue filed with MycilaGuice https://code.google.com/p/mycila/issues/detail?id=31
+
+        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
+        configuration.registerImplementation(SomeInterface.class, LifecycleSuperClass.class);
+        GuiceComponentProvider p = create(configuration, false);
+        LifecycleSuperClass component = (LifecycleSuperClass) p.getComponent(SomeInterface.class);
+        assertEquals(1, component.initialized);
+        assertEquals(0, component.destroyed);
+        p.destroy();
+        assertEquals(1, component.initialized);
+        assertEquals(1, component.destroyed);
+    }
+
+    @Test
+    public void destroyOfChildMustNotDestroyInParent() {
+
+        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
+        configuration.registerImplementation(LifecycleSuperClass.class);
+        GuiceComponentProvider parent = create(configuration, false);
+
+        ComponentProviderConfiguration childConfig = new ComponentProviderConfiguration();
+        GuiceComponentProvider child = parent.createChild(childConfig);
+
+        LifecycleSuperClass component = parent.getComponent(LifecycleSuperClass.class);
+        assertEquals(1, component.initialized);
+        assertEquals(0, component.destroyed);
+        child.destroy();
+        assertEquals(1, component.initialized);
+        assertEquals(0, component.destroyed);
+        parent.destroy();
+        assertEquals(1, component.initialized);
+        assertEquals(1, component.destroyed);
     }
 }

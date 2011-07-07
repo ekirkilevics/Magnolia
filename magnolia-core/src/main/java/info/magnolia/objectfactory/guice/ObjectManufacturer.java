@@ -41,7 +41,7 @@ import java.lang.reflect.Type;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import com.google.inject.ConfigurationException;
+import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 
@@ -81,7 +81,11 @@ public class ObjectManufacturer {
         }
         if (selectedConstructor != null) {
             selectedConstructor.setAccessible(true);
-            return invoke(selectedConstructor, resolveParameters(selectedConstructor, extraCandidates));
+            Object[] parameters = resolveParameters(selectedConstructor, extraCandidates);
+            if (parameters == null) {
+                throw new RuntimeException("Unable to resolve parameters for constructor " + selectedConstructor);
+            }
+            return invoke(selectedConstructor, parameters);
         }
 
         // Find greediest satisfiable constructor
@@ -148,21 +152,22 @@ public class ObjectManufacturer {
     }
 
     private Object getParameterFromInjector(Class<?> parameterType, Type genericParameterType) {
-        // FIXME we might be creating objects with guice here only to throw them away
-        try {
-            // If the parameter is javax.inject.Provider<T> we will look for a provider of T instead
-            if (genericParameterType instanceof ParameterizedType) {
-                ParameterizedType parameterizedType = (ParameterizedType) genericParameterType;
-                if (parameterizedType.getRawType() == javax.inject.Provider.class) {
-                    Type actualType = parameterizedType.getActualTypeArguments()[0];
-                    return injector.getProvider(Key.get(actualType));
-                }
+
+        // We ask for an existing binding so Guice wont create jit bindings for things like Class and String
+        // This means that all parameters need to be explicitly bound
+
+        // If the parameter is javax.inject.Provider<T> we will look for a provider of T instead
+        if (genericParameterType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) genericParameterType;
+            if (parameterizedType.getRawType() == javax.inject.Provider.class) {
+                Type actualType = parameterizedType.getActualTypeArguments()[0];
+                Binding<?> existingBinding = injector.getExistingBinding(Key.get(actualType));
+                return existingBinding != null ? existingBinding.getProvider() : NOTHING;
             }
-            return injector.getInstance(parameterType);
-        } catch (ConfigurationException e) {
-            // TODO we might want to log this
-            return NOTHING;
         }
+        Key<?> key = Key.get(parameterType);
+        Binding<?> existingBinding = injector.getExistingBinding(key);
+        return existingBinding != null ? existingBinding.getProvider().get() : NOTHING;
     }
 
     private Object findExtraCandidate(Class<?> parameterType, Type genericParameterType, Object[] extraCandidates) {

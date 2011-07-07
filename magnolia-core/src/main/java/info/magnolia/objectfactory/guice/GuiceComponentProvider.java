@@ -39,6 +39,7 @@ import javax.inject.Inject;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.mycila.inject.jsr250.Jsr250Injector;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.HierarchicalComponentProvider;
 import info.magnolia.objectfactory.MutableComponentProvider;
@@ -54,7 +55,7 @@ import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
 public class GuiceComponentProvider implements HierarchicalComponentProvider {
 
     @Inject
-    private Injector injector;
+    private Jsr250Injector injector;
     private ObjectManufacturer manufacturer;
     private final Map<Class<?>, Class<?>> implementations = new HashMap<Class<?>, Class<?>>();
     private GuiceComponentProvider parentComponentProvider;
@@ -110,6 +111,10 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
 
     public Injector getInjector() {
         return injector;
+    }
+
+    public void destroy() {
+        injector.destroy();
     }
 
     @Override
