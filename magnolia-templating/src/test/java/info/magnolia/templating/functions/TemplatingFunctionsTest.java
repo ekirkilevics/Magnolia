@@ -478,9 +478,9 @@ public class TemplatingFunctionsTest {
      * @param originNodeNames containing the node names to compare to the Nodes or ContentMap in  @param resultNodes
      * @throws RepositoryException
      */
-    private void assertListOfNodesOrMapsEqualStringDefinitions(List listOfNodesOrContentMaps, String[] originNodeNames) throws RepositoryException {
+    private void assertListOfNodesOrMapsEqualStringDefinitions(List<?> listOfNodesOrContentMaps, String[] originNodeNames) throws RepositoryException {
         int i = 0;
-        for ( Iterator it = listOfNodesOrContentMaps.iterator(); it.hasNext(); i++) {
+        for ( Iterator<?> it = listOfNodesOrContentMaps.iterator(); it.hasNext(); i++) {
             Object object = it.next();
             if(object instanceof Node){
                 assertEquals((((Node)object).getName()), originNodeNames[i]);
