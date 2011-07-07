@@ -43,7 +43,6 @@ import info.magnolia.link.LinkUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -79,13 +78,17 @@ public class TemplatingFunctions {
         if(content == null) {
             return null;
         }
-        try {
+        //TODO cringele: check if it should be handled by returning null. MockNode should throw too.
+        if(content.getDepth() > 0){
             return content.getParent();
-        } catch (ItemNotFoundException e) {
-            //Is thrown when node is root defined by JCR API
-            //TODO cringele: check if it should be handled by returning null. MockNode should throw too.
-            return null;
         }
+        return null;
+//        try {
+//            return content.getParent();
+//        } catch (ItemNotFoundException e) {
+//            //Is thrown when node is root defined by JCR API
+//            return null;
+//        }
     }
 
     public ContentMap parent(ContentMap contentMap) throws RepositoryException {
@@ -168,7 +171,7 @@ public class TemplatingFunctions {
             return null;
         }
         Node root = content;
-        while(this.parent(root) != null){
+        while(this.parent(root).getDepth() > 0){
             root = this.parent(root);
         }
         return root;
