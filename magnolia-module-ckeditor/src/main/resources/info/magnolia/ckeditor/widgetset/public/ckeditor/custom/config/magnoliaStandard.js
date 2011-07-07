@@ -19,7 +19,7 @@ CKEDITOR.config.contentCss = CKEDITOR.basePath + 'custom/css/magnoliaStandard.cs
 //CKEDITOR.config.shiftEnterMode = MgnlFCKConfig.shiftEnterMode;
 
 // create toolbar
-CKEDITOR.config.toolbar_Magnolia = new Array();
+var toolbar = new Array();
 toolbar[0] = new Array();
 
 toolbar[0].push('Bold');
@@ -112,6 +112,8 @@ if (MgnlFCKConfig.styles != '' || MgnlFCKConfig.templates != '' || MgnlFCKConfig
     }
 }
 */
+
+CKEDITOR.config.toolbar_Magnolia = toolbar
 // make the configured toolbar available
 CKEDITOR.config.toolbar = 'Magnolia';
 
