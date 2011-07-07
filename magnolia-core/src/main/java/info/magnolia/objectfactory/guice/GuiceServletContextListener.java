@@ -74,8 +74,11 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
  */
 public class GuiceServletContextListener implements ServletContextListener {
 
-    private ConfigLoader loader;
     private ServletContext servletContext;
+    private GuiceComponentProvider root;
+    private GuiceComponentProvider platform;
+    private ModuleManager moduleManager;
+    private ConfigLoader loader;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -87,10 +90,10 @@ public class GuiceServletContextListener implements ServletContextListener {
             builder.withConfiguration(getRootConfiguration());
             builder.useStage(Stage.PRODUCTION);
             builder.exposeGlobally();
-            GuiceComponentProvider root = builder.build();
+            root = builder.build();
 
             System.setProperty("server", root.getComponent(MagnoliaInitPaths.class).getServerName());
-            final ModuleManager moduleManager = root.getComponent(ModuleManager.class);
+            moduleManager = root.getComponent(ModuleManager.class);
             moduleManager.loadDefinitions();
             final MagnoliaConfigurationProperties configurationProperties = root.getComponent(MagnoliaConfigurationProperties.class);
             ((DefaultMagnoliaConfigurationProperties) configurationProperties).init();
@@ -100,7 +103,7 @@ public class GuiceServletContextListener implements ServletContextListener {
             builder.withConfiguration(getPlatformConfiguration());
             builder.withParent(root);
             builder.exposeGlobally();
-            GuiceComponentProvider platform = builder.build();
+            platform = builder.build();
 
             platform.getComponent(Log4jConfigurer.class).start();
 
@@ -123,18 +126,21 @@ public class GuiceServletContextListener implements ServletContextListener {
     @Override
     public void contextDestroyed(final ServletContextEvent sce) {
 
-        ModuleManager mm = ModuleManager.Factory.getInstance();
         // avoid disturbing NPEs if the context has never been started (classpath problems, etc)
-        if (mm != null) {
-            mm.stopModules();
+        if (moduleManager != null) {
+            moduleManager.stopModules();
         }
 
         stopServer();
 
-        // TODO
-//        root.destroy();
-    }
+        if (platform != null) {
+            platform.destroy();
+        }
 
+        if (root != null) {
+            root.destroy();
+        }
+    }
 
     protected void startServer() {
         MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {

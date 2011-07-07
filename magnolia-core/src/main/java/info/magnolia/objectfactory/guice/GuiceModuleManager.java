@@ -71,7 +71,6 @@ import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentConfigurationPath;
-import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.PropertiesComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -85,7 +84,7 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 @Singleton
 public class GuiceModuleManager extends ModuleManagerImpl {
 
-    private ComponentProvider main;
+    private GuiceComponentProvider main;
     private ModuleRegistry moduleRegistry;
     private MagnoliaConfigurationProperties configurationProperties;
     private Map<String, ModuleInstanceProvider<?>> moduleProviders = new HashMap<String, ModuleInstanceProvider<?>>();
@@ -137,7 +136,7 @@ public class GuiceModuleManager extends ModuleManagerImpl {
     @Override
     public void stopModules() {
         super.stopModules();
-        // TODO close down injector, JSR-250
+        main.destroy();
     }
 
     @Override
