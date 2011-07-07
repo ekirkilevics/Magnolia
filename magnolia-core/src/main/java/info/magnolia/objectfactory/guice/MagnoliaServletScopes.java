@@ -88,12 +88,14 @@ public class MagnoliaServletScopes {
                     }
                 }
 
+                @Override
                 public String toString() {
                     return String.format("%s[%s]", creator, REQUEST);
                 }
             };
         }
 
+        @Override
         public String toString() {
             return "MagnoliaServletScopes.REQUEST";
         }
@@ -127,12 +129,14 @@ public class MagnoliaServletScopes {
                     }
                 }
 
+                @Override
                 public String toString() {
                     return String.format("%s[%s]", creator, SESSION);
                 }
             };
         }
 
+        @Override
         public String toString() {
             return "MagnoliaServletScopes.SESSION";
         }

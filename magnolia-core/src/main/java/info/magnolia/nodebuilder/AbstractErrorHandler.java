@@ -83,6 +83,7 @@ public abstract class AbstractErrorHandler implements ErrorHandler {
     /**
      * Default implementation dropping the cause for those handlers that care only about the message.
      */
+    @Override
     public void report(String message, Throwable cause) throws NodeOperationException {
         report(message);
     }
