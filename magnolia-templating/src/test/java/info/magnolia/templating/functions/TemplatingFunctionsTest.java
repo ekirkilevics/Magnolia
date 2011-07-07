@@ -253,7 +253,7 @@ public class TemplatingFunctionsTest {
 
         // THEN
         String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(firstLevelPages, firstLevelComponents);
-        assertListOfNodesOrMapsEqualStringDefinitions(resultChildNodes, allFirstLevelNames);
+        assertContentMapListEqualStringDefinitions(resultChildNodes, allFirstLevelNames);
     }
 
     @Test
@@ -281,8 +281,8 @@ public class TemplatingFunctionsTest {
         List<ContentMap> resultChildComponentsMap = functions.children(rootPageContentMap, MgnlNodeType.NT_CONTENTNODE);
 
         // THEN
-        assertListOfNodesOrMapsEqualStringDefinitions(resultChildPagesMap, firstLevelPages);
-        assertListOfNodesOrMapsEqualStringDefinitions(resultChildComponentsMap, firstLevelComponents);
+        assertContentMapListEqualStringDefinitions(resultChildPagesMap, firstLevelPages);
+        assertContentMapListEqualStringDefinitions(resultChildComponentsMap, firstLevelComponents);
     }
 
     @Test
@@ -307,7 +307,7 @@ public class TemplatingFunctionsTest {
 
         // THEN
         String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(firstLevelPages, firstLevelComponents);
-        assertListOfNodesOrMapsEqualStringDefinitions(resultChildNodes, allFirstLevelNames);
+        assertNodesListEqualStringDefinitions(resultChildNodes, allFirstLevelNames);
     }
 
     @Test
@@ -332,8 +332,8 @@ public class TemplatingFunctionsTest {
         List<Node> resultChildComponents = functions.children(rootPage, MgnlNodeType.NT_CONTENTNODE);
 
         // THEN
-        assertListOfNodesOrMapsEqualStringDefinitions(resultChildPages, firstLevelPages);
-        assertListOfNodesOrMapsEqualStringDefinitions(resultChildComponents, firstLevelComponents);
+        assertNodesListEqualStringDefinitions(resultChildPages, firstLevelPages);
+        assertNodesListEqualStringDefinitions(resultChildComponents, firstLevelComponents);
     }
 
 
@@ -470,24 +470,34 @@ public class TemplatingFunctionsTest {
 
 
     /**
-     * Checks each object of the list @param resultNodesOrContentMaps with the passed nodeNames in @param originNodeNames.
-     * The checked object in the List can be an instance of Node or ContentMap.
-     * Check also the amount of nodes compared of the amount of passed namesNames in @param originNodeNames.
+     * Checks each Node of the list @param nodeList with the passed nodeNames in @param originNodeNames.
+     * Checks also the amount of Nodes compared of the amount of passed nodeNames in @param originNodeNames.
      *
-     * @param listOfNodesOrContentMaps List of Nodes or ContentMaps to compare to the names defined in @param originNodeNames
-     * @param originNodeNames containing the node names to compare to the Nodes or ContentMap in  @param resultNodes
+     * @param nodeList List of Nodes to compare to the names defined in @param originNodeNames
+     * @param originNodeNames containing the node names to compare to the Nodes in @param nodeList
      * @throws RepositoryException
      */
-    private void assertListOfNodesOrMapsEqualStringDefinitions(List<?> listOfNodesOrContentMaps, String[] originNodeNames) throws RepositoryException {
+    private void assertNodesListEqualStringDefinitions(List<Node> nodeList, String[] originNodeNames) throws RepositoryException {
         int i = 0;
-        for ( Iterator<?> it = listOfNodesOrContentMaps.iterator(); it.hasNext(); i++) {
-            Object object = it.next();
-            if(object instanceof Node){
-                assertEquals((((Node)object).getName()), originNodeNames[i]);
-            }
-            if(object instanceof ContentMap){
-                assertEquals((((ContentMap)object).get("@name")), originNodeNames[i]);
-            }
+        for (Iterator<Node> it = nodeList.iterator(); it.hasNext(); i++) {
+            Node node = it.next();
+            assertEquals(node.getName(), originNodeNames[i]);
+        }
+    }
+
+    /**
+     * Checks each ContentMap of the list @param contentMapList with the passed nodeNames in @param originNodeNames.
+     * Checks also the amount of contentMapList compared of the amount of passed nodeNames in @param originNodeNames.
+     *
+     * @param contentMapList List of ContentMaps to compare to the names defined in @param originNodeNames
+     * @param originNodeNames containing the node names to compare to the ContentMaps in @param contentMapList
+     * @throws RepositoryException
+     */
+    private void assertContentMapListEqualStringDefinitions(List<ContentMap> contentMapList, String[] originNodeNames) throws RepositoryException {
+        int i = 0;
+        for (Iterator<ContentMap> it = contentMapList.iterator(); it.hasNext(); i++) {
+            ContentMap map = it.next();
+            assertEquals(map.get("@name"), originNodeNames[i]);
         }
     }
 
