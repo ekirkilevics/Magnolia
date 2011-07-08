@@ -33,6 +33,7 @@
  */
 package info.magnolia.ckeditor.widgetset.client.ui;
 
+
 import java.util.HashMap;
 import java.util.Set;
 
@@ -56,16 +57,16 @@ public class VCKEditorTextField extends Widget implements Paintable, CKEditorSer
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-ckeditortextfield";
 
+    public static final String ATTR_CONFIG = "ckeditorConfig";
     public static final String ATTR_IMMEDIATE = "immediate";
     public static final String ATTR_READONLY = "readonly";
-    public static final String ATTR_INPAGECONFIG = "inPageConfig";
-    public static final String ATTR_CUSTOMCONFIG = "customConfig";
     public static final String ATTR_WRITERRULES_TAGNAME = "writerRules.tagName";
     public static final String ATTR_WRITERRULES_JSRULE = "writerRules.jsRule";
     public static final String ATTR_WRITER_INDENTATIONCHARS = "writerIndentationChars";
     public static final String VAR_TEXT = "text";
     public static final String VAR_VERSION = "version";
 
+    public static final String CUSTOM_CONFIGURATION_PATH_DEFAULT = "custom/config/magnoliaStandard.js";
 
     private static boolean initializedCKEDITOR = false;
     private static String ckeditorVersion;
@@ -156,8 +157,7 @@ public class VCKEditorTextField extends Widget implements Paintable, CKEditorSer
         else if ( ckEditor == null ) {
             getElement().setInnerHTML(""); // in case we put contents in there while in readonly mode
 
-            String inPageConfig = uidl.hasAttribute(ATTR_INPAGECONFIG) ? uidl.getStringAttribute(ATTR_INPAGECONFIG) : null;
-            String customConfig = uidl.hasAttribute(ATTR_CUSTOMCONFIG) ? uidl.getStringAttribute(ATTR_CUSTOMCONFIG) : null;
+            String configuration = uidl.hasAttribute(ATTR_CONFIG) ? uidl.getStringAttribute(ATTR_CONFIG) : null;
 
             writerIndentationChars = uidl.hasAttribute(ATTR_WRITER_INDENTATIONCHARS) ? uidl.getStringAttribute(ATTR_WRITER_INDENTATIONCHARS) : null;
 
@@ -176,8 +176,7 @@ public class VCKEditorTextField extends Widget implements Paintable, CKEditorSer
                 writerRules.put(tagName, jsRule);
                 ++i;
             }
-
-            ckEditor = (CKEditor)CKEditorService.loadEditor(paintableId, this, inPageConfig, customConfig );
+            ckEditor = (CKEditor)CKEditorService.loadEditor(paintableId, this, configuration, CUSTOM_CONFIGURATION_PATH_DEFAULT);
             // editor data and some options are set when the instance is ready....
         } else if ( ckEditorIsReady ) {
             if ( dataBeforeEdit != null ) {

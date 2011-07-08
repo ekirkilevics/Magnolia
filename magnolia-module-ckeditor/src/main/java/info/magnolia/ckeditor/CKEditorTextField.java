@@ -38,7 +38,6 @@ import info.magnolia.ckeditor.widgetset.client.ui.VCKEditorTextField;
 
 import java.util.Map;
 
-
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -57,8 +56,7 @@ import com.vaadin.ui.AbstractField;
  * Copied verbatim from http://vaadin.com/directory#addon/ckeditor-wrapper-for-vaadin.
  */
 @com.vaadin.ui.ClientWidget(VCKEditorTextField.class)
-public class CKEditorTextField extends AbstractField
-implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier  {
+public class CKEditorTextField extends AbstractField implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier  {
 
     private static final long serialVersionUID = 2801471973845411928L;
 
@@ -86,8 +84,9 @@ implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier  {
 
     @Override
     public void setValue(Object newValue) throws Property.ReadOnlyException, Property.ConversionException {
-        if ( newValue == null )
+        if ( newValue == null ) {
             newValue = "";
+        }
         super.setValue(newValue, false);
     }
 
@@ -100,10 +99,11 @@ implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier  {
         target.addAttribute(VCKEditorTextField.ATTR_READONLY, isReadOnly());
 
         if (config != null) {
-            if(config.getInPageConfig() != null) {
-                target.addAttribute(VCKEditorTextField.ATTR_INPAGECONFIG, config.getInPageConfig());
-            } else if(config.getJsConfigFile() != null){
-                target.addAttribute(VCKEditorTextField.ATTR_CUSTOMCONFIG, config.getJsConfigFile());
+            if(config.getConfiguration() != null) {
+                target.addAttribute(VCKEditorTextField.ATTR_CONFIG, config.getConfiguration());
+            } else {
+                //something must have gone awry
+                throw new PaintException("Configuration of CKEditorField cannot be null.");
             }
         }
     }
@@ -117,8 +117,9 @@ implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier  {
             // Only do the setting if the string representation of the value
             // has been updated
             String newValue = (String)variables.get(VCKEditorTextField.VAR_TEXT);
-            if ( newValue == null )
+            if ( newValue == null ) {
                 newValue = "";
+            }
 
             final String oldValue = getValue().toString();
             if ( ! newValue.equals(oldValue) ) {
@@ -164,8 +165,7 @@ implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier  {
 
     @Override
     public void addListener(FocusListener listener) {
-        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
-                FocusListener.focusMethod);
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener, FocusListener.focusMethod);
     }
 
     @Override

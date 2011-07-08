@@ -47,29 +47,33 @@ public class CKEditorService {
      *
      * @param id the string DOM &lt;div&gt; 'id' attribute value for the element you want to replace with CKEditor
      * @param listener the CKEditorService.CKEditorListener will get notified when the editor instance is ready, changed, etc.
-     * @param jsInPageConfig the String possible custom "in page" configuration; note that this must be an expected JSON for the CKEDITOR in page config.
+     * @param configuration "in page" configuration; note that this must be an expected JSON for the CKEDITOR in page config.
      * sent "as is" without any real syntax or security testing, so be sure you know it's valid and not malicious,
      * such as: <code>{toolbar : 'Basic', language : 'en'}</code>
-     * @param jsCustomConfig path to the js custom configuration file.
+     * @param fallbackConfiguration path to the js fallback configuration file.
      */
-    public static native JavaScriptObject loadEditor(String id, CKEditorService.CKEditorListener listener, String jsInPageConfig, String jsCustomConfig)
+    public static native JavaScriptObject loadEditor(String id, CKEditorService.CKEditorListener listener, String configuration, String fallbackConfiguration)
     /*-{
+
          // Build our inPageConfig object based on the JSON jsInPageConfig sent to us.
-         var inPageConfig = @info.magnolia.ckeditor.widgetset.client.ui.CKEditorService::convertJavaScriptStringToObject(Ljava/lang/String;)(jsInPageConfig);
+         var inPageConfig = @info.magnolia.ckeditor.widgetset.client.ui.CKEditorService::convertJavaScriptStringToObject(Ljava/lang/String;)(configuration);
 
          var myEditor;
 
          if ( inPageConfig ) {
+
             myEditor = $wnd.CKEDITOR.appendTo( id, inPageConfig );
          } else {
-
+            //something must have gone awry
             myEditor = $wnd.CKEDITOR.appendTo( id );
-            if (jsCustomConfig){
+            if (fallbackConfiguration){
                 $wnd.CKEDITOR.replace( id,
                         {
-                            customConfig : jsCustomConfig
+                            customConfig : fallbackConfiguration
                         });
+                //alert("Something must have gone wrong while creating CKEditor configuration. Perhaps your custom configuration file contains errors? Falling back to Magnolia default one.");
                }
+             //alert("Something must have gone really wrong while creating CKEditor configuration. Could not even find fallback configuration.");
          }
 
 
@@ -124,7 +128,7 @@ public class CKEditorService {
         try {
              return eval('('+jsString+')');
          } catch (e) {
-             alert('convertJavaScriptStringToObject() INVALID JAVASCRIPT: ' + jsString);
+             alert('convertJavaScriptStringToObject() INVALID JAVASCRIPT: ' + jsString + ', error is ' + e);
              return null;
          }
     }-*/;
