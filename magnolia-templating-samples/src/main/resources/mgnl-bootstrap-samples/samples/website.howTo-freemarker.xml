@@ -105,13 +105,7 @@
       </sv:property>
       <sv:property sv:name="text" sv:type="String">
         <sv:value>&lt;p&gt;
-    This is the second paragraph and it can be moved up and down.&lt;/p&gt;
-&lt;p&gt;
-    This is the second paragraph and it can be moved up and down.&lt;/p&gt;
-&lt;p&gt;
-    This is the second paragraph and it can be moved up and down.&lt;/p&gt;
-&lt;p&gt;
-    This is the second paragraph and it can be moved up and down.This is the second paragraph and it can be moved up and down.This is the second paragraph and it can be moved up and down.This is the second paragraph and it can be moved up and down.This is the second paragraph and it can be moved up and down.This is the second paragraph and it can be moved up and down.This is the second paragraph and it can be moved up and down.This is the second paragraph and it can be moved up and down.This is the second paragraph and it can be moved up and down.&lt;/p&gt;
+	This is the second paragraph and it can be moved up and down.&lt;/p&gt;
 </sv:value>
       </sv:property>
       <sv:property sv:name="title" sv:type="String">
@@ -128,7 +122,7 @@
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-07-06T17:16:24.909+02:00</sv:value>
+          <sv:value>2011-07-08T02:56:30.948+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
           <sv:value>samples:paragraphs/text</sv:value>
@@ -205,7 +199,9 @@
         <sv:value>admin</sv:value>
       </sv:property>
       <sv:property sv:name="text" sv:type="String">
-        <sv:value>This is the first paragraph in this collection area.&lt;br&gt;</sv:value>
+        <sv:value>&lt;p&gt;
+	This is the first paragraph in this extras area.&lt;/p&gt;
+</sv:value>
       </sv:property>
       <sv:property sv:name="title" sv:type="String">
         <sv:value>Extras - Paragraph One</sv:value>
@@ -224,7 +220,7 @@
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-06-30T23:46:19.437+02:00</sv:value>
+          <sv:value>2011-07-08T02:57:46.577+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
           <sv:value>samples:paragraphs/text</sv:value>
@@ -236,16 +232,16 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>a70b79a5-0427-46a4-87d4-7256b8f752cc</sv:value>
+        <sv:value>4a96a947-7e98-4f71-9b2d-d41b6201580d</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
       <sv:property sv:name="text" sv:type="String">
-        <sv:value>This is the second paragraph and it can be moved up and down.&lt;br&gt;</sv:value>
+        <sv:value/>
       </sv:property>
       <sv:property sv:name="title" sv:type="String">
-        <sv:value>Extras - Paragraph Two</sv:value>
+        <sv:value>Link List Title</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -254,55 +250,68 @@
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
-        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-          <sv:value>false</sv:value>
-        </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-06-30T23:46:21.033+02:00</sv:value>
+          <sv:value>2011-07-08T02:58:42.133+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samples:paragraphs/text</sv:value>
+          <sv:value>samples:paragraphs/linkList</sv:value>
         </sv:property>
       </sv:node>
-    </sv:node>
-    <sv:node sv:name="01">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>610dc5ff-6a2f-475d-84d2-b0628c9d95f0</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:createdBy" sv:type="String">
-        <sv:value>admin</sv:value>
-      </sv:property>
-      <sv:property sv:name="text" sv:type="String">
-        <sv:value>This is the third paragraph.&lt;br&gt;</sv:value>
-      </sv:property>
-      <sv:property sv:name="title" sv:type="String">
-        <sv:value>Extras - Paragraph Three</sv:value>
-      </sv:property>
-      <sv:node sv:name="MetaData">
+      <sv:node sv:name="links">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:metaData</sv:value>
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>f04e3fe6-7e25-47f7-bfbe-58abc2ee01a0</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
-        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-          <sv:value>false</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:authorid" sv:type="String">
-          <sv:value>superuser</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-06-30T23:46:23.713+02:00</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samples:paragraphs/text</sv:value>
-        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="0">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>ccb2f675-1c31-4de6-b3e0-65152b9e9785</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
+          <sv:property sv:name="target" sv:type="String">
+            <sv:value>http://www.magnolia.com</sv:value>
+          </sv:property>
+          <sv:property sv:name="title" sv:type="String">
+            <sv:value>Magnolia</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+              <sv:value>admin</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:authorid" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+              <sv:value>2011-07-08T02:59:20.140+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:template" sv:type="String">
+              <sv:value>samples:paragraphs/externalLink</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
       </sv:node>
     </sv:node>
   </sv:node>
