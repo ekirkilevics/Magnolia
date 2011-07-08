@@ -289,7 +289,7 @@
             <sv:value>admin</sv:value>
           </sv:property>
           <sv:property sv:name="target" sv:type="String">
-            <sv:value>http://www.magnolia.com</sv:value>
+            <sv:value>http://www.magnolia-cms.com</sv:value>
           </sv:property>
           <sv:property sv:name="title" sv:type="String">
             <sv:value>Magnolia</sv:value>
