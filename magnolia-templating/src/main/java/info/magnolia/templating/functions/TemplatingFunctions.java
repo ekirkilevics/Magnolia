@@ -75,20 +75,10 @@ public class TemplatingFunctions {
     }
 
     public Node parent(Node content) throws RepositoryException {
-        if(content == null) {
+        if(content == null || content.getDepth() == 0) {
             return null;
         }
-        //TODO cringele: check if it should be handled by returning null. MockNode should throw too.
-        if(content.getDepth() > 0){
-            return content.getParent();
-        }
-        return null;
-//        try {
-//            return content.getParent();
-//        } catch (ItemNotFoundException e) {
-//            //Is thrown when node is root defined by JCR API
-//            return null;
-//        }
+        return content.getParent();
     }
 
     public ContentMap parent(ContentMap contentMap) throws RepositoryException {
