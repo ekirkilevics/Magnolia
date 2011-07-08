@@ -41,11 +41,6 @@ import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.ContentMap;
-//import info.magnolia.link.LinkFactory;
-//import info.magnolia.link.LinkTransformerManager;
-//import info.magnolia.link.LinkUtil;
-//import info.magnolia.objectfactory.ComponentProvider;
-//import info.magnolia.objectfactory.Components;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
@@ -58,6 +53,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -66,6 +62,17 @@ import org.junit.Test;
  * @version $Id$
  */
 public class TemplatingFunctionsTest {
+
+    private static final String CHILD_NAME = "child";
+    private MockNode root;
+    private MockNode child;
+
+    @Before
+    public void setUp() {
+        root = new MockNode();
+        child = new MockNode("child");
+        root.addNode(child);
+    }
 
 //  @Test
 //  public void testLinkFromNode() throws RepositoryException {
@@ -94,18 +101,16 @@ public class TemplatingFunctionsTest {
     public void testAsContentFromNode() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        String name = "test";
-        MockNode origin = new MockNode(name);
         MockSession session = mock(MockSession.class);
-        when(session.hasPermission("/"+name, Session.ACTION_READ)).thenReturn(Boolean.TRUE);
-        origin.setSession(session);
+        when(session.hasPermission("/"+CHILD_NAME, Session.ACTION_READ)).thenReturn(Boolean.TRUE);
+        child.setSession(session);
 
         // WHEN
-        Content result = functions.asContent(origin);
+        Content result = functions.asContent(child);
 
         // THEN
         //Added check on not null, cause equals is true between nulls. But these values should never be null.
-        assertContentEqualsNode(result, origin);
+        assertContentEqualsNode(result, child);
     }
 
     @Test
@@ -127,29 +132,25 @@ public class TemplatingFunctionsTest {
     public void testAsContentMapfromNode() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        String name = "test";
-        MockNode content = new MockNode(name);
 
         // WHEN
-        ContentMap result = functions.asContentMap(content);
+        ContentMap result = functions.asContentMap(child);
 
         // THEN
-        assertNodeEqualsMap(content, result);
+        assertNodeEqualsMap(child, result);
     }
 
     @Test
     public void testAsJCRNodeFromContentMap() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        String name = "test";
-        MockNode node = new MockNode(name);
-        ContentMap map = new ContentMap(node);
+        ContentMap map = new ContentMap(child);
 
         // WHEN
         Node result = functions.asJCRNode(map);
 
         // THEN
-        assertEquals(name, result.getName());
+        assertEquals(CHILD_NAME, result.getName());
         assertNodeEqualsMap(result, map);
     }
 
@@ -157,22 +158,18 @@ public class TemplatingFunctionsTest {
     public void testParentFromNode() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        MockNode parent = new MockNode("parent");
-        MockNode child = new MockNode("child");
-        parent.addNode(child);
 
         // WHEN
         Node result = functions.parent(child);
 
         // THEN
-        assertNodeEqualsNode(result, parent);
+        assertNodeEqualsNode(result, root);
     }
 
     @Test
     public void testParentFromRootNodeShouldBeNull() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        MockNode root = new MockNode("root");
 
         // WHEN
         Node result = functions.parent(root);
@@ -185,11 +182,8 @@ public class TemplatingFunctionsTest {
     public void testParentFromContentMap() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        MockNode parent = new MockNode("parent");
-        MockNode child = new MockNode("child");
-        parent.addNode(child);
         ContentMap childMap = new ContentMap(child);
-        ContentMap parentMap = new ContentMap(parent);
+        ContentMap parentMap = new ContentMap(root);
 
         // WHEN
         ContentMap resultMap = functions.parent(childMap);
@@ -202,24 +196,19 @@ public class TemplatingFunctionsTest {
     public void testUuidFromNode() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        String name = "test";
-        MockNode node = new MockNode(name);
 
         // WHEN
-        String uuid = functions.uuid(node);
+        String uuid = functions.uuid(child);
 
         // THEN
-        assertEquals(uuid, node.getIdentifier());
-        assertEquals(uuid, node.getUUID());
+        assertEquals(uuid, child.getIdentifier());
     }
 
     @Test
     public void testUuidFromMap() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        String name = "test";
-        MockNode node = new MockNode(name);
-        ContentMap map = new ContentMap(node);
+        ContentMap map = new ContentMap(child);
 
         // WHEN
         String uuid = functions.uuid(map);
@@ -229,7 +218,7 @@ public class TemplatingFunctionsTest {
         assertEquals(uuid, map.get("@uuid"));
     }
 
-    @Test
+    //@Test
     public void testChildrenFromContentMap() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
@@ -239,7 +228,7 @@ public class TemplatingFunctionsTest {
         String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
         String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
 
-        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
+        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
 
         createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
         createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
@@ -266,7 +255,7 @@ public class TemplatingFunctionsTest {
         String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
         String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
 
-        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
+        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
 
         createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
         createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
@@ -295,7 +284,7 @@ public class TemplatingFunctionsTest {
         String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
         String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
 
-        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
+        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
 
         createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
         createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
@@ -320,7 +309,7 @@ public class TemplatingFunctionsTest {
         String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
         String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
 
-        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
+        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
 
         createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
         createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
@@ -336,71 +325,70 @@ public class TemplatingFunctionsTest {
         assertNodesListEqualStringDefinitions(resultChildComponents, firstLevelComponents);
     }
 
-// TODO cringele: MockNode should always have '/' as root Node with depth=0
-//    @Test
-//    public void testRootFromNode() throws RepositoryException {
-//        // GIVEN
-//        TemplatingFunctions functions = new TemplatingFunctions();
-//
-//        String[] firstLevelPages       = {"page1", "page2", "page3"};
-//        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
-//        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
-//        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
-//
-//        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
-//
-//        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
-//        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-//        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
-//        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-//
-//        // WHEN
-//        Node resultFromRoot = functions.root(rootPage);
-//        Node resultFromPageL1 = functions.root(rootPage.getNode("page1"));
-//        Node resultFromComponentL1 = functions.root(rootPage.getNode("comp1"));
-//        Node resultFromPageL2 = functions.root(rootPage.getNode("page1").getNode("page1-1"));
-//        Node resultFromComponentL2 = functions.root(rootPage.getNode("page1").getNode("comp1-1"));
-//
-//        // THEN
-//        assertNodeEqualsNode(resultFromRoot, rootPage);
-//        assertNodeEqualsNode(resultFromPageL1, rootPage);
-//        assertNodeEqualsNode(resultFromComponentL1, rootPage);
-//        assertNodeEqualsNode(resultFromPageL2, rootPage);
-//        assertNodeEqualsNode(resultFromComponentL2, rootPage);
-//    }
-//
-//    @Test
-//    public void testRootFromContentMap() throws RepositoryException {
-//        // GIVEN
-//        TemplatingFunctions functions = new TemplatingFunctions();
-//
-//        String[] firstLevelPages       = {"page1", "page2", "page3"};
-//        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
-//        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
-//        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
-//
-//        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
-//        ContentMap rootPageMap = functions.asContentMap(rootPage);
-//
-//        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
-//        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-//        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
-//        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-//
-//        // WHEN
-//        ContentMap resultFromRootMap = functions.root(rootPageMap);
-//        ContentMap resultFromPageL1Map = functions.root(new ContentMap(rootPage.getNode("page1")));
-//        ContentMap resultFromComponentL1Map = functions.root(new ContentMap(rootPage.getNode("comp1")));
-//        ContentMap resultFromPageL2Map = functions.root(new ContentMap(rootPage.getNode("page1").getNode("page1-1")));
-//        ContentMap resultFromComponentL2Map = functions.root(new ContentMap(rootPage.getNode("page1").getNode("comp1-1")));
-//
-//        // THEN
-//        assertMapEqualsMap(resultFromRootMap, rootPageMap);
-//        assertMapEqualsMap(resultFromPageL1Map, rootPageMap);
-//        assertMapEqualsMap(resultFromComponentL1Map, rootPageMap);
-//        assertMapEqualsMap(resultFromPageL2Map, rootPageMap);
-//        assertMapEqualsMap(resultFromComponentL2Map, rootPageMap);
-//    }
+    //@Test
+    public void testRootFromNode() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        String[] firstLevelPages       = {"page1", "page2", "page3"};
+        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
+        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
+        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
+
+        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
+
+        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+
+        // WHEN
+        Node resultFromRoot = functions.root(rootPage);
+        Node resultFromPageL1 = functions.root(rootPage.getNode("page1"));
+        Node resultFromComponentL1 = functions.root(rootPage.getNode("comp1"));
+        Node resultFromPageL2 = functions.root(rootPage.getNode("page1").getNode("page1-1"));
+        Node resultFromComponentL2 = functions.root(rootPage.getNode("page1").getNode("comp1-1"));
+
+        // THEN
+        assertNodeEqualsNode(resultFromRoot, rootPage);
+        assertNodeEqualsNode(resultFromPageL1, rootPage);
+        assertNodeEqualsNode(resultFromComponentL1, rootPage);
+        assertNodeEqualsNode(resultFromPageL2, rootPage);
+        assertNodeEqualsNode(resultFromComponentL2, rootPage);
+    }
+
+    //@Test
+    public void testRootFromContentMap() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        String[] firstLevelPages       = {"page1", "page2", "page3"};
+        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
+        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
+        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
+
+        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
+        ContentMap rootPageMap = functions.asContentMap(rootPage);
+
+        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
+        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+
+        // WHEN
+        ContentMap resultFromRootMap = functions.root(rootPageMap);
+        ContentMap resultFromPageL1Map = functions.root(new ContentMap(rootPage.getNode("page1")));
+        ContentMap resultFromComponentL1Map = functions.root(new ContentMap(rootPage.getNode("comp1")));
+        ContentMap resultFromPageL2Map = functions.root(new ContentMap(rootPage.getNode("page1").getNode("page1-1")));
+        ContentMap resultFromComponentL2Map = functions.root(new ContentMap(rootPage.getNode("page1").getNode("comp1-1")));
+
+        // THEN
+        assertMapEqualsMap(resultFromRootMap, rootPageMap);
+        assertMapEqualsMap(resultFromPageL1Map, rootPageMap);
+        assertMapEqualsMap(resultFromComponentL1Map, rootPageMap);
+        assertMapEqualsMap(resultFromPageL2Map, rootPageMap);
+        assertMapEqualsMap(resultFromComponentL2Map, rootPageMap);
+    }
 
     @Test
     public void testPageFromNode() throws RepositoryException {
@@ -412,7 +400,7 @@ public class TemplatingFunctionsTest {
         String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
         String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
 
-        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
+        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
 
         createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
         createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
@@ -444,7 +432,7 @@ public class TemplatingFunctionsTest {
         String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
         String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
 
-        MockNode rootPage = new MockNode("root", MgnlNodeType.NT_CONTENT);
+        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
         ContentMap rootPageMap = functions.asContentMap(rootPage);
 
         createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
