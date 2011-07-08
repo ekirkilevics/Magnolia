@@ -63,7 +63,7 @@ public class CKEditorDefaultConfigurationTest {
     }
 
     @Test
-    public void testDefaulMagnoliaToolbarReturnsWithListsOptions() throws Exception {
+    public void testDefaultMagnoliaToolbarReturnsWithListsOptions() throws Exception {
         CKEditorDefaultConfiguration config = new CKEditorDefaultConfiguration();
         assertTrue(Arrays.toString(config.getToolbar_Magnolia()).contains("BulletedList"));
     }
