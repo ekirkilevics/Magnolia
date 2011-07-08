@@ -61,9 +61,10 @@ public abstract class MockItem implements Item {
         this(name, null);
     }
 
-    public MockItem(String name, Session session) {
+    public MockItem(String name, MockNode parent) {
         this.name = name;
-        this.session = session;
+        this.parent = parent;
+        setSessionFrom(parent);
     }
 
     @Override
@@ -111,6 +112,10 @@ public abstract class MockItem implements Item {
         this.session = session;
     }
 
+    private void setSessionFrom(MockNode parent) {
+        setSession(parent == null ? null : parent.getSession());
+    }
+
     @Override
     public boolean isModified() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
@@ -143,7 +148,7 @@ public abstract class MockItem implements Item {
 
     public void setParent(MockNode parent) {
         this.parent = parent;
-        setSession(parent.getSession());
+        setSessionFrom(parent);
     }
 
     @Override

@@ -64,7 +64,7 @@ public class MockNodeTest {
 
     @Before
     public void init() {
-        root = new MockNode("root");
+        root = new MockNode("/");
     }
 
     @Test

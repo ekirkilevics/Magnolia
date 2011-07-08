@@ -60,7 +60,6 @@ import javax.jcr.version.VersionException;
 public class MockProperty extends MockItem implements Property {
 
     private MockValue value;
-    private MockNode node = null;
 
     public MockProperty(String name, Object objectValue) {
         this(name, new MockValue(objectValue));
@@ -72,9 +71,8 @@ public class MockProperty extends MockItem implements Property {
     }
 
     public MockProperty(String name, MockValue value, MockNode node) {
-        super(name, node.getSession());
+        super(name, node);
         this.value = value;
-        this.node = node;
     }
 
     @Override
@@ -134,7 +132,7 @@ public class MockProperty extends MockItem implements Property {
 
     @Override
     public Node getNode() {
-       return node;
+       return getParent();
     }
 
     @Override
@@ -257,6 +255,6 @@ public class MockProperty extends MockItem implements Property {
     @Override
     public void remove() {
         ((MockNode) getNode()).removeProperty(getName());
-        node = null;
+        setParent(null);
     }
 }

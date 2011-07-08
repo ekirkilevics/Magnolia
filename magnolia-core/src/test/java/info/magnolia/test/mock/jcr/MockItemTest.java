@@ -44,32 +44,38 @@ public class MockItemTest {
 
     @Test
     public void testGetDepth() throws Exception {
-        final MockNode parent = new MockNode("parent");
+        // GIVEN
+        final MockNode root = new MockNode("root");
         final MockNode child = new MockNode("child");
-        child.setParent(parent);
-
-        assertEquals(1, child.getDepth());
-        assertEquals(0, parent.getDepth());
-
         final MockNode childOfChild = new MockNode("childOfChild");
-        child.addNode(childOfChild);
+        final String propertyName = "prop";
 
-        assertEquals(2, childOfChild.getDepth());
+        root.addNode(child);
+        child.addNode(childOfChild);
+        child.setProperty(propertyName, "test");
+
+        // WHEN - in that case we don't have a real WHEN...
+
+        // THEN - expected values set as stated in javadoc of Item#getDetph
+        assertEquals(0, root.getDepth());
         assertEquals(1, child.getDepth());
-        assertEquals(0, parent.getDepth());
+        assertEquals(2, childOfChild.getDepth());
+        assertEquals(2, child.getProperty(propertyName).getDepth());
     }
 
     @Test
     public void testGetPath() throws Exception {
-        final MockNode parent = new MockNode("parent");
+        // GIVEN
+        final MockNode root = new MockNode("root");
         final MockNode child = new MockNode("child");
-        child.setParent(parent);
-
-        assertEquals("/parent/child", child.getPath());
-
         final MockNode childOfChild = new MockNode("childOfChild");
-        childOfChild.setParent(child);
+        root.addNode(child);
+        child.addNode(childOfChild);
 
-        assertEquals("/parent/child/childOfChild", childOfChild.getPath());
+        // WHEN - in that case we don't have a real WHEN...
+
+        // THEN
+        assertEquals("/root/child", child.getPath());
+        assertEquals("/root/child/childOfChild", childOfChild.getPath());
     }
 }
