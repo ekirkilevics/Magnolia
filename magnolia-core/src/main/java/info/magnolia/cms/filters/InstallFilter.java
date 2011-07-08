@@ -99,7 +99,7 @@ public class InstallFilter extends AbstractMgnlFilter {
                 final String command = StringUtils.defaultIfEmpty(StringUtils.substringAfter(uri, prefix + "/"), null);
                 final boolean installDone = ui.execute(out, command);
                 if (installDone) {
-                    filterManager.resetRootFilter();
+                    filterManager.startUsingConfiguredFilters();
                     // invalidate session: MAGNOLIA-2611
                     request.getSession().invalidate();
                     // redirect to root

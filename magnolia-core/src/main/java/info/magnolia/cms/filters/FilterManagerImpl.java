@@ -59,11 +59,11 @@ import java.util.Collections;
  * Default {@link FilterManager} implementation; uses content2bean and observation
  * to maintain the filter chain configured at {@value #SERVER_FILTERS}.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 @Singleton
 public class FilterManagerImpl implements FilterManager {
+
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FilterManagerImpl.class);
 
     private final EventListener filtersEventListener = new EventListener() {
@@ -172,7 +172,6 @@ public class FilterManagerImpl implements FilterManager {
         return systemUIFilter;
     }
 
-
     /**
      * Checks if Magnolia is ready to operate or if we need to go through
      * SystemUI initialization screens.
@@ -191,7 +190,12 @@ public class FilterManagerImpl implements FilterManager {
     }
 
     @Override
-    public void resetRootFilter() {
+    public void startUsingConfiguredFilters() {
+        resetRootFilter();
+        startObservation();
+    }
+
+    protected void resetRootFilter() {
         destroyRootFilter();
         createRootFilter();
         initRootFilter();
