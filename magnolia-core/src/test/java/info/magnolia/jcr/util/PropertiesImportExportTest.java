@@ -96,7 +96,7 @@ public class PropertiesImportExportTest {
 
     @Test
     public void testCreateContent() throws Exception {
-        final MockNode root = new MockNode("root");
+        final MockNode root = new MockNode();
 
         String content =
             "/parent1/sub1.prop1=one\n" +
@@ -119,7 +119,7 @@ public class PropertiesImportExportTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testCreateContentFailingBecauseOfEqualsSignWithoutADot() throws Exception {
-        final MockNode root = new MockNode("root");
+        final MockNode root = new MockNode();
         String content =
             "/parent/sub/prop=2";
         pie.createContent(root, new ByteArrayInputStream(content.getBytes()));

@@ -132,7 +132,11 @@ public class MockProperty extends MockItem implements Property {
 
     @Override
     public Node getNode() {
-       return getParent();
+        try {
+            return getParent();
+        } catch (ItemNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

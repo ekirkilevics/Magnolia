@@ -79,10 +79,12 @@ public abstract class MockItem implements Item {
 
     @Override
     public int getDepth() throws RepositoryException {
-        if (this.getParent() == null) {
+        try {
+            return getParent().getDepth() + 1;
+        } catch (ItemNotFoundException e) {
+            // aha - it's the root already...
             return 0;
         }
-        return getParent().getDepth() + 1;
     }
 
     @Override
@@ -91,16 +93,27 @@ public abstract class MockItem implements Item {
     }
 
     @Override
-    public Node getParent() {
+    public Node getParent() throws ItemNotFoundException {
         return parent;
     }
 
     @Override
     public String getPath() throws RepositoryException {
-        if (this.getParent() != null && !this.getParent().getName().equals("jcr:root")) {
-            return getParent().getPath() + "/" + this.getName();
+        final Node parentNode;
+        try {
+            parentNode = getParent();
+        } catch (ItemNotFoundException e1) {
+            // aha - it's the root already...
+            return getName();
         }
-        return "/" + this.getName();
+        // CAUTION: we really need different behavior here - depending whether we're children of root or children of other childs!
+        String parentToChildSeparator = "/";
+        try {
+            parentNode.getParent();
+        } catch (ItemNotFoundException ignored) {
+            parentToChildSeparator = "";
+        }
+        return getParent().getPath() + parentToChildSeparator + this.getName();
     }
 
     @Override
@@ -140,7 +153,6 @@ public abstract class MockItem implements Item {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
-
     @Override
     public void save() throws AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException, ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
@@ -153,6 +165,7 @@ public abstract class MockItem implements Item {
 
     @Override
     public String toString() {
-        return "MockItem [name=" + name + ", parent=" + (parent == null ? "null" :parent.getName()) + ", session=" + (session == null ? "null" : session.getWorkspace().getName()) + "]";
+        return "MockItem [name=" + name + ", parent=" + (parent == null ? "null" : parent.getName()) + ", session="
+                + (session == null ? "null" : session.getWorkspace().getName()) + "]";
     }
 }

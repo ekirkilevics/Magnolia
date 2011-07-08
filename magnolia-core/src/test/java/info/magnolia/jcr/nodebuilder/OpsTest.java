@@ -63,9 +63,8 @@ public class OpsTest {
 
     @Before
     public void setUp() {
-        rootNode = new MockNode("root");
         session = new MockSession("testSession");
-        rootNode.setSession(session);
+        rootNode = (MockNode) session.getRootNode();
     }
 
     @Test

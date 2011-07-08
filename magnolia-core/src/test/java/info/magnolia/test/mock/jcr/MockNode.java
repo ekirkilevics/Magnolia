@@ -48,6 +48,7 @@ import java.util.UUID;
 
 import javax.jcr.Binary;
 import javax.jcr.Item;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.ItemVisitor;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -70,6 +71,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public class MockNode extends MockItem implements Node {
 
+    public static final String ROOT_NODE_NAME = "/";
+
     private final LinkedHashMap<String, MockNode> children = new LinkedHashMap<String, MockNode>();
 
     private String identifier = generateIdentifier();
@@ -81,6 +84,13 @@ public class MockNode extends MockItem implements Node {
     private String primaryType;
 
     private final LinkedHashMap<String, Property> properties = new LinkedHashMap<String, Property>();
+
+    /**
+     * Creates a root node -> name == ROOT_NODE_NAME.
+     */
+    public MockNode() {
+        this(ROOT_NODE_NAME);
+    }
 
     public MockNode(String name) {
         this(name, MgnlNodeType.NT_CONTENTNODE);
@@ -100,7 +110,7 @@ public class MockNode extends MockItem implements Node {
 
         }
         Iterator<MockNode> childrenIterator = children.values().iterator();
-        while(childrenIterator.hasNext()) {
+        while (childrenIterator.hasNext()) {
             MockNode child = childrenIterator.next();
             addNode(child);
         }
@@ -132,6 +142,14 @@ public class MockNode extends MockItem implements Node {
         newChild.setPrimaryType(primaryNodeTypeName);
         addNode(newChild);
         return newChild;
+    }
+
+    @Override
+    public Node getParent() throws ItemNotFoundException {
+        if (ROOT_NODE_NAME.equals(getName()) && super.getParent() == null) {
+            throw new ItemNotFoundException("This is the rootNode - it doesn't have a parent!");
+        }
+        return super.getParent();
     }
 
     @Override
@@ -282,7 +300,7 @@ public class MockNode extends MockItem implements Node {
     @Override
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
         if ("jcr:primaryType".equals(relPath)) {
-           return new MockProperty(relPath, primaryType);
+            return new MockProperty(relPath, primaryType);
         }
         Property prop = properties.get(relPath);
         if (prop == null) {
@@ -437,7 +455,11 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public void remove() {
-        ((MockNode) getParent()).removeFromChildren(this);
+        try {
+            ((MockNode) getParent()).removeFromChildren(this);
+        } catch (ItemNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected boolean removeFromChildren(Node childNode) {

@@ -45,7 +45,7 @@ public class MockItemTest {
     @Test
     public void testGetDepth() throws Exception {
         // GIVEN
-        final MockNode root = new MockNode("root");
+        final MockNode root = new MockNode();
         final MockNode child = new MockNode("child");
         final MockNode childOfChild = new MockNode("childOfChild");
         final String propertyName = "prop";
@@ -66,7 +66,7 @@ public class MockItemTest {
     @Test
     public void testGetPath() throws Exception {
         // GIVEN
-        final MockNode root = new MockNode("root");
+        final MockNode root = new MockNode();
         final MockNode child = new MockNode("child");
         final MockNode childOfChild = new MockNode("childOfChild");
         root.addNode(child);
@@ -75,7 +75,7 @@ public class MockItemTest {
         // WHEN - in that case we don't have a real WHEN...
 
         // THEN
-        assertEquals("/root/child", child.getPath());
-        assertEquals("/root/child/childOfChild", childOfChild.getPath());
+        assertEquals("/child", child.getPath());
+        assertEquals("/child/childOfChild", childOfChild.getPath());
     }
 }
