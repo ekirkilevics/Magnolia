@@ -62,7 +62,6 @@ import org.junit.Test;
  */
 public class NodeUtilTest {
 
-    public static final String ROOT = "root";
     private static final String FIRST_CHILD = "1";
     private static final String SECOND_CHILD = "2";
     private static final String THIRD_CHILD = "3";
@@ -74,7 +73,7 @@ public class NodeUtilTest {
 
     @Before
     public void setUpTestStructure() throws RepositoryException {
-        root = new MockNode(ROOT);
+        root = new MockNode();
         first = root.addNode(FIRST_CHILD);
         second = root.addNode(SECOND_CHILD);
         third = root.addNode(THIRD_CHILD);
@@ -213,7 +212,7 @@ public class NodeUtilTest {
         assertEquals(FIRST_CHILD, names.get(0));
         assertEquals(SECOND_CHILD, names.get(1));
         assertEquals(THIRD_CHILD, names.get(2));
-        assertEquals(ROOT, names.get(3));
+        assertEquals(MockNode.ROOT_NODE_NAME, names.get(3));
     }
 
     @Test
