@@ -56,6 +56,7 @@ public class CKEditorService {
     /*-{
 
          // Build our inPageConfig object based on the JSON jsInPageConfig sent to us.
+         //FIXME this fails when the configuration string does not represent a js object rather a plain string with the path to the custom config
          var inPageConfig = @info.magnolia.ckeditor.widgetset.client.ui.CKEditorService::convertJavaScriptStringToObject(Ljava/lang/String;)(configuration);
 
          var myEditor;

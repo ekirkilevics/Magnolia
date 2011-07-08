@@ -175,7 +175,10 @@ public class CKEditorDefaultConfiguration {
     public String getCustomConfig() {
         return customConfig;
     }
-
+    /**
+     *  The path to a custom configuration file. It must be relative to CKEditor base path, i.e. <code>custom/config/basic.js</code>.
+     *  If this is set, it will take precedence over all other options.
+     */
     public void setCustomConfig(String customConfig) {
         this.customConfig = customConfig;
     }
