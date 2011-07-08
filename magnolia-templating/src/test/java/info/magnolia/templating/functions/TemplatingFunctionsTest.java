@@ -218,7 +218,7 @@ public class TemplatingFunctionsTest {
         assertEquals(uuid, map.get("@uuid"));
     }
 
-    //@Test
+    @Test
     public void testChildrenFromContentMap() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
