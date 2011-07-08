@@ -33,34 +33,32 @@
  */
 package info.magnolia.module.samples.model;
 
-import info.magnolia.rendering.model.RenderingModel;
-import info.magnolia.rendering.model.RenderingModelImpl;
-import info.magnolia.rendering.template.RenderableDefinition;
-
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFormatException;
+
+import info.magnolia.rendering.model.RenderingModel;
+import info.magnolia.rendering.model.RenderingModelImpl;
+import info.magnolia.rendering.template.RenderableDefinition;
 
 /**
  * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
  *
  * @version $Id$
  */
+public class InternalLinkModel extends RenderingModelImpl<RenderableDefinition> {
 
-public class InternalLinkModel extends RenderingModelImpl<RenderableDefinition>{
+    private String internalUrl;
 
-	private String internalUrl;
+    public InternalLinkModel(Node content, RenderableDefinition definition, RenderingModel parent) {
+        super(content, definition, parent);
+    }
 
-	public InternalLinkModel(Node content, RenderableDefinition definition,
-			RenderingModel parent) {
-		super(content, definition, parent);
-	}
-
-	public String getInternalUrl() throws ValueFormatException, PathNotFoundException, RepositoryException {
-		String uuid = content.getProperty("target").getString();
-		//TODO return the link corresponding to the uuid
-		return "#";
-	}
+    public String getInternalUrl() throws ValueFormatException, PathNotFoundException, RepositoryException {
+        String uuid = content.getProperty("target").getString();
+        //TODO return the link corresponding to the uuid
+        return "#";
+    }
 
 }
