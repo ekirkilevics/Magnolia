@@ -156,11 +156,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>54399304-2998-4fbb-b246-6f2a7366a888</sv:value>
           </sv:property>
+          <sv:property sv:name="id" sv:type="String">
+            <sv:value>samples:paragraphs/internalLink</sv:value>
+          </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
-          </sv:property>
-          <sv:property sv:name="name" sv:type="String">
-            <sv:value>samples:paragraphs/internalLink</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -179,7 +179,7 @@
               <sv:value>2011-04-28T15:54:11.459+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-07-05T15:58:37.807+02:00</sv:value>
+              <sv:value>2011-07-08T13:44:41.855+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -193,11 +193,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>3496a7ad-5633-4044-9006-abe8842cf8cb</sv:value>
           </sv:property>
+          <sv:property sv:name="id" sv:type="String">
+            <sv:value>samples:paragraphs/externalLink</sv:value>
+          </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
-          </sv:property>
-          <sv:property sv:name="name" sv:type="String">
-            <sv:value>samples:paragraphs/externalLink</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -216,7 +216,7 @@
               <sv:value>2011-04-28T15:54:11.459+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2011-07-05T15:58:49.144+02:00</sv:value>
+              <sv:value>2011-07-08T13:44:44.268+02:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>

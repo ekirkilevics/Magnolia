@@ -43,7 +43,7 @@ import java.util.Collection;
  */
 public interface ComponentAvailability {
 
-    String getName();
+    String getId();
 
     Collection<String> getRoles();
 

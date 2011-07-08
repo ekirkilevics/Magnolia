@@ -220,11 +220,11 @@ public class AreaElement extends AbstractContentTemplatingElement {
         }
         if (areaDefinition != null && areaDefinition.getAvailableComponents().size() > 0) {
             Iterator<ComponentAvailability> iterator = areaDefinition.getAvailableComponents().values().iterator();
-            List<String> componentNames = new ArrayList<String>();
+            List<String> componentIds = new ArrayList<String>();
             while (iterator.hasNext()) {
-                componentNames.add(iterator.next().getName());
+                componentIds.add(iterator.next().getId());
             }
-            return StringUtils.join(componentNames, ',');
+            return StringUtils.join(componentIds, ',');
         }
         return "";
     }
