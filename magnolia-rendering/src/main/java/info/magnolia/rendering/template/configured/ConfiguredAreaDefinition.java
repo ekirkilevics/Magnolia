@@ -56,8 +56,8 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
         return availableComponents;
     }
 
-    public void setAvailableComponents(Map<String, ComponentAvailability> availableParagraphs) {
-        this.availableComponents = availableParagraphs;
+    public void setAvailableComponents(Map<String, ComponentAvailability> availableComponents) {
+        this.availableComponents = availableComponents;
     }
 
     public void addAvailableComponent(String name, ComponentAvailability configuredComponentAvailability) {
