@@ -5,7 +5,7 @@
 [#assign maxDepth = def.maxNavigationDepth!2]
 
 <ul>
-    [@renderNavigation cmsfn.root(content) maxDepth /]
+    [@renderNavigation cmsfn.rootPage(content) maxDepth /]
 </ul>
 
 

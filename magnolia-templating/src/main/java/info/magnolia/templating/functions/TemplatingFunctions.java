@@ -167,10 +167,27 @@ public class TemplatingFunctions {
             return null;
         }
         Node root = content;
-        while(this.parent(root).getDepth() > 0){
+        while(this.parent(root).getDepth() == 0){
             root = this.parent(root);
         }
         return root;
+    }
+
+    //TODO cringele : test missing
+    public ContentMap rootPage(ContentMap content) throws RepositoryException{
+        return content == null ? null : asContentMap(this.rootPage(asJCRNode(content)));
+    }
+
+    //TODO cringele : test missing
+    public Node rootPage(Node content) throws RepositoryException{
+        if(content == null) {
+            return null;
+        }
+        Node rootPage = content;
+        while(this.parent(rootPage).getDepth() > 0){
+            rootPage = this.parent(rootPage);
+        }
+        return rootPage;
     }
 
     public ContentMap page(ContentMap content) throws RepositoryException{
