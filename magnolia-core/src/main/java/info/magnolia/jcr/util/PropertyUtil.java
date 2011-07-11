@@ -86,6 +86,7 @@ public class PropertyUtil {
         } else if (propertyValue instanceof Boolean) {
             node.setProperty(propertyName, ((Boolean) propertyValue).booleanValue());
         } else
+            // TODO dlipp: verify if this is desired default-behaviour: NodeDataUtil#setValue sets propertyValue.toString() as default!
             throw new IllegalArgumentException("Cannot set property to a value of type " + propertyValue.getClass());
     }
 }
