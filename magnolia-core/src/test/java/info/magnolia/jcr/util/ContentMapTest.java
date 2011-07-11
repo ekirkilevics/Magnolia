@@ -78,6 +78,7 @@ public class ContentMapTest {
         assertEquals("/bla/bla", map.get("@path"));
         assertEquals("12345", map.get("@uuid"));
         assertEquals("12345", map.get("@id"));
+        assertEquals(2, map.get("@depth"));
     }
 
     // @Test
@@ -125,7 +126,6 @@ public class ContentMapTest {
         ContentMap map = new ContentMap(hm.getNode("/somepage/mypage/paragraphs/0"));
         assertNotNull(map.get("attachment1"));
         assertTrue(map.get("attachment1") instanceof Node);
-        System.out.println(map.get("attachment1").getClass());
     }
     @Test
     public void testGetOtherProps() throws Exception {

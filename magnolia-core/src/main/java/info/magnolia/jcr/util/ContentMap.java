@@ -55,12 +55,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * Map based representation of JCR content. This class is for instance used in template scripts to
- * allow notations like <code>content.propName</code>. It first tries to read a property with name
- * (key) and if not present checks for the presence of child node. Few special property names map to
- * the JCR methods: \@name, \@id, \@path, \@level, \@nodeType
+ * Map based representation of JCR content. This class is for instance used in template scripts to allow notations like
+ * <code>content.propName</code>. It first tries to read a property with name (key) and if not present checks for the
+ * presence of child node. Few special property names map to the JCR methods: \@name, \@id, \@path, \@level, \@nodeType
  *
  *
  * @version $Id$
@@ -84,18 +82,23 @@ public class ContentMap implements Map<String, Object> {
 
         this.content = content;
 
-        // Supported special types are: @nodeType @name, @path @level (and their deprecated forms - see convertDeprecatedProps() for details)
+        // Supported special types are: @nodeType @name, @path @level (and their deprecated forms - see
+        // convertDeprecatedProps() for details)
         Class<? extends Node> clazz = content.getClass();
         try {
             specialProperties.put("name", clazz.getMethod("getName", null));
             specialProperties.put("id", clazz.getMethod("getIdentifier", null));
             specialProperties.put("path", clazz.getMethod("getPath", null));
-            specialProperties.put("level", clazz.getMethod("getLevel", null));
+            specialProperties.put("depth", clazz.getMethod("getDepth", null));
             specialProperties.put("nodeType", clazz.getMethod("getPrimaryNodeType", null));
         } catch (SecurityException e) {
-            log.debug("Failed to gain access to Node get***() method. Check VM security settings. " + e.getLocalizedMessage(), e);
+            log.debug(
+                    "Failed to gain access to Node get***() method. Check VM security settings. "
+                            + e.getLocalizedMessage(), e);
         } catch (NoSuchMethodException e) {
-            log.debug("Failed to retrieve get***() method of Node class. Check the classpath for conflicting version of JCR classes. " + e.getLocalizedMessage(), e);
+            log.debug(
+                    "Failed to retrieve get***() method of Node class. Check the classpath for conflicting version of JCR classes. "
+                            + e.getLocalizedMessage(), e);
         }
     }
 
@@ -144,14 +147,18 @@ public class ContentMap implements Map<String, Object> {
         return specialProperties.containsKey(StringUtils.removeStart(strKey, "@"));
     }
 
+    /**
+     * @return a property name - in case the one handed in is known to be deprecated it'll be converted, else the
+     *         original one is returned.
+     */
     private String convertDeprecatedProps(String strKey) {
         // in the past we allowed both lower and upper case notation ...
         if ("@UUID".equals(strKey) || "@uuid".equals(strKey)) {
             return "@id";
         } else if ("@handle".equals(strKey)) {
             return "@path";
-        } else if ("@depth".equals(strKey)) {
-            return "@level";
+        } else if ("@level".equals(strKey)) {
+            return "@depth";
         }
         return strKey;
     }
@@ -162,7 +169,8 @@ public class ContentMap implements Map<String, Object> {
         try {
             keyStr = (String) key;
         } catch (ClassCastException e) {
-            throw new ClassCastException("ContentMap accepts only String as a parameters, provided object was of type " + (key == null ? "null" : key.getClass().getName()));
+            throw new ClassCastException("ContentMap accepts only String as a parameters, provided object was of type "
+                    + (key == null ? "null" : key.getClass().getName()));
         }
 
         Object prop = getNodeProperty(keyStr);
@@ -174,12 +182,11 @@ public class ContentMap implements Map<String, Object> {
     }
 
     private Object getSpecialProperty(String strKey) {
-        if(isSpecialProperty(strKey)){
+        if (isSpecialProperty(strKey)) {
             final Method method = specialProperties.get(StringUtils.removeStart(strKey, "@"));
             try {
                 return method.invoke(content, null);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
@@ -195,7 +202,8 @@ public class ContentMap implements Map<String, Object> {
                 if (type == PropertyType.DATE) {
                     return prop.getDate();
                 } else if (type == PropertyType.BINARY) {
-                    // this should actually never happen. there is no reason why anyone should stream binary data into template ... or is there?
+                    // this should actually never happen. there is no reason why anyone should stream binary data into
+                    // template ... or is there?
                 } else if (prop.isMultiple()) {
 
                     Value[] values = prop.getValues();
@@ -213,15 +221,15 @@ public class ContentMap implements Map<String, Object> {
                     return valueStrings;
                 } else {
                     try {
-                        return info.magnolia.link.LinkUtil.convertLinksFromUUIDPattern(prop.getString(), LinkTransformerManager.getInstance().getBrowserLink(content.getPath()));
+                        return info.magnolia.link.LinkUtil.convertLinksFromUUIDPattern(prop.getString(),
+                                LinkTransformerManager.getInstance().getBrowserLink(content.getPath()));
                     } catch (LinkException e) {
                         log.warn("Failed to parse links with from " + prop.getName(), e);
                     }
                 }
                 // don't we want to honor other types (e.g. numbers? )
                 return prop.getString();
-            }
-            else{
+            } else {
                 // property doesn't exist, but maybe child of that name does
                 if (content.hasNode(keyStr)) {
                     return new ContentMap(content.getNode(keyStr));
@@ -231,7 +239,7 @@ public class ContentMap implements Map<String, Object> {
         } catch (PathNotFoundException e) {
             // ignore, property doesn't exist
         } catch (RepositoryException e) {
-            log.warn("Failed to retrieve {} on {} with {}", new Object[] { keyStr, content, e.getMessage() });
+            log.warn("Failed to retrieve {} on {} with {}", new Object[] {keyStr, content, e.getMessage()});
         }
 
         return null;
