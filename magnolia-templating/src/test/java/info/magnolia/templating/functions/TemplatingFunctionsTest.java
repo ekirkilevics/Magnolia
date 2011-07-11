@@ -33,6 +33,8 @@
  */
 package info.magnolia.templating.functions;
 
+//import static org.easymock.EasyMock.createMock;
+//import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -40,8 +42,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MgnlNodeType;
+//import info.magnolia.context.MgnlContext;
+//import info.magnolia.context.WebContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.test.mock.MockContent;
+//import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 
@@ -74,29 +79,6 @@ public class TemplatingFunctionsTest {
         root.addNode(child);
     }
 
-//  @Test
-//  public void testLinkFromNode() throws RepositoryException {
-//      // given
-//      TemplatingFunctions functions = new TemplatingFunctions();
-//      MockSession session = mock(MockSession.class);
-//
-//      String name = "test";
-//      MockNode node = new MockNode(name);
-//      node.setSession(session);
-//      when(session.hasPermission("/"+name, Session.ACTION_READ)).thenReturn(Boolean.TRUE);
-//
-//      ComponentProvider componentProvider = mock(ComponentProvider.class);
-//      Components.setProvider(componentProvider);
-//      componentProvider.newInstance(LinkTransformerManager.class);
-//      //componentProvider.newInstance(LinkFactory.class);
-//
-//      // when
-//      String result = functions.link(node);
-//
-//      // then
-//      assertEquals("", result);
-//  }
-
     @Test
     public void testAsContentFromNode() throws RepositoryException {
         // GIVEN
@@ -124,7 +106,6 @@ public class TemplatingFunctionsTest {
         Node result = functions.asJCRNode(content);
 
         // THEN
-        assertEquals(name, result.getName());
         assertNodeEqualsContent(result, content);
     }
 
@@ -217,6 +198,38 @@ public class TemplatingFunctionsTest {
         assertEquals(uuid, map.get("@id"));
         assertEquals(uuid, map.get("@uuid"));
     }
+
+//    @Test
+//    public void testLinkFromNode() throws RepositoryException {
+//        // given
+//        TemplatingFunctions functions = new TemplatingFunctions();
+//        MockNode parent = new MockNode("parent");
+//        MockNode child = new MockNode("child");
+//
+//        parent.addNode(child);
+//
+//        WebContext webCtx = createMock(WebContext.class);
+//        expect(webCtx.getContextPath()).andReturn("/foo");
+//        MgnlContext.setInstance(webCtx);
+//
+//        //MgnlContextTest
+//
+//        MockWebContext context = new MockWebContext();
+//        context.setContextPath("/test");
+//
+//       // WebContext context = mock(WebContext.class);
+//       // context.setAttribute(name, value, scope)
+//        MgnlContext.setInstance(context);
+//        System.out.println(MgnlContext.getContextPath());
+//
+//        // when
+//        String resultParent = functions.link(parent);
+//        String resultChild = functions.link(child);
+//
+//        // then
+//        assertEquals("/parent", resultParent);
+//        assertEquals("/parent/child", resultChild);
+//    }
 
     @Test
     public void testChildrenFromContentMap() throws RepositoryException {
