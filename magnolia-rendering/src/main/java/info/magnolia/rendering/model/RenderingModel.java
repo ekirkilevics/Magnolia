@@ -49,6 +49,8 @@ import info.magnolia.rendering.template.RenderableDefinition;
  */
 public interface RenderingModel <RD extends RenderableDefinition> {
 
+    // TODO document that bean properties will be set with request parameters
+
     /**
      * A constant used in some special cases where rendering must be skipped, i.e. a redirect template.
      * It can be used by template models as a return value for the {@link RenderingModel#execute()} method to inform
