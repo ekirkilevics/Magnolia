@@ -33,24 +33,37 @@
  */
 package info.magnolia.templating.freemarker;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.*;
+import javax.jcr.Node;
+
+import org.junit.Test;
 
 /**
  * $Id$
  */
 public class AreaDirectiveTest extends AbstractDirectiveTestCase {
 
-    @Test @Ignore
-    public void testRenderSimpleBar() throws Exception {
+    @Test
+    public void testRenderSimpleBarWithoutAreaNode() throws Exception {
         final String result = renderForTest("[@cms.area name=\"stage\" /]");
-        assertEquals("<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + "\r\n"
+        assertEquals(
+                "<cms:area content=\"testWorkspace:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
+                        + "\r\n", result);
+    }
+
+    @Test
+    public void testRenderSimpleBar() throws Exception {
+        Node paragraph1 = getSession().getNode("/foo/bar/paragraphs/1");
+        // make sure we have a areaNode...
+        paragraph1.addNode("stage");
+
+        final String result = renderForTest("[@cms.area name=\"stage\" /]");
+        assertEquals(
+                "<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" -->"
+                        + "\r\n"
                         + "<cms:area content=\"testWorkspace:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                + "\r\n"
-                + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + "\r\n", result);
+                        + "\r\n" + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" -->"
+                        + "\r\n", result);
     }
 }

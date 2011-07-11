@@ -79,11 +79,11 @@ import static org.mockito.Mockito.*;
 public abstract class AbstractDirectiveTestCase {
 
     private WebContext ctx;
-    protected MockSession hm;
+    private MockSession session;
     private HttpServletRequest req;
     private HttpServletResponse res;
-    protected StringTemplateLoader tplLoader;
-    protected FreemarkerHelper fmHelper;
+    private StringTemplateLoader tplLoader;
+    private FreemarkerHelper fmHelper;
 
     @Before
     public void setUp() throws Exception {
@@ -98,7 +98,7 @@ public abstract class AbstractDirectiveTestCase {
 
         fmHelper = new FreemarkerHelper(fmConfig);
 
-        hm =
+        session =
             SessionTestUtil.createSession("testWorkspace",
             "/foo/bar.@type=mgnl:content",
             "/foo/bar/MetaData.@type=mgnl:metadata",
@@ -177,7 +177,7 @@ public abstract class AbstractDirectiveTestCase {
         MgnlContext.setInstance(ctx);
 
         final RenderingContext renderingContext = mock(RenderingContext.class);
-        when(renderingContext.getCurrentContent()).thenReturn(hm.getNode("/foo/bar/paragraphs/1"));
+        when(renderingContext.getCurrentContent()).thenReturn(session.getNode("/foo/bar/paragraphs/1"));
         when(renderingContext.getRenderableDefinition()).thenReturn(new ConfiguredTemplateDefinition());
 
         final RenderingEngine renderingEngine = mock(RenderingEngine.class);
@@ -202,7 +202,7 @@ public abstract class AbstractDirectiveTestCase {
         tplLoader.putTemplate("test.ftl", templateSource);
 
         final Map<String, Object> map = contextWithDirectives();
-        map.put("content", hm.getNode("/foo/bar/"));
+        map.put("content", session.getNode("/foo/bar/"));
 
         final StringWriter out = new StringWriter();
         fmHelper.render("test.ftl", map, out);
@@ -220,5 +220,9 @@ public abstract class AbstractDirectiveTestCase {
         final HashMap<String, Object> map = new HashMap<String, Object>();
         map.put(key, value);
         return map;
+    }
+
+    protected MockSession getSession() {
+        return session;
     }
 }
