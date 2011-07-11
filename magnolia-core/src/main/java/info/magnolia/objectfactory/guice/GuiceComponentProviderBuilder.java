@@ -86,8 +86,7 @@ public class GuiceComponentProviderBuilder {
         return this;
     }
 
-    // TODO should be inStage()
-    public GuiceComponentProviderBuilder useStage(Stage stage) {
+    public GuiceComponentProviderBuilder inStage(Stage stage) {
         this.stage = stage;
         return this;
     }

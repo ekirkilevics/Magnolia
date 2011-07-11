@@ -88,7 +88,7 @@ public class GuiceServletContextListener implements ServletContextListener {
         try {
             GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
             builder.withConfiguration(getRootConfiguration());
-            builder.useStage(Stage.PRODUCTION);
+            builder.inStage(Stage.PRODUCTION);
             builder.exposeGlobally();
             root = builder.build();
 
