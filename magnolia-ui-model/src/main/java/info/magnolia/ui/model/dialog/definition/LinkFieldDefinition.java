@@ -34,11 +34,10 @@
 package info.magnolia.ui.model.dialog.definition;
 
 /**
- * The link field allows you to create a link to content stored in Magnolia.
- * <p>You can browse any specified workspace and select a content node to link to such as a page (website), file (dms) or data item (data).
+ * The link field allows you to create a link to content stored in Magnolia. You can browse any specified workspace and
+ * select a content node to link to such as a page (website), file (dms) or data item (data).
  *
- * @author fgrilli
- *
+ * @version $Id$
  */
 public class LinkFieldDefinition extends FieldDefinition {
 
@@ -51,30 +50,39 @@ public class LinkFieldDefinition extends FieldDefinition {
     public String getWorkspace() {
         return workspace;
     }
+
     public void setWorkspace(String workspace) {
         this.workspace = workspace;
     }
+
     public String getExtension() {
         return extension;
     }
+
     public void setExtension(String extension) {
         this.extension = extension;
     }
+
     public String getTree() {
         return tree;
     }
+
     public void setTree(String tree) {
         this.tree = tree;
     }
+
     public String getWidth() {
         return width;
     }
+
     public void setWidth(String width) {
         this.width = width;
     }
+
     public String getButtonLabel() {
         return buttonLabel;
     }
+
     public void setButtonLabel(String buttonLabel) {
         this.buttonLabel = buttonLabel;
     }

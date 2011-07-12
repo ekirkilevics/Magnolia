@@ -33,28 +33,47 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
-import info.magnolia.cms.i18n.MessagesUtil;
-import info.magnolia.ui.admincentral.dialog.view.DialogView.Presenter;
-import info.magnolia.ui.model.dialog.definition.DialogDefinition;
-import info.magnolia.ui.model.dialog.definition.FieldDefinition;
-import info.magnolia.ui.model.dialog.definition.LinkFieldDefinition;
-import info.magnolia.ui.model.dialog.definition.TabDefinition;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
+import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Field;
+import info.magnolia.cms.i18n.MessagesUtil;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.admincentral.dialog.view.DialogView.Presenter;
+import info.magnolia.ui.admincentral.jcr.view.builder.JcrViewBuilderProvider;
+import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import info.magnolia.ui.model.dialog.definition.FieldDefinition;
+import info.magnolia.ui.model.dialog.definition.LinkFieldDefinition;
+import info.magnolia.ui.model.dialog.definition.TabDefinition;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 
 /**
- * The link field allows you to create a link to content stored in Magnolia.
- * <p>You can browse any specified repository and select a content node to link to such as a page (website), file (dms) or data item (data).
- * @author fgrilli
+ * The link field allows you to create a link to content stored in Magnolia. You can browse any specified workspace and
+ * select a content node to link to such as a page (website), file (dms) or data item (data).
  *
+ * @version $Id$
  */
-public class DialogLinkField extends AbstractVaadinFieldDialogField {
+public class DialogLinkField extends AbstractVaadinFieldDialogField implements LinkSelectWindow.Presenter {
 
-    public DialogLinkField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, Presenter presenter) {
+    // TODO do we have to required a WorkbenchDefinition, can we take workspace as a string only?
+
+    private Application application;
+    private WorkbenchRegistry workbenchRegistry;
+    private JcrViewBuilderProvider jcrViewBuilderProvider;
+    private LinkSelectWindow linkSelectWindow;
+    private Node selectedNode;
+    private TextAndButtonField linkField;
+
+    public DialogLinkField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, Presenter presenter, Application application, WorkbenchRegistry workbenchRegistry, JcrViewBuilderProvider jcrViewBuilderProvider) {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
+        this.application = application;
+        this.workbenchRegistry = workbenchRegistry;
+        this.jcrViewBuilderProvider = jcrViewBuilderProvider;
     }
 
     @Override
@@ -65,7 +84,7 @@ public class DialogLinkField extends AbstractVaadinFieldDialogField {
     @Override
     public Field getField() {
         final LinkFieldDefinition definition = (LinkFieldDefinition) getFieldDefinition();
-        TextAndButtonField linkField = new TextAndButtonField();
+        linkField = new TextAndButtonField();
 
         linkField.getTextField().addListener(new FieldEvents.FocusListener() {
             @Override
@@ -78,10 +97,34 @@ public class DialogLinkField extends AbstractVaadinFieldDialogField {
         linkField.getButton().addListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                //TODO open a modal dialog to browse configured workspace. We need a reference to the modal holding this field and open on top on this.
-                //Adding to the main application window does not seem to work.
+                onButtonClick();
+
             }
         });
         return linkField;
+    }
+
+    private void onButtonClick() {
+        WorkbenchDefinition workbenchDefinition = workbenchRegistry.getWorkbench("website");
+        linkSelectWindow = new LinkSelectWindow(this, application, jcrViewBuilderProvider, workbenchDefinition);
+        linkSelectWindow.select((String) linkField.getValue());
+    }
+
+    @Override
+    public void onCancel() {
+        linkSelectWindow.close();
+        linkSelectWindow = null;
+    }
+
+    @Override
+    public void onClose() {
+        selectedNode = linkSelectWindow.getSelectedNode();
+        try {
+            linkField.setValue(selectedNode.getPath());
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+        linkSelectWindow.close();
+        linkSelectWindow = null;
     }
 }

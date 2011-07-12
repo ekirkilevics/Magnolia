@@ -34,11 +34,17 @@
 package info.magnolia.module.wcm;
 
 import com.vaadin.Application;
+import info.magnolia.cms.security.User;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.HierarchicalComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
+import info.magnolia.objectfactory.configuration.InstanceConfiguration;
+import info.magnolia.ui.model.settings.Direction;
+import info.magnolia.ui.model.settings.InputDevice;
+import info.magnolia.ui.model.settings.UISettings;
 import info.magnolia.ui.vaadin.integration.view.MainWindow;
 
 /**
@@ -58,6 +64,8 @@ public class PageEditorApplication extends Application {
         WcmModule wcmModule = parent.getComponent(WcmModule.class);
         ComponentProviderConfiguration components = wcmModule.getConfigurations().getComponents().clone();
 
+        components.addInstance(InstanceConfiguration.valueOf(User.class, MgnlContext.getUser()));
+        components.addInstance(InstanceConfiguration.valueOf(UISettings.class, new UISettings(Direction.LTR, InputDevice.MOUSE)));
         components.registerInstance(Application.class, this);
         components.addImplementation(ImplementationConfiguration.valueOf(MainWindow.class, PageEditorWindow.class));
 

@@ -84,7 +84,7 @@ public interface JcrView extends View {
      */
     public interface Presenter {
 
-        void onItemSelection(Item tem);
+        void onItemSelection(Item item);
     }
 
     void setPresenter(Presenter presenter);
