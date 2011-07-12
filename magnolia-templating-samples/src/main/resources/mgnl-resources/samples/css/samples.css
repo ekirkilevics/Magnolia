@@ -5,7 +5,7 @@
 
 body {
     font: 90% arial, helvetica, sans-serif;
-    background: #fff;
+    background: #FAFBF4;
 }
 
 a {
@@ -58,7 +58,7 @@ a {
 
 
 
-#navigation ul li.selected,#navigation ul li a:hover {
+#navigation ul li.selected, #navigation ul li.selected a, #navigation ul li a:hover {
     color: #fff;
 }
 
