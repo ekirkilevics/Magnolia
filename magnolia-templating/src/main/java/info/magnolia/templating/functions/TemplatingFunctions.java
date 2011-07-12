@@ -46,6 +46,7 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -195,14 +196,14 @@ public class TemplatingFunctions {
             return null;
         }
         Node page = content;
-        while(!isPageNode(page) && this.parent(page) != null){
+        while(!isPageNode(page) && this.parent(page).getDepth()>0){
             page = this.parent(page);
         }
         return page;
     }
 
     private boolean isPageNode(Node node) throws RepositoryException {
-        return node.getPrimaryNodeType().getName() == MgnlNodeType.NT_CONTENT;
+        return StringUtils.equals(MgnlNodeType.NT_CONTENT, node.getPrimaryNodeType().getName());
     }
 
 
