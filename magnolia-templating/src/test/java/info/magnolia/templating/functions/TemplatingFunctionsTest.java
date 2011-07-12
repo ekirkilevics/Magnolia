@@ -42,11 +42,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MgnlNodeType;
-//import info.magnolia.context.MgnlContext;
-//import info.magnolia.context.WebContext;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.test.mock.MockContent;
-//import info.magnolia.test.mock.MockWebContext;
+import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 
@@ -54,6 +53,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -68,15 +68,50 @@ import org.junit.Test;
  */
 public class TemplatingFunctionsTest {
 
-    private static final String CHILD_NAME = "child";
+    private static final String CONTEXT_PATH = "/manual_set_context_path";
+
+    private static final String LEVEL_1_FIRST_PAGE_NAME      = "page-L1-1";
+    private static final String LEVEL_2_FIRST_PAGE_NAME      = "page-L2-1";
+    private static final String LEVEL_2_FIRST_COMPONENT_NAME = "comp-L2-1";
+    private static final String LEVEL_3_FIRST_PAGE_NAME      = "page-L3-1";
+    private static final String LEVEL_3_FIRST_COMPONENT_NAME = "comp-L3-1";
+
+    private static final String[] LEVEL_1_PAGE_NAMES       = {LEVEL_1_FIRST_PAGE_NAME, "page-L1-2", "page-L1-3"};
+    private static final String[] LEVEL_2_PAGE_NAMES       = {LEVEL_2_FIRST_PAGE_NAME, "page-L2-2", "page-L2-3"};
+    private static final String[] LEVEL_2_COMPONENT_NAMES  = {LEVEL_2_FIRST_COMPONENT_NAME, "comp-L2-2", "comp-L2-3"};
+    private static final String[] LEVEL_3_PAGE_NAMES       = {LEVEL_3_FIRST_PAGE_NAME, "page-L3-2", "page-L3-3"};
+    private static final String[] LEVEL_3_COMPONENT_NAMES  = {LEVEL_3_FIRST_COMPONENT_NAME, "comp-L3-2", "comp-L3-3"};
+
     private MockNode root;
-    private MockNode child;
+    private MockNode topPage;
+    private MockNode topPageComponent;
+    private MockNode childPage;
+    private MockNode childPageComponent;
+    private MockNode childPageSubPage;
+
+    private ContentMap rootContentMap;
+    private ContentMap topPageContentMap;
+    private ContentMap topPageComponentContentMap;
+    private ContentMap childPageContentMap;
+    private ContentMap childPageComponentContentMap;
+    private ContentMap childPageSubPageContentMap;
 
     @Before
-    public void setUp() {
+    public void setUpNodeHierarchie() throws PathNotFoundException, RepositoryException{
         root = new MockNode();
-        child = new MockNode("child");
-        root.addNode(child);
+
+        topPage            = createChildNodes(root,       LEVEL_1_PAGE_NAMES,      MgnlNodeType.NT_CONTENT);
+        topPageComponent   = createChildNodes(topPage,    LEVEL_2_COMPONENT_NAMES, MgnlNodeType.NT_CONTENTNODE);
+        childPage          = createChildNodes(topPage,    LEVEL_2_PAGE_NAMES,      MgnlNodeType.NT_CONTENT);
+        childPageComponent = createChildNodes(childPage,  LEVEL_3_COMPONENT_NAMES, MgnlNodeType.NT_CONTENTNODE);
+        childPageSubPage   = createChildNodes(childPage,  LEVEL_3_PAGE_NAMES,      MgnlNodeType.NT_CONTENT);
+
+        rootContentMap = new ContentMap(root);
+        topPageContentMap = new ContentMap(topPage);
+        topPageComponentContentMap = new ContentMap(topPageComponent);
+        childPageContentMap = new ContentMap(childPage);
+        childPageComponentContentMap = new ContentMap(childPageComponent);
+        childPageSubPageContentMap = new ContentMap(childPageSubPage);
     }
 
     @Test
@@ -84,23 +119,22 @@ public class TemplatingFunctionsTest {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
         MockSession session = mock(MockSession.class);
-        when(session.hasPermission("/"+CHILD_NAME, Session.ACTION_READ)).thenReturn(Boolean.TRUE);
-        child.setSession(session);
+        when(session.hasPermission(root.getPath()+LEVEL_1_FIRST_PAGE_NAME, Session.ACTION_READ)).thenReturn(Boolean.TRUE);
+        topPage.setSession(session);
 
         // WHEN
-        Content result = functions.asContent(child);
+        Content result = functions.asContent(topPage);
 
         // THEN
         //Added check on not null, cause equals is true between nulls. But these values should never be null.
-        assertContentEqualsNode(result, child);
+        assertContentEqualsNode(result, topPage);
     }
 
     @Test
     public void testAsJCRNodeFromContent() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        String name = "test";
-        MockContent content = new MockContent(name);
+        MockContent content = new MockContent("test");
 
         // WHEN
         Node result = functions.asJCRNode(content);
@@ -115,36 +149,22 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap result = functions.asContentMap(child);
+        ContentMap result = functions.asContentMap(topPage);
 
         // THEN
-        assertNodeEqualsMap(child, result);
+        assertNodeEqualsMap(topPage, result);
     }
 
     @Test
     public void testAsJCRNodeFromContentMap() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        ContentMap map = new ContentMap(child);
 
         // WHEN
-        Node result = functions.asJCRNode(map);
+        Node resultContenMap = functions.asJCRNode(topPageContentMap);
 
         // THEN
-        assertEquals(CHILD_NAME, result.getName());
-        assertNodeEqualsMap(result, map);
-    }
-
-    @Test
-    public void testParentFromNode() throws RepositoryException {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-
-        // WHEN
-        Node result = functions.parent(child);
-
-        // THEN
-        assertNodeEqualsNode(result, root);
+        assertNodeEqualsMap(resultContenMap, topPageContentMap);
     }
 
     @Test
@@ -160,17 +180,51 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testParentFromContentMap() throws RepositoryException {
+    public void testParentFromNodeLevel1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        ContentMap childMap = new ContentMap(child);
-        ContentMap parentMap = new ContentMap(root);
 
         // WHEN
-        ContentMap resultMap = functions.parent(childMap);
+        Node result = functions.parent(topPage);
 
         // THEN
-        assertMapEqualsMap(resultMap, parentMap);
+        assertNodeEqualsNode(result, root);
+    }
+
+    @Test
+    public void testParentFromNodeLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node result = functions.parent(childPage);
+
+        // THEN
+        assertNodeEqualsNode(result, topPage);
+    }
+
+    @Test
+    public void testParentFromContentMapLevel1() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultMap = functions.parent(topPageContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultMap, new ContentMap(root));
+    }
+
+    @Test
+    public void testParentFromContentMapLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultMap = functions.parent(childPageContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultMap, topPageContentMap);
     }
 
     @Test
@@ -179,293 +233,521 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        String uuid = functions.uuid(child);
+        String uuid = functions.uuid(topPage);
 
         // THEN
-        assertEquals(uuid, child.getIdentifier());
+        assertEquals(uuid, topPage.getIdentifier());
     }
 
     @Test
-    public void testUuidFromMap() throws RepositoryException {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-        ContentMap map = new ContentMap(child);
-
-        // WHEN
-        String uuid = functions.uuid(map);
-
-        // THEN
-        assertEquals(uuid, map.get("@id"));
-        assertEquals(uuid, map.get("@uuid"));
-    }
-
-//    @Test
-//    public void testLinkFromNode() throws RepositoryException {
-//        // given
-//        TemplatingFunctions functions = new TemplatingFunctions();
-//        MockNode parent = new MockNode("parent");
-//        MockNode child = new MockNode("child");
-//
-//        parent.addNode(child);
-//
-//        WebContext webCtx = createMock(WebContext.class);
-//        expect(webCtx.getContextPath()).andReturn("/foo");
-//        MgnlContext.setInstance(webCtx);
-//
-//        //MgnlContextTest
-//
-//        MockWebContext context = new MockWebContext();
-//        context.setContextPath("/test");
-//
-//       // WebContext context = mock(WebContext.class);
-//       // context.setAttribute(name, value, scope)
-//        MgnlContext.setInstance(context);
-//        System.out.println(MgnlContext.getContextPath());
-//
-//        // when
-//        String resultParent = functions.link(parent);
-//        String resultChild = functions.link(child);
-//
-//        // then
-//        assertEquals("/parent", resultParent);
-//        assertEquals("/parent/child", resultChild);
-//    }
-
-    @Test
-    public void testChildrenFromContentMap() throws RepositoryException {
+    public void testUuidFromContentMap() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
-        String[] firstLevelPages       = {"page1", "page2", "page3"};
-        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
-        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
-        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
-
-        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
-
-        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-
-        ContentMap rootPageContentMap = new ContentMap(rootPage);
-
         // WHEN
-        List<ContentMap> resultChildNodes = functions.children(rootPageContentMap);
+        String uuid = functions.uuid(topPageContentMap);
 
         // THEN
-        String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(firstLevelPages, firstLevelComponents);
-        assertContentMapListEqualStringDefinitions(resultChildNodes, allFirstLevelNames);
+        assertEquals(uuid, topPageContentMap.get("@id"));
+        assertEquals(uuid, topPageContentMap.get("@uuid"));
     }
 
     @Test
-    public void testChildrenFromContentMapAndType() throws RepositoryException {
+    public void testLinkFromNodeLevel1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
-        String[] firstLevelPages       = {"page1", "page2", "page3"};
-        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
-        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
-        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
-
-        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
-
-        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-
-        ContentMap rootPageContentMap = new ContentMap(rootPage);
-
+        MockWebContext context = new MockWebContext();
+        context.setContextPath(CONTEXT_PATH);
+        MgnlContext.setInstance(context);
 
         // WHEN
-        List<ContentMap> resultChildPagesMap = functions.children(rootPageContentMap, MgnlNodeType.NT_CONTENT);
-        List<ContentMap> resultChildComponentsMap = functions.children(rootPageContentMap, MgnlNodeType.NT_CONTENTNODE);
+        String resultLink = functions.link(topPage);
 
         // THEN
-        assertContentMapListEqualStringDefinitions(resultChildPagesMap, firstLevelPages);
-        assertContentMapListEqualStringDefinitions(resultChildComponentsMap, firstLevelComponents);
+        assertEquals(CONTEXT_PATH+topPage.getPath(), resultLink);
+    }
+
+    @Test
+    public void testLinkFromNodeLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        MockWebContext context = new MockWebContext();
+        context.setContextPath(CONTEXT_PATH);
+        MgnlContext.setInstance(context);
+
+        // WHEN
+        String resultLink = functions.link(childPage);
+
+        // THEN
+        assertEquals(CONTEXT_PATH+childPage.getPath(), resultLink);
+    }
+
+    @Test
+    public void testLinkFromContentMapLevel1() throws RepositoryException {
+        // given
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        MockWebContext context = new MockWebContext();
+        context.setContextPath(CONTEXT_PATH);
+        MgnlContext.setInstance(context);
+
+        // when
+        String resultLink = functions.link(topPage);
+
+        // then
+        assertEquals(CONTEXT_PATH+topPage.getPath(), resultLink);
+    }
+
+    @Test
+    public void testLinkFromContentMapLevel2() throws RepositoryException {
+        // given
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        MockWebContext context = new MockWebContext();
+        context.setContextPath(CONTEXT_PATH);
+        MgnlContext.setInstance(context);
+
+        // when
+        String resultLink = functions.link(childPage);
+
+        // then
+        assertEquals(CONTEXT_PATH+childPage.getPath(), resultLink);
     }
 
     @Test
     public void testChildrenFromNode() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-
-        String[] firstLevelPages       = {"page1", "page2", "page3"};
-        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
-        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
-        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
-
-        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
-
-        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
+        String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(LEVEL_2_COMPONENT_NAMES, LEVEL_2_PAGE_NAMES);
 
         // WHEN
-        List<Node> resultChildNodes = functions.children(rootPage);
+        List<Node> resultChildNodes = functions.children(topPage);
 
         // THEN
-        String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(firstLevelPages, firstLevelComponents);
         assertNodesListEqualStringDefinitions(resultChildNodes, allFirstLevelNames);
     }
 
     @Test
-    public void testChildrenFromNodeAndType() throws RepositoryException {
+    public void testChildrenFromContentMap() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
-        String[] firstLevelPages       = {"page1", "page2", "page3"};
-        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
-        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
-        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
-
-        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
-
-        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-
         // WHEN
-        List<Node> resultChildPages = functions.children(rootPage, MgnlNodeType.NT_CONTENT);
-        List<Node> resultChildComponents = functions.children(rootPage, MgnlNodeType.NT_CONTENTNODE);
+        List<ContentMap> resultChildNodes = functions.children(new ContentMap(topPage));
 
         // THEN
-        assertNodesListEqualStringDefinitions(resultChildPages, firstLevelPages);
-        assertNodesListEqualStringDefinitions(resultChildComponents, firstLevelComponents);
-    }
-
-    //@Test
-    public void testRootFromNode() throws RepositoryException {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-
-        String[] firstLevelPages       = {"page1", "page2", "page3"};
-        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
-        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
-        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
-
-        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
-
-        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-
-        // WHEN
-        Node resultFromRoot = functions.root(rootPage);
-        Node resultFromPageL1 = functions.root(rootPage.getNode("page1"));
-        Node resultFromComponentL1 = functions.root(rootPage.getNode("comp1"));
-        Node resultFromPageL2 = functions.root(rootPage.getNode("page1").getNode("page1-1"));
-        Node resultFromComponentL2 = functions.root(rootPage.getNode("page1").getNode("comp1-1"));
-
-        // THEN
-        assertNodeEqualsNode(resultFromRoot, rootPage);
-        assertNodeEqualsNode(resultFromPageL1, rootPage);
-        assertNodeEqualsNode(resultFromComponentL1, rootPage);
-        assertNodeEqualsNode(resultFromPageL2, rootPage);
-        assertNodeEqualsNode(resultFromComponentL2, rootPage);
-    }
-
-    //@Test
-    public void testRootFromContentMap() throws RepositoryException {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-
-        String[] firstLevelPages       = {"page1", "page2", "page3"};
-        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
-        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
-        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
-
-        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
-        ContentMap rootPageMap = functions.asContentMap(rootPage);
-
-        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-
-        // WHEN
-        ContentMap resultFromRootMap = functions.root(rootPageMap);
-        ContentMap resultFromPageL1Map = functions.root(new ContentMap(rootPage.getNode("page1")));
-        ContentMap resultFromComponentL1Map = functions.root(new ContentMap(rootPage.getNode("comp1")));
-        ContentMap resultFromPageL2Map = functions.root(new ContentMap(rootPage.getNode("page1").getNode("page1-1")));
-        ContentMap resultFromComponentL2Map = functions.root(new ContentMap(rootPage.getNode("page1").getNode("comp1-1")));
-
-        // THEN
-        assertMapEqualsMap(resultFromRootMap, rootPageMap);
-        assertMapEqualsMap(resultFromPageL1Map, rootPageMap);
-        assertMapEqualsMap(resultFromComponentL1Map, rootPageMap);
-        assertMapEqualsMap(resultFromPageL2Map, rootPageMap);
-        assertMapEqualsMap(resultFromComponentL2Map, rootPageMap);
+        String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(LEVEL_2_COMPONENT_NAMES, LEVEL_2_PAGE_NAMES);
+        assertContentMapListEqualStringDefinitions(resultChildNodes, allFirstLevelNames);
     }
 
     @Test
-    public void testPageFromNode() throws RepositoryException {
+    public void testChildrenFromNodeAndTypePage() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
-        String[] firstLevelPages       = {"page1", "page2", "page3"};
-        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
-        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
-        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
-
-        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
-
-        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-
         // WHEN
-        Node resultFromRoot = functions.page(rootPage);
-        Node resultFromPageL1 = functions.page(rootPage.getNode("page1"));
-        Node resultFromComponentL1 = functions.page(rootPage.getNode("comp1"));
-        Node resultFromPageL2 = functions.page(rootPage.getNode("page1").getNode("page1-1"));
-        Node resultFromComponentL2 = functions.page(rootPage.getNode("page1").getNode("comp1-1"));
+        List<Node> resultChildPages = functions.children(topPage, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertNodeEqualsNode(resultFromRoot, rootPage);
-        assertNodeEqualsNode(resultFromPageL1, rootPage.getNode("page1"));
-        assertNodeEqualsNode(resultFromComponentL1, rootPage);
-        assertNodeEqualsNode(resultFromPageL2, rootPage.getNode("page1").getNode("page1-1"));
-        assertNodeEqualsNode(resultFromComponentL2, rootPage.getNode("page1"));
+        assertNodesListEqualStringDefinitions(resultChildPages, LEVEL_2_PAGE_NAMES);
     }
 
     @Test
-    public void testPageFromContentMap() throws RepositoryException {
+    public void testChildrenFromNodeAndTypeComponent() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
-        String[] firstLevelPages       = {"page1", "page2", "page3"};
-        String[] firstLevelComponents  = {"comp1", "comp2", "comp3"};
-        String[] secondLevelPages      = {"page1-1", "page1-2", "page1-3"};
-        String[] secondLevelComponents = {"comp1-1", "comp1-2", "comp1-3"};
-
-        MockNode rootPage = new MockNode(MockNode.ROOT_NODE_NAME, MgnlNodeType.NT_CONTENT);
-        ContentMap rootPageMap = functions.asContentMap(rootPage);
-
-        createChildNodes(rootPage, firstLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes(rootPage, firstLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelPages, MgnlNodeType.NT_CONTENT);
-        createChildNodes((MockNode)rootPage.getNode("page1"), secondLevelComponents, MgnlNodeType.NT_CONTENTNODE);
-
         // WHEN
-        ContentMap resultFromRootMap = functions.page(rootPageMap);
-        ContentMap resultFromPageL1Map = functions.page(new ContentMap(rootPage.getNode("page1")));
-        ContentMap resultFromComponentL1Map = functions.page(new ContentMap(rootPage.getNode("comp1")));
-        ContentMap resultFromPageL2Map = functions.page(new ContentMap(rootPage.getNode("page1").getNode("page1-1")));
-        ContentMap resultFromComponentL2Map = functions.page(new ContentMap(rootPage.getNode("page1").getNode("comp1-1")));
+        List<Node> resultChildComponents = functions.children(topPage, MgnlNodeType.NT_CONTENTNODE);
 
         // THEN
-        assertMapEqualsMap(resultFromRootMap, rootPageMap);
-        assertMapEqualsMap(resultFromPageL1Map, new ContentMap(rootPage.getNode("page1")));
-        assertMapEqualsMap(resultFromComponentL1Map, rootPageMap);
-        assertMapEqualsMap(resultFromPageL2Map, new ContentMap(rootPage.getNode("page1").getNode("page1-1")));
-        assertMapEqualsMap(resultFromComponentL2Map, new ContentMap(rootPage.getNode("page1")));
+        assertNodesListEqualStringDefinitions(resultChildComponents, LEVEL_2_COMPONENT_NAMES);
+    }
+
+    @Test
+    public void testChildrenFromContentMapAndTypePage() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        List<ContentMap> resultChildPagesMap = functions.children(topPageContentMap, MgnlNodeType.NT_CONTENT);
+
+        // THEN
+        assertContentMapListEqualStringDefinitions(resultChildPagesMap, LEVEL_2_PAGE_NAMES);
+    }
+
+    @Test
+    public void testChildrenFromContentMapAndTypeComponent() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        List<ContentMap> resultChildComponentsMap = functions.children(topPageContentMap, MgnlNodeType.NT_CONTENTNODE);
+
+        // THEN
+        assertContentMapListEqualStringDefinitions(resultChildComponentsMap, LEVEL_2_COMPONENT_NAMES);
+    }
+
+    @Test
+    public void testRootFromPageNodeLevel1() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.root(topPage);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, root);
+    }
+
+    @Test
+    public void testRootFromPageNodeLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.root(childPage);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, root);
+    }
+
+    @Test
+    public void testRootFromComponentNodeLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.root(topPageComponent);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, root);
+    }
+
+    @Test
+    public void testRootFromPageNodeLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.root(childPageSubPage);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, root);
+    }
+
+    @Test
+    public void testRootFromComponentNodeLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.root(childPageComponent);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, root);
+    }
+
+    @Test
+    public void testRootFromPageContentMapLevel1() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.root(topPageContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, rootContentMap);
+    }
+
+    @Test
+    public void testRootFromPageContentMapLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.root(childPageContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, rootContentMap);
+    }
+
+    @Test
+    public void testRootFromComponentContentMapLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.root(topPageComponentContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, rootContentMap);
+    }
+
+    @Test
+    public void testRootFromPageContentMapLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.root(childPageSubPageContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, rootContentMap);
+    }
+
+    @Test
+    public void testRootFromComponentContentMapLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.root(childPageComponentContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, rootContentMap);
+    }
+
+    @Test
+    public void testPageFromPageNodeLevel1() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.page(topPage);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, topPage);
+    }
+
+    @Test
+    public void testPageFromPageNodeLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.page(childPage);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, childPage);
+    }
+
+    @Test
+    public void testPageFromComponentNodeLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.page(topPageComponent);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, topPage);
+    }
+
+    @Test
+    public void testPageFromPageNodeLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.page(childPageSubPage);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, childPageSubPage);
+    }
+
+    @Test
+    public void testPageFromComponentNodeLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.page(childPageComponent);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, childPage);
+    }
+
+    @Test
+    public void testPageFromPageContentMapLevel1() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.page(topPageContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, topPageContentMap);
+    }
+
+    @Test
+    public void testPageFromPageContentMapLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.page(childPageContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, childPageContentMap);
+    }
+
+    @Test
+    public void testPageFromComponentContentMapLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.page(topPageComponentContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, topPageContentMap);
+    }
+
+    @Test
+    public void testPageFromPageContentMapLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.page(childPageSubPageContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, childPageSubPageContentMap);
+    }
+
+    @Test
+    public void testPageFromComponentContentMapLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.page(childPageComponentContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, childPageContentMap);
+    }
+
+    @Test
+    public void testRootPageFromPageNodeLevel1() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.rootPage(topPage);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, topPage);
+    }
+
+    @Test
+    public void testRootPageFromPageNodeLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.rootPage(childPage);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, topPage);
+    }
+
+    @Test
+    public void testRootPageFromComponentNodeLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.rootPage(topPageComponent);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, topPage);
+    }
+
+    @Test
+    public void testRootPageFromPageNodeLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.rootPage(childPageSubPage);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, topPage);
+    }
+
+    @Test
+    public void testRootPageFromComponentNodeLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node resultNode = functions.rootPage(childPageComponent);
+
+        // THEN
+        assertNodeEqualsNode(resultNode, topPage);
+    }
+
+    @Test
+    public void testRootPageFromPageContentMapLevel1() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.rootPage(topPageContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, topPageContentMap);
+    }
+
+    @Test
+    public void testRootPageFromPageContentMapLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.rootPage(childPageContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, topPageContentMap);
+    }
+
+    @Test
+    public void testRootPageFromComponentContentMapLevel2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.rootPage(topPageComponentContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, topPageContentMap);
+    }
+
+    @Test
+    public void testRootPageFromPageContentMapLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.rootPage(childPageSubPageContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, topPageContentMap);
+    }
+
+    @Test
+    public void testRootPageFromComponentContentMapLevel3() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap resultContentMap = functions.rootPage(childPageComponentContentMap);
+
+        // THEN
+        assertMapEqualsMap(resultContentMap, topPageContentMap);
     }
 
 
@@ -602,18 +884,24 @@ public class TemplatingFunctionsTest {
         assertEquals(node.getPath(), content.getHandle());
     }
 
+
+
     /**
-     * Add to the give node child nodes by the name and type passed.
+     * Add to the give node child nodes by the name and type passed. Returns first created child node.
      *
      * @param parent Node where child nodes are added to
      * @param childNodeNames names of the child nodes to create
      * @param nodeTypeName primary type of the child nodes to create
+     * @return first created child node
+     * @throws RepositoryException
+     * @throws PathNotFoundException
      */
-    private void createChildNodes(MockNode parent, String[] childNodeNames, String nodeTypeName) {
+    private MockNode createChildNodes(MockNode parent, String[] childNodeNames, String nodeTypeName) throws PathNotFoundException, RepositoryException {
         for(String nodeName : childNodeNames){
             MockNode child = new MockNode(nodeName, nodeTypeName);
             parent.addNode(child);
         }
+        return childNodeNames.length == 0 ? null : (MockNode)parent.getNode(childNodeNames[0]);
     }
 
 }
