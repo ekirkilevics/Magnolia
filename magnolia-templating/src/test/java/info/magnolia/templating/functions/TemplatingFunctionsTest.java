@@ -54,6 +54,7 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.Before;
@@ -815,6 +816,8 @@ public class TemplatingFunctionsTest {
         assertEquals(node1.getPath(), node2.getPath());
         assertNotNull(node1.getDepth());
         assertEquals(node1.getDepth(), node2.getDepth());
+        assertNotNull(node1.getPrimaryNodeType().getName());
+        assertEquals(node1.getPrimaryNodeType().getName(), node2.getPrimaryNodeType().getName());
     }
 
     /**
@@ -836,10 +839,9 @@ public class TemplatingFunctionsTest {
         assertEquals(map1.get("@handle"), map2.get("@handle"));
         assertNotNull(map1.get("@depth"));
         assertEquals(map1.get("@depth"), map2.get("@depth"));
-
-        //TODO cringele: should they work too?
-//        assertNotNull(map1.get("@nodeType"));
-//        assertEquals(map1.get("@nodeType"), map2.get("@nodeType"));
+        //TODO cringele: should ContentMap really return NodeType Object on "@nodeType" or the NodeTypeName?
+        assertNotNull(((NodeType)map1.get("@nodeType")).getName());
+        assertEquals(((NodeType)map1.get("@nodeType")).getName(), ((NodeType)map1.get("@nodeType")).getName());
 
     }
 
