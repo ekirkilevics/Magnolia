@@ -33,17 +33,8 @@
  */
 package info.magnolia.templating.freemarker;
 
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.junit.Before;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import freemarker.cache.StringTemplateLoader;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
@@ -61,22 +52,34 @@ import info.magnolia.freemarker.FreemarkerConfig;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.pico.PicoComponentProvider;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.mock.jcr.MockSession;
-import static org.mockito.Mockito.*;
+
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Before;
 
 /**
- * In contrast to related tests, this one can't use ComponentsTestUtils & MockComponentProvider (doesn't support determining appropriate constructor to be called) but
- * a proper Pico environment.
+ * In contrast to related tests, this one can't use ComponentsTestUtils & MockComponentProvider (doesn't support
+ * determining appropriate constructor to be called) but a proper Pico environment.
  *
  * @version $Id$
  */
 public abstract class AbstractDirectiveTestCase {
+    public static class MockRequestScopedObject {
+    }
 
     private WebContext ctx;
     private MockSession session;
@@ -99,37 +102,19 @@ public abstract class AbstractDirectiveTestCase {
         fmHelper = new FreemarkerHelper(fmConfig);
 
         session =
-            SessionTestUtil.createSession("testWorkspace",
-            "/foo/bar.@type=mgnl:content",
-            "/foo/bar/MetaData.@type=mgnl:metadata",
-            "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
-            "/foo/bar/paragraphs.@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/0.@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/0.@uuid=100",
-            "/foo/bar/paragraphs/1.@type=mgnl:contentNode",
-            "/foo/bar/paragraphs/1.@uuid=101",
-            "/foo/bar/paragraphs/1.text=hello 1",
-            "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
-            "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1");
+                SessionTestUtil.createSession("testWorkspace", "/foo/bar.@type=mgnl:content",
+                        "/foo/bar/MetaData.@type=mgnl:metadata", "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
+                        "/foo/bar/paragraphs.@type=mgnl:contentNode", "/foo/bar/paragraphs/0.@type=mgnl:contentNode",
+                        "/foo/bar/paragraphs/0.@uuid=100", "/foo/bar/paragraphs/1.@type=mgnl:contentNode",
+                        "/foo/bar/paragraphs/1.@uuid=101", "/foo/bar/paragraphs/1.text=hello 1",
+                        "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
+                        "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1");
 
         final AggregationState aggState = new AggregationState();
         // let's make sure we render stuff on an author instance
         aggState.setPreviewMode(false);
         final ServerConfiguration serverCfg = new ServerConfiguration();
         serverCfg.setAdmin(true);
-
-        // TODO dlipp: next lines should be switched back to ComponentTestUtils as soon as SCRUM-201 is solved.
-        // setUp minimal Pico
-        final MutablePicoContainer container = new PicoBuilder().withConstructorInjection().build();
-
-        PicoComponentProvider provider = new PicoComponentProvider(container);
-        Components.setProvider(provider);
-
-        provider.registerInstance(ServerConfiguration.class, serverCfg);
-        // register some default components used internally
-        provider.registerInstance(MessagesManager.class, new DefaultMessagesManager());
-        provider.registerInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        provider.registerInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
         ConfiguredTemplateDefinition testParagraph0 = new ConfiguredTemplateDefinition();
         testParagraph0.setName("testParagraph0");
@@ -153,12 +138,28 @@ public abstract class AbstractDirectiveTestCase {
         when(p2provider.getDefinition()).thenReturn(testParagraph2);
         when(p2provider.getId()).thenReturn(testParagraph2.getName());
 
+        // TODO dlipp: next lines should be switched back to ComponentTestUtils as soon as SCRUM-201 is solved.
+
+        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
+        configuration.registerInstance(ServerConfiguration.class, serverCfg);
+        // register some default components used internally
+        configuration.registerImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        configuration.registerImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
+        configuration.registerImplementation(I18nAuthoringSupport.class, DefaultI18nAuthoringSupport.class);
+
+        final RenderingEngine renderingEngine = mock(RenderingEngine.class);
+        final RenderingContext renderingContext = mock(RenderingContext.class);
+        when(renderingContext.getCurrentContent()).thenReturn(session.getNode("/foo/bar/paragraphs/1"));
+        when(renderingContext.getRenderableDefinition()).thenReturn(new ConfiguredTemplateDefinition());
+        when(renderingEngine.getRenderingContext()).thenReturn(renderingContext);
+        configuration.registerInstance(RenderingEngine.class, renderingEngine);
+
         final TemplateDefinitionRegistry tdr = new TemplateDefinitionRegistry();
         tdr.register(p0provider);
         tdr.register(p1provider);
         tdr.register(p2provider);
 
-        provider.registerInstance(TemplateDefinitionRegistry.class, tdr);
+        configuration.registerInstance(TemplateDefinitionRegistry.class, tdr);
 
         req = mock(HttpServletRequest.class);
         req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
@@ -176,13 +177,8 @@ public abstract class AbstractDirectiveTestCase {
 
         MgnlContext.setInstance(ctx);
 
-        final RenderingContext renderingContext = mock(RenderingContext.class);
-        when(renderingContext.getCurrentContent()).thenReturn(session.getNode("/foo/bar/paragraphs/1"));
-        when(renderingContext.getRenderableDefinition()).thenReturn(new ConfiguredTemplateDefinition());
-
-        final RenderingEngine renderingEngine = mock(RenderingEngine.class);
-        when(renderingEngine.getRenderingContext()).thenReturn(renderingContext);
-        provider.registerInstance(RenderingEngine.class, renderingEngine);
+        // finally create the GuiceComponentProvider!
+        new GuiceComponentProviderBuilder().withConfiguration(configuration).exposeGlobally().build();
     }
 
     /**
