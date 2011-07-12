@@ -209,7 +209,7 @@ public class TemplatingFunctionsTest {
         ContentMap resultContentMap = functions.parent(topPageContentMap);
 
         // THEN
-        assertMapEqualsMap(resultContentMap, new ContentMap(root));
+        assertMapEqualsMap(resultContentMap, rootContentMap);
     }
 
     @Test
@@ -813,6 +813,8 @@ public class TemplatingFunctionsTest {
         assertEquals(node1.getIdentifier(), node2.getIdentifier());
         assertNotNull(node1.getPath());
         assertEquals(node1.getPath(), node2.getPath());
+        assertNotNull(node1.getDepth());
+        assertEquals(node1.getDepth(), node2.getDepth());
     }
 
     /**
@@ -832,14 +834,13 @@ public class TemplatingFunctionsTest {
         assertEquals(map1.get("@path"), map2.get("@path"));
         assertNotNull(map1.get("@handle"));
         assertEquals(map1.get("@handle"), map2.get("@handle"));
+        assertNotNull(map1.get("@depth"));
+        assertEquals(map1.get("@depth"), map2.get("@depth"));
 
         //TODO cringele: should they work too?
 //        assertNotNull(map1.get("@nodeType"));
 //        assertEquals(map1.get("@nodeType"), map2.get("@nodeType"));
-//        assertNotNull(map1.get("@level"));
-//        assertEquals(map1.get("@level"), map2.get("@level"));
-//        assertNotNull(map1.get("@nodeType"));
-//        assertEquals(map1.get("@nodeType"), map2.get("@nodeType"));
+
     }
 
     /**
@@ -860,6 +861,8 @@ public class TemplatingFunctionsTest {
         assertNotNull(node.getPath());
         assertEquals(node.getPath(), map.get("@path"));
         assertEquals(node.getPath(), map.get("@handle"));
+        assertNotNull(node.getDepth());
+        assertEquals(node.getDepth(), map.get("@depth"));
     }
 
     /**
