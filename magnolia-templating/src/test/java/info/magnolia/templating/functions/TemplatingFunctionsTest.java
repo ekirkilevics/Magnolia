@@ -865,6 +865,8 @@ public class TemplatingFunctionsTest {
         assertEquals(node.getPath(), map.get("@handle"));
         assertNotNull(node.getDepth());
         assertEquals(node.getDepth(), map.get("@depth"));
+        assertNotNull(node.getPrimaryNodeType().getName());
+        assertEquals(node.getPrimaryNodeType().getName(), ((NodeType)map.get("@nodeType")).getName());
     }
 
     /**
