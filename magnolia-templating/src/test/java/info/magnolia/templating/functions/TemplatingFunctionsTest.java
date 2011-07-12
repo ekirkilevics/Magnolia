@@ -170,10 +170,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        Node result = functions.parent(root);
+        Node resultNode = functions.parent(root);
 
         // THEN
-        assertNull(result);
+        assertNull(resultNode);
     }
 
     @Test
@@ -182,10 +182,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        Node result = functions.parent(topPage);
+        Node resultNode = functions.parent(topPage);
 
         // THEN
-        assertNodeEqualsNode(result, root);
+        assertNodeEqualsNode(resultNode, root);
     }
 
     @Test
@@ -194,10 +194,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        Node result = functions.parent(childPage);
+        Node resultNode = functions.parent(childPage);
 
         // THEN
-        assertNodeEqualsNode(result, topPage);
+        assertNodeEqualsNode(resultNode, topPage);
     }
 
     @Test
@@ -206,10 +206,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap resultMap = functions.parent(topPageContentMap);
+        ContentMap resultContentMap = functions.parent(topPageContentMap);
 
         // THEN
-        assertMapEqualsMap(resultMap, new ContentMap(root));
+        assertMapEqualsMap(resultContentMap, new ContentMap(root));
     }
 
     @Test
@@ -218,10 +218,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap resultMap = functions.parent(childPageContentMap);
+        ContentMap resultContentMap = functions.parent(childPageContentMap);
 
         // THEN
-        assertMapEqualsMap(resultMap, topPageContentMap);
+        assertMapEqualsMap(resultContentMap, topPageContentMap);
     }
 
     @Test
@@ -332,7 +332,7 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        List<ContentMap> resultChildNodes = functions.children(new ContentMap(topPage));
+        List<ContentMap> resultChildNodes = functions.children(topPageContentMap);
 
         // THEN
         String[] allNamesDepth1 = (String[]) ArrayUtils.addAll(DEPTH_2_COMPONENT_NAMES, DEPTH_2_PAGE_NAMES);
@@ -369,10 +369,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        List<ContentMap> resultChildPagesMap = functions.children(topPageContentMap, MgnlNodeType.NT_CONTENT);
+        List<ContentMap> resultChildPages = functions.children(topPageContentMap, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertContentMapListEqualStringDefinitions(resultChildPagesMap, DEPTH_2_PAGE_NAMES);
+        assertContentMapListEqualStringDefinitions(resultChildPages, DEPTH_2_PAGE_NAMES);
     }
 
     @Test
@@ -381,10 +381,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        List<ContentMap> resultChildComponentsMap = functions.children(topPageContentMap, MgnlNodeType.NT_CONTENTNODE);
+        List<ContentMap> resultChildComponents = functions.children(topPageContentMap, MgnlNodeType.NT_CONTENTNODE);
 
         // THEN
-        assertContentMapListEqualStringDefinitions(resultChildComponentsMap, DEPTH_2_COMPONENT_NAMES);
+        assertContentMapListEqualStringDefinitions(resultChildComponents, DEPTH_2_COMPONENT_NAMES);
     }
 
     @Test
