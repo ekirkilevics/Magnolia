@@ -33,8 +33,6 @@
  */
 package info.magnolia.templating.functions;
 
-//import static org.easymock.EasyMock.createMock;
-//import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -70,17 +68,17 @@ public class TemplatingFunctionsTest {
 
     private static final String CONTEXT_PATH = "/manual_set_context_path";
 
-    private static final String LEVEL_1_FIRST_PAGE_NAME      = "page-L1-1";
-    private static final String LEVEL_2_FIRST_PAGE_NAME      = "page-L2-1";
-    private static final String LEVEL_2_FIRST_COMPONENT_NAME = "comp-L2-1";
-    private static final String LEVEL_3_FIRST_PAGE_NAME      = "page-L3-1";
-    private static final String LEVEL_3_FIRST_COMPONENT_NAME = "comp-L3-1";
+    private static final String DEPTH_1_FIRST_PAGE_NAME      = "page-L1-1";
+    private static final String DEPTH_2_FIRST_PAGE_NAME      = "page-L2-1";
+    private static final String DEPTH_2_FIRST_COMPONENT_NAME = "comp-L2-1";
+    private static final String DEPTH_3_FIRST_PAGE_NAME      = "page-L3-1";
+    private static final String DEPTH_3_FIRST_COMPONENT_NAME = "comp-L3-1";
 
-    private static final String[] LEVEL_1_PAGE_NAMES       = {LEVEL_1_FIRST_PAGE_NAME, "page-L1-2", "page-L1-3"};
-    private static final String[] LEVEL_2_PAGE_NAMES       = {LEVEL_2_FIRST_PAGE_NAME, "page-L2-2", "page-L2-3"};
-    private static final String[] LEVEL_2_COMPONENT_NAMES  = {LEVEL_2_FIRST_COMPONENT_NAME, "comp-L2-2", "comp-L2-3"};
-    private static final String[] LEVEL_3_PAGE_NAMES       = {LEVEL_3_FIRST_PAGE_NAME, "page-L3-2", "page-L3-3"};
-    private static final String[] LEVEL_3_COMPONENT_NAMES  = {LEVEL_3_FIRST_COMPONENT_NAME, "comp-L3-2", "comp-L3-3"};
+    private static final String[] DEPTH_1_PAGE_NAMES       = {DEPTH_1_FIRST_PAGE_NAME,      "page-L1-2", "page-L1-3"};
+    private static final String[] DEPTH_2_PAGE_NAMES       = {DEPTH_2_FIRST_PAGE_NAME,      "page-L2-2", "page-L2-3"};
+    private static final String[] DEPTH_2_COMPONENT_NAMES  = {DEPTH_2_FIRST_COMPONENT_NAME, "comp-L2-2", "comp-L2-3"};
+    private static final String[] DEPTH_3_PAGE_NAMES       = {DEPTH_3_FIRST_PAGE_NAME,      "page-L3-2", "page-L3-3"};
+    private static final String[] DEPTH_3_COMPONENT_NAMES  = {DEPTH_3_FIRST_COMPONENT_NAME, "comp-L3-2", "comp-L3-3"};
 
     private MockNode root;
     private MockNode topPage;
@@ -100,11 +98,11 @@ public class TemplatingFunctionsTest {
     public void setUpNodeHierarchie() throws PathNotFoundException, RepositoryException{
         root = new MockNode();
 
-        topPage            = createChildNodes(root,       LEVEL_1_PAGE_NAMES,      MgnlNodeType.NT_CONTENT);
-        topPageComponent   = createChildNodes(topPage,    LEVEL_2_COMPONENT_NAMES, MgnlNodeType.NT_CONTENTNODE);
-        childPage          = createChildNodes(topPage,    LEVEL_2_PAGE_NAMES,      MgnlNodeType.NT_CONTENT);
-        childPageComponent = createChildNodes(childPage,  LEVEL_3_COMPONENT_NAMES, MgnlNodeType.NT_CONTENTNODE);
-        childPageSubPage   = createChildNodes(childPage,  LEVEL_3_PAGE_NAMES,      MgnlNodeType.NT_CONTENT);
+        topPage            = createChildNodes(root,       DEPTH_1_PAGE_NAMES,      MgnlNodeType.NT_CONTENT);
+        topPageComponent   = createChildNodes(topPage,    DEPTH_2_COMPONENT_NAMES, MgnlNodeType.NT_CONTENTNODE);
+        childPage          = createChildNodes(topPage,    DEPTH_2_PAGE_NAMES,      MgnlNodeType.NT_CONTENT);
+        childPageComponent = createChildNodes(childPage,  DEPTH_3_COMPONENT_NAMES, MgnlNodeType.NT_CONTENTNODE);
+        childPageSubPage   = createChildNodes(childPage,  DEPTH_3_PAGE_NAMES,      MgnlNodeType.NT_CONTENT);
 
         rootContentMap = new ContentMap(root);
         topPageContentMap = new ContentMap(topPage);
@@ -119,14 +117,13 @@ public class TemplatingFunctionsTest {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
         MockSession session = mock(MockSession.class);
-        when(session.hasPermission(root.getPath()+LEVEL_1_FIRST_PAGE_NAME, Session.ACTION_READ)).thenReturn(Boolean.TRUE);
+        when(session.hasPermission(root.getPath()+DEPTH_1_FIRST_PAGE_NAME, Session.ACTION_READ)).thenReturn(Boolean.TRUE);
         topPage.setSession(session);
 
         // WHEN
         Content result = functions.asContent(topPage);
 
         // THEN
-        //Added check on not null, cause equals is true between nulls. But these values should never be null.
         assertContentEqualsNode(result, topPage);
     }
 
@@ -180,7 +177,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testParentFromNodeLevel1() throws RepositoryException {
+    public void testParentFromNodeDepth1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -192,7 +189,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testParentFromNodeLevel2() throws RepositoryException {
+    public void testParentFromNodeDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -204,7 +201,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testParentFromContentMapLevel1() throws RepositoryException {
+    public void testParentFromContentMapDepth1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -216,7 +213,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testParentFromContentMapLevel2() throws RepositoryException {
+    public void testParentFromContentMapDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -253,7 +250,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testLinkFromNodeLevel1() throws RepositoryException {
+    public void testLinkFromNodeDepth1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -269,7 +266,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testLinkFromNodeLevel2() throws RepositoryException {
+    public void testLinkFromNodeDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -285,7 +282,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testLinkFromContentMapLevel1() throws RepositoryException {
+    public void testLinkFromContentMapDepth1() throws RepositoryException {
         // given
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -301,7 +298,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testLinkFromContentMapLevel2() throws RepositoryException {
+    public void testLinkFromContentMapDepth2() throws RepositoryException {
         // given
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -320,13 +317,13 @@ public class TemplatingFunctionsTest {
     public void testChildrenFromNode() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
-        String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(LEVEL_2_COMPONENT_NAMES, LEVEL_2_PAGE_NAMES);
+        String[] allNamesDepth1 = (String[]) ArrayUtils.addAll(DEPTH_2_COMPONENT_NAMES, DEPTH_2_PAGE_NAMES);
 
         // WHEN
         List<Node> resultChildNodes = functions.children(topPage);
 
         // THEN
-        assertNodesListEqualStringDefinitions(resultChildNodes, allFirstLevelNames);
+        assertNodesListEqualStringDefinitions(resultChildNodes, allNamesDepth1);
     }
 
     @Test
@@ -338,8 +335,8 @@ public class TemplatingFunctionsTest {
         List<ContentMap> resultChildNodes = functions.children(new ContentMap(topPage));
 
         // THEN
-        String[] allFirstLevelNames = (String[]) ArrayUtils.addAll(LEVEL_2_COMPONENT_NAMES, LEVEL_2_PAGE_NAMES);
-        assertContentMapListEqualStringDefinitions(resultChildNodes, allFirstLevelNames);
+        String[] allNamesDepth1 = (String[]) ArrayUtils.addAll(DEPTH_2_COMPONENT_NAMES, DEPTH_2_PAGE_NAMES);
+        assertContentMapListEqualStringDefinitions(resultChildNodes, allNamesDepth1);
     }
 
     @Test
@@ -351,7 +348,7 @@ public class TemplatingFunctionsTest {
         List<Node> resultChildPages = functions.children(topPage, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertNodesListEqualStringDefinitions(resultChildPages, LEVEL_2_PAGE_NAMES);
+        assertNodesListEqualStringDefinitions(resultChildPages, DEPTH_2_PAGE_NAMES);
     }
 
     @Test
@@ -363,7 +360,7 @@ public class TemplatingFunctionsTest {
         List<Node> resultChildComponents = functions.children(topPage, MgnlNodeType.NT_CONTENTNODE);
 
         // THEN
-        assertNodesListEqualStringDefinitions(resultChildComponents, LEVEL_2_COMPONENT_NAMES);
+        assertNodesListEqualStringDefinitions(resultChildComponents, DEPTH_2_COMPONENT_NAMES);
     }
 
     @Test
@@ -375,7 +372,7 @@ public class TemplatingFunctionsTest {
         List<ContentMap> resultChildPagesMap = functions.children(topPageContentMap, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertContentMapListEqualStringDefinitions(resultChildPagesMap, LEVEL_2_PAGE_NAMES);
+        assertContentMapListEqualStringDefinitions(resultChildPagesMap, DEPTH_2_PAGE_NAMES);
     }
 
     @Test
@@ -387,11 +384,11 @@ public class TemplatingFunctionsTest {
         List<ContentMap> resultChildComponentsMap = functions.children(topPageContentMap, MgnlNodeType.NT_CONTENTNODE);
 
         // THEN
-        assertContentMapListEqualStringDefinitions(resultChildComponentsMap, LEVEL_2_COMPONENT_NAMES);
+        assertContentMapListEqualStringDefinitions(resultChildComponentsMap, DEPTH_2_COMPONENT_NAMES);
     }
 
     @Test
-    public void testRootFromPageNodeLevel1() throws RepositoryException {
+    public void testRootFromPageNodeDepth1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -403,7 +400,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootFromPageNodeLevel2() throws RepositoryException {
+    public void testRootFromPageNodeDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -415,7 +412,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootFromComponentNodeLevel2() throws RepositoryException {
+    public void testRootFromComponentNodeDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -427,7 +424,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootFromPageNodeLevel3() throws RepositoryException {
+    public void testRootFromPageNodeDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -439,7 +436,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootFromComponentNodeLevel3() throws RepositoryException {
+    public void testRootFromComponentNodeDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -451,7 +448,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootFromPageContentMapLevel1() throws RepositoryException {
+    public void testRootFromPageContentMapDepth1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -463,7 +460,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootFromPageContentMapLevel2() throws RepositoryException {
+    public void testRootFromPageContentMapDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -475,7 +472,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootFromComponentContentMapLevel2() throws RepositoryException {
+    public void testRootFromComponentContentMapDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -487,7 +484,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootFromPageContentMapLevel3() throws RepositoryException {
+    public void testRootFromPageContentMapDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -499,7 +496,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootFromComponentContentMapLevel3() throws RepositoryException {
+    public void testRootFromComponentContentMapDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -511,7 +508,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testPageFromPageNodeLevel1() throws RepositoryException {
+    public void testPageFromPageNodeDepth1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -523,7 +520,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testPageFromPageNodeLevel2() throws RepositoryException {
+    public void testPageFromPageNodeDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -535,7 +532,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testPageFromComponentNodeLevel2() throws RepositoryException {
+    public void testPageFromComponentNodeDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -547,7 +544,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testPageFromPageNodeLevel3() throws RepositoryException {
+    public void testPageFromPageNodeDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -559,7 +556,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testPageFromComponentNodeLevel3() throws RepositoryException {
+    public void testPageFromComponentNodeDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -571,7 +568,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testPageFromPageContentMapLevel1() throws RepositoryException {
+    public void testPageFromPageContentMapDepth1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -583,7 +580,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testPageFromPageContentMapLevel2() throws RepositoryException {
+    public void testPageFromPageContentMapDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -595,7 +592,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testPageFromComponentContentMapLevel2() throws RepositoryException {
+    public void testPageFromComponentContentMapDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -607,7 +604,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testPageFromPageContentMapLevel3() throws RepositoryException {
+    public void testPageFromPageContentMapDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -619,7 +616,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testPageFromComponentContentMapLevel3() throws RepositoryException {
+    public void testPageFromComponentContentMapDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -631,7 +628,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootPageFromPageNodeLevel1() throws RepositoryException {
+    public void testRootPageFromPageNodeDepth1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -643,7 +640,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootPageFromPageNodeLevel2() throws RepositoryException {
+    public void testRootPageFromPageNodeDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -655,7 +652,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootPageFromComponentNodeLevel2() throws RepositoryException {
+    public void testRootPageFromComponentNodeDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -667,7 +664,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootPageFromPageNodeLevel3() throws RepositoryException {
+    public void testRootPageFromPageNodeDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -679,7 +676,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootPageFromComponentNodeLevel3() throws RepositoryException {
+    public void testRootPageFromComponentNodeDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -691,7 +688,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootPageFromPageContentMapLevel1() throws RepositoryException {
+    public void testRootPageFromPageContentMapDepth1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -703,7 +700,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootPageFromPageContentMapLevel2() throws RepositoryException {
+    public void testRootPageFromPageContentMapDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -715,7 +712,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootPageFromComponentContentMapLevel2() throws RepositoryException {
+    public void testRootPageFromComponentContentMapDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -727,7 +724,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootPageFromPageContentMapLevel3() throws RepositoryException {
+    public void testRootPageFromPageContentMapDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -739,7 +736,7 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testRootPageFromComponentContentMapLevel3() throws RepositoryException {
+    public void testRootPageFromComponentContentMapDepth3() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
