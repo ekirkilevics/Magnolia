@@ -139,9 +139,6 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>ad2f0655-94be-4a02-9e5e-ad7a69bdf6b8</sv:value>
       </sv:property>
-      <sv:property sv:name="dialog" sv:type="String">
-        <sv:value>samples:areas/divIDAndClass</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
@@ -330,9 +327,6 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>65f8b4c4-1732-4863-b8dc-2253ef07999a</sv:value>
       </sv:property>
-      <sv:property sv:name="dialog" sv:type="String">
-        <sv:value>samples:areas/divIDAndClass</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
@@ -484,9 +478,6 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>a35445bf-9722-4926-bcdf-e7314594e42c</sv:value>
       </sv:property>
-      <sv:property sv:name="dialog" sv:type="String">
-        <sv:value>samples:areas/divIDAndClass</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
@@ -637,9 +628,6 @@
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>28a402bc-c071-4eb0-9884-9a9dbd3672a1</sv:value>
-      </sv:property>
-      <sv:property sv:name="dialog" sv:type="String">
-        <sv:value>samples:samplesTextDialog</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
