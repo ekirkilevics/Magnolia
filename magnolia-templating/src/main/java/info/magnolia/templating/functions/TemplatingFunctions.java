@@ -47,17 +47,14 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
  *
  * @version $Id$
+ * TODO dlipp: to be reviewed - see SCRUM-277
  */
 public class TemplatingFunctions {
-
-    private static final Logger log = LoggerFactory.getLogger(TemplatingFunctions.class);
 
     public Content asContent(Node node) throws RepositoryException {
         return node == null ? null : new DefaultContent(node, null);
@@ -113,48 +110,36 @@ public class TemplatingFunctions {
         return contentMap == null ? null : this.link(asJCRNode(contentMap));
     }
 
-    public List<ContentMap> children(ContentMap content) throws RepositoryException{
-        if(content == null) {
-            return null;
-        }
+    protected List<ContentMap> contentMapChildrenFrom(Iterable<Node> nodes) {
         List<ContentMap> childList = new ArrayList<ContentMap>();
-        for(Node child : NodeUtil.getNodes(asJCRNode(content), NodeUtil.EXCLUDE_META_DATA_FILTER)){
+        for (Node child : nodes) {
             childList.add(new ContentMap(child));
         }
         return childList;
     }
 
-    public List<ContentMap> children(ContentMap content, String nodeTypeName) throws RepositoryException{
-        if(content == null) {
-            return null;
-        }
-        List<ContentMap> childList = new ArrayList<ContentMap>();
-        for(Node child : NodeUtil.getNodes(asJCRNode(content), nodeTypeName)){
-            childList.add(new ContentMap(child));
-        }
-        return childList;
+    public List<ContentMap> children(ContentMap content) throws RepositoryException {
+        return content == null ? null : contentMapChildrenFrom(NodeUtil.getNodes(asJCRNode(content), NodeUtil.EXCLUDE_META_DATA_FILTER));
     }
 
-    public List<Node> children(Node content) throws RepositoryException{
-        if(content == null) {
-            return null;
-        }
+    public List<ContentMap> children(ContentMap content, String nodeTypeName) throws RepositoryException {
+        return content == null ? null : contentMapChildrenFrom(NodeUtil.getNodes(asJCRNode(content), nodeTypeName));
+    }
+
+    protected List<Node> nodeChildrenFrom(Iterable<Node> nodes) {
         List<Node> childList = new ArrayList<Node>();
-        for(Node child : NodeUtil.getNodes(content, NodeUtil.EXCLUDE_META_DATA_FILTER) ){
+        for (Node child : nodes) {
             childList.add(child);
         }
         return childList;
     }
 
-    public List<Node> children(Node content, String nodeTypeName) throws RepositoryException{
-        if(content == null) {
-            return null;
-        }
-        List<Node> childList = new ArrayList<Node>();
-        for(Node child : NodeUtil.getNodes(content, nodeTypeName) ){
-            childList.add(child);
-        }
-        return childList;
+    public List<Node> children(Node content) throws RepositoryException {
+        return content == null ? null : nodeChildrenFrom(NodeUtil.getNodes(content, NodeUtil.EXCLUDE_META_DATA_FILTER));
+    }
+
+    public List<Node> children(Node content, String nodeTypeName) throws RepositoryException {
+        return content == null ? null: nodeChildrenFrom(NodeUtil.getNodes(content, nodeTypeName));
     }
 
     public ContentMap root(ContentMap content) throws RepositoryException{
