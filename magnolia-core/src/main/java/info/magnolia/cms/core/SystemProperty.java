@@ -159,7 +159,8 @@ public final class SystemProperty {
     public static Properties getProperties() {
         // DeprecationUtil.isDeprecated();
         // providing a MagnoliaConfigurationProperties-compliant replacement...
-        final Properties p = new Properties(properties);
+        final Properties p = new Properties();
+        p.putAll(properties);
         for (String k : magnoliaConfigurationProperties.getKeys()) {
             p.put(k, magnoliaConfigurationProperties.getProperty(k));
         }
