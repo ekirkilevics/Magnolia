@@ -42,7 +42,7 @@ import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
 import info.magnolia.ui.model.dialog.registry.ConfiguredDialogDefinitionManager;
-import info.magnolia.ui.model.workbench.registry.ConfiguredWorkbenchManager;
+import info.magnolia.ui.model.workbench.registry.ConfiguredWorkbenchDefinitionManager;
 
 /**
  * Magnolia's AdminCentral Module.
@@ -54,12 +54,12 @@ public class AdminCentralModule implements ModuleLifecycle {
     // TODO things configured on the module is always part of the _global_ ComponentProvider, this means that they cannot refer to components in the UI componentProvider, hence, factories and builders are not good candidates for being configured on the module
 
     private ConfiguredDialogDefinitionManager configuredDialogManager;
-    private ConfiguredWorkbenchManager configuredWorkbenchManager;
+    private ConfiguredWorkbenchDefinitionManager configuredWorkbenchManager;
 
     private Map<String, AdminCentralConfiguration> configurations = new HashMap<String, AdminCentralConfiguration>();
 
     @Inject
-    public AdminCentralModule(ConfiguredDialogDefinitionManager configuredDialogManager, ConfiguredWorkbenchManager configuredWorkbenchManager) {
+    public AdminCentralModule(ConfiguredDialogDefinitionManager configuredDialogManager, ConfiguredWorkbenchDefinitionManager configuredWorkbenchManager) {
         this.configuredDialogManager = configuredDialogManager;
         this.configuredWorkbenchManager = configuredWorkbenchManager;
     }
@@ -67,7 +67,7 @@ public class AdminCentralModule implements ModuleLifecycle {
     @Override
     public void start(ModuleLifecycleContext ctx) {
         configuredDialogManager.start();
-        ctx.registerModuleObservingComponent("workbenches", configuredWorkbenchManager);
+        configuredWorkbenchManager.start();
     }
 
     @Override

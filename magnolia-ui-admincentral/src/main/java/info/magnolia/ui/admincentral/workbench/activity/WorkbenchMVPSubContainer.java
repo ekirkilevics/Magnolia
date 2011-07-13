@@ -37,6 +37,7 @@ package info.magnolia.ui.admincentral.workbench.activity;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.InstanceConfiguration;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
 import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
 import info.magnolia.ui.admincentral.search.place.SearchPlace;
@@ -46,7 +47,7 @@ import info.magnolia.ui.framework.activity.AbstractMVPSubContainer;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
-import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
+import info.magnolia.ui.model.workbench.registry.WorkbenchDefinitionRegistry;
 
 
 /**
@@ -55,10 +56,10 @@ import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer<WorkbenchActivity>{
 
     private WorkbenchPlace place;
-    private WorkbenchRegistry workbenchRegistry;
+    private WorkbenchDefinitionRegistry workbenchRegistry;
     private AdminCentralConfiguration adminCentralConfiguration;
 
-    public WorkbenchMVPSubContainer(WorkbenchPlace place, WorkbenchRegistry workbenchRegistry, AdminCentralConfiguration adminCentralConfiguration, Shell shell, ComponentProvider componentProvider) {
+    public WorkbenchMVPSubContainer(WorkbenchPlace place, WorkbenchDefinitionRegistry workbenchRegistry, AdminCentralConfiguration adminCentralConfiguration, Shell shell, ComponentProvider componentProvider) {
         super("workbench-" + place.getWorkbenchName(), shell, componentProvider);
         this.place = place;
         this.workbenchRegistry = workbenchRegistry;
@@ -81,7 +82,12 @@ public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer<WorkbenchA
         ComponentProviderConfiguration defaultComponentsConfiguration = adminCentralConfiguration.getWorkbench().getComponents();
 
         // load the workbench specific configuration if existing
-        final WorkbenchDefinition workbenchDefinition = workbenchRegistry.getWorkbench(place.getWorkbenchName());
+        final WorkbenchDefinition workbenchDefinition;
+        try {
+            workbenchDefinition = workbenchRegistry.get(place.getWorkbenchName());
+        } catch (RegistrationException e) {
+            throw new RuntimeException(e);
+        }
 
         if (workbenchDefinition == null){
             throw new IllegalStateException("No definition could be found for workbench [" + place.getWorkbenchName() + "]");

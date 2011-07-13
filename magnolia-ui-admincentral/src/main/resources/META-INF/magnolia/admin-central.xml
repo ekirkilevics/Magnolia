@@ -10,12 +10,12 @@
 
   <properties>
     <property>
-      <name>info.magnolia.ui.model.workbench.registry.ConfiguredWorkbenchManager</name>
-      <value>info.magnolia.ui.model.workbench.registry.ConfiguredWorkbenchManager</value>
+      <name>info.magnolia.ui.model.workbench.registry.ConfiguredWorkbenchDefinitionManager</name>
+      <value>info.magnolia.ui.model.workbench.registry.ConfiguredWorkbenchDefinitionManager</value>
     </property>
     <property>
-      <name>info.magnolia.ui.model.workbench.registry.WorkbenchRegistry</name>
-      <value>info.magnolia.ui.model.workbench.registry.WorkbenchRegistry</value>
+      <name>info.magnolia.ui.model.workbench.registry.WorkbenchDefinitionRegistry</name>
+      <value>info.magnolia.ui.model.workbench.registry.WorkbenchDefinitionRegistry</value>
     </property>
     <property>
       <name>info.magnolia.ui.model.dialog.registry.DialogDefinitionRegistry</name>

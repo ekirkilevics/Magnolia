@@ -10,9 +10,11 @@
   <name>magnolia-ui-model</name>
   <packaging>jar</packaging>
   <description>Registration and definition of ui components like dialogs and trees.</description>
+
   <properties>
-  	<cloverCoverageThreshold>5</cloverCoverageThreshold>
+  	<cloverCoverageThreshold>10</cloverCoverageThreshold>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -24,14 +26,9 @@
       <artifactId>junit-dep</artifactId>
       <scope>test</scope>
     </dependency>
-        <dependency>
-      <groupId>org.easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
-      <groupId>org.easymock</groupId>
-      <artifactId>easymockclassextension</artifactId>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

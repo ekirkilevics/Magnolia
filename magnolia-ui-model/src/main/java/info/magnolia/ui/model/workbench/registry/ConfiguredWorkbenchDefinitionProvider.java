@@ -34,29 +34,36 @@
 package info.magnolia.ui.model.workbench.registry;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 
 /**
  * Provides the tree definition for a tree configured in the repository.
  */
-public class ConfiguredWorkbenchProvider implements WorkbenchProvider {
+public class ConfiguredWorkbenchDefinitionProvider implements WorkbenchDefinitionProvider {
 
-    private Content configNode;
+    private String id;
+    private WorkbenchDefinition definition;
 
-    public ConfiguredWorkbenchProvider(Content content) {
-        this.configNode = new LazyContentWrapper(content);
+    public ConfiguredWorkbenchDefinitionProvider(String id, Node configNode) throws RepositoryException, Content2BeanException{
+        this.id = id;
+        Content content = ContentUtil.wrapAsContent(configNode);
+        this.definition = (WorkbenchDefinition) Content2BeanUtil.toBean(content, true, WorkbenchDefinition.class);
     }
 
     @Override
     public WorkbenchDefinition getDefinition() {
-        try {
-            return (WorkbenchDefinition) Content2BeanUtil.toBean(configNode, true, WorkbenchDefinition.class);
-        } catch (Content2BeanException e) {
-            throw new IllegalStateException("Can't read workbench definition.", e);
-        }
+        return definition;
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 }

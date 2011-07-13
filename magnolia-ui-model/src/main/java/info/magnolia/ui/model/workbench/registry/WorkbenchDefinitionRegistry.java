@@ -33,44 +33,17 @@
  */
 package info.magnolia.ui.model.workbench.registry;
 
+import info.magnolia.registry.AbstractRegistry;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.inject.Singleton;
 
 /**
  * Maintains a registry of configured workbench providers by name.
+ *
+ * @version $Id$
  */
 @Singleton
-public class WorkbenchRegistry {
+public class WorkbenchDefinitionRegistry extends AbstractRegistry<WorkbenchDefinition, WorkbenchDefinitionProvider> {
 
-    private final Map<String, WorkbenchProvider> providers = new HashMap<String, WorkbenchProvider>();
-
-    public void register(String name, WorkbenchProvider provider) {
-        synchronized (providers) {
-            if (providers.containsKey(name)) {
-                throw new IllegalStateException("Workbench already registered for name [" + name + "]");
-            }
-            providers.put(name, provider);
-        }
-    }
-
-    public void unregister(String name) {
-        synchronized (providers) {
-            providers.remove(name);
-        }
-    }
-
-    public WorkbenchDefinition getWorkbench(String name) {
-
-        WorkbenchProvider workbenchProvider;
-        synchronized (providers) {
-            workbenchProvider = providers.get(name);
-        }
-        if (workbenchProvider == null) {
-            return null;
-        }
-        return workbenchProvider.getDefinition();
-    }
 }

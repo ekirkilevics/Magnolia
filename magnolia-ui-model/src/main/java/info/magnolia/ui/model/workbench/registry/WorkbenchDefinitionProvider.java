@@ -33,13 +33,14 @@
  */
 package info.magnolia.ui.model.workbench.registry;
 
+import info.magnolia.registry.Provider;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
-
 /**
- * Provides a tree definition.
+ * Provides a Workbench definition.
+ *
+ * @version $Id$
  */
-public interface WorkbenchProvider {
+public interface WorkbenchDefinitionProvider extends Provider<WorkbenchDefinition>{
 
-    WorkbenchDefinition getDefinition();
 }

@@ -50,7 +50,7 @@ import info.magnolia.ui.admincentral.workbench.action.WorkbenchActionFactory;
 import info.magnolia.ui.model.builder.FactoryBase;
 import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
-import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
+import info.magnolia.ui.model.workbench.registry.WorkbenchDefinitionRegistry;
 
 /**
  * Jcr view configured via content to bean.
@@ -66,7 +66,7 @@ public class ConfiguredJcrViewBuilder extends FactoryBase<AbstractColumnDefiniti
     private WorkbenchActionFactory workbenchActionFactory;
 
     // TODO: why is WorkbenchRegistry handed over here?
-    public ConfiguredJcrViewBuilder(ComponentProvider componentProvider, WorkbenchRegistry workbenchRegistry, WorkbenchActionFactory workbenchActionFactory) {
+    public ConfiguredJcrViewBuilder(ComponentProvider componentProvider, WorkbenchDefinitionRegistry workbenchRegistry, WorkbenchActionFactory workbenchActionFactory) {
         super(componentProvider);
         this.componentProvider = componentProvider;
         this.workbenchActionFactory = workbenchActionFactory;
