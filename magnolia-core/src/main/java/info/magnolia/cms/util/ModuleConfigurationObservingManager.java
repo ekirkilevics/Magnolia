@@ -61,7 +61,7 @@ public abstract class ModuleConfigurationObservingManager {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final Object monitor = new Object();
+    private final Object reloadMonitor = new Object();
     private final String pathWithinModule;
     private final ModuleRegistry moduleRegistry;
     private final List<String> observedPaths = new ArrayList<String>();
@@ -82,7 +82,7 @@ public abstract class ModuleConfigurationObservingManager {
 
             @Override
             public void onEvent(EventIterator events) {
-                synchronized (monitor) {
+                synchronized (reloadMonitor) {
                     reload();
                 }
             }
@@ -98,7 +98,7 @@ public abstract class ModuleConfigurationObservingManager {
             });
         }
 
-        synchronized (monitor) {
+        synchronized (reloadMonitor) {
             reload();
         }
     }
@@ -159,6 +159,6 @@ public abstract class ModuleConfigurationObservingManager {
      * in subclasses to block calls while the reload is in progress.
      */
     protected Object getReloadMonitor() {
-        return monitor;
+        return reloadMonitor;
     }
 }
