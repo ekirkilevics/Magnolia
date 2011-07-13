@@ -125,11 +125,12 @@ public class TemplatingFunctionsTest {
         Content result = functions.asContent(topPage);
 
         // THEN
-        assertContentEqualsNode(result, topPage);
+        // DefaultContent does not have a equals method - but as it is only a wrapper around a Node we can directly compare the nodes
+        assertEquals(topPage, result.getJCRNode());
     }
 
     @Test
-    public void testAsJCRNodeFromContent() throws RepositoryException {
+    public void testAsJCRNodeFromContent() {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
         MockContent content = new MockContent("test");
@@ -138,7 +139,7 @@ public class TemplatingFunctionsTest {
         Node result = functions.asJCRNode(content);
 
         // THEN
-        assertNodeEqualsContent(result, content);
+        assertEquals(content.getJCRNode(), result);
     }
 
     @Test
@@ -541,7 +542,7 @@ public class TemplatingFunctionsTest {
         Node resultNode = functions.page(topPageComponent);
 
         // THEN
-        assertNodeEqualsNode(resultNode, topPage);
+        assertEquals(resultNode, topPage);
     }
 
     @Test
@@ -782,23 +783,6 @@ public class TemplatingFunctionsTest {
     }
 
     /**
-     * Checks all mandatory Content values. None should be null and all values should equal.
-     *
-     * @param content Content to compare with Node
-     * @param node Node to compare with Content
-     * @throws RepositoryException
-     */
-    private void assertContentEqualsNode(Content content, Node node) throws RepositoryException {
-        assertNotNull(content.getName());
-        assertEquals(content.getName(), node.getName());
-        assertNotNull(content.getUUID());
-        assertEquals(content.getUUID(), node.getUUID());
-        assertEquals(content.getUUID(), node.getIdentifier());
-        assertNotNull(content.getHandle());
-        assertEquals(content.getHandle(), node.getPath());
-    }
-
-    /**
      * Checks all mandatory Node values. None should be null and all values should equal.
      *
      * @param node1 Node to compare with Node-2
@@ -868,27 +852,6 @@ public class TemplatingFunctionsTest {
         assertNotNull(node.getPrimaryNodeType().getName());
         assertEquals(node.getPrimaryNodeType().getName(), ((NodeType)map.get("@nodeType")).getName());
     }
-
-    /**
-     * Checks all mandatory Content values. None should be null and all values should equal.
-     *
-     * @param node Node to compare with Content
-     * @param content Content to compare with Node
-     * @throws RepositoryException
-     */
-    private void assertNodeEqualsContent(Node node, Content content) throws RepositoryException {
-        assertNotNull(node.getName());
-        assertEquals(node.getName(), content.getName());
-        //TODO cringele: this should work!! I'll have a look at them with dlipp
-//        assertNotNull(node.getUUID());
-//        assertEquals(node.getUUID(), content.getUUID());
-//        assertNotNull(node.getIdentifier());
-//        assertEquals(node.getIdentifier(), content.getUUID());
-        assertNotNull(node.getPath());
-        assertEquals(node.getPath(), content.getHandle());
-    }
-
-
 
     /**
      * Add to the give node child nodes by the name and type passed. Returns first created child node.
