@@ -40,6 +40,7 @@ import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanProcessor;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -85,14 +86,13 @@ public class ConfiguredRendererProviderTest {
     }
 
     @Test
-    public void testGetDefinition() throws RepositoryException, Content2BeanException {
+    public void testGetDefinition() throws RepositoryException, Content2BeanException, RegistrationException {
         // GIVEN
         MockNode root = new MockNode();
         root.setSession(new MockSession("test"));
         Node rendererConfig = root.addNode("test");
         root.setProperty("class", "info.magnolia.rendering.renderer.FreemarkerRenderer");
         root.setProperty("type", "freemarker");
-
 
         // WHEN
         ConfiguredRendererProvider provider = new ConfiguredRendererProvider("test", rendererConfig);
