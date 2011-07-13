@@ -163,6 +163,88 @@
         </sv:property>
       </sv:node>
     </sv:node>
+    <sv:node sv:name="03">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>0ef24ece-1e66-4754-aca5-52f6c9568873</sv:value>
+      </sv:property>
+      <sv:property sv:name="checkbox" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="checkboxWithDefault" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="dateWithTime" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="dateWithoutTime" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="editMultiRow" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="editNumberDecimal" sv:type="Decimal">
+        <sv:value>0</sv:value>
+      </sv:property>
+      <sv:property sv:name="editNumberDouble" sv:type="Double">
+        <sv:value>0.0</sv:value>
+      </sv:property>
+      <sv:property sv:name="editNumberLong" sv:type="Long">
+        <sv:value>0</sv:value>
+      </sv:property>
+      <sv:property sv:name="editSingleRow" sv:type="String">
+        <sv:value>f</sv:value>
+      </sv:property>
+      <sv:property sv:name="editSingleRowFixedWidth" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="editSingleRowFullWidth" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="editSingleRowMaxLength" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
+      <sv:property sv:name="link" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="password" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="passwordFixedWidth" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="passwordWithoutVerification" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="richEdit" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="select" sv:type="String">
+        <sv:value>LON</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:authorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+          <sv:value>2011-07-13T14:25:42.657+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:template" sv:type="String">
+          <sv:value>samples:paragraphs/fieldsShowRoom</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
   </sv:node>
   <sv:node sv:name="extras">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
