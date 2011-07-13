@@ -43,6 +43,7 @@
                   <h3>List Area Main</h3>
                     [@cms.area name="main" /]
                 </div><!-- end main -->
+                [#-- [@cms.area name="main" dialog="samples:mainProperties" components="samples:paragraphs/howToFTL,samples:paragraphs/text"/] --]
 
 
                 [#-- ****** extras ****** --]
@@ -55,8 +56,8 @@
 
             [#-- ****** footer  ****** --]
             <div id="footer">
-              <h3>Single Area Footer</h3>
-                [@cms.area name="footer" type="single" components="samples:paragraphs/text"/]
+              <h3>List Area Footer</h3>
+                [@cms.area name="footer" /]
             </div><!-- end footer -->
 
 
