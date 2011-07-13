@@ -84,8 +84,8 @@ public class ConfiguredDialogDefinitionManager extends ModuleConfigurationObserv
             NodeUtil.visit(node, new NodeVisitor() {
 
                 @Override
-                public void visit(Node node) throws RepositoryException {
-                    for (Node dialogNode : NodeUtil.getNodes(node, MgnlNodeType.NT_CONTENTNODE)) {
+                public void visit(Node current) throws RepositoryException {
+                    for (Node dialogNode : NodeUtil.getNodes(current, MgnlNodeType.NT_CONTENTNODE)) {
                         DialogDefinitionProvider provider = readProvider(dialogNode);
                         if (provider != null) {
                             providers.add(provider);
@@ -110,8 +110,8 @@ public class ConfiguredDialogDefinitionManager extends ModuleConfigurationObserv
         }
     }
 
-    protected String createId(Node templateDefinitionNode) throws RepositoryException {
-        final String path = templateDefinitionNode.getPath();
+    protected String createId(Node configNode) throws RepositoryException {
+        final String path = configNode.getPath();
         final String[] pathElements = path.split("/");
         final String moduleName = pathElements[2];
         return moduleName + ":" + StringUtils.removeStart(path, "/modules/" + moduleName + "/dialogs/");
