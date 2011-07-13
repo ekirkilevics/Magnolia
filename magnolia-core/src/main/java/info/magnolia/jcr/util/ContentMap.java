@@ -60,9 +60,7 @@ import org.slf4j.LoggerFactory;
  * <code>content.propName</code>. It first tries to read a property with name (key) and if not present checks for the
  * presence of child node. Few special property names map to the JCR methods: \@name, \@id, \@path, \@level, \@nodeType
  *
- *
  * @version $Id$
- *
  */
 public class ContentMap implements Map<String, Object> {
 
@@ -82,7 +80,7 @@ public class ContentMap implements Map<String, Object> {
 
         this.content = content;
 
-        // Supported special types are: @nodeType @name, @path @level (and their deprecated forms - see
+        // Supported special types are: @nodeType @name, @path @depth (and their deprecated forms - see
         // convertDeprecatedProps() for details)
         Class<? extends Node> clazz = content.getClass();
         try {
