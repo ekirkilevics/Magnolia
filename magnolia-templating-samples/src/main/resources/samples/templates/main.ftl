@@ -21,7 +21,7 @@
                 <div id="navigation">
                     [#include "/samples/areas/navigation.ftl" ]
                     [#-- should be used as an area so it can be inherited. Inheritance of areas not implemented yet.
-                    [@cms.area name="stage" /]
+                    [@cms.area name="navigation" /]
                     --]
                 </div><!-- end navigation -->
 
@@ -46,7 +46,6 @@
                   <h3>List-Area Main</h3>
                     [@cms.area name="main" /]
                 </div><!-- end main -->
-                [#-- [@cms.area name="main" dialog="samples:mainProperties" components="samples:paragraphs/howToFTL,samples:paragraphs/text"/] --]
 
 
                 [#-- ****** extras ****** --]
