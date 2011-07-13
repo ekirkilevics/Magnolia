@@ -53,6 +53,7 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -114,7 +115,6 @@ public class GuiceComponentProviderBuilder {
                 }
 
                 // We don't need to register these providers at every level, would be enough to do it in the top parent
-                // TODO: maybe we should throw CreationException in these providers, plus what happens on an Exception, does it seep through or is it wrapped?
                 bind(Context.class).toProvider(new Provider<Context>() {
                     @Override
                     public Context get() {
@@ -159,6 +159,13 @@ public class GuiceComponentProviderBuilder {
                     bind(Class.forName("com.mycila.inject.jsr250.Jsr250PostConstructHandler"));
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
+                }
+                // If we have a parent and it has a MagnoliaConfigurationProperties component expose all its properties
+                if (parent != null) {
+                    MagnoliaConfigurationProperties configurationProperties = parent.getComponent(MagnoliaConfigurationProperties.class);
+                    if (configurationProperties != null) {
+                        install(new GuicePropertyModule(configurationProperties));
+                    }
                 }
                 install(Jsr250.newJsr250Module());
             }
