@@ -64,6 +64,7 @@ import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 
@@ -134,10 +135,12 @@ public class GuiceServletContextListener implements ServletContextListener {
         stopServer();
 
         if (platform != null) {
+            Components.setProvider(platform.getParent());
             platform.destroy();
         }
 
         if (root != null) {
+            Components.setProvider(root.getParent());
             root.destroy();
         }
     }

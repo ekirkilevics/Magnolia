@@ -136,6 +136,7 @@ public class GuiceModuleManager extends ModuleManagerImpl {
     @Override
     public void stopModules() {
         super.stopModules();
+        Components.setProvider(main.getParent());
         main.destroy();
     }
 

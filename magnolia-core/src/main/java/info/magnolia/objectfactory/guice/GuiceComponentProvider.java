@@ -119,7 +119,7 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
 
     @Override
     public HierarchicalComponentProvider getParent() {
-        throw new UnsupportedOperationException();
+        return parentComponentProvider;
     }
 
     @Override
