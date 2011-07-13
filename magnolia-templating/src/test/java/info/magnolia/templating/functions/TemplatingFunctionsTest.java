@@ -227,31 +227,6 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
-    public void testUuidFromNode() throws RepositoryException {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-
-        // WHEN
-        String uuid = functions.uuid(topPage);
-
-        // THEN
-        assertEquals(uuid, topPage.getIdentifier());
-    }
-
-    @Test
-    public void testUuidFromContentMap() throws RepositoryException {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-
-        // WHEN
-        String uuid = functions.uuid(topPageContentMap);
-
-        // THEN
-        assertEquals(uuid, topPageContentMap.get("@id"));
-        assertEquals(uuid, topPageContentMap.get("@uuid"));
-    }
-
-    @Test
     public void testLinkFromNodeDepth1() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();

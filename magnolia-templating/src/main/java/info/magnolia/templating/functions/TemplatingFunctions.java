@@ -87,14 +87,6 @@ public class TemplatingFunctions {
         return asContentMap(parentContent);
     }
 
-    public String uuid(Node content) throws RepositoryException {
-        return content == null ? null : content.getIdentifier();
-    }
-
-    public String uuid(ContentMap contentMap) throws RepositoryException {
-        return contentMap == null ? null : this.uuid(asJCRNode(contentMap));
-    }
-
 //    //TODO cringele : these would be the right way of creating links. LinkUtil needs to be Node capable and not only Content. (SCRUM-242)
 //    public String link(Node content) throws RepositoryException{
 //        //TODO cringele : LinkUtil should accept Node and not only Content
