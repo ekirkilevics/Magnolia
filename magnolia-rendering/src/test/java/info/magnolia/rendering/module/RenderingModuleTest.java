@@ -46,15 +46,15 @@ public class RenderingModuleTest {
     @Test
     public void testStartsManagers() {
 
-        // Given
+        // GIVEN
         ConfiguredTemplateDefinitionManager configuredTemplateDefinitionManager = mock(ConfiguredTemplateDefinitionManager.class);
         ConfiguredRendererManager configuredRendererManager = mock(ConfiguredRendererManager.class);
         RenderingModule renderingModule = new RenderingModule(configuredTemplateDefinitionManager, configuredRendererManager);
 
-        // When
+        // WHEN
         renderingModule.start(mock(ModuleLifecycleContext.class));
 
-        // Then
+        // THEN
         verify(configuredTemplateDefinitionManager).start();
         verify(configuredRendererManager).start();
     }

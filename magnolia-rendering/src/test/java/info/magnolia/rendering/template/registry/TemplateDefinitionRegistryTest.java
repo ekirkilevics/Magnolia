@@ -78,14 +78,14 @@ public class TemplateDefinitionRegistryTest {
     @Test
     public void testRegisterAndGetTemplateDefinition() throws RegistrationException {
 
-        // Given
+        // GIVEN
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         ConfiguredTemplateDefinition definition = new ConfiguredTemplateDefinition();
 
-        // When
+        // WHEN
         registry.register(new SimpleTemplateDefinitionProvider("foobar", definition));
 
-        // Then
+        // THEN
         assertSame(definition, registry.getTemplateDefinition("foobar"));
         assertEquals(1, registry.getTemplateDefinitions().size());
         assertSame(definition, registry.getTemplateDefinitions().iterator().next());
@@ -94,19 +94,19 @@ public class TemplateDefinitionRegistryTest {
     @Test(expected = RegistrationException.class)
     public void testGetTemplateDefinitionThrowsOnBadId() throws RegistrationException {
 
-        // Given
+        // GIVEN
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
 
-        // When
+        // WHEN
         registry.getTemplateDefinition("nonExistingId");
 
-        // Then we get RegistrationException
+        // THEN we get RegistrationException
     }
 
     @Test
     public void testGetTemplateDefinitionsIgnoresFailingProvider() throws RegistrationException {
 
-        // Given
+        // GIVEN
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         registry.register(new TemplateDefinitionProvider() {
             @Override
@@ -120,10 +120,10 @@ public class TemplateDefinitionRegistryTest {
             }
         });
 
-        // When
+        // WHEN
         Collection<TemplateDefinition> templateDefinitions = registry.getTemplateDefinitions();
 
-        // Then
+        // THEN
         assertTrue(templateDefinitions.isEmpty());
     }
 

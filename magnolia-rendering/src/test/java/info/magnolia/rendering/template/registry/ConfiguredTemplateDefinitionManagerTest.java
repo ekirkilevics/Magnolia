@@ -101,13 +101,13 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
     @Test
     public void testRegistersTemplatesOnStart() throws RepositoryException, IOException, RegistrationException {
 
-        // Given
+        // GIVEN
         ConfiguredTemplateDefinitionManager manager = new ConfiguredTemplateDefinitionManager(moduleRegistry, templateDefinitionRegistry);
 
-        // When
+        // WHEN
         manager.start();
 
-        // Then
+        // THEN
         TemplateDefinition a = templateDefinitionRegistry.get("fooModule:a");
         assertNotNull(a);
         assertEquals("fooModule:a", a.getId());
@@ -122,18 +122,18 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
     @Test
     public void testReloadsTemplatesOnChange() throws RepositoryException, IOException, RegistrationException, InterruptedException {
 
-        // Given
+        // GIVEN
         ConfiguredTemplateDefinitionManager manager = new ConfiguredTemplateDefinitionManager(moduleRegistry, templateDefinitionRegistry);
 
-        // When
+        // WHEN
         manager.start();
 
-        // Then, make sure that it found template 'a'
+        // THEN, make sure that it found template 'a'
         TemplateDefinition a = templateDefinitionRegistry.get("fooModule:a");
         assertNotNull(a);
         assertEquals("fooModule:a", a.getId());
 
-        // When we remove the node for template 'a' and add a new one 'c' in zedModule
+        // WHEN we remove the node for template 'a' and add a new one 'c' in zedModule
         session.getNode("/modules/fooModule/templates/a").remove();
         Node node = session.getNode("/modules/zedModule/").addNode("templates").addNode("c");
         node.setProperty("title", "zedTitle");
@@ -144,7 +144,7 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
 
         Thread.sleep(5000);
 
-        // Then 'a' must be gone and the 'z' must have been found
+        // THEN 'a' must be gone and the 'z' must have been found
         try {
             templateDefinitionRegistry.get("a");
             fail();

@@ -101,15 +101,15 @@ public class GuiceScopesTest {
 
     @Test
     public void testContextProvidersWhenContextSet() {
-        // Given
+        // GIVEN
         Context context = mock(Context.class);
         MgnlContext.setInstance(context);
         GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockSingletonWithContextProviders.class);
 
-        // When
+        // WHEN
         MockSingletonWithContextProviders component = provider.getComponent(MockSingletonWithContextProviders.class);
 
-        // Then
+        // THEN
         assertSame(context, component.contextProvider.get());
         try {
             component.webContextProvider.get();
@@ -127,17 +127,17 @@ public class GuiceScopesTest {
 
     @Test
     public void testContextProvidersWhenWebContextSet() {
-        // Given
+        // GIVEN
         AggregationState aggregationState = new AggregationState();
         WebContext context = mock(WebContext.class);
         when(context.getAggregationState()).thenReturn(aggregationState);
         MgnlContext.setInstance(context);
         GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockSingletonWithContextProviders.class);
 
-        // When
+        // WHEN
         MockSingletonWithContextProviders component = provider.getComponent(MockSingletonWithContextProviders.class);
 
-        // Then
+        // THEN
         assertSame(context, component.contextProvider.get());
         assertSame(context, component.webContextProvider.get());
         assertSame(aggregationState, component.aggregationStateProvider.get());
@@ -145,7 +145,7 @@ public class GuiceScopesTest {
 
     @Test
     public void testServletProvidersWhenWebContextSet() {
-        // Given
+        // GIVEN
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockHttpSession session = new MockHttpSession();
@@ -156,10 +156,10 @@ public class GuiceScopesTest {
         MgnlContext.setInstance(webContext);
         GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockSingletonWithContextProviders.class);
 
-        // When
+        // WHEN
         MockSingletonWithContextProviders component = provider.getComponent(MockSingletonWithContextProviders.class);
 
-        // Then
+        // THEN
         assertSame(request, component.requestProvider.get());
         assertSame(session, component.sessionProvider.get());
         assertSame(response, component.responseProvider.get());
@@ -167,14 +167,14 @@ public class GuiceScopesTest {
 
     @Test
     public void testServletProvidersFailWhenWebContextNotSet() {
-        // Given
+        // GIVEN
         MgnlContext.setInstance(mock(Context.class));
         GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockSingletonWithContextProviders.class);
 
-        // When
+        // WHEN
         MockSingletonWithContextProviders component = provider.getComponent(MockSingletonWithContextProviders.class);
 
-        // Then
+        // THEN
         try {
             component.requestProvider.get();
             fail();
@@ -194,27 +194,27 @@ public class GuiceScopesTest {
 
     @Test
     public void testRequestScope() {
-        // Given
+        // GIVEN
         MockWebContext webContext = new MockWebContext();
         webContext.setRequest(new MockHttpServletRequest());
         webContext.setResponse(new MockHttpServletResponse());
         MgnlContext.setInstance(webContext);
         GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockRequestScopedObject.class);
 
-        // When
+        // WHEN
         MockRequestScopedObject component = provider.getComponent(MockRequestScopedObject.class);
 
-        // Then
+        // THEN
         assertNotNull(component);
         assertSame(component, provider.getComponent(MockRequestScopedObject.class));
 
-        // When we switch request
+        // WHEN we switch request
         webContext = new MockWebContext();
         webContext.setRequest(new MockHttpServletRequest());
         webContext.setResponse(new MockHttpServletResponse());
         MgnlContext.setInstance(webContext);
 
-        // Then we get a new object
+        // THEN we get a new object
         MockRequestScopedObject component2 = provider.getComponent(MockRequestScopedObject.class);
         assertNotNull(component2);
         assertNotSame(component2, component);
@@ -222,19 +222,19 @@ public class GuiceScopesTest {
 
     @Test(expected = ProvisionException.class)
     public void testRequestScopeFailsWhenNotInWebContext() {
-        // Given
+        // GIVEN
         MgnlContext.setInstance(mock(Context.class));
         GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockRequestScopedObject.class);
 
-        // When
+        // WHEN
         provider.getComponent(MockRequestScopedObject.class);
 
-        // Then we expect an exception
+        // THEN we expect an exception
     }
 
     @Test
     public void testSessionScope() {
-        // Given
+        // GIVEN
         MockWebContext webContext = new MockWebContext();
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setSession(new MockHttpSession());
@@ -243,21 +243,21 @@ public class GuiceScopesTest {
 
         GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockSessionScopedObject.class);
 
-        // When
+        // WHEN
         MockSessionScopedObject component = provider.getComponent(MockSessionScopedObject.class);
 
-        // Then
+        // THEN
         assertNotNull(component);
         assertSame(component, provider.getComponent(MockSessionScopedObject.class));
 
-        // When we switch request
+        // WHEN we switch request
         webContext = new MockWebContext();
         request = new MockHttpServletRequest();
         webContext.setRequest(request);
         request.setSession(new MockHttpSession());
         MgnlContext.setInstance(webContext);
 
-        // Then we get a new object
+        // THEN we get a new object
         MockSessionScopedObject component2 = provider.getComponent(MockSessionScopedObject.class);
         assertNotNull(component2);
         assertNotSame(component2, component);
@@ -265,14 +265,14 @@ public class GuiceScopesTest {
 
     @Test(expected = ProvisionException.class)
     public void testSessionScopeFailsWhenNotInWebContext() {
-        // Given
+        // GIVEN
         MgnlContext.setInstance(mock(Context.class));
         GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockSessionScopedObject.class);
 
-        // When
+        // WHEN
         provider.getComponent(MockSessionScopedObject.class);
 
-        // Then we expect an exception
+        // THEN we expect an exception
     }
 
     private GuiceComponentProvider createComponentProviderWithSingleImplementation(Class<?> clazz) {

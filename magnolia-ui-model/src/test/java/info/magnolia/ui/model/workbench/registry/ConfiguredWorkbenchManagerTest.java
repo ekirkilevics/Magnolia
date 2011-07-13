@@ -98,13 +98,13 @@ public class ConfiguredWorkbenchManagerTest extends MgnlTestCase {
     @Test
     public void testRegistersRenderersOnStart() throws RegistrationException {
 
-        // Given
+        // GIVEN
         ConfiguredWorkbenchDefinitionManager manager = new ConfiguredWorkbenchDefinitionManager(moduleRegistry, workbenchDefinitionRegistry);
 
-        // When
+        // WHEN
         manager.start();
 
-        // Then
+        // THEN
         assertNotNull(workbenchDefinitionRegistry.get("a"));
         assertEquals("foo", (workbenchDefinitionRegistry.get("a")).getWorkspace());
         assertNotNull(workbenchDefinitionRegistry.get("b"));
@@ -114,17 +114,17 @@ public class ConfiguredWorkbenchManagerTest extends MgnlTestCase {
     @Test
     public void testReloadsRenderersOnChange() throws RepositoryException, RegistrationException, InterruptedException {
 
-        // Given
+        // GIVEN
         ConfiguredWorkbenchDefinitionManager manager = new ConfiguredWorkbenchDefinitionManager(moduleRegistry, workbenchDefinitionRegistry);
 
-        // When
+        // WHEN
         manager.start();
 
-        // Then, make sure that it found renderer 'a'
+        // THEN, make sure that it found WorkbenchDefinition 'a'
         assertNotNull(workbenchDefinitionRegistry.get("a"));
         assertEquals("foo", (workbenchDefinitionRegistry.get("a")).getWorkspace());
 
-        // When we remove the node for renderer 'a' and add a new one 'c' in zedModule
+        // WHEN we remove the node for WorkbenchDefinition 'a' and add a new one 'c' in zedModule
         session.getNode("/modules/fooModule/workbenches/a").remove();
         Node node = session.getNode("/modules/zedModule/").addNode("workbenches").addNode("c");
         node.setProperty("class", WorkbenchDefinition.class.getName());
@@ -136,7 +136,7 @@ public class ConfiguredWorkbenchManagerTest extends MgnlTestCase {
 
         Thread.sleep(5000);
 
-        // Then 'a' must be gone and the 'z' must have been found
+        // THEN 'a' must be gone and the 'z' must have been found
         try {
             workbenchDefinitionRegistry.get("a");
             fail();

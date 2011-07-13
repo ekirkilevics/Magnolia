@@ -118,13 +118,13 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
     @Test
     public void testRegistersRenderersOnStart() throws RepositoryException, IOException, RegistrationException {
 
-        // Given
+        // GIVEN
         ConfiguredRendererManager manager = new ConfiguredRendererManager(moduleRegistry, rendererRegistry);
 
-        // When
+        // WHEN
         manager.start();
 
-        // Then
+        // THEN
         assertNotNull(rendererRegistry.get("a"));
         assertEquals("foo", ((MockTestRenderer) rendererRegistry.get("a")).getSomeProperty());
         assertNotNull(rendererRegistry.get("b"));
@@ -134,17 +134,17 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
     @Test
     public void testReloadsRenderersOnChange() throws RepositoryException, IOException, RegistrationException, InterruptedException {
 
-        // Given
+        // GIVEN
         ConfiguredRendererManager manager = new ConfiguredRendererManager(moduleRegistry, rendererRegistry);
 
-        // When
+        // WHEN
         manager.start();
 
-        // Then, make sure that it found renderer 'a'
+        // THEN, make sure that it found renderer 'a'
         assertNotNull(rendererRegistry.get("a"));
         assertEquals("foo", ((MockTestRenderer) rendererRegistry.get("a")).getSomeProperty());
 
-        // When we remove the node for renderer 'a' and add a new one 'c' in zedModule
+        // WHEN we remove the node for renderer 'a' and add a new one 'c' in zedModule
         session.getNode("/modules/fooModule/renderers/a").remove();
         Node node = session.getNode("/modules/zedModule/").addNode("renderers").addNode("c");
         node.setProperty("class", MockTestRenderer.class.getName());
@@ -156,7 +156,7 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
 
         Thread.sleep(5000);
 
-        // Then 'a' must be gone and the 'z' must have been found
+        // THEN 'a' must be gone and the 'z' must have been found
         try {
             rendererRegistry.get("a");
             fail();

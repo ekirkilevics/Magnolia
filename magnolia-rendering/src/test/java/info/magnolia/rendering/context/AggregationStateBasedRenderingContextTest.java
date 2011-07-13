@@ -54,16 +54,16 @@ public class AggregationStateBasedRenderingContextTest {
 
     @Test
     public void usesAggregationStateFromProvider() {
-        // Given
+        // GIVEN
         Node mainContent = mock(Node.class);
         AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(mainContent);
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(Providers.of(aggregationState));
 
-        // When
+        // WHEN
         Node returnedMainContent = context.getMainContent();
 
-        // Then
+        // THEN
         assertSame(mainContent, returnedMainContent);
     }
 
