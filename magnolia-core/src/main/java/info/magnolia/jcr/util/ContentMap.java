@@ -84,11 +84,11 @@ public class ContentMap implements Map<String, Object> {
         // convertDeprecatedProps() for details)
         Class<? extends Node> clazz = content.getClass();
         try {
-            specialProperties.put("name", clazz.getMethod("getName", null));
-            specialProperties.put("id", clazz.getMethod("getIdentifier", null));
-            specialProperties.put("path", clazz.getMethod("getPath", null));
-            specialProperties.put("depth", clazz.getMethod("getDepth", null));
-            specialProperties.put("nodeType", clazz.getMethod("getPrimaryNodeType", null));
+            specialProperties.put("name", clazz.getMethod("getName", (Class<?>[]) null));
+            specialProperties.put("id", clazz.getMethod("getIdentifier", (Class<?>[]) null));
+            specialProperties.put("path", clazz.getMethod("getPath", (Class<?>[]) null));
+            specialProperties.put("depth", clazz.getMethod("getDepth", (Class<?>[]) null));
+            specialProperties.put("nodeType", clazz.getMethod("getPrimaryNodeType", (Class<?>[]) null));
         } catch (SecurityException e) {
             log.debug(
                     "Failed to gain access to Node get***() method. Check VM security settings. "
