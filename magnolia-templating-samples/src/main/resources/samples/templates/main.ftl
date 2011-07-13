@@ -20,12 +20,15 @@
                 [#-- ****** navigation ****** --]
                 <div id="navigation">
                     [#include "/samples/areas/navigation.ftl" ]
+                    [#-- should be used as an area so it can be inherited. Inheritance of areas not implemented yet.
+                    [@cms.area name="stage" /]
+                    --]
                 </div><!-- end navigation -->
 
 
                 [#-- ****** stage ****** --]
                 <div id="stage">
-                    <h3>Single Area Stage</h3>
+                    <h3>Single-Area Stage</h3>
                     [@cms.area name="stage" /]
                 </div><!-- end stage -->
 
@@ -40,7 +43,7 @@
 
                 [#-- ****** main ****** --]
                 <div id="main">
-                  <h3>List Area Main</h3>
+                  <h3>List-Area Main</h3>
                     [@cms.area name="main" /]
                 </div><!-- end main -->
                 [#-- [@cms.area name="main" dialog="samples:mainProperties" components="samples:paragraphs/howToFTL,samples:paragraphs/text"/] --]
@@ -48,7 +51,7 @@
 
                 [#-- ****** extras ****** --]
                 <div id="extras">
-                <h3>List Area Extras</h3>
+                <h3>List-Area Extras</h3>
                     [@cms.area name="extras" /]
                 </div><!-- end extras -->
 
@@ -56,7 +59,7 @@
 
             [#-- ****** footer  ****** --]
             <div id="footer">
-              <h3>List Area Footer</h3>
+              <h3>List-Area Footer</h3>
                 [@cms.area name="footer" /]
             </div><!-- end footer -->
 
