@@ -126,7 +126,11 @@ public class LinkSelectWindow extends Window implements JcrView.Presenter {
     }
 
     public void select(String path) {
-        jcrView.select(path);
+        try {
+            jcrView.select(path);
+        } catch (RuntimeRepositoryException ignored) {
+            // This happens when the path doesn't exist
+        }
     }
 
     public Node getSelectedNode() {

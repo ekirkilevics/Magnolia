@@ -35,17 +35,21 @@ package info.magnolia.ui.admincentral.dialog.field;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Field;
 import info.magnolia.cms.i18n.MessagesUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.ui.admincentral.dialog.view.DialogView.Presenter;
 import info.magnolia.ui.admincentral.jcr.view.builder.JcrViewBuilderProvider;
+import info.magnolia.ui.framework.editor.NodeEditor;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.LinkFieldDefinition;
@@ -59,7 +63,9 @@ import info.magnolia.ui.model.workbench.registry.WorkbenchDefinitionRegistry;
  *
  * @version $Id$
  */
-public class DialogLinkField extends AbstractVaadinFieldDialogField implements LinkSelectWindow.Presenter {
+public class DialogLinkField extends AbstractDialogField implements NodeEditor, LinkSelectWindow.Presenter {
+
+    public static final String DEFAULT_WORKBENCH = "website";
 
     // TODO do we have to required a WorkbenchDefinition, can we take workspace as a string only?
 
@@ -67,14 +73,35 @@ public class DialogLinkField extends AbstractVaadinFieldDialogField implements L
     private WorkbenchDefinitionRegistry workbenchRegistry;
     private JcrViewBuilderProvider jcrViewBuilderProvider;
     private LinkSelectWindow linkSelectWindow;
-    private Node selectedNode;
     private TextAndButtonField linkField;
+    private WorkbenchDefinition workbenchDefinition;
+    private LinkFieldDefinition fieldDefinition;
 
-    public DialogLinkField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, Presenter presenter, Application application, WorkbenchDefinitionRegistry workbenchRegistry, JcrViewBuilderProvider jcrViewBuilderProvider) {
+    public DialogLinkField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, LinkFieldDefinition fieldDefinition, Presenter presenter, Application application, WorkbenchDefinitionRegistry workbenchRegistry, JcrViewBuilderProvider jcrViewBuilderProvider) throws RegistrationException {
         super(dialogDefinition, tabDefinition, fieldDefinition, presenter);
         this.application = application;
         this.workbenchRegistry = workbenchRegistry;
         this.jcrViewBuilderProvider = jcrViewBuilderProvider;
+        this.fieldDefinition = fieldDefinition;
+        this.workbenchDefinition = getWorkbenchDefinition();
+        this.linkField = new TextAndButtonField();
+        this.view.setComponent(linkField);
+        this.editor = this;
+        linkField.getTextField().addListener(new FieldEvents.FocusListener() {
+            @Override
+            public void focus(FieldEvents.FocusEvent event) {
+                getDialogPresenter().onFocus(DialogLinkField.this);
+            }
+        });
+
+        linkField.getButton().setCaption(MessagesUtil.getWithDefault(fieldDefinition.getButtonLabel(), fieldDefinition.getButtonLabel()));
+        linkField.getButton().addListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                onButtonClick();
+
+            }
+        });
     }
 
     @Override
@@ -83,35 +110,38 @@ public class DialogLinkField extends AbstractVaadinFieldDialogField implements L
     }
 
     @Override
-    public Field getField() {
-        final LinkFieldDefinition definition = (LinkFieldDefinition) getFieldDefinition();
-        linkField = new TextAndButtonField();
-
-        linkField.getTextField().addListener(new FieldEvents.FocusListener() {
-            @Override
-            public void focus(FieldEvents.FocusEvent event) {
-                getDialogPresenter().onFocus(DialogLinkField.this);
+    public void edit(Node node) throws RepositoryException {
+        String value = node.getProperty(fieldDefinition.getName()).getString();
+        if (StringUtils.isNotEmpty(value)) {
+            if (fieldDefinition.isUuid()) {
+                try {
+                    Session session = MgnlContext.getJCRSession(workbenchDefinition.getWorkspace());
+                    value = session.getNodeByIdentifier(value).getPath();
+                } catch (RepositoryException e) {
+                    // The node pointed out by this identifier doesn't exist
+                }
             }
-        });
+        }
+        linkField.setValue(value);
+    }
 
-        linkField.getButton().setCaption(MessagesUtil.getWithDefault(definition.getButtonLabel(), definition.getButtonLabel()));
-        linkField.getButton().addListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                onButtonClick();
-
+    @Override
+    public void save(Node node) throws RepositoryException {
+        String value = (String) linkField.getValue();
+        if (StringUtils.isNotEmpty(value)) {
+            if (fieldDefinition.isUuid()) {
+                try {
+                    Session session = MgnlContext.getJCRSession(workbenchDefinition.getWorkspace());
+                    value = session.getNode(value).getIdentifier();
+                } catch (RepositoryException e) {
+                    // The node pointed out by this identifier doesn't exist
+                }
             }
-        });
-        return linkField;
+        }
+        node.setProperty(fieldDefinition.getName(), value);
     }
 
     private void onButtonClick() {
-        WorkbenchDefinition workbenchDefinition;
-        try {
-          workbenchDefinition = workbenchRegistry.get("website");
-        } catch (RegistrationException e) {
-            throw new RuntimeException(e);
-        }
         linkSelectWindow = new LinkSelectWindow(this, application, jcrViewBuilderProvider, workbenchDefinition);
         linkSelectWindow.select((String) linkField.getValue());
     }
@@ -124,13 +154,23 @@ public class DialogLinkField extends AbstractVaadinFieldDialogField implements L
 
     @Override
     public void onClose() {
-        selectedNode = linkSelectWindow.getSelectedNode();
         try {
+            Node selectedNode = linkSelectWindow.getSelectedNode();
             linkField.setValue(selectedNode.getPath());
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
         linkSelectWindow.close();
         linkSelectWindow = null;
+    }
+
+    protected WorkbenchDefinition getWorkbenchDefinition() throws RegistrationException {
+        if (StringUtils.isNotEmpty(fieldDefinition.getWorkbench())) {
+            return workbenchRegistry.get(fieldDefinition.getWorkbench());
+        }
+        if (StringUtils.isNotEmpty(fieldDefinition.getWorkspace())) {
+            // TODO create default workbench for the set workspace
+        }
+        return workbenchRegistry.get(DEFAULT_WORKBENCH);
     }
 }

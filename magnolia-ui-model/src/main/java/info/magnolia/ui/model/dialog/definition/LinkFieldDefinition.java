@@ -43,9 +43,12 @@ public class LinkFieldDefinition extends FieldDefinition {
 
     private String workspace;
     private String extension;
-    private String tree;
+    private String workbench;
     private String width;
     private String buttonLabel;
+
+    // TODO In JCR 2.0 this is called identifier, do we want to adjust to this or maybe call it reference
+    private boolean uuid;
 
     public String getWorkspace() {
         return workspace;
@@ -63,12 +66,12 @@ public class LinkFieldDefinition extends FieldDefinition {
         this.extension = extension;
     }
 
-    public String getTree() {
-        return tree;
+    public String getWorkbench() {
+        return workbench;
     }
 
-    public void setTree(String tree) {
-        this.tree = tree;
+    public void setWorkbench(String workbench) {
+        this.workbench = workbench;
     }
 
     public String getWidth() {
@@ -85,5 +88,13 @@ public class LinkFieldDefinition extends FieldDefinition {
 
     public void setButtonLabel(String buttonLabel) {
         this.buttonLabel = buttonLabel;
+    }
+
+    public boolean isUuid() {
+        return uuid;
+    }
+
+    public void setUuid(boolean uuid) {
+        this.uuid = uuid;
     }
 }

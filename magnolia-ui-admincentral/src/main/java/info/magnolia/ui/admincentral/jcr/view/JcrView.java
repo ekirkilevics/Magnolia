@@ -92,6 +92,10 @@ public interface JcrView extends View {
     // TODO should we really ask view?
     String getPathInTree(Item item);
 
+    /**
+     *
+     * @throws info.magnolia.exception.RuntimeRepositoryException if the path does not exist
+     */
     void select(String path);
 
     void refresh();
