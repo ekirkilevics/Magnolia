@@ -3,7 +3,7 @@
 
     [#-- Is top page of the site structure -> rendering the top page on same navigation level as its sub-pages--]
     [#assign isRootPage = (pageNode.@path==cmsfn.rootPage(content).@path)!false]
-    [#if isRootPage]
+    [#if isRootPage && depth == 0]
         [#if pageNode.@path != content.@path]
             <li>
                 <a href="${cmsfn.link(pageNode)}">${pageNode.title!pageNode.@name}</a>

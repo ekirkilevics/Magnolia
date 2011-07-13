@@ -13,7 +13,7 @@
     <sv:value>admin</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
-    <sv:value>Home</sv:value>
+    <sv:value>Samples Site</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -29,7 +29,7 @@
       <sv:value>2011-04-21T13:52:12.890+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2011-07-08T01:50:03.941+02:00</sv:value>
+      <sv:value>2011-07-13T13:37:35.085+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:template" sv:type="String">
       <sv:value>samples:pages/ftl</sv:value>
@@ -1017,6 +1017,40 @@
           <sv:value>samples:pages/ftl</sv:value>
         </sv:property>
       </sv:node>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="navigation">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>9e794bdd-6731-46d3-ae4f-d84b4b82c420</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+      <sv:value>admin</sv:value>
+    </sv:property>
+    <sv:property sv:name="text" sv:type="String">
+      <sv:value/>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>sdds</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2011-07-13T13:22:51.563+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:template" sv:type="String">
+        <sv:value>samples:paragraphs/text</sv:value>
+      </sv:property>
     </sv:node>
   </sv:node>
 </sv:node>
