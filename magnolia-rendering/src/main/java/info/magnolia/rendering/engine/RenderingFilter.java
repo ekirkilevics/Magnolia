@@ -181,24 +181,24 @@ public class RenderingFilter extends AbstractMgnlFilter {
             catch (IOException e) {
                 // don't log at error level since tomcat tipically throws a
                 // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
-                log.debug("Exception while dispatching resource " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                log.debug("Exception while dispatching resource " + e.getClass().getName() + ": " + e.getMessage(), e);
                 return;
             }
             catch (Exception e) {
-                log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e);
                 return;
             }
             finally {
                 IOUtils.closeQuietly(is);
             }
         }
-        log.debug("Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI()); //$NON-NLS-1$
+        log.debug("Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI());
 
         if (!response.isCommitted()) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
         else {
-            log.info("Unable to redirect to 404 page for {}, response is already committed", request.getRequestURI()); //$NON-NLS-1$
+            log.info("Unable to redirect to 404 page for {}, response is already committed", request.getRequestURI());
         }
 
     }
@@ -228,14 +228,14 @@ public class RenderingFilter extends AbstractMgnlFilter {
      */
     private InputStream getNodedataAstream(String path, HierarchyManager hm, HttpServletResponse res) {
 
-        log.debug("getNodedataAstream for path \"{}\"", path); //$NON-NLS-1$
+        log.debug("getNodedataAstream for path \"{}\"", path);
 
         try {
             NodeData atom = hm.getNodeData(path);
             if (atom != null) {
                 if (atom.getType() == PropertyType.BINARY) {
 
-                    String sizeString = atom.getAttribute("size"); //$NON-NLS-1$
+                    String sizeString = atom.getAttribute("size");
                     if (NumberUtils.isNumber(sizeString)) {
                         res.setContentLength(Integer.parseInt(sizeString));
                     }
