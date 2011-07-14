@@ -111,16 +111,12 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 }
 
             }
-            catch (IOException e) {
-                log.error(e.getMessage(), e);
-                throw e;
-            }
             catch (RenderException e) {
                 log.error(e.getMessage(), e);
                 throw new ServletException(e);
             }
             catch (Exception e) {
-                // @todo better handling of rendering exception
+                // TODO better handling of rendering exception
                 log.error(e.getMessage(), e);
                 if (!response.isCommitted()) {
                     response.setContentType("text/html");
@@ -138,20 +134,20 @@ public class RenderingFilter extends AbstractMgnlFilter {
         // chain.doFilter(request, response);
     }
 
-    protected void render(Node content, String templateName, HttpServletResponse response) throws IOException, RenderException {
+    protected void render(Node content, String templateName, HttpServletResponse response) throws RenderException {
 
         // This lazy print writer will only acquire the writer from response if it is going to be used. This allows
         // templates to use the output stream if they wish. See MAGNOLIA-3014.
         LazyInitPrintWriter out = new LazyInitPrintWriter(response);
 
-        TemplateDefinition templateDifinition;
+        TemplateDefinition templateDefinition;
         try {
-            templateDifinition = templateDefinitionRegistry.get(templateName);
+            templateDefinition = templateDefinitionRegistry.get(templateName);
         }
         catch (RegistrationException e) {
             throw new RenderException(e);
         }
-        renderingEngine.render(content, templateDifinition, Collections.EMPTY_MAP, out);
+        renderingEngine.render(content, templateDefinition, Collections.<String, Object>emptyMap(), out);
     }
 
 
