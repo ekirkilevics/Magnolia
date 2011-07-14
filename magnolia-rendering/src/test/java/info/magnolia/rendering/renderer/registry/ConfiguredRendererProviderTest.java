@@ -40,7 +40,6 @@ import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanProcessor;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -86,7 +85,7 @@ public class ConfiguredRendererProviderTest {
     }
 
     @Test
-    public void testGetDefinition() throws RepositoryException, Content2BeanException, RegistrationException {
+    public void testGetDefinition() throws RepositoryException, Content2BeanException {
         // GIVEN
         MockNode root = new MockNode();
         root.setSession(new MockSession("test"));

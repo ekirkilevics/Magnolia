@@ -37,7 +37,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.renderer.Renderer;
 
 import javax.jcr.Node;
@@ -65,7 +64,7 @@ public class ConfiguredRendererProvider implements RendererProvider {
     }
 
     @Override
-    public Renderer getDefinition() throws RegistrationException {
+    public Renderer getDefinition() {
         return renderer;
     }
 }
