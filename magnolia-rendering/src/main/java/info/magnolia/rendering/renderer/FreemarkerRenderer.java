@@ -70,7 +70,7 @@ public class FreemarkerRenderer extends AbstractRenderer {
     }
 
     @Override
-    protected void onRender(Node content, RenderableDefinition definition, Appendable out, Map ctx, String templateScript) throws RenderException {
+    protected void onRender(Node content, RenderableDefinition definition, Appendable out, Map<String, Object> ctx, String templateScript) throws RenderException {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
@@ -82,8 +82,8 @@ public class FreemarkerRenderer extends AbstractRenderer {
     }
 
     @Override
-    protected Map newContext() {
-        return new HashMap();
+    protected Map<String, Object> newContext() {
+        return new HashMap<String, Object>();
     }
 
 }
