@@ -76,8 +76,8 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 public class GuiceServletContextListener implements ServletContextListener {
 
     private ServletContext servletContext;
-    private GuiceComponentProvider root;
     private GuiceComponentProvider platform;
+    private GuiceComponentProvider system;
     private ModuleManager moduleManager;
     private ConfigLoader loader;
 
@@ -88,27 +88,27 @@ public class GuiceServletContextListener implements ServletContextListener {
 
         try {
             GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
-            builder.withConfiguration(getRootConfiguration());
+            builder.withConfiguration(getPlatformConfiguration());
             builder.inStage(Stage.PRODUCTION);
             builder.exposeGlobally();
-            root = builder.build();
+            platform = builder.build();
 
-            System.setProperty("server", root.getComponent(MagnoliaInitPaths.class).getServerName());
-            moduleManager = root.getComponent(ModuleManager.class);
+            System.setProperty("server", platform.getComponent(MagnoliaInitPaths.class).getServerName());
+            moduleManager = platform.getComponent(ModuleManager.class);
             moduleManager.loadDefinitions();
-            final MagnoliaConfigurationProperties configurationProperties = root.getComponent(MagnoliaConfigurationProperties.class);
+            final MagnoliaConfigurationProperties configurationProperties = platform.getComponent(MagnoliaConfigurationProperties.class);
             ((DefaultMagnoliaConfigurationProperties) configurationProperties).init();
             SystemProperty.setMagnoliaConfigurationProperties(configurationProperties);
 
             builder = new GuiceComponentProviderBuilder();
-            builder.withConfiguration(getPlatformConfiguration());
-            builder.withParent(root);
+            builder.withConfiguration(getSystemConfiguration());
+            builder.withParent(platform);
             builder.exposeGlobally();
-            platform = builder.build();
+            system = builder.build();
 
-            platform.getComponent(Log4jConfigurer.class).start();
+            system.getComponent(Log4jConfigurer.class).start();
 
-            loader = platform.getComponent(ConfigLoader.class);
+            loader = system.getComponent(ConfigLoader.class);
 
             startServer();
 
@@ -134,14 +134,19 @@ public class GuiceServletContextListener implements ServletContextListener {
 
         stopServer();
 
+        // We set the global ComponentProvider to its parent here, then we destroy it, components in it that expects the
+        // global ComponentProvider to be the one it lives in and the one that was there when the component was created
+        // might fail because of this. Maybe we can solve it by using the ThreadLocal override we already have and call
+        // scopes.
+
+        if (system != null) {
+            Components.setProvider(system.getParent());
+            system.destroy();
+        }
+
         if (platform != null) {
             Components.setProvider(platform.getParent());
             platform.destroy();
-        }
-
-        if (root != null) {
-            Components.setProvider(root.getParent());
-            root.destroy();
         }
     }
 
@@ -165,7 +170,7 @@ public class GuiceServletContextListener implements ServletContextListener {
         }
     }
 
-    public ComponentProviderConfiguration getRootConfiguration() {
+    public ComponentProviderConfiguration getPlatformConfiguration() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
         configuration.registerInstance(ServletContext.class, servletContext);
         configuration.registerImplementation(InstallContextImpl.class);
@@ -181,7 +186,7 @@ public class GuiceServletContextListener implements ServletContextListener {
         return configuration;
     }
 
-    private ComponentProviderConfiguration getPlatformConfiguration() {
+    private ComponentProviderConfiguration getSystemConfiguration() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
 
         configuration.registerImplementation(Log4jConfigurer.class);
