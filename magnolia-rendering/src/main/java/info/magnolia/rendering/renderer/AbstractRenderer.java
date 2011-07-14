@@ -62,10 +62,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  */
 public abstract class AbstractRenderer implements Renderer, RenderingModelBasedRenderer {
 
-    private static final String MODEL_ATTRIBUTE = RenderingModel.class.getName();
-
-    public AbstractRenderer() {
-    }
+    protected static final String MODEL_ATTRIBUTE = RenderingModel.class.getName();
 
     @Override
     public void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws IOException, RenderException {
@@ -77,7 +74,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
 
         String uuid;
         try {
-            uuid = content.getUUID();
+            uuid = content.getIdentifier();
         }
         catch (RepositoryException e) {
             throw new RenderException(e);
