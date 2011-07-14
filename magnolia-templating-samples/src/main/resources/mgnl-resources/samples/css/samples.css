@@ -84,6 +84,10 @@ h1 {
     border-top: 4px solid #000;
 }
 
+h4 {
+    padding-top: 6px;
+}
+
 #wrapper-2 {
     padding-top: 20px;
 }

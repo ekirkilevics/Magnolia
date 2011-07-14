@@ -33,12 +33,21 @@
  */
 package info.magnolia.module.samples.model;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.RenderingModelImpl;
-import info.magnolia.module.templating.RenderableDefinition;
-import info.magnolia.module.templating.RenderingModel;
+import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.rendering.model.RenderingModel;
+import info.magnolia.rendering.model.RenderingModelImpl;
+import info.magnolia.rendering.template.RenderableDefinition;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.jcr.Node;
 /**
  * This model class is defined in the paragraph definition in the configuration
  * <code>(modules/samples/components/name-of-paragraph/modelClass)</code>.
@@ -48,13 +57,13 @@ import info.magnolia.module.templating.RenderingModel;
  * @author tmiyar
  *
  */
-public class SampleParagraphModel extends RenderingModelImpl {
+public class SampleComponentModel extends RenderingModelImpl<RenderableDefinition> {
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SampleParagraphModel.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SampleComponentModel.class);
 
     private String query;
 
-    public SampleParagraphModel(Content content, RenderableDefinition definition, RenderingModel parent) {
+    public SampleComponentModel(Node content, RenderableDefinition definition, RenderingModel<?> parent) {
         super(content, definition, parent);
         log.info("Running sample paragraph model");
 
@@ -71,6 +80,19 @@ public class SampleParagraphModel extends RenderingModelImpl {
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    public List<ContentMap> getSearchResult(){
+        List<ContentMap> results = new ArrayList<ContentMap>();
+        String sql = "select * from nt:base where jcr:path like '/%' and contains(*, '"+query+"') order by jcr:path";
+
+        //TODO cringele: QueryUtil should return Node and not Content. See SCRUM-293
+        Collection<Content> contentList = QueryUtil.query(ContentRepository.WEBSITE, sql);
+        for(Iterator<Content> it=contentList.iterator(); it.hasNext();){
+            results.add(new ContentMap(it.next().getJCRNode()));
+        }
+
+        return results;
     }
 
 }

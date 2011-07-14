@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="howToFTL" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sv:node sv:name="searchResult" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
@@ -7,13 +7,13 @@
     <sv:value>mix:lockable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>92da3005-aa22-48e8-8130-3fad8e5aec4b</sv:value>
+    <sv:value>422124d4-7226-40c5-9f76-c39b0243888e</sv:value>
   </sv:property>
   <sv:property sv:name="description" sv:type="String">
-    <sv:value>paragraphs.samplesHowToFTL.description</sv:value>
+    <sv:value>Component displaying the search results</sv:value>
   </sv:property>
   <sv:property sv:name="dialog" sv:type="String">
-    <sv:value>samples:howTo</sv:value>
+    <sv:value>samples:mainProperties</sv:value>
   </sv:property>
   <sv:property sv:name="i18nBasename" sv:type="String">
     <sv:value>info.magnolia.module.samples.messages</sv:value>
@@ -28,10 +28,10 @@
     <sv:value>freemarker</sv:value>
   </sv:property>
   <sv:property sv:name="templateScript" sv:type="String">
-    <sv:value>/samples/components/howTo.ftl</sv:value>
+    <sv:value>/samples/components/searchResult.ftl</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
-    <sv:value>paragraphs.samplesHowToFTL.title</sv:value>
+    <sv:value>Search Result</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -50,7 +50,7 @@
       <sv:value>2008-09-25T12:45:26.721+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2011-07-14T10:33:23.178+02:00</sv:value>
+      <sv:value>2011-07-14T13:52:04.371+02:00</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>
