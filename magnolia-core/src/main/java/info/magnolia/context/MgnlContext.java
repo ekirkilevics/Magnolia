@@ -117,6 +117,8 @@ public class MgnlContext {
 
     /**
      * Get hierarchy manager initialized for this user.
+     *
+     * @deprecated since 5.0 - use {@link #getJCRSession(String)}
      */
     public static HierarchyManager getHierarchyManager(String repositoryId) {
         return getInstance().getHierarchyManager(repositoryId);
@@ -140,7 +142,7 @@ public class MgnlContext {
 
     /**
      * Get access manager for the specified repository on the specified workspace.
-     * @deprecated security is handled by JCR now
+     * @deprecated since 5.0 - security is handled by JCR now
      */
     @Deprecated
     public static AccessManager getAccessManager(String repositoryId, String workspaceId) {
@@ -511,10 +513,11 @@ public class MgnlContext {
     /**
      * Note: this is the way to go, if you no longer want to rely on the Content-API.
      *
-     * @param workspace - workspace to get session for
+     * @param repository - workspace to get session for
      * @return a JCR session to the provided workspace
      */
-    public static Session getJCRSession(String workspace) throws LoginException, RepositoryException {
-        return getInstance().getJCRSession(workspace, workspace);
+    public static Session getJCRSession(String repository) throws LoginException, RepositoryException {
+        // TODO dlipp: to be verified - see SCRUM-291
+        return getInstance().getJCRSession(repository, repository);
     }
 }
