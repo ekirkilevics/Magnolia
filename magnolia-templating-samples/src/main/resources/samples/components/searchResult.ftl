@@ -15,7 +15,7 @@
         <ul>
             [#list model.getSearchResult() as resultItem]
                 [#assign foundOnPage = cmsfn.page(resultItem)]
-                <li><a href="${ctx.contextPath}${foundOnPage.@path}">${foundOnPage.title!foundOnPage.@name}</a></li>
+                <li><a href="${ctx.contextPath}${foundOnPage.@path}">${foundOnPage.title!foundOnPage.@name}</a><span>(found in Node: ${resultItem.@path})</span></li>
             [/#list]
         </ul>
     </div><!-- end search-results -->

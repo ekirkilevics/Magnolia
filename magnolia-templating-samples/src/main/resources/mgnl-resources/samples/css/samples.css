@@ -136,6 +136,11 @@ h4 {
 }
 
 
+#search-results ul li span{
+    font-size: 70%;
+    padding-left: 10px;
+}
+
 
 /*#######################
 COMPONENTS
