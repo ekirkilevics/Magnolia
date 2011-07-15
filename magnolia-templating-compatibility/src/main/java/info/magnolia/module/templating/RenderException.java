@@ -41,6 +41,7 @@ package info.magnolia.module.templating;
  */
 public class RenderException extends info.magnolia.rendering.engine.RenderException {
     public RenderException() {
+        super("");
     }
 
     public RenderException(String message) {
