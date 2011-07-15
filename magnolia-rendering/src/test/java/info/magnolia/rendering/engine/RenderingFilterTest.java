@@ -40,6 +40,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
@@ -111,7 +112,8 @@ public class RenderingFilterTest {
 
         // THEN
         verify(response).flushBuffer();
-        verify(renderingEngine).render((Node)anyObject(), (RenderableDefinition)anyObject(), (Map)anyObject(), (Appendable)anyObject());
+        verify(renderingEngine).render((Node) anyObject(), (RenderableDefinition) anyObject(), (Map) anyObject(),
+                (Appendable) anyObject());
     }
 
     @Test
@@ -135,15 +137,41 @@ public class RenderingFilterTest {
 
         // THEN
         verify(response).flushBuffer();
-        verify(renderingEngine).render((Node)anyObject(), (RenderableDefinition)anyObject(), (Map)anyObject(), (Appendable)anyObject());
+        verify(renderingEngine).render((Node) anyObject(), (RenderableDefinition) anyObject(), (Map) anyObject(),
+                (Appendable) anyObject());
     }
 
-    @Test(expected=ServletException.class)
-    public void testDoFilterThrowsServletExceptionOnMissingTemplateDefinitionProvider() throws Exception {
+    @Test(expected = RuntimeException.class)
+    public void testDoFilterFailesOnNonRendererExceptions() throws Exception {
         // GIVEN
         MockWebContext context = new MockWebContext();
         AggregationState aggState = new AggregationState();
         aggState.setTemplateName(TEMPLATE_NAME);
+        context.setAggregationState(aggState);
+        MgnlContext.setInstance(context);
+
+        TemplateDefinitionProvider provider = mock(TemplateDefinitionProvider.class);
+        when(provider.getId()).thenReturn(TEMPLATE_NAME);
+        templateDefinitionRegistry.register(provider);
+
+        doThrow(new IllegalArgumentException()).when(response).flushBuffer();
+
+        RenderingFilter filter = new RenderingFilter(renderingEngine, templateDefinitionRegistry);
+        // WHEN
+        filter.doFilter(request, response, chain);
+
+        // THEN
+        verify(response).flushBuffer();
+        verify(renderingEngine).render((Node) anyObject(), (RenderableDefinition) anyObject(), (Map) anyObject(),
+                (Appendable) anyObject());
+    }
+
+    @Test(expected = ServletException.class)
+    public void testDoFilterThrowsServletExceptionOnMissingTemplateDefinitionProvider() throws Exception {
+        // GIVEN
+        AggregationState aggState = new AggregationState();
+        aggState.setTemplateName(TEMPLATE_NAME);
+        MockWebContext context = new MockWebContext();
         context.setAggregationState(aggState);
         MgnlContext.setInstance(context);
 
@@ -168,5 +196,25 @@ public class RenderingFilterTest {
 
         // THEN - expected Exception
         verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void testHandleResourceRequest() throws Exception {
+        // GIVEN
+        AggregationState aggState = new AggregationState();
+        final String handle = "testHandle";
+        aggState.setHandle(handle);
+        final String repository = "testRepository";
+        aggState.setRepository(repository);
+        WebContext context = mock(WebContext.class);
+        MgnlContext.setInstance(context);
+
+        RenderingFilter filter = new RenderingFilter(renderingEngine, templateDefinitionRegistry);
+
+        // WHEN
+        filter.handleResourceRequest(aggState, request, response);
+
+        // THEN
+
     }
 }
