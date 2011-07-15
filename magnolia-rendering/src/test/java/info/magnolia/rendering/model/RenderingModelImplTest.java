@@ -34,6 +34,11 @@
 package info.magnolia.rendering.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import info.magnolia.rendering.template.configured.ConfiguredRenderableDefinition;
+import info.magnolia.test.mock.jcr.MockNode;
+
+import javax.jcr.Node;
 
 import org.junit.Test;
 
@@ -43,15 +48,63 @@ import org.junit.Test;
 public class RenderingModelImplTest {
 
     @Test
-    public void testGetRoot() {
-        RenderingModelImpl parent = new RenderingModelImpl(null, null,null);
-        RenderingModelImpl child = new RenderingModelImpl(null, null, parent);
-        RenderingModelImpl childOfChild = new RenderingModelImpl(null, null, child);
+    public void testGetContent() {
+        // GIVEN
+        MockNode content = new MockNode();
+        RenderingModelImpl model = new RenderingModelImpl(content, null,null);
 
-        // when
+        // WHEN
+        Node result = model.getContent();
+
+        // THEN
+        assertEquals(content, result);
+    }
+
+    @Test
+    public void testGetDef() {
+        // GIVEN
+        ConfiguredRenderableDefinition definition = new ConfiguredRenderableDefinition();
+        RenderingModelImpl<ConfiguredRenderableDefinition> model = new RenderingModelImpl<ConfiguredRenderableDefinition>(null, definition,null);
+
+        // WHEN
+        ConfiguredRenderableDefinition result = model.getDef();
+
+        // THEN
+        assertEquals(definition, result);
+    }
+    @Test
+    public void testGetDefinition() {
+        // GIVEN
+        ConfiguredRenderableDefinition definition = new ConfiguredRenderableDefinition();
+        RenderingModelImpl<ConfiguredRenderableDefinition> model = new RenderingModelImpl<ConfiguredRenderableDefinition>(null, definition,null);
+
+        // WHEN
+        ConfiguredRenderableDefinition result = model.getDefinition();
+
+        // THEN
+        assertEquals(definition, result);
+    }
+
+    @Test
+    public void testGetRoot() {
+        // GIVEN
+        RenderingModelImpl<ConfiguredRenderableDefinition> parent = new RenderingModelImpl<ConfiguredRenderableDefinition>(null, null,null);
+        RenderingModelImpl<ConfiguredRenderableDefinition> child = new RenderingModelImpl<ConfiguredRenderableDefinition>(null, null, parent);
+        RenderingModelImpl<ConfiguredRenderableDefinition> childOfChild = new RenderingModelImpl<ConfiguredRenderableDefinition>(null, null, child);
+
+        // WHEN
         RenderingModel result = childOfChild.getRoot();
 
-        // then
+        // THEN
         assertEquals(parent, result);
+    }
+
+    @Test
+    public void testExecute() {
+        // WHEN
+        String result = new RenderingModelImpl<ConfiguredRenderableDefinition>(null, null, null).execute();
+
+        // THEN
+        assertNull(result);
     }
 }

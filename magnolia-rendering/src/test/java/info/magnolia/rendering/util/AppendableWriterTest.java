@@ -46,14 +46,14 @@ public class AppendableWriterTest {
 
     @Test
     public void testWrite() throws IOException {
-        // given
+        // GIVEN
         StringBuilder builder = new StringBuilder();
         AppendableWriter writer = new AppendableWriter(builder);
 
-        // when
+        // WHEN
         writer.append("superLongWord", 5, 9);
 
-        // then
+        // THEN
         assertEquals("Long", builder.toString());
     }
 

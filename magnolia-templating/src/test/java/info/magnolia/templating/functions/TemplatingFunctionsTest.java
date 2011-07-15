@@ -260,33 +260,33 @@ public class TemplatingFunctionsTest {
 
     @Test
     public void testLinkFromContentMapDepth1() throws RepositoryException {
-        // given
+        // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
         MockWebContext context = new MockWebContext();
         context.setContextPath(CONTEXT_PATH);
         MgnlContext.setInstance(context);
 
-        // when
+        // WHEN
         String resultLink = functions.link(topPage);
 
-        // then
+        // THEN
         assertEquals(CONTEXT_PATH+topPage.getPath(), resultLink);
     }
 
     @Test
     public void testLinkFromContentMapDepth2() throws RepositoryException {
-        // given
+        // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
         MockWebContext context = new MockWebContext();
         context.setContextPath(CONTEXT_PATH);
         MgnlContext.setInstance(context);
 
-        // when
+        // WHEN
         String resultLink = functions.link(childPage);
 
-        // then
+        // THEN
         assertEquals(CONTEXT_PATH+childPage.getPath(), resultLink);
     }
 

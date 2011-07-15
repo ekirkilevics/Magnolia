@@ -49,16 +49,16 @@ public class ModelExecutionFilterTest {
 
     @Test
     public void testDoFilter() throws Exception {
-        // given
+        // GIVEN
         FilterChain chain = mock(FilterChain.class);
         ModelExecutionFilter filter = new ModelExecutionFilter();
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
-        // when
+        // WHEN
         filter.doFilter(request, response, chain);
 
-        // then
+        // THEN
         verify(chain).doFilter(request, response);
     }
 }

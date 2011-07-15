@@ -69,97 +69,97 @@ public class AggregationStateBasedRenderingContextTest {
 
     @Test
     public void testGetMainContent() {
-        // given
+        // GIVEN
         AggregationState aggregationState = new AggregationState();
         Node mainContent = mock(Node.class);
         aggregationState.setMainContent(mainContent);
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
 
-        // when
+        // WHEN
         Node result = context.getMainContent();
 
-        // then
+        // THEN
         assertEquals(mainContent, result);
     }
 
     @Test
     public void testGetCurrentContent() {
-        // given
+        // GIVEN
         AggregationState aggregationState = new AggregationState();
         Node currentContent = mock(Node.class);
         aggregationState.setCurrentContent(currentContent);
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
 
-        // when
+        // WHEN
         Node result = context.getCurrentContent();
 
-        // then
+        // THEN
         assertEquals(currentContent, result);
     }
 
     @Test
     public void testPushSetsMainContentIfItsNull() {
-        // given
+        // GIVEN
         AggregationState aggregationState = new AggregationState();
         Node content = mock(Node.class);
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
 
-        // when
+        // WHEN
         context.push(content, null);
 
-        // then - mainContent should now be set
+        // THEN - mainContent should now be set
         assertEquals(content, context.getMainContent());
     }
 
     @Test
     public void testPushDoesNotSetMainContentIfItsNotNull() {
-        // given
+        // GIVEN
         Node mainContent = mock(Node.class);
         AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(mainContent);
         Node content = mock(Node.class);
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
 
-        // when
+        // WHEN
         context.push(content, null);
 
-        // then - mainContent should be unchanged
+        // THEN - mainContent should be unchanged
         assertEquals(mainContent, context.getMainContent());
     }
 
 
     @Test
     public void testPushSetsCurrentContent() {
-        // given
+        // GIVEN
         AggregationState aggregationState = new AggregationState();
         Node content = mock(Node.class);
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
 
-        // when
+        // WHEN
         context.push(content, null);
 
-        // then
+        // THEN
         assertEquals(content, context.getCurrentContent());
     }
 
     @Test
     public void testPushSetsRenderableDefinition() {
-        // given
+        // GIVEN
         AggregationState aggregationState = new AggregationState();
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
         Node content = mock(Node.class);
         RenderableDefinition renderableDefinition = mock(RenderableDefinition.class);
 
-        // when
+        // WHEN
         context.push(content, renderableDefinition);
 
-        // then
+        // THEN
         assertEquals(renderableDefinition, context.getRenderableDefinition());
     }
 
     @Test
     public void testPop() {
-        // given
+        // GIVEN
         AggregationState aggregationState = new AggregationState();
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
         Node first = mock(Node.class);
@@ -169,17 +169,17 @@ public class AggregationStateBasedRenderingContextTest {
         context.push(first, firstRenderableDefinition);
         context.push(second, secondRenderableDefinition);
 
-        // when
+        // WHEN
         context.pop();
 
-        // then
+        // THEN
         assertEquals(first, context.getCurrentContent());
         assertEquals(firstRenderableDefinition, context.getRenderableDefinition());
     }
 
     @Test
     public void testPopWithThreeLevels() {
-        // given
+        // GIVEN
         AggregationState aggregationState = new AggregationState();
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
         Node first = mock(Node.class);
@@ -192,40 +192,40 @@ public class AggregationStateBasedRenderingContextTest {
         context.push(second, secondRenderableDefinition);
         context.push(third, thirdRenderableDefinition);
 
-        // then
+        // THEN
         assertEquals(third, context.getCurrentContent());
         assertEquals(thirdRenderableDefinition, context.getRenderableDefinition());
 
-        // when
+        // WHEN
         context.pop();
 
-        // then
+        // THEN
         assertEquals(second, context.getCurrentContent());
         assertEquals(secondRenderableDefinition, context.getRenderableDefinition());
 
-        // when
+        // WHEN
         context.pop();
 
-        // then
+        // THEN
         assertEquals(first, context.getCurrentContent());
         assertEquals(firstRenderableDefinition, context.getRenderableDefinition());
     }
 
     @Test(expected = EmptyStackException.class)
     public void testPopWithoutPrecedingPush() {
-        // given
+        // GIVEN
         AggregationState aggregationState = new AggregationState();
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
 
-        // when
+        // WHEN
         context.pop();
 
-        // then - nothing on stack so there should be a Exception
+        // THEN - nothing on stack so there should be a Exception
     }
 
     @Test
     public void testGetRenderableDefinition() {
-        // given
+        // GIVEN
         AggregationState aggregationState = new AggregationState();
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
         Node first = mock(Node.class);
@@ -235,22 +235,22 @@ public class AggregationStateBasedRenderingContextTest {
         context.push(first, firstRenderableDefinition);
         context.push(second, secondRenderableDefinition);
 
-        // when
+        // WHEN
         RenderableDefinition result = context.getRenderableDefinition();
 
-        // then
+        // THEN
         assertEquals(result, secondRenderableDefinition);
     }
 
     @Test
     public void testGetRenderableDefinitionBeforePushReturnsNull() {
-        // given
+        // GIVEN
         AggregationState aggregationState = new AggregationState();
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
-        // when
+        // WHEN
         RenderableDefinition result = context.getRenderableDefinition();
 
-        // then
+        // THEN
         assertNull(result);
     }
 }
