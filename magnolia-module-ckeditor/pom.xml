@@ -13,6 +13,10 @@
   <packaging>jar</packaging>
   <name>magnolia-module-ckeditor</name>
 
+  <properties>
+    <cloverCoverageThreshold>30</cloverCoverageThreshold>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
