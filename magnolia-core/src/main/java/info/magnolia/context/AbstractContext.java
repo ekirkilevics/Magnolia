@@ -140,6 +140,11 @@ public abstract class AbstractContext implements Context, Serializable {
         return getRepositoryStrategy().getSession(repositoryId,  workspaceId);
     }
 
+    @Override
+    public Session getJCRSession(String repositoryId) throws LoginException, RepositoryException {
+        return getJCRSession(repositoryId, ContentRepository.getDefaultWorkspace(repositoryId));
+    }
+
     /**
      * Get the attribute value.
      * @param name to which value is associated to

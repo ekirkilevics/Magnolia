@@ -214,10 +214,15 @@ public interface Context extends org.apache.commons.chain.Context {
     public void release();
 
     /**
-     * Gets Session initialized for current user.
-     * @param config
-     * @param repository
-     * @return
+     * @param repository repository to get session for
+     * @return session belonging to provided repository & workspace
+     */
+    public Session getJCRSession(String repository) throws LoginException, RepositoryException ;
+
+    /**
+     * @param repository repository to get session for
+     * @param workspace workspace to get session for
+     * @return session belonging to provided repository & workspace
      */
     public Session getJCRSession(String repository, String workspace) throws LoginException, RepositoryException ;
 

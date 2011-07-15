@@ -513,11 +513,22 @@ public class MgnlContext {
     /**
      * Note: this is the way to go, if you no longer want to rely on the Content-API.
      *
-     * @param repository - workspace to get session for
-     * @return a JCR session to the provided workspace
+     * @param repository - repository to get session for
+     * @return a JCR session to the provided repository
      */
     public static Session getJCRSession(String repository) throws LoginException, RepositoryException {
-        // TODO dlipp: to be verified - see SCRUM-291
-        return getInstance().getJCRSession(repository, repository);
+        return getInstance().getJCRSession(repository);
     }
+
+    /**
+     * Note: this is the way to go, if you no longer want to rely on the Content-API.
+     *
+     * @param repository - repository to get session for
+     * @param workspace - workspace to get session for
+     * @return a JCR session to the provided repository
+     */
+    public static Session getJCRSession(String repository, String workspace) throws LoginException, RepositoryException {
+        return getInstance().getJCRSession(repository, workspace);
+    }
+
 }
