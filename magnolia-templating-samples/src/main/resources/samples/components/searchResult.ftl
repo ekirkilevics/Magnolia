@@ -25,9 +25,9 @@
 [#include "/samples/includes/inc.searchForm.ftl" ]
 
 
-<div>
-  <h4>Display Paragraph Sources</h4>
-  <ul>
-     <li><a href="${ctx.contextPath}/.sources/components/searchResult.ftl">SearchResult paragraph</a></li>
-  </ul>
-</div>
+
+<h4>Display Paragraph Sources</h4>
+<ul>
+    <li><a href="${ctx.contextPath}/.sources/components/searchResult.ftl">SearchResult paragraph</a></li>
+</ul>
+

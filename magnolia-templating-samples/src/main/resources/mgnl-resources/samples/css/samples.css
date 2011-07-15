@@ -24,7 +24,7 @@ h2 {
 
 
 h3 {
-    padding-top: 10px;
+    padding: 10px 0px 2px 0px;
 }
 
 h4 {
@@ -114,7 +114,7 @@ h4 {
     float: left;
 }
 
-#main div ul {
+#main ul {
     list-style-position: inside;
 }
 
