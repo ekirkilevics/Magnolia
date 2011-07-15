@@ -70,6 +70,8 @@ import org.slf4j.LoggerFactory;
  * binary content.
  *
  * @version $Id$
+ *
+ * TODO dlipp: should be converted to use JCR-API no longer content API (SCRUM-292)
  */
 public class RenderingFilter extends AbstractMgnlFilter {
 
@@ -112,11 +114,13 @@ public class RenderingFilter extends AbstractMgnlFilter {
 
             }
             catch (RenderException e) {
+                // TODO better handling of rendering exception
+                // TODO dlipp: why not move this section up to the actual call to render() -> that's the only place where a RenderException could occur...
                 log.error(e.getMessage(), e);
                 throw new ServletException(e);
             }
             catch (Exception e) {
-                // TODO better handling of rendering exception
+                // TODO dlipp: there's no other checked exceptions thrown in the code above - is it correct to react like that???
                 log.error(e.getMessage(), e);
                 if (!response.isCommitted()) {
                     response.setContentType("text/html");
