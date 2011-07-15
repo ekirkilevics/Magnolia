@@ -50,8 +50,10 @@ import java.io.InputStream;
  * {@link #isExist()} returns false. As soon a value is set - null is not considered a value - the
  * node data starts to exist. The various value read methods ({@link #getString()},
  * {@link #getBoolean()}, ..) will always return a value (default or null)
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ *
+ * @version $Id$
+ *
+ * @deprecated since 5.0, use jcr.Property instead.
  */
 public interface NodeData extends Cloneable {
     int MULTIVALUE_UNDEFINED = -1;
