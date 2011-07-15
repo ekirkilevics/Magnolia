@@ -84,7 +84,8 @@ public class SampleComponentModel extends RenderingModelImpl<RenderableDefinitio
 
     public List<ContentMap> getSearchResult(){
         List<ContentMap> results = new ArrayList<ContentMap>();
-        String sql = "select * from nt:base where jcr:path like '/%' and contains(*, '"+query+"') order by jcr:path";
+
+        String sql = "SELECT * from nt:base WHERE jcr:path like '/%' AND contains(*, '"+query+"') AND (jcr:primaryType = 'mgnl:content' OR jcr:primaryType = 'mgnl:contentNode') order by jcr:path";
 
         //TODO cringele: QueryUtil should return Node and not Content. See SCRUM-293
         Collection<Content> contentList = QueryUtil.query(ContentRepository.WEBSITE, sql);
