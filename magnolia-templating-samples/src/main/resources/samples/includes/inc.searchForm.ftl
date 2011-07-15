@@ -4,6 +4,4 @@
       <input id="query" name="query" value="${ctx.query!}" />
       <input type="submit" name="search" value="search" />
     </form>
-    <br />
 </div><!-- end search -->
-<br />

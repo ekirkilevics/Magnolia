@@ -3,7 +3,7 @@
 
 [@cms.edit /]
 
-<h4>${content.title!content.@name}</h4>
+<h3>${content.title!content.@name}</h3>
 
 Text: ${content.text!("No text defined yet")}
 
@@ -35,8 +35,8 @@ Text: ${content.text!("No text defined yet")}
 
 
 <div>
-  <h5>Display Paragraph Sources</h5>
+  <h4>Display Paragraph Sources</h4>
   <ul>
      <li><a href="${ctx.contextPath}/.sources/components/howTo.ftl">HowTo paragraph</a></li>
   </ul>
-</div><br />
+</div>

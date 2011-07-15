@@ -73,7 +73,7 @@
         <sv:value>This is the first paragraph in this collection area.&lt;br&gt;</sv:value>
       </sv:property>
       <sv:property sv:name="title" sv:type="String">
-        <sv:value>Main - Paragraph One</sv:value>
+        <sv:value>Main - Component One</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -109,7 +109,7 @@
 </sv:value>
       </sv:property>
       <sv:property sv:name="title" sv:type="String">
-        <sv:value>Main - Paragraph Two</sv:value>
+        <sv:value>Main - Component Two</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">

@@ -2,7 +2,7 @@
 [@cms.edit /]
 
 
-<h4>${content.title!content.@name}</h4>
+<h3>${content.title!content.@name}</h3>
 [#if content.text?has_content]
     <p>${content.text}</p>
 [/#if]
@@ -10,7 +10,7 @@
 
 [#if model.getSearchResult()?has_content]
     <div id="search-results" >
-        <h4>Query Results for: "${model.query!"No query set yet"}"</h4>
+        <h3>Query Results for: "${model.query!"No query set yet"}"</h3>
 
         <ul>
             [#list model.getSearchResult() as resultItem]
@@ -26,8 +26,8 @@
 
 
 <div>
-  <h5>Display Paragraph Sources</h5>
+  <h4>Display Paragraph Sources</h4>
   <ul>
      <li><a href="${ctx.contextPath}/.sources/components/searchResult.ftl">SearchResult paragraph</a></li>
   </ul>
-</div><br />
+</div>

@@ -28,7 +28,7 @@
 
                 [#-- ****** stage ****** --]
                 <div id="stage">
-                    <h3>Single-Area Stage</h3>
+                    <h2>Single-Area Stage</h2>
                     [@cms.area name="stage" /]
                 </div><!-- end stage -->
 
@@ -43,14 +43,14 @@
 
                 [#-- ****** main ****** --]
                 <div id="main">
-                  <h3>List-Area Main</h3>
+                  <h2>List-Area Main</h2>
                     [@cms.area name="main" /]
                 </div><!-- end main -->
 
 
                 [#-- ****** extras ****** --]
                 <div id="extras">
-                <h3>List-Area Extras</h3>
+                <h2>List-Area Extras</h2>
                     [@cms.area name="extras" /]
                 </div><!-- end extras -->
 
@@ -58,7 +58,7 @@
 
             [#-- ****** footer  ****** --]
             <div id="footer">
-              <h3>List-Area Footer</h3>
+              <h2>List-Area Footer</h2>
                 [@cms.area name="footer" /]
             </div><!-- end footer -->
 
