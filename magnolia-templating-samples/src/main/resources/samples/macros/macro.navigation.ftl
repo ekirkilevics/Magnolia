@@ -6,7 +6,7 @@
     [#if isRootPage && depth == 0]
         [#if pageNode.@path != content.@path]
             <li>
-                <a href="${cmsfn.link(pageNode)}">${pageNode.title!pageNode.@name}</a>
+                <a href="${cmsfn.link(pageNode)}.html">${pageNode.title!pageNode.@name}</a>
             </li>
         [#else]
             <li class="selected">
@@ -29,7 +29,7 @@
                     [#if isSelected]
                         <span>${childPage.title!childPage.@name}</span>
                     [#else]
-                        <a href="${cmsfn.link(childPage)}"><span>${childPage.title!childPage.@name}</span></a>
+                        <a href="${cmsfn.link(childPage)}.html"><span>${childPage.title!childPage.@name}</span></a>
                     [/#if]
                 </li>
                 <ul class="second">
@@ -38,7 +38,7 @@
             [#else]
 
                 <li>
-                    <a href="${cmsfn.link(childPage)}">${childPage.title!childPage.@name}</a>
+                    <a href="${cmsfn.link(childPage)}.html">${childPage.title!childPage.@name}</a>
                 </li>
             [/#if]
 
