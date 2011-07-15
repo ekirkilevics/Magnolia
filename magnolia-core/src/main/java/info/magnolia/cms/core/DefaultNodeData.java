@@ -53,8 +53,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Wrapper class for a jcr property.
- * @author Sameer Charles
- * @version 2.0 $Id$
+ *
+ * @version $Id$
  * @deprecated since 5.0, use jcr.Property instead.
  */
 @Deprecated
@@ -75,9 +75,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
-        else{
-            return null;
-        }
+        return null;
     }
 
     @Override
@@ -86,17 +84,14 @@ public class DefaultNodeData extends AbstractNodeData {
             try {
                 if(this.isMultiValue() == MULTIVALUE_TRUE) {
                     return getJCRProperty().getValues();
-                } else {
-                    //JCR-1464 needed for export of multivalue property with only one item
-                    return new Value[] { getJCRProperty().getValue() };
                 }
+                //JCR-1464 needed for export of multivalue property with only one item
+                return new Value[] { getJCRProperty().getValue() };
             } catch (RepositoryException e) {
                 throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
-        else{
-            return null;
-        }
+        return null;
     }
 
     @Override
@@ -126,9 +121,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
-        else{
-            return StringUtils.EMPTY;
-        }
+        return StringUtils.EMPTY;
     }
 
     @Override
@@ -141,9 +134,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
-        else{
-            return 0;
-        }
+        return 0;
     }
 
     @Override
@@ -156,9 +147,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
-        else{
-            return 0;
-        }
+        return 0;
     }
 
     @Override
@@ -171,9 +160,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
-        else{
-            return null;
-        }
+        return null;
     }
 
     @Override
@@ -186,9 +173,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
-        else{
-            return false;
-        }
+        return false;
     }
 
     @Override
@@ -201,9 +186,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
-        else{
-            return null;
-        }
+        return null;
     }
 
     @Override
@@ -342,5 +325,4 @@ public class DefaultNodeData extends AbstractNodeData {
             getJCRProperty().refresh(keepChanges);
         }
     }
-
 }
