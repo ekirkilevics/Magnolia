@@ -33,6 +33,18 @@
  */
 package info.magnolia.cms.filters;
 
+import java.util.Collections;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -43,17 +55,7 @@ import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.module.ModuleManager;
-import org.apache.commons.lang.StringUtils;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import java.util.Collections;
 
 /**
  * Default {@link FilterManager} implementation; uses content2bean and observation
@@ -80,7 +82,8 @@ public class FilterManagerImpl implements FilterManager {
 
     private final ModuleManager moduleManager;
     private final SystemContext systemContext;
-    private MgnlFilter rootFilter;
+    private final MgnlFilterDispatcher filterDispatcher = new MgnlFilterDispatcher();
+    private final Object resetLock = new Object();
     private FilterConfig filterConfig;
 
     @Inject
@@ -90,64 +93,106 @@ public class FilterManagerImpl implements FilterManager {
     }
 
     @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) throws ServletException {
         // remember this config
         this.filterConfig = filterConfig;
         MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
             @Override
             public void doExec() {
+                try {
+                    MgnlFilter filter = createRootFilter();
+                    initRootFilter(filter, FilterManagerImpl.this.filterConfig);
+                    filterDispatcher.replaceTargetFilter(filter);
+                } catch (ServletException e) {
+                    log.error("Error initializing filters", e);
+                    return;
+                }
                 if (!isSystemUIMode()) {
                     startObservation();
                 }
-                createRootFilter();
-                initRootFilter();
             }
         }, true);
     }
 
     @Override
-    public MgnlFilter getRootFilter() {
-        if (rootFilter == null) {
-            // TODO - lock while rootFilter is being reconstructed ?
-            throw new IllegalStateException("rootFilter is null, init() has probably not been called, or failed.");
-        }
-        return rootFilter;
+    public void destroy() {
+        MgnlFilter filter = filterDispatcher.replaceTargetFilter(null);
+        destroyRootFilter(filter);
     }
 
-    protected void initRootFilter() {
-        try {
-            log.info("Initializing filters");
-            rootFilter.init(filterConfig);
+    @Override
+    public MgnlFilterDispatcher getFilterDispatcher() {
+        return filterDispatcher;
+    }
 
-            if (log.isDebugEnabled()) {
-                printFilters(rootFilter);
+    @Override
+    public void startUsingConfiguredFilters() {
+        resetRootFilter();
+        startObservation();
+    }
+
+    protected void resetRootFilter() {
+        synchronized (resetLock) {
+
+            MgnlFilter newFilter;
+            try {
+                newFilter = createRootFilter();
+                initRootFilter(newFilter, filterConfig);
+            } catch (ServletException e) {
+                log.error("Error initializing filters", e);
+                return;
             }
-        } catch (ServletException e) {
-            log.error("Error initializing filters", e);
+
+            final MgnlFilter oldFilter = filterDispatcher.replaceTargetFilter(newFilter);
+
+            // This is executed asynchronously in another thread so we don't risk causing dead lock, see SafeDestroyMgnlFilterWrapper
+            doInSystemContextAsync("FilterChainDisposerThread", new MgnlContext.VoidOp() {
+                @Override
+                public void doExec() {
+                    destroyRootFilter(oldFilter);
+                }
+            }, true);
         }
     }
 
-    protected void createRootFilter() {
+    protected MgnlFilter createRootFilter() throws ServletException {
         if (isSystemUIMode()) {
-            rootFilter = createSystemUIFilter();
-        } else {
-            rootFilter = createConfiguredFilters();
+            return createSystemUIFilter();
+        }
+        return createConfiguredFilters();
+    }
+
+    protected void initRootFilter(MgnlFilter rootFilter, FilterConfig filterConfig) throws ServletException {
+        log.info("Initializing filters");
+        rootFilter.init(filterConfig);
+
+        if (log.isDebugEnabled()) {
+            printFilters(rootFilter);
         }
     }
 
-    private MgnlFilter createConfiguredFilters() {
+    protected void destroyRootFilter(MgnlFilter rootFilter) {
+        if (rootFilter != null) {
+            rootFilter.destroy();
+        }
+    }
+
+    private MgnlFilter createConfiguredFilters() throws ServletException {
         try {
             final HierarchyManager hm = systemContext.getHierarchyManager(ContentRepository.CONFIG);
             final Content node = hm.getContent(SERVER_FILTERS);
-            return (MgnlFilter) Content2BeanUtil.toBean(node, true, MgnlFilter.class);
+            MgnlFilter filter = (MgnlFilter) Content2BeanUtil.toBean(node, true, MgnlFilter.class);
+            if (filter == null) {
+                throw new ServletException("Unable to create filter objects");
+            }
+            return filter;
         } catch (PathNotFoundException e) {
-            log.warn("No filters configured at {}", SERVER_FILTERS);
+            throw new ServletException("No filters configured at " + SERVER_FILTERS);
         } catch (RepositoryException e) {
-            log.error("Can't read filter definitions", e);
+            throw new ServletException("Can't read filter definitions", e);
         } catch (Content2BeanException e) {
-            log.error("Can't create filter objects", e);
+            throw new ServletException("Can't create filter objects", e);
         }
-        return null;
     }
 
     /**
@@ -189,37 +234,33 @@ public class FilterManagerImpl implements FilterManager {
                 5000);
     }
 
-    @Override
-    public void startUsingConfiguredFilters() {
-        resetRootFilter();
-        startObservation();
-    }
-
-    protected void resetRootFilter() {
-        destroyRootFilter();
-        createRootFilter();
-        initRootFilter();
-    }
-
-    @Override
-    public void destroyRootFilter() {
-        if (rootFilter != null) {
-            rootFilter.destroy();
-            rootFilter = null; // probably not a good idea, let it be replaced later on
-        }
-    }
-
     private void printFilters(MgnlFilter rootFilter) {
         log.debug("Here is the root filter as configured:");
         printFilter(0, rootFilter);
     }
 
-    private void printFilter(int i, MgnlFilter f) {
-        log.debug("{}{} ({})", new Object[]{StringUtils.repeat(" ", i), f.getName(), f.toString()});
-        if (f instanceof CompositeFilter) {
-            for (MgnlFilter f1 : ((CompositeFilter) f).getFilters()) {
-                printFilter(i + 2, f1);
+    private void printFilter(int indentation, MgnlFilter filter) {
+        log.debug("{}{} ({})", new Object[]{StringUtils.repeat(" ", indentation), filter.getName(), filter.toString()});
+        if (filter instanceof CompositeFilter) {
+            for (MgnlFilter nestedFilter : ((CompositeFilter) filter).getFilters()) {
+                printFilter(indentation + 2, nestedFilter);
             }
         }
+    }
+
+    private <T, E extends Throwable> void doInSystemContextAsync(final String threadName, final MgnlContext.Op<T, E> op, final boolean releaseAfterExecution) {
+        new Thread() {
+            {
+                setName(threadName);
+            }
+            @Override
+            public void run() {
+                try {
+                    MgnlContext.doInSystemContext(op, releaseAfterExecution);
+                } catch (Throwable e) {
+                    log.error("Exception caught when executing asynchronous operation: " + e.getMessage(), e);
+                }
+            }
+        }.start();
     }
 }

@@ -39,16 +39,15 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Interface for filters managed by Magnolia, exposing support for the bypass mechanism.
- * @author philipp
- * @version $Id$
  *
+ * @version $Id$
  * @content2bean.component path="/server/filters"
  */
 public interface MgnlFilter extends Filter {
 
-    public String getName();
+    String getName();
 
-    public void setName(String name);
+    void setName(String name);
 
-    public boolean matches(HttpServletRequest request);
+    boolean matches(HttpServletRequest request);
 }

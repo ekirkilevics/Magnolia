@@ -33,11 +33,7 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.Components;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -47,30 +43,37 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Components;
+
 
 /**
- * A single filter which in turn executes a chain of other filters not configured in web.xml. This filters delegates to
- * one single filter which is either the filter chain configured in the config repository or the primitive system UI when
- * a system/module installation or update is needed.
+ * Entry point for Magnolia filter dispatching. Intercepts all requests and passes them on to the Magnolia filter chain
+ * that will either process the request or pass it on to the next filter configured in web.xml.
  *
- * @author fgiust
- * @version $Revision$ ($Author$)
+ * @version $Id$
+ * @see FilterManager
+ * @see MgnlFilterDispatcher
  */
 public class MgnlMainFilter implements Filter {
+
     private static final Logger log = LoggerFactory.getLogger(MgnlMainFilter.class);
-
-    /**
-     * @deprecated since 5.0, use IoC!
-     */
-    private static MgnlMainFilter instance;
-
-    private FilterManager filterManager;
 
     /**
      * @deprecated since 5.0, use {@link FilterManager#SERVER_FILTERS}.
      */
-    public static final String SERVER_FILTERS = "/server/filters";
+    public static final String SERVER_FILTERS = FilterManager.SERVER_FILTERS;
+
+    /**
+     * @deprecated since 5.0, use IoC to access FilterManager.
+     */
+    private static MgnlMainFilter instance;
+
+    private FilterManager filterManager;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -82,7 +85,7 @@ public class MgnlMainFilter implements Filter {
     @Override
     public void destroy() {
         if (filterManager != null) {
-            filterManager.destroyRootFilter();
+            filterManager.destroy();
         }
     }
 
@@ -101,14 +104,8 @@ public class MgnlMainFilter implements Filter {
             contextUpdated = true;
         }
 
-        final MgnlFilter rootFilter = getRootFilter();
         try {
-            if (rootFilter.matches(request)) {
-                rootFilter.doFilter(request, response, chain);
-            } else {
-                // pass request to next filter in web.xml
-                chain.doFilter(request, response);
-            }
+            filterManager.getFilterDispatcher().doDispatch(request, response, chain);
         } finally {
             if (contextUpdated && MgnlContext.hasInstance()) {
                 MgnlContext.pop();
@@ -116,8 +113,11 @@ public class MgnlMainFilter implements Filter {
         }
     }
 
-    protected MgnlFilter getRootFilter() {
-        return filterManager.getRootFilter();
+    /**
+     * Returns the root filter, note that the filter is destroyed if the filter chain is reloaded.
+     */
+    public MgnlFilter getRootFilter() {
+        return filterManager.getFilterDispatcher().getTargetFilter();
     }
 
     protected FilterManager getFilterManager(ServletContext servletContext) {
@@ -125,7 +125,7 @@ public class MgnlMainFilter implements Filter {
     }
 
     /**
-     * @deprecated since 5.0, use IoC.
+     * @deprecated since 5.0, use IoC to access FilterManager.
      */
     public static MgnlMainFilter getInstance() {
         return instance;

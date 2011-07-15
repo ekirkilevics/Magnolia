@@ -37,8 +37,9 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
 /**
- * The FilterManager implementation is responsible for maintaining and providing the Magnolia filter chain
- * configured at {@value #SERVER_FILTERS}.
+ * The FilterManager implementation is responsible for providing a MgnlFilterDispatcher which delegates to one single
+ * filter which is either the filter chain configured in the config workspace or the primitive system UI when
+ * a system/module installation or update is needed.
  *
  * @version $Id$
  * @see MgnlMainFilter
@@ -46,13 +47,16 @@ import javax.servlet.ServletException;
  */
 public interface FilterManager {
 
+    /**
+     * Location in the config workspace where the Magnolia filter chain is configured.
+     */
     public static final String SERVER_FILTERS = "/server/filters";
 
     void init(FilterConfig filterConfig) throws ServletException;
 
-    MgnlFilter getRootFilter();
+    MgnlFilterDispatcher getFilterDispatcher();
 
     void startUsingConfiguredFilters();
 
-    void destroyRootFilter();
+    void destroy();
 }
