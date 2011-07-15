@@ -208,17 +208,26 @@ public class ConfiguredAreaDefinitionTest {
         assertEquals(73, hash);
     }
 
+    /**
+     * CAUTION: this is a special case - ConfiguredAreaDefintion#hashCode relies on LinkedHashMap#hashCode() which is
+     * inherited from Object#hashCode(). It does not return identical values when executed several times - it's only
+     * guaranteed to be identical when executed several times within one execution of a Java VW...
+     */
     @Test
     public void testHashCodeForDifferentAvailableComps() {
         // GIVEN
         ConfiguredAreaDefinition area1 = new ConfiguredAreaDefinition();
-        ComponentAvailability available = mock(ComponentAvailability.class);
+        ComponentAvailability available = new ConfiguredComponentAvailability();
         area1.addAvailableComponent("test", available);
+
+        ConfiguredAreaDefinition area2 = new ConfiguredAreaDefinition();
+        area2.addAvailableComponent("test", available);
 
         // WHEN
         int hash = area1.hashCode();
+        int hash2 = area2.hashCode();
 
-        // THEN
-        assertEquals(1825920048, hash);
+        // THEN - both hash's should be identical
+        assertEquals(hash, hash2);
     }
 }
