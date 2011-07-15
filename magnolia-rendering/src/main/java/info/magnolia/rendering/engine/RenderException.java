@@ -40,9 +40,6 @@ package info.magnolia.rendering.engine;
  */
 public class RenderException extends Exception {
 
-    public RenderException() {
-    }
-
     public RenderException(String message) {
         super(message);
     }
