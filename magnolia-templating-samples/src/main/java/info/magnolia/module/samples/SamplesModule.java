@@ -49,7 +49,7 @@ import info.magnolia.module.ModuleLifecycleContext;
  * are some tasks to perform when starting/stopping the module.
  * This class is loaded with what you have defined in the configuration in modules/samples/config
  * nodedata get loaded into class variables (modules/samples/config/propertySample)
- * content into list object (modules/samples/config/sampleList)
+ * content into list object (modules/samples/config/items)
  * contentnode into map object (modules/samples/config/sampleMap)
  *
  * by using nodedata 'class' you can specify the class it will turn into (see in this
@@ -64,9 +64,7 @@ public class SamplesModule implements ModuleLifecycle {
     final private static Logger log = LoggerFactory.getLogger(SamplesModule.class);
 
     private List<Dummy> items = new ArrayList<Dummy>();
-
     private Map sampleMap = new HashMap();
-
     private String sampleProperty;
 
     @Override

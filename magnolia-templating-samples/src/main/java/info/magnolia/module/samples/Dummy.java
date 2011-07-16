@@ -54,9 +54,7 @@ public class Dummy {
     final private static Logger log = LoggerFactory.getLogger(Dummy.class);
 
     private String name;
-
     private boolean active;
-
     private Map parameters = new HashMap();
 
     public String getName() {
