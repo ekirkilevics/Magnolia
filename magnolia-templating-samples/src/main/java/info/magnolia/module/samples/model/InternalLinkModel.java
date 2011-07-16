@@ -33,32 +33,74 @@
  */
 package info.magnolia.module.samples.model;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.link.LinkUtil;
+import info.magnolia.rendering.model.RenderingModel;
+import info.magnolia.rendering.model.RenderingModelImpl;
+import info.magnolia.rendering.template.RenderableDefinition;
+
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFormatException;
 
-import info.magnolia.rendering.model.RenderingModel;
-import info.magnolia.rendering.model.RenderingModelImpl;
-import info.magnolia.rendering.template.RenderableDefinition;
-
 /**
- * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
+ * Resolving internal links, either uuid or path link.
  *
  * @version $Id$
  */
 public class InternalLinkModel extends RenderingModelImpl<RenderableDefinition> {
 
-    private String internalUrl;
 
-    public InternalLinkModel(Node content, RenderableDefinition definition, RenderingModel parent) {
+    public InternalLinkModel(Node content, RenderableDefinition definition, RenderingModel<?> parent) {
         super(content, definition, parent);
     }
 
-    public String getInternalUrl() throws ValueFormatException, PathNotFoundException, RepositoryException {
-        String uuid = content.getProperty("target").getString();
-        //TODO return the link corresponding to the uuid
-        return "#";
+    public ContentMap getTarget() throws ValueFormatException, PathNotFoundException, RepositoryException{
+        return new LinkItem(content, "target").getNode();
+    }
+
+    public String getTargetLink() throws ValueFormatException, PathNotFoundException, RepositoryException{
+        return new LinkItem(content, "target").getLink();
+    }
+
+    public class LinkItem {
+
+        private ContentMap targetContentMap = null;
+        private Content targetContent = null;
+        private String targetLink = null;
+
+        //TODO cringele: should be refactored when LinkUtil returns Node (SCRUM-242)
+        public LinkItem(Node componentNode, String propertyName) throws ValueFormatException, PathNotFoundException, RepositoryException{
+            if(componentNode.hasProperty(propertyName)){
+                String targetValue = componentNode.getProperty(propertyName).getString();
+                HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+
+                //Link by path
+                if(targetValue.startsWith("/")){
+                    targetContent = hm.getContent(targetValue);
+                }
+                //Link by uuid
+                else {
+                    targetContent = hm.getContentByUUID(targetValue);
+                }
+                targetContentMap = new ContentMap(targetContent.getJCRNode());
+                targetLink = LinkUtil.createLink(targetContent);
+            }
+
+        }
+
+        public String getLink() {
+            return targetLink;
+        }
+
+        public ContentMap getNode() {
+            return targetContentMap;
+        }
     }
 
 }
