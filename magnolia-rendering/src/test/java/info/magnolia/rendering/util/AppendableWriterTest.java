@@ -50,11 +50,16 @@ public class AppendableWriterTest {
         StringBuilder builder = new StringBuilder();
         AppendableWriter writer = new AppendableWriter(builder);
 
-        // WHEN
-        writer.append("superLongWord", 5, 9);
+        try {
+            // WHEN
+            writer.append("superLongWord", 5, 9);
 
-        // THEN
-        assertEquals("Long", builder.toString());
+            // THEN
+            assertEquals("Long", builder.toString());
+
+        } finally {
+            writer.close();
+        }
     }
 
 }
