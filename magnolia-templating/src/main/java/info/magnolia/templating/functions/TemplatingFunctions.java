@@ -142,6 +142,10 @@ public class TemplatingFunctions {
 //    public Node root(Node content) throws RepositoryException{
 //        return content == null ? null :  content.getSession().getRootNode();
 //    }
+// OR this Code:
+//    public Node rootPage(Node content) throws RepositoryException{
+//          return content == null ? null : (Node) content.getAncestor(1);
+//    }
 
     public Node root(Node content) throws RepositoryException{
         if(content == null) {
@@ -168,6 +172,10 @@ public class TemplatingFunctions {
 //          return content;
 //      }
 //      return content.getSession().getNode(firstPagesPath);
+//  }
+// OR this Code:
+//  public Node rootPage(Node content) throws RepositoryException{
+//      return content == null ? null : (Node) content.getAncestor(1);
 //  }
 
     public Node rootPage(Node content) throws RepositoryException{
