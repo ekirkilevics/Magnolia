@@ -25,9 +25,9 @@
 
             <div id="main">
                 <p>Select a product:
-                    <a href="${ctx.contextPath}${content.@handle}/product1">Product 1</a>
-                    <a href="${ctx.contextPath}${content.@handle}/product2">Product 2</a>
-                    <a href="${ctx.contextPath}${content.@handle}/product3">Product 3</a>
+                    <a href="${ctx.contextPath}${content.@path}/product1">Product 1</a>
+                    <a href="${ctx.contextPath}${content.@path}/product2">Product 2</a>
+                    <a href="${ctx.contextPath}${content.@path}/product3">Product 3</a>
                 </p>
                 <p>You selected: ${ctx.parameters.product!"none yet"}</p>
                 <br />

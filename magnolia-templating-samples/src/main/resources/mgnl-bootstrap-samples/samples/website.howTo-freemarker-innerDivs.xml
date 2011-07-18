@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="howTo-freemarker" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sv:node sv:name="howTo-freemarker-innerDivs" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:content</sv:value>
   </sv:property>
@@ -7,13 +7,13 @@
     <sv:value>mix:lockable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>fdd37ee2-2350-49eb-8626-f18d67382ed2</sv:value>
+    <sv:value>50001f53-2f28-47e1-ae34-7d7c8e6ea739</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
-    <sv:value>Samples Site - How to FTL</sv:value>
+    <sv:value>Samples Site - Inner Divs</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -22,6 +22,9 @@
     <sv:property sv:name="jcr:createdBy" sv:type="String">
       <sv:value>admin</sv:value>
     </sv:property>
+    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+      <sv:value>false</sv:value>
+    </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
     </sv:property>
@@ -29,10 +32,10 @@
       <sv:value>2011-04-21T13:52:12.890+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2011-07-14T16:54:37.650+02:00</sv:value>
+      <sv:value>2011-07-18T12:52:38.984+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:template" sv:type="String">
-      <sv:value>samples:pages/ftl</sv:value>
+      <sv:value>samples:pages/ftlInnerDivs</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="main">
@@ -40,7 +43,7 @@
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>c0dd8a53-b9f4-4f91-b95a-991344487713</sv:value>
+      <sv:value>dc0c8956-7d84-4f62-89f3-76f4d6b31ca6</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
       <sv:value>admin</sv:value>
@@ -64,7 +67,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>dde1327a-6f64-45d2-a0ae-b7cbe3c1138a</sv:value>
+        <sv:value>7464c632-bda6-4d03-98a7-6e9cbfeceeb6</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -98,7 +101,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>da5f5d19-59d1-4b2d-be1c-984bf9ec2f84</sv:value>
+        <sv:value>400aa981-8f5d-4337-823d-e39d45e95af3</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -134,7 +137,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>0ef24ece-1e66-4754-aca5-52f6c9568873</sv:value>
+        <sv:value>15675ff3-a2c8-4a18-8202-048491e1903d</sv:value>
       </sv:property>
       <sv:property sv:name="checkbox" sv:type="Boolean">
         <sv:value>false</sv:value>
@@ -216,7 +219,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>05bd0be2-5bdd-49e6-b5c0-12eb790ff125</sv:value>
+        <sv:value>4d31a7b0-d871-4ffe-9307-3b4ab78fbd6d</sv:value>
       </sv:property>
       <sv:property sv:name="date" sv:type="String">
         <sv:value/>
@@ -256,7 +259,7 @@
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>91d7b578-0e44-49ca-93e7-34b352a69311</sv:value>
+      <sv:value>43ce7cca-c777-46fa-9276-a3d4d1523766</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
       <sv:value>admin</sv:value>
@@ -280,7 +283,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>dab66b3d-9225-415d-9561-ac9f89483aa0</sv:value>
+        <sv:value>0ce10041-5139-47f3-9989-ca7841aed2c0</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -319,7 +322,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>4a96a947-7e98-4f71-9b2d-d41b6201580d</sv:value>
+        <sv:value>4e7619d4-e2ae-4b40-88a2-75d09e1574a5</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -352,7 +355,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>f04e3fe6-7e25-47f7-bfbe-58abc2ee01a0</sv:value>
+          <sv:value>87db751f-558f-46cd-ba71-f10a85d3a6e5</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -370,7 +373,7 @@
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>ccb2f675-1c31-4de6-b3e0-65152b9e9785</sv:value>
+            <sv:value>072f2e93-1906-42d6-b967-caef47d5098f</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -404,7 +407,7 @@
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>60668187-16a1-4d8a-93ff-be12d28eb929</sv:value>
+            <sv:value>4b605b14-949f-4093-9ecc-ee5dbef4894f</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -438,7 +441,7 @@
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>633734ca-f71e-4fde-9864-227bcbfc9195</sv:value>
+      <sv:value>384dcea7-1077-4a73-b0e7-f049b7c93c5b</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
       <sv:value>admin</sv:value>
@@ -471,7 +474,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>ed5b257c-fc1e-4c0f-ae69-e5b64148977f</sv:value>
+        <sv:value>4d4832aa-62c6-4d36-8974-520363cc8ad1</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -509,7 +512,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>cedc7829-edb9-43dc-abdb-02f0ea588a00</sv:value>
+        <sv:value>7c089013-999e-4e9b-bf8b-833c80117d99</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -542,7 +545,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>dbf842fb-ff71-4ca5-b705-764edd4c4041</sv:value>
+          <sv:value>66116783-d9f6-44ae-a2dd-5b9e00cd728c</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -560,7 +563,7 @@
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>92c1cb52-2710-4fbe-9cf0-d39bf4425418</sv:value>
+            <sv:value>3f7c99cc-4ca1-4844-849c-508c718e3323</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -594,7 +597,7 @@
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>cc787cde-ad92-4e2c-b1e2-c0a9b1767359</sv:value>
+            <sv:value>9711d809-2ef0-4e7f-b2c2-aefd9a4d77d9</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -628,7 +631,7 @@
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>137daaeb-4751-4e04-8416-0e53035949eb</sv:value>
+            <sv:value>0341debb-7486-480f-81d3-556dc0cb79cb</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -664,7 +667,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>53d7ee09-f7a5-422b-91df-0d187ee1ee48</sv:value>
+        <sv:value>95557beb-160e-46f5-a8fb-9536351507c8</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -700,7 +703,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>052e6383-f000-4076-aed4-a0ff36325398</sv:value>
+          <sv:value>6d8b292b-7401-45e8-b024-2d60a29063d0</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -727,7 +730,7 @@
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>ecbc660d-62ed-4c98-972f-ac2029c3196a</sv:value>
+            <sv:value>983a9233-7055-48e3-abae-0f1979944867</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -761,7 +764,7 @@
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>438441cf-9ef9-431e-ae6e-2db0121f8ae2</sv:value>
+            <sv:value>b48f960b-9e52-4ccb-a5f8-c2ea67d4e98d</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -795,7 +798,7 @@
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>539c6c9b-f7f7-4159-8815-07df22f791a6</sv:value>
+            <sv:value>3fe6b074-1702-464a-aeb6-606e9db654a1</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -832,7 +835,7 @@
       <sv:value>mgnl:content</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>f852bc93-54c6-43c2-b4b9-a94656ba8a05</sv:value>
+      <sv:value>b1fb96a4-884a-4f70-8348-69b06791d98e</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
       <sv:value>admin</sv:value>
@@ -847,14 +850,17 @@
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2011-07-08T00:53:13.922+02:00</sv:value>
+        <sv:value>2011-07-18T12:52:45.259+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:template" sv:type="String">
-        <sv:value>samples:pages/ftl</sv:value>
+        <sv:value>samples:pages/ftlInnerDivs</sv:value>
       </sv:property>
     </sv:node>
     <sv:node sv:name="article1">
@@ -862,7 +868,7 @@
         <sv:value>mgnl:content</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>00e03af6-672e-4dd6-92a7-516fd09d4452</sv:value>
+        <sv:value>7fc5328e-99a8-4a3b-b694-8150e2c22841</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -877,14 +883,17 @@
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-07-08T00:53:00.794+02:00</sv:value>
+          <sv:value>2011-07-18T12:53:20.387+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samples:pages/ftl</sv:value>
+          <sv:value>samples:pages/ftlInnerDivs</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="subarticle1">
@@ -892,7 +901,7 @@
           <sv:value>mgnl:content</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>2f71c770-8881-49bd-a55e-e3456964b517</sv:value>
+          <sv:value>23c318e0-5af3-49ea-a6b3-67e80023a003</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -914,10 +923,10 @@
             <sv:value>superuser</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2011-07-08T01:16:33.803+02:00</sv:value>
+            <sv:value>2011-07-18T12:53:25.206+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:template" sv:type="String">
-            <sv:value>samples:pages/ftl</sv:value>
+            <sv:value>samples:pages/ftlInnerDivs</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
@@ -926,7 +935,7 @@
           <sv:value>mgnl:content</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>39de4a5e-1280-4590-aa6a-f0ff9f6695b4</sv:value>
+          <sv:value>89888a05-c9de-4d8c-9978-8ea5732908c0</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -948,10 +957,10 @@
             <sv:value>superuser</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2011-07-08T01:16:15.993+02:00</sv:value>
+            <sv:value>2011-07-18T12:53:28.750+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:template" sv:type="String">
-            <sv:value>samples:pages/ftl</sv:value>
+            <sv:value>samples:pages/ftlInnerDivs</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
@@ -960,7 +969,7 @@
           <sv:value>mgnl:content</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>3e9f196b-cec1-49c3-9f4b-8de98accd86e</sv:value>
+          <sv:value>b5127804-21b8-4a64-b3ff-40c4b1c8d228</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -982,10 +991,10 @@
             <sv:value>superuser</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2011-07-08T01:16:24.325+02:00</sv:value>
+            <sv:value>2011-07-18T12:53:33.297+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:template" sv:type="String">
-            <sv:value>samples:pages/ftl</sv:value>
+            <sv:value>samples:pages/ftlInnerDivs</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
@@ -995,7 +1004,7 @@
         <sv:value>mgnl:content</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>39cdc6a2-5b20-484c-9a2f-b85dadc38f0c</sv:value>
+        <sv:value>20a1327d-2aee-4a41-8816-784c77111b21</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -1010,14 +1019,17 @@
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-07-08T00:53:07.702+02:00</sv:value>
+          <sv:value>2011-07-18T12:53:36.641+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samples:pages/ftl</sv:value>
+          <sv:value>samples:pages/ftlInnerDivs</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -1027,7 +1039,7 @@
       <sv:value>mgnl:content</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>53052434-5a1c-4680-beb2-6237fba816f9</sv:value>
+      <sv:value>1776385e-cc2b-4971-b34b-da0a74663e89</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
       <sv:value>admin</sv:value>
@@ -1042,14 +1054,17 @@
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2011-07-08T00:53:38.652+02:00</sv:value>
+        <sv:value>2011-07-18T12:53:08.404+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:template" sv:type="String">
-        <sv:value>samples:pages/ftl</sv:value>
+        <sv:value>samples:pages/ftlInnerDivs</sv:value>
       </sv:property>
     </sv:node>
     <sv:node sv:name="news1">
@@ -1057,7 +1072,7 @@
         <sv:value>mgnl:content</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>05375011-ba7d-437b-a11c-d6c8029cbdc1</sv:value>
+        <sv:value>cbc4ae16-3fc8-4597-b623-5ba836438d76</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -1072,14 +1087,17 @@
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-07-08T00:53:28.225+02:00</sv:value>
+          <sv:value>2011-07-18T12:54:00.022+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samples:pages/ftl</sv:value>
+          <sv:value>samples:pages/ftlInnerDivs</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -1088,7 +1106,7 @@
         <sv:value>mgnl:content</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>8f384e21-7bfa-4134-9e2e-fb64cfacb67e</sv:value>
+        <sv:value>151e70bc-737b-4d20-9698-458a79a64a9b</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -1103,14 +1121,17 @@
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-07-08T00:53:32.583+02:00</sv:value>
+          <sv:value>2011-07-18T12:54:04.798+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samples:pages/ftl</sv:value>
+          <sv:value>samples:pages/ftlInnerDivs</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -1120,7 +1141,7 @@
       <sv:value>mgnl:content</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>cd7dd6cb-6225-4a91-be5e-be727d47e883</sv:value>
+      <sv:value>9259d297-68d5-4a4a-97c2-676dfa1119bb</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
       <sv:value>admin</sv:value>
@@ -1142,10 +1163,10 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2011-07-08T00:53:55.026+02:00</sv:value>
+        <sv:value>2011-07-18T12:52:53.995+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:template" sv:type="String">
-        <sv:value>samples:pages/ftl</sv:value>
+        <sv:value>samples:pages/ftlInnerDivs</sv:value>
       </sv:property>
     </sv:node>
     <sv:node sv:name="event1">
@@ -1153,7 +1174,7 @@
         <sv:value>mgnl:content</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>d337a253-7216-4a8d-b8d3-d29599413d4f</sv:value>
+        <sv:value>6b750f3d-b731-4605-b351-fd9f3a155227</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -1175,10 +1196,10 @@
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-07-08T00:54:00.109+02:00</sv:value>
+          <sv:value>2011-07-18T12:53:48.278+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samples:pages/ftl</sv:value>
+          <sv:value>samples:pages/ftlInnerDivs</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -1187,7 +1208,7 @@
         <sv:value>mgnl:content</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>e5485f95-b5b7-43c1-88e0-ca1128435631</sv:value>
+        <sv:value>03d29fdd-d5c1-4d11-b3a1-02920cf4393f</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -1209,10 +1230,10 @@
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-07-08T00:54:04.934+02:00</sv:value>
+          <sv:value>2011-07-18T12:53:52.867+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samples:pages/ftl</sv:value>
+          <sv:value>samples:pages/ftlInnerDivs</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -1222,7 +1243,7 @@
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>9e794bdd-6731-46d3-ae4f-d84b4b82c420</sv:value>
+      <sv:value>a16d79bc-8f09-425c-8e5b-12045b146236</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
       <sv:value>admin</sv:value>
