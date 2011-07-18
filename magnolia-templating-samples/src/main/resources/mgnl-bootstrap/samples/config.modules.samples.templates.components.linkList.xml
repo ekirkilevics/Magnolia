@@ -157,7 +157,7 @@
             <sv:value>54399304-2998-4fbb-b246-6f2a7366a888</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/internalLink</sv:value>
+            <sv:value>samples:components/internalLink</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -194,7 +194,7 @@
             <sv:value>3496a7ad-5633-4044-9006-abe8842cf8cb</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/externalLink</sv:value>
+            <sv:value>samples:components/externalLink</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>

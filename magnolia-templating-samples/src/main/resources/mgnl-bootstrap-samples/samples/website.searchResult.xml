@@ -84,7 +84,7 @@
           <sv:value>2011-07-14T16:41:29.532+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samples:paragraphs/searchResult</sv:value>
+          <sv:value>samples:components/searchResult</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>

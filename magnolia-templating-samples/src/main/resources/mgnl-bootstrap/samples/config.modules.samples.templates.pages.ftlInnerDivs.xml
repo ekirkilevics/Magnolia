@@ -255,7 +255,7 @@
             <sv:value>9e569712-6802-4d35-9822-c943176f7e5c</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/text</sv:value>
+            <sv:value>samples:components/text</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -369,7 +369,7 @@
             <sv:value>18b371ee-1367-46d1-87a3-ee42b836f00a</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/text</sv:value>
+            <sv:value>samples:components/text</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -483,7 +483,7 @@
             <sv:value>fb139170-39e9-4e30-9606-95b12cf21667</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/text</sv:value>
+            <sv:value>samples:components/text</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -520,7 +520,7 @@
             <sv:value>56a2e2e0-81cd-4156-ac3f-8d9cc8dab35d</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/linkList</sv:value>
+            <sv:value>samples:components/linkList</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -557,7 +557,7 @@
             <sv:value>f35e69b3-3ffa-4bca-813f-9e1ee154ae7b</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/fieldsShowRoom</sv:value>
+            <sv:value>samples:components/fieldsShowRoom</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -594,7 +594,7 @@
             <sv:value>5413b3d7-832e-4270-9c8d-1c9eef09cd0b</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/howToFTL</sv:value>
+            <sv:value>samples:components/howToFTL</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -631,7 +631,7 @@
             <sv:value>997e2956-b394-4f31-8bc3-ef4831f21801</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/searchResult</sv:value>
+            <sv:value>samples:components/searchResult</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -745,7 +745,7 @@
             <sv:value>e2567165-78af-4337-95c3-79f1b1c2ba68</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/text</sv:value>
+            <sv:value>samples:components/text</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -782,7 +782,7 @@
             <sv:value>e6b1c766-b368-4e7b-9d0e-111f51d03191</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/linkList</sv:value>
+            <sv:value>samples:components/linkList</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -933,7 +933,7 @@
             <sv:value>3d4f1131-8928-4e57-8d59-21ce34802bdf</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/text</sv:value>
+            <sv:value>samples:components/text</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -970,7 +970,7 @@
             <sv:value>9b2cd7ae-7562-4fb2-bb34-927d43876314</sv:value>
           </sv:property>
           <sv:property sv:name="id" sv:type="String">
-            <sv:value>samples:paragraphs/linkList</sv:value>
+            <sv:value>samples:components/linkList</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>

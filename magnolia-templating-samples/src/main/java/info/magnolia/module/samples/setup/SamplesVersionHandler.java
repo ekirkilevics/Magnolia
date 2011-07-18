@@ -85,10 +85,10 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
                                 "/mgnl-bootstrap/samples/config.modules.samples.dialogs.controlsShowRoom.xml",
                                 "/mgnl-bootstrap/samples/config.modules.samples.dialogs.howTo.xml",
                                 "/mgnl-bootstrap/samples/config.modules.samples.dialogs.mainProperties.xml",
-                                "/mgnl-bootstrap/samples/config.modules.samples.paragraphs.samplesControlsShowRoom.xml",
-                                "/mgnl-bootstrap/samples/config.modules.samples.paragraphs.samplesHowToFTL.xml",
-                                "/mgnl-bootstrap/samples/config.modules.samples.paragraphs.samplesHowToJSP.xml",
-                                "/mgnl-bootstrap/samples/config.modules.samples.paragraphs.samplesSearchResult.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.components.samplesControlsShowRoom.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.components.samplesHowToFTL.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.components.samplesHowToJSP.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.components.samplesSearchResult.xml",
                                 "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesMainFTL.xml",
                                 "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesMainJSP.xml",
                                 "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesVirtualURI.xml",
@@ -120,8 +120,8 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
                         "/mgnl-bootstrap-samples/samples/users.admin.patrick.xml"))
                 .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample templates.",
                             ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/sample-templates"))
-                .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample paragraphs.",
-                            ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/sample-paragraphs"))
+                .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample components.",
+                            ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/sample-components"))
                 .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample dialogs.",
                             ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/sample-dialogs"))
 

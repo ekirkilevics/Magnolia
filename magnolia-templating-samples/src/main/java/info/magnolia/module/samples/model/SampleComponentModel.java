@@ -49,11 +49,11 @@ import java.util.List;
 
 import javax.jcr.Node;
 /**
- * This model class is defined in the paragraph definition in the configuration
- * <code>(modules/samples/components/name-of-paragraph/modelClass)</code>.
+ * This model class is defined in the component definition in the configuration
+ * <code>(modules/samples/components/name-of-component/modelClass)</code>.
  * To be accessed in the template file by <code>def.method-name</code>.
  *
- * Paragraph models can also be defined in the paragraph definitions.
+ * Component models can also be defined in the component definitions.
  * @author tmiyar
  *
  */
@@ -65,7 +65,7 @@ public class SampleComponentModel extends RenderingModelImpl<RenderableDefinitio
 
     public SampleComponentModel(Node content, RenderableDefinition definition, RenderingModel<?> parent) {
         super(content, definition, parent);
-        log.info("Running sample paragraph model");
+        log.info("Running sample component model");
 
     }
 
