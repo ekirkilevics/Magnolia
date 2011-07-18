@@ -1,6 +1,6 @@
-[#-------------- Fields Paragraph --------------]
+[#-------------- Fields Component --------------]
 [@cms.edit /]
-<h3>Fields Showroom Component</h3>
+<h3>Fields Show-Room Component</h3>
 This text is rendered statically.
 </br>
 The intention of this component is demonstrating all possible dialog fields.

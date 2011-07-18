@@ -26,8 +26,8 @@
 
 
 
-<h4>Display Paragraph Sources</h4>
+<h4>Display Component Sources</h4>
 <ul>
-    <li><a href="${ctx.contextPath}/.sources/components/searchResult.ftl">SearchResult paragraph</a></li>
+    <li><a href="${ctx.contextPath}/.sources/components/searchResult.ftl">SearchResult component</a></li>
 </ul>
 

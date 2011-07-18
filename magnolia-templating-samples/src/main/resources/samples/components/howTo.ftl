@@ -1,4 +1,4 @@
-[#-------------- HowTo Paragraph --------------]
+[#-------------- HowTo Component --------------]
 
 
 [@cms.edit /]
@@ -34,7 +34,7 @@ Text: ${content.text!("No text defined yet")}
 [#include "/samples/includes/inc.searchForm.ftl" ]
 
 
-<h4>Display Paragraph Sources</h4>
+<h4>Display Component's Sources</h4>
 <ul>
-    <li><a href="${ctx.contextPath}/.sources/components/howTo.ftl">HowTo paragraph</a></li>
+    <li><a href="${ctx.contextPath}/.sources/components/howTo.ftl">'HowTo' component</a></li>
 </ul>
