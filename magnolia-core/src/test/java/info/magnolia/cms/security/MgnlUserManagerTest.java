@@ -37,7 +37,6 @@ import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 
 import javax.jcr.Node;
@@ -110,7 +109,6 @@ public class MgnlUserManagerTest {
     @Test
     public void testFindPrincipalNode() throws RepositoryException {
         IMocksControl control = EasyMock.createControl();
-        HierarchyManager hm = control.createMock(HierarchyManager.class);
         Session session = control.createMock(Session.class);
         Workspace workspace = control.createMock(Workspace.class);
         QueryManager qm = control.createMock(QueryManager.class);
@@ -138,7 +136,6 @@ public class MgnlUserManagerTest {
         control.verify();
 
         control = EasyMock.createControl();
-        hm = control.createMock(HierarchyManager.class);
         session = control.createMock(Session.class);
         workspace = control.createMock(Workspace.class);
         qm = control.createMock(QueryManager.class);
