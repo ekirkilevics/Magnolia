@@ -68,6 +68,9 @@ public class InternalLinkModel extends RenderingModelImpl<RenderableDefinition> 
         return new LinkItem(content, "target").getLink();
     }
 
+    /**
+     * Represents a Link.
+     */
     public class LinkItem {
 
         private ContentMap targetContentMap = null;
