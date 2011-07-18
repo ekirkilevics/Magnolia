@@ -138,6 +138,11 @@ public class TemplatingFunctions {
         return content == null ? null : asContentMap(this.root(asJCRNode(content)));
     }
 
+    //TODO cringele : should replace the method root(Node) below, can't test it yet. See SCRUM-277
+//    public Node root(Node content) throws RepositoryException{
+//        return content == null ? null :  content.getSession().getRootNode();
+//    }
+
     public Node root(Node content) throws RepositoryException{
         if(content == null) {
             return null;
@@ -152,6 +157,18 @@ public class TemplatingFunctions {
     public ContentMap rootPage(ContentMap content) throws RepositoryException{
         return content == null ? null : asContentMap(this.rootPage(asJCRNode(content)));
     }
+
+    //TODO cringele: should replace the method rootPage(Node) below, can't test it yet. See SCRUM-277
+//  public Node rootPage(Node content) throws RepositoryException{
+//      if(content == null) {
+//          return null;
+//      }
+//      String firstPagesPath = "/"+StringUtils.split(content.getPath(), "/")[0];
+//      if(StringUtils.equals(content.getPath(), firstPagesPath)){
+//          return content;
+//      }
+//      return content.getSession().getNode(firstPagesPath);
+//  }
 
     public Node rootPage(Node content) throws RepositoryException{
         if(content == null) {
