@@ -34,8 +34,7 @@
 package info.magnolia.rendering.engine;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.util.LazyInitPrintWriter;
 import info.magnolia.context.MgnlContext;
@@ -49,9 +48,9 @@ import java.util.Collections;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyType;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
-import javax.jcr.Value;
+import javax.jcr.Session;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -59,8 +58,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +70,6 @@ import org.slf4j.LoggerFactory;
  *
  * @version $Id$
  *
- * TODO dlipp: should be converted to use JCR-API no longer content API (SCRUM-292)
  */
 public class RenderingFilter extends AbstractMgnlFilter {
 
@@ -109,7 +107,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 catch (IOException e) {
                     // don't log at error level since tomcat typically throws a
                     // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
-                    log.debug("Exception flushing response " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                    log.debug("Exception flushing response " + e.getClass().getName() + ": " + e.getMessage(), e);
                 }
 
             }
@@ -165,15 +163,15 @@ public class RenderingFilter extends AbstractMgnlFilter {
 
         final String resourceHandle = aggregationState.getHandle();
 
-        log.debug("handleResourceRequest, resourceHandle=\"{}\"", resourceHandle); //$NON-NLS-1$
+        log.debug("handleResourceRequest, resourceHandle=\"{}\"", resourceHandle);
 
         if (StringUtils.isNotEmpty(resourceHandle)) {
 
-            HierarchyManager hm = MgnlContext.getHierarchyManager(aggregationState.getRepository());
 
             InputStream is = null;
             try {
-                is = getNodedataAstream(resourceHandle, hm, response);
+                Session session = MgnlContext.getJCRSession(aggregationState.getRepository());
+                is = getNodedataAstream(resourceHandle, session, response);
                 if (null != is) {
                     // don't reset any existing status code, see MAGNOLIA-2005
                     // response.setStatus(HttpServletResponse.SC_OK);
@@ -224,41 +222,32 @@ public class RenderingFilter extends AbstractMgnlFilter {
         IOUtils.closeQuietly(os);
     }
 
-    /**
-     * @param path path for nodedata in jcr repository
-     * @param hm Hierarchy manager
-     * @param res HttpServletResponse
-     * @return InputStream or <code>null</code> if nodeData is not found
-     */
-    private InputStream getNodedataAstream(String path, HierarchyManager hm, HttpServletResponse res) {
+    private InputStream getNodedataAstream(String path, Session session, HttpServletResponse res) {
 
         log.debug("getNodedataAstream for path \"{}\"", path);
 
         try {
-            NodeData atom = hm.getNodeData(path);
+            Node atom = session.getNode(path);
             if (atom != null) {
-                if (atom.getType() == PropertyType.BINARY) {
-
-                    String sizeString = atom.getAttribute("size");
+                if (atom.hasProperty(MgnlNodeType.JCR_DATA)) {
+                    Property sizeProperty = atom.getProperty("size");
+                    String sizeString = sizeProperty == null ? "" : sizeProperty.getString();
                     if (NumberUtils.isNumber(sizeString)) {
                         res.setContentLength(Integer.parseInt(sizeString));
                     }
                 }
-
-                Value value = atom.getValue();
-                if (value != null) {
-                    return value.getStream();
-                }
+                Property streamProperty = atom.getProperty(MgnlNodeType.JCR_DATA);
+                return streamProperty.getStream();
             }
 
-            log.warn("Resource not found: [{}]", path); //$NON-NLS-1$
+            log.warn("Resource not found: [{}]", path);
 
         }
         catch (PathNotFoundException e) {
-            log.warn("Resource not found: [{}]", path); //$NON-NLS-1$
+            log.warn("Resource not found: [{}]", path);
         }
         catch (RepositoryException e) {
-            log.error("RepositoryException while reading Resource [" + path + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
+            log.error("RepositoryException while reading Resource [" + path + "]", e);
         }
         return null;
     }

@@ -40,15 +40,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
-import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.MockWebContext;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -210,21 +209,19 @@ public class RenderingFilterTest {
     public void testHandleResourceRequest() throws Exception {
         // GIVEN
         String contentProperties = StringUtils.join(Arrays.asList(
-                "/first/attachment2@type=mgnl:resource",
+                "/first/attachment2.@type=mgnl:resource",
                 "/first/attachment2.fileName=test",
                 "/first/attachment2.extension=jpeg",
-                "/first/attachment2.jcr\\:data=X",
+                "/first/attachment2.jcr\\:data=binary:X",
                 "/first/attachment2.jcr\\:mimeType=image/jpeg",
-                "/first/attachment2.size=12"
+                "/first/attachment2.size=1"
         ), "\n");
 
         final String first = "first";
-        // ugly but temporary - will be switched to JCR-API with SCRUM-292
-        HierarchyManager hm = MockUtil.createHierarchyManager(contentProperties);
 
-        final String binaryContent = "the content";
+        MockSession session = SessionTestUtil.createSession(contentProperties);
+
         final String binaryNodeName = "attachment2";
-        Content content = hm.getContent(first);
 
         AggregationState aggState = new AggregationState();
         aggState.setHandle("/" + first + "/" + binaryNodeName);
@@ -232,7 +229,7 @@ public class RenderingFilterTest {
         aggState.setRepository(repository);
         WebContext context = mock(WebContext.class);
         MgnlContext.setInstance(context);
-        when(context.getHierarchyManager(repository)).thenReturn(hm);
+        when(context.getJCRSession(repository)).thenReturn(session);
         MockServletOutputStream outputStream = new MockServletOutputStream();
 
         when(response.getOutputStream()).thenReturn(outputStream);
@@ -243,7 +240,7 @@ public class RenderingFilterTest {
         filter.handleResourceRequest(aggState, request, response);
 
         // THEN
+        verify(response).setContentLength(1);
         assertEquals("X", outputStream.getContent());
-
     }
 }

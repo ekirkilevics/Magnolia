@@ -33,6 +33,7 @@
  */
 package info.magnolia.jcr.util;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
@@ -85,6 +86,8 @@ public class PropertyUtil {
             node.setProperty(propertyName, ((Double) propertyValue).doubleValue());
         } else if (propertyValue instanceof Boolean) {
             node.setProperty(propertyName, ((Boolean) propertyValue).booleanValue());
+        } else if (propertyValue instanceof InputStream) {
+            node.setProperty(propertyName, (InputStream) propertyValue);
         } else
             // TODO dlipp: verify if this is desired default-behavior: NodeDataUtil#setValue sets propertyValue.toString() as default!
             throw new IllegalArgumentException("Cannot set property to a value of type " + propertyValue.getClass());
