@@ -108,6 +108,8 @@ public interface Context extends org.apache.commons.chain.Context {
      * Get hierarchy manager initialized for this user.
      * @param repositoryId
      * @return hierarchy manager
+     *
+     * @deprecated since 5.0 - use {@link #getJCRSession(String)}
      */
     public HierarchyManager getHierarchyManager(String repositoryId);
 
