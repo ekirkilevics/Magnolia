@@ -33,20 +33,25 @@
  */
 package info.magnolia.rendering.engine;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.MockWebContext;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -55,8 +60,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.mockrunner.mock.web.MockServletOutputStream;
 
 /**
  * @version $Id$
@@ -201,13 +209,33 @@ public class RenderingFilterTest {
     @Test
     public void testHandleResourceRequest() throws Exception {
         // GIVEN
+        String contentProperties = StringUtils.join(Arrays.asList(
+                "/first/attachment2@type=mgnl:resource",
+                "/first/attachment2.fileName=test",
+                "/first/attachment2.extension=jpeg",
+                "/first/attachment2.jcr\\:data=X",
+                "/first/attachment2.jcr\\:mimeType=image/jpeg",
+                "/first/attachment2.size=12"
+        ), "\n");
+
+        final String first = "first";
+        // ugly but temporary - will be switched to JCR-API with SCRUM-292
+        HierarchyManager hm = MockUtil.createHierarchyManager(contentProperties);
+
+        final String binaryContent = "the content";
+        final String binaryNodeName = "attachment2";
+        Content content = hm.getContent(first);
+
         AggregationState aggState = new AggregationState();
-        final String handle = "testHandle";
-        aggState.setHandle(handle);
+        aggState.setHandle("/" + first + "/" + binaryNodeName);
         final String repository = "testRepository";
         aggState.setRepository(repository);
         WebContext context = mock(WebContext.class);
         MgnlContext.setInstance(context);
+        when(context.getHierarchyManager(repository)).thenReturn(hm);
+        MockServletOutputStream outputStream = new MockServletOutputStream();
+
+        when(response.getOutputStream()).thenReturn(outputStream);
 
         RenderingFilter filter = new RenderingFilter(renderingEngine, templateDefinitionRegistry);
 
@@ -215,6 +243,7 @@ public class RenderingFilterTest {
         filter.handleResourceRequest(aggState, request, response);
 
         // THEN
+        assertEquals("X", outputStream.getContent());
 
     }
 }
