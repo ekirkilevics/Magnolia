@@ -42,6 +42,7 @@ import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockNode;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -448,7 +449,7 @@ public class TemplatingFunctionsTest {
         // THEN
         assertMapEqualsMap(resultContentMap, rootContentMap);
     }
-//TODO start here for new tests
+
     @Test
     public void testPageFromComponentNodeDepth2() throws RepositoryException {
         // GIVEN
@@ -641,76 +642,84 @@ public class TemplatingFunctionsTest {
         assertMapEqualsMap(resultContentMap, childPageContentMap);
     }
 
-//      @Test
-//      public void testAncestorsFromComponentNodeDepth1() throws RepositoryException {
-//          // GIVEN
-//          TemplatingFunctions functions = new TemplatingFunctions();
-//
-//          // WHEN
-//          List<Node> resultList = functions.ancestors(topPage);
-//
-//          // THEN
-//          assertEquals(resultList.size(), 0);
-//      }
-//
-//      @Test
-//      public void testAncestorsFromComponentNodeDepth4() throws RepositoryException {
-//          // GIVEN
-//          TemplatingFunctions functions = new TemplatingFunctions();
-//          MockNode subComponent = new MockNode("subComponent", MgnlNodeType.NT_CONTENT);
-//          childPageComponent.addNode(subComponent);
-//
-//          List<Node> compareList = new ArrayList<Node>();
-//          compareList.add(childPageComponent);
-//          compareList.add(childPage);
-//          compareList.add(topPage);
-//
-//          // WHEN
-//          List<Node> resultList = functions.ancestors(subComponent);
-//
-//          // THEN
-//          assertEquals(resultList.size(), compareList.size());
-//          Iterator<Node> itCompare = compareList.iterator();
-//          for(Iterator<Node> itResult=resultList.iterator(); itResult.hasNext();){
-//
-//              assertNodeEqualsNode(itResult.next(), itCompare.next());
-//          }
-//      }
-//
-//      @Test
-//      public void testAncestorPagesFromComponentNodeDepth1() throws RepositoryException {
-//          // GIVEN
-//          TemplatingFunctions functions = new TemplatingFunctions();
-//
-//          // WHEN
-//          List<Node> resultList = functions.ancestorPages(topPage);
-//
-//          // THEN
-//          assertEquals(resultList.size(), 0);
-//      }
-//
-//      @Test
-//      public void testAncestorPagesFromComponentNodeDepth4() throws RepositoryException {
-//          // GIVEN
-//          TemplatingFunctions functions = new TemplatingFunctions();
-//          MockNode subComponent = new MockNode("subComponent", MgnlNodeType.NT_CONTENT);
-//          childPageComponent.addNode(subComponent);
-//
-//          List<Node> compareList = new ArrayList<Node>();
-//          compareList.add(childPage);
-//          compareList.add(topPage);
-//
-//          // WHEN
-//          // gets into endless loop.
-//          List<Node> resultList = functions.ancestorPages(childPageComponent);
-//
-//          // THEN
-//          assertEquals(resultList.size(), compareList.size());
-//          Iterator<Node> itCompare = compareList.iterator();
-//          for(Iterator<Node> itResult=resultList.iterator(); itResult.hasNext();){
-//
-//              assertNodeEqualsNode(itResult.next(), itCompare.next());
-//      }
+     @Test
+     public void testAncestorsFromComponentNodeDepth1() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         List<Node> resultList = functions.ancestors(topPage);
+
+         // THEN
+         assertEquals(resultList.size(), 0);
+     }
+
+     @Test
+     public void testAncestorsFromNodeDepth1() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         List<Node> resultList = functions.ancestors(topPage);
+
+         // THEN
+         assertEquals(resultList.size(), 0);
+     }
+
+     @Test
+     public void testAncestorPagesFromNodeDepth1() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         List<Node> resultList = functions.ancestors(topPage, MgnlNodeType.NT_CONTENT);
+
+         // THEN
+         assertEquals(resultList.size(), 0);
+     }
+
+     @Test
+     public void testAncestorPagesFromComponentNodeDepth4() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+         List<Node> compareList = new ArrayList<Node>();
+         compareList.add(topPage);
+         compareList.add(childPage);
+         Iterator<Node> itCompare = compareList.iterator();
+
+         // WHEN
+         // gets into endless loop.
+         List<Node> resultList = functions.ancestors(childPageComponent, MgnlNodeType.NT_CONTENT);
+
+         // THEN
+         assertEquals(resultList.size(), compareList.size());
+         for(Iterator<Node> itResult=resultList.iterator(); itResult.hasNext();){
+            assertNodeEqualsNode(itResult.next(), itCompare.next());
+         }
+     }
+
+     @Test
+     public void testAncestorsFromComponentNodeDepth5() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+         MockNode subComponent = new MockNode("subComponent", MgnlNodeType.NT_CONTENT);
+         childPageComponent.addNode(subComponent);
+
+         List<Node> compareList = new ArrayList<Node>();
+         compareList.add(topPage);
+         compareList.add(childPage);
+         compareList.add(childPageComponent);
+         Iterator<Node> itCompare = compareList.iterator();
+
+         // WHEN
+         List<Node> resultList = functions.ancestors(subComponent);
+
+         // THEN
+         assertEquals(resultList.size(), compareList.size());
+         for(Iterator<Node> itResult=resultList.iterator(); itResult.hasNext();){
+            assertNodeEqualsNode(itResult.next(), itCompare.next());
+         }
+     }
 
 
     /**
