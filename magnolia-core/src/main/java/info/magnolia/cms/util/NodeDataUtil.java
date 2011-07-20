@@ -249,7 +249,9 @@ public class NodeDataUtil {
                 nodeData.setValue((Calendar)valueObj);
                 break;
             case PropertyType.LONG:
-                nodeData.setValue(((Long)valueObj).longValue());
+                // can either be a Long or an Integer - see #getJCRPropertyType(Object)
+                long valueToSet = (valueObj instanceof Integer) ? ((Integer) valueObj).intValue() : (Long) valueObj;
+                nodeData.setValue(valueToSet);
                 break;
             case PropertyType.DOUBLE:
                 nodeData.setValue(((Double)valueObj).doubleValue());
