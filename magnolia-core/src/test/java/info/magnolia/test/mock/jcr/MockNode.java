@@ -188,8 +188,15 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public Item getAncestor(int depth) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public Item getAncestor(int depth) throws RepositoryException {
+        if(this.getDepth() == depth){
+            return this;
+        }
+        Node parentNode = this.getParent();
+        while(parentNode.getDepth() != depth){
+            parentNode = parentNode.getParent();
+        }
+        return parentNode;
     }
 
     @Override

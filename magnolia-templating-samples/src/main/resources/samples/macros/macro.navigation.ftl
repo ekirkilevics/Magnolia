@@ -1,8 +1,12 @@
 
+[#-- TODO cringele:does not work anymore, cause cmsfn.page(node) return the page now itself if a page-node was passed.
+cmsfn.parent(content, "mgnl:content") will always return a parent page node.
+Like this the script can only work either if included from page's script, but not as a Area's script. Or otherwise around.
+Much less flexible. Needing cmsfn.page back again? --]
 [#macro renderNavigation pageNode maxDepth depth=0 ]
 
     [#-- Is top page of the site structure -> rendering the top page on same navigation level as its sub-pages--]
-    [#assign isRootPage = (pageNode.@path==cmsfn.rootPage(content).@path)!false]
+    [#assign isRootPage = (pageNode.@path==cmsfn.root(content, "mgnl:content").@path)!false]
     [#if isRootPage && depth == 0]
         [#if pageNode.@path != content.@path]
             <li>
@@ -21,7 +25,7 @@
     [#if childPages?size!=0 && depth < maxDepth]
         [#list childPages as childPage]
 
-            [#assign isSelected = (childPage.@path == cmsfn.page(content).@path)!false]
+            [#assign isSelected = (childPage.@path == cmsfn.parent(content, "mgnl:content").@path)!false]
             [#assign isSelectedParent = (childPage.@path == cmsfn.parent(content).@path)!false]
 
             [#if isSelected || isSelectedParent]

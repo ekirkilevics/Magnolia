@@ -33,9 +33,6 @@
  */
 package info.magnolia.templating.functions;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultContent;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
@@ -46,8 +43,6 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
  *
@@ -56,41 +51,18 @@ import org.apache.commons.lang.StringUtils;
  */
 public class TemplatingFunctions {
 
-    public Content asContent(Node node) throws RepositoryException {
-        return node == null ? null : new DefaultContent(node, null);
-    }
 
     public Node asJCRNode(ContentMap contentMap) {
         return contentMap == null ? null : contentMap.getJCRNode();
-    }
-
-    public Node asJCRNode(Content content) {
-        return content == null ? null : content.getJCRNode();
     }
 
     public ContentMap asContentMap(Node content) {
         return content == null ? null : new ContentMap(content);
     }
 
-    public Node parent(Node content) throws RepositoryException {
-        if(content == null || content.getDepth() == 0) {
-            return null;
-        }
-        return content.getParent();
-    }
-
-    public ContentMap parent(ContentMap contentMap) throws RepositoryException {
-        if(contentMap == null) {
-            return null;
-        }
-        Node parentContent = this.parent(contentMap.getJCRNode());
-        return asContentMap(parentContent);
-    }
-
 //    //TODO cringele : these would be the right way of creating links. LinkUtil needs to be Node capable and not only Content. (SCRUM-242)
 //    public String link(Node content) throws RepositoryException{
-//        //TODO cringele : LinkUtil should accept Node and not only Content
-//        return content == null ? null : LinkUtil.createLink(asContent(content));
+//        return content == null ? null : LinkUtil.createLink(content);
 //    }
 
     //TODO cringele : hacky way of creating a link, but serves for now until LinkUtill is Node capable (SCRUM-242)
@@ -102,10 +74,18 @@ public class TemplatingFunctions {
         return contentMap == null ? null : this.link(asJCRNode(contentMap));
     }
 
-    protected List<ContentMap> contentMapChildrenFrom(Iterable<Node> nodes) {
-        List<ContentMap> childList = new ArrayList<ContentMap>();
+    public List<Node> children(Node content) throws RepositoryException {
+        return content == null ? null : nodeChildrenFrom(NodeUtil.getNodes(content, NodeUtil.EXCLUDE_META_DATA_FILTER));
+    }
+
+    public List<Node> children(Node content, String nodeTypeName) throws RepositoryException {
+        return content == null ? null: nodeChildrenFrom(NodeUtil.getNodes(content, nodeTypeName));
+    }
+
+    protected List<Node> nodeChildrenFrom(Iterable<Node> nodes) {
+        List<Node> childList = new ArrayList<Node>();
         for (Node child : nodes) {
-            childList.add(new ContentMap(child));
+            childList.add(child);
         }
         return childList;
     }
@@ -118,114 +98,113 @@ public class TemplatingFunctions {
         return content == null ? null : contentMapChildrenFrom(NodeUtil.getNodes(asJCRNode(content), nodeTypeName));
     }
 
-    protected List<Node> nodeChildrenFrom(Iterable<Node> nodes) {
-        List<Node> childList = new ArrayList<Node>();
+    protected List<ContentMap> contentMapChildrenFrom(Iterable<Node> nodes) {
+        List<ContentMap> childList = new ArrayList<ContentMap>();
         for (Node child : nodes) {
-            childList.add(child);
+            childList.add(new ContentMap(child));
         }
         return childList;
     }
 
-    public List<Node> children(Node content) throws RepositoryException {
-        return content == null ? null : nodeChildrenFrom(NodeUtil.getNodes(content, NodeUtil.EXCLUDE_META_DATA_FILTER));
+    public ContentMap parent(ContentMap contentMap) throws RepositoryException {
+        return contentMap == null ? null : asContentMap(this.parent(contentMap.getJCRNode()));
     }
 
-    public List<Node> children(Node content, String nodeTypeName) throws RepositoryException {
-        return content == null ? null: nodeChildrenFrom(NodeUtil.getNodes(content, nodeTypeName));
+    public ContentMap parent(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
+        return contentMap == null ? null : asContentMap(this.parent(contentMap.getJCRNode(), nodeTypeName));
     }
 
-    public ContentMap root(ContentMap content) throws RepositoryException{
-        return content == null ? null : asContentMap(this.root(asJCRNode(content)));
+    public ContentMap root(ContentMap contentMap) throws RepositoryException {
+        return contentMap == null ? null : asContentMap(this.root(contentMap.getJCRNode()));
     }
 
-    //TODO cringele : should replace the method root(Node) below, can't test it yet. See SCRUM-277
-//    public Node root(Node content) throws RepositoryException{
-//        return content == null ? null :  content.getSession().getRootNode();
+    public ContentMap root(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
+        return contentMap == null ? null : asContentMap(this.root(contentMap.getJCRNode(), nodeTypeName));
+    }
+
+    //TODO cringele: finish code for ancestors(ContentMap)
+//    public List<ContentMap> ancestors(ContentMap contentMap) throws RepositoryException {
+//        return contentMap == null ? null : this.ancestors(contentMap.getJCRNode());
 //    }
-// OR this Code:
-//    public Node rootPage(Node content) throws RepositoryException{
-//          return content == null ? null : (Node) content.getAncestor(1);
+//
+//    public List<ContentMap> ancestors(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
+//        return contentMap == null ? null : this.ancestors(contentMap.getJCRNode(), nodeTypeName));
 //    }
+
+    public Node parent(Node content) throws RepositoryException {
+        return this.parent(content, null);
+    }
+
+    public Node parent(Node content, String nodeTypeName) throws RepositoryException {
+        if(content == null) {
+            return null;
+        }
+        if(isRoot(content)) {
+            return null;
+        }
+        if(nodeTypeName==null ){
+            return content.getParent();
+        }
+        Node parent = content.getParent();
+        while(!parent.isNodeType(nodeTypeName)){
+            if(isRoot(parent)){
+                return null;
+            }
+            parent = parent.getParent();
+        }
+        return parent;
+    }
 
     public Node root(Node content) throws RepositoryException{
+        return this.root(content, null);
+    }
+
+    public Node root(Node content, String nodeTypeName) throws RepositoryException{
         if(content == null) {
             return null;
         }
-        Node root = content;
-        while(root.getDepth() > 0){
-            root = this.parent(root);
+        if(nodeTypeName==null ){
+            return (Node) content.getAncestor(0);
         }
-        return root;
+        if(isRoot(content) && content.isNodeType(nodeTypeName)) {
+            return content;
+        }
+
+        Node parentNode = this.parent(content, nodeTypeName);
+        if(parentNode == null){
+            return null;
+        }
+        while(!parentNode.isNodeType(nodeTypeName) && parentNode != null){
+            parentNode = this.parent(parentNode, nodeTypeName);
+        }
+        return parentNode;
     }
 
-    public ContentMap rootPage(ContentMap content) throws RepositoryException{
-        return content == null ? null : asContentMap(this.rootPage(asJCRNode(content)));
+    public List<Node> ancestors(Node content) throws RepositoryException{
+        return content == null ? null : this.ancestors(content, null);
     }
 
-    //TODO cringele: should replace the method rootPage(Node) below, can't test it yet. See SCRUM-277
-//  public Node rootPage(Node content) throws RepositoryException{
-//      if(content == null) {
-//          return null;
-//      }
-//      String firstPagesPath = "/"+StringUtils.split(content.getPath(), "/")[0];
-//      if(StringUtils.equals(content.getPath(), firstPagesPath)){
-//          return content;
-//      }
-//      return content.getSession().getNode(firstPagesPath);
-//  }
-// OR this Code:
-//  public Node rootPage(Node content) throws RepositoryException{
-//      return content == null ? null : (Node) content.getAncestor(1);
-//  }
-
-    public Node rootPage(Node content) throws RepositoryException{
+    public List<Node> ancestors(Node content, String nodeTypeName) throws RepositoryException{
         if(content == null) {
             return null;
         }
-        Node rootPage = content;
-        while(rootPage.getDepth() > 1){
-            rootPage = this.parent(rootPage);
+        List<Node> ancestors = new ArrayList<Node>();
+        int depth = content.getDepth();
+        for(int i=1; i<depth; ++i){
+            Node possibelAncestor = (Node)content.getAncestor(i);
+            if(nodeTypeName == null){
+                ancestors.add(possibelAncestor);
+            } else {
+                if(possibelAncestor.isNodeType(nodeTypeName)){
+                    ancestors.add(possibelAncestor);
+                }
+            }
         }
-        return rootPage;
+        return ancestors;
     }
 
-    public ContentMap page(ContentMap content) throws RepositoryException{
-        return content == null ? null : asContentMap(this.page(asJCRNode(content)));
+    private boolean isRoot(Node content) throws RepositoryException {
+        return content.getDepth() == 0;
     }
-
-    public Node page(Node content) throws RepositoryException{
-        if(content == null) {
-            return null;
-        }
-        Node page = content;
-        while(!isPageNode(page) && this.parent(page).getDepth()>0){
-            page = this.parent(page);
-        }
-        return page;
-    }
-
-    private boolean isPageNode(Node node) throws RepositoryException {
-        return StringUtils.equals(MgnlNodeType.NT_CONTENT, node.getPrimaryNodeType().getName());
-    }
-
-
-
-    //TODO cringele : May all be optional. Decide on weather to provide them or not
-
-//    public String linkExteral(Node content) throws RepositoryException{
-//        return content == null ? null : LinkUtil.createExternalLink(asContent(content));
-//    }
-//
-//    public String linkExternal(ContentMap contentMap) throws RepositoryException{
-//        return contentMap == null ? null : this.linkExteral(asJCRNode(contentMap));
-//    }
-//
-//    public String linkAbsolute(Node content) throws RepositoryException{
-//        return content == null ? null : LinkUtil.createAbsoluteLink(asContent(content));
-//    }
-//
-//    public String linkAbsolute(ContentMap contentMap) throws RepositoryException{
-//        return contentMap == null ? null : this.linkAbsolute(asJCRNode(contentMap));
-//    }
 
 }

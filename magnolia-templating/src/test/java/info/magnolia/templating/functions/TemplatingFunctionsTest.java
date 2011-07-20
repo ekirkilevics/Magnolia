@@ -36,16 +36,11 @@ package info.magnolia.templating.functions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
-import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockNode;
-import info.magnolia.test.mock.jcr.MockSession;
 
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +48,6 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -111,35 +105,6 @@ public class TemplatingFunctionsTest {
         childPageContentMap = new ContentMap(childPage);
         childPageComponentContentMap = new ContentMap(childPageComponent);
         childPageSubPageContentMap = new ContentMap(childPageSubPage);
-    }
-
-    @Test
-    public void testAsContentFromNode() throws RepositoryException {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-        MockSession session = mock(MockSession.class);
-        when(session.hasPermission(root.getPath()+DEPTH_1_FIRST_PAGE_NAME, Session.ACTION_READ)).thenReturn(Boolean.TRUE);
-        topPage.setSession(session);
-
-        // WHEN
-        Content result = functions.asContent(topPage);
-
-        // THEN
-        // DefaultContent does not have a equals method - but as it is only a wrapper around a Node we can directly compare the nodes
-        assertEquals(topPage, result.getJCRNode());
-    }
-
-    @Test
-    public void testAsJCRNodeFromContent() {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-        MockContent content = new MockContent("test");
-
-        // WHEN
-        Node result = functions.asJCRNode(content);
-
-        // THEN
-        assertEquals(content.getJCRNode(), result);
     }
 
     @Test
@@ -483,53 +448,17 @@ public class TemplatingFunctionsTest {
         // THEN
         assertMapEqualsMap(resultContentMap, rootContentMap);
     }
-
-    @Test
-    public void testPageFromPageNodeDepth1() throws RepositoryException {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-
-        // WHEN
-        Node resultNode = functions.page(topPage);
-
-        // THEN
-        assertNodeEqualsNode(resultNode, topPage);
-    }
-
-    @Test
-    public void testPageFromPageNodeDepth2() throws RepositoryException {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-
-        // WHEN
-        Node resultNode = functions.page(childPage);
-
-        // THEN
-        assertNodeEqualsNode(resultNode, childPage);
-    }
-
+//TODO start here for new tests
     @Test
     public void testPageFromComponentNodeDepth2() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        Node resultNode = functions.page(topPageComponent);
+        Node resultNode = functions.parent(topPageComponent, MgnlNodeType.NT_CONTENT);
 
         // THEN
         assertEquals(resultNode, topPage);
-    }
-
-    @Test
-    public void testPageFromPageNodeDepth3() throws RepositoryException {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-
-        // WHEN
-        Node resultNode = functions.page(childPageSubPage);
-
-        // THEN
-        assertNodeEqualsNode(resultNode, childPageSubPage);
     }
 
     @Test
@@ -538,34 +467,34 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        Node resultNode = functions.page(childPageComponent);
+        Node resultNode = functions.parent(childPageComponent, MgnlNodeType.NT_CONTENT);
 
         // THEN
         assertNodeEqualsNode(resultNode, childPage);
     }
 
     @Test
-    public void testPageFromPageContentMapDepth1() throws RepositoryException {
+    public void testPageFromPageNode() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap resultContentMap = functions.page(topPageContentMap);
+        Node resultNode = functions.parent(childPage, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertMapEqualsMap(resultContentMap, topPageContentMap);
+        assertNodeEqualsNode(resultNode, topPage);
     }
 
     @Test
-    public void testPageFromPageContentMapDepth2() throws RepositoryException {
+    public void testPageFromPageContentMap() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap resultContentMap = functions.page(childPageContentMap);
+        ContentMap resultContentMap = functions.parent(childPageContentMap, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertMapEqualsMap(resultContentMap, childPageContentMap);
+        assertMapEqualsMap(resultContentMap, topPageContentMap);
     }
 
     @Test
@@ -574,22 +503,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap resultContentMap = functions.page(topPageComponentContentMap);
+        ContentMap resultContentMap = functions.parent(topPageComponentContentMap, MgnlNodeType.NT_CONTENT);
 
         // THEN
         assertMapEqualsMap(resultContentMap, topPageContentMap);
-    }
-
-    @Test
-    public void testPageFromPageContentMapDepth3() throws RepositoryException {
-        // GIVEN
-        TemplatingFunctions functions = new TemplatingFunctions();
-
-        // WHEN
-        ContentMap resultContentMap = functions.page(childPageSubPageContentMap);
-
-        // THEN
-        assertMapEqualsMap(resultContentMap, childPageSubPageContentMap);
     }
 
     @Test
@@ -598,7 +515,7 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap resultContentMap = functions.page(childPageComponentContentMap);
+        ContentMap resultContentMap = functions.parent(childPageComponentContentMap, MgnlNodeType.NT_CONTENT);
 
         // THEN
         assertMapEqualsMap(resultContentMap, childPageContentMap);
@@ -610,10 +527,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        Node resultNode = functions.rootPage(topPage);
+        Node resultNode = functions.root(topPage, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertNodeEqualsNode(resultNode, topPage);
+        assertNull(resultNode);
     }
 
     @Test
@@ -622,7 +539,7 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        Node resultNode = functions.rootPage(childPage);
+        Node resultNode = functions.root(childPage, MgnlNodeType.NT_CONTENT);
 
         // THEN
         assertNodeEqualsNode(resultNode, topPage);
@@ -634,7 +551,7 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        Node resultNode = functions.rootPage(topPageComponent);
+        Node resultNode = functions.root(topPageComponent, MgnlNodeType.NT_CONTENT);
 
         // THEN
         assertNodeEqualsNode(resultNode, topPage);
@@ -646,10 +563,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        Node resultNode = functions.rootPage(childPageSubPage);
+        Node resultNode = functions.root(childPageSubPage, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertNodeEqualsNode(resultNode, topPage);
+        assertNodeEqualsNode(resultNode, childPage);
     }
 
     @Test
@@ -658,10 +575,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        Node resultNode = functions.rootPage(childPageComponent);
+        Node resultNode = functions.root(childPageComponent, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertNodeEqualsNode(resultNode, topPage);
+        assertNodeEqualsNode(resultNode, childPage);
     }
 
     @Test
@@ -670,10 +587,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap resultContentMap = functions.rootPage(topPageContentMap);
+        ContentMap resultContentMap = functions.root(topPageContentMap, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertMapEqualsMap(resultContentMap, topPageContentMap);
+        assertNull(resultContentMap);
     }
 
     @Test
@@ -682,7 +599,7 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap resultContentMap = functions.rootPage(childPageContentMap);
+        ContentMap resultContentMap = functions.root(childPageContentMap, MgnlNodeType.NT_CONTENT);
 
         // THEN
         assertMapEqualsMap(resultContentMap, topPageContentMap);
@@ -694,7 +611,7 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap resultContentMap = functions.rootPage(topPageComponentContentMap);
+        ContentMap resultContentMap = functions.root(topPageComponentContentMap, MgnlNodeType.NT_CONTENT);
 
         // THEN
         assertMapEqualsMap(resultContentMap, topPageContentMap);
@@ -706,10 +623,10 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap resultContentMap = functions.rootPage(childPageSubPageContentMap);
+        ContentMap resultContentMap = functions.root(childPageSubPageContentMap, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertMapEqualsMap(resultContentMap, topPageContentMap);
+        assertMapEqualsMap(resultContentMap, childPageContentMap);
     }
 
     @Test
@@ -718,11 +635,82 @@ public class TemplatingFunctionsTest {
         TemplatingFunctions functions = new TemplatingFunctions();
 
         // WHEN
-        ContentMap resultContentMap = functions.rootPage(childPageComponentContentMap);
+        ContentMap resultContentMap = functions.root(childPageComponentContentMap, MgnlNodeType.NT_CONTENT);
 
         // THEN
-        assertMapEqualsMap(resultContentMap, topPageContentMap);
+        assertMapEqualsMap(resultContentMap, childPageContentMap);
     }
+
+//      @Test
+//      public void testAncestorsFromComponentNodeDepth1() throws RepositoryException {
+//          // GIVEN
+//          TemplatingFunctions functions = new TemplatingFunctions();
+//
+//          // WHEN
+//          List<Node> resultList = functions.ancestors(topPage);
+//
+//          // THEN
+//          assertEquals(resultList.size(), 0);
+//      }
+//
+//      @Test
+//      public void testAncestorsFromComponentNodeDepth4() throws RepositoryException {
+//          // GIVEN
+//          TemplatingFunctions functions = new TemplatingFunctions();
+//          MockNode subComponent = new MockNode("subComponent", MgnlNodeType.NT_CONTENT);
+//          childPageComponent.addNode(subComponent);
+//
+//          List<Node> compareList = new ArrayList<Node>();
+//          compareList.add(childPageComponent);
+//          compareList.add(childPage);
+//          compareList.add(topPage);
+//
+//          // WHEN
+//          List<Node> resultList = functions.ancestors(subComponent);
+//
+//          // THEN
+//          assertEquals(resultList.size(), compareList.size());
+//          Iterator<Node> itCompare = compareList.iterator();
+//          for(Iterator<Node> itResult=resultList.iterator(); itResult.hasNext();){
+//
+//              assertNodeEqualsNode(itResult.next(), itCompare.next());
+//          }
+//      }
+//
+//      @Test
+//      public void testAncestorPagesFromComponentNodeDepth1() throws RepositoryException {
+//          // GIVEN
+//          TemplatingFunctions functions = new TemplatingFunctions();
+//
+//          // WHEN
+//          List<Node> resultList = functions.ancestorPages(topPage);
+//
+//          // THEN
+//          assertEquals(resultList.size(), 0);
+//      }
+//
+//      @Test
+//      public void testAncestorPagesFromComponentNodeDepth4() throws RepositoryException {
+//          // GIVEN
+//          TemplatingFunctions functions = new TemplatingFunctions();
+//          MockNode subComponent = new MockNode("subComponent", MgnlNodeType.NT_CONTENT);
+//          childPageComponent.addNode(subComponent);
+//
+//          List<Node> compareList = new ArrayList<Node>();
+//          compareList.add(childPage);
+//          compareList.add(topPage);
+//
+//          // WHEN
+//          // gets into endless loop.
+//          List<Node> resultList = functions.ancestorPages(childPageComponent);
+//
+//          // THEN
+//          assertEquals(resultList.size(), compareList.size());
+//          Iterator<Node> itCompare = compareList.iterator();
+//          for(Iterator<Node> itResult=resultList.iterator(); itResult.hasNext();){
+//
+//              assertNodeEqualsNode(itResult.next(), itCompare.next());
+//      }
 
 
     /**
@@ -798,9 +786,13 @@ public class TemplatingFunctionsTest {
         assertEquals(map1.get("@handle"), map2.get("@handle"));
         assertNotNull(map1.get("@depth"));
         assertEquals(map1.get("@depth"), map2.get("@depth"));
-        //TODO cringele: should ContentMap really return NodeType Object on "@nodeType" or the NodeTypeName?
+        //TODO cringele: change when SCRUM-303 is solved
         assertNotNull(((NodeType)map1.get("@nodeType")).getName());
-        assertEquals(((NodeType)map1.get("@nodeType")).getName(), ((NodeType)map1.get("@nodeType")).getName());
+        assertEquals(((NodeType)map1.get("@nodeType")).getName(), ((NodeType)map2.get("@nodeType")).getName());
+        //TODO cringele: correct code when SCRUM-303 is solved
+//        assertNotNull(map1.get("@nodeType"));
+//        assertEquals(map1.get("@nodeType"), map2.get("@nodeType"));
+
 
     }
 
