@@ -37,16 +37,19 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vaadin.jouni.animator.Disclosure;
 
 import com.vaadin.lazyloadwrapper.LazyLoadWrapper;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalSplitPanel;
 
+
 /**
  * The sidebar view showing the list of available actions and a preview of the selected item.
- *
+ * 
  * @author fgrilli
  * @author tmattsson
+ * @author mrichert
  */
 public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
 
@@ -63,7 +66,7 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
         panel.setImmediate(false);
         panel.setSizeFull();
 
-        panel.setFirstComponent(actionListView.asVaadinComponent());
+        panel.setFirstComponent(new Disclosure("Actions", this.actionListView.asVaadinComponent()));
 
         LazyLoadWrapper lazyPreview = new LazyLoadWrapper(previewView.asVaadinComponent());
         lazyPreview.setSizeUndefined();

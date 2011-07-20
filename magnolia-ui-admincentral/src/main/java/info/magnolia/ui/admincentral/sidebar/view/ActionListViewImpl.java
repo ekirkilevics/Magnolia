@@ -41,37 +41,29 @@ import java.util.List;
 
 import javax.inject.Singleton;
 
-import com.vaadin.data.Item;
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Table;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.NativeButton;
+
 
 /**
  * Implementation for {@link ActionListView}.
- *
+ * 
  * @author fgrilli
+ * @author mrichert
  */
 @Singleton
 public class ActionListViewImpl implements ActionListView {
 
     private Presenter presenter;
-    private Table table = new Table();
+
+    private CssLayout menu = new CssLayout();
 
     public ActionListViewImpl() {
-        table.setRowHeaderMode(Table.ROW_HEADER_MODE_ICON_ONLY);
-        table.addContainerProperty("Command", String.class, "");
-        table.setSizeFull();
-        table.setSelectable(true);
-        table.addListener(new ItemClickEvent.ItemClickListener() {
-
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                if (!event.isDoubleClick()) {
-                    presenter.onMenuItemSelected((String) event.getItemId());
-                }
-            }
-        });
+        menu.addStyleName("sidebar-menu");
     }
 
     @Override
@@ -83,15 +75,23 @@ public class ActionListViewImpl implements ActionListView {
     }
 
     protected void clear() {
-        // table.removeAllItems();
+        menu.removeAllComponents();
     }
 
     protected void addAction(MenuItemDefinition menuItem) {
-        Object itemId = menuItem.getName();
-        table.addItem(itemId);
-        Item commandItem = table.getItem(itemId);
-        commandItem.getItemProperty("Command").setValue(menuItem.getLabel());
-        table.setItemIcon(itemId, new ExternalResource(MgnlContext.getContextPath() + menuItem.getIcon()));
+        final String itemId = menuItem.getName();
+        NativeButton button = new NativeButton(menuItem.getLabel());
+        button.setIcon(new ExternalResource(MgnlContext.getContextPath() + menuItem.getIcon()));
+
+        button.addListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                presenter.onMenuItemSelected(itemId);
+            }
+        });
+
+        menu.addComponent(button);
     }
 
     @Override
@@ -101,6 +101,6 @@ public class ActionListViewImpl implements ActionListView {
 
     @Override
     public Component asVaadinComponent() {
-        return table;
+        return menu;
     }
 }
