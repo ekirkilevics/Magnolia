@@ -260,7 +260,7 @@ public class Dialog extends DialogControlImpl {
         Button save = new Button();
         String saveOnclick = this.getConfigValue("saveOnclick", "mgnlDialogFormSubmit();");
         String saveLabel = this.getConfigValue("saveLabel", msgs.get("buttons.save"));
-        if (StringUtils.isNotEmpty(saveOnclick) && StringUtils.isNotEmpty("saveLabel")) {
+        if (StringUtils.isNotEmpty(saveOnclick) && StringUtils.isNotEmpty(saveLabel)) {
             save.setId("mgnlSaveButton");
             save.setOnclick(saveOnclick);
             save.setLabel(saveLabel);
