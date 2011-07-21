@@ -447,5 +447,18 @@ public class NodeTest extends RepositoryTestCase {
         return NodeDataUtil.createValue(valueObj, valueFactory);
     }
 
+    // TODO: SCRUM-308
+    // public void testModDate() throws IOException, RepositoryException{
+    // Node content = getTestNode();
+    // Calendar modDate = MetaDataUtil.getMetaData(content).getModificationDate();
+    // Calendar creationDate = MetaDataUtil.getMetaData(content).getCreationDate();
+    // assertNotNull(modDate);
+    // assertEquals(creationDate, modDate);
+    // content.setProperty("test", false);
+    // content.save();
+    // modDate = MetaDataUtil.getMetaData(content).getModificationDate();
+    // assertNotNull(modDate);
+    // assertNotSame(creationDate, modDate);
+    // }
 
 }
