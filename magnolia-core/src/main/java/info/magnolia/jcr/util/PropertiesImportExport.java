@@ -39,12 +39,14 @@ import info.magnolia.cms.util.OrderedProperties;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.util.ISO8601;
 
@@ -61,6 +63,26 @@ import org.apache.jackrabbit.util.ISO8601;
  */
 public class PropertiesImportExport {
 
+    /**
+     * Each property is one item in the properties varargs passed in.
+     * 
+     * @param root
+     * @param properties
+     * @throws IOException
+     * @throws RepositoryException
+     */
+    public void createContent(Node root, String... properties) throws IOException, RepositoryException {
+        createContent(root, IOUtils.toInputStream(StringUtils.join(Arrays.asList(properties), "\n")));
+    }
+
+    /**
+     * Each property or node in the stream has to be separated by the \n.
+     * 
+     * @param root
+     * @param propertiesStream
+     * @throws IOException
+     * @throws RepositoryException
+     */
     public void createContent(Node root, InputStream propertiesStream) throws IOException, RepositoryException {
         Properties properties = new OrderedProperties();
 
