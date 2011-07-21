@@ -39,6 +39,8 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.Rule;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.MgnlContext.Op;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.logging.AuditLoggingUtil;
 
@@ -47,7 +49,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import javax.jcr.Item;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
@@ -570,13 +574,47 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public void delete() throws RepositoryException {
+        final String nodePath = Path.getAbsolutePath(this.node.getPath());
+        log.debug("removing {} from {}", this.node.getPath(), getHierarchyManager().getName());
         Access.tryPermission(this.node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_REMOVE);
-        String nodePath = Path.getAbsolutePath(this.node.getPath());
-        ItemType nodeType = this.getItemType();
-        this.node.remove();
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodeType, nodePath);
-    }
+        final ItemType nodeType = this.getItemType();
+        if (!getHierarchyManager().getName().equals("mgnlVersion")) {
+            MgnlContext.doInSystemContext(new Op<Void, RepositoryException>() {
+                @Override
+                public Void exec() throws RepositoryException {
+                    try {
+                        final String uuid = node.getUUID();
+                        HierarchyManager hm = MgnlContext.getHierarchyManager("mgnlVersion");
+                        Node versionedNode = hm.getContentByUUID(uuid).getJCRNode();
+                        log.debug("Located versioned node {}({})", uuid, nodePath);
 
+                        VersionHistory history = versionedNode.getVersionHistory();
+
+                        log.debug("Removing versioned node {}({})", uuid, nodePath);
+                        versionedNode.remove();
+                        hm.save();
+
+                        VersionIterator iter = history.getAllVersions();
+                        // skip root version. It can't be deleted manually, but will be cleaned up automatically after removing all other versions (see JCR-134)
+                        iter.nextVersion();
+                        while (iter.hasNext()) {
+                            Version version = iter.nextVersion();
+                            log.debug("removing version {}", version.getName());
+                            history.removeVersion(version.getName());
+                        }
+                        // at this point history should be deleted automatically (at least on JR)
+                    } catch (ItemNotFoundException e) {
+                        // doesn't exist in version store, ignore
+                    } catch (UnsupportedRepositoryOperationException e) {
+                        // not versionable or not referenceable ... either way ignore
+                    }
+                    return null;
+                }
+            });
+        }
+        this.node.remove();
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DELETE, getHierarchyManager().getName(), nodeType, nodePath);
+    }
 
     @Override
     public void refresh(boolean keepChanges) throws RepositoryException {

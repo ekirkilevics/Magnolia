@@ -170,7 +170,7 @@ public abstract class BaseVersionManager {
             @Override
             public Version exec(Session session) throws RepositoryException {
                 try {
-                    return createVersion(session.getNodeByIdentifier(node.getUUID()), rule);
+                    return createVersion(session.getNodeByIdentifier(node.getIdentifier()), rule);
                 }
                 catch (RepositoryException re) {
                     // since add version is synchronized on a singleton object, its safe to revert all changes made in
@@ -300,19 +300,27 @@ public abstract class BaseVersionManager {
      */
     public synchronized VersionHistory getVersionHistory(Node node) throws UnsupportedRepositoryOperationException,
     RepositoryException {
-        Node versionedNode = this.getVersionedNode(node);
-        if (versionedNode == null) {
-            // node does not exist in version store so no version history
-            log.info("No VersionHistory found for this node");
+        try {
+            Node versionedNode = this.getVersionedNode(node);
+            if (versionedNode == null) {
+                // node does not exist in version store so no version history
+                log.info("No VersionHistory found for this node");
+                return null;
+            }
+            return versionedNode.getVersionHistory();
+        } catch (UnsupportedRepositoryOperationException e) {
+            // node is not versionable or underlying repo doesn't support versioning.
             return null;
         }
-        return versionedNode.getVersionHistory();
     }
 
     /**
-     * Get named version.
-     * @throws UnsupportedOperationException if repository implementation does not support Versions API
-     * @throws javax.jcr.RepositoryException if any repository error occurs
+     * /** Get named version.
+     * 
+     * @throws UnsupportedOperationException
+     *             if repository implementation does not support Versions API
+     * @throws javax.jcr.RepositoryException
+     *             if any repository error occurs
      */
     public synchronized Version getVersion(Node node, String name) throws UnsupportedRepositoryOperationException,
     RepositoryException {

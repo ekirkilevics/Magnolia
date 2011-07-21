@@ -33,6 +33,21 @@
  */
 package info.magnolia.cms.core;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.getCurrentArguments;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.importexport.PropertiesImportExport;
+import info.magnolia.repository.Provider;
+import info.magnolia.test.RepositoryTestCase;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -42,23 +57,16 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.FileProperties;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.importexport.PropertiesImportExport;
-import info.magnolia.repository.Provider;
-import info.magnolia.test.RepositoryTestCase;
-import static org.easymock.EasyMock.*;
-
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.jcr.Property;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
 import javax.jcr.ValueFactory;
+import javax.jcr.version.VersionHistory;
+import javax.jcr.version.VersionIterator;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -458,6 +466,44 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertNotSame(creationDate, modDate);
     }
 
+    public void testDelete() throws Exception {
+        // GIVEN content node with version history
+        final Content content = getTestContent();
+        final String uuid = content.getUUID();
+        final Content parent = content.getParent();
+        content.addVersion();
+        // parent.save();
+        Content versionedContent = MgnlContext.getHierarchyManager("mgnlVersion").getContentByUUID(uuid);
+        assertNotNull(versionedContent);
+        VersionHistory history = versionedContent.getJCRNode().getVersionHistory();
+        // root and current
+        VersionIterator versions = content.getAllVersions();
+        // root version
+        assertNotNull(versions.nextVersion());
+        // previously created version
+        assertNotNull(versions.nextVersion());
+
+        // WHEN we delete the content
+        content.delete();
+        parent.save();
+
+        // THEN versioned node and all versions should be deleted as well
+        // make sure versioned node is deleted
+        try {
+            MgnlContext.getHierarchyManager("mgnlVersion").getContentByUUID(uuid);
+            fail("versioned copy should have been deleted but was not.");
+        } catch (ItemNotFoundException e) {
+            // expected
+        }
+
+        // make sure history has no label => all versions incl. root are gone
+        try {
+            history.getVersionLabels();
+            fail("version history should have been invalidated by JR after manually deleting all versions except root and referencing content");
+        } catch (RepositoryException e) {
+            // no versions exist anymore.
+        }
+    }
 
     private Value createValue(Object valueObj) throws RepositoryException, UnsupportedRepositoryOperationException {
         ValueFactory valueFactory = MgnlContext.getHierarchyManager("website").getWorkspace().getSession().getValueFactory();

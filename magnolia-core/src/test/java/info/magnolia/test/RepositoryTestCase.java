@@ -36,20 +36,13 @@ package info.magnolia.test;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.security.DummyUser;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
 import info.magnolia.context.SystemRepositoryStrategy;
 import info.magnolia.importexport.BootstrapUtil;
 import info.magnolia.test.mock.MockContext;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.core.jndi.BindableRepositoryFactory;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
-import javax.jcr.ImportUUIDBehavior;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -57,6 +50,15 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Map;
+
+import javax.jcr.ImportUUIDBehavior;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.core.jndi.BindableRepositoryFactory;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
  * @author ashapochka
@@ -105,12 +107,14 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
 
     protected void modifyContextesToUseRealRepository() {
         // create a mock web context with same repository acquiring strategy as the system context
-        SystemContext systemContext = MgnlContext.getSystemContext();
+        MockContext systemContext = (MockContext) MgnlContext.getSystemContext();
         SystemRepositoryStrategy repositoryStrategy = new SystemRepositoryStrategy(systemContext);
+        systemContext.setRepositoryStrategy(repositoryStrategy);
+        MockContext ctx = (MockContext) MgnlContext.getInstance();
+        ctx.setRepositoryStrategy(repositoryStrategy);
 
-        //update the mock context
-        ((MockContext) systemContext).setRepositoryStrategy(repositoryStrategy);
-        ((MockContext) MgnlContext.getInstance()).setRepositoryStrategy(repositoryStrategy);
+        systemContext.setUser(new DummyUser());
+        ctx.setUser(new DummyUser());
     }
 
     protected void startRepository() throws Exception {

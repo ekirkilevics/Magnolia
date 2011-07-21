@@ -33,18 +33,32 @@
  */
 package info.magnolia.cms.core.version;
 
+import info.magnolia.cms.core.Access;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.ChildWrappingNodeWrapper;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.MgnlContext.Op;
+import info.magnolia.logging.AuditLoggingUtil;
 
 import javax.jcr.InvalidItemStateException;
 import javax.jcr.ItemExistsException;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
+import javax.jcr.version.VersionHistory;
+import javax.jcr.version.VersionIterator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Wrapper providing support for Magnolia specific versioning ops (by copy).
@@ -52,6 +66,8 @@ import javax.jcr.version.VersionException;
  * @version $Id$
  */
 public class MgnlVersioningNodeWrapper extends ChildWrappingNodeWrapper {
+
+    private static final Logger log = LoggerFactory.getLogger(MgnlVersioningNodeWrapper.class);
 
     public MgnlVersioningNodeWrapper(Node wrapped) {
         super(wrapped, MgnlVersioningNodeWrapper.class);
@@ -84,5 +100,54 @@ public class MgnlVersioningNodeWrapper extends ChildWrappingNodeWrapper {
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, ItemExistsException,
     UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
         throw new UnsupportedOperationException("Magnolia doesn't support locating versions by label at the moment");
+    }
+
+    /**
+     * Remove version history while removing the content.
+     */
+    @Override
+    public void remove() throws RepositoryException {
+        wrapped = getWrappedNode();
+        final String nodePath = Path.getAbsolutePath(wrapped.getPath());
+        log.debug("removing {} from {}", wrapped.getPath(), getSession().getWorkspace().getName());
+        Access.tryPermission(getSession(), Path.getAbsolutePath(getPath()), Session.ACTION_REMOVE);
+        NodeType nodeType = this.getPrimaryNodeType();
+        String workspaceName = getSession().getWorkspace().getName();
+        if (!workspaceName.equals("mgnlVersion")) {
+            MgnlContext.doInSystemContext(new Op<Void, RepositoryException>() {
+                @Override
+                public Void exec() throws RepositoryException {
+                    try {
+                        final String uuid = wrapped.getUUID();
+                        HierarchyManager hm = MgnlContext.getHierarchyManager("mgnlVersion");
+                        Node versionedNode = hm.getContentByUUID(uuid).getJCRNode();
+                        log.debug("Located versioned node {}({})", uuid, nodePath);
+
+                        VersionHistory history = versionedNode.getVersionHistory();
+
+                        log.debug("Removing versioned node {}({})", uuid, nodePath);
+                        versionedNode.remove();
+                        hm.save();
+
+                        VersionIterator iter = history.getAllVersions();
+                        // skip root version. It can't be deleted manually, but will be cleaned up automatically after removing all other versions (see JCR-134)
+                        iter.nextVersion();
+                        while (iter.hasNext()) {
+                            Version version = iter.nextVersion();
+                            log.debug("removing version {}", version.getName());
+                            history.removeVersion(version.getName());
+                        }
+                        // at this point history should be deleted automatically (at least on JR)
+                    } catch (ItemNotFoundException e) {
+                        // doesn't exist in version store, ignore
+                    } catch (UnsupportedRepositoryOperationException e) {
+                        // not versionable or not referenceable ... either way ignore
+                    }
+                    return null;
+                }
+            });
+        }
+        wrapped.remove();
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DELETE, workspaceName, nodeType, nodePath);
     }
 }

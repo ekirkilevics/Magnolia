@@ -33,13 +33,14 @@
  */
 package info.magnolia.logging;
 
-import javax.servlet.http.HttpServletRequest;
-
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.auth.login.FormLogin;
 import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.UserContext;
+
+import javax.jcr.nodetype.NodeType;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Utilities class used to log 'auditory actions'.
@@ -60,9 +61,19 @@ public class AuditLoggingUtil {
 
     /**
      * log create, modify, activate, deactivate, delete incl. node type.
+     * 
+     * @deprecated since 5.0, use {@link #log(String, String, NodeType, String)} instead.
      */
+    @Deprecated
     public static void log(String action, String workspaceName, ItemType nodeType, String nodePath) {
         AuditLoggingUtil.log(action, new String[]{AuditLoggingUtil.getUser(), workspaceName, nodeType == null ? "" : nodeType.getSystemName(), nodePath});
+    }
+
+    /**
+     * log create, modify, activate, deactivate, delete incl. node type.
+     */
+    public static void log(String action, String workspaceName, NodeType nodeType, String nodePath) {
+        AuditLoggingUtil.log(action, new String[] { AuditLoggingUtil.getUser(), workspaceName, nodeType == null ? "" : nodeType.getName(), nodePath });
     }
 
     /**

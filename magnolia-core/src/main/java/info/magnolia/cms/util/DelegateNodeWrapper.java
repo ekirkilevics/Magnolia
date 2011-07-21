@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.exception.RuntimeRepositoryException;
+
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -69,8 +71,6 @@ import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 
-import info.magnolia.exception.RuntimeRepositoryException;
-
 /**
  * Wrapper for JCR node.
  *
@@ -78,7 +78,7 @@ import info.magnolia.exception.RuntimeRepositoryException;
  */
 public abstract class DelegateNodeWrapper implements Node, Cloneable {
 
-    private Node wrapped;
+    protected Node wrapped;
 
     protected DelegateNodeWrapper() {
     }
@@ -584,7 +584,7 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
                 tmp.wrapped = (Node) ((DelegateNodeWrapper) this.getWrappedNode()).clone();
                 return tmp.deepUnwrap(wrapper, false);
             } else {
-                // still not at the end ... 
+                // still not at the end ...
                 wrapped = ((DelegateNodeWrapper) getWrappedNode()).deepUnwrap(wrapper, true);
                 return this;
             }
