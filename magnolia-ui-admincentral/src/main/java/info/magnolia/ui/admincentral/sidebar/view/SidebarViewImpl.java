@@ -40,8 +40,9 @@ import org.slf4j.LoggerFactory;
 import org.vaadin.jouni.animator.Disclosure;
 
 import com.vaadin.lazyloadwrapper.LazyLoadWrapper;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.ui.VerticalLayout;
 
 
 /**
@@ -54,7 +55,8 @@ import com.vaadin.ui.VerticalSplitPanel;
 public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
 
     private static final Logger log = LoggerFactory.getLogger(SidebarViewImpl.class);
-    private VerticalSplitPanel panel;
+
+    private VerticalLayout panel = new VerticalLayout();
     private ActionListView actionListView;
     private PreviewView previewView;
     private Presenter presenter;
@@ -62,15 +64,16 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
     public SidebarViewImpl(ActionListView actionListView, PreviewView previewView) {
         this.actionListView = actionListView;
         this.previewView = previewView;
-        panel = new VerticalSplitPanel();
-        panel.setImmediate(false);
-        panel.setSizeFull();
 
-        panel.setFirstComponent(new Disclosure("Actions", this.actionListView.asVaadinComponent()));
+        Disclosure actions = new Disclosure("Actions", this.actionListView.asVaadinComponent());
+        actions.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+        actions.open();
+        panel.addComponent(actions);
 
-        LazyLoadWrapper lazyPreview = new LazyLoadWrapper(previewView.asVaadinComponent());
-        lazyPreview.setSizeUndefined();
-        panel.setSecondComponent(lazyPreview);
+        Disclosure lazyPreview = new Disclosure("Status", new LazyLoadWrapper(this.previewView.asVaadinComponent()));
+        lazyPreview.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+        lazyPreview.open();
+        panel.addComponent(lazyPreview);
     }
 
     @Override

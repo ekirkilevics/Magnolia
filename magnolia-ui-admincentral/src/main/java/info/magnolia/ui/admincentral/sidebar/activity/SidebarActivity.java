@@ -33,14 +33,6 @@
  */
 package info.magnolia.ui.admincentral.sidebar.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.jcr.Item;
-import javax.jcr.RepositoryException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.sidebar.view.SidebarView;
@@ -49,12 +41,22 @@ import info.magnolia.ui.admincentral.workbench.action.WorkbenchActionFactory;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jcr.Item;
+import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Shows the detail view and command list.
@@ -152,5 +154,9 @@ public class SidebarActivity extends AbstractActivity implements SidebarView.Pre
             }
         }
         return null;
+    }
+
+    public void update(Place place) {
+        showItem((ItemSelectedPlace) place);
     }
 }
