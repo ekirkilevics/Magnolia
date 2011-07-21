@@ -33,225 +33,229 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
-import junit.framework.TestCase;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections.CollectionUtils;
-import static org.easymock.EasyMock.*;
+import info.magnolia.test.ComponentsTestUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Iterator;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.codec.binary.Base64;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 /**
- *
- * @author had
+ * @version $Id$
  * TODO: this test should NOT use SystemContext (or not *only*)
  */
-public class DialogPasswordTest extends TestCase {
+public class DialogPasswordTest {
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         //MessagesManager.setDefaultLocale("en");
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         MgnlContext.release();
         // reset manually since we used system context.
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        super.tearDown();
     }
 
+    @Test
     public void testValidateChangePwd() throws Exception {
-        DialogPassword dp = new DialogPassword();
-        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
-        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
-        Content storageNode = createStrictMock(Content.class);
-        Content configNode = createStrictMock(Content.class);
-        NodeData pswd = createStrictMock(NodeData.class);
+        // GIVEN
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        Content storageNode = mock(Content.class);
+        Content configNode = mock(Content.class);
+        NodeData pswd = mock(NodeData.class);
 
-        SystemContext ctx = createStrictMock(SystemContext.class);
+        SystemContext ctx = mock(SystemContext.class);
         ComponentsTestUtil.setInstance(SystemContext.class, ctx);
         MgnlContext.setInstance(ctx);
 
-        expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        expect(configNode.getHandle()).andReturn("/som/dialog/path/pswd");
-        expect(configNode.getName()).andReturn("pswd");
-        expect(configNode.getChildren(ItemType.CONTENTNODE)).andReturn(CollectionUtils.EMPTY_COLLECTION);
+        when(configNode.getHandle()).thenReturn("/som/dialog/path/pswd");
+        when(configNode.getName()).thenReturn("pswd");
 
         // validate() call
-        expect(request.getParameter("pswd")).andReturn("blah");
-        expect(request.getParameter("pswd_verification")).andReturn("blah");
-        expect(storageNode.getNodeData("pswd")).andReturn(pswd);
-        expect(pswd.getString()).andReturn("oldBlah");
+        when(request.getParameter("pswd")).thenReturn("blah");
+        when(request.getParameter("pswd_verification")).thenReturn("blah");
+        when(storageNode.getNodeData("pswd")).thenReturn(pswd);
+        when(pswd.getString()).thenReturn("oldBlah");
 
-        Object[] mocks = new Object[] {request, response, storageNode, configNode, pswd, ctx};
-        replay(mocks);
+        DialogPassword dp = new DialogPassword();
+
+        // WHEN
         dp.init(request, response, storageNode, configNode);
+
+        // THEN
         assertTrue(dp.validate());
-        verify(mocks);
     }
 
+    @Test
     public void testValidateSamePwd() throws Exception {
-        DialogPassword dp = new DialogPassword();
-        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
-        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
-        Content storageNode = createStrictMock(Content.class);
-        Content configNode = createStrictMock(Content.class);
-        NodeData pswd = createStrictMock(NodeData.class);
+        // GIVEN
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        Content storageNode = mock(Content.class);
+        Content configNode = mock(Content.class);
+        NodeData pswd = mock(NodeData.class);
 
-        SystemContext ctx = createStrictMock(SystemContext.class);
+        SystemContext ctx = mock(SystemContext.class);
         ComponentsTestUtil.setInstance(SystemContext.class, ctx);
         MgnlContext.setInstance(ctx);
 
-        expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        expect(configNode.getHandle()).andReturn("/som/dialog/path/pswd");
-        expect(configNode.getName()).andReturn("pswd");
-        expect(configNode.getChildren(ItemType.CONTENTNODE)).andReturn(CollectionUtils.EMPTY_COLLECTION);
+        when(configNode.getHandle()).thenReturn("/som/dialog/path/pswd");
+        when(configNode.getName()).thenReturn("pswd");
 
         // validate() call
-        expect(request.getParameter("pswd")).andReturn("blah");
-        expect(request.getParameter("pswd_verification")).andReturn("blah");
-        expect(storageNode.getNodeData("pswd")).andReturn(pswd);
-        expect(pswd.getString()).andReturn(new String(Base64.encodeBase64("blah".getBytes())));
+        when(request.getParameter("pswd")).thenReturn("blah");
+        when(request.getParameter("pswd_verification")).thenReturn("blah");
+        when(storageNode.getNodeData("pswd")).thenReturn(pswd);
+        when(pswd.getString()).thenReturn(new String(Base64.encodeBase64("blah".getBytes())));
 
-        Object[] mocks = new Object[] {request, response, storageNode, configNode, pswd, ctx};
-        replay(mocks);
+        DialogPassword dp = new DialogPassword();
+
+        // WHEN
         dp.init(request, response, storageNode, configNode);
+
+        // THEN
         assertTrue(dp.validate());
-        verify(mocks);
     }
 
+    @Test
     public void testValidatePwdNotChanged() throws Exception {
-        DialogPassword dp = new DialogPassword();
-        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
-        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
-        Content storageNode = createStrictMock(Content.class);
-        Content configNode = createStrictMock(Content.class);
-        NodeData pswd = createStrictMock(NodeData.class);
+        // GIVEN
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        Content storageNode = mock(Content.class);
+        Content configNode = mock(Content.class);
+        NodeData pswd = mock(NodeData.class);
 
-        SystemContext ctx = createStrictMock(SystemContext.class);
+        SystemContext ctx = mock(SystemContext.class);
         ComponentsTestUtil.setInstance(SystemContext.class, ctx);
         MgnlContext.setInstance(ctx);
 
-        expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        expect(configNode.getHandle()).andReturn("/som/dialog/path/pswd");
-        expect(configNode.getName()).andReturn("pswd");
-        expect(configNode.getChildren(ItemType.CONTENTNODE)).andReturn(CollectionUtils.EMPTY_COLLECTION);
+        when(configNode.getHandle()).thenReturn("/som/dialog/path/pswd");
+        when(configNode.getName()).thenReturn("pswd");
 
         // validate() call
-        expect(request.getParameter("pswd")).andReturn("    ");
-        expect(request.getParameter("pswd_verification")).andReturn("");
-        expect(storageNode.getNodeData("pswd")).andReturn(pswd);
-        expect(pswd.getString()).andReturn(new String(Base64.encodeBase64("blah".getBytes())));
+        when(request.getParameter("pswd")).thenReturn("    ");
+        when(request.getParameter("pswd_verification")).thenReturn("");
+        when(storageNode.getNodeData("pswd")).thenReturn(pswd);
+        when(pswd.getString()).thenReturn(new String(Base64.encodeBase64("blah".getBytes())));
 
-        Object[] mocks = new Object[] {request, response, storageNode, configNode, pswd, ctx};
-        replay(mocks);
+        DialogPassword dp = new DialogPassword();
+
+        // WHEN
         dp.init(request, response, storageNode, configNode);
+
+        // THEN
         assertTrue(dp.validate());
-        verify(mocks);
     }
 
+    @Test
     public void testValidateChangePwdVerifyDontMatch() throws Exception {
-        DialogPassword dp = new DialogPassword();
-        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
-        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
-        Content storageNode = createStrictMock(Content.class);
-        Content configNode = createStrictMock(Content.class);
-        Iterator iterator = createStrictMock(Iterator.class);
-        NodeData pswd = createStrictMock(NodeData.class);
-        // use nice mock due to issues with MessageManager and its static init block
-        SystemContext ctx = createNiceMock(SystemContext.class);
+        // GIVEN
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        Content storageNode = mock(Content.class);
+        Content configNode = mock(Content.class);
+        Iterator iterator = mock(Iterator.class);
+        NodeData pswd = mock(NodeData.class);
+
+        SystemContext ctx = mock(SystemContext.class);
         ComponentsTestUtil.setInstance(SystemContext.class, ctx);
         ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         MgnlContext.setInstance(ctx);
 
-        expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        expect(configNode.getHandle()).andReturn("/som/dialog/path/pswd");
-        expect(configNode.getName()).andReturn("pswd");
-        expect(configNode.getChildren(ItemType.CONTENTNODE)).andReturn(CollectionUtils.EMPTY_COLLECTION);
+        when(configNode.getHandle()).thenReturn("/som/dialog/path/pswd");
+        when(configNode.getName()).thenReturn("pswd");
 
         // validate() call
-        expect(request.getParameter("pswd")).andReturn("blah");
-        expect(request.getParameter("pswd_verification")).andReturn("huh");
-        expect(storageNode.getNodeData("pswd")).andReturn(pswd);
-        expect(pswd.getString()).andReturn("oldBlah").times(2);
+        when(request.getParameter("pswd")).thenReturn("blah");
+        when(request.getParameter("pswd_verification")).thenReturn("huh");
+        when(storageNode.getNodeData("pswd")).thenReturn(pswd);
+        when(pswd.getString()).thenReturn("oldBlah");
 
         //ctx.setLocale(Locale.ENGLISH);
-        expect(ctx.getLocale()).andReturn(Locale.ENGLISH).anyTimes();
+        when(ctx.getLocale()).thenReturn(Locale.ENGLISH);
 
-        expect(storageNode.hasNodeData("pswd")).andReturn(Boolean.TRUE);
-        expect(storageNode.getNodeData("pswd")).andReturn(pswd);
-        // expect(ctx.getAttribute("multipartform")).andReturn(null);
-        expect(request.getMethod()).andReturn("POST");
-        expect(request.getParameter("pswd")).andReturn("blah");
-        expect(request.getMethod()).andReturn("POST");
-        expect(request.getParameter("pswd")).andReturn("blah");
-        expect(ctx.getAttribute("msg", Context.LOCAL_SCOPE)).andReturn(null);
+        when(storageNode.hasNodeData("pswd")).thenReturn(Boolean.TRUE);
+        when(storageNode.getNodeData("pswd")).thenReturn(pswd);
+        // when(ctx.getAttribute("multipartform")).thenReturn(null);
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getParameter("pswd")).thenReturn("blah");
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getParameter("pswd")).thenReturn("blah");
+        when(ctx.getAttribute("msg", Context.LOCAL_SCOPE)).thenReturn(null);
         ctx.setAttribute("msg", "dialog.password.failed.js", Context.LOCAL_SCOPE);
 
-        Object[] mocks = new Object[] {request, response, storageNode, configNode, iterator, pswd, ctx};
-        replay(mocks);
+        DialogPassword dp = new DialogPassword();
+
+        // WHEN
         dp.init(request, response, storageNode, configNode);
+
+        // THEN
         assertFalse(dp.validate());
-        verify(mocks);
     }
 
+    @Test
     public void testValidateChangePwdVerifyDontMatchVerifyEmpty() throws Exception {
-        DialogPassword dp = new DialogPassword();
-        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
-        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
-        Content storageNode = createStrictMock(Content.class);
-        Content configNode = createStrictMock(Content.class);
-        Iterator iterator = createStrictMock(Iterator.class);
-        NodeData pswd = createStrictMock(NodeData.class);
+        // GIVEN
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        Content storageNode = mock(Content.class);
+        Content configNode = mock(Content.class);
+        Iterator iterator = mock(Iterator.class);
+        NodeData pswd = mock(NodeData.class);
         // use nice mock due to issues with MessageManager and its static init block
-        SystemContext ctx = createNiceMock(SystemContext.class);
+        SystemContext ctx = mock(SystemContext.class);
         ComponentsTestUtil.setInstance(SystemContext.class, ctx);
         ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         MgnlContext.setInstance(ctx);
 
-        expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        expect(configNode.getHandle()).andReturn("/som/dialog/path/pswd");
-        expect(configNode.getName()).andReturn("pswd");
-        expect(configNode.getChildren(ItemType.CONTENTNODE)).andReturn(CollectionUtils.EMPTY_COLLECTION);
+        when(configNode.getHandle()).thenReturn("/som/dialog/path/pswd");
+        when(configNode.getName()).thenReturn("pswd");
 
         // validate() call
-        expect(request.getParameter("pswd")).andReturn("blah");
-        expect(request.getParameter("pswd_verification")).andReturn("");
-        expect(storageNode.getNodeData("pswd")).andReturn(pswd);
-        expect(pswd.getString()).andReturn("oldBlah").times(2);
+        when(request.getParameter("pswd")).thenReturn("blah");
+        when(request.getParameter("pswd_verification")).thenReturn("");
+        when(storageNode.getNodeData("pswd")).thenReturn(pswd);
+        when(pswd.getString()).thenReturn("oldBlah");
 
         //ctx.setLocale(Locale.ENGLISH);
-        expect(ctx.getLocale()).andReturn(Locale.ENGLISH).anyTimes();
+        when(ctx.getLocale()).thenReturn(Locale.ENGLISH);
 
-        expect(storageNode.hasNodeData("pswd")).andReturn(Boolean.TRUE);
-        expect(storageNode.getNodeData("pswd")).andReturn(pswd);
-        // expect(ctx.getAttribute("multipartform")).andReturn(null);
-        expect(request.getMethod()).andReturn("POST");
-        expect(request.getParameter("pswd")).andReturn("blah");
-        expect(request.getMethod()).andReturn("POST");
-        expect(request.getParameter("pswd")).andReturn("blah");
-        expect(ctx.getAttribute("msg", Context.LOCAL_SCOPE)).andReturn(null);
+        when(storageNode.hasNodeData("pswd")).thenReturn(Boolean.TRUE);
+        when(storageNode.getNodeData("pswd")).thenReturn(pswd);
+        // when(ctx.getAttribute("multipartform")).thenReturn(null);
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getParameter("pswd")).thenReturn("blah");
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getParameter("pswd")).thenReturn("blah");
+        when(ctx.getAttribute("msg", Context.LOCAL_SCOPE)).thenReturn(null);
         ctx.setAttribute("msg", "dialog.password.failed.js", Context.LOCAL_SCOPE);
 
-        Object[] mocks = new Object[] {request, response, storageNode, configNode, iterator, pswd, ctx};
-        replay(mocks);
-        dp.init(request, response, storageNode, configNode);
-        assertFalse(dp.validate());
-        verify(mocks);
-    }
+        DialogPassword dp = new DialogPassword();
 
+        // WHEN
+        dp.init(request, response, storageNode, configNode);
+
+        // THEN
+        assertFalse(dp.validate());
+    }
 }
