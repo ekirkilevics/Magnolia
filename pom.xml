@@ -811,5 +811,6 @@ for Java Content Repositories (JCR).
 
     <module>magnolia-empty-webapp</module>
     <module>magnolia-module-ckeditor</module>
+    <module>magnolia-ui-vaadin-components-demo</module>
   </modules>
 </project>

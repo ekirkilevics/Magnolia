@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>magnolia-project</artifactId>
+    <groupId>info.magnolia</groupId>
+    <version>5.0-SNAPSHOT</version>
+  </parent>
+  <groupId>info.magnolia</groupId>
+  <artifactId>magnolia-ui-vaadin-components</artifactId>
+  <version>5.0-SNAPSHOT</version>
+  <dependencies>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.vaadin.addons</groupId>
+      <artifactId>animator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>temp.org.vaadin.addons</groupId>
+      <artifactId>vaadin-chameleon-theme</artifactId>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.1</version>
+        <configuration>
+          <archive>
+            <index>true</index>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <!-- Implementation-Title and Implementation-Version come from the POM by default -->
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+            <manifestEntries>
+              <!-- Package format version - do not change -->
+              <Vaadin-Package-Version>1</Vaadin-Package-Version>
+
+              <!-- Add-on specific fields to update -->
+              <Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
+
+              <!-- Implementation-Title and Implementation-Version come from the POM by default -->
+              <Implementation-Vendor>Vaadin Ltd</Implementation-Vendor>
+              <Implementation-Title>${pom.name}</Implementation-Title>
+              <Implementation-Version>${pom.version}</Implementation-Version>
+
+              <!-- Comma-separated list of widgetsets in the package -->
+              <Vaadin-Widgetsets>com.vaadin.addons.xs.gwt.XSWidgetSet</Vaadin-Widgetsets>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <suppressionsLocation>${basedir}/checkstyle-suppressions.xml</suppressionsLocation>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <!-- This is needed for the sources required by the GWT compiler to be included in the produced JARs -->
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+  </build>
+</project>

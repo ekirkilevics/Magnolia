@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.navigation;
+package info.magnolia.ui.vaadin.components;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,6 +39,8 @@ import java.util.HashSet;
 import org.vaadin.jouni.animator.AnimatorProxy;
 import org.vaadin.jouni.animator.client.ui.VAnimatorProxy.AnimType;
 
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -61,6 +63,7 @@ public class Melodion extends CssLayout {
 
     public Melodion() {
         addStyleName("sidebar-menu");
+        setSizeUndefined();
     }
 
     public void setSelected(Component c) {
@@ -125,9 +128,19 @@ public class Melodion extends CssLayout {
             this.caption = caption;
             addComponent(animator);
             addComponent(caption);
+
+            addListener(new LayoutClickListener() {
+
+                @Override
+                public void layoutClick(LayoutClickEvent event) {
+                    if (event.getChildComponent() == Tab.this.caption) {
+                        setSelected(Tab.this);
+                    }
+                }
+            });
         }
 
-        public void addButton(NativeButton b) {
+        public void addButton(final NativeButton b) {
             if (content == null) {
                 content = new CssLayout();
             }
@@ -138,15 +151,13 @@ public class Melodion extends CssLayout {
 
                 @Override
                 public void buttonClick(ClickEvent event) {
-                    updateStyles();
-                    event.getButton().addStyleName("selected");
+                    setSelected(b);
                 }
             });
         }
 
         public void expand() {
             if (!isExpanded()) {
-                collapseOthers(this);
                 if (content != null) {
                     if (content.getParent() != this) {
                         addComponent(content);
@@ -154,6 +165,7 @@ public class Melodion extends CssLayout {
                     animator.animate(content, AnimType.ROLL_DOWN_OPEN_POP);
                     expanded = true;
                 }
+                collapseOthers(this);
             }
         }
 
@@ -162,7 +174,7 @@ public class Melodion extends CssLayout {
         }
 
         public void collapse() {
-            if (content != null) {
+            if (content != null && isExpanded()) {
                 animator.animate(content, AnimType.ROLL_UP_CLOSE_REMOVE);
                 expanded = false;
             }

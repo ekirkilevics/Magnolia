@@ -35,12 +35,13 @@ package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.admincentral.navigation.Melodion.Tab;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
+import info.magnolia.ui.vaadin.components.Melodion;
+import info.magnolia.ui.vaadin.components.Melodion.Tab;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import java.util.HashMap;
