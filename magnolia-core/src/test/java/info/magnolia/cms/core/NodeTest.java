@@ -461,4 +461,44 @@ public class NodeTest extends RepositoryTestCase {
     // assertNotSame(creationDate, modDate);
     // }
 
+    // TODO: SCRUM-310
+    // public void testDelete() throws Exception {
+    // // GIVEN content node with version history
+    // final Node content = getTestNode();
+    // final String uuid = content.getIdentifier();
+    // final Node parent = content.getParent();
+    // VersionManager.getInstance().addVersion(content);
+    // parent.save();
+    // Node versionedContent = MgnlContext.getJCRSession("mgnlVersion").getNodeByIdentifier(uuid);
+    // assertNotNull(versionedContent);
+    // VersionHistory history = versionedContent.getVersionHistory();
+    // // root and current
+    // VersionIterator versions = content.getVersionHistory().getAllVersions();
+    // // root version
+    // assertNotNull(versions.nextVersion());
+    // // previously created version
+    // assertNotNull(versions.nextVersion());
+    //
+    // // WHEN we delete the content
+    // content.remove();
+    // parent.getSession().save();
+    //
+    // // THEN versioned node and all versions should be deleted as well
+    // // make sure versioned node is deleted
+    // try {
+    // MgnlContext.getHierarchyManager("mgnlVersion").getContentByUUID(uuid);
+    // fail("versioned copy should have been deleted but was not.");
+    // } catch (ItemNotFoundException e) {
+    // // expected
+    // }
+    //
+    // // make sure history has no label => all versions incl. root are gone
+    // try {
+    // history.getVersionLabels();
+    // fail("version history should have been invalidated by JR after manually deleting all versions except root and referencing content");
+    // } catch (RepositoryException e) {
+    // // no versions exist anymore.
+    // }
+    // }
+
 }
