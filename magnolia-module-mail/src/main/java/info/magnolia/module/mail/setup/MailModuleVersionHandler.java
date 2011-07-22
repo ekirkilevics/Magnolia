@@ -86,7 +86,7 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
                 "/modules/adminInterface/config/menu/tools/mails"
         );
 
-        final MoveNodeContentTask moveTemplates = new MoveNodeContentTask("Rename templates", "Templates will be renamed to templatesConfiguration.",
+        final ReconfigureMailTemplatesTask moveTemplates = new ReconfigureMailTemplatesTask("Rename templates", "Templates will be renamed to templatesConfiguration.",
                 ContentRepository.CONFIG,
                 "/modules/mail/config/templates",
                 "/modules/mail/config/templatesConfiguration",
