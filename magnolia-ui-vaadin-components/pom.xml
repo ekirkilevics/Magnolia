@@ -47,9 +47,6 @@
               <Implementation-Vendor>Vaadin Ltd</Implementation-Vendor>
               <Implementation-Title>${pom.name}</Implementation-Title>
               <Implementation-Version>${pom.version}</Implementation-Version>
-
-              <!-- Comma-separated list of widgetsets in the package -->
-              <Vaadin-Widgetsets>com.vaadin.addons.xs.gwt.XSWidgetSet</Vaadin-Widgetsets>
             </manifestEntries>
           </archive>
         </configuration>
