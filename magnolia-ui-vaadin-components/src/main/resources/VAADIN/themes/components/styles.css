@@ -1,0 +1,44 @@
+.sidebar-menu .v-label {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  padding: .6em .9em;
+}
+
+.sidebar-menu .v-label:hover {
+  cursor: pointer;
+}
+
+.sidebar-menu .v-label-spacer:hover {
+  cursor: auto;
+}
+
+.sidebar-menu .v-label img {
+  vertical-align: middle;
+}
+
+.sidebar-menu .v-tree-node {
+  background: none;
+}
+
+.sidebar-menu .v-caption {
+  font-size: .85em;
+  height: 0;
+  overflow: visible;
+  height: 0;
+  clear: both;
+}
+
+.sidebar-menu .v-captiontext, .sidebar-menu .v-icon {
+  padding: .6em .9em 0;
+}
+
+.sidebar-menu .v-captiontext {
+  float: right;
+}
+
+.sidebar-menu .v-icon {
+  float: left;
+}

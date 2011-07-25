@@ -37,7 +37,7 @@ public class ComponentsDemo extends Application
     {
         setTheme("demo");
 
-        window = new Window("My Vaadin Application");
+        window = new Window("Components demo");
         setMainWindow(window);
 
         Melodion melodion = new Melodion();
@@ -66,12 +66,16 @@ public class ComponentsDemo extends Application
         workItems.setCaption("5 new");
         melodion.addTab(workItems);
 
-        melodion.addTab(new Label("Moderation"));
+        Label moderation = new Label("Moderation");
+        moderation.setCaption("2 new");
+        melodion.addTab(moderation);
         melodion.addTab(new Label("Internal messages"));
 
         melodion.addSpacer();
 
-        melodion.addTab(new Label("Welcome board"));
+        Label welcomeBoard = new Label("Welcome board");
+        welcomeBoard.setIcon(new ThemeResource("../runo/icons/16/note.png"));
+        melodion.addTab(welcomeBoard);
 
         Label settings = new Label("Settings");
         settings.setIcon(new ThemeResource("../runo/icons/16/settings.png"));
@@ -80,6 +84,16 @@ public class ComponentsDemo extends Application
         Label profile = new Label("Profile");
         profile.setIcon(new ThemeResource("../runo/icons/16/user.png"));
         melodion.addTab(profile);
+
+        melodion.addSpacer();
+
+        Label systemMessagesLabel = new Label("System messages");
+        systemMessagesLabel.setCaption("3 new");
+        Tab systemMessagesTab = melodion.addTab(systemMessagesLabel);
+        systemMessagesTab.addButton(new NativeButton("Warnings"));
+        systemMessagesTab.addButton(new NativeButton("Errors"));
+
+        melodion.addTab(new Label("Audit log"));
 
         window.addComponent(melodion);
     }
