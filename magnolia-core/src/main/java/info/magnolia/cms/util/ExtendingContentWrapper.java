@@ -66,7 +66,6 @@ import info.magnolia.cms.core.NodeData;
  * <li>nodes laying deeper in the hierarchy can extend an other node
  * </ul>
  *
- * @author pbaerfuss
  * @version $Id$
  * @see InheritanceContentWrapper a class supporting content inheritance.
  */
@@ -225,9 +224,7 @@ public class ExtendingContentWrapper extends ContentWrapper {
             }
             return wrapContentNodes(merged.values());
         }
-        else {
-            return wrapContentNodes(directChildren);
-        }
+        return wrapContentNodes(directChildren);
     }
 
     @Override
@@ -297,9 +294,7 @@ public class ExtendingContentWrapper extends ContentWrapper {
             }
             return wrapNodeDatas(merged.values());
         }
-        else {
-            return wrapNodeDatas(directChildren);
-        }
+        return wrapNodeDatas(directChildren);
     }
 
     @Override
