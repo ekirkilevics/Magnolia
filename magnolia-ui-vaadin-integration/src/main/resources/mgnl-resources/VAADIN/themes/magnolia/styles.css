@@ -135,35 +135,6 @@ input.v-textfield,textarea.v-textarea,.v-filterselect {
   overflow-x: hidden;
 }
 
-.sidebar-menu .v-label {
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
-
-.sidebar-menu .v-label:hover {
-  cursor: pointer;
-}
-
-.sidebar-menu .v-label-spacer:hover {
-  cursor: auto;
-}
-
-.sidebar-menu .v-label img {
-  vertical-align: middle;
-}
-
-.sidebar-menu .v-tree-node {
-  background: none;
-}
-
-.sidebar-menu .v-caption {
-  float: right;
-  padding-top: 2ex;
-}
-
 input.v-textfield-search[type="text"] {
   float: right;
 }
