@@ -1,4 +1,5 @@
 @import "../chameleon/styles.css";
+@import "../components/styles.css";
 
 /* Application background */
 .v-app {
