@@ -48,15 +48,15 @@ import org.slf4j.LoggerFactory;
  * Provides support for a simple syntax form of doing redirects and forwards. You pass it a url prefixed with either
  * "redirect:", "permanent:" or "forward:". The context path is added to the url.
  *
- * @author tmattsson
+ * @version $Id$
  */
 public class RequestDispatchUtil {
 
     private static final Logger log = LoggerFactory.getLogger(RequestDispatchUtil.class);
 
-    private static final String REDIRECT_PREFIX = "redirect:";
-    private static final String PERMANENT_PREFIX = "permanent:";
-    private static final String FORWARD_PREFIX = "forward:";
+    public static final String REDIRECT_PREFIX = "redirect:";
+    public static final String PERMANENT_PREFIX = "permanent:";
+    public static final String FORWARD_PREFIX = "forward:";
 
     /**
      * Returns true if processing took place, even if it fails.
@@ -75,7 +75,7 @@ public class RequestDispatchUtil {
                     redirectUrl = request.getContextPath() + redirectUrl;
                 }
 
-                response.sendRedirect(redirectUrl);
+                response.sendRedirect(response.encodeRedirectURL(redirectUrl));
 
             } catch (IOException e) {
                 log.error("Failed to redirect to {}:{}", targetUri, e.getMessage());
