@@ -1,31 +1,57 @@
-/*
- * Copyright 2009 IT Mill Ltd.
+/**
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This file is dual-licensed under both the Magnolia
+ * Network Agreement and the GNU General Public License.
+ * You may elect to use one or the other of these licenses.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * This file is distributed in the hope that it will be
+ * useful, but AS-IS and WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE, TITLE, or NONINFRINGEMENT.
+ * Redistribution, except as permitted by whichever of the GPL
+ * or MNA you select, is prohibited.
+ *
+ * 1. For the GPL license (GPL), you can redistribute and/or
+ * modify this file under the terms of the GNU General
+ * Public License, Version 3, as published by the Free Software
+ * Foundation.  You should have received a copy of the GNU
+ * General Public License, Version 3 along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * 2. For the Magnolia Network Agreement (MNA), this file
+ * and the accompanying materials are made available under the
+ * terms of the MNA which accompanies this distribution, and
+ * is available at http://www.magnolia-cms.com/mna.html
+ *
+ * Any modifications to this file must keep this entire header
+ * intact.
+ *
  */
 package info.magnolia.ui.vaadin.components.demo;
 
 import info.magnolia.ui.vaadin.components.Melodion;
 import info.magnolia.ui.vaadin.components.Melodion.Tab;
+import info.magnolia.ui.vaadin.components.Rack;
+
+import org.vaadin.jouni.animator.Disclosure;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
 
+
 /**
- * The Application's "main" class
+ * The Application's "main" class.
  */
 @SuppressWarnings("serial")
 public class ComponentsDemo extends Application
@@ -40,8 +66,29 @@ public class ComponentsDemo extends Application
         window = new Window("Components demo");
         setMainWindow(window);
 
+        HorizontalLayout layout = new HorizontalLayout();
+        window.addComponent(layout);
+
+        layout.addComponent(new Panel("Melodion", melodion()));
+        layout.addComponent(new Panel("Rack", rack()));
+    }
+
+    private ComponentContainer rack() {
+        Rack rack = new Rack();
+        rack.setWidth(300, Sizeable.UNITS_PIXELS);
+
+        Disclosure actions = rack.addUnit("Actions");
+        actions.setContent(new Label("Hello"));
+
+        Disclosure status = rack.addUnit("Status");
+        status.setContent(new Label("World"));
+
+        return rack;
+    }
+
+    private ComponentContainer melodion() {
         Melodion melodion = new Melodion();
-        melodion.setWidth(300, Melodion.UNITS_PIXELS);
+        melodion.setWidth(300, Sizeable.UNITS_PIXELS);
 
         Tab templates = melodion.addTab(new Label("Templates"));
         templates.addButton(new NativeButton("Site-wide templates"));
@@ -95,6 +142,6 @@ public class ComponentsDemo extends Application
 
         melodion.addTab(new Label("Audit log"));
 
-        window.addComponent(melodion);
+        return melodion;
     }
 }
