@@ -49,15 +49,13 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.safehaus.uuid.UUIDGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.InvalidParameterException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
@@ -73,12 +71,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.InvalidParameterException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.safehaus.uuid.UUIDGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This filter receives activation requests from another instance and applies them.
@@ -455,7 +457,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             systemHM.getWorkspace().getSession().importXML(transientStoreHandle, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
             IOUtils.closeQuietly(inputStream);
             // copy properties from transient store to existing content
-            Content tmpContent = transientNode.getChildByName(topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE));
+            Content tmpContent = transientNode.getContent(topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE));
             copyProperties(tmpContent, existingContent);
             systemHM.delete(transientStoreHandle);
             hierarchyManager.save();

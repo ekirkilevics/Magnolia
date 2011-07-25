@@ -33,6 +33,18 @@
  */
 package info.magnolia.module.exchangesimple;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.getCurrentArguments;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.isNull;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.startsWith;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
@@ -40,17 +52,18 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
-import org.apache.commons.io.IOUtils;
-import static org.easymock.EasyMock.*;
 
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.zip.GZIPInputStream;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
@@ -60,11 +73,10 @@ import javax.jcr.Workspace;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.zip.GZIPInputStream;
+
+import org.apache.commons.io.IOUtils;
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 
 /**
  * Basic test for receiving end of the activation.
@@ -164,7 +176,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         expect(tempNode.getHandle()).andReturn("/DUMMY-UUID");
 
         // get node with imported properties
-        expect(tempNode.getChildByName("nodename")).andReturn(importedNode);
+        expect(tempNode.getContent("nodename")).andReturn(importedNode);
 
         // for the sake of this test we'll just pretend we have no properties on the imported node either
         expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
@@ -232,7 +244,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         expect(tempNode.getHandle()).andReturn("/DUMMY-UUID");
 
         // get node with imported properties
-        expect(tempNode.getChildByName("nodename")).andReturn(importedNode);
+        expect(tempNode.getContent("nodename")).andReturn(importedNode);
 
         // for the sake of this test we'll just pretend we have no properties on the imported node
         expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
@@ -309,7 +321,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         expect(tempNode.getHandle()).andReturn("/DUMMY-UUID");
 
         // get node with imported properties
-        expect(tempNode.getChildByName("nodename")).andReturn(importedNode);
+        expect(tempNode.getContent("nodename")).andReturn(importedNode);
 
         // for the sake of this test we'll just pretend we have no properties on the imported node
         expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
