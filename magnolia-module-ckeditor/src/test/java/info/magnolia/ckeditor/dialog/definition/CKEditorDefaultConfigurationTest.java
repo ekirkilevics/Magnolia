@@ -97,7 +97,7 @@ public class CKEditorDefaultConfigurationTest {
     }
 
     /**
-     * we want [['foo, "'bar']] but not [['foo', 'bar',]] as some browsers may not like the latter.
+     * we want [['foo, 'bar']] but not [['foo', 'bar',]] as some browsers may not like the latter.
      */
     @Test
     public void testMagnoliaToolbarReturnsJavascriptArrayWithNoDanglingComma() throws Exception {
