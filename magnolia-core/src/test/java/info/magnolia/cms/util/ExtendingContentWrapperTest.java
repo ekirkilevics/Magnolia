@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,17 +33,18 @@
  */
 package info.magnolia.cms.util;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.jcr.RepositoryException;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
-
-import javax.jcr.RepositoryException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 
 /**
@@ -61,15 +62,14 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
 
-        assertFalse(extendedContent.hasNodeData("extends"));
-        assertFalse(extendedContent.getNodeData("extends").isExist());
+        assertFalse(extendedContent.hasNodeData(ExtendingContentWrapper.EXTENDING_NODE_DATA));
+        assertFalse(extendedContent.getNodeData(ExtendingContentWrapper.EXTENDING_NODE_DATA).isExist());
         for (NodeData nd : extendedContent.getNodeDataCollection()) {
-            if ("extends".equals(nd.getName())) {
+            if (ExtendingContentWrapper.EXTENDING_NODE_DATA.equals(nd.getName())) {
                 fail("Found extends node data that is supposed to be hidden.");
             }
         }
     }
-
 
     public void testThatNodeDatasAreMerged() throws IOException, RepositoryException{
         HierarchyManager hm = MockUtil.createHierarchyManager(
@@ -98,7 +98,8 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
         Content extendedContent = new ExtendingContentWrapper(plainContent);
 
         assertEquals("new", extendedContent.getNodeData("nodeData").getString());
-        assertEquals(1, extendedContent.getNodeDataCollection().size());    }
+        assertEquals(1, extendedContent.getNodeDataCollection().size());
+    }
 
     public void testThatSubNodesAreMerged() throws IOException, RepositoryException{
         HierarchyManager hm = MockUtil.createHierarchyManager(
@@ -287,7 +288,7 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
         // override defining node
         Content disinheritedNode = subnode.getContent("uglyChild");
         // we hide extends now
-        assertFalse(disinheritedNode.hasNodeData("extends"));
+        assertFalse(disinheritedNode.hasNodeData(ExtendingContentWrapper.EXTENDING_NODE_DATA));
         // superbase child node should not be inherited because of override
         assertFalse(disinheritedNode.hasContent("withSubChild"));
 
@@ -296,30 +297,60 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
 
         assertEquals(3, subnode.getNodeDataCollection().size());
     }
-    
-    public void testWrongSettingsInExtendsNode() throws IOException, RepositoryException{
-        HierarchyManager hm = MockUtil.createHierarchyManager(
-                "/superbase/nodeData1=org1\n" +
-                "/superbase/uglyChild/nodeDataX=over1\n" +
-                "/impl/node/extends=/superbase\n" +
-                "/impl/node2/extends=../../superbase/uglyChild\n" + 
-                "/impl/node3/extends=../../superbase/wrongNode");    
-        
+
+    public void testExtendsNonAbsolutelyAndNodeIsNotExisting() throws IOException, RepositoryException {
+        // GIVEN
+        HierarchyManager hm =
+                MockUtil.createHierarchyManager("/superbase/nodeData1=org1\n"
+                        + "/superbase/uglyChild/nodeDataX=over1\n" + "/impl/node/extends=/superbase\n"
+                        + "/impl/node2/extends=../../superbase/uglyChild\n"
+                        + "/impl/node3/extends=../../superbase/wrongNode");
+
         try {
             Content plainContent = hm.getContent("/impl/node3");
-            Content extendedContent = new ExtendingContentWrapper(plainContent, true);
+
+            // WHEN
+            new ExtendingContentWrapper(plainContent, true);
+            fail("Must never get here!");
+
+        // THEN
         } catch (RuntimeException e) {
-            assertEquals(e.getMessage(), "Can't find referenced node for value: TestMockHierarchyManager:/impl/node3[mgnl:contentNode]");
+            assertEquals(e.getMessage(),
+                    "Can't find referenced node for value: TestMockHierarchyManager:/impl/node3[mgnl:contentNode]");
         }
-
-        Content plainContent = hm.getContent("/impl/node");
-        Content extendedContent = new ExtendingContentWrapper(plainContent);
-        NodeData subnode = extendedContent.getNodeData("extends");
-        assertEquals("/superbase/extends", subnode.getHandle().toString());
-
-        plainContent = hm.getContent("/impl/node2");
-        extendedContent = new ExtendingContentWrapper(plainContent);
-        subnode = extendedContent.getNodeData("extends");
-        assertEquals("/superbase/uglyChild/extends", subnode.getHandle().toString());
     }
+
+
+    public void testExtendsWithEmptyValue() throws Exception {
+        // GIVEN
+        HierarchyManager hm = MockUtil.createHierarchyManager("/impl/node\n");
+        Content plainContent = hm.getContent("/impl/node");
+        plainContent.setNodeData(ExtendingContentWrapper.EXTENDING_NODE_DATA, " ");
+
+        // WHEN
+        ExtendingContentWrapper extendedContent = new ExtendingContentWrapper(plainContent);
+
+        // THEN
+        assertFalse(extendedContent.isExtending());
+    }
+
+    public void testExtendsAbsolutelyAndNodeIsNotExisting() throws IOException, RepositoryException {
+        // GIVEN
+        HierarchyManager hm =
+                MockUtil.createHierarchyManager(
+                        "/impl/node/extends=/base/node\n" +
+                        "/impl/node/nodeData2=org2");
+        Content plainContent = hm.getContent("/impl/node");
+
+        // WHEN
+        try {
+            new ExtendingContentWrapper(plainContent, true);
+            fail("should never get here...");
+
+        // THEN
+        } catch (RuntimeException e) {
+            assertEquals("Can't find referenced node for value: TestMockHierarchyManager:/impl/node[mgnl:contentNode]", e.getMessage());
+        }
+    }
+
 }
