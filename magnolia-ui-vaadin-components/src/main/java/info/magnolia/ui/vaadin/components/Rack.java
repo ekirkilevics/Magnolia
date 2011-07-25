@@ -58,9 +58,9 @@ public class Rack extends VerticalLayout {
         add = new NativeSelect();
         add.setNullSelectionAllowed(false);
         Container c = new IndexedContainer();
-        c.addItem("More…");
+        c.addItem("More");
         add.setContainerDataSource(c);
-        add.select("More…");
+        add.select("More");
         addComponent(add);
     }
 
