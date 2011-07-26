@@ -36,8 +36,6 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.freemarker.FreemarkerUtil;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -47,6 +45,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -197,14 +199,9 @@ public class DialogMultiSelect extends DialogBox {
         List objects = new ArrayList();
         for (Iterator iter = values.iterator(); iter.hasNext();) {
             String value = (String) iter.next();
-            objects.add("{value: '" + escape(value) + "'}");
+            objects.add("{value: '" + StringEscapeUtils.escapeJavaScript(value) + "'}");
         }
         return "[" + StringUtils.join(objects.iterator(), ",") + "]";
-    }
-
-    private String escape(String value) {
-        // for now we only escape single quotes...
-        return value.replaceAll("\\'", "\\\\\\'");
     }
 
     public String getSaveInfo() {
