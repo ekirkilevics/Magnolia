@@ -9,6 +9,9 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-gui</artifactId>
   <name>magnolia-gui</name>
+  <properties>
+    <cloverCoverageThreshold>5</cloverCoverageThreshold>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
