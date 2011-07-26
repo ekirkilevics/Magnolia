@@ -51,8 +51,8 @@ import java.util.Map;
 
 /**
  * Control to select multiple values. The values can get stored as list, in JSON format or as a multiple values
- * @author Philipp Bracher
- * @version $Revision$ ($Author$)
+ *
+ * @version $Id$
  */
 public class DialogMultiSelect extends DialogBox {
 
@@ -104,8 +104,8 @@ public class DialogMultiSelect extends DialogBox {
      */
     public String getAddButton() {
         Button add = new Button();
-        add.setLabel(getMessage("buttons.add")); //$NON-NLS-1$
-        add.setOnclick(this.getName() + "DynamicTable.addNew();"); //$NON-NLS-1$
+        add.setLabel(getMessage("buttons.add"));
+        add.setOnclick(this.getName() + "DynamicTable.addNew();");
         add.setSmall(true);
         return add.getHtml();
     }
@@ -126,7 +126,7 @@ public class DialogMultiSelect extends DialogBox {
 
         if (StringUtils.isNotEmpty(chooseOnclick)) {
             Button choose = new Button();
-            choose.setLabel(this.getMessage("buttons.choose")); //$NON-NLS-1$
+            choose.setLabel(this.getMessage("buttons.choose"));
             choose.setOnclick(chooseOnclick);
 
             choose.setSmall(true);
@@ -140,9 +140,9 @@ public class DialogMultiSelect extends DialogBox {
      */
     public String getDeleteButton() {
         Button delete = new Button();
-        delete.setLabel(this.getMessage("buttons.delete")); //$NON-NLS-1$
+        delete.setLabel(this.getMessage("buttons.delete"));
         delete
-            .setOnclick(this.getName() + "DynamicTable.del('${index}');" + this.getName() + "DynamicTable.persist();"); //$NON-NLS-1$
+            .setOnclick(this.getName() + "DynamicTable.del('${index}');" + this.getName() + "DynamicTable.persist();");
         delete.setSmall(true);
         return delete.getHtml();
     }
@@ -197,9 +197,14 @@ public class DialogMultiSelect extends DialogBox {
         List objects = new ArrayList();
         for (Iterator iter = values.iterator(); iter.hasNext();) {
             String value = (String) iter.next();
-            objects.add("{value: '" + value + "'}");
+            objects.add("{value: '" + escape(value) + "'}");
         }
         return "[" + StringUtils.join(objects.iterator(), ",") + "]";
+    }
+
+    private String escape(String value) {
+        // for now we only escape single quotes...
+        return value.replaceAll("\\'", "\\\\\\'");
     }
 
     public String getSaveInfo() {
