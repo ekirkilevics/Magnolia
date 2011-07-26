@@ -33,12 +33,23 @@
  */
 package info.magnolia.ui.vaadin.components;
 
-import org.vaadin.jouni.animator.Disclosure;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.NativeSelect;
+import org.vaadin.jouni.animator.AnimatorProxy;
+import org.vaadin.jouni.animator.client.ui.VAnimatorProxy.AnimType;
+
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.terminal.Sizeable;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.BaseTheme;
 
 
 /**
@@ -47,26 +58,190 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class Rack extends VerticalLayout {
 
-    private VerticalLayout units;
+    private VerticalLayout container;
 
-    private NativeSelect add;
+    private ComboBox selector;
+
+    private Map<String, Unit> units = new HashMap<String, Unit>();
 
     public Rack() {
-        units = new VerticalLayout();
-        addComponent(units);
+        container = new VerticalLayout();
+        addComponent(container);
 
-        add = new NativeSelect();
-        add.setNullSelectionAllowed(false);
-        Container c = new IndexedContainer();
-        c.addItem("More");
-        add.setContainerDataSource(c);
-        add.select("More");
-        addComponent(add);
+        selector = new ComboBox();
+        selector.setNullSelectionAllowed(true);
+        selector.setImmediate(true);
+        selector.setInputPrompt("More...");
+        selector.addStyleName("select-button");
+        selector.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+        addComponent(selector);
+
+        selector.addListener(new ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                Object value = event.getProperty().getValue();
+                if (value != null) {
+                    units.get("" + value).setVisible(true);
+                }
+            }
+        });
     }
 
-    public Disclosure addUnit(String caption) {
-        Disclosure disclosure = new Disclosure(caption);
-        units.addComponent(disclosure);
-        return disclosure;
+    public Unit addUnit(Button title) {
+        Unit unit = new Unit(title);
+        container.addComponent(unit);
+        unit.setVisible(false);
+        return unit;
+    }
+
+    /**
+     * A number of UI controls logically and semantically belonging together.
+     *
+     * @author mrichert
+     */
+    @SuppressWarnings("serial")
+    public class Unit extends CssLayout {
+
+        public static final String STYLE = "v-disclosure";
+
+        public static final String STYLE_CAPTION = STYLE + "-caption";
+
+        public static final String STYLE_CAPTION_OPEN = STYLE_CAPTION + "-open";
+
+        protected AnimatorProxy animator = new AnimatorProxy();
+
+        protected Component content;
+
+        protected Button title = new Button();
+
+        protected boolean expanded = true;
+
+        private Button close;
+
+        private Unit(Button title) {
+            super.addComponent(animator);
+
+            close = new Button("x");
+            close.setStyleName("close");
+            close.addStyleName("borderless");
+            super.addComponent(close);
+
+            super.addComponent(title);
+
+            setStyleName(STYLE);
+            setWidth(100, Sizeable.UNITS_PERCENTAGE);
+            this.title = title;
+            this.title.addStyleName(BaseTheme.BUTTON_LINK);
+            this.title.addStyleName(STYLE_CAPTION);
+            this.title.addStyleName(STYLE_CAPTION_OPEN);
+
+            close.addListener(new ClickListener() {
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    setVisible(false);
+                }
+            });
+
+            this.title.addListener(new ClickListener() {
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    if (expanded) {
+                        collapse();
+                    }
+                    else {
+                        expand();
+                    }
+                }
+            });
+        }
+
+        public void setClosable(boolean closable) {
+            close.setVisible(closable);
+            if (!closable) {
+                setVisible(true);
+            }
+        }
+
+        @Override
+        public void setVisible(boolean visible) {
+            super.setVisible(visible);
+            String caption = title.getCaption();
+            if (visible) {
+                units.remove(caption);
+                selector.removeItem(caption);
+            }
+            else {
+                units.put(caption, this);
+                selector.addItem(caption);
+            }
+        }
+
+        public String getDisclosureCaption() {
+            return title.getCaption();
+        }
+
+        public void setDisclosureCaption(String caption) {
+            title.setCaption(caption);
+        }
+
+        public void setContent(Component newContent) {
+            if (content != newContent) {
+                if (content != null && content.getParent() != null) {
+                    removeComponent(content);
+                }
+                if (expanded && newContent != null) {
+                    super.addComponent(newContent);
+                }
+                content = newContent;
+            }
+        }
+
+        public Component getContent() {
+            return content;
+        }
+
+        public Unit expand() {
+            if (content != null) {
+                if (content.getParent() == null || content.getParent() != this) {
+                    super.addComponent(content);
+                }
+                animator.animate(content, AnimType.ROLL_DOWN_OPEN_POP);
+                title.addStyleName(STYLE_CAPTION_OPEN);
+                expanded = true;
+            }
+            return this;
+        }
+
+        public boolean isExpanded() {
+            return expanded;
+        }
+
+        public Unit collapse() {
+            if (content != null) {
+                animator.animate(content, AnimType.ROLL_UP_CLOSE_REMOVE);
+                title.removeStyleName(STYLE_CAPTION_OPEN);
+                expanded = false;
+            }
+            return this;
+        }
+
+        @Override
+        public void addComponent(Component c) {
+            if (content == null) {
+                setContent(c);
+            }
+            else {
+                throw new UnsupportedOperationException(
+                        "You can only add one component to the Disclosure. Use Disclosure.setContent() method instead.");
+            }
+        }
+
+        @Override
+        public void removeAllComponents() {
+            setContent(null);
+        }
     }
 }

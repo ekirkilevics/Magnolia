@@ -122,3 +122,7 @@ input.v-textfield,textarea.v-textarea,.v-filterselect {
 .sidebar-menu .tab-selected,.sidebar-menu .selected {
   text-shadow: 0 1px 0 rgb(26, 110, 138);
 }
+
+.v-button-borderless .v-icon {
+  width: 16px;
+}

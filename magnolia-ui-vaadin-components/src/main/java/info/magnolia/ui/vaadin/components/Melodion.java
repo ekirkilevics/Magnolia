@@ -127,7 +127,7 @@ public class Melodion extends CssLayout {
         private Tab(Label caption) {
             this.caption = caption;
             addComponent(animator);
-            addComponent(caption);
+            addComponent(this.caption);
 
             addListener(new LayoutClickListener() {
 

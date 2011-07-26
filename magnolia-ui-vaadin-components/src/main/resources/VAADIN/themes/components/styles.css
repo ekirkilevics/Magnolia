@@ -42,3 +42,7 @@
 .sidebar-menu .v-icon {
   float: left;
 }
+
+.v-button-close {
+  float: right;
+}

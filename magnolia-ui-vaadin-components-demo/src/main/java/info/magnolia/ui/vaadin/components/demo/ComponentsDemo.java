@@ -36,13 +36,14 @@ package info.magnolia.ui.vaadin.components.demo;
 import info.magnolia.ui.vaadin.components.Melodion;
 import info.magnolia.ui.vaadin.components.Melodion.Tab;
 import info.magnolia.ui.vaadin.components.Rack;
-
-import org.vaadin.jouni.animator.Disclosure;
+import info.magnolia.ui.vaadin.components.Rack.Unit;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
@@ -75,15 +76,45 @@ public class ComponentsDemo extends Application
 
     private ComponentContainer rack() {
         Rack rack = new Rack();
-        rack.setWidth(300, Sizeable.UNITS_PIXELS);
+        rack.setWidth(200, Sizeable.UNITS_PIXELS);
 
-        Disclosure actions = rack.addUnit("Actions");
-        actions.setContent(new Label("Hello"));
+        actions(rack);
 
-        Disclosure status = rack.addUnit("Status");
-        status.setContent(new Label("World"));
+        Unit status = rack.addUnit(new Button("Status"));
+        status.setContent(new Label("Hello World!"));
 
         return rack;
+    }
+
+    private void actions(Rack rack) {
+        Unit actions = rack.addUnit(new Button("Actions"));
+        actions.setClosable(false);
+        CssLayout layout = new CssLayout();
+        actions.setContent(layout);
+
+        Button previewPage = button("Preview page");
+        previewPage.setIcon(new ThemeResource("../chameleon/img/magnifier.png"));
+        layout.addComponent(previewPage);
+
+        layout.addComponent(new Label("&nbsp;", Label.CONTENT_XHTML));
+
+        Button addSubpage = button("Add subpage");
+        addSubpage.setIcon(new ThemeResource("../runo/icons/16/document-add.png"));
+        layout.addComponent(addSubpage);
+
+        Button editPage = button("Edit page");
+        editPage.setIcon(new ThemeResource("../runo/icons/16/document-txt.png"));
+        layout.addComponent(editPage);
+
+        Button pageProperties = button("Page properties");
+        pageProperties.setIcon(new ThemeResource("../runo/icons/16/settings.png"));
+        layout.addComponent(pageProperties);
+    }
+
+    private Button button(String caption) {
+        Button button = new Button(caption);
+        button.addStyleName("borderless");
+        return button;
     }
 
     private ComponentContainer melodion() {
