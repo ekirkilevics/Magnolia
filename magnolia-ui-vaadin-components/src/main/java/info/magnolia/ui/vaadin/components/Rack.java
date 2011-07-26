@@ -177,6 +177,7 @@ public class Rack extends VerticalLayout {
                 units.put(caption, this);
                 selector.addItem(caption);
             }
+            selector.setEnabled(!units.isEmpty());
         }
 
         public String getDisclosureCaption() {

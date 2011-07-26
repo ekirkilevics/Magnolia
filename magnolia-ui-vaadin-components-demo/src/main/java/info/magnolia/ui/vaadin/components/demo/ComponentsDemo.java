@@ -92,9 +92,9 @@ public class ComponentsDemo extends Application
         CssLayout layout = new CssLayout();
         actions.setContent(layout);
 
-        Button previewPage = button("Preview page");
-        previewPage.setIcon(new ThemeResource("../chameleon/img/magnifier.png"));
-        layout.addComponent(previewPage);
+        Button preview = button("Preview");
+        preview.setIcon(new ThemeResource("../chameleon/img/magnifier.png"));
+        layout.addComponent(preview);
 
         layout.addComponent(new Label("&nbsp;", Label.CONTENT_XHTML));
 
@@ -102,17 +102,22 @@ public class ComponentsDemo extends Application
         addSubpage.setIcon(new ThemeResource("../runo/icons/16/document-add.png"));
         layout.addComponent(addSubpage);
 
-        Button editPage = button("Edit page");
-        editPage.setIcon(new ThemeResource("../runo/icons/16/document-txt.png"));
-        layout.addComponent(editPage);
+        Button edit = button("Edit");
+        edit.setIcon(new ThemeResource("../runo/icons/16/document-txt.png"));
+        layout.addComponent(edit);
 
-        Button pageProperties = button("Page properties");
-        pageProperties.setIcon(new ThemeResource("../runo/icons/16/settings.png"));
-        layout.addComponent(pageProperties);
+        Button properties = button("Properties");
+        properties.setIcon(new ThemeResource("../runo/icons/16/settings.png"));
+        layout.addComponent(properties);
+
+        Button delete = button("Delete");
+        delete.setIcon(new ThemeResource("../runo/icons/16/document-delete.png"));
+        layout.addComponent(delete);
     }
 
     private Button button(String caption) {
         Button button = new Button(caption);
+        button.setStyleName("action");
         button.addStyleName("borderless");
         return button;
     }

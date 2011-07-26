@@ -43,6 +43,11 @@
   float: left;
 }
 
+.v-button-action {
+  width: 100%;
+  text-align: left;
+}
+
 .v-button-close {
   float: right;
 }
