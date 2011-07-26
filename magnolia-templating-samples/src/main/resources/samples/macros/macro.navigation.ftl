@@ -25,7 +25,8 @@ Much less flexible. Needing cmsfn.page back again? --]
     [#if childPages?size!=0 && depth < maxDepth]
         [#list childPages as childPage]
 
-            [#assign isSelected = (childPage.@path == cmsfn.parent(content, "mgnl:content").@path)!false]
+            [#-- will need something again as cmsfn.page(content) [#assign isSelected = (childPage.@path == cmsfn.parent(content, "mgnl:content").@path)!false] --]
+            [#assign isSelected = (childPage.@path == content.@path)!false]
             [#assign isSelectedParent = (childPage.@path == cmsfn.parent(content).@path)!false]
 
             [#if isSelected || isSelectedParent]
