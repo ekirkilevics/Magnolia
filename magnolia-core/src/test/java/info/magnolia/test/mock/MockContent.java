@@ -55,6 +55,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.NodeType;
@@ -606,5 +607,9 @@ public class MockContent extends AbstractContent {
         return ChildrenCollectorFilter.matches(name, namePattern);
     }
 
+    @Override
+    public Workspace getWorkspace() throws RepositoryException {
+        return getHierarchyManager().getWorkspace();
+    }
 
 }

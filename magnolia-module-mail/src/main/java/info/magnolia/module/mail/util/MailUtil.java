@@ -58,8 +58,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.jcr.RepositoryException;
 
@@ -169,21 +169,7 @@ public class MailUtil {
             }
             else if (token.startsWith(MailConstants.PREFIX_GROUP)) {
                 final String groupName = StringUtils.removeStart(token, MailConstants.PREFIX_GROUP);
-                try {
-                    Collection users = getAllUserNodes();
-                    Iterator iter = users.iterator();
-                    while(iter.hasNext()){
-                        Content userNode = ((Content) iter.next());
-                        User user = manager.getUser(userNode.getName());
-                        if (user.getGroups().contains(groupName)){
-                            ret.append(getUserMail(user));
-                            ret.append("\n");
-                        }
-                    }
-                }
-                catch (Exception e) {
-                    log.error("can not get user email info.");
-                }
+                getGroupMembersMails(manager, ret, groupName);
             }
             else if (token.startsWith(MailConstants.PREFIX_ROLE)) {
                 final String roleName = StringUtils.removeStart(token, MailConstants.PREFIX_ROLE);
@@ -209,6 +195,30 @@ public class MailUtil {
             }
         }
         return ret.toString();
+    }
+
+    protected static void getGroupMembersMails(final UserManager manager, StringBuffer ret, final String groupName) {
+        log.debug("group = {}", groupName);
+        try {
+            Collection users = getAllUserNodes();
+            Iterator iter = users.iterator();
+            while(iter.hasNext()){
+                Content userNode = ((Content) iter.next());
+                User user = manager.getUser(userNode.getName());
+                if (user.getAllGroups().contains(groupName)) {
+                    String mail = getUserMail(user);
+                    log.debug("user {} will be notified using mail address {}.", user.getName(), mail);
+                    if (mail != null) {
+                        ret.append(mail);
+                        ret.append("\n");
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            log.error("can not get user email info.", e);
+        }
+        log.debug("found:" + ret.toString());
     }
 
     /**
