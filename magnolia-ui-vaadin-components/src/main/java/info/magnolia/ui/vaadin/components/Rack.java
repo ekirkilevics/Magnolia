@@ -48,7 +48,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.themes.BaseTheme;
 
 
@@ -56,16 +57,22 @@ import com.vaadin.ui.themes.BaseTheme;
  * An enclosure for mounting multiple components.
  * @author mrichert
  */
-public class Rack extends VerticalLayout {
+public class Rack extends CssLayout {
 
-    private VerticalLayout container;
+    private Layout container;
 
     private ComboBox selector;
 
     private Map<String, Unit> units = new HashMap<String, Unit>();
 
     public Rack() {
-        container = new VerticalLayout();
+        setStyleName("rack");
+
+        NativeButton collapse = new NativeButton(">");
+        collapse.setStyleName("collapse");
+        addComponent(collapse);
+
+        container = new CssLayout();
         addComponent(container);
 
         selector = new ComboBox();
@@ -172,6 +179,7 @@ public class Rack extends VerticalLayout {
             if (visible) {
                 units.remove(caption);
                 selector.removeItem(caption);
+                expand();
             }
             else {
                 units.put(caption, this);
@@ -204,29 +212,29 @@ public class Rack extends VerticalLayout {
             return content;
         }
 
-        public Unit expand() {
-            if (content != null) {
-                if (content.getParent() == null || content.getParent() != this) {
-                    super.addComponent(content);
+        public void expand() {
+            if (!isExpanded()) {
+                if (content != null) {
+                    if (content.getParent() != this) {
+                        super.addComponent(content);
+                    }
+                    animator.animate(content, AnimType.ROLL_DOWN_OPEN_POP);
+                    title.addStyleName(STYLE_CAPTION_OPEN);
+                    expanded = true;
                 }
-                animator.animate(content, AnimType.ROLL_DOWN_OPEN_POP);
-                title.addStyleName(STYLE_CAPTION_OPEN);
-                expanded = true;
             }
-            return this;
         }
 
         public boolean isExpanded() {
             return expanded;
         }
 
-        public Unit collapse() {
+        public void collapse() {
             if (content != null) {
                 animator.animate(content, AnimType.ROLL_UP_CLOSE_REMOVE);
                 title.removeStyleName(STYLE_CAPTION_OPEN);
                 expanded = false;
             }
-            return this;
         }
 
         @Override

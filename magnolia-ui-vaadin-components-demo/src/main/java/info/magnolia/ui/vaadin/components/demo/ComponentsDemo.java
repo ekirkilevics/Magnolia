@@ -83,6 +83,9 @@ public class ComponentsDemo extends Application
         Unit status = rack.addUnit(new Button("Status"));
         status.setContent(new Label("Hello World!"));
 
+        Unit versions = rack.addUnit(new Button("Versions"));
+        versions.setContent(new Label("Hello World!"));
+
         return rack;
     }
 
