@@ -36,6 +36,7 @@ package info.magnolia.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleVersionHandler;
@@ -43,11 +44,11 @@ import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.model.Version;
 
-import javax.jcr.RepositoryException;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
 
 /**
  *
@@ -55,6 +56,12 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "./src/test/resources");
+    }
 
     @Override
     protected String getModuleDescriptorPath() {

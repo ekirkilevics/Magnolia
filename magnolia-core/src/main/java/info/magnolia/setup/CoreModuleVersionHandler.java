@@ -208,6 +208,14 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                                 addProperty("toWebContainerResources", Boolean.FALSE))
                                 )))));
 
+        final ArrayList<Condition> conditions = new ArrayList<Condition>();
+        final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
+        u.filterMustBeRegisteredWithCorrectDispatchers("info.magnolia.cms.filters.MgnlMainFilter");
+
+        register(DeltaBuilder.update("4.4.5", "")
+            .addConditions(conditions)
+        );
+
     }
 
     private PropertyValueDelegateTask fixMimetype(String mimeType, final String previouslyWrongValue, final String fixedValue) {

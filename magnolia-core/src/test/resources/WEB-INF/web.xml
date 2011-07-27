@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
+  <description>Magnolia</description>
+  <display-name>magnolia</display-name>
+  <distributable />
+  <filter>
+    <display-name>Magnolia global filters - required for CoreModuleVersionHandlerTests to run</display-name>
+    <filter-name>magnoliaFilterChain</filter-name>
+    <filter-class>info.magnolia.cms.filters.MgnlMainFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>magnoliaFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+  <servlet>
+    <servlet-name>test</servlet-name>
+    <servlet-class>some.package.TestServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>test</servlet-name>
+    <url-pattern>/test/*</url-pattern>
+  </servlet-mapping>
+</web-app>
