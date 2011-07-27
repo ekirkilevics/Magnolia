@@ -69,6 +69,7 @@ import info.magnolia.setup.for3_6_2.UpdateGroups;
 import info.magnolia.setup.for3_6_2.UpdateRoles;
 import info.magnolia.setup.for3_6_2.UpdateUsers;
 import info.magnolia.setup.for4_3.UpdateUserPermissions;
+import info.magnolia.setup.for4_4_5.BootstrapMIMEMappingsTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,7 +214,10 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.filterMustBeRegisteredWithCorrectDispatchers("info.magnolia.cms.filters.MgnlMainFilter");
 
         register(DeltaBuilder.update("4.4.5", "")
-            .addConditions(conditions)
+                .addTask(new BootstrapMIMEMappingsTask("Add m4a MIME mapping", "Add MIME mapping for m4a in case it doesn't exist already", "m4a", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4a.xml"))
+                .addTask(new BootstrapMIMEMappingsTask("Add m4v MIME mapping", "Add MIME mapping for m4v in case it doesn't exist already", "m4v", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4v.xml"))
+                .addTask(new BootstrapMIMEMappingsTask("Add srt MIME mapping", "Add MIME mapping for srt in case it doesn't exist already", "srt", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.srt.xml"))
+                .addConditions(conditions)
         );
 
     }
