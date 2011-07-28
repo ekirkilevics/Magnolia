@@ -2515,6 +2515,74 @@
       </sv:property>
     </sv:node>
   </sv:node>
+  <sv:node sv:name="m4b">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>5e427f4d-88c2-4cc6-8d64-d1a110e230b0</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>m4b</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/mp4.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>audio/mp4</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-02-02T15:33:48.692+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2011-07-26T13:56:14.664+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="m4r">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>62666866-5613-4306-bd7d-d4d6fb77f07a</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>m4r</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/mp4.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>audio/mp4</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-02-02T15:33:48.692+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2011-07-26T13:59:50.579+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
   <sv:node sv:name="m4v">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
@@ -2809,7 +2877,7 @@
       <sv:value>mp4</sv:value>
     </sv:property>
     <sv:property sv:name="mime-type" sv:type="String">
-      <sv:value>application/octet-stream</sv:value>
+      <sv:value>video/mp4</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -2820,6 +2888,108 @@
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
         <sv:value>2006-02-02T15:33:48.692+01:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="mp4a">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>858d5ace-438b-4f57-bfb0-93b04e588f4c</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>mp4a</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/mp4.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>video/mp4</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-02-02T15:33:48.692+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2011-07-26T14:36:49.639+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="mp4s">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>0a996b64-4341-4e6e-b3b0-b42d577856d0</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>mp4s</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/mp4.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/mp4</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-02-02T15:33:48.692+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2011-07-27T09:45:25.756+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="mp4v">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>bd9764a7-031b-4e5e-8fdd-abbf59e4fe5d</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>mp4v</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/mp4.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>video/mp4</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-02-02T15:33:48.692+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2011-07-26T14:02:47.069+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -2898,6 +3068,40 @@
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
         <sv:value>2006-02-02T15:33:48.402+01:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="mpg4">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>19b7d1b0-5c02-4861-a749-bd644a76193d</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>mpg4</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/mp4.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>video/mp4</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-02-02T15:33:48.402+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2011-07-27T09:47:28.124+02:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>

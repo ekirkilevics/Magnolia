@@ -277,44 +277,6 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("custom-type-for-swf", getMimeTypePropertyValue("swf"));
     }
 
-    public void testMP4MimeTypesOnInstall() throws ModuleManagementException, RepositoryException {
-        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
-
-        assertEquals("audio/mp4", getMimeTypePropertyValue("m4a"));
-        assertEquals("video/mp4", getMimeTypePropertyValue("m4v"));
-        assertEquals("application/x-srt", getMimeTypePropertyValue("srt"));
-    }
-
-    public void testMP4MimeTypesOnUpdateTo445() throws ModuleManagementException, RepositoryException {
-        // these mime types didn't exist before 4.4.5
-        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.4"));
-
-        assertEquals("audio/mp4", getMimeTypePropertyValue("m4a"));
-        assertEquals("video/mp4", getMimeTypePropertyValue("m4v"));
-        assertEquals("application/x-srt", getMimeTypePropertyValue("srt"));
-    }
-
-    public void testMP4MimeTypesOnUpdateTo445WithUserFixedValues() throws ModuleManagementException, RepositoryException {
-        // fake a pre-install:
-        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
-        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
-        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
-        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
-
-        // if custom mime types have been set up already, we don't want to overwrite them
-        setupConfigProperty("/server/MIMEMapping/m4a", "mime-type", "custom-type-for-m4a");
-        setupConfigProperty("/server/MIMEMapping/m4v", "mime-type", "custom-type-for-m4v");
-        setupConfigProperty("/server/MIMEMapping/srt", "mime-type", "custom-type-for-srt");
-
-        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.4"));
-
-        assertEquals("custom-type-for-m4a", getMimeTypePropertyValue("m4a"));
-        assertEquals("custom-type-for-m4v", getMimeTypePropertyValue("m4v"));
-        assertEquals("custom-type-for-srt", getMimeTypePropertyValue("srt"));
-    }
-
     private String getMimeTypePropertyValue(String typeName) throws RepositoryException {
         return MgnlContext.getHierarchyManager("config").getContent("/server/MIMEMapping/" + typeName).getNodeData("mime-type").getString();
     }
@@ -357,6 +319,103 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("uriSecurity", updatedFilters.next().getName());
         assertEquals("activation", updatedFilters.next().getName());
         assertFalse(updatedFilters.hasNext());
+    }
+
+    public void testMP4MimeTypesOnInstall() throws ModuleManagementException, RepositoryException {
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
+
+        // new types
+        assertEquals("audio/mp4", getMimeTypePropertyValue("m4a"));
+        assertEquals("audio/mp4", getMimeTypePropertyValue("m4b"));
+        assertEquals("audio/mp4", getMimeTypePropertyValue("m4r"));
+        assertEquals("video/mp4", getMimeTypePropertyValue("m4v"));
+        assertEquals("video/mp4", getMimeTypePropertyValue("mp4a"));
+        assertEquals("application/mp4", getMimeTypePropertyValue("mp4s"));
+        assertEquals("video/mp4", getMimeTypePropertyValue("mp4v"));
+        assertEquals("video/mp4", getMimeTypePropertyValue("mpg4"));
+        assertEquals("application/x-srt", getMimeTypePropertyValue("srt"));
+        // this type used to be application/octet-stream
+        assertEquals("video/mp4", getMimeTypePropertyValue("mp4"));
+    }
+
+    public void testMP4MimeTypesOnUpdateTo445() throws ModuleManagementException, RepositoryException {
+        // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
+        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+
+        // other mime types didn't exist before 4.4.5
+        setupConfigProperty("/server/MIMEMapping/mp4", "mime-type", "application/octet-stream");
+
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.4"));
+
+        assertEquals("audio/mp4", getMimeTypePropertyValue("m4a"));
+        assertEquals("audio/mp4", getMimeTypePropertyValue("m4b"));
+        assertEquals("audio/mp4", getMimeTypePropertyValue("m4r"));
+        assertEquals("video/mp4", getMimeTypePropertyValue("m4v"));
+        assertEquals("video/mp4", getMimeTypePropertyValue("mp4a"));
+        assertEquals("application/mp4", getMimeTypePropertyValue("mp4s"));
+        assertEquals("video/mp4", getMimeTypePropertyValue("mp4v"));
+        assertEquals("video/mp4", getMimeTypePropertyValue("mpg4"));
+        assertEquals("application/x-srt", getMimeTypePropertyValue("srt"));
+        // this type used to be application/octet-stream
+        assertEquals("video/mp4", getMimeTypePropertyValue("mp4"));
+    }
+
+    public void testMP4MimeTypesOnUpdateTo445WithUserFixedValues() throws ModuleManagementException, RepositoryException {
+        // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
+        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+
+        // if custom mime types have been set up already, we don't want to overwrite them (apart from mp4)
+        setupConfigProperty("/server/MIMEMapping/m4a", "mime-type", "custom-type-for-m4a");
+        setupConfigProperty("/server/MIMEMapping/m4b", "mime-type", "custom-type-for-m4b");
+        setupConfigProperty("/server/MIMEMapping/m4r", "mime-type", "custom-type-for-m4r");
+        setupConfigProperty("/server/MIMEMapping/m4v", "mime-type", "custom-type-for-m4v");
+        setupConfigProperty("/server/MIMEMapping/mp4a", "mime-type", "custom-type-for-mp4a");
+        setupConfigProperty("/server/MIMEMapping/mp4s", "mime-type", "custom-type-for-mp4s");
+        setupConfigProperty("/server/MIMEMapping/mp4v", "mime-type", "custom-type-for-mp4v");
+        setupConfigProperty("/server/MIMEMapping/mpg4", "mime-type", "custom-type-for-mpg4");
+        setupConfigProperty("/server/MIMEMapping/srt", "mime-type", "custom-type-for-srt");
+        setupConfigProperty("/server/MIMEMapping/mp4", "mime-type", "custom-type-for-mp4");
+
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.4"));
+
+        assertEquals("custom-type-for-m4a", getMimeTypePropertyValue("m4a"));
+        assertEquals("custom-type-for-m4b", getMimeTypePropertyValue("m4b"));
+        assertEquals("custom-type-for-m4r", getMimeTypePropertyValue("m4r"));
+        assertEquals("custom-type-for-m4v", getMimeTypePropertyValue("m4v"));
+        assertEquals("custom-type-for-mp4a", getMimeTypePropertyValue("mp4a"));
+        assertEquals("custom-type-for-mp4s", getMimeTypePropertyValue("mp4s"));
+        assertEquals("custom-type-for-mp4v", getMimeTypePropertyValue("mp4v"));
+        assertEquals("custom-type-for-mpg4", getMimeTypePropertyValue("mpg4"));
+        assertEquals("custom-type-for-srt", getMimeTypePropertyValue("srt"));
+        assertEquals("custom-type-for-mp4", getMimeTypePropertyValue("mp4"));
+    }
+
+    public void testDefaultMP4MimeTypeOnUpdateTo445WithUserFixedValue() throws ModuleManagementException, RepositoryException {
+        // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
+        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+
+        // already changed value differing from original installation
+        setupConfigProperty("/server/MIMEMapping/mp4", "mime-type", "application/octet-stream");
+
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.4"));
+
+        // don't overwrite user settings
+        assertEquals("video/mp4", getMimeTypePropertyValue("mp4"));
     }
 
 }
