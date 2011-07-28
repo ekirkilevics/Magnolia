@@ -9,7 +9,6 @@
   </parent>
   <artifactId>magnolia-module-wcm</artifactId>
   <name>magnolia-module-wcm</name>
-  <packaging>jar</packaging>
   <description>Magnolia WCM</description>
   <dependencies>
     <dependency>

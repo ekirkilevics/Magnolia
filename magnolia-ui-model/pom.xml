@@ -8,11 +8,10 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-ui-model</artifactId>
   <name>magnolia-ui-model</name>
-  <packaging>jar</packaging>
   <description>Registration and definition of ui components like dialogs and trees.</description>
 
   <properties>
-  	<cloverCoverageThreshold>10</cloverCoverageThreshold>
+    <cloverCoverageThreshold>10</cloverCoverageThreshold>
   </properties>
 
   <dependencies>
