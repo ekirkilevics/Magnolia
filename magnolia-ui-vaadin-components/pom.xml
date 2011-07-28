@@ -4,10 +4,10 @@
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
     <version>5.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
-  <groupId>info.magnolia</groupId>
   <artifactId>magnolia-ui-vaadin-components</artifactId>
-  <version>5.0-SNAPSHOT</version>
+  <name>magnolia-ui-vaadin-components</name>
   <dependencies>
     <dependency>
       <groupId>com.vaadin</groupId>

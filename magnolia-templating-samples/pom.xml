@@ -8,7 +8,6 @@
   </parent>
   <artifactId>magnolia-templating-samples</artifactId>
   <name>magnolia-templating-samples</name>
-  <packaging>jar</packaging>
   <description />
   <properties>
     <documentationURL>http://documentation.magnolia-cms.com/modules/samples.html</documentationURL>
