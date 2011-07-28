@@ -626,6 +626,10 @@ for Java Content Repositories (JCR).
         <exclusions>
           <!-- exclusions here are not transitive -->
           <exclusion>
+            <groupId>javax.jcr</groupId>
+            <artifactId>jcr</artifactId>
+          </exclusion>
+          <exclusion>
             <groupId>ant</groupId>
             <artifactId>ant</artifactId>
           </exclusion>
