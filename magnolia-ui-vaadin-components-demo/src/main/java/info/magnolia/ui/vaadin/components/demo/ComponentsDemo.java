@@ -55,13 +55,12 @@ import com.vaadin.ui.Window;
  * The Application's "main" class.
  */
 @SuppressWarnings("serial")
-public class ComponentsDemo extends Application
-{
+public class ComponentsDemo extends Application {
+
     private Window window;
 
     @Override
-    public void init()
-    {
+    public void init() {
         setTheme("demo");
 
         window = new Window("Components demo");
@@ -70,14 +69,21 @@ public class ComponentsDemo extends Application
         HorizontalLayout layout = new HorizontalLayout();
         window.addComponent(layout);
 
-        layout.addComponent(new Panel("Melodion", melodion()));
-        layout.addComponent(new Panel("Rack", rack()));
+        Panel melodionPanel = new Panel("Melodion", melodion());
+        melodionPanel.setWidth(300, Sizeable.UNITS_PIXELS);
+        melodionPanel.setHeight(450, Sizeable.UNITS_PIXELS);
+        layout.addComponent(melodionPanel);
+
+        Panel rackPanel = new Panel("Rack", rack());
+        rackPanel.setWidth(200, Sizeable.UNITS_PIXELS);
+        rackPanel.setHeight(200, Sizeable.UNITS_PIXELS);
+        layout.addComponent(rackPanel);
     }
 
     private ComponentContainer rack() {
         Rack rack = new Rack();
-        rack.setWidth(200, Sizeable.UNITS_PIXELS);
 
+        toolbar(rack);
         actions(rack);
 
         Unit status = rack.addUnit(new Button("Status"));
@@ -87,6 +93,35 @@ public class ComponentsDemo extends Application
         versions.setContent(new Label("Hello World!"));
 
         return rack;
+    }
+
+    private void toolbar(Rack rack) {
+        CssLayout layout = new CssLayout();
+        rack.setToolbar(layout);
+
+        Button preview = button();
+        preview.setIcon(new ThemeResource("../chameleon/img/magnifier.png"));
+        layout.addComponent(preview);
+
+        Label spacer = new Label("&nbsp;", Label.CONTENT_XHTML);
+        spacer.setSizeUndefined();
+        layout.addComponent(spacer);
+
+        Button addSubpage = button();
+        addSubpage.setIcon(new ThemeResource("../runo/icons/16/document-add.png"));
+        layout.addComponent(addSubpage);
+
+        Button edit = button();
+        edit.setIcon(new ThemeResource("../runo/icons/16/document-txt.png"));
+        layout.addComponent(edit);
+
+        Button properties = button();
+        properties.setIcon(new ThemeResource("../runo/icons/16/settings.png"));
+        layout.addComponent(properties);
+
+        Button delete = button();
+        delete.setIcon(new ThemeResource("../runo/icons/16/document-delete.png"));
+        layout.addComponent(delete);
     }
 
     private void actions(Rack rack) {
@@ -118,16 +153,22 @@ public class ComponentsDemo extends Application
         layout.addComponent(delete);
     }
 
-    private Button button(String caption) {
-        Button button = new Button(caption);
+    private Button button() {
+        return button(new Button());
+    }
+
+    private Button button(Button button) {
         button.setStyleName("action");
         button.addStyleName("borderless");
         return button;
     }
 
+    private Button button(String caption) {
+        return button(new Button(caption));
+    }
+
     private ComponentContainer melodion() {
         Melodion melodion = new Melodion();
-        melodion.setWidth(300, Sizeable.UNITS_PIXELS);
 
         Tab templates = melodion.addTab(new Label("Templates"));
         templates.addButton(new NativeButton("Site-wide templates"));

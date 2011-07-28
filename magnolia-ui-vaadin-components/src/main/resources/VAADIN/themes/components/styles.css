@@ -56,6 +56,17 @@
   position: relative;
 }
 
+.rack.collapsed {
+  float: right;
+  width: 29px;
+}
+
+.rack .v-filterselect {
+  width: 100% !important;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 .v-csslayout-rack>.v-csslayout-margin {
   margin-left: 9px;
 }
@@ -69,6 +80,16 @@
   padding: 0;
   margin: 0;
   text-align: center;
+}
+
+.v-ff .v-nativebutton-collapse {
+  border-width: 1px;
+  border-color: #8E8E87;
+  border-style: solid;
+}
+
+.v-ff .v-nativebutton-collapse span {
+  margin-left: -2px;
 }
 
 .v-nativebutton-collapse .v-nativebutton-caption {

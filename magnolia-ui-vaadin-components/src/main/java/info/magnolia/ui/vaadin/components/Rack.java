@@ -41,7 +41,6 @@ import org.vaadin.jouni.animator.client.ui.VAnimatorProxy.AnimType;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -65,12 +64,41 @@ public class Rack extends CssLayout {
 
     private Map<String, Unit> units = new HashMap<String, Unit>();
 
+    private Component toolbar;
+
+    private NativeButton collapse;
+
+    private AnimatorProxy animator = new AnimatorProxy();
+
     public Rack() {
+        setSizeUndefined();
         setStyleName("rack");
 
-        NativeButton collapse = new NativeButton(">");
+        collapse = new NativeButton(">");
         collapse.setStyleName("collapse");
         addComponent(collapse);
+
+        collapse.addListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                String caption = collapse.getCaption();
+                if (">".equals(caption)) {
+                    removeComponent(container);
+                    removeComponent(selector);
+                    addComponent(toolbar);
+                    collapse.setCaption("<");
+                    addStyleName("collapsed");
+                }
+                else if ("<".equals(caption)) {
+                    removeComponent(toolbar);
+                    addComponent(container);
+                    addComponent(selector);
+                    collapse.setCaption(">");
+                    removeStyleName("collapsed");
+                }
+            }
+        });
 
         container = new CssLayout();
         addComponent(container);
@@ -80,7 +108,7 @@ public class Rack extends CssLayout {
         selector.setImmediate(true);
         selector.setInputPrompt("More...");
         selector.addStyleName("select-button");
-        selector.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+        selector.setSizeUndefined();
         addComponent(selector);
 
         selector.addListener(new ValueChangeListener() {
@@ -102,6 +130,10 @@ public class Rack extends CssLayout {
         return unit;
     }
 
+    public void setToolbar(Component toolbar) {
+        this.toolbar = toolbar;
+    }
+
     /**
      * A number of UI controls logically and semantically belonging together.
      *
@@ -116,8 +148,6 @@ public class Rack extends CssLayout {
 
         public static final String STYLE_CAPTION_OPEN = STYLE_CAPTION + "-open";
 
-        protected AnimatorProxy animator = new AnimatorProxy();
-
         protected Component content;
 
         protected Button title = new Button();
@@ -128,6 +158,8 @@ public class Rack extends CssLayout {
 
         private Unit(Button title) {
             super.addComponent(animator);
+            setStyleName(STYLE);
+            setSizeUndefined();
 
             close = new Button("x");
             close.setStyleName("close");
@@ -136,8 +168,6 @@ public class Rack extends CssLayout {
 
             super.addComponent(title);
 
-            setStyleName(STYLE);
-            setWidth(100, Sizeable.UNITS_PERCENTAGE);
             this.title = title;
             this.title.addStyleName(BaseTheme.BUTTON_LINK);
             this.title.addStyleName(STYLE_CAPTION);
