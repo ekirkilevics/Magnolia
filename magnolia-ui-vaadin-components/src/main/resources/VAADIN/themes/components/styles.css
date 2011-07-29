@@ -49,7 +49,11 @@
 }
 
 .rack .v-disclosure>.v-csslayout-margin {
-  padding-right: 9px;
+  padding-right: 1px;
+}
+
+.v-sa5 .rack .v-disclosure>.v-csslayout-margin {
+  padding-right: 10px;
 }
 
 .rack .close {
