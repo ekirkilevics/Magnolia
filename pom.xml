@@ -305,11 +305,13 @@ for Java Content Repositories (JCR).
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-user</artifactId>
         <version>2.3.0</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-dev</artifactId>
         <version>2.3.0</version>
+        <scope>provided</scope>
       </dependency>
       <!-- validation-api dep is needed by GWT 2.3.0 during gwt compilation -->
       <dependency>
