@@ -46,6 +46,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
     private RescueSecuritySupport securitySupport;
 
     //this is our GIVEN
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         securitySupport = new RescueSecuritySupport();
@@ -67,7 +68,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
         RescueUserManager uman = (RescueUserManager) securitySupport.getUserManager();
 
         //THEN
-        assertEquals(Realm.REALM_SYSTEM, uman.getRealmName());
+        assertEquals(Realm.REALM_SYSTEM.getName(), uman.getRealmName());
     }
 
     public void testUserManagerReturnsCorrectAnonymousUser() throws Exception {
