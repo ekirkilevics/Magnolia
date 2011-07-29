@@ -41,12 +41,15 @@ import org.vaadin.jouni.animator.client.ui.VAnimatorProxy.AnimType;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.themes.BaseTheme;
@@ -154,32 +157,34 @@ public class Rack extends CssLayout {
 
         protected boolean expanded = true;
 
-        private Button close;
+        private Label close;
 
         private Unit(Button title) {
             super.addComponent(animator);
             setStyleName(STYLE);
             setSizeUndefined();
 
-            close = new Button("x");
+            close = new Label("x");
             close.setStyleName("close");
             close.addStyleName("borderless");
+            close.setSizeUndefined();
             super.addComponent(close);
 
-            super.addComponent(title);
+            addListener(new LayoutClickListener() {
+
+                @Override
+                public void layoutClick(LayoutClickEvent event) {
+                    if (close.equals(event.getClickedComponent())) {
+                        setVisible(false);
+                    }
+                }
+            });
 
             this.title = title;
             this.title.addStyleName(BaseTheme.BUTTON_LINK);
             this.title.addStyleName(STYLE_CAPTION);
             this.title.addStyleName(STYLE_CAPTION_OPEN);
-
-            close.addListener(new ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    setVisible(false);
-                }
-            });
+            super.addComponent(title);
 
             this.title.addListener(new ClickListener() {
 

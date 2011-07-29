@@ -43,13 +43,42 @@
   float: left;
 }
 
-.v-button-action {
+.rack .v-button-action {
   width: 100%;
   text-align: left;
 }
 
-.v-button-close {
+.rack .v-disclosure>.v-csslayout-margin {
+  padding-right: 9px;
+}
+
+.rack .close {
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  -khtml-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
   float: right;
+  width: 14px;
+  height: 15px;
+  overflow: hidden;
+  text-indent: -50px;
+  background: transparent url(../chameleon/img/close-btn.png) no-repeat 0 0;
+  vertical-align: middle;
+  margin: 2px 0 0 0;
+  box-sizing: content-box;
+}
+
+.rack .close:hover {
+  background-position-y: -25px;
+}
+
+.rack .close:active {
+  background-position-y: -50px;
 }
 
 .v-csslayout-rack {

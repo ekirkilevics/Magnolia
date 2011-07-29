@@ -71,12 +71,12 @@ public class ComponentsDemo extends Application {
 
         Panel melodionPanel = new Panel("Melodion", melodion());
         melodionPanel.setWidth(300, Sizeable.UNITS_PIXELS);
-        melodionPanel.setHeight(450, Sizeable.UNITS_PIXELS);
+        melodionPanel.setHeight(480, Sizeable.UNITS_PIXELS);
         layout.addComponent(melodionPanel);
 
         Panel rackPanel = new Panel("Rack", rack());
         rackPanel.setWidth(200, Sizeable.UNITS_PIXELS);
-        rackPanel.setHeight(200, Sizeable.UNITS_PIXELS);
+        rackPanel.setHeight(220, Sizeable.UNITS_PIXELS);
         layout.addComponent(rackPanel);
     }
 
