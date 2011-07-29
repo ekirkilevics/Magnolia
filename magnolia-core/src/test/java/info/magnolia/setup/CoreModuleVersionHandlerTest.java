@@ -64,6 +64,12 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     }
 
     @Override
+    protected void tearDown() throws Exception {
+        System.clearProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR);
+        super.tearDown();
+    }
+
+    @Override
     protected String getModuleDescriptorPath() {
         return "/META-INF/magnolia/core.xml";
     }
