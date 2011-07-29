@@ -71,8 +71,6 @@ public class Rack extends CssLayout {
 
     private NativeButton collapse;
 
-    private AnimatorProxy animator = new AnimatorProxy();
-
     public Rack() {
         setSizeUndefined();
         setStyleName("rack");
@@ -158,6 +156,8 @@ public class Rack extends CssLayout {
         protected boolean expanded = true;
 
         private Label close;
+
+        private AnimatorProxy animator = new AnimatorProxy();
 
         private Unit(Button title) {
             super.addComponent(animator);
