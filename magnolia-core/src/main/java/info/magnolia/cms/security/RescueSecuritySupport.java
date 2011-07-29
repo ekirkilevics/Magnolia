@@ -160,78 +160,97 @@ public class RescueSecuritySupport extends SecuritySupportBase {
             }
         }
 
+        @Override
         public boolean hasRole(String roleName) {
             return roles.contains(roleName);
         }
 
+        @Override
         public void removeRole(String roleName) throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public void addRole(String roleName) throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public boolean inGroup(String groupName) {
             return groups.contains(groupName);
         }
 
+        @Override
         public void removeGroup(String groupName) throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public void addGroup(String groupName) throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public boolean isEnabled() {
             return true;
         }
 
+        @Override
         public void setEnabled(boolean enabled) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public String getLanguage() {
             return "en";
         }
 
+        @Override
         public String getName() {
             return name;
         }
 
+        @Override
         public String getPassword() {
             return password;
         }
 
+        @Override
         public String getProperty(String propertyName) {
             return null;
         }
 
+        @Override
         public void setProperty(String propertyName, String value) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public Collection<String> getGroups() {
             return Collections.unmodifiableCollection(groups);
         }
 
+        @Override
         public Collection<String> getAllGroups() {
             return Collections.unmodifiableCollection(groups);
         }
 
+        @Override
         public Collection<String> getRoles() {
             return Collections.unmodifiableCollection(roles);
         }
 
+        @Override
         public Collection<String> getAllRoles() {
             return Collections.unmodifiableCollection(roles);
         }
 
+        @Override
         public Subject getSubject() {
             return subject;
         }
 
+        @Override
         public void setSubject(Subject subject) {
             this.subject = subject;
         }
