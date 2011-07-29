@@ -65,7 +65,7 @@ public class RescueSecuritySupport extends SecuritySupportBase {
     public UserManager getUserManager() {
         log.warn("Using RescueSecuritySupport, will instantiate RescueUserManager, please fix your configuration !");
         SystemUserManager userManager = new RescueUserManager();
-        userManager.setRealName(Realm.REALM_SYSTEM.getName());
+        userManager.setRealmName(Realm.REALM_SYSTEM.getName());
         return userManager;
     }
 
@@ -73,7 +73,7 @@ public class RescueSecuritySupport extends SecuritySupportBase {
     public UserManager getUserManager(String realmName) {
         log.warn("Using RescueSecuritySupport, will instantiate RescueUserManager, please fix your configuration !");
         SystemUserManager userManager = new RescueUserManager();
-        userManager.setRealName(realmName);
+        userManager.setRealmName(realmName);
         return userManager;
     }
 

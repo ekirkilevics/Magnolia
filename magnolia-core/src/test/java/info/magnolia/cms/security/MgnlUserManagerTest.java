@@ -130,7 +130,7 @@ public class MgnlUserManagerTest {
         control.replay();
         MgnlUserManager um = new MgnlUserManager();
         // Realm "all"
-        um.setRealName(Realm.REALM_ALL.getName());
+        um.setRealmName(Realm.REALM_ALL.getName());
         Node principal = um.findPrincipalNode("test", session);
         assertNotNull(principal);
         control.verify();
@@ -159,7 +159,7 @@ public class MgnlUserManagerTest {
         control.replay();
         um = new MgnlUserManager();
 
-        um.setRealName("otherRealm");
+        um.setRealmName("otherRealm");
         principal = um.findPrincipalNode("test", session);
         assertNotNull(principal);
         control.verify();

@@ -114,10 +114,10 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
      */
     @Deprecated
     public void setName(String name) {
-        setRealName(name);
+        setRealmName(name);
     }
 
-    public void setRealName(String name) {
+    public void setRealmName(String name) {
         this.realmName = name;
     }
 
