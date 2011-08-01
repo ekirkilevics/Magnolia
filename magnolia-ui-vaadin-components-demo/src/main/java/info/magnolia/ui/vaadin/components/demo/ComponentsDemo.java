@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.vaadin.components.demo;
 
+import info.magnolia.ui.vaadin.components.Collapser;
 import info.magnolia.ui.vaadin.components.Melodion;
 import info.magnolia.ui.vaadin.components.Melodion.Tab;
 import info.magnolia.ui.vaadin.components.Rack;
@@ -74,16 +75,18 @@ public class ComponentsDemo extends Application {
         melodionPanel.setHeight(480, Sizeable.UNITS_PIXELS);
         layout.addComponent(melodionPanel);
 
-        Panel rackPanel = new Panel("Rack", rack());
+        Panel rackPanel = new Panel("Collapsible Rack", collapsibleRack());
         rackPanel.setWidth(200, Sizeable.UNITS_PIXELS);
         rackPanel.setHeight(220, Sizeable.UNITS_PIXELS);
         layout.addComponent(rackPanel);
     }
 
-    private ComponentContainer rack() {
+    private ComponentContainer collapsibleRack() {
         Rack rack = new Rack();
+        Collapser collapser = new Collapser();
+        collapser.setExpandedContent(rack);
 
-        toolbar(rack);
+        toolbar(collapser);
         actions(rack);
 
         Unit status = rack.addUnit(new Button("Status"));
@@ -92,12 +95,12 @@ public class ComponentsDemo extends Application {
         Unit versions = rack.addUnit(new Button("Versions"));
         versions.setContent(new Label("Hello World!"));
 
-        return rack;
+        return collapser;
     }
 
-    private void toolbar(Rack rack) {
+    private void toolbar(Collapser collapser) {
         CssLayout layout = new CssLayout();
-        rack.setToolbar(layout);
+        collapser.setCollapsedContent(layout);
 
         Button preview = button();
         preview.setIcon(new ThemeResource("../chameleon/img/magnifier.png"));
