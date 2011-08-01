@@ -75,7 +75,7 @@ public class ComponentsDemo extends Application {
         melodionPanel.setHeight(480, Sizeable.UNITS_PIXELS);
         layout.addComponent(melodionPanel);
 
-        Panel rackPanel = new Panel("Collapsible Rack", collapsibleRack());
+        Panel rackPanel = new Panel("Collapser + Rack", collapsibleRack());
         rackPanel.setWidth(200, Sizeable.UNITS_PIXELS);
         rackPanel.setHeight(220, Sizeable.UNITS_PIXELS);
         layout.addComponent(rackPanel);

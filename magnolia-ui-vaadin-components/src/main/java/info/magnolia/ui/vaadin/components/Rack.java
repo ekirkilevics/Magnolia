@@ -66,8 +66,6 @@ public class Rack extends CssLayout {
 
     private Map<String, Unit> units = new HashMap<String, Unit>();
 
-    private Component toolbar;
-
     public Rack() {
         setSizeUndefined();
         setStyleName("rack");
@@ -100,10 +98,6 @@ public class Rack extends CssLayout {
         container.addComponent(unit);
         unit.setVisible(false);
         return unit;
-    }
-
-    public void setToolbar(Component toolbar) {
-        this.toolbar = toolbar;
     }
 
     /**

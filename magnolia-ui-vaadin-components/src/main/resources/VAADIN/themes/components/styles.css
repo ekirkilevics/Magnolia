@@ -1,4 +1,4 @@
-.sidebar-menu .v-label,.rack .v-label {
+.sidebar-menu .v-label,.rack .v-label, .collapser .collapsed-content .v-label {
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
