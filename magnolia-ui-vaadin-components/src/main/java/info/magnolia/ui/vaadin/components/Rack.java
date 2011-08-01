@@ -51,7 +51,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.themes.BaseTheme;
 
 
@@ -69,37 +68,9 @@ public class Rack extends CssLayout {
 
     private Component toolbar;
 
-    private NativeButton collapse;
-
     public Rack() {
         setSizeUndefined();
         setStyleName("rack");
-
-        collapse = new NativeButton(">");
-        collapse.setStyleName("collapse");
-        addComponent(collapse);
-
-        collapse.addListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                String caption = collapse.getCaption();
-                if (">".equals(caption)) {
-                    removeComponent(container);
-                    removeComponent(selector);
-                    addComponent(toolbar);
-                    collapse.setCaption("<");
-                    addStyleName("collapsed");
-                }
-                else if ("<".equals(caption)) {
-                    removeComponent(toolbar);
-                    addComponent(container);
-                    addComponent(selector);
-                    collapse.setCaption(">");
-                    removeStyleName("collapsed");
-                }
-            }
-        });
 
         container = new CssLayout();
         addComponent(container);

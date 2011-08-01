@@ -95,15 +95,6 @@
   background-position-y: -50px;
 }
 
-.v-csslayout-rack {
-  position: relative;
-}
-
-.rack.collapsed {
-  float: right;
-  width: 29px;
-}
-
 .rack .v-filterselect {
   width: 100% !important;
   -moz-box-sizing: border-box;
@@ -114,7 +105,37 @@
   margin-left: 9px;
 }
 
-.v-nativebutton-collapse {
+.collapser {
+  position: relative;
+  height: 100%;
+}
+
+.collapser .v-csslayout-margin, .collapser .v-csslayout-container {
+  height: 100%;
+}
+
+.collapser .expanded-content {
+  height: 100%;
+  overflow: auto;
+}
+
+.collapser .collapsed-content {
+  height: 100%;
+  overflow: hidden;
+}
+
+.collapser.collapsed {
+  float: right;
+  width: 29px;
+}
+
+.collapser .collapsed-content {
+  float: right;
+  width: 20px;
+}
+
+.collapser .v-nativebutton-collapse {
+  z-index: 2;
   position: absolute;
   top: 0;
   left: 0;
@@ -125,16 +146,16 @@
   text-align: center;
 }
 
-.v-ff .v-nativebutton-collapse {
+.v-ff .collapser .v-nativebutton-collapse {
   border-width: 1px;
   border-color: #8E8E87;
   border-style: solid;
 }
 
-.v-ff .v-nativebutton-collapse span {
+.v-ff .collapser .v-nativebutton-collapse span {
   margin-left: -2px;
 }
 
-.v-nativebutton-collapse .v-nativebutton-caption {
+.collapser .v-nativebutton-collapse .v-nativebutton-caption {
   font-size: 9px;
 }
