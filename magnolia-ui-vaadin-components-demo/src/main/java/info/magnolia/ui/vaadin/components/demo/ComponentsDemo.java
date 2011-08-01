@@ -103,9 +103,7 @@ public class ComponentsDemo extends Application {
         preview.setIcon(new ThemeResource("../chameleon/img/magnifier.png"));
         layout.addComponent(preview);
 
-        Label spacer = new Label("&nbsp;", Label.CONTENT_XHTML);
-        spacer.setSizeUndefined();
-        layout.addComponent(spacer);
+        layout.addComponent(new Label());
 
         Button addSubpage = button();
         addSubpage.setIcon(new ThemeResource("../runo/icons/16/document-add.png"));
@@ -118,6 +116,8 @@ public class ComponentsDemo extends Application {
         Button properties = button();
         properties.setIcon(new ThemeResource("../runo/icons/16/settings.png"));
         layout.addComponent(properties);
+
+        layout.addComponent(new Label());
 
         Button delete = button();
         delete.setIcon(new ThemeResource("../runo/icons/16/document-delete.png"));
@@ -134,7 +134,7 @@ public class ComponentsDemo extends Application {
         preview.setIcon(new ThemeResource("../chameleon/img/magnifier.png"));
         layout.addComponent(preview);
 
-        layout.addComponent(new Label("&nbsp;", Label.CONTENT_XHTML));
+        layout.addComponent(new Label());
 
         Button addSubpage = button("Add subpage");
         addSubpage.setIcon(new ThemeResource("../runo/icons/16/document-add.png"));
@@ -147,6 +147,8 @@ public class ComponentsDemo extends Application {
         Button properties = button("Properties");
         properties.setIcon(new ThemeResource("../runo/icons/16/settings.png"));
         layout.addComponent(properties);
+
+        layout.addComponent(new Label());
 
         Button delete = button("Delete");
         delete.setIcon(new ThemeResource("../runo/icons/16/document-delete.png"));
