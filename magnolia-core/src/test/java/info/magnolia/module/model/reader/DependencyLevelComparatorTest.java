@@ -68,9 +68,9 @@ public class DependencyLevelComparatorTest extends TestCase {
 
         final DependencyLevelComparator reg = new DependencyLevelComparator(map);
 
-        assertEquals(0, reg.calcDependencyLevel(modDefA));
-        assertEquals(1, reg.calcDependencyLevel(modDefB));
-        assertEquals(2, reg.calcDependencyLevel(modDefC));
+        assertEquals(0, reg.calcDependencyDepth(modDefA));
+        assertEquals(1, reg.calcDependencyDepth(modDefB));
+        assertEquals(2, reg.calcDependencyDepth(modDefC));
     }
 
     public void testCalcDepencyLevelIgnoresUnregisteredOptionalDependencies() {
@@ -93,8 +93,8 @@ public class DependencyLevelComparatorTest extends TestCase {
 
         final DependencyLevelComparator reg = new DependencyLevelComparator(map);
 
-        assertEquals(0, reg.calcDependencyLevel(modDefB));
-        assertEquals(1, reg.calcDependencyLevel(modDefC));
+        assertEquals(0, reg.calcDependencyDepth(modDefB));
+        assertEquals(1, reg.calcDependencyDepth(modDefC));
     }
 
     public void testCalcDepencyLevelDoesNotIgnoreRegisteredOptionalDependencies() {
@@ -119,9 +119,9 @@ public class DependencyLevelComparatorTest extends TestCase {
 
         final DependencyLevelComparator reg = new DependencyLevelComparator(map);
 
-        assertEquals(0, reg.calcDependencyLevel(modDefA));
-        assertEquals(1, reg.calcDependencyLevel(modDefB));
-        assertEquals(2, reg.calcDependencyLevel(modDefC));
+        assertEquals(0, reg.calcDependencyDepth(modDefA));
+        assertEquals(1, reg.calcDependencyDepth(modDefB));
+        assertEquals(2, reg.calcDependencyDepth(modDefC));
     }
 
     public void testBlowupExplicitelyInCaseOfSelfDependency() {
