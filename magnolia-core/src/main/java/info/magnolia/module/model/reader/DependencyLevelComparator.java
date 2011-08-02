@@ -101,9 +101,6 @@ class DependencyLevelComparator implements Comparator<ModuleDefinition> {
         }
         final List<Integer> dependencyLevels = new ArrayList<Integer>();
         for (final DependencyDefinition dep : def.getDependencies()) {
-            if (dep.getName().equals(def.getName())) {
-                throw new RuntimeException(def + " is dependent on itself, can't resolve dependencies.");
-            }
             final ModuleDefinition depDef = allKnownModulesDefinitions.get(dep.getName());
             if (depDef == null && !dep.isOptional()) {
                 throw new RuntimeException("Missing definition for module:" + dep.getName());

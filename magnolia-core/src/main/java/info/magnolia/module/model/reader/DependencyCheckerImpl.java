@@ -38,11 +38,11 @@ import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionRange;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Singleton;
 
 /**
  * Default implementation of DependencyChecker.
@@ -57,9 +57,7 @@ public class DependencyCheckerImpl implements DependencyChecker {
     public void checkDependencies(Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
         for (ModuleDefinition def : moduleDefinitions.values()) {
             for (DependencyDefinition dep : def.getDependencies()) {
-                if (!dep.isOptional()) {
-                    checkSpecificDependency(def, dep, moduleDefinitions);
-                }
+                checkSpecificDependency(def, dep, moduleDefinitions);
             }
         }
     }
@@ -73,23 +71,38 @@ public class DependencyCheckerImpl implements DependencyChecker {
         return modules;
     }
 
-    protected void checkSpecificDependency(ModuleDefinition checkedModule, DependencyDefinition requiredDependency, Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
-        final ModuleDefinition dependencyModuleDef = moduleDefinitions.get(requiredDependency.getName());
-        if (dependencyModuleDef == null) {
-            throw new ModuleDependencyException("Module " + checkedModule + " is dependent on " + requiredDependency + ", which was not found.");
+    protected void checkSpecificDependency(ModuleDefinition checkedModule, DependencyDefinition dependency, Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
+        final ModuleDefinition dependencyModuleDef = moduleDefinitions.get(dependency.getName());
+
+        // check mandatory dependencies
+        if (dependencyModuleDef == null && !dependency.isOptional()) {
+            throw new ModuleDependencyException("Module " + checkedModule + " is dependent on " + dependency + ", which was not found.");
         }
 
-        final VersionRange requiredRange = requiredDependency.getVersionRange();
-        final Version dependencyVersion = dependencyModuleDef.getVersion();
+        // check cyclic dependencies
+        if (dependencyModuleDef != null) {
+            for (DependencyDefinition dependencyOfDependency : dependencyModuleDef.getDependencies()) {
+                if (dependencyOfDependency.getName().equals(checkedModule.getName())) {
+                    // in the rare cases where a module is dependent on itself, this exception message will not be as clear as could be.
+                    throw new ModuleDependencyException("Cyclic dependency between " + checkedModule + " and " + dependencyModuleDef);
+                }
+            }
+        }
 
-        // TODO ignore ${project.version} ? or be smarter ?
-//        if (instVersion.equals("${project.version}")) {
-//            log.info("module " + requiredDependency.getName() + " has a dynamic version [" + instVersion + "]. checks ignored");
-//            return;
-//        }
+        // check required version ranges
+        if (dependencyModuleDef != null) {
+            final VersionRange requiredRange = dependency.getVersionRange();
+            final Version dependencyVersion = dependencyModuleDef.getVersion();
 
-        if (!requiredRange.contains(dependencyVersion)) {
-            throw new ModuleDependencyException("Module " + checkedModule + " is dependent on " + requiredDependency + ", but " + dependencyModuleDef + " is currently installed.");
+            // TODO ignore ${project.version} ? or be smarter ?
+    //        if (instVersion.equals("${project.version}")) {
+    //            log.info("module " + requiredDependency.getName() + " has a dynamic version [" + instVersion + "]. checks ignored");
+    //            return;
+    //        }
+
+            if (!requiredRange.contains(dependencyVersion)) {
+                throw new ModuleDependencyException("Module " + checkedModule + " is dependent on " + dependency + ", but " + dependencyModuleDef + " is currently installed.");
+            }
         }
     }
 }

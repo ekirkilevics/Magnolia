@@ -50,6 +50,12 @@ import java.util.Map;
 public class DependencyCheckerImplTest extends TestCase {
     private DependencyChecker depChecker;
 
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        depChecker = new DependencyCheckerImpl();
+    }
+
     public void testSimpleDependenciesAreResolvedAndChecked() throws Exception {
         final Map modules = buildModulesMapWithDependencyOn("3.0");
         depChecker.checkDependencies(modules);
@@ -126,6 +132,49 @@ public class DependencyCheckerImplTest extends TestCase {
         }
     }
 
+    public void testOptionalDependenciesAreIndeedOptional() throws ModuleDependencyException {
+        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);
+        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", Version.parseVersion("1"), "fake.Module", null);
+        final DependencyDefinition depOnA = new DependencyDefinition();
+        depOnA.setName("mod-a");
+        depOnA.setVersion("1");
+        depOnA.setOptional(true);
+        final DependencyDefinition depOnB = new DependencyDefinition();
+        depOnB.setName("mod-b");
+        depOnB.setVersion("1");
+        modDefC.addDependency(depOnA);
+        modDefC.addDependency(depOnB);
+
+        // mod-a is not registered in this case
+        final Map<String, ModuleDefinition> map = new HashMap<String, ModuleDefinition>();
+        map.put(modDefB.getName(), modDefB);
+        map.put(modDefC.getName(), modDefC);
+        depChecker.checkDependencies(map);
+        final List<ModuleDefinition> sorted = depChecker.sortByDependencyLevel(map);
+        assertEquals(2, sorted.size());
+        assertEquals(modDefB, sorted.get(0));
+        assertEquals(modDefC, sorted.get(1));
+    }
+
+    public void testOptionalDependenciesStillHaveToMatchVersionRanges() throws ModuleDependencyException {
+        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1.5"), "fake.Module", null);
+        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", Version.parseVersion("1"), "fake.Module", null);
+         final DependencyDefinition depOnB = new DependencyDefinition();
+        depOnB.setName("mod-b");
+        depOnB.setVersion("1.0/1.2");
+        depOnB.setOptional(true);
+        modDefC.addDependency(depOnB);
+        final Map<String, ModuleDefinition> map = new HashMap<String, ModuleDefinition>();
+        map.put(modDefB.getName(), modDefB);
+        map.put(modDefC.getName(), modDefC);
+        try {
+            depChecker.checkDependencies(map);
+            fail("should have failed");
+        } catch (ModuleDependencyException e) {
+            assertEquals("Module mod-c (version 1.0.0) is dependent on mod-b version 1.0/1.2, but mod-b (version 1.5.0) is currently installed.", e.getMessage());
+        }
+    }
+
     public void testModulesShouldBeSortedAccordingToDependencies() {
         final Map modules = new HashMap();
         final ModuleDefinition module1 = new ModuleDefinition("module1", Version.parseVersion("3.0"), null, null);
@@ -154,6 +203,49 @@ public class DependencyCheckerImplTest extends TestCase {
         assertEquals(module4, list.get(4));
     }
 
+    public void testBlowupExplicitelyInCaseOfSelfDependency() {
+        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
+        modDefA.setDisplayName("Module-A");
+        final DependencyDefinition depOnSelf = new DependencyDefinition();
+        depOnSelf.setName("mod-a");
+        depOnSelf.setVersion("1");
+        modDefA.addDependency(depOnSelf);
+        final Map<String, ModuleDefinition> map = new HashMap<String, ModuleDefinition>();
+        map.put(modDefA.getName(), modDefA);
+        try {
+            depChecker.checkDependencies(map);
+            fail("should have failed");
+        } catch (Throwable e) {
+            assertTrue("Should have failed with a ModuleDependencyException instead of " + e.toString(), ModuleDependencyException.class.equals(e.getClass()));
+            assertEquals("Cyclic dependency between Module-A (version 1.0.0) and Module-A (version 1.0.0)", e.getMessage());
+        }
+    }
+
+    public void testCyclicDependenciesBlowupWithAClearExceptionMessage() {
+        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
+        modDefA.setDisplayName("Module-A");
+        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);
+        modDefB.setDisplayName("Module-B");
+        final DependencyDefinition depOnA = new DependencyDefinition();
+        depOnA.setName("mod-a");
+        depOnA.setVersion("1");
+        final DependencyDefinition depOnB = new DependencyDefinition();
+        depOnB.setName("mod-b");
+        depOnB.setVersion("1");
+        modDefA.addDependency(depOnB);
+        modDefB.addDependency(depOnA);
+        final Map<String, ModuleDefinition> map = new HashMap<String, ModuleDefinition>();
+        map.put(modDefA.getName(), modDefA);
+        map.put(modDefB.getName(), modDefB);
+        try {
+            depChecker.checkDependencies(map);
+            fail("should have failed");
+        } catch (Throwable e) {
+            assertTrue("Should have failed with a ModuleDependencyException instead of " + e.toString(), ModuleDependencyException.class.equals(e.getClass()));
+            assertEquals("Cyclic dependency between Module-A (version 1.0.0) and Module-B (version 1.0.0)", e.getMessage());
+        }
+    }
+
     public void testCoreIsAlwaysSortedFirst() {
         final Map modules = new HashMap();
         final ModuleDefinition core = new ModuleDefinition("core", Version.parseVersion("1.2.3"), null, null);
@@ -176,7 +268,6 @@ public class DependencyCheckerImplTest extends TestCase {
         assertEquals(module2, list.get(2));
         assertEquals(module3, list.get(3));
     }
-
 
     public void testWebappIsAlwaysSortedLast() {
         final Map modules = new HashMap();
@@ -204,7 +295,6 @@ public class DependencyCheckerImplTest extends TestCase {
         assertEquals(webapp, list.get(4));
     }
 
-
     private Map buildModulesMapWithDependencyOn(String dependencyDefinitionVersion) {
         final Map modules = new HashMap();
         modules.put("module1", new ModuleDefinition("module1", Version.parseVersion("3.0"), null, null));
@@ -214,9 +304,4 @@ public class DependencyCheckerImplTest extends TestCase {
         return modules;
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        depChecker = new DependencyCheckerImpl();
-    }
 }
