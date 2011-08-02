@@ -373,11 +373,14 @@ public class MockContent extends AbstractContent {
     @Override
     public MockMetaData getMetaData() {
         try {
+            if(!hasContent(MetaData.DEFAULT_META_NODE)){
+                createContent(MetaData.DEFAULT_META_NODE, ItemType.NT_METADATA);
+            }
+
             return new MockMetaData((MockContent) getContent(MetaData.DEFAULT_META_NODE));
         } catch (RepositoryException e) {
-            //we mimick the default behaviour here, so lets create an empty metadata node
+            throw new RuntimeException("Can't create/read the meta data node.", e);
         }
-        return new MockMetaData(new MockContent(MetaData.DEFAULT_META_NODE));
     }
 
     @Override
@@ -408,7 +411,8 @@ public class MockContent extends AbstractContent {
             //    } - else ?
 
             if(type == PropertyType.BINARY){
-                nodeData = new BinaryMockNodeData(name, (MockContent) getContent(name));
+                Content binaryNode = createContent(name, ItemType.NT_RESOURCE);
+                nodeData = new BinaryMockNodeData(name, (MockContent) binaryNode);
             }
             else{
                 nodeData = new MockNodeData(name, type);
