@@ -33,15 +33,20 @@
  */
 package info.magnolia.nodebuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import info.magnolia.cms.core.Content;
 
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * Abstract implementation of NodeOperation. Mainly implementing {@link #then(NodeOperation...)}.
  */
 public abstract class AbstractNodeOperation implements NodeOperation {
-    private NodeOperation[] childrenOps = {};
+    private List<NodeOperation> childrenOps = new ArrayList<NodeOperation>();
 
     @Override
     public void exec(Content context, ErrorHandler errorHandler) {
@@ -64,7 +69,8 @@ public abstract class AbstractNodeOperation implements NodeOperation {
 
     @Override
     public NodeOperation then(NodeOperation... childrenOps) {
-        this.childrenOps = childrenOps;
+        // add the operations to allow multiple calls on the method.
+        CollectionUtils.addAll(this.childrenOps, childrenOps);
         return this;
     }
 }

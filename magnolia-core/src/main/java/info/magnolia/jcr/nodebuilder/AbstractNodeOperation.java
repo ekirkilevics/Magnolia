@@ -33,9 +33,13 @@
  */
 package info.magnolia.jcr.nodebuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +51,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractNodeOperation implements NodeOperation {
     private static final Logger log = LoggerFactory.getLogger(AbstractNodeOperation.class);
 
-    private NodeOperation[] childrenOps = {};
+    private List<NodeOperation> childrenOps = new ArrayList<NodeOperation>();
 
     @Override
     public void exec(Node context, ErrorHandler errorHandler) {
@@ -74,7 +78,8 @@ public abstract class AbstractNodeOperation implements NodeOperation {
 
     @Override
     public NodeOperation then(NodeOperation... childrenOps) {
-        this.childrenOps = childrenOps;
+        // add the operations to allow multiple calls on the method.
+        CollectionUtils.addAll(this.childrenOps, childrenOps);
         return this;
     }
 }
