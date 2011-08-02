@@ -73,7 +73,7 @@ import org.apache.commons.lang.StringUtils;
 public class MockUtil {
 
     /**
-     * Mocks the current and system context
+     * Mocks the current and system context.
      */
     public static MockContext initMockContext() {
         final MockContext ctx = new MockWebContext();
@@ -129,6 +129,13 @@ public class MockUtil {
     public static MockHierarchyManager createHierarchyManager(String propertiesStr) throws IOException, RepositoryException {
         final ByteArrayInputStream in = new ByteArrayInputStream(propertiesStr.getBytes());
         return createHierarchyManager(null, in);
+    }
+
+    /**
+     * Creates an empty {@link HierarchyManager} and registers it the current context.
+     */
+    public static MockHierarchyManager createAndSetHierarchyManager(String repository) throws IOException, RepositoryException {
+        return createAndSetHierarchyManager(repository, "");
     }
 
     public static MockHierarchyManager createAndSetHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
