@@ -10,7 +10,6 @@
   <artifactId>magnolia-ui-vaadin-components-demo</artifactId>
   <packaging>war</packaging>
   <name>magnolia-ui-vaadin-components-demo</name>
-
   <dependencies>
     <dependency>
       <groupId>com.vaadin</groupId>
@@ -38,7 +37,6 @@
       <artifactId>validation-api</artifactId>
     </dependency>
   </dependencies>
-  
   <build>
     <plugins>
       <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
@@ -90,30 +88,6 @@
           </execution>
         </executions>
       </plugin>
-      <!-- A simple Jetty test server at http://localhost:8080/magnolia-ui-vaadin-components-demo can be launched with the Maven goal jetty:run and stopped
-        with jetty:stop -->
-      <plugin>
-        <groupId>org.mortbay.jetty</groupId>
-        <artifactId>maven-jetty-plugin</artifactId>
-        <version>6.1.24</version>
-        <configuration>
-          <stopPort>9966</stopPort>
-          <stopKey>magnolia-ui-vaadin-components-demo</stopKey>
-          <!-- Redeploy every x seconds if changes are detected, 0 for no automatic redeployment -->
-          <scanIntervalSeconds>0</scanIntervalSeconds>
-          <!-- make sure Jetty also finds the widgetset -->
-          <webAppConfig>
-            <contextPath>/magnolia-ui-vaadin-components-demo</contextPath>
-            <baseResource implementation="org.mortbay.resource.ResourceCollection">
-              <!-- Workaround for Maven/Jetty issue http://jira.codehaus.org/browse/JETTY-680 -->
-              <!-- <resources>src/main/webapp,${project.build.directory}/${project.build.finalName}</resources> -->
-              <resourcesAsCSV>src/main/webapp,${project.build.directory}/${project.build.finalName}</resourcesAsCSV>
-            </baseResource>
-          </webAppConfig>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
-
-
 </project>
