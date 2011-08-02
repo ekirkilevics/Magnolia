@@ -61,7 +61,7 @@ public class DependencyLevelComparatorTest extends TestCase {
         modDefB.addDependency(depOnA);
         modDefC.addDependency(depOnB);
 
-        final Map map = new HashMap();
+        final Map<String, ModuleDefinition> map = new HashMap<String, ModuleDefinition>();
         map.put(modDefA.getName(), modDefA);
         map.put(modDefB.getName(), modDefB);
         map.put(modDefC.getName(), modDefC);
@@ -87,7 +87,7 @@ public class DependencyLevelComparatorTest extends TestCase {
         modDefC.addDependency(depOnB);
 
         // mod-a is not registered in this case
-        final Map map = new HashMap();
+        final Map<String, ModuleDefinition> map = new HashMap<String, ModuleDefinition>();
         map.put(modDefB.getName(), modDefB);
         map.put(modDefC.getName(), modDefC);
 
@@ -112,7 +112,7 @@ public class DependencyLevelComparatorTest extends TestCase {
         modDefC.addDependency(depOnA);
         modDefC.addDependency(depOnB);
 
-        final Map map = new HashMap();
+        final Map<String, ModuleDefinition> map = new HashMap<String, ModuleDefinition>();
         map.put(modDefA.getName(), modDefA);
         map.put(modDefB.getName(), modDefB);
         map.put(modDefC.getName(), modDefC);
@@ -123,4 +123,24 @@ public class DependencyLevelComparatorTest extends TestCase {
         assertEquals(1, reg.calcDependencyLevel(modDefB));
         assertEquals(2, reg.calcDependencyLevel(modDefC));
     }
+
+    public void testBlowupExplicitelyInCaseOfSelfDependency() {
+        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
+        modDefA.setDisplayName("Module-A");
+        final DependencyDefinition depOnSelf = new DependencyDefinition();
+        depOnSelf.setName("mod-a");
+        depOnSelf.setVersion("1");
+        modDefA.addDependency(depOnSelf);
+        final Map<String, ModuleDefinition> map = new HashMap<String, ModuleDefinition>();
+        map.put(modDefA.getName(), modDefA);
+        try {
+            final DependencyLevelComparator comparator = new DependencyLevelComparator(map);
+            comparator.calcDependencyDepth(modDefA);
+            fail("should have failed");
+        } catch (Throwable e) {
+            assertTrue("Should have failed with a RuntimeException instead of "+e.toString(), RuntimeException.class.equals(e.getClass()));
+            assertEquals("Module-A (version 1.0.0) is dependent on itself, can't resolve dependencies.", e.getMessage());
+        }
+    }
+
 }
