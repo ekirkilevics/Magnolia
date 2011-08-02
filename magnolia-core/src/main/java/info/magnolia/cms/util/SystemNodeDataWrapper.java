@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -39,28 +39,24 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.LifeTimeJCRSessionUtil;
 
 /**
- * A lazy content wrapper reading from the node using the {@link LifeTimeJCRSessionUtil}.
+ * A lazy node data wrapper reading from the node data using the {@link LifeTimeJCRSessionUtil}.
+ * 
+ * @author ochytil
  * @version $Id$
- *
  */
-public class SystemContentWrapper extends LazyContentWrapper {
+public class SystemNodeDataWrapper extends LazyNodeDataWrapper {
 
-    public SystemContentWrapper(String repository, String uuid) {
-        super(repository, uuid);
+    public SystemNodeDataWrapper(NodeData nodeData) {
+        super(nodeData);
     }
 
-    public SystemContentWrapper(Content node) {
-        super(node);
+    @Override
+    protected Content wrap(Content content) {
+        return new SystemContentWrapper(content);
     }
-
     @Override
     public HierarchyManager getHierarchyManager() {
         return LifeTimeJCRSessionUtil.getHierarchyManager(getRepository());
-    }
-    
-    @Override
-    public NodeData wrap(NodeData nodeData){
-        return new SystemNodeDataWrapper(nodeData);
     }
 
 }
