@@ -8,7 +8,7 @@
 <Repository>
   <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem" />
   <Security appName="Jackrabbit">
-    <AccessManager class="org.apache.jackrabbit.core.security.SimpleAccessManager"></AccessManager>
+    <AccessManager class="info.magnolia.test.TestAccessManager"></AccessManager>
     <LoginModule class="org.apache.jackrabbit.core.security.SimpleLoginModule">
       <param name="anonymousId" value="anonymous" />
     </LoginModule>
