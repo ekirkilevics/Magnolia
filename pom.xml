@@ -301,6 +301,7 @@ for Java Content Repositories (JCR).
         <artifactId>vaadin-chameleon-theme</artifactId>
         <version>1.1.0</version>
       </dependency>
+      <!-- gwt jars only needed at build time, which is why they are in scope:provided -->
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-user</artifactId>
