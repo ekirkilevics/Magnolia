@@ -145,16 +145,13 @@ public class BinaryMockNodeData extends MockNodeData {
 
     @Override
     public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
-        if (wrappedContent != null) {
-            throw new UnsupportedOperationException();
-        }
         setAttribute(name, value.toString());
     }
 
     @Override
     public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
         if (wrappedContent != null) {
-            throw new UnsupportedOperationException();
+            wrappedContent.setNodeData(name, value);
         }
         attributes.put(name, value);
     }
