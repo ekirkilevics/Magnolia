@@ -136,6 +136,7 @@ public abstract class AbstractRenderTestCase extends MgnlTestCase {
         FreemarkerConfig freemarkerConfig = new FreemarkerConfig();
         freemarkerConfig.setTemplateExceptionHandler(new TemplateExceptionHandler() {
 
+            @Override
             public void handleTemplateException(TemplateException te, Environment env, Writer out) throws TemplateException {
                 // we have to throw RuntimeException as the renderers swallow TemplateExceptions
                 throw new RuntimeException(te);
@@ -280,6 +281,7 @@ public abstract class AbstractRenderTestCase extends MgnlTestCase {
         // ignored the web.xml file
         expect(servletContext.getResourceAsStream((String) anyObject())).andStubAnswer(new IAnswer<InputStream>() {
 
+            @Override
             public InputStream answer() throws Throwable {
                 String path = (String) getCurrentArguments()[0];
                 if (path.equals("/WEB-INF/web.xml")) {
@@ -292,6 +294,7 @@ public abstract class AbstractRenderTestCase extends MgnlTestCase {
         // when freemarker wants to access the jars
         expect(servletContext.getResource((String) anyObject())).andStubAnswer(new IAnswer<URL>() {
 
+            @Override
             public URL answer() throws Throwable {
                 String path = (String) getCurrentArguments()[0];
                 return new URL(path);
@@ -306,6 +309,7 @@ public abstract class AbstractRenderTestCase extends MgnlTestCase {
         ParagraphRendererManager paragraphRendererManager = createMock(ParagraphRendererManager.class);
         expect(paragraphRendererManager.getRenderer((String) anyObject())).andStubAnswer(new IAnswer<ParagraphRenderer>() {
 
+            @Override
             public ParagraphRenderer answer() throws Throwable {
                 return paragraphRenderers.get(getCurrentArguments()[0]);
             }
@@ -316,6 +320,7 @@ public abstract class AbstractRenderTestCase extends MgnlTestCase {
         TemplateRendererManager templateRendererManager = createMock(TemplateRendererManager.class);
         expect(templateRendererManager.getRenderer((String) anyObject())).andStubAnswer(new IAnswer<TemplateRenderer>() {
 
+            @Override
             public TemplateRenderer answer() throws Throwable {
                 return templateRenderers.get(getCurrentArguments()[0]);
             }
@@ -326,6 +331,7 @@ public abstract class AbstractRenderTestCase extends MgnlTestCase {
         ParagraphManager paragraphManager = createMock(ParagraphManager.class);
         expect(paragraphManager.getParagraphDefinition((String) anyObject())).andStubAnswer(new IAnswer<Paragraph>() {
 
+            @Override
             public Paragraph answer() throws Throwable {
                 return paragraphs.get(getCurrentArguments()[0]);
             }
@@ -336,6 +342,7 @@ public abstract class AbstractRenderTestCase extends MgnlTestCase {
         TemplateManager templateManager = createMock(TemplateManager.class);
         expect(templateManager.getTemplateDefinition((String) anyObject())).andStubAnswer(new IAnswer<Template>() {
 
+            @Override
             public Template answer() throws Throwable {
                 return templates.get(getCurrentArguments()[0]);
             }
