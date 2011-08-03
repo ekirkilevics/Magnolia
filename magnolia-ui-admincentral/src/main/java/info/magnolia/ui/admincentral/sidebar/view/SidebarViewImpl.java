@@ -33,14 +33,14 @@
  */
 package info.magnolia.ui.admincentral.sidebar.view;
 
+import info.magnolia.ui.vaadin.components.Rack;
+import info.magnolia.ui.vaadin.components.Rack.Unit;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.jouni.animator.Disclosure;
 
-import com.vaadin.lazyloadwrapper.LazyLoadWrapper;
-import com.vaadin.terminal.Sizeable;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 
@@ -65,15 +65,15 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
         this.actionListView = actionListView;
         this.previewView = previewView;
 
-        Disclosure actions = new Disclosure("Actions", this.actionListView.asVaadinComponent());
-        actions.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-        actions.open();
-        panel.addComponent(actions);
+        Rack rack = new Rack();
+        panel.addComponent(rack);
 
-        Disclosure lazyPreview = new Disclosure("Status", new LazyLoadWrapper(this.previewView.asVaadinComponent()));
-        lazyPreview.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-        lazyPreview.open();
-        panel.addComponent(lazyPreview);
+        Unit actions = rack.addUnit(new Button("Actions"));
+        actions.setContent(this.actionListView.asVaadinComponent());
+        actions.setClosable(false);
+
+        Unit status = rack.addUnit(new Button("Status"));
+        status.setContent(this.previewView.asVaadinComponent());
     }
 
     @Override

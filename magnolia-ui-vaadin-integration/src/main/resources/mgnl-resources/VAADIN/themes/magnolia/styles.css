@@ -1,5 +1,7 @@
 @import "../chameleon/styles.css";
-@import "../components/styles.css";
+@import "../magnolia-ui-vaadin-components/collapser.css";
+@import "../magnolia-ui-vaadin-components/melodion.css";
+@import "../magnolia-ui-vaadin-components/rack.css";
 
 /* Application background */
 .v-app {

@@ -62,6 +62,7 @@ public class Melodion extends CssLayout {
     private Collection<Tab> tabs = new HashSet<Tab>();
 
     public Melodion() {
+        setStyleName("melodion");
         addStyleName("sidebar-menu");
         setSizeUndefined();
     }

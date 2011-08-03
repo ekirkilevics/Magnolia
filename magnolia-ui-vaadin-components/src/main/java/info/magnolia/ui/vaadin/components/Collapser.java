@@ -41,7 +41,7 @@ import com.vaadin.ui.NativeButton;
 
 
 /**
- * A collapsible side bar.
+ * A sidebar that collapses to a vertical toolbar.
  */
 public class Collapser extends CssLayout {
 

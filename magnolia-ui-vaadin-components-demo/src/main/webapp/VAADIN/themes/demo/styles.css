@@ -1,5 +1,7 @@
 @import "../chameleon/styles.css";
-@import "../components/styles.css";
+@import "../magnolia-ui-vaadin-components/collapser.css";
+@import "../magnolia-ui-vaadin-components/melodion.css";
+@import "../magnolia-ui-vaadin-components/rack.css";
 
 /* Application background */
 .v-app {
@@ -125,4 +127,8 @@ input.v-textfield,textarea.v-textarea,.v-filterselect {
 
 .v-button-borderless .v-icon {
   width: 16px;
+}
+
+.collapser {
+  width: 198px;
 }

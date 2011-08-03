@@ -43,6 +43,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -75,18 +76,35 @@ public class ComponentsDemo extends Application {
         melodionPanel.setHeight(480, Sizeable.UNITS_PIXELS);
         layout.addComponent(melodionPanel);
 
-        Panel rackPanel = new Panel("Collapser + Rack", collapsibleRack());
+        Panel rackPanel = new Panel("Rack", rack());
         rackPanel.setWidth(200, Sizeable.UNITS_PIXELS);
         rackPanel.setHeight(220, Sizeable.UNITS_PIXELS);
         layout.addComponent(rackPanel);
+
+        Panel collapserRackPanel = new Panel("Collapser + Rack", collapserRack());
+        collapserRackPanel.setWidth(200, Sizeable.UNITS_PIXELS);
+        collapserRackPanel.setHeight(220, Sizeable.UNITS_PIXELS);
+        layout.addComponent(collapserRackPanel);
+
+        Panel melodionCollapserRackPanel = new Panel("Melodion + Collapser + Rack", melodionCollapserRack());
+        melodionCollapserRackPanel.setWidth(400, Sizeable.UNITS_PIXELS);
+        melodionCollapserRackPanel.setHeight(480, Sizeable.UNITS_PIXELS);
+        layout.addComponent(melodionCollapserRackPanel);
+
     }
 
-    private ComponentContainer collapsibleRack() {
-        Rack rack = new Rack();
-        Collapser collapser = new Collapser();
-        collapser.setExpandedContent(rack);
+    private ComponentContainer melodionCollapserRack() {
+        CssLayout layout = new CssLayout();
 
-        toolbar(collapser);
+        layout.addComponent(melodion());
+        layout.addComponent(collapserRack());
+
+        return layout;
+    }
+
+    private ComponentContainer rack() {
+        Rack rack = new Rack();
+
         actions(rack);
 
         Unit status = rack.addUnit(new Button("Status"));
@@ -95,12 +113,21 @@ public class ComponentsDemo extends Application {
         Unit versions = rack.addUnit(new Button("Versions"));
         versions.setContent(new Label("Hello World!"));
 
+        return rack;
+    }
+
+    private ComponentContainer collapserRack() {
+        ComponentContainer rack = rack();
+        Collapser collapser = new Collapser();
+        collapser.setExpandedContent(rack);
+
+        collapser.setCollapsedContent(toolbar());
+
         return collapser;
     }
 
-    private void toolbar(Collapser collapser) {
+    private Component toolbar() {
         CssLayout layout = new CssLayout();
-        collapser.setCollapsedContent(layout);
 
         Button preview = button();
         preview.setIcon(new ThemeResource("../chameleon/img/magnifier.png"));
@@ -125,6 +152,8 @@ public class ComponentsDemo extends Application {
         Button delete = button();
         delete.setIcon(new ThemeResource("../runo/icons/16/document-delete.png"));
         layout.addComponent(delete);
+
+        return layout;
     }
 
     private void actions(Rack rack) {

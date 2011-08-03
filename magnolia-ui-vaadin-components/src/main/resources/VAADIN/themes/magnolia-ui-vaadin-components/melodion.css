@@ -1,0 +1,44 @@
+.melodion .v-label {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  padding: .6em .9em;
+}
+
+.melodion .v-label:hover {
+  cursor: pointer;
+}
+
+.melodion .v-label-spacer:hover {
+  cursor: auto;
+}
+
+.melodion .v-label img {
+  vertical-align: middle;
+}
+
+.melodion .v-tree-node {
+  background: none;
+}
+
+.melodion .v-caption {
+  font-size: .85em;
+  height: 0;
+  overflow: visible;
+  height: 0;
+  clear: both;
+}
+
+.melodion .v-captiontext,.melodion .v-icon {
+  padding: .6em .9em 0;
+}
+
+.melodion .v-captiontext {
+  float: right;
+}
+
+.melodion .v-icon {
+  float: left;
+}
