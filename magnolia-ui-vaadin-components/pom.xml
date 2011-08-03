@@ -51,12 +51,6 @@
           </archive>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <suppressionsLocation>${basedir}/checkstyle-suppressions.xml</suppressionsLocation>
-        </configuration>
-      </plugin>
     </plugins>
 
     <!-- This is needed for the sources required by the GWT compiler to be included in the produced JARs -->
