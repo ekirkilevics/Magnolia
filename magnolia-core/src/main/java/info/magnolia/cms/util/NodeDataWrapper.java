@@ -81,16 +81,6 @@ public abstract class NodeDataWrapper implements NodeData {
         return builder.toString();
     }
 
-    /**
-     * Default implementation of content wrapping for cases where NodeData needs to return content.
-     * 
-     * @param content
-     * @return
-     */
-    protected Content wrap(Content content) {
-        return content;
-    }
-
     // ---- below are only generated delegate methods
     @Override
     public void delete() throws RepositoryException {
@@ -154,17 +144,17 @@ public abstract class NodeDataWrapper implements NodeData {
 
     @Override
     public Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {
-        return wrap(getWrappedNodeData().getParent());
+        return getWrappedNodeData().getParent();
     }
 
     @Override
     public Content getReferencedContent() throws RepositoryException, PathNotFoundException, RepositoryException {
-        return wrap(getWrappedNodeData().getReferencedContent());
+        return getWrappedNodeData().getReferencedContent();
     }
 
     @Override
     public Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException {
-        return wrap(getWrappedNodeData().getReferencedContent(repositoryId));
+        return getWrappedNodeData().getReferencedContent(repositoryId);
     }
 
     @Override

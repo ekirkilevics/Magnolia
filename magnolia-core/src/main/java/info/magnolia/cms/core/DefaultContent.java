@@ -202,13 +202,13 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new DefaultContent(this.node, name, this.getHierarchyManager()));
+        return (new DefaultContent(this.node, name, this.hierarchyManager));
     }
 
     @Override
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
     AccessDeniedException {
-        Content content = new DefaultContent(this.node, name, contentType, this.getHierarchyManager());
+        Content content = new DefaultContent(this.node, name, contentType, this.hierarchyManager);
         MetaData metaData = content.getMetaData();
         metaData.setCreationDate();
         return content;
@@ -312,7 +312,7 @@ public class DefaultContent extends AbstractContent {
             while (nodeIterator.hasNext()) {
                 Node subNode = (Node) nodeIterator.next();
                 try {
-                    Content content = new DefaultContent(subNode, this.getHierarchyManager());
+                    Content content = new DefaultContent(subNode, this.hierarchyManager);
                     if (filter.accept(content)) {
                         children.add(content);
                     }
@@ -393,7 +393,7 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new DefaultContent(this.node.getParent(), this.getHierarchyManager()));
+        return (new DefaultContent(this.node.getParent(), this.hierarchyManager));
     }
 
     @Override
@@ -401,7 +401,7 @@ public class DefaultContent extends AbstractContent {
         if (level > this.getLevel()) {
             throw new PathNotFoundException();
         }
-        return (new DefaultContent(this.node.getAncestor(level), this.getHierarchyManager()));
+        return (new DefaultContent(this.node.getAncestor(level), this.hierarchyManager));
     }
 
     @Override

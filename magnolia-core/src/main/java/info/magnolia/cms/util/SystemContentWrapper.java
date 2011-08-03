@@ -35,8 +35,11 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.LifeTimeJCRSessionUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * A lazy content wrapper reading from the node using the {@link LifeTimeJCRSessionUtil}.
@@ -44,6 +47,8 @@ import info.magnolia.context.LifeTimeJCRSessionUtil;
  *
  */
 public class SystemContentWrapper extends LazyContentWrapper {
+
+    private static Logger log = LoggerFactory.getLogger(SystemContentWrapper.class);
 
     public SystemContentWrapper(String repository, String uuid) {
         super(repository, uuid);
@@ -56,11 +61,6 @@ public class SystemContentWrapper extends LazyContentWrapper {
     @Override
     public HierarchyManager getHierarchyManager() {
         return LifeTimeJCRSessionUtil.getHierarchyManager(getRepository());
-    }
-    
-    @Override
-    public NodeData wrap(NodeData nodeData){
-        return new SystemNodeDataWrapper(nodeData);
     }
 
 }

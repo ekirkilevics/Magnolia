@@ -35,7 +35,6 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,11 +87,6 @@ public class LazyContentWrapper extends ContentWrapper implements Serializable {
     @Override
     public HierarchyManager getHierarchyManager() {
         return MgnlContext.getSystemContext().getHierarchyManager(getRepository());
-    }
-
-    @Override
-    public NodeData wrap(NodeData nodeData) {
-        return new LazyNodeDataWrapper(nodeData);
     }
 
     protected void setUuid(String uuid) {
