@@ -43,13 +43,13 @@ import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionRange;
 import info.magnolia.module.model.VersionTest;
 import info.magnolia.test.ComponentsTestUtil;
+import junit.framework.TestCase;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 /**
  * @author gjoseph
@@ -178,6 +178,41 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertEquals("5.6.7/8.9.0", dep2versionRange.toString());
         VersionTest.assertVersion(5, 6, 7, null, dep2versionRange.getFrom());
         VersionTest.assertVersion(8, 9, 0, null, dep2versionRange.getTo());
+    }
+
+    public void testDependenciesCanBeSpecifiedWithoutVersion() throws ModuleManagementException {
+        String xml = "<module>\n" +
+        "  <name>myName</name>\n" +
+        "  <version>1.2.3</version>\n" +
+        "  <dependencies>\n" +
+        "    <dependency>\n" +
+        "      <name>foo</name>\n" +
+        "      <optional>true</optional>\n" +
+        "    </dependency>\n" +
+        "    <dependency>\n" +
+        "      <name>bar</name>\n" +
+        "    </dependency>\n" +
+        "  </dependencies>\n" +
+        "</module>";
+
+        final ModuleDefinition def = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
+        final List<DependencyDefinition> deps = new ArrayList<DependencyDefinition>(def.getDependencies());
+        assertEquals(2, deps.size());
+        final DependencyDefinition dep1 = deps.get(0);
+        final DependencyDefinition dep2 = deps.get(1);
+        assertEquals("foo", dep1.getName());
+        assertEquals(true, dep1.isOptional());
+        assertEquals(null, dep1.getVersion());
+        final VersionRange dep1versionRange = dep1.getVersionRange();
+        assertEquals(Version.UNDEFINED_FROM, dep1versionRange.getFrom());
+        assertEquals(Version.UNDEFINED_TO, dep1versionRange.getTo());
+
+        assertEquals("bar", dep2.getName());
+        assertEquals(false, dep2.isOptional());
+        assertEquals(null, dep2.getVersion());
+        final VersionRange dep2versionRange = dep2.getVersionRange();
+        assertEquals(Version.UNDEFINED_FROM, dep2versionRange.getFrom());
+        assertEquals(Version.UNDEFINED_TO, dep2versionRange.getTo());
     }
 
     public void testInvalidXmlIsCheckedAgainstDTD() {

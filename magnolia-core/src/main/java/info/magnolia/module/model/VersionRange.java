@@ -46,7 +46,8 @@ public class VersionRange {
     private final Version from;
     private final Version to;
 
-    public VersionRange(String rangeDef) {
+    public VersionRange(String input) {
+        final String rangeDef = input == null ? "*" : input;
         final int sepIdx = rangeDef.indexOf(separator);
         if (sepIdx < 0) {
             this.from = newVersion(rangeDef, Version.UNDEFINED_FROM);

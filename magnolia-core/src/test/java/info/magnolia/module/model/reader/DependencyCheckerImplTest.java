@@ -203,6 +203,38 @@ public class DependencyCheckerImplTest extends TestCase {
         assertEquals(module4, list.get(4));
     }
 
+    public void testNonOptionalDependencyWithUnspecifiedVersionShouldBeTakenIntoAccount() throws Exception {
+        final Map modules = new HashMap();
+        final ModuleDefinition module1 = new ModuleDefinition("module1", Version.parseVersion("3.0"), null, null);
+        final ModuleDefinition module2 = new ModuleDefinition("module2", Version.parseVersion("3.0"), null, null);
+
+        module1.addDependency(new DependencyDefinition("module2", null, false));
+        
+        modules.put("module1", module1);
+        modules.put("module2", module2);
+        depChecker.checkDependencies(modules);
+        final List<ModuleDefinition> sorted = depChecker.sortByDependencyLevel(modules);
+        assertEquals(2, sorted.size());
+        assertEquals(module2, sorted.get(0));
+        assertEquals(module1, sorted.get(1));
+    }
+
+    public void testOptionalDependencyWithUnspecifiedVersionShouldBeTakenIntoAccount() throws Exception {
+        final Map modules = new HashMap();
+        final ModuleDefinition module1 = new ModuleDefinition("module1", Version.parseVersion("3.0"), null, null);
+        final ModuleDefinition module2 = new ModuleDefinition("module2", Version.parseVersion("3.0"), null, null);
+
+        module1.addDependency(new DependencyDefinition("module2", null, false));
+
+        modules.put("module1", module1);
+        modules.put("module2", module2);
+        depChecker.checkDependencies(modules);
+        final List<ModuleDefinition> sorted = depChecker.sortByDependencyLevel(modules);
+        assertEquals(2, sorted.size());
+        assertEquals(module2, sorted.get(0));
+        assertEquals(module1, sorted.get(1));
+    }
+
     public void testBlowupExplicitelyInCaseOfSelfDependency() {
         final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
         modDefA.setDisplayName("Module-A");

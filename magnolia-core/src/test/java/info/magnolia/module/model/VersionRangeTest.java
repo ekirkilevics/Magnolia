@@ -125,6 +125,12 @@ public class VersionRangeTest extends TestCase {
         assertEquals(Version.UNDEFINED_TO, range.getTo());
     }
 
+    public void testNullIsConsideredAsWildcard() {
+        final VersionRange range = new VersionRange(null);
+        assertEquals(Version.UNDEFINED_FROM, range.getFrom());
+        assertEquals(Version.UNDEFINED_TO, range.getTo());
+    }
+
     public void testChecksIfAVersionIsInRange() {
         doTestIsInRange(true, "1.2.3/3.4.5", "2.0.0");
         doTestIsInRange(false, "1.2.3/3.4.5", "4.0.0");
