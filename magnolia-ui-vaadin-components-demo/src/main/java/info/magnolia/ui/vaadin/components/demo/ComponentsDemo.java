@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.vaadin.components.demo;
 
+import static com.vaadin.terminal.Sizeable.UNITS_PERCENTAGE;
+import static com.vaadin.terminal.Sizeable.UNITS_PIXELS;
 import info.magnolia.ui.vaadin.components.Collapser;
 import info.magnolia.ui.vaadin.components.Melodion;
 import info.magnolia.ui.vaadin.components.Melodion.Tab;
@@ -40,10 +42,8 @@ import info.magnolia.ui.vaadin.components.Rack;
 import info.magnolia.ui.vaadin.components.Rack.Unit;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -72,23 +72,28 @@ public class ComponentsDemo extends Application {
         window.addComponent(layout);
 
         Panel melodionPanel = new Panel("Melodion", melodion());
-        melodionPanel.setWidth(300, Sizeable.UNITS_PIXELS);
-        melodionPanel.setHeight(480, Sizeable.UNITS_PIXELS);
+        melodionPanel.setWidth(200, UNITS_PIXELS);
+        melodionPanel.setHeight(480, UNITS_PIXELS);
+        melodionPanel.setScrollable(true);
+        melodionPanel.setImmediate(true);
         layout.addComponent(melodionPanel);
 
         Panel rackPanel = new Panel("Rack", rack());
-        rackPanel.setWidth(200, Sizeable.UNITS_PIXELS);
-        rackPanel.setHeight(220, Sizeable.UNITS_PIXELS);
+        rackPanel.setWidth(200, UNITS_PIXELS);
+        rackPanel.setHeight(220, UNITS_PIXELS);
+        rackPanel.setScrollable(true);
+        rackPanel.setImmediate(true);
         layout.addComponent(rackPanel);
 
         Panel collapserRackPanel = new Panel("Collapser + Rack", collapserRack());
-        collapserRackPanel.setWidth(200, Sizeable.UNITS_PIXELS);
-        collapserRackPanel.setHeight(220, Sizeable.UNITS_PIXELS);
+        collapserRackPanel.setWidth(200, UNITS_PIXELS);
+        collapserRackPanel.setHeight(220, UNITS_PIXELS);
         layout.addComponent(collapserRackPanel);
 
         Panel melodionCollapserRackPanel = new Panel("Melodion + Collapser + Rack", melodionCollapserRack());
-        melodionCollapserRackPanel.setWidth(400, Sizeable.UNITS_PIXELS);
-        melodionCollapserRackPanel.setHeight(480, Sizeable.UNITS_PIXELS);
+        melodionCollapserRackPanel.setWidth(400, UNITS_PIXELS);
+        melodionCollapserRackPanel.setHeight(480, UNITS_PIXELS);
+        melodionCollapserRackPanel.setStyleName("melodion-collapser-rack");
         layout.addComponent(melodionCollapserRackPanel);
 
     }
@@ -96,8 +101,9 @@ public class ComponentsDemo extends Application {
     private ComponentContainer melodionCollapserRack() {
         CssLayout layout = new CssLayout();
 
-        layout.addComponent(melodion());
         layout.addComponent(collapserRack());
+
+        layout.addComponent(scrollPanel(melodion()));
 
         return layout;
     }
@@ -119,14 +125,24 @@ public class ComponentsDemo extends Application {
     private ComponentContainer collapserRack() {
         ComponentContainer rack = rack();
         Collapser collapser = new Collapser();
-        collapser.setExpandedContent(rack);
+        collapser.setExpandedContent(scrollPanel(rack));
 
-        collapser.setCollapsedContent(toolbar());
+        collapser.setCollapsedContent(scrollPanel(toolbar()));
 
         return collapser;
     }
 
-    private Component toolbar() {
+    private Panel scrollPanel(ComponentContainer content) {
+        Panel panel = new Panel(content);
+        panel.setStyleName("scroll");
+        panel.setScrollable(true);
+        panel.setImmediate(true);
+        panel.setSizeUndefined();
+        panel.setHeight(100, UNITS_PERCENTAGE);
+        return panel;
+    }
+
+    private ComponentContainer toolbar() {
         CssLayout layout = new CssLayout();
 
         Button preview = button();

@@ -30,8 +30,12 @@
   overflow: hidden;
 }
 
-.collapser.collapsed {
+.collapser {
   float: right;
+}
+
+.collapser.collapsed {
+/*   float: right; */
   width: 29px;
 }
 
