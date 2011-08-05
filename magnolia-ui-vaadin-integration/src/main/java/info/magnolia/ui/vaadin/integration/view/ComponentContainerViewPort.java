@@ -33,39 +33,42 @@
  */
 package info.magnolia.ui.vaadin.integration.view;
 
-
 import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.framework.view.ViewPort;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Label;
 
 
 /**
- * A {@link ViewPort} wrapping a Vaadin {@link ComponentContainer} to hide the fact that multiple
- * components could be added.
+ * A {@link ViewPort} using a Vaadin {@link ComponentContainer}. When constructed it will add a
+ * placeholder component to the container. If the view is set the current component will be
+ * replaced. components could be added.
  */
-public class ComponentContainerBasedViewPort implements ViewPort {
+public class ComponentContainerViewPort implements ViewPort {
 
-    // TODO: why does it need an id?
+    private static final Label PLACEHOLDER = new Label("Placeholder");
 
-    private String id;
+    // TODO this is a dummy initialization to have a component to add right from the beginning
+    private Component component = PLACEHOLDER;
 
-    private ComponentContainer componentContainer;
+    private ComponentContainer container;
 
-    public ComponentContainerBasedViewPort(String id, ComponentContainer componentContainer) {
-        this.id = id;
-        this.componentContainer = componentContainer;
+    public ComponentContainerViewPort(ComponentContainer container) {
+        this.container = container;
+        container.addComponent(component);
     }
 
     @Override
     public void setView(View view) {
-        componentContainer.removeAllComponents();
-        if (view != null) {
-            componentContainer.addComponent(VaadinComponentUtil.toVaadinComponent(view));
-        }
+        // TODO view is null if the view port is reset. this happens if the activity manager changes the place
+        Component newComponent = view != null ? VaadinComponentUtil.toVaadinComponent(view):PLACEHOLDER;
+        container.replaceComponent(component, newComponent);
+        component = newComponent;
     }
 
-    public String getId() {
-        return id;
+    public Component getComponent() {
+        return component;
     }
 }

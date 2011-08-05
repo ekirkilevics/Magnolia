@@ -90,6 +90,8 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
             return;
         }
 
+        // TODO is it really necessery to set the view to null. I think in GWT this is done to prevent event handling
+        // after an activity has been stopped. but this is not going to happen in vaadin.
         viewPort.setView(null);
         isolatedEventBus.removeHandlers();
 

@@ -75,7 +75,7 @@ import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
-import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
+import info.magnolia.ui.vaadin.integration.view.ComponentContainerViewPort;
 
 /**
  * Presenter logic for page editor.
@@ -119,7 +119,7 @@ public class PageEditorPresenter implements ToolboxView.Presenter, SelectionChan
         historyHandler.register(placeController, eventBus, defaultPlace);
 
         ActivityManager activityManager = new ActivityManager(mainActivityMapper, eventBus);
-        activityManager.setViewPort(new ComponentContainerBasedViewPort("main", pageEditorView.getEditorContainer()));
+        activityManager.setViewPort(new ComponentContainerViewPort(pageEditorView.getEditorContainer()));
 
         historyHandler.handleCurrentHistory();
 

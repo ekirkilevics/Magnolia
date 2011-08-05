@@ -46,7 +46,7 @@ import info.magnolia.ui.framework.place.PlaceHistoryHandler;
 import info.magnolia.ui.framework.place.PlaceHistoryMapper;
 import info.magnolia.ui.framework.place.PlaceHistoryMapperImpl;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
+import info.magnolia.ui.vaadin.integration.view.ComponentContainerViewPort;
 
 /**
  * Provides the MVP infrastructure for AdminCentral.
@@ -84,8 +84,8 @@ public class AdminCentralPresenter {
         final ActivityManager menuActivityManager = new ActivityManager(navigationActivityMapper, eventBus);
         final ActivityManager mainActivityManager = new ActivityManager(mainActivityMapper, eventBus);
 
-        mainActivityManager.setViewPort(new ComponentContainerBasedViewPort("main", adminCentralView.getMainContainer()));
-        menuActivityManager.setViewPort(new ComponentContainerBasedViewPort("navigation", adminCentralView.getMenuDisplay()));
+        mainActivityManager.setViewPort(new ComponentContainerViewPort(adminCentralView.getMainContainer()));
+        menuActivityManager.setViewPort(new ComponentContainerViewPort(adminCentralView.getMenuDisplay()));
 
         historyHandler.handleCurrentHistory();
     }

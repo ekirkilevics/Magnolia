@@ -36,7 +36,7 @@ package info.magnolia.ui.admincentral.workbench.view;
 import javax.inject.Singleton;
 
 import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.vaadin.integration.view.ComponentViewPort;
+import info.magnolia.ui.vaadin.integration.view.ComponentContainerViewPort;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
@@ -54,10 +54,9 @@ public class WorkbenchViewImpl implements WorkbenchView{
 
     private VerticalLayout outerLayout;
     private HorizontalSplitPanel splitPanel;
-    private ComponentViewPort itemListViewPort;
-    private ComponentViewPort sidebarViewPort;
-    private ComponentViewPort functionToolbarViewPort;
-    private ComponentViewPort searchViewPort;
+    private ComponentContainerViewPort itemListViewPort;
+    private ComponentContainerViewPort sidebarViewPort;
+    private ComponentContainerViewPort functionToolbarViewPort;
 
     public WorkbenchViewImpl() {
 
@@ -75,24 +74,15 @@ public class WorkbenchViewImpl implements WorkbenchView{
             }
         });
 
-        itemListViewPort = new ComponentViewPort();
-        sidebarViewPort = new ComponentViewPort();
-        functionToolbarViewPort = new ComponentViewPort();
-        searchViewPort = new ComponentViewPort();
-
-        itemListViewPort.setSizeFull();
-        sidebarViewPort.setSizeFull();
-
-        splitPanel.addComponent(itemListViewPort);
-        splitPanel.addComponent(sidebarViewPort);
-        splitPanel.setSizeFull();
+        itemListViewPort = new ComponentContainerViewPort(splitPanel);
+        sidebarViewPort = new ComponentContainerViewPort(splitPanel);
 
         outerLayout = new  VerticalLayout();
-        outerLayout.setSizeFull();
 
-        outerLayout.addComponent(functionToolbarViewPort);
+        functionToolbarViewPort = new ComponentContainerViewPort(outerLayout);
         outerLayout.addComponent(splitPanel);
 
+        outerLayout.setSizeFull();
         outerLayout.setExpandRatio(splitPanel, 1);
 
     }

@@ -40,7 +40,9 @@ import com.vaadin.ui.CustomComponent;
 
 
 /**
- * A display which itself is a {@link CustomComponent}. Can be used as a display slot.
+ * A display which itself is a {@link CustomComponent}. Can be used as a display slot. Attention:
+ * this adds an extra element to the DOM tree. It is recommended to use
+ * {@link ComponentContainerBasedViewPort}.
  */
 @SuppressWarnings("serial")
 public class ComponentViewPort extends CustomComponent implements ViewPort {
