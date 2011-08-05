@@ -123,7 +123,7 @@
   <servlets>
     <servlet>
       <name>AdminCentral</name>
-      <class>info.magnolia.ui.vaadin.integration.servlet.MagnoliaResourcesAwareApplicationServlet</class>
+      <class>com.vaadin.terminal.gwt.server.ApplicationServlet</class>
        <mappings>
          <mapping>/.magnolia/admin-central</mapping>
          <mapping>/.magnolia/admin-central/*</mapping>
@@ -136,6 +136,19 @@
          <param>
            <name>widgetset</name>
            <value>info.magnolia.ui.vaadin.widgetset.MagnoliaWidgetset</value>
+         </param>
+       </params>
+    </servlet>
+    <servlet>
+      <name>VaadinClasspathResourcesSpool</name>
+      <class>info.magnolia.cms.servlets.ClasspathSpool</class>
+       <mappings>
+         <mapping>/VAADIN/*</mapping>
+      </mappings>
+       <params>
+         <param>
+           <name>resourcesRoot</name>
+           <value>/VAADIN</value>
          </param>
        </params>
     </servlet>

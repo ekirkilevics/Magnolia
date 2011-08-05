@@ -25,8 +25,8 @@
 
   <servlets>
     <servlet>
-      <name>AdminCentral</name>
-      <class>info.magnolia.ui.vaadin.integration.servlet.MagnoliaResourcesAwareApplicationServlet</class>
+      <name>WebContentManagement</name>
+      <class>com.vaadin.terminal.gwt.server.ApplicationServlet</class>
        <mappings>
          <mapping>/.magnolia/page-editor</mapping>
          <mapping>/.magnolia/page-editor/*</mapping>

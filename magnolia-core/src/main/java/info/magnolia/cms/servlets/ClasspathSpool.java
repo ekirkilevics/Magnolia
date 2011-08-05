@@ -56,8 +56,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A simple spool servlet that load resources from the classpath. Resources folder is configurable via the servlet <code>resourcesRoot</code> init parameter.
- * If none is provided, it defaults to <code>mgnl-resources</code>. Files in this folder will be loaded by this servlet (corresponding to the mapped url
- * <code>/.resources/*</code>. This servlet should be used for authoring-only resources, like rich editor images and
+ * If none is provided, it defaults to <code>/mgnl-resources</code>. Files in this folder will be loaded by this servlet (corresponding to the configured mapped url,
+ * e.g. <code>/.resources/*</code> or <code>/VAADIN/*</code>, etc. This servlet should be used for authoring-only resources, like rich editor images and
  * scripts. It's not suggested for public website resources. Content length and last modification date are not set on
  * files returned from the classpath.
  *
@@ -157,7 +157,7 @@ public class ClasspathSpool extends HttpServlet {
         URL url = ClasspathResourcesUtil.getResource(resourcesRoot);
         log.debug("resources root is {}", resourcesRoot);
         if(url == null) {
-            log.warn("Resource classpath root {} does not seem to exist. Some resources might not be available, please check your configuration. Falling back to default resouces root {}", resourcesRoot, MGNL_DEFAULT_RESOURCES_ROOT);
+            log.warn("Resource classpath root {} does not seem to exist. Some resources might not be available, please check your configuration. Falling back to default resources root {}", resourcesRoot, MGNL_DEFAULT_RESOURCES_ROOT);
             // in case of misconfiguration, this should mitigate the risk of ending up with an unusable Magnolia instance.
             resourcesRoot = MGNL_DEFAULT_RESOURCES_ROOT;
         }
