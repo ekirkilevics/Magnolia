@@ -69,7 +69,6 @@ import info.magnolia.setup.for3_6_2.UpdateGroups;
 import info.magnolia.setup.for3_6_2.UpdateRoles;
 import info.magnolia.setup.for3_6_2.UpdateUsers;
 import info.magnolia.setup.for4_3.UpdateUserPermissions;
-import info.magnolia.setup.for4_4_5.BootstrapMIMEMappingsTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -215,13 +214,13 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
         register(DeltaBuilder.update("4.4.5", "")
                 .addTask(new BootstrapConditionally("Bootstrap m4a MIME mapping", "Bootstrap MIME mapping for m4a in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4a.xml"))
-                .addTask(new BootstrapMIMEMappingsTask("Add m4b MIME mapping", "Add MIME mapping for m4b in case it doesn't exist already", "m4b", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4b.xml"))
-                .addTask(new BootstrapMIMEMappingsTask("Add m4r MIME mapping", "Add MIME mapping for m4r in case it doesn't exist already", "m4r", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4r.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap m4b MIME mapping", "Bootstrap MIME mapping for m4b in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4b.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap m4r MIME mapping", "Bootstrap MIME mapping for m4r in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4r.xml"))
                 .addTask(new BootstrapConditionally("Bootstrap m4v MIME mapping", "Bootstrap MIME mapping for m4v in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4v.xml"))
-                .addTask(new BootstrapMIMEMappingsTask("Add mp4a MIME mapping", "Add MIME mapping for mp4a in case it doesn't exist already", "mp4a", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4a.xml"))
-                .addTask(new BootstrapMIMEMappingsTask("Add mp4s MIME mapping", "Add MIME mapping for mp4s in case it doesn't exist already", "mp4s", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4s.xml"))
-                .addTask(new BootstrapMIMEMappingsTask("Add mp4v MIME mapping", "Add MIME mapping for mp4v in case it doesn't exist already", "mp4v", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4v.xml"))
-                .addTask(new BootstrapMIMEMappingsTask("Add mpg4 MIME mapping", "Add MIME mapping for mp4a in case it doesn't exist already", "mpg4", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mpg4.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap mp4a MIME mapping", "Bootstrap MIME mapping for mp4a in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4a.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap mp4s MIME mapping", "Bootstrap MIME mapping for mp4s in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4s.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap mp4v MIME mapping", "Bootstrap MIME mapping for mp4v in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4v.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap mpg4 MIME mapping", "Bootstrap MIME mapping for mpg4 in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mpg4.xml"))
                 .addTask(new BootstrapConditionally("Bootstrap srt MIME mapping", "Bootstrap MIME mapping for srt in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.srt.xml"))
                 .addTask(fixMimetype("mp4", "application/octet-stream", "video/mp4"))
                 .addConditions(conditions)
