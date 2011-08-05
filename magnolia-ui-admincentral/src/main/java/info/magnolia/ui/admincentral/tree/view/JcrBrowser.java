@@ -89,7 +89,8 @@ public class JcrBrowser extends TreeTable {
         // TODO the view should not know the shell (it's used to show errors)
         this.shell = shell;
 
-        setSizeFull();
+        setSizeUndefined();
+        setHeight(100, UNITS_PERCENTAGE);
         setEditable(false);
         setSelectable(true);
         setColumnCollapsingAllowed(true);
@@ -106,7 +107,8 @@ public class JcrBrowser extends TreeTable {
 
         for (Column<?> treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();
-            super.setColumnExpandRatio(columnName, treeColumn.getWidth() <= 0 ? 1 : treeColumn.getWidth());
+            // super.setColumnExpandRatio(columnName, treeColumn.getWidth() <= 0 ? 1 :
+            // treeColumn.getWidth());
             container.addContainerProperty(columnName, Component.class, "");
             super.setColumnHeader(columnName, treeColumn.getLabel());
         }

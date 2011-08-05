@@ -33,58 +33,40 @@
  */
 package info.magnolia.ui.admincentral.workbench.view;
 
-import javax.inject.Singleton;
-
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.vaadin.integration.view.ComponentContainerViewPort;
 
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
-import com.vaadin.ui.AbstractSplitPanel.SplitterClickListener;
+import javax.inject.Singleton;
+
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.CssLayout;
 
 
 /**
  * Implementation for {@link WorkbenchView}.
  */
 @Singleton
-public class WorkbenchViewImpl implements WorkbenchView{
+public class WorkbenchViewImpl implements WorkbenchView {
 
-    private VerticalLayout outerLayout;
-    private HorizontalSplitPanel splitPanel;
-    private ComponentContainerViewPort itemListViewPort;
-    private ComponentContainerViewPort sidebarViewPort;
+    private CssLayout outerLayout = new CssLayout();
+
     private ComponentContainerViewPort functionToolbarViewPort;
 
+    private ComponentContainerViewPort sidebarViewPort;
+
+    private ComponentContainerViewPort itemListViewPort;
+
     public WorkbenchViewImpl() {
-
-        splitPanel = new HorizontalSplitPanel();
-        splitPanel.setSplitPosition(20, Sizeable.UNITS_PERCENTAGE, true);
-        splitPanel.setSizeFull();
-        splitPanel.addListener(new SplitterClickListener() {
-
-            @Override
-            public void splitterClick(SplitterClickEvent event) {
-                if(event.isDoubleClick()){
-                    HorizontalSplitPanel panel = (HorizontalSplitPanel)event.getSource();
-                    panel.setSplitPosition(panel.getSplitPosition() > 0 ? 0 : 20, Sizeable.UNITS_PERCENTAGE, true);
-                }
-            }
-        });
-
-        itemListViewPort = new ComponentContainerViewPort(splitPanel);
-        sidebarViewPort = new ComponentContainerViewPort(splitPanel);
-
-        outerLayout = new  VerticalLayout();
-
-        functionToolbarViewPort = new ComponentContainerViewPort(outerLayout);
-        outerLayout.addComponent(splitPanel);
-
         outerLayout.setSizeFull();
-        outerLayout.setExpandRatio(splitPanel, 1);
+        outerLayout.setStyleName("workbench-view");
+        functionToolbarViewPort = new ComponentContainerViewPort(outerLayout);
 
+        CssLayout innerLayout = new CssLayout();
+        innerLayout.setSizeFull();
+        innerLayout.setStyleName("workbench-view-inner");
+        outerLayout.addComponent(innerLayout);
+        sidebarViewPort = new ComponentContainerViewPort(innerLayout);
+        itemListViewPort = new ComponentContainerViewPort(innerLayout);
     }
 
     @Override

@@ -62,7 +62,6 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
     public TreeViewImpl(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) {
 
         jcrBrowser = new JcrBrowser(workbenchDefinition, treeModel, shell);
-        jcrBrowser.setSizeFull();
         // next two lines are required to make the browser (TreeTable) react on selection change via mouse
         jcrBrowser.setImmediate(true);
         jcrBrowser.setNullSelectionAllowed(false);

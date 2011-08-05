@@ -10,6 +10,7 @@
 .collapser {
   position: relative;
   height: 100%;
+  width: 198px;
 }
 
 .v-csslayout-collapser>.v-csslayout-margin {

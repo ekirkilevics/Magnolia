@@ -47,15 +47,16 @@ public class Collapser extends CssLayout {
 
     private NativeButton collapse;
 
-    private Component expandedContent;
+    private Component expandedContent = new CssLayout();
 
-    private Component collapsedContent;
+    private Component collapsedContent = new CssLayout();
 
     public Collapser() {
         setStyleName("collapser");
 
         collapse = new NativeButton(">");
         collapse.setStyleName("collapse");
+        collapse.setImmediate(true);
         addComponent(collapse);
 
         collapse.addListener(new ClickListener() {

@@ -36,6 +36,8 @@ package info.magnolia.ui.vaadin.integration.view;
 import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.framework.view.ViewPort;
 
+import java.io.Serializable;
+
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
@@ -46,12 +48,10 @@ import com.vaadin.ui.Label;
  * placeholder component to the container. If the view is set the current component will be
  * replaced. components could be added.
  */
-public class ComponentContainerViewPort implements ViewPort {
-
-    private static final Label PLACEHOLDER = new Label("Placeholder");
+public class ComponentContainerViewPort implements ViewPort, Serializable {
 
     // TODO this is a dummy initialization to have a component to add right from the beginning
-    private Component component = PLACEHOLDER;
+    private Component component = new Label();
 
     private ComponentContainer container;
 
@@ -62,8 +62,9 @@ public class ComponentContainerViewPort implements ViewPort {
 
     @Override
     public void setView(View view) {
-        // TODO view is null if the view port is reset. this happens if the activity manager changes the place
-        Component newComponent = view != null ? VaadinComponentUtil.toVaadinComponent(view):PLACEHOLDER;
+        // TODO view is null if the view port is reset. this happens if the activity manager changes
+        // the place
+        Component newComponent = view != null ? VaadinComponentUtil.toVaadinComponent(view) : new Label();
         container.replaceComponent(component, newComponent);
         component = newComponent;
     }

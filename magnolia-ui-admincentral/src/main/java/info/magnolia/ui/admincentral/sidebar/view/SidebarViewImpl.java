@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.sidebar.view;
 
+import info.magnolia.ui.vaadin.components.Collapser;
 import info.magnolia.ui.vaadin.components.Rack;
 import info.magnolia.ui.vaadin.components.Rack.Unit;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
@@ -42,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Panel;
 
 
 /**
@@ -56,17 +57,26 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
 
     private static final Logger log = LoggerFactory.getLogger(SidebarViewImpl.class);
 
-    private VerticalLayout panel = new VerticalLayout();
     private ActionListView actionListView;
     private PreviewView previewView;
     private Presenter presenter;
+
+    private Component root;
 
     public SidebarViewImpl(ActionListView actionListView, PreviewView previewView) {
         this.actionListView = actionListView;
         this.previewView = previewView;
 
         Rack rack = new Rack();
-        panel.addComponent(rack);
+        Panel scrollPanel = new Panel(rack);
+        scrollPanel.setStyleName("scroll");
+        scrollPanel.setScrollable(true);
+        scrollPanel.setImmediate(true);
+        scrollPanel.setSizeUndefined();
+        // scrollPanel.setHeight(100, UNITS_PERCENTAGE);
+        scrollPanel.setContent(rack);
+        Collapser collapser = new Collapser();
+        collapser.setExpandedContent(scrollPanel);
 
         Unit actions = rack.addUnit(new Button("Actions"));
         actions.setContent(this.actionListView.asVaadinComponent());
@@ -74,6 +84,8 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
 
         Unit status = rack.addUnit(new Button("Status"));
         status.setContent(this.previewView.asVaadinComponent());
+
+        root = collapser;
     }
 
     @Override
@@ -94,6 +106,6 @@ public class SidebarViewImpl implements IsVaadinComponent, SidebarView {
 
     @Override
     public Component asVaadinComponent() {
-        return panel;
+        return root;
     }
 }

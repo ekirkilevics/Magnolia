@@ -132,15 +132,11 @@ input.v-textfield,textarea.v-textarea,.v-filterselect {
   width: 16px;
 }
 
-.collapser {
-  width: 198px;
-}
-
 .v-panel-content-melodion-collapser-rack>.v-csslayout,.v-panel-content-melodion-collapser-rack>.v-csslayout>.v-csslayout-margin,.v-panel-content-melodion-collapser-rack>.v-csslayout>.v-csslayout-margin>.v-csslayout-container
   {
   height: 100%;
 }
 
-.scroll>.v-panel-captionwrap,.v-panel-content-scroll,.v-panel-deco-scroll {
+.v-panel-nocaption-scroll,.v-panel-content-scroll,.v-panel-deco-scroll {
   border: none;
 }

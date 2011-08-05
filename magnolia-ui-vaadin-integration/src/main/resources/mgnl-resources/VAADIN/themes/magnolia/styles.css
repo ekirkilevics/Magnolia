@@ -160,3 +160,38 @@ input.v-textfield-search[type="text"]:focus {
 .v-splitpanel-second-container {
 
 }
+
+.sidebar-view, .sidebar-view>.v-csslayout-margin, .sidebar-view>.v-csslayout-margin>.v-csslayout-container {
+  height: 100%;
+}
+
+.workbench-view>.v-csslayout-margin, .workbench-view>.v-csslayout-margin>.v-csslayout-container, .workbench-view-inner>.v-csslayout-margin, .workbench-view-inner>.v-csslayout-margin>.v-csslayout-container {
+  width: 100%;
+  height: 100%;
+}
+
+.workbench-view .v-table {
+  height: 100% !important;
+}
+
+.workbench-view .v-table>* {
+  width: 100% !important;
+}
+
+.v-csslayout-toolbar {
+  position: absolute;
+  width: 100%;
+}
+
+.workbench-view {
+  position: relative;
+}
+
+.workbench-view-inner {
+  box-sizing: border-box;
+  padding-top: 33px;
+}
+
+.v-panel-scroll, .v-panel-content-scroll {
+  height: 100%;
+}

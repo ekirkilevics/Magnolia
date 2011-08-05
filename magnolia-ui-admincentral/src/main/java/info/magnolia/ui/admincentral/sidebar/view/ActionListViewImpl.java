@@ -42,11 +42,11 @@ import java.util.List;
 import javax.inject.Singleton;
 
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.NativeButton;
 
 
 /**
@@ -62,10 +62,6 @@ public class ActionListViewImpl implements ActionListView {
 
     private CssLayout menu = new CssLayout();
 
-    public ActionListViewImpl() {
-        menu.addStyleName("sidebar-menu");
-    }
-
     @Override
     public void show(List<MenuItemDefinition> contextMenuItems) {
         clear();
@@ -80,8 +76,10 @@ public class ActionListViewImpl implements ActionListView {
 
     protected void addAction(MenuItemDefinition menuItem) {
         final String itemId = menuItem.getName();
-        NativeButton button = new NativeButton(menuItem.getLabel());
+        Button button = new Button(menuItem.getLabel());
         button.setIcon(new ExternalResource(MgnlContext.getContextPath() + menuItem.getIcon()));
+        button.setStyleName("action");
+        button.addStyleName("borderless");
 
         button.addListener(new ClickListener() {
 
