@@ -46,6 +46,7 @@ import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
+import info.magnolia.module.delta.CheckOrCreatePropertyTask;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
@@ -223,6 +224,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new BootstrapConditionally("Bootstrap mpg4 MIME mapping", "Bootstrap MIME mapping for mpg4 in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mpg4.xml"))
                 .addTask(new BootstrapConditionally("Bootstrap srt MIME mapping", "Bootstrap MIME mapping for srt in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.srt.xml"))
                 .addTask(fixMimetype("mp4", "application/octet-stream", "video/mp4"))
+                .addTask(addButDoNotReplaceMimeProperty("mov", "icon", "/.resources/file-icons/moov.png"))
+                .addTask(addButDoNotReplaceMimeProperty("mov", "extension", "mov"))
                 .addConditions(conditions)
         );
 
@@ -237,6 +240,15 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         return new PropertyValueDelegateTask(mimeType.toUpperCase() + " MIME mapping",
                 "Checks and updates " + mimeType.toUpperCase() + "MIME mapping if not correct.",
                 workspaceName, nodePath, "mime-type", previouslyWrongValue, false, fixTask);
+    }
+
+    private PropertyExistsDelegateTask addButDoNotReplaceMimeProperty(String mimeType, final String propertyName, final String propertyValue) {
+        final String workspaceName = ContentRepository.CONFIG;
+        final String nodePath = "/server/MIMEMapping/" + mimeType;
+        final CheckOrCreatePropertyTask createTask = new CheckOrCreatePropertyTask(null, null, workspaceName, nodePath, propertyName, propertyValue);
+        return new PropertyExistsDelegateTask("Add "+mimeType.toUpperCase()+" property",
+                "Adds property '"+propertyName+"' to "+mimeType.toUpperCase()+" MIME type in case it doesn't exist yet",
+                workspaceName, nodePath, propertyName, null, createTask);
     }
 
     @Override

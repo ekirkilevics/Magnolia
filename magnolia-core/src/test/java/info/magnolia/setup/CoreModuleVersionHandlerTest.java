@@ -99,7 +99,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
-
+        // needed for 4.4.5 - configuration of mov MIME type
+        setupConfigNode("/server/MIMEMapping/mov");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         // prior to 3.6.4, the mime types for png and swf were incorrect
@@ -119,6 +120,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        // needed for 4.4.5 - configuration of mov MIME type
+        setupConfigNode("/server/MIMEMapping/mov");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         // prior to 3.6.4, the mime types for png and swf were incorrect - but values have been customized on this instance
@@ -138,6 +141,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        // needed for 4.4.5 - configuration of mov MIME type
+        setupConfigNode("/server/MIMEMapping/mov");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -165,6 +170,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        // needed for 4.4.5 - configuration of mov MIME type
+        setupConfigNode("/server/MIMEMapping/mov");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -187,6 +194,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        // needed for 4.4.5 - configuration of mov MIME type
+        setupConfigNode("/server/MIMEMapping/mov");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -216,6 +225,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        // needed for 4.4.5 - configuration of mov MIME type
+        setupConfigNode("/server/MIMEMapping/mov");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -239,6 +250,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        // needed for 4.4.5 - configuration of mov MIME type
+        setupConfigNode("/server/MIMEMapping/mov");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -268,6 +281,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        // needed for 4.4.5 - configuration of mov MIME type
+        setupConfigNode("/server/MIMEMapping/mov");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -287,6 +302,10 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         return MgnlContext.getHierarchyManager("config").getContent("/server/MIMEMapping/" + typeName).getNodeData("mime-type").getString();
     }
 
+    private String getMimePropertyValue(String typeName, String propertyName) throws RepositoryException {
+        return MgnlContext.getHierarchyManager(ContentRepository.CONFIG).getContent("/server/MIMEMapping/" + typeName).getNodeData(propertyName).getString();
+    }
+
     /**
      * test unicode normalization filter and the new filter ordering (update version to 4.3).
      */
@@ -301,6 +320,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/uriSecurity", "enable", "true");
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/filters/activation", "enable", "true");
+        // needed for 4.4.5 - configuration of mov MIME type
+        setupConfigNode("/server/MIMEMapping/mov");
         // let's make sure we've set up this test with filters in their pre-4.3 order
         final Iterator<Content> filters = MgnlContext.getHierarchyManager("config").getContent("/server/filters/").getChildren().iterator();
         assertEquals("context", filters.next().getName());
@@ -349,6 +370,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
+        setupConfigNode("/server/MIMEMapping/mov");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
@@ -369,6 +391,9 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("application/x-srt", getMimeTypePropertyValue("srt"));
         // this type used to be application/octet-stream
         assertEquals("video/mp4", getMimeTypePropertyValue("mp4"));
+        // new properties for mov
+        assertEquals("/.resources/file-icons/moov.png", getMimePropertyValue("mov", "icon"));
+        assertEquals("mov", getMimePropertyValue("mov", "extension"));
     }
 
     public void testMP4MimeTypesOnUpdateTo445WithUserFixedValues() throws ModuleManagementException, RepositoryException {
@@ -376,11 +401,12 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
+        setupConfigNode("/server/MIMEMapping/mov");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
 
-        // if custom mime types have been set up already, we don't want to overwrite them (apart from mp4)
+        // if custom mime types have been set up already, we don't want to overwrite them
         setupConfigProperty("/server/MIMEMapping/m4a", "mime-type", "custom-type-for-m4a");
         setupConfigProperty("/server/MIMEMapping/m4b", "mime-type", "custom-type-for-m4b");
         setupConfigProperty("/server/MIMEMapping/m4r", "mime-type", "custom-type-for-m4r");
@@ -391,6 +417,9 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/MIMEMapping/mpg4", "mime-type", "custom-type-for-mpg4");
         setupConfigProperty("/server/MIMEMapping/srt", "mime-type", "custom-type-for-srt");
         setupConfigProperty("/server/MIMEMapping/mp4", "mime-type", "custom-type-for-mp4");
+        // same if mov extension and icon have been set manually
+        setupConfigProperty("/server/MIMEMapping/mov", "extension", "custom-extension-for-mov");
+        setupConfigProperty("/server/MIMEMapping/mov", "icon", "custom-icon-for-mov");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.4"));
 
@@ -404,6 +433,9 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("custom-type-for-mpg4", getMimeTypePropertyValue("mpg4"));
         assertEquals("custom-type-for-srt", getMimeTypePropertyValue("srt"));
         assertEquals("custom-type-for-mp4", getMimeTypePropertyValue("mp4"));
+
+        assertEquals("custom-extension-for-mov", getMimePropertyValue("mov", "extension"));
+        assertEquals("custom-icon-for-mov", getMimePropertyValue("mov", "icon"));
     }
 
     public void testDefaultMP4MimeTypeOnUpdateTo445WithUserFixedValue() throws ModuleManagementException, RepositoryException {
@@ -411,6 +443,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
+        setupConfigNode("/server/MIMEMapping/mov");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
