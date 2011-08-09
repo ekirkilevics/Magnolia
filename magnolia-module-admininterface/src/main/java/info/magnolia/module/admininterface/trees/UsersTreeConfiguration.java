@@ -110,7 +110,7 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
 
         menuNewFolder.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotItemType(" //$NON-NLS-1$
             + tree.getJavascriptTree()
-            + ", '" + ItemType.NT_FOLDER + "')"); //$NON-NLS-1$
+            + ", '" + ItemType.USER.getSystemName() + "')"); //$NON-NLS-1$
 
 
         ContextMenuItem menuOpen = new ContextMenuItem("edit");
