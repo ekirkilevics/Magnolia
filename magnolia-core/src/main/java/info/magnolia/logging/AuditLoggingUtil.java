@@ -34,6 +34,7 @@
 package info.magnolia.logging;
 
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.security.auth.login.FormLogin;
 import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.context.MgnlContext;
@@ -94,13 +95,15 @@ public class AuditLoggingUtil {
      * Log user login.
      */
     public static void log(final LoginResult loginResult, final HttpServletRequest request ) {
-        String userid = "";
-        String result = "";
-        if(loginResult.getStatus() == LoginResult.STATUS_SUCCEEDED
-                || loginResult.getStatus() == LoginResult.STATUS_FAILED) {
-            //need request as if the user is not logged yet, the id is not in the context
-            userid = request.getParameter(FormLogin.PARAMETER_USER_ID);
+        if(loginResult.getStatus() == LoginResult.STATUS_SUCCEEDED || loginResult.getStatus() == LoginResult.STATUS_FAILED) {
+            // need request as if the user is not logged yet, the id is not in the context
+            String userid = request.getParameter(FormLogin.PARAMETER_USER_ID);
+            if (UserManager.ANONYMOUS_USER.equals(userid)) {
+                // do not log for anonymous
+                return;
+            }
 
+            String result;
             if(loginResult.getStatus() == LoginResult.STATUS_SUCCEEDED) {
                 result = "Success";
             } else {
