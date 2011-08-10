@@ -7,7 +7,7 @@
     <sv:value>mix:lockable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>47098875-36b5-4ae6-80f6-9e6e5fde0adc</sv:value>
+    <sv:value>37098875-36b5-4ae6-80f6-9e6e5fde0adc</sv:value>
   </sv:property>
   <sv:property sv:name="description" sv:type="String">
     <sv:value>components.samplesControlsShowRoom.description</sv:value>
