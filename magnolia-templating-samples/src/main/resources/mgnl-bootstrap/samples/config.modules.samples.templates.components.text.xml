@@ -7,7 +7,7 @@
     <sv:value>mix:lockable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>4355d0ca-f87f-4234-8807-c61b6b65245a</sv:value>
+    <sv:value>4455d0ca-f87f-4234-8807-c61b6b65245a</sv:value>
   </sv:property>
   <sv:property sv:name="description" sv:type="String">
     <sv:value>Displays a title and a body of text</sv:value>

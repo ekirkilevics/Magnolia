@@ -7,7 +7,7 @@
     <sv:value>mix:lockable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>d5d724d3-5dac-41e1-8b35-a9eadbb23327</sv:value>
+    <sv:value>d6d724d3-5dac-41e1-8b35-a9eadbb23327</sv:value>
   </sv:property>
   <sv:property sv:name="i18nBasename" sv:type="String">
     <sv:value>info.magnolia.module.samples.messages</sv:value>

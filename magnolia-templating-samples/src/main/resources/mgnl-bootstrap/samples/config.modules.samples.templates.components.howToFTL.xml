@@ -7,7 +7,7 @@
     <sv:value>mix:lockable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>92da3005-aa22-48e8-8130-3fad8e5aec4b</sv:value>
+    <sv:value>82da3005-aa22-48e8-8130-3fad8e5aec4b</sv:value>
   </sv:property>
   <sv:property sv:name="description" sv:type="String">
     <sv:value>components.samplesHowToFTL.description</sv:value>
