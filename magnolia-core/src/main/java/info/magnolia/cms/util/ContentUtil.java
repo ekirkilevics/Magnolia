@@ -313,6 +313,21 @@ public class ContentUtil {
     }
 
     /**
+     * Returns the first found <strong>ancestor</strong> of the given node which is of the given type,
+     * or the given node itself, it is of the given type.
+     */
+    public static Content getAncestorOfType(final Content firstNode, final String nodeType) throws RepositoryException {
+        Content node = firstNode;
+        while (!node.isNodeType(nodeType)) {
+            node = node.getParent();
+            if (node.getLevel() == 0) {
+                throw new RepositoryException("No ancestor of type " + nodeType + " found for " + firstNode);
+            }
+        }
+        return node;
+    }
+
+    /**
      * Convenient method to order a node before a target node.
      */
     public static void orderBefore(Content nodeToMove, String targetNodeName) throws RepositoryException{

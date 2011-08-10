@@ -36,10 +36,13 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.nodebuilder.NodeBuilder;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
+
+import static info.magnolia.nodebuilder.Ops.*;
 import static org.easymock.EasyMock.*;
 import static java.util.Arrays.asList;
 
@@ -60,6 +63,24 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class ContentUtilTest extends MgnlTestCase {
+
+    private MockContent rootABC;
+
+    // @Before
+    public void setUp() {
+        rootABC = new MockContent("root", ItemType.CONTENT);
+        new NodeBuilder(rootABC,
+                addNode("a", ItemType.CONTENT).then(
+                        addNode("aa", ItemType.CONTENT),
+                        addNode("ab", ItemType.CONTENTNODE).then(
+                                addNode("abb", ItemType.CONTENTNODE)
+                        )
+                ),
+                addNode("b", ItemType.CONTENT),
+                addNode("c", ItemType.CONTENTNODE)
+        ).exec();
+    }
+
     public void testVisitShouldPassFilterAlong() throws Exception {
         final ItemType foo = new ItemType("foo");
         final ItemType bar = new ItemType("bar");
@@ -501,6 +522,36 @@ public class ContentUtilTest extends MgnlTestCase {
             }
         });
         assertEquals(asList("a","b","c","d","f","e"), result);
+    }
+
+    // @Test
+    public void testGetAncestorOfTypeBasicCase() throws RepositoryException {
+        final Content content = rootABC.getContent("a/ab/abb");
+        assertEquals(rootABC.getContent("a"), ContentUtil.getAncestorOfType(content, ItemType.CONTENT.getSystemName()));
+    }
+
+    // @Test
+    public void testGetAncestorOfTypeReturnsSelfIfMatch() throws RepositoryException {
+        final Content abb = rootABC.getContent("a/ab/abb");
+        final Content ab = rootABC.getContent("a/ab");
+        final Content aa = rootABC.getContent("a/aa");
+        final Content c = rootABC.getContent("c");
+        assertEquals(abb, ContentUtil.getAncestorOfType(abb, ItemType.CONTENTNODE.getSystemName()));
+        assertEquals(ab, ContentUtil.getAncestorOfType(ab, ItemType.CONTENTNODE.getSystemName()));
+        assertEquals(aa, ContentUtil.getAncestorOfType(aa, ItemType.CONTENT.getSystemName()));
+        assertEquals(c, ContentUtil.getAncestorOfType(c, ItemType.CONTENTNODE.getSystemName()));
+    }
+
+    // @Test
+    public void testGetAncestorOfTypeThrowsExceptionIfNotFound() throws RepositoryException {
+        final Content content = rootABC.getContent("a/aa");
+        try {
+            ContentUtil.getAncestorOfType(content, ItemType.CONTENTNODE.getSystemName());
+            fail("should have failed");
+        } catch (Throwable t) {
+            assertTrue(t instanceof RepositoryException);
+            assertEquals("No ancestor of type mgnl:contentNode found for null:/root/a/aa[mgnl:content]", t.getMessage());
+        }
     }
 
     private final static class ContentTypeRejector implements Content.ContentFilter {
