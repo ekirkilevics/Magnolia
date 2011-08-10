@@ -36,8 +36,7 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.test.RepositoryTestCase;
+import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -55,11 +54,12 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * Tests for {@link ContentUtil} which do rely on an actual repository, i.e not using {@link info.magnolia.test.RepositoryTestCase}.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ContentUtilTest extends RepositoryTestCase {
+public class ContentUtilTest extends MgnlTestCase {
     public void testVisitShouldPassFilterAlong() throws Exception {
         final ItemType foo = new ItemType("foo");
         final ItemType bar = new ItemType("bar");
@@ -132,15 +132,6 @@ public class ContentUtilTest extends RepositoryTestCase {
         assertTrue("child1 must be deleted because it has no children", !hm.isExist("/node1/child1"));
         assertTrue("node1 must existe because the level was defined", hm.isExist("/node1"));
 
-    }
-
-    public void testSessionBasedCopy() throws RepositoryException{
-        HierarchyManager hm = MgnlContext.getHierarchyManager("config");
-        Content src = hm.getRoot().createContent("test");
-        src.createContent("subnode");
-        ContentUtil.copyInSession(src, "/gugu");
-        assertTrue(hm.isExist("/gugu"));
-        assertTrue(hm.isExist("/gugu/subnode"));
     }
 
     public void testOrderAfter() throws RepositoryException, IOException{
@@ -510,43 +501,6 @@ public class ContentUtilTest extends RepositoryTestCase {
             }
         });
         assertEquals(asList("a","b","c","d","f","e"), result);
-    }
-
-    public void testChangeNodeTypeReplaceFirstOccurrenceOnly() throws Exception {
-        final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
-        final Content src = hm.getRoot().createContent("test");
-        src.createContent("foo");
-        src.createContent("bar");
-        final String oldUUID = src.getUUID();
-
-        assertEquals("wrong initial type", ItemType.CONTENT.getSystemName() , src.getNodeTypeName());
-
-        ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, false);
-
-        assertTrue(hm.isExist("/test"));
-        assertEquals(oldUUID, hm.getContent("/test").getUUID());
-        assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test").getNodeTypeName());
-        assertEquals(ItemType.CONTENT.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
-        assertEquals(ItemType.CONTENT.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
-    }
-
-    public void testChangeNodeTypeReplaceAllOccurrences() throws Exception {
-        final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
-        final Content src = hm.getRoot().createContent("test");
-        src.createContent("foo");
-        src.createContent("bar");
-        final String oldUUID = src.getUUID();
-        assertEquals("wrong initial type", ItemType.CONTENT.getSystemName(), src.getNodeTypeName());
-        assertEquals("wrong initial type", ItemType.CONTENT.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
-        assertEquals("wrong initial type", ItemType.CONTENT.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
-
-        ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, true);
-
-        assertTrue(hm.isExist("/test"));
-        assertEquals(oldUUID, hm.getContent("/test").getUUID());
-        assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test").getNodeTypeName());
-        assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
-        assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
     }
 
     private final static class ContentTypeRejector implements Content.ContentFilter {
