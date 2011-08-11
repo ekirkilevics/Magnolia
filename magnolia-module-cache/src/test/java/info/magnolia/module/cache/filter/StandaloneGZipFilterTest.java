@@ -48,6 +48,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Basic test for the gzip filter deployed without cache filter.
@@ -58,6 +59,7 @@ public class StandaloneGZipFilterTest extends MgnlTestCase {
     private HttpServletRequest request;
 
     // FIXME: MAGNOLIA-3413, this method was added to avoid junit warnings so that we can comment out the failing tests
+    @Test
     public void testDummy(){
     }
 

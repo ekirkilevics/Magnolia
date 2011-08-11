@@ -59,11 +59,11 @@ import java.util.List;
 import javax.jcr.RepositoryException;
 
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * TODO Changes needed for http://jira.magnolia-cms.com/browse/SCRUM-140 forced me to comment out a couple of test which were failing.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     private static final String QUICKSTART = "redirect:/.magnolia/pages/quickstart.html";
@@ -98,6 +98,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         return new AdminModuleVersionHandler();
     }
 
+    @Test
     public void testDefaultURISetOnAuthorInstancesIsSetToAdminCentral() throws ModuleManagementException, RepositoryException {
         setupConfigProperty("/server/", "admin", "true");
         // fake a core install:
@@ -109,7 +110,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         assertNoMessages(installContext);
     }
 
-
+    @Test
     public void testDefaultURISetOnPublicInstancesIsSetToQuickStartIfNoTemplatesExist() throws ModuleManagementException, RepositoryException {
         setupConfigProperty("/server/", "admin", "false");
         // fake a core install:
@@ -147,6 +148,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
 //        assertNoMessages(installContext);
 //    }
 
+    @Test
     public void testWarnsIfDefaultUriIsQuickstartOnPublicAndTemplatesExist() throws ModuleManagementException, RepositoryException {
         setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
@@ -174,6 +176,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         assertSingleMessage(installContext, "Please set the default virtual URI mapping; it was incorrectly reset by a previous update.", InstallContext.MessagePriority.warning);
     }
 
+    @Test
     public void testWarnsOnlyOnceIfDefaultUriIsQuickstartOnPublicAndTemplatesExistWhenUpdatingFromPre4_0_3() throws ModuleManagementException, RepositoryException {
         setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:

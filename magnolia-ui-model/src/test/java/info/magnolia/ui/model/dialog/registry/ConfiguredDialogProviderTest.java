@@ -39,6 +39,8 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.test.ComponentsTestUtil;
 */
+import org.junit.Test;
+
 import info.magnolia.test.RepositoryTestCase;
 
 /*import org.apache.commons.io.IOUtils;
@@ -53,6 +55,7 @@ import org.junit.Test;
  * @version $Id:$
  */
 public class ConfiguredDialogProviderTest extends RepositoryTestCase {
+    @Test
     public void testDummy() throws Exception {
 
     }

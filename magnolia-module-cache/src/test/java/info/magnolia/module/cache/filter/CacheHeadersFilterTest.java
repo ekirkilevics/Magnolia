@@ -49,6 +49,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
@@ -57,11 +59,13 @@ import org.easymock.EasyMock;
 public class CacheHeadersFilterTest extends MgnlTestCase {
 
     @Override
+    @Before
     public void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
     }
 
+    @Test
     public void testFilterCacheRequest() throws Exception {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
@@ -80,6 +84,7 @@ public class CacheHeadersFilterTest extends MgnlTestCase {
         verify(request, response, chain);
     }
 
+    @Test
     public void testFilterNoCacheRequest() throws Exception {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
