@@ -274,12 +274,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin</artifactId>
-        <version>6.6.2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.vaadin.addons</groupId>
-        <artifactId>vaadin-treetable</artifactId>
-        <version>1.2.0</version>
+        <version>6.7-SNAPSHOT</version>
       </dependency>
       <dependency>
 	    <groupId>org.vaadin.addons</groupId>
@@ -295,11 +290,6 @@ for Java Content Repositories (JCR).
          <groupId>org.vaadin.addons</groupId>
          <artifactId>animator</artifactId>
          <version>1.6.4</version>
-      </dependency>
-      <dependency>
-        <groupId>temp.org.vaadin.addons</groupId>
-        <artifactId>vaadin-chameleon-theme</artifactId>
-        <version>1.1.0</version>
       </dependency>
       <!-- gwt jars only needed at build time, which is why they are in scope:provided -->
       <dependency>
