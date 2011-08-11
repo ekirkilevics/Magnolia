@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.util;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
@@ -45,14 +46,14 @@ import java.util.List;
 
 import javax.jcr.RepositoryException;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Test;
 
 
 /**
- * @author pbracher
  * @version $Id$
  */
-public class InheritanceContentWrapperTest extends TestCase {
+public class InheritanceContentWrapperTest {
 
     private HierarchyManager hm;
 
@@ -62,13 +63,13 @@ public class InheritanceContentWrapperTest extends TestCase {
         hm = MockUtil.createHierarchyManager(stream);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testRoot() throws Exception {
         setUpContent("testPropertyInheritance");
         Content root = new InheritanceContentWrapper(hm.getRoot());
@@ -76,6 +77,7 @@ public class InheritanceContentWrapperTest extends TestCase {
         root.getNodeData("whateverThatIsNotOnTheNodeItself");
     }
 
+    @Test
     public void testPropertyInheritance() throws Exception {
         setUpContent("testPropertyInheritance");
         Content page11 = getWrapped("/page1/page11");
@@ -86,6 +88,7 @@ public class InheritanceContentWrapperTest extends TestCase {
         assertEquals("page1", page12.getNodeData("nd").getString());
     }
 
+    @Test
     public void testNestedPropertyInheritance() throws Exception {
         setUpContent("testNestedPropertyInheritance");
         Content para = getWrapped("/page1/page11/container/para");
@@ -93,6 +96,7 @@ public class InheritanceContentWrapperTest extends TestCase {
         assertEquals("page1", para.getNodeData("nd").getString());
     }
 
+    @Test
     public void testSingleParagraphInheritance() throws Exception {
         setUpContent("testSingleParagraphInheritance");
         Content page11 = getWrapped("/page1/page11");
@@ -104,6 +108,7 @@ public class InheritanceContentWrapperTest extends TestCase {
         assertTrue(((InheritanceContentWrapper)page12.getContent("para")).isInherited());
     }
 
+    @Test
     public void testNestedParagraphInheritance() throws Exception {
         setUpContent("testNestedParagraphInheritance");
         Content page11 = getWrapped("/page1/page11");
@@ -119,6 +124,7 @@ public class InheritanceContentWrapperTest extends TestCase {
 
     }
 
+    @Test
     public void testCollectionInheritance() throws Exception {
         setUpContent("testCollectionInheritance");
         Content page11 = getWrapped("/page1/page11");

@@ -33,38 +33,43 @@
  */
 package info.magnolia.module.delta;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.security.MgnlRoleManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.SecuritySupportImpl;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import static org.easymock.EasyMock.*;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.jcr.RepositoryException;
+
+import org.junit.Test;
+
 
 /**
- * @author vsteller
  * @version $Id$
- *
  */
 public class AddURIPermissionTaskTest extends MgnlTestCase {
+    @Test
     public void testGetPostPermissionAddedToRoleProperly() throws Exception {
         final Properties result = doTestPermissionAddedToRoleProperly(AddURIPermissionTask.GET_POST);
         assertEquals("63", result.get("/rolename/acl_uri/0.permissions"));
     }
 
+    @Test
     public void testGetPermissionAddedToRoleProperly() throws Exception {
         final Properties result = doTestPermissionAddedToRoleProperly(AddURIPermissionTask.GET);
         assertEquals("8", result.get("/rolename/acl_uri/0.permissions"));
     }
 
+    @Test
     public void testDenyPermissionAddedToRoleProperly() throws Exception {
         final Properties result = doTestPermissionAddedToRoleProperly(AddURIPermissionTask.DENY);
         assertEquals("0", result.get("/rolename/acl_uri/0.permissions"));

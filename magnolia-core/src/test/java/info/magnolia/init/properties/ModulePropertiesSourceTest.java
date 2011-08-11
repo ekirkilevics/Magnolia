@@ -33,27 +33,30 @@
  */
 package info.magnolia.init.properties;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistryImpl;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.PropertyDefinition;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
+
+import org.junit.After;
+import org.junit.Test;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ModulePropertiesSourceTest extends TestCase {
+public class ModulePropertiesSourceTest {
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testPropertiesCanBeOverriddenUsingDependencyOrderingOfModules() {
         final ModuleDefinition m1 = new ModuleDefinition("m1", null, null, null);
         final PropertyDefinition p1 = new PropertyDefinition();
@@ -74,6 +77,7 @@ public class ModulePropertiesSourceTest extends TestCase {
         assertEquals("second value", ps.getProperty("myProperty"));
     }
 
+    @Test
     public void testDifferentPropertiesCanRegisteredByDifferentModulesEllipsisDuh() {
         final ModuleDefinition m1 = new ModuleDefinition("m1", null, null, null);
         final PropertyDefinition p1 = new PropertyDefinition();

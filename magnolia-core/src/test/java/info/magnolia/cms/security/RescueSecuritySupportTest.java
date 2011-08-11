@@ -33,10 +33,14 @@
  */
 package info.magnolia.cms.security;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.RescueSecuritySupport.RescueUserManager;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @version $Id$
@@ -47,7 +51,8 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
 
     //this is our GIVEN
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         securitySupport = new RescueSecuritySupport();
         MockUtil.createAndSetHierarchyManager(ContentRepository.USERS, getClass().getResourceAsStream("sample-users.properties"));
@@ -55,6 +60,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
         MockUtil.createAndSetHierarchyManager(ContentRepository.USER_ROLES, getClass().getResourceAsStream("sample-userroles.properties"));
     }
 
+    @Test
     public void testUserManagerIsAnInstanceOfRescueUserManager() throws Exception {
         //WHEN
         UserManager uman = securitySupport.getUserManager();
@@ -63,6 +69,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
         assertTrue(uman instanceof RescueUserManager);
     }
 
+    @Test
     public void testUserManagerRealmIsSystemRealm() throws Exception {
         //WHEN
         RescueUserManager uman = (RescueUserManager) securitySupport.getUserManager();
@@ -71,6 +78,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
         assertEquals(Realm.REALM_SYSTEM.getName(), uman.getRealmName());
     }
 
+    @Test
     public void testUserManagerReturnsCorrectAnonymousUser() throws Exception {
         //WHEN
         User user = securitySupport.getUserManager().getAnonymousUser();
@@ -80,6 +88,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
         assertEquals("", user.getPassword());
     }
 
+    @Test
     public void testUserManagerReturnsEnabledRescueUser() throws Exception {
         //WHEN
         User user = securitySupport.getUserManager().getUser("");
@@ -88,6 +97,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
         assertTrue(user.isEnabled());
     }
 
+    @Test
     public void testUserManagerReturnsRescueUserWithEnglishAsDefaultLanguage() throws Exception {
         //WHEN
         User user = securitySupport.getUserManager().getUser("");
@@ -96,6 +106,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
         assertEquals("en", user.getLanguage());
     }
 
+    @Test
     public void testUserManagerReturnsCorrectSystemUser() throws Exception {
         //WHEN
         User user = securitySupport.getUserManager().getSystemUser();
@@ -105,6 +116,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
         assertEquals(UserManager.SYSTEM_PSWD, user.getPassword());
     }
 
+    @Test
     public void testUserManagerReturnsCorrectSystemUserByName() throws Exception {
         //WHEN
         User user = securitySupport.getUserManager().getUser(UserManager.SYSTEM_USER);
@@ -114,6 +126,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
         assertEquals(UserManager.SYSTEM_PSWD, user.getPassword());
     }
 
+    @Test
     public void testUserManagerReturnsAnonymousUserByAnyNameExcludedSystemUserName() throws Exception {
         //WHEN
         User user = securitySupport.getUserManager().getUser("foo");
@@ -123,6 +136,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
         assertEquals("", user.getPassword());
     }
 
+    @Test
     public void testUserManagerReturnsSystemUserWithCorrectRole() throws Exception {
         //WHEN
         User user = securitySupport.getUserManager().getSystemUser();
@@ -131,6 +145,7 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
         assertTrue(user.hasRole("superuser"));
     }
 
+    @Test
     public void testUserManagerReturnsSystemUserWithCorrectGroup() throws Exception {
         //WHEN
         User user = securitySupport.getUserManager().getSystemUser();

@@ -48,7 +48,7 @@ import java.io.IOException;
  */
 public class PoweredByTagTest extends MgnlTagTestCase {
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
 
         final LicenseFileExtractor licenseExtractor = createStrictMock(LicenseFileExtractor.class);

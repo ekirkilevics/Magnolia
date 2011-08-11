@@ -38,36 +38,38 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.test.mock.MockContext;
-import junit.framework.TestCase;
-import org.apache.jackrabbit.core.jndi.RegistryHelper;
-import org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory;
+
+import java.util.Hashtable;
+import java.util.Locale;
 
 import javax.jcr.Repository;
 import javax.jcr.SimpleCredentials;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import java.util.Hashtable;
-import java.util.Locale;
+
+import org.apache.jackrabbit.core.jndi.RegistryHelper;
+import org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory;
+import org.junit.After;
+import org.junit.Test;
 
 /**
  * Ensures some issues we encountered with 3rd party libraries are gone for good.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class SelfTest extends TestCase {
+public class SelfTest {
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
     /**
      * Jackrabbit keeps a cache of jndi references since 1.4.6
      * See https://issues.apache.org/jira/browse/JCR-1778
      */
+    @Test
     public void testJackrabbitUnregistersProperly() throws Exception {
         Hashtable environment = new Hashtable();
         environment.put(Context.INITIAL_CONTEXT_FACTORY, DummyInitialContextFactory.class.getName());
@@ -99,6 +101,7 @@ public class SelfTest extends TestCase {
     /**
      * This test breaks currently when run against commons-beanutils 1.8, but works fine with version 1.7
      */
+    @Test
     public void testCommandIsSetCorrectlyFromPrototype() throws Exception {
         MockContext ctx = new MockContext();
         ctx.setLocale(Locale.ENGLISH);

@@ -33,28 +33,31 @@
  */
 package info.magnolia.module.delta;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
+
+import org.junit.After;
+import org.junit.Test;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ModuleBootstrapTaskTest extends TestCase {
+public class ModuleBootstrapTaskTest {
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testShouldOnlyBootstrapFilesFromThisModule() {
         final ModuleDefinition modDef = new ModuleDefinition("test-module", Version.parseVersion("1.0"), null, null);
         final InstallContext ctx = createStrictMock(InstallContext.class);

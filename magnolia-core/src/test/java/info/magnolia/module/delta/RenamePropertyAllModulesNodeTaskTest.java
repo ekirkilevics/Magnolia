@@ -59,7 +59,6 @@ public class RenamePropertyAllModulesNodeTaskTest {
     public void setUp() throws Exception {
         ctx = mock(InstallContext.class);
     }
-
     @Test
     public void testRenameWorksIfOldPropertyIsPresentAndNewNot() throws Exception {
         HierarchyManager hm = MockUtil.createAndSetHierarchyManager("config", "/modules");

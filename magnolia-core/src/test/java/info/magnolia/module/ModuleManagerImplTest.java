@@ -48,7 +48,10 @@ import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import static org.easymock.classextension.EasyMock.*;
 
 import java.util.Arrays;
@@ -58,16 +61,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ModuleManagerImplTest extends TestCase {
+public class ModuleManagerImplTest {
     private ModuleRegistry moduleRegistry;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         moduleRegistry = new ModuleRegistryImpl();
         ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
         ComponentsTestUtil.setInstance(SystemContext.class, createStrictMock(SystemContext.class));
@@ -76,13 +76,13 @@ public class ModuleManagerImplTest extends TestCase {
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }
 
+    @Test
     public void testCheckModuleAndDeltasToStringForUpdate() {
         final ModuleDefinition mod = new ModuleDefinition("foo", Version.parseVersion("2.3.4"), null, null);
         final Delta d1 = DeltaBuilder.update("1.1", "New version").addTask(new WarnTask("t1", "test 1")).addTask(new WarnTask("t2", "test 2"));
@@ -91,6 +91,7 @@ public class ModuleManagerImplTest extends TestCase {
         assertEquals("ModuleAndDeltas for foo: current version is 1.0.0, updating to 2.3.4 with 2 deltas.", mad.toString());
     }
 
+    @Test
     public void testCheckModuleAndDeltasToStringForInstall() {
         final ModuleDefinition mod = new ModuleDefinition("foo", Version.parseVersion("2.3.4"), null, null);
         final Delta d1 = DeltaBuilder.update("1.1", "New version").addTask(new WarnTask("t1", "test 1")).addTask(new WarnTask("t2", "test 2"));
@@ -106,6 +107,7 @@ public class ModuleManagerImplTest extends TestCase {
      *
      * TODO : since ContentRepository.getAllRepositoryNames() returns an empty iterator, we don't actually check the save operations
      */
+    @Test
     public void testUpdateAppliesSuppliedDeltasAndTasks() throws Exception {
         final String newVersion = "2.3.4";
 
@@ -144,6 +146,7 @@ public class ModuleManagerImplTest extends TestCase {
         verify(ctx, d1, d2, t1, t2, t3, t4, moduleNode, versionProp, allModulesNode);
     }
 
+    @Test
     public void testTaskExecutionExceptionInterruptsTasksAddsExplicitErrorMessage() throws TaskExecutionException {
         final ModuleDefinition mod = new ModuleDefinition("foo", Version.parseVersion("2.3.4"), null, null);
         final InstallContextImpl ctx = createStrictMock(InstallContextImpl.class);
@@ -167,6 +170,7 @@ public class ModuleManagerImplTest extends TestCase {
         verify(ctx, d1, t1, t2);
     }
 
+    @Test
     public void testFailedConditionsPreventsFurtherModulesToBeInstalledOrUpdated() throws TaskExecutionException, ModuleManagementException {
         final ModuleDefinitionReader modDefReader = createStrictMock(ModuleDefinitionReader.class);
         final InstallContextImpl ctx = createStrictMock(InstallContextImpl.class);
@@ -233,6 +237,7 @@ public class ModuleManagerImplTest extends TestCase {
         verify(modDefReader, ctx, mvh1, mvh2, d1, d2, c1, c2, c3, t1, t2);
     }
 
+    @Test
     public void testPerformCantBeCalledTwiceByDifferentThreads() throws Exception {
         final ModuleDefinitionReader modDefReader = createStrictMock(ModuleDefinitionReader.class);
         final InstallContextImpl ctx = new InstallContextImpl(moduleRegistry);

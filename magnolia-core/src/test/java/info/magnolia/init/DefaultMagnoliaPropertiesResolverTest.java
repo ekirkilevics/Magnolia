@@ -36,7 +36,10 @@ package info.magnolia.init;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaInitPaths;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -46,31 +49,28 @@ import java.util.List;
 import static org.easymock.EasyMock.*;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class DefaultMagnoliaPropertiesResolverTest extends TestCase {
+public class DefaultMagnoliaPropertiesResolverTest {
 
     private ServletContext ctx;
     private MagnoliaInitPaths initPaths;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         ctx = createStrictMock(ServletContext.class);
         initPaths = new TestMagnoliaInitPaths("test-host-name", "/tmp/magnoliaTests", "magnoliaTests", "/test");
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         verify(ctx);
         System.getProperties().remove("testProp");
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testDefaultLocations() {
         expect(ctx.getInitParameter("magnolia.initialization.file")).andReturn(null);
         replay(ctx);
@@ -84,6 +84,7 @@ public class DefaultMagnoliaPropertiesResolverTest extends TestCase {
         assertEquals(expected, locations);
     }
 
+    @Test
     public void testLocationsAreTrimmed() {
         final String valueInWebXml = "  location1 , location2\n\t,\tlocation3,,,location4\n,\nlocation5\t,\n\tlocation6   ,\n location7\n\n";
         expect(ctx.getInitParameter("magnolia.initialization.file")).andReturn(valueInWebXml);
@@ -99,6 +100,7 @@ public class DefaultMagnoliaPropertiesResolverTest extends TestCase {
      * testInitParamCanMixAbsoluteAndRelativePaths()
      * testSourcesOnlyIncludeExistingLocations()
      */
+    @Test
     public void testSourcesOnlyIncludeExistingLocations() {
         final String unexistingAbsPath = "/lol/pouet/magnolia.properties";
         final String unexistingRelPath = "rel/dummy/path/magnolia.properties";
@@ -120,6 +122,7 @@ public class DefaultMagnoliaPropertiesResolverTest extends TestCase {
         assertEquals("[FileSystemPropertySource from " + existingAbsPath + "]", sources.get(1).describe());
     }
 
+    @Test
     public void testFileResolutionCtxAttributes() {
 
         expect(ctx.getInitParameter("magnolia.initialization.file")).andReturn("WEB-INF/${contextParam/param}/${contextAttribute/attribute}/magnolia.properties");
@@ -132,6 +135,7 @@ public class DefaultMagnoliaPropertiesResolverTest extends TestCase {
         assertEquals("WEB-INF/paramvalue/attributevalue/magnolia.properties", locations.get(0));
     }
 
+    @Test
     public void testSystemPropertiesCanBeUsed() {
         System.setProperty("testProp", "hello");
         expect(ctx.getInitParameter("magnolia.initialization.file")).andReturn("WEB-INF/${systemProperty/testProp}/magnolia.properties");
@@ -141,6 +145,7 @@ public class DefaultMagnoliaPropertiesResolverTest extends TestCase {
         assertEquals("WEB-INF/hello/magnolia.properties", locations.get(0));
     }
 
+    @Test
     public void testEnvironmentPropertiesCanBeUsed() {
         // since we can't add properties to System.env, we just an env property whose value we can know otherwise.
         // This test will most likely fail on Windows (where the env property seems to be USERNAME), unless someone comes up with a brighter idea.

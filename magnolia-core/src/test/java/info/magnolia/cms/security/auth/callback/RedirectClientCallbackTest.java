@@ -33,40 +33,43 @@
  */
 package info.magnolia.cms.security.auth.callback;
 
+import static org.easymock.EasyMock.*;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class RedirectClientCallbackTest extends TestCase {
+public class RedirectClientCallbackTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
     private RedirectClientCallback callback;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         request = createStrictMock(HttpServletRequest.class);
         response = createStrictMock(HttpServletResponse.class);
         callback = new RedirectClientCallback();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         replay(request, response);
         callback.handle(request, response);
         verify(request, response);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+@Test
     public void testExternalUrlsArePassedAsIs() throws Exception {
         callback.setLocation("http://www.magnolia-cms.com");
         expect(request.getRequestURI()).andReturn("/really/does/not/matter");
@@ -75,6 +78,7 @@ public class RedirectClientCallbackTest extends TestCase {
         response.sendRedirect("http://www.magnolia-cms.com");
     }
 
+    @Test
     public void testRelativeURLsAreSupported() /* although I hardly see how that could be any useful */ throws Exception {
         callback.setLocation("bar");
         expect(request.getRequestURI()).andReturn("/really/does/not/matter");
@@ -83,6 +87,7 @@ public class RedirectClientCallbackTest extends TestCase {
         response.sendRedirect("bar");
     }
 
+    @Test
     public void testAbsoluteURLsArePrefixedWithContextPath() throws Exception {
         callback.setLocation("/bar");
         expect(request.getContextPath()).andReturn("/foo");
@@ -92,6 +97,7 @@ public class RedirectClientCallbackTest extends TestCase {
         response.sendRedirect("/foo/bar");
     }
 
+    @Test
     public void testDoesNothingIfCurrentRequestURLIsTarget() throws Exception {
         callback.setLocation("/some/path");
         expect(request.getContextPath()).andReturn("/foo");
@@ -100,6 +106,7 @@ public class RedirectClientCallbackTest extends TestCase {
         // nothing happens - TODO - maybe this should throw an exception ?
     }
 
+    @Test
     public void testTargetUrlIsFormattedWithEncodedRequestURL() throws Exception {
         callback.setLocation("http://sso.mycompany.com/login/?backto={0}");
         expect(request.getRequestURI()).andReturn("/foo/some/path");

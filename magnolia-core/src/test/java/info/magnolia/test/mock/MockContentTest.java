@@ -33,16 +33,10 @@
  */
 package info.magnolia.test.mock;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import junit.framework.TestCase;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -51,16 +45,24 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class MockContentTest extends TestCase {
+public class MockContentTest {
 
     /**
      * This is the mock-equivalent test of {@link info.magnolia.cms.core.DefaultContentTest#testNameFilteringWorksForBothBinaryAndNonBinaryProperties()}.
      */
+    @Test
     public void testNameFilteringWorksForBothBinaryAndNonBinaryProperties() throws Exception {
         String contentProperties = StringUtils.join(Arrays.asList(
                 "/somepage/mypage@type=mgnl:content",
@@ -148,6 +150,7 @@ public class MockContentTest extends TestCase {
     /**
      * This is the mock-equivalent test of {@link info.magnolia.cms.core.DefaultContentTest#testStringPropertiesCanBeRetrievedByStreamAndViceVersa()}.
      */
+    @Test
     public void testStringPropertiesCanBeRetrievedByStreamAndViceVersa() throws Exception {
         String contentProperties = StringUtils.join(Arrays.asList(
                 "/hello/foo=bar",
@@ -176,6 +179,7 @@ public class MockContentTest extends TestCase {
         assertEquals("some-data", bin.getString());
     }
 
+    @Test
     public void testOrderBefore() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -194,6 +198,7 @@ public class MockContentTest extends TestCase {
         assertEquals(Arrays.asList(new String[]{"a", "c","b"}), result);
     }
 
+    @Test
     public void testOrderBefore2() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -212,6 +217,7 @@ public class MockContentTest extends TestCase {
         assertEquals(Arrays.asList(new String[]{"b", "a","c"}), result);
     }
 
+    @Test
     public void testOrderBeforeFirstNode() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -230,6 +236,7 @@ public class MockContentTest extends TestCase {
         assertEquals(Arrays.asList(new String[]{"c", "a","b"}), result);
     }
 
+    @Test
     public void testGetAncestor() throws RepositoryException, IOException {
         MockHierarchyManager hm =
                 MockUtil.createHierarchyManager("/level0\n" + "/level0/level1\n" + "/level0/level1/level2\n");
@@ -238,6 +245,7 @@ public class MockContentTest extends TestCase {
         assertEquals(3, ancestors.size());
     }
 
+    @Test
     public void testCanDeleteAProperty() throws Exception {
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node.a=lol\n" +

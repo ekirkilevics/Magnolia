@@ -33,58 +33,66 @@
  */
 package info.magnolia.module.fckeditor.dialogs;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.link.BaseLinkTest;
-import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 /**
- * @author gjoseph
- * @version $Revision$ ($Author$)
+ * @version $Id$
  */
 public class FckEditorDialogTest extends BaseLinkTest {
 
-    /**
-     *
-     */
     protected static final String SOME_PATH = "/some/path/to/here";
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         replay(allMocks.toArray());
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         verify(allMocks.toArray());
         super.tearDown();
     }
 
+    @Test
     public void testNullsAndBasicCharsAreNotTouchedForJS() {
         assertEquals("foo bar", new FckEditorDialog().escapeJsValue("foo bar"));
         assertNull(new FckEditorDialog().escapeJsValue(null));
     }
 
+    @Test
     public void testQuotesAreEscapedForJS() {
         assertEquals("foo\\'bar", new FckEditorDialog().escapeJsValue("foo'bar"));
         assertEquals("foo\\\"bar", new FckEditorDialog().escapeJsValue("foo\"bar"));
         assertEquals("fo\\'o\\\"bar", new FckEditorDialog().escapeJsValue("fo'o\"bar"));
     }
 
+    @Test
     public void testNewLinesAreEscapedForJS() {
         assertEquals("foo\\r\\nbar", new FckEditorDialog().escapeJsValue("foo\r\nbar"));
         assertEquals("foo\\nbar", new FckEditorDialog().escapeJsValue("foo\nbar"));
         assertEquals("foo\\rbar", new FckEditorDialog().escapeJsValue("foo\rbar"));
     }
 
+    @Test
     public void testBackSlashesAreEscapedForJS() {
         assertEquals("foo\\\\bar", new FckEditorDialog().escapeJsValue("foo\\bar"));
         assertEquals("Here is a \\\\backslash for Sean", new FckEditorDialog().escapeJsValue("Here is a \\backslash for Sean"));
     }
 
+    @Test
     public void testConvertToViewShouldConvertFormerImageLinks() throws RepositoryException {
         final FckEditorDialogForTest d = new FckEditorDialogForTest();
         d.init(null, null, null, null);
@@ -94,6 +102,7 @@ public class FckEditorDialogTest extends BaseLinkTest {
         assertEquals("<a href=\"" + SOME_CONTEXT + SOME_PATH + "/field/image.jpg\">baz</a>", d.convertToView("<a href=\"page/field/image.jpg\">baz</a>"));
     }
 
+    @Test
     public void testConvertToViewShouldNotConvertNonUUIDLinks() throws RepositoryException {
         final FckEditorDialogForTest d = new FckEditorDialogForTest();
         d.init(null, null, null, null);
@@ -103,6 +112,7 @@ public class FckEditorDialogTest extends BaseLinkTest {
         assertEquals("<img src=\"/foo/bar.gif\"/>", d.convertToView("<img src=\"/foo/bar.gif\"/>"));
     }
 
+    @Test
     public void testConvertToViewDoesNotImpactAbsoluteAndExternalLinksAndImages() throws RepositoryException {
         final HttpServletRequest mockReq = createMock(HttpServletRequest.class);
 
@@ -122,6 +132,7 @@ public class FckEditorDialogTest extends BaseLinkTest {
     }
 
     /* MAGNOLIA-2768, MAGNOLIA-2862, MAGNOLIA-2865, MAGNOLIA-2867 */
+    @Test
     public void testLinksToRemovedPageAreStillDisplayed() throws Exception {
         final FckEditorDialogForTest d = new FckEditorDialogForTest();
         d.init(null, null, null, null);
@@ -133,6 +144,7 @@ public class FckEditorDialogTest extends BaseLinkTest {
         assertEquals("<p><strong>Some</strong> <em><a href=\"/some-context/unexi/sting/path.html\">formatted</a></em> text.</p>", d.convertToView(input));
     }
 
+    @Test
     public void testConvertToViewDoesNotConvertMailtoLinks() throws RepositoryException {
         final HttpServletRequest mockReq = createMock(HttpServletRequest.class);
 

@@ -33,10 +33,8 @@
  */
 package info.magnolia.module;
 
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -63,6 +61,8 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import org.junit.Before;
+
 /**
  * A base class for testing implementations of ModuleVersionHandler.
  *
@@ -72,7 +72,8 @@ import javax.jcr.RepositoryException;
 public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         //        ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
         //        assertNotNull(Components.getComponent(ModuleRegistry.class));
         super.setUp();

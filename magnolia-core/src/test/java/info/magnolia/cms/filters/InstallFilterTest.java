@@ -42,6 +42,10 @@ import static org.easymock.EasyMock.*;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -59,7 +63,8 @@ public class InstallFilterTest extends MgnlTestCase {
     private PrintWriter writer;
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
 
@@ -76,6 +81,7 @@ public class InstallFilterTest extends MgnlTestCase {
         expect(res.getWriter()).andReturn(writer);
     }
 
+    @Test
     public void testExecutesCorrectCommandBasedOnURI() throws Exception {
         // this is the interesting bit:
         expect(req.getRequestURI()).andReturn("/test/.magnolia/installer/foo");
@@ -87,6 +93,7 @@ public class InstallFilterTest extends MgnlTestCase {
         verify(moduleManager, ui, req, res, chain);
     }
 
+    @Test
     public void testPassesNullAsCommandIfNoneSpecifiedWithTrailingSlash() throws Exception {
         // this is the interesting bit:
         expect(req.getRequestURI()).andReturn("/test/.magnolia/installer/");
@@ -98,6 +105,7 @@ public class InstallFilterTest extends MgnlTestCase {
         verify(moduleManager, ui, req, res, chain);
     }
 
+    @Test
     public void testPassesNullAsCommandIfNoneSpecified() throws Exception {
         // this is the interesting bit:
         expect(req.getRequestURI()).andReturn("/test/.magnolia/installer");

@@ -33,26 +33,27 @@
  */
 package info.magnolia.setup.for3_5;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.Content;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 import java.util.Properties;
 
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class AddURIPermissionsToAllRolesTest extends TestCase {
+public class AddURIPermissionsToAllRolesTest {
     private static final String SOMECONTENT = "" +
             "dummyrole.title=A Dummy Role\n" +
             "anonymous.title=The anonymous role\n";
 
+    @Test
     public void testRegularRolesGetAllUriPermOnSlashStar() throws Exception {
         final Properties result = doTestURIPermissionsGetAddedProperly("dummyrole", true);
         assertEquals("/*", result.get("/dummyrole/acl_uri/0.path"));
@@ -61,6 +62,7 @@ public class AddURIPermissionsToAllRolesTest extends TestCase {
         assertEquals("A Dummy Role", result.get("/dummyrole.title"));
     }
 
+    @Test
     public void testRegularRolesGetAllUriPermOnSlashStarAlsoOnPublicInstances() throws Exception {
         final Properties result = doTestURIPermissionsGetAddedProperly("dummyrole", false);
         assertEquals(4, result.size());
@@ -70,6 +72,7 @@ public class AddURIPermissionsToAllRolesTest extends TestCase {
         assertEquals("A Dummy Role", result.get("/dummyrole.title"));
     }
 
+    @Test
     public void testAnonymousRoleGetsDenyOnAllOnAuthorInstances() throws Exception {
         final Properties result = doTestURIPermissionsGetAddedProperly("anonymous", true);
         assertEquals(4, result.size());
@@ -79,6 +82,7 @@ public class AddURIPermissionsToAllRolesTest extends TestCase {
         assertEquals("A Dummy Role", result.get("/dummyrole.title"));
     }
 
+    @Test
     public void testAnonymousRoleGetsAccessOnSlashStarAndDenyOnDotMagnoliaOnPublicInstances() throws Exception {
         final Properties result = doTestURIPermissionsGetAddedProperly("anonymous", false);
         assertEquals(8, result.size());

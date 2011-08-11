@@ -44,12 +44,15 @@ import info.magnolia.test.mock.MockUtil;
 
 import static info.magnolia.nodebuilder.Ops.*;
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import static java.util.Arrays.asList;
 
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -59,14 +62,14 @@ import java.util.List;
 /**
  * Tests for {@link ContentUtil} which do rely on an actual repository, i.e not using {@link info.magnolia.test.RepositoryTestCase}.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class ContentUtilTest extends MgnlTestCase {
 
     private MockContent rootABC;
 
-    // @Before
+    @Override
+    @Before
     public void setUp() {
         rootABC = new MockContent("root", ItemType.CONTENT);
         new NodeBuilder(rootABC,
@@ -81,6 +84,7 @@ public class ContentUtilTest extends MgnlTestCase {
         ).exec();
     }
 
+    @Test
     public void testVisitShouldPassFilterAlong() throws Exception {
         final ItemType foo = new ItemType("foo");
         final ItemType bar = new ItemType("bar");
@@ -121,6 +125,7 @@ public class ContentUtilTest extends MgnlTestCase {
         verify(visitor);
     }
 
+    @Test
     public void testDeleteAndRemoveParentsIfAnOtherChild() throws IOException, RepositoryException{
         String content = "/node1/child1\n" +
             "/node1/child2\n";
@@ -133,6 +138,7 @@ public class ContentUtilTest extends MgnlTestCase {
 
     }
 
+    @Test
     public void testDeleteAndRemoveParentsIfNoOtherChild() throws IOException, RepositoryException{
         String content = "/node1/child1";
         HierarchyManager hm = MockUtil.createHierarchyManager(content);
@@ -142,6 +148,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertTrue("node1 must be deleted because it has no children", !hm.isExist("/node1"));
     }
 
+    @Test
     public void testDeleteAndRemoveParentsWithLevel() throws IOException, RepositoryException{
         String content = "/node1/child1/subchild1";
 
@@ -155,6 +162,7 @@ public class ContentUtilTest extends MgnlTestCase {
 
     }
 
+    @Test
     public void testOrderAfter() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -173,6 +181,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(Arrays.asList(new String[]{"b", "a","c"}), result);
     }
 
+    @Test
     public void testOrderAfterLastNode() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -191,6 +200,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("b", "c","a"), result);
     }
 
+    @Test
     public void testOrderAfterLastNodeVariation1() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -212,6 +222,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("a","b","d","e","f","c"), result);
     }
 
+    @Test
     public void testOrderAfterFirstNodeOnlyThree() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -230,6 +241,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("a", "c","b"), result);
     }
 
+    @Test
     public void testOrderAfterFirstNodeMoreThanThreeVariation1() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -251,6 +263,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("a","f","b","c","d","e"), result);
     }
 
+    @Test
     public void testOrderAfterFirstNodeMoreThanThreeVariation2() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -272,6 +285,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("a","e","b","c","d","f"), result);
     }
 
+    @Test
     public void testOrderAfterMidNodeMoreThanThreeVariation1() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -293,6 +307,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("a","b","c","f","d","e"), result);
     }
 
+    @Test
     public void testOrderAfterMidNodeMoreThanThreeVariation2() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -314,6 +329,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("a","b","e","c","d","f"), result);
     }
 
+    @Test
     public void testOrderBeforeFirstNodeVariation1() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -335,6 +351,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("c","a","b","d","e","f"), result);
     }
 
+    @Test
     public void testOrderBeforeFirstNodeVariation2() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -356,6 +373,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("b","a","c","d","e","f"), result);
     }
 
+    @Test
     public void testOrderBeforeFirstNodeVariation3() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -377,6 +395,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("a","b","c","d","e","f"), result);
     }
 
+    @Test
     public void testOrderBeforeFirstNodeVariation4() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -398,6 +417,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("f","a","b","c","d","e"), result);
     }
 
+    @Test
     public void testOrderBeforeLastNodeVariation1() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -419,6 +439,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("b","c","d","e","a","f"), result);
     }
 
+    @Test
     public void testOrderBeforeLastNodeVariation2() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -440,6 +461,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("a","b","d","e","c","f"), result);
     }
 
+    @Test
     public void testOrderBeforeLastNodeVariation3() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -461,6 +483,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("a","b","c","d","e","f"), result);
     }
 
+    @Test
     public void testOrderBeforeMidNodeVariation1() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -482,6 +505,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("a","c","d","b","e","f"), result);
     }
 
+    @Test
     public void testOrderBeforeMidNodeVariation2() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -503,6 +527,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("b","c","d","a","e","f"), result);
     }
 
+    @Test
     public void testOrderBeforeMidNodeVariation3() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
@@ -524,13 +549,13 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(asList("a","b","c","d","f","e"), result);
     }
 
-    // @Test
+    @Test
     public void testGetAncestorOfTypeBasicCase() throws RepositoryException {
         final Content content = rootABC.getContent("a/ab/abb");
         assertEquals(rootABC.getContent("a"), ContentUtil.getAncestorOfType(content, ItemType.CONTENT.getSystemName()));
     }
 
-    // @Test
+    @Test
     public void testGetAncestorOfTypeReturnsSelfIfMatch() throws RepositoryException {
         final Content abb = rootABC.getContent("a/ab/abb");
         final Content ab = rootABC.getContent("a/ab");
@@ -542,7 +567,7 @@ public class ContentUtilTest extends MgnlTestCase {
         assertEquals(c, ContentUtil.getAncestorOfType(c, ItemType.CONTENTNODE.getSystemName()));
     }
 
-    // @Test
+    @Test
     public void testGetAncestorOfTypeThrowsExceptionIfNotFound() throws RepositoryException {
         final Content content = rootABC.getContent("a/aa");
         try {
@@ -570,9 +595,4 @@ public class ContentUtilTest extends MgnlTestCase {
             }
         }
     }
-
-
-
-
-
 }

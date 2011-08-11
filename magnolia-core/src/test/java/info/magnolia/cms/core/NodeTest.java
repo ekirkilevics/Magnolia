@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.core;
 
+import static org.junit.Assert.*;
+
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createStrictMock;
@@ -67,10 +69,10 @@ import javax.jcr.ValueFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.easymock.IAnswer;
+import org.junit.Test;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class NodeTest extends RepositoryTestCase {
 
@@ -78,6 +80,7 @@ public class NodeTest extends RepositoryTestCase {
         void call() throws Exception;
     }
 
+    @Test
     public void testAddMixin() throws IOException, RepositoryException{
         final Node content = getTestNode();
         final String repoName = content.getSession().getWorkspace().getName();
@@ -100,6 +103,7 @@ public class NodeTest extends RepositoryTestCase {
     }
 
 
+    @Test
     public void testReadingANodeData() throws IOException, RepositoryException{
         Node content = getTestNode();
         Property nodeData = content.getProperty("nd1");
@@ -107,6 +111,7 @@ public class NodeTest extends RepositoryTestCase {
         assertFalse(nodeData.isNew());
     }
 
+    @Test
     public void testThatReadingANonExistingNodeDataFail() throws IOException, RepositoryException {
         Node content = getTestNode();
         try {
@@ -118,6 +123,7 @@ public class NodeTest extends RepositoryTestCase {
         }
     }
 
+    @Test
     public void testSettingAnExistingNodeData() throws IOException, RepositoryException{
         Node content = getTestNode();
         // this should not fail
@@ -126,6 +132,7 @@ public class NodeTest extends RepositoryTestCase {
         assertEquals("test", nodeData.getString());
     }
 
+    @Test
     public void testSettingANonExistingNodeDataCreatesANewNodeData() throws IOException, RepositoryException{
         Node content = getTestNode();
         Value value = createValue("test");
@@ -142,6 +149,7 @@ public class NodeTest extends RepositoryTestCase {
     // assertEquals(PropertyType.BOOLEAN, nodeData.getType());
     // }
 
+    @Test
     public void testCreatingAndSettingANodeData() throws IOException, RepositoryException{
         Node content = getTestNode();
         // this should not fail
@@ -149,6 +157,7 @@ public class NodeTest extends RepositoryTestCase {
         assertEquals("test", nodeData.getString());
     }
 
+    @Test
     public void testCreatingAnExistingNodeDataDoesNotFail() throws IOException, RepositoryException{
         Node content = getTestNode();
         Property nodeData = content.setProperty("nd1", "other");
@@ -265,6 +274,7 @@ public class NodeTest extends RepositoryTestCase {
     //        am.setPermissionList(permissions);
     //    }
 
+        @Test
     public void testIsNodeTypeForNodeChecksPrimaryType() throws RepositoryException {
         final Node node = createMock(Node.class);
         final Property nodeTypeProp = createStrictMock(Property.class);
@@ -285,6 +295,7 @@ public class NodeTest extends RepositoryTestCase {
         verify(node, nodeTypeProp);
     }
 
+        @Test
     public void testIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes() throws RepositoryException {
         doTestIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes(true, "foo", "foo");
         doTestIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes(false, "bar", "foo");
@@ -308,6 +319,7 @@ public class NodeTest extends RepositoryTestCase {
         verify(node, nodeTypeProp, nodeFrozenTypeProp);
     }
 
+        @Test
     public void testIsNodeTypeForNodeDoesNotCheckFrozenTypeIfTheRequestedTypeIsFrozenType()throws RepositoryException {
         final Node node = createStrictMock(Node.class);
         final Property nodeTypeProp = createStrictMock(Property.class);
@@ -322,6 +334,7 @@ public class NodeTest extends RepositoryTestCase {
         verify(node, nodeTypeProp);
     }
 
+        @Test
     public void testNameFilteringWorksForBothBinaryAndNonBinaryProperties() throws Exception {
         String contentProperties = StringUtils.join(Arrays.asList(
                 "/somepage/mypage.@type=mgnl:content",
@@ -415,6 +428,7 @@ public class NodeTest extends RepositoryTestCase {
         // assertEquals(true, e.getDate().before(Calendar.getInstance()));
     }
 
+    @Test
     public void testStringPropertiesCanBeRetrievedByStreamAndViceVersa() throws Exception {
         String[] contentProperties = new String[] {
                 "/hello.foo=bar",

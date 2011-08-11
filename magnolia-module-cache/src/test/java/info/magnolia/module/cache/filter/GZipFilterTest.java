@@ -47,7 +47,7 @@ public class GZipFilterTest extends MgnlTestCase {
     private static final String SOME_10CHARSLONG_CHAIN = "qwertzuiop";
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
     }

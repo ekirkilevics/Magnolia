@@ -33,8 +33,8 @@
  */
 package info.magnolia.link;
 
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.classextension.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.test.mock.MockContent;
@@ -42,6 +42,9 @@ import info.magnolia.test.mock.MockContent;
 import java.text.MessageFormat;
 
 import org.apache.commons.lang.StringUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
@@ -61,17 +64,20 @@ public class UUIDLinkTest extends BaseLinkTest {
     protected static final LinkTransformer NOP_TRANSFORMER = new AbsolutePathTransformer(false, false, false);
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         replay(allMocks.toArray());
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         verify(allMocks.toArray());
         super.tearDown();
     }
 
+    @Test
     public void testParseFromUUIDPattern() throws Exception {
         Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE);
 
@@ -79,6 +85,7 @@ public class UUIDLinkTest extends BaseLinkTest {
         assertEquals(UUID_PATTERN_SIMPLE, LinkFactory.toPattern(link));
     }
 
+    @Test
     public void testParseLink() throws Exception {
         Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK);
 
@@ -87,6 +94,7 @@ public class UUIDLinkTest extends BaseLinkTest {
         assertEquals(UUID_PATTERN_SIMPLE, LinkFactory.toPattern(link));
     }
 
+    @Test
     public void testParseFromBrowserLink() throws Exception {
         Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK);
 
@@ -95,6 +103,7 @@ public class UUIDLinkTest extends BaseLinkTest {
         assertEquals(UUID_PATTERN_SIMPLE, LinkFactory.toPattern(link));
     }
 
+    @Test
     public void testLinkWithAnchor() throws Exception{
         Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK + "#bar");
         assertEquals(UUID_PATTERN_SIMPLE + "#bar", LinkFactory.toPattern(link));
@@ -103,6 +112,7 @@ public class UUIDLinkTest extends BaseLinkTest {
         assertEquals(HREF_ABSOLUTE_LINK + "#bar", NOP_TRANSFORMER.transform(link));
     }
 
+    @Test
     public void testLinkWithParameters() throws Exception {
         Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK + "?bar=test");
         assertEquals(UUID_PATTERN_SIMPLE + "?bar=test", LinkFactory.toPattern(link));
@@ -111,6 +121,7 @@ public class UUIDLinkTest extends BaseLinkTest {
         assertEquals(HREF_ABSOLUTE_LINK + "?bar=test", NOP_TRANSFORMER.transform(link));
     }
 
+    @Test
     public void testUUIDToAbsoluteLinksAfterRenaming() throws Exception{
         ((MockContent)ContentUtil.getContent(ContentRepository.WEBSITE, "/parent/sub")).setName("subRenamed");
         Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE);
@@ -122,11 +133,13 @@ public class UUIDLinkTest extends BaseLinkTest {
         assertEquals(UUID_PATTERN_BINARY, LinkFactory.toPattern(link));
     }
 
+    @Test
     public void testUUIDToBinary() throws Exception {
         Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_BINARY);
         assertEquals(HREF_BINARY, NOP_TRANSFORMER.transform(link));
     }
 
+    @Test
     public void testUUIDToBinaryAfterRenaming() throws Exception {
         // now rename the the page
         ((MockContent)ContentUtil.getContent(ContentRepository.WEBSITE, "/parent/sub")).setName("subRenamed");

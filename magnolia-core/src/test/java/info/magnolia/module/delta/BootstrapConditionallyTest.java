@@ -38,7 +38,10 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import static org.easymock.EasyMock.*;
 
@@ -47,31 +50,29 @@ import java.io.IOException;
 
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class BootstrapConditionallyTest extends TestCase {
+public class BootstrapConditionallyTest {
     private static final String SOMECONTENT = "foo.bar.baz=bleh";
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         MockUtil.initMockContext();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }
 
+    @Test
     public void testExecutesDelegateTaskIfNodeExists() throws Exception {
         final String resourceToBootstrap = "/some-dir/test/foobar/somerepo.foo.bar.xml";
         doTest(resourceToBootstrap, false, true);
     }
 
+    @Test
     public void testBootstrapsIfNodeDoesNotExist() throws Exception {
         final String resourceToBootstrap = "/some-dir/test/foobar/somerepo.bleh.blih.xml";
         doTest(resourceToBootstrap, true, false);

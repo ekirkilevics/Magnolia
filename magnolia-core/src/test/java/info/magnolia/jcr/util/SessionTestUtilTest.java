@@ -46,7 +46,6 @@ import org.junit.Test;
  * @version $Id$
  */
 public class SessionTestUtilTest {
-
     @Test
     public void testCreateSessionFromString() throws IOException, RepositoryException {
         String content = "/parent1/sub1.prop1=one";
@@ -60,7 +59,6 @@ public class SessionTestUtilTest {
         assertEquals("1", session.getNode("/parent1/sub1").getIdentifier());
         assertEquals("2", session.getNode("/parent2/sub2").getIdentifier());
     }
-
     @Test
     public void testCreateSessionWithStringVarargs() throws Exception {
         MockSession session = SessionTestUtil.createSession("testWorkspace",
@@ -71,7 +69,6 @@ public class SessionTestUtilTest {
         assertEquals("1", session.getNode("/foo/bar/sub1").getIdentifier());
         assertEquals("testName", session.getNode("/foo/bar/subpath").getProperty("property").getString());
     }
-
     @Test
     public void testMockSessionSetsProperWorkspaceName() throws Exception {
         final String workspaceName = "workspace";

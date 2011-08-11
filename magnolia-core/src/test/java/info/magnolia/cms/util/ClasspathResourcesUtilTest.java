@@ -33,17 +33,19 @@
  */
 package info.magnolia.cms.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-import java.net.URL;
-import java.net.MalformedURLException;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.junit.Test;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ClasspathResourcesUtilTest extends TestCase {
+public class ClasspathResourcesUtilTest {
+    @Test
     public void testSanitizeUrlToFile() throws MalformedURLException {
         assertSanitizeToFile("/foo/bar/baz.jar", new URL("file:///foo/bar/baz.jar"));
         assertSanitizeToFile("/foo/bar/baz.jar", new URL("file:///foo/bar/baz.jar!/"));
@@ -52,6 +54,7 @@ public class ClasspathResourcesUtilTest extends TestCase {
         assertSanitizeToFile("/foo/bar/baz.jar", new URL("jar:file:/foo/bar/baz.jar!/"));
     }
 
+    @Test
     public void testOhWindoes() throws MalformedURLException {
         URL u1 = new URL("file:/C:/tomcat 5.5.20/webapps/magnoliaAuthor/WEB-INF/lib/foo-1.2.3.jar");
         URL u2 = new URL("file:/C:/tomcat%205.5.20/webapps/magnoliaAuthor/WEB-INF/lib/foo-1.2.3.jar");

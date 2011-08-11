@@ -33,10 +33,8 @@
  */
 package info.magnolia.module.cache.filter;
 
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
 import info.magnolia.test.ComponentsTestUtil;
@@ -49,6 +47,7 @@ import info.magnolia.voting.voters.TrueVoter;
 import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
+import org.junit.Before;
 
 /**
  * Basic test for the gzip filter deployed without cache filter.
@@ -93,7 +92,8 @@ public class StandaloneGZipFilterTest extends MgnlTestCase {
     }
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         MockUtil.initMockContext();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);

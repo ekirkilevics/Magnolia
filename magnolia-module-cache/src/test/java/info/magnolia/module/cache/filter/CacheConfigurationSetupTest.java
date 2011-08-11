@@ -34,6 +34,7 @@
 package info.magnolia.module.cache.filter;
 
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
@@ -63,9 +64,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  * Test for common cache configuration setup.
- * @author pbracher
+ * @version $Id$
  */
 public class CacheConfigurationSetupTest extends RepositoryTestCase {
 
@@ -79,7 +83,8 @@ public class CacheConfigurationSetupTest extends RepositoryTestCase {
     }
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         bootstrapSingleResource("/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml");
         Content content = ContentUtil.getContent("config", "/modules/cache/config/configurations/default");
@@ -94,6 +99,7 @@ public class CacheConfigurationSetupTest extends RepositoryTestCase {
         cacheConf = (CacheConfiguration) Content2BeanUtil.toBean(content, true, CacheConfiguration.class);
     }
 
+    @Test
     public void testVoting(){
         //Logger.getLogger("info.magnolia.voting").setLevel(Level.DEBUG);
 
@@ -119,6 +125,7 @@ public class CacheConfigurationSetupTest extends RepositoryTestCase {
         assertTrue("javascript.js should pass if magnolia develop is false", vote("/.magnolia/pages/javascript.js", false, true) > 0);
     }
 
+    @Test
     public void testExecutorSetup(){
         // this test is mainly testing if the content2bean transformation does what we expect
         CachePolicyExecutor executor = cacheConf.getExecutor(CachePolicyResult.bypass);

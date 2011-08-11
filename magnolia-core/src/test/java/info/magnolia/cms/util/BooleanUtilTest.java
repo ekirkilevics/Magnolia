@@ -34,15 +34,16 @@
 package info.magnolia.cms.util;
 
 import static info.magnolia.cms.util.BooleanUtil.toBoolean;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class BooleanUtilTest extends TestCase {
+public class BooleanUtilTest {
 
+    @Test
     public void testToBooleanKnowsItsBasicEnglishVocabulary() {
         assertEquals(true, toBoolean("true", true));
         assertEquals(true, toBoolean("true", false));
@@ -60,6 +61,7 @@ public class BooleanUtilTest extends TestCase {
         assertEquals(false, toBoolean("no", false));
     }
 
+    @Test
     public void testToBooleanHandlesNullsAndEmptyStringsGracefully() {
         assertEquals(true, toBoolean(null, true));
         assertEquals(false, toBoolean(null, false));
@@ -67,6 +69,7 @@ public class BooleanUtilTest extends TestCase {
         assertEquals(false, toBoolean("", false));
     }
 
+    @Test
     public void testToBooleanUsesDefaultValueForUnknownValues() {
         assertEquals(true, toBoolean("blah", true));
         assertEquals(false, toBoolean("blah", false));

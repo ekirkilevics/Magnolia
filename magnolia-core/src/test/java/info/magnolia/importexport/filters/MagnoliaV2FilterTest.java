@@ -49,6 +49,7 @@ import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -57,8 +58,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
- * Test MagnoliaV2Filter behaviour, fixed bugs, etc... Loosely based on DataTransporterTest.java
- * @author hpaluch
+ * @version $Id$
  */
 public class MagnoliaV2FilterTest extends XMLTestCase {
 
@@ -69,6 +69,7 @@ public class MagnoliaV2FilterTest extends XMLTestCase {
      * http://jira.magnolia-cms.com/browse/MAGNOLIA-2653 for details.
      * @throws Exception
      */
+    @Test
     public void testBogusMetaElement() throws Exception {
         final String inputResourcePath = "/test-v2-filter.xml";
 

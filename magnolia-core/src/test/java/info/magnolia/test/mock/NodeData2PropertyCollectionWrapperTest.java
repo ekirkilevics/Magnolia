@@ -66,7 +66,6 @@ public class NodeData2PropertyCollectionWrapperTest {
 
         wrapper = new NodeData2PropertyCollectionWrapper(testCollection);
     }
-
     @Test
     public void testRemoveAll() throws PathNotFoundException {
         Collection<Property> propertiesToRemove = new ArrayList<Property>(2);
@@ -78,7 +77,6 @@ public class NodeData2PropertyCollectionWrapperTest {
         assertEquals(nodeData2.getJCRProperty(), wrapper.iterator().next());
 
     }
-
     @Test
     public void testRetainAll() throws PathNotFoundException {
         Collection<Property> propertiesToRetain = new ArrayList<Property>(2);

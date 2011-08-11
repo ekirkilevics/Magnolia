@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.core.search;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.QueryUtil;
@@ -49,18 +50,22 @@ import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.RepositoryException;
 import javax.jcr.query.InvalidQueryException;
 
+import org.junit.Before;
+import org.junit.Test;
+
 
 /**
  * Imports testdata into the repository during {@link #setUp()} and runs various queries against it
  * using the Magnolia Query API.
- * @author jfrantzius
  *
+ * @version $Id$
  */
 public class QueryTest extends RepositoryTestCase {
 
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         InputStream xmlStream = this.getClass().getClassLoader().getResourceAsStream("info/magnolia/cms/core/search/website.level1.xml");
@@ -78,6 +83,7 @@ public class QueryTest extends RepositoryTestCase {
     /**
      * Simple query for the single content object with template "home"
      */
+    @Test
     public void testSimpleQuery() throws InvalidQueryException, RepositoryException, IOException {
         String path = "/level1/level2";
         String templateName = "home";
@@ -93,6 +99,7 @@ public class QueryTest extends RepositoryTestCase {
         assertTrue(foundContent.iterator().next().getName().equals("homepage"));
     }
 
+    @Test
     public void testMaxResultSize() throws InvalidQueryException, RepositoryException {
         String path = "/level1/level2";
         String templateName = "teaserPage1";

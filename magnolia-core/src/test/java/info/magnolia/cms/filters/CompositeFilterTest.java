@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.filters;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.util.HashMap;
 import javax.servlet.FilterChain;
@@ -40,6 +42,9 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import info.magnolia.cms.util.CustomFilterConfig;
 import info.magnolia.test.ComponentsTestUtil;
@@ -53,7 +58,8 @@ import info.magnolia.test.MgnlTestCase;
 public class CompositeFilterTest extends MgnlTestCase {
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
     }
@@ -84,6 +90,7 @@ public class CompositeFilterTest extends MgnlTestCase {
         }
     }
 
+    @Test
     public void testInitializationAndDestruction() throws ServletException {
 
         TestFilter testFilter1 = new TestFilter("TestFilterTest1");

@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.taglibs;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.test.ComponentsTestUtil;
@@ -49,6 +50,10 @@ import javax.servlet.jsp.jstl.core.LoopTagStatus;
 import javax.servlet.jsp.tagext.IterationTag;
 import javax.servlet.jsp.tagext.Tag;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
 import com.mockrunner.mock.web.MockPageContext;
@@ -61,7 +66,8 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
     private ArrayList items;
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         // reinit mock context - this test needs instance of WebContext
         final MockWebContext ctx = new MockWebContext();
@@ -94,12 +100,14 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
         super.tearDown();
     }
 
+    @Test
     public void testDoStartTag() {
         assertNull(pc.getAttribute("testStatus"));
         cni.doStartTag();
@@ -118,6 +126,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         assertEquals(Tag.SKIP_BODY, cni.doAfterBody());
     }
 
+    @Test
     public void testDoStartTag2() {
         assertNull(pc.getAttribute("testStatus"));
         int begin = 5;
@@ -138,6 +147,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         assertEquals(Tag.SKIP_BODY, cni.doAfterBody());
     }
 
+    @Test
     public void testDoStartTag3() {
         assertNull(pc.getAttribute("testStatus"));
         int end = 5;
@@ -161,6 +171,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
     /**
      * #MAGNOLIA-1896 - NPE on contentNodeCollectionName not found
      */
+    @Test
     public void testContentNodeCollectionNameNPE() {
         assertNull(pc.getAttribute("testStatus"));
         // NPE thrown when specified collection doesn't exist
@@ -176,6 +187,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         assertEquals(Tag.SKIP_BODY, cni.doStartTag());
     }
 
+    @Test
     public void testContentNodeCollectionName() {
         assertNull(pc.getAttribute("testStatus"));
         cni.setContentNodeCollectionName("collName");
@@ -192,6 +204,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
     }
 
+    @Test
     public void testGetLastNoEnd() {
         assertNull(pc.getAttribute("testStatus"));
         int begin = 5;
@@ -215,6 +228,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         assertEquals(Tag.SKIP_BODY, cni.doAfterBody());
     }
 
+    @Test
     public void testNestedCollections() {
         assertNull(pc.getAttribute("testStatus"));
         cni.setContentNodeCollectionName("collName");

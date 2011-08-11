@@ -33,15 +33,16 @@
  */
 package info.magnolia.voting.voters;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.voting.Voter;
 
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class IfVoterTest extends TestCase {
+public class IfVoterTest {
+    @Test
     public void testReturnsValueOfElseIfConditionIsTrue() {
         final IfVoter v = new IfVoter();
         // condition's return value is ignored.
@@ -51,6 +52,7 @@ public class IfVoterTest extends TestCase {
         assertEquals(2, v.vote(null));
     }
 
+    @Test
     public void testReturnsValueOfOtherwiseIfConditionIsFalse() {
         final IfVoter v = new IfVoter();
         // condition's return value is ignored.
@@ -60,6 +62,7 @@ public class IfVoterTest extends TestCase {
         assertEquals(4, v.vote(null));
     }
 
+    @Test
     public void testReturns0IfConditionIsFalseAndOtherwiseIsntSet() {
         final IfVoter v = new IfVoter();
         // condition's return value is ignored.

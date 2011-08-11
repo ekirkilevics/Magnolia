@@ -35,7 +35,10 @@ package info.magnolia.init;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import javax.servlet.ServletContext;
 
@@ -44,63 +47,68 @@ import static org.easymock.EasyMock.*;
 /**
  * TODO : we should also handle the cases when servletContext.getRealPath() returns null - see javadoc
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class DefaultMagnoliaInitPathsTest extends TestCase {
+public class DefaultMagnoliaInitPathsTest {
     private ServletContext servletContext;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         servletContext = createStrictMock(ServletContext.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         verify(servletContext);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
     // TODO : test methods for retro-compat
 
+    @Test
     public void testDetermineRootPathJustWorks() {
         MagnoliaInitPaths paths = expectServletContextRealPath("/foo/bar");
         assertEquals("/foo/bar", paths.getRootPath());
     }
 
+    @Test
     public void testDetermineRootPathStripsTrailingSlash() {
         MagnoliaInitPaths paths = expectServletContextRealPath("/foo/bar/");
         assertEquals("/foo/bar", paths.getRootPath());
     }
 
+    @Test
     public void testDetermineRootPathTranslatesBackslashes() {
         MagnoliaInitPaths paths = expectServletContextRealPath("\\foo\\bar");
         assertEquals("/foo/bar", paths.getRootPath());
     }
 
+    @Test
     public void testDetermineRootPathTranslatesBackslashesAndStripsTrailingSlash() {
         MagnoliaInitPaths paths = expectServletContextRealPath("\\foo\\bar\\");
         assertEquals("/foo/bar", paths.getRootPath());
     }
 
+    @Test
     public void testDetermineWebappFolderNameJustWorks() {
         MagnoliaInitPaths paths = expectServletContextRealPath("/foo/bar");
         assertEquals("bar", paths.getWebappFolderName());
     }
 
+    @Test
     public void testDetermineWebappFolderNameWorksWithTrailingSlashes() {
         MagnoliaInitPaths paths = expectServletContextRealPath("/foo/bar/");
         assertEquals("bar", paths.getWebappFolderName());
     }
 
+    @Test
     public void testDetermineWebappFolderNameWorksWithBackslashes() {
         MagnoliaInitPaths paths = expectServletContextRealPath("\\foo\\bar");
         assertEquals("bar", paths.getWebappFolderName());
     }
 
+    @Test
     public void testDetermineWebappFolderNameWorksWithTrailingSlashesAndBackslashes() {
         MagnoliaInitPaths paths = expectServletContextRealPath("\\foo\\bar\\");
         assertEquals("bar", paths.getWebappFolderName());

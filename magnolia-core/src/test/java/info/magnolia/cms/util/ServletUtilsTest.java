@@ -33,19 +33,23 @@
  */
 package info.magnolia.cms.util;
 
+import static org.junit.Assert.*;
+
 import java.util.LinkedHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.junit.Test;
+
 import com.mockrunner.mock.web.MockHttpServletRequest;
-import junit.framework.TestCase;
 
 /**
  * Tests for {@link ServletUtils}.
  */
-public class ServletUtilsTest extends TestCase {
+public class ServletUtilsTest {
 
+    @Test
     public void testServletInitParametersToMap() {
         LinkedHashMap<String, String> initParameters = new LinkedHashMap<String, String>();
         initParameters.put("key1", "value1");
@@ -63,6 +67,7 @@ public class ServletUtilsTest extends TestCase {
         assertEquals("key3", strings[2]);
     }
 
+    @Test
     public void testFilterInitParametersToMap() {
         LinkedHashMap<String, String> initParameters = new LinkedHashMap<String, String>();
         initParameters.put("key1", "value1");
@@ -79,6 +84,7 @@ public class ServletUtilsTest extends TestCase {
         assertEquals("key2", strings[1]);
         assertEquals("key3", strings[2]);
     }
+    @Test
     public void testGetWrappedRequest() {
         MockHttpServletRequest mock = new MockHttpServletRequest();
         HttpServletRequest request = new HttpServletRequestWrapper(mock) {};
@@ -88,6 +94,7 @@ public class ServletUtilsTest extends TestCase {
         assertNull(ServletUtils.getWrappedRequest(mock, request.getClass()));
     }
 
+    @Test
     public void testIsMultipart() {
         MockHttpServletRequest mock = new MockHttpServletRequest();
 
@@ -104,6 +111,7 @@ public class ServletUtilsTest extends TestCase {
         assertFalse(ServletUtils.isMultipart(mock));
     }
 
+    @Test
     public void testIsForward() {
         MockHttpServletRequest mock = new MockHttpServletRequest();
 
@@ -116,6 +124,7 @@ public class ServletUtilsTest extends TestCase {
         assertFalse(ServletUtils.isForward(mock));
     }
 
+    @Test
     public void testIsInclude() {
         MockHttpServletRequest mock = new MockHttpServletRequest();
 
@@ -128,6 +137,7 @@ public class ServletUtilsTest extends TestCase {
         assertTrue(ServletUtils.isInclude(mock));
     }
 
+    @Test
     public void testIsError() {
         MockHttpServletRequest mock = new MockHttpServletRequest();
 
@@ -151,6 +161,7 @@ public class ServletUtilsTest extends TestCase {
         assertTrue(ServletUtils.isInclude(mock));
     }
 
+    @Test
     public void testGetDispatcherType() {
 
         MockHttpServletRequest mock = new MockHttpServletRequest();

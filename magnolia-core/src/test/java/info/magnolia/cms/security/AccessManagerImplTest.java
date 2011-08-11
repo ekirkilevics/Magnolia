@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.security;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
@@ -40,20 +41,24 @@ import info.magnolia.test.ComponentsTestUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Test;
 
-public class AccessManagerImplTest extends TestCase {
+/**
+ * @version $Id$
+ */
+public class AccessManagerImplTest {
 
     private static final String TEST = "/admin/test";
     private static final String TEST_LANG = "/admin/test/language";
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testGetPermissions() {
         final Permission accessChildrenPermission = new PermissionImpl();
         accessChildrenPermission.setPattern(new SimpleUrlPattern("/admin/test/*"));

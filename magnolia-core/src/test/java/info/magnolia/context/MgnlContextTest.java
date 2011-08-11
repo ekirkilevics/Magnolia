@@ -36,28 +36,29 @@ package info.magnolia.context;
 import info.magnolia.cms.core.Content;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContext;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import javax.jcr.RepositoryException;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class MgnlContextTest extends TestCase {
-    @Override
-    protected void setUp() throws Exception {
+public class MgnlContextTest {
+    @Before
+    public void setUp() throws Exception {
         ComponentsTestUtil.setInstance(SystemContext.class, new MockContext());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }
 
+    @Test
     public void testCanDeclareCheckExceptionToBeThrownByDoInSystemContext() {
         final RepositoryException testEx = new RepositoryException("test!");
 
@@ -74,6 +75,7 @@ public class MgnlContextTest extends TestCase {
         }
     }
 
+    @Test
     public void testCanThrowRuntimeExceptionsWithoutSpecificThrowsClauseInDoInSystemContext() {
         final IllegalStateException testEx = new IllegalStateException("test!");
         try {
@@ -88,5 +90,4 @@ public class MgnlContextTest extends TestCase {
             assertSame(testEx, e);
         }
     }
-
 }

@@ -33,9 +33,8 @@
  */
 package info.magnolia.freemarker;
 
-import freemarker.cache.StringTemplateLoader;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -44,7 +43,6 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -52,21 +50,23 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import org.junit.After;
+import org.junit.Before;
+
+import freemarker.cache.StringTemplateLoader;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public abstract class AbstractFreemarkerTestCase extends TestCase {
+public abstract class AbstractFreemarkerTestCase {
     protected StringTemplateLoader tplLoader;
     protected FreemarkerHelper fmHelper;
     protected FreemarkerConfig fmConfig;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         tplLoader = new StringTemplateLoader();
         fmConfig = new FreemarkerConfig();
         fmConfig.getTemplateLoaders().clear();
@@ -87,11 +87,10 @@ public abstract class AbstractFreemarkerTestCase extends TestCase {
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
     protected void assertRendereredContent(String expectedOutput, Object o, String templateName) throws TemplateException, IOException {

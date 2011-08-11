@@ -33,11 +33,16 @@
  */
 package info.magnolia.voting.voters;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
 
-public class URIStartsWithVoterTest extends TestCase {
+/**
+ * @version $Id$
+ */
+public class URIStartsWithVoterTest {
 
+    @Test
     public void testBasics(){
         URIStartsWithVoter voter = new URIStartsWithVoter();
         voter.setPattern("/test");
@@ -47,6 +52,7 @@ public class URIStartsWithVoterTest extends TestCase {
         assertTrue(voter.vote("/gugu") == 0);
     }
 
+    @Test
     public void testNotVoter(){
         URIStartsWithVoter voter = new URIStartsWithVoter();
         voter.setPattern("/test");
@@ -56,6 +62,7 @@ public class URIStartsWithVoterTest extends TestCase {
         assertTrue(voter.vote("/gugu") > 0);
     }
 
+    @Test
     public void testInverseVoter(){
         URIStartsWithVoter voter = new URIStartsWithVoter();
         voter.setPattern("/test");

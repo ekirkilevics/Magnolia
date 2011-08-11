@@ -33,11 +33,12 @@
  */
 package info.magnolia.voting.voters;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 
-public class BasePatternVoterTest extends TestCase {
+public class BasePatternVoterTest {
 
+    @Test
     public void testInitWithoutPattern(){
         BasePatternVoter voter = new BasePatternVoter() {
             @Override

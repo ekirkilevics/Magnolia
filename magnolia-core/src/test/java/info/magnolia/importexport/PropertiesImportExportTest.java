@@ -33,6 +33,7 @@
  */
 package info.magnolia.importexport;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
@@ -47,22 +48,22 @@ import java.util.Properties;
 
 import javax.jcr.RepositoryException;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Test;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class PropertiesImportExportTest extends TestCase {
+public class PropertiesImportExportTest {
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
 
+    @Test
     public void testConvertsToStringByDefault() throws IOException, RepositoryException {
         final PropertiesImportExport pie = new PropertiesImportExport();
 
@@ -71,6 +72,7 @@ public class PropertiesImportExportTest extends TestCase {
         assertEquals("2009-10-14T08:59:01.227-04:00", pie.convertNodeDataStringToObject("string:2009-10-14T08:59:01.227-04:00"));
     }
 
+    @Test
     public void testConvertsToWrapperType() {
         final PropertiesImportExport pie = new PropertiesImportExport();
 
@@ -85,6 +87,7 @@ public class PropertiesImportExportTest extends TestCase {
         assertNull(dateOnlyObject);
     }
 
+    @Test
     public void testCanUseIntShortcutForConvertingIntegers() {
         final PropertiesImportExport pie = new PropertiesImportExport();
 
@@ -94,6 +97,7 @@ public class PropertiesImportExportTest extends TestCase {
     // This test uses the import then immediately exports and makes sure that the number of properties
     // at least matches.
 
+    @Test
     public void testPropertiesExport() throws Exception {
         final HierarchyManager hm = initHM();
         Properties baseProperties = new Properties();
@@ -109,6 +113,7 @@ public class PropertiesImportExportTest extends TestCase {
         );
     }
 
+    @Test
     public void testImportMetadata() throws Exception {
         // TODO - some of these tests, and it's very visible with this one, depend on MockUtil.createHM
         // ... so in essence, we're testing that, and not PIE

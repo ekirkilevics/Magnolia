@@ -33,14 +33,17 @@
  */
 package info.magnolia.module.delta;
 
+import static org.easymock.EasyMock.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.InstallContext;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * TODO : tests when the parent nodes are not existing.
@@ -48,7 +51,7 @@ import javax.jcr.RepositoryException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class MoveAndRenamePropertyTaskTest extends TestCase {
+public class MoveAndRenamePropertyTaskTest {
     private InstallContext ctx;
     private HierarchyManager hm;
     private Content origParent;
@@ -58,9 +61,8 @@ public class MoveAndRenamePropertyTaskTest extends TestCase {
     private MoveAndRenamePropertyTask task;
 
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         ctx = createStrictMock(InstallContext.class);
         hm = createStrictMock(HierarchyManager.class);
         origParent = createStrictMock(Content.class);
@@ -69,14 +71,14 @@ public class MoveAndRenamePropertyTaskTest extends TestCase {
         newProp = createStrictMock(NodeData.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         replay(ctx, hm, origParent, origProp, newParent, newProp);
         task.execute(ctx);
         verify(ctx, hm, origParent, origProp, newParent, newProp);
     }
 
+    @Test
     public void testPropertyWithOldDefaultValueGetsNewDefaultValue() throws RepositoryException {
         task = new MoveAndRenamePropertyTask("", "/foo", "oldprop", "old-default", "/bar", "newprop", "new-default");
 
@@ -93,6 +95,7 @@ public class MoveAndRenamePropertyTaskTest extends TestCase {
         expect(newParent.createNodeData("newprop", "new-default")).andReturn(newProp);
     }
 
+    @Test
     public void testPropertyWithDifferentValueIsMovedButNotChanged() throws RepositoryException {
         task = new MoveAndRenamePropertyTask("", "/foo", "oldprop", "old-default", "/bar", "newprop", "new-default");
 
@@ -109,6 +112,7 @@ public class MoveAndRenamePropertyTaskTest extends TestCase {
         expect(newParent.createNodeData("newprop", "custom-value")).andReturn(newProp);
     }
 
+    @Test
     public void testValueIsCopiedNoMatterWhatIfOldDefaultNotPassed() throws RepositoryException {
         task = new MoveAndRenamePropertyTask("", "/foo", "oldprop", null, "/bar", "newprop", "new-default");
 
@@ -125,6 +129,7 @@ public class MoveAndRenamePropertyTaskTest extends TestCase {
         expect(newParent.createNodeData("newprop", "custom-value")).andReturn(newProp);
     }
 
+    @Test
     public void testNewDefaultIsUsedIfPropertyDidNotExist() throws RepositoryException {
         task = new MoveAndRenamePropertyTask("", "/foo", "oldprop", "oldvalue", "/bar", "newprop", "new-default");
 
@@ -141,6 +146,7 @@ public class MoveAndRenamePropertyTaskTest extends TestCase {
         expect(newParent.createNodeData("newprop", "new-default")).andReturn(newProp);
     }
 
+    @Test
     public void testNewDefaultIsUsedIfPropertyDidNotExistAndNodeDataReturnsEmptyValue() throws RepositoryException {
         task = new MoveAndRenamePropertyTask("", "/foo", "oldprop", "oldvalue", "/bar", "newprop", "new-default");
 
@@ -157,6 +163,7 @@ public class MoveAndRenamePropertyTaskTest extends TestCase {
         expect(newParent.createNodeData("newprop", "new-default")).andReturn(newProp);
     }
 
+    @Test
     public void testPropertyReplacedByOldValueIfNewAlreadyExists() throws RepositoryException {
         task = new MoveAndRenamePropertyTask("", "/foo", "oldprop", "old-default", "/bar", "newprop", "new-default");
 

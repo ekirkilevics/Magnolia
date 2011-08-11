@@ -33,13 +33,15 @@
  */
 package info.magnolia.cms.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ClassUtilTest extends TestCase {
+public class ClassUtilTest {
+    @Test
     public void testIsSubClass() throws Exception {
         assertTrue(ClassUtil.isSubClass(Bar.class, Foo.class));
         assertTrue(ClassUtil.isSubClass(Foo.class, Object.class));

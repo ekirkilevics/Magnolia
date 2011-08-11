@@ -57,7 +57,7 @@ import org.easymock.EasyMock;
 public class CacheHeadersFilterTest extends MgnlTestCase {
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
     }

@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.core.version;
 
+import static org.junit.Assert.*;
+
 import static info.magnolia.cms.beans.runtime.FileProperties.PROPERTY_CONTENTTYPE;
 import static info.magnolia.cms.beans.runtime.FileProperties.PROPERTY_LASTMODIFIED;
 import static info.magnolia.cms.core.ItemType.CONTENT;
@@ -55,10 +57,11 @@ import java.util.Collections;
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
- *
- * @author vsteller
- *
+ * @version $Id$
  */
 public class ContentVersionTest extends RepositoryTestCase {
 
@@ -66,13 +69,15 @@ public class ContentVersionTest extends RepositoryTestCase {
     private static final String VERSIONED = "before versioning";
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         // context is then cleared automatically on teardown by RepoTestCase(MgnlTestCase)
         MockContext ctx = (MockContext) MgnlContext.getSystemContext();
         ctx.setUser(new MgnlUser("toto","admin",Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_MAP));
     }
 
+    @Test
     public void testBasics() throws RepositoryException{
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
 
@@ -153,6 +158,7 @@ public class ContentVersionTest extends RepositoryTestCase {
         }
     }
 
+    @Test
     public void testRetrievingBinariesFromContentVersion() throws RepositoryException, IOException {
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
 
@@ -178,6 +184,7 @@ public class ContentVersionTest extends RepositoryTestCase {
         assertNotNull("Expected a non-null binary value to be retrieved from ContentVersion", versionedBinaryNodeData.getValue());
     }
 
+    @Test
     public void testRestoringBinariesFromContentVersion() throws RepositoryException, IOException {
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
 
@@ -209,6 +216,7 @@ public class ContentVersionTest extends RepositoryTestCase {
         assertNotNull("Expected a non-null binary value to be retrieved from the restored version", restoredBinaryNodeData.getValue());
     }
 
+    @Test
     public void testRetrievingBinariesFromContentVersionsChildNode() throws RepositoryException, IOException {
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
 

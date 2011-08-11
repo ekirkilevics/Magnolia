@@ -33,13 +33,16 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * @version $Id$
  */
-public class DialogMultiSelectTest extends TestCase {
+public class DialogMultiSelectTest  {
 
+    @Test
     public void testGetJSONFromJSONModel() {
         // GIVEN
         DialogMultiSelect select = new DialogMultiSelect();
@@ -54,6 +57,7 @@ public class DialogMultiSelectTest extends TestCase {
         assertEquals(jsonValue, result);
     }
 
+    @Test
     public void testGetJSONFromListModel() {
         // GIVEN
         DialogMultiSelect select = new DialogMultiSelect();

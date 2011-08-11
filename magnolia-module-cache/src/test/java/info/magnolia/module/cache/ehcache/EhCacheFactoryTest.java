@@ -33,14 +33,10 @@
  */
 package info.magnolia.module.cache.ehcache;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.mbean.CacheMonitor;
-import junit.framework.TestCase;
-import net.sf.ehcache.config.CacheConfiguration;
-import net.sf.ehcache.constructs.blocking.LockTimeoutException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -48,17 +44,25 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
+import net.sf.ehcache.config.CacheConfiguration;
+import net.sf.ehcache.constructs.blocking.LockTimeoutException;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Test to assert whether there are still any issues with cache failing to un-block on access from multiple threads.
- * @author had
- * @version $Id:$
+ * @version $Id$
  */
-public class EhCacheFactoryTest extends TestCase {
+public class EhCacheFactoryTest {
 
     private static final Logger log = LoggerFactory.getLogger(EhCacheFactoryTest.class);
     private EhCacheFactory factory;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR, "target/cacheTest");
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");
@@ -79,15 +83,15 @@ public class EhCacheFactoryTest extends TestCase {
         factory.start();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
-        super.tearDown();
         SystemProperty.clear();
     }
 
     /**
      * Simple test for serial access to the cache.
      */
+    @Test
     public void testSerialAccess() throws Exception {
         final Cache ehCache = factory.getCache("test1");
         assertNull(ehCache.get("foo"));
@@ -98,6 +102,7 @@ public class EhCacheFactoryTest extends TestCase {
     /**
      * Simple test of item eviction.
      */
+    @Test
     public void testAddMoreThanMaxSize() throws Exception {
         // make sure there's only one item allowed
         assertEquals(1, factory.getDefaultCacheConfiguration().getMaxElementsInMemory());
@@ -120,6 +125,7 @@ public class EhCacheFactoryTest extends TestCase {
     /**
      * Ensure that cache unblocks all threads waiting for item to be cached.
      */
+    @Test
     public void testBlocking() throws Exception {
         // block forever, making sure taskX.get() will fail our tests if blockage occurs
         factory.setBlockingTimeout(0);
@@ -176,6 +182,7 @@ public class EhCacheFactoryTest extends TestCase {
     /**
      * Ensure cache unblocks and returns proper item to all the threads waiting for the item even if such is soon after evicted from the cache.
      */
+    @Test
     public void testBlockingAfterAddingMoreThanMaxSize() throws Exception {
         // make sure there's only one item allowed
         assertEquals(1, factory.getDefaultCacheConfiguration().getMaxElementsInMemory());

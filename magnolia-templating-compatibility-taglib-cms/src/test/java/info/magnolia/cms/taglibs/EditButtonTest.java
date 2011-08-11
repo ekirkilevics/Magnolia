@@ -42,8 +42,12 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.MgnlTagTestCase;
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import javax.jcr.RepositoryException;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 
@@ -51,8 +55,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 /**
- * @author had
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class EditButtonTest extends MgnlTagTestCase {
     private Content mainContent;
@@ -64,7 +67,8 @@ public class EditButtonTest extends MgnlTagTestCase {
     }
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
@@ -83,6 +87,7 @@ public class EditButtonTest extends MgnlTagTestCase {
         webContext.setRequest(new MockHttpServletRequest());
     }
 
+    @Test
     public void testDisplaysDialogWithCurrentNodaHandle() throws Exception {
         final String dialogName = "test-dial";
         final String name = "bar";

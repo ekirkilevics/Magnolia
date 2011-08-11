@@ -33,6 +33,7 @@
  */
 package info.magnolia.module;
 
+import static org.junit.Assert.*;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
@@ -41,23 +42,24 @@ import info.magnolia.module.model.reader.DependencyCheckerImpl;
 import info.magnolia.setup.CoreModule;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.FixedModuleDefinitionReader;
-import junit.framework.TestCase;
 
 import java.util.HashMap;
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Test;
+
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ModuleRegistryImplTest extends TestCase {
-    @Override
-    protected void tearDown() throws Exception {
+public class ModuleRegistryImplTest {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testCanGetModuleByClass() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
         final CoreModule module = new CoreModule(null,null,null);
@@ -68,6 +70,7 @@ public class ModuleRegistryImplTest extends TestCase {
         assertSame(module, result);
     }
 
+    @Test
     public void testGetModuleByClassThrowExceptionIfMultipleModulesRegisteredWithSameClass() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
         reg.registerModuleInstance("foo", new CoreModule(null,null,null));
@@ -81,6 +84,7 @@ public class ModuleRegistryImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testGetModuleByClassThrowExceptionIfNoModulesRegisteredWithGivenClass() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
         reg.registerModuleInstance("foo", new HashMap()/*whatever*/);
@@ -92,6 +96,7 @@ public class ModuleRegistryImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testCanGetModuleByNameIfMultipleModulesRegisteredWithSameClass() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
         reg.registerModuleInstance("foo", new CoreModule(null,null,null));
@@ -102,6 +107,7 @@ public class ModuleRegistryImplTest extends TestCase {
         assertNotSame(foo, bar);
     }
 
+    @Test
     public void testThrowsExceptionForUnregisteredModuleName() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
         reg.registerModuleInstance("foo", new CoreModule(null,null,null));
@@ -129,6 +135,7 @@ public class ModuleRegistryImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testCanCheckIfAModuleExists() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
         reg.registerModuleInstance("foo", new CoreModule(null,null,null));
@@ -138,6 +145,7 @@ public class ModuleRegistryImplTest extends TestCase {
         assertFalse(reg.isModuleRegistered("chalala"));
     }
 
+    @Test
     public void testModuleDefinitionsAreListedInDependencyOrder() throws ModuleManagementException {
         final ModuleDefinition a = new ModuleDefinition("a", Version.parseVersion("1.0"), null, null);
         final ModuleDefinition b = new ModuleDefinition("b", Version.parseVersion("1.0"), null, null);

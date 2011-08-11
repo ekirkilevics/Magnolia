@@ -33,22 +33,22 @@
  */
 package info.magnolia.cms.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author philipp
  * @version $Id$
- *
  */
-public class DelayedExecutorTest extends TestCase {
+public class DelayedExecutorTest {
 
     public DelayedExecutorTest() {
         // can't use a debuger to solve problems
         // Logger.getRootLogger().setLevel(Level.DEBUG);
     }
 
+    @Test
     public void testDelayedExecution() throws InterruptedException{
         TestRunnable runnable = new TestRunnable();
         DelayedExecutor executor = new DelayedExecutor(runnable, 100, 500);
@@ -59,6 +59,7 @@ public class DelayedExecutorTest extends TestCase {
         assertEquals(true, runnable.executed);
     }
 
+    @Test
     public void testMultipleDelayedExecution() throws InterruptedException{
         TestRunnable runnable = new TestRunnable();
         DelayedExecutor executor = new DelayedExecutor(runnable, 100, 500);
@@ -72,6 +73,7 @@ public class DelayedExecutorTest extends TestCase {
         assertEquals(true, runnable.executed);
     }
 
+    @Test
     public void testExecutionAfterMaxDelay() throws InterruptedException{
         TestRunnable runnable = new TestRunnable();
         DelayedExecutor executor = new DelayedExecutor(runnable, 100, 200);

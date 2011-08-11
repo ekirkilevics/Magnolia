@@ -36,15 +36,17 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.UnsupportedEncodingException;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class UnicodeNormalizerTest extends TestCase {
+public class UnicodeNormalizerTest {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UnicodeNormalizerTest.class);
 
     private static final byte[] MACROMAN_BYTES = new byte[]{47, 121, -118, -118, -118, -118, -118};
@@ -64,40 +66,43 @@ public class UnicodeNormalizerTest extends TestCase {
         }
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         SystemProperty.clear();
         ComponentsTestUtil.clear();
         ComponentsTestUtil.setImplementation(info.magnolia.cms.util.UnicodeNormalizer.Normalizer.class, "info.magnolia.cms.util.UnicodeNormalizer$AutoDetectNormalizer");
         SystemProperty.setProperty("magnolia.utf8.enabled", "true");
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         SystemProperty.clear();
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testAsciiStringsShouldPassThroughWithAutoDetect() {
         assertEquals("hello", UnicodeNormalizer.normalizeNFC("hello"));
     }
 
+    @Test
     public void testNFCStringIsStillEqualsAfterNormalizeCallWithAutoDetect() {
         assertEquals(NFC, UnicodeNormalizer.normalizeNFC(NFC));
     }
 
+    @Test
     public void testNormalizingNFDStringMakesItEqualsToNFCStringWithAutoDetect() {
         assertEquals(NFC, UnicodeNormalizer.normalizeNFC(NFD));
     }
 
+    @Test
     public void testNormalizationAlsoWorksForStringsThatWereOriginallyNotUTF8WithAutoDetect() {
         assertEquals(MACROMAN, NFC);
         assertEquals(NFC, UnicodeNormalizer.normalizeNFC(MACROMAN));
     }
 
+    @Test
     public void testICUNormalizer() {
         final UnicodeNormalizer.Normalizer n = new UnicodeNormalizer.ICUNormalizer();
         assertEquals(NFC, n.normalizeNFC(NFD));
@@ -105,6 +110,7 @@ public class UnicodeNormalizerTest extends TestCase {
         assertEquals("hello", n.normalizeNFC("hello"));
     }
 
+    @Test
     public void testNonNormalizer() {
         final UnicodeNormalizer.Normalizer n = new UnicodeNormalizer.NonNormalizer();
         assertEquals(NFD, n.normalizeNFC(NFD));
@@ -112,6 +118,7 @@ public class UnicodeNormalizerTest extends TestCase {
         assertEquals("hello", n.normalizeNFC("hello"));
     }
 
+    @Test
     public void testJava6ReflectionNormalizer() {
         try {
             Class.forName("java.text.Normalizer");
@@ -122,6 +129,5 @@ public class UnicodeNormalizerTest extends TestCase {
         } catch (ClassNotFoundException e) {
             log.info("This test can only be run with Java 6.");
         }
-
     }
 }

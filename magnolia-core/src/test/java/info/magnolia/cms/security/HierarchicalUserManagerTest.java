@@ -35,39 +35,41 @@ package info.magnolia.cms.security;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class HierarchicalUserManagerTest extends TestCase {
+public class HierarchicalUserManagerTest {
     private HierarchicalUserManager hm;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         hm = new HierarchicalUserManager();
         hm.setName("test-realm");
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
 
+    @Test
     public void testParentPathIsRealmIfNameShorterThan3Chars() {
         assertEquals("/test-realm", hm.getParentPath("ab"));
     }
 
+    @Test
     public void testParentPathShouldReflectFirstLettersOfNameAndIncludeRealmName() {
         assertEquals("/test-realm/c/ca", hm.getParentPath("casimir"));
     }
 
+    @Test
     public void testParentPathShouldBeLowercased() {
         assertEquals("/test-realm/c/ca", hm.getParentPath("Casimir"));
         assertEquals("/test-realm/c/ca", hm.getParentPath("CASIMIR"));

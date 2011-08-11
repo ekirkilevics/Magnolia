@@ -33,6 +33,7 @@
  */
 package info.magnolia.content2bean;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
 import info.magnolia.test.MgnlTestCase;
@@ -46,11 +47,13 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import org.junit.Test;
+
 /**
- * @author philipp
  * @version $Id$
  */
 public class Content2BeanTest extends MgnlTestCase {
+    @Test
     public void testContentToBeanWithClassDefined() throws RepositoryException, Content2BeanException{
         Content node = MockUtil.createNode("node", new Object[][]{
             {"class", "info.magnolia.content2bean.SimpleBean"},
@@ -63,6 +66,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("prop2Value", ((SimpleBean) bean).getProp2());
     }
 
+    @Test
     public void testContentToBeanWithDefaultClass() throws RepositoryException, Content2BeanException{
         Content node = MockUtil.createNode("node", new Object[][]{{"prop1", "prop1Value"}, {"prop2", "prop2Value"}});
 
@@ -72,6 +76,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("prop2Value", ((SimpleBean) bean).getProp2());
     }
 
+    @Test
     public void testContentToBeanWithSubBean() throws RepositoryException, Content2BeanException {
         Content node = MockUtil.createContent("parent", new String[][]{
                 {"class", "info.magnolia.content2bean.BeanWithSubBean"},
@@ -92,6 +97,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("propSub2Value", sub.getProp2());
     }
 
+    @Test
     public void testContentToBeanWithSubBeanAndAutoTypeResolving() throws RepositoryException, Content2BeanException {
         Content node = MockUtil.createContent("parent", new String[][]{
                 {"class", "info.magnolia.content2bean.BeanWithSubBean"},
@@ -111,6 +117,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("propSub2Value", sub.getProp2());
     }
 
+    @Test
     public void testContentToBeanWithSubMap() throws RepositoryException, Content2BeanException {
         Content node = MockUtil.createContent("parent", new String[][]{
                 {"class", "info.magnolia.content2bean.BeanWithMap"},
@@ -147,6 +154,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("prop2Sub2Value", ((SimpleBean)beans.get("sub2")).getProp2());
     }
 
+    @Test
     public void testContentToBeanWithSubMapUsingMapping() throws RepositoryException, Content2BeanException {
         Content node = MockUtil.createContent("parent", new String[][]{
                 {"class", "info.magnolia.content2bean.BeanWithMap"},
@@ -183,6 +191,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("prop2Sub2Value", ((SimpleBean)beans.get("sub2")).getProp2());
     }
 
+    @Test
     public void testContentToBeanWithSubMapUsingAdder() throws RepositoryException, Content2BeanException {
         Content node = MockUtil.createContent("parent", new String[][]{
                 {"class", "info.magnolia.content2bean.BeanWithMapAndAdder"},
@@ -217,6 +226,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("prop2Sub2Value", ((SimpleBean)beans.get("sub2")).getProp2());
     }
 
+    @Test
     public void testContentToBeanWithArraysUsingAdder() throws RepositoryException, Content2BeanException {
         Content node = MockUtil.createContent("parent", new String[][]{
                 {"class", "info.magnolia.content2bean.BeanWithArrayAndAdder"},
@@ -250,6 +260,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("prop2Sub2Value", bean.getBeans()[1].getProp2());
     }
 
+    @Test
     public void testClassPropertiesAreConvertedProperly() throws RepositoryException, Content2BeanException {
         Content node = MockUtil.createContent("parent", new String[][]{
                 {"class", "info.magnolia.content2bean.BeanWithClass"},
@@ -261,6 +272,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals(String.class, o.getClazz());
     }
 
+    @Test
     public void testJCRPropertiesTypes() throws RepositoryException, Content2BeanException {
         Content node = MockUtil.createContent("parent", new Object[][]{
                 {"class", "info.magnolia.content2bean.BeanWithPrimitiveProperties"},
@@ -273,6 +285,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals(true, bean.isBool());
     }
 
+    @Test
     public void testFromStringConversion() throws RepositoryException, Content2BeanException {
         Content node = MockUtil.createContent("parent", new Object[][]{
                 {"class", "info.magnolia.content2bean.BeanWithPrimitiveProperties"},
@@ -285,6 +298,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals(true, bean.isBool());
     }
 
+    @Test
     public void testFlatteningSubNodesToSimpleList() throws RepositoryException, Content2BeanException, IOException {
         String data =
             "/parent.class=" + BeanWithListOfString.class.getName() + "\n" +
@@ -299,6 +313,7 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("two", bean.getValues().get(1));
     }
 
+    @Test
     public void testCanConvertStringsToTheAppropriateEnumEquivalent() throws Exception {
         Content node = MockUtil.createContent("myNode", new String[][]{
                 {"class", "info.magnolia.content2bean.BeanWithEnum"},
@@ -314,6 +329,7 @@ public class Content2BeanTest extends MgnlTestCase {
 
     }
 
+    @Test
     public void testCanSpecifySpecificMapImplementation() throws Exception {
         final Content node = MockUtil.createNode("/foo/bar",
                 "/foo/bar.class=" + BeanWithMap.class.getName(),
@@ -336,6 +352,7 @@ public class Content2BeanTest extends MgnlTestCase {
     }
 
     /* TODO - MAGNOLIA-3160
+    @Test
     public void testCanSpecifySpecificCollectionImplementation() throws Exception {
         final Content node = MockUtil.createNode("/foo/bar",
                 "/foo/bar.class=" + BeanWithCollection.class.getName(),
@@ -364,6 +381,7 @@ public class Content2BeanTest extends MgnlTestCase {
     }
     */
 
+    @Test
     public void testWillFailToUseACustomMapWhichIsNotConcrete() throws Exception { // DUH !
         final Content node = MockUtil.createNode("/bar",
                 "/bar.class=" + BeanWithMap.class.getName(),

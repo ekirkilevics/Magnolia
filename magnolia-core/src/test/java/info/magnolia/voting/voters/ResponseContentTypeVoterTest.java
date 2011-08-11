@@ -36,24 +36,24 @@ package info.magnolia.voting.voters;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
 
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ResponseContentTypeVoterTest extends TestCase {
+public class ResponseContentTypeVoterTest {
     private ResponseContentTypeVoter voter;
     private HttpServletResponse response;
     private WebContext ctx;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         voter = new ResponseContentTypeVoter();
         ctx = createStrictMock(WebContext.class);
         response = createStrictMock(HttpServletResponse.class);
@@ -64,18 +64,19 @@ public class ResponseContentTypeVoterTest extends TestCase {
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testVotesTrueIfNoAllowedNorRejectedIsConfigured() {
         expect(response.getContentType()).andReturn("whatever");
         doTest(true);
     }
 
+    @Test
     public void testVotesTrueIfContentTypeIsAllowed() {
         voter.addAllowed("text/html");
         voter.addAllowed("application/x-javascript");
@@ -84,6 +85,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(true);
     }
 
+    @Test
     public void testVotesFalseIfContentTypeIsNotInAllowedList() {
         voter.addAllowed("text/html");
         voter.addAllowed("application/x-javascript");
@@ -92,6 +94,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(false);
     }
 
+    @Test
     public void testVotesFalseIfContentTypeIsExplicitelyRejected() {
         voter.addRejected("image/gif");
         voter.addRejected("image/jpeg");
@@ -100,6 +103,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(false);
     }
 
+    @Test
     public void testVotesTrueIfContentTypeIsNotRejected() {
         voter.addRejected("image/gif");
         voter.addRejected("image/jpeg");
@@ -108,6 +112,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(true);
     }
 
+    @Test
     public void testVotesTrueIfContentTypeIsAllowedAndNotRejected() {
         voter.addAllowed("text/html");
         voter.addAllowed("application/x-javascript");
@@ -119,6 +124,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(true);
     }
 
+    @Test
     public void testVotesFalseIfContentTypeIsNotExplicitelyAllowedAndExplicitelyRejected() {
         voter.addAllowed("text/html");
         voter.addAllowed("application/x-javascript");
@@ -130,6 +136,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(false);
     }
 
+    @Test
     public void testVotesFalseIfContentTypeIsNotExplicitelyAllowedAndNotExplicitelyRejectedEither() {
         voter.addAllowed("text/html");
         voter.addAllowed("application/x-javascript");
@@ -141,6 +148,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(false);
     }
 
+    @Test
     public void testVotesFalseIfResponseDoesNotHaveAContentTypeSetYet() {
         voter.addAllowed("text/html");
         voter.addAllowed("application/x-javascript");
@@ -152,6 +160,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(false);
     }
 
+    @Test
     public void testVotesFalseIfResponseDoesNotHaveAContentTypeSetYetEvenIfNoRejectedAreConfigured() {
         voter.addAllowed("text/html");
         voter.addAllowed("application/x-javascript");
@@ -160,6 +169,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(false);
     }
 
+    @Test
     public void testVotesFalseIfResponseDoesNotHaveAContentTypeSetYetEvenIfNoAllowedAreConfigured() {
         voter.addRejected("text/html");
         voter.addRejected("application/x-javascript");
@@ -168,6 +178,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(false);
     }
 
+    @Test
     public void testIgnoresCharsetInContentType() {
         voter.addAllowed("text/html");
         voter.addAllowed("application/x-javascript");
@@ -179,6 +190,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(true);
     }
 
+    @Test
     public void testIgnoresCharsetInContentType2() {
         voter.addAllowed("text/html");
         voter.addAllowed("application/x-javascript");

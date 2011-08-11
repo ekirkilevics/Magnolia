@@ -37,24 +37,25 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
 import static org.easymock.classextension.EasyMock.createMock;
 
 import java.util.Locale;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class MessagesManagerTest extends TestCase {
+public class MessagesManagerTest {
     private SystemContext sysCtx;
     private Context ctx;
     private static final String DUMMY_BUNDLE = "info.magnolia.cms.i18n.dummy";
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
 
         ctx = createMock(Context.class);
         // current context locale
@@ -72,36 +73,40 @@ public class MessagesManagerTest extends TestCase {
         replay(ctx, sysCtx);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         verify(ctx, sysCtx);
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        super.tearDown();
     }
 
+@Test
     public void testGetsSimpleMessageFromDefaultBundle() {
         assertEquals("Magnolia core tests", MessagesManager.get("about.title"));
         final Messages messages = MessagesManager.getMessages();
         assertEquals("Magnolia core tests", messages.get("about.title"));
     }
 
+    @Test
     public void testGetsMessagesFromSpecifiedBundle() {
         final Messages messages = MessagesManager.getMessages(DUMMY_BUNDLE);
         assertEquals("Bar", messages.get("foo"));
     }
 
+    @Test
     public void testGetsMessagesFromSpecifiedBundleInPriorityEvenIfItExistsInDefaultBundle() {
         final Messages messages = MessagesManager.getMessages(DUMMY_BUNDLE);
         assertEquals("This is a test", messages.get("about.title"));
     }
 
+    @Test
     public void testFallsBackToDefaultLocaleIfCurrentLocaleDoesntSpecifyThisMessage() {
         final Messages messages = MessagesManager.getMessages(DUMMY_BUNDLE, Locale.FRENCH);
         assertEquals("Ceci n'est pas un test", messages.get("about.title"));
         assertEquals("Only in English", messages.get("only.en"));
     }
 
+    @Test
     public void testFallsBackToDefaultLocaleAlsoWithDefaultBundle() {
         final Messages messages = MessagesManager.getMessages(Locale.FRENCH);
         assertEquals("Autre message seulement defini dans le bundle de base", messages.get("other"));

@@ -33,14 +33,15 @@
  */
 package info.magnolia.objectfactory;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class DefaultClassFactoryTest extends TestCase {
+public class DefaultClassFactoryTest {
+    @Test
     public void testCanInstantiateWithEmptyConstructor() {
         final DefaultClassFactory classFactory = new DefaultClassFactory();
         assertEquals("default", classFactory.newInstance(FooBar.class).getValue());
@@ -48,6 +49,7 @@ public class DefaultClassFactoryTest extends TestCase {
         assertEquals("default", classFactory.newInstance(FooBar.class, null).getValue());
     }
 
+    @Test
     public void testCanInstantiateWithAppropriateConstructor() {
         final DefaultClassFactory classFactory = new DefaultClassFactory();
         assertEquals("bingo", classFactory.newInstance(FooBar.class, "bingo").getValue());
@@ -61,6 +63,7 @@ public class DefaultClassFactoryTest extends TestCase {
 
     /*
         org.apache.commons.beanutils.ConstructorUtils.invokeConstructor chokes on null arguments
+    @Test
     public void testCanInstantiateWithSingleArgConstructorAndNullParam() {
         final DefaultClassFactory classFactory = new DefaultClassFactory();
         assertEquals("null", classFactory.newInstance(FooBar.class, new Object[]{null}).getValue());
@@ -68,6 +71,7 @@ public class DefaultClassFactoryTest extends TestCase {
     }
     */
 
+    @Test
     public void testCanInstantiateWithAppropriateConstructorAndNullParamsWhenSignatureIsSpecified() {
         final DefaultClassFactory classFactory = new DefaultClassFactory();
         assertEquals("bingo", classFactory.newInstance(FooBar.class, arr(String.class), "bingo").getValue());
@@ -77,6 +81,7 @@ public class DefaultClassFactoryTest extends TestCase {
     }
 
     //    MAGNOLIA-3082: use best match
+    @Test
     public void testCanInstantiateWithBestMatchingConstructorWhenTheSignatureIsMorePrecise() {
         final DefaultClassFactory classFactory = new DefaultClassFactory();
 
@@ -116,6 +121,7 @@ public class DefaultClassFactoryTest extends TestCase {
 //        }
 //    }
 
+    @Test
     public void testCanInstantiateWithSingleArgConstructorAndNullParamWhenSignatureIspecified() {
         final DefaultClassFactory classFactory = new DefaultClassFactory();
         assertEquals(null, classFactory.newInstance(FooBar.class, arr(String.class), new Object[]{null}).getValue());

@@ -33,16 +33,17 @@
  */
 package info.magnolia.module.cache.filter;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
 
 /**
  * Basic test for the cached page functionality.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class InMemoryCachedPageTest extends TestCase {
+public class InMemoryCachedPageTest {
 
     // FIXME: MAGNOLIA-3413, this method was added to avoid junit warnings so that we can comment out the failing tests
+    @Test
     public void testDummy(){
     }
 

@@ -33,9 +33,8 @@
  */
 package info.magnolia.module.admininterface;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
@@ -48,20 +47,21 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockMetaData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.ListUtils;
-
-import static org.easymock.EasyMock.*;
-
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * @author had
- * @version $Id:$
+ * @version $Id$
  */
-public class AdminTreeMVCHandlerTest extends TestCase {
+public class AdminTreeMVCHandlerTest {
 
     private HttpServletRequest req;
     private HttpServletResponse res;
@@ -72,7 +72,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
     private AdminTreeMVCHandler handler;
     private Object[] objs;
 
-    @Override
+    @Before
     public void setUp() {
         req = createStrictMock(HttpServletRequest.class);
         res = createStrictMock(HttpServletResponse.class);
@@ -86,6 +86,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
         ComponentsTestUtil.setInstance(SystemContext.class, sysctx);
     }
 
+    @Test
     public void testMove() throws Exception {
         expect(ctx.getHierarchyManager("repo-name")).andReturn(hm);
         expect(hm.isExist("/bar/foo")).andReturn(false);
@@ -105,6 +106,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
      * Make sure that the uuid is retrieved for activation and path is translated using SC
      * @throws Exception
      */
+    @Test
     public void testGetActivateCommandContext() throws Exception {
         handler.pathSelected = "/some/selected/path";
         expect(ctx.put("repository", "repo-name")).andReturn(null);
@@ -128,6 +130,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
      * Make sure path is set for <b>every</b> command.
      * @throws Exception
      */
+    @Test
     public void testGetSomeCommandContext() throws Exception {
         handler.pathSelected = "/some/selected/path";
         expect(ctx.put("repository", "repo-name")).andReturn(null);
@@ -138,6 +141,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
         verify(objs);
     }
 
+    @Test
     public void testCopy() throws Exception {
         final boolean unactivated[] = new boolean[1];
         MetaData meta = new MockMetaData(new MockContent("blah")) {
@@ -165,6 +169,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
         assertTrue(unactivated[0]);
     }
 
+    @Test
     public void testDeepCopy() throws Exception {
         final boolean unactivated[] = new boolean[1];
         MetaData meta = new MockMetaData(new MockContent("blah")) {
@@ -205,7 +210,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
         assertTrue(unactivated[0]);
     }
 
-    @Override
+    @After
     public void tearDown() {
         MgnlContext.setInstance(null);
     }

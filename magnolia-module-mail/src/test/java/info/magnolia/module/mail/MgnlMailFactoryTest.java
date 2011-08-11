@@ -34,19 +34,20 @@
 package info.magnolia.module.mail;
 
 
+import static org.junit.Assert.*;
 import info.magnolia.module.mail.templates.MgnlEmail;
+
+import org.junit.Test;
 import org.subethamail.wiser.WiserMessage;
 
 import java.util.Iterator;
 
 /**
- * MgnlMailFactoryTest.
- * Date: Mar 31, 2006
- * Time: 9:14:00 PM
- * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
+ * @version $Id$
  */
 public class MgnlMailFactoryTest extends AbstractMailTest {
 
+    @Test
     public void testSimpleMail() throws Exception {
 
         params.put(MailTemplate.MAIL_TYPE, MailConstants.MAIL_TEMPLATE_SIMPLE);

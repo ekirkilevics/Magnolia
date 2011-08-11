@@ -104,7 +104,6 @@ public class GuiceComponentProviderTest {
         MgnlContext.setInstance(null);
         Components.setProvider(null);
     }
-
     @Test
     public void testGetComponentProvider() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
@@ -118,7 +117,6 @@ public class GuiceComponentProviderTest {
         GuiceComponentProvider p = createComponentProvider(configuration);
         assertNull(p.getComponent(StringBuilder.class));
     }
-
     @Test
     public void testInstance() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
@@ -128,7 +126,6 @@ public class GuiceComponentProviderTest {
         assertSame(singletonObject, p.getComponent(SingletonObject.class));
         assertSame(singletonObject, p.getComponent(SingletonObject.class));
     }
-
     @Test
     public void testImplementation() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
@@ -138,7 +135,6 @@ public class GuiceComponentProviderTest {
         assertNotNull(singletonObject);
         assertSame(singletonObject, p.getComponent(SingletonObject.class));
     }
-
     @Test
     public void testConfigured() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
@@ -150,7 +146,6 @@ public class GuiceComponentProviderTest {
         assertSame(singletonObject, p.getComponent(SingletonObject.class));
         assertEquals("foobar", p.getComponent(SingletonObject.class).getName());
     }
-
     @Test
     public void testObserved() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
@@ -165,7 +160,6 @@ public class GuiceComponentProviderTest {
     @Singleton
     public static class OtherSingletonObject {
     }
-
     @Test
     public void testCreateChild() {
 
@@ -206,8 +200,8 @@ public class GuiceComponentProviderTest {
         }
     }
 
-    @Test
     @Ignore
+    @Test
     public void testLifecycle() {
 
         // This fails because Guice creates an extra internal binding and Mycila destroys each of them

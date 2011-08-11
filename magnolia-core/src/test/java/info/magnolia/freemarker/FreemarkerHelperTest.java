@@ -33,10 +33,8 @@
  */
 package info.magnolia.freemarker;
 
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -69,21 +67,24 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import org.junit.Test;
+
 import freemarker.core.InvalidReferenceException;
 import freemarker.template.TemplateException;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 
+    @Test
     public void testWeCanUseAnyObjectTypeAsOurRoot() throws IOException, TemplateException {
         tplLoader.putTemplate("test.ftl", "${left} ${right.left.blue - left} ${right.right.green} ${right.right.name}");
         final Pair root = new Pair(Integer.valueOf(100), new Pair(Color.PINK, Color.ORANGE));
         assertRendereredContent("100 75 200 orange", root, "test.ftl");
     }
 
+    @Test
     public void testSimpleNodeReferenceOutputsItsName() throws TemplateException, IOException {
         final MockContent foo = new MockContent("foo");
         foo.addContent(new MockContent("bar"));
@@ -97,6 +98,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("foo gazonk color:orange foo gazonk", map, "test.ftl");
     }
 
+    @Test
     public void testSubNodesAreReachable() throws TemplateException, IOException {
         tplLoader.putTemplate("test_sub.ftl", "The child node's bli'bla property is ${bli['bla']}");
 
@@ -110,6 +112,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("The child node's bli'bla property is bloup", c, "test_sub.ftl");
     }
 
+    @Test
     public void testSubSubNode() throws TemplateException, IOException {
         final MockContent baz = new MockContent("baz");
         baz.addNodeData(new MockNodeData("prop", "wassup"));
@@ -124,6 +127,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("yo, wassup ?", c, "test.ftl");
     }
 
+    @Test
     public void testCanReachParentWithBuiltIn() throws Exception {
         final Content c = MockUtil.createNode("/foo/bar",
                 "/foo.myProp=this is foo",
@@ -134,6 +138,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     }
 
     /** not supported:
+    @Test
     public void testCanReachParentWithProperty() throws Exception {
         final Content c = MockUtil.createNode("/foo/bar",
                 "/foo.myProp=this is foo",
@@ -144,6 +149,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     }*/
 
     /** not supported:
+    @Test
     public void testCanReachParentWithMethod() throws Exception {
         final Content c = MockUtil.createNode("/foo/bar",
                 "/foo.myProp=this is foo",
@@ -153,6 +159,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("this is bar and this is foo", createSingleValueMap("content", c), "test.ftl");
     }*/
 
+    @Test
     public void testCanLoopThroughNodes() throws TemplateException, IOException {
         final MockContent foo = new MockContent("foo");
         final MockContent c = new MockContent("root");
@@ -166,6 +173,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("3: /root/foo/bar /root/foo/baz /root/foo/gazonk ", c, "test.ftl");
     }
 
+    @Test
     public void testCanLoopThroughNodesNestedInBean() throws TemplateException, IOException {
         final MockContent foo = new MockContent("foo");
         foo.addContent(new MockContent("bar"));
@@ -180,6 +188,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("3: /foo/bar /foo/baz /foo/gazonk ", map, "test.ftl");
     }
 
+    @Test
     public void testCanLoopThroughPropertiesUsingTheKeysBuiltIn() throws TemplateException, IOException {
         final MockContent f = new MockContent("flebele");
         f.addNodeData(new MockNodeData("foo", "bar"));
@@ -192,6 +201,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("3: foo=bar bar=baz baz=gazonk", c, "test.ftl");
     }
 
+    @Test
     public void testCanLoopThroughPropertiesUsingTheValuesBuiltIn() throws TemplateException, IOException {
         final MockContent f = new MockContent("flebele");
         f.addNodeData(new MockNodeData("foo", "bar"));
@@ -213,6 +223,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 //        assertRendereredContent("/root/flebele/foo", c, "test2.ftl");
 //    }
 
+    @Test
     public void testCanRenderMetaData() throws TemplateException, IOException, AccessDeniedException {
         final MockContent f = new MockContent("foo");
         final MockMetaData md = f.createMetaData();
@@ -228,6 +239,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("greg:yes:my test page:" + expectedDate, c, "test.ftl");
     }
 
+    @Test
     public void testMetaDataIsOneOfTheChildrenRetrievedByTheChildrenBuiltIn() throws TemplateException, IOException, AccessDeniedException {
         final MockContent f = new MockContent("foo");
         final MockMetaData md = f.createMetaData();
@@ -241,6 +253,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("MetaData,pouet,", createSingleValueMap("c", f), "test.ftl");
     }
 
+    @Test
     public void testBooleanPropertiesAreHandledProperly() throws TemplateException, IOException {
         final MockContent c = new MockContent("root");
         final MockContent foo = new MockContent("foo");
@@ -255,6 +268,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("yes yes no no", c, "test.ftl");
     }
 
+    @Test
     public void testDatePropertiesAreHandledProperly() throws TemplateException, IOException {
         final MockContent c = new MockContent("root");
         final MockContent foo = new MockContent("foo");
@@ -266,6 +280,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("2007-06-03 15:39:46", c, "test.ftl");
     }
 
+    @Test
     public void testNumberProperties() throws TemplateException, IOException {
         final MockContent c = new MockContent("root");
         final MockContent foo = new MockContent("foo");
@@ -277,6 +292,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("1,234,567,890,123,456,789 , 12,345,678.901", c, "test.ftl");
     }
 
+    @Test
     public void testReferenceProperties() throws TemplateException, IOException, RepositoryException {
         final MockContent foo = new MockContent("foo");
         final MockContent bar = new MockContent("bar");
@@ -290,6 +306,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("bar gazonk", createSingleValueMap("foo", foo), "test.ftl");
     }
 
+    @Test
     public void testRendereredWithCurrentLocale() throws TemplateException, IOException {
         tplLoader.putTemplate("test.ftl", "this is a test template.");
         tplLoader.putTemplate("test_en.ftl", "this is a test template in english.");
@@ -303,6 +320,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("Ceci est une template belge hein une fois.", new Locale("fr", "BE"), c, "test.ftl");
     }
 
+    @Test
     public void testMissingAndDefaultValueOperatorsActsAsIExceptThemTo() throws IOException, TemplateException {
         tplLoader.putTemplate("test.ftl", "[#if content.title?has_content]<h2>${content.title}</h2>[/#if]");
         final MockContent c = new MockContent("pouet");
@@ -316,6 +334,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("<h2>pouet</h2>", m, "test.ftl");
     }
 
+    @Test
     public void testContextPathIsAddedWithWebContext() throws IOException, TemplateException {
         tplLoader.putTemplate("pouet", ":${contextPath}:");
         final WebContext context = createStrictMock(WebContext.class);
@@ -332,6 +351,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         verify(context);
     }
 
+    @Test
     public void testContextPathIsNotAddedWithNotWebContext() throws IOException, TemplateException {
         tplLoader.putTemplate("pouet", ":${contextPath}:");
         final Context context = createStrictMock(Context.class);
@@ -351,6 +371,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         verify(context);
     }
 
+    @Test
     public void testContextPathIsAlsoAvailableThroughMagnoliaContext() throws IOException, TemplateException {
         tplLoader.putTemplate("pouet", ":${ctx.contextPath}:");
         final WebContext context = createStrictMock(WebContext.class);
@@ -368,6 +389,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         verify(context);
     }
 
+    @Test
     public void testMagnoliaContextIsExposed() throws IOException, TemplateException {
         tplLoader.putTemplate("pouet", ":${ctx.user.name}:");
         final Context context = createStrictMock(Context.class);
@@ -382,6 +404,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         verify(context, user);
     }
 
+    @Test
     public void testMagnoliaContextAttributesAreAvailableWithMapSyntax() throws IOException, TemplateException {
         tplLoader.putTemplate("pouet", ":${ctx.foo}:${ctx['baz']}:");
         final Context context = createStrictMock(Context.class);
@@ -397,6 +420,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         verify(context);
     }
 
+    @Test
     public void testEvalCanEvaluateDynamicNodeProperties() throws IOException, TemplateException {
         tplLoader.putTemplate("test.ftl", "evaluated result: ${'content.title'?eval}");
 
@@ -410,6 +434,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("evaluated result: This is my title", m, "test.ftl");
     }
 
+    @Test
     public void testInterpretCanBeUsedForDynamicNodeProperties() throws IOException, TemplateException {
         tplLoader.putTemplate("test.ftl", "[#assign dynTpl='${content.title}'?interpret]\n" +
                 "evaluated result: [@dynTpl/]");
@@ -424,6 +449,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("evaluated result: This is my other-value title", m, "test.ftl");
     }
 
+    @Test
     public void testEvalCanAlsoBeUsedForNestedExpressions() throws IOException, TemplateException {
         // except we need lots of quotes
         tplLoader.putTemplate("test.ftl", "evaluated result: ${'\"${content.title}\"'?eval}");
@@ -438,6 +464,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("evaluated result: This is my other-value", m, "test.ftl");
     }
 
+    @Test
     public void testInterpretCanBeUsedEvenIfPropertyHasNoFreemarkerStuff() throws IOException, TemplateException {
         tplLoader.putTemplate("test.ftl", "[#assign dynTpl='${content.title}'?interpret]evaluated title: [@dynTpl/]");
 
@@ -453,6 +480,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 
     private final static String SOME_UUID = "deb0c7d0-402f-4e04-9db3-cb308695733e";
 
+    @Test
     public void testUuidLinksAreTransformedToRelativeLinksInWebContext() throws IOException, TemplateException, RepositoryException {
         final MockContent page = new MockContent("baz");
         final MockHierarchyManager hm = prepareHM(page);
@@ -474,6 +502,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         verify(context);
     }
 
+    @Test
     public void testUuidLinksAreTransformedToAbsoluteLinksInWebContextWithoutAggregationState() throws IOException, TemplateException, RepositoryException {
         final MockContent page = new MockContent("baz");
         final MockHierarchyManager hm = prepareHM(page);
@@ -491,6 +520,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         verify(context);
     }
 
+    @Test
     public void testUuidLinksAreTransformedToFullUrlLinksInNonWebContext() throws IOException, TemplateException, RepositoryException {
         doTestUuidLinksAreTransformed(null, "== Some text... blah blah... <a href=\"http://myTests:1234/yay/foo/bar/baz.html\">Bleh</a> ! ==");
     }
@@ -527,6 +557,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         verify(sysMockCtx);
     }
 
+    @Test
     public void testUserPropertiesAreAvailable() throws IOException, TemplateException {
         tplLoader.putTemplate("test.ftl", "${user.name} is my name, is speak ${user.language}, I'm ${user.enabled?string('', 'not ')}enabled, and testProp has a value of ${user.testProp} !");
 
@@ -541,6 +572,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         verify(user);
     }
 
+    @Test
     public void testUserUnsupportedExceptionFallback() throws Exception {
         tplLoader.putTemplate("test.ftl", "${user.name} is my name, fullName: ${user.fullName!user.name}, testProp: ${user.testProp!'default'} !");
         final User user = createStrictMock(User.class);
@@ -554,18 +586,21 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         verify(user);
     }
 
+    @Test
     public void testNodeNameCanBeRenderedImplicitly() throws Exception {
         tplLoader.putTemplate("test.ftl", "This should output the node's name: ${content}");
         final Map root = createSingleValueMap("content", new MockContent("myNode"));
         assertRendereredContent("This should output the node's name: myNode", root, "test.ftl");
     }
 
+    @Test
     public void testNodeNameCanBeRenderedExplicitly() throws Exception {
         tplLoader.putTemplate("test.ftl", "This should also output the node's name: ${content.@name}");
         final Map root = createSingleValueMap("content", new MockContent("myOtherNode"));
         assertRendereredContent("This should also output the node's name: myOtherNode", root, "test.ftl");
     }
 
+    @Test
     public void testGivenLocaleTakesOverAnyContextLocale() throws IOException, TemplateException {
         tplLoader.putTemplate("test_en.ftl", "in english");
         tplLoader.putTemplate("test_de.ftl", "in deutscher Sprache");
@@ -575,11 +610,13 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContentWithSpecifiedLocale("en francais", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testSimpleI18NMessageCanBeUsedInTemplates() throws Exception {
         tplLoader.putTemplate("test.ftl", "ouais: ${i18n.get('testMessage')}");
         assertRendereredContentWithSpecifiedLocale("ouais: mon message en francais", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testSimpleI18NMessageFallsBackToEnglishIfNotSpecifiedGivenLanguage() throws Exception {
         tplLoader.putTemplate("test.ftl", "hop: ${i18n.get('testMessage')}");
         assertRendereredContentWithSpecifiedLocale("hop: my message in english", Locale.GERMAN, new HashMap(), "test.ftl");
@@ -591,51 +628,61 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 //        assertRendereredContentWithSpecifiedLocale("ouais: Console d'administration", Locale.FRENCH, new HashMap(), "test.ftl");
 //    }
 
+    @Test
     public void testCanUseDotSyntaxToGetASimpleI18NMessage() throws Exception {
         tplLoader.putTemplate("test.ftl", "ouais: ${i18n.testMessage}");
         assertRendereredContentWithSpecifiedLocale("ouais: mon message en francais", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testCanUseBracketSyntaxToGetASimpleI18NMessage() throws Exception {
         tplLoader.putTemplate("test.ftl", "ouais: ${i18n['testMessage']}");
         assertRendereredContentWithSpecifiedLocale("ouais: mon message en francais", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testMustUseMethodCallSyntaxToGetAParameterizedI18NMessage() throws Exception {
         tplLoader.putTemplate("test.ftl", "result: ${i18n.get('withOneParam', ['bar'])}");
         assertRendereredContentWithSpecifiedLocale("result: foo:bar", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testSupportsI18NMessagesWithMultipleParameters() throws Exception {
         tplLoader.putTemplate("test.ftl", "result: ${i18n.get('withMoreParams', ['one', 'two', 'three'])}");
         assertRendereredContentWithSpecifiedLocale("result: 1:one, 2:two, 3:three", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testOutputsInterrogationMarksAroundI18NKeyIfUnknown() throws IOException, TemplateException {
         tplLoader.putTemplate("test.ftl", "ouais: ${i18n['bleh.blah']}");
         assertRendereredContentWithSpecifiedLocale("ouais: ???bleh.blah???", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testI18NMessageParametersCanComeFromData() throws IOException, TemplateException {
         tplLoader.putTemplate("test.ftl", "result: ${i18n.get('withOneParam', [value])}");
         assertRendereredContentWithSpecifiedLocale("result: foo:wesh t'as vu", Locale.FRENCH, createSingleValueMap("value", "wesh t'as vu"), "test.ftl");
     }
 
+    @Test
     public void testCanPassBundleNameFromTemplateWithMethodCallSyntaxToGetSimple18NMessage() throws Exception {
         tplLoader.putTemplate("test.ftl", "result: ${i18n.get('testMessage', 'info.magnolia.freemarker.other')}");
         assertRendereredContentWithSpecifiedLocale("result: this is the other bundle", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testCanPassBundleNameFromTemplateWithMethodCallSyntaxToGetAParameterizedI18NMessage() throws Exception {
         tplLoader.putTemplate("test.ftl", "result: ${i18n.get('withOneParam', ['bar'], 'info.magnolia.freemarker.other')}");
         assertRendereredContentWithSpecifiedLocale("result: bling:bar", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testCanPassBundleNameFromTemplateAndSupportsI18NMessagesWithMultipleParameters() throws Exception {
         tplLoader.putTemplate("test.ftl", "result: ${i18n.get('withMoreParams', ['one', 'two', 'three'], 'info.magnolia.freemarker.other')}");
         assertRendereredContentWithSpecifiedLocale("result: bling:one, bling:two, bling:three", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testCanUseSharedVariables() throws Exception {
         fmConfig.addSharedVariable("mySharedVar", "default value");
         tplLoader.putTemplate("test.ftl", "shared: ${mySharedVar} - something from the context: ${foobar}");
@@ -643,6 +690,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContentWithoutCheckingContext("shared: default value - something from the context: chalala", ctx, "test.ftl");
     }
 
+    @Test
     public void testContextVariablesOverloadSharedVariables() throws Exception {
         fmConfig.addSharedVariable("mySharedVar", "default value");
         tplLoader.putTemplate("test.ftl", "shared: ${mySharedVar} - something from the context: ${foobar}");
@@ -651,6 +699,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContentWithoutCheckingContext("shared: overridden value - something from the context: chalala", ctx, "test.ftl");
     }
 
+    @Test
     public void testCanAccessStaticMethodsOfSharedVariables() throws Exception {
         // we still have to instantiate the class, but if it's registered as a sharedVariable, it has been instantiated by c2b anyhow
         fmConfig.addSharedVariable("foo", new FooBar());
@@ -658,12 +707,14 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContentWithoutCheckingContext("Coco: FooBar says hello", new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testEnumMembersCanBeUsedInTemplates() throws Exception {
         fmConfig.addSharedVariable("chalala", Chalala.class);
         tplLoader.putTemplate("test.ftl", "3: ${chalala.three}");
         assertRendereredContentWithoutCheckingContext("3: three", new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testEnumCanBeComparedWith() throws Exception {
         fmConfig.addSharedVariable("chalala", Chalala.class);
         fmConfig.addSharedVariable("three", Chalala.three);
@@ -672,6 +723,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContentWithoutCheckingContext("true, false, false, true", new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testEnumCanBeListed() throws Exception {
         fmConfig.addSharedVariable("chalala", Chalala.class);
         tplLoader.putTemplate("test.ftl", "" +
@@ -682,6 +734,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
                 "list enum by values: one two three ", new HashMap(), "test.ftl");
     }
 
+    @Test
     public void testCanAccessEnumPropertiesOfVariables() throws Exception {
         fmConfig.addSharedVariable("shared", new EnumContainer(Chalala.two));
         final Map ctx = createSingleValueMap("fromContext", new EnumContainer(Chalala.one));
@@ -689,6 +742,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContentWithoutCheckingContext("shared: two - from context: one", ctx, "test.ftl");
     }
 
+    @Test
     public void testUseCombinationOfPadSubStringAndTrimForSafeSubstring() throws Exception {
         tplLoader.putTemplate("test.ftl", "[#assign foo='a fairly short string']\n" +
                 "${foo?right_pad(50)?substring(0, 50)?trim}");

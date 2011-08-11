@@ -44,20 +44,17 @@ import org.junit.Test;
  * @version $Id$
  */
 public class MockSessionTest {
-
     @Test
     public void testConstructionProperlyWiresWorkspaceToSession() {
         final MockSession mockSession = new MockSession("test");
         assertEquals(mockSession, mockSession.getWorkspace().getSession());
     }
-
     @Test
     public void testConstructionProperlyWiresSessionToRoot() throws Exception {
         MockSession session = new MockSession("test");
         MockNode root = (MockNode) session.getRootNode();
         assertEquals(session, root.getSession());
     }
-
     @Test
     public void testGetNodeFromStringe() throws Exception {
         final MockSession mockSession = new MockSession("test");
@@ -67,7 +64,6 @@ public class MockSessionTest {
 
         assertEquals(child, mockSession.getNode("/child"));
     }
-
     @Test
     public void testGetPropertyFromString() throws Exception {
         final MockSession mockSession = new MockSession("test");
@@ -83,7 +79,6 @@ public class MockSessionTest {
 
         assertEquals(property, mockSession.getProperty("/child/childOfChild/property"));
     }
-
     @Test
     public void testNodeExistsFromString() throws Exception {
         final MockSession mockSession = new MockSession("test");

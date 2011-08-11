@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.filters;
 
+import static org.junit.Assert.*;
+
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -41,6 +43,8 @@ import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.voters.URIStartsWithVoter;
 import org.easymock.EasyMock;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.Filter;
@@ -58,18 +62,19 @@ import static org.easymock.classextension.EasyMock.*;
 
 
 /**
- * @author fgiust
- * @version $Revision$ ($Author$)
+ * @version $Id$
  */
 public class FilterTest extends MgnlTestCase {
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         // shunt log4j
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
+    @Test
     public void testInitialization() throws IOException, RepositoryException, ServletException{
         String conf =
             "/server/filters@type=mgnl:content\n" +
@@ -106,6 +111,7 @@ public class FilterTest extends MgnlTestCase {
         return mf;
     }
 
+    @Test
     public void testDecoratedFilter() throws IOException, RepositoryException, ServletException {
         String conf =
             "/server/filters@type=mgnl:content\n" +
@@ -135,6 +141,7 @@ public class FilterTest extends MgnlTestCase {
         verify(filterConfig, request, response, chain);
     }
 
+    @Test
     public void testBypassing() throws IOException, RepositoryException, ServletException {
         // first filter ignores all uris starting with a .
         String conf =

@@ -33,20 +33,22 @@
  */
 package info.magnolia.module.admininterface;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 
 /**
  * TODO : review, rewrite.
  *
- * @author Fabrizio Giustina
- * @version $Revision$ ($Author$)
+ * @version $Id$
  */
-public class SaveHandlerImplTest extends TestCase {
+public class SaveHandlerImplTest {
 
     /**
      * Test for rich editor cleanup. IE often insert a br at the beginning of a paragraph.
      */
+    @Test
     public void testGetRichEditValueStrCleanExplorerPs() {
         SaveHandlerImpl save = new SaveHandlerImpl();
         assertEquals("aaa\n\n  bbb", save.cleanLineBreaks("<P>aaa</P>\r\n<P><BR>bbb</P>", -1));

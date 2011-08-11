@@ -33,22 +33,23 @@
  */
 package info.magnolia.module.cache.filter;
 
+import static org.junit.Assert.*;
+
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
+import org.junit.Test;
 
 
 /**
- * Tests for CacheResponseWrapper.
- * @author dlipp
+ * @version $Id$
  */
-public class CacheResponseWrapperTest extends TestCase {
+public class CacheResponseWrapperTest {
 
+    @Test
     public void testSetHeader() {
         IMocksControl mocksControl = EasyMock.createNiceControl();
         HttpServletResponse mockResponse = mocksControl.createMock(HttpServletResponse.class);
@@ -66,6 +67,7 @@ public class CacheResponseWrapperTest extends TestCase {
         assertEquals(1, names.size());
     }
 
+    @Test
     public void testGetLastModified() {
         IMocksControl mocksControl = EasyMock.createNiceControl();
         HttpServletResponse mockResponse = mocksControl.createMock(HttpServletResponse.class);

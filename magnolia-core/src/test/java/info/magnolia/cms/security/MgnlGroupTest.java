@@ -37,21 +37,21 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.context.MgnlContext;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.util.Collection;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class MgnlGroupTest extends TestCase {
+public class MgnlGroupTest {
     private MgnlGroupManager gman;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         final SecuritySupportImpl sec = new SecuritySupportImpl();
         sec.setGroupManager(new MgnlGroupManager());
         sec.setRoleManager(new MgnlRoleManager());
@@ -63,13 +63,13 @@ public class MgnlGroupTest extends TestCase {
         gman = new MgnlGroupManager();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testGetRoles() throws AccessDeniedException {
         final Collection rolesA = gman.getGroup("groupA").getRoles();
         assertEquals(2, rolesA.size());
@@ -80,6 +80,7 @@ public class MgnlGroupTest extends TestCase {
         assertEquals(0, rolesC.size());
     }
 
+    @Test
     public void testGetRolesWithoutDuplicates() throws AccessDeniedException {
         final Collection rolesB = gman.getGroup("groupB").getRoles();
         assertEquals(2, rolesB.size());
@@ -90,6 +91,7 @@ public class MgnlGroupTest extends TestCase {
         assertEquals(0, rolesC.size());
     }
 
+    @Test
     public void testGetGroupsReturnsDirectGroups() throws AccessDeniedException {
         final Collection groupsA = gman.getGroup("groupA").getGroups();
         assertEquals(1, groupsA.size());
@@ -99,6 +101,7 @@ public class MgnlGroupTest extends TestCase {
         assertEquals(0, groupsD.size());
     }
 
+    @Test
     public void testGetGroupsReturnsDirectGroupsWithoutDuplicates() throws AccessDeniedException {
         final Collection groupsB = gman.getGroup("groupB").getGroups();
         assertEquals(2, groupsB.size());

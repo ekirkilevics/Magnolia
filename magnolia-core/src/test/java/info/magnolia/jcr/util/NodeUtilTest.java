@@ -78,7 +78,6 @@ public class NodeUtilTest {
         second = root.addNode(SECOND_CHILD);
         third = root.addNode(THIRD_CHILD);
     }
-
     @Test
     public void testHasMixin() throws Exception {
         final String mixin1 = "mixin1";
@@ -92,7 +91,6 @@ public class NodeUtilTest {
     public void testHasMixinFailsWithEmptyMixin() throws Exception {
         NodeUtil.hasMixin(root, null);
     }
-
     @Test
     public void testUnwrap() throws Exception {
         final Version version = mock(Version.class);
@@ -101,7 +99,6 @@ public class NodeUtilTest {
 
         assertEquals(root, NodeUtil.unwrap(wrapper));
     }
-
     @Test
     public void testOrderBeforeWithExistingNodeAndSibling() throws Exception {
         NodeUtil.orderBefore(third, FIRST_CHILD);
@@ -111,7 +108,6 @@ public class NodeUtilTest {
         assertEquals(first, kidsIterator.next());
         assertEquals(second, kidsIterator.next());
     }
-
     @Test
     public void testOrderBeforeWithNullSibling() throws Exception {
         // should result in putting firstChild at the end of the children
@@ -122,7 +118,6 @@ public class NodeUtilTest {
         assertEquals(third, orderedKids.next());
         assertEquals(first, orderedKids.next());
     }
-
     @Test
     public void testOrderAfterWithExistingNodeAndSibling() throws Exception {
         NodeUtil.orderAfter(third, FIRST_CHILD);
@@ -132,7 +127,6 @@ public class NodeUtilTest {
         assertEquals(third, kidsIterator.next());
         assertEquals(second, kidsIterator.next());
     }
-
     @Test
     public void testOrderAfterWithNullSibling() throws RepositoryException {
         // should result in putting thirdChild at the begin of the children
@@ -142,7 +136,6 @@ public class NodeUtilTest {
         assertEquals(first, orderedKids.next());
         assertEquals(second, orderedKids.next());
     }
-
     @Test
     public void testOrderFirst() throws RepositoryException {
         NodeUtil.orderFirst(second);
@@ -151,7 +144,6 @@ public class NodeUtilTest {
         assertEquals(first, orderedKids.next());
         assertEquals(third, orderedKids.next());
     }
-
     @Test
     public void testOrderLast() throws RepositoryException {
         NodeUtil.orderLast(second);
@@ -160,7 +152,6 @@ public class NodeUtilTest {
         assertEquals(third, orderedKids.next());
         assertEquals(second, orderedKids.next());
     }
-
     @Test
     public void testCreatePath() throws RepositoryException {
         final String pathToCreate = "/xxx/yyy/zzz";
@@ -168,14 +159,12 @@ public class NodeUtilTest {
         assertNotNull(zzz);
         assertEquals(PropertyType.TYPENAME_STRING, zzz.getPrimaryNodeType().getName());
     }
-
     @Test
     public void testCreatePathDoesntCreateNewWhenExisting() throws RepositoryException {
         Node returnedNode = NodeUtil.createPath(root, FIRST_CHILD, PropertyType.TYPENAME_STRING);
         assertNotNull(returnedNode);
         assertEquals("createPath was called with existing subpath: existing node should be returned - not a new instance!", first, returnedNode);
     }
-
     @Test
     public void testVisit() throws RepositoryException {
         final AtomicInteger counter = new AtomicInteger(0);
@@ -187,7 +176,6 @@ public class NodeUtilTest {
         });
         assertEquals(4, counter.get());
     }
-
     @Test
     public void testPostVisit() throws RepositoryException {
 
@@ -214,7 +202,6 @@ public class NodeUtilTest {
         assertEquals(THIRD_CHILD, names.get(2));
         assertEquals(MockNode.ROOT_NODE_NAME, names.get(3));
     }
-
     @Test
     public void testGetNodes() throws RepositoryException {
         first.addNode("alpha", MgnlNodeType.NT_CONTENT);
@@ -227,7 +214,6 @@ public class NodeUtilTest {
         assertEquals("gamma", iterator.next().getName());
         assertTrue(!iterator.hasNext());
     }
-
     @Test
     public void testGetNodeWithContentType() throws RepositoryException {
         root.addNode("alpha", MgnlNodeType.NT_CONTENT);
@@ -240,7 +226,6 @@ public class NodeUtilTest {
         assertEquals("gamma", iterator.next().getName());
         assertTrue(!iterator.hasNext());
     }
-
     @Test
     public void testGetNodesWithNodeFilter() throws RepositoryException {
         first.addNode("alpha", MgnlNodeType.NT_CONTENT);

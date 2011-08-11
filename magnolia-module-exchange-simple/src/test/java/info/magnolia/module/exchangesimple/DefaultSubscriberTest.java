@@ -33,11 +33,7 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import java.net.URLConnection;
-import java.util.ArrayList;
-
-import javax.jcr.ImportUUIDBehavior;
-
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -53,10 +49,23 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
 
+import java.net.URLConnection;
+import java.util.ArrayList;
+
+import javax.jcr.ImportUUIDBehavior;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * @version $Id$
+ */
 public class DefaultSubscriberTest extends RepositoryTestCase {
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.setImplementation(Subscriber.class, DefaultSubscriber.class);
         ComponentsTestUtil.setImplementation(ActivationManager.class, DefaultActivationManager.class);
@@ -64,7 +73,8 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ActivationManager man = Components.getComponentProvider().newInstance(ActivationManager.class);
         man.setSubscribers(new ArrayList());
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
@@ -73,6 +83,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         super.tearDown();
     }
 
+    @Test
     public void testDefaultTimeout() throws Exception {
         BootstrapUtil.bootstrap(new String[]{"/mgnl-bootstrap/exchange-simple/config.server.activation.xml"}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
@@ -86,6 +97,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         assertEquals(600000, subscriber.getReadTimeout());
     }
 
+    @Test
     public void testCustomTimeout() throws Exception {
         BootstrapUtil.bootstrap(new String[]{"/mgnl-bootstrap/exchange-simple/config.server.activation.xml"}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
@@ -103,6 +115,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         assertEquals(4000, subscriber.getReadTimeout());
     }
 
+    @Test
     public void testTimeoutSet() throws Exception {
         BootstrapUtil.bootstrap(new String[]{"/mgnl-bootstrap/exchange-simple/config.server.activation.xml"}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);

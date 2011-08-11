@@ -33,29 +33,30 @@
  */
 package info.magnolia.link;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.BinaryMockNodeData;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.context.WebContext;
-import info.magnolia.context.MgnlContext;
-import static org.easymock.classextension.EasyMock.*;
+import info.magnolia.test.mock.MockUtil;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
+
 /**
- * @author philipp
  * @version $Id$
- *
  */
 public abstract class BaseLinkTest extends MgnlTestCase {
 
@@ -79,7 +80,8 @@ public abstract class BaseLinkTest extends MgnlTestCase {
 
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         MockHierarchyManager hm = MockUtil.createHierarchyManager(website);
@@ -108,8 +110,4 @@ public abstract class BaseLinkTest extends MgnlTestCase {
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
 }

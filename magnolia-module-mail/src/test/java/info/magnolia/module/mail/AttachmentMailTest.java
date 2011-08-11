@@ -33,17 +33,20 @@
  */
 package info.magnolia.module.mail;
 
+import static org.junit.Assert.*;
+
 import info.magnolia.module.mail.templates.MailAttachment;
 
 import java.io.File;
 import java.net.URL;
 
+import org.junit.Test;
+
 /**
- * AttachmentMailTest.
- * @author fgiust
- * @version $Revision$ ($Author$)
+ * @version $Id$
  */
 public class AttachmentMailTest extends AbstractMailTest {
+    @Test
     public void testAttachmentFile() throws Exception {
         String file = getResourcePath(TEST_FILE_PDF);
         MailAttachment att = new MailAttachment(new File(file).toURL(), "att");
@@ -52,5 +55,4 @@ public class AttachmentMailTest extends AbstractMailTest {
         assertTrue(f.exists());
         assertEquals(f.getAbsolutePath(), file);
     }
-
 }

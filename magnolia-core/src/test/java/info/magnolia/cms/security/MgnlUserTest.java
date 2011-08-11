@@ -38,22 +38,22 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import javax.jcr.RepositoryException;
 import java.util.Collection;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class MgnlUserTest extends TestCase {
+public class MgnlUserTest {
     private MgnlUserManager uman;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         final SecuritySupportImpl sec = new SecuritySupportImpl();
         sec.setGroupManager(new MgnlGroupManager());
         sec.setRoleManager(new MgnlRoleManager());
@@ -78,19 +78,20 @@ public class MgnlUserTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        super.tearDown();
     }
 
+    @Test
     public void testGetGroupsReturnsOnlyDirectGroups() {
         final Collection<String> g = uman.getUser("julien").getGroups();
         assertEquals(1, g.size());
         assertEquals("groupC", g.iterator().next());
     }
 
+    @Test
     public void testGetGroupsReturnsDirectGroupsWithoutDuplicates() {
         final Collection<String> groups = uman.getUser("georges").getGroups();
         assertEquals(2, groups.size());
@@ -98,6 +99,7 @@ public class MgnlUserTest extends TestCase {
         assertTrue(groups.contains("groupB"));
     }
 
+    @Test
     public void testGetAllGroupsReturnsDirectAndInheritedGroups() {
         final Collection<String> groups = uman.getUser("georges").getAllGroups();
         assertEquals(4, groups.size());
@@ -107,6 +109,7 @@ public class MgnlUserTest extends TestCase {
         assertTrue(groups.contains("groupD"));
     }
 
+    @Test
     public void testGetRolesReturnsDirectRoles() {
         final Collection<String> roles = uman.getUser("georges").getRoles();
         assertEquals(3, roles.size());
@@ -115,6 +118,7 @@ public class MgnlUserTest extends TestCase {
         assertTrue(roles.contains("roleX"));
     }
 
+    @Test
     public void testGetRolesReturnsDirectRolesWithoutDuplicates() {
         final Collection<String> roles = uman.getUser("julien").getRoles();
         assertEquals(2, roles.size());
@@ -122,6 +126,7 @@ public class MgnlUserTest extends TestCase {
         assertTrue(roles.contains("roleX"));
     }
 
+    @Test
     public void testGetAllRolesReturnsDirectAndInheritedRoles() throws AccessDeniedException {
         final Collection<String> rolesG = uman.getUser("georges").getAllRoles();
         assertEquals(5, rolesG.size());

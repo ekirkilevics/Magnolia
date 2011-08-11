@@ -98,7 +98,6 @@ public class GuiceScopesTest {
     @SessionScoped
     public static class MockSessionScopedObject {
     }
-
     @Test
     public void testContextProvidersWhenContextSet() {
         // GIVEN
@@ -124,7 +123,6 @@ public class GuiceScopesTest {
     }
 
     // TODO its unfortunate that these throw ProvisionException
-
     @Test
     public void testContextProvidersWhenWebContextSet() {
         // GIVEN
@@ -142,7 +140,6 @@ public class GuiceScopesTest {
         assertSame(context, component.webContextProvider.get());
         assertSame(aggregationState, component.aggregationStateProvider.get());
     }
-
     @Test
     public void testServletProvidersWhenWebContextSet() {
         // GIVEN
@@ -164,7 +161,6 @@ public class GuiceScopesTest {
         assertSame(session, component.sessionProvider.get());
         assertSame(response, component.responseProvider.get());
     }
-
     @Test
     public void testServletProvidersFailWhenWebContextNotSet() {
         // GIVEN
@@ -191,7 +187,6 @@ public class GuiceScopesTest {
         } catch (ProvisionException expected) {
         }
     }
-
     @Test
     public void testRequestScope() {
         // GIVEN
@@ -231,7 +226,6 @@ public class GuiceScopesTest {
 
         // THEN we expect an exception
     }
-
     @Test
     public void testSessionScope() {
         // GIVEN

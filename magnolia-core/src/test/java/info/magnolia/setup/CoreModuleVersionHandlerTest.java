@@ -33,6 +33,7 @@
  */
 package info.magnolia.setup;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -50,21 +51,25 @@ import java.util.List;
 
 import javax.jcr.RepositoryException;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "./src/test/resources");
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         System.clearProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR);
         super.tearDown();
     }
@@ -85,6 +90,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         };
     }
 
+    @Test
     public void testPngSwfMimeTypesOnInstall() throws ModuleManagementException, RepositoryException {
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
 
@@ -92,6 +98,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("application/x-shockwave-flash", getMimeTypePropertyValue("swf"));
     }
 
+    @Test
     public void testPngSwfMimeTypesOnUpdateFrom35x() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
@@ -113,6 +120,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("application/x-shockwave-flash", getMimeTypePropertyValue("swf"));
     }
 
+    @Test
     public void testPngSwfMimeTypesOnUpdateFrom35xWithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a 3pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
@@ -134,6 +142,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("custom-type-for-swf", getMimeTypePropertyValue("swf"));
     }
 
+    @Test
     public void testPngSwfMimeTypesOnUpdateFrom364() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
@@ -163,6 +172,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      * customized the mime types values, or updating from 3.6.7, where the values would have been fixed
      * by update tasks, is equivalent.
      */
+    @Test
     public void testPngSwfMimeTypesOnUpdateFrom364WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
@@ -186,6 +196,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("custom-type-for-swf", getMimeTypePropertyValue("swf"));
     }
 
+    @Test
     public void testPngSwfMimeTypesOnUpdateFrom401() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
@@ -217,6 +228,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      * customized the mime types values, or updating from 4.0.3, where the values would have been fixed
      * by update tasks, is equivalent.
      */
+    @Test
     public void testPngSwfMimeTypesOnUpdateFrom401WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
@@ -242,6 +254,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("custom-type-for-swf", getMimeTypePropertyValue("swf"));
     }
 
+    @Test
     public void testPngSwfMimeTypesOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
@@ -273,6 +286,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      * customized the mime types values, or updating from 4.1.1, where the values would have been fixed
      * by update tasks, is equivalent.
      */
+    @Test
     public void testPngSwfMimeTypesOnUpdateFrom410WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
@@ -309,6 +323,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     /**
      * test unicode normalization filter and the new filter ordering (update version to 4.3).
      */
+    @Test
     public void testUnicodeNormalizerAndFilterOrderOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
         setupConfigNode("/server/filters/");
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute", ItemType.CONTENTNODE);
@@ -348,6 +363,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertFalse(updatedFilters.hasNext());
     }
 
+    @Test
     public void testMP4MimeTypesOnInstall() throws ModuleManagementException, RepositoryException {
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
 
@@ -365,6 +381,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("video/mp4", getMimeTypePropertyValue("mp4"));
     }
 
+    @Test
     public void testMP4MimeTypesOnUpdateTo445() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
@@ -396,6 +413,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("mov", getMimePropertyValue("mov", "extension"));
     }
 
+    @Test
     public void testMP4MimeTypesOnUpdateTo445WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
@@ -438,6 +456,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("custom-icon-for-mov", getMimePropertyValue("mov", "icon"));
     }
 
+    @Test
     public void testDefaultMP4MimeTypeOnUpdateTo445WithUserFixedValue() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");

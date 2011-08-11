@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.filters;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import javax.jcr.RepositoryException;
@@ -47,6 +49,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import info.magnolia.cms.core.AggregationState;
@@ -67,27 +71,30 @@ import info.magnolia.voting.Voting;
 import static org.easymock.EasyMock.*;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class ServletDispatchingFilterTest extends MgnlTestCase {
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
     }
 
+    @Test
     public void testEscapeMetaCharacters() {
         assertEquals("a\\{b\\)c\\(d\\}e\\^f\\]g\\[h\\*i\\$j\\+kl",
                 Mapping.escapeMetaCharacters("a{b)c(d}e^f]g[h*i$j+kl"));
     }
 
+    @Test
     public void testSupportsDefaultMapping() throws Exception {
         shouldMatch("/dms/some-doc.pdf", "", "/dms/some-doc.pdf", "/");
         shouldMatch(null, "", "/", "/");
     }
 
+    @Test
     public void testSupportsPathMapping() throws Exception {
         shouldMatch("/hey/ho/lets/go", "/ramones", "/ramones/hey/ho/lets/go", "/ramones/*");
         shouldMatch(null, "/ramones", "/ramones/", "/ramones/*");
@@ -97,10 +104,12 @@ public class ServletDispatchingFilterTest extends MgnlTestCase {
         shouldBypass("/ramones", "/ramones/*");
     }
 
+    @Test
     public void testSupportsExtensionMapping() throws Exception {
         shouldMatch(null, "/dms/some-doc.pdf", "/dms/some-doc.pdf", "*.pdf");
     }
 
+    @Test
     public void testSupportsRegexMappings() throws Exception {
         // the part of the request following the pattern match is the path info:
         shouldMatch("/123/456", "/test", "/test/123/456", "regex:/[a-z]{4}");
@@ -123,15 +132,18 @@ public class ServletDispatchingFilterTest extends MgnlTestCase {
         shouldMatch("/wEsh", "/foo/bar473", "/foo/bar473/wEsh", "regex:^/foo/bar[0-9]{3}");
     }
 
+    @Test
     public void testShouldNotBypassWhenPathMappingMatches() throws Exception {
         shouldMatch("/some-doc.pdf", "/$d}^(m)+{s*", "/$d}^(m)+{s*/some-doc.pdf", "/$d}^(m)+{s*/*");
     }
 
+    @Test
     public void testShouldNotBypassWhenExactMappingMatches() throws Exception {
         shouldMatch(null, "/exactMatch", "/exactMatch", "/exactMatch");
         shouldMatch(null, "/somepath*", "/somepath*", "/somepath*");
     }
 
+    @Test
     public void testShouldBypassWhenMappingDoesNotMatch() throws Exception {
         shouldBypass("/bleh/foo.bar", "/dms/*");
         shouldBypass("/exactMatch/rightPathInfo", "/exactMatch");
@@ -139,16 +151,19 @@ public class ServletDispatchingFilterTest extends MgnlTestCase {
         shouldBypass("/nonSpecConformantMapping*/somePage.html", "/nonSpecConformantMapping*");
     }
 
+    @Test
     public void testShouldBypassWhenMappingDoesNotMatchMAGNOLIA1984() throws Exception {
         shouldBypass("/modules/dms/managingdocs.html", "/dms/*");
     }
 
+    @Test
     public void testPathInfoShouldAdhereToServletSpec() throws Exception {
         shouldMatch("/pathInfo.html", "/servlet", "/servlet/pathInfo.html", "/servlet/*");
         // The following doesn't work - spec isn't clear as to whether it should or not
         //shouldMatch("/test", "/some-some.foo", "/some-some.foo/test", "*.foo");
     }
 
+    @Test
     public void testPathInfoShouldStateWhateverIsAfterTheRegexMapping() throws Exception {
         shouldMatch("/test", "/some-doc.pdf", "/some-doc.pdf/test", "regex:.*\\.pdf");
     }
@@ -213,6 +228,7 @@ public class ServletDispatchingFilterTest extends MgnlTestCase {
         verify(chain, res, req, servlet, ctx);
     }
 
+    @Test
     public void testWrapperRespectsForwards() throws RepositoryException, IOException, Content2BeanException, ServletException {
 
         String testContent = "" +

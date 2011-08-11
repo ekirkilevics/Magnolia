@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.delta;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
@@ -50,16 +51,18 @@ import info.magnolia.test.RepositoryTestCase;
 
 import java.util.List;
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
- *
- * @author ochytil
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class RegisterServletTaskTest extends RepositoryTestCase {
     private InstallContextImpl installContext;
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
         ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
         ComponentsTestUtil.setInstance(ModuleManager.class, new ModuleManagerImpl(null, null, null, null));
@@ -69,6 +72,7 @@ public class RegisterServletTaskTest extends RepositoryTestCase {
         ContentUtil.createPath(hm, "/server/filters/servlets", ItemType.CONTENT);
     }
 
+    @Test
     public void testRegisterServletTaskWithEmptyMappings() throws Exception {
         ServletDefinition sd = new ServletDefinition();
         sd.addMapping("");
@@ -85,6 +89,7 @@ public class RegisterServletTaskTest extends RepositoryTestCase {
         assertEquals("Empty mappings configuration is not supported and servlet was not installed.", messageForTestModule.get(0).getMessage());
     }
 
+    @Test
     public void testRegisterServletTaskWithMappings() throws Exception {
         ServletDefinition sd = new ServletDefinition();
         sd.addMapping(null);

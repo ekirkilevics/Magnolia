@@ -33,18 +33,20 @@
  */
 package info.magnolia.freemarker.models;
 
-import freemarker.template.TemplateModelException;
-import freemarker.template.utility.DeepUnwrap;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.test.mock.BinaryMockNodeData;
-import junit.framework.TestCase;
+
+import org.junit.Test;
+
+import freemarker.template.TemplateModelException;
+import freemarker.template.utility.DeepUnwrap;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class BinaryNodeDataModelTest extends TestCase {
+public class BinaryNodeDataModelTest {
+    @Test
     public void testCanBeUnwrappedByDeepUnWrap() throws TemplateModelException {
         final NodeData c = new BinaryMockNodeData("test");
         final BinaryNodeDataModel model = new BinaryNodeDataModel(c, new MagnoliaObjectWrapper(null /* not needed in the context of this test*/));

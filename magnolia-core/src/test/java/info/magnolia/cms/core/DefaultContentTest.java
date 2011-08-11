@@ -33,13 +33,8 @@
  */
 package info.magnolia.cms.core;
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.getCurrentArguments;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -71,6 +66,7 @@ import javax.jcr.version.VersionIterator;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.easymock.IAnswer;
+import org.junit.Test;
 
 /**
  * @author gjoseph
@@ -82,6 +78,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         void call() throws Exception;
     }
 
+    @Test
     public void testAddMixin() throws IOException, RepositoryException{
         final Content content = getTestContent();
         final String repoName = content.getHierarchyManager().getName();
@@ -104,6 +101,7 @@ public class DefaultContentTest extends RepositoryTestCase {
     }
 
 
+    @Test
     public void testReadingANodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
         NodeData nodeData = content.getNodeData("nd1");
@@ -111,6 +109,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals(true, nodeData.isExist());
     }
 
+    @Test
     public void testThatReadingANonExistingNodeDataDoesNotFail() throws IOException, RepositoryException{
         Content content = getTestContent();
         // this should not fail
@@ -118,6 +117,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals(false, nodeData.isExist());
     }
 
+    @Test
     public void testSettingAnExistingNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
         // this should not fail
@@ -126,6 +126,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals("test", nodeData.getString());
     }
 
+    @Test
     public void testSettingANonExistingNodeDataCreatesANewNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
         Value value = createValue("test");
@@ -135,6 +136,7 @@ public class DefaultContentTest extends RepositoryTestCase {
     }
 
 
+    @Test
     public void testCreatingAnEmptyNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
         // this should not fail
@@ -143,6 +145,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals(true, nodeData.isExist());
     }
 
+    @Test
     public void testCreatingAnEmptyNodeDataSetsADefaultValueIfPossible() throws IOException, RepositoryException {
         Content content = getTestContent();
         NodeData nodeData = content.createNodeData("nd2", PropertyType.BOOLEAN);
@@ -150,6 +153,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals(PropertyType.BOOLEAN, nodeData.getType());
     }
 
+    @Test
     public void testCreatingAndSettingANodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
         // this should not fail
@@ -157,6 +161,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals("test", nodeData.getString());
     }
 
+    @Test
     public void testCreatingAndSettingABooleanNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
         // this actually creates a string property having an empty string value
@@ -169,12 +174,14 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals(true, nodeData.getBoolean());
     }
 
+    @Test
     public void testCreatingAnExistingNodeDataDoesNotFail() throws IOException, RepositoryException{
         Content content = getTestContent();
         NodeData nodeData = content.createNodeData("nd1", "other");
         assertEquals("other", nodeData.getString());
     }
 
+    @Test
     public void testCreatingAndReadingABinaryNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
         String binaryContent = "the content";
@@ -190,6 +197,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         //assertEquals("filename", nodeData.getAttribute(FileProperties.PROPERTY_FILENAME));
     }
 
+    @Test
     public void testThatReadingANonExistingNodeDataReturnsAnEmptyNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
         NodeData nd = content.getNodeData("nirvana");
@@ -200,6 +208,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals("", nd.getAttribute("other"));
     }
 
+    @Test
     public void testThatReadingANonExistingNodeDataReturnsAnEmptyNodeDataWhichIsUnmutable() throws IOException, RepositoryException{
         Content content = getTestContent();
         NodeData nd = content.getNodeData("nirvana");
@@ -284,6 +293,7 @@ public class DefaultContentTest extends RepositoryTestCase {
     //        am.setPermissionList(permissions);
     //    }
 
+    @Test
     public void testIsNodeTypeForNodeChecksPrimaryType() throws RepositoryException {
         final Node node = createMock(Node.class);
         final Property nodeTypeProp = createStrictMock(Property.class);
@@ -304,6 +314,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         verify(node, nodeTypeProp);
     }
 
+    @Test
     public void testIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes() throws RepositoryException {
         doTestIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes(true, "foo", "foo");
         doTestIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes(false, "bar", "foo");
@@ -327,6 +338,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         verify(node, nodeTypeProp, nodeFrozenTypeProp);
     }
 
+    @Test
     public void testIsNodeTypeForNodeDoesNotCheckFrozenTypeIfTheRequestedTypeIsFrozenType()throws RepositoryException {
         final Node node = createStrictMock(Node.class);
         final Property nodeTypeProp = createStrictMock(Property.class);
@@ -341,6 +353,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         verify(node, nodeTypeProp);
     }
 
+    @Test
     public void testNameFilteringWorksForBothBinaryAndNonBinaryProperties() throws Exception {
         String contentProperties = StringUtils.join(Arrays.asList(
                 "/somepage/mypage@type=mgnl:content",
@@ -426,6 +439,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals(true, e.getDate().before(Calendar.getInstance()));
     }
 
+    @Test
     public void testStringPropertiesCanBeRetrievedByStreamAndViceVersa() throws Exception {
         String contentProperties = StringUtils.join(Arrays.asList(
                 "/hello/foo=bar",
@@ -453,6 +467,7 @@ public class DefaultContentTest extends RepositoryTestCase {
     }
 
 
+    @Test
     public void testModDate() throws IOException, RepositoryException{
         Content content = getTestContent();
         Calendar modDate = content.getMetaData().getModificationDate();
@@ -466,6 +481,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertNotSame(creationDate, modDate);
     }
 
+    @Test
     public void testDelete() throws Exception {
         // GIVEN content node with version history
         final Content content = getTestContent();
@@ -509,6 +525,5 @@ public class DefaultContentTest extends RepositoryTestCase {
         ValueFactory valueFactory = MgnlContext.getHierarchyManager("website").getWorkspace().getSession().getValueFactory();
         return NodeDataUtil.createValue(valueObj, valueFactory);
     }
-
 
 }

@@ -51,8 +51,6 @@ import org.junit.Test;
  * @version $Id$
  */
 public class MockValueTest {
-
-
     @Test
     public void testConstructionWithProvidedType() throws RepositoryException {
         final String reference = "identifier";
@@ -65,7 +63,6 @@ public class MockValueTest {
         final MockValue jcrValue = new MockValue(objectValue);
         assertEquals(expectedType, jcrValue.getType());
     }
-
     @Test
     public void testGetBinary() throws Exception {
         Object objectValue = new Binary() {
@@ -97,7 +94,6 @@ public class MockValueTest {
     public void testGetBinaryWithWrongValueType() throws Exception {
         new MockValue(Boolean.FALSE).getBinary();
     }
-
     @Test
     public void testGetBoolean() throws Exception {
         Object objectValue = Boolean.TRUE;
@@ -109,7 +105,6 @@ public class MockValueTest {
     public void testGetBooleanmWithWrongValueType() throws Exception {
         new MockValue(BigDecimal.ONE).getBoolean();
     }
-
     @Test
     public void testGetDate() throws Exception {
         Object objectValue = Calendar.getInstance();
@@ -122,7 +117,6 @@ public class MockValueTest {
     public void testGetDateWithWrongValueType() throws Exception {
         new MockValue(Boolean.FALSE).getDate();
     }
-
     @Test
     public void testGetDecimal() throws Exception {
         Object objectValue = BigDecimal.valueOf(123l);
@@ -134,7 +128,6 @@ public class MockValueTest {
     public void testGetDecimalWithWrongValueType() throws Exception {
         new MockValue(Boolean.FALSE).getDecimal();
     }
-
     @Test
     public void testGetDouble() throws Exception {
         Object objectValue = Double.valueOf(123);
@@ -146,14 +139,12 @@ public class MockValueTest {
     public void testGetDoubleWithWrongValueType() throws Exception {
         new MockValue(Boolean.FALSE).getDouble();
     }
-
     @Test
     public void testGetLength() throws Exception {
         assertEquals(6, new MockValue("string").getLength());
         assertEquals(5, new MockValue(Boolean.FALSE).getLength());
         assertEquals(2, new MockValue(BigDecimal.valueOf(12)).getLength());
     }
-
     @Test
     public void testGetLongWithLong() throws Exception {
         Object objectValue = 123l;
@@ -165,7 +156,6 @@ public class MockValueTest {
     public void testGetLongWithWrongValueType() throws Exception {
         new MockValue(Boolean.FALSE).getLong();
     }
-
     @Test
     public void testGetStream() throws Exception {
         Object objectValue = new InputStream() {
@@ -182,7 +172,6 @@ public class MockValueTest {
     public void testGetStreamWithWrongValueType() throws Exception {
         new MockValue(Boolean.FALSE).getStream();
     }
-
     @Test
     public void testGetStringWithString() throws Exception {
         Object objectValue = "String";
@@ -194,7 +183,6 @@ public class MockValueTest {
     public void testGetStringWithWrongValueType() throws Exception {
         new MockValue(Boolean.FALSE).getString();
     }
-
     @Test
     public void testGetType() throws Exception {
         assertEquals(PropertyType.STRING, new MockValue("string").getType());

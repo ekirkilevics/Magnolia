@@ -50,36 +50,37 @@ import java.util.Properties;
 
 import javax.jcr.RepositoryException;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class DefaultComponentProviderTest extends TestCase {
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+public class DefaultComponentProviderTest {
+    @Before
+    public void setUp() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
         SystemProperty.clear();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
         SystemProperty.clear();
-        super.tearDown();
     }
 
+    @Test
     public void testReturnsGivenConcreteClassIfNoneConfigured() {
         final DefaultComponentProvider componentProvider = new DefaultComponentProvider(new Properties());
         Object obj = componentProvider.getSingleton(TestImplementation.class);
         assertTrue(obj instanceof TestImplementation);
     }
 
+    @Test
     public void testBlowsIfGivenInterfaceAndNoImplementationIsConfigured() {
         final DefaultComponentProvider componentProvider = new DefaultComponentProvider(new Properties());
         try {
@@ -90,6 +91,7 @@ public class DefaultComponentProviderTest extends TestCase {
         }
     }
 
+    @Test
     public void testReturnsConfiguredImplementation() {
         final Properties p = new Properties();
         p.setProperty("info.magnolia.objectfactory.DefaultComponentProviderTest$TestInterface", "info.magnolia.objectfactory.DefaultComponentProviderTest$TestImplementation");
@@ -98,6 +100,7 @@ public class DefaultComponentProviderTest extends TestCase {
         assertTrue(obj instanceof TestImplementation);
     }
 
+    @Test
     public void testGetSingletonReturnsSameInstance() {
         final ComponentProvider cp = new DefaultComponentProvider(new Properties());
 
@@ -105,11 +108,13 @@ public class DefaultComponentProviderTest extends TestCase {
         assertSame(cp.getSingleton(TestImplementation.class), cp.getSingleton(TestImplementation.class));
     }
 
+    @Test
     public void testNewInstanceReallyReturnsNewInstance() {
         final ComponentProvider cp = new DefaultComponentProvider(new Properties());
         assertNotSame(cp.newInstance(TestImplementation.class), cp.newInstance(TestImplementation.class));
     }
 
+    @Test
     public void testUsesComponentFactoryIfSuchFactoryIsConfigured() {
         final Properties p = new Properties();
         p.setProperty("info.magnolia.objectfactory.DefaultComponentProviderTest$TestInterface", "info.magnolia.objectfactory.DefaultComponentProviderTest$TestInstanceFactory");
@@ -128,6 +133,7 @@ public class DefaultComponentProviderTest extends TestCase {
      * C2B and ObserverComponentFactory both use {@link Components} to retrieve their ... components.
      * (sort of a cyclic-dependency there)
      */
+    @Test
     public void testSingletonDefinedInRepositoryDefaultToConfigWorkspace() throws RepositoryException, IOException {
         setDefaultImplementationsAndInitMockRepository("/test", ContentRepository.CONFIG,
                 "test.class=" + TestImplementation.class.getName()
@@ -144,6 +150,7 @@ public class DefaultComponentProviderTest extends TestCase {
      * C2B and ObserverComponentFactory both use {@link Components} to retrieve their ... components.
      * (sort of a cyclic-dependency there)
      */
+    @Test
     public void testSingletonDefinedInRepositoryUsesGivenRepoName() throws RepositoryException, IOException {
         Components.getSingleton(String.class);
         setDefaultImplementationsAndInitMockRepository("dummy:/test", "dummy",
@@ -159,6 +166,7 @@ public class DefaultComponentProviderTest extends TestCase {
      * C2B and ObserverComponentFactory both use {@link Components} to retrieve their ... components.
      * (sort of a cyclic-dependency there)
      */
+    @Test
     public void testProxiesReturnedByObserverComponentFactoryCanBeCastToTheirSubclass() throws Exception {
         setDefaultImplementationsAndInitMockRepository("config:/test", "config",
                 "test.class=" + TestOtherImplementation.class.getName()

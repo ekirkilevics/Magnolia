@@ -53,6 +53,9 @@ import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
@@ -63,7 +66,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class DataTransporterTest extends XMLTestCase {
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         final Properties properties = new Properties();
         properties.put("magnolia.export.keep_extra_namespaces", "false");
@@ -71,11 +75,13 @@ public class DataTransporterTest extends XMLTestCase {
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         SystemProperty.clear();
         super.tearDown();
     }
 
+    @Test
     public void testParseAndFormat() throws Exception {
         File inputFile = new File(getClass().getResource("/test-formatted-input.xml").getFile());
         File outputFile = File.createTempFile("export-test-", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -106,6 +112,7 @@ public class DataTransporterTest extends XMLTestCase {
         assertTrue("Document is not formatted as expected:\n" + diffLog.toString(), xmlDiff.identical());
     }
 
+    @Test
     public void testRemoveNs() throws Exception {
         InputStream input = getClass().getResourceAsStream("/test-unwantedns.xml");
         File outputFile = File.createTempFile("export-test-", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -125,6 +132,7 @@ public class DataTransporterTest extends XMLTestCase {
         assertTrue("'xsi' namespace not found in output file", StringUtils.contains(result, "xmlns:xsi"));
     }
 
+    @Test
     public void testEncodePath() {
         String pathName = "www.testme.ch/test/me&now";
         String encodedPath = DataTransporter.encodePath(pathName, DataTransporter.DOT, DataTransporter.UTF8);

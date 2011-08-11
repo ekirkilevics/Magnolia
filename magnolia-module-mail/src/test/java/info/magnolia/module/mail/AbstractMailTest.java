@@ -42,6 +42,9 @@ import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.module.mail.handlers.MgnlMailHandler;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
+
+import org.junit.After;
+import org.junit.Before;
 import org.subethamail.wiser.Wiser;
 
 import java.io.File;
@@ -84,6 +87,7 @@ public abstract class AbstractMailTest extends RepositoryTestCase {
     }
 
     @Override
+    @Before
     public void setUp() throws Exception {
         super.setUp();
 
@@ -112,6 +116,7 @@ public abstract class AbstractMailTest extends RepositoryTestCase {
      * @see junit.framework.TestCase#tearDown()
      */
     @Override
+    @After
     public void tearDown() throws Exception {
         wiser.stop();
         // prevent random failure of the build in ubuntu due to not releasing socket fast enough.

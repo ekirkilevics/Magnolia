@@ -33,15 +33,17 @@
  */
 package info.magnolia.importexport;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.junit.Test;
+
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class BootstrapFilesComparatorTest extends TestCase {
+public class BootstrapFilesComparatorTest {
+    @Test
     public void testXmlShouldBeBeforeProperties() {
         assertStrictOrder("foo.xml", "foo.properties");
         assertStrictOrder("/foo/bar/baz.xml", "/bar/bar/abc.properties");
@@ -49,6 +51,7 @@ public class BootstrapFilesComparatorTest extends TestCase {
         assertStrictOrder("/foo/bar/abc.xml", "/bar/bar/abc.properties");
     }
 
+    @Test
     public void testZipAndGzShouldBeIgnoredInSortingXmlBeforeProperties() {
         assertStrictOrder("foo.xml.zip", "foo.properties");
         assertStrictOrder("foo.xml.zip", "foo.properties.zip");
@@ -60,6 +63,7 @@ public class BootstrapFilesComparatorTest extends TestCase {
         assertStrictOrder("foo.xml", "foo.properties.gz");
     }
 
+    @Test
     public void testFilesAreOrderedByFileNameLength() {
         // this is not the actual desired behaviour, see MAGNOLIA-1541
         assertStrictOrder("mama.xml", "bebebebebebebe.xml");

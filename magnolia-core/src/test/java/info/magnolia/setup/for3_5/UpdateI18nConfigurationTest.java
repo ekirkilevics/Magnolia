@@ -50,7 +50,10 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
@@ -59,11 +62,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class UpdateI18nConfigurationTest extends TestCase {
+public class UpdateI18nConfigurationTest {
     private static final String CONTENT_AS_IN_30 = "" +
             "server.i18n@type=mgnl:contentNode\n" +
             "server.i18n.language=zz\n" +
@@ -104,9 +105,8 @@ public class UpdateI18nConfigurationTest extends TestCase {
             "server.i18n.content.locales.es.enabled=true\n" +
             "server.i18n.content.locales.es.langage=es\n";
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         final TypeMappingImpl typeMapping = new TypeMappingImpl();
         ComponentsTestUtil.setInstance(TypeMapping.class, typeMapping);
         ComponentsTestUtil.setInstance(Content2BeanProcessor.class, new Content2BeanProcessorImpl(typeMapping));
@@ -114,13 +114,13 @@ public class UpdateI18nConfigurationTest extends TestCase {
         ComponentsTestUtil.setImplementation(TransformationState.class, TransformationStateImpl.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
     }
 
+    @Test
     public void testUpdatesProperlyWhenAlreadyExisting() throws Exception {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager(CONTENT_AS_IN_30);
         final InstallContext ctx = createStrictMock(InstallContext.class);

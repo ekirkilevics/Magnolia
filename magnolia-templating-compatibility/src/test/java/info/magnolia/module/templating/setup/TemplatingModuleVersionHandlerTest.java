@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.templating.setup;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -48,6 +49,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.jcr.RepositoryException;
+
+import org.junit.Test;
 
 /**
  *
@@ -73,6 +76,7 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
     }
 
     // fixed by 4.0.3 or 4.1.1
+    @Test
     public void testMisfixedTemplatesFrom402AreFixed() throws Exception {
         // fake pre-install
         setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter"); // old RenderingFilter fqn
@@ -104,6 +108,7 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
         assertNoMessages(ctx);
     }
 
+    @Test
     public void testSilentIfUserFixedTemplatesHimself() throws Exception {
         // fake pre-install
         setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter"); // old RenderingFilter fqn

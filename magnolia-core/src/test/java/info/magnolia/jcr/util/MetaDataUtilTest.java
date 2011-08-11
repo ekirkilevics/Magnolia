@@ -51,7 +51,6 @@ public class MetaDataUtilTest {
     public void setUp() {
         root = new MockNode("root");
     }
-
     @Test
     public void testGetMetaData() throws Exception {
         root.addNode(MetaData.DEFAULT_META_NODE);

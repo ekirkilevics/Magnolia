@@ -33,22 +33,25 @@
  */
 package info.magnolia.cms.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-import javax.jcr.RepositoryException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.jcr.RepositoryException;
+
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ExceptionUtilTest extends TestCase {
+public class ExceptionUtilTest {
+    @Test
     public void testUnwrapIfShouldThrowWrappedExceptionIfItMatchesThe2ndParameter() {
         doTestUnwrapIf(new FileNotFoundException("HOP"), IOException.class);
     }
 
+    @Test
     public void testUnwrapIfShouldThrowWrappedExceptionIfItIsARuntimeExceptionEvenIfItDoesntMatch2ndParameter() {
         doTestUnwrapIf(new ArrayIndexOutOfBoundsException("HELLO"), IOException.class);
     }
@@ -65,6 +68,7 @@ public class ExceptionUtilTest extends TestCase {
         }
     }
 
+    @Test
     public void testUnwrapIfShouldThrowPassedExceptionIfItDoesNotMatchAndIsntARuntimeException() {
         // wrapping the test exception - as client code would do
         final IOException originalException = new IOException("AIE");
@@ -80,6 +84,7 @@ public class ExceptionUtilTest extends TestCase {
         }
     }
 
+    @Test
     public void testUnwrapIfWithCauseBeeingNull() {
         final RuntimeException runtimeWrapping = new RuntimeException((Throwable)null);
 
@@ -92,6 +97,7 @@ public class ExceptionUtilTest extends TestCase {
         }
     }
 
+    @Test
     public void testUnwrapIfWithUnwrapIfBeeingNull() {
         final IOException originalException = new IOException("AIE");
         final RuntimeException runtimeWrapping = new RuntimeException(originalException);
@@ -103,5 +109,4 @@ public class ExceptionUtilTest extends TestCase {
             assertSame(originalException, t.getCause());
         }
     }
-
 }

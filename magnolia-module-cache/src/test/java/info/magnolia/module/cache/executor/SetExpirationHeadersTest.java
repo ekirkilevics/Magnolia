@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.cache.executor;
 
+import static org.easymock.EasyMock.*;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.browsercachepolicy.FixedDuration;
@@ -42,15 +43,15 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.easymock.EasyMock.*;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests for the settings of expiration headers cache executor.
+ * @version $Id$
  */
-public class SetExpirationHeadersTest extends TestCase {
+public class SetExpirationHeadersTest {
 
+    @Test
     public void testProcessCacheRequest() throws Exception {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
@@ -72,6 +73,7 @@ public class SetExpirationHeadersTest extends TestCase {
         verify(request, response, chain, cache);
     }
 
+    @Test
     public void testProcessNoCacheRequest() throws Exception {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);

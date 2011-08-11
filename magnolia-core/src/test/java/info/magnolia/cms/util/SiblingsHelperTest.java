@@ -38,28 +38,29 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class SiblingsHelperTest extends TestCase {
+public class SiblingsHelperTest {
     private MockHierarchyManager hm;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         hm = MockUtil.createHierarchyManager(TEST_CONTENT);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testCanTellPosition() throws Exception {
         final Content n = hm.getContent("/parent/sub2");
         final SiblingsHelper s = SiblingsHelper.of(n);
@@ -69,6 +70,7 @@ public class SiblingsHelperTest extends TestCase {
         assertEquals("Should have skipped nodes of different type.", 3, s.getIndex());
     }
 
+    @Test
     public void testCanTellIfFirstWhenInitializingWithFirst() throws Exception {
         final Content n = hm.getContent("/parent/sub1");
         final SiblingsHelper s = SiblingsHelper.of(n);
@@ -77,6 +79,7 @@ public class SiblingsHelperTest extends TestCase {
         assertEquals(false, s.isLast());
     }
 
+    @Test
     public void testCanTellIfFirstAfterNavigating() throws Exception {
         final Content n = hm.getContent("/parent/sub2");
         final SiblingsHelper s = SiblingsHelper.of(n);
@@ -86,6 +89,7 @@ public class SiblingsHelperTest extends TestCase {
         assertEquals(false, s.isLast());
     }
 
+    @Test
     public void testCanTellIfLastWhenInitializingWith() throws Exception {
         final Content n = hm.getContent("/parent/sub6");
         final SiblingsHelper s = SiblingsHelper.of(n);
@@ -96,6 +100,7 @@ public class SiblingsHelperTest extends TestCase {
         assertEquals("ID-6", s.getCurrent().getUUID());
     }
 
+    @Test
     public void testCanTellIfLastAfterNavigating() throws Exception {
         final Content n = hm.getContent("/parent/sub4");
         final SiblingsHelper s = SiblingsHelper.of(n);
@@ -107,6 +112,7 @@ public class SiblingsHelperTest extends TestCase {
         assertEquals("ID-5", s.getCurrent().getUUID());
     }
 
+    @Test
     public void testCanTellIfLastEvenIfThereAreOtherNodesOfAnotherType() throws Exception {
         final Content n = hm.getContent("/parent/sub5");
         final SiblingsHelper s = SiblingsHelper.of(n);
@@ -115,6 +121,7 @@ public class SiblingsHelperTest extends TestCase {
         assertEquals(false, s.isFirst());
     }
 
+    @Test
     public void testFactoryMethodProperlyInstanciatesWithFirstChildOfParent() throws Exception {
         final Content parent = hm.getContent("/parent");
         final SiblingsHelper s = SiblingsHelper.childrenOf(parent);

@@ -59,6 +59,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.core.jndi.BindableRepositoryFactory;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.junit.After;
+import org.junit.Before;
 
 /**
  * @author ashapochka
@@ -80,7 +82,8 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     private boolean quiet = true;
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         //        ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
         //        ComponentsTestUtil.setInstance(PropertiesInitializer.class, new PropertiesInitializer(Components.getComponentProvider().getComponent(ModuleRegistry.class)));
         super.setUp();
@@ -176,7 +179,8 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         if (isAutoStart()) {
             shutdownRepository(true);
         }

@@ -53,9 +53,7 @@ import org.easymock.classextension.EasyMock;
 import org.junit.Test;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class MgnlUserManagerTest {
 

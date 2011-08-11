@@ -33,22 +33,12 @@
  */
 package info.magnolia.module.cache.filter;
 
-import static org.easymock.EasyMock.anyLong;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.getCurrentArguments;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.isNull;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.same;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
-import info.magnolia.module.cache.mbean.CacheMonitor;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.ModuleRegistry;
@@ -64,6 +54,7 @@ import info.magnolia.module.cache.FlushPolicy;
 import info.magnolia.module.cache.executor.Bypass;
 import info.magnolia.module.cache.executor.Store;
 import info.magnolia.module.cache.executor.UseCache;
+import info.magnolia.module.cache.mbean.CacheMonitor;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
@@ -85,19 +76,19 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
-
 import org.easymock.IAnswer;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Basic cache filter test.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 
 // FIXME: MAGNOLIA-3413, commented out the failing tests
 
-public class CacheFilterTest extends TestCase {
+public class CacheFilterTest {
     private AggregationState aggregationState;
     private CacheFactory cacheFactory;
     private CachePolicy cachePolicy;
@@ -109,6 +100,7 @@ public class CacheFilterTest extends TestCase {
     private HttpServletResponse response;
     private FilterChain filterChain;
 
+    @Test
     public void testFilterUsesGivenConfigAndCacheName() throws Exception {
         final ModuleRegistry moduleRegistry = new ModuleRegistryImpl();
         ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
@@ -618,6 +610,7 @@ public class CacheFilterTest extends TestCase {
     }
     */
 
+    @Test
     public void test304IsNotCached() throws Exception {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(
                 new CachePolicyResult(CachePolicyResult.store, "/dummy", null));
@@ -681,15 +674,13 @@ public class CacheFilterTest extends TestCase {
         verify(cache, cacheFactory, cachePolicy, webContext, request, response, filterChain);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");
         MockUtil.initMockContext();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);

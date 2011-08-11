@@ -33,16 +33,18 @@
  */
 package info.magnolia.module.cache.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 
+import org.junit.Test;
+
 /**
  * Basic tests for gzip utilities class.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class GZipUtilTest extends TestCase {
+public class GZipUtilTest {
+    @Test
     public void testGzippedEmptyByteArrayShouldBeExactly20BytesLong() throws IOException {
         final byte[] gzipped = GZipUtil.gzip(new byte[0]);
         assertEquals(20, gzipped.length);
@@ -53,6 +55,7 @@ public class GZipUtilTest extends TestCase {
         assertTrue(GZipUtil.isGZipped(gzipped));
     }
 
+    @Test
     public void testGzipped1ByteArrayShouldNotBe20BytesLong() throws IOException {
         final byte[] gzipped = GZipUtil.gzip(new byte[]{'a'});
         assertEquals(21, gzipped.length);
@@ -64,6 +67,7 @@ public class GZipUtilTest extends TestCase {
         assertTrue(GZipUtil.isGZipped(gzipped));
     }
 
+    @Test
     public void testGzipIsSymetric() throws IOException {
         final byte[] gzipped = GZipUtil.gzip("azerty".getBytes());
         final byte[] unzipped = GZipUtil.ungzip(gzipped);
@@ -74,6 +78,7 @@ public class GZipUtilTest extends TestCase {
         assertTrue(GZipUtil.isGZipped(gzipped));
     }
 
+    @Test
     public void testGzipActuallyCompressesAtSomePoint() throws IOException {
         final String s1 = "qwertzuiopasdfghjklyxcvbnm";
         final String s = s1 + s1;// + s1 + s1 + s1 + s1 + s1 + s1 + s1 + s1;

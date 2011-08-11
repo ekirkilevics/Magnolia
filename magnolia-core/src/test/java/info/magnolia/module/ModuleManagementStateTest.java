@@ -33,27 +33,28 @@
  */
 package info.magnolia.module;
 
+import static org.junit.Assert.*;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.DeltaType;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
-import junit.framework.TestCase;
 
 import java.util.Arrays;
 
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ModuleManagementStateTest extends TestCase {
+public class ModuleManagementStateTest {
     private static final String[] TEXTS = new String[]{"installs only", "updates only", "installs and updates"};
     private static final Version v01 = Version.parseVersion("0.1");
     private static final Version v05 = Version.parseVersion("0.5");
     private static final Version v10 = Version.parseVersion("1.0");
 
+    @Test
     public void testDescriptionForUpdatesOnly() {
         final ModuleManager.ModuleManagementState state = new ModuleManager.ModuleManagementState();
         state.addModule(new ModuleDefinition("a", v10, null, null), v01, Arrays.<Delta>asList(
@@ -70,6 +71,7 @@ public class ModuleManagementStateTest extends TestCase {
         assertEquals("updates only", state.getDeltaTypesDescription(TEXTS));
     }
 
+    @Test
     public void testDescriptionForInstallsOnly() {
         final ModuleManager.ModuleManagementState state = new ModuleManager.ModuleManagementState();
         state.addModule(new ModuleDefinition("a", v10, null, null), null, Arrays.<Delta>asList(
@@ -84,6 +86,7 @@ public class ModuleManagementStateTest extends TestCase {
         assertEquals("installs only", state.getDeltaTypesDescription(TEXTS));
     }
 
+    @Test
     public void testDescriptionForInstallsAndUpdates() {
         final ModuleManager.ModuleManagementState state = new ModuleManager.ModuleManagementState();
         state.addModule(new ModuleDefinition("a", v10, null, null), v01, Arrays.<Delta>asList(

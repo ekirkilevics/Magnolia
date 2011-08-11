@@ -33,18 +33,20 @@
  */
 package info.magnolia.freemarker.models;
 
-import freemarker.template.TemplateModelException;
-import freemarker.template.utility.DeepUnwrap;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.test.mock.MockContent;
-import junit.framework.TestCase;
+
+import org.junit.Test;
+
+import freemarker.template.TemplateModelException;
+import freemarker.template.utility.DeepUnwrap;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ContentModelTest extends TestCase {
+public class ContentModelTest {
+    @Test
     public void testCanBeUnwrappedByDeepUnWrap() throws TemplateModelException {
         final Content c = new MockContent("test");
         final ContentModel model = new ContentModel(c, new MagnoliaObjectWrapper(null /* not needed in the context of this test*/));

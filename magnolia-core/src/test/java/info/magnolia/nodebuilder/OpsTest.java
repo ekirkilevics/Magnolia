@@ -33,6 +33,7 @@
  */
 package info.magnolia.nodebuilder;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
@@ -40,10 +41,10 @@ import info.magnolia.test.RepositoryTestCase;
 
 import javax.jcr.RepositoryException;
 
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class OpsTest extends RepositoryTestCase {
     private final ErrorHandler eh = new ErrorHandler() {
@@ -63,6 +64,7 @@ public class OpsTest extends RepositoryTestCase {
         }
     };
 
+    @Test
     public void testAddPropertyFailsIfPropertyExists() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         final Content node = hm.getRoot().createContent("hello");
@@ -77,6 +79,7 @@ public class OpsTest extends RepositoryTestCase {
         }
     }
 
+    @Test
     public void testSetPropertyFailsIfPropertyDoesNotExist() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         final Content node = hm.getRoot().createContent("hello");
@@ -91,6 +94,7 @@ public class OpsTest extends RepositoryTestCase {
         }
     }
 
+    @Test
     public void testSetPropertyFailsIfPropertyDoesNotHaveExpectedValue() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         final Content node = hm.getRoot().createContent("hello");
@@ -104,6 +108,7 @@ public class OpsTest extends RepositoryTestCase {
         }
     }
 
+    @Test
     public void testRemoveFailsOnUnexistingPropertyOrNode() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         hm.getRoot().createContent("hello").createNodeData("foo", "bar");
@@ -119,6 +124,7 @@ public class OpsTest extends RepositoryTestCase {
         }
     }
 
+    @Test
     public void testRenamePropertyAndCheckValueForString() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         hm.getRoot().createContent("hello").setNodeData("fooOld", "bar");

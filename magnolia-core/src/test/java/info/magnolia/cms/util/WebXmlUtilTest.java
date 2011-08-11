@@ -33,61 +33,71 @@
  */
 package info.magnolia.cms.util;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.filters.MgnlMainFilter;
-import junit.framework.TestCase;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Test;
+
 /**
- * @author fgiust
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class WebXmlUtilTest extends TestCase {
+public class WebXmlUtilTest {
     private static final List<String> MANDATORY_DISPATCHERS = Arrays.asList("REQUEST", "FORWARD", "INCLUDE");
     private static final List<String> OPTIONAL_DISPATCHERS = Arrays.asList("ERROR");
 
+    @Test
     public void testFilterDispatcherChecksShouldNotFailWithCorrectConfiguration() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterok.xml"));
         assertEquals(1, util.checkFilterDispatchersConfiguration(MgnlMainFilter.class.getName(), MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
+    @Test
     public void testFilterDispatcherChecksShouldFailIfDispatcherNotSet() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filternodispatcher.xml"));
         assertEquals(-1, util.checkFilterDispatchersConfiguration(MgnlMainFilter.class.getName(), MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
+    @Test
     public void testFilterDispatcherChecksShouldNotFailIfFilterNotRegistered() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_nofilter.xml"));
         assertEquals(1, util.checkFilterDispatchersConfiguration(MgnlMainFilter.class.getName(), MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
+    @Test
     public void testFilterDispatcherChecksShouldFailIfRequestIsMissing() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterwrongdispatchers.xml"));
         assertEquals(-1, util.checkFilterDispatchersConfiguration("webxmltest.WithMissingForward", MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
+    @Test
     public void testFilterDispatcherChecksShouldFailIfIncludeIsMissing() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterwrongdispatchers.xml"));
         assertEquals(-1, util.checkFilterDispatchersConfiguration("webxmltest.WithMissingInclude", MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
+    @Test
     public void testFilterDispatcherErrorIsNotMandatory() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterwrongdispatchers.xml"));
         assertEquals(1, util.checkFilterDispatchersConfiguration("webxmltest.ErrorIsNotMandatory", MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
+    @Test
     public void testFilterDispatcherOrderIsIrrelevant() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterwrongdispatchers.xml"));
         assertEquals(1, util.checkFilterDispatchersConfiguration("webxmltest.OrderIsIrrelevant", MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
+    @Test
     public void testCanDetectFilterRegistration() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterwrongdispatchers.xml"));
         assertEquals(true, util.isFilterRegistered("webxmltest.OrderIsIrrelevant"));
         assertEquals(false, util.isFilterRegistered("nonregistered.BlehFilter"));
     }
 
+    @Test
     public void testCanDetectServletRegistration() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterok.xml"));
         assertEquals(true, util.isServletRegistered("test"));

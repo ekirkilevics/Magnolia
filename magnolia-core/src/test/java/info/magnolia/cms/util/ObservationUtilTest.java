@@ -33,9 +33,13 @@
  */
 package info.magnolia.cms.util;
 
+import static org.junit.Assert.*;
+
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
+
+import org.junit.Test;
 
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
@@ -48,6 +52,7 @@ import static org.mockito.Mockito.*;
  */
 public class ObservationUtilTest extends MgnlTestCase {
 
+    @Test
     public void testFailRegisterWhenSessionInvalid() throws Exception {
 
         setupMockSession(false);
@@ -66,6 +71,7 @@ public class ObservationUtilTest extends MgnlTestCase {
         }
     }
 
+    @Test
     public void testRegisterWhenSessionValid() throws Exception {
 
         MockSession session = setupMockSession(true);
@@ -84,6 +90,7 @@ public class ObservationUtilTest extends MgnlTestCase {
         verify(observationManager).addEventListener(listener, 63, "/parent", true, null, null, false);
     }
 
+    @Test
     public void testDontFailUnregisterWhenSessionInvalid() throws Exception {
 
         MockSession session = setupMockSession(false);
@@ -102,6 +109,7 @@ public class ObservationUtilTest extends MgnlTestCase {
         verify(observationManager, times(0)).removeEventListener(listener);
     }
 
+    @Test
     public void testUnregisterWhenSessionValid() throws Exception {
 
         MockSession session = setupMockSession(true);

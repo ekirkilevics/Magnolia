@@ -33,21 +33,22 @@
  */
 package info.magnolia.setup.for3_5;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 import java.util.Properties;
 
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class IPConfigRulesUpdateTest extends TestCase {
+public class IPConfigRulesUpdateTest {
+    @Test
     public void testOnlyChangesOldStyleRulesOrdersMethodsUppercasesThemAndLeavesOtherNodesUntouched() throws Exception {
         final String testContent = "" +
                 "server.IPConfig.allow-all.IP=*\n" +

@@ -33,27 +33,28 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.*;
+import static org.junit.Assert.assertEquals;
+import info.magnolia.test.ComponentsTestUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.junit.After;
+import org.junit.Test;
+
 /**
- *
- * @author ashapochka
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class RequestAttributeStrategyTest extends TestCase {
-    @Override
-    protected void tearDown() throws Exception {
+public class RequestAttributeStrategyTest {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testLocalAttributes() {
         HttpServletRequest request = createMock(HttpServletRequest.class);
         WebContext ctx = createMock(WebContext.class);
@@ -82,6 +83,7 @@ public class RequestAttributeStrategyTest extends TestCase {
         verify(request, ctx);
     }
 
+    @Test
     public void testSessionAttributes() {
         HttpServletRequest request = createMock(HttpServletRequest.class);
         HttpSession session = createMock(HttpSession.class);
@@ -99,6 +101,7 @@ public class RequestAttributeStrategyTest extends TestCase {
         verify(request, session, ctx);
     }
 
+    @Test
     public void testApplicationAttributes() {
         HttpServletRequest request = createMock(HttpServletRequest.class);
         SystemContext context = createMock(SystemContext.class);

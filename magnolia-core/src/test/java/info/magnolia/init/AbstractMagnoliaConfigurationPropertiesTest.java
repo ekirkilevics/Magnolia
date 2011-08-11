@@ -37,61 +37,68 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class AbstractMagnoliaConfigurationPropertiesTest extends TestCase {
+public class AbstractMagnoliaConfigurationPropertiesTest {
 
     private MagnoliaConfigurationProperties p;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         p = new TestMagnoliaConfigurationProperties(getClass().getResourceAsStream("/test-init.properties"));
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         SystemProperty.clear();
         System.getProperties().remove("testProp");
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testSimpleProperty() throws Exception {
         assertEquals("property", p.getProperty("test.one"));
     }
 
+    @Test
     public void testNestedProperty() throws Exception {
         assertEquals("nested property", p.getProperty("test.two"));
     }
 
+    @Test
     public void testNestedPropertyMoreLevels() throws Exception {
         assertEquals("another nested property", p.getProperty("test.three"));
     }
 
+    @Test
     public void testNestedSomeMore() throws Exception {
         assertEquals("nest property nested property another nested property", p.getProperty("test.four"));
     }
 
+    @Test
     public void testCircularProperty() throws Exception {
         assertEquals("${test.circular2}", p.getProperty("test.circular1"));
         assertEquals("${test.circular1}", p.getProperty("test.circular2"));
     }
 
+    @Test
     public void testSelfReferencingProperty() throws Exception {
         assertEquals("${test.circular3}", p.getProperty("test.circular3"));
     }
 
+    @Test
     public void testValuesAreTrimmed() throws Exception {
         assertEquals("foo", p.getProperty("test.whitespaces"));
     }
 
+    @Test
     public void testValuesForNestedPropertiesAreTrimmed() throws Exception {
         // TODO : i get the feeling this passes by accident, and would not pass if .nested was iterated on first
         assertEquals("bar foo", p.getProperty("test.whitespaces.nested"));

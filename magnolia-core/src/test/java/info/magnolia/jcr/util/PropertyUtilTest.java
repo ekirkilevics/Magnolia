@@ -58,7 +58,6 @@ public class PropertyUtilTest {
     public void setUp() {
         root = new MockNode("root");
     }
-
     @Test
     public void testOrderLast() throws RepositoryException {
         final String newPropertyName = "newPropertyName";
@@ -79,56 +78,48 @@ public class PropertyUtilTest {
     public void testSetPropertyThrowsExceptionOnNullName() throws RepositoryException {
         PropertyUtil.setProperty(root, null, null);
     }
-
     @Test
     public void testSetPropertyToString() throws RepositoryException {
         final Object value = "value";
         PropertyUtil.setProperty(root, PROPERTY_NAME, value);
         assertEquals(value, root.getProperty(PROPERTY_NAME).getString());
     }
-
     @Test
     public void testSetPropertyToBigDecimal() throws RepositoryException {
         final Object value = BigDecimal.ONE;
         PropertyUtil.setProperty(root, PROPERTY_NAME, value);
         assertEquals(value, root.getProperty(PROPERTY_NAME).getDecimal());
     }
-
     @Test
     public void testSetPropertyToCalendar() throws RepositoryException {
         final Object value = Calendar.getInstance();
         PropertyUtil.setProperty(root, PROPERTY_NAME, value);
         assertEquals(value, root.getProperty(PROPERTY_NAME).getDate());
     }
-
     @Test
     public void testSetPropertyToValue() throws RepositoryException {
         final Object value = new MockValue("x");
         PropertyUtil.setProperty(root, PROPERTY_NAME, value);
         assertEquals(value, root.getProperty(PROPERTY_NAME).getValue());
     }
-
     @Test
     public void testSetPropertyToLong() throws RepositoryException {
         final Object value = Long.valueOf(123l);
         PropertyUtil.setProperty(root, PROPERTY_NAME, value);
         assertEquals(value, root.getProperty(PROPERTY_NAME).getLong());
     }
-
     @Test
     public void testSetPropertyToDouble() throws RepositoryException {
         final Object value = Double.valueOf("42.195");
         PropertyUtil.setProperty(root, PROPERTY_NAME, value);
         assertEquals(value, root.getProperty(PROPERTY_NAME).getDouble());
     }
-
     @Test
     public void testSetPropertyToBoolean() throws RepositoryException {
         final Object value = Boolean.TRUE;
         PropertyUtil.setProperty(root, PROPERTY_NAME, value);
         assertEquals(value, root.getProperty(PROPERTY_NAME).getBoolean());
     }
-
     @Test
     public void testSetPropertyToNode() throws RepositoryException {
         final String identifier = "identifier";
@@ -137,5 +128,4 @@ public class PropertyUtilTest {
         PropertyUtil.setProperty(root, PROPERTY_NAME, referenced);
         assertEquals(identifier, root.getProperty(PROPERTY_NAME).getString());
     }
-
 }

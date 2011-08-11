@@ -33,6 +33,7 @@
  */
 package info.magnolia.test.mock;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
@@ -40,13 +41,14 @@ import java.util.Calendar;
 
 import javax.jcr.PropertyType;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @version $Id$
  */
-public class MockNodeDataTest extends TestCase {
+public class MockNodeDataTest {
 
+    @Test
     public void testSetValueWithParamValue() throws Exception {
         doTestSetValueWithParamValue("String", "Hello World");
         doTestSetValueWithParamValue("Long", Long.valueOf(123l));
@@ -63,6 +65,7 @@ public class MockNodeDataTest extends TestCase {
         assertEquals(jcrValueNodeData, jcrValueNodeData);
     }
 
+    @Test
     public void testCanGetHandle() throws Exception {
         MockHierarchyManager hm = MockUtil.createHierarchyManager("/node/sub/sub2.a=lol\n");
         final Content node = hm.getContent("/node/sub/sub2");
@@ -70,6 +73,7 @@ public class MockNodeDataTest extends TestCase {
         assertEquals("/node/sub/sub2/a", p.getHandle());
     }
 
+    @Test
     public void testCanDeleteSelf() throws Exception {
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node.a=lol\n" +

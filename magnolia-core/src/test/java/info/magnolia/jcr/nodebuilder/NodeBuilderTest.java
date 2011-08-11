@@ -74,7 +74,6 @@ public class NodeBuilderTest {
         when(valueFactory.createValue(PROPERTY_VALUE)).thenReturn(propertyValue);
         session.setValueFactory(valueFactory);
     }
-
     @Test
     public void testExecWithSeveralChildOps() throws Exception {
         final NodeOperation addNodeOp = Ops.addNode(CHILD_NAME);

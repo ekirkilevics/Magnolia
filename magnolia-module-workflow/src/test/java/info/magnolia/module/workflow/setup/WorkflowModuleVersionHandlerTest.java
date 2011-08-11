@@ -39,6 +39,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -61,6 +62,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.jcr.RepositoryException;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * A test class for WorkflowModuleVersionHandler.
@@ -90,7 +95,8 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
     }
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         // setup security
         SecuritySupportImpl securitySupport = new SecuritySupportImpl();
@@ -117,7 +123,8 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         verify(roleManager, role);
         super.tearDown();
     }
@@ -127,6 +134,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
      *
      * Testing update to 4.2
      */
+    @Test
     public void testDMSVersioningCommandUpdate() throws ModuleManagementException, RepositoryException {
         // prepare nodes that should exist if the dms was really installed ...
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
@@ -152,6 +160,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
      * Workflow should enable itself for data module content activation if data module is installed.
      * Testing update to 4.2
      */
+    @Test
     public void testDataActivationCommandUpdate() throws ModuleManagementException, RepositoryException {
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         // workflow configuration

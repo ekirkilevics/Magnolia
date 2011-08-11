@@ -58,6 +58,8 @@ import java.util.List;
 
 import javax.jcr.RepositoryException;
 
+import org.junit.Before;
+
 /**
  * TODO Changes needed for http://jira.magnolia-cms.com/browse/SCRUM-140 forced me to comment out a couple of test which were failing.
  * @author gjoseph
@@ -68,7 +70,8 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     private static final String ADMIN_CENTRAL = "redirect:/.magnolia/pages/adminCentral.html";
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
         ComponentsTestUtil.setImplementation(UnicodeNormalizer.Normalizer.class, "info.magnolia.cms.util.UnicodeNormalizer$NonNormalizer");
         ComponentsTestUtil.setInstance(SearchFactory.class, new DefaultSearchFactory());

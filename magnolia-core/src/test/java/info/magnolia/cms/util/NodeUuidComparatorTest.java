@@ -33,15 +33,16 @@
  */
 package info.magnolia.cms.util;
 
+import static org.junit.Assert.*;
 import info.magnolia.test.mock.MockContent;
-import junit.framework.TestCase;
+
+import org.junit.Test;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class NodeUuidComparatorTest extends TestCase {
+public class NodeUuidComparatorTest {
+    @Test
     public void testBasic() {
         final MockContent a = new MockContent("a");
         a.setUUID("a-uuid");

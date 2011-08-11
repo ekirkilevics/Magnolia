@@ -33,19 +33,20 @@
  */
 package info.magnolia.module.model;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class VersionComparatorTest extends TestCase {
+public class VersionComparatorTest {
     private static final Version V100 = Version.parseVersion("1.0.0");
     private static final Version V101 = Version.parseVersion("1.0.1");
     private static final Version V110 = Version.parseVersion("1.1.0");
     private static final Version V200 = Version.parseVersion("2.0.0");
 
+    @Test
     public void testBasic() {
         final VersionComparator vc = new VersionComparator();
         assertTrue(vc.compare(V101, V100) > 0);
@@ -68,6 +69,7 @@ public class VersionComparatorTest extends TestCase {
         assertTrue(vc.compare(V110, V200) < 0);
     }
 
+    @Test
     public void testClassifiersAreIgnored() {
         final VersionComparator vc = new VersionComparator();
         assertTrue(vc.compare(Version.parseVersion("1.0-foo"), V100) == 0);

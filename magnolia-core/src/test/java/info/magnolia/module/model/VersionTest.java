@@ -33,30 +33,34 @@
  */
 package info.magnolia.module.model;
 
+import static org.junit.Assert.*;
 import info.magnolia.module.model.Version.UndefinedDevelopmentVersion;
-import junit.framework.TestCase;
+
+import org.junit.Test;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class VersionTest extends TestCase {
+public class VersionTest {
+    @Test
     public void testShouldSupportSingleDigitVersions() {
         assertVersion(3, 0, 0, null, Version.parseVersion("3"));
     }
 
+    @Test
     public void testShouldSupportTwoDigitVersions() {
         assertVersion(3, 0, 0, null, Version.parseVersion("3.0"));
         assertVersion(3, 1, 0, null, Version.parseVersion("3.1"));
     }
 
+    @Test
     public void testShouldSupportThreeDigitVersions() {
         assertVersion(3, 0, 0, null, Version.parseVersion("3.0.0"));
         assertVersion(3, 2, 0, null, Version.parseVersion("3.2.0"));
         assertVersion(3, 4, 5, null, Version.parseVersion("3.4.5"));
     }
 
+    @Test
     public void testShouldSupportAlphanumericClassifiers() {
         assertVersion(3, 0, 0, "x", Version.parseVersion("3.0.0-x"));
         assertVersion(3, 0, 0, "Y", Version.parseVersion("3.0.0-Y"));
@@ -64,11 +68,13 @@ public class VersionTest extends TestCase {
         assertVersion(3, 0, 0, "20060622gregYO", Version.parseVersion("3.0.0-20060622gregYO"));
     }
 
+    @Test
     public void testShouldSupportUnderscoresAndDashesInClassifiersToo() {
         assertVersion(3, 4, 5, "20060622-greg-YO", Version.parseVersion("3.4.5-20060622-greg-YO"));
         assertVersion(3, 4, 5, "20071102_fixed", Version.parseVersion("3.4.5-20071102_fixed"));
     }
 
+    @Test
     public void testShouldRejectInvalidCharsInClassifiers() {
         try {
             Version.parseVersion("3.0.0-/slash+plus");
@@ -78,6 +84,7 @@ public class VersionTest extends TestCase {
         }
     }
 
+    @Test
     public void testShouldSupportClassifierIndependentlyOfTheVersionNumberPrecision() {
         assertVersion(3, 0, 0, "foo", Version.parseVersion("3-foo"));
         assertVersion(3, 0, 0, "foo", Version.parseVersion("3.0-foo"));
@@ -87,10 +94,12 @@ public class VersionTest extends TestCase {
         assertVersion(3, 1, 7, "foo", Version.parseVersion("3.1.7-foo"));
     }
 
+    @Test
     public void testShouldTrimInput() {
         assertVersion(3, 1, 7, "foo", Version.parseVersion(" 3.1.7-foo\t\n "));
     }
 
+    @Test
     public void testShouldRejectInvalidInput() {
         assertInvalidVersion("Invalid major revision: \"\" in version \".4\"", ".4");
         assertInvalidVersion("Invalid major revision: \"\" in version \".4.2\"", ".4.2");
@@ -107,6 +116,7 @@ public class VersionTest extends TestCase {
         assertInvalidVersion("Invalid classifier: \"?=)\" in version \"3.4.3-?=)\"", "3.4.3-?=)");
     }
 
+    @Test
     public void test3and300shouldBeEquivalent() {
         assertTrue(Version.parseVersion("3").isEquivalent(Version.parseVersion("3.0.0")));
         assertFalse(Version.parseVersion("3.0.1").isEquivalent(Version.parseVersion("3.0.0")));
@@ -117,12 +127,14 @@ public class VersionTest extends TestCase {
         assertFalse(Version.parseVersion("3.0.1").isEquivalent(Version.parseVersion("2.2.2")));
     }
 
+    @Test
     public void testClassifiersShouldBeIgnoredInEquivalenceComparison() {
         assertTrue(Version.parseVersion("3-foo").isEquivalent(Version.parseVersion("3.0.0")));
         assertTrue(Version.parseVersion("3.0.0").isEquivalent(Version.parseVersion("3.0.0-bar")));
         assertTrue(Version.parseVersion("3.0.0-baz").isEquivalent(Version.parseVersion("3.0.0-bar")));
     }
 
+    @Test
     public void testStrictlyAfter() {
         doTestStrictlyAfter(true, "3.0.0", "2.0.0");
         doTestStrictlyAfter(true, "3.0.0", "2.5.0");
@@ -147,12 +159,14 @@ public class VersionTest extends TestCase {
         doTestStrictlyAfter(true, "3.4.2", "2.3.4");
     }
 
+    @Test
     public void testStrictlyAfterShouldIgnoreClassifiers() {
         doTestStrictlyAfter(true, "4-foo", "3.0-bar");
         doTestStrictlyAfter(true, "3.1.0", "3.0.0-bar");
         doTestStrictlyAfter(true, "3.1.0-foo", "3.0.0");
     }
 
+    @Test
     public void testBeforeOrEqu() {
         doTestBefore(false, "3.0.0", "2.0.0");
         doTestBefore(false, "3.0.0", "2.5.0");
@@ -177,6 +191,7 @@ public class VersionTest extends TestCase {
         doTestBefore(false, "3.4.2", "2.3.4");
     }
 
+    @Test
     public void testBeforeOrEquShouldIgnoreClassifiers() {
         doTestBefore(false, "4-foo", "3.0-bar");
         doTestBefore(false, "3.1.0", "3.0.0-bar");
@@ -186,6 +201,7 @@ public class VersionTest extends TestCase {
         doTestBefore(true, "3.0.0-foo", "3.1.0");
     }
 
+    @Test
     public void testUndefinedDeveloperVersion() {
         Version realVersion = new Version(3, 1, 1);
         assertTrue(Version.parseVersion(Version.UndefinedDevelopmentVersion.KEY) instanceof UndefinedDevelopmentVersion);

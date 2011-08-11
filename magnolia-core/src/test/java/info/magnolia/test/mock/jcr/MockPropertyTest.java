@@ -52,40 +52,34 @@ import org.junit.Test;
  * @version $Id$
  */
 public class MockPropertyTest {
-
     @Test
     public void testIsMultiple() throws RepositoryException {
         Property property = new MockProperty("test", "test");
         assertTrue(!property.isMultiple());
     }
-
     @Test
     public void testIsNode() {
         Property property = new MockProperty("test", "test");
         assertTrue(!property.isNode());
     }
-
     @Test
     public void testGetSetValueWithBigDecimal() throws Exception{
         Property property = new MockProperty("test", "test");
         property.setValue(BigDecimal.ONE);
         assertEquals(BigDecimal.ONE, property.getDecimal());
     }
-
     @Test
     public void testGetString() throws ValueFormatException, RepositoryException {
         String stringValue = "string";
         Property property = new MockProperty("test", new MockValue(stringValue));
         assertEquals(stringValue, property.getString());
     }
-
     @Test
     public void testGetType() throws RepositoryException {
         String stringValue = "string";
         Property property = new MockProperty("test", new MockValue(stringValue));
         assertEquals(PropertyType.STRING, property.getType());
     }
-
     @Test
     public void testGetValue() throws ValueFormatException, RepositoryException {
         String stringValue = "string";
@@ -93,7 +87,6 @@ public class MockPropertyTest {
         Property property = new MockProperty("test", mockValue);
         assertEquals(mockValue, property.getValue());
     }
-
     @Test
     public void testAccept() throws RepositoryException{
         Property property = new MockProperty("test", "test");

@@ -33,24 +33,26 @@
  */
 package info.magnolia.setup.for3_5;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.voters.URIStartsWithVoter;
-import static org.easymock.EasyMock.*;
 
 import java.util.Properties;
 
+import org.junit.Test;
+
 
 /**
- * @author vsteller
  * @version $Id$
- *
  */
 public class CheckAndUpdateExistingFiltersTest extends MgnlTestCase {
 
+    @Test
     public void testWarnIfFilterDidNotExistIn30() throws Exception {
         final String testContent = "" +
                 "/server/filters/customFilter.class=any.filter.Clazz\n" +
@@ -67,6 +69,7 @@ public class CheckAndUpdateExistingFiltersTest extends MgnlTestCase {
         verify(ctx);
     }
 
+    @Test
     public void testWarnIfFilterClassHasBeenModified() throws Exception {
         final String testContent = "" +
             "/server/filters/contentType.class=another.filter.Clazz\n" +
@@ -83,6 +86,7 @@ public class CheckAndUpdateExistingFiltersTest extends MgnlTestCase {
         verify(ctx);
     }
 
+    @Test
     public void testWarnIfFilterPriorityHasBeenModified() throws Exception {
         final String testContent = "" +
             "/server/filters/contentType.class=info.magnolia.cms.filters.ContentTypeFilter\n" +
@@ -99,6 +103,7 @@ public class CheckAndUpdateExistingFiltersTest extends MgnlTestCase {
         verify(ctx);
     }
 
+    @Test
     public void testWarnIfFilterParamsHaveBeenModified() throws Exception {
         final String testContent = "" +
             "/server/filters/intercept.class=info.magnolia.cms.filters.MgnlInterceptFilter\n" +
@@ -116,6 +121,7 @@ public class CheckAndUpdateExistingFiltersTest extends MgnlTestCase {
         verify(ctx);
     }
 
+    @Test
     public void testProperTransformationIfFilterBypassHasBeenModified() throws Exception {
         final String testContent = "" +
             "/server/filters/cms.class=info.magnolia.cms.filters.MgnlCmsFilter\n" +
@@ -142,6 +148,7 @@ public class CheckAndUpdateExistingFiltersTest extends MgnlTestCase {
 
     }
 
+    @Test
     public void testDoNotWarnIfFilterHasDefault30Configuration() throws Exception {
         final String testContent = "" +
                 "/server/filters/contentType.class=info.magnolia.cms.filters.ContentTypeFilter\n" +

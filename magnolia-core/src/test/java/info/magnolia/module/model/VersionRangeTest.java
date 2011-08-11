@@ -33,14 +33,15 @@
  */
 package info.magnolia.module.model;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class VersionRangeTest extends TestCase {
+public class VersionRangeTest {
+    @Test
     public void testBasicRangeParsing() {
         final VersionRange range = new VersionRange("1.2.3/4.5.6");
         VersionTest.assertVersion(1, 2, 3, null, range.getFrom());
@@ -48,6 +49,7 @@ public class VersionRangeTest extends TestCase {
         assertTrue(range.getFrom().isBeforeOrEquivalent(range.getTo()));
     }
 
+    @Test
     public void testInputIsTrimmedAndSeparatorCanBeSurroundBySpaces() {
         final VersionRange range = new VersionRange("\n\t  1.2.3  /\t\n4.5.6    \n");
         VersionTest.assertVersion(1, 2, 3, null, range.getFrom());
@@ -55,6 +57,7 @@ public class VersionRangeTest extends TestCase {
         assertTrue(range.getFrom().isBeforeOrEquivalent(range.getTo()));
     }
 
+    @Test
     public void testClassifiersAreAccepted() {
         final VersionRange range = new VersionRange("1.2.3-foo/4.5.6-bar");
         VersionTest.assertVersion(1, 2, 3, "foo", range.getFrom());
@@ -62,6 +65,7 @@ public class VersionRangeTest extends TestCase {
         assertTrue(range.getFrom().isBeforeOrEquivalent(range.getTo()));
     }
 
+    @Test
     public void testFromAndToCanBeSame() {
         final VersionRange range = new VersionRange("3.0.0/3.0.0");
         VersionTest.assertVersion(3, 0, 0, null, range.getFrom());
@@ -69,6 +73,7 @@ public class VersionRangeTest extends TestCase {
         assertTrue(range.getFrom().isEquivalent(range.getTo()));
     }
 
+    @Test
     public void testClassifiersAreAcceptedEvenIfFromAndToAreSame() {
         final VersionRange range = new VersionRange("3.0.0-pouet/3.0.0-tralala");
         VersionTest.assertVersion(3, 0, 0, "pouet", range.getFrom());
@@ -76,6 +81,7 @@ public class VersionRangeTest extends TestCase {
         assertTrue(range.getFrom().isEquivalent(range.getTo()));
     }
 
+    @Test
     public void testFromCanNotBeAfterTo() {
         try {
             new VersionRange("4.0.0/3.4.5");
@@ -85,6 +91,7 @@ public class VersionRangeTest extends TestCase {
         }
     }
 
+    @Test
     public void testFromCanNotBeAfterToAndClassifiersAreStillIgnored() {
         try {
             new VersionRange("4.0.0-foo/3.4.5-bar");
@@ -94,6 +101,7 @@ public class VersionRangeTest extends TestCase {
         }
     }
 
+    @Test
     public void testSingleVersionCanBeSpecified() {
         final VersionRange range = new VersionRange("1.2.3");
         VersionTest.assertVersion(1, 2, 3, null, range.getFrom());
@@ -101,41 +109,48 @@ public class VersionRangeTest extends TestCase {
         assertTrue(range.getFrom().isEquivalent(range.getTo()));
     }
 
+    @Test
     public void testFromCanBeWildcard() {
         final VersionRange range = new VersionRange("*/1.2.3");
         assertEquals(Version.UNDEFINED_FROM, range.getFrom());
         VersionTest.assertVersion(1, 2, 3, null, range.getTo());
     }
 
+    @Test
     public void testToCanBeWildcard() {
         final VersionRange range = new VersionRange("1.2.3/*");
         VersionTest.assertVersion(1, 2, 3, null, range.getFrom());
         assertEquals(Version.UNDEFINED_TO, range.getTo());
     }
 
+    @Test
     public void testToAndFromCanBeWildcards() {
         final VersionRange range = new VersionRange("*/*");
         assertEquals(Version.UNDEFINED_FROM, range.getFrom());
         assertEquals(Version.UNDEFINED_TO, range.getTo());
     }
 
+    @Test
     public void testSingleVersionCanBeWildcard() {
         final VersionRange range = new VersionRange("*");
         assertEquals(Version.UNDEFINED_FROM, range.getFrom());
         assertEquals(Version.UNDEFINED_TO, range.getTo());
     }
 
+    @Test
     public void testNullIsConsideredAsWildcard() {
         final VersionRange range = new VersionRange(null);
         assertEquals(Version.UNDEFINED_FROM, range.getFrom());
         assertEquals(Version.UNDEFINED_TO, range.getTo());
     }
 
+    @Test
     public void testChecksIfAVersionIsInRange() {
         doTestIsInRange(true, "1.2.3/3.4.5", "2.0.0");
         doTestIsInRange(false, "1.2.3/3.4.5", "4.0.0");
     }
 
+    @Test
     public void testChecksIfAVersionIsInRangeWithFromWildcard() {
         doTestIsInRange(true, "*/3.4.5", "1.2.3");
         doTestIsInRange(false, "*/3.4.5", "3.4.6");
@@ -143,6 +158,7 @@ public class VersionRangeTest extends TestCase {
         doTestIsInRange(true, "*/3.4.5", "3.4.5");
     }
 
+    @Test
     public void testChecksIfAVersionIsInRangeWithToWildcard() {
         doTestIsInRange(true, "1.2.3/*", "3.4.5");
         doTestIsInRange(false, "1.2.3/*", "1.0.0");
@@ -150,6 +166,7 @@ public class VersionRangeTest extends TestCase {
         doTestIsInRange(true, "1.2.3/*", "1.2.3");
     }
 
+    @Test
     public void testSingleVersionRangeShouldContainItSelf() {
         doTestIsInRange(true, "1.2.3", "1.2.3");
     }

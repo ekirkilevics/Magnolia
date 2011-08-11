@@ -33,10 +33,8 @@
  */
 package info.magnolia.cms.taglibs;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -52,9 +50,11 @@ import java.util.Collections;
 
 import javax.jcr.RepositoryException;
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class EditBarTest extends MgnlTagTestCase {
     private Content mainContent;
@@ -66,7 +66,8 @@ public class EditBarTest extends MgnlTagTestCase {
     }
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
@@ -84,6 +85,7 @@ public class EditBarTest extends MgnlTagTestCase {
         webContext.setParameters(Collections.singletonMap(Resource.MGNL_PREVIEW_ATTRIBUTE, "false"));
     }
 
+    @Test
     public void testDisplaysParagraphNameAsLabel() throws Exception {
         final String paraTitle = "testParaTitleKey";
         final Paragraph paraInfo = new Paragraph();

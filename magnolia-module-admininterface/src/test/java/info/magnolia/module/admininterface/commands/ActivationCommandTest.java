@@ -34,12 +34,7 @@
 package info.magnolia.module.admininterface.commands;
 
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.exchange.Syndicator;
@@ -59,30 +54,30 @@ import java.util.ArrayList;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
- * @author had
- *
+ * @version $Id$
  */
-public class ActivationCommandTest extends TestCase {
+public class ActivationCommandTest {
     private static final String PARENT_PATH = "/foo/bar";
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
-        super.tearDown();
         ComponentsTestUtil.clear();
     }
 
+    @Test
     public void testActivateNonRecursiveNoSiblings() throws Exception {
         final ActivationCommand command = new ActivationCommand();
         command.setRepository("some-repo");

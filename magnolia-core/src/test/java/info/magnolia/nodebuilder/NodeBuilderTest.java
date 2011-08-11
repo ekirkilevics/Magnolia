@@ -33,22 +33,24 @@
  */
 package info.magnolia.nodebuilder;
 
+import static info.magnolia.nodebuilder.Ops.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
-import static info.magnolia.nodebuilder.Ops.*;
 import info.magnolia.test.RepositoryTestCase;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class NodeBuilderTest extends RepositoryTestCase {
+    @Test
     public void testContextNodeIsProperlyPropagated() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         {
@@ -91,6 +93,7 @@ public class NodeBuilderTest extends RepositoryTestCase {
         assertEquals("some String value", hm.getNodeData("/MyRoot/newName").getString());
     }
 
+    @Test
     public void testErrorMessages() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         {
@@ -126,6 +129,7 @@ public class NodeBuilderTest extends RepositoryTestCase {
         assertEquals("chalala/zeuzeu can't be found at /MyRoot/hello/world.", messageTracker.getMessages().get(6));
     }
 
+    @Test
     public void testPropertyNotReplaceIfCurrentValueDoesNotMatchExpectations() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         {

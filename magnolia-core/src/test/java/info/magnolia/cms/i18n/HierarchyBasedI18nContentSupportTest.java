@@ -33,19 +33,22 @@
  */
 package info.magnolia.cms.i18n;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 
 import java.util.Locale;
 
+import org.junit.Test;
+
 
 /**
- * @author fgrilli
- *
+ * @version $Id$
  */
 public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupportTest {
     @Override
+    @Test
     public void testDetermineLocale(){
         HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
@@ -105,6 +108,7 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
     }
 
     @Override
+    @Test
     public void testDetermineLocaleEndlessLoop () {
         HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
@@ -143,6 +147,7 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
     }
 
     @Override
+    @Test
     public void testGetNodeDataEndlessLoop() throws Exception {
         HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
         defSupport.setEnabled(true);

@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.model.workbench.registry;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ContentRepository;

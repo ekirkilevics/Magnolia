@@ -33,17 +33,19 @@
  */
 package info.magnolia.cms.util;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.SystemProperty;
-import junit.framework.TestCase;
 
 import java.util.List;
 
-/**
- * @author had
- * @version $Revision: $ ($Author: $)
- */
-public class WorkspaceXmlUtilTest extends TestCase {
+import org.junit.Test;
 
+/**
+ * @version $Id$
+ */
+public class WorkspaceXmlUtilTest {
+
+@Test
     public void testWorkspaceOldIndexer() {
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "src/test/resources/info/magnolia/cms/util");
         List names = WorkspaceXmlUtil.getWorkspaceNamesWithIndexer();

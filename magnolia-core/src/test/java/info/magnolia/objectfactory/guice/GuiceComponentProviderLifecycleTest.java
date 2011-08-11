@@ -153,42 +153,37 @@ public class GuiceComponentProviderLifecycleTest {
             stopSequence += "E";
         }
     }
-
     @Test
     public void testSimpleLifeCycle() {
         assertLifeCycleSequence(LifecycleSimple.class, "A", "A");
     }
-
     @Test
     public void testMultipleAnnotatedMethods() {
         // order among methods in same class is undefined so we just test that all of them were called
         assertLifeCycleSequenceContainsAll(LifecycleMultiple.class, "AB", "BA");
     }
 
-    @Test
     @Ignore
+    @Test
     public void testExtends() {
         // Order of @PreDestroy fails, issue filed with MycilaGuice https://code.google.com/p/mycila/issues/detail?id=30
         assertLifeCycleSequence(LifecycleExtends.class, "AX", "XA");
     }
-
     @Test
     public void testOverrides() {
         assertLifeCycleSequence(LifecycleOverrides.class, "B", "B");
     }
-
     @Test
     public void testOverridesRemovesAnnotations() {
         assertLifeCycleSequence(LifecycleOverridesRemovesAnnotations.class, "", "");
     }
-
     @Test
     public void testPrivateMethods() {
         assertLifeCycleSequence(LifecyclePrivateMethods.class, "D", "D");
     }
 
-    @Test
     @Ignore
+    @Test
     public void testSameNamePrivateMethods() {
         // Order of @PreDestroy fails, issue filed with MycilaGuice https://code.google.com/p/mycila/issues/detail?id=30
         assertLifeCycleSequence(LifecycleSameNamePrivateMethods.class, "ED", "DE");

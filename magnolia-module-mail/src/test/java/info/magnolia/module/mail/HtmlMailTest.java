@@ -33,8 +33,12 @@
  */
 package info.magnolia.module.mail;
 
+import static org.junit.Assert.*;
+
 import info.magnolia.module.mail.templates.MailAttachment;
 import info.magnolia.module.mail.templates.MgnlEmail;
+
+import org.junit.Test;
 import org.subethamail.wiser.WiserMessage;
 
 import java.io.File;
@@ -43,11 +47,11 @@ import java.util.Iterator;
 
 
 /**
- * HtmlMailTest.
- * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
+ * @version $Id$
  */
 public class HtmlMailTest extends AbstractMailTest {
 
+    @Test
     public void testHtmlMail() throws Exception {
 
         MgnlEmail email = prepareTest();
@@ -66,6 +70,7 @@ public class HtmlMailTest extends AbstractMailTest {
 
     }
 
+    @Test
     public void testHtmlMailWithImageFile() throws Exception {
 
         MgnlEmail email = prepareTest();
@@ -85,6 +90,7 @@ public class HtmlMailTest extends AbstractMailTest {
 
     }
 
+    @Test
     public void testHtmlMailWithTwoEmbeddedContent() throws Exception {
 
         MgnlEmail email = prepareTest();
@@ -108,6 +114,7 @@ public class HtmlMailTest extends AbstractMailTest {
 
     }
 
+    @Test
     public void testHtmlMailWithPdf() throws Exception {
         MgnlEmail email = prepareTest();
         String subject = "test html email";

@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.exchangesimple;
 
+
+import static org.junit.Assert.*;
+
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.createStrictMock;
@@ -77,11 +80,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Basic test for receiving end of the activation.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class ReceiveFilterTest extends MgnlTestCase {
     private static final String PARENT_PATH = "/foo/bar";
@@ -104,17 +109,20 @@ public class ReceiveFilterTest extends MgnlTestCase {
     }
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         super.tearDown();
     }
 
+    @Test
     public void testActivateShouldCreateNewNodeIfItDoesNotExist() throws Exception {
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
             @Override
@@ -150,6 +158,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         });
     }
 
+    @Test
     public void testActivateShouldUpdateNodeIfItAlreadyExists() throws Exception {
         final Content existingNode = createMock(Content.class); // can't make it strict, as getHandle and getName are called plenty of times
         final Content existingParent = createStrictMock(Content.class);
@@ -379,7 +388,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         verify(mocks);
     }
 
-
+    @Test
     public void testCantActivateInLockedNode() throws Exception {
         // use a nice mock as because of multithreading we are not able to specify exact order and number of calls
         final Content parentNode = createNiceMock(Content.class);

@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.admininterface;
 
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
@@ -45,25 +48,25 @@ import info.magnolia.module.admininterface.commands.BaseActivationCommand;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockMetaData;
-import junit.framework.TestCase;
-import org.apache.commons.collections.ListUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.jcr.Session;
 import javax.jcr.Workspace;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.easymock.EasyMock.*;
+import org.apache.commons.collections.ListUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
- * @author had
- * @version $Id:$
+ * @version $Id$
  */
-public class AdminTreeMVCHandlerUTF8Test extends TestCase
-{
+public class AdminTreeMVCHandlerUTF8Test{
 
     private HttpServletRequest req;
 
@@ -101,7 +104,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
 
     public static final String TEXT_NOT_ALLOWED_VALIDATED = "-----";
 
-    @Override
+    @Before
     public void setUp()
     {
         req = createStrictMock(HttpServletRequest.class);
@@ -119,7 +122,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
         ComponentsTestUtil.setInstance(SystemContext.class, sysctx);
     }
 
-    @Override
+    @After
     public void tearDown()
     {
         MgnlContext.setInstance(null);
@@ -127,6 +130,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
         SystemProperty.clear();
     }
 
+    @Test
     public void testMove() throws Exception
     {
         expect(ctx.getHierarchyManager("repo-name")).andReturn(hm);
@@ -147,6 +151,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
      * Make sure that the uuid is retrieved for activation and path is translated using SC
      * @throws Exception
      */
+    @Test
     public void testGetActivateCommandContext() throws Exception
     {
         handler.pathSelected = "/some/" + TEXT_ACCENTED + "/" + TEXT_SPECIAL;
@@ -171,6 +176,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
      * test on save value
      * @throws Exception
      */
+    @Test
     public void testSaveValueCommandContext() throws Exception
     {
         String parentHandle = "/foo";
@@ -214,6 +220,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
      * test on save value
      * @throws Exception
      */
+    @Test
     public void testSaveUTF8ValueCommandContext() throws Exception
     {
         String parentHandle = "/foo";
@@ -261,6 +268,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
      * Make sure path is set for <b>every</b> command.
      * @throws Exception
      */
+    @Test
     public void testGetSomeCommandContext() throws Exception
     {
         handler.pathSelected = "/some/" + TEXT_ACCENTED + "/" + TEXT_SPECIAL;
@@ -272,6 +280,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
         verify(objs);
     }
 
+    @Test
     public void testCopy() throws Exception
     {
         final boolean unactivated[] = new boolean[1];
@@ -303,6 +312,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
         assertTrue(unactivated[0]);
     }
 
+    @Test
     public void testDeepCopy() throws Exception
     {
         final boolean unactivated[] = new boolean[1];

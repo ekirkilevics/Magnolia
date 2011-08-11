@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.core.version;
 
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
 
@@ -40,6 +42,9 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.version.Version;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
@@ -56,7 +61,8 @@ import info.magnolia.test.mock.MockContext;
 public class BaseVersionManagerTest extends RepositoryTestCase {
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         // context is then cleared automatically on teardown by RepoTestCase(MgnlTestCase)
         MockContext ctx = (MockContext) MgnlContext.getSystemContext();
@@ -64,6 +70,7 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
 
     }
 
+    @Test
     public void testCreateAndRestoreVersion() throws RepositoryException{
         Session session = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
         VersionManager versionMan = VersionManager.getInstance();
@@ -91,6 +98,7 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         assertTrue("Paragraph should be restored", node.hasNode("paragraph"));
     }
 
+    @Test
     public void testCreateAndRestoreDeletedVersion() throws RepositoryException {
         Provider repoProvider = ContentRepository.getRepositoryProvider(ContentRepository.WEBSITE);
         String mgnlMixDeleted = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<nodeTypes" + " xmlns:rep=\"internal\""

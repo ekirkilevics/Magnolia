@@ -33,29 +33,32 @@
  */
 package info.magnolia.module.model.reader;
 
+import static org.junit.Assert.*;
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
-import junit.framework.TestCase;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DependencyCheckerImplTest extends TestCase {
+public class DependencyCheckerImplTest {
     private DependencyChecker depChecker;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         depChecker = new DependencyCheckerImpl();
     }
 
+    @Test
     public void testSimpleDependenciesAreResolvedAndChecked() throws Exception {
         final Map modules = buildModulesMapWithDependencyOn("3.0");
         depChecker.checkDependencies(modules);
@@ -63,24 +66,28 @@ public class DependencyCheckerImplTest extends TestCase {
     }
 
 
+    @Test
     public void testDependenciesCanUseLowerBoundInfiniteRanges() throws Exception {
         final Map modules = buildModulesMapWithDependencyOn("*/4.0");
         depChecker.checkDependencies(modules);
         // assert(no dependency failures)
     }
 
+    @Test
     public void testDependenciesCanUseUpperBoundInfiniteRanges() throws Exception {
         final Map modules = buildModulesMapWithDependencyOn("1.0/*");
         depChecker.checkDependencies(modules);
         // assert(no dependency failures)
     }
 
+    @Test
     public void testDependenciesCanUseFiniteRanges() throws Exception {
         final Map modules = buildModulesMapWithDependencyOn("1.0/4.0");
         depChecker.checkDependencies(modules);
         // assert(no dependency failures)
     }
 
+    @Test
     public void testDependenciesShouldBeInvalidIfOutsideOfUpperBound() {
         final Map modules = buildModulesMapWithDependencyOn("1.0/2.0");
         try {
@@ -91,6 +98,7 @@ public class DependencyCheckerImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testDependenciesShouldBeInvalidIfOutsideOfLowerBound() {
         final Map modules = buildModulesMapWithDependencyOn("4.0/5.0");
         try {
@@ -101,6 +109,7 @@ public class DependencyCheckerImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testDependenciesShouldBeInvalidIfOutsideOfUpperBoundWithInfiniteLowerBound() {
         final Map modules = buildModulesMapWithDependencyOn("*/2.0");
         try {
@@ -111,6 +120,7 @@ public class DependencyCheckerImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testDependenciesShouldBeInvalidIfOutsideOfLowerBoundWithInfiniteUpperBound() {
         final Map modules = buildModulesMapWithDependencyOn("4.0/*");
         try {
@@ -121,6 +131,7 @@ public class DependencyCheckerImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testShouldFailWhenDependencyNotFound() {
         final Map modules = buildModulesMapWithDependencyOn("Q.W");
         modules.remove("module1");
@@ -132,6 +143,7 @@ public class DependencyCheckerImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testOptionalDependenciesAreIndeedOptional() throws ModuleDependencyException {
         final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);
         final ModuleDefinition modDefC = new ModuleDefinition("mod-c", Version.parseVersion("1"), "fake.Module", null);
@@ -156,6 +168,7 @@ public class DependencyCheckerImplTest extends TestCase {
         assertEquals(modDefC, sorted.get(1));
     }
 
+    @Test
     public void testOptionalDependenciesStillHaveToMatchVersionRanges() throws ModuleDependencyException {
         final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1.5"), "fake.Module", null);
         final ModuleDefinition modDefC = new ModuleDefinition("mod-c", Version.parseVersion("1"), "fake.Module", null);
@@ -175,6 +188,7 @@ public class DependencyCheckerImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testModulesShouldBeSortedAccordingToDependencies() {
         final Map modules = new HashMap();
         final ModuleDefinition module1 = new ModuleDefinition("module1", Version.parseVersion("3.0"), null, null);
@@ -203,13 +217,14 @@ public class DependencyCheckerImplTest extends TestCase {
         assertEquals(module4, list.get(4));
     }
 
+    @Test
     public void testNonOptionalDependencyWithUnspecifiedVersionShouldBeTakenIntoAccount() throws Exception {
         final Map modules = new HashMap();
         final ModuleDefinition module1 = new ModuleDefinition("module1", Version.parseVersion("3.0"), null, null);
         final ModuleDefinition module2 = new ModuleDefinition("module2", Version.parseVersion("3.0"), null, null);
 
         module1.addDependency(new DependencyDefinition("module2", null, false));
-        
+
         modules.put("module1", module1);
         modules.put("module2", module2);
         depChecker.checkDependencies(modules);
@@ -219,6 +234,7 @@ public class DependencyCheckerImplTest extends TestCase {
         assertEquals(module1, sorted.get(1));
     }
 
+    @Test
     public void testOptionalDependencyWithUnspecifiedVersionShouldBeTakenIntoAccount() throws Exception {
         final Map modules = new HashMap();
         final ModuleDefinition module1 = new ModuleDefinition("module1", Version.parseVersion("3.0"), null, null);
@@ -235,6 +251,7 @@ public class DependencyCheckerImplTest extends TestCase {
         assertEquals(module1, sorted.get(1));
     }
 
+    @Test
     public void testBlowupExplicitelyInCaseOfSelfDependency() {
         final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
         modDefA.setDisplayName("Module-A");
@@ -253,6 +270,7 @@ public class DependencyCheckerImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testCyclicDependenciesBlowupWithAClearExceptionMessage() {
         final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
         modDefA.setDisplayName("Module-A");
@@ -278,6 +296,7 @@ public class DependencyCheckerImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testCoreIsAlwaysSortedFirst() {
         final Map modules = new HashMap();
         final ModuleDefinition core = new ModuleDefinition("core", Version.parseVersion("1.2.3"), null, null);
@@ -301,6 +320,7 @@ public class DependencyCheckerImplTest extends TestCase {
         assertEquals(module3, list.get(3));
     }
 
+    @Test
     public void testWebappIsAlwaysSortedLast() {
         final Map modules = new HashMap();
         final ModuleDefinition webapp = new ModuleDefinition("webapp", Version.parseVersion("1.2.3"), null, null);

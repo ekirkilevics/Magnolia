@@ -34,8 +34,8 @@
 package info.magnolia.cms.i18n;
 
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
@@ -46,26 +46,23 @@ import info.magnolia.test.mock.MockHierarchyManager;
 
 import java.util.Locale;
 
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * @author philipp
  * @version $Id$
- *
  */
 public class DefaultI18NContentSupportTest extends MgnlTestCase {
 
-    /**
-     *
-     */
     protected static final Locale DEFAULT_LOCALE = new Locale("en");
     /**
      * Logger.
      */
     protected static Logger log = LoggerFactory.getLogger(DefaultI18NContentSupportTest.class);
 
+    @Test
     public void testDetermineLocale(){
         DefaultI18nContentSupport defSupport = new DefaultI18nContentSupport();
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
@@ -97,6 +94,7 @@ public class DefaultI18NContentSupportTest extends MgnlTestCase {
         assertEquals(DEFAULT_LOCALE, locale);
     }
 
+    @Test
     public void testDetermineLocaleEndlessLoop () {
         DefaultI18nContentSupport defSupport = new DefaultI18nContentSupport();
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
@@ -134,6 +132,7 @@ public class DefaultI18NContentSupportTest extends MgnlTestCase {
 
     }
 
+    @Test
     public void testGetNodeDataEndlessLoop() throws Exception {
         DefaultI18nContentSupport defSupport = new DefaultI18nContentSupport();
         defSupport.setEnabled(true);

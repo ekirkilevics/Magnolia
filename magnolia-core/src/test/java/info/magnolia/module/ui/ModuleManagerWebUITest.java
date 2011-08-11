@@ -49,7 +49,10 @@ import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -63,11 +66,10 @@ import static org.easymock.EasyMock.*;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ModuleManagerWebUITest extends TestCase {
+public class ModuleManagerWebUITest {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         // shunt log4j
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
 
@@ -80,13 +82,13 @@ public class ModuleManagerWebUITest extends TestCase {
         ComponentsTestUtil.setInstance(FreemarkerConfig.class, freemarkerConfig);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testModuleManagementExceptionsArePropagatedEvenThoughTheUpdateIsRunningInASeparateThread() throws ModuleManagementException, InterruptedException {
         final InstallContextImpl ctx = new InstallContextImpl(new ModuleRegistryImpl());
         final ModuleManager moduleManager = createStrictMock(ModuleManager.class);
@@ -110,6 +112,7 @@ public class ModuleManagerWebUITest extends TestCase {
     }
 
     /*
+    @Test
     public void testModuleManagementExceptionsArePropagatedEvenThoughTheUpdateIsRunningInASeparateThreadAndTheExceptionMessageMentionsTheCurrentModule() throws ModuleManagementException, InterruptedException {
         final InstallContextImpl ctx = new InstallContextImpl();
         final ModuleDefinition testmodule = new ModuleDefinition("testmodule", Version.parseVersion("1.0"), null, null);
@@ -136,14 +139,17 @@ public class ModuleManagerWebUITest extends TestCase {
     }
      */
 
+    @Test
     public void testListTasksTemplate() throws ModuleManagementException {
         doTestTemplate("listTasks");
     }
 
+    @Test
     public void testDoneTemplate() throws ModuleManagementException {
         doTestTemplate("installDone");
     }
 
+    @Test
     public void testRestartNeededTemplate() throws ModuleManagementException {
         doTestTemplate("installDoneRestartNeeded");
     }

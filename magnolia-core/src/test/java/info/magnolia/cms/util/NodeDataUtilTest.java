@@ -33,15 +33,18 @@
  */
 package info.magnolia.cms.util;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.test.mock.MockNodeData;
-import junit.framework.TestCase;
+
+import org.junit.Test;
 
 /**
  * @version $Id$
  */
-public class NodeDataUtilTest extends TestCase {
+public class NodeDataUtilTest {
 
+@Test
     public void testSetNodeDataWithInteger() throws Exception {
         // GIVEN
         NodeData data = new MockNodeData("test", 0);

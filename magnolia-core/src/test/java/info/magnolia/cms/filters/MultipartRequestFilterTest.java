@@ -33,16 +33,8 @@
  */
 package info.magnolia.cms.filters;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.getCurrentArguments;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.SystemProperty;
@@ -70,10 +62,11 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * @author Andreas Brenk
- * @author Fabrizio Giustina
  * @version $Id$
  */
 public class MultipartRequestFilterTest extends MgnlTestCase {
@@ -84,7 +77,8 @@ public class MultipartRequestFilterTest extends MgnlTestCase {
     private WebContext webCtx;
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
@@ -103,16 +97,19 @@ public class MultipartRequestFilterTest extends MgnlTestCase {
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         super.tearDown();
     }
 
+    @Test
     public void testFilterCOS() throws Throwable {
         webCtx.push(isA(MultipartRequestWrapper.class), eq(res));
         doTest(new CosMultipartRequestFilter(), "text/xml");
     }
 
+    @Test
     public void testFilterCommonsFileUpload() throws Throwable {
         webCtx.push(isA(MultipartRequestWrapper.class), eq(res));
         doTest(new MultipartRequestFilter(), "text/xml; charset=UTF-8");

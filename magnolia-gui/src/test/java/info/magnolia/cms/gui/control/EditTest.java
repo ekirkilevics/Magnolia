@@ -33,17 +33,19 @@
  */
 package info.magnolia.cms.gui.control;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class EditTest extends TestCase {
+public class EditTest {
+
+    @Test
     public void testSingleLineEditAndTextAreaAreBothEncoded() {
         final Edit edit = new Edit(null, "m<n&copy;");
         edit.setRows("1");
@@ -57,6 +59,7 @@ public class EditTest extends TestCase {
         assertEquals("m&lt;n&amp;copy;", inputValue);
     }
 
+    @Test
     public void testAngularBracketsAreEncoded() {
         final Edit edit = new Edit(null, "a<b>c");
         assertEquals("a&lt;b&gt;c", extractInputValue(edit));
@@ -67,6 +70,7 @@ public class EditTest extends TestCase {
      * (i.e. as an accented letter), thus losing the entity-encoding in further
      * save operations.
      */
+    @Test
     public void testHtmlEntitiesAreDoubleEncoded() {
         final Edit edit = new Edit(null, "th&eacute;");
         assertEquals("th&amp;eacute;", extractInputValue(edit));

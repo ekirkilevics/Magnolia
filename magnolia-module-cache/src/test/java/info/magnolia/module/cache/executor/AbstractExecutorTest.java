@@ -33,10 +33,8 @@
  */
 package info.magnolia.module.cache.executor;
 
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicyResult;
 
@@ -47,30 +45,32 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
  * Basic test for the common cache executor functionality.
- * @author had
- * @version $Id: $
+ * @version $Id$
  */
-public class AbstractExecutorTest extends TestCase {
+public class AbstractExecutorTest {
     private final static long ONE_SECOND_IN_MSECS = 1000L;
 
     private HttpServletRequest request;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         //MockUtil.initMockContext();
         request = createStrictMock(HttpServletRequest.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         verify(request);
     }
 
+    @Test
     public void testNotModifiedAfterRequestHeader() throws Exception {
 
         final long modifiedTime = System.currentTimeMillis();
@@ -85,6 +85,7 @@ public class AbstractExecutorTest extends TestCase {
         assertFalse("Request if-modified-since is 2 seconds after modification time - should have returned false", modifiedSince);
     }
 
+    @Test
     public void testModifiedAfterRequestHeader() throws Exception {
 
         final long modifiedTime = System.currentTimeMillis();
@@ -99,6 +100,7 @@ public class AbstractExecutorTest extends TestCase {
         assertTrue("Request if-modified-since is 2 seconds before modification time - should have returned true", modifiedSince);
     }
 
+    @Test
     public void testModifiedSameAsRequestHeader() throws Exception {
 
         final long modifiedTime = System.currentTimeMillis();

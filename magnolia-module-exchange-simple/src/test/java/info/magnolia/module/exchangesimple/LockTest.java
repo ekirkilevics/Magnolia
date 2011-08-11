@@ -32,14 +32,8 @@
  *
  */
 package info.magnolia.module.exchangesimple;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.lock.LockException;
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -49,12 +43,17 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.test.RepositoryTestCase;
 import info.magnolia.test.mock.MockUtil;
 
-import static org.easymock.EasyMock.*;
+import javax.jcr.RepositoryException;
+import javax.jcr.lock.LockException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test to verify releasing of locks on activation.
- * @author had
- * @version $Id:$
+ * @version $Id$
  */
 public class LockTest extends RepositoryTestCase {
 
@@ -187,6 +186,8 @@ public class LockTest extends RepositoryTestCase {
         }
 
     }
+
+    @Test
     public void testLocks() throws Exception {
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
         Content node = hm.createContent("/", "page", ItemType.CONTENT.getSystemName());
@@ -209,6 +210,7 @@ public class LockTest extends RepositoryTestCase {
         t2.interrupt();
     }
 
+    @Test
     public void testLockReceiveFilter() throws Exception {
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
         Content node = hm.createContent("/", "page", ItemType.CONTENT.getSystemName());

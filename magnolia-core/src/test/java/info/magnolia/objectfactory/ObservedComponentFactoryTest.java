@@ -44,18 +44,18 @@ import info.magnolia.content2bean.impl.TypeMappingImpl;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ObservedComponentFactoryTest extends TestCase {
+public class ObservedComponentFactoryTest {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         // default impl's for content2bean TODO - refactor PropertiesInitializer
         final TypeMappingImpl typeMapping = new TypeMappingImpl();
         ComponentsTestUtil.setInstance(TypeMapping.class, typeMapping);
@@ -64,14 +64,14 @@ public class ObservedComponentFactoryTest extends TestCase {
         ComponentsTestUtil.setImplementation(TransformationState.class, "info.magnolia.content2bean.impl.TransformationStateImpl");
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         SystemProperty.clear();
-        super.tearDown();
     }
 
+    @Test
     public void testReturnsAProxyToGivenTypeIfConcreteClassEvenIfPathDoesNotExistYet() throws Exception {
         MockUtil.createAndSetHierarchyManager("test", "/foo");
 
@@ -81,6 +81,7 @@ public class ObservedComponentFactoryTest extends TestCase {
         assertEquals("default", observedCompo.getTheString());
     }
 
+    @Test
     public void testProxyIsSwappedOncePathGetsReloaded() throws Exception {
         MockUtil.createAndSetHierarchyManager("test", "/foo");
 
@@ -103,6 +104,7 @@ public class ObservedComponentFactoryTest extends TestCase {
     }
 
     /*
+    @Test
     public void testReturnsANullProxyUntilPathExistsForNonConcreteTypes() throws Exception {
         MockUtil.createAndSetHierarchyManager("test", "/foo");
 

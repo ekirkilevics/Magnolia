@@ -65,7 +65,6 @@ public class Content2NodeCollectionWrapperTest {
 
         wrapper = new Content2NodeCollectionWrapper(testCollection);
     }
-
     @Test
     public void testRemoveAll() {
         Collection<Node> nodesToRemove = new ArrayList<Node>(2);
@@ -76,7 +75,6 @@ public class Content2NodeCollectionWrapperTest {
         assertEquals(1, wrapper.size());
         assertEquals(content2.getJCRNode(), wrapper.iterator().next());
     }
-
     @Test
     public void testRetainAll() {
         Collection<Node> nodesToRetain = new ArrayList<Node>(2);

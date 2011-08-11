@@ -43,7 +43,10 @@ import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionRange;
 import info.magnolia.module.model.VersionTest;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -55,24 +58,23 @@ import java.util.List;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class BetwixtModuleDefinitionReaderTest extends TestCase {
+public class BetwixtModuleDefinitionReaderTest {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         // shunt log4j
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
         // shunt the chatty Digester log explicitely - possibly because of the commons-logging wrapping, shunting the root logger isn't enough
         org.apache.log4j.Logger.getLogger(org.apache.commons.digester.Digester.class).setLevel(org.apache.log4j.Level.OFF);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testDisplayNameCanBeWrittenWithDashEventhoughThisIsDeprecated() throws Exception {
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
         "<module>\n" +
@@ -86,6 +88,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertEquals("The Display Name", mod.getDisplayName());
     }
 
+    @Test
     public void testDisplayNameShouldBeWrittenWithCapitalN() throws Exception {
         String xml = "<module>\n" +
         "  <name>the name</name>\n" +
@@ -98,6 +101,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertEquals("The Display Name", mod.getDisplayName());
     }
 
+    @Test
     public void testClassIsResolvedToClassNameAsAString() throws Exception {
         String xml = "<module>\n" +
         "  <name>the name</name>\n" +
@@ -109,6 +113,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertEquals("java.lang.Integer", mod.getClassName());
     }
 
+    @Test
     public void testVersionHandlerIsResolvedToAClass() throws Exception {
         String xml = "<module>\n" +
         "  <name>the name</name>\n" +
@@ -120,6 +125,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertEquals(String.class, mod.getVersionHandler());
     }
 
+    @Test
     public void testModuleVersionIsProperlyRead() throws ModuleManagementException {
         String xml = "<module>\n" +
         "  <name>the name</name>\n" +
@@ -135,6 +141,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         VersionTest.assertVersion(1, 2, 3, null, version);
     }
 
+    @Test
     public void testDependenciesVersionAreProperlyRead() throws ModuleManagementException {
         //org.apache.log4j.Logger.getLogger("org.apache").setLevel(org.apache.log4j.Level.DEBUG);
         String xml = "<module>\n" +
@@ -180,6 +187,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         VersionTest.assertVersion(8, 9, 0, null, dep2versionRange.getTo());
     }
 
+    @Test
     public void testDependenciesCanBeSpecifiedWithoutVersion() throws ModuleManagementException {
         String xml = "<module>\n" +
         "  <name>myName</name>\n" +
@@ -215,6 +223,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertEquals(Version.UNDEFINED_TO, dep2versionRange.getTo());
     }
 
+    @Test
     public void testInvalidXmlIsCheckedAgainstDTD() {
         String xmlWithVersionElementMisplaced = "<module>\n" +
         "  <version>2.3.4</version>\n" +
@@ -228,6 +237,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         }
     }
 
+    @Test
     public void testGivenDtdIsIgnoredAndCheckedAgainstOurs() {
         String xmlWithWrongDtd = "<!DOCTYPE log4j:configuration SYSTEM \"log4j.dtd\">\n" +
         "<module>\n" +
@@ -242,6 +252,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         }
     }
 
+    @Test
     public void testReadCompleteDescriptorAndCheckAllPropertiesDamnYouBetwixt() throws Exception {
         final BetwixtModuleDefinitionReader reader = new BetwixtModuleDefinitionReader();
         final ModuleDefinition m = reader.readFromResource("/info/magnolia/module/model/reader/dummy-module.xml");
@@ -269,15 +280,15 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertEquals(DependencyLevelComparatorTest.class.getName(), servlet1.getClassName());
         assertEquals("lalala", servlet1.getComment());
         assertEquals(2, servlet1.getMappings().size());
-        assertEquals("/foo/*", (String) fromList(servlet1.getMappings(), 0));
-        assertEquals("/bar", (String) fromList(servlet1.getMappings(), 1));
+        assertEquals("/foo/*", fromList(servlet1.getMappings(), 0));
+        assertEquals("/bar", fromList(servlet1.getMappings(), 1));
         final ServletDefinition servlet2 = (ServletDefinition) fromList(m.getServlets(), 1);
         assertNotNull(servlet2);
         assertEquals("OtherServlet", servlet2.getName());
         assertEquals(info.magnolia.module.model.VersionComparatorTest.class.getName(), servlet2.getClassName());
         assertEquals("blahblah", servlet2.getComment());
         assertEquals(1, servlet2.getMappings().size());
-        assertEquals("/blah/*", (String) fromList(servlet2.getMappings(), 0));
+        assertEquals("/blah/*", fromList(servlet2.getMappings(), 0));
 
         assertNotNull(m.getRepositories());
         assertEquals(2, m.getRepositories().size());
@@ -294,6 +305,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertEquals("/chalala/testNodeTypes.xml", repo2.getNodeTypeFile());
     }
 
+    @Test
     public void testSelf() {
         // make sure these resources are available - ide might not have compiled them
         assertNotNull(BetwixtModuleDefinitionReaderTest.class.getResourceAsStream("/info/magnolia/module/model/ModuleDefinition.betwixt"));

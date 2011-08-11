@@ -33,14 +33,19 @@
  */
 package info.magnolia.cms.filters;
 
-import com.mockrunner.mock.web.MockHttpServletRequest;
+import static org.junit.Assert.*;
 import info.magnolia.test.MgnlTestCase;
 
+import org.junit.Test;
+
+import com.mockrunner.mock.web.MockHttpServletRequest;
+
 /**
- * Test for UnicodeNormalizationRequestWrapper.
+ * @version $Id$
  */
 public class UnicodeNormalizationRequestWrapperTest extends MgnlTestCase {
 
+    @Test
     public void testWillNotBlockNewlyAddedParametersOnForward() {
 
         MockHttpServletRequest mock = new MockHttpServletRequest();

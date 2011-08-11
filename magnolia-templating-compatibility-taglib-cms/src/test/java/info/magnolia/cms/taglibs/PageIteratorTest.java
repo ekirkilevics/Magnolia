@@ -66,7 +66,7 @@ public class PageIteratorTest extends MgnlTagTestCase {
     }
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
 
         MockNode mainContent = new MockNode("main");

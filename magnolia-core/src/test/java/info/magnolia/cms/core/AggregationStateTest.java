@@ -36,20 +36,22 @@ package info.magnolia.cms.core;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class AggregationStateTest extends TestCase {
+public class AggregationStateTest {
     private WebContext webCtx;
     private AggregationState aggState;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         aggState = new AggregationState();
         aggState.setCharacterEncoding("UTF-8");
 
@@ -59,19 +61,20 @@ public class AggregationStateTest extends TestCase {
         replay(webCtx);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         verify(webCtx);
 
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testUriDecodingShouldStripCtxPath() {
         assertEquals("/pouet", aggState.stripContextPathIfExists("/foo/pouet"));
     }
 
+    @Test
     public void testUriDecodingShouldReturnPassedURIDoesntContainCtxPath() {
         assertEquals("/pouet", aggState.stripContextPathIfExists("/pouet"));
     }

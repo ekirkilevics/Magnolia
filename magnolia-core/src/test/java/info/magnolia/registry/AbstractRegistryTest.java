@@ -48,7 +48,6 @@ import org.junit.Test;
  * @version $Id$
  */
 public class AbstractRegistryTest {
-
     @Test
     public void testUnregister() throws RegistrationException{
         // GIVEN
@@ -64,7 +63,6 @@ public class AbstractRegistryTest {
         // THEN
         assertEquals(0, rendererRegistry.getProviders().values().size());
     }
-
     @Test
     public void testUnregisterAndRegister() throws RegistrationException {
         // GIVEN
@@ -94,7 +92,6 @@ public class AbstractRegistryTest {
         assertTrue(idsOfNewRegisteredProviders.contains(rendererId));
         assertEquals(1, idsOfNewRegisteredProviders.size());
     }
-
     @Test
     public void testRegisteringSameProviderMultipleTimesOverwritesOldSetting() throws RegistrationException {
         // GIVEN

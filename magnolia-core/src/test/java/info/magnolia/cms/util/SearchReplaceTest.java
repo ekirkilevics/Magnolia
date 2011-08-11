@@ -37,7 +37,10 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import javax.jcr.RepositoryException;
 import java.util.regex.Pattern;
@@ -47,12 +50,11 @@ import java.util.regex.Pattern;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class SearchReplaceTest extends TestCase {
+public class SearchReplaceTest {
     private Content root;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         root = MockUtil.createNode("/",
                 "/top@type=mgnl:contentNode",
                 "/top.text=maGnolia is Great",
@@ -72,14 +74,14 @@ public class SearchReplaceTest extends TestCase {
         );
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
 
+    @Test
     public void testCaseInsensitive() throws Exception {
         assertEquals("maGnolia is Great", prop("/top/text"));
         assertEquals("maGnolia is Great", prop("/top/chalala"));
@@ -97,6 +99,7 @@ public class SearchReplaceTest extends TestCase {
         assertEquals("the rules of Magnolia are the rules", prop("/top/other3/text"));
     }
 
+    @Test
     public void testCanUseNamePatterns() throws Exception {
         assertEquals("three flowers", prop("/top/plip/text"));
         assertEquals("three flowers", prop("/top/plip/other"));
@@ -110,6 +113,7 @@ public class SearchReplaceTest extends TestCase {
         assertEquals("three flowers", prop("/top/plip/title"));
     }
 
+    @Test
     public void testCanUseJokerInNamePatterns() throws Exception {
         assertEquals("three flowers", prop("/top/plip/text"));
         assertEquals("three flowers", prop("/top/plip/other"));
@@ -123,6 +127,7 @@ public class SearchReplaceTest extends TestCase {
         assertEquals("three flowers", prop("/top/plip/other"));
     }
 
+    @Test
     public void testDefaultsToLiteralMatching() throws Exception {
         assertEquals("This property contains an [ open bracket.", prop("/top/blah/text"));
         assertEquals("This property contains an { open bracketZ", prop("/top/bloh/text"));

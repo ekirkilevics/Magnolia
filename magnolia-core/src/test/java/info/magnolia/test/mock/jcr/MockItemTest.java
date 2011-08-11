@@ -41,7 +41,6 @@ import org.junit.Test;
  * @version $Id$
  */
 public class MockItemTest {
-
     @Test
     public void testGetDepth() throws Exception {
         // GIVEN
@@ -62,7 +61,6 @@ public class MockItemTest {
         assertEquals(2, childOfChild.getDepth());
         assertEquals(2, child.getProperty(propertyName).getDepth());
     }
-
     @Test
     public void testGetPath() throws Exception {
         // GIVEN

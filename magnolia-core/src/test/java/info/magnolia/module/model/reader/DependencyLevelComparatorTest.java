@@ -33,21 +33,24 @@
  */
 package info.magnolia.module.model.reader;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
-import junit.framework.TestCase;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.Test;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DependencyLevelComparatorTest extends TestCase {
+public class DependencyLevelComparatorTest {
 
+    @Test
     public void testCalcDepencyLevelWithNonOptionalDependencies() {
         final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
         final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);
@@ -73,6 +76,7 @@ public class DependencyLevelComparatorTest extends TestCase {
         assertEquals(2, reg.calcDependencyDepth(modDefC));
     }
 
+    @Test
     public void testCalcDepencyLevelIgnoresUnregisteredOptionalDependencies() {
         final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);
         final ModuleDefinition modDefC = new ModuleDefinition("mod-c", Version.parseVersion("1"), "fake.Module", null);
@@ -97,6 +101,7 @@ public class DependencyLevelComparatorTest extends TestCase {
         assertEquals(1, reg.calcDependencyDepth(modDefC));
     }
 
+    @Test
     public void testCalcDepencyLevelDoesNotIgnoreRegisteredOptionalDependencies() {
         final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
         final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);

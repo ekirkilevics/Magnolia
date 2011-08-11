@@ -48,10 +48,7 @@ import javax.jcr.RepositoryException;
 import org.junit.Test;
 
 /**
- * Tests for delegate wrapper.
- * 
- * @author had
- * 
+ * @version $Id$
  */
 public class DelegateNodeWrapperTest {
 

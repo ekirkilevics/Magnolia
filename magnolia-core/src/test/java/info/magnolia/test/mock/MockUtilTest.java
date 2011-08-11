@@ -33,34 +33,34 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.cms.core.HierarchyManager;
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 
 import java.io.IOException;
 
 import javax.jcr.RepositoryException;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Test;
 
 /**
- * @author philipp
  * @version $Id$
- *
  */
-public class MockUtilTest extends TestCase {
+public class MockUtilTest {
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testGettingHierarchyManagerFromContext() throws IOException, RepositoryException{
         MockContext ctx = MockUtil.initMockContext();
         HierarchyManager hm = initTestData();
@@ -68,6 +68,7 @@ public class MockUtilTest extends TestCase {
         assertEquals(MgnlContext.getHierarchyManager(ContentRepository.CONFIG), hm);
     }
 
+    @Test
     public void testReadingNodes() throws IOException, RepositoryException{
         HierarchyManager hm = initTestData();
 
@@ -94,6 +95,7 @@ public class MockUtilTest extends TestCase {
         assertEquals("sub2value2", sub2.getNodeData("prop2").getString());
     }
 
+    @Test
     public void testReadingBoolean() throws IOException, RepositoryException{
         HierarchyManager hm = initTestData();
 
@@ -102,6 +104,7 @@ public class MockUtilTest extends TestCase {
         assertEquals(Boolean.TRUE, NodeDataUtil.getValueObject(node.getNodeData("prop3")));
     }
 
+    @Test
     public void testGettingByUUID() throws IOException, RepositoryException{
         HierarchyManager hm = initTestData();
 
@@ -110,6 +113,7 @@ public class MockUtilTest extends TestCase {
         assertEquals(node.getHandle(), "/parent/sub2");
     }
 
+    @Test
     public void testMetaData() throws IOException, RepositoryException {
         final HierarchyManager hm = initTestData();
         Content sub1 = hm.getContent("/parent/sub1");
@@ -122,6 +126,7 @@ public class MockUtilTest extends TestCase {
         assertEquals("/parent/sub1/MetaData", metaData.getHandle());
     }
 
+    @Test
     public void testSyntax() throws IOException, RepositoryException{
         String content =
             "/parent1/sub1.prop1=one\n"+
@@ -147,6 +152,7 @@ public class MockUtilTest extends TestCase {
         assertEquals("4", hm.getContent("/parent4/sub4").getUUID());
     }
 
+    @Test
     public void testNodesCanBeCreatedWithoutProperties() throws IOException, RepositoryException{
         String content =
             "/node1/sub1.prop1=one\n"+
@@ -164,6 +170,5 @@ public class MockUtilTest extends TestCase {
     protected HierarchyManager initTestData() throws IOException, RepositoryException {
         return MockUtil.createHierarchyManager(ContentRepository.CONFIG, this.getClass().getResourceAsStream("testcontent.properties"));
     }
-
 
 }

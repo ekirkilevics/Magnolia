@@ -33,28 +33,30 @@
  */
 package info.magnolia.module.delta;
 
-import junit.framework.TestCase;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
+import info.magnolia.cms.util.WebXmlUtil;
+import info.magnolia.module.InstallContext;
 
 import java.util.ArrayList;
 
-import info.magnolia.cms.util.WebXmlUtil;
-import info.magnolia.module.InstallContext;
-import static org.easymock.EasyMock.*;
+import org.junit.Test;
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class WebXmlConditionsUtilTest extends TestCase {
+public class WebXmlConditionsUtilTest {
 
+    @Test
     public void testDoesNotWarnIfErrorDispatcherIsUsed() {
         doTestFilterDispatchersConditions("web_filterwrongdispatchers.xml", "webxmltest.ErrorIsNotMandatory", false, true);
     }
 
+    @Test
     public void testBlocksIfRequestDispatcherIsMissing() {
         doTestFilterDispatchersConditions("web_filterwrongdispatchers.xml", "webxmltest.WithMissingRequst", false, false);
     }
 
+    @Test
     public void testBlocksIfIncludeDispatcherIsMissing() {
         doTestFilterDispatchersConditions("web_filterwrongdispatchers.xml", "webxmltest.WithMissingInclude", false, false);
     }

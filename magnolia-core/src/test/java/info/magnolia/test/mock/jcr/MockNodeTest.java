@@ -66,7 +66,6 @@ public class MockNodeTest {
     public void init() {
         root = new MockNode();
     }
-
     @Test
     public void testConstructionFromNamePropertiesAndChildren() throws Exception {
         Map<String, MockValue> properties = new LinkedHashMap<String, MockValue>();
@@ -96,7 +95,6 @@ public class MockNodeTest {
         assertTrue(nodeWithPropertyAndChild.hasNodes());
         assertEquals(child, nodeWithPropertyAndChild.getNode(childName));
     }
-
     @Test
     public void testAddNodeWithParamFakeJCRNode() throws Exception {
         final MockNode child = new MockNode("child");
@@ -105,7 +103,6 @@ public class MockNodeTest {
         assertEquals(root, child.getParent());
         assertEquals(root.getChildren().get("child"), child);
     }
-
     @Test
     public void testAddNodeWithParamString() throws Exception {
         final MockNode child = (MockNode) root.addNode("child");
@@ -113,7 +110,6 @@ public class MockNodeTest {
         assertEquals(root, child.getParent());
         assertEquals(root.getChildren().get("child"), child);
     }
-
     @Test
     public void testAddNodeWithParamStringString() throws Exception {
         final MockNode child = (MockNode) root.addNode("child", "primaryNodeTypeName");
@@ -122,7 +118,6 @@ public class MockNodeTest {
         assertEquals(root.getChildren().get("child"), child);
         assertEquals("primaryNodeTypeName", child.getPrimaryNodeType().getName());
     }
-
     @Test
     public void testGetNodeWithExistingPath() throws Exception {
         final MockNode child = (MockNode) root.addNode("child");
@@ -136,7 +131,6 @@ public class MockNodeTest {
     public void testGetNodeWithFalsePath() throws Exception {
         root.getNode("does/not/exist");
     }
-
     @Test
     public void testHasNode() throws Exception {
         final MockNode child = (MockNode) root.addNode("child");
@@ -146,7 +140,6 @@ public class MockNodeTest {
         assertTrue(!root.hasNode("childOfChild"));
         assertTrue(!root.hasNode("does/not/exist"));
     }
-
     @Test
     public void testHasNodes() throws Exception {
         final MockNode child = new MockNode("child");
@@ -155,7 +148,6 @@ public class MockNodeTest {
         assertTrue(root.hasNodes());
         assertTrue(!child.hasNodes());
     }
-
     @Test
     public void testHasProperties() throws Exception {
         assertTrue(!root.hasProperties());
@@ -163,7 +155,6 @@ public class MockNodeTest {
         root.setProperty("property", "string");
         assertTrue(root.hasProperties());
     }
-
     @Test
     public void testGetProperties() throws Exception {
         root.setProperty("property1", "string");
@@ -181,15 +172,12 @@ public class MockNodeTest {
 
         assertTrue(!iterator.hasNext());
     }
-
-
     @Test
     public void testSetPropertyWithStringAndBoolean() throws Exception {
         root.setProperty("boolean", false);
 
         assertEquals(false, root.getProperty("boolean").getValue().getBoolean());
     }
-
     @Test
     public void testSetPropertyWithStringAndValue() throws Exception {
         final MockValue value = new MockValue("stringValue");
@@ -197,7 +185,6 @@ public class MockNodeTest {
 
         assertEquals(value, root.getProperty("string").getValue());
     }
-
     @Test
     public void testChildNodesAndPropertiesGetProperSession() throws Exception {
         MockSession session = new MockSession("test");
@@ -208,7 +195,6 @@ public class MockNodeTest {
         assertEquals(session, child.getSession());
         assertEquals(session, property.getSession());
     }
-
     @Test
     public void testGetMixingNodeTypes() throws Exception {
         root.addMixin("mixin1");
@@ -218,7 +204,6 @@ public class MockNodeTest {
         assertEquals(1, nodeTypes.length);
         assertEquals("mixin1", nodeTypes[0].getName());
     }
-
     @Test
     public void testOrderBeforeWithBothNamesValid() throws Exception {
         final String firstChild = "1";
@@ -237,7 +222,6 @@ public class MockNodeTest {
         assertEquals(first, orderedKids.next());
         assertEquals(third, orderedKids.next());
     }
-
     @Test
     public void testOrderBeforeWithNullBeforeName() throws Exception {
         final String firstChild = "1";
@@ -256,7 +240,6 @@ public class MockNodeTest {
         assertEquals(third, orderedKids.next());
         assertEquals(first, orderedKids.next());
     }
-
     @Test
     public void testAccept() throws RepositoryException{
         ItemVisitor visitor = mock(ItemVisitor.class);

@@ -33,6 +33,7 @@
  */
 package info.magnolia.test;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
@@ -44,9 +45,12 @@ import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 
-
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspException;
+
+import org.junit.After;
+import org.junit.Before;
+
 import java.io.IOException;
 import java.util.Locale;
 
@@ -59,16 +63,17 @@ import static org.easymock.EasyMock.*;
 
 /**
  * A base class to simplify the testing of tag library output.
- * @author ryangardner
- * Date: Jan 3, 2008
+ *
+ * @version $Id$
  */
-public abstract class MgnlTagTestCase extends MgnlTestCase  {
+public abstract class MgnlTagTestCase extends MgnlTestCase {
     protected MockWebContext webContext;
     protected MockPageContext pageContext;
     private SystemContext sysContext;
 
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         HierarchyManager hm = initWebsiteData();
@@ -96,13 +101,13 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         verify(sysContext);
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
         super.tearDown();
     }
-
 
     /**
      * Clears the JSP buffer to allow for future tests to have a clean slate
@@ -117,40 +122,45 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
     }
 
     /**
-     * Test the value of the jsp document, clearing the JSP buffer after the check is done.
-     *  - Delegates to {@link #assertJspContent(String, String)}
+     * Test the value of the jsp document, clearing the JSP buffer after the check is done. - Delegates to
+     * {@link #assertJspContent(String, String)}
      */
     protected void assertJspContent(String expectedResult) throws JspException {
         assertJspContent(null, expectedResult);
     }
 
     /**
-     * Test the value of the jsp document, clearing the JSP buffer after the check is done.
-     *  - Delegates to {@link #assertJspContent(String, String, boolean)}
+     * Test the value of the jsp document, clearing the JSP buffer after the check is done. - Delegates to
+     * {@link #assertJspContent(String, String, boolean)}
      */
     protected void assertJspContent(String explanation, String expectedResult) throws JspException {
         assertJspContent(explanation, expectedResult, false);
     }
 
     /**
-     * Tests that the doEndTag() method outputs a value that matches the result parameter
-     * After testing this, the JspWriter buffer is cleared to allow for further tests
+     * Tests that the doEndTag() method outputs a value that matches the result parameter After testing this, the
+     * JspWriter buffer is cleared to allow for further tests
      *
-     * @param explanation Explanation of what is being tested
-     * @param expectedResult The expected result that the tag should write to the jsp page as a string
-     * @param leaveJspIntact by default, the JSP buffer will be cleared after each call to this method
-     *                       if this value is true, the jsp will be left untouched after the assertion
-     * @throws JspException  Thrown if there is a JSP Exception thrown by the tag
+     * @param explanation
+     *            Explanation of what is being tested
+     * @param expectedResult
+     *            The expected result that the tag should write to the jsp page as a string
+     * @param leaveJspIntact
+     *            by default, the JSP buffer will be cleared after each call to this method if this value is true, the
+     *            jsp will be left untouched after the assertion
+     * @throws JspException
+     *             Thrown if there is a JSP Exception thrown by the tag
      */
-    protected void assertJspContent(String explanation,  String expectedResult, boolean leaveJspIntact ) throws JspException {
-         assertEquals(explanation, expectedResult, getJspOutput());
-         if (!leaveJspIntact) {
+    protected void assertJspContent(String explanation, String expectedResult, boolean leaveJspIntact) throws JspException {
+        assertEquals(explanation, expectedResult, getJspOutput());
+        if (!leaveJspIntact) {
             clearJsp();
-         }
+        }
     }
 
     /**
      * Get the current value stored in the JSP buffer.
+     *
      * @return whatever is stored in the JSP buffer
      */
     protected String getJspOutput() {
@@ -158,16 +168,15 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
         return jspWriter.getOutputAsString();
     }
 
-
     /**
      * This method is responsible for initializing a HM repository for use in the testing.
      *
      * It is called durring the setUp() procedure.
      *
-     * One suggested way to implement this is to create a properties file resource with the contents
-     * you wish to initialize this with, and then read in the properties file here like this:
+     * One suggested way to implement this is to create a properties file resource with the contents you wish to
+     * initialize this with, and then read in the properties file here like this:
      *
-     *  return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("mytagtest.properties"));
+     * return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("mytagtest.properties"));
      *
      * (Obviously, mytagtest is a placeholder name, and in your implementation you would change this)
      *
@@ -176,7 +185,6 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
      * @throws RepositoryException
      */
     abstract protected HierarchyManager initWebsiteData() throws IOException, RepositoryException;
-        //return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("outtest.properties"));
-
+    // return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("outtest.properties"));
 
 }

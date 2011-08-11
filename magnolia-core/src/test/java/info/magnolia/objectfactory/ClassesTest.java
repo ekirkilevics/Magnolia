@@ -38,35 +38,34 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockComponentProvider;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import org.apache.commons.beanutils.ConstructorUtils;
 
 import java.lang.reflect.Field;
 import java.util.Date;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ClassesTest extends TestCase {
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+public class ClassesTest {
+    @Before
+    public void setUp() throws Exception {
         SystemProperty.clear();
         SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
         Components.setProvider(new MockComponentProvider(SystemProperty.getProperties()));
         resetCFP();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         resetCFP();
         SystemProperty.clear();
         Components.setProvider(null);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
     private void resetCFP() throws NoSuchFieldException, IllegalAccessException {
@@ -76,6 +75,7 @@ public class ClassesTest extends TestCase {
         cfpField.set(null, new Classes.ClassFactoryProvider(new DefaultClassFactory()));
     }
 
+    @Test
     public void testDefaultClassFactoryWorksJustFine() throws ClassNotFoundException {
         final String s = Classes.newInstance("java.lang.String", "hello");
         assertEquals("hello", s);
@@ -84,6 +84,7 @@ public class ClassesTest extends TestCase {
         assertTrue(cf instanceof DefaultClassFactory);
     }
 
+    @Test
     public void testCanSetupADifferentClassFactory() throws ClassNotFoundException {
         SystemProperty.setProperty(ClassFactory.class.getName(), TestClassFactory.class.getName());
         final String s = Classes.newInstance("chalala", "hello");
@@ -94,6 +95,7 @@ public class ClassesTest extends TestCase {
         assertTrue(cf instanceof TestClassFactory);
     }
     /*
+    @Test
     public void testCanSetupADifferentClassFactoryThatNeedsComponents() throws ClassNotFoundException {
 
         // TODO This test is ignored for now since registering components via SystemProperty is no longer supported.

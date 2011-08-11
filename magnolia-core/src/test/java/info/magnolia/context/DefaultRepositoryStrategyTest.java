@@ -33,6 +33,8 @@
  */
 package info.magnolia.context;
 
+import static org.junit.Assert.*;
+
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
@@ -44,16 +46,18 @@ import static org.easymock.classextension.EasyMock.*;
 
 import javax.jcr.Session;
 import javax.security.auth.Subject;
+
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
- * @author ashapochka
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
+    @Test
     public void testAccessManagers() {
         UserContext context = createMock(UserContext.class);
         replay(context);
@@ -64,6 +68,7 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
         verify(context);
     }
 
+    @Test
     public void testRepositorySessions() throws Exception {
         UserContext context = createMock(UserContext.class);
         DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
@@ -72,6 +77,7 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
         strategy.release();
     }
 
+    @Test
     public void testQueryManagers() {
         UserContext context = createMock(UserContext.class);
         User user = createMock(User.class);
@@ -84,6 +90,7 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
         verify(context);
     }
 
+    @Test
     public void testHierarchyManagers() {
         UserContext context = createMock(UserContext.class);
         User user = createMock(User.class);

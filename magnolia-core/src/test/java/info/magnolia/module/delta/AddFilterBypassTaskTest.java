@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.delta;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
@@ -40,17 +42,17 @@ import info.magnolia.setup.AddFilterBypassTask;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.voters.URIStartsWithVoter;
-import static org.easymock.EasyMock.*;
 
 import java.util.Properties;
 
+import org.junit.Test;
+
 
 /**
- * @author vsteller
  * @version $Id$
- *
  */
 public class AddFilterBypassTaskTest extends MgnlTestCase {
+    @Test
     public void testFilterBypassAddedProperly() throws Exception {
         final String testContent = "" +
             "/server/filter/someFilter.class=someFilterClass";

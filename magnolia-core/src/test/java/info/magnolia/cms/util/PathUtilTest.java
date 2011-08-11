@@ -93,7 +93,6 @@ public class PathUtilTest {
         assertEquals("foo/bar", PathUtil.getFolder("foo/bar/"));
         assertEquals("/foo/bar", PathUtil.getFolder("/foo/bar/"));
     }
-
     @Test
     public void testGetFileName() {
         assertEquals("bar", PathUtil.getFileName("/foo/bar"));
@@ -110,7 +109,6 @@ public class PathUtilTest {
     public void testGetFileNameDoesNotSupportNullArgument() {
         PathUtil.getFileName(null);
     }
-
     @Test
     public void testGetExtension() {
         assertEquals("html", PathUtil.getExtension("index.html"));
@@ -121,7 +119,6 @@ public class PathUtilTest {
         assertEquals("", PathUtil.getExtension("/"));
         assertEquals(null, PathUtil.getExtension(null));
     }
-
     @Test
     public void testStripExtension() {
         assertEquals("index", PathUtil.stripExtension("index.html"));

@@ -58,7 +58,7 @@ public class OutTest extends MgnlTagTestCase {
     private AggregationState agState;
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
         agState = initAgState();
         webContext.setAggregationState(agState);

@@ -33,6 +33,7 @@
  */
 package info.magnolia.test;
 
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.PropertiesInitializer;
 import info.magnolia.cms.core.SystemProperty;
@@ -50,25 +51,26 @@ import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyCheckerImpl;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+
+import org.junit.After;
+import org.junit.Before;
+
 /**
- * @author philipp
  * @version $Id$
  */
-public abstract class MgnlTestCase extends TestCase {
+public abstract class MgnlTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         // ignore mapping warnings
         org.apache.log4j.Logger.getLogger(ContentRepository.class).setLevel(org.apache.log4j.Level.ERROR);
         // don't clear all here. tests should be allowed to set their own implementations, fix the tests that do not clean after themselves instead!
@@ -82,12 +84,11 @@ public abstract class MgnlTestCase extends TestCase {
         MockUtil.initMockContext();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         SystemProperty.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
     protected void setMagnoliaProperties() throws Exception {

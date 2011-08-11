@@ -33,17 +33,18 @@
  */
 package info.magnolia.module.delta;
 
+import org.junit.Test;
+
 import info.magnolia.test.MgnlTestCase;
 
 /**
- * @author vsteller
  * @version $Id$
- *
  */
 public class BackupTaskTest extends MgnlTestCase {
 
     private final String backupPath = "/backup/of";
 
+    @Test
     public void testNodeExistsWithFullPathAtBackupPathAfterBackingUp() throws Exception {
         // TODO: not testable yet, since MoveNodeTask will throw a NPE due to MAGNOLIA-1951
 //        final String testContent = "" +

@@ -63,7 +63,7 @@ import static info.magnolia.module.mail.setup.MailModuleVersionHandler.MAIL_COMM
 public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
     }
     @Override

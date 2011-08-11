@@ -33,24 +33,27 @@
  */
 package info.magnolia.cms.beans.config;
 
+import static org.junit.Assert.*;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
+
+import org.junit.After;
+import org.junit.Test;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class RegexpVirtualURIMappingTest extends TestCase {
+public class RegexpVirtualURIMappingTest {
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testExample() {
         final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
         mapping.setFromURI("/products/([0-9a-z]+)\\.html");
@@ -61,6 +64,7 @@ public class RegexpVirtualURIMappingTest extends TestCase {
         assertEquals(2, res.getLevel());
     }
 
+    @Test
     public void testExample2() {
         final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
         mapping.setFromURI("^/stk-resources/comics/resources/comics/css/(.*)\\.css$");
@@ -70,6 +74,7 @@ public class RegexpVirtualURIMappingTest extends TestCase {
         assertEquals("forward:/docroot/comics/css/style.css", res.getToURI());
     }
 
+    @Test
     public void testExample3() {
         final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
         mapping.setFromURI("^/stk-resources/comics/resources/comics/css(.*)/(.*)\\.css$");
@@ -79,6 +84,7 @@ public class RegexpVirtualURIMappingTest extends TestCase {
         assertEquals("forward:/docroot/comics/css/style.css", res.getToURI());
     }
 
+    @Test
     public void testRegexSubstitutionWorksAndLevelIsSetToGroupCountPlusOne() {
         final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
         mapping.setFromURI("/foo/(.*?)-([1-9]).html");
@@ -90,6 +96,7 @@ public class RegexpVirtualURIMappingTest extends TestCase {
     }
 
     // see MAGNOLIA-2659
+    @Test
     public void testSupportsMoreThan9Groups() {
         final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
         mapping.setFromURI("/(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)(q)(r)(s)(t)(u)(v)(w)(x)(y)(z).html");
@@ -101,6 +108,7 @@ public class RegexpVirtualURIMappingTest extends TestCase {
         assertEquals(27, res.getLevel());
     }
 
+    @Test
     public void testGracefullyFailingOnIncompleteConfig() {
         final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
         mapping.setFromURI("");
@@ -110,6 +118,7 @@ public class RegexpVirtualURIMappingTest extends TestCase {
         assertEquals(null, res);
     }
 
+    @Test
     public void testGracefullyFailingOnWrongRegexGroup() {
         final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
         mapping.setFromURI("/foo/([a-z]+)/detail/([0-9]+)\\.html");

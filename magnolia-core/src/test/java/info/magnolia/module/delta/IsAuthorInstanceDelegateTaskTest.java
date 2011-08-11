@@ -33,56 +33,61 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.test.ComponentsTestUtil;
+import static org.easymock.EasyMock.*;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class IsAuthorInstanceDelegateTaskTest extends TestCase {
+public class IsAuthorInstanceDelegateTaskTest {
     private InstallContext ctx;
     private Task delegIfAuthor;
     private Task delegIfPublic;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         MockUtil.initMockContext();
         ctx = createMock(InstallContext.class);
         delegIfAuthor = createStrictMock(Task.class);
         delegIfPublic = createStrictMock(Task.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }
 
+    @Test
     public void testExecutesAuthorDelegateTaskWhenIsAuthor() throws Exception {
         delegIfAuthor.execute(ctx);
         doTest("server.admin=true");
     }
 
+    @Test
     public void testExecutesPublicDelegateTaskWhenIsPublic() throws Exception {
         delegIfPublic.execute(ctx);
         doTest("server.admin=false");
     }
 
+    @Test
     public void testExecutesAuthorDelegateTaskWhenAdminPropertyDoesNotExist() throws Exception {
         ctx.warn("Property \"admin\" was expected to be found at /server but does not exist.");
         delegIfAuthor.execute(ctx);
         doTest("server.bleh=bloh");
     }
 
+    @Test
     public void testExecutesAuthorDelegateTaskWhenAdminPropertyHasAMeaninglessValue() throws Exception {
         delegIfAuthor.execute(ctx);
         doTest("server.admin=bibaboo");

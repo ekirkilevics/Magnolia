@@ -44,7 +44,6 @@ import org.junit.Test;
  * @version $Id$
  */
 public class AbstractNodeOperationTest {
-
     @Test
     public void testThen() throws RepositoryException {
         final String rootNodeName = "root";

@@ -46,7 +46,6 @@ import static org.junit.Assert.*;
  * @version $Id$
  */
 public class VersionUtilTest {
-
     @Test
     public void testGetNodeTypeName() throws Exception {
 

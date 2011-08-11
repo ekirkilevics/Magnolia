@@ -33,22 +33,24 @@
  */
 package info.magnolia.context;
 
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.junit.Assert.*;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletOutputStream;
-import java.io.StringWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Test;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class WriterResponseWrapperTest extends TestCase {
+public class WriterResponseWrapperTest {
 
+    @Test
     public void testCantUseWriterAfterOutputStream() throws IOException {
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final StringWriter out = new StringWriter();
@@ -64,6 +66,7 @@ public class WriterResponseWrapperTest extends TestCase {
         assertEquals("boo", out.toString());
     }
 
+    @Test
     public void testCantUseOutputStreamAfterWriter() {
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final StringWriter out = new StringWriter();

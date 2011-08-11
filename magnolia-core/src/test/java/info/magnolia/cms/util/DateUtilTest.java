@@ -33,16 +33,18 @@
  */
 package info.magnolia.cms.util;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
- * @version $Revision:  $ ($Author:  $)
+ * @version $ID$
  */
-public class DateUtilTest extends TestCase {
+public class DateUtilTest {
 
     private Date getTestDate() {
         Calendar calendar = Calendar.getInstance();
@@ -56,6 +58,7 @@ public class DateUtilTest extends TestCase {
         return calendar.getTime();
     }
 
+    @Test
     public void testCustomFormatShouldUseGivenLocale() {
         assertEquals("Sunday, 6. July 2008", DateUtil.format(getTestDate(), "EEEE, d. MMMM yyyy", new Locale("en")));
         assertEquals("Sonntag, 6. Juli 2008", DateUtil.format(getTestDate(), "EEEE, d. MMMM yyyy", new Locale("de")));

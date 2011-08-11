@@ -33,22 +33,24 @@
  */
 package info.magnolia.nodebuilder.task;
 
+import static info.magnolia.nodebuilder.Ops.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContextImpl;
 import info.magnolia.module.delta.Task;
-import static info.magnolia.nodebuilder.Ops.*;
 import info.magnolia.test.RepositoryTestCase;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class NodeBuilderTaskTest extends RepositoryTestCase {
+    @Test
     public void testUnknownRootThrowsException() throws Exception {
         MgnlContext.getHierarchyManager("config").getRoot().createContent("hello").createContent("world");
 
@@ -60,6 +62,7 @@ public class NodeBuilderTaskTest extends RepositoryTestCase {
         assertPathNotFoundExceptionFor("hello/world/blah");
     }
 
+    @Test
     public void testSyntax() throws Exception {
         ContentUtil.createPath(MgnlContext.getHierarchyManager("config"), "/modules/stk/templates/stkSection/mainArea/opener/paragraphs/stkTeaserOpener");
 

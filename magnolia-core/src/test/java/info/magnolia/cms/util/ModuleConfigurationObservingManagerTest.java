@@ -33,6 +33,16 @@
  */
 package info.magnolia.cms.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.jcr.util.SessionTestUtil;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockEvent;
+import info.magnolia.test.mock.jcr.MockObservationManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -41,20 +51,12 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.junit.Test;
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.jcr.util.SessionTestUtil;
-import info.magnolia.module.ModuleRegistry;
-import info.magnolia.test.MgnlTestCase;
-import info.magnolia.test.mock.MockUtil;
-import info.magnolia.test.mock.jcr.MockEvent;
-import info.magnolia.test.mock.jcr.MockObservationManager;
-import static org.mockito.Mockito.*;
 
 /**
  * @version $Id$

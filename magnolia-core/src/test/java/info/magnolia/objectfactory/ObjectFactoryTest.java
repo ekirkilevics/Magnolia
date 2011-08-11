@@ -35,25 +35,26 @@ package info.magnolia.objectfactory;
 
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
-import junit.framework.TestCase;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ObjectFactoryTest extends TestCase {
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+public class ObjectFactoryTest {
+    @Before
+    public void setUp() throws Exception {
         SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         SystemProperty.clear();
         Components.setProvider(null);
     }
+    @Test
     public void testSettingSystemPropertyIntoDefaultComponentStillAllowsToSwapImplementationsLater() {
 /*
 

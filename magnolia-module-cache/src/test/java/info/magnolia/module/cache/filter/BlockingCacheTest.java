@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.cache.filter;
 
+import static org.easymock.EasyMock.*;
+import static org.easymock.classextension.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
@@ -75,16 +78,19 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
 import net.sf.ehcache.constructs.blocking.LockTimeoutException;
 
 import org.apache.commons.collections.IteratorUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.easymock.classextension.EasyMock.*;
-
-public class BlockingCacheTest extends TestCase {
+/**
+ * @version $Id$
+ */
+public class BlockingCacheTest{
 
     private static final String CONTENT = "CONTENT";
 
@@ -122,6 +128,7 @@ public class BlockingCacheTest extends TestCase {
 
     private static final Logger log = LoggerFactory.getLogger(BlockingCacheTest.class);
 
+    @Test
     public void testLockTimeoutException() throws Exception{
         ExecutorService ex = Executors.newSingleThreadExecutor();
 
@@ -152,6 +159,7 @@ public class BlockingCacheTest extends TestCase {
         log.info("4th get: {}", resultOfThirdRequest);
     }
 
+    @Test
     public void testThatAFailingRequestReleasesTheLock() throws Exception{
         try{
             doRequest(FAILING_RENDERING);
@@ -165,16 +173,14 @@ public class BlockingCacheTest extends TestCase {
         doRequest(SUCCEEDING_RENDERING);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
-        super.tearDown();
         factory.stop();
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR, "target/cacheTest");
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");
         final CacheMonitor cacheMonitor = new CacheMonitor(createStrictMock(CommandsManager.class));

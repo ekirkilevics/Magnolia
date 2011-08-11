@@ -34,9 +34,8 @@
 package info.magnolia.context;
 
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.classextension.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.security.Realm;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
@@ -51,28 +50,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Test;
 
 /**
- *
- * @author ashapochka
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class WebContextImplTest extends TestCase
+public class WebContextImplTest
 /* TODO - implementing Serializable for the purpose of this test - see MAGNOLIA-3523 */
 implements Serializable {
 
     // setting the user attribute on the session is done in UserContextImpl, which is why the following constant uses this class' name.
     private static final String SESSION_USER = UserContextImpl.class.getName() + ".user";
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
 
+    @Test
     public void testLoginLogout() {
         HttpServletRequest request = createMock(HttpServletRequest.class);
         HttpSession session = createMock(HttpSession.class);

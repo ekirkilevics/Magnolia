@@ -33,29 +33,32 @@
  */
 package info.magnolia.module.delta;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockNodeData;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class PropertyValuesTaskTest extends TestCase {
+public class PropertyValuesTaskTest {
     private InstallContext ctx;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         ctx = createStrictMock(InstallContext.class);
     }
 
+    @Test
     public void testExistingPropertyIsReplaced() throws RepositoryException {
         final MockContent node = new MockContent("foo");
         node.addNodeData(new MockNodeData("bar", "old-value"));
@@ -70,6 +73,7 @@ public class PropertyValuesTaskTest extends TestCase {
         assertEquals("newValue", nodeData.getString());
     }
 
+    @Test
     public void testNonExistingPropertyIsNotReplacedButLogged() throws RepositoryException {
         ctx.warn("Property \"bar\" was expected to exist at /foo with value \"old-value\" but does not exist.");
 
@@ -85,6 +89,7 @@ public class PropertyValuesTaskTest extends TestCase {
         assertEquals(false, nodeData.isExist());
     }
 
+    @Test
     public void testPropertywithUnexpectedValueIsNotReplacedButLogged() throws RepositoryException {
         ctx.warn("Property \"bar\" was expected to exist at /foo with value \"old-value\" but has the value \"wrong-value\" instead.");
 
@@ -101,6 +106,7 @@ public class PropertyValuesTaskTest extends TestCase {
         assertEquals("wrong-value", nodeData.getString());
     }
 
+    @Test
     public void testNonExistingPropertyAndExpectedAsSuchIsCreated() throws RepositoryException {
         final MockContent node = new MockContent("foo");
 
@@ -114,6 +120,7 @@ public class PropertyValuesTaskTest extends TestCase {
         assertEquals("newValue", nodeData.getString());
     }
 
+    @Test
     public void testUnexpectedlyExistingPropertyIsNotReplacedAndLogged() throws RepositoryException {
         ctx.warn("Property \"bar\" was expected not to exist at /foo, but exists with value \"old-value\" and was going to be created with value \"newValue\".");
 

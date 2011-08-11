@@ -75,7 +75,6 @@ public class PropertiesImportExportTest {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }
-
     @Test
     public void testConvertsToWrapperType() {
         assertEquals(Boolean.TRUE, pie.convertPropertyStringToObject("boolean:true"));
@@ -88,12 +87,10 @@ public class PropertiesImportExportTest {
         final Object dateOnlyObject = pie.convertPropertyStringToObject("date:2009-12-12");
         assertNull(dateOnlyObject);
     }
-
     @Test
     public void testCanUseIntShortcutForConvertingIntegers() {
         assertEquals(Integer.valueOf(37), pie.convertPropertyStringToObject("int:37"));
     }
-
     @Test
     public void testCreateContent() throws Exception {
         final MockNode root = new MockNode();
@@ -146,5 +143,4 @@ public class PropertiesImportExportTest {
             "/parent.sub.@uuid=1";
         pie.createContent(null, new ByteArrayInputStream(content.getBytes()));
     }
-
 }

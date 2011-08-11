@@ -33,22 +33,23 @@
  */
 package info.magnolia.module.files;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import junit.framework.TestCase;
-import org.apache.commons.io.IOUtils;
-import static org.easymock.EasyMock.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 
+import org.apache.commons.io.IOUtils;
+import org.junit.Test;
+
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class MD5CheckingFileExtractorOperationTest extends TestCase {
+public class MD5CheckingFileExtractorOperationTest {
+    @Test
     public void testAbsentFilesAreRecreated() throws Exception {
         final String resourcePath = "/info/magnolia/test/mock/testcontent.properties";
         final String fileInfoNodePath = "/server/install" + resourcePath;

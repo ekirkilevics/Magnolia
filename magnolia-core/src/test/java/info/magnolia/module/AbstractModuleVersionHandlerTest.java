@@ -42,7 +42,10 @@ import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
 
 import java.util.ArrayList;
@@ -53,7 +56,7 @@ import java.util.List;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class AbstractModuleVersionHandlerTest extends TestCase {
+public class AbstractModuleVersionHandlerTest {
     private Delta d1;
     private Delta d2;
     private Delta d3;
@@ -61,9 +64,8 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
     private Delta d5;
     private AbstractModuleVersionHandler versionHandler;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         d1 = createNiceMock(Delta.class);
         d2 = createNiceMock(Delta.class);
         d3 = createNiceMock(Delta.class);
@@ -93,13 +95,13 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         versionHandler.register(d5);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+@Test
     public void testCantRegisterMultipleDeltasForSameVersion() {
         final Delta d1 = DeltaBuilder.update(Version.parseVersion("1.0.0"), "", new NullTask("", ""));
         final Delta d2 = DeltaBuilder.update(Version.parseVersion("1.0.0"), "", new NullTask("", ""));
@@ -113,6 +115,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         }
     }
 
+@Test
     public void testRetrievesTheAppropriateListOfDeltas() {
         final List deltas = versionHandler.getDeltas(makeInstallContext("1.3"), Version.parseVersion("1.0.1"));
         assertEquals(3, deltas.size());
@@ -121,6 +124,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         assertEquals(d5, deltas.get(2));
     }
 
+@Test
     public void testHasExtraDeltaIfVersionBeingInstalledIsNewerThanLatestRegisteredDelta() {
         final List deltas = versionHandler.getDeltas(makeInstallContext("1.5"), Version.parseVersion("1.0.1"));
         assertEquals(4, deltas.size());
@@ -130,6 +134,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         assertDefaultUpdateDelta((Delta) deltas.get(3));
     }
 
+@Test
     public void testRetrievesTheAppropriateDeltaForIntermediateUnregisteredVersion() {
         final List deltas = versionHandler.getDeltas(makeInstallContext("1.5"), Version.parseVersion("1.2.5"));
         assertEquals(2, deltas.size());
@@ -137,6 +142,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         assertDefaultUpdateDelta((Delta) deltas.get(1));
     }
 
+@Test
     public void testReturnsDefaultUpdateDeltaIfNoDeltaWasRegisteredForNewerVersion() {
         final List deltas = versionHandler.getDeltas(makeInstallContext("1.5"), Version.parseVersion("1.4"));
         assertNotNull(deltas);
@@ -145,17 +151,20 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         assertDefaultUpdateDelta(d);
     }
 
+@Test
     public void testReturnsEmptyListIfLatestDeltaWasRegisteredForCurrentVersion() {
         final List deltas = versionHandler.getDeltas(makeInstallContext("1.3"), Version.parseVersion("1.3"));
         assertNotNull(deltas);
         assertEquals(0, deltas.size());
     }
 
+@Test
     public void testReturnsEmptyListIfCurrentVersionIsInstalledVersion() {
         final List deltas = versionHandler.getDeltas(makeInstallContext("1.5"), Version.parseVersion("1.5"));
         assertEquals(0, deltas.size());
     }
 
+@Test
     public void testReturnsDefaultUpdateDeltaIfNoDeltaWasRegisteredAtAll() {
         final AbstractModuleVersionHandler versionHandler = newTestModuleVersionHandler();
         final List deltas = versionHandler.getDeltas(makeInstallContext("1.5"), Version.parseVersion("1.0.1"));
@@ -172,6 +181,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         assertTrue(tasks.get(1) instanceof AbstractModuleVersionHandler.ModuleVersionUpdateTask);
     }
 
+@Test
     public void testDeltasAreSorted() {
         // yes, this test might pass by accident.
         final List deltas = versionHandler.getDeltas(makeInstallContext("0.5"), Version.parseVersion("0.4"));
@@ -184,6 +194,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         assertDefaultUpdateDelta((Delta) deltas.get(5));
     }
 
+@Test
     public void testVersionUpdateTaskAndFileExtractionAreAdded() {
         final NullTask nullTask = new NullTask("test", "test");
         final NullTask nullTask2 = new NullTask("test2", "test2");
@@ -205,14 +216,17 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         assertTrue(tasks.get(3) instanceof AbstractModuleVersionHandler.ModuleVersionUpdateTask);
     }
 
+@Test
     public void testStoresTheModuleDescriptorVersionOnUpdateOfVersionThatDoesNotHaveSpecificDeltaAndIsSnapshot() {
         doTestStoresModuleDescriptorVersion("2.2-SNAPSHOT", Version.parseVersion("1.0"));
     }
 
+@Test
     public void testStoresTheModuleDescriptorVersionOnUpdateOfVersionThatDoesNotHaveSpecificDelta() {
         doTestStoresModuleDescriptorVersion("2.2", Version.parseVersion("1.0"));
     }
 
+@Test
     public void testStoresTheModuleDescriptorVersionOnUpdateOfVersionThatHasSpecificDelta() {
         doTestStoresModuleDescriptorVersion("2.0", Version.parseVersion("1.0"));
     }
@@ -221,6 +235,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
     //        doTestStoresModuleDescriptorVersion("2.0-SNAPSHOT", Version.parseVersion("1.0"));
     //    }
 
+@Test
     public void testStoresTheModuleDescriptorVersionOnInstall() {
         doTestStoresModuleDescriptorVersion("2.2-SNAPSHOT", null);
     }

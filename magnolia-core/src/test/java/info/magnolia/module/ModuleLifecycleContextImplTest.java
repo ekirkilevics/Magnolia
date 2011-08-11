@@ -33,16 +33,17 @@
  */
 package info.magnolia.module;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
-import junit.framework.TestCase;
+
+import org.junit.Test;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class ModuleLifecycleContextImplTest extends TestCase {
+public class ModuleLifecycleContextImplTest {
+    @Test
     public void testCantRegisterAComponentIfNodeNameIsAlreadyForAnotherComponent() {
         final ModuleLifecycleContextImpl lifecycleCtx = new ModuleLifecycleContextImpl();
         lifecycleCtx.registerModuleObservingComponent("foo", new DummyObservedManager1());
@@ -54,6 +55,7 @@ public class ModuleLifecycleContextImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testStartRegistersAllObserversWithAllModules() {
 
     }

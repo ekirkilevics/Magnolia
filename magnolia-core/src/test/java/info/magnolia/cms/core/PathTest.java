@@ -33,34 +33,36 @@
  */
 package info.magnolia.cms.core;
 
+import static org.junit.Assert.*;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
 
 import java.io.File;
 
+import org.junit.After;
+import org.junit.Test;
+
 /**
  * @author fgiust
- * @version $Revision$ ($Author$)
+ * @version $Id$
  */
-public class PathTest extends TestCase {
+public class PathTest {
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
     /**
      * Test method for {@link info.magnolia.cms.core.Path#isAbsolute(java.lang.String)}.
      */
+@Test
     public void testIsAbsolute() {
         assertTrue(Path.isAbsolute("/test"));
         assertTrue(Path.isAbsolute("d:/test"));
         assertTrue(Path.isAbsolute(File.separator + "test"));
         assertFalse(Path.isAbsolute("test"));
     }
-
 
 }

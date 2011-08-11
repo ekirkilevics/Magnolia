@@ -38,7 +38,10 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
 
 /**
@@ -46,15 +49,14 @@ import static org.easymock.EasyMock.*;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class PropertyValueDelegateTaskTest extends TestCase {
+public class PropertyValueDelegateTaskTest {
     private static final String SOMECONTENT = "foo.bar.baz=bleh";
     private InstallContext ctx;
     private Task delegIfTrue;
     private Task delegIfFalse;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         MockUtil.initMockContext();
 
         final MockHierarchyManager hm = MockUtil.createAndSetHierarchyManager("somerepo", SOMECONTENT);
@@ -64,29 +66,32 @@ public class PropertyValueDelegateTaskTest extends TestCase {
         expect(ctx.getHierarchyManager("somerepo")).andReturn(hm);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }
 
+    @Test
     public void testExecutesDelegateTaskIfPropertyExistsWithExpectedValue() throws Exception {
         delegIfTrue.execute(ctx);
         doTest("baz", "bleh", true);
     }
 
+    @Test
     public void testExecutesOtherDelegateTaskIfPropertyExistsWithOtherValue() throws Exception {
         delegIfFalse.execute(ctx);
         doTest("baz", "othervalue", true);
     }
 
+    @Test
     public void testExecutesOtherDelegateTaskIfPropertyMustNotExistAndDoesNot() throws Exception {
         ctx.warn("Property \"nonexistingproperty\" was expected to be found at /foo/bar but does not exist.");
         delegIfFalse.execute(ctx);
         doTest("nonexistingproperty", "bleh", false);
     }
 
+    @Test
     public void testThrowsExceptionIfPropertyMustExistAndDoesNot() throws Exception {
         try {
             doTest("nonexistingproperty", "bleh", true);

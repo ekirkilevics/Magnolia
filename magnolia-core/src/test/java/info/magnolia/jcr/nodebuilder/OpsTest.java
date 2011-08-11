@@ -66,14 +66,12 @@ public class OpsTest {
         session = new MockSession("testSession");
         rootNode = (MockNode) session.getRootNode();
     }
-
     @Test
     public void testAddNodeWithString() throws RepositoryException {
         final NodeOperation op = Ops.addNode(CHILD_NAME);
         op.exec(rootNode, eh);
         assertTrue(rootNode.hasNode(CHILD_NAME));
     }
-
     @Test
     public void testAddNodeWithTwoStrings() throws RepositoryException {
         final String itemTypeName = MgnlNodeType.NT_FOLDER;
@@ -83,7 +81,6 @@ public class OpsTest {
         assertTrue(rootNode.hasNode(CHILD_NAME));
         assertEquals(itemTypeName, rootNode.getNode(CHILD_NAME).getPrimaryNodeType().getName());
     }
-
     @Test
     public void testAddProperty() throws Exception {
         final ValueFactory valueFactory = mock(ValueFactory.class);
@@ -103,7 +100,6 @@ public class OpsTest {
         op.exec(rootNode, eh);
         fail("should have failed");
     }
-
     @Test
     public void testSetProperty() throws Exception {
         rootNode.setProperty(PROPERTY_NAME, PROPERTY_VALUE);
@@ -126,7 +122,6 @@ public class OpsTest {
         op.exec(rootNode, eh);
         fail("should have failed");
     }
-
     @Test
     public void testRenameProperty() {
         rootNode.setProperty(PROPERTY_NAME, PROPERTY_VALUE);

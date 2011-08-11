@@ -33,13 +33,15 @@
  */
 package info.magnolia.cms.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public class StringLengthComparatorTest extends TestCase {
+public class StringLengthComparatorTest {
+    @Test
     public void testBasic() {
         assertEquals(0, new StringLengthComparator().compare("abc", "www"));
         assertTrue(new StringLengthComparator().compare("ac", "wwxxxw") < 0);

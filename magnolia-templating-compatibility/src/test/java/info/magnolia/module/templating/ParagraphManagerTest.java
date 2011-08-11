@@ -33,18 +33,22 @@
  */
 package info.magnolia.module.templating;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.Content;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 
+import javax.jcr.RepositoryException;
+
+import org.junit.Test;
+
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class ParagraphManagerTest extends MgnlTestCase {
+    @Test
     public void testJspIsDefaultTypeIfNotSpecified() throws IOException, RepositoryException {
         final Content paraNode = MockUtil.createHierarchyManager(PARA_NOTYPE).getContent("/modules/test/paragraph/foo");
         final ParagraphManager pm = new ParagraphManager();
@@ -70,6 +74,7 @@ public class ParagraphManagerTest extends MgnlTestCase {
 //        fail("not implemented yet");
 //    }
 
+    @Test
     public void testShouldUseNodeNameIfNoNameProperty() throws IOException, RepositoryException {
         final Content paraNode = MockUtil.createHierarchyManager(PARA_NONAME).getContent("/modules/test/paragraph/noname");
         final ParagraphManager pm = new ParagraphManager();
@@ -79,6 +84,7 @@ public class ParagraphManagerTest extends MgnlTestCase {
         assertEquals("jsp", p.getType());
     }
 
+    @Test
     public void testNamePropertyShouldPrevailOverNodeName() throws IOException, RepositoryException {
         final Content n = MockUtil.createHierarchyManager(PARA_TEST).getContent("/modules/test/paragraph");
         final ParagraphManager pm = new ParagraphManager();
@@ -90,6 +96,7 @@ public class ParagraphManagerTest extends MgnlTestCase {
         assertEquals("foo", foo.getName());
     }
 
+    @Test
     public void testDialogNameShouldBeEqualsToParagraphNameIfNotSpecified() throws IOException, RepositoryException {
         final Content n = MockUtil.createHierarchyManager(PARA_TEST).getContent("/modules/test/paragraph");
         final Content c2 = MockUtil.createHierarchyManager(PARA_NONAME).getContent("/modules/test/paragraph");

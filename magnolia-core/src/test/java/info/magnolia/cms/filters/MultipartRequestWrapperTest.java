@@ -33,9 +33,12 @@
  */
 package info.magnolia.cms.filters;
 
+import static org.junit.Assert.*;
+
 import java.util.Enumeration;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import info.magnolia.cms.beans.runtime.MultipartForm;
@@ -43,6 +46,7 @@ import info.magnolia.test.MgnlTestCase;
 
 public class MultipartRequestWrapperTest extends MgnlTestCase {
 
+    @Test
     public void testWillNotHideNewParametersAfterDoingForward() {
 
         MultipartForm form = new MultipartForm();

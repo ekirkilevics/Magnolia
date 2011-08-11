@@ -37,42 +37,46 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.DefaultComponentProviderTest;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Tests for {@link info.magnolia.test.ComponentsTestUtil}
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ComponentsTestUtilTest extends TestCase {
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+public class ComponentsTestUtilTest {
+    @Before
+    public void setUp() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
         SystemProperty.clear();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
         SystemProperty.clear();
     }
 
+    @Test
     public void testConfiguredImplementation() {
         ComponentsTestUtil.setImplementation(DefaultComponentProviderTest.TestInterface.class, DefaultComponentProviderTest.TestImplementation.class);
         Object obj = Components.getSingleton(DefaultComponentProviderTest.TestInterface.class);
         assertTrue(obj instanceof DefaultComponentProviderTest.TestImplementation);
     }
 
+    @Test
     public void testSetSingletonInstance() {
         DefaultComponentProviderTest.TestImplementation instance = new DefaultComponentProviderTest.TestImplementation();
         ComponentsTestUtil.setInstance(DefaultComponentProviderTest.TestInterface.class, instance);
         assertSame(instance, Components.getSingleton(DefaultComponentProviderTest.TestInterface.class));
     }
 
+    @Test
     public void testInstanceFactory() {
         ComponentsTestUtil.setInstanceFactory(DefaultComponentProviderTest.TestInterface.class, new DefaultComponentProviderTest.TestInstanceFactory());
 

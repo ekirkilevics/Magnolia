@@ -35,23 +35,25 @@ package info.magnolia.cms.util;
 
 import static org.easymock.EasyMock.*;
 import static org.easymock.classextension.EasyMock.*;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @version $Id$
  */
-public class RequestDispatchUtilTest extends TestCase {
+public class RequestDispatchUtilTest {
 
     private static final String HAS_SPACE_FRAGMENT = "/has space";
     private static final String ENCODED_HAS_SPACE_FRAGMENT = "/has+space";
     private static final String EXTERNAL_URL = "http://www.something.com";
 
+    @Test
     public void testDispatchWithNullURI() {
         // GIVEN
         final String targetUri = null;
@@ -63,6 +65,7 @@ public class RequestDispatchUtilTest extends TestCase {
         assertFalse(result);
     }
 
+    @Test
     public void testDispatchRedirectInternal() throws Exception {
         // GIVEN
         final String contextPath = "contextPath";
@@ -86,6 +89,7 @@ public class RequestDispatchUtilTest extends TestCase {
         verify(mocks);
     }
 
+    @Test
     public void testDispatchRedirectNonInternal() throws Exception {
         // GIVEN
         final String targetUri = RequestDispatchUtil.REDIRECT_PREFIX + EXTERNAL_URL + HAS_SPACE_FRAGMENT;
@@ -106,6 +110,7 @@ public class RequestDispatchUtilTest extends TestCase {
         verify(mocks);
     }
 
+    @Test
     public void testDispatchRedirectNonInternalFailure() throws Exception{
         // GIVEN
         final String targetUri = RequestDispatchUtil.REDIRECT_PREFIX + EXTERNAL_URL + HAS_SPACE_FRAGMENT;

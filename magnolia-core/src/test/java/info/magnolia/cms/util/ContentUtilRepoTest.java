@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.util;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -41,14 +42,16 @@ import info.magnolia.test.RepositoryTestCase;
 
 import javax.jcr.RepositoryException;
 
+import org.junit.Test;
+
 /**
  * Tests for {@link ContentUtil} which rely on an actual repository, i.e using {@link RepositoryTestCase}.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class ContentUtilRepoTest extends RepositoryTestCase {
 
+    @Test
     public void testSessionBasedCopy() throws RepositoryException{
         HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         Content src = hm.getRoot().createContent("test");
@@ -58,6 +61,7 @@ public class ContentUtilRepoTest extends RepositoryTestCase {
         assertTrue(hm.isExist("/gugu/subnode"));
     }
 
+    @Test
     public void testChangeNodeTypeReplaceFirstOccurrenceOnly() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         final Content src = hm.getRoot().createContent("test");
@@ -76,6 +80,7 @@ public class ContentUtilRepoTest extends RepositoryTestCase {
         assertEquals(ItemType.CONTENT.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
     }
 
+    @Test
     public void testChangeNodeTypeReplaceAllOccurrences() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         final Content src = hm.getRoot().createContent("test");
