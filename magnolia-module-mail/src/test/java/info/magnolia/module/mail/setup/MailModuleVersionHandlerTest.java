@@ -52,6 +52,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Test;
+
 import static info.magnolia.module.mail.setup.MailModuleVersionHandler.COMMAND_IN_ADMININTERFACEMODULE_PATH;
 import static info.magnolia.module.mail.setup.MailModuleVersionHandler.MAIL_COMMAND_CLASS_PRIOR_TO_4_0;
 
@@ -62,10 +64,6 @@ import static info.magnolia.module.mail.setup.MailModuleVersionHandler.MAIL_COMM
  */
 public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-    }
     @Override
     protected void initDefaultImplementations() throws IOException, ModuleManagementException {
         ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
@@ -99,6 +97,7 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         };
     }
 
+    @Test
     public void testMailCommandIsSetProperlyOnInstallWithoutWarning() throws Exception {
         final InstallContext ctx = executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
         assertConfig(MailCommand.class.getName(), COMMAND_IN_ADMININTERFACEMODULE_PATH + "/class");
@@ -106,6 +105,7 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     }
 
     // yes, 3.7 does not exist; this is just to avoid all 3.5 and 3.6 tasks
+    @Test
     public void testUpdatingFrom37() throws Exception {
         setupConfigProperty("/modules/mail/config/templates", "foo", "bar");
         setupConfigProperty("/server/filters/servlets/Mail", "foo", "bar");
@@ -117,6 +117,7 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     }
 
     // yes, 3.7 does not exist; this is just to avoid all 3.5 and 3.6 tasks
+    @Test
     public void testUpdatingFrom37WithCustomCommand() throws Exception {
         setupConfigProperty("/modules/mail/config/templates", "foo", "bar");
         setupConfigProperty("/server/filters/servlets/Mail", "foo", "bar");
@@ -130,6 +131,7 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertSingleMessage(ctx, "Property \"class\" was expected to exist at /modules/adminInterface/commands/default/sendMail with value \"info.magnolia.cms.mail.commands.MailCommand\" but has the value \"custom-command-class\" instead.", InstallContext.MessagePriority.warning);
     }
 
+    @Test
     public void testUpdatingFrom402ShouldBeSilentIfUserAlreadyFixedTheirConfig() throws Exception {
         setupConfigProperty("/modules/mail/config/templates", "foo", "bar");
         setupConfigProperty("/server/filters/servlets/Mail", "foo", "bar");
@@ -140,6 +142,7 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertNoMessages(ctx);
     }
 
+    @Test
     public void testUpdatingFrom41ShouldBeSilentIfUserAlreadyFixedTheirConfig() throws Exception {
         setupConfigProperty("/modules/mail/config/templates", "foo", "bar");
         setupConfigProperty("/server/filters/servlets/Mail", "foo", "bar");
@@ -151,6 +154,7 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     }
 
+    @Test
     public void testUpdatingFrom402ShouldBeSilentEvenWithCustomCommandClass() throws Exception {
         setupConfigProperty("/modules/mail/config/templates", "foo", "bar");
         setupConfigProperty("/server/filters/servlets/Mail", "foo", "bar");
@@ -161,6 +165,7 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertNoMessages(ctx);
     }
 
+    @Test
     public void testUpdatingFrom41ShouldBeSilentEvenWithCustomCommandClass() throws Exception {
         setupConfigProperty("/modules/mail/config/templates", "foo", "bar");
         setupConfigProperty("/server/filters/servlets/Mail", "foo", "bar");
