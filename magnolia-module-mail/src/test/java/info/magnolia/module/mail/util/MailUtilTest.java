@@ -33,10 +33,8 @@
  */
 package info.magnolia.module.mail.util;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -55,16 +53,17 @@ import info.magnolia.test.mock.MockHierarchyManager;
 import java.util.Arrays;
 import java.util.Collections;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Test for mail utils.
- * 
+ *
  * @author had
- * 
+ *
  */
-public class MailUtilTest extends TestCase {
+public class MailUtilTest {
 
+    @Test
     public void testGetGroupMembersMails() throws Exception {
 
         UserManager manager = createMock(UserManager.class);

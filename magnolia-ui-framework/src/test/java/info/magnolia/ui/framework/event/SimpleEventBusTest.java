@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.framework.event;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -40,15 +42,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests for SimpleEventBus.
  *
  * @author tmattsson
  */
-public class SimpleEventBusTest extends TestCase {
+public class SimpleEventBusTest {
 
     private static class TestEvent implements Event<TestEventHandler> {
         @Override
@@ -99,6 +100,7 @@ public class SimpleEventBusTest extends TestCase {
         }
     }
 
+    @Test
     public void testAreHandlersInvokedInOrder() {
         SimpleEventBus eventBus = new SimpleEventBus();
         List<InvocationOrderTestingHandler> handlers = new ArrayList<InvocationOrderTestingHandler>();
@@ -115,6 +117,7 @@ public class SimpleEventBusTest extends TestCase {
         }
     }
 
+    @Test
     public void testHandlerAddedWhileDispatchingIsNotCalled() {
         final SimpleEventBus eventBus = new SimpleEventBus();
         final TestEventHandler handler2 = new TestEventHandler();
@@ -131,6 +134,7 @@ public class SimpleEventBusTest extends TestCase {
         assertEquals(0, handler2.getInvocationCount());
     }
 
+    @Test
     public void testHandlerRemovedWhileDispatchingIsCalled() {
         SimpleEventBus eventBus = new SimpleEventBus();
         RemoveEventHandler handler1 = new RemoveEventHandler();
@@ -145,6 +149,7 @@ public class SimpleEventBusTest extends TestCase {
         assertEquals(1, handler2.getInvocationCount());
     }
 
+    @Test
     public void testMultipleRegistrationOfTheSameHandlerWillNotResultInMultipleInvocations() {
 
         SimpleEventBus eventBus = new SimpleEventBus();
@@ -159,6 +164,7 @@ public class SimpleEventBusTest extends TestCase {
         assertEquals(1, handler.getInvocationCount());
     }
 
+    @Test
     public void testMultipleThreads() throws InterruptedException {
 
         final int numberOfThreads = 20;

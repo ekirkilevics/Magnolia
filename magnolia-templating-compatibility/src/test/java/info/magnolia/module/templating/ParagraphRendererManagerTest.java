@@ -33,34 +33,38 @@
  */
 package info.magnolia.module.templating;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
+
+import javax.jcr.RepositoryException;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ParagraphRendererManagerTest extends TestCase {
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+public class ParagraphRendererManagerTest {
+    @Before
+    public void setUp() throws Exception {
         SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         SystemProperty.clear();
-        super.tearDown();
     }
 
+    @Test
     public void testNotSpecifyingTheNamePropertyShouldMeanTheNodeNameIsUsedInstead() throws IOException, RepositoryException {
         final Content node = getConfigNode(CONFIGNODE2, "/modules/test2/paragraph-renderers");
         final ParagraphRendererManager prm = new ParagraphRendererManager();
@@ -70,6 +74,7 @@ public class ParagraphRendererManagerTest extends TestCase {
         assertNotNull(prm.getRenderer("baz"));
     }
 
+    @Test
     public void testUnknownParagraphRendererNamesThrowsException() throws IOException, RepositoryException {
         final Content node = getConfigNode(CONFIGNODE1, "/modules/test/paragraph-renderers");
         final ParagraphRendererManager prm = new ParagraphRendererManager();
@@ -85,6 +90,7 @@ public class ParagraphRendererManagerTest extends TestCase {
         }
     }
 
+    @Test
     public void testParagraphRenderersAreAddedProperly() throws IOException, RepositoryException {
         Content node1 = getConfigNode(CONFIGNODE1, "/modules/test/paragraph-renderers");
         Content node2 = getConfigNode(CONFIGNODE2, "/modules/test2/paragraph-renderers");
@@ -109,6 +115,7 @@ public class ParagraphRendererManagerTest extends TestCase {
         assertEquals(0, renderers.size());
     }
 
+    @Test
     public void testCanNotAddParagraphRenderersWithDuplicateNames() throws IOException, RepositoryException {
         Content node1 = getConfigNode(CONFIGNODE1, "/modules/test/paragraph-renderers");
         Content node3 = getConfigNode(CONFIGNODE3, "/modules/test3/paragraph-renderers");
@@ -130,6 +137,7 @@ public class ParagraphRendererManagerTest extends TestCase {
         }
     }
 
+    @Test
     public void testRenderersNamePropertyHasPriorityOverNodeName() throws IOException, RepositoryException {
         Content node3 = getConfigNode(CONFIGNODE3, "/modules/test3/paragraph-renderers");
         final ParagraphRendererManager prm = new ParagraphRendererManager();
@@ -148,6 +156,7 @@ public class ParagraphRendererManagerTest extends TestCase {
         assertTrue(renderers.get("bar") instanceof DummyParagraphRenderer);
     }
 
+    @Test
     public void testRenderersWithFaultyClassNamesShouldNotBeIgnored() throws IOException, RepositoryException {
         final Content node = getConfigNode(CONFIGNODE4, "/modules/test4/paragraph-renderers");
         final ParagraphRendererManager prm = new ParagraphRendererManager();

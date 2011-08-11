@@ -33,19 +33,23 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.Content;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.StringWriter;
+
+import javax.jcr.RepositoryException;
+
+import org.junit.Test;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class PlainTextParagraphRendererTest extends TestCase {
+public class PlainTextParagraphRendererTest {
+    @Test
     public void testJustWorks() throws IOException, RepositoryException {
         final PlainTextParagraphRenderer r = new PlainTextParagraphRenderer();
         final Content content = getNode(CONTENTNODE1, "/foo/bar/MyPage");

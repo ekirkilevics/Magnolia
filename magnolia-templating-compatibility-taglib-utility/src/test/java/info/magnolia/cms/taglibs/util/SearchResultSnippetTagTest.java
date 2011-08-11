@@ -33,23 +33,25 @@
  */
 package info.magnolia.cms.taglibs.util;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.test.mock.MockContent;
-import junit.framework.TestCase;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspException;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.junit.Test;
 
 
 /**
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
-public class SearchResultSnippetTagTest extends TestCase {
+public class SearchResultSnippetTagTest {
 
+    @Test
     public void testStripHtmlSimple() {
         String html = "<div>uh!</div>";
         String text = "uh!";
@@ -57,6 +59,7 @@ public class SearchResultSnippetTagTest extends TestCase {
         assertEquals(text, result);
     }
 
+    @Test
     public void testStripHtmlEmptyTag() {
         String html = "<div>uh!<br/></div>";
         String text = "uh!";
@@ -64,6 +67,7 @@ public class SearchResultSnippetTagTest extends TestCase {
         assertEquals(text, result);
     }
 
+    @Test
     public void testStripHtmlNewLines() {
         String html = "<div\n class=\"abc\">uh!</div>";
         String text = "uh!";
@@ -71,6 +75,7 @@ public class SearchResultSnippetTagTest extends TestCase {
         assertEquals(text, result);
     }
 
+    @Test
     public void testStripHtmlMultipleNewLines() {
         String html = "<div\n class=\"abc\"\n style=\"abc\">uh!</div>";
         String text = "uh!";
@@ -78,6 +83,7 @@ public class SearchResultSnippetTagTest extends TestCase {
         assertEquals(text, result);
     }
 
+    @Test
     public void testStripHtmlNewLineAsLast() {
         String html = "<div\n class=\"abc\"\n style=\"abc\"\n>uh!</div>";
         String text = "uh!";
@@ -85,6 +91,7 @@ public class SearchResultSnippetTagTest extends TestCase {
         assertEquals(text, result);
     }
 
+    @Test
     public void testLongTestShouldNotProduceIssues() throws JspException, RepositoryException, AccessDeniedException {
         // this is taken from a sample documentation page.
         final String longText = "{toc:maxLevel=1}\n" +

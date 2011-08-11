@@ -33,30 +33,32 @@
  */
 package info.magnolia.module.templating.renderers;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.TemplateRenderer;
 import info.magnolia.test.ComponentsTestUtil;
-import junit.framework.TestCase;
 
 import java.io.StringWriter;
 
-import static org.easymock.EasyMock.*;
+import org.junit.After;
+import org.junit.Test;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ServletTemplateRendererTest extends TestCase {
-    @Override
-    protected void tearDown() throws Exception {
+public class ServletTemplateRendererTest {
+    @After
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
         SystemProperty.clear();
-        super.tearDown();
     }
 
+    @Test
     public void testServletTemplateRendererOnlyWorksInWebContextAndIsPoliteEnoughToGiveAnExplicitExceptionMessageAboutIt() throws Exception {
         final Context ctx = createStrictMock(Context.class);
         replay(ctx);

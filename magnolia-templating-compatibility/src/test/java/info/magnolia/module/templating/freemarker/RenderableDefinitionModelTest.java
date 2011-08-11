@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.templating.freemarker;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.freemarker.models.MagnoliaObjectWrapper;
 import info.magnolia.module.templating.AbstractRenderable;
 import info.magnolia.module.templating.Paragraph;
@@ -44,7 +45,8 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
 import freemarker.ext.util.ModelFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -57,8 +59,9 @@ import freemarker.template.TemplateException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class RenderableDefinitionModelTest extends TestCase {
+public class RenderableDefinitionModelTest {
 
+    @Test
     public void testRenderableDefinitionParametersAreAvailableAsTopLevelProperties() throws IOException, TemplateException {
         final Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("foo", "bar");
@@ -73,6 +76,7 @@ public class RenderableDefinitionModelTest extends TestCase {
         doTestFreemarkerRendering(":myname:bar:", ":${def.name}:${def.foo}:", root);
     }
 
+    @Test
     public void testRenderableDefinitionPropertiesHaveHigherPriorityThanParameters() throws IOException, TemplateException {
         final Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("foo", "bar");
@@ -88,6 +92,7 @@ public class RenderableDefinitionModelTest extends TestCase {
         doTestFreemarkerRendering(":real name:bar:", ":${def.name}:${def.foo}:", root);
     }
 
+    @Test
     public void testRenderableDefinitionPropertiesAreStillAvailableIfReallyNeeded() throws IOException, TemplateException {
         final Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("foo", "bar");

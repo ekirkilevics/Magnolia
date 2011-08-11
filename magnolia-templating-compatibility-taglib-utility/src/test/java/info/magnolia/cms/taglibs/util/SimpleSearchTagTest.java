@@ -33,29 +33,28 @@
  */
 package info.magnolia.cms.taglibs.util;
 
+import static org.junit.Assert.fail;
+
 import javax.jcr.NamespaceException;
 import javax.jcr.query.InvalidQueryException;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-// jackrabbit 1.4 : import org.apache.jackrabbit.core.query.DefaultQueryNodeFactory;
-import org.apache.jackrabbit.spi.commons.query.DefaultQueryNodeFactory;
 import org.apache.jackrabbit.core.query.lucene.SearchIndex;
-// jackrabbit 1.4 : import org.apache.jackrabbit.core.query.xpath.XPathQueryBuilder;
-import org.apache.jackrabbit.spi.commons.query.xpath.XPathQueryBuilder;
 import org.apache.jackrabbit.spi.Name;
 import org.apache.jackrabbit.spi.commons.conversion.IllegalNameException;
 import org.apache.jackrabbit.spi.commons.conversion.NameResolver;
 import org.apache.jackrabbit.spi.commons.name.NameFactoryImpl;
+import org.apache.jackrabbit.spi.commons.query.DefaultQueryNodeFactory;
+import org.apache.jackrabbit.spi.commons.query.xpath.XPathQueryBuilder;
+import org.junit.Test;
 
 /**
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class SimpleSearchTagTest extends TestCase {
+public class SimpleSearchTagTest {
 
     /**
      *
@@ -79,6 +78,7 @@ public class SimpleSearchTagTest extends TestCase {
      * Test for GenerateXPathQuery(). Uses Jackrabbit internal XPathQueryBuilder in order to validate the query.
      * @throws InvalidQueryException
      */
+    @Test
     public void testGenerateXPathQuery(){
 
         SimpleSearchTag tag = new SimpleSearchTag();
@@ -97,6 +97,7 @@ public class SimpleSearchTagTest extends TestCase {
     /**
      * Test for GenerateXPathQuery(). Uses Jackrabbit internal XPathQueryBuilder in order to validate the query.
      */
+    @Test
     public void testGenerateXPathQuerySmokeTest() {
 
         SimpleSearchTag tag = new SimpleSearchTag();

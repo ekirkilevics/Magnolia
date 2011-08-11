@@ -33,6 +33,25 @@
  */
 package info.magnolia.module.exchangesimple;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.Content.ContentFilter;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.exchange.ActivationManager;
+import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.exchange.Subscriber;
+import info.magnolia.cms.exchange.Subscription;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.util.Rule;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
+import info.magnolia.context.WebContext;
+import info.magnolia.test.ComponentsTestUtil;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,32 +63,16 @@ import javax.jcr.Session;
 import javax.jcr.Workspace;
 
 import org.apache.commons.collections.CollectionUtils;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.core.Content.ContentFilter;
-import info.magnolia.cms.exchange.ActivationManager;
-import info.magnolia.cms.exchange.ExchangeException;
-import info.magnolia.cms.exchange.Subscriber;
-import info.magnolia.cms.exchange.Subscription;
-import info.magnolia.cms.security.User;
-import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.cms.util.Rule;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
-import info.magnolia.context.WebContext;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Basic test for checking the sending end of the activation.
  * @author had
  * @version $Id:$
  */
-public class SimpleSyndicatorTest extends TestCase {
+public class SimpleSyndicatorTest {
 
     private ActivationManager actMan;
     private WebContext ctx;
@@ -82,7 +85,7 @@ public class SimpleSyndicatorTest extends TestCase {
     private Collection<Subscriber> subscribers;
     private List<Object> allMocks;
 
-    @Override
+    @Before
     public void setUp() {
         actMan = createStrictMock(ActivationManager.class);
         ComponentsTestUtil.setInstance(ActivationManager.class, actMan);
@@ -107,7 +110,7 @@ public class SimpleSyndicatorTest extends TestCase {
         syndicator.contentFilterRule = rule;
     }
 
-    @Override
+    @After
     public void tearDown() {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.setInstance(ActivationManager.class, null);
@@ -116,6 +119,7 @@ public class SimpleSyndicatorTest extends TestCase {
         SystemProperty.getProperties().remove(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR);
     }
 
+    @Test
     public void testDeactivateWithNoSubscriber() throws Exception {
         runDeactivateTest(new Runnable() {
             @Override
@@ -142,6 +146,7 @@ public class SimpleSyndicatorTest extends TestCase {
 
     }
 
+    @Test
     public void testDeactivateWithNoActiveSubscriber() throws Exception {
         runDeactivateTest(new Runnable() {
             @Override
@@ -171,6 +176,7 @@ public class SimpleSyndicatorTest extends TestCase {
 
     }
 
+    @Test
     public void testActivateLooongName() throws Exception {
         // name of the content has to be more then 256 chars to make sure that if used somewhere to create files it will fail the test.
         StringBuilder sb = new StringBuilder("/");

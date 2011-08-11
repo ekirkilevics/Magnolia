@@ -33,50 +33,48 @@
  */
 package info.magnolia.cms.taglibs.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import static org.easymock.EasyMock.*;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.ComponentsTestUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.servlet.jsp.PageContext;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
 import com.mockrunner.mock.web.MockPageContext;
 import com.mockrunner.mock.web.MockServletConfig;
-
-import junit.framework.TestCase;
-
-import static org.easymock.EasyMock.*;
 /**
  * @author had
  */
-public class SimpleNavigationTagTest extends TestCase {
+public class SimpleNavigationTagTest {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
 
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
-    /**
-     * Test rendering child entries
-     */
+
+    @Test
     public void testChildren() throws Exception {
         SimpleNavigationTag tag = new SimpleNavigationTag();
         Content current = createStrictMock(Content.class);
