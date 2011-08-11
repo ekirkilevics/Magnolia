@@ -40,10 +40,11 @@ import java.util.Comparator;
 /**
  * Compares 2 nodes by the value of their UUID.
  *
- * @author gjoseph
+ * @version $Id$
  */
 public class NodeUuidComparator implements Comparator<Content> {
 
+    @Override
     public int compare(Content c1, Content c2) {
         final String s1 = c1.getUUID();
         final String s2 = c2.getUUID();

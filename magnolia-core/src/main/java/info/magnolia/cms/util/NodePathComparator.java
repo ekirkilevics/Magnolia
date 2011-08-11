@@ -40,10 +40,11 @@ import java.util.Comparator;
 /**
  * Compares 2 nodes by the value of their path.
  *
- * @author gjoseph
+ * @version $Id$
  */
 public class NodePathComparator implements Comparator<Content> {
 
+    @Override
     public int compare(Content c1, Content c2) {
         final String s1 = c1.getHandle();
         final String s2 = c2.getHandle();
