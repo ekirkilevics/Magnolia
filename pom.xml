@@ -93,13 +93,6 @@ for Java Content Repositories (JCR).
       <timezone>+1</timezone>
     </developer>
     <developer>
-      <id>mrichert</id>
-      <name>Marlon Richert</name>
-      <email>marlon(at)vaadin.com</email>
-      <organization>Vaadin Ltd.</organization>
-      <timezone>+2</timezone>
-    </developer>
-    <developer>
       <id>fgiust</id>
       <name>Fabrizio Giustina</name>
       <email>fgiust(at)openmindonline.it</email>
@@ -270,26 +263,6 @@ for Java Content Repositories (JCR).
             <artifactId>xercesImpl</artifactId>
           </exclusion>
         </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.vaadin</groupId>
-        <artifactId>vaadin</artifactId>
-        <version>6.7-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-	    <groupId>org.vaadin.addons</groupId>
-	    <artifactId>confirmdialog</artifactId>
-	    <version>1.1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.vaadin.addons</groupId>
-        <artifactId>lazyloadwrapper</artifactId>
-        <version>1.0.2</version>
-      </dependency>
-      <dependency>
-         <groupId>org.vaadin.addons</groupId>
-         <artifactId>animator</artifactId>
-         <version>1.6.4</version>
       </dependency>
       <!-- gwt jars only needed at build time, which is why they are in scope:provided -->
       <dependency>
@@ -958,18 +931,10 @@ for Java Content Repositories (JCR).
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
 
-    <!-- Old Magnolia UI -->
+    <!-- Magnolia UI -->
     <module>magnolia-gui</module>
     <module>magnolia-module-fckeditor</module>
     <module>magnolia-module-admininterface</module>
-
-    <!-- New Magnolia 5.0 UI -->
-    <module>magnolia-ui-framework</module>
-    <module>magnolia-ui-model</module>
-    <module>magnolia-ui-vaadin-components</module>
-    <module>magnolia-ui-vaadin-widgetset</module>
-    <module>magnolia-ui-vaadin-integration</module>
-    <module>magnolia-ui-admincentral</module>
 
     <!-- Templating -->
     <module>magnolia-rendering</module>
@@ -985,10 +950,8 @@ for Java Content Repositories (JCR).
     <module>magnolia-module-exchange-simple</module>
     <module>magnolia-module-mail</module>
     <module>magnolia-module-store-client</module>
-    <module>magnolia-module-wcm</module>
     <module>magnolia-module-workflow</module>
-
     <module>magnolia-empty-webapp</module>
-    <module>magnolia-module-ckeditor</module>
+
   </modules>
 </project>

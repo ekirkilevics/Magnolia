@@ -51,26 +51,6 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-ui-admincentral</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-wcm</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-ui-vaadin-integration</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-ui-vaadin-widgetset</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -122,14 +102,14 @@
       <artifactId>openutils-log4j</artifactId>
     </dependency>
     <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-templating-samples</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+       <dependency>
       <groupId>junit</groupId>
       <artifactId>junit-dep</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>info.magnolia</groupId>
-    	<artifactId>magnolia-templating-samples</artifactId>
-    	<version>4.5-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>

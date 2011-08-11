@@ -42,11 +42,11 @@
   <dependencies>
     <dependency>
       <name>core</name>
-      <version>5.0/*</version>
+      <version>4.5/*</version>
     </dependency>
     <dependency>
       <name>rendering</name>
-      <version>5.0/*</version>
+      <version>4.5/*</version>
     </dependency>
   </dependencies>
 
