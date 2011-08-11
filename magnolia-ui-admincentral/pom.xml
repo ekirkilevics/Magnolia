@@ -21,19 +21,11 @@
     </dependency>
     <dependency>
       <groupId>org.vaadin.addons</groupId>
-      <artifactId>vaadin-treetable</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.vaadin.addons</groupId>
       <artifactId>lazyloadwrapper</artifactId>
     </dependency>
     <dependency>
        <groupId>org.vaadin.addons</groupId>
        <artifactId>animator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>temp.org.vaadin.addons</groupId>
-      <artifactId>vaadin-chameleon-theme</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>

@@ -64,7 +64,7 @@ public abstract class EditableText extends Editable {
         private String path;
 
         private TextFieldEditor(String path) {
-            setImmediate(false);
+            // setImmediate(false);
             this.path = path;
         }
 

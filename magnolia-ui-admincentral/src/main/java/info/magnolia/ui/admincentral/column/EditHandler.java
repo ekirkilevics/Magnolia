@@ -36,6 +36,7 @@ package info.magnolia.ui.admincentral.column;
 import info.magnolia.ui.admincentral.container.JcrContainer;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Component;
@@ -49,45 +50,63 @@ import com.vaadin.ui.Table;
  * 
  * @author mrichert
  */
-public class EditHandler implements ItemClickListener {
+public class EditHandler implements ItemClickListener
+// , ValueChangeListener
+{
 
-    private Table table;
+    private final Table table;
+
+    private Property editedContainerProperty;
+
+    private Editable editable;
 
     public EditHandler(Table table) {
         this.table = table;
         table.addListener(this);
+        table.addListener((ValueChangeListener) this);
     }
 
     @Override
     public void itemClick(ItemClickEvent event) {
-        table = (Table) event.getSource();
-        final Object itemId = event.getItemId();
-        final String propertyId = (String) event.getPropertyId();
+        Object itemId = event.getItemId();
+        String propertyId = (String) event.getPropertyId();
         if (table.isSelected(itemId)) {
-            Property containerProperty = table.getContainerProperty(itemId,
+            cleanUp();
+            editedContainerProperty = table.getContainerProperty(itemId,
                 propertyId);
-            Object value = containerProperty.getValue();
-            JcrContainer jcrContainer = (JcrContainer) table.getContainerDataSource();
+            Object value = editedContainerProperty.getValue();
 
+            JcrContainer jcrContainer = (JcrContainer) table.getContainerDataSource();
             if (value instanceof String) {
                 value = jcrContainer.getColumnValue(propertyId, itemId);
             }
 
             if (value instanceof Editable) {
-                final Editable editable = (Editable) value;
+                editable = (Editable) value;
+                Component editorComponent = editable.getEditorComponent();
+                editedContainerProperty.setValue(editorComponent);
 
                 editable.addListener(new EditListener() {
 
                     @Override
                     public void edit(EditEvent event) {
-                        table.getContainerProperty(itemId,
-                                propertyId).setValue(editable);
+                        cleanUp();
                     }
                 });
-
-                Component editorComponent = editable.getEditorComponent();
-                containerProperty.setValue(editorComponent);
             }
+        }
+    }
+
+    // @Override
+    // public void valueChange(ValueChangeEvent event) {
+    // cleanUp();
+    // }
+
+    private void cleanUp() {
+        if (editedContainerProperty != null && editable != null) {
+            editedContainerProperty.setValue(editable);
+            editedContainerProperty = null;
+            editable = null;
         }
     }
 }

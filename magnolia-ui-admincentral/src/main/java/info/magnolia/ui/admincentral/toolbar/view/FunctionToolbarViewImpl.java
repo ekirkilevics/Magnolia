@@ -52,6 +52,7 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +62,6 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.addon.chameleon.Segment;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.Alignment;
@@ -70,13 +70,14 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
 
 /**
- * TODO show search results and advanced search options.
- * Implementation for {@link FunctionToolbarView}.
+ * TODO show search results and advanced search options. Implementation for
+ * {@link FunctionToolbarView}.
  * @author fgrilli
  * @author mrichert
  */
@@ -106,8 +107,8 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
             return;
         }
 
-        //TODO build UI filters for advanced search
-        //final List<ToolbarItemFilterDefinition> filters = toolbarDefinition.getFilters();
+        // TODO build UI filters for advanced search
+        // final List<ToolbarItemFilterDefinition> filters = toolbarDefinition.getFilters();
 
         final List<ToolbarItemGroupDefinition> groupItems = toolbarDefinition.getGroups();
 
@@ -169,30 +170,34 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
 
                 @Override
                 public void buttonClick(ClickEvent event) {
-                    //TODO show advanced search
+                    // TODO show advanced search
                 }
             });
             outerContainer.addComponent(advancedSearchButton);
 
             final TextField searchBox = new TextField();
-            //FIXME get the text from messages.properties
+            // FIXME get the text from messages.properties
             searchBox.setInputPrompt("Search");
             searchBox.addStyleName("search");
-            searchBox.addShortcutListener(new ShortcutListener("",ShortcutAction.KeyCode.ENTER, null) {
+            searchBox.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ENTER, null) {
 
                 @Override
                 public void handleAction(Object sender, Object target) {
 
                     SearchParameters params = new SearchParameters(workspace, searchBox.getValue().toString());
-                    //TODO add filters to params if search started in advanced mode.
-                    //presumably iterate over UI select widgets, get the selected options, get the boolean op chosen for a given selection and build the filters. Something like the following:
-                    //params.addFilter(new SearchFilter(selection, SearchFilter.LIKE, foo)) //addFilter(..), or(..) etc. could be chainable and return the current instance of SearchParameters
-                    //.or()
-                    //.addFilter(new SearchFilter(anotherSelection, SearchFilter.EQ, bar))
-                    //.and()
-                    //.addFilter(new SearchFilter(yetAnotherSelection, SearchFilter.NEQ, baz));
+                    // TODO add filters to params if search started in advanced mode.
+                    // presumably iterate over UI select widgets, get the selected options, get the
+                    // boolean op chosen for a given selection and build the filters. Something like
+                    // the following:
+                    // params.addFilter(new SearchFilter(selection, SearchFilter.LIKE, foo))
+                    // //addFilter(..), or(..) etc. could be chainable and return the current
+                    // instance of SearchParameters
+                    // .or()
+                    // .addFilter(new SearchFilter(anotherSelection, SearchFilter.EQ, bar))
+                    // .and()
+                    // .addFilter(new SearchFilter(yetAnotherSelection, SearchFilter.NEQ, baz));
                     searchPresenter.onStartSearch(params);
-                    //TODO show expanded/advanced search
+                    // TODO show expanded/advanced search
                 }
             });
             outerContainer.addComponent(searchBox);
@@ -211,7 +216,7 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
 
     @Override
     public void setPresenter(SearchView.Presenter presenter) {
-        this.searchPresenter = presenter;
+        searchPresenter = presenter;
 
     }
 
@@ -220,9 +225,11 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
         if (newPlace instanceof ItemSelectedPlace) {
             ViewType viewType = ((ItemSelectedPlace) newPlace).getViewType();
             setViewButtonStyle(viewButtons.get(viewType));
-        } else if (newPlace instanceof SearchPlace){
+        }
+        else if (newPlace instanceof SearchPlace) {
             setViewButtonStyle(viewButtons.get(ViewType.LIST));
-        } else {
+        }
+        else {
             setViewButtonStyle(viewButtons.get(ViewType.TREE));
         }
     }
@@ -232,22 +239,70 @@ public class FunctionToolbarViewImpl implements FunctionToolbarView, IsVaadinCom
         searchPresenter.onPerformSearch(searchParameters, jcrView);
     }
 
-    private void setViewButtonStyle(Button button){
-        if(button == null){
+    private void setViewButtonStyle(Button button) {
+        if (button == null) {
             return;
         }
         for (Button btn : viewButtons.values()) {
             btn.removeStyleName("v-button-down");
         }
-        //log.debug("applying 'down' style to button {}", button.getCaption());
-        //FIXME adding a style with the complete name is not recommended (shoudl be simply "down"), however it's the only way it works now.
+        // log.debug("applying 'down' style to button {}", button.getCaption());
+        // FIXME adding a style with the complete name is not recommended (shoudl be simply "down"),
+        // however it's the only way it works now.
         button.addStyleName("v-button-down");
     }
-
 
     @Override
     public void update(SearchResult result) {
         // TODO update UI showing the number of results
+    }
+
+    /**
+     * The segment control is just a set of buttons inside a HorizontalLayout.
+     * 
+     * @author mrichert
+     */
+    public static class Segment extends HorizontalLayout {
+
+        public Segment() {
+            addStyleName("segment");
+        }
+
+        public Segment addButton(Button b) {
+            addComponent(b);
+            b.addListener(new Button.ClickListener() {
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    if (event.getButton().getStyleName().indexOf("down") == -1) {
+                        event.getButton().addStyleName("down");
+                    }
+                    else {
+                        event.getButton().removeStyleName("down");
+                    }
+                }
+            });
+            updateButtonStyles();
+            return this;
+        }
+
+        private void updateButtonStyles() {
+            int i = 0;
+            Component c = null;
+            for (Iterator<Component> iterator = getComponentIterator(); iterator
+                    .hasNext();) {
+                c = iterator.next();
+                c.removeStyleName("first");
+                c.removeStyleName("last");
+                if (i == 0) {
+                    c.addStyleName("first");
+                }
+                i++;
+            }
+            if (c != null) {
+                c.addStyleName("last");
+            }
+        }
     }
 
 }
