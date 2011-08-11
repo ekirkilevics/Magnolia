@@ -51,6 +51,7 @@ import javax.servlet.jsp.PageContext;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
@@ -58,7 +59,7 @@ import com.mockrunner.mock.web.MockHttpServletResponse;
 import com.mockrunner.mock.web.MockPageContext;
 import com.mockrunner.mock.web.MockServletConfig;
 /**
- * @author had
+ * @version $Id$
  */
 public class SimpleNavigationTagTest {
 
@@ -74,6 +75,7 @@ public class SimpleNavigationTagTest {
         MgnlContext.setInstance(null);
     }
 
+    @Ignore
     @Test
     public void testChildren() throws Exception {
         SimpleNavigationTag tag = new SimpleNavigationTag();

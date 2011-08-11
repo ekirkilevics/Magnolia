@@ -13,8 +13,7 @@
   <properties>
     <taglib.shortname>cmsu</taglib.shortname>
     <taglib.uri>cms-util-taglib</taglib.uri>
-  	<!-- FIXME -->
-  	<skipTests>true</skipTests>
+    <cloverCoverageThreshold>5</cloverCoverageThreshold>
   </properties>
   <dependencies>
     <dependency>

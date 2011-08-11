@@ -40,6 +40,10 @@ import info.magnolia.test.MgnlTagTestCase;
 import static org.easymock.classextension.EasyMock.*;
 
 import javax.jcr.RepositoryException;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.IOException;
 
 /**
@@ -48,6 +52,7 @@ import java.io.IOException;
  */
 public class PoweredByTagTest extends MgnlTagTestCase {
     @Override
+    @Before
     public void setUp() throws Exception {
         super.setUp();
 
@@ -64,6 +69,7 @@ public class PoweredByTagTest extends MgnlTagTestCase {
         ComponentsTestUtil.setInstance(LicenseFileExtractor.class, licenseExtractor);
     }
 
+    @Test
     public void testShouldBeUseableWithoutAnyAttribute() throws Exception {
         final PoweredByTag tag = new PoweredByTag();
         tag.setJspContext(pageContext);
@@ -72,6 +78,7 @@ public class PoweredByTagTest extends MgnlTagTestCase {
         assertJspContent("Powered by <a href=\"http://www.magnolia-cms.com\">Magnolia</a> Test Edition 7.5.3.");
     }
 
+    @Test
     public void testCanUseACustomPatternWithDifferentParameters() throws Exception {
         final PoweredByTag tag = new PoweredByTag();
         tag.setPattern("I''m using version {1} of the {0} of Magnolia which was built on {2} by {4}. These guys have their offices at {5}, and can be reached by email at {6}. Their wonderful website is at http://{3} !");
