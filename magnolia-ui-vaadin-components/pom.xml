@@ -17,10 +17,6 @@
       <groupId>org.vaadin.addons</groupId>
       <artifactId>animator</artifactId>
     </dependency>
-    <dependency>
-      <groupId>temp.org.vaadin.addons</groupId>
-      <artifactId>vaadin-chameleon-theme</artifactId>
-    </dependency>
   </dependencies>
   <build>
     <plugins>
