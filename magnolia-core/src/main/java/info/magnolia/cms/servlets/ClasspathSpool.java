@@ -55,31 +55,32 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A simple spool servlet that load resources from the classpath. A simple rule for accessible resources: only files
- * into a <code>mgnl-resources</code> folder will be loaded by this servlet (corresponding to the mapped url
- * <code>/.resources/*</code>. This servlet should be used for authoring-only resources, like rich editor images and
+ * A simple spool servlet that load resources from the classpath. Resources folder is configurable via the servlet <code>resourcesRoot</code> init parameter.
+ * If none is provided, it defaults to <code>/mgnl-resources</code>. Files in this folder will be loaded by this servlet (corresponding to the configured mapped url,
+ * e.g. <code>/.resources/*</code> or <code>/VAADIN/*</code>, etc. This servlet should be used for authoring-only resources, like rich editor images and
  * scripts. It's not suggested for public website resources. Content length and last modification date are not set on
  * files returned from the classpath.
  *
- * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public class ClasspathSpool extends HttpServlet {
 
     /**
-     * Root directory for resources streamed from the classath. Only resources in this folder can be accessed.
+     * Default root directory for resources streamed from the classpath. Resources folder is configurable via the servlet <code>resourcesRoot</code> init parameter.
      */
-    public static final String MGNL_RESOURCES_ROOT = "/mgnl-resources";
+    public static final String MGNL_DEFAULT_RESOURCES_ROOT = "/mgnl-resources";
 
     private static final long serialVersionUID = 222L;
 
     private final static Logger log = LoggerFactory.getLogger(ClasspathSpool.class);
 
+    private String resourcesRoot;
+
     @Override
     protected long getLastModified(HttpServletRequest req) {
         String filePath = this.getFilePath(req);
         try {
-            URL url = ClasspathResourcesUtil.getResource(MGNL_RESOURCES_ROOT + filePath);
+            URL url = ClasspathResourcesUtil.getResource(resourcesRoot + filePath);
             if(url != null){
                 URLConnection connection = url.openConnection();
 
@@ -150,6 +151,15 @@ public class ClasspathSpool extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         multipleFilePathsCache = new Hashtable<String, String[]>();
+        resourcesRoot = StringUtils.defaultIfEmpty(getInitParameter("resourcesRoot"), MGNL_DEFAULT_RESOURCES_ROOT);
+        //test if the folder is really there, else log warning and fall back to default.
+        URL url = ClasspathResourcesUtil.getResource(resourcesRoot);
+        log.debug("resources root is {}", resourcesRoot);
+        if(url == null) {
+            log.warn("Resource classpath root {} does not seem to exist. Some resources might not be available, please check your configuration. Falling back to default resources root {}", resourcesRoot, MGNL_DEFAULT_RESOURCES_ROOT);
+            // in case of misconfiguration, this should mitigate the risk of ending up with an unusable Magnolia instance.
+            resourcesRoot = MGNL_DEFAULT_RESOURCES_ROOT;
+        }
     }
 
     /**
@@ -166,20 +176,18 @@ public class ClasspathSpool extends HttpServlet {
      * request URI.
      */
     private void streamMultipleFile(HttpServletResponse response, String filePath) throws IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("aggregating files for request {}", filePath);
-        }
+        log.debug("aggregating files for request {}", filePath);
 
         String[] paths = multipleFilePathsCache.get(filePath);
         if (paths == null) {
-            final String startsWith = MGNL_RESOURCES_ROOT + StringUtils.substringBefore(filePath, "*");
-            final String endssWith = StringUtils.substringAfterLast(filePath, "*");
+            final String startsWith = resourcesRoot + StringUtils.substringBefore(filePath, "*");
+            final String endsWith = StringUtils.substringAfterLast(filePath, "*");
 
             paths = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
 
                 @Override
                 public boolean accept(String name) {
-                    return name.startsWith(startsWith) && name.endsWith(endssWith);
+                    return name.startsWith(startsWith) && name.endsWith(endsWith);
                 }
             });
         }
@@ -199,8 +207,8 @@ public class ClasspathSpool extends HttpServlet {
 
         for (String path : paths) {
             try {
-                if (!path.startsWith(MGNL_RESOURCES_ROOT)) {
-                    path = MGNL_RESOURCES_ROOT + path;
+                if (!path.startsWith(resourcesRoot)) {
+                    path = resourcesRoot + path;
                 }
                 in = ClasspathResourcesUtil.getStream(path);
                 if (in != null) {
@@ -221,7 +229,7 @@ public class ClasspathSpool extends HttpServlet {
         // this method caches content if possible and checks the magnolia.develop property to avoid
         // caching during the development process
         try {
-            in = ClasspathResourcesUtil.getStream(MGNL_RESOURCES_ROOT + filePath);
+            in = ClasspathResourcesUtil.getStream(resourcesRoot + filePath);
         }
         catch (IOException e) {
             IOUtils.closeQuietly(in);
