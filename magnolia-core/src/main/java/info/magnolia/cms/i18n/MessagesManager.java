@@ -43,35 +43,34 @@ import java.util.Locale;
 /**
  * From this class you get the i18n messages. You should pass a a request, but if you can't the getMessages method will
  * handle it properly. The get() methods are easy to use.
- * @author philipp
- * @author molaschi
+ * @version $Id$
  */
 public abstract class MessagesManager {
 
     /**
      * Use this locale if no other provided.
      */
-    public static final String FALLBACK_LOCALE = "en"; //$NON-NLS-1$
+    public static final String FALLBACK_LOCALE = "en";
 
     /**
      * Use this basename if no other is provided.
      */
-    public static final String DEFAULT_BASENAME = "info.magnolia.ui.admincentral.messages"; //$NON-NLS-1$
+    public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages";
 
     /**
      * The node name where the configuration for i18n is stored.
      */
-    public static final String I18N_CONFIG_PATH = "/server/i18n/system"; //$NON-NLS-1$
+    public static final String I18N_CONFIG_PATH = "/server/i18n/system";
 
     /**
      * The name of the property to store the current system language.
      */
-    public static final String FALLBACK_NODEDATA = "fallbackLanguage"; //$NON-NLS-1$
+    public static final String FALLBACK_NODEDATA = "fallbackLanguage";
 
     /**
      * Under this node all the available languages are stored. They are showed in the user dialog.
      */
-    public static final String LANGUAGES_NODE_NAME = "languages"; //$NON-NLS-1$
+    public static final String LANGUAGES_NODE_NAME = "languages";
 
     /**
      * @deprecated since 5.0, use IoC !

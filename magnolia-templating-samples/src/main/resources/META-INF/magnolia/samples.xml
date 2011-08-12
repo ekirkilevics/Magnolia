@@ -14,7 +14,7 @@
   </properties>
   <dependencies>
     <dependency>
-      <name>admin-central</name>
+      <name>adminInterface</name>
       <version>4.5/*</version>
     </dependency>
     <dependency>
