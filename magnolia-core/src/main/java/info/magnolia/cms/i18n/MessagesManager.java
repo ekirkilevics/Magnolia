@@ -41,7 +41,7 @@ import java.util.Locale;
 
 
 /**
- * From this class you get the i18n messages. You should pass a a request, but if you can't the getMessages method will
+ * From this class you get the i18n messages. You should pass a request, but if you can't the getMessages method will
  * handle it properly. The get() methods are easy to use.
  * @version $Id$
  */
