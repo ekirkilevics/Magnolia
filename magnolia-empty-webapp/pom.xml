@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
           <groupId>info.magnolia</groupId>
-          <artifactId>magnolia-module-samples</artifactId>
+          <artifactId>magnolia-templating-samples</artifactId>
           <version>${project.version}</version>
         </dependency>
       </dependencies>
@@ -102,11 +102,6 @@
       <artifactId>openutils-log4j</artifactId>
     </dependency>
     <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-templating-samples</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-       <dependency>
       <groupId>junit</groupId>
       <artifactId>junit-dep</artifactId>
       <scope>test</scope>
