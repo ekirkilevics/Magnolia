@@ -63,9 +63,13 @@ import org.slf4j.LoggerFactory;
  *  Default value is <code>generic</code>.
  * <li><strong>readOnly</strong>: make the editor read-only. Default value is <code>false</code>.
  * <li><strong>lineNumbers</strong>: shows/hide line numbers. Default value is <code>true</code>.
+ * <li><strong>rows</strong>: determines the numbers of rows initially shown.
+ * If <code>useCodeHighlighter</code> is <code>true</code> the value is automatically converted in pixels by multiplying {@link DialogEditCode#LINE_HEIGHT} by the number of rows (default value is <code>20</code>).
+ * If <code>useCodeHighlighter</code> is <code>false</code> it has the same meaning as the html textareas attribute (default value is <code>20</code>).
  * </ul>
- * @author tmiyar
- * @author fgrilli
+ * <p>KNOWN ISSUE: setting the control's width with the <code>cols</code> option currently does not work.
+ *
+ * @version $Id$
  */
 public class DialogEditCode extends DialogBox {
 
@@ -79,6 +83,11 @@ public class DialogEditCode extends DialogBox {
      * Valid values are <code>js, javascript, processedJs, css, processedCss, html, freemarker, ftl, groovy, generic</code>.
      */
     public static final Map<String,String> availableParsers = new HashMap<String,String>();
+
+    /**
+     * The editor line height in pixels.
+     */
+    public static final Long LINE_HEIGHT = 16L;
 
     static {
         availableParsers.put("js", "JSParser");
@@ -96,7 +105,6 @@ public class DialogEditCode extends DialogBox {
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
-    @Override
     public void drawHtml(Writer out) throws IOException {
         final Edit control = new Edit(this.getName(), this.getValue());
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
@@ -117,7 +125,7 @@ public class DialogEditCode extends DialogBox {
         if(StringUtils.isNotBlank(language)){
             parser = getAvailableParser(language.trim());
             if(parser == null){
-                log.warn("no suitable parser found for language {}. No syntax highlighting will be available. Look at the documentation for the supported languages. ", language);
+                log.warn("No suitable parser found for language {}. Syntax highlighting will not be available. Look at the control's documentation for the supported languages. ", language);
                 drawSimpleEditor(out, control);
                 return;
             }
@@ -126,7 +134,7 @@ public class DialogEditCode extends DialogBox {
     }
 
     private void drawSimpleEditor(Writer out, Edit control) throws IOException {
-        control.setRows(this.getConfigValue("rows", "1"));
+        control.setRows(this.getConfigValue("rows", "20"));
         control.setCssStyles("width", this.getConfigValue("width", "100%"));
         control.setCssStyles("font-family", "Courier New, monospace");
         control.setCssStyles("font-size", "14px");
@@ -158,8 +166,9 @@ public class DialogEditCode extends DialogBox {
             }
         }
 
-        control.setRows(this.getConfigValue("rows", "25"));
-        control.setRows(this.getConfigValue("cols", "100"));
+        final String rows = this.getConfigValue("rows", "20");
+        final String height = String.valueOf(Long.valueOf(rows) * LINE_HEIGHT);
+        control.setRows(height);
 
         this.drawHtmlPre(out);
         // load the script once if there are multiple instances
@@ -175,7 +184,7 @@ public class DialogEditCode extends DialogBox {
         inlineStyle.append("font-family: monospace;\n");
         inlineStyle.append("font-size: 10pt;\n");
         inlineStyle.append("color: #aaa;\n");
-        inlineStyle.append("line-height: 16px;\n");
+        inlineStyle.append("line-height: "+ LINE_HEIGHT +"px;\n");
         inlineStyle.append("padding: .4em;\n");
         inlineStyle.append("width: 2.2em;\n");
         inlineStyle.append("</style>\n");
@@ -186,14 +195,15 @@ public class DialogEditCode extends DialogBox {
 
         final boolean lineNumbers = BooleanUtil.toBoolean(this.getConfigValue("lineNumbers"), true);
         final boolean readOnly = BooleanUtil.toBoolean(this.getConfigValue("readOnly"), false);
-        final String editorVar = "editor"+this.getName();
+
+        final String editorVar = "editor" + this.getName();
 
         out.write("\n<script>\n");
         out.write("MgnlDHTMLUtil.addOnLoad(function(){\n");
-        String codeMirrorEditor = "var " + editorVar +" = CodeMirror.fromTextArea(\""+this.getName()+"\", {\n"+
+        String codeMirrorEditor = editorVar +" = CodeMirror.fromTextArea(\""+this.getName()+"\", {\n"+
         "     path: \"" + pathToCodeMirror + "\",\n" +
         "     textWrapping: false,\n" +
-        "     height: \"420px\",\n" +
+        "     height: \"" + height + "px\",\n" +
         "     basefiles: [\"codemirror-base.min.js\"],\n" +
         "     parserfile: [\"allinone.js\"],\n" +
         "     stylesheet: [\""+ pathToCodeMirror +"css/jscolors.css\",\""+ pathToCodeMirror +"css/csscolors.css\",\""+
@@ -203,7 +213,7 @@ public class DialogEditCode extends DialogBox {
         "     initCallback:function(e){ \n"+
         "            e.setParser('"+ parser +"');\n"+
         "            e.focus();\n"+
-        "     } \n"+
+        "     } \n" +
         "});\n";
 
         out.write(codeMirrorEditor);
