@@ -76,7 +76,7 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
                 Content newNode = parentNode.getContent(this.getNewNodeName());
                 TemplateDefinition newTemplate = getDefaultTemplate(newNode.getJCRNode());
                 if (newTemplate != null) {
-                    newNode.getMetaData().setTemplate(newTemplate.getName());
+                    newNode.getMetaData().setTemplate(newTemplate.getId());
                     newNode.save();
                 }
             }

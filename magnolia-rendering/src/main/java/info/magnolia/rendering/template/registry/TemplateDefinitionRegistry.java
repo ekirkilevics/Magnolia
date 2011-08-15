@@ -62,8 +62,8 @@ import org.slf4j.LoggerFactory;
 public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinition, TemplateDefinitionProvider>{
 
     private static final Logger log = LoggerFactory.getLogger(TemplateDefinitionRegistry.class);
-
-    private static final String DELETED_PAGE_TEMPLATE = "mgnlDeleted";
+    //FIXME this probably should not be hardcoded.
+    private static final String DELETED_PAGE_TEMPLATE = "adminInterface:mgnlDeleted";
 
 
     public TemplateDefinition getTemplateDefinition(String id) throws RegistrationException {
@@ -117,7 +117,7 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
         final ArrayList<TemplateDefinition> availableTemplateDefinitions = new ArrayList<TemplateDefinition>();
         final Collection<TemplateDefinition> templateDefinitions = getTemplateDefinitions();
         for (TemplateDefinition templateDefinition : templateDefinitions) {
-            if(templateDefinition.isAvailable(content)){
+            if(!DELETED_PAGE_TEMPLATE.equals(templateDefinition.getId()) && templateDefinition.isAvailable(content)){
                 availableTemplateDefinitions.add(templateDefinition);
             }
         }

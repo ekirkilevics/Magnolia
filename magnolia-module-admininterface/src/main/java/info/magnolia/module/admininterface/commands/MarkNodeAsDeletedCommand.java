@@ -54,7 +54,7 @@ import info.magnolia.module.admininterface.commands.BaseRepositoryCommand;
 
 public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
 
-    public static final String DELETED_NODE_TEMPLATE = "mgnlDeleted";
+    public static final String DELETED_NODE_TEMPLATE = "adminInterface:mgnlDeleted";
 
     public static final String DELETED_NODE_DELETED_BY = "mgnl:deletedBy";
     public static final String DELETED_NODE_DELETED_ON = "mgnl:deletedOn";
