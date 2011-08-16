@@ -74,7 +74,7 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
             templateDefinitionProvider = providers.get(id);
         }
         if (templateDefinitionProvider == null) {
-            throw new RegistrationException("No TemplateDefinition registered for id: " + id);
+            throw new RegistrationException("No TemplateDefinition registered for id: " + id + ", availables ids are " + providers.keySet());
         }
         TemplateDefinition templateDefinition = templateDefinitionProvider.getDefinition();
         templateDefinition.setId(id);
