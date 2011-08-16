@@ -192,6 +192,7 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+        .append("id", this.id)
         .append("name", this.name)
         .append("renderType", this.renderType)
         .append("description", this.description)
