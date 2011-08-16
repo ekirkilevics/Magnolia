@@ -90,7 +90,7 @@ public abstract class AbstractRegistry<D, P extends Provider<D>> {
             provider = providers.get(id);
         }
         if (provider == null) {
-            throw new RegistrationException("Can't find a registration for type [" + id + "]. Available types are " + providers.keySet());
+            throw new RegistrationException("Can't find a registration for type [" + id + "]. Registered types are " + providers.keySet());
         }
         return provider.getDefinition();
     }
