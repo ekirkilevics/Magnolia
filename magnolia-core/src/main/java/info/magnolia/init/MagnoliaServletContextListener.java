@@ -213,8 +213,8 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             builder.exposeGlobally();
             platform = builder.build();
 
-			// expose server name as a system property, so it can be used in log4j configurations
-			// rootPath and webapp are not exposed since there can be different webapps running in the same jvm
+            // expose server name as a system property, so it can be used in log4j configurations
+            // rootPath and webapp are not exposed since there can be different webapps running in the same jvm
             System.setProperty("server", platform.getComponent(MagnoliaInitPaths.class).getServerName());
             moduleManager = platform.getComponent(ModuleManager.class);
             moduleManager.loadDefinitions();
