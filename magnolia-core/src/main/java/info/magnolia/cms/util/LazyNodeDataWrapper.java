@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -37,52 +37,47 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
+
+import java.io.Serializable;
+
+import javax.jcr.RepositoryException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.RepositoryException;
-import java.io.Serializable;
-
-
 /**
- * Stores an uuid and will re-fetch the node in {@link #getWrappedContent()} if the session is closed.
+ * Stores a path and will re-fetch the node data in {@link #getWrappedNodeData()} if the session is closed.
+ * 
+ * @author ochytil
  * @version $Id$
- *
  */
-public class LazyContentWrapper extends ContentWrapper implements Serializable {
-    private static final Logger log = LoggerFactory.getLogger(LazyContentWrapper.class);
+public class LazyNodeDataWrapper extends NodeDataWrapper implements Serializable {
+    private static final Logger log = LoggerFactory.getLogger(LazyNodeDataWrapper.class);
 
     private String repository;
 
-    private String uuid;
+    private String path;
 
-    private transient Content node;
+    private transient NodeData nodeData;
 
-    public LazyContentWrapper(String repository, String uuid) {
-        this.setRepository(repository);
-        this.setUuid(uuid);
-    }
-
-    public LazyContentWrapper(Content node) {
-        try {
-            this.setRepository(node.getWorkspace().getName());
-        } catch (RepositoryException e) {
-            log.error("can't read repository name from wrapping node", e);
-        }
-        this.setUuid(node.getUUID());
-        this.node = node;
+    public LazyNodeDataWrapper(NodeData nodeData) {
+        this.setRepository(nodeData.getHierarchyManager().getWorkspace().getName());
+        this.setPath(nodeData.getHandle());
+        this.nodeData = nodeData;
     }
 
     @Override
-    public synchronized Content getWrappedContent() {
+    public NodeData getWrappedNodeData() {
         try {
-            if (node == null || !node.getJCRNode().getSession().isLive()) {
-                node = getHierarchyManager().getContentByUUID(getUuid());
+            // DHM.getNodeData() can still return null and the var itself is transient and won't survive serialization
+            if (nodeData == null || (nodeData.isExist() && !nodeData.getJCRProperty().getSession().isLive())) {
+                nodeData = getHierarchyManager().getNodeData(getPath());
             }
-        } catch (RepositoryException e) {
-            log.error("can't reinitialize node " + getUuid(), e);
         }
-        return node;
+        catch (RepositoryException e) {
+            log.error("can't reinitialize node " + getPath(), e);
+        }
+        return nodeData;
     }
 
     @Override
@@ -90,17 +85,12 @@ public class LazyContentWrapper extends ContentWrapper implements Serializable {
         return MgnlContext.getSystemContext().getHierarchyManager(getRepository());
     }
 
-    @Override
-    public NodeData wrap(NodeData nodeData) {
-        return new LazyNodeDataWrapper(nodeData);
+    protected void setPath(String uuid) {
+        this.path = uuid;
     }
 
-    protected void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    protected String getUuid() {
-        return uuid;
+    protected String getPath() {
+        return path;
     }
 
     protected void setRepository(String repository) {
@@ -111,4 +101,8 @@ public class LazyContentWrapper extends ContentWrapper implements Serializable {
         return repository;
     }
 
+    @Override
+    protected Content wrap(Content content) {
+        return new LazyContentWrapper(content);
+    }
 }

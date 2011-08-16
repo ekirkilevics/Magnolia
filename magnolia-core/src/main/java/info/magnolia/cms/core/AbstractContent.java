@@ -379,12 +379,12 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         MetaData md = this.getMetaData();
         md.setModificationDate();
         md.setAuthorId(MgnlContext.getUser().getName());
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFY, hierarchyManager.getName(),this.getItemType(), getHandle());
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, getHierarchyManager().getName(), this.getItemType(), getHandle());
     }
 
     @Override
     public boolean isGranted(long permissions) {
-        return hierarchyManager.isGranted(getHandle(), permissions);
+        return getHierarchyManager().getAccessManager().isGranted(getHandle(), permissions);
     }
 
     @Override
