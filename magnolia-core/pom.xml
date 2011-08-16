@@ -31,22 +31,6 @@
       <artifactId>jackrabbit-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.picocontainer</groupId>
-      <artifactId>picocontainer</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.picocontainer</groupId>
-      <artifactId>picocontainer-gems</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.picocontainer.web</groupId>
-      <artifactId>picocontainer-web-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.picocontainer</groupId>
-      <artifactId>picocontainer-logging</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
     </dependency>

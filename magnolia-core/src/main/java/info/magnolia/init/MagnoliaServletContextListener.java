@@ -33,37 +33,48 @@
  */
 package info.magnolia.init;
 
-import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.context.ContextFactory;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.logging.Log4jConfigurer;
-import info.magnolia.module.InstallContextImpl;
-import info.magnolia.module.ModuleManager;
-import info.magnolia.module.ModuleRegistry;
-import info.magnolia.module.model.ModuleDefinition;
-import info.magnolia.module.model.reader.DependencyChecker;
-import info.magnolia.module.model.reader.ModuleDefinitionReader;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.pico.ModuleAdapterFactory;
-import info.magnolia.objectfactory.pico.PicoComponentProvider;
-import info.magnolia.objectfactory.pico.PicoLifecycleStrategy;
-import org.picocontainer.ComponentMonitor;
-import org.picocontainer.LifecycleStrategy;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
-import org.picocontainer.PicoContainer;
-import org.picocontainer.gems.monitors.Slf4jComponentMonitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.inject.Stage;
+import info.magnolia.cms.beans.config.ConfigLoader;
+import info.magnolia.cms.beans.config.VersionConfig;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.filters.FilterManager;
+import info.magnolia.cms.filters.FilterManagerImpl;
+import info.magnolia.cms.i18n.DefaultMessagesManager;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.license.LicenseFileExtractor;
+import info.magnolia.cms.util.UnicodeNormalizer;
+import info.magnolia.cms.util.WorkspaceAccessUtil;
+import info.magnolia.content2bean.Content2BeanProcessor;
+import info.magnolia.content2bean.Content2BeanTransformer;
+import info.magnolia.content2bean.TransformationState;
+import info.magnolia.content2bean.TypeMapping;
+import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
+import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.content2bean.impl.TransformationStateImpl;
+import info.magnolia.content2bean.impl.TypeMappingImpl;
+import info.magnolia.context.ContextFactory;
+import info.magnolia.context.JCRSessionPerThreadSystemContext;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
+import info.magnolia.logging.Log4jConfigurer;
+import info.magnolia.module.InstallContextImpl;
+import info.magnolia.module.ModuleManager;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.module.model.reader.DependencyChecker;
+import info.magnolia.module.model.reader.ModuleDefinitionReader;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.guice.GuiceComponentProvider;
+import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
+import info.magnolia.objectfactory.guice.GuiceModuleManager;
 
 
 /**
@@ -154,34 +165,37 @@ import java.util.Properties;
 public class MagnoliaServletContextListener implements ServletContextListener {
     private static final Logger log = LoggerFactory.getLogger(MagnoliaServletContextListener.class);
 
+    private ServletContext servletContext;
+    private GuiceComponentProvider platform;
+    private GuiceComponentProvider system;
+    private ModuleManager moduleManager;
     private ConfigLoader loader;
 
     @Override
     public void contextDestroyed(final ServletContextEvent sce) {
-        final MutablePicoContainer rootContainer = getRootContainer(sce.getServletContext());
-        // just in case we weren't even able to create/store the root container ...
-        if (rootContainer != null) {
 
-            // now stop all components
-            rootContainer.stop();
+        // TODO ModuleManager should be shut down by ConfigLoader
 
-            rootContainer.dispose();
-        }
-
-        // TODO: this should be managed by pico - components being stopped:
-        ModuleManager mm = ModuleManager.Factory.getInstance();
         // avoid disturbing NPEs if the context has never been started (classpath problems, etc)
-        if (mm != null) {
-            mm.stopModules();
+        if (moduleManager != null) {
+            moduleManager.stopModules();
         }
 
-        if (loader != null) {
-            MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
-                @Override
-                public void doExec() {
-                    loader.unload(sce.getServletContext());
-                }
-            }, true);
+        stopServer();
+
+        // We set the global ComponentProvider to its parent here, then we destroy it, components in it that expects the
+        // global ComponentProvider to be the one it lives in and the one that was there when the component was created
+        // might fail because of this. Maybe we can solve it by using the ThreadLocal override we already have and call
+        // scopes.
+
+        if (system != null) {
+            Components.setProvider(system.getParent());
+            system.destroy();
+        }
+
+        if (platform != null) {
+            Components.setProvider(platform.getParent());
+            platform.destroy();
         }
     }
 
@@ -191,224 +205,48 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(final ServletContextEvent sce) {
         try {
-            final ServletContext context = sce.getServletContext();
+            servletContext = sce.getServletContext();
 
-            // the container used for startup - should not be referenced further
-            // TODO : maybe we don't even need to store the root container ?
-            final MutablePicoContainer root = makeContainer(null, "Magnolia-Root-Container");
+            GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
+            builder.withConfiguration(getPlatformConfiguration());
+            builder.inStage(Stage.PRODUCTION);
+            builder.exposeGlobally();
+            platform = builder.build();
 
-
-            populateRootContainer(root, context);
-            storeRootContainer(context, root);
-
-            // TODO - currently unused : installContainer
-            // final MutablePicoContainer installContainer = makeContainer(root);
-            // storeInstallContainer(context, installContainer);
-
-            final MagnoliaInitPaths initPaths = root.getComponent(DefaultMagnoliaInitPaths.class);
-
-            // These were previously set in the various determine* methods (which in turn were previously called init*).
-            // They are now made available via DefaultMagnoliaConfigurationProperties > InitPathsPropertySource > DefaultMagnoliaInitPaths
-            // TODO: remove this code once reviewed.
-//            SystemProperty.setProperty(SystemProperty.MAGNOLIA_WEBAPP, initPaths.getWebappFolderName());
-//            SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, initPaths.getRootPath());
-//            SystemProperty.setProperty(SystemProperty.MAGNOLIA_SERVERNAME, initPaths.getServerName());
-
-            // TODO - isn't the below completely bogus, since we already replace tokens when loading the log4j file ? see MAGNOLIA-2840
-            // expose server name as a system property, so it can be used in log4j configurations
-            // rootPath and webapp are not exposed since there can be different webapps running in the same jvm
-            System.setProperty("server", initPaths.getServerName());
-
-            // Get ModuleManager and initialize properties from the root container
-            final ModuleManager moduleManager = root.getComponent(ModuleManager.class);
-            moduleManager.loadDefinitions(); // TODO do this as lifecycle ?
-
-            // this needs to happen *after* module definitions have been loaded (although this might change if ModuleRegistry gets a lifecycle)
-            final MagnoliaConfigurationProperties configurationProperties = root.getComponent(MagnoliaConfigurationProperties.class);
-            ((DefaultMagnoliaConfigurationProperties)configurationProperties).init();
+			// expose server name as a system property, so it can be used in log4j configurations
+			// rootPath and webapp are not exposed since there can be different webapps running in the same jvm
+            System.setProperty("server", platform.getComponent(MagnoliaInitPaths.class).getServerName());
+            moduleManager = platform.getComponent(ModuleManager.class);
+            moduleManager.loadDefinitions();
+            final MagnoliaConfigurationProperties configurationProperties = platform.getComponent(MagnoliaConfigurationProperties.class);
+            // TODO we can't cast to the impl here
+            ((DefaultMagnoliaConfigurationProperties) configurationProperties).init();
             SystemProperty.setMagnoliaConfigurationProperties(configurationProperties);
 
-            // TODO: This is a temporary ComponentProvider attempting to get the groovy module to work -- currently fails (depends on SysCtx)
-            //Components.setProvider(new PicoComponentProvider(root, new DefaultComponentProvider(configurationProperties)));
+            builder = new GuiceComponentProviderBuilder();
+            builder.withConfiguration(getSystemConfiguration());
+            builder.withParent(platform);
+            builder.exposeGlobally();
+            system = builder.build();
 
-            final MutablePicoContainer mainContainer = makeContainer(root, "Magnolia-Main-Container");
+            // TODO Log4jConfigurer uses @PostConstruct to start logging, but there's no guarantee that it is the first
+            // @PostConstruct to be called so it is possible that there's no logging when another components @PostConstruct
+            // is called
 
-            // TODO extract population to a ContainerComposer interface - and get the composers out of pico ? (ordering problem? how about request-scope?)
-            // TODO - extract container composers (one for properties, one for modules, etc)
-            populateMainContainer(mainContainer, root.getComponent(ModuleRegistry.class), configurationProperties);
-            storeMainContainer(context, mainContainer);
+            loader = system.getComponent(ConfigLoader.class);
 
-            // Finally, we fire up the container! Root container will start its components, then start its children containers too.
-            root.start();
-
-            // TODO : de-uglify this ? Also: get rid of DefaultComponentProvider here.
-            PicoComponentProvider provider = new PicoComponentProvider(mainContainer);
-            Properties properties = new Properties();
-            for (String key : configurationProperties.getKeys()) {
-                properties.put(key, configurationProperties.getProperty(key));
-            }
-            provider.parseConfiguration(properties);
-            Components.setProvider(provider);
-
-            //TODO: verify that this is what we need
-            mainContainer.addComponent(ComponentProvider.class, provider);
-
-            // TODO - perhaps PicoComponentProvider can be constructed by pico itself
-
-            // Start from the main container (ConfigLoader needs LicenceFileExtractor for example, whose impl is set via a property)
-            this.loader = mainContainer.getComponent(ConfigLoader.class); // new ConfigLoader(context);
             startServer();
         } catch (Throwable t) {
             log.error("Oops, Magnolia could not be started", t);
+            t.printStackTrace();
+            if (t instanceof Error) {
+                throw (Error) t;
+            }
             if (t instanceof RuntimeException) {
                 throw (RuntimeException) t;
-            } else {
-                throw new RuntimeException(t);
             }
+            throw new RuntimeException(t);
         }
-    }
-
-    protected void populateRootContainer(MutablePicoContainer pico, ServletContext context) {
-        // it doesn't matter whether we register an implementation with or without a key - but the lookup is slightly faster if we register it using the class it's going to be looked up by as its key
-        pico.addComponent(ServletContext.class, context);
-        pico.addComponent(InstallContextImpl.class); // this is looked up as InstallContextImpl, at least by ModuleManagerImpl, let's see...
-        pico.addComponent(ModuleManager.class, info.magnolia.module.ModuleManagerImpl.class);
-        pico.addComponent(ModuleRegistry.class, info.magnolia.module.ModuleRegistryImpl.class);
-        pico.addComponent(ModuleDefinitionReader.class, info.magnolia.module.model.reader.BetwixtModuleDefinitionReader.class);
-        pico.addComponent(DependencyChecker.class, info.magnolia.module.model.reader.DependencyCheckerImpl.class);
-        pico.addComponent(DefaultMagnoliaInitPaths.class);
-        pico.addComponent(DefaultMagnoliaConfigurationProperties.class);
-        pico.addComponent(DefaultMagnoliaPropertiesResolver.class);
-        // set via a property in the main container: pico.addComponent(ConfigLoader.class);
-
-        pico.addComponent(ContextFactory.class);
-
-        pico.addComponent(Log4jConfigurer.class);
-
-        // we'll register the whole c2b she-bang here for now
-        pico.addComponent(info.magnolia.content2bean.Content2BeanProcessor.class, info.magnolia.content2bean.impl.Content2BeanProcessorImpl.class);
-        pico.addComponent(info.magnolia.content2bean.Content2BeanTransformer.class, info.magnolia.content2bean.impl.Content2BeanTransformerImpl.class);
-        pico.addComponent(info.magnolia.content2bean.TransformationState.class, info.magnolia.content2bean.impl.TransformationStateImpl.class);
-        pico.addComponent(info.magnolia.content2bean.TypeMapping.class, info.magnolia.content2bean.impl.TypeMappingImpl.class);
-
-        // finally, register ourself. MagnoliaInitPaths needs this, for instance, for retro-compatibility reasons
-        pico.addComponent(this);
-    }
-
-    protected void populateMainContainer(MutablePicoContainer pico, ModuleRegistry moduleRegistry, MagnoliaConfigurationProperties configurationProperties) {
-
-        // Register module classes
-        for (String moduleName : moduleRegistry.getModuleNames()) {
-            final ModuleDefinition module = moduleRegistry.getDefinition(moduleName);
-            if (module.getClassName() != null) {
-                final Class<Object> moduleClass = classForName(module.getClassName());
-                pico.as(ModuleAdapterFactory.makeModuleProperties(moduleName)).addComponent(moduleClass);
-            }
-        }
-/*
-        // TODO - register components from module descriptors <components> instead.
-        final Set<String> keys = configurationProperties.getKeys();
-        for (String key : keys) {
-            String value = configurationProperties.getProperty(key);
-            final Class<Object> keyType = classForName(key);
-            if (keyType == null) {
-                log.debug("{} does not seem to resolve to a class. (property value: {})", key, value);
-                continue;
-            }
-            if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
-                final ComponentConfigurationPath path = new ComponentConfigurationPath(value);
-                // TODO - wrap in a caching adapter if that's not already the case ??
-                pico.addAdapter(new ObservedComponentAdapter(path, keyType));
-            } else {
-                final Class<?> valueType = classForName(value);
-                if (valueType == null) {
-                    log.debug("{} does not seem to resolve a class or a configuration path. (property key: {})", value, key);
-                } else {
-                    if (ComponentFactory.class.isAssignableFrom(valueType)) {
-                        // TODO - maybe use a FactoryInjector instead ? not clear. Also not sure if we want factories to be IoC'd.
-                        pico.addAdapter(new ComponentFactoryProviderAdapter(keyType, (Class<ComponentFactory>) valueType));
-                    } else {
-                        pico.addComponent(keyType, valueType);
-                    }
-                }
-            }
-        }
-*/
-    }
-
-    // TODO : we have a dependency on ClassFactory, but we can't inject it here,
-    // since it might get swapped later
-    // TODO use ClassloadingPicoContainer instead ?
-    private Class<Object> classForName(String value) {
-        try {
-            return Classes.getClassFactory().forName(value);
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
-    }
-
-    /**
-     * Our LifecycleStrategy is by default lazy, i.e components are not started before they're needed.
-     * Changing this now would mean all known components get started at startup before the repo is loaded.
-     * We could have an annotation to drive this behaviour, see {@link org.picocontainer.LifecycleStrategy#isLazy(org.picocontainer.ComponentAdapter)}
-     */
-    protected MutablePicoContainer makeContainer(PicoContainer parent, String name) {
-        final ComponentMonitor componentMonitor = makeComponentMonitor();
-        final LifecycleStrategy lifecycleStrategy = makeLifecycleStrategy(componentMonitor);
-
-        // TODO : perhaps we'll need to use DefaultClassLoadingPicoContainer - able to load classes based on names
-        //      : and/or somehow hookup a info.magnolia.objectfactory.ClassFactory, so we can use groovy components !
-        //      : DefaultClassLoadingPicoContainer.loadClass() would need to be protected - or we use ClassLoadingPicoContainer.getComponentClassLoader instead
-        final PicoBuilder picoBuilder = new PicoBuilder(parent)
-                // order of injection matters, so ConstructorInjection must be first. Yes, we could add more types of injection if needed.
-                .withConstructorInjection()
-                .withAnnotatedFieldInjection() // TODO: once PICO-380 is fixed, we can use javax.inject.@Inject instead of org.picocontainer.annotations.@Inject
-                // order of behaviors matters! we want to cache the decorated component, not re-decorate every time we get the cached instance
-                .withCaching()
-                .withBehaviors(new ModuleAdapterFactory())
-                .withMonitor(componentMonitor)
-                .withLifecycle(lifecycleStrategy);
-        if (parent != null) {
-            picoBuilder.addChildToParent(); // we add child containers to their parent so that lifecycle is propagated downwards. This also allows visiting, and propagation of monitor changes.
-        }
-        final MutablePicoContainer pico = picoBuilder.build();
-        pico.setName(name);
-        return pico;
-    }
-
-    protected ComponentMonitor makeComponentMonitor() {
-        // TODO - different monitor(s) ? LifecycleComponentMonitor might be interesting to "summarize" all failures ?
-        // (the PrefuseDependencyGraph might be interesting too)
-        return new Slf4jComponentMonitor(LoggerFactory.getLogger(Slf4jComponentMonitor.class)) {
-
-            @Override
-            public Object noComponentFound(MutablePicoContainer container, Object componentKey) {
-
-                // We don't log when pico can't find a dependency since we routinely query the container to test if it's been configured for a specific type or not
-
-                return null;
-            }
-        };
-    }
-
-    protected PicoLifecycleStrategy makeLifecycleStrategy(ComponentMonitor componentMonitor) {
-        return new PicoLifecycleStrategy(componentMonitor);
-    }
-
-    protected MutablePicoContainer getRootContainer(ServletContext context) {
-        return (MutablePicoContainer) context.getAttribute("pico-root");
-    }
-
-    protected void storeRootContainer(ServletContext context, PicoContainer pico) {
-        context.setAttribute("pico-root", pico);
-    }
-
-    protected void storeMainContainer(ServletContext context, PicoContainer pico) {
-        context.setAttribute("pico-main", pico);
-    }
-
-    protected void storeInstallContainer(ServletContext context, PicoContainer pico) {
-        context.setAttribute("pico-install", pico);
     }
 
     protected void startServer() {
@@ -420,10 +258,68 @@ public class MagnoliaServletContextListener implements ServletContextListener {
         }, true);
     }
 
+    protected void stopServer() {
+        if (loader != null) {
+            MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                @Override
+                public void doExec() {
+                    loader.unload();
+                }
+            }, true);
+        }
+    }
+
+    public ComponentProviderConfiguration getPlatformConfiguration() {
+        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
+        configuration.registerInstance(ServletContext.class, servletContext);
+        configuration.registerImplementation(InstallContextImpl.class);
+        configuration.registerImplementation(ContextFactory.class);
+
+        configuration.registerImplementation(ModuleManager.class, GuiceModuleManager.class);
+        configuration.registerImplementation(ModuleRegistry.class, info.magnolia.module.ModuleRegistryImpl.class);
+        configuration.registerImplementation(ModuleDefinitionReader.class, info.magnolia.module.model.reader.BetwixtModuleDefinitionReader.class);
+        configuration.registerImplementation(DependencyChecker.class, info.magnolia.module.model.reader.DependencyCheckerImpl.class);
+
+        configuration.registerImplementation(MagnoliaInitPaths.class, DefaultMagnoliaInitPaths.class);
+        configuration.registerImplementation(MagnoliaConfigurationProperties.class, DefaultMagnoliaConfigurationProperties.class);
+        configuration.registerImplementation(MagnoliaPropertiesResolver.class, DefaultMagnoliaPropertiesResolver.class);
+        configuration.registerInstance(MagnoliaServletContextListener.class, this); // This is needed by DefaultMagnoliaInitPaths
+        return configuration;
+    }
+
+    // TODO this is equivalent of mgnl-beans.propertes, it must again be configurable
+    private ComponentProviderConfiguration getSystemConfiguration() {
+        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
+
+        configuration.registerImplementation(Log4jConfigurer.class);
+
+        // we'll register the whole c2b she-bang here for now
+        configuration.registerImplementation(Content2BeanProcessor.class, Content2BeanProcessorImpl.class);
+        configuration.registerImplementation(Content2BeanTransformer.class, Content2BeanTransformerImpl.class);
+        configuration.registerImplementation(TransformationState.class, TransformationStateImpl.class);
+        configuration.registerImplementation(TypeMapping.class, TypeMappingImpl.class);
+
+        configuration.registerImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        configuration.registerImplementation(LicenseFileExtractor.class);
+        configuration.registerImplementation(VersionConfig.class);
+
+        configuration.registerImplementation(SystemContext.class, JCRSessionPerThreadSystemContext.class);
+        configuration.registerImplementation(WorkspaceAccessUtil.class);
+        configuration.registerImplementation(ConfigLoader.class);
+
+        configuration.registerImplementation(UnicodeNormalizer.Normalizer.class, UnicodeNormalizer.AutoDetectNormalizer.class);
+
+        configuration.registerImplementation(FilterManager.class, FilterManagerImpl.class);
+
+        return configuration;
+    }
+
+    // TODO What about getPropertiesFilesString
+
     /**
      * @deprecated since 5.0, use or subclass {@link MagnoliaInitPaths}.
      */
-    protected String initServername(boolean unqualified) {
+    protected String initWebappName(String rootPath) {
         return null;
     }
 
@@ -437,7 +333,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     /**
      * @deprecated since 5.0, use or subclass {@link MagnoliaInitPaths}.
      */
-    protected String initWebappName(String rootPath) {
+    protected String initServername(boolean unqualified) {
         return null;
     }
 

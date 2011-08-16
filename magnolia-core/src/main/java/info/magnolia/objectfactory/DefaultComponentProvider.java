@@ -53,7 +53,6 @@ import java.util.Set;
  * and reflects (through observation) the contents of the given path.
  *
  * @deprecated since 5.0, use IoC, i.e another implementation of ComponentProvider.
- * @see info.magnolia.objectfactory.pico.PicoComponentProvider
  *
  * @author Philipp Bracher
  * @version $Revision: 25238 $ ($Author: pbaerfuss $)

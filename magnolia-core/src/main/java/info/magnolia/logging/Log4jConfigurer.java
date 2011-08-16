@@ -35,8 +35,6 @@ package info.magnolia.logging;
 
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ConfigUtil;
-import info.magnolia.objectfactory.AtStartup;
-import info.magnolia.objectfactory.Startable;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
@@ -48,6 +46,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 
 /**
@@ -76,8 +76,7 @@ import javax.inject.Singleton;
  * @version $Id$
  */
 @Singleton
-@AtStartup
-public class Log4jConfigurer implements Startable {
+public class Log4jConfigurer {
 
     /**
      * Init parameter specifying the location of the Log4J config file.
@@ -87,12 +86,12 @@ public class Log4jConfigurer implements Startable {
     public Log4jConfigurer() {
     }
 
-    @Override
+    @PostConstruct
     public void start() {
         initLogging();
     }
 
-    @Override
+    @PreDestroy
     public void stop() {
         shutdownLogging();
     }
