@@ -108,7 +108,7 @@ package info.magnolia.module.templating;
  * </tbody>
  * </table>
  *
- * @deprecated since 5.0, the differentiation of paragraphs and templates were removed. Use {@link RenderableDefinition} instead.
+ * @deprecated since 4.5, the differentiation of paragraphs and templates were removed. Use {@link RenderableDefinition} instead.
  */
 public class Paragraph extends AbstractRenderable {
     @SuppressWarnings({"unchecked", "rawtypes"})

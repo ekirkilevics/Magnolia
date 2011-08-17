@@ -181,7 +181,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     }
 
     /**
-     * @deprecated since 5.0, use {@link Classes#isConcrete(Class)}
+     * @deprecated since 4.5, use {@link Classes#isConcrete(Class)}
      */
     @Deprecated
     protected boolean isConcrete(Class<?> clazz) {
@@ -189,7 +189,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     }
 
     /**
-     * @deprecated since 5.0, use {@link #onRegister(Node)} instead
+     * @deprecated since 4.5, use {@link #onRegister(Node)} instead
      */
     @Deprecated
     protected void onRegister(Content node) {

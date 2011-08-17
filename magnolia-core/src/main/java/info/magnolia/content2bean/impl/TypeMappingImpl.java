@@ -203,7 +203,7 @@ public class TypeMappingImpl implements TypeMapping {
     }
 
     /**
-     * @deprecated since 5.0, transformers should be explicitly registered via the module descriptor.
+     * @deprecated since 4.5, transformers should be explicitly registered via the module descriptor.
      */
     protected Content2BeanTransformer findTransformerByNamingConvention(Class<?> beanClass) {
         final String transformerClassName = beanClass.getName() + "Transformer";
@@ -217,7 +217,7 @@ public class TypeMappingImpl implements TypeMapping {
 
     /**
      * This was originally implemented by {@link info.magnolia.content2bean.impl.PropertiesBasedTypeMapping}.
-     * @deprecated since 5.0, transformers should be explicitly registered via the module descriptor.
+     * @deprecated since 4.5, transformers should be explicitly registered via the module descriptor.
      */
     protected Content2BeanTransformer findTransformerViaProperty(Class<?> beanClass) throws ClassNotFoundException {
         final String property = SystemProperty.getProperty(beanClass.getName() + ".transformer");

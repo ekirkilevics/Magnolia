@@ -38,7 +38,7 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 /**
  * Depricated.
- * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.engine.RenderingFilter}
+ * @deprecated since 4.5, replaced by {@link info.magnolia.rendering.engine.RenderingFilter}
  */
 public class RenderingFilter extends info.magnolia.rendering.engine.RenderingFilter {
 

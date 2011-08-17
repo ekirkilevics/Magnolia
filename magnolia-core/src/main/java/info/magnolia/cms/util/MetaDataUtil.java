@@ -98,7 +98,7 @@ public class MetaDataUtil {
     }
 
     /**
-     * @deprecated since 5.0 - use {@link #getActivationStatusIcon(Node)} instead.
+     * @deprecated since 4.5 - use {@link #getActivationStatusIcon(Node)} instead.
      */
     public static String getActivationStatusIcon(Content content) {
         return getActivationStatusIcon(content.getJCRNode());

@@ -66,7 +66,7 @@ public class VersionConfig {
     }
 
     /**
-     * @deprecated since 5.0, use IoC !
+     * @deprecated since 4.5, use IoC !
      */
     public static VersionConfig getInstance() {
         return Components.getSingleton(VersionConfig.class);

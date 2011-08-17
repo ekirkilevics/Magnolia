@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
 
 /**
  * @version $Id$
- * @deprecated since 5.0 - use {@link info.magnolia.test.mock.jcr.MockSession} instead.
+ * @deprecated since 4.5 - use {@link info.magnolia.test.mock.jcr.MockSession} instead.
  */
 public class MockJCRSession implements Session {
 

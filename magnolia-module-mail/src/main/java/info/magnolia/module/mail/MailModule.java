@@ -56,7 +56,7 @@ public class MailModule implements ModuleLifecycle {
     private static final Logger log = LoggerFactory.getLogger(MailModule.class);
 
     /**
-     * @deprecated since 5.0, use IoC !
+     * @deprecated since 4.5, use IoC !
      */
     private static MailModule instance;
 
@@ -74,7 +74,7 @@ public class MailModule implements ModuleLifecycle {
     }
 
     /**
-     * @deprecated since 5.0, use IoC !
+     * @deprecated since 4.5, use IoC !
      */
     public static MailModule getInstance() {
         DeprecationUtil.isDeprecated("Use IoC!");

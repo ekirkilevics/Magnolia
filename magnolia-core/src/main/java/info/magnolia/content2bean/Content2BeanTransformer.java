@@ -53,7 +53,7 @@ public interface Content2BeanTransformer {
     public TransformationState newState();
 
     /**
-     * @deprecated since 5.0, use {@link #resolveType(TypeMapping, TransformationState)}
+     * @deprecated since 4.5, use {@link #resolveType(TypeMapping, TransformationState)}
      */
     public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException;
 
@@ -78,7 +78,7 @@ public interface Content2BeanTransformer {
     public void initBean(TransformationState state, Map values) throws Content2BeanException;
 
     /**
-     * @deprecated since 5.0, use {@link #setProperty(TypeMapping, TransformationState, PropertyTypeDescriptor, java.util.Map)}
+     * @deprecated since 4.5, use {@link #setProperty(TypeMapping, TransformationState, PropertyTypeDescriptor, java.util.Map)}
      */
     public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values);
 
@@ -95,13 +95,13 @@ public interface Content2BeanTransformer {
     /**
      * The mapping to use.
      *
-     * @deprecated since 5.0, do not use
+     * @deprecated since 4.5, do not use
      */
     public TypeMapping getTypeMapping();
 
     /**
      * Creates singleton instance of content2bean transformer.
-     * @deprecated since 5.0, we should use IoC...
+     * @deprecated since 4.5, we should use IoC...
      */
     class Factory {
         public static Content2BeanTransformer getDefaultTransformer() {

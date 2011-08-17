@@ -107,14 +107,14 @@ public class ModuleManagerImpl implements ModuleManager {
     private final DependencyChecker dependencyChecker;
 
     /**
-     * @deprecated since 5.0 - use IoC - temporarily kept for tests ?
+     * @deprecated since 4.5 - use IoC - temporarily kept for tests ?
      */
     protected ModuleManagerImpl() {
         this(new InstallContextImpl(ModuleRegistry.Factory.getInstance()), new BetwixtModuleDefinitionReader());
     }
 
     /**
-     * @deprecated since 5.0 - use IoC - temporarily kept for tests ?
+     * @deprecated since 4.5 - use IoC - temporarily kept for tests ?
      */
     protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader) {
         this(installContext, moduleDefinitionReader, ModuleRegistry.Factory.getInstance(), new DependencyCheckerImpl());
@@ -398,7 +398,7 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     /**
-     * @deprecated since 5.0 - we want to introduce interfaces for the few properties managed here, or dropped support for it altogether.
+     * @deprecated since 4.5 - we want to introduce interfaces for the few properties managed here, or dropped support for it altogether.
      */
     protected void populateModuleInstance(Object moduleInstance, Map<String, Object> moduleProperties) {
         try {

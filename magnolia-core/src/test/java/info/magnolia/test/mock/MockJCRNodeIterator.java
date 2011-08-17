@@ -43,7 +43,7 @@ import java.util.Collection;
  *
  * @version $Id$
  *
- * @deprecated since 5.0 - use {@link  info.magnolia.test.mock.jcr.MockNodeIterator}
+ * @deprecated since 4.5 - use {@link  info.magnolia.test.mock.jcr.MockNodeIterator}
  */
 public class MockJCRNodeIterator extends MockNodeIterator {
 

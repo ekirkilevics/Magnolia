@@ -98,7 +98,7 @@ public class Log4jConfigurer {
 
     /**
      * Initialize Log4J, including setting the web app root system property.
-     * @deprecated since 5.0, should not be public.
+     * @deprecated since 4.5, should not be public.
      * @see #start()
      */
     public static void initLogging() {
@@ -145,7 +145,7 @@ public class Log4jConfigurer {
 
     /**
      * Shuts down Log4J.
-     * @deprecated since 5.0, should not be public.
+     * @deprecated since 4.5, should not be public.
      * @see #stop()
      */
     public static void shutdownLogging() {

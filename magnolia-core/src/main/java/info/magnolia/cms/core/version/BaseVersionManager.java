@@ -200,7 +200,7 @@ public abstract class BaseVersionManager {
      * @return newly created version node
      * @throws UnsupportedOperationException if repository implementation does not support Versions API
      * @throws javax.jcr.RepositoryException if any repository error occurs
-     * @deprecated since 5.0 use {@link #createVersion(Node, Rule)} instead
+     * @deprecated since 4.5 use {@link #createVersion(Node, Rule)} instead
      */
     @Deprecated
     protected Version createVersion(Content node, Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
@@ -371,7 +371,7 @@ public abstract class BaseVersionManager {
      * node's version history
      * @throws javax.jcr.RepositoryException if an error occurs
      * @throws javax.jcr.version.VersionException
-     * @deprecated since 5.0 use {@link #restore(Node, Version, boolean)} instead
+     * @deprecated since 4.5 use {@link #restore(Node, Version, boolean)} instead
      */
     @Deprecated
     public synchronized void restore(Content node, Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {

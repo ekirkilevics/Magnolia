@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A {@link ContentFilter} using a {@link Rule}.
  * @version $Revision$ ($Author$)
- * @deprecated since 5.0 use {@link RuleBasedNodePredicate} instead
+ * @deprecated since 4.5 use {@link RuleBasedNodePredicate} instead
  */
 @Deprecated
 public class RuleBasedContentFilter implements Content.ContentFilter {

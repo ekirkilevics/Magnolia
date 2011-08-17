@@ -107,14 +107,14 @@ public class MockUtil {
     }
 
     /**
-     * @deprecated since 5.0 - use {@link SessionTestUtil#createSession(InputStream)} instead.
+     * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(InputStream)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(InputStream propertiesStream) throws IOException, RepositoryException {
         return createHierarchyManager(null, propertiesStream);
     }
 
     /**
-     * @deprecated since 5.0 - use {@link SessionTestUtil#createSession(String, InputStream)} instead.
+     * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, InputStream)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
         MockHierarchyManager hm = new MockHierarchyManager(repository);
@@ -124,7 +124,7 @@ public class MockUtil {
     }
 
     /**
-     * @deprecated since 5.0 - use {@link SessionTestUtil#createSession(String)} instead.
+     * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(String propertiesStr) throws IOException, RepositoryException {
         final ByteArrayInputStream in = new ByteArrayInputStream(propertiesStr.getBytes());

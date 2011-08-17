@@ -60,7 +60,7 @@ public class WorkflowModule implements ModuleLifecycle {
     private static final Logger log = LoggerFactory.getLogger(WorkflowModule.class);
 
     /**
-     * @deprecated since 5.0, use IoC !
+     * @deprecated since 4.5, use IoC !
      */
     private static WorkflowModule instance;
 
@@ -183,7 +183,7 @@ public class WorkflowModule implements ModuleLifecycle {
     }
 
     /**
-     * @deprecated since 5.0, use IoC !
+     * @deprecated since 4.5, use IoC !
      */
     public static WorkflowModule getInstance() {
         DeprecationUtil.isDeprecated("Use IoC!");

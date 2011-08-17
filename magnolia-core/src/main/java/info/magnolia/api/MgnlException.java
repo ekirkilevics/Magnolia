@@ -35,7 +35,7 @@ package info.magnolia.api;
 
 /**
  * Deprecated. Use {@link info.magnolia.exception.MgnlException} instead.
- * @deprecated since 5.0
+ * @deprecated since 4.5
  */
 public class MgnlException extends info.magnolia.exception.MgnlException {
 

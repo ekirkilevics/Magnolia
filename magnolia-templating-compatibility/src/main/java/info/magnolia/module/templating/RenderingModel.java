@@ -36,7 +36,7 @@ package info.magnolia.module.templating;
 
 /**
  * Deprecated.
- * @deprecated since 5.0, use {@link info.magnolia.rendering.model.RenderingModel}
+ * @deprecated since 4.5, use {@link info.magnolia.rendering.model.RenderingModel}
  * @param <RD> the {@link RenderableDefinition} bound to the model
  */
 public interface RenderingModel <RD extends RenderableDefinition> extends info.magnolia.rendering.model.RenderingModel<RD> {

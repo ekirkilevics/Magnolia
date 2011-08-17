@@ -102,7 +102,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     /**
      * TODO : rename to getRealmName and setRealmName (and make sure Content2Bean still sets realmName using the parent's node name).
-     * @deprecated since 5.0 use realmName instead
+     * @deprecated since 4.5 use realmName instead
      */
     @Deprecated
     public String getName() {
@@ -110,7 +110,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     }
 
     /**
-     * @deprecated since 5.0 use realmName instead
+     * @deprecated since 4.5 use realmName instead
      */
     @Deprecated
     public void setName(String name) {
@@ -170,7 +170,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     /**
      * Helper method to find a user in a certain realm. Uses JCR Query.
-     * @deprecated since 5.0 use findUserNode(java.lang.String, java.lang.String, javax.jcr.Session) instead
+     * @deprecated since 4.5 use findUserNode(java.lang.String, java.lang.String, javax.jcr.Session) instead
      */
     @Deprecated
     protected Content findUserNode(String realm, String name) throws RepositoryException {
@@ -325,7 +325,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     }
 
     /**
-     * @deprecated since 5.0 use {@link #setPasswordProperty(Node, String)} instead
+     * @deprecated since 4.5 use {@link #setPasswordProperty(Node, String)} instead
      */
     @Deprecated
     protected void setPasswordProperty(Content userNode, String clearPassword) throws RepositoryException {
@@ -375,7 +375,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     /**
      * Creates a {@link MgnlUser} out of a jcr node. Can be overridden in order to provide a different implementation.
      * @since 4.3.1
-     * @deprecated since 5.0 use newUSerInstance(javax.jcr.Node) instead
+     * @deprecated since 4.5 use newUSerInstance(javax.jcr.Node) instead
      */
     @Deprecated
     protected User newUserInstance(Content node) {

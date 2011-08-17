@@ -46,7 +46,7 @@ import java.util.Properties;
  * @author pbracher
  * @version $Id$
  *
- * @deprecated since 5.0, unused. Custom Transformer should be enough.
+ * @deprecated since 4.5, unused. Custom Transformer should be enough.
  */
 public class PropertiesBasedTypeDescriptor extends TypeDescriptor {
 

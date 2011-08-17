@@ -44,7 +44,7 @@ import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
  * {@link #newModel(Content, RenderableDefinition , RenderingModel)}
  *
  * @version $Id$
- * @deprecated since 5.0, use {@link ConfiguredRenderableDefinition} instead.
+ * @deprecated since 4.5, use {@link ConfiguredRenderableDefinition} instead.
  */
 public class AbstractRenderable extends ConfiguredTemplateDefinition implements RenderableDefinition{
 
@@ -57,7 +57,7 @@ public class AbstractRenderable extends ConfiguredTemplateDefinition implements 
     }
 
     /**
-     * @deprecated since 5.0 - use {@link #getTemplateScript()} instead
+     * @deprecated since 4.5 - use {@link #getTemplateScript()} instead
      */
     @Override
     public String getTemplatePath() {
@@ -65,7 +65,7 @@ public class AbstractRenderable extends ConfiguredTemplateDefinition implements 
     }
 
     /**
-     * @deprecated since 5.0 - use {@link #getRenderType()} instead
+     * @deprecated since 4.5 - use {@link #getRenderType()} instead
      */
     @Override
     public String getType() {
@@ -73,14 +73,14 @@ public class AbstractRenderable extends ConfiguredTemplateDefinition implements 
     }
 
     /**
-     * @deprecated since 5.0 - use {@link #setTemplateScript(String)} instead
+     * @deprecated since 4.5 - use {@link #setTemplateScript(String)} instead
      */
     public void setTemplatePath(String templatePath) {
         setTemplateScript(templatePath);
     }
 
     /**
-     * @deprecated since 5.0 - use {@link #setRenderType(String)} instead
+     * @deprecated since 4.5 - use {@link #setRenderType(String)} instead
      */
     public void setType(String type) {
         setRenderType(type);

@@ -317,21 +317,21 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     // TODO What about getPropertiesFilesString
 
     /**
-     * @deprecated since 5.0, use or subclass {@link MagnoliaInitPaths}.
+     * @deprecated since 4.5, use or subclass {@link MagnoliaInitPaths}.
      */
     protected String initWebappName(String rootPath) {
         return null;
     }
 
     /**
-     * @deprecated since 5.0, use or subclass {@link MagnoliaInitPaths}.
+     * @deprecated since 4.5, use or subclass {@link MagnoliaInitPaths}.
      */
     protected String initRootPath(final ServletContext context) {
         return null;
     }
 
     /**
-     * @deprecated since 5.0, use or subclass {@link MagnoliaInitPaths}.
+     * @deprecated since 4.5, use or subclass {@link MagnoliaInitPaths}.
      */
     protected String initServername(boolean unqualified) {
         return null;

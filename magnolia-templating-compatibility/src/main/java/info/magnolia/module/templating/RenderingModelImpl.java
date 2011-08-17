@@ -39,7 +39,7 @@ import javax.jcr.Node;
 
 /**
  * Deprecated.
- * @deprecated since 5.0, use {@link info.magnolia.rendering.model.RenderingModelImpl} instead.
+ * @deprecated since 4.5, use {@link info.magnolia.rendering.model.RenderingModelImpl} instead.
  * @param <RD> the {@link RenderableDefinition} bound to the model
  */
 @Deprecated

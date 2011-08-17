@@ -53,7 +53,7 @@ import java.io.InputStream;
  *
  * @version $Id$
  *
- * @deprecated since 5.0, use jcr.Property instead.
+ * @deprecated since 4.5, use jcr.Property instead.
  */
 public interface NodeData extends Cloneable {
     int MULTIVALUE_UNDEFINED = -1;

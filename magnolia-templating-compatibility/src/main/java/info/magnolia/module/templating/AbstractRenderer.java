@@ -53,7 +53,7 @@ import info.magnolia.context.MgnlContext;
  *
  * @author pbracher
  * @version $Id$
- * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.renderer.AbstractRenderer}
+ * @deprecated since 4.5, replaced by {@link info.magnolia.rendering.renderer.AbstractRenderer}
  * FIXME remove most of the code and and try to extend the new {@link info.magnolia.rendering.renderer.AbstractRenderer}
  *
  */

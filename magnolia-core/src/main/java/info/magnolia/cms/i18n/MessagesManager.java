@@ -73,7 +73,7 @@ public abstract class MessagesManager {
     public static final String LANGUAGES_NODE_NAME = "languages";
 
     /**
-     * @deprecated since 5.0, use IoC !
+     * @deprecated since 4.5, use IoC !
      */
     public static MessagesManager getInstance() {
         return Components.getSingleton(MessagesManager.class);

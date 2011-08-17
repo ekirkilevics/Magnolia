@@ -66,7 +66,7 @@ import org.xml.sax.ContentHandler;
 
 /**
  * @version $Id$
- * @deprecated since 5.0 - use {@link info.magnolia.test.mock.jcr.MockWorkspace} instead.
+ * @deprecated since 4.5 - use {@link info.magnolia.test.mock.jcr.MockWorkspace} instead.
  */
 
 public class MockWorkspace implements Workspace {

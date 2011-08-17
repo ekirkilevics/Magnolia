@@ -64,7 +64,7 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
     }
 
     /**
-     * @deprecated since 5.0, permissions are checked directly by jcr now. Use Session.hasPermission() directly
+     * @deprecated since 4.5, permissions are checked directly by jcr now. Use Session.hasPermission() directly
      */
     @Override
     @Deprecated

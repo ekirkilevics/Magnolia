@@ -48,7 +48,7 @@ public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
     }
 
     /**
-     * @deprecated since 5.0 Access Manager is no longer supported. Security is checked directly by repository.
+     * @deprecated since 4.5 Access Manager is no longer supported. Security is checked directly by repository.
      */
     @Override
     @Deprecated
@@ -57,7 +57,7 @@ public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
     }
 
     /**
-     * @deprecated since 5.0 JAAS subject is no longer passed around by strategy. There should be no need to access it.
+     * @deprecated since 4.5 JAAS subject is no longer passed around by strategy. There should be no need to access it.
      */
     @Deprecated
     protected Subject getSubject() {

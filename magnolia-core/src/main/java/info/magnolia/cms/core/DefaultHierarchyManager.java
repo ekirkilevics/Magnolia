@@ -63,7 +63,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sameer Charles
  * $Id:HierarchyManager.java 2719 2006-04-27 14:38:44Z scharles $
- * @deprecated since 5.0. Use Session and its methods instead.
+ * @deprecated since 4.5. Use Session and its methods instead.
  */
 @Deprecated
 public class DefaultHierarchyManager implements HierarchyManager, Serializable {

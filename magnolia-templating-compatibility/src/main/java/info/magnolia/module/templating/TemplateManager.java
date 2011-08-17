@@ -53,7 +53,7 @@ import javax.jcr.RepositoryException;
 
 /**
  * Manages the templates of the system.
- * @deprecated since 5.0, use the {@link TemplateDefinitionRegistry} instead
+ * @deprecated since 4.5, use the {@link TemplateDefinitionRegistry} instead
  */
 @Singleton
 public class TemplateManager extends ObservedManager {

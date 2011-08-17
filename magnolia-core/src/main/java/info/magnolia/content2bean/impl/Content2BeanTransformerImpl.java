@@ -198,7 +198,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     }
 
     /**
-     * @deprecated since 5.0, use
+     * @deprecated since 4.5, use
      *             {@link #onResolveType(info.magnolia.content2bean.TypeMapping, info.magnolia.content2bean.TransformationState, info.magnolia.content2bean.TypeDescriptor)}
      */
     protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
@@ -435,7 +435,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     /**
      * Returns the default mapping.
      *
-     * @deprecated since 5.0, do not use.
+     * @deprecated since 4.5, do not use.
      */
     @Override
     public TypeMapping getTypeMapping() {

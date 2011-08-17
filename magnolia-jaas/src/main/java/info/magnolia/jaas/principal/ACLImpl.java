@@ -46,7 +46,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * This class represents access control list as a principal.
  * @author Sameer Charles $Id$
- * @deprecated since 5.0 use {@link info.magnolia.cms.security.ACLImpl} instead
+ * @deprecated since 4.5 use {@link info.magnolia.cms.security.ACLImpl} instead
  */
 @Deprecated
 public class ACLImpl implements ACL {

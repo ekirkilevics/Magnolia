@@ -39,7 +39,7 @@ package info.magnolia.module.templating.setup.for4_0;
  *
  * @version $Id$
  *
- * @deprecated since 5.0 - use {@link info.magnolia.module.delta.RenamePropertyAllModulesNodeTask} instead - as it is of
+ * @deprecated since 4.5 - use {@link info.magnolia.module.delta.RenamePropertyAllModulesNodeTask} instead - as it is of
  *             general purpose the implementation got moved to core.
  */
 public class RenamePropertyAllModulesNodeTask extends info.magnolia.module.delta.RenamePropertyAllModulesNodeTask {

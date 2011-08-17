@@ -97,7 +97,7 @@ public class ConfigLoader {
     }
 
     /**
-     * @deprecated since 5.0, use {@link #unload()}, dependencies are injected.
+     * @deprecated since 4.5, use {@link #unload()}, dependencies are injected.
      */
     public void unload(ServletContext servletContext) {
         unload();
@@ -108,7 +108,7 @@ public class ConfigLoader {
     }
 
     /**
-     * @deprecated since 5.0, use {@link #load()}, dependencies are injected.
+     * @deprecated since 4.5, use {@link #load()}, dependencies are injected.
      */
     public void load(ServletContext servletContext) {
         load();

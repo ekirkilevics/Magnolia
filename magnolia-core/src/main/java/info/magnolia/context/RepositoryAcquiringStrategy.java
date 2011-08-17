@@ -49,7 +49,7 @@ import info.magnolia.cms.security.AccessManager;
 public interface RepositoryAcquiringStrategy {
     HierarchyManager getHierarchyManager(String repositoryId, String workspaceId);
     /**
-     * @deprecated since 5.0
+     * @deprecated since 4.5
      */
     @Deprecated
     AccessManager getAccessManager(String repositoryId, String workspaceId);

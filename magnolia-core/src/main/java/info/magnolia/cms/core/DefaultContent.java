@@ -80,7 +80,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sameer Charles
  * @version $Revision:2719 $ ($Author:scharles $)
- * @deprecated since 5.0 use jcr.Node instead.
+ * @deprecated since 4.5 use jcr.Node instead.
  */
 @Deprecated
 public class DefaultContent extends AbstractContent {

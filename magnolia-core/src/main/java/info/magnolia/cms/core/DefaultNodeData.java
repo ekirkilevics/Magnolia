@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * Wrapper class for a jcr property.
  *
  * @version $Id$
- * @deprecated since 5.0, use jcr.Property instead.
+ * @deprecated since 4.5, use jcr.Property instead.
  */
 @Deprecated
 public class DefaultNodeData extends AbstractNodeData {

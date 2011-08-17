@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  *
- * @deprecated since 5.0 - register Transformers explicitly.
+ * @deprecated since 4.5 - register Transformers explicitly.
  */
 public class PropertiesBasedTypeMapping extends TypeMappingImpl {
 

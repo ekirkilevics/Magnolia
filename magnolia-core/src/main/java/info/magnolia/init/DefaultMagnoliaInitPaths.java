@@ -62,7 +62,7 @@ public class DefaultMagnoliaInitPaths implements MagnoliaInitPaths {
     protected static final String MAGNOLIA_UNQUALIFIED_SERVER_NAME = "magnolia.unqualified.server.name";
 
     /**
-     * @deprecated since 5.0 - only used here for retro-compatibility with potential subclasses of MgnlServletContextListener
+     * @deprecated since 4.5 - only used here for retro-compatibility with potential subclasses of MgnlServletContextListener
      */
     private final MagnoliaServletContextListener magnoliaServletContextListener;
     private final String serverName;

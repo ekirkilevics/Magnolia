@@ -53,7 +53,7 @@ public interface ComponentProvider {
     <T> Class<? extends T> getImplementation(Class<T> type) throws ClassNotFoundException;
 
     /**
-     * @deprecated since 5.0, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
+     * @deprecated since 4.5, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
      * Additionally, it should not be up to the client to decide whether this component is a singleton or not.
      */
     <T> T getSingleton(Class<T> type);

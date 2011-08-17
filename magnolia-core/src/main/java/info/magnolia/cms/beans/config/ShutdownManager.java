@@ -53,7 +53,7 @@ public class ShutdownManager extends ObservedManager {
     private static ShutdownManager instance = new ShutdownManager();
 
     /**
-     * @deprecated since 5.0, use IoC ! (although in this specific case, you've been told not to use this class since 4.0)
+     * @deprecated since 4.5, use IoC ! (although in this specific case, you've been told not to use this class since 4.0)
      */
     public static ShutdownManager getInstance() {
         return instance;

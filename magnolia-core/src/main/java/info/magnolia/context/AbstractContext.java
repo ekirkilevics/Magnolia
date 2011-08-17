@@ -117,7 +117,7 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     /**
-     * @deprecated since 5.0
+     * @deprecated since 4.5
      */
     @Override
     @Deprecated

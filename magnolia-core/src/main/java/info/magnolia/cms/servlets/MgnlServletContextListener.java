@@ -43,7 +43,7 @@ import javax.servlet.ServletContextEvent;
 
 /**
  * This class is maintained for compatibility with releases prior to 5.0. Please use {@link info.magnolia.init.MagnoliaServletContextListener} instead.
- * @deprecated since 5.0 - use {@link info.magnolia.init.MagnoliaServletContextListener} instead.
+ * @deprecated since 4.5 - use {@link info.magnolia.init.MagnoliaServletContextListener} instead.
  *
  * @author Fabrizio Giustina
  */
@@ -66,14 +66,14 @@ public class MgnlServletContextListener extends MagnoliaServletContextListener {
     }
 
     /**
-     * @deprecated since 5.0, use {@link #startServer()}, dependencies are injected.
+     * @deprecated since 4.5, use {@link #startServer()}, dependencies are injected.
      */
     protected void startServer(final ServletContext context) {
         startServer();
     }
 
     /**
-     * @deprecated since 5.0, use {@link MagnoliaServletContextListener#getPropertiesFilesString(javax.servlet.ServletContext, info.magnolia.init.MagnoliaInitPaths)}
+     * @deprecated since 4.5, use {@link MagnoliaServletContextListener#getPropertiesFilesString(javax.servlet.ServletContext, info.magnolia.init.MagnoliaInitPaths)}
      */
     protected String getPropertiesFilesString(ServletContext context, String servername, String webapp) {
         DeprecationUtil.isDeprecated("Use info.magnolia.init.MagnoliaServletContextListener instead");
@@ -81,7 +81,7 @@ public class MgnlServletContextListener extends MagnoliaServletContextListener {
     }
 
     /**
-     * @deprecated since 5.0, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
+     * @deprecated since 4.5, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
      */
     @Override
     protected String initServername(boolean unqualified) {
@@ -90,7 +90,7 @@ public class MgnlServletContextListener extends MagnoliaServletContextListener {
     }
 
     /**
-     * @deprecated since 5.0, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
+     * @deprecated since 4.5, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
      */
     @Override
     protected String initRootPath(final ServletContext context) {
@@ -99,7 +99,7 @@ public class MgnlServletContextListener extends MagnoliaServletContextListener {
     }
 
     /**
-     * @deprecated since 5.0, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
+     * @deprecated since 4.5, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
      */
     @Override
     protected String initWebappName(String rootPath) {

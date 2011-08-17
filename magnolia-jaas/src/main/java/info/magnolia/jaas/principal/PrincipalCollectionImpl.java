@@ -88,7 +88,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
 
     /**
      * Sets internal collection of principals.
-     * @deprecated since 5.0
+     * @deprecated since 4.5
      */
     @Override
     @Deprecated

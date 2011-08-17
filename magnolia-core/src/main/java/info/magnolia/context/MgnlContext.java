@@ -118,7 +118,7 @@ public class MgnlContext {
     /**
      * Get hierarchy manager initialized for this user.
      *
-     * @deprecated since 5.0 - use {@link #getJCRSession(String)}
+     * @deprecated since 4.5 - use {@link #getJCRSession(String)}
      */
     public static HierarchyManager getHierarchyManager(String repositoryId) {
         return getInstance().getHierarchyManager(repositoryId);
@@ -142,7 +142,7 @@ public class MgnlContext {
 
     /**
      * Get access manager for the specified repository on the specified workspace.
-     * @deprecated since 5.0 - security is handled by JCR now
+     * @deprecated since 4.5 - security is handled by JCR now
      */
     @Deprecated
     public static AccessManager getAccessManager(String repositoryId, String workspaceId) {
@@ -361,7 +361,7 @@ public class MgnlContext {
 
     /**
      * Get Magnolia system context. This context has full permissions over all repositories/ workspaces.
-     * @deprecated since 5.0, use IoC, i.e., declare a dependency on SystemContext in your component.
+     * @deprecated since 4.5, use IoC, i.e., declare a dependency on SystemContext in your component.
      */
     @Deprecated
     public static SystemContext getSystemContext() {
@@ -461,7 +461,7 @@ public class MgnlContext {
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @param servletContext ServletContext instance
-     * @deprecated since 5.0, use WebContextFactory.
+     * @deprecated since 4.5, use WebContextFactory.
      */
     @Deprecated
     public static void initAsWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {

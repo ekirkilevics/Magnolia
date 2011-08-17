@@ -86,11 +86,11 @@ public interface ModuleManager {
 
     /**
      * Use this to retrieve the configured singleton impl of ModuleManager.
-     * @deprecated since 5.0, use IoC.
+     * @deprecated since 4.5, use IoC.
      */
     public class Factory {
         /**
-         * @deprecated since 5.0, use IoC.
+         * @deprecated since 4.5, use IoC.
          */
         public static ModuleManager getInstance() {
             return Components.getSingleton(ModuleManager.class);

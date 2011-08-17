@@ -80,7 +80,7 @@ public class CacheMonitor implements CacheMonitorMBean {
     }
 
     /**
-     * @deprecated since 5.0, use IoC instead
+     * @deprecated since 4.5, use IoC instead
      */
     private CacheFactory getCacheFactory() {
         CacheFactory factory = ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class).getCacheFactory();
@@ -101,7 +101,7 @@ public class CacheMonitor implements CacheMonitorMBean {
     }
 
     /**
-     * @deprecated since 5.0, use IoC instead
+     * @deprecated since 4.5, use IoC instead
      */
     public static CacheMonitor getInstance() {
         return instance;

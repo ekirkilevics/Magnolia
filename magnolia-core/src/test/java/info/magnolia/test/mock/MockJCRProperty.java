@@ -59,7 +59,7 @@ import javax.jcr.version.VersionException;
 
 /**
  * @version $Id$
- * @deprecated since 5.0 - use {@link info.magnolia.test.mock.jcr.MockProperty} instead.
+ * @deprecated since 4.5 - use {@link info.magnolia.test.mock.jcr.MockProperty} instead.
  */
 
 @Deprecated

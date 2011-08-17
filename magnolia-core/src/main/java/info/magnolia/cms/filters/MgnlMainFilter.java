@@ -64,12 +64,12 @@ public class MgnlMainFilter implements Filter {
     private static final Logger log = LoggerFactory.getLogger(MgnlMainFilter.class);
 
     /**
-     * @deprecated since 5.0, use {@link FilterManager#SERVER_FILTERS}.
+     * @deprecated since 4.5, use {@link FilterManager#SERVER_FILTERS}.
      */
     public static final String SERVER_FILTERS = FilterManager.SERVER_FILTERS;
 
     /**
-     * @deprecated since 5.0, use IoC to access FilterManager.
+     * @deprecated since 4.5, use IoC to access FilterManager.
      */
     private static MgnlMainFilter instance;
 
@@ -125,7 +125,7 @@ public class MgnlMainFilter implements Filter {
     }
 
     /**
-     * @deprecated since 5.0, use IoC to access FilterManager.
+     * @deprecated since 4.5, use IoC to access FilterManager.
      */
     public static MgnlMainFilter getInstance() {
         return instance;

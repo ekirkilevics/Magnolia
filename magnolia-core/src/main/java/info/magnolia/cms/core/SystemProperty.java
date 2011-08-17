@@ -49,7 +49,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Sameer charles
  * @version 2.0 $Id$
  *
- * @deprecated since 5.0, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
+ * @deprecated since 4.5, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
  */
 public final class SystemProperty {
 
@@ -93,7 +93,7 @@ public final class SystemProperty {
     }
 
     /**
-     * @deprecated since 5.0, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
+     * @deprecated since 4.5, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
      */
     public static void setProperty(String name, String value) {
         // DeprecationUtil.isDeprecated();
@@ -101,7 +101,7 @@ public final class SystemProperty {
     }
 
     /**
-     * @deprecated since 5.0, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
+     * @deprecated since 4.5, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
      */
     public static String getProperty(String name) {
         final String legacy = (String) properties.get(name);
@@ -116,14 +116,14 @@ public final class SystemProperty {
      * Returns a boolean property, returning <code>false</code> if the property is not set.
      * @param name property name
      * @return true only if the request property has a value of <code>true</code>
-     * @deprecated since 5.0, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
+     * @deprecated since 4.5, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
      */
     public static boolean getBooleanProperty(String name) {
         return "true".equals(getProperty(name));
     }
 
     /**
-     * @deprecated since 5.0, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
+     * @deprecated since 4.5, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
      */
     public static String getProperty(String name, String defaultValue) {
         String value = getProperty(name);
@@ -134,7 +134,7 @@ public final class SystemProperty {
     }
 
     /**
-     * @deprecated since 5.0, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
+     * @deprecated since 4.5, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
      */
     public static boolean hasProperty(String name) {
         final boolean legacy = properties.containsKey(name);
@@ -153,7 +153,7 @@ public final class SystemProperty {
     }
 
     /**
-     * @deprecated since 5.0 - while this still "works" and returns an aggregate of the local properties and those provided by
+     * @deprecated since 4.5 - while this still "works" and returns an aggregate of the local properties and those provided by
      * MagnoliaConfigurationProperties, writing to this Property object will not be reflected anywhere.
      */
     public static Properties getProperties() {
@@ -174,7 +174,7 @@ public final class SystemProperty {
     }
 
     /**
-     * @deprecated since 5.0 - this is only here to allow tests to work until their tested classes are all converted.
+     * @deprecated since 4.5 - this is only here to allow tests to work until their tested classes are all converted.
      */
     public static void setMagnoliaConfigurationProperties(MagnoliaConfigurationProperties magnoliaConfigurationProperties) {
         SystemProperty.magnoliaConfigurationProperties = magnoliaConfigurationProperties;

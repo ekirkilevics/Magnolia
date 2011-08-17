@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
  * @author pbracher
  * @author fgiust
  *
- * @deprecated since 5.0 - replaced by classes in the {@link info.magnolia.init} package.
+ * @deprecated since 4.5 - replaced by classes in the {@link info.magnolia.init} package.
  */
 public class PropertiesInitializer {
     private static final Logger log = LoggerFactory.getLogger(PropertiesInitializer.class);
@@ -111,7 +111,7 @@ public class PropertiesInitializer {
      public static final String ENV_PROPERTY_PLACEHOLDER_PREFIX = "env/"; //$NON-NLS-1$
 
     /**
-     * @deprecated since 5.0, use IoC
+     * @deprecated since 4.5, use IoC
      */
     public static PropertiesInitializer getInstance() {
         return Components.getSingleton(PropertiesInitializer.class);
@@ -203,7 +203,7 @@ public class PropertiesInitializer {
     }
 
     /**
-     * @deprecated since 5.0, replaced by a new ClasspathPropertySource("/mgnl-beans.properties").
+     * @deprecated since 4.5, replaced by a new ClasspathPropertySource("/mgnl-beans.properties").
      * @see info.magnolia.init.DefaultMagnoliaConfigurationProperties
      */
     public void loadBeanProperties() {
@@ -306,7 +306,7 @@ public class PropertiesInitializer {
      * @param propertiesFilesString a comma separated list of paths.
      * @return Property file configuration string with everything replaced.
      *
-     * @deprecated since 5.0, this is done by {@link info.magnolia.init.DefaultMagnoliaPropertiesResolver#DefaultMagnoliaPropertiesResolver}.
+     * @deprecated since 4.5, this is done by {@link info.magnolia.init.DefaultMagnoliaPropertiesResolver#DefaultMagnoliaPropertiesResolver}.
      */
     public static String processPropertyFilesString(ServletContext context, String servername, String webapp,
         String propertiesFilesString) {
@@ -388,7 +388,7 @@ public class PropertiesInitializer {
      * Parse the given String value recursively, to be able to resolve nested placeholders. Partly borrowed from
      * org.springframework.beans.factory.config.PropertyPlaceholderConfigurer (original author: Juergen Hoeller)
      *
-     * @deprecated since 5.0 this is now done by {@link info.magnolia.init.AbstractMagnoliaConfigurationProperties#parseStringValue}.
+     * @deprecated since 4.5 this is now done by {@link info.magnolia.init.AbstractMagnoliaConfigurationProperties#parseStringValue}.
      */
     protected String parseStringValue(String strVal, Set<String> visitedPlaceholders) {
 

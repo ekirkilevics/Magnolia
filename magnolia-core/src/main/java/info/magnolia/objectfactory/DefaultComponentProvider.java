@@ -52,7 +52,7 @@ import java.util.Set;
  * repository). In the latter case, the component is constructed via {@link info.magnolia.objectfactory.ObservedComponentFactory}
  * and reflects (through observation) the contents of the given path.
  *
- * @deprecated since 5.0, use IoC, i.e another implementation of ComponentProvider.
+ * @deprecated since 4.5, use IoC, i.e another implementation of ComponentProvider.
  *
  * @author Philipp Bracher
  * @version $Revision: 25238 $ ($Author: pbaerfuss $)
@@ -152,7 +152,7 @@ public class DefaultComponentProvider implements ComponentProvider {
     }
 
     /**
-     * @deprecated since 5.0, use {@link Classes#isConcrete(Class)}
+     * @deprecated since 4.5, use {@link Classes#isConcrete(Class)}
      */
     protected boolean isConcrete(Class<?> clazz) {
         return Classes.isConcrete(clazz);
@@ -175,7 +175,7 @@ public class DefaultComponentProvider implements ComponentProvider {
     }
 
     /**
-     * @deprecated since 5.0, use {@link ComponentConfigurationPath#isComponentConfigurationPath(String)}
+     * @deprecated since 4.5, use {@link ComponentConfigurationPath#isComponentConfigurationPath(String)}
      */
     static boolean isInRepositoryDefinition(String className) {
         return ComponentConfigurationPath.isComponentConfigurationPath(className);

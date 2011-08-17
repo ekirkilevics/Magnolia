@@ -109,7 +109,7 @@ public interface Context extends org.apache.commons.chain.Context {
      * @param repositoryId
      * @return hierarchy manager
      *
-     * @deprecated since 5.0 - use {@link #getJCRSession(String)}
+     * @deprecated since 4.5 - use {@link #getJCRSession(String)}
      */
     public HierarchyManager getHierarchyManager(String repositoryId);
 
@@ -119,7 +119,7 @@ public interface Context extends org.apache.commons.chain.Context {
      * @param workspaceId
      * @return hierarchy manager
      *
-     * @deprecated since 5.0 - use {@link #getJCRSession(String, String)}
+     * @deprecated since 4.5 - use {@link #getJCRSession(String, String)}
      */
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId);
 

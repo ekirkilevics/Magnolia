@@ -52,7 +52,7 @@ import org.apache.commons.lang.StringUtils;
  * Manages the paragraphs on the system. Modules can register the nodes where
  * the paragraphs are defined.
  *
- * @deprecated since 5.0, use the {@link TemplateDefinitionRegistry} instead
+ * @deprecated since 4.5, use the {@link TemplateDefinitionRegistry} instead
  */
 @Singleton
 public class ParagraphManager extends ObservedManager {

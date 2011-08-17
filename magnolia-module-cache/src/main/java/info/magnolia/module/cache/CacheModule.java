@@ -175,7 +175,7 @@ public class CacheModule implements ModuleLifecycle {
     }
 
     /**
-     * @deprecated since 5.0, use IoC/CDI
+     * @deprecated since 4.5, use IoC/CDI
      */
     public static CacheModule getInstance() {
         return ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class);

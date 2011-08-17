@@ -103,12 +103,12 @@ public class BinaryNodeData extends AbstractNodeData {
 
     @Override
     public boolean isExist() {
-        return getBinaryNode(false) != null;
+        return getBinaryNode(false) != null && getStream() != null;
     }
 
     @Override
     public InputStream getStream() {
-        if (isExist()) {
+        if (getBinaryNode(false) != null) {
             try {
                 return getJCRProperty().getStream();
             }

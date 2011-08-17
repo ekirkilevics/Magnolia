@@ -98,7 +98,7 @@ public class MetaData {
     /**
      * Package private constructor.
      * @param workingNode current <code>Node</code> on which <code>MetaData</code> is requested
-     * @deprecated since 5.0 use MetaData(Node, Session) instead.
+     * @deprecated since 4.5 use MetaData(Node, Session) instead.
      */
     @Deprecated
     protected MetaData(Node workingNode, AccessManager manager) {

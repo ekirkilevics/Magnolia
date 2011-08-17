@@ -147,7 +147,7 @@ public class CommandsManager extends ObservedManager {
 
     /**
      * @return Returns the instance.
-     * @deprecated since 5.0, use IoC !
+     * @deprecated since 4.5, use IoC !
      */
     public static CommandsManager getInstance() {
         return Components.getSingleton(CommandsManager.class);

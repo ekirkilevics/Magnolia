@@ -36,7 +36,7 @@ package info.magnolia.module.templating;
 /**
  * A generic exception used by subclasses of AbstractRenderer.
  *
- * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.engine.RenderException}
+ * @deprecated since 4.5, replaced by {@link info.magnolia.rendering.engine.RenderException}
  * @version $Id$
  */
 public class RenderException extends info.magnolia.rendering.engine.RenderException {

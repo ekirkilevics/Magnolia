@@ -41,7 +41,7 @@ import java.io.Writer;
 /**
  * This is the central entry point to render any content.
  * @version $Id$
- * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.engine.RenderingEngine}
+ * @deprecated since 4.5, replaced by {@link info.magnolia.rendering.engine.RenderingEngine}
  *
  */
 public interface RenderingEngine {

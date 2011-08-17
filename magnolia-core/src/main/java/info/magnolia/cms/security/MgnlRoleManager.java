@@ -89,7 +89,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
     }
 
     /**
-     * @deprecated since 5.0
+     * @deprecated since 4.5
      */
     @Deprecated
     protected MgnlRole newRoleInstance(Content node) throws RepositoryException {

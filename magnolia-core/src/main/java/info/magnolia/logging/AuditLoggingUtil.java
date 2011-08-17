@@ -63,7 +63,7 @@ public class AuditLoggingUtil {
     /**
      * log create, modify, activate, deactivate, delete incl. node type.
      * 
-     * @deprecated since 5.0, use {@link #log(String, String, NodeType, String)} instead.
+     * @deprecated since 4.5, use {@link #log(String, String, NodeType, String)} instead.
      */
     @Deprecated
     public static void log(String action, String workspaceName, ItemType nodeType, String nodePath) {

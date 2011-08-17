@@ -401,7 +401,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
 
     /**
      * Update the "last access" timestamp.
-     * @deprecated since 5.0, use {@link UserManager#updateLastAccessTimestamp(User)} instead
+     * @deprecated since 4.5, use {@link UserManager#updateLastAccessTimestamp(User)} instead
      */
     @Deprecated
     public void setLastAccess() {
@@ -410,7 +410,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
 
     /**
      * Not every user needs to have a node behind. Use manager to obtain nodes
-     * @deprecated since 5.0, use {@link UserManager#updateLastAccessTimestamp(User)} instead
+     * @deprecated since 4.5, use {@link UserManager#updateLastAccessTimestamp(User)} instead
      */
     @Deprecated
     public Content getUserNode() {
@@ -418,7 +418,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
     }
 
     /**
-     * @deprecated since 5.0, use {@link UserManager} instead
+     * @deprecated since 4.5, use {@link UserManager} instead
      */
     @Override
     @Deprecated

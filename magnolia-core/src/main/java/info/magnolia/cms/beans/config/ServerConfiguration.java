@@ -80,7 +80,7 @@ public class ServerConfiguration {
     }
 
     /**
-     * @deprecated since 5.0, use IoC
+     * @deprecated since 4.5, use IoC
      */
     @Deprecated
     public static ServerConfiguration getInstance() {

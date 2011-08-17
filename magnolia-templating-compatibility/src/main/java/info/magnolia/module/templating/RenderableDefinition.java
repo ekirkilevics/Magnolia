@@ -41,17 +41,17 @@ import info.magnolia.cms.core.Content;
  * Abstract rendering definition used for templates and paragraphs.
  *
  * @version $Id$
- * @deprecated since 5.0, replaced by {@link info.magnolia.rendering.template.configured.RenderableDefinition}
+ * @deprecated since 4.5, replaced by {@link info.magnolia.rendering.template.configured.RenderableDefinition}
  */
 public interface RenderableDefinition extends info.magnolia.rendering.template.RenderableDefinition{
 
     /**
-     * @deprecated since 5.0 - use {@link #getRenderType()} instead
+     * @deprecated since 4.5 - use {@link #getRenderType()} instead
      */
     public String getType();
 
     /**
-     * @deprecated since 5.0 - use {@link #getTemplateScript()} instead
+     * @deprecated since 4.5 - use {@link #getTemplateScript()} instead
      */
     public String getTemplatePath();
 
@@ -64,7 +64,7 @@ public interface RenderableDefinition extends info.magnolia.rendering.template.R
 
 
     /**
-     * @deprecated since 5.0 - use {@link info.magnolia.rendering.template.RenderableDefinition#newModel(javax.jcr.Node, info.magnolia.rendering.template.RenderableDefinition, info.magnolia.rendering.model.RenderingModel)} instead
+     * @deprecated since 4.5 - use {@link info.magnolia.rendering.template.RenderableDefinition#newModel(javax.jcr.Node, info.magnolia.rendering.template.RenderableDefinition, info.magnolia.rendering.model.RenderingModel)} instead
      */
     public RenderingModel<?> newModel(Content wrappedContent, RenderableDefinition definition, RenderingModel<?> parentModel)  throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
 }

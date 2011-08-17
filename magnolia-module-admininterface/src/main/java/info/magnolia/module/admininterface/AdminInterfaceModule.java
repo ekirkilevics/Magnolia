@@ -51,7 +51,7 @@ public class AdminInterfaceModule implements ModuleLifecycle {
     private SecurityConfiguration securityConfiguration;
 
     /**
-     * @deprecated since 5.0, use IoC !
+     * @deprecated since 4.5, use IoC !
      */
     private static AdminInterfaceModule instance;
 
@@ -83,7 +83,7 @@ public class AdminInterfaceModule implements ModuleLifecycle {
     }
 
     /**
-     * @deprecated since 5.0, use IoC !
+     * @deprecated since 4.5, use IoC !
      */
     public static AdminInterfaceModule getInstance() {
         DeprecationUtil.isDeprecated("Use IoC!");
