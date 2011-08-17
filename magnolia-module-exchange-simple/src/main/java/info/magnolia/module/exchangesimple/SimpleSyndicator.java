@@ -213,10 +213,10 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
 
             }
             catch (MalformedURLException e) {
-                throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + urlString + "]");
+                throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + stripPasswordFromUrl(urlString) + "]");
             }
             catch (IOException e) {
-                throw new ExchangeException("Not able to send the deactivation request [" + urlString + "]: " + e.getMessage());
+                throw new ExchangeException("Not able to send the deactivation request [" + stripPasswordFromUrl(urlString) + "]: " + e.getMessage());
             }
             catch (Exception e) {
                 throw new ExchangeException(e);
