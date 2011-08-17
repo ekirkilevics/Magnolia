@@ -422,7 +422,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
                 if (endIdx > 0) {
                     escapedUrl = escapedUrl.substring(0, idx) + escapedUrl.substring(endIdx + 1);
                 } else {
-                    escapedUrl = escapedUrl.substring(0, idx);
+                    escapedUrl = escapedUrl.substring(0, idx - 1);
                 }
             }
         }
