@@ -622,7 +622,7 @@ public class ContentUtil {
                 log.debug("{} won't be replaced", node.getHandle());
                 return;
             }
-            log.debug("find&replace operations took {}ms" + (System.currentTimeMillis() - start) / 1000);
+            log.debug("find&replace operations took {}ms" + (System.currentTimeMillis() - start));
 
             FileUtils.writeStringToFile(file, replaced);
             inStream = new FileInputStream(file);
