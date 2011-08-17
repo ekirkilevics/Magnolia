@@ -33,7 +33,9 @@
  */
 package info.magnolia.registry;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -90,7 +92,9 @@ public abstract class AbstractRegistry<D, P extends Provider<D>> {
             provider = providers.get(id);
         }
         if (provider == null) {
-            throw new RegistrationException("Can't find a registration for type [" + id + "]. Registered types are " + providers.keySet());
+            ArrayList<String> types = new ArrayList<String>(providers.keySet());
+            Collections.sort(types);
+            throw new RegistrationException("Can't find a registration for type [" + id + "]. Registered types are " + types);
         }
         return provider.getDefinition();
     }
