@@ -33,6 +33,11 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.core.AbstractContent;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultNodeData;
+import info.magnolia.cms.core.NodeData;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -40,14 +45,10 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.jcr.RepositoryException;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import info.magnolia.cms.core.AbstractContent;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultNodeData;
-import info.magnolia.cms.core.NodeData;
 
 
 /**
@@ -95,36 +96,24 @@ public class ExtendingContentWrapper extends ContentWrapper {
                 Content parent = extendingNodeData.getParent();
 
                 if (StringUtils.isBlank(extendedNode)) {
+                    // there is nothing to do, extending node is not defined ... probably caught in middle of config
                     extending = false;
-                } else {
-                    if (!extendedNode.startsWith("/")) {
-                        if (parent.hasContent(extendedNode)) {
-                            extendedNode = parent.getContent(extendedNode).getHandle();
-                        } else if (EXTENDING_NODE_DATA_OVERRIDE.equals(extendedNode)) {
-                            extending = false;
-                        } else {
-                            String message = "Can't find referenced node for value: " + wrappedContent;
-                            log.error(message);
-                            extending = false;
-                            if (failOnError) {
-                                throw new RuntimeException(message);
-                            }
+                } else if (EXTENDING_NODE_DATA_OVERRIDE.equals(extendedNode)) {
+                    extending = false;
+                }
+                if (extending) {
+                    if (isExists(extendedNode, parent)) {
+                        // support multiple inheritance
+                        extendedContent = wrapIfNeeded(extendingNodeData.getReferencedContent());
+                    } else {
+                        String message = "Can't find referenced node for value: " + wrappedContent;
+                        log.error(message);
+                        extending = false;
+                        if (failOnError) {
+                            throw new RuntimeException(message);
                         }
                     }
-                    if (extending) {
-                        // really existing? Check for extended Node...
-                        if (!getWrappedContent().getHierarchyManager().isExist(extendedNode)) {
-                            String message = "Can't find referenced node for value: " + wrappedContent;
-                            log.error(message);
-                            extending = false;
-                            if (failOnError) {
-                                throw new RuntimeException(message);
-                            }
-                        } else {
-                            // support multiple inheritance
-                            extendedContent = wrapIfNeeded(extendingNodeData.getReferencedContent());
-                        }
-                    }
+
                 }
 
             }
@@ -157,6 +146,14 @@ public class ExtendingContentWrapper extends ContentWrapper {
         }
         // might extend further more
         this.extendedContent = wrapIfNeeded(extendedContent);
+    }
+
+    private boolean isExists(String extendedNode, Content parent) throws RepositoryException {
+        if (extendedNode.startsWith("/") && getWrappedContent().getHierarchyManager().isExist(extendedNode)) {
+            return true;
+        }
+
+        return parent.hasContent(extendedNode);
     }
 
     private static Content wrapIfNeeded(Content content) {
