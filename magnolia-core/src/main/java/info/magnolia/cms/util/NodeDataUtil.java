@@ -239,31 +239,33 @@ public class NodeDataUtil {
         }
         else{
             switch (getJCRPropertyType(valueObj)) {
-            case PropertyType.STRING:
-                nodeData.setValue((String)valueObj);
-                break;
-            case PropertyType.BOOLEAN:
-                nodeData.setValue(((Boolean)valueObj).booleanValue());
-                break;
-            case PropertyType.DATE:
-                nodeData.setValue((Calendar)valueObj);
-                break;
-            case PropertyType.LONG:
-                // can either be a Long or an Integer - see #getJCRPropertyType(Object)
-                long valueToSet = (valueObj instanceof Integer) ? ((Integer) valueObj).intValue() : (Long) valueObj;
-                nodeData.setValue(valueToSet);
-                break;
-            case PropertyType.DOUBLE:
-                nodeData.setValue(((Double)valueObj).doubleValue());
-                break;
-            case PropertyType.BINARY:
-                nodeData.setValue((InputStream)valueObj);
-                break;
-            case PropertyType.REFERENCE:
-                nodeData.setValue((Content)valueObj);
-                break;
-            default:
-                nodeData.setValue(valueObj.toString());
+                case PropertyType.STRING:
+                    nodeData.setValue((String)valueObj);
+                    break;
+                case PropertyType.BOOLEAN:
+                    nodeData.setValue(((Boolean)valueObj).booleanValue());
+                    break;
+                case PropertyType.DATE:
+                    nodeData.setValue((Calendar)valueObj);
+                    break;
+                case PropertyType.LONG:
+                    // can either be a Long or Integer - see #getJCRPropertyType(Object)
+                    long longToSet = (valueObj instanceof Integer) ? ((Integer) valueObj).longValue() : ((Long) valueObj).longValue();
+                    nodeData.setValue(longToSet);
+                    break;
+                case PropertyType.DOUBLE:
+                    // can either be a Double or Float - see #getJCRPropertyType(Object)
+                    double doubleToSet = (valueObj instanceof Float) ? ((Float) valueObj).doubleValue() : ((Double) valueObj).doubleValue();
+                    nodeData.setValue(doubleToSet);
+                    break;
+                case PropertyType.BINARY:
+                    nodeData.setValue((InputStream)valueObj);
+                    break;
+                case PropertyType.REFERENCE:
+                    nodeData.setValue((Content)valueObj);
+                    break;
+                default:
+                    nodeData.setValue(valueObj.toString());
             }
         }
         return nodeData;
@@ -469,22 +471,22 @@ public class NodeDataUtil {
 
     public static Value createValue(Object obj, ValueFactory valueFactory) throws RepositoryException {
         switch (getJCRPropertyType(obj)) {
-        case PropertyType.STRING:
-            return valueFactory.createValue((String)obj);
-        case PropertyType.BOOLEAN:
-            return valueFactory.createValue(((Boolean)obj).booleanValue());
-        case PropertyType.DATE:
-            return valueFactory.createValue((Calendar)obj);
-        case PropertyType.LONG:
-            return valueFactory.createValue(((Long)obj).longValue());
-        case PropertyType.DOUBLE:
-            return valueFactory.createValue(((Double)obj).doubleValue());
-        case PropertyType.BINARY:
-            return valueFactory.createValue((InputStream)obj);
-        case PropertyType.REFERENCE:
-            return valueFactory.createValue(((Content)obj).getJCRNode());
-        default:
-            return (obj != null ? valueFactory.createValue(obj.toString()) : valueFactory.createValue(StringUtils.EMPTY));
+            case PropertyType.STRING:
+                return valueFactory.createValue((String)obj);
+            case PropertyType.BOOLEAN:
+                return valueFactory.createValue(((Boolean)obj).booleanValue());
+            case PropertyType.DATE:
+                return valueFactory.createValue((Calendar)obj);
+            case PropertyType.LONG:
+                return obj instanceof Long ? valueFactory.createValue(((Long)obj).longValue()) : valueFactory.createValue(((Integer)obj).longValue());
+            case PropertyType.DOUBLE:
+                return obj instanceof Double ? valueFactory.createValue(((Double)obj).doubleValue()) : valueFactory.createValue(((Float)obj).doubleValue());
+            case PropertyType.BINARY:
+                return valueFactory.createValue((InputStream)obj);
+            case PropertyType.REFERENCE:
+                return valueFactory.createValue(((Content)obj).getJCRNode());
+            default:
+                return (obj != null ? valueFactory.createValue(obj.toString()) : valueFactory.createValue(StringUtils.EMPTY));
         }
     }
 
@@ -561,6 +563,9 @@ public class NodeDataUtil {
             return PropertyType.STRING;
         }
         if(obj instanceof Double) {
+            return PropertyType.DOUBLE;
+        }
+        if(obj instanceof Float) {
             return PropertyType.DOUBLE;
         }
         if(obj instanceof Long) {

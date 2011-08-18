@@ -33,18 +33,158 @@
  */
 package info.magnolia.cms.util;
 
+import static org.easymock.classextension.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.test.mock.MockNodeData;
 
+import javax.jcr.PropertyType;
+import javax.jcr.ValueFactory;
+
 import org.junit.Test;
 
 /**
+ * Not converted to Mockito as it will be replaced anyway (when giving up Content-API).
+ *
  * @version $Id$
  */
 public class NodeDataUtilTest {
 
-@Test
+    @Test
+    public void testCreateValueWithDouble() throws Exception{
+        // GIVEN
+        ValueFactory valueFactory = createNiceMock(ValueFactory.class);
+        replay(valueFactory);
+        double three = 3;
+        Object obj = Double.valueOf(three);
+
+        // Easymocks' expectation
+        valueFactory.createValue(three);
+
+        // WHEN
+        NodeDataUtil.createValue(obj, valueFactory);
+
+        // THEN
+        verify(valueFactory);
+    }
+
+    @Test
+    public void testCreateValueWithDoubleFromString() throws Exception{
+        // GIVEN
+        ValueFactory valueFactory = createNiceMock(ValueFactory.class);
+        replay(valueFactory);
+        double three = 3;
+        String obj = "" + three;
+
+        // Easymocks' expectation
+        valueFactory.createValue(three);
+
+        // WHEN
+        NodeDataUtil.createValue(obj, PropertyType.DOUBLE, valueFactory);
+
+        // THEN
+        verify(valueFactory);
+    }
+
+    @Test
+    public void testCreateValueWithFloat() throws Exception{
+        // GIVEN
+        ValueFactory valueFactory = createNiceMock(ValueFactory.class);
+        replay(valueFactory);
+        float three = 3f;
+        double threeAsDouble = three;
+        Object obj = Float.valueOf(three);
+
+        // Easymocks' expectation
+        valueFactory.createValue(threeAsDouble);
+
+        // WHEN
+        NodeDataUtil.createValue(obj, valueFactory);
+
+        // THEN
+        verify(valueFactory);
+    }
+
+    @Test
+    public void testCreateValueWithInteger() throws Exception{
+        // GIVEN
+        ValueFactory valueFactory = createNiceMock(ValueFactory.class);
+        replay(valueFactory);
+        int three = 3;
+        long threeAsLong = three;
+        Object obj = Integer.valueOf(three);
+
+        // Easymocks' expectation
+        valueFactory.createValue(threeAsLong);
+
+        // WHEN
+        NodeDataUtil.createValue(obj, valueFactory);
+
+        // THEN
+        verify(valueFactory);
+    }
+
+    @Test
+    public void testCreateValueWithLong() throws Exception{
+        // GIVEN
+        ValueFactory valueFactory = createNiceMock(ValueFactory.class);
+        replay(valueFactory);
+        long three = 3;
+        Object obj = Long.valueOf(three);
+
+        // Easymocks' expectation
+        valueFactory.createValue(three);
+
+        // WHEN
+        NodeDataUtil.createValue(obj, valueFactory);
+
+        // THEN
+        verify(valueFactory);
+    }
+
+    @Test
+    public void testCreateValueWithLongFromString() throws Exception{
+        // GIVEN
+        ValueFactory valueFactory = createNiceMock(ValueFactory.class);
+        replay(valueFactory);
+        long three = 3;
+        String obj = "" + three;
+
+        // Easymocks' expectation
+        valueFactory.createValue(three);
+
+        // WHEN
+        NodeDataUtil.createValue(obj, PropertyType.LONG, valueFactory);
+
+        // THEN
+        verify(valueFactory);
+    }
+
+    @Test
+    public void testSetNodeDataWithDouble() throws Exception {
+        // GIVEN
+        NodeData data = new MockNodeData("test", 0);
+
+        // WHEN
+        NodeDataUtil.setValue(data, Double.valueOf(3));
+
+        // THEN
+        assertEquals(3.0, data.getDouble(), 0.0);
+    }
+
+    @Test
+    public void testSetNodeDataWithFloat() throws Exception {
+        // GIVEN
+        NodeData data = new MockNodeData("test", 0);
+
+        // WHEN
+        NodeDataUtil.setValue(data, Float.valueOf(3));
+
+        // THEN
+        assertEquals(3.0, data.getDouble(), 0.0);
+    }
+
+    @Test
     public void testSetNodeDataWithInteger() throws Exception {
         // GIVEN
         NodeData data = new MockNodeData("test", 0);
@@ -52,8 +192,19 @@ public class NodeDataUtilTest {
         // WHEN
         NodeDataUtil.setValue(data, Integer.valueOf(3));
 
-        // THEN
+        // THEN - JCR doesn't support storage of integers - instead they get converted to longs
         assertEquals(3, data.getLong());
     }
 
+    @Test
+    public void testSetNodeDataWithLong() throws Exception {
+        // GIVEN
+        NodeData data = new MockNodeData("test", 0);
+
+        // WHEN
+        NodeDataUtil.setValue(data, Long.valueOf(3));
+
+        // THEN
+        assertEquals(3, data.getLong());
+    }
 }
