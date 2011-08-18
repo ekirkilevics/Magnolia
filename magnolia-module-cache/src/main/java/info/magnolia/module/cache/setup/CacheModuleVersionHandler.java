@@ -195,8 +195,8 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("4.4.2", "Update cache configuration")
             .addTask(new IsModuleInstalledOrRegistered("FlushByComments", "Checks for unwanted presence of FlushByComments node.", "commenting", null, new NodeExistsDelegateTask("FlushByComments", "Checks if FlushByComments node exists.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments", new RemoveNodeTask("FlushByComments", "Removes FlushByComments node.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments"))))
         );
-        
-        register(DeltaBuilder.update("5.0", "Update cache configuration")
+
+        register(DeltaBuilder.update("4.5", "Update cache configuration")
                 .addTask(new NodeExistsDelegateTask("Bypass executor", "Check for existence of bypass executor and add setExpirationHeader if found.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", new ArrayDelegateTask("", "",
                         new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "bypass", MgnlNodeType.NT_CONTENTNODE),
                         new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "setExpirationHeader", MgnlNodeType.NT_CONTENTNODE),
