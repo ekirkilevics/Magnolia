@@ -49,8 +49,12 @@ import org.junit.Test;
  */
 public class RequestDispatchUtilTest {
 
-    private static final String HAS_SPACE_FRAGMENT = "/has space";
-    private static final String ENCODED_HAS_SPACE_FRAGMENT = "/has+space";
+    private static final String FRAGMENT = "/magnoliaTest/.magnolia/pages/adminCentral.html";
+    /**
+     * RequestDispatchUtil internally calls HttpServletResponse#encodeRewriteURL(String) - with the above FRAGMENT
+     * running in a ServletContainer nothing would get replaced but the sessionid would be appended.
+     */
+    private static final String ENCODED_FRAGMENT = "/magnoliaTest/.magnolia/pages/adminCentral.html;jsessionid=17bcou1dvqju5";
     private static final String EXTERNAL_URL = "http://www.something.com";
 
     @Test
@@ -69,15 +73,15 @@ public class RequestDispatchUtilTest {
     public void testDispatchRedirectInternal() throws Exception {
         // GIVEN
         final String contextPath = "contextPath";
-        final String targetUri = RequestDispatchUtil.REDIRECT_PREFIX + HAS_SPACE_FRAGMENT;
+        final String targetUri = RequestDispatchUtil.REDIRECT_PREFIX + FRAGMENT;
         HttpServletRequest request = createNiceMock(HttpServletRequest.class);
         HttpServletResponse response = createNiceMock(HttpServletResponse.class);
 
         expect(request.getContextPath()).andReturn(contextPath);
 
-        expect(response.encodeRedirectURL(contextPath + HAS_SPACE_FRAGMENT)).andReturn(contextPath  + ENCODED_HAS_SPACE_FRAGMENT);
+        expect(response.encodeRedirectURL(contextPath + FRAGMENT)).andReturn(contextPath  + ENCODED_FRAGMENT);
         // next line states we're expecting such call (after replay)
-        response.sendRedirect(contextPath + ENCODED_HAS_SPACE_FRAGMENT);
+        response.sendRedirect(contextPath + ENCODED_FRAGMENT);
         Object[] mocks = new Object[] {request, response};
         replay(mocks);
 
@@ -92,13 +96,13 @@ public class RequestDispatchUtilTest {
     @Test
     public void testDispatchRedirectNonInternal() throws Exception {
         // GIVEN
-        final String targetUri = RequestDispatchUtil.REDIRECT_PREFIX + EXTERNAL_URL + HAS_SPACE_FRAGMENT;
+        final String targetUri = RequestDispatchUtil.REDIRECT_PREFIX + EXTERNAL_URL + FRAGMENT;
         HttpServletRequest request = createNiceMock(HttpServletRequest.class);
         HttpServletResponse response = createNiceMock(HttpServletResponse.class);
 
-        expect(response.encodeRedirectURL(EXTERNAL_URL + HAS_SPACE_FRAGMENT)).andReturn(EXTERNAL_URL  + ENCODED_HAS_SPACE_FRAGMENT);
+        expect(response.encodeRedirectURL(EXTERNAL_URL + FRAGMENT)).andReturn(EXTERNAL_URL  + ENCODED_FRAGMENT);
         // we're expecting call to void method below (after replay)
-        response.sendRedirect(EXTERNAL_URL + ENCODED_HAS_SPACE_FRAGMENT);
+        response.sendRedirect(EXTERNAL_URL + ENCODED_FRAGMENT);
         Object[] mocks = new Object[] {request, response};
         replay(mocks);
 
@@ -113,13 +117,13 @@ public class RequestDispatchUtilTest {
     @Test
     public void testDispatchRedirectNonInternalFailure() throws Exception{
         // GIVEN
-        final String targetUri = RequestDispatchUtil.REDIRECT_PREFIX + EXTERNAL_URL + HAS_SPACE_FRAGMENT;
+        final String targetUri = RequestDispatchUtil.REDIRECT_PREFIX + EXTERNAL_URL + FRAGMENT;
         HttpServletRequest request = createNiceMock(HttpServletRequest.class);
         HttpServletResponse response = createNiceMock(HttpServletResponse.class);
 
-        expect(response.encodeRedirectURL(EXTERNAL_URL + HAS_SPACE_FRAGMENT)).andReturn(EXTERNAL_URL  + ENCODED_HAS_SPACE_FRAGMENT);
+        expect(response.encodeRedirectURL(EXTERNAL_URL + FRAGMENT)).andReturn(EXTERNAL_URL  + ENCODED_FRAGMENT);
         // next 3 lines state we're expecting a call to sendRedirect that throws an exception
-        response.sendRedirect(EXTERNAL_URL + ENCODED_HAS_SPACE_FRAGMENT);
+        response.sendRedirect(EXTERNAL_URL + ENCODED_FRAGMENT);
         Exception exception = new IOException("Something went wrong!");
         expectLastCall().andThrow(exception);
 
