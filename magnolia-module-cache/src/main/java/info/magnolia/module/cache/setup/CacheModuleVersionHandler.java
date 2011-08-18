@@ -37,7 +37,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.cache.RegisterWorkspaceForCacheFlushingTask;
@@ -107,7 +106,6 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("3.6", "New cache API and configuration.")
                 .addTask(new BackupTask("config", "/modules/cache/config", true))
                 .addTask(new BootstrapResourcesTask("New configuration", "Bootstraps new default cache configuration.") {
-                    @Override
                     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
                         return new String[]{
                                 "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml",
@@ -128,7 +126,6 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
         register(DeltaBuilder.update("3.6.2", "Updated executors and filter configuration.")
                 .addTask(new BootstrapResourcesTask("Updated configuration", "Bootstraps new default cache configuration.") {
-                    @Override
                     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
                         return new String[]{
                                 "/mgnl-bootstrap/cache/setup/config.modules.cache.config.configurations.default.executors.store.cacheContent.compressible.xml",
@@ -195,21 +192,20 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("4.4.2", "Update cache configuration")
             .addTask(new IsModuleInstalledOrRegistered("FlushByComments", "Checks for unwanted presence of FlushByComments node.", "commenting", null, new NodeExistsDelegateTask("FlushByComments", "Checks if FlushByComments node exists.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments", new RemoveNodeTask("FlushByComments", "Removes FlushByComments node.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments"))))
         );
-
-        register(DeltaBuilder.update("4.5", "Update cache configuration")
-                .addTask(new NodeExistsDelegateTask("Bypass executor", "Check for existence of bypass executor and add setExpirationHeader if found.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", new ArrayDelegateTask("", "",
-                        new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "bypass", MgnlNodeType.NT_CONTENTNODE),
-                        new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "setExpirationHeader", MgnlNodeType.NT_CONTENTNODE),
-                        new NewPropertyTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass/setExpirationHeader", "class", "info.magnolia.module.cache.executor.SetExpirationHeaders"),
-                        new MoveAndRenamePropertyTask("", "/modules/cache/config/configurations/default/executors/bypass", "class", "/modules/cache/config/configurations/default/executors/bypass/bypass", "class"))))
-            );
+       
+        register(DeltaBuilder.update("4.4.5", "Update cache configuration")
+            .addTask(new NodeExistsDelegateTask("Bypass executor", "Check for existence of bypass executor and add setExpirationHeader if found.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", new ArrayDelegateTask("", "",
+                    new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "bypass", ItemType.CONTENTNODE.getSystemName()),
+                    new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "setExpirationHeader", ItemType.CONTENTNODE.getSystemName()),
+                    new NewPropertyTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass/setExpirationHeader", "class", "info.magnolia.module.cache.executor.SetExpirationHeaders"),
+                    new MoveAndRenamePropertyTask("", "/modules/cache/config/configurations/default/executors/bypass", "class", "/modules/cache/config/configurations/default/executors/bypass/bypass", "class"))))
+        );
     }
 
     private List<Task> getTasksFor364() {
         List<Task> list = new ArrayList<Task>();
         // Add new compression types and user agents configuration
         list.add(new BootstrapResourcesTask("Updated configuration", "Bootstraps cache compression configuration.") {
-            @Override
             protected String[] getResourcesToBootstrap(final InstallContext installContext) {
                 return new String[]{"/mgnl-bootstrap/cache/config.modules.cache.config.compression.xml"};
             }
@@ -229,7 +225,6 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
         // add new bypass to GzipFilter that executes voters from new compression configuration in /modules/cache/config
         list.add(new AbstractRepositoryTask("Add bypass", "Adds new bypass for GZip filter using global configuration.") {
-            @Override
             protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
                 final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
                 Content content = hm.createContent("/server/filters/gzip/bypasses", "deletageBypass", ItemType.CONTENTNODE.getSystemName());
@@ -239,7 +234,6 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         });
 
         list.add(new AbstractRepositoryTask("Cache Flushing", "Migrate old cache flushing configuration to new location." ) {
-            @Override
             protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
                 final String reposPath= "/modules/cache/config/repositories";
                 final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
@@ -257,7 +251,6 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         return list;
     }
 
-    @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final List<Task> tasks = new ArrayList<Task>();
         tasks.add(new FilterOrderingTask("gzip", new String[]{"context", "multipartRequest", "activation"}));
