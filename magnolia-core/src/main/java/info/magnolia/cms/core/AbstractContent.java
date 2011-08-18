@@ -384,7 +384,13 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     @Override
     public boolean isGranted(long permissions) {
-        return getHierarchyManager().getAccessManager().isGranted(getHandle(), permissions);
+        final String action = Access.convertPermissions(permissions);
+        try {
+            return Access.isGranted(this.getJCRNode().getSession(), getHandle(), action);
+        } catch (RepositoryException e) {
+            log.error("An error occured while trying to access path {} with action {}", new Object[]{getHandle(), action}, e);
+            return false;
+        }
     }
 
     @Override
