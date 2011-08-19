@@ -80,7 +80,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     @Test
     public void testWeCanUseAnyObjectTypeAsOurRoot() throws IOException, TemplateException {
         tplLoader.putTemplate("test.ftl", "${left} ${right.left.blue - left} ${right.right.green} ${right.right.name}");
-        final Pair root = new Pair(Integer.valueOf(100), new Pair(Color.PINK, Color.ORANGE));
+        final Pair<Integer, Pair<Color, Color>> root = new Pair<Integer, Pair<Color, Color>>(Integer.valueOf(100), new Pair<Color, Color>(Color.PINK, Color.ORANGE));
         assertRendereredContent("100 75 200 orange", root, "test.ftl");
     }
 
@@ -90,7 +90,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         foo.addContent(new MockContent("bar"));
         foo.addContent(new MockContent("baz"));
         foo.addContent(new MockContent("gazonk"));
-        final Pair pair = new Pair(Color.ORANGE, foo);
+        final Pair<Color, Content> pair = new Pair<Color, Content>(Color.ORANGE, foo);
         final Map<String, Object> map = createSingleValueMap("pair", pair);
 
         tplLoader.putTemplate("test.ftl", "${pair.right} ${pair.right.gazonk} ${pair.left?string} ${pair.right?string} ${pair.right.gazonk?string}");
@@ -179,7 +179,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         foo.addContent(new MockContent("bar"));
         foo.addContent(new MockContent("baz"));
         foo.addContent(new MockContent("gazonk"));
-        final Object pair = new Pair(Color.ORANGE, foo);
+        final Object pair = new Pair<Color, Content>(Color.ORANGE, foo);
         final String key = "pair";
         Map map = createSingleValueMap(key, pair);
 

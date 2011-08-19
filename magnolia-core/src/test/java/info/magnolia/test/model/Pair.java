@@ -37,20 +37,20 @@ package info.magnolia.test.model;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public final class Pair {
-    private final Object left;
-    private final Object right;
+public final class Pair<A, B> {
+    private final A left;
+    private final B right;
 
-    public Pair(Object left, Object right) {
+    public Pair(A left, B right) {
         this.left = left;
         this.right = right;
     }
 
-    public Object getLeft() {
+    public A getLeft() {
         return left;
     }
 
-    public Object getRight() {
+    public B getRight() {
         return right;
     }
 }
