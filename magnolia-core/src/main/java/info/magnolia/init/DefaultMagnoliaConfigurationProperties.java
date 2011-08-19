@@ -56,9 +56,9 @@ import javax.inject.Singleton;
  * <li>{@link SystemPropertySource}</li>
  * </ul>
  *
- * This class along with {@link DefaultMagnoliaPropertiesResolver} provide a replacement for PropertiesInitializer since 5.0.
+ * This class along with {@link DefaultMagnoliaPropertiesResolver} provide a replacement for PropertiesInitializer since 4.5.
  *
- * @since 5.0
+ * @since 4.5
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

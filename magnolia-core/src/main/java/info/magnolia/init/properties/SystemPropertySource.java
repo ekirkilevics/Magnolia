@@ -36,7 +36,7 @@ package info.magnolia.init.properties;
 /**
  * A {@link info.magnolia.init.PropertySource} exposing all {@link System#props} properties.
  *
- * Since Magnolia 5.0, all system properties are available, not only those overriding otherwise existing keys.
+ * Since Magnolia 4.5, all system properties are available, not only those overriding otherwise existing keys.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

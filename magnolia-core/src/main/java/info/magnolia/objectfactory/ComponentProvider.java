@@ -37,7 +37,7 @@ package info.magnolia.objectfactory;
  * ComponentProvider is responsible for providing components, singletons or new instances.
  * Magnolia "beans", "managers" etc are all provided by this.
  *
- * Since Magnolia 5.0, you are encouraged to use IoC, so the cases where this class
+ * Since Magnolia 4.5, you are encouraged to use IoC, so the cases where this class
  * is needed should be limited. Think twice !
  *
  * @author gjoseph

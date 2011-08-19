@@ -181,7 +181,7 @@ public final class SystemProperty {
     }
 
     /**
-     * @since 5.0 needed to clear up the hacks above, in tests.
+     * @since 4.5 needed to clear up the hacks above, in tests.
      */
     public static void clear() {
         properties.clear();

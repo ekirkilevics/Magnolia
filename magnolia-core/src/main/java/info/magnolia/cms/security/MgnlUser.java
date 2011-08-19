@@ -62,7 +62,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * User for 5.0 instance
+ * User for 4.5 instance
  * In difference from old MgnlUser, this class operates directly on JCR session and with JCR nodes/properties as our hierarchy managers are not
  * available at the login time.
  * Also in difference from MgnlUser, this class doesn't keep around instance of the user node! TODO: Test performance impact of such change.

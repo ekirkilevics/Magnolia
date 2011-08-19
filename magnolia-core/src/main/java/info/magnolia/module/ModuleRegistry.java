@@ -89,7 +89,7 @@ public interface ModuleRegistry {
 
     /**
      * Returns the list of known <tt>ModuleDefinition</tt>s, as ordered by the loading mechanism (typically in dependency order).
-     * @since 5.0
+     * @since 4.5
      */
     List<ModuleDefinition> getModuleDefinitions();
 

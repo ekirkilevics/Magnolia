@@ -42,7 +42,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 /**
- * This class is maintained for compatibility with releases prior to 5.0. Please use {@link info.magnolia.init.MagnoliaServletContextListener} instead.
+ * This class is maintained for compatibility with releases prior to 4.5. Please use {@link info.magnolia.init.MagnoliaServletContextListener} instead.
  * @deprecated since 4.5 - use {@link info.magnolia.init.MagnoliaServletContextListener} instead.
  *
  * @author Fabrizio Giustina

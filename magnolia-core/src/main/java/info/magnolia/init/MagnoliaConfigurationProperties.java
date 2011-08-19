@@ -39,7 +39,7 @@ package info.magnolia.init;
  * as well as properties configured in module descriptors, etc.
  * Implementations of this interface are responsible for locating relevant {@link PropertySource}, and provide them in a sensible order.
  *
- * @since 5.0
+ * @since 4.5
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
