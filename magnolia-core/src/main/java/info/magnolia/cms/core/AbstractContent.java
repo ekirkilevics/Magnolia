@@ -388,7 +388,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         try {
             return Access.isGranted(this.getJCRNode().getSession(), getHandle(), action);
         } catch (RepositoryException e) {
-            log.error("An error occured while trying to access path {} with action {}", new Object[]{getHandle(), action}, e);
+            log.error("An error occurred while trying to access path {} with action {}", new Object[]{getHandle(), action}, e);
             return false;
         }
     }
