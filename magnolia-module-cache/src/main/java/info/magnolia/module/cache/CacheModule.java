@@ -66,7 +66,7 @@ public class CacheModule implements ModuleLifecycle {
     private ContentCompression compression;
 
     /**
-     * @deprecated TODO since 5.0 - find another, cleaner, mechanism to provide the information this module needs instead of using ModuleManager.
+     * @deprecated TODO since 4.5 - find another, cleaner, mechanism to provide the information this module needs instead of using ModuleManager.
      */
     @Inject
     public CacheModule(ModuleManager moduleManager, CacheMonitor cacheMonitor) {

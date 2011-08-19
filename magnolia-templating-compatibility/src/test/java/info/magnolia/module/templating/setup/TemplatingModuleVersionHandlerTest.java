@@ -96,7 +96,7 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         assertConfig("My Test Template", tplPath + "/title");
 
-        // 5.0 renames templatePath to templateScript
+        // 4.5 renames templatePath to templateScript
         assertConfig("/some/path.ftl", tplPath + "/templateScript");
         // non-standard props are supposed to be moved to the "parameters" subnode
         assertConfig("someValue", tplPath + "/parameters/someProperty");
@@ -128,7 +128,7 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         assertConfig("My Test Template", tplPath + "/title");
 
-        // 5.0 renames templatePath to templateScript
+        // 4.5 renames templatePath to templateScript
         assertConfig("/some/path.ftl", tplPath + "/templateScript");
         // non-standard props are supposed to be moved to the "parameters" subnode
         assertConfig("someValue", tplPath + "/parameters/someProperty");

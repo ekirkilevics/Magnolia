@@ -58,7 +58,7 @@ public interface RenderableDefinition extends info.magnolia.rendering.template.R
 
     /**
      * The modules execute() method can return a string which is passed to this method to determine the template to use.
-     * @deprecated  since 5.0 - without replacement
+     * @deprecated  since 4.5 - without replacement
      */
     public String determineTemplatePath(String actionResult, RenderingModel<?> model);
 
