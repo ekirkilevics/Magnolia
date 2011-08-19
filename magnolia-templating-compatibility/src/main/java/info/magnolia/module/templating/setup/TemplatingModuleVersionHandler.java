@@ -107,7 +107,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                         "backwardCompatibility"))
         );
 
-        register(DeltaBuilder.update("5.0", "")
+        register(DeltaBuilder.update("4.5", "")
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "templatePath is now templateScript.", "templates", "templatePath", "templateScript"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "templatePath is now templateScript.", "paragraphs", "templatePath", "templateScript"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "type is now renderType.", "templates", "type", "renderType"))
