@@ -198,7 +198,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("4.4.5", "Update cache configuration")
             .addTask(new NodeExistsDelegateTask("Bypass executor", "Check for existence of bypass executor and add setExpirationHeader if found.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", new ArrayDelegateTask("", "",
                     new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "setExpirationHeader", ItemType.CONTENTNODE.getSystemName()),
-            		new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "bypass", ItemType.CONTENTNODE.getSystemName()),
+                    new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "bypass", ItemType.CONTENTNODE.getSystemName()),
                     new NewPropertyTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass/setExpirationHeader", "class", "info.magnolia.module.cache.executor.SetExpirationHeaders"),
                     new MoveAndRenamePropertyTask("", "/modules/cache/config/configurations/default/executors/bypass", "class", "/modules/cache/config/configurations/default/executors/bypass/bypass", "class"))))
         );
