@@ -5,6 +5,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <link media="screen" href="${contextPath}/.resources/samples/css/samples.css" type="text/css" rel="stylesheet">
+        <!-- TODO remove hardcoded injection of GWT code. This should be done dynamically-->
+        <script type="text/javascript" src="${contextPath}/.resources/editor/info.magnolia.templating.edit.PageEditor/info.magnolia.templating.edit.PageEditor.nocache.js"></script>
         <title>${content.title!content.@name}</title>
     </head>
 
