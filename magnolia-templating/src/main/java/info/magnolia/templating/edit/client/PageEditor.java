@@ -42,6 +42,7 @@ import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
+ * TODO: maybe all this page editor stuff has to move to magnolia-gui?
  * Client side implementation of the page editor. Outputs injects ui widgets inside document element (typically the <code>&lt;html&gt;</code> element).
  *
  * @version $Id$
