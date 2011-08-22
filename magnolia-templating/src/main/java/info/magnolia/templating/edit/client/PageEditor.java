@@ -129,6 +129,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     protected native void mgnlOpenDialog(String dialog, String workspace, String path, String collectionName, String nodeName) /*-{
         $wnd.mgnlOpenDialog(dialog, workspace, path, collectionName, nodeName);
     }-*/;
+
     public  void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName){
         if (collectionName == null) {
             collectionName = "";
