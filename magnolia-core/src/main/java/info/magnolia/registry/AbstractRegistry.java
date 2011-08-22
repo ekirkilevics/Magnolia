@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,7 +50,6 @@ import java.util.Set;
  *
  * @version $Id$
  */
-
 public abstract class AbstractRegistry<D, P extends Provider<D>> {
 
     private final Map<String, P> providers = new HashMap<String, P>();
@@ -90,11 +90,11 @@ public abstract class AbstractRegistry<D, P extends Provider<D>> {
         P provider;
         synchronized (providers) {
             provider = providers.get(id);
-        }
-        if (provider == null) {
-            ArrayList<String> types = new ArrayList<String>(providers.keySet());
-            Collections.sort(types);
-            throw new RegistrationException("Can't find a registration for type [" + id + "]. Registered types are " + types);
+            if (provider == null) {
+                List<String> types = new ArrayList<String>(providers.keySet());
+                Collections.sort(types);
+                throw new RegistrationException("Can't find a registration for type [" + id + "]. Registered types are " + types);
+            }
         }
         return provider.getDefinition();
     }
