@@ -36,7 +36,6 @@ package info.magnolia.templating.edit.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
@@ -78,46 +77,20 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     public static final String PARAM_SOURCE_PATH = "sourcePath";
     public static final String PARAM_DESTINATION_PATH = "destinationPath";
 
-    private IFrameElement iFrameElement;
-    private String id;
     private AbstractBarWidget selectedBar;
 
     public PageEditor() {
-       /* iFrameElement = Document.get().createIFrameElement();
-        iFrameElement.setAttribute("width", "100%");
-        iFrameElement.setAttribute("height", "100%");
-        iFrameElement.setFrameBorder(0);
-        getElement().appendChild(iFrameElement);
+    }
 
-        hookEvents(iFrameElement, this);
-        */
+    @Override
+    public void onModuleLoad() {
+        Element documentElement = Document.get().getDocumentElement();
+        detectCmsTag(documentElement, null);
     }
 
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-    }
-
-    /**
-     * Inspired by {@link com.google.gwt.user.client.ui.impl.FormPanelImpl}.
-     * <p/>
-     * TODO probably doesn't work in IE6 as FormPanelImpl has a special impl for it.
-     */
-    public native void hookEvents(Element iframe, PageEditor listener) /*-{
-        if (iframe) {
-            iframe.onload = $entry(function() {
-                listener.@info.magnolia.templating.edit.client.PageEditor::onFrameLoad()();
-            });
-        }
-    }-*/;
-
-    public void onFrameLoad() {
-        // TODO when the user navigates in the iframe we need to respond accordingly
-        Element documentElement = iFrameElement.getContentDocument().getDocumentElement();
-        detectCmsTag(documentElement, null);
-        // TODO ideally we would do updateSelection() to select the page here but we don't have access to website+path
-        // TODO so this is now done in PageEditorActivity
-        // TODO this could maybe be solved with a special page marker, but that requires a new directive
     }
 
     private void detectCmsTag(Element element, AreaBarWidget parentBar) {
@@ -206,11 +179,5 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         if (value != null) {
             System.out.println(variableName + "=" + value);
         }
-    }
-
-    @Override
-    public void onModuleLoad() {
-        Element documentElement = Document.get().getDocumentElement();
-        detectCmsTag(documentElement, null);
     }
 }
