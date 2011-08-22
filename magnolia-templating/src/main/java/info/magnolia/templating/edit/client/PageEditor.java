@@ -79,6 +79,8 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     private AbstractBarWidget selectedBar;
 
+    //private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
+
     public PageEditor() {
     }
 
@@ -121,14 +123,21 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         }
     }
 
-    public void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName) {
-        updateVariable(ACTION_OPEN_DIALOG, "dummy");
-        updateVariable(PARAM_SELECTED_WORKSPACE, workspace);
-        updateVariable(PARAM_SELECTED_PATH, path);
-        updateVariable(PARAM_SELECTED_COLLECTION_NAME, collectionName);
-        updateVariable(PARAM_SELECTED_NODE_NAME, nodeName);
-        updateVariable(PARAM_DIALOG, dialog);
-    }
+    /**
+     * Delegate to mgnlOpenDialog function found in general.js.
+     */
+    protected native void mgnlOpenDialog(String dialog, String workspace, String path, String collectionName, String nodeName) /*-{
+        $wnd.mgnlOpenDialog(dialog, workspace, path, collectionName, nodeName);
+    }-*/;
+    public  void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName){
+        if (collectionName == null) {
+            collectionName = "";
+        }
+        if (nodeName == null) {
+            nodeName = "";
+        }
+        mgnlOpenDialog(dialog, workspace, path, collectionName, nodeName);
+    };
 
     public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {
         if (this.selectedBar != null && (this.selectedBar != selectedBar)) {

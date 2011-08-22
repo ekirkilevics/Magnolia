@@ -68,7 +68,7 @@
           </dependency>
         </dependencies>
       </plugin>
-      <!-- FIXME temporarily skip cover -->
+      <!-- FIXME temporarily skip clover -->
       <plugin>
         <groupId>com.atlassian.maven.plugins</groupId>
         <artifactId>maven-clover2-plugin</artifactId>
