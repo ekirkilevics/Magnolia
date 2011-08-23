@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>magnolia-project</artifactId>
+    <groupId>info.magnolia</groupId>
+    <version>4.5-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <groupId>info.magnolia</groupId>
+  <artifactId>magnolia-templating-editor</artifactId>
+  <name>magnolia-templating-editor</name>
+
+  <build>
+    <plugins>
+      <!-- Compile custom GWT components or widget dependencies with the GWT
+        compiler -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>2.3.0-1</version>
+        <configuration>
+          <compileSourcesArtifacts>
+            <compileSourcesArtifact>javax.validation:validation-api</compileSourcesArtifact>
+          </compileSourcesArtifacts>
+          <!-- put the created resources on the classpath -->
+          <webappDirectory>target/classes/mgnl-resources/editor</webappDirectory>
+          <!-- the target/classes directory is cleaned regularly. You can use
+            mvn gwt:compile -Dgwt.inplace to store the output in the resource folder -->
+          <warSourceDirectory>src/main/resources/mgnl-resources/editor</warSourceDirectory>
+          <!-- this is not a webapp -->
+          <noServer>true</noServer>
+          <module>info.magnolia.templating.editor.PageEditor</module>
+          <!-- <draftCompile>true</draftCompile> -->
+          <!-- <style>PRETTY</style> -->
+          <!-- <runTarget>.magnolia/admin-central</runTarget> -->
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>resources</goal>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <!-- Tell what GWT version to use -->
+        <dependencies>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>2.3.0</version>
+          </dependency>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>2.3.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>com.atlassian.maven.plugins</groupId>
+        <artifactId>maven-clover2-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+    <testResources>
+      <testResource>
+        <!-- we keep .jsp in test/java for convenience -->
+        <directory>src/test/java</directory>
+      </testResource>
+      <testResource>
+        <!-- redefine default resources location -->
+        <directory>src/test/resources</directory>
+      </testResource>
+    </testResources>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-templating</artifactId>
+      <version>4.5-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- needed to run in dev mode -->
+    <!-- TODO should probably go into a profile -->
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- validation-api dep is needed by GWT 2.3.0 during gwt compilation -->
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jsp-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit-dep</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-core</artifactId>
+      <type>test-jar</type>
+      <version>4.5-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>
