@@ -1,0 +1,9 @@
+<info>
+  <element name="components">
+  	<!-- mapped here to avoid nesting them in grouping tags -->
+    <element name="component" property="components"/>
+    <element name="composer" property="composers"/>
+    <element name="type-mapping" property="typeMappings"/>
+    <addDefaults/>
+  </element>
+</info>

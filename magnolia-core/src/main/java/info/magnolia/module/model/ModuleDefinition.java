@@ -57,6 +57,7 @@ public class ModuleDefinition {
     private Collection<ServletDefinition> servlets = new ArrayList<ServletDefinition>();
     private Collection<RepositoryDefinition> repositories = new ArrayList<RepositoryDefinition>();
     private Collection<PropertyDefinition> properties = new ArrayList<PropertyDefinition>();
+    private Collection<ComponentsDefinition> components = new ArrayList<ComponentsDefinition>();
 
     public ModuleDefinition() {
     }
@@ -156,6 +157,18 @@ public class ModuleDefinition {
 
     public void addProperty(PropertyDefinition property) {
         properties.add(property);
+    }
+
+    public Collection<ComponentsDefinition> getComponents() {
+        return components;
+    }
+
+    public void setComponents(Collection<ComponentsDefinition> components) {
+        this.components = components;
+    }
+
+    public boolean addComponents(ComponentsDefinition components) {
+        return this.components.add(components);
     }
 
     /**

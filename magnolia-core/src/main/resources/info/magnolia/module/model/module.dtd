@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- main definition -->
-<!ELEMENT module (name, (displayName|display-name)?,  description?, class?, versionHandler?, version, properties?, dependencies?, servlets?, repositories?)>
+<!ELEMENT module (name, (displayName|display-name)?,  description?, class?, versionHandler?, version, properties?, components?, dependencies?, servlets?, repositories?)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT displayName (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
@@ -36,3 +36,16 @@
 <!ELEMENT workspaces (workspace+)>
 <!ELEMENT workspace (#PCDATA)>
 <!ELEMENT nodeTypeFile (#PCDATA)>
+
+<!ELEMENT components (id, composer*, component*, type-mapping*)>
+<!ELEMENT id (#PCDATA)>
+
+<!ELEMENT component (key?, implementation?, observed?, workspace?, path?, provider?)>
+<!ELEMENT key (#PCDATA)>
+<!ELEMENT implementation (#PCDATA)>
+<!ELEMENT observed (#PCDATA)>
+<!ELEMENT path (#PCDATA)>
+<!ELEMENT provider (#PCDATA)>
+
+<!ELEMENT composer (class)>
+<!ELEMENT type-mapping (key, implementation)>

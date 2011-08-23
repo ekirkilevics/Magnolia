@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>dummy</name>
+  <displayName>dummy module</displayName>
+  <description>a dummy module descriptor for tests</description>
+  <version>7.8.9</version>
+
+  <components>
+    <id>platform</id>
+    <composer>
+      <class>com.acme.FirstTestComposer</class>
+    </composer>
+    <composer>
+      <class>com.acme.SecondTestComposer</class>
+    </composer>
+    <component>
+      <key>com.acme.ComponentKey</key>
+      <implementation>impl</implementation>
+      <observed>true</observed>
+      <workspace>config</workspace>
+      <path>/modules/acme/foo</path>
+      <provider>provider</provider>
+    </component>
+
+    <type-mapping>
+      <key>t-m-key</key>
+      <implementation>t-m-impl</implementation>
+    </type-mapping>
+
+  </components>
+
+</module>

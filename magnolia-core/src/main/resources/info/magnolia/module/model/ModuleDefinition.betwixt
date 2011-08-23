@@ -4,6 +4,8 @@
     <element name="displayName" property="displayName"/>
     <!-- this is deprecated : -->
     <element name="display-name" property="displayName"/>
+    <!-- mapped here to override the default pluralization -->
+    <element name="components" property="components"/>
     <addDefaults/>
   </element>
 </info>

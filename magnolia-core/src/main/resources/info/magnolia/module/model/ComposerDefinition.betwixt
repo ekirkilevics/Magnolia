@@ -1,0 +1,6 @@
+<info>
+  <element name="composer">
+    <element name="class" property="className"/>
+    <addDefaults/>
+  </element>
+</info>

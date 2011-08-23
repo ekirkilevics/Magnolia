@@ -35,10 +35,14 @@ package info.magnolia.module.model.reader;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
+import info.magnolia.module.model.ComponentDefinition;
+import info.magnolia.module.model.ComponentsDefinition;
+import info.magnolia.module.model.ComposerDefinition;
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.RepositoryDefinition;
 import info.magnolia.module.model.ServletDefinition;
+import info.magnolia.module.model.TypeMappingDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionRange;
 import info.magnolia.module.model.VersionTest;
@@ -233,7 +237,7 @@ public class BetwixtModuleDefinitionReaderTest {
             new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithVersionElementMisplaced));
             fail("should have failed");
         } catch (ModuleManagementException e) {
-            assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class?,versionHandler?,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
+            assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class?,versionHandler?,version,properties?,components?,dependencies?,servlets?,repositories?)\".", e.getMessage());
         }
     }
 
@@ -248,7 +252,7 @@ public class BetwixtModuleDefinitionReaderTest {
             new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithWrongDtd));
             fail("should have failed");
         } catch (ModuleManagementException e) {
-            assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class?,versionHandler?,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
+            assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class?,versionHandler?,version,properties?,components?,dependencies?,servlets?,repositories?)\".", e.getMessage());
         }
     }
 
@@ -310,6 +314,37 @@ public class BetwixtModuleDefinitionReaderTest {
         // make sure these resources are available - ide might not have compiled them
         assertNotNull(BetwixtModuleDefinitionReaderTest.class.getResourceAsStream("/info/magnolia/module/model/ModuleDefinition.betwixt"));
         assertNotNull(BetwixtModuleDefinitionReaderTest.class.getResourceAsStream("/info/magnolia/module/model/ServletDefinition.betwixt"));
+    }
+
+    @Test
+    public void testReadModuleDescriptorWithComponents() throws ModuleManagementException {
+        final BetwixtModuleDefinitionReader reader = new BetwixtModuleDefinitionReader();
+        final ModuleDefinition m = reader.readFromResource("/info/magnolia/module/model/reader/dummy-module-with-components.xml");
+        assertNotNull(m);
+        assertEquals(1, m.getComponents().size());
+        ComponentsDefinition components = m.getComponents().iterator().next();
+        assertEquals("platform", components.getId());
+
+        assertEquals(2, components.getComposers().size());
+        Iterator<ComposerDefinition> iterator = components.getComposers().iterator();
+        ComposerDefinition composer = iterator.next();
+        assertEquals("com.acme.FirstTestComposer", composer.getClassName());
+        composer = iterator.next();
+        assertEquals("com.acme.SecondTestComposer", composer.getClassName());
+
+        assertEquals(1, components.getComponents().size());
+        ComponentDefinition componentDefinition = components.getComponents().iterator().next();
+        assertEquals("com.acme.ComponentKey", componentDefinition.getKey());
+        assertEquals("impl", componentDefinition.getImplementation());
+        assertEquals("provider", componentDefinition.getProvider());
+        assertEquals("true", componentDefinition.getObserved());
+        assertEquals("config", componentDefinition.getWorkspace());
+        assertEquals("/modules/acme/foo", componentDefinition.getPath());
+
+        assertEquals(1, components.getTypeMappings().size());
+        TypeMappingDefinition typeMapping = components.getTypeMappings().iterator().next();
+        assertEquals("t-m-key", typeMapping.getKey());
+        assertEquals("t-m-impl", typeMapping.getImplementation());
     }
 
     private Object fromList(Collection coll, int index) {
