@@ -26,56 +26,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
       </plugin>
-      <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>gwt-maven-plugin</artifactId>
-        <version>2.3.0-1</version>
-        <configuration>
-          <compileSourcesArtifacts>
-            <compileSourcesArtifact>javax.validation:validation-api</compileSourcesArtifact>
-          </compileSourcesArtifacts>
-          <!-- put the created resources on the classpath -->
-          <webappDirectory>target/classes/mgnl-resources/editor</webappDirectory>
-          <!-- the target/classes directory is cleaned regularly. You can use mvn gwt:compile -Dgwt.inplace to store the output in the resource folder -->
-          <warSourceDirectory>src/main/resources/mgnl-resources/editor</warSourceDirectory>
-          <!-- this is not a webapp -->
-          <noServer>true</noServer>
-          <!-- <module>info.magnolia.ui.vaadin.widgetset.MagnoliaWidgetset</module>-->
-          <!-- <draftCompile>true</draftCompile> -->
-          <!-- <style>PRETTY</style> -->
-          <!-- <runTarget>.magnolia/admin-central</runTarget>-->
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>resources</goal>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-        </executions>
-        <!-- Tell what GWT version to use -->
-        <dependencies>
-          <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>2.3.0</version>
-          </dependency>
-          <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-dev</artifactId>
-            <version>2.3.0</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      <!-- FIXME temporarily skip clover -->
-      <plugin>
-        <groupId>com.atlassian.maven.plugins</groupId>
-        <artifactId>maven-clover2-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
     </plugins>
     <testResources>
       <testResource>
@@ -113,24 +63,6 @@
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
       <scope>provided</scope>
-    </dependency>
-
-     <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-user</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <!-- needed to run in dev mode -->
-    <!-- TODO should probably go into a profile -->
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-dev</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!-- validation-api dep is needed by GWT 2.3.0 during gwt compilation -->
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
