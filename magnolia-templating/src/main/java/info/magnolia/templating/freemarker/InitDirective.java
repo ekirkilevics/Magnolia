@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,23 +33,27 @@
  */
 package info.magnolia.templating.freemarker;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.Map;
 
-import freemarker.template.TemplateDirectiveModel;
+import freemarker.core.Environment;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
+import info.magnolia.templating.elements.InitElement;
 
 /**
- * A map with freemarker directives specific to Magnolia.
+ * A freemarker directive for adding Magnolia specific javascripts and css.
  *
  * @version $Id$
  */
-public class Directives extends HashMap<String, TemplateDirectiveModel> {
+public class InitDirective extends AbstractDirective<InitElement> {
 
-    public Directives() {
-        super();
-        put("edit", new EditDirective());
-        put("context", new ContextDirective());
-        put("render", new RenderDirective());
-        put("area", new AreaDirective());
-        put("init", new InitDirective());
+    @Override
+    protected void prepareTemplatingElement(InitElement templatingElement, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+        checkBody(body, false);
+
+        initContentElement(params, templatingElement);
+
     }
 }

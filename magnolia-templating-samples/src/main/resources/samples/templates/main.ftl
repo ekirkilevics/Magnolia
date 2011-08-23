@@ -7,14 +7,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <link media="screen" href="${contextPath}/.resources/samples/css/samples.css" type="text/css" rel="stylesheet">
-        <!-- TODO remove hardcoded injection of GWT code. This should be done dynamically-->
-        <script type="text/javascript" src="${contextPath}/.resources/editor/info.magnolia.templating.editor.PageEditor/info.magnolia.templating.editor.PageEditor.nocache.js"></script>
-        <!--TODO For testing purposes only. Inject here real general.js and any other js lib needed-->
-        <script type="text/javascript">
-           function mgnlOpenDialog(dialog, workspace, path, collectionName, nodeName){
-            alert("dialog is "+ dialog + ", workspace is "+ workspace + ", path is " + path);
-            }
-        </script>
+        [@cms.init /]
         <title>${content.title!content.@name}</title>
     </head>
 
