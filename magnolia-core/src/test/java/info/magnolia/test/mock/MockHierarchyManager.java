@@ -38,6 +38,7 @@ import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.util.ContentUtil;
 
 import java.util.HashMap;
@@ -79,6 +80,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
             this.name = name;
         }
         setJcrSession(new MockJCRSession(this));
+        this.setAccessManager(new MockAccessManager());
         this.root = new MockContent("jcr:root");
         root.setUUID("jcr:root");
         root.setHierarchyManager(this);
