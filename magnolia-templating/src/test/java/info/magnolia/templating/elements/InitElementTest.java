@@ -53,7 +53,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests for InitMarker.
+ * Tests for InitElement.
  *
  * @version $Id$
  */

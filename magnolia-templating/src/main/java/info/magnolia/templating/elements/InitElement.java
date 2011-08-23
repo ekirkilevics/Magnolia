@@ -63,7 +63,7 @@ public class InitElement extends AbstractContentTemplatingElement {
 
         Sources src = new Sources(MgnlContext.getContextPath());
         MarkupHelper helper = new MarkupHelper(out);
-
+        helper.append("<!-- begin js and css added by @cms.init -->\n");
         helper.append(src.getHtmlCss());
         helper.append(src.getHtmlJs());
         helper.append("<script type=\"text/javascript\" src=\"" + PAGE_EDITOR_JS_SOURCE + "\"></script>");
@@ -74,5 +74,7 @@ public class InitElement extends AbstractContentTemplatingElement {
         if (!isAdmin()) {
             return;
         }
+        MarkupHelper helper = new MarkupHelper(out);
+        helper.append("\n<!-- end js and css added by @cms.init -->\n");
     }
 }
