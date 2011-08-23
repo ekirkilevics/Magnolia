@@ -126,8 +126,10 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     /**
      * Delegate to mgnlOpenDialog function found in general.js.
      */
-    protected native void mgnlOpenDialog(String dialog, String workspace, String path, String collectionName, String nodeName) /*-{
-        $wnd.mgnlOpenDialog(dialog, workspace, path, collectionName, nodeName);
+    protected native void mgnlOpenDialog(String path, String collectionName, String nodeName, String paragraph, String workspace, String dialogPage, String width, String height, String locale) /*-{
+
+        $wnd.mgnlOpenDialog(path, collectionName, nodeName, paragraph, workspace, dialogPage, width, height, locale);
+
     }-*/;
 
     public  void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName){
@@ -137,7 +139,9 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         if (nodeName == null) {
             nodeName = "";
         }
-        mgnlOpenDialog(dialog, workspace, path, collectionName, nodeName);
+        int i = dialog.indexOf(":");
+        String dialogName = dialog.substring(i+1);
+        mgnlOpenDialog(path, collectionName, nodeName, dialogName, workspace, "", "", "", "");
     };
 
     public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {
