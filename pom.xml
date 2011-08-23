@@ -59,7 +59,7 @@ for Java Content Repositories (JCR).
     </developer>
     <developer>
       <id>gjoseph</id>
-      <name>Grégory Joseph</name>
+      <name>Gr�gory Joseph</name>
       <email>gregory.joseph(at)magnolia-cms.com</email>
       <organization>Magnolia International Ltd.</organization>
       <timezone>+1</timezone>
@@ -919,6 +919,7 @@ for Java Content Repositories (JCR).
     <!-- Templating -->
     <module>magnolia-rendering</module>
     <module>magnolia-templating</module>
+    <module>magnolia-templating-editor</module>
     <module>magnolia-templating-samples</module>
 
     <module>magnolia-templating-compatibility</module>
@@ -932,6 +933,6 @@ for Java Content Repositories (JCR).
     <module>magnolia-module-store-client</module>
     <module>magnolia-module-workflow</module>
     <module>magnolia-empty-webapp</module>
-
+    <module>magnolia-templating-editor</module>
   </modules>
 </project>
