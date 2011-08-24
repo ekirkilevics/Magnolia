@@ -35,25 +35,15 @@ package info.magnolia.objectfactory.guice;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import com.google.inject.Provider;
 import com.google.inject.Stage;
-import com.google.inject.servlet.RequestScoped;
-import com.google.inject.servlet.SessionScoped;
 import com.google.inject.util.Modules;
 import com.mycila.inject.jsr250.Jsr250;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.objectfactory.ComponentComposer;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -98,7 +88,23 @@ public class GuiceComponentProviderBuilder {
 
     public GuiceComponentProvider build() {
 
-        final GuiceComponentProvider componentProvider = new GuiceComponentProvider(configuration, parent);
+        if (configuration == null) {
+            configuration = new ComponentProviderConfiguration();
+        }
+
+        // Add implicit composers
+        configuration.addComposer(new GuiceContextAndScopesComposer());
+        configuration.addComposer(new GuicePropertyComposer());
+
+        // Allow composers to customize the configuration before we use it
+        for (ComponentComposer composer : configuration.getComposers()) {
+            composer.doWithConfiguration(parent, configuration);
+        }
+
+//        configuration.print();
+
+        // Create the ComponentProvider instance and expose it globally if required
+        final GuiceComponentProvider componentProvider = new GuiceComponentProvider(configuration.getTypeMapping(), parent);
         if (exposeGlobally) {
             Components.setProvider(componentProvider);
         }
@@ -106,82 +112,47 @@ public class GuiceComponentProviderBuilder {
         Module module = new AbstractModule() {
             @Override
             protected void configure() {
+
+                // Bind the ComponentProvider instance first so its the first thing to get member injection
+                bind(ComponentProvider.class).toInstance(componentProvider);
+
                 // requireExplicitBindings is switched off because Guice internally creates jit bindings and those are called for @PreDestroy, which fails if this is turned on
 //                binder().requireExplicitBindings();
-                bind(ComponentProvider.class).toInstance(componentProvider);
-                install(new GuiceComponentProviderModule(configuration));
-                for (Module extraModule : extraModules) {
-                    binder().install(extraModule);
-                }
 
-                // We don't need to register these providers at every level, would be enough to do it in the top parent
-                bind(Context.class).toProvider(new Provider<Context>() {
-                    @Override
-                    public Context get() {
-                        return MgnlContext.getInstance();
-                    }
-                });
-                bind(WebContext.class).toProvider(new Provider<WebContext>() {
-                    @Override
-                    public WebContext get() {
-                        return MgnlContext.getWebContext();
-                    }
-                });
-                bind(AggregationState.class).toProvider(new Provider<AggregationState>() {
-                    @Override
-                    public AggregationState get() {
-                        return MgnlContext.getAggregationState();
-                    }
-                });
-                bind(HttpSession.class).toProvider(new Provider<HttpSession>() {
-                    @Override
-                    public HttpSession get() {
-                        return MgnlContext.getWebContext().getRequest().getSession();
-                    }
-                });
-                bind(HttpServletRequest.class).toProvider(new Provider<HttpServletRequest>() {
-                    @Override
-                    public HttpServletRequest get() {
-                        return MgnlContext.getWebContext().getRequest();
-                    }
-                });
-                bind(HttpServletResponse.class).toProvider(new Provider<HttpServletResponse>() {
-                    @Override
-                    public HttpServletResponse get() {
-                        return MgnlContext.getWebContext().getResponse();
-                    }
-                });
-                bindScope(RequestScoped.class, MagnoliaServletScopes.REQUEST);
-                bindScope(SessionScoped.class, MagnoliaServletScopes.SESSION);
-
+                // JSR-250 support added by Mycila
                 try {
                     bind(Class.forName("com.mycila.inject.jsr250.Jsr250KeyProvider"));
                     bind(Class.forName("com.mycila.inject.jsr250.Jsr250PostConstructHandler"));
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-                // If we have a parent and it has a MagnoliaConfigurationProperties component expose all its properties
-                if (parent != null) {
-                    MagnoliaConfigurationProperties configurationProperties = parent.getComponent(MagnoliaConfigurationProperties.class);
-                    if (configurationProperties != null) {
-                        install(new GuicePropertyModule(configurationProperties));
-                    }
-                }
                 install(Jsr250.newJsr250Module());
+
+                install(new GuiceComponentConfigurationModule(configuration));
+
+                for (Module extraModule : extraModules) {
+                    binder().install(extraModule);
+                }
             }
         };
 
-        Stage stageToUse;
         if (parent != null) {
-            stageToUse = stage != null ? stage : parent.getInjector().getInstance(Stage.class);
             GuiceParentBindingsModule parentBindingsModule = new GuiceParentBindingsModule(parent.getInjector());
             module = Modules.override(parentBindingsModule).with(module);
-        } else {
-            stageToUse = stage != null ? stage : Stage.PRODUCTION;
         }
 
-        Injector injector = Guice.createInjector(stageToUse, module);
+        Injector injector = Guice.createInjector(resolveStageToUse(), module);
 
         return (GuiceComponentProvider) injector.getInstance(ComponentProvider.class);
+    }
+
+    private Stage resolveStageToUse() {
+        if (stage != null) {
+            return stage;
+        }
+        if (parent != null) {
+            return parent.getInjector().getInstance(Stage.class);
+        }
+        return Stage.PRODUCTION;
     }
 }

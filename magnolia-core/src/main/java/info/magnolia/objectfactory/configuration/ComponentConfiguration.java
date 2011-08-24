@@ -31,27 +31,36 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
+package info.magnolia.objectfactory.configuration;
 
 /**
- * Util method to work with {@link ComponentFactory}s.
+ * Represents a configuration of a component for a specific type.
+ *
+ * @version $Id$
  */
-public class ComponentFactoryUtil {
+public abstract class ComponentConfiguration implements Cloneable {
 
-    /**
-     * Uses the empty constructor or passes the {@link ComponentProvider} such a constructor exists.
-     */
-    public static <T> ComponentFactory<T> createFactory(Class<? extends ComponentFactory<T>> factoryClass, ComponentProvider componentProvider) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        try {
-            Constructor<? extends ComponentFactory<T>> constructor;
-            constructor = factoryClass.getConstructor(ComponentProvider.class);
-            return constructor.newInstance(componentProvider);
-        } catch (NoSuchMethodException e) {
-            return factoryClass.newInstance();
-        }
+    // TODO should this class be generic?
+
+    private Class type;
+
+    protected ComponentConfiguration() {
+    }
+
+    protected ComponentConfiguration(Class type) {
+        this.type = type;
+    }
+
+    public Class getType() {
+        return type;
+    }
+
+    public void setType(Class type) {
+        this.type = type;
+    }
+
+    @Override
+    protected ComponentConfiguration clone() throws CloneNotSupportedException {
+        return (ComponentConfiguration) super.clone();
     }
 }

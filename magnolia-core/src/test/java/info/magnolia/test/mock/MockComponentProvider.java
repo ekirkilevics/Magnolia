@@ -33,6 +33,7 @@
  */
 package info.magnolia.test.mock;
 
+import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentConfigurationPath;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.LazyObservedComponentFactory;
@@ -103,5 +104,13 @@ public class MockComponentProvider extends PropertiesComponentProvider {
     @Override
     public void clear() {
         super.clear();
+    }
+
+    protected Class<?> classForName(String value) {
+        try {
+            return Classes.getClassFactory().forName(value);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
     }
 }

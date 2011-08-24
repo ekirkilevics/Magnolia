@@ -33,15 +33,11 @@
  */
 package info.magnolia.objectfactory;
 
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
-import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
-import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
-
-import java.util.Map;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.configuration.ComponentsFromPropertiesComposer;
+
 
 /**
  * This {@link ComponentProvider} is using the configuration provided in a Properties object. Each property key is
@@ -57,8 +53,6 @@ import org.slf4j.LoggerFactory;
  */
 public class PropertiesComponentProvider extends AbstractComponentProvider {
 
-    private final static Logger log = LoggerFactory.getLogger(PropertiesComponentProvider.class);
-
     public PropertiesComponentProvider() {
     }
 
@@ -70,44 +64,15 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
         super(parent);
     }
 
-    public <T> void parseConfiguration(Properties mappings) {
-        final ComponentProviderConfiguration config = createConfigurationFromProperties(mappings);
-        configure(config);
-    }
-
-    public static <T> ComponentProviderConfiguration createConfigurationFromProperties(Properties mappings) {
-        final ComponentProviderConfiguration config = new ComponentProviderConfiguration();
-
-        for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
-            String key = (String) entry.getKey();
-            String value = (String) entry.getValue();
-
-            final Class<T> type = (Class<T>) classForName(key);
-            if (type == null) {
-                log.debug("{} does not seem to resolve to a class. (property value: {})", key, value);
-                continue;
+    public void parseConfiguration(final Properties mappings) {
+        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
+        new ComponentsFromPropertiesComposer() {
+            @Override
+            public void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration) {
+                super.createConfigurationFromProperties(mappings, configuration);
             }
-            if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
-                ComponentConfigurationPath path = new ComponentConfigurationPath(value);
-                config.addConfigured(new ConfiguredComponentConfiguration(type, path.getRepository(), path.getPath(), true));
-            } else {
-                Class<? extends T> valueType = (Class<? extends T>) classForName(value);
-                if (valueType == null) {
-                    log.debug("{} does not seem to resolve a class or a configuration path. (property key: {})", value, key);
-                } else {
-                    config.addImplementation(new ImplementationConfiguration(type, valueType));
-                }
-            }
-        }
-        return config;
-    }
-
-    protected static Class<?> classForName(String value) {
-        try {
-            return Classes.getClassFactory().forName(value);
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
+        }.doWithConfiguration(getParent(), configuration);
+        configure(configuration);
     }
 
     @Override

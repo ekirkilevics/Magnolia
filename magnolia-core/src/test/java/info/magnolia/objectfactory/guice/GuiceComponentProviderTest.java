@@ -138,7 +138,7 @@ public class GuiceComponentProviderTest {
     @Test
     public void testConfigured() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-        configuration.addConfigured(new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, "/foo/bar/singleton"));
+        configuration.addComponent(new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, "/foo/bar/singleton"));
 
         GuiceComponentProvider p = createComponentProviderWithContent2Bean(configuration, true);
         SingletonObject singletonObject = p.getComponent(SingletonObject.class);
@@ -149,7 +149,7 @@ public class GuiceComponentProviderTest {
     @Test
     public void testObserved() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-        configuration.addConfigured(new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, ContentRepository.CONFIG, "/foo/bar/singleton", true));
+        configuration.addComponent(new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, ContentRepository.CONFIG, "/foo/bar/singleton", true));
         GuiceComponentProvider p = createComponentProviderWithContent2Bean(configuration, true);
         SingletonObject singletonObject = p.getComponent(SingletonObject.class);
         assertNotNull(singletonObject);

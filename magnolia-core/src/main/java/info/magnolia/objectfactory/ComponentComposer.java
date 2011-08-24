@@ -33,25 +33,15 @@
  */
 package info.magnolia.objectfactory;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 /**
- * Util method to work with {@link ComponentFactory}s.
+ * Component composers are called to customize the ComponentProviderConfiguration before its used to create a
+ * ComponentProvider.
+ *
+ * @version $Id$
  */
-public class ComponentFactoryUtil {
+public interface ComponentComposer {
 
-    /**
-     * Uses the empty constructor or passes the {@link ComponentProvider} such a constructor exists.
-     */
-    public static <T> ComponentFactory<T> createFactory(Class<? extends ComponentFactory<T>> factoryClass, ComponentProvider componentProvider) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        try {
-            Constructor<? extends ComponentFactory<T>> constructor;
-            constructor = factoryClass.getConstructor(ComponentProvider.class);
-            return constructor.newInstance(componentProvider);
-        } catch (NoSuchMethodException e) {
-            return factoryClass.newInstance();
-        }
-    }
+    void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration);
 }

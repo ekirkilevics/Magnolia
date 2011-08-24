@@ -33,7 +33,6 @@
  */
 package info.magnolia.objectfactory.guice;
 
-import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 
@@ -44,7 +43,6 @@ import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.HierarchicalComponentProvider;
 import info.magnolia.objectfactory.MutableComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
-import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
 
 
 /**
@@ -57,14 +55,12 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
     @Inject
     private Jsr250Injector injector;
     private ObjectManufacturer manufacturer;
-    private final Map<Class<?>, Class<?>> implementations = new HashMap<Class<?>, Class<?>>();
+    private final Map<Class<?>, Class<?>> implementations;
     private GuiceComponentProvider parentComponentProvider;
 
-    GuiceComponentProvider(ComponentProviderConfiguration configuration, GuiceComponentProvider parentComponentProvider) {
+    public GuiceComponentProvider(Map<Class<?>, Class<?>> implementations, GuiceComponentProvider parentComponentProvider) {
         this.parentComponentProvider = parentComponentProvider;
-        for (ImplementationConfiguration<?> implementationConfiguration : configuration.getImplementations()) {
-            implementations.put(implementationConfiguration.getType(), implementationConfiguration.getImplementation());
-        }
+        this.implementations = implementations;
     }
 
     @Override

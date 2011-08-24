@@ -42,9 +42,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
  * @param <T> the type
  * @version $Id$
  */
-public class ConfiguredComponentConfiguration<T> implements Cloneable {
-
-    private Class<T> type;
+public class ConfiguredComponentConfiguration<T> extends ComponentConfiguration {
 
     private String workspace = ContentRepository.CONFIG;
 
@@ -57,23 +55,15 @@ public class ConfiguredComponentConfiguration<T> implements Cloneable {
     }
 
     public ConfiguredComponentConfiguration(Class<T> type, String workspace, String path, boolean observed) {
-        this.type = type;
+        super(type);
         this.workspace = workspace;
         this.path = path;
         this.observed = observed;
     }
 
     public ConfiguredComponentConfiguration(Class<T> type, String path) {
-        this.type = type;
+        super(type);
         this.path = path;
-    }
-
-    public Class<T> getType() {
-        return type;
-    }
-
-    public void setType(Class<T> type) {
-        this.type = type;
     }
 
     public String getWorkspace() {
@@ -98,20 +88,5 @@ public class ConfiguredComponentConfiguration<T> implements Cloneable {
 
     public void setObserved(boolean observed) {
         this.observed = observed;
-    }
-
-    @Override
-    public ConfiguredComponentConfiguration<T> clone() {
-        try {
-            ConfiguredComponentConfiguration<T> clone = (ConfiguredComponentConfiguration<T>) super.clone();
-            clone.type = type;
-            clone.workspace = workspace;
-            clone.path = path;
-            clone.observed = observed;
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            // should never happen
-            throw new RuntimeException(e);
-        }
     }
 }

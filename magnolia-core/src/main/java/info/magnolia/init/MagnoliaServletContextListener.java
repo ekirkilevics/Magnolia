@@ -71,6 +71,7 @@ import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.configuration.ComponentConfigurationBuilder;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.guice.GuiceComponentProvider;
 import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
@@ -224,7 +225,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             SystemProperty.setMagnoliaConfigurationProperties(configurationProperties);
 
             builder = new GuiceComponentProviderBuilder();
-            builder.withConfiguration(getSystemConfiguration());
+            builder.withConfiguration(new ComponentConfigurationBuilder().getMergedComponents(platform.getComponent(ModuleRegistry.class), "system"));
             builder.withParent(platform);
             builder.exposeGlobally();
             system = builder.build();

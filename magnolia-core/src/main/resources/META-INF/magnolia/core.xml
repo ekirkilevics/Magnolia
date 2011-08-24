@@ -7,6 +7,69 @@
   <versionHandler>info.magnolia.setup.CoreModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
 
+  <components>
+    <id>system</id>
+    <component>
+      <type>info.magnolia.logging.Log4jConfigurer</type>
+      <implementation>info.magnolia.logging.Log4jConfigurer</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.content2bean.Content2BeanProcessor</type>
+      <implementation>info.magnolia.content2bean.impl.Content2BeanProcessorImpl</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.content2bean.Content2BeanTransformer</type>
+      <implementation>info.magnolia.content2bean.impl.Content2BeanTransformerImpl</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.content2bean.TransformationState</type>
+      <implementation>info.magnolia.content2bean.impl.TransformationStateImpl</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.content2bean.TypeMapping</type>
+      <implementation>info.magnolia.content2bean.impl.TypeMappingImpl</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.cms.i18n.MessagesManager</type>
+      <implementation>info.magnolia.cms.i18n.DefaultMessagesManager</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.cms.license.LicenseFileExtractor</type>
+      <implementation>info.magnolia.cms.license.LicenseFileExtractor</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.cms.beans.config.VersionConfig</type>
+      <implementation>info.magnolia.cms.beans.config.VersionConfig</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.context.SystemContext</type>
+      <implementation>info.magnolia.context.JCRSessionPerThreadSystemContext</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.cms.util.WorkspaceAccessUtil</type>
+      <implementation>info.magnolia.cms.util.WorkspaceAccessUtil</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.cms.beans.config.ConfigLoader</type>
+      <implementation>info.magnolia.cms.beans.config.ConfigLoader</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.cms.util.UnicodeNormalizer$Normalizer</type>
+      <implementation>info.magnolia.cms.util.UnicodeNormalizer$AutoDetectNormalizer</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.cms.filters.FilterManager</type>
+      <implementation>info.magnolia.cms.filters.FilterManagerImpl</implementation>
+    </component>
+  </components>
+
+  <components>
+    <id>main</id>
+    <composer>
+      <class>info.magnolia.objectfactory.configuration.ComponentsFromPropertiesComposer</class>
+    </composer>
+  </components>
+
   <servlets>
     <servlet>
       <name>ClasspathSpoolServlet</name>

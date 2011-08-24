@@ -39,23 +39,13 @@ package info.magnolia.objectfactory.configuration;
  * @param <T> the type
  * @version $Id$
  */
-public class InstanceConfiguration<T> implements Cloneable {
-
-    private Class<T> type;
+public class InstanceConfiguration<T> extends ComponentConfiguration {
 
     private T instance;
 
     public InstanceConfiguration(Class<T> type, T instance) {
-        this.type = type;
+        super(type);
         this.instance = instance;
-    }
-
-    public Class<T> getType() {
-        return type;
-    }
-
-    public void setType(Class<T> type) {
-        this.type = type;
     }
 
     public T getInstance() {
@@ -64,19 +54,6 @@ public class InstanceConfiguration<T> implements Cloneable {
 
     public void setInstance(T instance) {
         this.instance = instance;
-    }
-
-    @Override
-    public InstanceConfiguration<T> clone() {
-        try {
-            InstanceConfiguration<T> clone = (InstanceConfiguration<T>) super.clone();
-            clone.type = type;
-            clone.instance = instance;
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            // should never happen
-            throw new RuntimeException(e);
-        }
     }
 
     public static <Y> InstanceConfiguration<Y> valueOf(Class<Y> clazz, Y instance) {

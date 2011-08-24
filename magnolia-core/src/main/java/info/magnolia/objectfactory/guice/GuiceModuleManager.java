@@ -35,7 +35,6 @@ package info.magnolia.objectfactory.guice;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
@@ -46,21 +45,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.ProvisionException;
-import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.filters.FilterManager;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.cms.util.ObservationUtil;
-import info.magnolia.cms.util.UnicodeNormalizer;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
-import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.module.InstallContextImpl;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.ModuleLifecycleContextImpl;
@@ -72,8 +63,7 @@ import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentConfigurationPath;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.PropertiesComponentProvider;
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.configuration.ComponentConfigurationBuilder;
 
 
 /**
@@ -86,14 +76,12 @@ public class GuiceModuleManager extends ModuleManagerImpl {
 
     private GuiceComponentProvider main;
     private ModuleRegistry moduleRegistry;
-    private MagnoliaConfigurationProperties configurationProperties;
     private Map<String, ModuleInstanceProvider<?>> moduleProviders = new HashMap<String, ModuleInstanceProvider<?>>();
 
     @Inject
-    public GuiceModuleManager(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry moduleRegistry, DependencyChecker dependencyChecker, MagnoliaConfigurationProperties configurationProperties) {
+    public GuiceModuleManager(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry moduleRegistry, DependencyChecker dependencyChecker) {
         super(installContext, moduleDefinitionReader, moduleRegistry, dependencyChecker);
         this.moduleRegistry = moduleRegistry;
-        this.configurationProperties = configurationProperties;
     }
 
     @Override
@@ -107,25 +95,8 @@ public class GuiceModuleManager extends ModuleManagerImpl {
             return;
         }
 
-        Properties properties = new Properties();
-        for (String key : configurationProperties.getKeys()) {
-            properties.put(key, configurationProperties.getProperty(key));
-        }
-
-        // FIXME These are defined in mgnl-beans.properties and if allowed would override those hard-coded in GuiceServletContextListener
-        properties.remove(LicenseFileExtractor.class.getName());
-        properties.remove(VersionConfig.class.getName());
-        properties.remove(MessagesManager.class.getName());
-        properties.remove(SystemContext.class.getName());
-        properties.remove(WorkspaceAccessUtil.class.getName());
-        properties.remove(ConfigLoader.class.getName());
-        properties.remove(UnicodeNormalizer.Normalizer.class.getName());
-        properties.remove(FilterManager.class.getName());
-
-        ComponentProviderConfiguration configuration = PropertiesComponentProvider.createConfigurationFromProperties(properties);
-
         GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
-        builder.withConfiguration(configuration);
+        builder.withConfiguration(new ComponentConfigurationBuilder().getMergedComponents(moduleRegistry, "main"));
         builder.withParent((GuiceComponentProvider) Components.getComponentProvider());
         builder.exposeGlobally();
         builder.addModule(new ModuleClassesModule());

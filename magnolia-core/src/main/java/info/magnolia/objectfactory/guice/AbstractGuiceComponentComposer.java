@@ -31,27 +31,30 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory;
+package info.magnolia.objectfactory.guice;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
+import com.google.inject.AbstractModule;
+import info.magnolia.objectfactory.ComponentComposer;
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 /**
- * Util method to work with {@link ComponentFactory}s.
+ * Abstract base class for composers that interact with Guice.
+ *
+ * @version $Id$
  */
-public class ComponentFactoryUtil {
+public abstract class AbstractGuiceComponentComposer extends AbstractModule implements ComponentComposer {
 
-    /**
-     * Uses the empty constructor or passes the {@link ComponentProvider} such a constructor exists.
-     */
-    public static <T> ComponentFactory<T> createFactory(Class<? extends ComponentFactory<T>> factoryClass, ComponentProvider componentProvider) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        try {
-            Constructor<? extends ComponentFactory<T>> constructor;
-            constructor = factoryClass.getConstructor(ComponentProvider.class);
-            return constructor.newInstance(componentProvider);
-        } catch (NoSuchMethodException e) {
-            return factoryClass.newInstance();
-        }
+    protected ComponentProvider parentComponentProvider;
+    protected ComponentProviderConfiguration configuration;
+
+    @Override
+    public void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration) {
+        this.parentComponentProvider = parentComponentProvider;
+        this.configuration = configuration;
+    }
+
+    @Override
+    protected void configure() {
     }
 }

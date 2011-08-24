@@ -39,9 +39,7 @@ package info.magnolia.objectfactory.configuration;
  * @param <T> the type
  * @version $Id$
  */
-public class ImplementationConfiguration<T> implements Cloneable {
-
-    private Class<T> type;
+public class ImplementationConfiguration<T> extends ComponentConfiguration {
 
     private Class<? extends T> implementation;
 
@@ -49,38 +47,16 @@ public class ImplementationConfiguration<T> implements Cloneable {
     }
 
     public ImplementationConfiguration(Class<T> type, Class<? extends T> implementation) {
-        this.type = type;
+        super(type);
         this.implementation = implementation;
-    }
-
-    public Class<T> getType() {
-        return type;
     }
 
     public Class<? extends T> getImplementation() {
         return implementation;
     }
 
-    // content2bean
-    public void setType(Class<T> type) {
-        this.type = type;
-    }
-
     public void setImplementation(Class<? extends T> implementation) {
         this.implementation = implementation;
-    }
-
-    @Override
-    public ImplementationConfiguration<T> clone() {
-        try {
-            ImplementationConfiguration<T> clone = (ImplementationConfiguration<T>) super.clone();
-            clone.implementation = implementation;
-            clone.type = type;
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            // should never happen
-            throw new RuntimeException(e);
-        }
     }
 
     public static <T> ImplementationConfiguration<T> valueOf(Class<T> type, Class<? extends T> implementation) {

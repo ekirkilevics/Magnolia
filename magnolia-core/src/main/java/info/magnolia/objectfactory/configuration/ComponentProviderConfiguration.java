@@ -34,7 +34,14 @@
 package info.magnolia.objectfactory.configuration;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.inject.Singleton;
+
+import com.google.inject.servlet.RequestScoped;
+import com.google.inject.servlet.SessionScoped;
+import info.magnolia.objectfactory.ComponentComposer;
 
 
 /**
@@ -44,91 +51,36 @@ import java.util.Collection;
  */
 public class ComponentProviderConfiguration implements Cloneable {
 
-    private Collection<ImplementationConfiguration<?>> implementations = new ArrayList<ImplementationConfiguration<?>>();
+    private Map<Class<?>, Class<?>> typeMapping = new HashMap<Class<?>, Class<?>>();
+    private Map<Class, ComponentConfiguration> components = new HashMap<Class, ComponentConfiguration>();
+    private List<ComponentComposer> composers = new ArrayList<ComponentComposer>();
 
-    private Collection<InstanceConfiguration<?>> instances = new ArrayList<InstanceConfiguration<?>>();
-
-    private Collection<ComponentFactoryConfiguration<?>> factories = new ArrayList<ComponentFactoryConfiguration<?>>();
-
-    private Collection<ConfiguredComponentConfiguration<?>> configured = new ArrayList<ConfiguredComponentConfiguration<?>>();
-
-    public Collection<ImplementationConfiguration<?>> getImplementations() {
-        return implementations;
+    public void addComponent(ComponentConfiguration componentConfiguration) {
+        this.components.put(componentConfiguration.getType(), componentConfiguration);
     }
 
-    public void setImplementations(Collection<ImplementationConfiguration<?>> implementations) {
-        this.implementations = implementations;
+    public void addTypeMapping(Class<?> from, Class<?> to) {
+        this.typeMapping.put(from, to);
     }
 
-    public void addImplementation(ImplementationConfiguration<?> configuration) {
-        implementations.add(configuration);
+    public Map<Class<?>, Class<?>> getTypeMapping() {
+        return typeMapping;
     }
 
-    public Collection<InstanceConfiguration<?>> getInstances() {
-        return instances;
+    public Map<Class, ComponentConfiguration> getComponents() {
+        return components;
     }
 
-    public void setInstances(Collection<InstanceConfiguration<?>> instances) {
-        this.instances = instances;
+    public List<ComponentComposer> getComposers() {
+        return composers;
     }
 
-    public void addInstance(InstanceConfiguration<?> configuration) {
-        instances.add(configuration);
-    }
-
-    public Collection<ComponentFactoryConfiguration<?>> getFactories() {
-        return factories;
-    }
-
-    public void setFactories(Collection<ComponentFactoryConfiguration<?>> factories) {
-        this.factories = factories;
-    }
-
-    public void addFactory(ComponentFactoryConfiguration<?> configuration) {
-        factories.add(configuration);
-    }
-
-    public Collection<ConfiguredComponentConfiguration<?>> getConfigured() {
-        return configured;
-    }
-
-    public void setConfigured(Collection<ConfiguredComponentConfiguration<?>> configured) {
-        this.configured = configured;
-    }
-
-    public void addConfigured(ConfiguredComponentConfiguration<?> configuration) {
-        configured.add(configuration);
-    }
-
-    @Override
-    public ComponentProviderConfiguration clone() {
-        try {
-            ComponentProviderConfiguration clone = (ComponentProviderConfiguration) super.clone();
-            clone.implementations = new ArrayList<ImplementationConfiguration<?>>();
-            for (ImplementationConfiguration<?> implementation : implementations) {
-                clone.implementations.add(implementation.clone());
-            }
-            clone.instances = new ArrayList<InstanceConfiguration<?>>();
-            for (InstanceConfiguration<?> instance : instances) {
-                clone.instances.add(instance.clone());
-            }
-            clone.factories = new ArrayList<ComponentFactoryConfiguration<?>>();
-            for (ComponentFactoryConfiguration<?> factory : factories) {
-                clone.factories.add(factory.clone());
-            }
-            clone.configured = new ArrayList<ConfiguredComponentConfiguration<?>>();
-            for (ConfiguredComponentConfiguration<?> componentConfiguration : configured) {
-                clone.configured.add(componentConfiguration.clone());
-            }
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            // should never happen
-            throw new RuntimeException(e);
-        }
+    public boolean addComposer(ComponentComposer composer) {
+        return composers.add(composer);
     }
 
     public <T> void registerImplementation(Class<T> type, Class<? extends T> implementation) {
-        addImplementation(ImplementationConfiguration.valueOf(type, implementation));
+        addComponent(ImplementationConfiguration.valueOf(type, implementation));
     }
 
     public <T> void registerImplementation(Class<T> type) {
@@ -136,30 +88,82 @@ public class ComponentProviderConfiguration implements Cloneable {
     }
 
     public <T> void registerInstance(Class<T> type, T instance) {
-        addInstance(InstanceConfiguration.valueOf(type, instance));
+        addComponent(InstanceConfiguration.valueOf(type, instance));
     }
 
     public void combine(ComponentProviderConfiguration components) {
-        components = components.clone();
-        this.implementations.addAll(components.implementations);
-        this.instances.addAll(components.instances);
-        this.factories.addAll(components.factories);
-        this.configured.addAll(components.configured);
+        this.components.putAll(components.clone().components);
     }
 
     public boolean hasConfigFor(Class<?> type) {
-        for (ImplementationConfiguration<?> implementation : implementations) {
-            if (implementation.getType().equals(type)) return true;
+        return components.containsKey(type);
+    }
+
+    @Override
+    public ComponentProviderConfiguration clone() {
+        try {
+            ComponentProviderConfiguration clone = (ComponentProviderConfiguration) super.clone();
+            clone.components = new HashMap<Class, ComponentConfiguration>();
+            for (Map.Entry<Class, ComponentConfiguration> entry : components.entrySet()) {
+                clone.components.put(entry.getKey(), entry.getValue().clone());
+            }
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            // should never happen
+            throw new RuntimeException(e);
         }
-        for (InstanceConfiguration<?> instance : instances) {
-            if (instance.getType().equals(type)) return true;
+    }
+/*
+    public void print() {
+        System.out.println("<components>");
+        System.out.println("  <id>main</id>");
+        for (Map.Entry<Class, ComponentConfiguration> entry : components.entrySet()) {
+            ComponentConfiguration c = entry.getValue();
+            if (c instanceof ComponentFactoryConfiguration) {
+                ComponentFactoryConfiguration cc = (ComponentFactoryConfiguration) c;
+                System.out.println("  <component>");
+                System.out.println("    <type>"+cc.getType().getName()+"</type>");
+                System.out.println("    <provider>"+cc.getFactoryClass().getName()+"</provider>");
+                System.out.println("  </component>");
+            } else if (c instanceof ImplementationConfiguration) {
+                ImplementationConfiguration cc = (ImplementationConfiguration) c;
+                if (!isTypeMapping(cc.getImplementation())) {
+                    System.out.println("  <component>");
+                    System.out.println("    <type>"+cc.getType().getName()+"</type>");
+                    System.out.println("    <implementation>"+cc.getImplementation().getName()+"</implementation>");
+                    System.out.println("  </component>");
+                }
+            } else if (c instanceof ConfiguredComponentConfiguration) {
+                ConfiguredComponentConfiguration cc = (ConfiguredComponentConfiguration) c;
+                System.out.println("  <component>");
+                System.out.println("    <type>"+cc.getType().getName()+"</type>");
+                if (cc.getWorkspace().equalsIgnoreCase("config"))
+                    System.out.println("    <workspace>"+cc.getWorkspace()+"</workspace>");
+                System.out.println("    <path>"+cc.getPath()+"</path>");
+                if (cc.isObserved())
+                    System.out.println("    <observed>true</observed>");
+                System.out.println("  </component>");
+            }
         }
-        for (ComponentFactoryConfiguration<?> factory : factories) {
-            if (factory.getType().equals(type)) return true;
+        for (Map.Entry<Class<?>, Class<?>> entry : typeMapping.entrySet()) {
+            if (isTypeMapping(entry.getValue())) {
+                System.out.println("  <type-mapping>");
+                System.out.println("    <type>"+entry.getKey().getName()+"</type>");
+                System.out.println("    <implementation>"+entry.getValue().getName()+"</implementation>");
+                System.out.println("  </type-mapping>");
+            }
+
         }
-        for (ConfiguredComponentConfiguration<?> configuration : configured) {
-            if (configuration.getType().equals(type)) return true;
-        }
-        return false;
+        System.out.println("</components>");
+    }
+*/
+    private boolean isTypeMapping(Class clazz) {
+        if (clazz.isAnnotationPresent(Singleton.class))
+            return false;
+        if (clazz.isAnnotationPresent(RequestScoped.class))
+            return false;
+        if (clazz.isAnnotationPresent(SessionScoped.class))
+            return false;
+        return true;
     }
 }

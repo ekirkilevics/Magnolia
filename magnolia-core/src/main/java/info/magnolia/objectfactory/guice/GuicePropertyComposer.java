@@ -35,10 +35,8 @@ package info.magnolia.objectfactory.guice;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-
 import javax.inject.Named;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Key;
 import info.magnolia.init.MagnoliaConfigurationProperties;
 
@@ -47,16 +45,22 @@ import info.magnolia.init.MagnoliaConfigurationProperties;
  *
  * @version $Id$
  */
-public class GuicePropertyModule extends AbstractModule {
-
-    private MagnoliaConfigurationProperties configurationProperties;
-
-    public GuicePropertyModule(MagnoliaConfigurationProperties configurationProperties) {
-        this.configurationProperties = configurationProperties;
-    }
+public class GuicePropertyComposer extends AbstractGuiceComponentComposer {
 
     @Override
     protected void configure() {
+
+        // If we have a parent and it has a MagnoliaConfigurationProperties component expose all its properties
+        if (parentComponentProvider != null) {
+            MagnoliaConfigurationProperties configurationProperties = parentComponentProvider.getComponent(MagnoliaConfigurationProperties.class);
+            if (configurationProperties != null) {
+                installProperties(configurationProperties);
+            }
+        }
+    }
+
+    private void installProperties(MagnoliaConfigurationProperties configurationProperties) {
+
         for (final String key : configurationProperties.getKeys()) {
 
             /*

@@ -42,27 +42,16 @@ import info.magnolia.objectfactory.ComponentFactory;
  * @param <T> the type
  * @version $Id$
  */
-public class ComponentFactoryConfiguration<T> implements Cloneable {
-
-    private Class<T> type;
+public class ComponentFactoryConfiguration<T> extends ComponentConfiguration {
 
     private Class<? extends ComponentFactory<T>> factoryClass;
 
-    // content2bean
     public ComponentFactoryConfiguration() {
     }
 
     public ComponentFactoryConfiguration(Class<T> type, Class<? extends ComponentFactory<T>> factoryClass) {
-        this.type = type;
+        super(type);
         this.factoryClass = factoryClass;
-    }
-
-    public Class<T> getType() {
-        return type;
-    }
-
-    public void setType(Class<T> type) {
-        this.type = type;
     }
 
     public Class<? extends ComponentFactory<T>> getFactoryClass() {
@@ -71,18 +60,5 @@ public class ComponentFactoryConfiguration<T> implements Cloneable {
 
     public void setFactoryClass(Class<? extends ComponentFactory<T>> factoryClass) {
         this.factoryClass = factoryClass;
-    }
-
-    @Override
-    public ComponentFactoryConfiguration clone() {
-        try {
-            ComponentFactoryConfiguration clone = (ComponentFactoryConfiguration) super.clone();
-            clone.type = type;
-            clone.factoryClass = factoryClass;
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            // should never happen
-            throw new RuntimeException(e);
-        }
     }
 }

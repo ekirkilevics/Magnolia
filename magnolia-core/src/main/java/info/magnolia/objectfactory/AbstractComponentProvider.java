@@ -33,6 +33,7 @@
  */
 package info.magnolia.objectfactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.util.DeprecationUtil;
+import info.magnolia.objectfactory.configuration.ComponentConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentFactoryConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
@@ -207,44 +209,42 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
     @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void configure(ComponentProviderConfiguration configuration) {
-        for (ImplementationConfiguration config : configuration.getImplementations()) {
-            if (config.getImplementation() == null && config.getType() == null) {
-                // do not fail when configuration is bogged, try to get server running anyway
-                log.error("Can't instantiate factory, implementation and type are not set: " + config);
-                continue;
+
+        for (Map.Entry<Class, ComponentConfiguration> entry : configuration.getComponents().entrySet()) {
+            ComponentConfiguration value = entry.getValue();
+            if (value instanceof ImplementationConfiguration) {
+                ImplementationConfiguration config = (ImplementationConfiguration) value;
+                registerImplementation(config.getType(), config.getImplementation());
+            } else if (value instanceof InstanceConfiguration) {
+                InstanceConfiguration config = (InstanceConfiguration) value;
+                registerInstance(config.getType(), config.getInstance());
+            } else if (value instanceof ComponentFactoryConfiguration) {
+                ComponentFactoryConfiguration config = (ComponentFactoryConfiguration) value;
+                registerComponentFactory(config.getType(), config.getFactoryClass());
+            } else if (value instanceof ConfiguredComponentConfiguration) {
+                ConfiguredComponentConfiguration config = (ConfiguredComponentConfiguration) value;
+                registerConfiguredComponent(config.getType(), config.getWorkspace(), config.getPath(), config.isObserved());
             }
-            registerImplementation(config.getType(), config.getImplementation());
-        }
-        for (InstanceConfiguration config : configuration.getInstances()) {
-            registerInstance(config.getType(), config.getInstance());
-        }
-        for (ComponentFactoryConfiguration config : configuration.getFactories()) {
-            ComponentFactory< ? > factory;
-            try {
-                factory = ComponentFactoryUtil.createFactory(config.getFactoryClass(), this);
-                registerComponentFactory(config.getType(), factory);
-            }
-            catch (Exception e) {
-                throw new RuntimeException("Can't instantiate factory: " + config.getFactoryClass().getName(), e);
-            }
-        }
-        for (ConfiguredComponentConfiguration config : configuration.getConfigured()) {
-            if (config.getType() == null) {
-                log.error("Type definitions contain invalid configuration. " + config.getWorkspace() + ":" + config.getPath() + (config.isObserved() ? " [observed]": ""));
-                continue;
-            }
-            registerConfiguredComponent(config.getType(), config.getWorkspace(), config.getPath(), config.isObserved());
         }
 
-    };
+        for (Map.Entry<Class<?>, Class<?>> entry : configuration.getTypeMapping().entrySet()) {
+            registerImplementation((Class)entry.getKey(), (Class)entry.getValue());
+        }
+    }
+
+    private <T> void registerComponentFactory(Class<T> type, Class<? extends ComponentFactory<T>> factoryClass) {
+        ComponentDefinition<T> definition = new ComponentDefinition<T>();
+        definition.setType(type);
+        definition.setFactoryClass(factoryClass);
+        definitions.put(type, definition);
+    }
 
     @Override
     public synchronized <T> void registerConfiguredComponent(Class<T> type, final String workspace, final String path, boolean observed) {
         final ComponentFactory<T> factory;
-        if(observed){
+        if (observed) {
             factory = new LazyObservedComponentFactory<T>(workspace, path, type, this);
-        }
-        else{
+        } else {
             factory = new ConfiguredComponentFactory<T>(path, workspace, this);
         }
         registerComponentFactory(type, factory);
@@ -307,9 +307,9 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
         return (ComponentDefinition<T>)definitions.get(type);
     }
 
-    private <T> ComponentFactory<T> instantiateFactoryIfNecessary(ComponentDefinition<T> definition) {
+    private <T> ComponentFactory<T> instantiateFactoryIfNecessary(ComponentDefinition<T> definition) throws InvocationTargetException, IllegalAccessException, InstantiationException {
         if (definition.getFactoryClass() != null && definition.getFactory() == null) {
-            definition.setFactory(createInstance(definition.getFactoryClass()));
+            definition.setFactory(ComponentFactoryUtil.createFactory(definition.getFactoryClass(), this));
         }
         return definition.getFactory();
     }
