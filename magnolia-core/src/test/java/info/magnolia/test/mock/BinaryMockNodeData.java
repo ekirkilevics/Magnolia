@@ -126,6 +126,23 @@ public class BinaryMockNodeData extends MockNodeData {
     }
 
     @Override
+    public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
+        if (wrappedContent != null) {
+            wrappedContent.addNodeData(new BinaryMockNodeData(ItemType.JCR_DATA, value));
+        }
+        if(value != null){
+            try {
+                bytes = IOUtils.toByteArray(value);
+            }
+            catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+        else{
+            bytes = null;
+        }
+    }
+
     public String getString() {
         if (wrappedContent != null) {
             return wrappedContent.getNodeData(ItemType.JCR_DATA).getString();
