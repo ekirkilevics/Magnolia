@@ -334,7 +334,7 @@ public class BetwixtModuleDefinitionReaderTest {
 
         assertEquals(1, components.getComponents().size());
         ComponentDefinition componentDefinition = components.getComponents().iterator().next();
-        assertEquals("com.acme.ComponentKey", componentDefinition.getKey());
+        assertEquals("com.acme.ComponentKey", componentDefinition.getType());
         assertEquals("impl", componentDefinition.getImplementation());
         assertEquals("provider", componentDefinition.getProvider());
         assertEquals("true", componentDefinition.getObserved());
@@ -343,7 +343,7 @@ public class BetwixtModuleDefinitionReaderTest {
 
         assertEquals(1, components.getTypeMappings().size());
         TypeMappingDefinition typeMapping = components.getTypeMappings().iterator().next();
-        assertEquals("t-m-key", typeMapping.getKey());
+        assertEquals("t-m-key", typeMapping.getType());
         assertEquals("t-m-impl", typeMapping.getImplementation());
     }
 

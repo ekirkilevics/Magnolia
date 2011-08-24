@@ -40,12 +40,12 @@
 <!ELEMENT components (id, composer*, component*, type-mapping*)>
 <!ELEMENT id (#PCDATA)>
 
-<!ELEMENT component (key?, implementation?, observed?, workspace?, path?, provider?)>
-<!ELEMENT key (#PCDATA)>
+<!ELEMENT component (type?, implementation?, provider?, workspace?, path?, observed?)>
+<!ELEMENT type (#PCDATA)>
 <!ELEMENT implementation (#PCDATA)>
-<!ELEMENT observed (#PCDATA)>
-<!ELEMENT path (#PCDATA)>
 <!ELEMENT provider (#PCDATA)>
+<!ELEMENT path (#PCDATA)>
+<!ELEMENT observed (#PCDATA)>
 
 <!ELEMENT composer (class)>
-<!ELEMENT type-mapping (key, implementation)>
+<!ELEMENT type-mapping (type, implementation)>

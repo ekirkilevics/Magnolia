@@ -15,16 +15,16 @@
       <class>com.acme.SecondTestComposer</class>
     </composer>
     <component>
-      <key>com.acme.ComponentKey</key>
+      <type>com.acme.ComponentKey</type>
       <implementation>impl</implementation>
-      <observed>true</observed>
+      <provider>provider</provider>
       <workspace>config</workspace>
       <path>/modules/acme/foo</path>
-      <provider>provider</provider>
+      <observed>true</observed>
     </component>
 
     <type-mapping>
-      <key>t-m-key</key>
+      <type>t-m-key</type>
       <implementation>t-m-impl</implementation>
     </type-mapping>
 
