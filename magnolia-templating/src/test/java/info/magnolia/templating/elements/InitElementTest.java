@@ -53,7 +53,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests for InitElement.
  *
  * @version $Id$
  */
@@ -81,6 +80,8 @@ public class InitElementTest {
 
     @Test
     public void testOutputContainsPageEditorJavascript() throws Exception {
+        //GIVEN look at setUp method()
+
         //WHEN
         element.begin(out);
         //THEN
@@ -89,6 +90,8 @@ public class InitElementTest {
 
     @Test
     public void testOutputContainsSourcesJavascript() throws Exception {
+        //GIVEN look at setUp method()
+
         //WHEN
         element.begin(out);
         //THEN
@@ -98,6 +101,8 @@ public class InitElementTest {
 
     @Test
     public void testOutputContainsSourcesCss() throws Exception {
+        //GIVEN look at setUp method()
+
         //WHEN
         element.begin(out);
         //THEN
