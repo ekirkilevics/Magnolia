@@ -238,13 +238,6 @@ public class MockContent extends AbstractContent {
             }
         }
 
-        // adding binaries too:
-        try {
-            onlyExistingNodeDatas.addAll(getBinaryNodeDatas(namePattern));
-        } catch (RepositoryException e) {
-            throw new IllegalStateException("Can't read node datas of " + toString(), e);
-        }
-
         return onlyExistingNodeDatas;
     }
 

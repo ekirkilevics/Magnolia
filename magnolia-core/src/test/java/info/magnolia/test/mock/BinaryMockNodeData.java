@@ -38,6 +38,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Collection;
@@ -52,6 +54,7 @@ import javax.jcr.Value;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +72,8 @@ public class BinaryMockNodeData extends MockNodeData {
     private Map<String, String> attributes = new HashMap<String, String>();
     // or by wrapping a Content instance (used i.e when creating mock content via properties)
     private MockContent wrappedContent;
+    // content stored
+    private byte[] bytes;
 
     public BinaryMockNodeData(String name) {
         super(name, PropertyType.BINARY);
@@ -80,7 +85,13 @@ public class BinaryMockNodeData extends MockNodeData {
     }
 
     public BinaryMockNodeData(String name, InputStream stream) {
-        super(name, stream);
+        this(name);
+        try {
+            setValue(stream);
+        }
+        catch (RepositoryException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public BinaryMockNodeData(String name, InputStream stream, String fileName, String mimeType, int size) {
@@ -111,7 +122,7 @@ public class BinaryMockNodeData extends MockNodeData {
             return wrappedContent.getNodeData(ItemType.JCR_DATA).getStream();
         }
 
-        return super.getStream();
+        return new ByteArrayInputStream(bytes);
     }
 
     @Override
@@ -154,6 +165,11 @@ public class BinaryMockNodeData extends MockNodeData {
             wrappedContent.setNodeData(name, value);
         }
         attributes.put(name, value);
+    }
+
+    @Override
+    public boolean isExist() {
+        return wrappedContent != null || bytes != null;
     }
 
     // unsupported operations, copied from BinaryNockData

@@ -134,9 +134,6 @@ public class MockNodeData extends AbstractNodeData {
 
     @Override
     public InputStream getStream() {
-        if (value instanceof InputStream) {
-            return (InputStream) value;
-        }
         final String s = getString();
         if (s == null) {
             // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
@@ -194,7 +191,7 @@ public class MockNodeData extends AbstractNodeData {
 
     @Override
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
-        this.value = value;
+        throw new UnsupportedOperationException("Streams can only be set on BinaryMockNodeData objects");
     }
 
     @Override
