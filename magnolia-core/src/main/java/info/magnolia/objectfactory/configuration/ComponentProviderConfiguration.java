@@ -92,7 +92,9 @@ public class ComponentProviderConfiguration implements Cloneable {
     }
 
     public void combine(ComponentProviderConfiguration components) {
+        this.typeMapping.putAll(components.typeMapping);
         this.components.putAll(components.clone().components);
+        this.composers.addAll(components.composers);
     }
 
     public boolean hasConfigFor(Class<?> type) {
