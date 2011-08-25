@@ -41,6 +41,7 @@ import info.magnolia.cms.exchange.ActivationManager;
 import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
+import info.magnolia.cms.exchange.Subscription;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
@@ -70,6 +71,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         ComponentsTestUtil.setImplementation(Subscriber.class, DefaultSubscriber.class);
         ComponentsTestUtil.setImplementation(ActivationManager.class, DefaultActivationManager.class);
         ComponentsTestUtil.setImplementation(Syndicator.class, TestSyndicator.class);
+        ComponentsTestUtil.setImplementation(Subscription.class, DefaultSubscription.class);
     }
 
     @Override
