@@ -37,5 +37,18 @@ package info.magnolia.module.templating;
  * Deprecated.
  * @deprecated since 4.5, replaced by {@link info.magnolia.rendering.model.EarlyExecutionAware}
  */
-public interface EarlyExecutionAware extends info.magnolia.rendering.model.EarlyExecutionAware{
+@Deprecated
+public interface EarlyExecutionAware {
+
+    /**
+     * Called before rendering of the paragraph.
+     * 
+     * @param parentModel
+     */
+    void setParent(RenderingModel parentModel);
+
+    /**
+     * Called after all properties were set. Can return a string which is passed to the method. {@link RenderableDefinition#determineTemplatePath(String, RenderingModel)}
+     */
+    String executeEarly();
 }

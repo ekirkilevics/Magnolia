@@ -35,20 +35,56 @@ package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
 
-import javax.jcr.Node;
-
 /**
  * Deprecated.
  * @deprecated since 4.5, use {@link info.magnolia.rendering.model.RenderingModelImpl} instead.
  * @param <RD> the {@link RenderableDefinition} bound to the model
  */
 @Deprecated
-public class RenderingModelImpl<RD extends RenderableDefinition> extends info.magnolia.rendering.model.RenderingModelImpl<RD> implements info.magnolia.module.templating.RenderingModel<RD>{
+public class RenderingModelImpl<RD extends RenderableDefinition> implements RenderingModel<RD> {
+    protected RenderingModel parentModel;
+    protected final Content content;
+    protected final RD definition;
 
-    public RenderingModelImpl(Content content, RD definition, RenderingModel< ? > parent) {
-        super(content.getJCRNode(), definition, parent);
+    public RenderingModelImpl(Content content, RD definition, RenderingModel parent) {
+        this.content = content;
+        this.definition = definition;
+        this.parentModel = parent;
     }
-    public RenderingModelImpl(Node content, info.magnolia.rendering.template.RenderableDefinition definition, info.magnolia.rendering.model.RenderingModel parent) {
-        super(content, (RD) definition, parent);
+
+    @Override
+    public RenderingModel getParent() {
+        return this.parentModel;
     }
+
+    public RenderingModel getRoot() {
+        RenderingModel model = this;
+        while (model.getParent() != null) {
+            model = model.getParent();
+        }
+        return model;
+    }
+
+    @Override
+    public Content getContent() {
+        return this.content;
+    }
+
+    /**
+     * Shortname for templates: model.def.
+     */
+    public RD getDef() {
+        return getDefinition();
+    }
+
+    @Override
+    public RD getDefinition() {
+        return this.definition;
+    }
+
+    @Override
+    public String execute() {
+        return null;
+    }
+
 }

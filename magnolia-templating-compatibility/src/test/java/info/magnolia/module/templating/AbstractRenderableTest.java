@@ -42,8 +42,6 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockContent;
 
-import javax.jcr.Node;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,9 +52,9 @@ import org.junit.Test;
  * @version $Revision: $ ($Author: $)
  */
 public class AbstractRenderableTest {
-    private MockContent dummyContent = new MockContent("");
-    private Paragraph dummyDef = new Paragraph();
-    private RenderingModel dummyParentModel = new RenderingModelImpl(dummyContent, null, null);
+    private final MockContent dummyContent = new MockContent("");
+    private final Paragraph dummyDef = new Paragraph();
+    private final RenderingModel dummyParentModel = new RenderingModelImpl(dummyContent, null, null);
 
     @Before
     public void setUp() throws Exception {
@@ -72,7 +70,7 @@ public class AbstractRenderableTest {
     public void testCanInstantiateModel() throws Exception {
         final AbstractRenderable renderable = new AbstractRenderable() {
         };
-        renderable.setModelClass((Class) StandardConstructorModel.class);
+        renderable.setModelClass(StandardConstructorModel.class);
         final RenderingModel m = renderable.newModel(dummyContent, dummyDef, dummyParentModel);
         assertNotNull(m);
         assertTrue(m instanceof StandardConstructorModel);
@@ -87,7 +85,7 @@ public class AbstractRenderableTest {
             final RenderingModel m = renderable.newModel(dummyContent, dummyDef, dummyParentModel);
             fail("should have failed");
         } catch (Exception e) {
-            assertEquals("A model class must define a constructor with types {interface javax.jcr.Node,interface info.magnolia.rendering.template.RenderableDefinition,interface info.magnolia.rendering.model.RenderingModel}. Can't instantiate class info.magnolia.module.templating.AbstractRenderableTest$NoConstructorModel", e.getMessage());
+            assertEquals("A model class must define a constructor with types {interface info.magnolia.cms.core.Content,interface info.magnolia.module.templating.RenderableDefinition,interface info.magnolia.module.templating.RenderingModel}. Can't instantiate class info.magnolia.module.templating.AbstractRenderableTest$NoConstructorModel", e.getMessage());
             assertTrue(e instanceof IllegalArgumentException);
         }
 
@@ -96,7 +94,7 @@ public class AbstractRenderableTest {
             final RenderingModel m = renderable.newModel(dummyContent, dummyDef, dummyParentModel);
             fail("should have failed");
         } catch (Exception e) {
-            assertEquals("A model class must define a constructor with types {interface javax.jcr.Node,interface info.magnolia.rendering.template.RenderableDefinition,interface info.magnolia.rendering.model.RenderingModel}. Can't instantiate class info.magnolia.module.templating.AbstractRenderableTest$WrongConstructorModel", e.getMessage());
+            assertEquals("A model class must define a constructor with types {interface info.magnolia.cms.core.Content,interface info.magnolia.module.templating.RenderableDefinition,interface info.magnolia.module.templating.RenderingModel}. Can't instantiate class info.magnolia.module.templating.AbstractRenderableTest$WrongConstructorModel", e.getMessage());
             assertTrue(e instanceof IllegalArgumentException);
         }
     }
@@ -108,7 +106,7 @@ public class AbstractRenderableTest {
         }
 
         @Override
-        public Node getContent() {
+        public Content getContent() {
             return null;
         }
 
@@ -130,7 +128,7 @@ public class AbstractRenderableTest {
     }
 
     public static class StandardConstructorModel implements RenderingModel {
-        public StandardConstructorModel(Node content, info.magnolia.rendering.template.RenderableDefinition definition, info.magnolia.rendering.model.RenderingModel<RenderableDefinition> parent) {
+        public StandardConstructorModel(Content content, RenderableDefinition definition, RenderingModel<RenderableDefinition> parent) {
 
         }
 
@@ -140,7 +138,7 @@ public class AbstractRenderableTest {
         }
 
         @Override
-        public Node getContent() {
+        public Content getContent() {
             return null;
         }
 

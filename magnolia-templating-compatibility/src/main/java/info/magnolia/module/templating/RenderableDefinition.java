@@ -33,9 +33,10 @@
  */
 package info.magnolia.module.templating;
 
-import java.lang.reflect.InvocationTargetException;
-
 import info.magnolia.cms.core.Content;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 /**
  * Abstract rendering definition used for templates and paragraphs.
@@ -43,28 +44,39 @@ import info.magnolia.cms.core.Content;
  * @version $Id$
  * @deprecated since 4.5, replaced by {@link info.magnolia.rendering.template.configured.RenderableDefinition}
  */
-public interface RenderableDefinition extends info.magnolia.rendering.template.RenderableDefinition{
+@Deprecated
+public interface RenderableDefinition extends info.magnolia.rendering.template.RenderableDefinition {
+    @Override
+    public String getName();
 
-    /**
-     * @deprecated since 4.5 - use {@link #getRenderType()} instead
-     */
     public String getType();
 
-    /**
-     * @deprecated since 4.5 - use {@link #getTemplateScript()} instead
-     */
+    @Override
+    public String getTitle();
+
+    @Override
+    public String getDescription();
+
+    @Override
+    public String getI18nBasename();
+
     public String getTemplatePath();
 
+    public String getDialog();
+
+    /**
+     * An arbitrary list of parameters. Used to omit subclass with getters and setters for each extra parameter.
+     */
+    @Override
+    public Map getParameters();
+
+    /**
+     * Create the model based on the current content.
+     */
+    public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
 
     /**
      * The modules execute() method can return a string which is passed to this method to determine the template to use.
-     * @deprecated  since 4.5 - without replacement
      */
-    public String determineTemplatePath(String actionResult, RenderingModel<?> model);
-
-
-    /**
-     * @deprecated since 4.5 - use {@link info.magnolia.rendering.template.RenderableDefinition#newModel(javax.jcr.Node, info.magnolia.rendering.template.RenderableDefinition, info.magnolia.rendering.model.RenderingModel)} instead
-     */
-    public RenderingModel<?> newModel(Content wrappedContent, RenderableDefinition definition, RenderingModel<?> parentModel)  throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
+    public String determineTemplatePath(String actionResult, RenderingModel model);
 }

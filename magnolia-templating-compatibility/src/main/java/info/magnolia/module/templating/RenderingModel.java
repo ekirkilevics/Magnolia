@@ -33,12 +33,42 @@
  */
 package info.magnolia.module.templating;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.rendering.template.RenderableDefinition;
 
 /**
  * Deprecated.
  * @deprecated since 4.5, use {@link info.magnolia.rendering.model.RenderingModel}
  * @param <RD> the {@link RenderableDefinition} bound to the model
  */
-public interface RenderingModel <RD extends RenderableDefinition> extends info.magnolia.rendering.model.RenderingModel<RD> {
+@Deprecated
+public interface RenderingModel<RD extends RenderableDefinition> {
+
+    // TODO document that bean properties will be set with request parameters
+
+    /**
+     * A constant used in some special cases where rendering must be skipped, i.e. a redirect template. It can be used by template models as a return value for the {@link RenderingModel#execute()} method to inform {@link info.magnolia.rendering.renderer.AbstractRenderer} that it should not render anything in that particular case.
+     */
+    public static final String SKIP_RENDERING = "skip-rendering";
+
+    /**
+     * The model of the parent paragraph or template.
+     */
+    RenderingModel<?> getParent();
+
+    /**
+     * The content node tied to this model.
+     */
+    Content getContent();
+
+    /**
+     * The renderable (paragraph/template) tied to this model.
+     */
+    RD getDefinition();
+
+    /**
+     * Called after all properties were set. Can return a string which is passed to the method. {@link RenderableDefinition#determineTemplatePath(String, RenderingModel)}
+     */
+    String execute();
 
 }

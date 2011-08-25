@@ -68,7 +68,8 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     private String renderType;
     private String description;
     private String i18nBasename;
-    private Class<? extends RenderingModel> modelClass = RenderingModelImpl.class;
+    //TODO: use generics again once we get rid of templating-compatibility module
+    private Class modelClass = RenderingModelImpl.class;
 
     protected Map<String, Object> parameters = new HashMap<String, Object>();
 
@@ -80,7 +81,7 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     @Override
     public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
         try {
-            final RenderingModel<?> model = Classes.getClassFactory().newInstance(getModelClass(), new Class[]{Node.class, definition.getClass(), RenderingModel.class}, content, definition, parentModel);
+            final RenderingModel<?> model = Classes.getClassFactory().newInstance((Class<? extends RenderingModel>) getModelClass(), new Class[] { Node.class, definition.getClass(), RenderingModel.class }, content, definition, parentModel);
             // TODO pass the parameter map to the method
             final Map<String, String> params = MgnlContext.getParameters();
             if (params != null) {
@@ -168,11 +169,11 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     }
 
     @SuppressWarnings("rawtypes")
-    public Class<? extends RenderingModel> getModelClass() {
+    public Class getModelClass() {
         return this.modelClass;
     }
 
-    public void setModelClass(Class<? extends RenderingModel<?>> modelClass) {
+    public void setModelClass(Class modelClass) {
         this.modelClass = modelClass;
     }
 

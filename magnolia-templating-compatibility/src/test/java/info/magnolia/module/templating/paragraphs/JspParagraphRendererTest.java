@@ -179,7 +179,7 @@ public class JspParagraphRendererTest {
 
         verify(ctx);
     }
-    */
+     */
 
     @Test
     public void testCantRenderWithoutParagraphPathCorrectlySet() throws Exception {
@@ -254,7 +254,7 @@ public class JspParagraphRendererTest {
 
     public static final class SkippableTestState extends RenderingModelImpl<RenderableDefinition> {
 
-        public SkippableTestState(Node content, info.magnolia.rendering.template.RenderableDefinition definition, info.magnolia.rendering.model.RenderingModel<RenderableDefinition> parent) {
+        public SkippableTestState(Content content, RenderableDefinition definition, RenderingModel<RenderableDefinition> parent) {
             super(content, definition, parent);
         }
         @Override

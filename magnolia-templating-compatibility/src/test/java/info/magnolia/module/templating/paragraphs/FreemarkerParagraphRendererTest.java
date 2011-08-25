@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
@@ -68,8 +71,6 @@ import javax.jcr.Workspace;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 import freemarker.cache.StringTemplateLoader;
 
@@ -129,7 +130,7 @@ public class FreemarkerParagraphRendererTest {
     @Test
     public void testWorksWithNonActionParagraphAndContentIsExposedToFreemarker() throws Exception {
         tplLoader.putTemplate("test_noclass.ftl", "This is a test template, rendering the content node under ${content.@handle} with UUID ${content.@uuid}.\n" +
-                "The value of the foo property is ${content.foo}.");
+        "The value of the foo property is ${content.foo}.");
 
         when(page.getUUID()).thenReturn("123");
         when(page.getNodeData("foo")).thenReturn(new MockNodeData("foo", "bar"));
@@ -210,7 +211,7 @@ public class FreemarkerParagraphRendererTest {
     }
 
     public static final class SimpleTestState extends RenderingModelImpl<RenderableDefinition>{
-        public SimpleTestState(Node content, info.magnolia.rendering.template.RenderableDefinition definition, info.magnolia.rendering.model.RenderingModel<RenderableDefinition> parent) {
+        public SimpleTestState(Content content, RenderableDefinition definition, RenderingModel<RenderableDefinition> parent) {
             super(content, definition, parent);
         }
 
@@ -241,7 +242,7 @@ public class FreemarkerParagraphRendererTest {
 
     public static final class SkippableTestState extends RenderingModelImpl<RenderableDefinition> {
 
-        public SkippableTestState(Node content, info.magnolia.rendering.template.RenderableDefinition definition, info.magnolia.rendering.model.RenderingModel<RenderableDefinition> parent) {
+        public SkippableTestState(Content content, RenderableDefinition definition, RenderingModel<RenderableDefinition> parent) {
             super(content, definition, parent);
         }
         @Override
