@@ -39,14 +39,6 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.VersionConfig;
-import info.magnolia.cms.filters.FilterManager;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.license.LicenseFileExtractor;
-import info.magnolia.cms.util.UnicodeNormalizer;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
-import info.magnolia.context.SystemContext;
 import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentComposer;
@@ -74,16 +66,6 @@ public class ComponentsFromPropertiesComposer implements ComponentComposer {
         for (String key : configurationProperties.getKeys()) {
             properties.put(key, configurationProperties.getProperty(key));
         }
-
-        // FIXME These are defined in mgnl-beans.properties and if allowed would override those hard-coded in GuiceServletContextListener
-        properties.remove(LicenseFileExtractor.class.getName());
-        properties.remove(VersionConfig.class.getName());
-        properties.remove(MessagesManager.class.getName());
-        properties.remove(SystemContext.class.getName());
-        properties.remove(WorkspaceAccessUtil.class.getName());
-        properties.remove(ConfigLoader.class.getName());
-        properties.remove(UnicodeNormalizer.Normalizer.class.getName());
-        properties.remove(FilterManager.class.getName());
 
         createConfigurationFromProperties(properties, configuration);
     }

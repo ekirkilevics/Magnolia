@@ -90,6 +90,10 @@ public class ComponentsTestUtil {
         getComponentProvider().setInstanceFactory(interf, factory);
     }
 
+    public static <T> void setConfigured(Class<T> type, String workspace, String path, boolean observed) {
+        getComponentProvider().setConfigured(type, workspace, path, observed);
+    }
+
     /**
      * <strong>Warning:</strong> this does NOT clear the *mappings*. With the current/default implementation,
      * this means tests also have to call SystemProperty.clear()

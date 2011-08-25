@@ -43,28 +43,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Stage;
 import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.filters.FilterManager;
-import info.magnolia.cms.filters.FilterManagerImpl;
-import info.magnolia.cms.i18n.DefaultMessagesManager;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.license.LicenseFileExtractor;
-import info.magnolia.cms.util.UnicodeNormalizer;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
-import info.magnolia.content2bean.Content2BeanProcessor;
-import info.magnolia.content2bean.Content2BeanTransformer;
-import info.magnolia.content2bean.TransformationState;
-import info.magnolia.content2bean.TypeMapping;
-import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
-import info.magnolia.content2bean.impl.TransformationStateImpl;
-import info.magnolia.content2bean.impl.TypeMappingImpl;
+
 import info.magnolia.context.ContextFactory;
-import info.magnolia.context.JCRSessionPerThreadSystemContext;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
-import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.module.InstallContextImpl;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleRegistry;
@@ -285,33 +267,6 @@ public class MagnoliaServletContextListener implements ServletContextListener {
         configuration.registerImplementation(MagnoliaConfigurationProperties.class, DefaultMagnoliaConfigurationProperties.class);
         configuration.registerImplementation(MagnoliaPropertiesResolver.class, DefaultMagnoliaPropertiesResolver.class);
         configuration.registerInstance(MagnoliaServletContextListener.class, this); // This is needed by DefaultMagnoliaInitPaths
-        return configuration;
-    }
-
-    // TODO this is equivalent of mgnl-beans.propertes, it must again be configurable
-    private ComponentProviderConfiguration getSystemConfiguration() {
-        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-
-        configuration.registerImplementation(Log4jConfigurer.class);
-
-        // we'll register the whole c2b she-bang here for now
-        configuration.registerImplementation(Content2BeanProcessor.class, Content2BeanProcessorImpl.class);
-        configuration.registerImplementation(Content2BeanTransformer.class, Content2BeanTransformerImpl.class);
-        configuration.registerImplementation(TransformationState.class, TransformationStateImpl.class);
-        configuration.registerImplementation(TypeMapping.class, TypeMappingImpl.class);
-
-        configuration.registerImplementation(MessagesManager.class, DefaultMessagesManager.class);
-        configuration.registerImplementation(LicenseFileExtractor.class);
-        configuration.registerImplementation(VersionConfig.class);
-
-        configuration.registerImplementation(SystemContext.class, JCRSessionPerThreadSystemContext.class);
-        configuration.registerImplementation(WorkspaceAccessUtil.class);
-        configuration.registerImplementation(ConfigLoader.class);
-
-        configuration.registerImplementation(UnicodeNormalizer.Normalizer.class, UnicodeNormalizer.AutoDetectNormalizer.class);
-
-        configuration.registerImplementation(FilterManager.class, FilterManagerImpl.class);
-
         return configuration;
     }
 

@@ -7,16 +7,17 @@
   <versionHandler>info.magnolia.module.exchangesimple.setup.ExchangeSimpleModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
 
-  <properties>
-    <property>
-      <name>info.magnolia.cms.exchange.Syndicator</name>
-      <value>info.magnolia.module.exchangesimple.SimpleSyndicator</value>
-      </property>
-    <property>
-      <name>info.magnolia.cms.exchange.Subscription</name>
-      <value>info.magnolia.module.exchangesimple.DefaultSubscription</value>
-    </property>
-  </properties>
+  <components>
+    <id>main</id>
+    <type-mapping>
+      <type>info.magnolia.cms.exchange.Syndicator</type>
+      <implementation>info.magnolia.module.exchangesimple.SimpleSyndicator</implementation>
+    </type-mapping>
+    <type-mapping>
+      <type>info.magnolia.cms.exchange.Subscription</type>
+      <implementation>info.magnolia.module.exchangesimple.DefaultSubscription</implementation>
+    </type-mapping>
+  </components>
 
   <dependencies>
     <dependency>

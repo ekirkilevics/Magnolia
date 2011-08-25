@@ -10,34 +10,45 @@
 
   <properties>
     <property>
-      <name>info.magnolia.module.admininterface.DialogHandlerManager</name>
-      <value>info.magnolia.module.admininterface.DialogHandlerManager</value>
-    </property>
-    <property>
+      <!-- TODO this class does not exist, is it an old left over? -->
       <name>info.magnolia.module.admininterface.ParagraphDialogHandlerManager</name>
       <value>info.magnolia.module.admininterface.ParagraphDialogHandlerManager</value>
-    </property>
-    <property>
-      <name>info.magnolia.module.admininterface.PageHandlerManager</name>
-      <value>info.magnolia.module.admininterface.PageHandlerManager</value>
-    </property>
-    <property>
-      <name>info.magnolia.module.admininterface.TreeHandlerManager</name>
-      <value>info.magnolia.module.admininterface.TreeHandlerManager</value>
-    </property>
-    <property>
-      <name>info.magnolia.module.admininterface.SaveHandler</name>
-      <value>info.magnolia.module.admininterface.UUIDSaveHandler</value>
-    </property>
-    <property>
-      <name>info.magnolia.cms.gui.i18n.I18nAuthoringSupport</name>
-      <value>/server/i18n/authoring</value>
     </property>
     <property>
       <name>defaultPublicURI</name>
       <value>redirect:/.magnolia/pages/quickstart.html</value>
     </property>
   </properties>
+
+  <components>
+    <id>main</id>
+    <component>
+      <type>info.magnolia.module.admininterface.DialogHandlerManager</type>
+      <implementation>info.magnolia.module.admininterface.DialogHandlerManager</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.module.admininterface.PageHandlerManager</type>
+      <implementation>info.magnolia.module.admininterface.PageHandlerManager</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.module.admininterface.TreeHandlerManager</type>
+      <implementation>info.magnolia.module.admininterface.TreeHandlerManager</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.cms.gui.i18n.I18nAuthoringSupport</type>
+      <workspace>config</workspace>
+      <path>/server/i18n/authoring</path>
+      <observed>true</observed>
+    </component>
+    <component>
+      <type>info.magnolia.cms.gui.dialog.ControlsManager</type>
+      <implementation>info.magnolia.cms.gui.dialog.ControlsManager</implementation>
+    </component>
+    <type-mapping>
+      <type>info.magnolia.module.admininterface.SaveHandler</type>
+      <implementation>info.magnolia.module.admininterface.UUIDSaveHandler</implementation>
+    </type-mapping>
+  </components>
 
   <dependencies>
     <dependency>

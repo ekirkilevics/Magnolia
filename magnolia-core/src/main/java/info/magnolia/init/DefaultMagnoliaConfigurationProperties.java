@@ -33,7 +33,6 @@
  */
 package info.magnolia.init;
 
-import info.magnolia.init.properties.ClasspathPropertySource;
 import info.magnolia.init.properties.InitPathsPropertySource;
 import info.magnolia.init.properties.ModulePropertiesSource;
 import info.magnolia.init.properties.SystemPropertySource;
@@ -86,7 +85,6 @@ public class DefaultMagnoliaConfigurationProperties extends AbstractMagnoliaConf
         final List<PropertySource> allSources = new ArrayList<PropertySource>();
         // TODO order ? -- sounds like it should be reversed (or we should iterate the other way around - eh)
         allSources.add(new InitPathsPropertySource(initPaths));
-        allSources.add(new ClasspathPropertySource("/mgnl-beans.properties"));
         allSources.add(new ModulePropertiesSource(moduleRegistry));
         final List<PropertySource> configuredSources = resolver.getSources();
         for (PropertySource source : configuredSources) {

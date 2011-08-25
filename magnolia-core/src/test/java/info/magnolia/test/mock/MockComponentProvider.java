@@ -95,6 +95,11 @@ public class MockComponentProvider extends PropertiesComponentProvider {
         registerComponentFactory(type, factory);
     }
 
+    public <T> void setConfigured(Class<T> type, String workspace, String path, boolean observed) {
+        removeComponent(type);
+        registerConfiguredComponent(type, workspace, path, observed);
+    }
+
     /**
      * Used only in tests.
      * <strong>Warning:</strong> this does NOT clear the *mappings*. With the current/default implementation,
