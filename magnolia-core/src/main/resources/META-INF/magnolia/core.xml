@@ -10,10 +10,6 @@
   <components>
     <id>system</id>
     <component>
-      <type>info.magnolia.logging.Log4jConfigurer</type>
-      <implementation>info.magnolia.logging.Log4jConfigurer</implementation>
-    </component>
-    <component>
       <type>info.magnolia.content2bean.Content2BeanProcessor</type>
       <implementation>info.magnolia.content2bean.impl.Content2BeanProcessorImpl</implementation>
     </component>

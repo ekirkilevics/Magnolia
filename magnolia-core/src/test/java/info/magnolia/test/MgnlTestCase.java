@@ -136,8 +136,8 @@ public abstract class MgnlTestCase {
         ComponentsTestUtil.setInstance(MagnoliaConfigurationProperties.class, configurationProperties);
 
         ComponentConfigurationBuilder configurationBuilder = new ComponentConfigurationBuilder();
-        ComponentProviderConfiguration configuration = configurationBuilder.getMergedComponents(mr, "system");
-        configuration.combine(configurationBuilder.getMergedComponents(mr, "main"));
+        ComponentProviderConfiguration configuration = configurationBuilder.getComponentsFromModules(mr, "system");
+        configuration.combine(configurationBuilder.getComponentsFromModules(mr, "main"));
 
         // Content2BeanProcessorImpl uses dependency injection and since we don't have that with MockComponentProvider we
         // need to manually create this object and replace the component configuration read from core.xml

@@ -33,6 +33,8 @@
  */
 package info.magnolia.init;
 
+import java.util.Collections;
+import java.util.List;
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -44,20 +46,15 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Stage;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.core.SystemProperty;
-
-import info.magnolia.context.ContextFactory;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.InstallContextImpl;
+import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleRegistry;
-import info.magnolia.module.model.reader.DependencyChecker;
-import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentConfigurationBuilder;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.guice.GuiceComponentProvider;
 import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
-import info.magnolia.objectfactory.guice.GuiceModuleManager;
 
 
 /**
@@ -155,6 +152,60 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     private ConfigLoader loader;
 
     @Override
+    public void contextInitialized(final ServletContextEvent sce) {
+        try {
+            servletContext = sce.getServletContext();
+
+            // Start 'platform' ComponentProvider
+            GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
+            builder.withConfiguration(getPlatformComponents());
+            builder.inStage(Stage.PRODUCTION);
+            builder.exposeGlobally();
+            platform = builder.build();
+
+            // Expose server name as a system property, so it can be used in log4j configurations
+            // rootPath and webapp are not exposed since there can be different webapps running in the same jvm
+            System.setProperty("server", platform.getComponent(MagnoliaInitPaths.class).getServerName());
+
+            // Load module definitions
+            moduleManager = platform.getComponent(ModuleManager.class);
+            moduleManager.loadDefinitions();
+
+            // Initialize MagnoliaConfigurationProperties
+            MagnoliaConfigurationProperties configurationProperties = platform.getComponent(MagnoliaConfigurationProperties.class);
+            configurationProperties.init();
+
+            // Connect legacy properties to the MagnoliaConfigurationProperties object
+            SystemProperty.setMagnoliaConfigurationProperties(configurationProperties);
+
+            // Initialize logging now that properties are available
+            Log4jConfigurer.initLogging();
+
+            // Start 'system' ComponentProvider
+            builder = new GuiceComponentProviderBuilder();
+            builder.withConfiguration(getSystemComponents());
+            builder.withParent(platform);
+            builder.exposeGlobally();
+            system = builder.build();
+
+            // Delegate to ConfigLoader to complete initialization
+            loader = system.getComponent(ConfigLoader.class);
+            startServer();
+
+        } catch (Throwable t) {
+            log.error("Oops, Magnolia could not be started", t);
+            t.printStackTrace();
+            if (t instanceof Error) {
+                throw (Error) t;
+            }
+            if (t instanceof RuntimeException) {
+                throw (RuntimeException) t;
+            }
+            throw new RuntimeException(t);
+        }
+    }
+
+    @Override
     public void contextDestroyed(final ServletContextEvent sce) {
 
         // TODO ModuleManager should be shut down by ConfigLoader
@@ -180,56 +231,32 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             Components.setProvider(platform.getParent());
             platform.destroy();
         }
+
+        Log4jConfigurer.shutdownLogging();
+    }
+
+    protected ComponentProviderConfiguration getPlatformComponents() {
+        ComponentConfigurationBuilder configurationBuilder = new ComponentConfigurationBuilder();
+        List<String> resources = getPlatformComponentsResources();
+        ComponentProviderConfiguration platformComponents = configurationBuilder.readConfiguration(resources);
+        platformComponents.registerInstance(ServletContext.class, servletContext);
+        // This is needed by DefaultMagnoliaInitPaths for backwards compatibility
+        platformComponents.registerInstance(MagnoliaServletContextListener.class, this);
+        return platformComponents;
     }
 
     /**
-     * TODO : javadoc.
+     * Returns a list of resources that contain platform components. Definitions for the same type will override giving
+     * preference to the last read definition.
      */
-    @Override
-    public void contextInitialized(final ServletContextEvent sce) {
-        try {
-            servletContext = sce.getServletContext();
+    protected List<String> getPlatformComponentsResources() {
+        // TODO this should be configurable
+        return Collections.singletonList("/info/magnolia/init/platform-components.xml");
+    }
 
-            GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
-            builder.withConfiguration(getPlatformConfiguration());
-            builder.inStage(Stage.PRODUCTION);
-            builder.exposeGlobally();
-            platform = builder.build();
-
-            // expose server name as a system property, so it can be used in log4j configurations
-            // rootPath and webapp are not exposed since there can be different webapps running in the same jvm
-            System.setProperty("server", platform.getComponent(MagnoliaInitPaths.class).getServerName());
-            moduleManager = platform.getComponent(ModuleManager.class);
-            moduleManager.loadDefinitions();
-            final MagnoliaConfigurationProperties configurationProperties = platform.getComponent(MagnoliaConfigurationProperties.class);
-            // TODO we can't cast to the impl here
-            ((DefaultMagnoliaConfigurationProperties) configurationProperties).init();
-            SystemProperty.setMagnoliaConfigurationProperties(configurationProperties);
-
-            builder = new GuiceComponentProviderBuilder();
-            builder.withConfiguration(new ComponentConfigurationBuilder().getMergedComponents(platform.getComponent(ModuleRegistry.class), "system"));
-            builder.withParent(platform);
-            builder.exposeGlobally();
-            system = builder.build();
-
-            // TODO Log4jConfigurer uses @PostConstruct to start logging, but there's no guarantee that it is the first
-            // @PostConstruct to be called so it is possible that there's no logging when another components @PostConstruct
-            // is called
-
-            loader = system.getComponent(ConfigLoader.class);
-
-            startServer();
-        } catch (Throwable t) {
-            log.error("Oops, Magnolia could not be started", t);
-            t.printStackTrace();
-            if (t instanceof Error) {
-                throw (Error) t;
-            }
-            if (t instanceof RuntimeException) {
-                throw (RuntimeException) t;
-            }
-            throw new RuntimeException(t);
-        }
+    protected ComponentProviderConfiguration getSystemComponents() {
+        ComponentConfigurationBuilder configurationBuilder = new ComponentConfigurationBuilder();
+        return configurationBuilder.getComponentsFromModules(platform.getComponent(ModuleRegistry.class), "system");
     }
 
     protected void startServer() {
@@ -250,24 +277,6 @@ public class MagnoliaServletContextListener implements ServletContextListener {
                 }
             }, true);
         }
-    }
-
-    public ComponentProviderConfiguration getPlatformConfiguration() {
-        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-        configuration.registerInstance(ServletContext.class, servletContext);
-        configuration.registerImplementation(InstallContextImpl.class);
-        configuration.registerImplementation(ContextFactory.class);
-
-        configuration.registerImplementation(ModuleManager.class, GuiceModuleManager.class);
-        configuration.registerImplementation(ModuleRegistry.class, info.magnolia.module.ModuleRegistryImpl.class);
-        configuration.registerImplementation(ModuleDefinitionReader.class, info.magnolia.module.model.reader.BetwixtModuleDefinitionReader.class);
-        configuration.registerImplementation(DependencyChecker.class, info.magnolia.module.model.reader.DependencyCheckerImpl.class);
-
-        configuration.registerImplementation(MagnoliaInitPaths.class, DefaultMagnoliaInitPaths.class);
-        configuration.registerImplementation(MagnoliaConfigurationProperties.class, DefaultMagnoliaConfigurationProperties.class);
-        configuration.registerImplementation(MagnoliaPropertiesResolver.class, DefaultMagnoliaPropertiesResolver.class);
-        configuration.registerInstance(MagnoliaServletContextListener.class, this); // This is needed by DefaultMagnoliaInitPaths
-        return configuration;
     }
 
     // TODO What about getPropertiesFilesString

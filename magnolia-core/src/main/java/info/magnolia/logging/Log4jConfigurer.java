@@ -46,9 +46,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.inject.Singleton;
 
 /**
  * <p>
@@ -75,7 +72,6 @@ import javax.inject.Singleton;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-@Singleton
 public class Log4jConfigurer {
 
     /**
@@ -83,23 +79,8 @@ public class Log4jConfigurer {
      */
     public static final String LOG4J_CONFIG = "log4j.config"; //$NON-NLS-1$
 
-    public Log4jConfigurer() {
-    }
-
-    @PostConstruct
-    public void start() {
-        initLogging();
-    }
-
-    @PreDestroy
-    public void stop() {
-        shutdownLogging();
-    }
-
     /**
      * Initialize Log4J, including setting the web app root system property.
-     * @deprecated since 4.5, should not be public.
-     * @see #start()
      */
     public static void initLogging() {
 
@@ -145,8 +126,6 @@ public class Log4jConfigurer {
 
     /**
      * Shuts down Log4J.
-     * @deprecated since 4.5, should not be public.
-     * @see #stop()
      */
     public static void shutdownLogging() {
         log("Shutting down Log4J"); //$NON-NLS-1$

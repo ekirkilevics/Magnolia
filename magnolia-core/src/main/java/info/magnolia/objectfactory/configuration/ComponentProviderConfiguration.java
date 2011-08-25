@@ -115,50 +115,7 @@ public class ComponentProviderConfiguration implements Cloneable {
             throw new RuntimeException(e);
         }
     }
-/*
-    public void print() {
-        System.out.println("<components>");
-        System.out.println("  <id>main</id>");
-        for (Map.Entry<Class, ComponentConfiguration> entry : components.entrySet()) {
-            ComponentConfiguration c = entry.getValue();
-            if (c instanceof ComponentFactoryConfiguration) {
-                ComponentFactoryConfiguration cc = (ComponentFactoryConfiguration) c;
-                System.out.println("  <component>");
-                System.out.println("    <type>"+cc.getType().getName()+"</type>");
-                System.out.println("    <provider>"+cc.getFactoryClass().getName()+"</provider>");
-                System.out.println("  </component>");
-            } else if (c instanceof ImplementationConfiguration) {
-                ImplementationConfiguration cc = (ImplementationConfiguration) c;
-                if (!isTypeMapping(cc.getImplementation())) {
-                    System.out.println("  <component>");
-                    System.out.println("    <type>"+cc.getType().getName()+"</type>");
-                    System.out.println("    <implementation>"+cc.getImplementation().getName()+"</implementation>");
-                    System.out.println("  </component>");
-                }
-            } else if (c instanceof ConfiguredComponentConfiguration) {
-                ConfiguredComponentConfiguration cc = (ConfiguredComponentConfiguration) c;
-                System.out.println("  <component>");
-                System.out.println("    <type>"+cc.getType().getName()+"</type>");
-                if (cc.getWorkspace().equalsIgnoreCase("config"))
-                    System.out.println("    <workspace>"+cc.getWorkspace()+"</workspace>");
-                System.out.println("    <path>"+cc.getPath()+"</path>");
-                if (cc.isObserved())
-                    System.out.println("    <observed>true</observed>");
-                System.out.println("  </component>");
-            }
-        }
-        for (Map.Entry<Class<?>, Class<?>> entry : typeMapping.entrySet()) {
-            if (isTypeMapping(entry.getValue())) {
-                System.out.println("  <type-mapping>");
-                System.out.println("    <type>"+entry.getKey().getName()+"</type>");
-                System.out.println("    <implementation>"+entry.getValue().getName()+"</implementation>");
-                System.out.println("  </type-mapping>");
-            }
 
-        }
-        System.out.println("</components>");
-    }
-*/
     private boolean isTypeMapping(Class clazz) {
         if (clazz.isAnnotationPresent(Singleton.class))
             return false;

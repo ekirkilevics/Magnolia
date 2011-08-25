@@ -55,6 +55,10 @@ public abstract class AbstractMagnoliaConfigurationProperties implements Magnoli
     }
 
     @Override
+    public void init() throws Exception {
+    }
+
+    @Override
     public Set<String> getKeys() {
         final Set<String> allKeys = new HashSet<String>();
         for (PropertySource source : sources) {

@@ -77,7 +77,8 @@ public class DefaultMagnoliaConfigurationProperties extends AbstractMagnoliaConf
         this.resolver = resolver;
     }
 
-    public void init() throws IOException {
+    @Override
+    public void init() throws Exception {
         this.sources = makeSources(initPaths, moduleRegistry, resolver);
     }
 

@@ -33,13 +33,10 @@
  */
 package info.magnolia.objectfactory.configuration;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.google.inject.servlet.RequestScoped;
-import com.google.inject.servlet.SessionScoped;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.model.ComponentDefinition;
@@ -57,49 +54,58 @@ import info.magnolia.objectfactory.ComponentFactory;
  */
 public class ComponentConfigurationBuilder {
 
-    // TODO add support for reading components from other sources, to be used for platform components
-
-    public ComponentProviderConfiguration getMergedComponents(ModuleRegistry moduleRegistry, String id) {
-
+    public ComponentProviderConfiguration readConfiguration(List<String> resourcePaths) {
+        ComponentConfigurationReader reader = new ComponentConfigurationReader();
+        List<ComponentsDefinition> componentsDefinitions = reader.readAll(resourcePaths);
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-
-        for (ModuleDefinition moduleDefinition : moduleRegistry.getModuleDefinitions()) {
-            for (ComponentsDefinition componentsDefinition : moduleDefinition.getComponents()) {
-                if (componentsDefinition.getId().equals(id)) {
-                    for (ComposerDefinition composerDefinition : componentsDefinition.getComposers()) {
-                        configuration.addComposer(getComposer(composerDefinition));
-                    }
-                    for (ComponentDefinition componentDefinition : componentsDefinition.getComponents()) {
-                        ComponentConfiguration component = getComponent(componentDefinition);
-                        if (component != null) {
-                            configuration.addComponent(component);
-                        }
-                    }
-                    for (TypeMappingDefinition typeMappingDefinition : componentsDefinition.getTypeMappings()) {
-                        configuration.addTypeMapping(classForName(typeMappingDefinition.getType()), classForName(typeMappingDefinition.getImplementation()));
-                    }
-                }
-            }
+        for (ComponentsDefinition componentsDefinition : componentsDefinitions) {
+            addComponents(configuration, componentsDefinition);
         }
-
         return configuration;
     }
 
-    private ComponentComposer getComposer(ComposerDefinition composerDefinition) {
+    public ComponentProviderConfiguration getComponentsFromModules(ModuleRegistry moduleRegistry, String id) {
+        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
+        for (ModuleDefinition moduleDefinition : moduleRegistry.getModuleDefinitions()) {
+            for (ComponentsDefinition componentsDefinition : moduleDefinition.getComponents()) {
+                if (componentsDefinition.getId().equals(id)) {
+                    addComponents(configuration, componentsDefinition);
+                }
+            }
+        }
+        return configuration;
+    }
+
+    public void addComponents(ComponentProviderConfiguration configuration, ComponentsDefinition componentsDefinition) {
+        for (ComposerDefinition composerDefinition : componentsDefinition.getComposers()) {
+            configuration.addComposer(getComposer(composerDefinition));
+        }
+        for (ComponentDefinition componentDefinition : componentsDefinition.getComponents()) {
+            ComponentConfiguration component = getComponent(componentDefinition);
+            if (component != null) {
+                configuration.addComponent(component);
+            }
+        }
+        for (TypeMappingDefinition typeMappingDefinition : componentsDefinition.getTypeMappings()) {
+            configuration.addTypeMapping(classForName(typeMappingDefinition.getType()), classForName(typeMappingDefinition.getImplementation()));
+        }
+    }
+
+    protected ComponentComposer getComposer(ComposerDefinition composerDefinition) {
         Class clazz = classForName(composerDefinition.getClassName());
         if (!ComponentComposer.class.isAssignableFrom(clazz)) {
-            throw new IllegalStateException("Composer must be of type ComponentComposer");
+            throw new ComponentConfigurationException("Composer must be of type ComponentComposer");
         }
         try {
             return (ComponentComposer) clazz.newInstance();
         } catch (InstantiationException e) {
-            throw new IllegalStateException("Unable to instantiate composer");
+            throw new ComponentConfigurationException("Unable to instantiate composer");
         } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Unable to instantiate composer");
+            throw new ComponentConfigurationException("Unable to instantiate composer");
         }
     }
 
-    private ComponentConfiguration getComponent(ComponentDefinition componentDefinition) {
+    protected ComponentConfiguration getComponent(ComponentDefinition componentDefinition) {
         if (isProvider(componentDefinition)) {
             return getProvider(componentDefinition);
         } else if (isImplementation(componentDefinition)) {
@@ -109,92 +115,70 @@ public class ComponentConfigurationBuilder {
         } else if (isObserved(componentDefinition)) {
             return getObserved(componentDefinition);
         } else {
-            throw new IllegalStateException("Unable to add component with key " + componentDefinition.getType());
+            throw new ComponentConfigurationException("Unable to add component with key " + componentDefinition.getType());
         }
     }
 
-    private ComponentConfiguration getObserved(ComponentDefinition componentDefinition) {
+    protected ComponentConfiguration getObserved(ComponentDefinition componentDefinition) {
         Class<?> key = classForName(componentDefinition.getType());
         String workspace = StringUtils.isNotBlank(componentDefinition.getWorkspace()) ? componentDefinition.getWorkspace() : ContentRepository.CONFIG;
         return new ConfiguredComponentConfiguration(key, workspace, componentDefinition.getPath(), true);
     }
 
-    private ComponentConfiguration getConfigured(ComponentDefinition componentDefinition) {
+    protected ComponentConfiguration getConfigured(ComponentDefinition componentDefinition) {
         Class<?> key = classForName(componentDefinition.getType());
         String workspace = StringUtils.isNotBlank(componentDefinition.getWorkspace()) ? componentDefinition.getWorkspace() : ContentRepository.CONFIG;
         return new ConfiguredComponentConfiguration(key, workspace, componentDefinition.getPath(), false);
     }
 
-    private ComponentConfiguration getImplementation(ComponentDefinition componentDefinition) {
+    protected ComponentConfiguration getImplementation(ComponentDefinition componentDefinition) {
         Class type = classForName(componentDefinition.getType());
         Class implementation = classForName(componentDefinition.getImplementation());
 
         if (ComponentFactory.class.isAssignableFrom(implementation)) {
             return new ComponentFactoryConfiguration(type, implementation);
         } else {
-
-            // TODO do we really need to say the scope here? wasn't this just to single out the non annotated classes?
-
-            // TODO should be enough to just register all
-
             if (type.equals(implementation)) {
-                if (implementation.isAnnotationPresent(Singleton.class)) {
-                    return new ImplementationConfiguration(type, implementation);
-                } else if (implementation.isAnnotationPresent(RequestScoped.class)) {
-                    return new ImplementationConfiguration(type, implementation);
-                } else if (implementation.isAnnotationPresent(SessionScoped.class)) {
-                    return new ImplementationConfiguration(type, implementation);
-                } else {
-                    // non scoped component declaration
-                }
+                return new ImplementationConfiguration(type, implementation);
             } else {
-                if (implementation.isAnnotationPresent(Singleton.class)) {
-                    return new ImplementationConfiguration(type, implementation);
-                } else if (implementation.isAnnotationPresent(RequestScoped.class)) {
-                    return new ImplementationConfiguration(type, implementation);
-                } else if (implementation.isAnnotationPresent(SessionScoped.class)) {
-                    return new ImplementationConfiguration(type, implementation);
-                } else {
-                    // non scoped component declaration
-                }
+                return new ImplementationConfiguration(type, implementation);
             }
         }
-        return null;
     }
 
-    private ComponentConfiguration getProvider(ComponentDefinition componentDefinition) {
+    protected ComponentConfiguration getProvider(ComponentDefinition componentDefinition) {
         Class key = classForName(componentDefinition.getType());
         Class provider = classForName(componentDefinition.getProvider());
-        if (Provider.class.isAssignableFrom(provider)) {
-            throw new UnsupportedOperationException("javax.inject.Provider not supported yet");
-        } else if (ComponentFactory.class.isAssignableFrom(provider)) {
+        if (ComponentFactory.class.isAssignableFrom(provider)) {
             return new ComponentFactoryConfiguration(key, provider);
         }
-        throw new IllegalStateException("Unknown provider type " + provider);
+        throw new ComponentConfigurationException("Unknown provider type " + provider);
     }
 
-    private boolean isObserved(ComponentDefinition componentDefinition) {
+    protected boolean isObserved(ComponentDefinition componentDefinition) {
         return StringUtils.isNotBlank(componentDefinition.getPath()) && Boolean.parseBoolean(componentDefinition.getObserved());
     }
 
-    private boolean isConfigured(ComponentDefinition componentDefinition) {
+    protected boolean isConfigured(ComponentDefinition componentDefinition) {
         return StringUtils.isNotBlank(componentDefinition.getPath()) && !Boolean.parseBoolean(componentDefinition.getObserved());
     }
 
-    private boolean isImplementation(ComponentDefinition componentDefinition) {
+    protected boolean isImplementation(ComponentDefinition componentDefinition) {
         return StringUtils.isNotBlank(componentDefinition.getImplementation());
     }
 
-    private boolean isProvider(ComponentDefinition componentDefinition) {
+    protected boolean isProvider(ComponentDefinition componentDefinition) {
         return StringUtils.isNotBlank(componentDefinition.getProvider());
     }
 
-    private Class<?> classForName(String className) {
-        // TODO use Classes
+    /**
+     * Returns the class denoted by the supplied class name without initializing the class.
+     */
+    protected Class<?> classForName(String className) {
         try {
             return Class.forName(className, false, this.getClass().getClassLoader());
         } catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
+            throw new ComponentConfigurationException(e);
         }
     }
 }

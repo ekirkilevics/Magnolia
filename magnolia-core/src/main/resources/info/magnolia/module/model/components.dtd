@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT components (id, composer*, component*, type-mapping*)>
+<!ELEMENT id (#PCDATA)>
+
+<!ELEMENT component (type?, implementation?, provider?, workspace?, path?, observed?)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT implementation (#PCDATA)>
+<!ELEMENT provider (#PCDATA)>
+<!ELEMENT workspace (#PCDATA)>
+<!ELEMENT path (#PCDATA)>
+<!ELEMENT observed (#PCDATA)>
+
+<!ELEMENT composer (class)>
+<!ELEMENT class (#PCDATA)>
+
+<!ELEMENT type-mapping (type, implementation)>

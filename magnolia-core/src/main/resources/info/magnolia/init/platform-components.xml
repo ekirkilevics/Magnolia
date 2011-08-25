@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components>
+  <id>platform</id>
+  <component>
+    <type>info.magnolia.module.ModuleManager</type>
+    <implementation>info.magnolia.objectfactory.guice.GuiceModuleManager</implementation>
+  </component>
+  <component>
+    <type>info.magnolia.module.ModuleRegistry</type>
+    <implementation>info.magnolia.module.ModuleRegistryImpl</implementation>
+  </component>
+  <component>
+    <type>info.magnolia.module.model.reader.ModuleDefinitionReader</type>
+    <implementation>info.magnolia.module.model.reader.BetwixtModuleDefinitionReader</implementation>
+  </component>
+  <component>
+    <type>info.magnolia.module.model.reader.DependencyChecker</type>
+    <implementation>info.magnolia.module.model.reader.DependencyCheckerImpl</implementation>
+  </component>
+  <component>
+    <type>info.magnolia.context.ContextFactory</type>
+    <implementation>info.magnolia.context.ContextFactory</implementation>
+  </component>
+  <component>
+    <type>info.magnolia.module.InstallContextImpl</type>
+    <implementation>info.magnolia.module.InstallContextImpl</implementation>
+  </component>
+  <component>
+    <type>info.magnolia.init.MagnoliaConfigurationProperties</type>
+    <implementation>info.magnolia.init.DefaultMagnoliaConfigurationProperties</implementation>
+  </component>
+  <component>
+    <type>info.magnolia.init.MagnoliaPropertiesResolver</type>
+    <implementation>info.magnolia.init.DefaultMagnoliaPropertiesResolver</implementation>
+  </component>
+  <component>
+    <type>info.magnolia.init.MagnoliaInitPaths</type>
+    <implementation>info.magnolia.init.DefaultMagnoliaInitPaths</implementation>
+  </component>
+</components>

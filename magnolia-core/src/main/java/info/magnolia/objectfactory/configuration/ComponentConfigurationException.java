@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,28 +25,33 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.init;
+package info.magnolia.objectfactory.configuration;
 
 /**
- * MagnoliaConfigurationProperties instances are providing access to system-wide
- * configuration properties. They are essentially a wrapper around all the <tt>magnolia.properties</tt> files that are used in the system,
- * as well as properties configured in module descriptors, etc.
- * Implementations of this interface are responsible for locating relevant {@link PropertySource}, and provide them in a sensible order.
+ * Exception thrown when parsing components configuration fails.
  *
- * @since 4.5
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
-public interface MagnoliaConfigurationProperties extends PropertySource {
+public class ComponentConfigurationException extends RuntimeException {
 
-    PropertySource getPropertySource(String key);
+    public ComponentConfigurationException() {
+    }
 
-    void init() throws Exception;
+    public ComponentConfigurationException(String message) {
+        super(message);
+    }
+
+    public ComponentConfigurationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ComponentConfigurationException(Throwable cause) {
+        super(cause);
+    }
 }

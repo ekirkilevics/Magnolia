@@ -96,7 +96,7 @@ public class GuiceModuleManager extends ModuleManagerImpl {
         }
 
         GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
-        builder.withConfiguration(new ComponentConfigurationBuilder().getMergedComponents(moduleRegistry, "main"));
+        builder.withConfiguration(new ComponentConfigurationBuilder().getComponentsFromModules(moduleRegistry, "main"));
         builder.withParent((GuiceComponentProvider) Components.getComponentProvider());
         builder.exposeGlobally();
         builder.addModule(new ModuleClassesModule());

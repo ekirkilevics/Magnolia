@@ -33,9 +33,6 @@
  */
 package info.magnolia.objectfactory.configuration;
 
-import java.util.Map;
-import java.util.Properties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,56 +42,58 @@ import info.magnolia.objectfactory.ComponentComposer;
 import info.magnolia.objectfactory.ComponentConfigurationPath;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.PropertiesComponentProvider;
 
 /**
- * Adds components configured as properties.
+ * This ComponentComposer configures components from properties. Each property key is the interface/base-class, and the
+ * value is either the implementation-to-use class name, an implementation of {@link ComponentFactory} which is used to
+ * instantiate the desired implementation, or the path to a node in the repository (in the form of
+ * <code>repository:/path/to/node</code> or <code>/path/to/node</code>, which defaults to the <code>config</code>
+ * repository). In the latter case, the component is constructed via
+ * {@link info.magnolia.objectfactory.ObservedComponentFactory} and reflects (through observation) the contents of the
+ * given path.
+ *
+ * This behaviour exists for backwards compatibility reasons, prefer configuring your components in a module
+ * descriptor instead, inside a components tag.
  *
  * @version $Id$
- * @see PropertiesComponentProvider
  */
 public class ComponentsFromPropertiesComposer implements ComponentComposer {
 
-    private final static Logger log = LoggerFactory.getLogger(PropertiesComponentProvider.class);
+    private final static Logger log = LoggerFactory.getLogger(ComponentsFromPropertiesComposer.class);
 
     @Override
     public void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration) {
 
         MagnoliaConfigurationProperties configurationProperties = parentComponentProvider.getComponent(MagnoliaConfigurationProperties.class);
 
-        Properties properties = new Properties();
-        for (String key : configurationProperties.getKeys()) {
-            properties.put(key, configurationProperties.getProperty(key));
+        if (configurationProperties != null) {
+            for (String key : configurationProperties.getKeys()) {
+                addComponent(configuration, key, configurationProperties.getProperty(key));
+            }
         }
-
-        createConfigurationFromProperties(properties, configuration);
     }
 
-    protected <T> void createConfigurationFromProperties(Properties mappings, ComponentProviderConfiguration configuration) {
-        for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
-            String key = (String) entry.getKey();
-            String value = (String) entry.getValue();
+    protected <T> void addComponent(ComponentProviderConfiguration configuration, String key, String value) {
 
-            final Class<T> type = (Class<T>) classForName(key);
-            if (type == null) {
-                log.debug("{} does not seem to resolve to a class. (property value: {})", key, value);
-                continue;
-            }
+        final Class<T> type = (Class<T>) classForName(key);
+        if (type == null) {
+            log.debug("{} does not seem to resolve to a class. (property value: {})", key, value);
+            return;
+        }
 
-            if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
-                ComponentConfigurationPath path = new ComponentConfigurationPath(value);
-                configuration.addComponent(new ConfiguredComponentConfiguration(type, path.getRepository(), path.getPath(), true));
+        if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
+            ComponentConfigurationPath path = new ComponentConfigurationPath(value);
+            configuration.addComponent(new ConfiguredComponentConfiguration(type, path.getRepository(), path.getPath(), true));
+        } else {
+            Class<? extends T> valueType = (Class<? extends T>) classForName(value);
+            if (valueType == null) {
+                log.debug("{} does not seem to resolve a class or a configuration path. (property key: {})", value, key);
             } else {
-                Class<? extends T> valueType = (Class<? extends T>) classForName(value);
-                if (valueType == null) {
-                    log.debug("{} does not seem to resolve a class or a configuration path. (property key: {})", value, key);
+                if (ComponentFactory.class.isAssignableFrom(valueType)) {
+                    configuration.addComponent(new ComponentFactoryConfiguration(type, valueType));
                 } else {
-                    if (ComponentFactory.class.isAssignableFrom(valueType)) {
-                        configuration.addComponent(new ComponentFactoryConfiguration(type, valueType));
-                    } else {
-                        configuration.addComponent(new ImplementationConfiguration(type, valueType));
-                        configuration.addTypeMapping(type, valueType);
-                    }
+                    configuration.addComponent(new ImplementationConfiguration(type, valueType));
+                    configuration.addTypeMapping(type, valueType);
                 }
             }
         }
