@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.rendering.engine.AppendableOnlyOutputProvider;
 import info.magnolia.rendering.engine.RenderingEngine;
 
 import java.io.IOException;
@@ -69,6 +70,7 @@ public class Include extends BodyTagSupport {
      * File to be included (e.g. /templates/jsp/x.jsp).
      * @deprecated
      */
+    @Deprecated
     private String path;
 
     /**
@@ -97,6 +99,7 @@ public class Include extends BodyTagSupport {
      * @see #setContentNode(Content)
      * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
      */
+    @Deprecated
     public void setContainer(Content contentNode) {
         this.setContentNode(contentNode);
     }
@@ -114,6 +117,7 @@ public class Include extends BodyTagSupport {
      * Just use basic jsp tags (i.e. <jsp:include/>) if you need to include a jsp in your templates.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
+    @Deprecated
     public void setPath(String path) {
         this.path = path;
     }
@@ -215,9 +219,7 @@ public class Include extends BodyTagSupport {
                 webContext.setPageContext(pageContext);
                 webContext.push((HttpServletRequest)pageContext.getRequest(), (HttpServletResponse)pageContext.getResponse());
                 try {
-                    
-                    
-                    renderingEngine.render(content.getJCRNode(), pageContext.getOut());
+                    renderingEngine.render(content.getJCRNode(), new AppendableOnlyOutputProvider(pageContext.getOut()));
                 } finally{
                     webContext.pop();
                     webContext.setPageContext(null);
