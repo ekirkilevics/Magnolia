@@ -72,7 +72,7 @@ public class GuiceScopesTest {
         ComponentsTestUtil.clear();
         SystemProperty.clear();
         MgnlContext.setInstance(null);
-        Components.setProvider(null);
+        Components.setComponentProvider(null);
     }
 
     @Singleton

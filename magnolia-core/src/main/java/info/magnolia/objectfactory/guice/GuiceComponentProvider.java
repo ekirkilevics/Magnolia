@@ -55,17 +55,17 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
     @Inject
     private Jsr250Injector injector;
     private ObjectManufacturer manufacturer;
-    private final Map<Class<?>, Class<?>> implementations;
+    private final Map<Class<?>, Class<?>> typeMappings;
     private GuiceComponentProvider parentComponentProvider;
 
-    public GuiceComponentProvider(Map<Class<?>, Class<?>> implementations, GuiceComponentProvider parentComponentProvider) {
+    public GuiceComponentProvider(Map<Class<?>, Class<?>> typeMappings, GuiceComponentProvider parentComponentProvider) {
         this.parentComponentProvider = parentComponentProvider;
-        this.implementations = implementations;
+        this.typeMappings = typeMappings;
     }
 
     @Override
     public <T> Class<? extends T> getImplementation(Class<T> type) {
-        Class<?> implementation = implementations.get(type);
+        Class<?> implementation = typeMappings.get(type);
         if (implementation == null) {
             if (parentComponentProvider != null) {
                 return parentComponentProvider.getImplementation(type);

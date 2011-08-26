@@ -63,7 +63,7 @@ public class GuiceComponentFactoryProviderAdapter implements Provider {
     }
 
     @Override
-    public Object get() {
+    public synchronized Object get() {
         if (this.factory == null) {
             try {
                 this.factory = factoryClass.newInstance();

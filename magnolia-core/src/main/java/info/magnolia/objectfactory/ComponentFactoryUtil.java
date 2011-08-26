@@ -38,12 +38,14 @@ import java.lang.reflect.InvocationTargetException;
 
 
 /**
- * Util method to work with {@link ComponentFactory}s.
+ * Utility method to work with {@link ComponentFactory}s.
+ *
+ * @version $Id$
  */
 public class ComponentFactoryUtil {
 
     /**
-     * Uses the empty constructor or passes the {@link ComponentProvider} such a constructor exists.
+     * Uses the empty constructor or passes the {@link ComponentProvider} if such a constructor exists.
      */
     public static <T> ComponentFactory<T> createFactory(Class<? extends ComponentFactory<T>> factoryClass, ComponentProvider componentProvider) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
         try {

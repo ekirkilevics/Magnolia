@@ -52,7 +52,7 @@ public class ObjectFactoryTest {
     @After
     public void tearDown() throws Exception {
         SystemProperty.clear();
-        Components.setProvider(null);
+        Components.setComponentProvider(null);
     }
     @Test
     public void testSettingSystemPropertyIntoDefaultComponentStillAllowsToSwapImplementationsLater() {

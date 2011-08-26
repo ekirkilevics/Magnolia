@@ -40,14 +40,14 @@ import info.magnolia.content2bean.Content2BeanUtil;
 
 /**
  * Builds a component configured in the repository by using content2bean.
+ *
  * @param <T> the components type
+ * @version $Id$
  */
 final class ConfiguredComponentFactory<T> implements ComponentFactory<T> {
 
     private final String path;
-
     private final String workspace;
-
     private ComponentProvider componentProvider;
 
     public ConfiguredComponentFactory(String path, String workspace, ComponentProvider componentProvider) {
@@ -59,13 +59,12 @@ final class ConfiguredComponentFactory<T> implements ComponentFactory<T> {
     @Override
     public T newInstance() {
         final Content node = ContentUtil.getContent(workspace, path);
-        if(node == null){
+        if (node == null) {
             throw new NullPointerException("Can't find a the node [" + workspace + ":" + path + "] to create an instance");
         }
         try {
             return (T) Content2BeanUtil.toBean(node, true, componentProvider);
-        }
-        catch (Content2BeanException e) {
+        } catch (Content2BeanException e) {
             throw new RuntimeException(e);
         }
     }

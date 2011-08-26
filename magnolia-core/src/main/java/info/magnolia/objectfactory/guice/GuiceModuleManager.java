@@ -114,7 +114,7 @@ public class GuiceModuleManager extends ModuleManagerImpl {
     public void stopModules() {
         super.stopModules();
         // See comment in GuiceServletContextListener
-        Components.setProvider(main.getParent());
+        Components.setComponentProvider(main.getParent());
         main.destroy();
     }
 

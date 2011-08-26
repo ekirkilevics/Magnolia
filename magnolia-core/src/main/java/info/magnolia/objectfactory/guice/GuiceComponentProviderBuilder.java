@@ -106,7 +106,7 @@ public class GuiceComponentProviderBuilder {
         // Create the ComponentProvider instance and expose it globally if required
         final GuiceComponentProvider componentProvider = new GuiceComponentProvider(configuration.getTypeMapping(), parent);
         if (exposeGlobally) {
-            Components.setProvider(componentProvider);
+            Components.setComponentProvider(componentProvider);
         }
 
         Module module = new AbstractModule() {

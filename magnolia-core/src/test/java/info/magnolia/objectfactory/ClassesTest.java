@@ -55,7 +55,7 @@ public class ClassesTest {
     public void setUp() throws Exception {
         SystemProperty.clear();
         SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
-        Components.setProvider(new MockComponentProvider(SystemProperty.getProperties()));
+        Components.setComponentProvider(new MockComponentProvider(SystemProperty.getProperties()));
         resetCFP();
     }
 
@@ -63,7 +63,7 @@ public class ClassesTest {
     public void tearDown() throws Exception {
         resetCFP();
         SystemProperty.clear();
-        Components.setProvider(null);
+        Components.setComponentProvider(null);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }

@@ -102,7 +102,7 @@ public class GuiceComponentProviderTest {
         ComponentsTestUtil.clear();
         SystemProperty.clear();
         MgnlContext.setInstance(null);
-        Components.setProvider(null);
+        Components.setComponentProvider(null);
     }
     @Test
     public void testGetComponentProvider() {

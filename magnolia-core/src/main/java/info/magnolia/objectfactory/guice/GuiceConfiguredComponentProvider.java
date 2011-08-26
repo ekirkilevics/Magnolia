@@ -65,7 +65,7 @@ public class GuiceConfiguredComponentProvider<T> implements Provider<T> {
     }
 
     @Override
-    public T get() {
+    public synchronized T get() {
         final Node node;
         try {
             node = MgnlContext.getJCRSession(workspace).getNode(path);

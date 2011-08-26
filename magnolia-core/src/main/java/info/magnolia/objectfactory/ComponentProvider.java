@@ -34,41 +34,40 @@
 package info.magnolia.objectfactory;
 
 /**
- * ComponentProvider is responsible for providing components, singletons or new instances.
- * Magnolia "beans", "managers" etc are all provided by this.
+ * ComponentProvider is responsible for providing components, these can be scoped as singletons or live in narrower
+ * scopes such as request and session, or be non scoped in which case a new instances will be created. Magnolia "beans",
+ * "managers" etc are all provided by this.
  *
- * Since Magnolia 4.5, you are encouraged to use IoC, so the cases where this class
- * is needed should be limited. Think twice !
+ * Since Magnolia 4.5, you are encouraged to use IoC, only in rare cases should you need to directly use this class.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public interface ComponentProvider {
 
     /**
-     * Returns the implementation type mapped for a given type.
-     *
-     * Used by Content2Bean.
+     * Returns the implementation type mapped for a given type. This is primarily used by Content2Bean.
      */
     <T> Class<? extends T> getImplementation(Class<T> type) throws ClassNotFoundException;
 
     /**
+     * Returns the component mapped for a given type.
+     *
      * @deprecated since 4.5, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
-     * Additionally, it should not be up to the client to decide whether this component is a singleton or not.
      */
     <T> T getSingleton(Class<T> type);
 
+    /**
+     * Returns the component mapped for a given type.
+     */
     <T> T getComponent(Class<T> type);
 
     /**
-     * Creates a new instance of the passed interface / class by using the registered
-     * implementation. The parameters are used to build the object. Most likely they are passed to
-     * the constructor. If this fails a {@link MgnlInstantiationException} is thrown.
+     * Creates a new instance of the passed interface / class by using the registered implementation. The parameters are
+     * used to build the object. Most likely they are passed to the constructor. If this fails a
+     * {@link MgnlInstantiationException} is thrown.
      *
      * @throws MgnlInstantiationException
-     * @throws UnsupportedOperationException
      */
-
     <T> T newInstance(Class<T> type, Object... parameters);
 
 }

@@ -48,22 +48,31 @@ import info.magnolia.objectfactory.ComponentConfigurer;
 import info.magnolia.objectfactory.ComponentFactory;
 
 /**
- * Builder for creating a ComponentProviderConfiguration from components configured in module descriptors.
+ * Builder for creating {@link ComponentProviderConfiguration}s from component definitions.
  *
  * @version $Id$
  */
 public class ComponentProviderConfigurationBuilder {
 
-    public ComponentProviderConfiguration readConfiguration(List<String> resourcePaths) {
+    /**
+     * Reads component definitions from the specified resources and returns a {@link ComponentProviderConfiguration}.
+     */
+    public ComponentProviderConfiguration readConfiguration(List<String> resourcePaths, String id) {
         ComponentConfigurationReader reader = new ComponentConfigurationReader();
         List<ComponentsDefinition> componentsDefinitions = reader.readAll(resourcePaths);
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
         for (ComponentsDefinition componentsDefinition : componentsDefinitions) {
-            addComponents(configuration, componentsDefinition);
+            if (componentsDefinition.getId().equals(id)) {
+                addComponents(configuration, componentsDefinition);
+            }
         }
         return configuration;
     }
 
+    /**
+     * Reads component definitions from module descriptors and return a {@link ComponentProviderConfiguration}
+     * containing all components with the given id.
+     */
     public ComponentProviderConfiguration getComponentsFromModules(ModuleRegistry moduleRegistry, String id) {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
         for (ModuleDefinition moduleDefinition : moduleRegistry.getModuleDefinitions()) {

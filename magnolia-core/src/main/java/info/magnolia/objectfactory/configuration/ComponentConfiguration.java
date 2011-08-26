@@ -40,8 +40,6 @@ package info.magnolia.objectfactory.configuration;
  */
 public abstract class ComponentConfiguration implements Cloneable {
 
-    // TODO should this class be generic?
-
     private Class type;
 
     protected ComponentConfiguration() {

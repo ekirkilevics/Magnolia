@@ -96,7 +96,7 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
     @After
     public void tearDown() throws Exception {
         super.tearDown();
-        Components.setProvider(null);
+        Components.setComponentProvider(null);
     }
 
     @Test

@@ -123,7 +123,7 @@ public class ComponentsTestUtil {
             }
 
             defaultComponentProvider = new MockComponentProvider(properties);
-            Components.setProvider(defaultComponentProvider);
+            Components.setComponentProvider(defaultComponentProvider);
         }
 
         return ((MockComponentProvider) Components.getComponentProvider());

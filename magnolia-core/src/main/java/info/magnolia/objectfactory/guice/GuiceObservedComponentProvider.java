@@ -63,7 +63,7 @@ public class GuiceObservedComponentProvider<T> implements Provider<T> {
     }
 
     @Override
-    public T get() {
+    public synchronized T get() {
         if (observedComponentFactory == null) {
             observedComponentFactory = new ObservedComponentFactory<T>(repository, path, type, componentProvider);
         }

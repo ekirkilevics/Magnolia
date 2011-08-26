@@ -38,7 +38,7 @@ package info.magnolia.objectfactory;
  * needed and is recreated if its configuration changes in the repository.
  *
  * @param <T> the type of component this factory instantiates.
- * @author tmattsson
+ * @version $Id$
  */
 public class LazyObservedComponentFactory<T> implements ComponentFactory<T> {
 

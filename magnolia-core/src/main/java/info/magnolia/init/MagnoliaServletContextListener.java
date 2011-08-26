@@ -227,12 +227,12 @@ public class MagnoliaServletContextListener implements ServletContextListener {
         // scopes.
 
         if (system != null) {
-            Components.setProvider(system.getParent());
+            Components.setComponentProvider(system.getParent());
             system.destroy();
         }
 
         if (platform != null) {
-            Components.setProvider(platform.getParent());
+            Components.setComponentProvider(platform.getParent());
             platform.destroy();
         }
 
@@ -242,7 +242,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     protected ComponentProviderConfiguration getPlatformComponents() {
         ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
         List<String> resources = getPlatformComponentsResources();
-        ComponentProviderConfiguration platformComponents = configurationBuilder.readConfiguration(resources);
+        ComponentProviderConfiguration platformComponents = configurationBuilder.readConfiguration(resources, "platform");
         platformComponents.registerInstance(ServletContext.class, servletContext);
         // This is needed by DefaultMagnoliaInitPaths for backwards compatibility
         platformComponents.registerInstance(MagnoliaServletContextListener.class, this);

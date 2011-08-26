@@ -34,64 +34,51 @@
 package info.magnolia.objectfactory;
 
 /**
- * Entry point to a ComponentProvider. The instance to be used must be set using {@link #setProvider(ComponentProvider)}.
- * There should not be any good reason to change this at runtime.
+ * Static access utility for the currently set {@link ComponentProvider}. The current {@link ComponentProvider} is set
+ * during start-up and there should be little reason to change it at runtime.
  *
- * @see info.magnolia.cms.servlets.MgnlServletContextListener
+ * Since Magnolia 4.5, you are encouraged to use IoC, only in rare cases should you need to directly use this class.
+ *
+ * @version $Id$
  * @see ComponentProvider
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
  */
 public class Components {
-    private static ComponentProvider componentProvider = new NullComponentProvider();
+
+    private static volatile ComponentProvider componentProvider = new NullComponentProvider();
 
     /**
-     * Are you sure you really need to do this ?
-     * @see info.magnolia.cms.servlets.MgnlServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+     * Sets the current {@link ComponentProvider}.
      */
-    public static void setProvider(ComponentProvider provider) {
+    public static void setComponentProvider(ComponentProvider provider) {
         componentProvider = provider;
     }
 
     /**
-     * @deprecated since 4.5, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
-     * Additionally, it should not be up to the client to decide whether this component is a singleton or not.
+     * Returns the currently set {@link ComponentProvider}.
+     */
+    public static ComponentProvider getComponentProvider() {
+        return componentProvider;
+    }
+
+    /**
+     * Returns a component from the currently set {@link ComponentProvider}.
+     *
+     * @see ComponentProvider#getComponent(Class)
+     * @deprecated since 4.5, use IoC to inject the component or use #getComponent(Class).
      */
     public static <T> T getSingleton(Class<T> type) {
         return getComponent(type);
     }
 
     /**
-     * Convenience method for retrieving a component out of the {@link ComponentProvider}.
-     * Consider using IoC instead.
+     * Returns a component from the currently set {@link ComponentProvider}. Consider using IoC to inject the component instead.
      */
     public static <T> T getComponent(Class<T> type) {
         return getComponentProvider().getComponent(type);
     }
 
-    public static ComponentProvider getComponentProvider() {
-        ComponentProvider scoped = scopes.get();
-        if (scoped != null) {
-            return scoped;
-        }
-        return componentProvider;
-    }
-
-    public static void pushScope(ComponentProvider scope) {
-        if (scopes.get() != null) {
-            throw new IllegalStateException("Only one additional scope is supported at this time");
-        }
-        scopes.set(scope);
-    }
-
-    public static void popScope(ComponentProvider scope) {
-        scopes.remove();
-    }
-
-    private static ThreadLocal<ComponentProvider> scopes = new ThreadLocal<ComponentProvider>();
-
     private static class NullComponentProvider implements ComponentProvider {
+
         @Override
         public <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException {
             throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
