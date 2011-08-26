@@ -53,7 +53,7 @@ import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.configuration.ComponentConfigurationBuilder;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfigurationBuilder;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.guice.GuiceComponentProvider;
 import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
@@ -240,7 +240,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     }
 
     protected ComponentProviderConfiguration getPlatformComponents() {
-        ComponentConfigurationBuilder configurationBuilder = new ComponentConfigurationBuilder();
+        ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
         List<String> resources = getPlatformComponentsResources();
         ComponentProviderConfiguration platformComponents = configurationBuilder.readConfiguration(resources);
         platformComponents.registerInstance(ServletContext.class, servletContext);
@@ -264,7 +264,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     }
 
     protected ComponentProviderConfiguration getSystemComponents() {
-        ComponentConfigurationBuilder configurationBuilder = new ComponentConfigurationBuilder();
+        ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
         return configurationBuilder.getComponentsFromModules(platform.getComponent(ModuleRegistry.class), "system");
     }
 

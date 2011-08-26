@@ -65,7 +65,7 @@ import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyCheckerImpl;
 import info.magnolia.objectfactory.configuration.ComponentConfiguration;
-import info.magnolia.objectfactory.configuration.ComponentConfigurationBuilder;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfigurationBuilder;
 import info.magnolia.objectfactory.configuration.ComponentFactoryConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
@@ -135,7 +135,7 @@ public abstract class MgnlTestCase {
         ComponentsTestUtil.setInstance(ModuleRegistry.class, mr);
         ComponentsTestUtil.setInstance(MagnoliaConfigurationProperties.class, configurationProperties);
 
-        ComponentConfigurationBuilder configurationBuilder = new ComponentConfigurationBuilder();
+        ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
         ComponentProviderConfiguration configuration = configurationBuilder.getComponentsFromModules(mr, "system");
         configuration.combine(configurationBuilder.getComponentsFromModules(mr, "main"));
 

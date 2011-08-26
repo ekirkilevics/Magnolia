@@ -52,7 +52,7 @@ import info.magnolia.objectfactory.ComponentFactory;
  *
  * @version $Id$
  */
-public class ComponentConfigurationBuilder {
+public class ComponentProviderConfigurationBuilder {
 
     public ComponentProviderConfiguration readConfiguration(List<String> resourcePaths) {
         ComponentConfigurationReader reader = new ComponentConfigurationReader();

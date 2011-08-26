@@ -63,7 +63,8 @@ import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentConfigurationPath;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.configuration.ComponentConfigurationBuilder;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfigurationBuilder;
 
 
 /**
@@ -96,12 +97,17 @@ public class GuiceModuleManager extends ModuleManagerImpl {
         }
 
         GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
-        builder.withConfiguration(new ComponentConfigurationBuilder().getComponentsFromModules(moduleRegistry, "main"));
+        builder.withConfiguration(getMainComponents());
         builder.withParent((GuiceComponentProvider) Components.getComponentProvider());
         builder.exposeGlobally();
         builder.addModule(new ModuleClassesModule());
 
         main = builder.build();
+    }
+
+    protected ComponentProviderConfiguration getMainComponents() {
+        ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
+        return configurationBuilder.getComponentsFromModules(moduleRegistry, "main");
     }
 
     @Override
