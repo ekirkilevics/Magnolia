@@ -37,6 +37,8 @@ import java.io.IOException;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.rendering.engine.RenderException;
 
 /**
@@ -73,7 +75,7 @@ public class MarkupHelper implements Appendable {
 
     public MarkupHelper attribute(String name, String value) throws IOException {
         // TODO we need to do html attribute escaping on the value
-        if (value != null) {
+        if (StringUtils.isNotEmpty(value)) {
             appendable.append(SPACE).append(name).append(EQUALS).append(QUOTE).append(value).append(QUOTE);
         }
         return this;
