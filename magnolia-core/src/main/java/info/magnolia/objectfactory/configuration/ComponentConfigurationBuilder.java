@@ -41,10 +41,10 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.model.ComponentDefinition;
 import info.magnolia.module.model.ComponentsDefinition;
-import info.magnolia.module.model.ComposerDefinition;
+import info.magnolia.module.model.ConfigurerDefinition;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.TypeMappingDefinition;
-import info.magnolia.objectfactory.ComponentComposer;
+import info.magnolia.objectfactory.ComponentConfigurer;
 import info.magnolia.objectfactory.ComponentFactory;
 
 /**
@@ -77,8 +77,8 @@ public class ComponentConfigurationBuilder {
     }
 
     public void addComponents(ComponentProviderConfiguration configuration, ComponentsDefinition componentsDefinition) {
-        for (ComposerDefinition composerDefinition : componentsDefinition.getComposers()) {
-            configuration.addComposer(getComposer(composerDefinition));
+        for (ConfigurerDefinition configurerDefinition : componentsDefinition.getConfigurers()) {
+            configuration.addConfigurer(getConfigurer(configurerDefinition));
         }
         for (ComponentDefinition componentDefinition : componentsDefinition.getComponents()) {
             ComponentConfiguration component = getComponent(componentDefinition);
@@ -91,17 +91,17 @@ public class ComponentConfigurationBuilder {
         }
     }
 
-    protected ComponentComposer getComposer(ComposerDefinition composerDefinition) {
-        Class clazz = classForName(composerDefinition.getClassName());
-        if (!ComponentComposer.class.isAssignableFrom(clazz)) {
-            throw new ComponentConfigurationException("Composer must be of type ComponentComposer");
+    protected ComponentConfigurer getConfigurer(ConfigurerDefinition configurerDefinition) {
+        Class clazz = classForName(configurerDefinition.getClassName());
+        if (!ComponentConfigurer.class.isAssignableFrom(clazz)) {
+            throw new ComponentConfigurationException("Configurer must be of type ComponentConfigurer");
         }
         try {
-            return (ComponentComposer) clazz.newInstance();
+            return (ComponentConfigurer) clazz.newInstance();
         } catch (InstantiationException e) {
-            throw new ComponentConfigurationException("Unable to instantiate composer");
+            throw new ComponentConfigurationException("Unable to instantiate configurer");
         } catch (IllegalAccessException e) {
-            throw new ComponentConfigurationException("Unable to instantiate composer");
+            throw new ComponentConfigurationException("Unable to instantiate configurer");
         }
     }
 

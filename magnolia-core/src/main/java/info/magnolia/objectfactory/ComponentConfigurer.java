@@ -31,30 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory.guice;
+package info.magnolia.objectfactory;
 
-import com.google.inject.AbstractModule;
-import info.magnolia.objectfactory.ComponentComposer;
-import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 /**
- * Abstract base class for composers that interact with Guice.
+ * Component configurers are called to customize the ComponentProviderConfiguration before its used to create a
+ * ComponentProvider.
  *
  * @version $Id$
  */
-public abstract class AbstractGuiceComponentComposer extends AbstractModule implements ComponentComposer {
+public interface ComponentConfigurer {
 
-    protected ComponentProvider parentComponentProvider;
-    protected ComponentProviderConfiguration configuration;
-
-    @Override
-    public void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration) {
-        this.parentComponentProvider = parentComponentProvider;
-        this.configuration = configuration;
-    }
-
-    @Override
-    protected void configure() {
-    }
+    void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration);
 }

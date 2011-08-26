@@ -46,7 +46,7 @@ public class ComponentsDefinition {
 
     private String id;
     private List<ComponentDefinition> components = new ArrayList<ComponentDefinition>();
-    private List<ComposerDefinition> composers = new ArrayList<ComposerDefinition>();
+    private List<ConfigurerDefinition> configurers = new ArrayList<ConfigurerDefinition>();
     private List<TypeMappingDefinition> typeMappings = new ArrayList<TypeMappingDefinition>();
 
     public String getId() {
@@ -69,16 +69,16 @@ public class ComponentsDefinition {
         return components.add(component);
     }
 
-    public List<ComposerDefinition> getComposers() {
-        return composers;
+    public List<ConfigurerDefinition> getConfigurers() {
+        return configurers;
     }
 
-    public void setComposers(List<ComposerDefinition> composers) {
-        this.composers = composers;
+    public void setConfigurers(List<ConfigurerDefinition> configurers) {
+        this.configurers = configurers;
     }
 
-    public boolean addComposer(ComposerDefinition composerDefinition) {
-        return composers.add(composerDefinition);
+    public boolean addConfigurer(ConfigurerDefinition configurerDefinition) {
+        return configurers.add(configurerDefinition);
     }
 
     public List<TypeMappingDefinition> getTypeMappings() {

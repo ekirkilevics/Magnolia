@@ -41,7 +41,7 @@ import javax.inject.Singleton;
 
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.SessionScoped;
-import info.magnolia.objectfactory.ComponentComposer;
+import info.magnolia.objectfactory.ComponentConfigurer;
 
 
 /**
@@ -53,7 +53,7 @@ public class ComponentProviderConfiguration implements Cloneable {
 
     private Map<Class<?>, Class<?>> typeMapping = new HashMap<Class<?>, Class<?>>();
     private Map<Class, ComponentConfiguration> components = new HashMap<Class, ComponentConfiguration>();
-    private List<ComponentComposer> composers = new ArrayList<ComponentComposer>();
+    private List<ComponentConfigurer> configurers = new ArrayList<ComponentConfigurer>();
 
     public void addComponent(ComponentConfiguration componentConfiguration) {
         this.components.put(componentConfiguration.getType(), componentConfiguration);
@@ -71,12 +71,12 @@ public class ComponentProviderConfiguration implements Cloneable {
         return components;
     }
 
-    public List<ComponentComposer> getComposers() {
-        return composers;
+    public List<ComponentConfigurer> getConfigurers() {
+        return configurers;
     }
 
-    public boolean addComposer(ComponentComposer composer) {
-        return composers.add(composer);
+    public boolean addConfigurer(ComponentConfigurer configurer) {
+        return configurers.add(configurer);
     }
 
     public <T> void registerImplementation(Class<T> type, Class<? extends T> implementation) {
@@ -94,7 +94,7 @@ public class ComponentProviderConfiguration implements Cloneable {
     public void combine(ComponentProviderConfiguration components) {
         this.typeMapping.putAll(components.typeMapping);
         this.components.putAll(components.clone().components);
-        this.composers.addAll(components.composers);
+        this.configurers.addAll(components.configurers);
     }
 
     public boolean hasConfigFor(Class<?> type) {

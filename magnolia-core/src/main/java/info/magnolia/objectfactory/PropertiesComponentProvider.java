@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
-import info.magnolia.objectfactory.configuration.ComponentsFromPropertiesComposer;
+import info.magnolia.objectfactory.configuration.ComponentsFromPropertiesConfigurer;
 
 
 /**
@@ -67,7 +67,7 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
 
     public void parseConfiguration(final Properties mappings) {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-        new ComponentsFromPropertiesComposer() {
+        new ComponentsFromPropertiesConfigurer() {
             @Override
             public void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration) {
                 for (Map.Entry<Object, Object> entry : mappings.entrySet()) {

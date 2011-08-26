@@ -38,13 +38,13 @@ import org.slf4j.LoggerFactory;
 
 import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.objectfactory.Classes;
-import info.magnolia.objectfactory.ComponentComposer;
+import info.magnolia.objectfactory.ComponentConfigurer;
 import info.magnolia.objectfactory.ComponentConfigurationPath;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
 
 /**
- * This ComponentComposer configures components from properties. Each property key is the interface/base-class, and the
+ * This ComponentConfigurer configures components from properties. Each property key is the interface/base-class, and the
  * value is either the implementation-to-use class name, an implementation of {@link ComponentFactory} which is used to
  * instantiate the desired implementation, or the path to a node in the repository (in the form of
  * <code>repository:/path/to/node</code> or <code>/path/to/node</code>, which defaults to the <code>config</code>
@@ -57,9 +57,9 @@ import info.magnolia.objectfactory.ComponentProvider;
  *
  * @version $Id$
  */
-public class ComponentsFromPropertiesComposer implements ComponentComposer {
+public class ComponentsFromPropertiesConfigurer implements ComponentConfigurer {
 
-    private final static Logger log = LoggerFactory.getLogger(ComponentsFromPropertiesComposer.class);
+    private final static Logger log = LoggerFactory.getLogger(ComponentsFromPropertiesConfigurer.class);
 
     @Override
     public void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration) {

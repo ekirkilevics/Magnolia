@@ -34,12 +34,12 @@
 package info.magnolia.module.model;
 
 /**
- * Composer as defined in module descriptor.
+ * Component configurer as defined in module descriptor.
  *
  * @version $Id$
  * @see ModuleDefinition
  */
-public class ComposerDefinition {
+public class ConfigurerDefinition {
 
     private String className;
 

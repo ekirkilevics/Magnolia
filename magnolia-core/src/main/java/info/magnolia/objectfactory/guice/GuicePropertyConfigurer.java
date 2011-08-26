@@ -45,7 +45,7 @@ import info.magnolia.init.MagnoliaConfigurationProperties;
  *
  * @version $Id$
  */
-public class GuicePropertyComposer extends AbstractGuiceComponentComposer {
+public class GuicePropertyConfigurer extends AbstractGuiceComponentConfigurer {
 
     @Override
     protected void configure() {

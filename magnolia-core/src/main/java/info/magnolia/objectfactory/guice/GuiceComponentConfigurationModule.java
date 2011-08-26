@@ -77,9 +77,9 @@ public class GuiceComponentConfigurationModule extends AbstractModule {
             }
         }
 
-        for (Object composer : configuration.getComposers()) {
-            if (composer instanceof Module) {
-                install((Module) composer);
+        for (Object configurer : configuration.getConfigurers()) {
+            if (configurer instanceof Module) {
+                install((Module) configurer);
             }
         }
     }

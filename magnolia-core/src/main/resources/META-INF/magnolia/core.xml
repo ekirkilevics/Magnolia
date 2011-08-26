@@ -61,9 +61,9 @@
 
   <components>
     <id>main</id>
-    <composer>
-      <class>info.magnolia.objectfactory.configuration.ComponentsFromPropertiesComposer</class>
-    </composer>
+    <configurer>
+      <class>info.magnolia.objectfactory.configuration.ComponentsFromPropertiesConfigurer</class>
+    </configurer>
     <component>
       <type>info.magnolia.context.WebContextFactory</type>
       <implementation>info.magnolia.context.WebContextFactoryImpl</implementation>

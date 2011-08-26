@@ -43,7 +43,7 @@ import com.google.inject.Module;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
 import com.mycila.inject.jsr250.Jsr250;
-import info.magnolia.objectfactory.ComponentComposer;
+import info.magnolia.objectfactory.ComponentConfigurer;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -92,13 +92,13 @@ public class GuiceComponentProviderBuilder {
             configuration = new ComponentProviderConfiguration();
         }
 
-        // Add implicit composers
-        configuration.addComposer(new GuiceContextAndScopesComposer());
-        configuration.addComposer(new GuicePropertyComposer());
+        // Add implicit configurers
+        configuration.addConfigurer(new GuiceContextAndScopesConfigurer());
+        configuration.addConfigurer(new GuicePropertyConfigurer());
 
-        // Allow composers to customize the configuration before we use it
-        for (ComponentComposer composer : configuration.getComposers()) {
-            composer.doWithConfiguration(parent, configuration);
+        // Allow configurers to customize the configuration before we use it
+        for (ComponentConfigurer configurer : configuration.getConfigurers()) {
+            configurer.doWithConfiguration(parent, configuration);
         }
 
 //        configuration.print();

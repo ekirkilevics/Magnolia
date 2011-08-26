@@ -1,5 +1,5 @@
 <info>
-  <element name="composer">
+  <element name="configurer">
     <element name="class" property="className"/>
     <addDefaults/>
   </element>

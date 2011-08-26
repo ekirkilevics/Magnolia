@@ -50,7 +50,7 @@ import info.magnolia.context.WebContext;
  *
  * @version $Id$
  */
-public class GuiceContextAndScopesComposer extends AbstractGuiceComponentComposer {
+public class GuiceContextAndScopesConfigurer extends AbstractGuiceComponentConfigurer {
 
     @Override
     protected void configure() {

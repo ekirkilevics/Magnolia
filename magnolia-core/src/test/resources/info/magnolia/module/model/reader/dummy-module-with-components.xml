@@ -8,12 +8,12 @@
 
   <components>
     <id>platform</id>
-    <composer>
-      <class>com.acme.FirstTestComposer</class>
-    </composer>
-    <composer>
-      <class>com.acme.SecondTestComposer</class>
-    </composer>
+    <configurer>
+      <class>com.acme.FirstTestConfigurer</class>
+    </configurer>
+    <configurer>
+      <class>com.acme.SecondTestConfigurer</class>
+    </configurer>
     <component>
       <type>com.acme.ComponentKey</type>
       <implementation>impl</implementation>

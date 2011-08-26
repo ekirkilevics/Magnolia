@@ -37,7 +37,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.model.ComponentDefinition;
 import info.magnolia.module.model.ComponentsDefinition;
-import info.magnolia.module.model.ComposerDefinition;
+import info.magnolia.module.model.ConfigurerDefinition;
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.RepositoryDefinition;
@@ -325,12 +325,12 @@ public class BetwixtModuleDefinitionReaderTest {
         ComponentsDefinition components = m.getComponents().iterator().next();
         assertEquals("platform", components.getId());
 
-        assertEquals(2, components.getComposers().size());
-        Iterator<ComposerDefinition> iterator = components.getComposers().iterator();
-        ComposerDefinition composer = iterator.next();
-        assertEquals("com.acme.FirstTestComposer", composer.getClassName());
-        composer = iterator.next();
-        assertEquals("com.acme.SecondTestComposer", composer.getClassName());
+        assertEquals(2, components.getConfigurers().size());
+        Iterator<ConfigurerDefinition> iterator = components.getConfigurers().iterator();
+        ConfigurerDefinition configurer = iterator.next();
+        assertEquals("com.acme.FirstTestConfigurer", configurer.getClassName());
+        configurer = iterator.next();
+        assertEquals("com.acme.SecondTestConfigurer", configurer.getClassName());
 
         assertEquals(1, components.getComponents().size());
         ComponentDefinition componentDefinition = components.getComponents().iterator().next();
