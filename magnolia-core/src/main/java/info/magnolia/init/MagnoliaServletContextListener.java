@@ -33,6 +33,7 @@
  */
 package info.magnolia.init;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Singleton;
@@ -40,6 +41,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,6 +145,10 @@ import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
  */
 @Singleton
 public class MagnoliaServletContextListener implements ServletContextListener {
+
+    public static final String PLATFORM_COMPONENTS_CONFIG_LOCATION_NAME = "magnolia.platform.components.config.location";
+    public static final String DEFAULT_PLATFORM_COMPONENTS_CONFIG_LOCATION = "/info/magnolia/init/platform-components.xml";
+
     private static final Logger log = LoggerFactory.getLogger(MagnoliaServletContextListener.class);
 
     private ServletContext servletContext;
@@ -208,8 +214,6 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     @Override
     public void contextDestroyed(final ServletContextEvent sce) {
 
-        // TODO ModuleManager should be shut down by ConfigLoader
-
         // avoid disturbing NPEs if the context has never been started (classpath problems, etc)
         if (moduleManager != null) {
             moduleManager.stopModules();
@@ -247,11 +251,16 @@ public class MagnoliaServletContextListener implements ServletContextListener {
 
     /**
      * Returns a list of resources that contain platform components. Definitions for the same type will override giving
-     * preference to the last read definition.
+     * preference to the last read definition. Checks for an init parameter in web.xml for an overridden location
+     * Subclasses can override this method to provide alternative strategies. The returned locations are used to find
+     * the resource on the class path.
      */
     protected List<String> getPlatformComponentsResources() {
-        // TODO this should be configurable
-        return Collections.singletonList("/info/magnolia/init/platform-components.xml");
+        String configLocation = servletContext.getInitParameter(PLATFORM_COMPONENTS_CONFIG_LOCATION_NAME);
+        if (StringUtils.isNotBlank(configLocation)) {
+            return Arrays.asList(StringUtils.split(configLocation, ", \n"));
+        }
+        return Collections.singletonList(DEFAULT_PLATFORM_COMPONENTS_CONFIG_LOCATION);
     }
 
     protected ComponentProviderConfiguration getSystemComponents() {
@@ -278,8 +287,6 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             }, true);
         }
     }
-
-    // TODO What about getPropertiesFilesString
 
     /**
      * @deprecated since 4.5, use or subclass {@link MagnoliaInitPaths}.
