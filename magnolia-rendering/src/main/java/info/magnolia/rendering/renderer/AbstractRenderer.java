@@ -36,13 +36,13 @@ package info.magnolia.rendering.renderer;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.model.EarlyExecutionAware;
 import info.magnolia.rendering.model.ModelExecutionFilter;
 import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.template.RenderableDefinition;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -65,9 +65,11 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     protected static final String MODEL_ATTRIBUTE = RenderingModel.class.getName();
 
     @Override
-    public void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws IOException, RenderException {
+    public void render(RenderingContext renderingCtx, Map<String, Object> contextObjects) throws RenderException {
 
         final RenderingModel<?> parentModel = MgnlContext.getAttribute(MODEL_ATTRIBUTE);
+        Node content = renderingCtx.getCurrentContent();
+        RenderableDefinition definition = renderingCtx.getRenderableDefinition();
 
         RenderingModel<?> model;
         String actionResult;
@@ -108,7 +110,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         setupContext(ctx, content, definition, model, actionResult);
         ctx.putAll(contextObjects);
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, model);
-        onRender(content, definition, out, ctx, templatePath);
+        onRender(content, definition, renderingCtx, ctx, templatePath);
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, parentModel);
 
         restoreContext(ctx, savedContextState);
@@ -116,14 +118,14 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
 
     protected String determineTemplatePath(Node content, RenderableDefinition definition, RenderingModel<?> model, final String actionResult) {
 
-// FIXME reactivate this code
+        // FIXME reactivate this code
         return definition.getTemplateScript();
-//        String templatePath = definition.determineTemplatePath(actionResult, model);
-//
-//        if (templatePath == null) {
-//            throw new IllegalStateException("Unable to render " + definition.getClass().getName() + " " + definition.getName() + " in page " + content.getHandle() + ": templatePath not set.");
-//        }
-//        return templatePath;
+        //        String templatePath = definition.determineTemplatePath(actionResult, model);
+        //
+        //        if (templatePath == null) {
+        //            throw new IllegalStateException("Unable to render " + definition.getClass().getName() + " " + definition.getName() + " in page " + content.getHandle() + ": templatePath not set.");
+        //        }
+        //        return templatePath;
     }
 
     /**
@@ -197,9 +199,9 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
      */
     protected Node wrapNodeForModel(Node content, Node mainContent) {
-//      FIXME
+        //      FIXME
         return content;
-//        return new I18nContentWrapper(content);
+        //        return new I18nContentWrapper(content);
     }
 
     /**
@@ -210,9 +212,9 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * TODO : return an Object instance instead - more flexibility for the template engine ?
      */
     protected Node wrapNodeForTemplate(Node content, Node mainContent) {
-//        FIXME
+        //        FIXME
         return content;
-//        return new I18nContentWrapper(content);
+        //        return new I18nContentWrapper(content);
     }
 
     protected Object setContextAttribute(final Map<String, Object> ctx, final String name, Object value) {
@@ -235,6 +237,6 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * Finally execute the rendering.
      * @param content TODO
      */
-    protected abstract void onRender(Node content, RenderableDefinition definition, Appendable out, Map<String, Object> ctx, String templateScript) throws RenderException;
+    protected abstract void onRender(Node content, RenderableDefinition definition, RenderingContext renderingCtx, Map<String, Object> ctx, String templateScript) throws RenderException;
 
 }

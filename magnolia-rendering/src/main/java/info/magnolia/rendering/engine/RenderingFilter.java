@@ -36,7 +36,6 @@ package info.magnolia.rendering.engine;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
-import info.magnolia.cms.util.LazyInitPrintWriter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
@@ -58,8 +57,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,10 +137,6 @@ public class RenderingFilter extends AbstractMgnlFilter {
 
     protected void render(Node content, String templateName, HttpServletResponse response) throws RenderException {
 
-        // This lazy print writer will only acquire the writer from response if it is going to be used. This allows
-        // templates to use the output stream if they wish. See MAGNOLIA-3014.
-        LazyInitPrintWriter out = new LazyInitPrintWriter(response);
-
         TemplateDefinition templateDefinition;
         try {
             templateDefinition = templateDefinitionRegistry.get(templateName);
@@ -149,7 +144,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
         catch (RegistrationException e) {
             throw new RenderException(e);
         }
-        renderingEngine.render(content, templateDefinition, Collections.<String, Object>emptyMap(), out);
+        renderingEngine.render(content, templateDefinition, Collections.<String, Object> emptyMap(), new ResponseOutputProvider(response));
     }
 
 

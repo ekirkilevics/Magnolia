@@ -36,6 +36,7 @@ package info.magnolia.rendering.renderer;
 /**
  * @version $Id$
  */
+import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.template.RenderableDefinition;
@@ -57,7 +58,7 @@ public class DummyRenderer extends AbstractRenderer {
     }
 
     @Override
-    protected void onRender(Node content, RenderableDefinition definition, Appendable out, Map<String, Object> ctx, String templateScript) throws RenderException {
+    protected void onRender(Node content, RenderableDefinition definition, RenderingContext renderingCtx, Map<String, Object> ctx, String templateScript) throws RenderException {
         onRenderCalled = true;
     }
 

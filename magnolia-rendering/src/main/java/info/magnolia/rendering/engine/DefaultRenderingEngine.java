@@ -43,7 +43,6 @@ import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -76,12 +75,12 @@ public class DefaultRenderingEngine implements RenderingEngine {
     }
 
     @Override
-    public void render(Node content, Appendable out) throws RenderException {
+    public void render(Node content, OutputProvider out) throws RenderException {
         render(content, EMPTY_CONTEXT, out);
     }
 
     @Override
-    public void render(Node content, Map<String, Object> contextObjects, Appendable out) throws RenderException {
+    public void render(Node content, Map<String, Object> contextObjects, OutputProvider out) throws RenderException {
         TemplateDefinition templateDefinition;
         try {
             templateDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(content);
@@ -93,19 +92,15 @@ public class DefaultRenderingEngine implements RenderingEngine {
     }
 
     @Override
-    public void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws RenderException {
+    public void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, OutputProvider out) throws RenderException {
 
         final Renderer renderer = getRendererFor(definition);
         final RenderingContext renderingContext = getRenderingContext();
-        renderingContext.push(content, definition);
+        renderingContext.push(content, definition, out);
 
         try {
-            renderer.render(content, definition, contextObjects, out);
-        }
-        catch (IOException e) {
-            throw new RenderException(e);
-        }
-        finally{
+            renderer.render(renderingContext, contextObjects);
+        } finally {
             renderingContext.pop();
         }
     }

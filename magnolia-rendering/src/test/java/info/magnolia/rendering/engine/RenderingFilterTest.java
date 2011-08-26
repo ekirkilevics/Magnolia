@@ -120,7 +120,7 @@ public class RenderingFilterTest {
         // THEN
         verify(response).flushBuffer();
         verify(renderingEngine).render((Node) anyObject(), (RenderableDefinition) anyObject(), (Map) anyObject(),
-                (Appendable) anyObject());
+                (OutputProvider) anyObject());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class RenderingFilterTest {
         // THEN
         verify(response).flushBuffer();
         verify(renderingEngine).render((Node) anyObject(), (RenderableDefinition) anyObject(), (Map) anyObject(),
-                (Appendable) anyObject());
+                (OutputProvider) anyObject());
     }
 
     @Test(expected = RuntimeException.class)
@@ -170,7 +170,7 @@ public class RenderingFilterTest {
         // THEN
         verify(response).flushBuffer();
         verify(renderingEngine).render((Node) anyObject(), (RenderableDefinition) anyObject(), (Map) anyObject(),
-                (Appendable) anyObject());
+                (OutputProvider) anyObject());
     }
 
     @Test(expected = ServletException.class)

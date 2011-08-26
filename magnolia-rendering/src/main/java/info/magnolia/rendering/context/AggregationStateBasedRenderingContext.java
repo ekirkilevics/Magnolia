@@ -33,14 +33,21 @@
  */
 package info.magnolia.rendering.context;
 
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.rendering.engine.OutputProvider;
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.template.RenderableDefinition;
+import info.magnolia.rendering.util.AppendableWriter;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Stack;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.jcr.Node;
 
 import com.google.inject.servlet.RequestScoped;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.rendering.template.RenderableDefinition;
 
 /**
  * RenderingContext implementation that uses AggregationState.
@@ -53,10 +60,11 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
     // TODO dlipp: add reasonable javadoc! Uses and updates the {@link AggregationState}.
     // FIXME we should not use the AggregationState anymore
 
-    private AggregationState aggregationState;
+    private final AggregationState aggregationState;
     private RenderableDefinition currentRenderableDefinition;
-    private Stack<Node> contentStack = new Stack<Node>();
-    private Stack<RenderableDefinition> definitionStack = new Stack<RenderableDefinition>();
+    private final Stack<Node> contentStack = new Stack<Node>();
+    private final Stack<RenderableDefinition> definitionStack = new Stack<RenderableDefinition>();
+    private OutputProvider out;
 
     @Inject
     public AggregationStateBasedRenderingContext(Provider<AggregationState> aggregationStateProvider) {
@@ -83,7 +91,7 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
     }
 
     @Override
-    public void push(Node content, RenderableDefinition renderableDefinition) {
+    public void push(Node content, RenderableDefinition renderableDefinition, OutputProvider out) {
         if (aggregationState.getMainContent() == null) {
             aggregationState.setMainContent(content);
         }
@@ -93,6 +101,7 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
 
         aggregationState.setCurrentContent(content);
         currentRenderableDefinition = renderableDefinition;
+        this.out = out;
     }
 
     @Override
@@ -100,6 +109,16 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
         currentRenderableDefinition = definitionStack.pop();
         aggregationState.setCurrentContent(contentStack.pop());
         // Note that we do not restore main content
+    }
+
+    @Override
+    public AppendableWriter getAppendable() throws RenderException, IOException {
+        return new AppendableWriter(this.out.getAppendable());
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws RenderException, IOException {
+        return this.out.getOutputStream();
     }
 
 }

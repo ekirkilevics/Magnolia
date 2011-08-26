@@ -33,7 +33,13 @@
  */
 package info.magnolia.rendering.context;
 
+import info.magnolia.rendering.engine.OutputProvider;
+import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.RenderableDefinition;
+import info.magnolia.rendering.util.AppendableWriter;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.jcr.Node;
 
@@ -49,7 +55,11 @@ public interface RenderingContext {
 
     RenderableDefinition getRenderableDefinition();
 
-    void push(Node content, RenderableDefinition renderableDefinition);
+    void push(Node content, RenderableDefinition renderableDefinition, OutputProvider out);
 
     void pop();
+
+    AppendableWriter getAppendable() throws RenderException, IOException;
+
+    OutputStream getOutputStream() throws RenderException, IOException;
 }

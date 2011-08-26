@@ -40,6 +40,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.template.RenderableDefinition;
@@ -63,6 +64,7 @@ public class AbstractRendererTest {
     private static final String CONTENT_IDENTIFIER = "12345";
     private MockNode content;
     private RenderingModel<?> parentModel;
+    private RenderingContext ctx;
 
     @Before
     public void setUp() throws RepositoryException {
@@ -74,6 +76,7 @@ public class AbstractRendererTest {
 
         parentModel = mock(RenderingModel.class);
         when(context.getAttribute(AbstractRenderer.MODEL_ATTRIBUTE)).thenReturn(parentModel);
+        ctx = mock(RenderingContext.class);
     }
 
     @Test(expected = RenderException.class)
@@ -82,9 +85,9 @@ public class AbstractRendererTest {
         Node content = mock(Node.class);
         doThrow(new RepositoryException()).when(content).getIdentifier();
         AbstractRenderer renderer = new DummyRenderer();
-
+        when(ctx.getCurrentContent()).thenReturn(content);
         // WHEN
-        renderer.render(content, null, null, null);
+        renderer.render(ctx, null);
 
         // THEN - expect Exception in line above...
     }
@@ -93,11 +96,11 @@ public class AbstractRendererTest {
     public void testRenderWithTemplateScriptBeingNull() throws Exception {
         // GIVEN
         Map<String, Object> contextObjects = new LinkedHashMap<String, Object>();
-        Appendable out = new StringBuilder();
         RenderableDefinition definition = mock(RenderableDefinition.class);
         RenderingModel newModel = mock(RenderingModel.class);
         when(definition.newModel(content, definition, parentModel)).thenReturn(newModel);
         when(newModel.execute()).thenReturn("keepOnGoing");
+        when(ctx.getCurrentContent()).thenReturn(content);
 
         AbstractRenderer renderer = new DummyRenderer() {
             @Override
@@ -106,7 +109,7 @@ public class AbstractRendererTest {
             }
         };
         // WHEN
-        renderer.render(content, definition, contextObjects, out);
+        renderer.render(ctx, contextObjects);
 
         // THEN - expected Exception
     }
@@ -118,6 +121,8 @@ public class AbstractRendererTest {
         RenderingModel newModel = mock(RenderingModel.class);
         when(definition.newModel(content, definition, parentModel)).thenReturn(newModel);
         when(newModel.execute()).thenReturn(RenderingModel.SKIP_RENDERING);
+        when(ctx.getCurrentContent()).thenReturn(content);
+        when(ctx.getRenderableDefinition()).thenReturn(definition);
 
         AbstractRenderer renderer = new DummyRenderer() {
             @Override
@@ -126,7 +131,7 @@ public class AbstractRendererTest {
             }
         };
         // WHEN
-        renderer.render(content, definition, null, null);
+        renderer.render(ctx, null);
 
         // THEN - didn't get a RuntimeException on call above so execution stopped before calling determineTemplatePath...
 
@@ -136,15 +141,16 @@ public class AbstractRendererTest {
     public void testRender() throws Exception {
         // GIVEN
         Map<String, Object> contextObjects = new LinkedHashMap<String, Object>();
-        Appendable out = new StringBuilder();
         RenderableDefinition definition = mock(RenderableDefinition.class);
         RenderingModel newModel = mock(RenderingModel.class);
         when(definition.newModel(content, definition, parentModel)).thenReturn(newModel);
         when(newModel.execute()).thenReturn("keepOnGoing");
+        when(ctx.getCurrentContent()).thenReturn(content);
+        when(ctx.getRenderableDefinition()).thenReturn(definition);
 
         DummyRenderer renderer = new DummyRenderer();
         // WHEN
-        renderer.render(content, definition, contextObjects, out);
+        renderer.render(ctx, contextObjects);
 
         // THEN
         assertTrue(renderer.wasOnRenderCalled());

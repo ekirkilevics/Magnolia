@@ -33,15 +33,17 @@
  */
 package info.magnolia.templating.elements;
 
-import java.io.IOException;
-import javax.jcr.Node;
-
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.AppendableOnlyOutputProvider;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
+
+import java.io.IOException;
+
+import javax.jcr.Node;
 
 /**
  * Renders a piece of content.
@@ -52,7 +54,7 @@ public class RenderElement extends AbstractContentTemplatingElement {
 
     private boolean editable;
     private String template;
-    private RenderingEngine renderingEngine;
+    private final RenderingEngine renderingEngine;
 
     public RenderElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
         super(server, renderingContext);
@@ -68,7 +70,7 @@ public class RenderElement extends AbstractContentTemplatingElement {
         WebContext webContext = MgnlContext.getWebContext();
         webContext.push(webContext.getRequest(), webContext.getResponse());
         try {
-            renderingEngine.render(content, out);
+            renderingEngine.render(content, new AppendableOnlyOutputProvider(out));
         } finally {
             webContext.pop();
             webContext.setPageContext(null);

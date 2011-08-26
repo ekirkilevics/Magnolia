@@ -33,17 +33,18 @@
  */
 package info.magnolia.rendering.renderer;
 
-import java.io.Writer;
-import java.util.Map;
-import javax.jcr.Node;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import info.magnolia.cms.util.ServletUtils;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.RenderableDefinition;
+
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Renders templates by dispatching to the servlet container.
@@ -53,12 +54,12 @@ import info.magnolia.rendering.template.RenderableDefinition;
 public class JspRenderer extends AbstractRenderer {
 
     @Override
-    protected void onRender(Node content, RenderableDefinition definition, Appendable out, Map<String, Object> ctx, String templateScript) throws RenderException {
+    protected void onRender(Node content, RenderableDefinition definition, RenderingContext renderingCtx, Map<String, Object> ctx, String templateScript) throws RenderException {
         HttpServletRequest request = ((WebContext) MgnlContext.getInstance()).getRequest();
         HttpServletResponse response = ((WebContext) MgnlContext.getInstance()).getResponse();
         try {
             if (response.isCommitted() || (ServletUtils.isForward(request) || ServletUtils.isInclude(request))) {
-                ((WebContext) ctx).include(templateScript, (Writer)out);
+                ((WebContext) ctx).include(templateScript, renderingCtx.getAppendable());
             } else {
 
                 // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
@@ -78,7 +79,7 @@ public class JspRenderer extends AbstractRenderer {
         final Node wrapped = super.wrapNodeForTemplate(currentContent, mainContent);
         return new NodeMapWrapper(wrapped, mainContent.getHandle());
     }
-*/
+     */
     @Override
     protected Map newContext() {
         return MgnlContext.getWebContext("JspRenderer can only be used with a WebContext");

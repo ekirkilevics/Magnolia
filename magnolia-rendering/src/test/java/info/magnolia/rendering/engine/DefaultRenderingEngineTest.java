@@ -33,12 +33,12 @@
  */
 package info.magnolia.rendering.engine;
 
-import java.io.IOException;
-import javax.inject.Provider;
-import javax.jcr.Node;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -51,13 +51,13 @@ import info.magnolia.rendering.renderer.registry.RendererProvider;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
+import info.magnolia.rendering.util.AppendableWriter;
 import info.magnolia.test.mock.jcr.MockNode;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
+import javax.inject.Provider;
+import javax.jcr.Node;
+
+import org.junit.Test;
 
 /**
  * @version $Id$
@@ -134,7 +134,8 @@ public class DefaultRenderingEngineTest {
 
         RendererRegistry rendererRegistry = new RendererRegistry();
         TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
-        DefaultRenderingEngine renderingEngine = createDefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, mock(RenderingContext.class));
+        RenderingContext renderingCtx = mock(RenderingContext.class);
+        DefaultRenderingEngine renderingEngine = createDefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, renderingCtx);
 
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
         when(templateDefinitionAssignment.getAssignedTemplateDefinition(content)).thenReturn(templateDefinition);
@@ -145,14 +146,17 @@ public class DefaultRenderingEngineTest {
         when(freemarkerRendererProvider.getDefinition()).thenReturn(freemarkerRenderer);
         rendererRegistry.register(freemarkerRendererProvider);
 
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
+        OutputProvider builderWrapper = new AppendableOnlyOutputProvider(builder);
+        final AppendableWriter writer = new AppendableWriter(builder);
+        when(renderingCtx.getAppendable()).thenReturn(writer);
         when(templateDefinition.getRenderType()).thenReturn(FREEMARKER_RENDERER_TYPE);
 
         // WHEN
-        renderingEngine.render(content, builder);
+        renderingEngine.render(content, builderWrapper);
 
         // THEN
-        verify(freemarkerRenderer).render(content, templateDefinition, DefaultRenderingEngine.EMPTY_CONTEXT, builder);
+        verify(freemarkerRenderer).render(renderingCtx, DefaultRenderingEngine.EMPTY_CONTEXT);
     }
 
     @Test(expected = RenderException.class)
@@ -162,7 +166,8 @@ public class DefaultRenderingEngineTest {
 
         RendererRegistry rendererRegistry = new RendererRegistry();
         TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
-        DefaultRenderingEngine renderingEngine = createDefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, mock(RenderingContext.class));
+        RenderingContext renderingCtx = mock(RenderingContext.class);
+        DefaultRenderingEngine renderingEngine = createDefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, renderingCtx);
 
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
         when(templateDefinitionAssignment.getAssignedTemplateDefinition(content)).thenReturn(templateDefinition);
@@ -173,13 +178,15 @@ public class DefaultRenderingEngineTest {
         when(freemarkerRendererProvider.getDefinition()).thenReturn(freemarkerRenderer);
         rendererRegistry.register(freemarkerRendererProvider);
 
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
+        OutputProvider builderWrapper = new AppendableOnlyOutputProvider(builder);
+        final AppendableWriter writer = new AppendableWriter(builder);
+        when(renderingCtx.getAppendable()).thenReturn(writer);
         when(templateDefinition.getRenderType()).thenReturn(FREEMARKER_RENDERER_TYPE);
-        doThrow(new IOException()).when(freemarkerRenderer).render(content, templateDefinition,
-                DefaultRenderingEngine.EMPTY_CONTEXT, builder);
+        doThrow(new RenderException("")).when(freemarkerRenderer).render(renderingCtx, DefaultRenderingEngine.EMPTY_CONTEXT);
 
         // WHEN
-        renderingEngine.render(content, builder);
+        renderingEngine.render(content, builderWrapper);
 
         // THEN - no code here as we expect an Exception
     }

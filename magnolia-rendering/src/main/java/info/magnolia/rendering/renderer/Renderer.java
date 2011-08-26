@@ -33,22 +33,18 @@
  */
 package info.magnolia.rendering.renderer;
 
+import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
-import info.magnolia.rendering.template.RenderableDefinition;
 
-import java.io.IOException;
 import java.util.Map;
 
-import javax.jcr.Node;
-
-
 /**
- * Renders a content with the passed {@link RenderableDefinition}.
- *
+ * Renders a content with the passed {@link info.magnolia.rendering.template.RenderableDefinition}.
+ * 
  * @version $Id$
  */
 public interface Renderer {
 
-    void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws IOException, RenderException ;
+    void render(RenderingContext ctx, Map<String, Object> contextObjects) throws RenderException;
 
 }

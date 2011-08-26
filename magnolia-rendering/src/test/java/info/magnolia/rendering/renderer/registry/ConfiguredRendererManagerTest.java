@@ -33,10 +33,29 @@
  */
 package info.magnolia.rendering.renderer.registry;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.jcr.util.SessionTestUtil;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.registry.RegistrationException;
+import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.renderer.Renderer;
+import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockEvent;
+import info.magnolia.test.mock.jcr.MockObservationManager;
+
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -44,22 +63,6 @@ import javax.jcr.Session;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.jcr.util.SessionTestUtil;
-import info.magnolia.module.ModuleRegistry;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.registry.RegistrationException;
-import info.magnolia.rendering.engine.RenderException;
-import info.magnolia.rendering.renderer.Renderer;
-import info.magnolia.rendering.template.RenderableDefinition;
-import info.magnolia.test.MgnlTestCase;
-import info.magnolia.test.mock.MockUtil;
-import info.magnolia.test.mock.jcr.MockEvent;
-import info.magnolia.test.mock.jcr.MockObservationManager;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ConfiguredRendererManagerTest extends MgnlTestCase {
 
@@ -112,7 +115,7 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
         }
 
         @Override
-        public void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, Appendable out) throws IOException, RenderException {
+        public void render(RenderingContext ctx, Map<String, Object> contextObjects) throws RenderException {
         }
     }
 

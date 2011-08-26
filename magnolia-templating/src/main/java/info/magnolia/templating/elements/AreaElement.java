@@ -33,22 +33,12 @@
  */
 package info.magnolia.templating.elements;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.AppendableOnlyOutputProvider;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.AreaDefinition;
@@ -56,6 +46,18 @@ import info.magnolia.rendering.template.ComponentAvailability;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -148,7 +150,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 } else if (type.equals(AreaDefinition.TYPE_SINGLE)) {
                     contextObjects.put(ATTRIBUTE_COMPONENT, new ContentMap(areaNode));
                 }
-                renderingEngine.render(areaNode, areaDefinition, contextObjects, out);
+                renderingEngine.render(areaNode, areaDefinition, contextObjects, new AppendableOnlyOutputProvider(out));
             }
 
             if (isAdmin()) {

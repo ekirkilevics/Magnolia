@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,39 +33,43 @@
  */
 package info.magnolia.rendering.engine;
 
-import info.magnolia.rendering.context.RenderingContext;
-import info.magnolia.rendering.template.RenderableDefinition;
+import java.io.IOException;
+import java.io.OutputStream;
 
-import java.util.Map;
-
-import javax.jcr.Node;
-
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * Renders content to a writer.
- *
+ * Output provider wrapping response.
+ * 
  * @version $Id$
+ * 
  */
-public interface RenderingEngine {
+public class ResponseOutputProvider implements OutputProvider {
 
-    /**
-     * Renders the content with its assigned template. Uses {@link info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment}.
-     */
-    void render(Node content, OutputProvider out) throws RenderException;
+    private final HttpServletResponse response;
+    private boolean streamCalled;
+    private boolean writerCalled;
 
-    /**
-     * The context is exposed to the template script.
-     */
-    void render(Node content, Map<String, Object> contextObjects, OutputProvider out) throws RenderException;
+    public ResponseOutputProvider(HttpServletResponse response) {
+        this.response = response;
+    }
 
-    /**
-     * Uses a specific {@link RenderableDefinition} to render the content.
-     */
-    void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, OutputProvider out) throws RenderException;
+    @Override
+    public Appendable getAppendable() throws RenderException, IOException {
+        if (streamCalled) {
+            throw new RenderException("Can't use appendable and output stream in parallel. getOutputStream() was already called.");
+        }
+        writerCalled = true;
+        return response.getWriter();
+    }
 
-    /**
-     * Returns the current {@link RenderingContext}.
-     * FIXME is this the right place? should we use IoC
-     */
-    public RenderingContext getRenderingContext();
+    @Override
+    public OutputStream getOutputStream() throws RenderException, IOException {
+        if (writerCalled) {
+            throw new RenderException("Can't use appendable and output stream in parallel. getAppendable() was already called.");
+        }
+        streamCalled = true;
+        return response.getOutputStream();
+    }
+
 }

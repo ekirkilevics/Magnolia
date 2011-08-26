@@ -33,18 +33,20 @@
  */
 package info.magnolia.rendering.context;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.rendering.template.RenderableDefinition;
+
 import java.util.EmptyStackException;
+
 import javax.jcr.Node;
 
 import org.junit.Test;
 
 import com.google.inject.util.Providers;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.rendering.template.RenderableDefinition;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.mock;
 
 
 /**
@@ -105,7 +107,7 @@ public class AggregationStateBasedRenderingContextTest {
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
 
         // WHEN
-        context.push(content, null);
+        context.push(content, null, null);
 
         // THEN - mainContent should now be set
         assertEquals(content, context.getMainContent());
@@ -121,7 +123,7 @@ public class AggregationStateBasedRenderingContextTest {
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
 
         // WHEN
-        context.push(content, null);
+        context.push(content, null, null);
 
         // THEN - mainContent should be unchanged
         assertEquals(mainContent, context.getMainContent());
@@ -136,7 +138,7 @@ public class AggregationStateBasedRenderingContextTest {
         AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
 
         // WHEN
-        context.push(content, null);
+        context.push(content, null, null);
 
         // THEN
         assertEquals(content, context.getCurrentContent());
@@ -151,7 +153,7 @@ public class AggregationStateBasedRenderingContextTest {
         RenderableDefinition renderableDefinition = mock(RenderableDefinition.class);
 
         // WHEN
-        context.push(content, renderableDefinition);
+        context.push(content, renderableDefinition, null);
 
         // THEN
         assertEquals(renderableDefinition, context.getRenderableDefinition());
@@ -166,8 +168,8 @@ public class AggregationStateBasedRenderingContextTest {
         Node second = mock(Node.class);
         RenderableDefinition firstRenderableDefinition = mock(RenderableDefinition.class);
         RenderableDefinition secondRenderableDefinition = mock(RenderableDefinition.class);
-        context.push(first, firstRenderableDefinition);
-        context.push(second, secondRenderableDefinition);
+        context.push(first, firstRenderableDefinition, null);
+        context.push(second, secondRenderableDefinition, null);
 
         // WHEN
         context.pop();
@@ -188,9 +190,9 @@ public class AggregationStateBasedRenderingContextTest {
         RenderableDefinition firstRenderableDefinition = mock(RenderableDefinition.class);
         RenderableDefinition secondRenderableDefinition = mock(RenderableDefinition.class);
         RenderableDefinition thirdRenderableDefinition = mock(RenderableDefinition.class);
-        context.push(first, firstRenderableDefinition);
-        context.push(second, secondRenderableDefinition);
-        context.push(third, thirdRenderableDefinition);
+        context.push(first, firstRenderableDefinition, null);
+        context.push(second, secondRenderableDefinition, null);
+        context.push(third, thirdRenderableDefinition, null);
 
         // THEN
         assertEquals(third, context.getCurrentContent());
@@ -232,8 +234,8 @@ public class AggregationStateBasedRenderingContextTest {
         Node second = mock(Node.class);
         RenderableDefinition firstRenderableDefinition = mock(RenderableDefinition.class);
         RenderableDefinition secondRenderableDefinition = mock(RenderableDefinition.class);
-        context.push(first, firstRenderableDefinition);
-        context.push(second, secondRenderableDefinition);
+        context.push(first, firstRenderableDefinition, null);
+        context.push(second, secondRenderableDefinition, null);
 
         // WHEN
         RenderableDefinition result = context.getRenderableDefinition();
