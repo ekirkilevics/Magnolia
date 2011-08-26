@@ -10,11 +10,6 @@
 
   <properties>
     <property>
-      <!-- TODO this class does not exist, is it an old left over? -->
-      <name>info.magnolia.module.admininterface.ParagraphDialogHandlerManager</name>
-      <value>info.magnolia.module.admininterface.ParagraphDialogHandlerManager</value>
-    </property>
-    <property>
       <name>defaultPublicURI</name>
       <value>redirect:/.magnolia/pages/quickstart.html</value>
     </property>
