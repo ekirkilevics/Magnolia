@@ -39,17 +39,29 @@ import info.magnolia.rendering.template.RenderableDefinition;
 
 
 /**
- * A bean tying the current content and the rendering definition. Subclasses
- * will provide helper methods to the template. The {@link #execute()} method is
- * executed before the rendering starts. The model is available under the name
- * <code>model</code>.
+ * A RenderingModel is used during rendering, it is analogous to the model part of the MVC pattern. It is associated with
+ * a renderable and is executed before a content node using the renderable is rendered. The renderer instantiates the
+ * RenderingModel and calls its execute method. While rendering the model is available to the template script under the
+ * name <code>model</code> and the value returned by the execute method is available under the name
+ * <code>actionResult</code>. It is commonly used to add backing logic to a component.
+ *
+ * <h3>Instantiation</h3>
+ * It is created using reflection for each renderable and used only once, it <b>must</b> have a constructor that takes
+ * the following constructor arguments:
+ * <ul>
+ *     <li>Node the node that is currently being rendered</li>
+ *     <li>RenderableDefinition the renderable definition begin used to render the node</li>
+ *     <li>RenderingModel the rendering model of the parent renderable</li>
+ * </ul>
+ *
+ * After instantiation all request parameters are then mapped to the model's properties.
+ *
+ * <p>It can also abort the rendering by returning {@link #SKIP_RENDERING} from its execute method.</p>
  *
  * @param <RD> - an instance of {@link RenderableDefinition}
  * @version $Id$
  */
 public interface RenderingModel <RD extends RenderableDefinition> {
-
-    // TODO document that bean properties will be set with request parameters
 
     /**
      * A constant used in some special cases where rendering must be skipped, i.e. a redirect template.
