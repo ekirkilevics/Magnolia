@@ -36,15 +36,19 @@ package info.magnolia.objectfactory;
 /**
  * Thrown by classes of this package when a component can't be instantiated.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class MgnlInstantiationException extends RuntimeException {
+
     public MgnlInstantiationException(String message) {
         super(message);
     }
 
     public MgnlInstantiationException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public MgnlInstantiationException(Throwable throwable) {
+        super(throwable);
     }
 }

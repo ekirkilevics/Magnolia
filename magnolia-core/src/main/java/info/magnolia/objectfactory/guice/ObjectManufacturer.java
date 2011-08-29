@@ -44,6 +44,7 @@ import javax.inject.Provider;
 import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 
 
 /**
@@ -74,7 +75,7 @@ public class ObjectManufacturer {
         for (Constructor<?> constructor : constructors) {
             if (constructor.isAnnotationPresent(Inject.class)) {
                 if (selectedConstructor != null) {
-                    throw new RuntimeException("Only one constructor can use @Inject [" + clazz + "]");
+                    throw new MgnlInstantiationException("Only one constructor can use @Inject [" + clazz + "]");
                 }
                 selectedConstructor = constructor;
             }
@@ -83,7 +84,7 @@ public class ObjectManufacturer {
             selectedConstructor.setAccessible(true);
             Object[] parameters = resolveParameters(selectedConstructor, extraCandidates);
             if (parameters == null) {
-                throw new RuntimeException("Unable to resolve parameters for constructor " + selectedConstructor);
+                throw new MgnlInstantiationException("Unable to resolve parameters for constructor " + selectedConstructor);
             }
             return invoke(selectedConstructor, parameters);
         }
@@ -110,7 +111,7 @@ public class ObjectManufacturer {
         if (selectedConstructor != null) {
             return invoke(selectedConstructor, bestParameters);
         }
-        throw new RuntimeException("No suitable constructor found for class [" + clazz + "]");
+        throw new MgnlInstantiationException("No suitable constructor found for class [" + clazz + "]");
     }
 
     private Object invoke(Constructor constructor, Object[] parameters) {
@@ -119,11 +120,11 @@ public class ObjectManufacturer {
             injector.injectMembers(instance);
             return instance;
         } catch (InstantiationException e) {
-            throw new RuntimeException(e);
+            throw new MgnlInstantiationException(e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new MgnlInstantiationException(e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            throw new MgnlInstantiationException(e);
         }
     }
 
