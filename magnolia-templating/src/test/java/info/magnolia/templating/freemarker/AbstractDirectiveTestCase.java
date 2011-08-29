@@ -69,6 +69,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.junit.After;
 import org.junit.Before;
 
 /**
@@ -188,10 +189,11 @@ public abstract class AbstractDirectiveTestCase {
         // no specific expectations here
     }
 
+    @After
     public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         SystemProperty.clear();
-        Components.setComponentProvider(null);
+        Components.setProvider(null);
     }
 
     public String renderForTest(final String templateSource) throws Exception {

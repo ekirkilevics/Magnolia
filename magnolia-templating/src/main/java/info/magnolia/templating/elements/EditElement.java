@@ -34,13 +34,9 @@
 package info.magnolia.templating.elements;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.jcr.util.MetaDataUtil;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import java.io.IOException;
 
@@ -75,26 +71,23 @@ public class EditElement extends AbstractContentTemplatingElement {
         }
         Node content = getTargetContent();
 
-        TemplateDefinition templateDefinition = getRequiredTemplateDefinition(content);
+        TemplateDefinition templateDefinition = getRequiredTemplateDefinition();
 
         MarkupHelper helper = new MarkupHelper(out);
         helper.startContent(content);
         helper.openTag(CMS_EDIT).attribute("content", getNodePath(content));
         helper.attribute("format", format);
         helper.attribute("label", templateDefinition.getTitle());
-        helper.attribute("dialog", resolveDialog(templateDefinition));
+        String dialog = resolveDialog(templateDefinition);
+        helper.attribute("dialog", dialog);
+
         helper.attribute("template", templateDefinition.getId());
+
         helper.closeTag(CMS_EDIT);
     }
 
-    private TemplateDefinition getRequiredTemplateDefinition(Node content) throws RenderException {
-        try {
-            TemplateDefinitionRegistry registry = Components.getComponent(TemplateDefinitionRegistry.class);
-            String template = MetaDataUtil.getMetaData(content).getTemplate();
-            return registry.getTemplateDefinition(template);
-        } catch (RegistrationException e) {
-            throw new RenderException("No template found for [" + content + "]", e);
-        }
+    private TemplateDefinition getRequiredTemplateDefinition() {
+        return (TemplateDefinition) getRenderingContext().getRenderableDefinition();
     }
 
     private String resolveDialog(TemplateDefinition component) throws RenderException {
@@ -105,7 +98,7 @@ public class EditElement extends AbstractContentTemplatingElement {
         if (StringUtils.isNotEmpty(dialog)) {
             return dialog;
         }
-        throw new RenderException("Please set dialog for component id=" + component.getId() + ", name=" + component.getName());
+        return null;
     }
 
     @Override
@@ -133,4 +126,5 @@ public class EditElement extends AbstractContentTemplatingElement {
     public void setFormat(String format) {
         this.format = format;
     }
+
 }

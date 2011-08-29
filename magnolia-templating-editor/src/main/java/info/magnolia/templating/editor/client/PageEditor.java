@@ -34,9 +34,11 @@
 package info.magnolia.templating.editor.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.HTML;
@@ -96,31 +98,112 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     private void detectCmsTag(Element element, AreaBarWidget parentBar) {
+        //TODO probably we should ignore any page markers but the first one we encounter in DOM.
+        final NodeList<Element> pages = element.getOwnerDocument().getElementsByTagName(MARKER_PAGE);
+        final NodeList<Element> edits = element.getOwnerDocument().getElementsByTagName(MARKER_EDIT);
+        final NodeList<Element> areas = element.getOwnerDocument().getElementsByTagName(MARKER_AREA);
 
         for (int i = 0; i < element.getChildCount(); i++) {
             Node childNode = element.getChild(i);
             if (childNode.getNodeType() == Element.ELEMENT_NODE) {
                 Element child = (Element) childNode;
-
                 if (child.getTagName().equalsIgnoreCase(MARKER_PAGE)) {
-                    PageBarWidget pageBarWidget = new PageBarWidget(this, child);
-                    pageBarWidget.attach(child);
+                    if(findCmsEditMarkerForElement(child, edits) != null) {
+                        PageBarWidget pageBarWidget = new PageBarWidget(this, child);
+                        pageBarWidget.attach(child);
+                    }
                 } else if (child.getTagName().equalsIgnoreCase(MARKER_EDIT)) {
                     if (parentBar != null && parentBar.getType().equals(AREA_TYPE_SINGLE)) {
                         parentBar.mutateIntoSingleBar(child);
                     } else {
-                        EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
-                        editBarWidget.attach(child);
+                        //avoid processing cms:edit marker twice if this is an area or page edit bar
+                        if(!isAreaEditBar(child, areas) && !isPageEditBar(child, pages)){
+                            EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
+                            editBarWidget.attach(child);
+                        }
                     }
                 } else if (child.getTagName().equalsIgnoreCase(MARKER_AREA)) {
-                    AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, child);
-                    areaBarWidget.attach(child);
-                    parentBar = areaBarWidget;
+                    if(findCmsEditMarkerForElement(child, edits) != null) {
+                        AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, child);
+                        areaBarWidget.attach(child);
+                        parentBar = areaBarWidget;
+                    }
                 }
 
                 detectCmsTag(child, parentBar);
             }
         }
+    }
+
+    private boolean isAreaEditBar(Element edit, NodeList<Element> areas) {
+
+        String editContent = edit.getAttribute("content");
+        int i = editContent.lastIndexOf("/");
+
+        if(i == -1) {
+            return false;
+        }
+        String match = editContent.substring(0, i);
+        //GWT only shows these messages in dev mode.
+        GWT.log("String to match area is " + match);
+
+        for(int j=0; j < areas.getLength(); j++) {
+
+            Element area = areas.getItem(j);
+            String areaContent = area.getAttribute("content");
+
+            if(match.equals(areaContent)) {
+                GWT.log("found match with element " + area);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isPageEditBar(Element edit, NodeList<Element> pages) {
+
+        String match = edit.getAttribute("content");
+        //GWT only shows these messages in dev mode.
+        GWT.log("String to match page is " + match);
+
+        for(int j=0; j < pages.getLength(); j++) {
+
+            Element page = pages.getItem(j);
+            String pageContent = page.getAttribute("content");
+
+            if(match.equals(pageContent)) {
+                GWT.log("found match with element " + page);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Looks in DOM for an existing &lt;cms:edit ... &gt; marker associated with an page or area element. For an edit bar to be associated with the passed in element,
+     * they must have the same content value.
+     */
+    private Element findCmsEditMarkerForElement(Element element, NodeList<Element> edits) {
+        String content = element.getAttribute("content");
+        String name = null;
+
+        if(MARKER_AREA.equalsIgnoreCase(element.getTagName())){
+            name = element.getAttribute("name");
+        }
+        String match = content + (name != null ? ("/" + name) : "");
+        //GWT shows these messages only in dev mode.
+        GWT.log("String to match edit bar is " + match);
+
+        for(int i=0; i < edits.getLength(); i++){
+            Element edit = edits.getItem(i);
+            String editContent = edit.getAttribute("content");
+
+            if(match.equals(editContent)) {
+                GWT.log("found match with element " + edit);
+                return edit;
+            }
+        }
+        return null;
     }
 
     /**
