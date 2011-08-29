@@ -44,7 +44,6 @@ import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.DeltaBuilder;
-import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
@@ -150,7 +149,6 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
 
         commonTasks.add(submenu("config", "/modules/samples"));
         commonTasks.add(submenu("servlet", "/server/filters/servlets/DisplaySamplesSourcesServlet"));
-        commonTasks.add(new FilterOrderingTask("sample", new String[]{"servlets"}));
 
         commonTasks.add(new SetDefaultPublicURI("defaultPublicURI"));
 
