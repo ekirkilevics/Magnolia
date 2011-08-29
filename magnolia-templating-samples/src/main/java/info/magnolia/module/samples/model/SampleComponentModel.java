@@ -36,7 +36,6 @@ package info.magnolia.module.samples.model;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.QueryUtil;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.model.RenderingModelImpl;
@@ -48,6 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
+
 /**
  * This model class is defined in the component definition in the configuration
  * <code>(modules/samples/components/name-of-component/modelClass)</code>.
