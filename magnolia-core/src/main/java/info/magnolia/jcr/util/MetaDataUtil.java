@@ -51,7 +51,7 @@ import javax.jcr.ValueFormatException;
  * from a caller perspective - independent from Content API. Internally content API is still used for now, but this will
  * most probably change quite soon.
  *
- * $Id$
+ * @version $Id$
  */
 public class MetaDataUtil {
 
