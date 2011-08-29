@@ -54,13 +54,18 @@ import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
+import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.OutputProvider;
+import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.mock.jcr.MockSession;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Locale;
@@ -73,6 +78,9 @@ import org.junit.After;
 import org.junit.Before;
 
 /**
+ * TODO review setUp() and renderForTest() methods: here we provide two ways to get the template definition, one is via TemplateDefintionRegistry and the other,
+ * which is needed i.e. by EditDirective, by pushing into into the current RenderingContext. Is that correct? Should two separate AbstractDirectiveTestCase classes be
+ * provided instead of setting up everything here?
  * In contrast to related tests, this one can't use ComponentsTestUtils & MockComponentProvider (doesn't support
  * determining appropriate constructor to be called) but a proper Pico environment.
  *
@@ -88,6 +96,8 @@ public abstract class AbstractDirectiveTestCase {
     private HttpServletResponse res;
     private StringTemplateLoader tplLoader;
     private FreemarkerHelper fmHelper;
+    private RenderingContext renderingContext;
+    private AggregationState aggState;
 
     @Before
     public void setUp() throws Exception {
@@ -111,7 +121,7 @@ public abstract class AbstractDirectiveTestCase {
                         "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
                         "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1");
 
-        final AggregationState aggState = new AggregationState();
+        aggState = new AggregationState();
         // let's make sure we render stuff on an author instance
         aggState.setPreviewMode(false);
         final ServerConfiguration serverCfg = new ServerConfiguration();
@@ -148,11 +158,11 @@ public abstract class AbstractDirectiveTestCase {
         configuration.registerImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
         configuration.registerImplementation(I18nAuthoringSupport.class, DefaultI18nAuthoringSupport.class);
 
+        aggState.setCurrentContent(session.getNode("/foo/bar/paragraphs/1"));
+        renderingContext = new AggregationStateBasedRenderingContext(aggState);
         final RenderingEngine renderingEngine = mock(RenderingEngine.class);
-        final RenderingContext renderingContext = mock(RenderingContext.class);
-        when(renderingContext.getCurrentContent()).thenReturn(session.getNode("/foo/bar/paragraphs/1"));
-        when(renderingContext.getRenderableDefinition()).thenReturn(new ConfiguredTemplateDefinition());
         when(renderingEngine.getRenderingContext()).thenReturn(renderingContext);
+
         configuration.registerInstance(RenderingEngine.class, renderingEngine);
 
         final TemplateDefinitionRegistry tdr = new TemplateDefinitionRegistry();
@@ -196,7 +206,21 @@ public abstract class AbstractDirectiveTestCase {
         Components.setProvider(null);
     }
 
-    public String renderForTest(final String templateSource) throws Exception {
+    public String renderForTest(final String templateSource, ConfiguredTemplateDefinition renderableDefinition) throws Exception {
+        if(renderableDefinition != null ) {
+            renderingContext.push(aggState.getCurrentContent(), renderableDefinition, new OutputProvider() {
+
+                @Override
+                public OutputStream getOutputStream() throws RenderException, IOException {
+                    return null;
+                }
+
+                @Override
+                public Appendable getAppendable() throws RenderException, IOException {
+                    return new StringWriter();
+                }
+            });
+        }
         tplLoader.putTemplate("test.ftl", templateSource);
 
         final Map<String, Object> map = contextWithDirectives();

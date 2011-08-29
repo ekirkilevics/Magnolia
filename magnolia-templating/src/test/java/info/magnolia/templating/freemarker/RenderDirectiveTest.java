@@ -45,7 +45,7 @@ public class RenderDirectiveTest extends AbstractDirectiveTestCase {
 
     @Test
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@cms.render /]");
+        final String result = renderForTest("[@cms.render /]", null);
         assertEquals("", result);
     }
 }

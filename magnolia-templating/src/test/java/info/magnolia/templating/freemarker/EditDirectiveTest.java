@@ -33,22 +33,32 @@
  */
 package info.magnolia.templating.freemarker;
 
-import org.junit.Ignore;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import freemarker.template.TemplateModelException;
 import static org.junit.Assert.*;
 
 /**
- * TODO restore ignored tests as soon as cause for failure is understood and fixed.
  * $Id$
  */
 public class EditDirectiveTest extends AbstractDirectiveTestCase {
+    private ConfiguredTemplateDefinition renderableDef = new ConfiguredTemplateDefinition();
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        renderableDef.setId("testParagraph1");
+        renderableDef.setTitle("Test Paragraph 1");
+        renderableDef.setDialog("testDialog");
+    }
 
     @Test
-    @Ignore
     public void testRenderSimpleBar() throws Exception {
-        String result = renderForTest("[@cms.edit /]");
+        String result = renderForTest("[@cms.edit /]", renderableDef);
         assertEquals("<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
                 + "\r\n"
                 + "<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
@@ -58,9 +68,8 @@ public class EditDirectiveTest extends AbstractDirectiveTestCase {
     }
 
     @Test
-    @Ignore
     public void testRenderWithDialog() throws Exception {
-        final String result = renderForTest("[@cms.edit dialog='testDialog' /]");
+        final String result = renderForTest("[@cms.edit dialog='testDialog' /]", renderableDef);
         assertEquals("<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
                 + "\r\n"
                         + "<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
@@ -72,7 +81,7 @@ public class EditDirectiveTest extends AbstractDirectiveTestCase {
     @Test
     public void testThrowsExceptionForUnknownParameters() throws Exception {
         try {
-            renderForTest("[@cms.edit fake='lol' /]");
+            renderForTest("[@cms.edit fake='lol' /]", null);
             fail("should have failed");
         } catch (TemplateModelException e) {
             assertEquals("Unsupported parameter(s): {fake=lol}", e.getMessage());

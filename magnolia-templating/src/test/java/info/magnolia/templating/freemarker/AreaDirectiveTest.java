@@ -34,6 +34,7 @@
 package info.magnolia.templating.freemarker;
 
 import static org.junit.Assert.assertEquals;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 
 import javax.jcr.Node;
 
@@ -43,10 +44,11 @@ import org.junit.Test;
  * $Id$
  */
 public class AreaDirectiveTest extends AbstractDirectiveTestCase {
+    private ConfiguredTemplateDefinition renderableDef = new ConfiguredTemplateDefinition();
 
     @Test
     public void testRenderSimpleBarWithoutAreaNode() throws Exception {
-        final String result = renderForTest("[@cms.area name=\"stage\" /]");
+        final String result = renderForTest("[@cms.area name=\"stage\" /]", renderableDef);
         assertEquals(
                 "<cms:area content=\"testWorkspace:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
                         + "\r\n", result);
@@ -58,7 +60,7 @@ public class AreaDirectiveTest extends AbstractDirectiveTestCase {
         // make sure we have a areaNode...
         paragraph1.addNode("stage");
 
-        final String result = renderForTest("[@cms.area name=\"stage\" /]");
+        final String result = renderForTest("[@cms.area name=\"stage\" /]", renderableDef);
         assertEquals(
                 "<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" -->"
                         + "\r\n"

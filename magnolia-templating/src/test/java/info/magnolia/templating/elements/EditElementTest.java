@@ -93,6 +93,7 @@ public class EditElementTest {
         ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
+
         RenderingContext renderingCtx = new AggregationStateBasedRenderingContext(aggregationState);
         ConfiguredTemplateDefinition renderableDefinition = new ConfiguredTemplateDefinition();
 
