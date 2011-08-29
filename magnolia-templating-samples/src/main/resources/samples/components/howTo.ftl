@@ -24,12 +24,6 @@ Text: ${content.text!("No text defined yet")}
 </p>
 
 
-<ul>Parameters set by filter:
-    <li>using model: ${model.filterAttribute} </li>
-    <li>get from request: ${ctx.sampleFilter}</li>
-</ul>
-
-
 
 [#include "/samples/includes/inc.searchForm.ftl" ]
 

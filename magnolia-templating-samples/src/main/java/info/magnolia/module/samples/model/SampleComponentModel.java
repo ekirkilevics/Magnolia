@@ -69,11 +69,6 @@ public class SampleComponentModel extends RenderingModelImpl<RenderableDefinitio
 
     }
 
-    public String getFilterAttribute() {
-        return (String) MgnlContext.getAttribute("sampleFilter");
-
-    }
-
     public String getQuery() {
         return query;
     }

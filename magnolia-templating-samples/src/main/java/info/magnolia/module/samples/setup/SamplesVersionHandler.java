@@ -92,7 +92,6 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
                                 "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesMainFTL.xml",
                                 "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesMainJSP.xml",
                                 "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesVirtualURI.xml",
-                                "/mgnl-bootstrap/samples/config.server.filters.sample.xml",
                         };
                     }
                 })
@@ -128,6 +127,13 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new RegisterModuleServletsTask())
                 .addTasks(getCommonTasks())
         );
+
+        register(DeltaBuilder.update("4.5", "")
+                .addTask(new RemoveNodeTask("Remove sample filter", "Removes the samples menu config item sample templates.",
+                            ContentRepository.CONFIG, "/server/filters/sample"))
+                .addTask(new RemoveNodeTask("Remove sample filter menu item", "Removes the samples menu config item sample templates.",
+                            ContentRepository.CONFIG, "/modules/adminInterface/config/menu/samples/filter"))
+        );
     }
 
     /**
@@ -143,7 +149,6 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
         commonTasks.add(new AddMainMenuItemTask("samples", "samples.menu.label", I18N_BASENAME, "", "/.resources/icons/24/compass.gif", "security"));
 
         commonTasks.add(submenu("config", "/modules/samples"));
-        commonTasks.add(submenu("filter", "/server/filters/sample"));
         commonTasks.add(submenu("servlet", "/server/filters/servlets/DisplaySamplesSourcesServlet"));
         commonTasks.add(new FilterOrderingTask("sample", new String[]{"servlets"}));
 
