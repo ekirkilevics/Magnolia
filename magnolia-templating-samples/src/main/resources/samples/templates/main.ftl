@@ -15,7 +15,7 @@
         <div id="wrapper">
 
             <cms:page content="website:${content.@path}" dialog="samples:mainProperties" label="/howTo-freemarker - Sample using the NEW freemarker template"></cms:page>
-
+            [@cms.edit /]
             <div id="header">
 
                 [#-- ****** navigation ****** --]
@@ -29,7 +29,7 @@
                 [#-- ****** stage ****** --]
                 <div id="stage">
                     <h2>Single-Area Stage</h2>
-                    [@cms.area name="stage" /]
+                    [@cms.area name="stage"/]
                 </div><!-- end stage -->
 
             </div><!-- end header -->
@@ -51,7 +51,7 @@
                 [#-- ****** extras ****** --]
                 <div id="extras">
                 <h2>List-Area Extras</h2>
-                    [@cms.area name="extras" /]
+                    [@cms.area name="extras"/]
                 </div><!-- end extras -->
 
             </div><!-- end wrapper-2 -->

@@ -411,7 +411,7 @@
         <sv:value>freemarker</sv:value>
       </sv:property>
       <sv:property sv:name="templateScript" sv:type="String">
-        <sv:value>/samples/areas/list.ftl</sv:value>
+        <sv:value>/samples/areas/listWrappedWithDiv.ftl</sv:value>
       </sv:property>
       <sv:property sv:name="type" sv:type="String">
         <sv:value>list</sv:value>
@@ -433,7 +433,7 @@
           <sv:value>2011-04-27T15:54:40.884+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-07-13T08:58:23.681+02:00</sv:value>
+          <sv:value>2011-08-29T17:29:20.058+02:00</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="availableComponents">
@@ -673,7 +673,7 @@
         <sv:value>freemarker</sv:value>
       </sv:property>
       <sv:property sv:name="templateScript" sv:type="String">
-        <sv:value>/samples/areas/list.ftl</sv:value>
+        <sv:value>/samples/areas/listWrappedWithDiv.ftl</sv:value>
       </sv:property>
       <sv:property sv:name="type" sv:type="String">
         <sv:value>list</sv:value>
@@ -695,7 +695,7 @@
           <sv:value>2011-04-27T15:54:40.884+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-07-13T08:58:35.073+02:00</sv:value>
+          <sv:value>2011-08-29T17:29:22.476+02:00</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="availableComponents">

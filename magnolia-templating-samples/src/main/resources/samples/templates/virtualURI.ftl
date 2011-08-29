@@ -13,7 +13,7 @@
         <div id="wrapper">
 
             <cms:page content="website:${content.@path}" dialog="samples:mainProperties" label="/samples virtual URI mappings"></cms:page>
-
+            [@cms.edit/]
             <div id="header">
                 <div id="navigation">
                     [#include "/samples/areas/navigation.ftl" ]
