@@ -47,7 +47,7 @@ import info.magnolia.rendering.template.RenderableDefinition;
  * @see info.magnolia.rendering.model.ModelExecutionFilter
  * @see info.magnolia.rendering.renderer.AbstractRenderer
  */
-public interface RenderingModelBasedRenderer {
+public interface RenderingModelBasedRenderer extends Renderer {
 
     RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws RenderException;
 }

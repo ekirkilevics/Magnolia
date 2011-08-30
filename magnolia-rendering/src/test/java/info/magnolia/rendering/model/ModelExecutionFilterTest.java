@@ -33,32 +33,212 @@
  */
 package info.magnolia.rendering.model;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
+import java.io.IOException;
+import javax.jcr.Node;
 import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 
 import org.junit.Test;
+
+import com.mockrunner.mock.web.MockHttpServletRequest;
+import com.mockrunner.mock.web.MockHttpServletResponse;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.filters.WebContainerResources;
+import info.magnolia.cms.filters.WebContainerResourcesImpl;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.SessionTestUtil;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.registry.RegistrationException;
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.renderer.Renderer;
+import info.magnolia.rendering.renderer.RenderingModelBasedRenderer;
+import info.magnolia.rendering.renderer.registry.RendererProvider;
+import info.magnolia.rendering.renderer.registry.RendererRegistry;
+import info.magnolia.rendering.template.RenderableDefinition;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
+import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.test.ComponentProviderBasedMagnoliaTestCase;
+import info.magnolia.test.mock.MockContext;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @version $Id$
  */
-public class ModelExecutionFilterTest {
+public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTestCase {
+
+    @Override
+    protected void customizeComponents(ComponentProviderConfiguration components) throws Exception {
+        super.customizeComponents(components);
+        components.registerImplementation(RendererRegistry.class);
+        components.registerImplementation(TemplateDefinitionRegistry.class);
+        components.registerImplementation(ModelExecutionFilter.class);
+        components.registerImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+    }
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+
+        MockContext ctx = (MockContext) MgnlContext.getInstance();
+        ctx.addSession(ContentRepository.WEBSITE, SessionTestUtil.createSession(ContentRepository.WEBSITE,
+                "/foo.@uuid=12345",
+                "/foo/MetaData.mgnl\\:template=some-template"
+        ));
+
+        TemplateDefinitionRegistry templateDefinitionRegistry = Components.getComponent(TemplateDefinitionRegistry.class);
+        templateDefinitionRegistry.register(new TemplateDefinitionProvider() {
+            @Override
+            public String getId() {
+                return "some-template";
+            }
+
+            @Override
+            public TemplateDefinition getDefinition() throws RegistrationException {
+                ConfiguredTemplateDefinition definition = new ConfiguredTemplateDefinition();
+                definition.setRenderType("test-renderer");
+                return definition;
+            }
+        });
+    }
 
     @Test
-    public void testDoFilter() throws Exception {
+    public void testWithoutParameter() throws IOException, ServletException {
+
         // GIVEN
         FilterChain chain = mock(FilterChain.class);
-        ModelExecutionFilter filter = new ModelExecutionFilter();
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
+        ModelExecutionFilter filter = Components.getComponent(ModelExecutionFilter.class);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        MgnlContext.push(request, response);
 
         // WHEN
         filter.doFilter(request, response, chain);
 
         // THEN
         verify(chain).doFilter(request, response);
+    }
+
+    @Test
+    public void testExecutesRenderingModel() throws Exception {
+
+        // GIVEN
+        FilterChain chain = mock(FilterChain.class);
+        ModelExecutionFilter filter = Components.getComponent(ModelExecutionFilter.class);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        setupRequestAndAggregationState(request, response, "12345");
+
+        RenderingModel renderingModel = mock(RenderingModel.class);
+        setupRendererThatReturnsMockRenderingModel(renderingModel);
+
+        // WHEN
+        filter.doFilter(request, response, chain);
+
+        // THEN
+        verify(renderingModel).execute();
+        verify(chain).doFilter(request, response);
+    }
+
+    @Test
+    public void testExecutesEarlyExecutionAwareRenderingModel() throws Exception {
+
+        // GIVEN
+        FilterChain chain = mock(FilterChain.class);
+        ModelExecutionFilter filter = Components.getComponent(ModelExecutionFilter.class);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        setupRequestAndAggregationState(request, response, "12345");
+
+        EarlyExecutionAware renderingModel = mock(EarlyExecutionAware.class);
+        setupRendererThatReturnsMockRenderingModel(renderingModel);
+
+        // WHEN
+        filter.doFilter(request, response, chain);
+
+        // THEN
+        verify(renderingModel).executeEarly();
+        verify(chain).doFilter(request, response);
+    }
+
+    @Test
+    public void testThrowsServletExceptionWhenParameterPointsToNonExistingContent() throws Exception {
+
+        // GIVEN
+        FilterChain chain = mock(FilterChain.class);
+        ModelExecutionFilter filter = Components.getComponent(ModelExecutionFilter.class);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        setupRequestAndAggregationState(request, response, "10002");
+
+        EarlyExecutionAware renderingModel = mock(EarlyExecutionAware.class);
+        setupRendererThatReturnsMockRenderingModel(renderingModel);
+
+        // THEN
+        try {
+            filter.doFilter(request, response, chain);
+            fail();
+        } catch (ServletException e) {
+            assertEquals("Can't read content for early execution, node: 10002", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testSkipsRenderingWhenRenderingModelWantsItTo() throws Exception {
+
+        // GIVEN
+        FilterChain chain = mock(FilterChain.class);
+        ModelExecutionFilter filter = Components.getComponent(ModelExecutionFilter.class);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        setupRequestAndAggregationState(request, response, "12345");
+
+        EarlyExecutionAware renderingModel = mock(EarlyExecutionAware.class);
+        when(renderingModel.executeEarly()).thenReturn(RenderingModel.SKIP_RENDERING);
+        setupRendererThatReturnsMockRenderingModel(renderingModel);
+
+        // WHEN
+        filter.doFilter(request, response, chain);
+
+        // THEN
+        verify(renderingModel).executeEarly();
+        verify(chain, never()).doFilter(request, response);
+    }
+
+    private void setupRequestAndAggregationState(MockHttpServletRequest request, MockHttpServletResponse response, String nodeIdentifier) {
+        MgnlContext.push(request, response);
+        MgnlContext.setAttribute(ModelExecutionFilter.DEFAULT_MODEL_EXECUTION_ATTRIBUTE_NAME, nodeIdentifier);
+        MgnlContext.getAggregationState().setRepository(ContentRepository.WEBSITE);
+    }
+
+    private void setupRendererThatReturnsMockRenderingModel(RenderingModel renderingModel) throws RenderException, RegistrationException {
+        final RenderingModelBasedRenderer renderer = mock(RenderingModelBasedRenderer.class);
+        when(renderer.newModel(any(Node.class), any(RenderableDefinition.class), any(RenderingModel.class))).thenReturn(renderingModel);
+
+        RendererRegistry rendererRegistry = Components.getComponent(RendererRegistry.class);
+        rendererRegistry.register(new RendererProvider() {
+            @Override
+            public String getId() {
+                return "test-renderer";
+            }
+
+            @Override
+            public Renderer getDefinition() throws RegistrationException {
+                return renderer;
+            }
+        });
     }
 }

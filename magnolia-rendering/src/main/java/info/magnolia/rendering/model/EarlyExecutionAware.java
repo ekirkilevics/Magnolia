@@ -41,7 +41,7 @@ package info.magnolia.rendering.model;
  * @see RenderingModel
  * @see ModelExecutionFilter
  */
-public interface EarlyExecutionAware {
+public interface EarlyExecutionAware extends RenderingModel {
 
     /**
      * Called before rendering of the paragraph.
