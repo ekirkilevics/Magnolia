@@ -35,8 +35,11 @@ package info.magnolia.rendering.template.configured;
 
 import info.magnolia.cms.core.Access;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
+import info.magnolia.objectfactory.guice.GuiceComponentProvider;
+import info.magnolia.objectfactory.guice.GuiceParameterResolver;
+import info.magnolia.objectfactory.guice.ObjectManufacturer;
 import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.model.RenderingModelImpl;
 import info.magnolia.rendering.template.RenderableDefinition;
@@ -50,7 +53,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 
@@ -74,22 +76,46 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     protected Map<String, Object> parameters = new HashMap<String, Object>();
 
     /**
-     * Instantiates the model based on the class defined by the {@link #modelClass} property. The class must provide a
-     * constructor similar to {@link RenderingModelImpl#RenderingModelImpl(Node, RenderableDefinition, RenderingModel)}.
-     * All the request parameters are then mapped to the model's properties.
+     * Instantiates the model based on the class defined by the {@link #modelClass} property. All the request parameters
+     * are then mapped to the model's properties.
      */
     @Override
-    public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    public RenderingModel<?> newModel(final Node content, final RenderableDefinition definition, final RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
         try {
-            final RenderingModel<?> model = Classes.getClassFactory().newInstance((Class<? extends RenderingModel>) getModelClass(), new Class[] { Node.class, definition.getClass(), RenderingModel.class }, content, definition, parentModel);
+
+            ObjectManufacturer objectManufacturer = new ObjectManufacturer();
+            GuiceComponentProvider componentProvider = (GuiceComponentProvider) Components.getComponentProvider();
+            RenderingModel model = (RenderingModel) objectManufacturer.newInstance(
+                    getModelClass(),
+                    new ObjectManufacturer.ParameterResolver() {
+                        @Override
+                        public Object resolveParameter(ObjectManufacturer.ConstructorParameter methodParameter) {
+                            if (methodParameter.getParameterType().equals(Node.class)) {
+                                return content;
+                            }
+                            if (methodParameter.getParameterType().isAssignableFrom(definition.getClass())) {
+                                return definition;
+                            }
+                            if (methodParameter.getParameterType().equals(RenderingModel.class)) {
+                                return parentModel;
+                            }
+                            return UNRESOLVED;
+                        }
+                    },
+                    new GuiceParameterResolver(componentProvider.getInjector()));
+
+            componentProvider.injectMembers(model);
+
             // TODO pass the parameter map to the method
             final Map<String, String> params = MgnlContext.getParameters();
             if (params != null) {
                 BeanUtils.populate(model, params);
             }
+
             return model;
+
         } catch (MgnlInstantiationException e) {
-            throw new IllegalArgumentException(MISSING_CONSTRUCTOR_MESSAGE + "Can't instantiate " + getModelClass(), e);
+            throw new IllegalArgumentException("Can't instantiate model " + getModelClass(), e);
         }
     }
 
@@ -200,11 +226,5 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
         .append("title", this.title)
         .append("templateScript", this.templateScript)
         .toString();
-    }
-
-    private static final Class<?>[] MODEL_CONSTRUCTOR_TYPES = new Class[]{Node.class, RenderableDefinition.class, RenderingModel.class};
-    private static final String MISSING_CONSTRUCTOR_MESSAGE;
-    static {
-        MISSING_CONSTRUCTOR_MESSAGE = "A model class must define a constructor with types " + ArrayUtils.toString(MODEL_CONSTRUCTOR_TYPES) + ". ";
     }
 }

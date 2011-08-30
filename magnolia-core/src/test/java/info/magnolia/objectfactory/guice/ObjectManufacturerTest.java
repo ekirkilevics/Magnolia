@@ -51,17 +51,18 @@ import static org.junit.Assert.fail;
 public class ObjectManufacturerTest {
 
     private ObjectManufacturer manufacturer;
+    private Injector injector;
 
     @Before
     public void setUp() throws Exception {
-        Injector injector = Guice.createInjector(new AbstractModule() {
+        injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
                 bind(String.class).toInstance("foobar");
             }
         });
 
-        manufacturer = new ObjectManufacturer(injector);
+        manufacturer = new ObjectManufacturer();
     }
 
     public static class NameableObject {
@@ -86,10 +87,15 @@ public class ObjectManufacturerTest {
 
     @Test
     public void annotatedConstructor() {
-        NameableObject object = (NameableObject) manufacturer.manufacture(ObjectWithAnnotatedConstructor.class);
+        NameableObject object = (NameableObject) manufacturer.newInstance(
+                ObjectWithAnnotatedConstructor.class,
+                new GuiceParameterResolver(injector));
         assertEquals("foobar", object.getName());
 
-        NameableObject object2 = (NameableObject) manufacturer.manufacture(ObjectWithAnnotatedConstructor.class, "12345");
+        NameableObject object2 = (NameableObject) manufacturer.newInstance(
+                ObjectWithAnnotatedConstructor.class,
+                new CandidateParameterResolver(new Object[]{"12345"}),
+                new GuiceParameterResolver(injector));
         assertEquals("12345", object2.getName());
     }
 
@@ -109,10 +115,15 @@ public class ObjectManufacturerTest {
 
     @Test
     public void greedyConstructor() {
-        NameableObject object = (NameableObject) manufacturer.manufacture(ObjectWithGreedyConstructor.class);
+        NameableObject object = (NameableObject) manufacturer.newInstance(
+                ObjectWithGreedyConstructor.class,
+                new GuiceParameterResolver(injector));
         assertEquals("foobar", object.getName());
 
-        NameableObject object2 = (NameableObject) manufacturer.manufacture(ObjectWithGreedyConstructor.class, "12345");
+        NameableObject object2 = (NameableObject) manufacturer.newInstance(
+                ObjectWithGreedyConstructor.class,
+                new CandidateParameterResolver(new Object[]{"12345"}),
+                new GuiceParameterResolver(injector));
         assertEquals("12345", object2.getName());
     }
 
@@ -127,7 +138,9 @@ public class ObjectManufacturerTest {
 
     @Test
     public void ignorePrivateConstructor() {
-        NameableObject object = (NameableObject) manufacturer.manufacture(ObjectWithGreediestConstructorPrivate.class);
+        NameableObject object = (NameableObject) manufacturer.newInstance(
+                ObjectWithGreediestConstructorPrivate.class,
+                new GuiceParameterResolver(injector));
         assertNull(object.getName());
     }
 
@@ -145,7 +158,7 @@ public class ObjectManufacturerTest {
 
     @Test(expected = RuntimeException.class)
     public void multipleAnnotatedConstructors() {
-        manufacturer.manufacture(ObjectWithMultipleAnnotatedConstructors.class);
+        manufacturer.newInstance(ObjectWithMultipleAnnotatedConstructors.class);
     }
 
 
@@ -159,7 +172,9 @@ public class ObjectManufacturerTest {
 
     @Test(expected = RuntimeException.class)
     public void failOnConstructorThatThrowsException() {
-        manufacturer.manufacture(ObjectWithConstructorThatThrowsException.class);
+        manufacturer.newInstance(
+                ObjectWithConstructorThatThrowsException.class,
+                new GuiceParameterResolver(injector));
     }
 
     public static class ObjectWithNoPrivateConstructor extends NameableObject {
@@ -173,6 +188,9 @@ public class ObjectManufacturerTest {
 
     @Test(expected = RuntimeException.class)
     public void failWhenNoPublicConstructor() {
-        manufacturer.manufacture(ObjectWithNoPrivateConstructor.class);
+        manufacturer.newInstance(
+                ObjectWithNoPrivateConstructor.class,
+                new GuiceParameterResolver(injector));
+
     }
 }

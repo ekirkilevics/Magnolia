@@ -35,6 +35,7 @@ package info.magnolia.objectfactory.guice;
 
 import java.util.Map;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -95,9 +96,15 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
     @Override
     public <T> T newInstance(Class<T> type, Object... parameters) {
         if (this.manufacturer == null) {
-            this.manufacturer = new ObjectManufacturer(injector);
+            this.manufacturer = new ObjectManufacturer();
         }
-        return (T) manufacturer.manufacture(getImplementation(type), parameters);
+        Class<? extends T> implementation = getImplementation(type);
+        T instance = (T) manufacturer.newInstance(
+                implementation,
+                new CandidateParameterResolver(parameters),
+                new GuiceParameterResolver(injector));
+        injectMembers(instance);
+        return instance;
     }
 
     @Override
@@ -107,6 +114,17 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
 
     public Injector getInjector() {
         return injector;
+    }
+
+    public <T> Provider<T> getProvider(Class<T> type) {
+        if (!hasExplicitBindingFor(injector, type)) {
+            return null;
+        }
+        return injector.getProvider(type);
+    }
+
+    public void injectMembers(Object instance) {
+        injector.injectMembers(instance);
     }
 
     public void destroy() {

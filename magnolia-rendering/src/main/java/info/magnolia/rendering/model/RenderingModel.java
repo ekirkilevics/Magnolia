@@ -46,8 +46,9 @@ import info.magnolia.rendering.template.RenderableDefinition;
  * <code>actionResult</code>. It is commonly used to add backing logic to a component.
  *
  * <h3>Instantiation</h3>
- * It is created using reflection for each renderable and used only once, it <b>must</b> have a constructor that takes
- * the following constructor arguments:
+ * It is created using reflection for each renderable and used only once, its constructor can declare as arguments any
+ * components that can be provided by the current ComponentProvider and in addition it can declare any of the following
+ * constructor arguments:
  * <ul>
  *     <li>Node the node that is currently being rendered</li>
  *     <li>RenderableDefinition the renderable definition begin used to render the node</li>

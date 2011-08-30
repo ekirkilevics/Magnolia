@@ -199,8 +199,10 @@ public class GuiceModuleManager extends ModuleManagerImpl {
                 throw new ProvisionException(e.getMessage(), e);
             }
 
-            ObjectManufacturer manufacturer = new ObjectManufacturer(injector);
-            instance = (T) manufacturer.manufacture(moduleClass);
+            ObjectManufacturer manufacturer = new ObjectManufacturer();
+            instance = (T) manufacturer.newInstance(
+                    moduleClass,
+                    new GuiceParameterResolver(injector));
 
             populate();
 
