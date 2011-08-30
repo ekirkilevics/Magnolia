@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admininterface.trees;
 
+import java.util.Collection;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
@@ -93,8 +95,11 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
 
     @Override
     public String show() {
-        //show start page if no templates present yet
-        if (templateManager.getTemplateDefinitions().isEmpty()) {
+        //show start page if no templates present yet or if only available template is mgnlDeleted
+        Collection<TemplateDefinition> templateDefinitions = templateManager.getTemplateDefinitions();
+        //TODO I know this hardcoded check is ugly but could not find a better way
+        boolean isDeletedNodeTemplate = templateDefinitions.size() == 1 && "adminInterface:mgnlDeleted".equals(templateDefinitions.iterator().next().getId());
+        if (templateDefinitions.isEmpty() || isDeletedNodeTemplate) {
             try {
                 request.getRequestDispatcher("/.magnolia/pages/quickstart.html").forward(request, response);
                 return "";
