@@ -34,9 +34,13 @@
 package info.magnolia.test.mock.jcr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Property;
+import javax.jcr.RepositoryException;
 
 import org.junit.Test;
 
@@ -44,6 +48,7 @@ import org.junit.Test;
  * @version $Id$
  */
 public class MockSessionTest {
+
     @Test
     public void testConstructionProperlyWiresWorkspaceToSession() {
         final MockSession mockSession = new MockSession("test");
@@ -92,4 +97,34 @@ public class MockSessionTest {
         assertTrue(!mockSession.nodeExists("/notThere"));
     }
 
+    @Test
+    public void testGetNodeByIdentifier() throws RepositoryException {
+        // given
+
+        // mock workspace with these nodes:
+        // /foo/bar/zed
+        // /apple
+        final MockSession mockSession = new MockSession("test");
+        final MockNode parent = (MockNode) mockSession.getRootNode();
+        final MockNode foo = new MockNode("foo");
+        final MockNode bar = new MockNode("bar");
+        final MockNode zed = new MockNode("zed");
+        final MockNode apple = new MockNode("apple");
+        parent.addNode(foo);
+        foo.addNode(bar);
+        bar.addNode(zed);
+        parent.addNode(apple);
+
+        assertSame(parent, mockSession.getNodeByIdentifier(parent.getIdentifier()));
+        assertSame(foo, mockSession.getNodeByIdentifier(foo.getIdentifier()));
+        assertSame(bar, mockSession.getNodeByIdentifier(bar.getIdentifier()));
+        assertSame(zed, mockSession.getNodeByIdentifier(zed.getIdentifier()));
+        assertSame(apple, mockSession.getNodeByIdentifier(apple.getIdentifier()));
+
+        try {
+            mockSession.getNodeByIdentifier("fake");
+            fail();
+        } catch (ItemNotFoundException expected) {
+        }
+    }
 }

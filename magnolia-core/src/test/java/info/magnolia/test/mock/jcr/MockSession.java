@@ -36,11 +36,15 @@ package info.magnolia.test.mock.jcr;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 import javax.jcr.Credentials;
 import javax.jcr.Item;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.Repository;
@@ -172,13 +176,26 @@ public class MockSession implements Session {
     }
 
     @Override
-    public Node getNodeByIdentifier(String id) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public Node getNodeByIdentifier(String id) throws RepositoryException {
+        Queue<Node> queue = new LinkedList<Node>();
+        queue.add(rootNode);
+        while (!queue.isEmpty()) {
+            Node node = queue.remove();
+            // null safe equals check
+            if (StringUtils.equals(id, node.getIdentifier()))
+                return node;
+            // add children to stack
+            NodeIterator iterator = node.getNodes();
+            while(iterator.hasNext())
+                queue.add(iterator.nextNode());
+
+        }
+        throw new ItemNotFoundException("No node found with identifier/uuid [" + id + "]");
     }
 
     @Override
-    public Node getNodeByUUID(String uuid)  {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public Node getNodeByUUID(String uuid) throws RepositoryException {
+        return getNodeByIdentifier(uuid);
     }
 
     @Override
