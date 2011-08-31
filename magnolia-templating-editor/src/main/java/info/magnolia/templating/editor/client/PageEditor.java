@@ -214,7 +214,9 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         $wnd.mgnlOpenDialog(path, collectionName, nodeName, paragraph, workspace, dialogPage, width, height, locale);
 
     }-*/;
-
+    /**
+     * TODO: rename and/or remove arguments no longer needed (collectionName, nodeName).
+     */
     public  void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName){
         if (collectionName == null) {
             collectionName = "";
