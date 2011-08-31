@@ -33,16 +33,23 @@
  */
 package info.magnolia.cms.taglibs;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTagTestCase;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+
+import java.io.IOException;
+import java.util.Collections;
 
 import javax.jcr.RepositoryException;
 
@@ -50,9 +57,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
-
-import java.io.IOException;
-import java.util.Collections;
 
 /**
  * @version $Id$
@@ -79,8 +83,8 @@ public class EditButtonTest extends MgnlTagTestCase {
         currentContent = createMock(Content.class);
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(this.mainContent.getJCRNode());
-        aggregationState.setCurrentContent(this.currentContent.getJCRNode());
+        aggregationState.setMainContent(this.mainContent);
+        aggregationState.setCurrentContent(this.currentContent);
 
         webContext.setAggregationState(aggregationState);
         webContext.setParameters(Collections.singletonMap(Resource.MGNL_PREVIEW_ATTRIBUTE, "false"));

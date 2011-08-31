@@ -76,7 +76,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
 
         String uuid;
         try {
-            uuid = content.getIdentifier();
+            uuid = content.getUUID();
         }
         catch (RepositoryException e) {
             throw new RenderException(e);
@@ -180,7 +180,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      */
     protected Node getMainContentSafely(Node content) {
         AggregationState state = getAggregationStateSafely();
-        return state == null ? content : state.getMainContent();
+        return state == null ? content : state.getMainContent().getJCRNode();
     }
 
     /**

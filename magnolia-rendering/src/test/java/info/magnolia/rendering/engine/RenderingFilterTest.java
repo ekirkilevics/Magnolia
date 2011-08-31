@@ -40,6 +40,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.jcr.util.SessionTestUtil;
@@ -106,6 +107,7 @@ public class RenderingFilterTest {
         MockWebContext context = new MockWebContext();
         AggregationState aggState = new AggregationState();
         aggState.setTemplateName(TEMPLATE_NAME);
+        aggState.setMainContent(mock(Content.class));
         context.setAggregationState(aggState);
         MgnlContext.setInstance(context);
 
@@ -129,6 +131,7 @@ public class RenderingFilterTest {
         MockWebContext context = new MockWebContext();
         AggregationState aggState = new AggregationState();
         aggState.setTemplateName(TEMPLATE_NAME);
+        aggState.setMainContent(mock(Content.class));
         context.setAggregationState(aggState);
         MgnlContext.setInstance(context);
 
@@ -178,6 +181,7 @@ public class RenderingFilterTest {
         // GIVEN
         AggregationState aggState = new AggregationState();
         aggState.setTemplateName(TEMPLATE_NAME);
+        aggState.setMainContent(mock(Content.class));
         MockWebContext context = new MockWebContext();
         context.setAggregationState(aggState);
         MgnlContext.setInstance(context);

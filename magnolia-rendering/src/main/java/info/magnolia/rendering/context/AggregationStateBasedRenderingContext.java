@@ -34,6 +34,7 @@
 package info.magnolia.rendering.context;
 
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.rendering.engine.OutputProvider;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.RenderableDefinition;
@@ -77,12 +78,16 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
 
     @Override
     public Node getMainContent() {
-        return aggregationState.getMainContent();
+        // there is still a possiblity of call to this method before push!
+        if (aggregationState.getMainContent() == null) {
+            return null;
+        }
+        return aggregationState.getMainContent().getJCRNode();
     }
 
     @Override
     public Node getCurrentContent() {
-        return aggregationState.getCurrentContent();
+        return aggregationState.getCurrentContent().getJCRNode();
     }
 
     @Override
@@ -93,13 +98,13 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
     @Override
     public void push(Node content, RenderableDefinition renderableDefinition, OutputProvider out) {
         if (aggregationState.getMainContent() == null) {
-            aggregationState.setMainContent(content);
+            aggregationState.setMainContent(ContentUtil.asContent(content));
         }
 
-        contentStack.push(aggregationState.getCurrentContent());
+        contentStack.push(aggregationState.getCurrentContent().getJCRNode());
         definitionStack.push(currentRenderableDefinition);
 
-        aggregationState.setCurrentContent(content);
+        aggregationState.setCurrentContent(ContentUtil.asContent(content));
         currentRenderableDefinition = renderableDefinition;
         this.out = out;
     }
@@ -107,7 +112,7 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
     @Override
     public void pop() {
         currentRenderableDefinition = definitionStack.pop();
-        aggregationState.setCurrentContent(contentStack.pop());
+        aggregationState.setCurrentContent(ContentUtil.asContent(contentStack.pop()));
         // Note that we do not restore main content
     }
 

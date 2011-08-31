@@ -51,8 +51,6 @@ import info.magnolia.module.templating.TemplateRendererManager;
 import java.io.IOException;
 import java.io.Writer;
 
-import javax.jcr.Node;
-
 
 /**
  * Default implementation which determines the definition (template/paragraph) from the content's
@@ -63,6 +61,7 @@ import javax.jcr.Node;
  * @deprecated since 4.5, replaced by {@link info.magnolia.rendering.engine.DefaultRenderingEngine}
  *
  */
+@Deprecated
 public class DefaultRenderingEngine implements RenderingEngine {
     /**
      * A helper enumeration usable by subclasses.
@@ -153,19 +152,18 @@ public class DefaultRenderingEngine implements RenderingEngine {
      * Will update the aggregation state and perform the rendering by using the helper.
      */
     protected void render(Content content, String definitionName, RenderingHelper helper, Writer out) throws RenderException {
-        Node contentNode = content.getJCRNode();
-        Node orgMainContent = null;
-        Node orgCurrentContent = null;
+        Content orgMainContent = null;
+        Content orgCurrentContent = null;
 
         AggregationState state = getAggregationStateSafely();
         if (state != null) {
             orgMainContent = state.getMainContent();
             orgCurrentContent = state.getCurrentContent();
 
-            state.setCurrentContent(contentNode);
+            state.setCurrentContent(content);
             // if not yet set the passed content is the entry point of the rendering
             if (orgMainContent == null) {
-                state.setMainContent(contentNode);
+                state.setMainContent(content);
             }
         }
 

@@ -40,24 +40,25 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.DateUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.link.LinkException;
 import info.magnolia.link.LinkFactory;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.link.LinkUtil;
-import info.magnolia.link.LinkException;
-import info.magnolia.context.MgnlContext;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.Locale;
+
+import javax.jcr.PropertyType;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Locale;
 
 
 /**
@@ -147,7 +148,7 @@ public class Out extends BaseContentTag {
 
     private static final String DEFAULT_LINEBREAK = "<br />"; //$NON-NLS-1$
 
-    private static final String DEFAULT_DATEPATTERN = DateUtil.FORMAT_DATE_MEDIUM; //$NON-NLS-1$
+    private static final String DEFAULT_DATEPATTERN = DateUtil.FORMAT_DATE_MEDIUM;
 
     private String defaultValue = StringUtils.EMPTY;
 
@@ -348,70 +349,64 @@ public class Out extends BaseContentTag {
             int type = nodeData.getType();
 
             switch (type) {
-                case PropertyType.DATE:
+            case PropertyType.DATE:
 
-                    Date date = nodeData.getDate().getTime();
-                    if (date != null) {
-                        Locale locale;
-                        if (this.dateLanguage == null) {
-                             locale = I18nContentSupportFactory.getI18nSupport().getLocale();
-                        }
-                        else {
-                            locale = new Locale(this.dateLanguage);
-                        }
-                        value = DateUtil.format(date, this.datePattern, locale);
+                Date date = nodeData.getDate().getTime();
+                if (date != null) {
+                    Locale locale;
+                    if (this.dateLanguage == null) {
+                        locale = I18nContentSupportFactory.getI18nSupport().getLocale();
                     }
-                    break;
-
-                case PropertyType.BINARY:
-                    value = this.getFilePropertyValue(contentNode);
-                    break;
-
-                default:
-                    value = StringUtils.isEmpty(this.lineBreak) ? nodeData.getString() : nodeData.getString(this.lineBreak);
-
-                    // replace internal links that use the special magnolia link format (looks like ${link: {uuid: ... etc) -
-                    // ( - see info.magnolia.link.Link for an example of the special format that this next line
-                    //    handles )
-                    try {
-                        value = LinkUtil.convertLinksFromUUIDPattern(value, LinkTransformerManager.getInstance().getBrowserLink(MgnlContext.getAggregationState().getMainContent().getPath())); // static actpage
-                    } catch (LinkException e) {
-                        log.warn("Failed to parse links with from " + nodeData.getName(), e);
-                    } catch (RepositoryException e) {
-                        // TODO dlipp - apply proper ExceptionHandling
-                        throw new RuntimeException(e);
+                    else {
+                        locale = new Locale(this.dateLanguage);
                     }
+                    value = DateUtil.format(date, this.datePattern, locale);
+                }
+                break;
+
+            case PropertyType.BINARY:
+                value = this.getFilePropertyValue(contentNode);
+                break;
+
+            default:
+                value = StringUtils.isEmpty(this.lineBreak) ? nodeData.getString() : nodeData.getString(this.lineBreak);
+
+                // replace internal links that use the special magnolia link format (looks like ${link: {uuid: ... etc) -
+                // ( - see info.magnolia.link.Link for an example of the special format that this next line
+                //    handles )
+                try {
+                    value = LinkUtil.convertLinksFromUUIDPattern(value, LinkTransformerManager.getInstance().getBrowserLink(MgnlContext.getAggregationState().getMainContent().getHandle())); // static actpage
+                } catch (LinkException e) {
+                    log.warn("Failed to parse links with from " + nodeData.getName(), e);
+                }
 
 
-                    if(!StringUtils.equalsIgnoreCase(getUuidToLink(), LINK_RESOLVING_NONE)){
-                        // if the uuidToLink type has been explicitly set, reset the output value
-                        // the link to the uuid value stored in the node - using whatever method
-                        // was specified in the uuidLinkType variable
-                        if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_HANDLE)){
-                            value = ContentUtil.uuid2path(this.getUuidToLinkRepository(), value);
-                        }
-                        else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_ABSOLUTE)){
-                            try {
-                                value = LinkUtil.convertUUIDtoURI(value, this.getUuidToLinkRepository());
-                            } catch (LinkException e) {
-                                log.warn("Failed to parse links with from " + nodeData.getName(), e);
-                            }
-                        }
-                        else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_RELATIVE)){
-                            try {
-                                value = LinkUtil.makePathRelative(MgnlContext.getAggregationState().getMainContent().getPath(), LinkFactory.createLink(this.getUuidToLinkRepository(), value).getHandle());
-                            } catch (LinkException e) {
-                                log.warn("Failed to parse links with from " + nodeData.getName(), e);
-                            } catch (RepositoryException e) {
-                                // TODO dlipp - apply proper ExceptionHandling
-                                throw new RuntimeException(e);
-                            }
-                        }
-                        else{
-                            throw new IllegalArgumentException("not supported value for uuidToLink");
+                if(!StringUtils.equalsIgnoreCase(getUuidToLink(), LINK_RESOLVING_NONE)){
+                    // if the uuidToLink type has been explicitly set, reset the output value
+                    // the link to the uuid value stored in the node - using whatever method
+                    // was specified in the uuidLinkType variable
+                    if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_HANDLE)){
+                        value = ContentUtil.uuid2path(this.getUuidToLinkRepository(), value);
+                    }
+                    else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_ABSOLUTE)){
+                        try {
+                            value = LinkUtil.convertUUIDtoURI(value, this.getUuidToLinkRepository());
+                        } catch (LinkException e) {
+                            log.warn("Failed to parse links with from " + nodeData.getName(), e);
                         }
                     }
-                    break;
+                    else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_RELATIVE)){
+                        try {
+                            value = LinkUtil.makePathRelative(MgnlContext.getAggregationState().getMainContent().getHandle(), LinkFactory.createLink(this.getUuidToLinkRepository(), value).getHandle());
+                        } catch (LinkException e) {
+                            log.warn("Failed to parse links with from " + nodeData.getName(), e);
+                        }
+                    }
+                    else{
+                        throw new IllegalArgumentException("not supported value for uuidToLink");
+                    }
+                }
+                break;
             }
         }
 

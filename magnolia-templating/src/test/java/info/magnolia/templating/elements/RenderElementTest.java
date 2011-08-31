@@ -33,17 +33,12 @@
  */
 package info.magnolia.templating.elements;
 
-import java.io.StringWriter;
-import javax.inject.Provider;
-import javax.jcr.Node;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.junit.After;
-import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.gui.i18n.DefaultI18nAuthoringSupport;
 import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
@@ -54,7 +49,6 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.DefaultRenderingEngine;
@@ -64,9 +58,17 @@ import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.jcr.MockSession;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import info.magnolia.test.mock.MockHierarchyManager;
+import info.magnolia.test.mock.MockUtil;
+
+import java.io.StringWriter;
+
+import javax.inject.Provider;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.junit.After;
+import org.junit.Test;
 
 /**
  * Tests for ParagraphMarker.
@@ -77,16 +79,17 @@ public class RenderElementTest {
 
     @Test
     public void testDoRender() throws Exception {
-        final MockSession session = SessionTestUtil.createSession("/foo/bar/baz/paragraphs/01.text=dummy");
+        final MockHierarchyManager session = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(session.getNode("/foo/bar/baz"));
-        Node currentContent = session.getNode("/foo/bar/baz/paragraphs/01");
+        aggregationState.setMainContent(session.getContent("/foo/bar/baz"));
+        Content currentContent = session.getContent("/foo/bar/baz/paragraphs/01");
         aggregationState.setCurrentContent(currentContent);
         final WebContext ctx = mock(WebContext.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         when(ctx.getResponse()).thenReturn(response);
         MgnlContext.setInstance(ctx);
+        when(ctx.getHierarchyManager("TestMockHierarchyManager")).thenReturn(session);
 
         final ServerConfiguration serverCfg = new ServerConfiguration();
         serverCfg.setAdmin(true);
@@ -101,7 +104,7 @@ public class RenderElementTest {
         final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
         final ConfiguredTemplateDefinition templateDefinition = new ConfiguredTemplateDefinition();
         templateDefinition.setRenderType("blah");
-        when(templateDefinitionAssignment.getAssignedTemplateDefinition(currentContent)).thenReturn(templateDefinition);
+        when(templateDefinitionAssignment.getAssignedTemplateDefinition(currentContent.getJCRNode())).thenReturn(templateDefinition);
 
         RendererRegistry registry = mock(RendererRegistry.class);
         Renderer renderer = mock(Renderer.class);
@@ -125,13 +128,13 @@ public class RenderElementTest {
 
     @Test
     public void testPostRender() throws Exception {
-        final MockSession session = SessionTestUtil.createSession(
+        final MockHierarchyManager session = MockUtil.createHierarchyManager(
                 "/foo/bar/baz/paragraphs/01.text=dummy\n" +
-                "/foo/bar/baz/paragraphs/01.@uuid=100");
+        "/foo/bar/baz/paragraphs/01.@uuid=100");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(session.getNode("/foo/bar/baz"));
-        aggregationState.setCurrentContent(session.getNode("/foo/bar/baz/paragraphs/01"));
+        aggregationState.setMainContent(session.getContent("/foo/bar/baz"));
+        aggregationState.setCurrentContent(session.getContent("/foo/bar/baz/paragraphs/01"));
 
         HttpServletRequest req = mock(HttpServletRequest.class);
         req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);

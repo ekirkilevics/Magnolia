@@ -38,8 +38,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.test.MgnlTagTestCase;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.jcr.MockNode;
-import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.MockHierarchyManager;
 
 import java.io.IOException;
 
@@ -69,17 +68,17 @@ public class PageIteratorTest extends MgnlTagTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        MockNode mainContent = new MockNode("main");
-        MockNode currentContent = new MockNode("active");
-        MockSession session = new MockSession("test");
-        currentContent.setSession(session);
+        MockContent mainContent = new MockContent("main");
+        MockContent currentContent = new MockContent("active");
+        MockHierarchyManager session = new MockHierarchyManager("test");
+        currentContent.setHierarchyManager(session);
 
-        MockNode mainContentChild = new MockNode("mainchild");
+        MockContent mainContentChild = new MockContent("mainchild");
 
-        MockNode currentContentChild = new MockNode("activechild");
+        MockContent currentContentChild = new MockContent("activechild");
 
-        mainContent.addNode(mainContentChild);
-        currentContent.addNode(currentContentChild);
+        mainContent.addContent(mainContentChild);
+        currentContent.addContent(currentContentChild);
 
         aggregationState = new AggregationState();
         aggregationState.setMainContent(mainContent);
@@ -97,7 +96,7 @@ public class PageIteratorTest extends MgnlTagTestCase {
         PageIterator tag = new PageIterator();
 
         tag.doStartTag();
-        Assert.assertEquals("/active/activechild", aggregationState.getCurrentContent().getPath());
+        Assert.assertEquals("/active/activechild", aggregationState.getCurrentContent().getHandle());
     }
 
     /**
@@ -112,11 +111,11 @@ public class PageIteratorTest extends MgnlTagTestCase {
 
         currentContent.addContent(paragraph);
 
-        aggregationState.setCurrentContent(paragraph.getJCRNode());
+        aggregationState.setCurrentContent(paragraph);
 
         tag.doStartTag();
 
-        Assert.assertEquals("Must be the first child of the current page.", "/active/activechild", aggregationState.getCurrentContent().getPath());
+        Assert.assertEquals("Must be the first child of the current page.", "/active/activechild", aggregationState.getCurrentContent().getHandle());
     }
 
 

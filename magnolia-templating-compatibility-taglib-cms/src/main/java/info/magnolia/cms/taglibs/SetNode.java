@@ -35,7 +35,6 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.I18nContentWrapper;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 
 import javax.servlet.jsp.PageContext;
@@ -83,6 +82,7 @@ public class SetNode extends BaseContentTag {
      * @deprecated use the contentNode attribute
      * @jsp.attribute required="false" rtexprvalue="true"
      */
+    @Deprecated
     public void setContent(Content node){
         this.setContentNode(node);
     }
@@ -126,13 +126,13 @@ public class SetNode extends BaseContentTag {
 
         // set attribute
         if (contentNode != null) {
-            Content mainContent = ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
+            Content mainContent = MgnlContext.getAggregationState().getMainContent();
             if (mainContent == null) {
                 mainContent = contentNode;
             }
             info.magnolia.cms.util.NodeMapWrapper nmw = new info.magnolia.cms.util.NodeMapWrapper(
-                new I18nContentWrapper(contentNode),
-                mainContent.getHandle());
+                    new I18nContentWrapper(contentNode),
+                    mainContent.getHandle());
 
             pageContext.setAttribute(this.var, nmw, this.scope);
         }
@@ -156,6 +156,7 @@ public class SetNode extends BaseContentTag {
      * @version $Revision$ ($Author$)
      * @deprecated use info.magnolia.cms.util.NodeMapWrapper instead
      */
+    @Deprecated
     public class NodeMapWrapper extends info.magnolia.cms.util.NodeMapWrapper {
 
         public NodeMapWrapper(Content node, Content actPage) {

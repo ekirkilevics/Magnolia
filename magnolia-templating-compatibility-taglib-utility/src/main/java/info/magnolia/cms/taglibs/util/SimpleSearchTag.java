@@ -38,18 +38,19 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.text.MessageFormat;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
-import java.text.MessageFormat;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -169,8 +170,8 @@ public class SimpleSearchTag extends TagSupport {
         }
         catch (Exception e) {
             log.error(MessageFormat.format(
-                "{0} caught while parsing query for search term [{1}] - query is [{2}]: {3}", //$NON-NLS-1$
-                new Object[]{e.getClass().getName(), this.query, queryString, e.getMessage()}), e);
+                    "{0} caught while parsing query for search term [{1}] - query is [{2}]: {3}", //$NON-NLS-1$
+                    new Object[]{e.getClass().getName(), this.query, queryString, e.getMessage()}), e);
         }
 
         return EVAL_PAGE;
@@ -196,7 +197,7 @@ public class SimpleSearchTag extends TagSupport {
         // search only in a specific subtree
         if (this.startLevel > 0) {
             try {
-                Content activePage = ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
+                Content activePage = MgnlContext.getAggregationState().getMainContent();
                 if (activePage != null) {
                     cleanStartPath = activePage.getAncestor(this.startLevel).getHandle();
                 }
@@ -213,6 +214,7 @@ public class SimpleSearchTag extends TagSupport {
      * @deprecated as from 3.5.5, this query is deemed to complex and not properly working, since it
      * forces a search on non-indexed word. The better generateSimpleQuery() method is recommended.
      */
+    @Deprecated
     protected String generateComplexXPathQuery() {
         return generateXPathQuery();
     }
@@ -225,12 +227,13 @@ public class SimpleSearchTag extends TagSupport {
      * @deprecated as from 3.5.5, this query is deemed to complex and not properly working, since it
      * forces a search on non-indexed word. The better generateSimpleQuery() method is recommened.
      */
+    @Deprecated
     protected String generateXPathQuery() {
         // strip reserved chars and split
         String[] tokens = StringUtils.split(StringUtils.lowerCase(StringUtils.replaceChars(
-            this.query,
-            RESERVED_CHARS,
-            null)));
+                this.query,
+                RESERVED_CHARS,
+                null)));
 
         // null input string?
         if (tokens == null) {
@@ -320,6 +323,7 @@ public class SimpleSearchTag extends TagSupport {
      * @deprecated not used when useSimpleJcrQuery is set to true.
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
+    @Deprecated
     public void setSupportSubstringSearch(boolean supportSubstringSearch) {
         this.supportSubstringSearch = supportSubstringSearch;
     }

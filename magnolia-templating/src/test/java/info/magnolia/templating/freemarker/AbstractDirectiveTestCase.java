@@ -47,11 +47,10 @@ import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.FreemarkerConfig;
 import info.magnolia.freemarker.FreemarkerHelper;
-import info.magnolia.jcr.util.SessionTestUtil;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
@@ -62,7 +61,11 @@ import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
-import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockContext;
+import info.magnolia.test.mock.MockHierarchyManager;
+import info.magnolia.test.mock.MockJCRSession;
+import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -74,6 +77,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 
@@ -91,7 +95,7 @@ public abstract class AbstractDirectiveTestCase {
     }
 
     private WebContext ctx;
-    private MockSession session;
+    private MockHierarchyManager session;
     private HttpServletRequest req;
     private HttpServletResponse res;
     private StringTemplateLoader tplLoader;
@@ -112,14 +116,15 @@ public abstract class AbstractDirectiveTestCase {
 
         fmHelper = new FreemarkerHelper(fmConfig);
 
+        ComponentsTestUtil.setInstance(SystemContext.class, new MockContext());
         session =
-                SessionTestUtil.createSession("testWorkspace", "/foo/bar.@type=mgnl:content",
-                        "/foo/bar/MetaData.@type=mgnl:metadata", "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
-                        "/foo/bar/paragraphs.@type=mgnl:contentNode", "/foo/bar/paragraphs/0.@type=mgnl:contentNode",
-                        "/foo/bar/paragraphs/0.@uuid=100", "/foo/bar/paragraphs/1.@type=mgnl:contentNode",
-                        "/foo/bar/paragraphs/1.@uuid=101", "/foo/bar/paragraphs/1.text=hello 1",
-                        "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
-                        "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1");
+            MockUtil.createAndSetHierarchyManager("testWorkspace", StringUtils.join(new String[] { "/foo/bar.@type=mgnl:content",
+                    "/foo/bar/MetaData.@type=mgnl:metadata", "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
+                    "/foo/bar/paragraphs.@type=mgnl:contentNode", "/foo/bar/paragraphs/0.@type=mgnl:contentNode",
+                    "/foo/bar/paragraphs/0.@uuid=100", "/foo/bar/paragraphs/1.@type=mgnl:contentNode",
+                    "/foo/bar/paragraphs/1.@uuid=101", "/foo/bar/paragraphs/1.text=hello 1",
+                    "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
+            "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1" }, "\n"));
 
         aggState = new AggregationState();
         // let's make sure we render stuff on an author instance
@@ -158,7 +163,7 @@ public abstract class AbstractDirectiveTestCase {
         configuration.registerImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
         configuration.registerImplementation(I18nAuthoringSupport.class, DefaultI18nAuthoringSupport.class);
 
-        aggState.setCurrentContent(session.getNode("/foo/bar/paragraphs/1"));
+        aggState.setCurrentContent(session.getContent("/foo/bar/paragraphs/1"));
         renderingContext = new AggregationStateBasedRenderingContext(aggState);
         final RenderingEngine renderingEngine = mock(RenderingEngine.class);
         when(renderingEngine.getRenderingContext()).thenReturn(renderingContext);
@@ -184,6 +189,8 @@ public abstract class AbstractDirectiveTestCase {
         when(ctx.getResponse()).thenReturn(res);
         when(ctx.getRequest()).thenReturn(req);
 
+        when(ctx.getHierarchyManager("testWorkspace")).thenReturn(session);
+
         setupExpectations(ctx, req);
 
         MgnlContext.setInstance(ctx);
@@ -203,12 +210,12 @@ public abstract class AbstractDirectiveTestCase {
     public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         SystemProperty.clear();
-        Components.setComponentProvider(null);
+        ComponentsTestUtil.clear();
     }
 
     public String renderForTest(final String templateSource, ConfiguredTemplateDefinition renderableDefinition) throws Exception {
         if(renderableDefinition != null ) {
-            renderingContext.push(aggState.getCurrentContent(), renderableDefinition, new OutputProvider() {
+            renderingContext.push(aggState.getCurrentContent().getJCRNode(), renderableDefinition, new OutputProvider() {
 
                 @Override
                 public OutputStream getOutputStream() throws RenderException, IOException {
@@ -224,7 +231,7 @@ public abstract class AbstractDirectiveTestCase {
         tplLoader.putTemplate("test.ftl", templateSource);
 
         final Map<String, Object> map = contextWithDirectives();
-        map.put("content", session.getNode("/foo/bar/"));
+        map.put("content", session.getContent("/foo/bar/"));
 
         final StringWriter out = new StringWriter();
         fmHelper.render("test.ftl", map, out);
@@ -244,7 +251,7 @@ public abstract class AbstractDirectiveTestCase {
         return map;
     }
 
-    protected MockSession getSession() {
-        return session;
+    protected MockJCRSession getSession() {
+        return (MockJCRSession) session.getJcrSession();
     }
 }

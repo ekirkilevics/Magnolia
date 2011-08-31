@@ -33,18 +33,17 @@
  */
 package info.magnolia.module.templating;
 
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.I18nContentWrapper;
+import info.magnolia.context.MgnlContext;
+
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.i18n.I18nContentWrapper;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.context.MgnlContext;
 
 
 /**
@@ -57,6 +56,7 @@ import info.magnolia.context.MgnlContext;
  * FIXME remove most of the code and and try to extend the new {@link info.magnolia.rendering.renderer.AbstractRenderer}
  *
  */
+@Deprecated
 public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
 
     private static final String MODEL_ATTRIBUTE = RenderingModel.class.getName();
@@ -166,7 +166,7 @@ public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
     protected Content getMainContentSafely(Content current) {
         AggregationState state = getAggregationStateSafely();
         if(state != null){
-            return ContentUtil.asContent(state.getMainContent());
+            return state.getMainContent();
         }
         return current;
     }

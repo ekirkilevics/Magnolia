@@ -33,8 +33,12 @@
  */
 package info.magnolia.freemarker;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -131,7 +135,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     public void testCanReachParentWithBuiltIn() throws Exception {
         final Content c = MockUtil.createNode("/foo/bar",
                 "/foo.myProp=this is foo",
-                "/foo/bar.myProp=this is bar");
+        "/foo/bar.myProp=this is bar");
 
         tplLoader.putTemplate("test.ftl", "${content.myProp} and ${content?parent.myProp}");
         assertRendereredContent("this is bar and this is foo", createSingleValueMap("content", c), "test.ftl");
@@ -214,14 +218,14 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("3: bar baz gazonk", c, "test.ftl");
     }
 
-//    public void testCanGetPropertyHandle() throws TemplateException, IOException {
-//        final MockContent f = new MockContent("flebele");
-//        f.addNodeData(new MockNodeData("foo", "bar"));
-//        final MockContent c = new MockContent("root");
-//        c.addContent(f);
-//        tplLoader.putTemplate("test2.ftl", "${flebele['foo'].@handle} ${flebele['foo'].name}");// ${flebele.foo.@handle}");
-//        assertRendereredContent("/root/flebele/foo", c, "test2.ftl");
-//    }
+    //    public void testCanGetPropertyHandle() throws TemplateException, IOException {
+    //        final MockContent f = new MockContent("flebele");
+    //        f.addNodeData(new MockNodeData("foo", "bar"));
+    //        final MockContent c = new MockContent("root");
+    //        c.addContent(f);
+    //        tplLoader.putTemplate("test2.ftl", "${flebele['foo'].@handle} ${flebele['foo'].name}");// ${flebele.foo.@handle}");
+    //        assertRendereredContent("/root/flebele/foo", c, "test2.ftl");
+    //    }
 
     @Test
     public void testCanRenderMetaData() throws TemplateException, IOException, AccessDeniedException {
@@ -263,7 +267,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         tplLoader.putTemplate("test.ftl", "${foo['hop']?string(\"yes\", \"no\")}" +
                 " ${foo.hop?string(\"yes\", \"no\")}" +
                 " ${foo['hip']?string(\"yes\", \"no\")}" +
-                " ${foo.hip?string(\"yes\", \"no\")}");
+        " ${foo.hip?string(\"yes\", \"no\")}");
 
         assertRendereredContent("yes yes no no", c, "test.ftl");
     }
@@ -437,7 +441,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     @Test
     public void testInterpretCanBeUsedForDynamicNodeProperties() throws IOException, TemplateException {
         tplLoader.putTemplate("test.ftl", "[#assign dynTpl='${content.title}'?interpret]\n" +
-                "evaluated result: [@dynTpl/]");
+        "evaluated result: [@dynTpl/]");
 
         final MockContent c = new MockContent("content");
         c.setUUID("123");
@@ -486,7 +490,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         final MockHierarchyManager hm = prepareHM(page);
 
         final AggregationState agg = new AggregationState();
-        agg.setMainContent(page.getJCRNode());
+        agg.setMainContent(page);
         final WebContext context = createStrictMock(WebContext.class);
         MgnlContext.setInstance(context);
         expect(context.getContextPath()).andReturn("/");
@@ -623,10 +627,10 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     }
 
     // TODO this test can't work at the moment since we're in core and the default bundle is in the admininterface module.
-//    public void testI18NFallsBackToDefaultBundle() throws Exception {
-//        tplLoader.putTemplate("test.ftl", "ouais: ${i18n['buttons.admincentral']}");
-//        assertRendereredContentWithSpecifiedLocale("ouais: Console d'administration", Locale.FRENCH, new HashMap(), "test.ftl");
-//    }
+    //    public void testI18NFallsBackToDefaultBundle() throws Exception {
+    //        tplLoader.putTemplate("test.ftl", "ouais: ${i18n['buttons.admincentral']}");
+    //        assertRendereredContentWithSpecifiedLocale("ouais: Console d'administration", Locale.FRENCH, new HashMap(), "test.ftl");
+    //    }
 
     @Test
     public void testCanUseDotSyntaxToGetASimpleI18NMessage() throws Exception {
@@ -728,7 +732,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         fmConfig.addSharedVariable("chalala", Chalala.class);
         tplLoader.putTemplate("test.ftl", "" +
                 "list enum by keys: [#list chalala?keys as val]${val} [/#list]\n" +
-                "list enum by values: [#list chalala?values as val]${val} [/#list]");
+        "list enum by values: [#list chalala?values as val]${val} [/#list]");
         assertRendereredContentWithoutCheckingContext("" +
                 "list enum by keys: one two three \n" +
                 "list enum by values: one two three ", new HashMap(), "test.ftl");
@@ -745,10 +749,10 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     @Test
     public void testUseCombinationOfPadSubStringAndTrimForSafeSubstring() throws Exception {
         tplLoader.putTemplate("test.ftl", "[#assign foo='a fairly short string']\n" +
-                "${foo?right_pad(50)?substring(0, 50)?trim}");
-                // "${foo[0..50]}"); // this syntax is deprecated and doesn't help in this case
-                // if there was a ?max built-in or function we could also do
-                // "${foo?substring(0, foo?length?max(50)}"
+        "${foo?right_pad(50)?substring(0, 50)?trim}");
+        // "${foo[0..50]}"); // this syntax is deprecated and doesn't help in this case
+        // if there was a ?max built-in or function we could also do
+        // "${foo?substring(0, foo?length?max(50)}"
         assertRendereredContent("a fairly short string", null, "test.ftl");
     }
 

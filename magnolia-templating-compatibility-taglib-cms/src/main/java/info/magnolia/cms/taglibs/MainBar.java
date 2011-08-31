@@ -34,6 +34,7 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarMain;
 import info.magnolia.cms.security.Permission;
@@ -43,7 +44,6 @@ import info.magnolia.jcr.util.NodeUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.Node;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
@@ -97,6 +97,7 @@ public class MainBar extends TagSupport implements BarTag {
      * @deprecated use the dialog attribute instead
      * @jsp.attribute required="false" rtexprvalue="true"
      */
+    @Deprecated
     public void setParagraph(String s) {
         this.dialog = s;
     }
@@ -144,8 +145,8 @@ public class MainBar extends TagSupport implements BarTag {
 
     @Override
     public int doEndTag() {
-        Node activePage = MgnlContext.getAggregationState().getMainContent();
-        if (ServerConfiguration.getInstance().isAdmin() && activePage != null && NodeUtil.isGranted(activePage,Permission.SET)) {
+        Content activePage = MgnlContext.getAggregationState().getMainContent();
+        if (ServerConfiguration.getInstance().isAdmin() && activePage != null && NodeUtil.isGranted(activePage.getJCRNode(), Permission.SET)) {
             try {
                 BarMain bar = new BarMain();
                 bar.setPath(this.getPath());

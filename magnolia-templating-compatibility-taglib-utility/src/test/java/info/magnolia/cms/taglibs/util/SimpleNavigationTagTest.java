@@ -33,7 +33,10 @@
  */
 package info.magnolia.cms.taglibs.util;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -90,7 +93,7 @@ public class SimpleNavigationTagTest {
         PageContext pageContext = new MockPageContext(new MockServletConfig(),new MockHttpServletRequest(), new MockHttpServletResponse());
         MgnlContext.setInstance(ctx);
         expect(ctx.getAggregationState()).andReturn(aggState);
-        aggState.setCurrentContent(current.getJCRNode());
+        aggState.setCurrentContent(current);
         expect(current.getNodeTypeName()).andReturn(ItemType.CONTENT.getSystemName());
         tag.setPageContext(pageContext);
         // start level is 0 by default, so returning 0 here is enough

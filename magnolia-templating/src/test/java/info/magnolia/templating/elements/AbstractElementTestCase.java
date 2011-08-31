@@ -33,13 +33,8 @@
  */
 package info.magnolia.templating.elements;
 
-import java.util.Arrays;
-import java.util.Locale;
-
-import org.apache.commons.lang.StringUtils;
-import org.junit.After;
-import org.junit.Before;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -52,7 +47,13 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
-import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.Locale;
+
+import org.apache.commons.lang.StringUtils;
+import org.junit.After;
+import org.junit.Before;
 
 /**
  * @version $Id$
@@ -83,9 +84,9 @@ public abstract class AbstractElementTestCase {
 
     @After
     public void tearDown() throws Exception {
-        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         SystemProperty.clear();
+        ComponentsTestUtil.clear();
     }
 
     @Before

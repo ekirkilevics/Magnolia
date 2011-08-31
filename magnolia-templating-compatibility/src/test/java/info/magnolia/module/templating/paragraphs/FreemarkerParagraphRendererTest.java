@@ -118,7 +118,7 @@ public class FreemarkerParagraphRendererTest {
         when(session.getWorkspace()).thenReturn(workspace);
         when(workspace.getName()).thenReturn("test");
 
-        aggState.setMainContent(page.getJCRNode());
+        aggState.setMainContent(page);
         when(magnoliaCtx.getAggregationState()).thenReturn(aggState);
         final HierarchyManager hm = mock(HierarchyManager.class);
         when(magnoliaCtx.getHierarchyManager("test")).thenReturn(hm);

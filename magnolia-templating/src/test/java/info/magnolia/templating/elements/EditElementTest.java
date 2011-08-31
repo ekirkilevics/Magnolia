@@ -35,6 +35,7 @@ package info.magnolia.templating.elements;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -46,14 +47,14 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.OutputProvider;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.MockHierarchyManager;
+import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -75,15 +76,17 @@ public class EditElementTest {
 
     @Before
     public void setUp() throws Exception {
-        final MockSession hm = SessionTestUtil.createSession("TestMockHierarchyManager",
+        final MockHierarchyManager hm = MockUtil.createHierarchyManager(
                 "/foo/bar/baz/paragraphs/01.text=dummy\n" +
                 "/foo/bar/baz/paragraphs/01/MetaData.mgnl\\:template=testParagraph0"
         );
+        hm.setName("TestMockHierarchyManager");
 
         final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(hm.getNode("/foo/bar/baz"));
-        aggregationState.setCurrentContent(hm.getNode("/foo/bar/baz/paragraphs/01"));
+        aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
+        aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
         final WebContext ctx = mock(WebContext.class);
+        when(ctx.getHierarchyManager("TestMockHierarchyManager")).thenReturn(hm);
         MgnlContext.setInstance(ctx);
 
         final ServerConfiguration serverCfg = new ServerConfiguration();
@@ -99,7 +102,7 @@ public class EditElementTest {
 
         out = new StringWriter();
 
-        renderingCtx.push(aggregationState.getCurrentContent(), renderableDefinition, new OutputProvider() {
+        renderingCtx.push(aggregationState.getCurrentContent().getJCRNode(), renderableDefinition, new OutputProvider() {
 
             @Override
             public OutputStream getOutputStream() throws RenderException, IOException {
@@ -171,8 +174,8 @@ public class EditElementTest {
 
     @After
     public void tearDown() throws Exception {
-        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         SystemProperty.clear();
+        ComponentsTestUtil.clear();
     }
 }

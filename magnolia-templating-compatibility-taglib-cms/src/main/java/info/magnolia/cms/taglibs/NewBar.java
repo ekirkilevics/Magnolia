@@ -41,13 +41,14 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.jsp.tagext.TagSupport;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -190,7 +191,7 @@ public class NewBar extends TagSupport implements BarTag {
     @Override
     public int doEndTag() {
 
-        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && NodeUtil.isGranted(MgnlContext.getAggregationState().getMainContent(),Permission.SET)) {
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && NodeUtil.isGranted(MgnlContext.getAggregationState().getMainContent().getJCRNode(), Permission.SET)) {
             try {
                 BarNew bar = new BarNew();
                 bar.setPath(this.getPath());
@@ -199,7 +200,7 @@ public class NewBar extends TagSupport implements BarTag {
                     log.warn("No paragraph selected for new bar in {}", pageContext.getPage());
                 }
                 bar.setNodeCollectionName(this.contentNodeCollectionName);
-                bar.setNodeName(contentNodeName); //$NON-NLS-1$
+                bar.setNodeName(contentNodeName);
                 bar.setDefaultButtons();
                 if (this.getNewLabel() != null) {
                     if (StringUtils.isEmpty(this.getNewLabel())) {

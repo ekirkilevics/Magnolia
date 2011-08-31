@@ -36,11 +36,8 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.filters.InterceptFilter;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.SelectorUtil;
 import info.magnolia.context.MgnlContext;
-
-import javax.jcr.Node;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -52,11 +49,13 @@ import org.apache.commons.lang.StringUtils;
 
  * @deprecated since 4.0 - should not be used. AggregationState should be usable as a replacement in most cases.
  */
+@Deprecated
 public class Resource {
 
     /**
      * @deprecated since 4.0 - use {@link InterceptFilter#MGNL_PREVIEW_ATTRIBUTE} or rather, use the methods on AggregationState.
      */
+    @Deprecated
     public static final String MGNL_PREVIEW_ATTRIBUTE = InterceptFilter.MGNL_PREVIEW_ATTRIBUTE;
 
     private static final String GLOBAL_CONTENT_NODE = "contentObjGlobal"; //$NON-NLS-1$
@@ -80,8 +79,9 @@ public class Resource {
      *
      * @deprecated use AggregationState
      */
+    @Deprecated
     public static Content getActivePage() {
-        return ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
+        return MgnlContext.getAggregationState().getMainContent();
     }
 
     /**
@@ -91,11 +91,11 @@ public class Resource {
      * @return currently active page, as requested from the URI
      */
     public static Content getCurrentActivePage() {
-        Node currentActpage = MgnlContext.getAggregationState().getCurrentContent();
+        Content currentActpage = MgnlContext.getAggregationState().getCurrentContent();
         if (currentActpage == null) {
             currentActpage = MgnlContext.getAggregationState().getMainContent();
         }
-        return ContentUtil.asContent(currentActpage);
+        return currentActpage;
     }
 
     /**
@@ -120,7 +120,7 @@ public class Resource {
      * @return ContentNode , local container specific to the current JSP/Servlet paragraph
      */
     public static Content getLocalContentNode() {
-        return ContentUtil.asContent(MgnlContext.getAggregationState().getCurrentContent());
+        return MgnlContext.getAggregationState().getCurrentContent();
     }
 
     /**
@@ -142,6 +142,7 @@ public class Resource {
      * @return initialised multipart form object with the posted data
      * @deprecated since 4.0 - use WebContext.getPostedForm()
      */
+    @Deprecated
     public static MultipartForm getPostedForm() {
         return MgnlContext.getPostedForm();
     }
@@ -155,6 +156,7 @@ public class Resource {
      * @return selector String as requested from the URI
      * @deprecated since 4.0 - use {@link info.magnolia.cms.util.SelectorUtil#getSelector}
      */
+    @Deprecated
     public static String getSelector() {
         return SelectorUtil.getSelector();
     }
@@ -166,6 +168,7 @@ public class Resource {
      * @return the selector value
      * @deprecated since 4.0 - use {@link info.magnolia.cms.util.SelectorUtil#getSelector}
      */
+    @Deprecated
     public static String getSelector(int index) {
         return SelectorUtil.getSelector(index);
     }
@@ -177,6 +180,7 @@ public class Resource {
      *
      * @deprecated not used
      */
+    @Deprecated
     public static void removeGlobalContentNode() {
         MgnlContext.removeAttribute(Resource.GLOBAL_CONTENT_NODE);
     }
@@ -199,15 +203,16 @@ public class Resource {
      * Restores the request's original <code>actpage</code> attribute (i.e. the one specified by the request URI).
      */
     public static void restoreCurrentActivePage() {
-        setCurrentActivePage(ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent()));
+        setCurrentActivePage(MgnlContext.getAggregationState().getMainContent());
     }
 
     /**
      * Set the request's <code>actpage</code> attribute to <code>page</code>.
      * @deprecated since 4.0 - use AggregationState.
      */
+    @Deprecated
     public static void setCurrentActivePage(Content page) {
-        MgnlContext.getAggregationState().setCurrentContent(page.getJCRNode());
+        MgnlContext.getAggregationState().setCurrentContent(page);
     }
 
     /**
@@ -227,7 +232,7 @@ public class Resource {
      * @param node to be set
      */
     public static void setLocalContentNode(Content node) {
-        MgnlContext.getAggregationState().setCurrentContent(node.getJCRNode());
+        MgnlContext.getAggregationState().setCurrentContent(node);
     }
 
     /**
@@ -242,6 +247,7 @@ public class Resource {
      * @return boolean , true if preview is enabled
      * @deprecated use {@link info.magnolia.cms.core.AggregationState#isPreviewMode}
      */
+    @Deprecated
     public static boolean showPreview() {
         return MgnlContext.getAggregationState().isPreviewMode();
     }
@@ -249,6 +255,7 @@ public class Resource {
     /**
      * @deprecated use AggregationState
      */
+    @Deprecated
     public static void setShowPreview(boolean showPreview){
         MgnlContext.getAggregationState().setPreviewMode(showPreview);
     }

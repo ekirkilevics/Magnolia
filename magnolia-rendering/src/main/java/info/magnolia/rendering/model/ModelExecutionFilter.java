@@ -34,8 +34,10 @@
 package info.magnolia.rendering.model;
 
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.RequestDispatchUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.MetaDataUtil;
@@ -105,10 +107,10 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
             return;
         }
 
-        Node content = getContent(nodeIdentifier);
+        Content content = ContentUtil.asContent(getContent(nodeIdentifier));
 
-        Node orgMainContent = null;
-        Node orgCurrentContent = null;
+        Content orgMainContent = null;
+        Content orgCurrentContent = null;
 
         AggregationState state = getAggregationStateSafely();
         if (state != null) {
@@ -123,13 +125,13 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
         }
         try {
 
-            TemplateDefinition templateDefinition = getTemplateDefinition(content);
+            TemplateDefinition templateDefinition = getTemplateDefinition(content.getJCRNode());
 
             RenderingModelBasedRenderer renderingModelBasedRenderer = getRenderingModelBasedRenderer(templateDefinition);
 
             RenderingModel renderingModel;
             try {
-                renderingModel = renderingModelBasedRenderer.newModel(content, templateDefinition, null);
+                renderingModel = renderingModelBasedRenderer.newModel(content.getJCRNode(), templateDefinition, null);
             }
             catch (RenderException e) {
                 throw new ServletException(e.getMessage(), e);
@@ -232,9 +234,10 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
 
     protected boolean handleExecutionResult(RenderingModel renderingModel, String actionResult, TemplateDefinition templateDefinition, HttpServletRequest request, HttpServletResponse response) {
 
-            // If the model rendered something on its own or sent a redirect we will not proceed with rendering.
-        if (response.isCommitted())
+        // If the model rendered something on its own or sent a redirect we will not proceed with rendering.
+        if (response.isCommitted()) {
             return false;
+        }
 
         if (actionResult == null) {
             return false;

@@ -77,6 +77,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  * @deprecated since 4.5 - use {@link info.magnolia.test.mock.jcr.MockNode} instead.
  */
+@Deprecated
 public class MockJCRNode implements Node {
 
     /**
@@ -97,7 +98,7 @@ public class MockJCRNode implements Node {
 
     @Override
     public Node addNode(String relPath) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        return mockContent.createContent(relPath).getJCRNode();
     }
 
     @Override

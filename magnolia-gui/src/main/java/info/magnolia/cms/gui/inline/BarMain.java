@@ -89,12 +89,14 @@ public class BarMain extends Bar {
     /**
      * @deprecated since 4.0 - use the empty constructor.
      */
+    @Deprecated
     public BarMain(HttpServletRequest request) {
     }
 
     /**
      * @deprecated since 4.0
      */
+    @Deprecated
     public BarMain(HttpServletRequest request, String path, String nodeCollectionName, String nodeName, String paragraph) {
         this(path, nodeCollectionName, nodeName, paragraph);
     }
@@ -292,6 +294,7 @@ public class BarMain extends Bar {
     /**
      * @deprecated use drawHtml(Writer out) instead.
      */
+    @Deprecated
     public void drawHtml(JspWriter out) throws IOException {
         drawHtml((Writer) out);
     }
@@ -304,7 +307,7 @@ public class BarMain extends Bar {
 
             final AggregationState aggregationState = MgnlContext.getAggregationState();
             final String permission = Access.convertPermissions(Permission.SET);
-            final Node mainContent = aggregationState.getMainContent();
+            final Node mainContent = aggregationState.getMainContent().getJCRNode();
             boolean isGranted;
             try {
                 isGranted = Access.isGranted(mainContent.getSession(), mainContent.getPath(), permission);
@@ -328,12 +331,12 @@ public class BarMain extends Bar {
                     this.setSmall(false);
                     if (this.getOverlay()) {
                         println(out, "<div class=\"mgnlMainbar\" style=\"top:" //$NON-NLS-1$
-                            + top
-                            + "px;left:" //$NON-NLS-1$
-                            + left
-                            + "px;width:" //$NON-NLS-1$
-                            + this.getWidth()
-                            + ";\">"); //$NON-NLS-1$
+                                + top
+                                + "px;left:" //$NON-NLS-1$
+                                + left
+                                + "px;width:" //$NON-NLS-1$
+                                + this.getWidth()
+                                + ";\">"); //$NON-NLS-1$
                     }
                     println(out, this.getHtml());
                     if (this.getOverlay()) {
@@ -355,6 +358,7 @@ public class BarMain extends Bar {
     /**
      * @deprecated use drawHtmlLinks(Writer out) instead.
      */
+    @Deprecated
     public void drawHtmlLinks(JspWriter out) throws IOException {
         drawHtmlLinks((Writer) out);
     }

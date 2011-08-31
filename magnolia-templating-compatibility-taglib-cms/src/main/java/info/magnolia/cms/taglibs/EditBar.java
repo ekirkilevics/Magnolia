@@ -191,7 +191,7 @@ public class EditBar extends TagSupport {
     public int doEndTag() {
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && NodeUtil.isGranted(aggregationState.getMainContent(), Permission.SET)) {
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && NodeUtil.isGranted(aggregationState.getMainContent().getJCRNode(), Permission.SET)) {
             try {
                 BarEdit bar = new BarEdit();
 

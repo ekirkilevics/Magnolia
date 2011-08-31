@@ -34,26 +34,13 @@
 package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.taglibs.Resource;
+import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.mail.MailConstants;
 import info.magnolia.module.mail.MailModule;
 import info.magnolia.module.mail.templates.MgnlEmail;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.Tag;
-import javax.servlet.jsp.tagext.TagSupport;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -65,6 +52,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.jsp.tagext.TagSupport;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Sends a simple mail generated with all the fields found in nodeCollectionName.
@@ -75,6 +75,7 @@ import java.util.Map;
  * @version $Revision$ ($Author$)
  * @deprecated since 4.0
  */
+@Deprecated
 public class SimpleMailTag extends TagSupport {
 
     /**
@@ -244,7 +245,7 @@ public class SimpleMailTag extends TagSupport {
             this.nodeCollectionName = Resource.getLocalContentNodeCollectionName();
         }
 
-        Content activePage = ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
+        Content activePage = MgnlContext.getAggregationState().getMainContent();
         Content fieldsNode = null;
         Iterator it;
         try {

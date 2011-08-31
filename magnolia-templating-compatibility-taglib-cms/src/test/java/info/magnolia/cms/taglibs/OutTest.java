@@ -33,22 +33,23 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.link.LinkTransformerManager;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.MgnlTagTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockNodeData;
-import info.magnolia.test.MgnlTagTestCase;
+import info.magnolia.test.mock.MockUtil;
 
-import javax.jcr.RepositoryException;
-import javax.servlet.jsp.JspException;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Locale;
+
+import javax.jcr.RepositoryException;
+import javax.servlet.jsp.JspException;
 
 /**
  * @author Ryan Gardner
@@ -70,15 +71,15 @@ public class OutTest extends MgnlTagTestCase {
 
     // UUID - related output tests
     protected Out basicUUID_test_instance(String linkResolvingType) throws RepositoryException {
-       HierarchyManager hm = webContext.getHierarchyManager(ContentRepository.WEBSITE);
-       pageContext.setAttribute("actPage", hm.getContentByUUID("1"));
-       Out out = new Out();
-       //2 is the node of the uuid link stored in the repository
-       out.setContentNode(hm.getContentByUUID("2"));
-       out.setPageContext(pageContext);
-       out.setNodeDataName("link1");
-       out.setUuidToLink(linkResolvingType);
-       return out;
+        HierarchyManager hm = webContext.getHierarchyManager(ContentRepository.WEBSITE);
+        pageContext.setAttribute("actPage", hm.getContentByUUID("1"));
+        Out out = new Out();
+        //2 is the node of the uuid link stored in the repository
+        out.setContentNode(hm.getContentByUUID("2"));
+        out.setPageContext(pageContext);
+        out.setNodeDataName("link1");
+        out.setUuidToLink(linkResolvingType);
+        return out;
     }
 
     public void testUUIDLinkOutRelative() throws IOException, RepositoryException, JspException {
@@ -146,7 +147,7 @@ public class OutTest extends MgnlTagTestCase {
         agState.setCurrentURI("http://www.test.org/");
         agState.setRepository(ContentRepository.WEBSITE);
         agState.setHandle("/main");
-        agState.setMainContent(webContext.getHierarchyManager(ContentRepository.WEBSITE).getContentByUUID("1").getJCRNode());
+        agState.setMainContent(webContext.getHierarchyManager(ContentRepository.WEBSITE).getContentByUUID("1"));
         agState.setLocale(Locale.US);
         return agState;
     }

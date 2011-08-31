@@ -40,8 +40,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Locale;
 
-import javax.jcr.Node;
-
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -60,8 +58,8 @@ public class AggregationState {
     private String extension;
     private File file;
     private String handle;
-    private Node mainContent;
-    private Node currentContent;
+    private Content mainContent;
+    private Content currentContent;
     private String repository;
     private String selector;
     private String templateName;
@@ -164,19 +162,19 @@ public class AggregationState {
         this.handle = handle;
     }
 
-    public Node getMainContent() {
+    public Content getMainContent() {
         return mainContent;
     }
 
-    public void setMainContent(Node mainContent) {
+    public void setMainContent(Content mainContent) {
         this.mainContent = mainContent;
     }
 
-    public Node getCurrentContent() {
+    public Content getCurrentContent() {
         return currentContent;
     }
 
-    public void setCurrentContent(Node currentContent) {
+    public void setCurrentContent(Content currentContent) {
         this.currentContent = currentContent;
     }
 

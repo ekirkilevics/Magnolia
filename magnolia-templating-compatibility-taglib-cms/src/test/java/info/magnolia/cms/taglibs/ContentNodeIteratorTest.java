@@ -33,12 +33,15 @@
  */
 package info.magnolia.cms.taglibs;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.objectfactory.ComponentFactory;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockUtil;
@@ -82,8 +85,8 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
 
         // need some basic i18n config
         MockUtil.createAndSetHierarchyManager(ContentRepository.CONFIG,
-            "/server/i18n/content/class=info.magnolia.cms.i18n.DefaultI18nContentSupport\n" +
-            "/server/i18n/content/enabled=false\n"
+                "/server/i18n/content/class=info.magnolia.cms.i18n.DefaultI18nContentSupport\n" +
+                "/server/i18n/content/enabled=false\n"
         );
         // init tested tag
         cni = new ContentNodeIterator();
@@ -183,7 +186,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
             coll.addContent(new MockContent("c" + i));
         }
         actPage.addContent(coll);
-        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage.getJCRNode());
+        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage);
         assertEquals(Tag.SKIP_BODY, cni.doStartTag());
     }
 
@@ -198,7 +201,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
             coll.addContent(new MockContent("c" + i));
         }
         actPage.addContent(coll);
-        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage.getJCRNode());
+        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage);
         assertEquals(Tag.EVAL_BODY_INCLUDE, cni.doStartTag());
         assertNotNull(Resource.getLocalContentNode());
         assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
@@ -241,7 +244,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
             coll.addContent(new MockContent("c" + i));
         }
         actParagraph.addContent(coll);
-        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage.getJCRNode());
+        MgnlContext.getWebContext().getAggregationState().setMainContent(actPage);
         Resource.setLocalContentNode(actParagraph);
         assertEquals(Tag.EVAL_BODY_INCLUDE, cni.doStartTag());
         assertNotNull(Resource.getLocalContentNode());

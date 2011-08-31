@@ -37,7 +37,6 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.ButtonEdit;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Components;
@@ -46,8 +45,6 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import java.io.Writer;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -90,7 +87,7 @@ public class EditButton extends TagSupport {
 
     @Override
     public int doEndTag() {
-        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && NodeUtil.isGranted(MgnlContext.getAggregationState().getMainContent(), Permission.SET)) {
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && NodeUtil.isGranted(MgnlContext.getAggregationState().getMainContent().getJCRNode(), Permission.SET)) {
 
             try {
                 if (this.getNodeCollectionName() != null && this.getNodeName() == null) {
@@ -133,16 +130,11 @@ public class EditButton extends TagSupport {
 
     private String getNodeName() {
         if (this.nodeName == null) {
-            Node current = MgnlContext.getWebContext().getAggregationState().getCurrentContent();
+            Content current = MgnlContext.getWebContext().getAggregationState().getCurrentContent();
             if (current == null) {
                 return null;
             }
-            try {
-                return current.getName();
-            } catch (RepositoryException e) {
-                // TODO dlipp - apply consistent ExceptionHandling
-                throw new RuntimeException(e);
-            }
+            return current.getName();
         }
         return this.nodeName;
     }
@@ -166,37 +158,39 @@ public class EditButton extends TagSupport {
     }
 
     /**
-    *  The paragraph type.
-    * @deprecated since 4.1, use the setDialog() instead.
-    * @param type , content type
-    * @jsp.attribute required="false" rtexprvalue="true"
-    */
-   public void setParagraph(String type) {
-       setDialog(type);
-   }
+     *  The paragraph type.
+     * @deprecated since 4.1, use the setDialog() instead.
+     * @param type , content type
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    @Deprecated
+    public void setParagraph(String type) {
+        setDialog(type);
+    }
 
-   /**
-    * @return String paragraph (type of par)
-    * @deprecated since 4.1, use the getDialog() instead.
-    */
-   private String getParagraph() {
-       return getDialog();
-   }
+    /**
+     * @return String paragraph (type of par)
+     * @deprecated since 4.1, use the getDialog() instead.
+     */
+    @Deprecated
+    private String getParagraph() {
+        return getDialog();
+    }
 
-   /**
-    * The dialog type.
-    * @param type , content type
-    * @jsp.attribute required="false" rtexprvalue="true"
-    */
-   public void setDialog (String dialog) {
-       this.dialog = dialog;
-   }
+    /**
+     * The dialog type.
+     * @param type , content type
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    public void setDialog (String dialog) {
+        this.dialog = dialog;
+    }
 
-   public String getDialog () {
-       return this.dialog;
-   }
+    public String getDialog () {
+        return this.dialog;
+    }
 
-   /**
+    /**
      * Set display handler (JSP / Servlet), needs to know the relative path from WEB-INF.
      * TODO: deprecate this ???
      * @param path relative to WEB-INF.
@@ -219,7 +213,7 @@ public class EditButton extends TagSupport {
      */
     public String getTemplate() {
         if (this.displayHandler == null) {
-            Content localContainer = ContentUtil.asContent(MgnlContext.getWebContext().getAggregationState().getCurrentContent());
+            Content localContainer = MgnlContext.getWebContext().getAggregationState().getCurrentContent();
             String templateName = localContainer.getNodeData("dialog").getString();
             // TODO - use IoC for TemplateDefinitionRegistry?
             try {
@@ -238,7 +232,7 @@ public class EditButton extends TagSupport {
      */
     private String getPath() {
         try {
-            return MgnlContext.getWebContext().getAggregationState().getCurrentContent().getPath();
+            return MgnlContext.getWebContext().getAggregationState().getCurrentContent().getHandle();
         }
         catch (Exception re) {
             return StringUtils.EMPTY;
@@ -249,6 +243,7 @@ public class EditButton extends TagSupport {
      * @deprecated use the label attribute instead.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
+    @Deprecated
     public void setEditLabel(String label) {
         this.setLabel(label);
     }

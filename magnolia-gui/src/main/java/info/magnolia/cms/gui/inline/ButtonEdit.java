@@ -33,22 +33,24 @@
  */
 package info.magnolia.cms.gui.inline;
 
+import info.magnolia.cms.core.Access;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.core.Access;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
+
+import java.io.IOException;
+import java.io.Writer;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
-import java.io.IOException;
-import java.io.Writer;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -60,7 +62,7 @@ public class ButtonEdit extends Button {
     private String dialogPath;
     private String dialog;
 
-    private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
+    private final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
 
     public ButtonEdit() {
     }
@@ -68,12 +70,14 @@ public class ButtonEdit extends Button {
     /**
      * @deprecated since 4.0 - use the empty constructor.
      */
+    @Deprecated
     public ButtonEdit(HttpServletRequest request) {
     }
 
     /**
      * @deprecated since 4.0 - do not pass an HttpServletRequest
      */
+    @Deprecated
     public ButtonEdit(HttpServletRequest request, String path, String nodeCollectionName, String nodeName, String dialog) {
         this(path, nodeCollectionName, nodeName, dialog);
     }
@@ -88,6 +92,7 @@ public class ButtonEdit extends Button {
     /**
      * @deprecated since 4.0 - do not pass an HttpServletRequest
      */
+    @Deprecated
     public void setDefaultOnclick(HttpServletRequest request) {
         setDefaultOnclick();
     }
@@ -104,21 +109,21 @@ public class ButtonEdit extends Button {
 
         String repository = MgnlContext.getAggregationState().getRepository();
         this.setOnclick("mgnlOpenDialog('" //$NON-NLS-1$
-            + this.getPath()
-            + "','" //$NON-NLS-1$
-            + nodeCollectionName
-            + "','" //$NON-NLS-1$
-            + nodeName
-            + "','" //$NON-NLS-1$
-            + this.getDialog()
-            + "','" //$NON-NLS-1$
-            + repository
-            + "',"
-            + (dialogPath != null ? "'" + dialogPath + "'" : "null")
-            + ", null" //width
-            + ", null" //height
-            + (i18nSupport.isEnabled()? ", '" + i18nSupport.getLocale().toString() + "'":"")
-            +");");
+                + this.getPath()
+                + "','" //$NON-NLS-1$
+                + nodeCollectionName
+                + "','" //$NON-NLS-1$
+                + nodeName
+                + "','" //$NON-NLS-1$
+                + this.getDialog()
+                + "','" //$NON-NLS-1$
+                + repository
+                + "',"
+                + (dialogPath != null ? "'" + dialogPath + "'" : "null")
+                + ", null" //width
+                + ", null" //height
+                + (i18nSupport.isEnabled()? ", '" + i18nSupport.getLocale().toString() + "'":"")
+                +");");
     }
 
     @Override
@@ -146,6 +151,7 @@ public class ButtonEdit extends Button {
     /**
      * @deprecated use drawHtml(Writer out) instead.
      */
+    @Deprecated
     public void drawHtml(JspWriter out) throws IOException {
         drawHtml((Writer)out);
     }
@@ -157,7 +163,7 @@ public class ButtonEdit extends Button {
         if (this.getRequest() != null) {
             final AggregationState aggregationState = MgnlContext.getAggregationState();
             final String permission = Access.convertPermissions(Permission.SET);
-            final Node mainContent = aggregationState.getMainContent();
+            final Node mainContent = aggregationState.getMainContent().getJCRNode();
             boolean isGranted;
             try {
                 isGranted = Access.isGranted(mainContent.getSession(), mainContent.getPath(), permission);

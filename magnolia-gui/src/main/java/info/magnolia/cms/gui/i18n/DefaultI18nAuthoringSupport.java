@@ -41,14 +41,14 @@ import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.BooleanUtil;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.link.LinkUtil;
-import org.apache.commons.lang.LocaleUtils;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 import java.util.Locale;
+
+import org.apache.commons.lang.LocaleUtils;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -73,7 +73,7 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
             select.setName("locale");
             select.setEvent("onchange", "window.location = this.value");
 
-            Content currentPage = ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
+            Content currentPage = MgnlContext.getAggregationState().getMainContent();
             String currentUri = createURI(currentPage, i18nContentSupport.getLocale());
             select.setValue(currentUri);
 
@@ -113,7 +113,7 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
         Locale locale = LocaleUtils.toLocale(dialog.getConfigValue("locale", null));
         boolean isFallbackLanguage = i18nContentSupport.getFallbackLocale().equals(locale);
 
-        if (isEnabled() && i18nContentSupport.isEnabled() && locale != null ) {
+        if (isEnabled() && i18nContentSupport.isEnabled() && locale != null && dialog.getStorageNode() != null) {
             List<DialogControlImpl> tabs = dialog.getSubs();
             for (DialogControlImpl tab : tabs) {
                 List<DialogControlImpl> controls = tab.getSubs();

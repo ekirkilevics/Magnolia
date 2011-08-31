@@ -39,14 +39,12 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.SecurityUtil;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeUtil;
 
 import java.util.Collection;
 import java.util.Properties;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
@@ -66,7 +64,7 @@ public class CmsFunctions {
      * @return current page
      */
     public static Content currentPage() {
-        return ContentUtil.asContent(MgnlContext.getAggregationState().getCurrentContent());
+        return MgnlContext.getAggregationState().getCurrentContent();
     }
 
     /**
@@ -74,7 +72,7 @@ public class CmsFunctions {
      * @return loaded page
      */
     public static Content mainPage() {
-        return ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
+        return MgnlContext.getAggregationState().getMainContent();
     }
 
     /**
@@ -124,7 +122,7 @@ public class CmsFunctions {
      * @return true if the current user can edit the active page.
      */
     public static boolean canEdit() {
-        return NodeUtil.isGranted(MgnlContext.getAggregationState().getMainContent(), Permission.SET);
+        return NodeUtil.isGranted(MgnlContext.getAggregationState().getMainContent().getJCRNode(), Permission.SET);
     }
 
     /**
@@ -134,11 +132,11 @@ public class CmsFunctions {
      */
     public static boolean isEditMode() {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        Node activePage = aggregationState.getMainContent();
+        Content activePage = aggregationState.getMainContent();
         return ServerConfiguration.getInstance().isAdmin()
-            && !aggregationState.isPreviewMode()
-            && activePage != null
-            && NodeUtil.isGranted(activePage, Permission.SET);
+        && !aggregationState.isPreviewMode()
+        && activePage != null
+                && NodeUtil.isGranted(activePage.getJCRNode(), Permission.SET);
     }
 
     /**

@@ -96,7 +96,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
                     log.warn("Context response not synced. This may lead to discrepancies in rendering.");
                 }
 
-                Node content = aggregationState.getMainContent();
+                Node content = aggregationState.getMainContent().getJCRNode();
 
                 render(content, templateName, response);
 

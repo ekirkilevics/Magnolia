@@ -33,23 +33,25 @@
  */
 package info.magnolia.cms.gui.inline;
 
+import info.magnolia.cms.core.Access;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.core.Access;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
+
+import java.io.IOException;
+import java.io.Writer;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
-import java.io.IOException;
-import java.io.Writer;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -62,11 +64,12 @@ public class BarNew extends Bar {
 
     private Button buttonNew = new Button();
 
-    private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
+    private final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
 
     /**
      * @deprecated since 4.0 - use the empty constructor.
      */
+    @Deprecated
     public BarNew(HttpServletRequest request) {
     }
 
@@ -100,7 +103,7 @@ public class BarNew extends Bar {
 
     public void setButtonNew() {
         this.setButtonNew(this.getPath(), this.getNodeCollectionName(StringUtils.EMPTY), this
-            .getNodeName(StringUtils.EMPTY), this.getParagraph());
+                .getNodeName(StringUtils.EMPTY), this.getParagraph());
     }
 
     /**
@@ -113,7 +116,7 @@ public class BarNew extends Bar {
     public void setButtonNew(String path, String nodeCollectionName, String nodeName, String paragraph) {
         Button b = new Button();
         final String labelKey = StringUtils.isBlank(paragraph) ? "buttons.noparagraph" : "buttons.new";
-        b.setLabel(MessagesManager.getMessages().get(labelKey)); //$NON-NLS-1$
+        b.setLabel(MessagesManager.getMessages().get(labelKey));
         String repository = MgnlContext.getAggregationState().getRepository();
         // if there are multiple paragraphs show the selectParagraph dialog
         if (StringUtils.contains(paragraph, ',')) {
@@ -127,25 +130,26 @@ public class BarNew extends Bar {
 
     protected String onClickForNewButton(String path, String nodeCollectionName, String nodeName, String paragraph, String repository, String dialogName) {
         return "mgnlOpenDialog('"
-                + path
-                + "','"
-                + nodeCollectionName
-                + "','"
-                + nodeName
-                + "','"
-                + paragraph
-                + "','"
-                + repository
-                + "','.magnolia/dialogs/" + dialogName + ".html'"
-                + ", null" //width
-                + ", null" //height
-                + (i18nSupport.isEnabled()? ", '" + i18nSupport.getLocale().toString() + "'":"")
-                +");";
+        + path
+        + "','"
+        + nodeCollectionName
+        + "','"
+        + nodeName
+        + "','"
+        + paragraph
+        + "','"
+        + repository
+        + "','.magnolia/dialogs/" + dialogName + ".html'"
+        + ", null" //width
+        + ", null" //height
+        + (i18nSupport.isEnabled()? ", '" + i18nSupport.getLocale().toString() + "'":"")
+        +");";
     }
 
     /**
      * @deprecated use drawHtml(Writer out) instead.
      */
+    @Deprecated
     public void drawHtml(JspWriter out) throws IOException {
         drawHtml((Writer) out);
     }
@@ -156,7 +160,7 @@ public class BarNew extends Bar {
     public void drawHtml(Writer out) throws IOException {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final String permission = Access.convertPermissions(Permission.SET);
-        final Node mainContent = aggregationState.getMainContent();
+        final Node mainContent = aggregationState.getMainContent().getJCRNode();
         boolean isGranted;
         try {
             isGranted = Access.isGranted(mainContent.getSession(), mainContent.getPath(), permission);

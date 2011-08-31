@@ -36,11 +36,11 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
-
 import info.magnolia.context.MgnlContext;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -117,6 +117,7 @@ public abstract class BaseContentTag extends TagSupport {
     /**
      * @deprecated Use {@link #getFirstMatchingNode()} instead
      */
+    @Deprecated
     protected Content getFirtMatchingNode() {
         return getFirstMatchingNode();
     }
@@ -187,7 +188,7 @@ public abstract class BaseContentTag extends TagSupport {
     }
 
     protected Content resolveNode(Content currentPage) {
-        Content currentParagraph = ContentUtil.asContent(MgnlContext.getAggregationState().getCurrentContent());
+        Content currentParagraph = MgnlContext.getAggregationState().getCurrentContent();
 
         try {
             if (StringUtils.isNotEmpty(contentNodeName)) {
@@ -200,7 +201,7 @@ public abstract class BaseContentTag extends TagSupport {
                 // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
                 // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
                 return currentPage.getContent(contentNodeCollectionName).getContent(contentNodeName);
-            } else  if (currentParagraph == null || currentParagraph.getHandle().equals(ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent()).getHandle())) {
+            } else if (currentParagraph == null || currentParagraph.getHandle().equals(MgnlContext.getAggregationState().getMainContent().getHandle())) {
                 // outside collection iterator
                 if (StringUtils.isEmpty(contentNodeCollectionName)) {
                     // e.g. <cms:out nodeDataName="title"/>
@@ -222,7 +223,7 @@ public abstract class BaseContentTag extends TagSupport {
                     // e.g. <cms:out nodeDataName="title"/>
                     return currentParagraph;
                 } else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
-                    || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
+                        || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
                     // empty collection name -> use actpage
                     // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
                     return currentPage;
@@ -261,6 +262,7 @@ public abstract class BaseContentTag extends TagSupport {
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      * @deprecated
      */
+    @Deprecated
     public void setActpage(boolean actpage) {
         this.actpage = actpage;
     }

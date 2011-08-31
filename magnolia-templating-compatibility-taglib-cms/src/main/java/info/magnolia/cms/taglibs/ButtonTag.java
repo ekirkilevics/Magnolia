@@ -39,7 +39,6 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -71,7 +70,7 @@ public class ButtonTag extends TagSupport {
     /**
      * Get i18n support.
      */
-    private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
+    private final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
     /**
      * Name of the dialog to open.
      * @jsp.attribute required="true" rtexprvalue="true"
@@ -107,22 +106,17 @@ public class ButtonTag extends TagSupport {
         Button button = new Button();
         button.setLabel(label);
         String path;
-        try {
-            path = MgnlContext.getAggregationState().getMainContent().getPath();
-        } catch (RepositoryException e) {
-            // TODO dlipp - apply consistent ExceptionHandling
-            throw new RuntimeException(e);
-        }
+        path = MgnlContext.getAggregationState().getMainContent().getHandle();
 
         button.setOnclick("mgnlOpenDialog('"
-            + path
-            + "','','','"
-            + dialogName
-            + "','"
-            + ContentRepository.WEBSITE
-            + "',null, null, null"
-            + (i18nSupport.isEnabled()? ", '" + i18nSupport.getLocale().toString() + "'":"")
-            + ")");
+                + path
+                + "','','','"
+                + dialogName
+                + "','"
+                + ContentRepository.WEBSITE
+                + "',null, null, null"
+                + (i18nSupport.isEnabled()? ", '" + i18nSupport.getLocale().toString() + "'":"")
+                + ")");
 
         if ("right".equalsIgnoreCase(position)) {
             bartag.addButtonRight(button);

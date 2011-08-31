@@ -36,14 +36,12 @@ package info.magnolia.cms.taglibs.util;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeUtil;
 
 import java.io.IOException;
 import java.util.Iterator;
 
-import javax.jcr.Node;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
@@ -128,10 +126,10 @@ public class RedirectTag extends BodyTagSupport {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         String location = getRedirectLocation(request);
 
-        Node activePage = MgnlContext.getAggregationState().getMainContent();
+        Content activePage = MgnlContext.getAggregationState().getMainContent();
 
         // on public servers, during preview or when the user can't edit the page, just send the redirect
-        if (!ServerConfiguration.getInstance().isAdmin() || MgnlContext.getAggregationState().isPreviewMode() || !NodeUtil.isGranted(activePage, Permission.SET)) {
+        if (!ServerConfiguration.getInstance().isAdmin() || MgnlContext.getAggregationState().isPreviewMode() || !NodeUtil.isGranted(activePage.getJCRNode(), Permission.SET)) {
             if (location != null) {
                 try {
                     ((HttpServletResponse) pageContext.getResponse()).sendRedirect(request.getContextPath() + location);
@@ -163,7 +161,7 @@ public class RedirectTag extends BodyTagSupport {
      * @return A URI if a child page is available, or null.
      */
     private String getRedirectLocation(HttpServletRequest request) {
-        Content page = ContentUtil.asContent(MgnlContext.getAggregationState().getMainContent());
+        Content page = MgnlContext.getAggregationState().getMainContent();
         Iterator<Content> it = page.getChildren().iterator();
         if (it.hasNext()) {
             Content c = it.next();

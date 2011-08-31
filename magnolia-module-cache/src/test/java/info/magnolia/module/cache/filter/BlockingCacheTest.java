@@ -33,9 +33,15 @@
  */
 package info.magnolia.module.cache.filter;
 
-import static org.easymock.EasyMock.*;
-import static org.easymock.classextension.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.anyLong;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.createStrictMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
@@ -54,6 +60,7 @@ import info.magnolia.module.cache.executor.Store;
 import info.magnolia.module.cache.executor.UseCache;
 import info.magnolia.module.cache.mbean.CacheMonitor;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.voting.DefaultVoting;
@@ -70,6 +77,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -97,7 +105,7 @@ public class BlockingCacheTest{
     private static final Producer SUCCEEDING_RENDERING = new Producer(){
         @Override
         public void produce(ServletRequest request, ServletResponse response) throws IOException {
-                response.getWriter().write(CONTENT);
+            response.getWriter().write(CONTENT);
         }
     };
 
@@ -234,9 +242,11 @@ public class BlockingCacheTest{
         filter.setName("cache-filter");
         filter.setCacheConfigurationName("my-config");
         filter.init(null);
+
+        MgnlContext.getAggregationState().setCurrentContent(new MockContent("boo"));
     }
 
-    private CachePolicyResult doRequest(final Producer producer) throws IOException, ServletException {
+    private CachePolicyResult doRequest(final Producer producer) throws IOException, ServletException, RepositoryException {
         MockWebContext webContext;
         HttpServletRequest request;
         HttpServletResponse response;
@@ -274,6 +284,10 @@ public class BlockingCacheTest{
         response.flushBuffer();
 
         MgnlContext.setInstance(webContext);
+        MockContent blah = new MockContent("blah");
+        blah.setNodeData(MgnlNodeType.JCR_PRIMARY_TYPE, "mgnl:content");
+
+        MgnlContext.getAggregationState().setCurrentContent(blah);
 
         replay(request, response);
 

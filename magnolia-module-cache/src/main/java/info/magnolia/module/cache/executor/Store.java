@@ -92,7 +92,7 @@ public class Store extends AbstractExecutor {
         if(cachedEntry != null){
             cachePolicyResult.setCachedEntry(cachedEntry);
             // let policy know the uuid in case it wants to do something with it
-            final Node content = MgnlContext.getAggregationState().getCurrentContent();
+            final Node content = MgnlContext.getAggregationState().getCurrentContent().getJCRNode();
             try {
                 if (content != null && NodeUtil.isNodeType(content, "mix:referenceable")) {
                     final String uuid = content.getIdentifier();
@@ -135,12 +135,12 @@ public class Store extends AbstractExecutor {
         }
         else{
             cacheEntry = new DelegatingBlobCachedEntry(cachedResponse.getContentLength(),
-                contentType,
-                cachedResponse.getCharacterEncoding(),
-                status,
-                cachedResponse.getHeaders(),
-                modificationDate,
-                originalUrl);
+                    contentType,
+                    cachedResponse.getCharacterEncoding(),
+                    status,
+                    cachedResponse.getHeaders(),
+                    modificationDate,
+                    originalUrl);
 
             // TODO remove this once we use a blob store
             // the file will be deleted once served in this request
@@ -157,6 +157,7 @@ public class Store extends AbstractExecutor {
     /**
      * @deprecated since 4.5, use IoC/CDI
      */
+    @Deprecated
     protected CacheModule getModule() {
         return CacheModule.getInstance();
     }

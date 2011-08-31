@@ -34,7 +34,6 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.cms.util.DeprecationUtil;
 import info.magnolia.context.MgnlContext;
@@ -53,6 +52,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author philipp
  * @version $Id$
  */
+@Deprecated
 public class BackwardCompatibilityFilter extends OncePerRequestAbstractMgnlFilter {
 
     private static Content ACTPAGE = new ContentWrapper(){
@@ -61,7 +61,7 @@ public class BackwardCompatibilityFilter extends OncePerRequestAbstractMgnlFilte
         public Content getWrappedContent() {
             DeprecationUtil.isDeprecated("The request attribute ${" + ACTPAGE_ATTRIBUTE + "} is deprecated please use the new ${" + ACTPAGE_FUNCTION + "} function instead");
 
-            return ContentUtil.asContent(MgnlContext.getAggregationState().getCurrentContent());
+            return MgnlContext.getAggregationState().getCurrentContent();
         }
     };
 
@@ -71,7 +71,7 @@ public class BackwardCompatibilityFilter extends OncePerRequestAbstractMgnlFilte
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+    throws IOException, ServletException {
         request.setAttribute(ACTPAGE_ATTRIBUTE, ACTPAGE);
         chain.doFilter(request, response);
     }

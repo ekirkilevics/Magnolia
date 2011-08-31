@@ -70,6 +70,7 @@ public class BarEdit extends Bar {
     /**
      * @deprecated since 4.0 - use the empty constructor.
      */
+    @Deprecated
     public BarEdit(HttpServletRequest request) {
     }
 
@@ -165,6 +166,7 @@ public class BarEdit extends Bar {
     /**
      * @deprecated use {@link #setButtonDelete(String)}
      */
+    @Deprecated
     public void setButtonDelete() {
         this.setButtonDelete(this.getPath(), this.getNodeCollectionName(), this.getNodeName());
     }
@@ -178,6 +180,7 @@ public class BarEdit extends Bar {
      *
      * @deprecated use {@link #setButtonDelete(String)}
      */
+    @Deprecated
     public void setButtonDelete(String path, String nodeCollectionName, String nodeName) {
         Button b = new Button();
         b.setLabel(MessagesManager.get("buttons.delete")); //$NON-NLS-1$
@@ -195,6 +198,7 @@ public class BarEdit extends Bar {
     /**
      * @deprecated use drawHtml(Writer out) instead.
      */
+    @Deprecated
     public void drawHtml(JspWriter out) throws IOException {
         drawHtml((Writer) out);
     }
@@ -205,7 +209,7 @@ public class BarEdit extends Bar {
     public void drawHtml(Writer out) throws IOException {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final String stringPermissions = Access.convertPermissions(Permission.SET);
-        final Node mainContent = aggregationState.getMainContent();
+        final Node mainContent = aggregationState.getMainContent().getJCRNode();
         boolean isGranted;
         try {
             isGranted = Access.isGranted(mainContent.getSession(), mainContent.getPath(), stringPermissions);
