@@ -41,6 +41,7 @@ import org.junit.Test;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -86,17 +87,34 @@ public class ObjectManufacturerTest {
     }
 
     @Test
-    public void annotatedConstructor() {
+    public void testParameterFromGuice() {
+        // WHEN
         NameableObject object = (NameableObject) manufacturer.newInstance(
                 ObjectWithAnnotatedConstructor.class,
                 new GuiceParameterResolver(injector));
-        assertEquals("foobar", object.getName());
 
+        // THEN
+        assertEquals("foobar", object.getName());
+    }
+
+    @Test
+    public void testCandidateTakesPrecedence() {
+        // WHEN
         NameableObject object2 = (NameableObject) manufacturer.newInstance(
                 ObjectWithAnnotatedConstructor.class,
                 new CandidateParameterResolver(new Object[]{"12345"}),
                 new GuiceParameterResolver(injector));
+
+        // THEN
         assertEquals("12345", object2.getName());
+    }
+
+    @Test(expected = MgnlInstantiationException.class)
+    public void testFailsWhenNoParameterCanBeResolved() {
+        // WHEN
+        manufacturer.newInstance(
+                ObjectWithAnnotatedConstructor.class,
+                new CandidateParameterResolver(new Object[]{}));
     }
 
     public static class ObjectWithGreedyConstructor extends NameableObject {
@@ -114,16 +132,24 @@ public class ObjectManufacturerTest {
     }
 
     @Test
-    public void greedyConstructor() {
+    public void testParameterFromGuiceWithGreedyConstructor() {
+        // WHEN
         NameableObject object = (NameableObject) manufacturer.newInstance(
                 ObjectWithGreedyConstructor.class,
                 new GuiceParameterResolver(injector));
+        // THEN
         assertEquals("foobar", object.getName());
+    }
 
+    @Test
+    public void testCandidateTakesPrecedenceWithGreedyConstructor() {
+        // WHEN
         NameableObject object2 = (NameableObject) manufacturer.newInstance(
                 ObjectWithGreedyConstructor.class,
                 new CandidateParameterResolver(new Object[]{"12345"}),
                 new GuiceParameterResolver(injector));
+
+        // THEN
         assertEquals("12345", object2.getName());
     }
 
@@ -137,10 +163,13 @@ public class ObjectManufacturerTest {
     }
 
     @Test
-    public void ignorePrivateConstructor() {
+    public void testIgnoresPrivateConstructor() {
+        // WHEN
         NameableObject object = (NameableObject) manufacturer.newInstance(
                 ObjectWithGreediestConstructorPrivate.class,
                 new GuiceParameterResolver(injector));
+
+        // THEN
         assertNull(object.getName());
     }
 
@@ -156,8 +185,8 @@ public class ObjectManufacturerTest {
         }
     }
 
-    @Test(expected = RuntimeException.class)
-    public void multipleAnnotatedConstructors() {
+    @Test(expected = MgnlInstantiationException.class)
+    public void testFailesOnMultipleAnnotatedConstructors() {
         manufacturer.newInstance(ObjectWithMultipleAnnotatedConstructors.class);
     }
 
@@ -170,8 +199,8 @@ public class ObjectManufacturerTest {
         }
     }
 
-    @Test(expected = RuntimeException.class)
-    public void failOnConstructorThatThrowsException() {
+    @Test(expected = MgnlInstantiationException.class)
+    public void testFailWhenConstructorThrowsException() {
         manufacturer.newInstance(
                 ObjectWithConstructorThatThrowsException.class,
                 new GuiceParameterResolver(injector));
@@ -186,8 +215,8 @@ public class ObjectManufacturerTest {
         }
     }
 
-    @Test(expected = RuntimeException.class)
-    public void failWhenNoPublicConstructor() {
+    @Test(expected = MgnlInstantiationException.class)
+    public void testFfailsWhenNoPublicConstructorAvailable() {
         manufacturer.newInstance(
                 ObjectWithNoPrivateConstructor.class,
                 new GuiceParameterResolver(injector));
