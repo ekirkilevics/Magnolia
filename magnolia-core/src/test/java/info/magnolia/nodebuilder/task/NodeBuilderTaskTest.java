@@ -33,16 +33,18 @@
  */
 package info.magnolia.nodebuilder.task;
 
-import static info.magnolia.nodebuilder.Ops.*;
-import static org.junit.Assert.*;
+import static info.magnolia.nodebuilder.Ops.addNode;
+import static info.magnolia.nodebuilder.Ops.addProperty;
+import static info.magnolia.nodebuilder.Ops.getNode;
+import static info.magnolia.nodebuilder.Ops.remove;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContextImpl;
 import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.test.RepositoryTestCase;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 
 import org.junit.Test;
 
@@ -52,14 +54,19 @@ import org.junit.Test;
 public class NodeBuilderTaskTest extends RepositoryTestCase {
     @Test
     public void testUnknownRootThrowsException() throws Exception {
-        MgnlContext.getHierarchyManager("config").getRoot().createContent("hello").createContent("world");
+        ContentUtil.createPath(MgnlContext.getHierarchyManager("config"), "/hello/world", true);
 
-        MgnlContext.getHierarchyManager("config").getContent("/hello");
-        MgnlContext.getHierarchyManager("config").getContent("/hello/world");
+        Task passing = new NodeBuilderTask("Passing", "This task should work since it uses a known root", ErrorHandling.strict, "config", "/hello/world", addProperty("foo", "bar"));
+        Task failing = new NodeBuilderTask("Failing", "This task should not work since it uses an unknown root", ErrorHandling.strict, "config", "/hello/boo", addProperty("foo", "bar"));
 
-        assertPathNotFoundExceptionFor("boo");
-        assertPathNotFoundExceptionFor("hello/woohoo");
-        assertPathNotFoundExceptionFor("hello/world/blah");
+        final InstallContextImpl ctx = new InstallContextImpl(null);
+        passing.execute(ctx);
+        try {
+            failing.execute(ctx);
+            fail("should have failed");
+        } catch (TaskExecutionException e) {
+            assertEquals("Could not execute task: hello/boo", e.getMessage());
+        }
     }
 
     @Test
@@ -75,32 +82,22 @@ public class NodeBuilderTaskTest extends RepositoryTestCase {
                         addNode("floating").then(
                                 addProperty("columns", "2"),
                                 addProperty("enabled", "true")),
-                        addNode("opener/paragraphs/xxxTeaserOpener").then(
-                                addProperty("name", "xxxTeaserOpener")),
-                        addNode("paragraphs").then(
-                                addNode("xxxSingleLink").then(
-                                        addProperty("name", "xxxSingleLink")),
-                                addNode("stkTeaserFingerTabbed").then(
-                                        addProperty("name", "stkTeaserFingerTabbed")),
-                                addNode("xxxTeaserNewsList").then(
-                                        addProperty("name", "xxxTeaserNewsList")),
-                                addNode("xxxExternalTeaser").then(
-                                        addProperty("name", "xxxExternalTeaser")),
-                                addNode("xxxChronicleTeaser").then(
-                                        addProperty("name", "xxxChronicleTeaser"))),
-                        remove("opener/paragraphs/stkTeaserOpener"))
+                                addNode("opener/paragraphs/xxxTeaserOpener").then(
+                                        addProperty("name", "xxxTeaserOpener")),
+                                        addNode("paragraphs").then(
+                                                addNode("xxxSingleLink").then(
+                                                        addProperty("name", "xxxSingleLink")),
+                                                        addNode("stkTeaserFingerTabbed").then(
+                                                                addProperty("name", "stkTeaserFingerTabbed")),
+                                                                addNode("xxxTeaserNewsList").then(
+                                                                        addProperty("name", "xxxTeaserNewsList")),
+                                                                        addNode("xxxExternalTeaser").then(
+                                                                                addProperty("name", "xxxExternalTeaser")),
+                                                                                addNode("xxxChronicleTeaser").then(
+                                                                                        addProperty("name", "xxxChronicleTeaser"))),
+                                                                                        remove("opener/paragraphs/stkTeaserOpener"))
         );
         configurateTemplateStkSection.execute(new InstallContextImpl(null));
     }
-
-    private void assertPathNotFoundExceptionFor(final String path) throws RepositoryException {
-        try {
-            MgnlContext.getHierarchyManager("config").getContent(path);
-            fail("should have failed");
-        } catch (PathNotFoundException e) {
-            assertEquals(path, e.getMessage());
-        }
-    }
-
 
 }
