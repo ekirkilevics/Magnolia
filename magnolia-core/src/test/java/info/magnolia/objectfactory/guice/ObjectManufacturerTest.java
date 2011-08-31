@@ -34,6 +34,7 @@
 package info.magnolia.objectfactory.guice;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -221,5 +222,33 @@ public class ObjectManufacturerTest {
                 ObjectWithNoPrivateConstructor.class,
                 new GuiceParameterResolver(injector));
 
+    }
+
+    public static class ObjectWithProviderParameter extends NameableObject {
+        public ObjectWithProviderParameter(Provider<String> name) {
+            super.name = name.get();
+        }
+    }
+
+    @Test
+    public void testCanGetProviderFromCandidate() {
+        // WHEN
+        NameableObject object = (NameableObject) manufacturer.newInstance(
+                ObjectWithProviderParameter.class,
+                new CandidateParameterResolver(new Object[]{"12345"}));
+
+        // THEN
+        assertEquals("12345", object.getName());
+    }
+
+    @Test
+    public void testCanGetProviderFromGuice() {
+        // WHEN
+        NameableObject object = (NameableObject) manufacturer.newInstance(
+                ObjectWithProviderParameter.class,
+                new GuiceParameterResolver(injector));
+
+        // THEN
+        assertEquals("foobar", object.getName());
     }
 }
