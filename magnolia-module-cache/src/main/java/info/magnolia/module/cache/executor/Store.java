@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.cache.executor;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.cache.Cache;
@@ -92,7 +93,8 @@ public class Store extends AbstractExecutor {
         if(cachedEntry != null){
             cachePolicyResult.setCachedEntry(cachedEntry);
             // let policy know the uuid in case it wants to do something with it
-            final Node content = MgnlContext.getAggregationState().getCurrentContent().getJCRNode();
+            final Content currentContent = MgnlContext.getAggregationState().getCurrentContent();
+            final Node content = currentContent != null ? currentContent.getJCRNode() : null;
             try {
                 if (content != null && NodeUtil.isNodeType(content, "mix:referenceable")) {
                     final String uuid = content.getIdentifier();
