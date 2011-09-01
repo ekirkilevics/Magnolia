@@ -8,18 +8,14 @@
   <version>${project.version}</version>
 
   <components>
-    <id>system</id>
-    <type-mapping>
-      <type>info.magnolia.cms.exchange.Subscription</type>
-      <implementation>info.magnolia.module.exchangesimple.DefaultSubscription</implementation>
-    </type-mapping>
-  </components>
-
-  <components>
     <id>main</id>
     <type-mapping>
       <type>info.magnolia.cms.exchange.Syndicator</type>
       <implementation>info.magnolia.module.exchangesimple.SimpleSyndicator</implementation>
+    </type-mapping>
+    <type-mapping>
+      <type>info.magnolia.cms.exchange.Subscription</type>
+      <implementation>info.magnolia.module.exchangesimple.DefaultSubscription</implementation>
     </type-mapping>
   </components>
 
