@@ -46,7 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.context.LifeTimeJCRSessionUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
 
 
@@ -147,7 +147,7 @@ public abstract class ModuleConfigurationObservingManager {
     }
 
     protected Session getSession() throws RepositoryException {
-        return LifeTimeJCRSessionUtil.getSession(ContentRepository.CONFIG);
+        return MgnlContext.getSystemContext().getJCRSession(ContentRepository.CONFIG, ContentRepository.CONFIG);
     }
 
     protected List<String> getObservedPaths() {
