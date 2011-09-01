@@ -169,7 +169,7 @@ public class GuiceComponentProviderTest {
 
         ComponentProviderConfiguration childConfig = new ComponentProviderConfiguration();
         childConfig.registerImplementation(OtherSingletonObject.class, OtherSingletonObject.class);
-        ComponentProvider child = parent.createChild(childConfig);
+        GuiceComponentProvider child = createChild(parent, childConfig);
 
         assertNotSame(parent, child);
 
@@ -226,7 +226,7 @@ public class GuiceComponentProviderTest {
         GuiceComponentProvider parent = createComponentProvider(configuration);
 
         ComponentProviderConfiguration childConfig = new ComponentProviderConfiguration();
-        GuiceComponentProvider child = parent.createChild(childConfig);
+        GuiceComponentProvider child = createChild(parent, childConfig);
 
         LifecycleSuperClass component = parent.getComponent(LifecycleSuperClass.class);
         assertEquals(1, component.initialized);
@@ -302,5 +302,9 @@ public class GuiceComponentProviderTest {
             builder.exposeGlobally();
         }
         return builder.build();
+    }
+
+    public GuiceComponentProvider createChild(GuiceComponentProvider parent, ComponentProviderConfiguration configuration) {
+        return new GuiceComponentProviderBuilder().withConfiguration(configuration).withParent(parent).build();
     }
 }

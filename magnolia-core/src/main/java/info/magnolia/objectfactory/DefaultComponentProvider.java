@@ -54,8 +54,7 @@ import java.util.Set;
  *
  * @deprecated since 4.5, use IoC, i.e another implementation of ComponentProvider.
  *
- * @author Philipp Bracher
- * @version $Revision: 25238 $ ($Author: pbaerfuss $)
+ * @version $Id$
  */
 public class DefaultComponentProvider implements ComponentProvider {
     private final static Logger log = LoggerFactory.getLogger(DefaultComponentProvider.class);
@@ -172,6 +171,11 @@ public class DefaultComponentProvider implements ComponentProvider {
     protected String getImplementationName(Class<?> type) {
         final String name = type.getName();
         return mappings.getProperty(name, name);
+    }
+
+    @Override
+    public ComponentProvider getParent() {
+        return null;
     }
 
     /**

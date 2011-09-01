@@ -41,13 +41,14 @@ package info.magnolia.objectfactory;
  * same key)
  *
  * @param <T> the type of component this factory instantiates.
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
- * @see ComponentProvider#newInstance(Class)
- * @see ComponentProvider#getSingleton(Class)
- * @see DefaultComponentProvider#setInstanceFactory(Class, ComponentFactory)
+ * @version $Id$
+ * @see ComponentProvider#getComponent(Class)
  */
 public interface ComponentFactory<T> {
-    public T newInstance();
+
+    /**
+     * Called by the ComponentProvider to create a component. This will only be done once and hence instances created
+     * by component factories are effectively singletons.
+     */
+    T newInstance();
 }

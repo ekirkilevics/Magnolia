@@ -41,6 +41,7 @@ package info.magnolia.objectfactory;
  * Since Magnolia 4.5, you are encouraged to use IoC, only in rare cases should you need to directly use this class.
  *
  * @version $Id$
+ * @see ComponentFactory
  */
 public interface ComponentProvider {
 
@@ -52,12 +53,15 @@ public interface ComponentProvider {
     /**
      * Returns the component mapped for a given type.
      *
+     * @see #getComponent(Class)
      * @deprecated since 4.5, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
      */
     <T> T getSingleton(Class<T> type);
 
     /**
      * Returns the component mapped for a given type.
+     *
+     * @return the component that is mapped for this type or null if there is none
      */
     <T> T getComponent(Class<T> type);
 
@@ -70,4 +74,5 @@ public interface ComponentProvider {
      */
     <T> T newInstance(Class<T> type, Object... parameters);
 
+    ComponentProvider getParent();
 }

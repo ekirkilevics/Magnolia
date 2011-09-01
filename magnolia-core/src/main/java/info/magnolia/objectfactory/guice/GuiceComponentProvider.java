@@ -41,17 +41,43 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.mycila.inject.jsr250.Jsr250Injector;
 import info.magnolia.objectfactory.ComponentFactory;
-import info.magnolia.objectfactory.HierarchicalComponentProvider;
-import info.magnolia.objectfactory.MutableComponentProvider;
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.ComponentProvider;
 
 
 /**
- * ComponentProvider implementation that uses a Guice Injector to look up singletons.
+ * ComponentProvider implementation based on Guice.
  *
+ * <h3>JSR-299 - Dependency injection</h3>
+ * Standardized annotations for dependency injection in Java, these are the most commonly used:
+ * <ul>
+ *  <li>{@link javax.inject.Inject}</li>
+ *  <li>{@link javax.inject.Singleton}</li>
+ *  <li>{@link javax.inject.Named}</li>
+ * </ul>
+ *
+ * <h3>JSR-250 - Lifecycle callbacks</h3>
+ * Supports {@link javax.annotation.PostConstruct} and {@link javax.annotation.PreDestroy} enabling components to do
+ * initialization and cleanup.
+ *
+ * <h3>Additional scopes</h3>
+ * <ul>
+ *     <li>{@link com.google.inject.servlet.RequestScoped}</li>
+ *     <li>{@link com.google.inject.servlet.SessionScoped}</li>
+ * </ul>
+ *
+ * <h3>Standard providers</h3>
+ * These objects will always be available
+ * <ul>
+ *     <li></li>
+ * </ul>
+ *
+ * TODO document the staged startup in MSCL
+ *
+ * @see ComponentProvider
+ * @see GuiceComponentProviderBuilder
  * @version $Id$
  */
-public class GuiceComponentProvider implements HierarchicalComponentProvider {
+public class GuiceComponentProvider implements ComponentProvider {
 
     @Inject
     private Jsr250Injector injector;
@@ -107,11 +133,6 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
         return instance;
     }
 
-    @Override
-    public GuiceComponentProvider createChild(ComponentProviderConfiguration componentsConfiguration) {
-        return new GuiceComponentProviderBuilder().withConfiguration(componentsConfiguration).withParent(this).build();
-    }
-
     public Injector getInjector() {
         return injector;
     }
@@ -132,18 +153,8 @@ public class GuiceComponentProvider implements HierarchicalComponentProvider {
     }
 
     @Override
-    public HierarchicalComponentProvider getParent() {
+    public GuiceComponentProvider getParent() {
         return parentComponentProvider;
-    }
-
-    @Override
-    public boolean isConfiguredFor(Class<?> type) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public MutableComponentProvider createChild() {
-        throw new UnsupportedOperationException();
     }
 
     private static boolean hasExplicitBindingFor(Injector injector, Class<?> type) {

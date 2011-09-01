@@ -34,6 +34,7 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 
 import java.lang.reflect.Constructor;
 
@@ -41,7 +42,7 @@ import java.lang.reflect.Constructor;
 /**
  * Simple ComponentProvider - not configurable at all.
  *
- * @author dlipp
+ * @version $Id$
  */
 public class MockSimpleComponentProvider implements ComponentProvider {
 
@@ -74,8 +75,13 @@ public class MockSimpleComponentProvider implements ComponentProvider {
             Constructor<T> constructor = type.getConstructor(classesArray);
             newInstance = constructor.newInstance(parameters);
         } catch (Exception e) {
-           throw new RuntimeException(e);
+           throw new MgnlInstantiationException(e);
         }
         return newInstance;
+    }
+
+    @Override
+    public ComponentProvider getParent() {
+        return null;
     }
 }

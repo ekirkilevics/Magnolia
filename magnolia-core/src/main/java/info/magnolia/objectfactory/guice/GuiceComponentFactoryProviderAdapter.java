@@ -33,16 +33,20 @@
  */
 package info.magnolia.objectfactory.guice;
 
+import java.lang.reflect.InvocationTargetException;
 import javax.inject.Inject;
 
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.ProvisionException;
 import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.objectfactory.ComponentFactoryUtil;
+import info.magnolia.objectfactory.ComponentProvider;
 
 
 /**
- * Guice Provider which serves as an adapter to a ComponentFactory.
+ * Guice Provider which serves as an adapter to a ComponentFactory. Performs member injection on its target
+ * ComponentFactory before using it for the first time.
  *
  * @version $Id$
  */
@@ -50,6 +54,8 @@ public class GuiceComponentFactoryProviderAdapter implements Provider {
 
     @Inject
     private Injector injector;
+    @Inject
+    private ComponentProvider componentProvider;
     private Class<? extends ComponentFactory<?>> factoryClass;
     private ComponentFactory<?> factory;
     private boolean injected = false;
@@ -66,10 +72,12 @@ public class GuiceComponentFactoryProviderAdapter implements Provider {
     public synchronized Object get() {
         if (this.factory == null) {
             try {
-                this.factory = factoryClass.newInstance();
+                this.factory = ComponentFactoryUtil.createFactory((Class<? extends ComponentFactory<Object>>) factoryClass, componentProvider);
             } catch (InstantiationException e) {
                 throw new ProvisionException("Failed to create ComponentFactory [" + factoryClass + "]", e);
             } catch (IllegalAccessException e) {
+                throw new ProvisionException("Failed to create ComponentFactory [" + factoryClass + "]", e);
+            } catch (InvocationTargetException e) {
                 throw new ProvisionException("Failed to create ComponentFactory [" + factoryClass + "]", e);
             }
         }

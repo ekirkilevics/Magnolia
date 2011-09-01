@@ -45,7 +45,7 @@ import info.magnolia.objectfactory.ComponentConfigurer;
 
 
 /**
- * Configuration passed to {@link info.magnolia.objectfactory.MutableComponentProvider#configure(ComponentProviderConfiguration)}.
+ * Configuration used to create component providers.
  *
  * @version $Id$
  */

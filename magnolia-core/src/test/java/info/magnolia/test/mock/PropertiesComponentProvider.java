@@ -31,26 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory;
+package info.magnolia.test.mock;
 
 import java.util.Map;
 import java.util.Properties;
 
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentsFromPropertiesConfigurer;
 
 
 /**
- * This {@link ComponentProvider} is using the configuration provided in a Properties object. Each property key is
- * the interface/base-class, and the value
- * is either the implementation-to-use class name, an implementation of {@link ComponentFactory}
- * which is used to instantiate the desired implementation, or the path to a node in the repository (in the form of
+ * This {@link info.magnolia.objectfactory.ComponentProvider} is using the configuration provided in a Properties
+ * object. Each property key is the interface/base-class, and the value is either the implementation-to-use class name,
  * <code>repository:/path/to/node</code> or <code>/path/to/node</code>, which defaults to the <code>config</code>
- * repository). In the latter case, the component is constructed via {@link ObservedComponentFactory}
- * and reflects (through observation) the contents of the given path.
+ * an implementation of {@link info.magnolia.objectfactory.ComponentFactory} which is used to instantiate the desired
+ * implementation, or the path to a node in the repository (in the form of repository). In the latter case, the
+ * component is constructed via {@link info.magnolia.objectfactory.ObservedComponentFactory} and reflects (through
+ * observation) the contents of the given path.
  *
- * @author Philipp Bracher
- * @version $Revision: 25238 $ ($Author: pbaerfuss $)
+ * @version $Id$
  */
 public class PropertiesComponentProvider extends AbstractComponentProvider {
 
@@ -61,7 +61,7 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
         parseConfiguration(mappings);
     }
 
-    public PropertiesComponentProvider(HierarchicalComponentProvider parent) {
+    public PropertiesComponentProvider(ComponentProvider parent) {
         super(parent);
     }
 
@@ -76,17 +76,5 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
             }
         }.doWithConfiguration(getParent(), configuration);
         configure(configuration);
-    }
-
-    @Override
-    public PropertiesComponentProvider createChild() {
-        return new PropertiesComponentProvider(this);
-    }
-
-    @Override
-    public PropertiesComponentProvider createChild(ComponentProviderConfiguration componentsConfiguration) {
-        PropertiesComponentProvider componentProvider = createChild();
-        componentProvider.configure(componentsConfiguration);
-        return componentProvider;
     }
 }

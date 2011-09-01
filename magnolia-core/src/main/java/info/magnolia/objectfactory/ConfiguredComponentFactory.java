@@ -44,7 +44,7 @@ import info.magnolia.content2bean.Content2BeanUtil;
  * @param <T> the components type
  * @version $Id$
  */
-final class ConfiguredComponentFactory<T> implements ComponentFactory<T> {
+public class ConfiguredComponentFactory<T> implements ComponentFactory<T> {
 
     private final String path;
     private final String workspace;

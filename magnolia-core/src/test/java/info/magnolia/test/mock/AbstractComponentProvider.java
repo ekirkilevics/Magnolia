@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory;
+package info.magnolia.test.mock;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -42,6 +42,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.util.DeprecationUtil;
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.objectfactory.ComponentFactoryUtil;
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.ConfiguredComponentFactory;
+import info.magnolia.objectfactory.LazyObservedComponentFactory;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.objectfactory.configuration.ComponentConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentFactoryConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -53,9 +60,9 @@ import info.magnolia.objectfactory.configuration.InstanceConfiguration;
  * Abstract ComponentProvider that supports component factories. Subclasses are responsible for registering components
  * and factories. Both components and factories are created on-demand when registered as classes.
  *
- * @author tmattsson
+ * @version $Id$
  */
-public abstract class AbstractComponentProvider implements MutableComponentProvider, HierarchicalComponentProvider {
+public abstract class AbstractComponentProvider implements ComponentProvider {
 
     private static class ComponentDefinition<T> {
 
@@ -115,19 +122,19 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private HierarchicalComponentProvider parent;
+    private ComponentProvider parent;
     private final Map<Class<?>, ComponentDefinition<?>> definitions = new ConcurrentHashMap<Class<?>, ComponentDefinition<?>>();
 
     protected AbstractComponentProvider() {
     }
 
-    protected AbstractComponentProvider(HierarchicalComponentProvider parent) {
+    protected AbstractComponentProvider(ComponentProvider parent) {
         this();
         this.parent = parent;
     }
 
     @Override
-    public HierarchicalComponentProvider getParent() {
+    public ComponentProvider getParent() {
         return parent;
     }
 
@@ -141,7 +148,7 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
     public synchronized <T> T getComponent(Class<T> type) {
         ComponentDefinition<T> definition = getComponentDefinition(type);
         if (definition == null) {
-            if (parent != null && parent.isConfiguredFor(type)) {
+            if (parent != null) {
                 return parent.getComponent(type);
             }
             // Register the component on-demand
@@ -170,7 +177,7 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
         try {
             ComponentDefinition<T> definition = getComponentDefinition(type);
             if (definition == null) {
-                if (parent != null && parent.isConfiguredFor(type)) {
+                if (parent != null) {
                     return parent.newInstance(type);
                 }
                 if (!Classes.isConcrete(type)) {
@@ -194,7 +201,7 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
     public <T> Class<? extends T> getImplementation(Class<T> type) throws ClassNotFoundException {
         ComponentDefinition<T> definition = getComponentDefinition(type);
         if (definition == null) {
-            if (parent != null && parent.isConfiguredFor(type)) {
+            if (parent != null) {
                 return parent.getImplementation(type);
             } else {
                 return type;
@@ -206,7 +213,6 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
         return definition.getImplementationType();
     }
 
-    @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void configure(ComponentProviderConfiguration configuration) {
 
@@ -239,7 +245,6 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
         definitions.put(type, definition);
     }
 
-    @Override
     public synchronized <T> void registerConfiguredComponent(Class<T> type, final String workspace, final String path, boolean observed) {
         final ComponentFactory<T> factory;
         if (observed) {
@@ -251,13 +256,10 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
 
     }
 
-    @Override
     @SuppressWarnings("unchecked")
     public synchronized <T> void registerImplementation(Class<T> type, Class<? extends T> implementationType) {
-
-//      Allow changing implementations TODO this should work for all register- methods.
-//        if (definitions.containsKey(type))
-//            throw new MgnlInstantiationException("Component already registered for type " + type.getName());
+        if (definitions.containsKey(type))
+            throw new MgnlInstantiationException("Component already registered for type " + type.getName());
         if (implementationType == null) {
             throw new MgnlInstantiationException("ImplementationConfiguration type is not set a for type " + type);
         }
@@ -277,7 +279,6 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
         }
     }
 
-    @Override
     public synchronized <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory) {
         if (type == null) {
             throw new NullPointerException("Null type is not allowed. Please check your type definition and classes on the classpath.");
@@ -291,7 +292,6 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
         definitions.put(type, definition);
     }
 
-    @Override
     public synchronized <T> void registerInstance(Class<T> type, T instance) {
         if (definitions.containsKey(type)) {
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
@@ -324,17 +324,5 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
 
     protected synchronized void clear() {
         definitions.clear();
-    }
-
-    @Override
-    public boolean isConfiguredFor(Class<?> type) {
-        ComponentDefinition<?> definition = getComponentDefinition(type);
-        if (definition != null) {
-            return true;
-        }
-        if (parent != null) {
-            return parent.isConfiguredFor(type);
-        }
-        return false;
     }
 }

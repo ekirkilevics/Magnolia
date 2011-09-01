@@ -101,8 +101,6 @@ public class GuiceComponentProviderBuilder {
             configurer.doWithConfiguration(parent, configuration);
         }
 
-//        configuration.print();
-
         // Create the ComponentProvider instance and expose it globally if required
         final GuiceComponentProvider componentProvider = new GuiceComponentProvider(configuration.getTypeMapping(), parent);
         if (exposeGlobally) {
