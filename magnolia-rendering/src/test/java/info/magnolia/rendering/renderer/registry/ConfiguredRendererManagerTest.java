@@ -39,6 +39,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.objectfactory.Components;
@@ -84,6 +85,7 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
         );
 
         MockUtil.getSystemMockContext().addSession(session.getWorkspace().getName(), session);
+        MockUtil.getSystemMockContext().addHierarchyManager(ContentRepository.CONFIG, new DefaultHierarchyManager("", session, "magnolia"));
 
         Set<String> moduleNames = new LinkedHashSet<String>();
         moduleNames.add("fooModule");

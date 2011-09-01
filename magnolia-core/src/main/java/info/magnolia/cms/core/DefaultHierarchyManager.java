@@ -113,6 +113,16 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         this.repositoryName = ContentRepository.getParentRepositoryName(this.workspaceName);
     }
 
+    // only used in tests
+    public DefaultHierarchyManager(String userId, Session jcrSession, String repositoryName) throws RepositoryException {
+        this.userId = userId;
+        this.jcrSession = jcrSession;
+        this.rootNode = jcrSession.getRootNode();
+        this.workspace = jcrSession.getWorkspace();
+        this.workspaceName = this.workspace.getName();
+        this.repositoryName = repositoryName;
+    }
+
     /**
      * Reinitialize itself with the partial deserialized data.
      * */

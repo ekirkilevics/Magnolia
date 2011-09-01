@@ -48,6 +48,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.ContextFactory;
 import info.magnolia.context.MgnlContext;
@@ -94,6 +95,7 @@ public class GuiceComponentProviderTest {
                 "/foo/bar/singleton.class=" + SingletonObject.class.getName(),
                 "/foo/bar/singleton.name=foobar"
         );
+        mockContext.addHierarchyManager("config", new DefaultHierarchyManager("", session, "magnolia"));
         mockContext.addSession("config", session);
     }
 

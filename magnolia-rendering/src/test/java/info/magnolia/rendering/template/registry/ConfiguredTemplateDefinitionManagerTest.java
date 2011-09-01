@@ -45,6 +45,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.module.ModuleRegistry;
@@ -81,6 +82,7 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
         );
 
         MockUtil.getSystemMockContext().addSession(session.getWorkspace().getName(), session);
+        MockUtil.getSystemMockContext().addHierarchyManager(ContentRepository.CONFIG, new DefaultHierarchyManager("", session, "magnolia"));
 
         Set<String> moduleNames = new LinkedHashSet<String>();
         moduleNames.add("fooModule");

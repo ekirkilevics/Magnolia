@@ -41,6 +41,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -641,23 +642,47 @@ public class ContentUtil {
     }
 
     public static Content asContent(Node content) {
-        // FIXME try to do better and make sure we use the same session and permissions
-        Session session;
+        if (content == null) {
+            return null;
+        }
         try {
-            session = content.getSession();
-            final HierarchyManager hm = MgnlContext.getHierarchyManager(session.getWorkspace().getName());
-            if(!hm.getWorkspace().getSession().equals(session)){
-                throw new IllegalStateException("Won't create a Content object, because the session of the passed node and the one used by the hierarchy manager are NOT the same. This could lead to various issues.");
+            final Session session = content.getSession();
+            final String workspaceName = session.getWorkspace().getName();
+
+            // First check if its a node acquired from the current context
+            try {
+                HierarchyManager hm = MgnlContext.getHierarchyManager(workspaceName);
+                if (hm.getWorkspace().getSession().equals(session)) {
+                    return hm.getContent(content.getPath());
+                }
+            } catch (IllegalStateException ignored) {
+                // Thrown when there's no context set
+            } catch (IllegalArgumentException ignored) {
+                // Thrown when there's no repository configured
             }
-            return hm.getContent(content.getPath());
+
+            try {
+                // Then see if its a node acquired from the system context
+                HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(workspaceName);
+                if (hm.getWorkspace().getSession().equals(session)) {
+                    return hm.getContent(content.getPath());
+                }
+            } catch (IllegalStateException ignored) {
+                // Thrown when there's no context set
+            } catch (IllegalArgumentException ignored) {
+                // Thrown when there's no repository configured
+            }
+
+            // Give up
+            throw new IllegalStateException( "Can't create a Content object, unable to find a HierarchyManager for the nodes session");
+
         } catch (RepositoryException e) {
-            // TODO dlipp - apply consistent ExceptionHandling
-            throw new RuntimeException(e);
+            throw new RuntimeRepositoryException(e);
         }
     }
 
+    @Deprecated
     public static Content wrapAsContent(Node node) throws RepositoryException {
-        return new DefaultContent(node, null);
+        return asContent(node);
     }
-
 }
