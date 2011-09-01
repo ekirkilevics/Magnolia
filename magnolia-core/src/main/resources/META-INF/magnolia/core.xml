@@ -57,6 +57,18 @@
       <type>info.magnolia.cms.filters.FilterManager</type>
       <implementation>info.magnolia.cms.filters.FilterManagerImpl</implementation>
     </component>
+    <component>
+      <type>info.magnolia.cms.security.SecuritySupport</type>
+      <workspace>config</workspace>
+      <path>/server/security</path>
+      <observed>true</observed>
+    </component>
+    <component>
+      <type>info.magnolia.cms.exchange.ActivationManager</type>
+      <workspace>config</workspace>
+      <path>/server/activation</path>
+      <observed>true</observed>
+    </component>
   </components>
 
   <components>
@@ -71,12 +83,6 @@
     <component>
       <type>info.magnolia.cms.beans.config.ServerConfiguration</type>
       <provider>info.magnolia.cms.beans.config.ServerConfiguration$InstanceFactory</provider>
-    </component>
-    <component>
-      <type>info.magnolia.cms.security.SecuritySupport</type>
-      <workspace>config</workspace>
-      <path>/server/security</path>
-      <observed>true</observed>
     </component>
     <component>
       <type>info.magnolia.cms.security.IPSecurityManager</type>
@@ -120,12 +126,6 @@
       <type>info.magnolia.link.LinkTransformerManager</type>
       <workspace>config</workspace>
       <path>/server/rendering/linkManagement</path>
-      <observed>true</observed>
-    </component>
-    <component>
-      <type>info.magnolia.cms.exchange.ActivationManager</type>
-      <workspace>config</workspace>
-      <path>/server/activation</path>
       <observed>true</observed>
     </component>
     <component>

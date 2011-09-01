@@ -87,9 +87,9 @@ public class GuiceComponentConfigurationModule extends AbstractModule {
     private <T> void registerConfiguredComponent(ConfiguredComponentConfiguration configuration) {
         Class key = configuration.getType();
         if (configuration.isObserved()) {
-            bind(key).toProvider(new GuiceObservedComponentProvider<T>(configuration.getWorkspace(), configuration.getPath(), key)).in(Scopes.SINGLETON);
+            bind(key).toProvider(new GuiceObservedComponentProvider<T>(configuration.getWorkspace(), configuration.getPath(), key));
         } else {
-            bind(key).toProvider(new GuiceConfiguredComponentProvider(configuration.getPath(), configuration.getWorkspace())).in(Scopes.SINGLETON);
+            bind(key).toProvider(new GuiceConfiguredComponentProvider(configuration.getPath(), configuration.getWorkspace()));
         }
     }
 

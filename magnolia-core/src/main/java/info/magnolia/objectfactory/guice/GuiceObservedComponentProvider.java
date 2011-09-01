@@ -55,6 +55,8 @@ public class GuiceObservedComponentProvider<T> implements Provider<T> {
     private String repository;
     private String path;
     private Class<T> type;
+    private T instance;
+    private boolean instantiated;
 
     public GuiceObservedComponentProvider(String repository, String path, Class<T> type) {
         this.repository = repository;
@@ -64,10 +66,13 @@ public class GuiceObservedComponentProvider<T> implements Provider<T> {
 
     @Override
     public synchronized T get() {
-        if (observedComponentFactory == null) {
-            observedComponentFactory = new ObservedComponentFactory<T>(repository, path, type, componentProvider);
+        if (!instantiated) {
+            if (observedComponentFactory == null) {
+                observedComponentFactory = new ObservedComponentFactory<T>(repository, path, type, componentProvider);
+            }
+            instance = observedComponentFactory.newInstance();
+            instantiated = true;
         }
-        // FIXME ObservedComponentFactory seems to return a new cglib proxy for each call
-        return observedComponentFactory.newInstance();
+        return instance;
     }
 }

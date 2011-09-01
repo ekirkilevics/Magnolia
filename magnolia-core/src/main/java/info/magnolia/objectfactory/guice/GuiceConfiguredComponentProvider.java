@@ -58,6 +58,8 @@ public class GuiceConfiguredComponentProvider<T> implements Provider<T> {
     private ComponentProvider componentProvider;
     private final String path;
     private final String workspace;
+    private T instance;
+    private boolean instantiated;
 
     public GuiceConfiguredComponentProvider(String path, String workspace) {
         this.path = path;
@@ -66,20 +68,24 @@ public class GuiceConfiguredComponentProvider<T> implements Provider<T> {
 
     @Override
     public synchronized T get() {
-        final Node node;
-        try {
-            node = MgnlContext.getJCRSession(workspace).getNode(path);
-        } catch (RepositoryException e) {
-            throw new ProvisionException("Can't find a the node [" + workspace + ":" + path + "] to create an instance");
-        }
+        if (!instantiated) {
+            final Node node;
+            try {
+                node = MgnlContext.getJCRSession(workspace).getNode(path);
+            } catch (RepositoryException e) {
+                throw new ProvisionException("Can't find a the node [" + workspace + ":" + path + "] to create an instance");
+            }
 
-        try {
-            return transformNode(node);
-        } catch (Content2BeanException e) {
-            throw new ProvisionException(e.getMessage(), e);
-        } catch (RepositoryException e) {
-            throw new ProvisionException(e.getMessage(), e);
+            try {
+                instance = transformNode(node);
+                instantiated = true;
+            } catch (Content2BeanException e) {
+                throw new ProvisionException(e.getMessage(), e);
+            } catch (RepositoryException e) {
+                throw new ProvisionException(e.getMessage(), e);
+            }
         }
+        return instance;
     }
 
     @SuppressWarnings("unchecked")
