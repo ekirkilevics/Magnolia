@@ -41,6 +41,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -54,6 +55,7 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Workspace;
 import javax.jcr.observation.EventListener;
@@ -154,6 +156,24 @@ public class MockUtil {
     public static MockHierarchyManager createAndSetHierarchyManager(String repository, String propertiesStr) throws IOException, RepositoryException {
         final ByteArrayInputStream in = new ByteArrayInputStream(propertiesStr.getBytes());
         return createAndSetHierarchyManager(repository, in);
+    }
+
+    /**
+     * Installs the session in the current context and creates a delegating hierarchy manager that uses this session.
+     */
+    public static void setSessionAndHierarchyManager(Session session) throws RepositoryException {
+        String workspaceName = session.getWorkspace().getName();
+        MockUtil.getMockContext().addSession(workspaceName, session);
+        MockUtil.getMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager("userId", session, "magnolia"));
+    }
+
+    /**
+     * Installs the session in the system context and creates a delegating hierarchy manager that uses this session.
+     */
+    public static void setSystemContextSessionAndHierarchyManager(Session session) throws RepositoryException {
+        String workspaceName = session.getWorkspace().getName();
+        MockUtil.getSystemMockContext().addSession(workspaceName, session);
+        MockUtil.getSystemMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager("userId", session, "magnolia"));
     }
 
     public static void createContent(Content root, InputStream propertiesStream) throws IOException, RepositoryException {

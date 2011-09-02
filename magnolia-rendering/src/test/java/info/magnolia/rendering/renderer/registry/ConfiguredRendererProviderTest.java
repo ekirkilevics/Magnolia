@@ -33,70 +33,59 @@
  */
 package info.magnolia.rendering.renderer.registry;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import info.magnolia.cms.core.Content;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanProcessor;
-import info.magnolia.content2bean.Content2BeanTransformer;
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.rendering.renderer.Renderer;
-import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.jcr.MockNode;
-import info.magnolia.test.mock.jcr.MockSession;
-
-import javax.jcr.Node;
+import java.io.IOException;
+import java.util.Map;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.DefaultHierarchyManager;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.jcr.util.SessionTestUtil;
+import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.renderer.Renderer;
+import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.mock.MockUtil;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @version $Id$
  */
-public class ConfiguredRendererProviderTest {
+public class ConfiguredRendererProviderTest extends MgnlTestCase {
 
-    private Renderer renderer;
+    public static class TestRenderer implements Renderer {
+        private String someProperty;
 
-    @Before
-    public void setUp() {
-        renderer = mock(Renderer.class);
+        public String getSomeProperty() {
+            return someProperty;
+        }
 
-        Content2BeanProcessor mockProcessor = new Content2BeanProcessor() {
-            @Override
-            public Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer, ComponentProvider componentProvider) throws Content2BeanException {
-                return renderer;
-            }
-            @Override
-            public Object setProperties(Object bean, Content node, boolean recursive, Content2BeanTransformer transformer, ComponentProvider componentProvider) throws Content2BeanException {
-                return null;
-            }
+        public void setSomeProperty(String someProperty) {
+            this.someProperty = someProperty;
+        }
 
-        };
-
-        ComponentsTestUtil.setInstance(Content2BeanProcessor.class, mockProcessor);
-    }
-
-
-    @After
-    public void tearDown() {
-        ComponentsTestUtil.clear();
+        @Override
+        public void render(RenderingContext ctx, Map<String, Object> contextObjects) throws RenderException {
+        }
     }
 
     @Test
-    public void testGetDefinition() throws RepositoryException, Content2BeanException {
+    public void testGetDefinition() throws RepositoryException, Content2BeanException, IOException {
         // GIVEN
-        MockNode root = new MockNode();
-        root.setSession(new MockSession("test"));
-        Node rendererConfig = root.addNode("test");
-        root.setProperty("class", "info.magnolia.rendering.renderer.FreemarkerRenderer");
-        root.setProperty("type", "freemarker");
+        Session session = SessionTestUtil.createSession(ContentRepository.CONFIG,
+                "/test.class=" + TestRenderer.class.getName(),
+                "/test.someProperty=foobar123"
+        );
+        MockUtil.setSystemContextSessionAndHierarchyManager(session);
 
         // WHEN
-        ConfiguredRendererProvider provider = new ConfiguredRendererProvider("test", rendererConfig);
+        ConfiguredRendererProvider provider = new ConfiguredRendererProvider("test", session.getNode("/test"));
+        TestRenderer renderer = (TestRenderer) provider.getDefinition();
 
         // THEN
-        assertEquals(renderer, provider.getDefinition());
+        assertEquals("foobar123", renderer.getSomeProperty());
     }
 }

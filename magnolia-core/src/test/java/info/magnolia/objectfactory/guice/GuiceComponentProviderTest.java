@@ -95,8 +95,7 @@ public class GuiceComponentProviderTest {
                 "/foo/bar/singleton.class=" + SingletonObject.class.getName(),
                 "/foo/bar/singleton.name=foobar"
         );
-        mockContext.addHierarchyManager("config", new DefaultHierarchyManager("", session, "magnolia"));
-        mockContext.addSession("config", session);
+        MockUtil.setSessionAndHierarchyManager(session);
     }
 
     @After

@@ -83,9 +83,7 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
                 "/modules/barModule/renderers/b.someProperty=bar",
                 "/modules/zedModule\n"
         );
-
-        MockUtil.getSystemMockContext().addSession(session.getWorkspace().getName(), session);
-        MockUtil.getSystemMockContext().addHierarchyManager(ContentRepository.CONFIG, new DefaultHierarchyManager("", session, "magnolia"));
+        MockUtil.setSystemContextSessionAndHierarchyManager(session);
 
         Set<String> moduleNames = new LinkedHashSet<String>();
         moduleNames.add("fooModule");
