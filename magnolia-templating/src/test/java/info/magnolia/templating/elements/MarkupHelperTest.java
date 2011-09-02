@@ -33,12 +33,12 @@
  */
 package info.magnolia.templating.elements;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.io.StringWriter;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Test case for MarkupHelper.
@@ -55,5 +55,15 @@ public class MarkupHelperTest {
         final String paramValue = "value1";
         compo.attribute(paramName, paramValue);
         assertEquals(out.toString(), " param1=\"value1\"", out.toString());
+    }
+
+    @Test
+    public void testParamsKeepCamelCaseNotation() throws IOException {
+        final StringWriter out = new StringWriter();
+        final MarkupHelper compo = new MarkupHelper(out);
+        final String paramName = "iAmACamelCaseParamName";
+        final String paramValue = "iAmACamelCaseParamValue";
+        compo.attribute(paramName, paramValue);
+        assertEquals(out.toString(), " iAmACamelCaseParamName=\"iAmACamelCaseParamValue\"", out.toString());
     }
 }
