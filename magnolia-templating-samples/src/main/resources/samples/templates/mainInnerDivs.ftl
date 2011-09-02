@@ -25,7 +25,6 @@
 
 
                 [#-- ****** stage ****** --]
-                [#-- <h2>Single-Area Stage</h2> -> Heading needs to be moved into the Area script for the correct div around --]
                 [@cms.area name="stage" /]
 
             </div><!-- end header -->
@@ -38,20 +37,15 @@
             <div id="wrapper-2">
 
                 [#-- ****** main ****** --]
-                <h2>List-Area Main</h2>
                 [@cms.area name="main" /]
 
-
                 [#-- ****** extras ****** --]
-                <h2>List-Area Extras</h2>
                 [@cms.area name="extras" /]
 
             </div><!-- end wrapper-2 -->
 
             [#-- ****** footer  ****** --]
-            [#-- <h2>List-Area Footer</h2> -> Heading needs to be moved into the Area script for the correct div around --]
             [@cms.area name="footer" /]
-
 
         </div><!-- end wrapper -->
     </body>

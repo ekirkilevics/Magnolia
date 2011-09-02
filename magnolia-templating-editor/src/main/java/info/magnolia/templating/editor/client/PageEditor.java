@@ -123,9 +123,10 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                         }
                     }
                 } else if (child.getTagName().equalsIgnoreCase(MARKER_AREA)) {
-                    if(findCmsEditMarkerForElement(child, edits) != null) {
+                    Element edit = findCmsEditMarkerForElement(child, edits);
+                    if(edit != null) {
                         AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, child);
-                        areaBarWidget.attach(child);
+                        areaBarWidget.attach(edit);
                         parentBar = areaBarWidget;
                     }
                 }

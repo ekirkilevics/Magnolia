@@ -25,12 +25,8 @@
                     [@cms.area name="navigation" /] --]
                 </div><!-- end navigation -->
 
-
                 [#-- ****** stage ****** --]
-                <div id="stage">
-                    <h2>Single-Area Stage</h2>
-                    [@cms.area name="stage"/]
-                </div><!-- end stage -->
+                [@cms.area name="stage"/]
 
             </div><!-- end header -->
 
@@ -42,25 +38,15 @@
             <div id="wrapper-2">
 
                 [#-- ****** main ****** --]
-                <div id="main">
-                  <h2>List-Area Main</h2>
-                    [@cms.area name="main" /]
-                </div><!-- end main -->
-
+                [@cms.area name="main" /]
 
                 [#-- ****** extras ****** --]
-                <div id="extras">
-                <h2>List-Area Extras</h2>
-                    [@cms.area name="extras"/]
-                </div><!-- end extras -->
+                [@cms.area name="extras"/]
 
             </div><!-- end wrapper-2 -->
 
             [#-- ****** footer  ****** --]
-            <div id="footer">
-              <h2>List-Area Footer</h2>
-                [@cms.area name="footer" /]
-            </div><!-- end footer -->
+            [@cms.area name="footer" /]
 
 
         </div><!-- end wrapper -->
