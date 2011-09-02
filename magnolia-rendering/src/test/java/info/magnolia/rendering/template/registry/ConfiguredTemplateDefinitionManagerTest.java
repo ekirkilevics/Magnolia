@@ -45,7 +45,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.module.ModuleRegistry;
@@ -58,7 +57,9 @@ import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockEvent;
 import info.magnolia.test.mock.jcr.MockObservationManager;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

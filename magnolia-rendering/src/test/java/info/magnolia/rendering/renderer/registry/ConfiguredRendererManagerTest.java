@@ -33,13 +33,19 @@
  */
 package info.magnolia.rendering.renderer.registry;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.objectfactory.Components;
@@ -51,19 +57,11 @@ import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockEvent;
 import info.magnolia.test.mock.jcr.MockObservationManager;
-
-import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ConfiguredRendererManagerTest extends MgnlTestCase {
 
