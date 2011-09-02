@@ -41,7 +41,6 @@ import javax.jcr.Session;
 import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.rendering.context.RenderingContext;
