@@ -48,7 +48,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.ContextFactory;
 import info.magnolia.context.MgnlContext;
