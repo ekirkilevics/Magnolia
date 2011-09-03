@@ -181,11 +181,14 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
 
         if (!browseMode) {
             tree.addMenuItem(menuOpen);
-            tree.addMenuItem(menuNew);
+            if(!tree.getRootPath().equals("/system")){
+                tree.addMenuItem(menuNew);
+            }
             tree.addMenuItem(menuNewFolder);
-            tree.addMenuItem(null); // line
-            tree.addMenuItem(menuDelete);
-
+            if(!tree.getRootPath().equals("/system")){
+                tree.addMenuItem(null); // line
+                tree.addMenuItem(menuDelete);
+            }
             tree.addMenuItem(null); // line
             tree.addMenuItem(menuActivateExcl);
             tree.addMenuItem(menuDeactivate);
@@ -202,7 +205,9 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
     @Override
     public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
         tree.addFunctionBarItemFromContextMenu("edit");
-        tree.addFunctionBarItemFromContextMenu("new");
+        if(!tree.getRootPath().equals("/system")){
+            tree.addFunctionBarItemFromContextMenu("new");
+        }
         tree.addFunctionBarItemFromContextMenu("newFolder");
         tree.addFunctionBarItem(null);
         tree.addFunctionBarItemFromContextMenu("activate");
