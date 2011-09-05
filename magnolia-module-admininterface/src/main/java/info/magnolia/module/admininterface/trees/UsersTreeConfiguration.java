@@ -184,8 +184,6 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
             if(!tree.getRootPath().equals("/system")){
                 tree.addMenuItem(menuNew);
                 tree.addMenuItem(menuNewFolder);
-            }
-            if(!tree.getRootPath().equals("/system")){
                 tree.addMenuItem(null); // line
                 tree.addMenuItem(menuDelete);
             }
