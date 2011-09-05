@@ -121,7 +121,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                     }
 
                 } else if (child.getTagName().equalsIgnoreCase(MARKER_AREA)) {
-                    Element edit = findCmsEditMarkerForElement(child, edits);
+                    Element edit = findCmsEditMarkerForArea(child, edits);
                     if(edit != null) {
                         AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, child);
                         areaBarWidget.attach(edit);
@@ -167,21 +167,18 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         if(content.matches(".*/\\d+?")){
             return false;
         }
-        GWT.log("edit element with content ["+ content + "] looks like it is a page main bar edit");
+        GWT.log("edit element with content ["+ content + "] looks like it is a page main edit bar");
         return true;
     }
 
     /**
-     * Looks in DOM for an existing &lt;cms:edit ... &gt; marker associated with an page or area element. For an edit bar to be associated with the passed in element,
+     * Looks in DOM for an existing &lt;cms:edit ... &gt; marker associated with an area element. For an edit bar to be associated with the passed in element,
      * they must have the same content value.
      */
-    private Element findCmsEditMarkerForElement(Element element, NodeList<Element> edits) {
-        String content = element.getAttribute("content");
-        String name = null;
+    private Element findCmsEditMarkerForArea(Element area, NodeList<Element> edits) {
+        String content = area.getAttribute("content");
+        String name = area.getAttribute("name");
 
-        if(MARKER_AREA.equalsIgnoreCase(element.getTagName())){
-            name = element.getAttribute("name");
-        }
         String match = content + (name != null ? ("/" + name) : "");
         //GWT shows these messages only in dev mode.
         GWT.log("String to match edit bar is " + match);
