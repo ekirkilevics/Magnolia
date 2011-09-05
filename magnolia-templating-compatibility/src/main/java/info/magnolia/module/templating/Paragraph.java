@@ -113,6 +113,6 @@ package info.magnolia.module.templating;
 public class Paragraph extends AbstractRenderable {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Paragraph() {
-       setModelClass((Class) RenderingModelImpl.class);
+       setModelClass(RenderingModelImpl.class);
     }
 }
