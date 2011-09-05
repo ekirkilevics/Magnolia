@@ -89,14 +89,14 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
                     getModelClass(),
                     new ObjectManufacturer.ParameterResolver() {
                         @Override
-                        public Object resolveParameter(ObjectManufacturer.ConstructorParameter methodParameter) {
-                            if (methodParameter.getParameterType().equals(Node.class)) {
+                        public Object resolveParameter(ObjectManufacturer.ConstructorParameter constructorParameter) {
+                            if (constructorParameter.getParameterType().equals(Node.class)) {
                                 return content;
                             }
-                            if (methodParameter.getParameterType().isAssignableFrom(definition.getClass())) {
+                            if (constructorParameter.getParameterType().isAssignableFrom(definition.getClass())) {
                                 return definition;
                             }
-                            if (methodParameter.getParameterType().equals(RenderingModel.class)) {
+                            if (constructorParameter.getParameterType().equals(RenderingModel.class)) {
                                 return parentModel;
                             }
                             return UNRESOLVED;

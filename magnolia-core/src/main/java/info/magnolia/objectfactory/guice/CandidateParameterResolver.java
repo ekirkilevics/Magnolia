@@ -53,10 +53,10 @@ public class CandidateParameterResolver implements ObjectManufacturer.ParameterR
     }
 
     @Override
-    public Object resolveParameter(ObjectManufacturer.ConstructorParameter methodParameter) {
+    public Object resolveParameter(ObjectManufacturer.ConstructorParameter constructorParameter) {
 
-        Type genericParameterType = methodParameter.getGenericParameterType();
-        Class<?> parameterType = methodParameter.getParameterType();
+        Type genericParameterType = constructorParameter.getGenericParameterType();
+        Class<?> parameterType = constructorParameter.getParameterType();
 
         // If the parameter is javax.inject.Provider<T> we will look for T instead and return a provider for it
         if (genericParameterType instanceof ParameterizedType) {
