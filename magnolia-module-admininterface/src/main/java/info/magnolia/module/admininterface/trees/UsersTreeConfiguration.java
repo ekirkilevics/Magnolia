@@ -183,8 +183,8 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
             tree.addMenuItem(menuOpen);
             if(!tree.getRootPath().equals("/system")){
                 tree.addMenuItem(menuNew);
+                tree.addMenuItem(menuNewFolder);
             }
-            tree.addMenuItem(menuNewFolder);
             if(!tree.getRootPath().equals("/system")){
                 tree.addMenuItem(null); // line
                 tree.addMenuItem(menuDelete);
@@ -207,8 +207,8 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
         tree.addFunctionBarItemFromContextMenu("edit");
         if(!tree.getRootPath().equals("/system")){
             tree.addFunctionBarItemFromContextMenu("new");
+            tree.addFunctionBarItemFromContextMenu("newFolder");
         }
-        tree.addFunctionBarItemFromContextMenu("newFolder");
         tree.addFunctionBarItem(null);
         tree.addFunctionBarItemFromContextMenu("activate");
         tree.addFunctionBarItemFromContextMenu("deactivate");
