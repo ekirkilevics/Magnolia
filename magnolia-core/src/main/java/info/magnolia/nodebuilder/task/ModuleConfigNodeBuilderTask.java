@@ -42,14 +42,14 @@ import javax.jcr.RepositoryException;
 /**
  * A task using the NodeBuilder API, applying operations on a the <tt>config</tt> node of the current module.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class ModuleConfigNodeBuilderTask extends AbstractNodeBuilderTask {
     public ModuleConfigNodeBuilderTask(String name, String description, ErrorHandling errorHandling, NodeOperation... operations) {
         super(name, description, errorHandling, operations);
     }
 
+    @Override
     protected Content getRootNode(InstallContext ctx) throws RepositoryException {
         return ctx.getOrCreateCurrentModuleConfigNode();
     }

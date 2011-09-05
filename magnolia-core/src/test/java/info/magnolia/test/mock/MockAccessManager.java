@@ -39,10 +39,13 @@ import info.magnolia.cms.security.Permission;
 
 /**
  * A {@link AccessManager} granting all permissions unless any specific permissions were set.
- * @deprecated since 4.5, AccessManagers are not longer in use
+ * @deprecated since 4.5, AccessManagers are not longer in use.
+ *
+ * @version $Id$
  */
 public class MockAccessManager extends AccessManagerImpl {
 
+    @Override
     public long getPermissions(String path) {
         if(getPermissionList() == null){
             return Permission.ALL;

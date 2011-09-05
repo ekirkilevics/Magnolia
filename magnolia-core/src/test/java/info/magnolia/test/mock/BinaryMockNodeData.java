@@ -61,9 +61,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author philipp
  * @version $Id$
- *
  */
 public class BinaryMockNodeData extends MockNodeData {
     private static final Logger log = LoggerFactory.getLogger(BinaryMockNodeData.class);
@@ -143,6 +141,7 @@ public class BinaryMockNodeData extends MockNodeData {
         }
     }
 
+    @Override
     public String getString() {
         if (wrappedContent != null) {
             return wrappedContent.getNodeData(ItemType.JCR_DATA).getString();
