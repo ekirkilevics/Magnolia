@@ -14,7 +14,7 @@
     <body>
         <div id="wrapper">
 
-            <cms:page content="website:${content.@path}" dialog="samples:mainProperties" label="/howTo-freemarker - Sample using the NEW freemarker template"></cms:page>
+            [#-- ****** main page bar ****** --]
             [@cms.edit/]
             <div id="header">
 

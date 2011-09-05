@@ -50,7 +50,6 @@ import com.google.gwt.user.client.ui.HTML;
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
 
-    public static final String MARKER_PAGE = "cms:page";
     public static final String MARKER_EDIT = "cms:edit";
     public static final String MARKER_AREA = "cms:area";
 
@@ -79,6 +78,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     public static final String PARAM_SOURCE_PATH = "sourcePath";
     public static final String PARAM_DESTINATION_PATH = "destinationPath";
 
+    private boolean pageEditBarAlreadyProcessed = false;
     private AbstractBarWidget selectedBar;
 
     //private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
@@ -98,8 +98,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     private void detectCmsTag(Element element, AreaBarWidget parentBar) {
-        //TODO probably we should ignore any page markers but the first one we encounter in DOM.
-        final NodeList<Element> pages = element.getOwnerDocument().getElementsByTagName(MARKER_PAGE);
         final NodeList<Element> edits = element.getOwnerDocument().getElementsByTagName(MARKER_EDIT);
         final NodeList<Element> areas = element.getOwnerDocument().getElementsByTagName(MARKER_AREA);
 
@@ -107,21 +105,21 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             Node childNode = element.getChild(i);
             if (childNode.getNodeType() == Element.ELEMENT_NODE) {
                 Element child = (Element) childNode;
-                if (child.getTagName().equalsIgnoreCase(MARKER_PAGE)) {
-                    if(findCmsEditMarkerForElement(child, edits) != null) {
+                if (child.getTagName().equalsIgnoreCase(MARKER_EDIT)) {
+                    //the first cms:edit we encounter in DOM which also matches the requisites to be a main page edit bar. We ignore the rest.
+                    if(!pageEditBarAlreadyProcessed && isPageEditBar(child)){
                         PageBarWidget pageBarWidget = new PageBarWidget(this, child);
                         pageBarWidget.attach(child);
+                        pageEditBarAlreadyProcessed = true;
+                    //avoid processing cms:edit marker twice if this is an area
+                    } else if(!isAreaEditBar(child, areas)) {
+                        EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
+                        editBarWidget.attach(child);
                     }
-                } else if (child.getTagName().equalsIgnoreCase(MARKER_EDIT)) {
                     if (parentBar != null && parentBar.getType().equals(AREA_TYPE_SINGLE)) {
                         parentBar.mutateIntoSingleBar(child);
-                    } else {
-                        //avoid processing cms:edit marker twice if this is an area or page edit bar
-                        if(!isAreaEditBar(child, areas) && !isPageEditBar(child, pages)){
-                            EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
-                            editBarWidget.attach(child);
-                        }
                     }
+
                 } else if (child.getTagName().equalsIgnoreCase(MARKER_AREA)) {
                     Element edit = findCmsEditMarkerForElement(child, edits);
                     if(edit != null) {
@@ -160,24 +158,17 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         }
         return false;
     }
+    /**
+     * If the element's content does not end with a slash and some digits, we assume it is a page edit bar.
+     */
+    private boolean isPageEditBar(Element editElement) {
 
-    private boolean isPageEditBar(Element edit, NodeList<Element> pages) {
-
-        String match = edit.getAttribute("content");
-        //GWT only shows these messages in dev mode.
-        GWT.log("String to match page is " + match);
-
-        for(int j=0; j < pages.getLength(); j++) {
-
-            Element page = pages.getItem(j);
-            String pageContent = page.getAttribute("content");
-
-            if(match.equals(pageContent)) {
-                GWT.log("found match with element " + page);
-                return true;
-            }
+        String content = editElement.getAttribute("content");
+        if(content.matches(".*/\\d+?")){
+            return false;
         }
-        return false;
+        GWT.log("edit element with content ["+ content + "] looks like it is a page main bar edit");
+        return true;
     }
 
     /**

@@ -11,8 +11,7 @@
 
     <body>
         <div id="wrapper">
-
-            <cms:page content="website:${content.@path}" dialog="samples:mainProperties" label="/samples virtual URI mappings"></cms:page>
+            [#-- ****** main page bar ****** --]
             [@cms.edit/]
             <div id="header">
                 <div id="navigation">
