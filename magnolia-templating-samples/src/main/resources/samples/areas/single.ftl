@@ -1,3 +1,2 @@
 
-
 [@cms.render content=component /]
