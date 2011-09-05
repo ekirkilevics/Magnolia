@@ -1,5 +1,5 @@
 
-
+[@cms.edit/]
 [#list components as component ]
 
     <div id="${def.parameters.divID!}">
