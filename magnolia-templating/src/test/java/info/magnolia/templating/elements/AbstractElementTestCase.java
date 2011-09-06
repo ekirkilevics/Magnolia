@@ -41,12 +41,12 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -134,7 +134,7 @@ public abstract class AbstractElementTestCase {
         pman.register(t0provider);
         pman.register(t1provider);
 
-        session = SessionTestUtil.createSession(CONTENT);
+        session = SessionTestUtil.createSession("testWorkspace", CONTENT);
     }
 
     protected MockSession getHM() {

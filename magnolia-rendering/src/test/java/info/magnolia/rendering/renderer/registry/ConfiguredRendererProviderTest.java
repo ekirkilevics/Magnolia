@@ -42,12 +42,12 @@ import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 import static org.junit.Assert.assertEquals;
 
 /**

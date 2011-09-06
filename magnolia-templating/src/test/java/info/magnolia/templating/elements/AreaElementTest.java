@@ -60,7 +60,6 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 //import info.magnolia.context.WebContext;
 //import info.magnolia.jcr.util.ContentMap;
-import info.magnolia.jcr.util.SessionTestUtil;
 //import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 //import info.magnolia.rendering.engine.DefaultRenderingEngine;
 //import info.magnolia.rendering.model.RenderingModel;
@@ -78,6 +77,7 @@ import info.magnolia.test.mock.jcr.MockSession;
 //import static org.mockito.Matchers.argThat;
 //import static org.mockito.Matchers.eq;
 //import static org.mockito.Mockito.*;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 /**
  * Tests for AreaMarker.

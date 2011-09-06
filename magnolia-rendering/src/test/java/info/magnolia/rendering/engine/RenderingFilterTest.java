@@ -43,12 +43,12 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -223,7 +223,7 @@ public class RenderingFilterTest {
 
         final String first = "first";
 
-        MockSession session = SessionTestUtil.createSession(contentProperties);
+        MockSession session = SessionTestUtil.createSession("testWorkspace", contentProperties);
 
         final String binaryNodeName = "attachment2";
 
