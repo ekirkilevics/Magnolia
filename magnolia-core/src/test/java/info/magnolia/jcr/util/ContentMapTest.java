@@ -40,6 +40,7 @@ import static org.junit.Assert.assertTrue;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -61,7 +62,7 @@ public class ContentMapTest {
     }
     @Test
     public void testGetBasicProps() throws Exception {
-        MockSession hm = SessionTestUtil.createSession(
+        MockSession hm = SessionTestUtil.createSession("testWorkspace",
                 "/bla.prop1=test\n" +
                 "/bla/bla.prop1=test\n" +
                 "/bla/bla.prop2=something\n" +
@@ -121,7 +122,7 @@ public class ContentMapTest {
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:mimeType=image/png",
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00"
         ), "\n");
-        MockSession hm = SessionTestUtil.createSession(contentProperties);
+        MockSession hm = SessionTestUtil.createSession("testWorkspace", contentProperties);
         ContentMap map = new ContentMap(hm.getNode("/somepage/mypage/paragraphs/0"));
         assertNotNull(map.get("attachment1"));
         assertTrue(map.get("attachment1") instanceof Node);
@@ -139,7 +140,7 @@ public class ContentMapTest {
                 "/somepage/mypage/paragraphs/0.imaginary=date:2009-10-14T08:59:01.227-04:00"
 
         ), "\n");
-        MockSession hm = SessionTestUtil.createSession(contentProperties);
+        MockSession hm = SessionTestUtil.createSession("testWorkspace", contentProperties);
         ContentMap map = new ContentMap(hm.getNode("/somepage/mypage/paragraphs/0"));
         assertNotNull(map.get("imaginary"));
         assertTrue(map.get("imaginary") instanceof Calendar);

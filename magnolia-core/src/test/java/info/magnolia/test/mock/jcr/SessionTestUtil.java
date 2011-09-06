@@ -31,18 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.test.mock.jcr;
 
-import info.magnolia.test.mock.jcr.MockNode;
-import info.magnolia.test.mock.jcr.MockSession;
-import info.magnolia.test.mock.jcr.MockValue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -50,15 +45,25 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Utility to setUp mock-jcr-structures for tests.. Use createSession() to build mock content based on a property file.
+ * Utility to setUp mock-jcr-structures for tests. Use createSession() to build mock content based on a property file.
  * Property values can have prefixes like boolean: int: for creating typed properties.
  *
  * @version $Id$
  */
 public class SessionTestUtil {
 
+    /**
+     * TODO - will be removed in a next step
+     */
     public static MockSession createSession(InputStream propertiesStream) throws IOException, RepositoryException {
         return createSession(null, propertiesStream);
+    }
+
+    /**
+     * TODO - will be removed in a next step
+     */
+    public static MockSession createSession(String propertiesStr) throws IOException, RepositoryException {
+        return createSession(null, propertiesStr);
     }
 
     public static MockSession createSession(String workspace, String propertiesStr) throws IOException, RepositoryException {
@@ -66,13 +71,8 @@ public class SessionTestUtil {
         return createSession(workspace, in);
     }
 
-
-    public static MockSession createSession(String propertiesStr) throws IOException, RepositoryException {
-        return createSession(null, propertiesStr);
-    }
-
     /**
-     * Create and return a MockSession for the provided workspace by merging all provided propertiesFormat to a linefeed separated String.
+     * Create and return a MockSession for the provided workspace by merging all propertiesFormats to a linefeed separated String.
      */
     public static MockSession createSession(String workspace, String... propertiesFormat) throws IOException, RepositoryException {
         return createSession(workspace, asLineFeedSeparatedString(propertiesFormat));
@@ -81,55 +81,11 @@ public class SessionTestUtil {
     public static MockSession createSession(String workspace, InputStream propertiesStream) throws IOException, RepositoryException {
         MockSession hm = new MockSession(workspace);
         Node root = hm.getRootNode();
-        createContent(root, propertiesStream);
+        NodeTestUtil.createSubnodes(root, propertiesStream);
         return hm;
     }
 
-    public static void createContent(Node root, InputStream propertiesStream) throws IOException, RepositoryException {
-        final PropertiesImportExport importer = new PropertiesImportExport() {
-            @Override
-            protected void setIdentifier(Node c, String valueStr) {
-                ((MockNode) c).setIdentifier(valueStr);
-            }
-        };
-        importer.createContent(root, propertiesStream);
-    }
-
-    public static MockNode createContent(final String name, Object[][] data, MockNode[] children) {
-        Map<String, MockValue> nodeDatas = createNodeDatas(data);
-        Map<String, MockNode> childrenMap = new LinkedHashMap<String, MockNode>();
-
-        for (MockNode child : children) {
-            childrenMap.put(child.getName(), child);
-        }
-
-        return new MockNode(name, nodeDatas, childrenMap);
-    }
-
-    public static MockNode createNode(String name, Object[][] data) {
-        return createContent(name, data, new MockNode[] {});
-    }
-
-    public static Map<String, MockValue> createNodeDatas(Object[][] data) {
-        Map<String, MockValue> nodeDatas = new LinkedHashMap<String, MockValue>();
-        for (Object[] aData : data) {
-            String name = (String) aData[0];
-            Object value = aData[1];
-            nodeDatas.put(name, new MockValue(value));
-        }
-        return nodeDatas;
-    }
-
-    /**
-     * Utility method similar to other create* methods; takes a vararg string argument to avoid concatenating long strings
-     * and \n's. Creates a HierarchyManager based on the given properties, and the first argument is the path to the
-     * node which we want to get from this HierarchyManager.
-     */
-    public static Node createNode(String returnFromPath, String... propertiesFormat) throws RepositoryException, IOException {
-        return createSession(asLineFeedSeparatedString(propertiesFormat)).getNode(returnFromPath);
-    }
-
-    private static String asLineFeedSeparatedString(String... s) {
+    static String asLineFeedSeparatedString(String... s) {
         return StringUtils.join(Arrays.asList(s), "\n");
     }
 

@@ -36,12 +36,12 @@ package info.magnolia.cms.util;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockEvent;
 import info.magnolia.test.mock.jcr.MockObservationManager;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,8 +68,8 @@ public class ModuleConfigurationObservingManagerTest extends MgnlTestCase {
     @Test
     public void testObserving() throws RepositoryException, IOException, InterruptedException {
 
-        final Session session = SessionTestUtil.createSession(""
-                + "/modules/foo/components/a\n"
+        final Session session = SessionTestUtil.createSession("testWorkspace",
+                "/modules/foo/components/a\n"
                 + "/modules/bar/components/b\n"
                 + "/modules/zed\n"
         );

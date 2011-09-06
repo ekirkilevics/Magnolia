@@ -31,10 +31,9 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.test.mock.jcr;
 
 import static org.junit.Assert.assertEquals;
-import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.IOException;
 
@@ -48,14 +47,15 @@ import org.junit.Test;
 public class SessionTestUtilTest {
     @Test
     public void testCreateSessionFromString() throws IOException, RepositoryException {
+        String workspace = "workspace";
         String content = "/parent1/sub1.prop1=one";
 
-        MockSession session = SessionTestUtil.createSession(content);
+        MockSession session = SessionTestUtil.createSession(workspace, content);
         assertEquals("one", session.getNode("/parent1/sub1").getProperty("prop1").getString());
 
         content = "/parent1/sub1.@uuid=1\n" + "/parent2/sub2.@uuid=2";
 
-        session = SessionTestUtil.createSession(content);
+        session = SessionTestUtil.createSession("testWorkspace", content);
         assertEquals("1", session.getNode("/parent1/sub1").getIdentifier());
         assertEquals("2", session.getNode("/parent2/sub2").getIdentifier());
     }
