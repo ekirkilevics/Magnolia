@@ -61,6 +61,9 @@ public class SessionTestUtil {
      * Create and return a MockSession for the provided workspace by merging all propertiesFormats to a linefeed separated String.
      */
     public static MockSession createSession(String workspace, String... propertiesFormat) throws IOException, RepositoryException {
+        if (propertiesFormat.length == 0) {
+            throw new IllegalArgumentException("You have to provide a non-empty array of properties.");
+        }
         return createSession(workspace, asLineFeedSeparatedString(propertiesFormat));
     }
 

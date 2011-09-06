@@ -58,8 +58,11 @@ public class NodeTestUtil {
      * Utility method similar to other create* methods; takes a vararg string argument to avoid concatenating long strings
      * and \n's.
      */
-    public static Node createNode(String returnFromPath, String workspaceName, String... propertyFormat) throws RepositoryException, IOException {
-        return SessionTestUtil.createSession(workspaceName, SessionTestUtil.asLineFeedSeparatedString(propertyFormat)).getNode(returnFromPath);
+    public static Node createNode(String returnFromPath, String workspaceName, String... propertiesFormat) throws RepositoryException, IOException {
+        if (propertiesFormat.length == 0) {
+            throw new IllegalArgumentException("You have to provide a non-empty array of properties.");
+        }
+        return SessionTestUtil.createSession(workspaceName, SessionTestUtil.asLineFeedSeparatedString(propertiesFormat)).getNode(returnFromPath);
     }
 
     public static void createSubnodes(Node root, InputStream propertiesStream) throws IOException, RepositoryException {
