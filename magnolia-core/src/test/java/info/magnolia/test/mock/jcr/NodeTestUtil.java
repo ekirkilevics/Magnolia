@@ -58,8 +58,8 @@ public class NodeTestUtil {
      * Utility method similar to other create* methods; takes a vararg string argument to avoid concatenating long strings
      * and \n's.
      */
-    public static Node createNode(String returnFromPath, String... propertyFormat) throws RepositoryException, IOException {
-        return SessionTestUtil.createSession(SessionTestUtil.asLineFeedSeparatedString(propertyFormat)).getNode(returnFromPath);
+    public static Node createNode(String returnFromPath, String workspaceName, String... propertyFormat) throws RepositoryException, IOException {
+        return SessionTestUtil.createSession(workspaceName, SessionTestUtil.asLineFeedSeparatedString(propertyFormat)).getNode(returnFromPath);
     }
 
     public static void createSubnodes(Node root, InputStream propertiesStream) throws IOException, RepositoryException {

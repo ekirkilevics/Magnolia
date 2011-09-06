@@ -51,7 +51,7 @@ public class NodeTestUtilTest {
         String string1 = "/root/sub1.prop1=one";
         String string2 = "/root/sub1.prop2=two";
         // WHEN
-        Node result = NodeTestUtil.createNode("root", string1, string2);
+        Node result = NodeTestUtil.createNode("root", "testWorkspace", string1, string2);
 
         // THEN
         assertEquals("root", result.getName());

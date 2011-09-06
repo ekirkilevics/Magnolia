@@ -52,20 +52,6 @@ import org.apache.commons.lang.StringUtils;
  */
 public class SessionTestUtil {
 
-    /**
-     * TODO - will be removed in a next step
-     */
-    public static MockSession createSession(InputStream propertiesStream) throws IOException, RepositoryException {
-        return createSession(null, propertiesStream);
-    }
-
-    /**
-     * TODO - will be removed in a next step
-     */
-    public static MockSession createSession(String propertiesStr) throws IOException, RepositoryException {
-        return createSession(null, propertiesStr);
-    }
-
     public static MockSession createSession(String workspace, String propertiesStr) throws IOException, RepositoryException {
         final ByteArrayInputStream in = new ByteArrayInputStream(propertiesStr.getBytes());
         return createSession(workspace, in);
