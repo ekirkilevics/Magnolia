@@ -61,8 +61,9 @@ import java.util.Comparator;
 /**
  * Represents a piece of content (node) which has nodedatas (properties) containing the values and
  * which can have sub contents. This is is very similar to the JCR {@link Node} interface.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
+ *
+ * @deprecated since 4.5 - use jcr.Node instead.
  */
 public interface Content extends Cloneable {
 
