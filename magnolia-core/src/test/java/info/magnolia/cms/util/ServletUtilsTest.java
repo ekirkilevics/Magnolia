@@ -185,4 +185,39 @@ public class ServletUtilsTest {
         mock.setAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/error.jsp");
         assertEquals(DispatcherType.INCLUDE, ServletUtils.getDispatcherType(mock));
     }
+
+    @Test
+    public void testGetOriginalRequestUri() {
+        MockHttpServletRequest mock = new MockHttpServletRequest();
+        mock.setRequestURI("/some/path/and/some.file");
+
+        assertEquals("/some/path/and/some.file", ServletUtils.getOriginalRequestURI(mock));
+
+        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, mock.getRequestURI());
+        mock.setRequestURI("/forwarded/to/test/path");
+        assertEquals("/some/path/and/some.file", ServletUtils.getOriginalRequestURI(mock));
+    }
+
+    @Test
+    public void testGetOriginalRequestUrlIncludingQueryString() {
+        MockHttpServletRequest mock = new MockHttpServletRequest();
+        mock.setRequestURL("http://some.domain/foo/bar.html");
+        mock.setRequestURI("/foo/bar.html");
+        mock.setQueryString("a=5&b=6");
+
+        assertEquals("http://some.domain/foo/bar.html?a=5&b=6", ServletUtils.getOriginalRequestURLIncludingQueryString(mock));
+
+        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, mock.getRequestURI());
+        mock.setAttribute(ServletUtils.FORWARD_QUERY_STRING_ATTRIBUTE, mock.getQueryString());
+        mock.setScheme("http");
+        mock.setServerName("some.domain");
+        mock.setServerPort(80);
+
+        mock.setRequestURL("/forwarded/to/test/path");
+        mock.setQueryString("qwerty=yes");
+        assertEquals("http://some.domain/foo/bar.html?a=5&b=6", ServletUtils.getOriginalRequestURLIncludingQueryString(mock));
+
+        mock.setServerPort(8080);
+        assertEquals("http://some.domain:8080/foo/bar.html?a=5&b=6", ServletUtils.getOriginalRequestURLIncludingQueryString(mock));
+    }
 }

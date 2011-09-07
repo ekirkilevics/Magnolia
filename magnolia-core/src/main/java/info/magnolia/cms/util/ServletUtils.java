@@ -41,6 +41,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletRequestWrapper;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Utility methods for operations related to Servlet API.
  *
@@ -50,6 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 public abstract class ServletUtils {
 
     public static final String FORWARD_REQUEST_URI_ATTRIBUTE = "javax.servlet.forward.request_uri";
+    public static final String FORWARD_QUERY_STRING_ATTRIBUTE = "javax.servlet.forward.query_string";
 
     public static final String INCLUDE_REQUEST_URI_ATTRIBUTE = "javax.servlet.include.request_uri";
 
@@ -144,5 +147,55 @@ public abstract class ServletUtils {
             return DispatcherType.ERROR;
         }
         return DispatcherType.REQUEST;
+    }
+
+    /**
+     * Returns the original request uri. The If the request has been forwarded it finds the original request uri from
+     * request attributes. The returned uri is not decoded.
+     */
+    public static String getOriginalRequestURI(HttpServletRequest request) {
+        if (request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE) != null) {
+            return (String) request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE);
+        } else {
+            return request.getRequestURI();
+        }
+    }
+
+    /**
+     * Returns the original request url. If the request has been forwarded it reconstructs the url from  request
+     * attributes. The returned url is not decoded.
+     */
+    public static String getOriginalRequestURLIncludingQueryString(HttpServletRequest request) {
+        if (request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE) != null) {
+            StringBuilder builder = new StringBuilder();
+
+            String scheme = request.getScheme();
+            builder.append(scheme).append("://").append(request.getServerName());
+
+            int port = request.getServerPort();
+            if ((scheme.equalsIgnoreCase("http") && port == 80) || (scheme.equalsIgnoreCase("https") && port == 443)) {
+                // adding port is not necessary
+            } else {
+                builder.append(":").append(port);
+            }
+
+            String requestUri = (String) request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE);
+            builder.append(requestUri);
+
+            String queryString = (String) request.getAttribute(FORWARD_QUERY_STRING_ATTRIBUTE);
+            if (StringUtils.isNotEmpty(queryString)) {
+                builder.append("?").append(queryString);
+            }
+
+            return builder.toString();
+        } else {
+            StringBuilder builder = new StringBuilder();
+            builder.append(request.getRequestURL());
+            String queryString = request.getQueryString();
+            if (StringUtils.isNotEmpty(queryString)) {
+                builder.append("?").append(queryString);
+            }
+            return builder.toString();
+        }
     }
 }
