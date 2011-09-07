@@ -834,7 +834,10 @@
         {
         if (this.lastEditedHtmlObject)
             {
-            this.lastEditedHtmlObject.innerHTML=escape(this.lastEditedOriginalValue);
+            var value=this.lastEditedOriginalValue;
+            value = value.replace(/</g,"&lt;");
+            value = value.replace(/>/g,"&gt;");
+            this.lastEditedHtmlObject.innerHTML=value;
             this.lastEditedHtmlObject=null;
             this.lastEditedOriginalValue="";
             this.lastEditedName="";
