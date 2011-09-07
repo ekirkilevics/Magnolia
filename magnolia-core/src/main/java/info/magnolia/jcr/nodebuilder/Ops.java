@@ -33,8 +33,8 @@
  */
 package info.magnolia.jcr.nodebuilder;
 
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.PropertyUtil;
 
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
@@ -86,7 +86,7 @@ public abstract class Ops {
                 if (context.hasProperty(name)) {
                     throw new ItemExistsException("Property " + name + " already exists at " + context.getPath());
                 }
-                final Value value = NodeDataUtil.createValue(newValue, context.getSession().getValueFactory());
+                final Value value = PropertyUtil.createValue(newValue, context.getSession().getValueFactory());
                 context.setProperty(name, value);
                 return context;
             }
@@ -104,7 +104,7 @@ public abstract class Ops {
                 if (!context.hasProperty(name)) {
                     throw new ItemNotFoundException(name);
                 }
-                final Value value = NodeDataUtil.createValue(newValue, context.getSession().getValueFactory());
+                final Value value = PropertyUtil.createValue(newValue, context.getSession().getValueFactory());
                 context.setProperty(name, value);
                 return context;
             }
