@@ -33,7 +33,7 @@
  */
 package info.magnolia.test.mock.jcr;
 
-import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.jcr.util.PropertyUtil;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -54,7 +54,7 @@ public class MockValue implements Value {
     private Object value;
 
     public MockValue(Object value) {
-        this(value, NodeDataUtil.getJCRPropertyType(value));
+        this(value, PropertyUtil.getJCRPropertyType(value));
     }
 
     public MockValue(Object value, int type) {

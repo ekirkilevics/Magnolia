@@ -33,15 +33,32 @@
  */
 package info.magnolia.jcr.util;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.DateUtil;
+import info.magnolia.context.MgnlContext;
+
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
 
 import javax.jcr.Binary;
 import javax.jcr.Node;
 import javax.jcr.Property;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
+import javax.jcr.ValueFactory;
+
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.FastDateFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Property-related utility methods.
@@ -49,6 +66,8 @@ import javax.jcr.Value;
  * @version $Id$
  */
 public class PropertyUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(PropertyUtil.class);
 
     public static void renameProperty(Property property, String newName) throws RepositoryException {
         Node node = property.getNode();
@@ -91,5 +110,189 @@ public class PropertyUtil {
         } else
             // TODO dlipp: verify if this is desired default-behavior: NodeDataUtil#setValue sets propertyValue.toString() as default!
             throw new IllegalArgumentException("Cannot set property to a value of type " + propertyValue.getClass());
+    }
+
+    /**
+     * Transforms a string to a jcr value object.
+     */
+    public static Value createValue(String valueStr, int type, ValueFactory valueFactory) {
+        Value value = null;
+        if (type == PropertyType.STRING) {
+            value = valueFactory.createValue(valueStr);
+        }
+        else if (type == PropertyType.BOOLEAN) {
+            value = valueFactory.createValue(BooleanUtils.toBoolean(valueStr));
+        }
+        else if (type == PropertyType.DOUBLE) {
+            try {
+                value = valueFactory.createValue(Double.parseDouble(valueStr));
+            }
+            catch (NumberFormatException e) {
+                value = valueFactory.createValue(0d);
+            }
+        }
+        else if (type == PropertyType.LONG) {
+            try {
+                value = valueFactory.createValue(Long.parseLong(valueStr));
+            }
+            catch (NumberFormatException e) {
+                value = valueFactory.createValue(0L);
+            }
+        }
+        else if (type == PropertyType.DATE) {
+            try {
+                Calendar date = new GregorianCalendar();
+                try {
+                    String newDateAndTime = valueStr;
+                    String[] dateAndTimeTokens = newDateAndTime.split("T"); //$NON-NLS-1$
+                    String newDate = dateAndTimeTokens[0];
+                    String[] dateTokens = newDate.split("-"); //$NON-NLS-1$
+                    int hour = 0;
+                    int minute = 0;
+                    int second = 0;
+                    int year = Integer.parseInt(dateTokens[0]);
+                    int month = Integer.parseInt(dateTokens[1]) - 1;
+                    int day = Integer.parseInt(dateTokens[2]);
+                    if (dateAndTimeTokens.length > 1) {
+                        String newTime = dateAndTimeTokens[1];
+                        String[] timeTokens = newTime.split(":"); //$NON-NLS-1$
+                        hour = Integer.parseInt(timeTokens[0]);
+                        minute = Integer.parseInt(timeTokens[1]);
+                        second = Integer.parseInt(timeTokens[2]);
+                    }
+                    date.set(year, month, day, hour, minute, second);
+                    // this is used in the searching
+                    date.set(Calendar.MILLISECOND, 0);
+                    date.setTimeZone(TimeZone.getTimeZone("GMT"));
+                }
+                // todo time zone??
+                catch (Exception e) {
+                    // ignore, it sets the current date / time
+                }
+                value = valueFactory.createValue(date);
+            }
+            catch (Exception e) {
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
+        }
+
+        return value;
+
+    }
+
+    /**
+     * @return JCR-PropertyType corresponding to provided Object.
+     */
+    public static int getJCRPropertyType(Object obj) {
+        if(obj instanceof String) {
+            return PropertyType.STRING;
+        }
+        if(obj instanceof Double) {
+            return PropertyType.DOUBLE;
+        }
+        if(obj instanceof Float) {
+            return PropertyType.DOUBLE;
+        }
+        if(obj instanceof Long) {
+            return PropertyType.LONG;
+        }
+        if(obj instanceof Integer) {
+            return PropertyType.LONG;
+        }
+        if(obj instanceof Boolean) {
+            return PropertyType.BOOLEAN;
+        }
+        if(obj instanceof Calendar) {
+            return PropertyType.DATE;
+        }
+        if(obj instanceof InputStream) {
+            return PropertyType.BINARY;
+        }
+        if(obj instanceof Content) {
+            return PropertyType.REFERENCE;
+        }
+        return PropertyType.UNDEFINED;
+    }
+
+    /**
+     * Updates existing property or creates a new one if it doesn't exist already.
+     */
+    public static void updateOrCreate(Node node, String string, GregorianCalendar gregorianCalendar) throws RepositoryException {
+        if (node.hasProperty(string)) {
+            node.getProperty(string).setValue(gregorianCalendar);
+        } else {
+            node.setProperty(string, gregorianCalendar);
+        }
+    }
+
+    public static String getDateFormat() {
+        String dateFormat = null;
+        try{
+            dateFormat = FastDateFormat.getDateInstance(
+                    FastDateFormat.SHORT,
+                    MgnlContext.getLocale()).getPattern();
+        }
+        // this happens if the context is not (yet) set
+        catch(IllegalStateException e){
+            dateFormat = DateUtil.YYYY_MM_DD;
+        }
+        return dateFormat;
+    }
+
+    public static List<String> getValuesStringList(Value[] values) {
+        ArrayList<String> list = new ArrayList<String>();
+        try{
+            Value value;
+            for( int i = 0; i < values.length; i++) {
+                value = values[i];
+                switch (value.getType()) {
+                case (PropertyType.STRING):
+                    list.add(value.getString());
+                break;
+                case (PropertyType.DOUBLE):
+                    list.add(Double.toString(value.getDouble()));
+                break;
+                case (PropertyType.LONG):
+                    list.add(Long.toString(value.getLong()));
+                break;
+                case (PropertyType.BOOLEAN):
+                    list.add(Boolean.toString(value.getBoolean()));
+                break;
+                case (PropertyType.DATE):
+                    Date valueDate = value.getDate().getTime();
+                list.add(DateUtil.format(valueDate, PropertyUtil.getDateFormat()));
+                break;
+                case (PropertyType.BINARY):
+                    // for lack of better solution, fall through to the default - empty string
+                default:
+                    list.add(StringUtils.EMPTY);
+                }
+            }
+        }
+        catch (Exception e) {
+            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+        }
+        return list;
+    }
+
+    public static Value createValue(Object obj, ValueFactory valueFactory) throws RepositoryException {
+        switch (PropertyUtil.getJCRPropertyType(obj)) {
+            case PropertyType.STRING:
+                return valueFactory.createValue((String)obj);
+            case PropertyType.BOOLEAN:
+                return valueFactory.createValue(((Boolean)obj).booleanValue());
+            case PropertyType.DATE:
+                return valueFactory.createValue((Calendar)obj);
+            case PropertyType.LONG:
+                return obj instanceof Long ? valueFactory.createValue(((Long)obj).longValue()) : valueFactory.createValue(((Integer)obj).longValue());
+            case PropertyType.DOUBLE:
+                return obj instanceof Double ? valueFactory.createValue(((Double)obj).doubleValue()) : valueFactory.createValue(((Float)obj).doubleValue());
+            case PropertyType.BINARY:
+                return valueFactory.createValue((InputStream)obj);
+            case PropertyType.REFERENCE:
+                return valueFactory.createValue(((Content)obj).getJCRNode());
+            default:
+                return (obj != null ? valueFactory.createValue(obj.toString()) : valueFactory.createValue(StringUtils.EMPTY));
+        }
     }
 }

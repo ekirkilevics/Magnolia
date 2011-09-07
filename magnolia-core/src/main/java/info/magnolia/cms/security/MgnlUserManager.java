@@ -42,8 +42,8 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.PropertyUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -404,7 +404,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
                 log.debug("update access timestamp for {}", user.getName());
                 try {
                     Node userNode = session.getNode(path);
-                    NodeDataUtil.updateOrCreate(userNode, "lastaccess", new GregorianCalendar());
+                    PropertyUtil.updateOrCreate(userNode, "lastaccess", new GregorianCalendar());
                     session.save();
                 }
                 catch (RepositoryException e) {
