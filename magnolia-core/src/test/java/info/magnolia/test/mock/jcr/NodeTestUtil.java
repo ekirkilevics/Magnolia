@@ -72,7 +72,7 @@ public class NodeTestUtil {
                 ((MockNode) c).setIdentifier(valueStr);
             }
         };
-        importer.createContent(root, propertiesStream);
+        importer.createNodes(root, propertiesStream);
     }
 
     public static MockNode createNode(final String name, Object[][] data, MockNode[] children) {

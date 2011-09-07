@@ -208,7 +208,7 @@ public class NodeTest extends RepositoryTestCase {
             "/mycontent.nd1=hello";
 
         Session hm = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
-        new PropertiesImportExport().createContent(hm.getRootNode(), IOUtils.toInputStream(contentProperties));
+        new PropertiesImportExport().createNodes(hm.getRootNode(), IOUtils.toInputStream(contentProperties));
         hm.save();
         Node content = hm.getNode("/mycontent");
         return content;
@@ -380,7 +380,7 @@ public class NodeTest extends RepositoryTestCase {
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00"
         ), "\n");
         final Session hm = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
-        new PropertiesImportExport().createContent(hm.getRootNode(), IOUtils.toInputStream(contentProperties));
+        new PropertiesImportExport().createNodes(hm.getRootNode(), IOUtils.toInputStream(contentProperties));
         hm.save();
 
         final Node content = hm.getNode("/somepage/mypage/paragraphs/0");
@@ -440,7 +440,7 @@ public class NodeTest extends RepositoryTestCase {
                 "/hello/bin.jcr\\:mimeType=image/gif",
         "/hello/bin.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00" };
         final Session hm = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
-        new PropertiesImportExport().createContent(hm.getRootNode(), contentProperties);
+        new PropertiesImportExport().createNodes(hm.getRootNode(), contentProperties);
         hm.save();
 
         final Node content = hm.getNode("/hello");

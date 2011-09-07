@@ -92,7 +92,7 @@ public class PropertiesImportExportTest {
         assertEquals(Integer.valueOf(37), pie.convertPropertyStringToObject("int:37"));
     }
     @Test
-    public void testCreateContent() throws Exception {
+    public void testCreateNodes() throws Exception {
         final MockNode root = new MockNode();
 
         String content =
@@ -100,7 +100,7 @@ public class PropertiesImportExportTest {
             "/parent2/sub2\n" +
             "/parent2/sub2.prop1=two";
 
-        pie.createContent(root, new ByteArrayInputStream(content.getBytes()));
+        pie.createNodes(root, new ByteArrayInputStream(content.getBytes()));
         assertEquals("one", root.getNode("/parent1/sub1").getProperty("prop1").getString());
         assertTrue(root.hasNode("/parent2/sub2"));
         assertEquals("two", root.getNode("/parent2/sub2").getProperty("prop1").getString());
@@ -109,38 +109,38 @@ public class PropertiesImportExportTest {
             "/parent1/sub1.@uuid=1\n" +
             "/parent2/sub2.@uuid=2";
 
-        pie.createContent(root, new ByteArrayInputStream(content.getBytes()));
+        pie.createNodes(root, new ByteArrayInputStream(content.getBytes()));
         assertEquals("1", root.getNode("/parent1/sub1").getIdentifier());
         assertEquals("2", root.getNode("/parent2/sub2").getIdentifier());
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void testCreateContentFailingBecauseOfEqualsSignWithoutADot() throws Exception {
+    public void testCreateNodesFailingBecauseOfEqualsSignWithoutADot() throws Exception {
         final MockNode root = new MockNode();
         String content =
             "/parent/sub/prop=2";
-        pie.createContent(root, new ByteArrayInputStream(content.getBytes()));
+        pie.createNodes(root, new ByteArrayInputStream(content.getBytes()));
     }
 
 
     @Test(expected=IllegalArgumentException.class)
-    public void testCreateContentFailingBecauseOfMissingTrailingSlash() throws Exception {
+    public void testCreateNodesFailingBecauseOfMissingTrailingSlash() throws Exception {
         String content =
             "parent/sub@uuid=1";
-        pie.createContent(null, new ByteArrayInputStream(content.getBytes()));
+        pie.createNodes(null, new ByteArrayInputStream(content.getBytes()));
     }
 
     @Test(expected=Exception.class)
-    public void testCreateContentFailingBecauseOfDotAndMonkeyTail() throws Exception {
+    public void testCreateNodesFailingBecauseOfDotAndMonkeyTail() throws Exception {
         String content =
             "/parent/sub@uuid=1";
-        pie.createContent(null, new ByteArrayInputStream(content.getBytes()));
+        pie.createNodes(null, new ByteArrayInputStream(content.getBytes()));
     }
 
     @Test(expected=Exception.class)
-    public void testCreateContentFailingBecauseOfDotInPath() throws Exception {
+    public void testCreateNodesFailingBecauseOfDotInPath() throws Exception {
         String content =
             "/parent.sub.@uuid=1";
-        pie.createContent(null, new ByteArrayInputStream(content.getBytes()));
+        pie.createNodes(null, new ByteArrayInputStream(content.getBytes()));
     }
 }

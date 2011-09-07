@@ -71,8 +71,8 @@ public class PropertiesImportExport {
      * @throws IOException
      * @throws RepositoryException
      */
-    public void createContent(Node root, String... properties) throws IOException, RepositoryException {
-        createContent(root, IOUtils.toInputStream(StringUtils.join(Arrays.asList(properties), "\n")));
+    public void createNodes(Node root, String... properties) throws IOException, RepositoryException {
+        createNodes(root, IOUtils.toInputStream(StringUtils.join(Arrays.asList(properties), "\n")));
     }
 
     /**
@@ -83,7 +83,7 @@ public class PropertiesImportExport {
      * @throws IOException
      * @throws RepositoryException
      */
-    public void createContent(Node root, InputStream propertiesStream) throws IOException, RepositoryException {
+    public void createNodes(Node root, InputStream propertiesStream) throws IOException, RepositoryException {
         Properties properties = new OrderedProperties();
 
         properties.load(propertiesStream);
@@ -106,7 +106,7 @@ public class PropertiesImportExport {
 
             type = StringUtils.defaultIfEmpty(type, MgnlNodeType.NT_CONTENTNODE);
             Node c = NodeUtil.createPath(root, path, type);
-            populateContent(c, propertyName, valueStr);
+            populateNode(c, propertyName, valueStr);
         }
     }
 
@@ -153,7 +153,7 @@ public class PropertiesImportExport {
         return cleaned;
     }
 
-    protected void populateContent(Node node, String name, String valueStr) throws RepositoryException {
+    protected void populateNode(Node node, String name, String valueStr) throws RepositoryException {
         if (StringUtils.isEmpty(name) && StringUtils.isEmpty(valueStr)) {
             // happens if the input properties file just created a node with no properties
             return;
