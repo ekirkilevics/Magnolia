@@ -140,16 +140,11 @@ public class AreaElement extends AbstractContentTemplatingElement {
         try {
             if (isEnabled() && areaNode != null) {
                 Map<String, Object> contextObjects = new HashMap<String, Object>();
-                if (type.equals(AreaDefinition.TYPE_LIST)) {
-                    List<ContentMap> components = new ArrayList<ContentMap>();
-                    for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_CONTENTNODE)) {
-                        components.add(new ContentMap(node));
-                    }
-                    contextObjects.put(ATTRIBUTE_COMPONENTS, components);
-
-                } else if (type.equals(AreaDefinition.TYPE_SINGLE)) {
-                    contextObjects.put(ATTRIBUTE_COMPONENT, new ContentMap(areaNode));
+                List<ContentMap> components = new ArrayList<ContentMap>();
+                for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_CONTENTNODE)) {
+                    components.add(new ContentMap(node));
                 }
+                contextObjects.put(ATTRIBUTE_COMPONENTS, components);
                 renderingEngine.render(areaNode, areaDefinition, contextObjects, new AppendableOnlyOutputProvider(out));
             }
 
@@ -235,7 +230,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         if (type.equals(AreaDefinition.TYPE_LIST)) {
             return true;
         }
-        if (type.equals(AreaDefinition.TYPE_SINGLE)) {
+        if (type.equals(AreaDefinition.TYPE_SINGLE) || type.equals(AreaDefinition.TYPE_NO_COMPONENT)) {
             try {
                 return !parentNode.hasNode(name);
             } catch (RepositoryException e) {

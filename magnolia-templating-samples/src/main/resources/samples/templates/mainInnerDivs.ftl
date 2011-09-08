@@ -19,9 +19,7 @@
             <div id="header">
 
                 [#-- ****** navigation ****** --]
-                [#include "/samples/areas/navigationWrappedWithDiv.ftl" ]
-                [#-- should be used as an area so it can be inherited. Inheritance of areas not implemented yet.
-                [@cms.area name="navigation" /]  --]
+                [@cms.area name="navigation" /]
 
 
                 [#-- ****** stage ****** --]

@@ -1248,12 +1248,6 @@
     <sv:property sv:name="jcr:createdBy" sv:type="String">
       <sv:value>admin</sv:value>
     </sv:property>
-    <sv:property sv:name="text" sv:type="String">
-      <sv:value/>
-    </sv:property>
-    <sv:property sv:name="title" sv:type="String">
-      <sv:value>sdds</sv:value>
-    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
@@ -1266,9 +1260,6 @@
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2011-07-13T13:22:51.563+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:template" sv:type="String">
-        <sv:value>samples:components/text</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>

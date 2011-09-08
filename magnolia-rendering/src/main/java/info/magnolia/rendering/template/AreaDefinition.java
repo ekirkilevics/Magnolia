@@ -43,6 +43,7 @@ import java.util.Map;
  */
 public interface AreaDefinition extends TemplateDefinition, Cloneable {
 
+    String TYPE_NO_COMPONENT = "noComponent";
     String TYPE_LIST = "list";
     String TYPE_SINGLE = "single";
     String DEFAULT_TYPE = TYPE_LIST;
