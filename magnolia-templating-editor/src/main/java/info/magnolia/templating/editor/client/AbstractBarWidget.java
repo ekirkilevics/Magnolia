@@ -74,7 +74,6 @@ public abstract class AbstractBarWidget extends SimplePanel {
         add(horizontalPanel);
         setStyle(color);
     }
-
     protected void onSelect() {
         setStyle("rgb(255, 255, 255)");
     }
@@ -101,6 +100,10 @@ public abstract class AbstractBarWidget extends SimplePanel {
                         "border-left: 1px solid #ADC97B !important;" +
                         "border-bottom: 1px solid #396101 !important;" +
                         "border-right: 1px solid #396101 !important;");
+    }
+
+    protected void setId(String id){
+        getElement().setId(id);
     }
 
     public AbstractBarWidget getParentBar() {

@@ -203,6 +203,27 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         $wnd.mgnlOpenDialog(path, collectionName, nodeName, paragraph, workspace, dialogPage, width, height, locale);
 
     }-*/;
+
+    protected native void mgnlMoveNodeStart(String id) /*-{
+        $wnd.mgnlMoveNodeStart('',id,'__'+id);
+    }-*/;
+
+    protected native void mgnlMoveNodeHigh(Object source) /*-{
+        $wnd.mgnlMoveNodeHigh(source);
+    }-*/;
+
+    protected native void mgnlMoveNodeEnd(Object source, String path) /*-{
+        $wnd.mgnlMoveNodeEnd(source, path);
+    }-*/;
+
+    protected native void mgnlMoveNodeReset(Object source) /*-{
+        $wnd.mgnlMoveNodeReset(source);
+    }-*/;
+
+    protected native void mgnlDeleteNode(String path) /*-{
+        $wnd.mgnlDeleteNode(path,'', '');
+    }-*/;
+
     /**
      * TODO: rename and/or remove arguments no longer needed (collectionName, nodeName).
      */
@@ -218,54 +239,36 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         mgnlOpenDialog(path, collectionName, nodeName, dialogName, workspace, "", "", "", "");
     };
 
+    public void moveComponentStart(String id) {
+        mgnlMoveNodeStart(id);
+    }
+
+    public void releaseComponent(EditBarWidget source, String path) {
+        GWT.log("path passed to mgnlMoveNodeEnd native function is " + path);
+        mgnlMoveNodeEnd(source.getElement(), path);
+    }
+
+    public void moveComponentOver(EditBarWidget source) {
+        mgnlMoveNodeHigh(source.getElement());
+    }
+
+    public void moveComponentOut(EditBarWidget source) {
+        mgnlMoveNodeReset(source.getElement());
+    }
+
+    public void deleteComponent(String path) {
+        mgnlDeleteNode(path);
+    }
+
     public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {
         if (this.selectedBar != null && (this.selectedBar != selectedBar)) {
             this.selectedBar.deselect();
         }
         this.selectedBar = selectedBar;
-        updateVariable(ACTION_UPDATE_SELECTION, type);
-        updateVariable(PARAM_SELECTED_WORKSPACE, workspace);
-        updateVariable(PARAM_SELECTED_PATH, path);
-        updateVariable(PARAM_SELECTED_COLLECTION_NAME, collectionName);
-        updateVariable(PARAM_SELECTED_NODE_NAME, nodeName);
-        updateVariable(PARAM_AVAILABLE_COMPONENTS, availableComponents);
-        updateVariable(PARAM_DIALOG, dialog);
     }
 
     public void addComponent(String workspace, String path, String collectionName, String nodeName, String availableComponents) {
-        updateVariable(ACTION_ADD_COMPONENT, "dummy");
-        updateVariable(PARAM_SELECTED_WORKSPACE, workspace);
-        updateVariable(PARAM_SELECTED_PATH, path);
-        updateVariable(PARAM_SELECTED_COLLECTION_NAME, collectionName);
-        updateVariable(PARAM_SELECTED_NODE_NAME, nodeName);
-        updateVariable(PARAM_AVAILABLE_COMPONENTS, availableComponents);
+        //TODO for the time being does nothing
     }
 
-    public void moveComponent(String workspaceName, String sourcePath, String destinationPath) {
-        updateVariable(ACTION_MOVE, "dummy");
-        updateVariable(PARAM_SELECTED_WORKSPACE, workspaceName);
-        updateVariable(PARAM_SOURCE_PATH, sourcePath);
-        updateVariable(PARAM_DESTINATION_PATH, destinationPath);
-    }
-
-    public void moveComponentBefore(String workspaceName, String sourcePath, String destinationPath) {
-        updateVariable(ACTION_MOVE_BEFORE, "dummy");
-        updateVariable(PARAM_SELECTED_WORKSPACE, workspaceName);
-        updateVariable(PARAM_SOURCE_PATH, sourcePath);
-        updateVariable(PARAM_DESTINATION_PATH, destinationPath);
-    }
-
-    public void moveComponentAfter(String workspaceName, String sourcePath, String destinationPath) {
-        updateVariable(ACTION_MOVE_AFTER, "dummy");
-        updateVariable(PARAM_SELECTED_WORKSPACE, workspaceName);
-        updateVariable(PARAM_SOURCE_PATH, sourcePath);
-        updateVariable(PARAM_DESTINATION_PATH, destinationPath);
-    }
-
-    private void updateVariable(String variableName, String value) {
-
-        if (value != null) {
-            System.out.println(variableName + "=" + value);
-        }
-    }
 }

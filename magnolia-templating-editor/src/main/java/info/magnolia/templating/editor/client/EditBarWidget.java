@@ -36,6 +36,12 @@ package info.magnolia.templating.editor.client;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Button;
 
 /**
@@ -52,8 +58,10 @@ public class EditBarWidget extends AbstractBarWidget {
     private String label;
     private String dialog;
     private String format; // bar or button (its likely too late to make a decision here)
+    private String id;
 
     public EditBarWidget(AbstractBarWidget parentBar, final PageEditor pageEditor, Element element) {
+
         super(parentBar, "rgb(116, 173, 59)");
         this.pageEditor = pageEditor;
 
@@ -62,20 +70,79 @@ public class EditBarWidget extends AbstractBarWidget {
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
 
+        this.id = path.substring(path.lastIndexOf("/") + 1);
+
+        setId("__"+id);
+
         this.componentId = element.getAttribute("template");
         this.label = element.getAttribute("label");
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
 
         setLabelText(label + "(" + componentId + ")");
-        Button button = new Button("Edit&nbsp;component");
-        button.addClickHandler(new ClickHandler() {
+
+        createButtons(pageEditor);
+
+        createMouseEventsHandlers(pageEditor);
+
+    }
+
+    private void createMouseEventsHandlers(final PageEditor pageEditor) {
+
+        addDomHandler(new MouseDownHandler() {
+
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                String parentPath = path.substring(0, path.lastIndexOf("/"));
+                pageEditor.releaseComponent((EditBarWidget)event.getSource(), parentPath);
+
+            }
+        }, MouseDownEvent.getType());
+
+        addDomHandler(new MouseOverHandler() {
+
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                pageEditor.moveComponentOver((EditBarWidget)event.getSource());
+            }
+        }, MouseOverEvent.getType());
+
+        addDomHandler(new MouseOutHandler() {
+
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                pageEditor.moveComponentOut((EditBarWidget)event.getSource());
+            }
+        }, MouseOutEvent.getType());
+    }
+
+    private void createButtons(final PageEditor pageEditor) {
+        Button edit = new Button("Edit");
+        edit.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 pageEditor.openDialog(dialog, workspace, path, null, null);
             }
         });
-        addButton(button);
+        addButton(edit);
+
+        Button move = new Button("Move");
+        move.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                pageEditor.moveComponentStart(id);
+            }
+        });
+        addButton(move);
+
+        Button delete = new Button("Delete");
+        delete.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                pageEditor.deleteComponent(path);
+            }
+        });
+        addButton(delete);
     }
 
     @Override
@@ -97,4 +164,5 @@ public class EditBarWidget extends AbstractBarWidget {
         element.appendChild(getElement());
         onAttach();
     }
+
 }
