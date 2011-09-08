@@ -37,7 +37,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.MgnlInstantiationException;
-import info.magnolia.rendering.template.configured.ConfiguredRenderableDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 
 import java.lang.reflect.InvocationTargetException;
@@ -49,12 +48,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * Base implementation for paragraph and template definitions. Provides the
- * {@link #modelClass} property which is used in the method
- * {@link #newModel(Content, RenderableDefinition , RenderingModel)}
- *
+ * Base implementation for paragraph and template definitions. Provides the {@link #modelClass} property which is used in the method {@link #newModel(Content, RenderableDefinition , RenderingModel)}
+ * 
  * @version $Id$
- * @deprecated since 4.5, use {@link ConfiguredRenderableDefinition} instead.
+ * @deprecated since 4.5, use {@link info.magnolia.rendering.template.configured.ConfiguredRenderableDefinition} instead.
  */
 @Deprecated
 public class AbstractRenderable extends ConfiguredTemplateDefinition implements RenderableDefinition {
