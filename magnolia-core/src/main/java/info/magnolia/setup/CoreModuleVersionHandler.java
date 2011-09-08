@@ -214,15 +214,15 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.filterMustBeRegisteredWithCorrectDispatchers("info.magnolia.cms.filters.MgnlMainFilter");
 
         register(DeltaBuilder.update("4.4.5", "")
-                .addTask(new BootstrapConditionally("Bootstrap m4a MIME mapping", "Bootstrap MIME mapping for m4a in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4a.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap m4a MIME mapping", "Bootstraps MIME mapping for m4a in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4a.xml"))
                 .addTask(new BootstrapConditionally("Bootstrap m4b MIME mapping", "Bootstrap MIME mapping for m4b in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4b.xml"))
                 .addTask(new BootstrapConditionally("Bootstrap m4r MIME mapping", "Bootstrap MIME mapping for m4r in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4r.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap m4v MIME mapping", "Bootstrap MIME mapping for m4v in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4v.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap m4v MIME mapping", "Bootstraps MIME mapping for m4v in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4v.xml"))
                 .addTask(new BootstrapConditionally("Bootstrap mp4a MIME mapping", "Bootstrap MIME mapping for mp4a in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4a.xml"))
                 .addTask(new BootstrapConditionally("Bootstrap mp4s MIME mapping", "Bootstrap MIME mapping for mp4s in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4s.xml"))
                 .addTask(new BootstrapConditionally("Bootstrap mp4v MIME mapping", "Bootstrap MIME mapping for mp4v in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4v.xml"))
                 .addTask(new BootstrapConditionally("Bootstrap mpg4 MIME mapping", "Bootstrap MIME mapping for mpg4 in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mpg4.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap srt MIME mapping", "Bootstrap MIME mapping for srt in case it doesn't exist already", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.srt.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap srt MIME mapping", "Bootstraps MIME mapping for srt in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.srt.xml"))
                 .addTask(fixMimetype("mp4", "application/octet-stream", "video/mp4"))
                 .addTask(addButDoNotReplaceMimeProperty("mov", "icon", "/.resources/file-icons/moov.png"))
                 .addTask(addButDoNotReplaceMimeProperty("mov", "extension", "mov"))
@@ -247,7 +247,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         final String nodePath = "/server/MIMEMapping/" + mimeType;
         final CheckOrCreatePropertyTask createTask = new CheckOrCreatePropertyTask(null, null, workspaceName, nodePath, propertyName, propertyValue);
         return new PropertyExistsDelegateTask("Add "+mimeType.toUpperCase()+" property",
-                "Adds property '"+propertyName+"' to "+mimeType.toUpperCase()+" MIME type in case it doesn't exist yet",
+                "Adds property '"+propertyName+"' to "+mimeType.toUpperCase()+" MIME type in case it doesn't exist yet.",
                 workspaceName, nodePath, propertyName, null, createTask);
     }
 
