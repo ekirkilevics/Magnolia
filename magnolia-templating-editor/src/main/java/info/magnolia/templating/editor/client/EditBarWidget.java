@@ -94,7 +94,7 @@ public class EditBarWidget extends AbstractBarWidget {
             @Override
             public void onMouseDown(MouseDownEvent event) {
                 String parentPath = path.substring(0, path.lastIndexOf("/"));
-                pageEditor.releaseComponent((EditBarWidget)event.getSource(), parentPath);
+                pageEditor.moveComponentEnd((EditBarWidget)event.getSource(), parentPath);
 
             }
         }, MouseDownEvent.getType());

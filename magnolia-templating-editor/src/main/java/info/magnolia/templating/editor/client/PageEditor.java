@@ -243,7 +243,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         mgnlMoveNodeStart(id);
     }
 
-    public void releaseComponent(EditBarWidget source, String path) {
+    public void moveComponentEnd(EditBarWidget source, String path) {
         GWT.log("path passed to mgnlMoveNodeEnd native function is " + path);
         mgnlMoveNodeEnd(source.getElement(), path);
     }
