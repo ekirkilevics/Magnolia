@@ -196,33 +196,33 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     /**
-     * Delegate to mgnlOpenDialog function found in general.js.
+     * Delegating to native javascript function found in general.js.
      */
-    protected native void mgnlOpenDialog(String path, String collectionName, String nodeName, String paragraph, String workspace, String dialogPage, String width, String height, String locale) /*-{
-
+    private native void mgnlOpenDialog(String path, String collectionName, String nodeName, String paragraph, String workspace, String dialogPage, String width, String height, String locale) /*-{
         $wnd.mgnlOpenDialog(path, collectionName, nodeName, paragraph, workspace, dialogPage, width, height, locale);
 
     }-*/;
 
-    protected native void mgnlMoveNodeStart(String id) /*-{
+    private native void mgnlMoveNodeStart(String id) /*-{
         $wnd.mgnlMoveNodeStart('',id,'__'+id);
     }-*/;
 
-    protected native void mgnlMoveNodeHigh(Object source) /*-{
+    private native void mgnlMoveNodeHigh(Object source) /*-{
         $wnd.mgnlMoveNodeHigh(source);
     }-*/;
 
-    protected native void mgnlMoveNodeEnd(Object source, String path) /*-{
+    private native void mgnlMoveNodeEnd(Object source, String path) /*-{
         $wnd.mgnlMoveNodeEnd(source, path);
     }-*/;
 
-    protected native void mgnlMoveNodeReset(Object source) /*-{
+    private native void mgnlMoveNodeReset(Object source) /*-{
         $wnd.mgnlMoveNodeReset(source);
     }-*/;
 
-    protected native void mgnlDeleteNode(String path) /*-{
+    private native void mgnlDeleteNode(String path) /*-{
         $wnd.mgnlDeleteNode(path,'', '');
     }-*/;
+
 
     /**
      * TODO: rename and/or remove arguments no longer needed (collectionName, nodeName).
