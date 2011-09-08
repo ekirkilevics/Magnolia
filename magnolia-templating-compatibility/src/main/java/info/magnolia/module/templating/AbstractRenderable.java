@@ -38,8 +38,8 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.rendering.template.configured.ConfiguredRenderableDefinition;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 
-import java.awt.geom.Area;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +57,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @deprecated since 4.5, use {@link ConfiguredRenderableDefinition} instead.
  */
 @Deprecated
-public class AbstractRenderable extends ConfiguredRenderableDefinition implements RenderableDefinition {
+public class AbstractRenderable extends ConfiguredTemplateDefinition implements RenderableDefinition {
     private String name;
     private String title;
     private String templateScript;
@@ -68,7 +68,6 @@ public class AbstractRenderable extends ConfiguredRenderableDefinition implement
 
     // TODO: check whether we shouldn't use LinkedHashMap here - would preserve order!
     private Map parameters = new HashMap();
-    private Map<String, Area> areas = new HashMap<String, Area>();
 
     /**
      * Return always the {@link #templateScript} property.
@@ -184,6 +183,7 @@ public class AbstractRenderable extends ConfiguredRenderableDefinition implement
         return this.dialog;
     }
 
+    @Override
     public void setDialog(String dialog) {
         this.dialog = dialog;
     }
@@ -206,14 +206,6 @@ public class AbstractRenderable extends ConfiguredRenderableDefinition implement
     @Override
     public void setParameters(Map params) {
         this.parameters = params;
-    }
-
-    public Map<String, Area> getAreas() {
-        return this.areas;
-    }
-
-    public void setAreas(Map<String, Area> areas) {
-        this.areas = areas;
     }
 
     @Override
