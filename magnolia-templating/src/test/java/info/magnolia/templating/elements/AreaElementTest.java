@@ -35,13 +35,13 @@ package info.magnolia.templating.elements;
 
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.SessionTestUtil;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.IOException;
 

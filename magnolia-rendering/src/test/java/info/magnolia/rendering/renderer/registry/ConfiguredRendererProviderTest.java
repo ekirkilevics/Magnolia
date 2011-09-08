@@ -33,13 +33,7 @@
  */
 package info.magnolia.rendering.renderer.registry;
 
-import java.io.IOException;
-import java.util.Map;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.rendering.context.RenderingContext;
@@ -48,7 +42,14 @@ import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
-import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.util.Map;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import org.junit.Test;
 
 /**
  * @version $Id$
