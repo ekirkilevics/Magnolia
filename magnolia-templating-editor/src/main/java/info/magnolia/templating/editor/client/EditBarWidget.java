@@ -79,8 +79,6 @@ public class EditBarWidget extends AbstractBarWidget {
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
 
-        setLabelText(label + "(" + componentId + ")");
-
         createButtons(pageEditor);
 
         createMouseEventsHandlers(pageEditor);
