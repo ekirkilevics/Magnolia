@@ -395,7 +395,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     @Override
     public Workspace getWorkspace() throws RepositoryException {
-        return getHierarchyManager().getWorkspace();
+        return getJCRNode().getSession().getWorkspace();
     }
 
     @Override

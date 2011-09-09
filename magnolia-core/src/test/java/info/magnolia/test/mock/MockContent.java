@@ -35,6 +35,7 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
@@ -100,10 +101,21 @@ public class MockContent extends AbstractContent {
 
     private Node node;
 
+    /**
+     * HM is no longer kept in ContentHandler - for DefaultContent it can be derived via RepositoryStrategy. For simplicity we'll directly keep them for MockContent.
+     */
+    private HierarchyManager hierarchyManager;
+
     public MockContent(String name) {
         this.name = name;
         this.node = new MockJCRNode(this);
     }
+
+    public MockContent(String name, HierarchyManager hm) {
+        this(name);
+        this.hierarchyManager = hm;
+    }
+
 
     public MockContent(String name, ItemType contentType) {
         this(name);
@@ -120,6 +132,14 @@ public class MockContent extends AbstractContent {
             MockNodeData nd = (MockNodeData) iter.next();
             addNodeData(nd);
         }
+    }
+
+    /**
+     * Set hierarchy manager.
+     * @param hierarchyManager
+     */
+    public void setHierarchyManager(HierarchyManager hm) {
+        this.hierarchyManager = hm;
     }
 
     @Override
@@ -348,10 +368,10 @@ public class MockContent extends AbstractContent {
 
     @Override
     public MockHierarchyManager getHierarchyManager() {
-        if (super.getHierarchyManager() == null && getParent() != null) {
+        if (getParent() != null) {
             return ((MockContent) getParent()).getHierarchyManager();
         }
-        return (MockHierarchyManager) super.getHierarchyManager();
+        return (MockHierarchyManager) hierarchyManager;
     }
 
     @Override

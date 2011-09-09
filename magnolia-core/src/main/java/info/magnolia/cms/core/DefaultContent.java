@@ -738,14 +738,6 @@ public class DefaultContent extends AbstractContent {
         }
     }
 
-    /**
-     * SCRUM-368 - first step in getting completely rid of it: do not store in DefaultContent but retrieve from repository strategy.
-     */
-    @Override
-    public void setHierarchyManager(HierarchyManager hierarchyManager) {
-        log.debug("This call to setHierarchyManager is obsolete now.");
-    }
-
     @Override
     public Workspace getWorkspace() throws RepositoryException {
         return node.getSession().getWorkspace();

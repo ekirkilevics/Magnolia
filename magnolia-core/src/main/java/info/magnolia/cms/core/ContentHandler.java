@@ -46,11 +46,6 @@ import info.magnolia.cms.util.DeprecationUtil;
 public abstract class ContentHandler implements Cloneable {
 
     /**
-     * HierarchyManager instance.
-     */
-    private HierarchyManager hierarchyManager;
-
-    /**
      * package private constructor.
      */
     ContentHandler() {
@@ -97,16 +92,5 @@ public abstract class ContentHandler implements Cloneable {
      * Get hierarchy manager if previously set for this object.
      * @return HierarchyManager
      */
-    public HierarchyManager getHierarchyManager() {
-        return hierarchyManager;
-    }
-
-    /**
-     * Set hierarchy manager.
-     * @param hierarchyManager
-     */
-    public void setHierarchyManager(HierarchyManager hierarchyManager) {
-        this.hierarchyManager = hierarchyManager;
-    }
-
+    public abstract HierarchyManager getHierarchyManager();
 }
