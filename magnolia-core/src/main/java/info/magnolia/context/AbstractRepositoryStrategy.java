@@ -109,7 +109,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         return hm;
     }
 
-    private Session unwrap(Session jcrSession) {
+    protected Session unwrap(Session jcrSession) {
         if (!(jcrSession instanceof DelegateSessionWrapper)) {
             return jcrSession;
         }
