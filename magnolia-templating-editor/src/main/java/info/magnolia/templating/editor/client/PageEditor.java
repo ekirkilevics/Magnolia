@@ -229,7 +229,16 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     public void addComponent(String workspace, String path, String collectionName, String nodeName, String availableComponents) {
-        //TODO for the time being does nothing
+        if (collectionName == null) {
+            collectionName = "";
+        }
+        if (nodeName == null) {
+            nodeName = "mgnlNew";
+        }
+        if (availableComponents == null) {
+            availableComponents = "";
+        }
+        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", "");
     }
 
 }
