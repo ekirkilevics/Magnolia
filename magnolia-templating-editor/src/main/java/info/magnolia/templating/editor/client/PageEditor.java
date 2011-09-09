@@ -33,6 +33,8 @@
  */
 package info.magnolia.templating.editor.client;
 
+import info.magnolia.templating.editor.client.jsni.GeneralJavascript;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -106,8 +108,8 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             if (childNode.getNodeType() == Element.ELEMENT_NODE) {
                 Element child = (Element) childNode;
                 if (child.getTagName().equalsIgnoreCase(MARKER_EDIT)) {
-                    //the first cms:edit we encounter in DOM which also matches the requisites to be a main page edit bar. We ignore the rest.
-                    if(!pageEditBarAlreadyProcessed && isPageEditBar(child)){
+                    //We assume the first cms:edit we encounter in DOM is the page edit bar.
+                    if(!pageEditBarAlreadyProcessed){
                         PageBarWidget pageBarWidget = new PageBarWidget(this, child);
                         pageBarWidget.attach(child);
                         pageEditBarAlreadyProcessed = true;
@@ -158,18 +160,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         }
         return false;
     }
-    /**
-     * If the element's content does not end with a slash and some digits, we assume it is a page edit bar.
-     */
-    private boolean isPageEditBar(Element editElement) {
-
-        String content = editElement.getAttribute("content");
-        if(content.matches(".*/\\d+?")){
-            return false;
-        }
-        GWT.log("edit element with content ["+ content + "] looks like it is a page main edit bar");
-        return true;
-    }
 
     /**
      * Looks in DOM for an existing &lt;cms:edit ... &gt; marker associated with an area element. For an edit bar to be associated with the passed in element,
@@ -196,35 +186,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     /**
-     * Delegating to native javascript functions found in general.js.
-     */
-    private native void mgnlOpenDialog(String path, String collectionName, String nodeName, String paragraph, String workspace, String dialogPage, String width, String height, String locale) /*-{
-        $wnd.mgnlOpenDialog(path, collectionName, nodeName, paragraph, workspace, dialogPage, width, height, locale);
-
-    }-*/;
-
-    private native void mgnlMoveNodeStart(String id) /*-{
-        $wnd.mgnlMoveNodeStart('',id,'__'+id);
-    }-*/;
-
-    private native void mgnlMoveNodeHigh(Object source) /*-{
-        $wnd.mgnlMoveNodeHigh(source);
-    }-*/;
-
-    private native void mgnlMoveNodeEnd(Object source, String path) /*-{
-        $wnd.mgnlMoveNodeEnd(source, path);
-    }-*/;
-
-    private native void mgnlMoveNodeReset(Object source) /*-{
-        $wnd.mgnlMoveNodeReset(source);
-    }-*/;
-
-    private native void mgnlDeleteNode(String path) /*-{
-        $wnd.mgnlDeleteNode(path,'', '');
-    }-*/;
-
-
-    /**
      * TODO: rename and/or remove arguments no longer needed (collectionName, nodeName).
      */
     public  void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName){
@@ -236,28 +197,28 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         }
         int i = dialog.indexOf(":");
         String dialogName = dialog.substring(i+1);
-        mgnlOpenDialog(path, collectionName, nodeName, dialogName, workspace, "", "", "", "");
+        //TODO how do we pass the locale (last arg)         here?
+        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialogName, workspace, "", "", "", "");
     };
 
     public void moveComponentStart(String id) {
-        mgnlMoveNodeStart(id);
+        GeneralJavascript.mgnlMoveNodeStart(id);
     }
 
     public void moveComponentEnd(EditBarWidget source, String path) {
-        GWT.log("path passed to mgnlMoveNodeEnd native function is " + path);
-        mgnlMoveNodeEnd(source.getElement(), path);
+        GeneralJavascript.mgnlMoveNodeEnd(source.getElement(), path);
     }
 
     public void moveComponentOver(EditBarWidget source) {
-        mgnlMoveNodeHigh(source.getElement());
+        GeneralJavascript.mgnlMoveNodeHigh(source.getElement());
     }
 
     public void moveComponentOut(EditBarWidget source) {
-        mgnlMoveNodeReset(source.getElement());
+        GeneralJavascript.mgnlMoveNodeReset(source.getElement());
     }
 
     public void deleteComponent(String path) {
-        mgnlDeleteNode(path);
+        GeneralJavascript.mgnlDeleteNode(path);
     }
 
     public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {
