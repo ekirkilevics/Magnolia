@@ -196,7 +196,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     /**
-     * Delegating to native javascript function found in general.js.
+     * Delegating to native javascript functions found in general.js.
      */
     private native void mgnlOpenDialog(String path, String collectionName, String nodeName, String paragraph, String workspace, String dialogPage, String width, String height, String locale) /*-{
         $wnd.mgnlOpenDialog(path, collectionName, nodeName, paragraph, workspace, dialogPage, width, height, locale);
