@@ -194,11 +194,17 @@ public class WorkspaceAccessUtil {
      * @param jcrSession
      * @param accessManager
      * @param queryManager
-     * */
+     *
+     * @deprecated since 4.5 - use {@link WorkspaceAccessUtil#createHierarchyManager(String, Session)} - or better directly the JCR-API.
+     */
     public HierarchyManager createHierarchyManager(String userId,
             Session jcrSession,
             AccessManager accessManager) throws RepositoryException {
-        return new DefaultHierarchyManager(userId ,jcrSession, accessManager);
+        return createHierarchyManager(userId ,jcrSession);
+    }
+
+    public HierarchyManager createHierarchyManager(String userId, Session jcrSession) throws RepositoryException {
+        return new DefaultHierarchyManager(userId ,jcrSession);
     }
 
     public Session createAdminRepositorySession(String workspace) throws RepositoryException {

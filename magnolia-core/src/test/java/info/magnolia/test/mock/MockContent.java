@@ -348,10 +348,10 @@ public class MockContent extends AbstractContent {
 
     @Override
     public MockHierarchyManager getHierarchyManager() {
-        if (this.hierarchyManager == null && getParent() != null) {
+        if (super.getHierarchyManager() == null && getParent() != null) {
             return ((MockContent) getParent()).getHierarchyManager();
         }
-        return (MockHierarchyManager) this.hierarchyManager;
+        return (MockHierarchyManager) super.getHierarchyManager();
     }
 
     @Override

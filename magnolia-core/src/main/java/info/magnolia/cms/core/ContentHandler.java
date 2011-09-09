@@ -48,7 +48,7 @@ public abstract class ContentHandler implements Cloneable {
     /**
      * HierarchyManager instance.
      */
-    protected HierarchyManager hierarchyManager;
+    private HierarchyManager hierarchyManager;
 
     /**
      * package private constructor.

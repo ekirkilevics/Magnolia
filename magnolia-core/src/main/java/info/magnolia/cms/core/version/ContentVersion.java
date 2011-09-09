@@ -763,7 +763,7 @@ public class ContentVersion extends DefaultContent {
     @Override
     public NodeType[] getMixinNodeTypes() throws RepositoryException {
         Value[] vals = this.node.getProperty("jcr:frozenMixinTypes").getValues();
-        NodeTypeManager typeMan = this.hierarchyManager.getWorkspace().getNodeTypeManager();
+        NodeTypeManager typeMan = getHierarchyManager().getWorkspace().getNodeTypeManager();
         NodeType[] types = new NodeType[vals.length];
         int i = 0;
         for (Value val : vals) {

@@ -39,6 +39,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.Rule;
+import info.magnolia.context.AbstractContext;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.MgnlContext.Op;
 import info.magnolia.jcr.util.NodeUtil;
@@ -50,7 +51,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.jcr.Item;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -61,6 +61,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.NodeType;
@@ -78,8 +79,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Default, JCR-based, implementation of {@link Content}.
  *
- * @author Sameer Charles
- * @version $Revision:2719 $ ($Author:scharles $)
+ * @version $Id$
+ *
  * @deprecated since 4.5 use jcr.Node instead.
  */
 @Deprecated
@@ -116,14 +117,12 @@ public class DefaultContent extends AbstractContent {
      * Constructor to get existing node.
      * @param rootNode node to start with
      * @param path absolute (primary) path to this <code>Node</code>
-     * @param hierarchyManager HierarchyManager instance
      * @throws PathNotFoundException if the node at <code>path</code> does not exist
      * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
      * operation
      * @throws RepositoryException if an error occurs
      */
-    DefaultContent(Node rootNode, String path, HierarchyManager hierarchyManager) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        this.setHierarchyManager(hierarchyManager);
+    DefaultContent(Node rootNode, String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Access.tryPermission(rootNode.getSession(), Path.getAbsolutePath(rootNode.getPath(), path), Session.ACTION_READ);
         this.setPath(path);
         this.setRootNode(rootNode);
@@ -133,16 +132,15 @@ public class DefaultContent extends AbstractContent {
     /**
      * Constructor to get existing node.
      * @param elem initialized node object
-     * @param hierarchyManager HierarchyManager instance
      * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
      * operation
      * @throws RepositoryException if an error occurs
      */
-    public DefaultContent(Item elem,HierarchyManager hierarchyManager) throws RepositoryException, AccessDeniedException {
-        this.setHierarchyManager(hierarchyManager);
+    public DefaultContent(Node node) throws RepositoryException, AccessDeniedException {
         // TODO: this check seems bit pointless ... we wouldn't have got the node if we were not allowed to read it
-        Access.tryPermission(elem.getSession(), Path.getAbsolutePath(elem.getPath()), Session.ACTION_READ);
-        this.setNode((Node) elem);
+        Access.tryPermission(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_READ);
+        // TODO dlipp: huh? Cast without check - why not directly create constructor with Node, HM???
+        this.setNode(node);
         this.setPath(this.getHandle());
     }
 
@@ -152,17 +150,15 @@ public class DefaultContent extends AbstractContent {
      * @param rootNode node to start with
      * @param path absolute (primary) path to this <code>Node</code>
      * @param contentType JCR node type as configured
-     * @param hierarchyManager HierarchyManager instance
      * @throws PathNotFoundException if the node at <code>path</code> does not exist
      * @throws RepositoryException if an error occurs
      * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
      * operation
      */
-    DefaultContent(Node rootNode, String path, String contentType, HierarchyManager hierarchyManager)
+    DefaultContent(Node rootNode, String path, String contentType)
     throws PathNotFoundException,
     RepositoryException,
     AccessDeniedException {
-        this.setHierarchyManager(hierarchyManager);
         Access.tryPermission(rootNode.getSession(), Path.getAbsolutePath(rootNode.getPath(), path), Session.ACTION_SET_PROPERTY + "," + Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE);
         this.setPath(path);
         this.setRootNode(rootNode);
@@ -171,7 +167,7 @@ public class DefaultContent extends AbstractContent {
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
         // MAGNOLIA-1518
         this.addMixin(ItemType.MIX_LOCKABLE);
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, hierarchyManager.getName(), this.getItemType(), Path.getAbsolutePath(node.getPath()));
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, rootNode.getSession().getWorkspace().getName(), this.getItemType(), Path.getAbsolutePath(node.getPath()));
     }
 
     /**
@@ -202,13 +198,13 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new DefaultContent(this.node, name, this.getHierarchyManager()));
+        return (new DefaultContent(this.node, name));
     }
 
     @Override
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
     AccessDeniedException {
-        Content content = new DefaultContent(this.node, name, contentType, this.getHierarchyManager());
+        Content content = new DefaultContent(this.node, name, contentType);
         MetaData metaData = content.getMetaData();
         metaData.setCreationDate();
         return content;
@@ -312,7 +308,7 @@ public class DefaultContent extends AbstractContent {
             while (nodeIterator.hasNext()) {
                 Node subNode = (Node) nodeIterator.next();
                 try {
-                    Content content = new DefaultContent(subNode, this.getHierarchyManager());
+                    Content content = new DefaultContent(subNode);
                     if (filter.accept(content)) {
                         children.add(content);
                     }
@@ -393,7 +389,7 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new DefaultContent(this.node.getParent(), this.getHierarchyManager()));
+        return (new DefaultContent(this.node.getParent()));
     }
 
     @Override
@@ -401,7 +397,7 @@ public class DefaultContent extends AbstractContent {
         if (level > this.getLevel()) {
             throw new PathNotFoundException();
         }
-        return (new DefaultContent(this.node.getAncestor(level), this.getHierarchyManager()));
+        return (new DefaultContent((Node)this.node.getAncestor(level)));
     }
 
     @Override
@@ -575,24 +571,25 @@ public class DefaultContent extends AbstractContent {
     @Override
     public void delete() throws RepositoryException {
         final String nodePath = Path.getAbsolutePath(this.node.getPath());
-        log.debug("removing {} from {}", this.node.getPath(), getHierarchyManager().getName());
+        final String workspaceName = this.node.getSession().getWorkspace().getName();
+        log.debug("removing {} from {}", this.node.getPath(), workspaceName);
         Access.tryPermission(this.node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_REMOVE);
         final ItemType nodeType = this.getItemType();
-        if (!getHierarchyManager().getName().equals("mgnlVersion")) {
+        if (!workspaceName.equals("mgnlVersion")) {
             MgnlContext.doInSystemContext(new Op<Void, RepositoryException>() {
                 @Override
                 public Void exec() throws RepositoryException {
                     try {
                         final String uuid = node.getUUID();
-                        HierarchyManager hm = MgnlContext.getHierarchyManager("mgnlVersion");
-                        Node versionedNode = hm.getContentByUUID(uuid).getJCRNode();
+                        Session session = MgnlContext.getJCRSession("mgnlVersion");
+                        Node versionedNode = session.getNodeByIdentifier(uuid);
                         log.debug("Located versioned node {}({})", uuid, nodePath);
 
                         VersionHistory history = versionedNode.getVersionHistory();
 
                         log.debug("Removing versioned node {}({})", uuid, nodePath);
                         versionedNode.remove();
-                        hm.save();
+                        session.save();
 
                         VersionIterator iter = history.getAllVersions();
                         // skip root version. It can't be deleted manually, but will be cleaned up automatically after removing all other versions (see JCR-134)
@@ -613,7 +610,7 @@ public class DefaultContent extends AbstractContent {
             });
         }
         this.node.remove();
-        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DELETE, getHierarchyManager().getName(), nodeType, nodePath);
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DELETE, workspaceName, nodeType, nodePath);
     }
 
     @Override
@@ -727,5 +724,30 @@ public class DefaultContent extends AbstractContent {
             }
         }
         return false;
+    }
+
+    /**
+     * SCRUM-368 - first step in getting completely rid of it: do not store in DefaultContent but retrieve from repository strategy.
+     */
+    @Override
+    public HierarchyManager getHierarchyManager() {
+        try {
+            return ((AbstractContext) MgnlContext.getInstance()).getRepositoryStrategy().getHierarchyManagerFor(node.getSession());
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * SCRUM-368 - first step in getting completely rid of it: do not store in DefaultContent but retrieve from repository strategy.
+     */
+    @Override
+    public void setHierarchyManager(HierarchyManager hierarchyManager) {
+        log.debug("This call to setHierarchyManager is obsolete now.");
+    }
+
+    @Override
+    public Workspace getWorkspace() throws RepositoryException {
+        return node.getSession().getWorkspace();
     }
 }

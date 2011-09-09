@@ -139,7 +139,7 @@ public class QueryResultImpl implements QueryResult {
                 // TODO: yet another of those silly checks ... if we were not allowed, we would not have the node here
                 boolean isAllowed = Access.isGranted(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_READ);
                 if (isAllowed) {
-                    collection.add(new DefaultContent(node, this.hm));
+                    collection.add(new DefaultContent(node));
                     this.dirtyHandles.put(node.getPath(), StringUtils.EMPTY);
                 }
             }

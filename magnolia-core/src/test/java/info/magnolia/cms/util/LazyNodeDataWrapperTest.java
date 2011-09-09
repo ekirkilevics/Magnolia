@@ -33,12 +33,7 @@
  */
 package info.magnolia.cms.util;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 
@@ -56,28 +51,35 @@ import junit.framework.TestCase;
  */
 public class LazyNodeDataWrapperTest extends TestCase {
 
-    public void testDoesNotCallHierarchyManagerUntilNeeded() {
-        final HierarchyManager hm = createStrictMock(HierarchyManager.class);
+    public void testDoesNotCallHierarchyManagerUntilNeeded() throws Exception {
+        final HierarchyManager hm = createMock(HierarchyManager.class);
         final NodeData nd = createMock(NodeData.class);
+        final Property prop = createMock(Property.class);
+        final Session session = createMock(Session.class);
         final Workspace wks = createMock(Workspace.class);
         // just initialization
-        expect(nd.getHierarchyManager()).andReturn(hm);
-        expect(hm.getWorkspace()).andReturn(wks);
+        expect(nd.getJCRProperty()).andReturn(prop);
+        expect(prop.getSession()).andReturn(session);
+        expect(session.getWorkspace()).andReturn(wks);
         expect(wks.getName()).andReturn("blah");
         expect(nd.getHandle()).andReturn("/baz/bar");
-        replay(hm, nd, wks);
+        replay(nd, prop, session, wks);
         final LazyNodeDataWrapper lazy = withHierarchyManager(hm, nd);
         // well we can't do much yet
-        verify(hm, nd, wks);
+        verify(nd, prop, session, wks);
     }
 
     public void testCallHierarchyManagerOnlyFirstTime() throws RepositoryException {
         final HierarchyManager hm = createMock(HierarchyManager.class);
         final NodeData nd = createMock(NodeData.class);
         final Workspace wks = createMock(Workspace.class);
+        // irrelevant mocks -- but let's pretend our nodedata's session is always live
+        final Property p = createNiceMock(Property.class);
+        final Session s = createNiceMock(Session.class);
         // just initialization
-        expect(nd.getHierarchyManager()).andReturn(hm);
-        expect(hm.getWorkspace()).andReturn(wks);
+        expect(nd.getJCRProperty()).andReturn(p);
+        expect(p.getSession()).andReturn(s);
+        expect(s.getWorkspace()).andReturn(wks);
         expect(wks.getName()).andReturn("blah");
         expect(nd.getHandle()).andReturn("/baz/bar");
 
@@ -85,9 +87,6 @@ public class LazyNodeDataWrapperTest extends TestCase {
         // but get the actual value twice
         expect(nd.getString()).andReturn("hello").times(2);
 
-        // irrelevant mocks -- but let's pretend our nodedata's session is always live
-        final Property p = createNiceMock(Property.class);
-        final Session s = createNiceMock(Session.class);
         expect(nd.isExist()).andReturn(true).anyTimes();
         expect(s.isLive()).andReturn(true).anyTimes();
         expect(p.getSession()).andReturn(s).anyTimes();
@@ -104,19 +103,20 @@ public class LazyNodeDataWrapperTest extends TestCase {
     public void testWorkOnDeadSession() throws RepositoryException {
         final HierarchyManager systemHM = createMock(HierarchyManager.class);
         final NodeData nd = createMock(NodeData.class);
+        final Property p = createNiceMock(Property.class);
+        final Session propSession = createNiceMock(Session.class);
+        final Session systemSession = createNiceMock(Session.class);
         final Workspace wks = createMock(Workspace.class);
         // just initialization
-        expect(nd.getHierarchyManager()).andReturn(systemHM);
-        expect(systemHM.getWorkspace()).andReturn(wks);
+        expect(nd.getJCRProperty()).andReturn(p);
+        expect(p.getSession()).andReturn(propSession);
+        expect(propSession.getWorkspace()).andReturn(wks);
         expect(wks.getName()).andReturn("blah");
         expect(nd.getHandle()).andReturn("/bar/baz");
 
         // but get the actual value twice
         expect(nd.getString()).andReturn("hello").times(3);
 
-        final Property p = createNiceMock(Property.class);
-        final Session propSession = createNiceMock(Session.class);
-        final Session systemSession = createNiceMock(Session.class);
         expect(nd.isExist()).andReturn(true).anyTimes();
 
         // get the property from system because internal node data is null

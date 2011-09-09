@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Stores a path and will re-fetch the node data in {@link #getWrappedNodeData()} if the session is closed.
- * 
+ *
  * @author ochytil
  * @version $Id$
  */
@@ -61,7 +61,11 @@ public class LazyNodeDataWrapper extends NodeDataWrapper implements Serializable
     private transient NodeData nodeData;
 
     public LazyNodeDataWrapper(NodeData nodeData) {
-        this.setRepository(nodeData.getHierarchyManager().getWorkspace().getName());
+        try {
+            this.setRepository(nodeData.getJCRProperty().getSession().getWorkspace().getName());
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
         this.setPath(nodeData.getHandle());
         this.nodeData = nodeData;
     }

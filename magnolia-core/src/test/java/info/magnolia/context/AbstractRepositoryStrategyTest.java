@@ -33,29 +33,48 @@
  */
 package info.magnolia.context;
 
-import javax.jcr.LoginException;
-import javax.jcr.RepositoryException;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.version.MgnlVersioningSession;
+import info.magnolia.cms.util.JCRPropertyFilteringSessionWrapper;
+import info.magnolia.test.RepositoryTestCase;
+
 import javax.jcr.Session;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.AccessManager;
+import org.junit.Test;
 
 /**
- * Contract for repository access providers. Each provider needs to be able to provide heirarchy manager, query manager for repositories that are searchable and access manager for repositories with enabled security. If given functionality is not available on the reporisotry, provider needs to return null.
- *
  * @version $Id$
  */
-public interface RepositoryAcquiringStrategy {
-    HierarchyManager getHierarchyManager(String repositoryId, String workspaceId);
+public class AbstractRepositoryStrategyTest extends RepositoryTestCase {
+    @Test
+    public void testUnwrap() {
+        // GIVEN
+        final UserContext context = mock(UserContext.class);
+        final Session jcrSession = mock(Session.class);
+        final Session wrapperOne = new JCRPropertyFilteringSessionWrapper(jcrSession);
+        final Session wrapperTwo = new MgnlVersioningSession(wrapperOne);
 
-    HierarchyManager getHierarchyManagerFor(Session jcrSession);
-    /**
-     * @deprecated since 4.5
-     */
-    @Deprecated
-    AccessManager getAccessManager(String repositoryId, String workspaceId);
-    QueryManager getQueryManager(String repositoryId, String workspaceId);
-    void release();
-    Session getSession(String repositoryId, String workspaceId) throws LoginException, RepositoryException;
+        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
+
+        // WHEN
+        Session result = strategy.unwrap(wrapperOne);
+
+        // THEN
+        assertEquals(jcrSession, result);
+    }
+
+    @Test
+    public void testCreatedHMCanAlsoBeRetrievedViaJCRSession() {
+        // GIVEN
+        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager("config");
+        Session session = hm.getWorkspace().getSession();
+
+        // WHEN
+        HierarchyManager hm2 =  ((AbstractContext) MgnlContext.getInstance()).getRepositoryStrategy().getHierarchyManagerFor(session);
+
+        // THEN
+        assertEquals(hm, hm2);
+    }
 }

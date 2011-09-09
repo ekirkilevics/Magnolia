@@ -101,4 +101,9 @@ public class MockRepositoryAcquiringStrategy implements RepositoryAcquiringStrat
     public void addSession(String repositoryId, Session session) {
         sessions.put(repositoryId, session);
     }
+
+    @Override
+    public HierarchyManager getHierarchyManagerFor(Session jcrSession) {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
 }
