@@ -62,7 +62,7 @@ public class LazyNodeDataWrapper extends NodeDataWrapper implements Serializable
 
     public LazyNodeDataWrapper(NodeData nodeData) {
         try {
-            this.setRepository(nodeData.getJCRProperty().getSession().getWorkspace().getName());
+            this.setRepository(nodeData.getParent().getWorkspace().getName());
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
         }
