@@ -34,8 +34,7 @@
 package info.magnolia.templating.elements;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
@@ -106,12 +105,8 @@ public class AbstractTemplateElementTest extends AbstractElementTestCase {
         when(aggregationState.getMainContent()).thenReturn(getHM().getNode("/foo/bar"));
 
         final AbstractTemplatingElement compo = new DummyComponent(null, aggregationState);
-        try {
-            compo.currentContent();
-            fail("Expceted IllegalStateException here");
-        } catch (IllegalStateException e) {
-            assertTrue(true);
-        }
+
+		assertNull(compo.currentContent());
 
         final Node expectedNode = getHM().getNode("/foo/bar/paragraphs/1");
 
