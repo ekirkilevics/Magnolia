@@ -56,9 +56,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author philipp
  * @version $Id$
- *
  */
 public class MockHierarchyManager extends DefaultHierarchyManager {
     private static final Logger log = LoggerFactory.getLogger(MockHierarchyManager.class);
@@ -237,6 +235,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
      */
     public void setName(String name) {
         this.name = name;
+        ((MockWorkspace) getWorkspace()).setName(name);
     }
 
     @Override

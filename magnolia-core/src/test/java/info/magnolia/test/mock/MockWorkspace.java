@@ -73,7 +73,7 @@ public class MockWorkspace implements Workspace {
 
     private static Logger log = LoggerFactory.getLogger(MockWorkspace.class);
 
-    private final String name;
+    private String name;
 
     private final Session session;
 
@@ -124,6 +124,10 @@ public class MockWorkspace implements Workspace {
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
