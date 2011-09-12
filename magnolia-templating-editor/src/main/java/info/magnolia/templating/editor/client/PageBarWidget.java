@@ -52,7 +52,7 @@ public class PageBarWidget extends AbstractBarWidget {
     private String dialog;
 
     public PageBarWidget(final PageEditor pageEditor, Element element) {
-        super(null, "rgb(116, 173, 59)");
+        super(null, null);
         this.pageEditor = pageEditor;
 
         String content = element.getAttribute("content");
@@ -71,7 +71,8 @@ public class PageBarWidget extends AbstractBarWidget {
                 pageEditor.openDialog(dialog, workspace, path, null, null);
             }
         });
-        addButton(button);
+        setClassName("mgnlMainbar mgnlControlBar");
+        addButton(button, null, ButtonPosition.RIGHT);
     }
 
     @Override
@@ -83,7 +84,6 @@ public class PageBarWidget extends AbstractBarWidget {
     @Override
     protected void setStyle(String color) {
         super.setStyle(color);
-        getElement().setAttribute("style", "z-index: 900; margin: 0; position: absolute; width: 100%; left: 0pt; top: 0pt;" + getElement().getAttribute("style"));
     }
 
     @Override

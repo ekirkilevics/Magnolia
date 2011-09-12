@@ -75,6 +75,8 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         setLabelText("Area");
 
+        setClassName("mgnlAreaControlBar");
+
         if (type.equals(PageEditor.AREA_TYPE_LIST)) {
             Button button = new Button("Edit&nbsp;area");
             button.addClickHandler(new ClickHandler() {
@@ -83,7 +85,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                     pageEditor.openDialog(dialog, workspace, path, null, name);
                 }
             });
-            addButton(button);
+            addButton(button, null, ButtonPosition.RIGHT);
         }
 
         if (showAddButton) {
@@ -98,7 +100,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                     }
                 }
             });
-            addButton(addButton);
+            addButton(addButton, null, ButtonPosition.RIGHT);
         }
     }
 
@@ -144,7 +146,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 }
             }
         });
-        addButton(button);
+        addButton(button, null, ButtonPosition.RIGHT);
 
         super.setColor("rgb(116, 173, 59)");
         super.setStyle(super.getColor());

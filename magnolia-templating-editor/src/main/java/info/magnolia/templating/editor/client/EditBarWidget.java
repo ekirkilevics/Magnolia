@@ -79,9 +79,11 @@ public class EditBarWidget extends AbstractBarWidget {
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
 
-        createButtons(pageEditor);
+        createButtons(pageEditor, "mgnlControlButtonSmall");
 
         createMouseEventsHandlers(pageEditor);
+
+        setClassName("mgnlControlBarSmall");
 
     }
 
@@ -114,7 +116,7 @@ public class EditBarWidget extends AbstractBarWidget {
         }, MouseOutEvent.getType());
     }
 
-    private void createButtons(final PageEditor pageEditor) {
+    private void createButtons(final PageEditor pageEditor, String buttonStyle) {
         Button edit = new Button("Edit");
         edit.addClickHandler(new ClickHandler() {
             @Override
@@ -122,7 +124,7 @@ public class EditBarWidget extends AbstractBarWidget {
                 pageEditor.openDialog(dialog, workspace, path, null, null);
             }
         });
-        addButton(edit);
+        addButton(edit, buttonStyle, ButtonPosition.LEFT);
 
         Button move = new Button("Move");
         move.addClickHandler(new ClickHandler() {
@@ -131,7 +133,7 @@ public class EditBarWidget extends AbstractBarWidget {
                 pageEditor.moveComponentStart(id);
             }
         });
-        addButton(move);
+        addButton(move, buttonStyle, ButtonPosition.LEFT);
 
         Button delete = new Button("Delete");
         delete.addClickHandler(new ClickHandler() {
@@ -140,7 +142,7 @@ public class EditBarWidget extends AbstractBarWidget {
                 pageEditor.deleteComponent(path);
             }
         });
-        addButton(delete);
+        addButton(delete, buttonStyle, ButtonPosition.RIGHT);
     }
 
     @Override

@@ -37,42 +37,37 @@ package info.magnolia.templating.editor.client;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * Base class for horizontal bars with buttons.
  */
-public abstract class AbstractBarWidget extends SimplePanel {
-
+public abstract class AbstractBarWidget extends FlowPanel {
+    /**
+     * ButtonPosition.
+     *
+     */
+    public enum ButtonPosition { LEFT, RIGHT };
     private AbstractBarWidget parentBar;
-    private HorizontalPanel horizontalPanel;
     private Label label;
+    private String style;
     private String color;
 
-    public AbstractBarWidget(AbstractBarWidget parentBar, String color) {
+    public AbstractBarWidget(AbstractBarWidget parentBar, String style) {
         this.parentBar = parentBar;
-        this.color = color;
+        this.style = style;
         this.label = new Label("");
 
-        horizontalPanel = new HorizontalPanel();
-        horizontalPanel.setWidth("100%");
-        horizontalPanel.add(label);
-        horizontalPanel.setCellWidth(label, "100%");
-
-        horizontalPanel.addDomHandler(new ClickHandler() {
+        addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 onSelect();
             }
         }, ClickEvent.getType());
 
-        add(horizontalPanel);
-        setStyle(color);
+        setStyle(style);
     }
     protected void onSelect() {
         setStyle("rgb(255, 255, 255)");
@@ -90,16 +85,8 @@ public abstract class AbstractBarWidget extends SimplePanel {
         this.color = color;
     }
 
-    protected void setStyle(String color) {
-        getElement().setAttribute("style",
-                "background-color:" +
-                        color +
-                        ";" +
-                        "background-position:repeat;" +
-                        "border-top: 1px solid #ADC97B !important;" +
-                        "border-left: 1px solid #ADC97B !important;" +
-                        "border-bottom: 1px solid #396101 !important;" +
-                        "border-right: 1px solid #396101 !important;");
+    protected void setStyle(String style) {
+        getElement().setAttribute("style", style);
     }
 
     protected void setId(String id){
@@ -114,9 +101,17 @@ public abstract class AbstractBarWidget extends SimplePanel {
         this.label.setText(labelText);
     }
 
-    protected void addButton(Button button) {
-        horizontalPanel.add(button);
-        horizontalPanel.setCellHorizontalAlignment(button, HasHorizontalAlignment.HorizontalAlignmentConstant.endOf(HasDirection.Direction.DEFAULT));
+    protected void addButton(Button button, String style, ButtonPosition position) {
+        /*if(style != null && !"".equals(style)) {
+            button.setStyleName(style, true);
+        }
+        button.setStyleName(position == ButtonPosition.LEFT ? "mgnlBtnsLeft" : "mgnlBtnsRight", true);
+        */
+        add(button);
+    }
+
+    protected void setClassName(String className) {
+        getElement().setClassName(className);
     }
 
     public void attach(Element element) {
