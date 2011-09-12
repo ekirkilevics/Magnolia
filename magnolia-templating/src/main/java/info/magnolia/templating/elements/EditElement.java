@@ -92,7 +92,7 @@ public class EditElement extends AbstractContentTemplatingElement {
         return (TemplateDefinition) getRenderingContext().getRenderableDefinition();
     }
 
-    private String resolveDialog(TemplateDefinition component) throws RenderException {
+    private String resolveDialog(TemplateDefinition component) {
         if (StringUtils.isNotEmpty(this.dialog)) {
             return this.dialog;
         }
