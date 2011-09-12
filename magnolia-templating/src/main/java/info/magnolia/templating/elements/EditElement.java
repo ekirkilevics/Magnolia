@@ -77,14 +77,14 @@ public class EditElement extends AbstractContentTemplatingElement {
         if (content != null) {
             helper.startContent(content);
             helper.openTag(CMS_EDIT).attribute("content", getNodePath(content));
-			helper.attribute("format", format);
-			helper.attribute("label", templateDefinition.getTitle());
-			String dialog = resolveDialog(templateDefinition);
-			helper.attribute("dialog", dialog);
+            helper.attribute("format", format);
+            helper.attribute("label", templateDefinition.getTitle());
+            String dialog = resolveDialog(templateDefinition);
+            helper.attribute("dialog", dialog);
 
-			helper.attribute("template", templateDefinition.getId());
+            helper.attribute("template", templateDefinition.getId());
 
-			helper.closeTag(CMS_EDIT);
+            helper.closeTag(CMS_EDIT);
         }
     }
 
