@@ -106,7 +106,7 @@ public class AbstractTemplateElementTest extends AbstractElementTestCase {
 
         final AbstractTemplatingElement compo = new DummyComponent(null, aggregationState);
 
-		assertNull(compo.currentContent());
+        assertNull(compo.currentContent());
 
         final Node expectedNode = getHM().getNode("/foo/bar/paragraphs/1");
 
