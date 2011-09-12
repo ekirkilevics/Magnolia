@@ -34,6 +34,7 @@
 package info.magnolia.rendering.context;
 
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.rendering.engine.OutputProvider;
 import info.magnolia.rendering.engine.RenderException;
@@ -87,7 +88,8 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
 
     @Override
     public Node getCurrentContent() {
-        return aggregationState.getCurrentContent().getJCRNode();
+        Content currentContent = aggregationState.getCurrentContent();
+        return currentContent != null ? currentContent.getJCRNode() : null;
     }
 
     @Override

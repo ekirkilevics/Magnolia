@@ -74,16 +74,18 @@ public class EditElement extends AbstractContentTemplatingElement {
         TemplateDefinition templateDefinition = getRequiredTemplateDefinition();
 
         MarkupHelper helper = new MarkupHelper(out);
-        helper.startContent(content);
-        helper.openTag(CMS_EDIT).attribute("content", getNodePath(content));
-        helper.attribute("format", format);
-        helper.attribute("label", templateDefinition.getTitle());
-        String dialog = resolveDialog(templateDefinition);
-        helper.attribute("dialog", dialog);
+        if (content != null) {
+            helper.startContent(content);
+            helper.openTag(CMS_EDIT).attribute("content", getNodePath(content));
+			helper.attribute("format", format);
+			helper.attribute("label", templateDefinition.getTitle());
+			String dialog = resolveDialog(templateDefinition);
+			helper.attribute("dialog", dialog);
 
-        helper.attribute("template", templateDefinition.getId());
+			helper.attribute("template", templateDefinition.getId());
 
-        helper.closeTag(CMS_EDIT);
+			helper.closeTag(CMS_EDIT);
+        }
     }
 
     private TemplateDefinition getRequiredTemplateDefinition() {
@@ -107,8 +109,10 @@ public class EditElement extends AbstractContentTemplatingElement {
             return;
         }
         Node content = getTargetContent();
-        MarkupHelper helper = new MarkupHelper(out);
-        helper.endContent(content);
+        if (content != null) {
+            MarkupHelper helper = new MarkupHelper(out);
+            helper.endContent(content);
+        }
     }
 
     public String getDialog() {

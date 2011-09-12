@@ -71,32 +71,32 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         Node content = renderingCtx.getCurrentContent();
         RenderableDefinition definition = renderingCtx.getRenderableDefinition();
 
-        RenderingModel<?> model;
-        String actionResult;
+        RenderingModel<?> model = null;
+        String actionResult = null;
 
-        String uuid;
-        try {
-            uuid = content.getUUID();
-        }
-        catch (RepositoryException e) {
-            throw new RenderException(e);
-        }
+        if (content != null) {
+            String uuid;
+            try {
+                uuid = content.getUUID();
+            }
+            catch (RepositoryException e) {
+                throw new RenderException(e);
+            }
 
-        model = MgnlContext.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + uuid);
+            model = MgnlContext.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + uuid);
+            if (model != null) {
+                actionResult = (String) MgnlContext.getAttribute(ModelExecutionFilter.ACTION_RESULT_ATTRIBUTE_PREFIX + uuid);
+                if (model instanceof EarlyExecutionAware) {
+                    ((EarlyExecutionAware)model).setParent(parentModel);
+                }
+            }
+        }
 
         if (model == null) {
-
             model = newModel(content, definition, parentModel);
-
             actionResult = model.execute();
-
             if (RenderingModel.SKIP_RENDERING.equals(actionResult)) {
                 return;
-            }
-        } else {
-            actionResult = (String) MgnlContext.getAttribute(ModelExecutionFilter.ACTION_RESULT_ATTRIBUTE_PREFIX + uuid);
-            if (model instanceof EarlyExecutionAware) {
-                ((EarlyExecutionAware)model).setParent(parentModel);
             }
         }
 
@@ -168,7 +168,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         final Node mainContent = getMainContentSafely(content);
 
         setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(mainContent, mainContent));
-        setContextAttribute(ctx, "content", new ContentMap(wrapNodeForTemplate(content, mainContent)));
+        setContextAttribute(ctx, "content", content != null ? new ContentMap(wrapNodeForTemplate(content, mainContent)) : null);
         setContextAttribute(ctx, "def", definition);
         setContextAttribute(ctx, "state", getAggregationStateSafely());
         setContextAttribute(ctx, "model", model);

@@ -138,11 +138,13 @@ public class AreaElement extends AbstractContentTemplatingElement {
     @Override
     public void end(Appendable out) throws RenderException {
         try {
-            if (isEnabled() && areaNode != null) {
+            if (isEnabled()) {
                 Map<String, Object> contextObjects = new HashMap<String, Object>();
                 List<ContentMap> components = new ArrayList<ContentMap>();
-                for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_CONTENTNODE)) {
-                    components.add(new ContentMap(node));
+                if (areaNode != null) {
+                    for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_CONTENTNODE)) {
+                        components.add(new ContentMap(node));
+                    }
                 }
                 contextObjects.put(ATTRIBUTE_COMPONENTS, components);
                 renderingEngine.render(areaNode, areaDefinition, contextObjects, new AppendableOnlyOutputProvider(out));

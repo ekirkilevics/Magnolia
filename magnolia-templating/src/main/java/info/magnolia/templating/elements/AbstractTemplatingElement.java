@@ -78,12 +78,7 @@ public abstract class AbstractTemplatingElement implements TemplatingElement {
      * different target node.
      */
     protected Node currentContent() {
-        final Node currentContent = renderingContext.getCurrentContent();
-        if (currentContent == null) {
-            throw new IllegalStateException(
-                    "Could not determine currentContent from RenderingContext, currentContent is null");
-        }
-        return currentContent;
+        return renderingContext.getCurrentContent();
     }
 
     protected String getDefinitionMessage(RenderableDefinition definition, String key) throws RepositoryException {
