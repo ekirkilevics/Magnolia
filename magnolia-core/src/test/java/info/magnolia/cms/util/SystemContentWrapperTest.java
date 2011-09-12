@@ -125,8 +125,8 @@ public class SystemContentWrapperTest extends RepositoryTestCase {
         // close the session SCW has to be able to recover
         hm.getWorkspace().getSession().logout();
 
-        assertFalse(plainContent.getHierarchyManager().getWorkspace().getSession().isLive());
-        assertTrue(systemContent.getHierarchyManager().getWorkspace().getSession().isLive());
+        assertFalse(plainContent.getWorkspace().getSession().isLive());
+        assertTrue(systemContent.getWorkspace().getSession().isLive());
 
         assertEquals(systemContent.getHierarchyManager(), LifeTimeJCRSessionUtil.getHierarchyManager("config"));
         assertEquals(systemContent.getHierarchyManager(), nd.getHierarchyManager());

@@ -40,6 +40,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 
 import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -77,7 +78,11 @@ public class Link {
      */
     public Link(Content content) {
         setNode(content);
-        setRepository(content.getHierarchyManager().getName());
+        try {
+            setRepository(content.getWorkspace().getName());
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
         // should we have Content.hasUUID()? ... DefaultContent hides the fact that some nodes might not have UUIDs (we can link to other content then just the one in website
         if (content.isNodeType(ItemType.MIX_REFERENCEABLE)) {
             setUUID(content.getUUID());

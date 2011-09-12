@@ -113,7 +113,7 @@ public class MockJCRProperty implements Property {
 
     @Override
     public Session getSession() throws RepositoryException {
-        return this.mockNodeData.getParent().getHierarchyManager().getWorkspace().getSession();
+        return this.mockNodeData.getParent().getWorkspace().getSession();
     }
 
     @Override

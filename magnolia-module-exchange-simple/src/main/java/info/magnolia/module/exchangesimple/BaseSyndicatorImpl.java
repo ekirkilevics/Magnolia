@@ -313,6 +313,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
             }
             if (Boolean.parseBoolean(activationContent.getproperty(ItemType.DELETED_NODE_MIXIN))) {
                 final HierarchyManager hm = content.getHierarchyManager();
+                final Session session = content.getJCRNode().getSession();
                 String uuid = content.getUUID();
                 if (StringUtils.isNotBlank(uuid)) {
                     if (content instanceof ContentVersion) {
@@ -323,7 +324,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
                     content.delete();
                     parentContent.save();
                 } else {
-                    log.warn("Content {}:{} was already removed.", new String[] {hm.getName(), path});
+                    log.warn("Content {}:{} was already removed.", new String[] {content.getWorkspace().getName(), path});
                 }
             } else {
                 this.updateActivationDetails(path);

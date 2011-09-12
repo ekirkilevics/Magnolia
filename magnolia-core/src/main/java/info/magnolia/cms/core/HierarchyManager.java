@@ -44,8 +44,9 @@ import javax.jcr.Workspace;
  * Main class to access content. Is retrieved by {@link MgnlContext#getHierarchyManager(String)}.
  * The {@link DefaultHierarchyManager} wraps a JCR session.
  *
- * @author gjoseph
- * @version $Revision$ ($Author$)
+ * @version $Id$
+ *
+ * @deprecated since 4.5 - use JCR-Session instead.
  */
 public interface HierarchyManager {
 
@@ -92,5 +93,8 @@ public interface HierarchyManager {
 
     void refresh(boolean keepChanges) throws RepositoryException;
 
+    /**
+     * @deprecated since 4.5 - use {@link Session#getWorkspace()#getName()} instead.
+     */
     String getName();
 }

@@ -33,10 +33,8 @@
  */
 package info.magnolia.cms.beans.config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
@@ -50,6 +48,7 @@ import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockRepositoryAcquiringStrategy;
 
 import javax.jcr.PropertyType;
+import javax.jcr.Workspace;
 
 import org.junit.After;
 import org.junit.Before;
@@ -76,6 +75,7 @@ public class URI2RepositoryMappingTest {
 
     @Test
     public void testGetUri() throws Exception {
+        // GIVEN
         ComponentsTestUtil.setInstance(ServerConfiguration.class, new ServerConfiguration());
         ServerConfiguration.getInstance().setDefaultExtension("bla");
         URI2RepositoryMapping mapping = new URI2RepositoryMapping();
@@ -84,6 +84,7 @@ public class URI2RepositoryMappingTest {
         // instance is set only in constructor ...
         final Context context = mock(Context.class);
         final HierarchyManager hm = mock(HierarchyManager.class);
+        final Workspace ws = mock(Workspace.class);
         final Content cnt = mock(Content.class);
         final NodeData docu = mock(NodeData.class);
         when(context.getHierarchyManager("dummy-repo")).thenReturn(hm);
@@ -91,14 +92,18 @@ public class URI2RepositoryMappingTest {
         when(hm.isNodeData("/Test/image")).thenReturn(Boolean.TRUE);
         when(hm.getContent("/Test")).thenReturn(cnt);
         when(cnt.getNodeData("image")).thenReturn(docu);
-        when(cnt.getHierarchyManager()).thenReturn(hm);
+        when(cnt.getWorkspace()).thenReturn(ws);
         when(cnt.isNodeType("mix:referenceable")).thenReturn(true);
 
         when(docu.getType()).thenReturn(PropertyType.BINARY);
         when(docu.getAttribute("extension")).thenReturn("jpg");
         when(docu.getAttribute("fileName")).thenReturn("blah");
         MgnlContext.setInstance(context);
+
+        // WHEN
         String uri = mapping.getURI("/Test/image");
+
+        // THEN
         assertEquals("Detected double slash in generated link path.",-1, uri.indexOf("//"));
         assertTrue("Incorrect file name generated.",uri.endsWith("/blah.jpg"));
     }

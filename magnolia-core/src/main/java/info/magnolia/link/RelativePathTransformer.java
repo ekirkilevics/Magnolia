@@ -33,12 +33,14 @@
  */
 package info.magnolia.link;
 
+import javax.jcr.RepositoryException;
+
 import info.magnolia.cms.core.Content;
 
 /**
  * Transformer creating links relative to provided path.
- * @author had
- * @version $Id:$
+ *
+ * @version $Id$
  */
 public class RelativePathTransformer extends AbsolutePathTransformer {
 
@@ -47,8 +49,12 @@ public class RelativePathTransformer extends AbsolutePathTransformer {
     public RelativePathTransformer(Content sourcePage, boolean useURI2RepositoryMapping, boolean useI18N) {
         super(false, useURI2RepositoryMapping, useI18N);
         Link link = new Link(sourcePage);
-        // TODO, this should be passed to a constructor
-        link.setRepository(sourcePage.getHierarchyManager().getName());
+        try {
+            // TODO, this should be passed to a constructor
+            link.setRepository(sourcePage.getWorkspace().getName());
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
         link.setExtension("html");
         absolutSourcePath = super.transform(link);
     }
@@ -57,7 +63,6 @@ public class RelativePathTransformer extends AbsolutePathTransformer {
         super(false, useURI2RepositoryMapping, useI18N);
         this.absolutSourcePath = absoluteSourcePath;
     }
-
 
     @Override
     public String transform(Link target) {

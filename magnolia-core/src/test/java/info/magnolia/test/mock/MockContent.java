@@ -626,7 +626,8 @@ public class MockContent extends AbstractContent {
 
     @Override
     public Workspace getWorkspace() throws RepositoryException {
-        return getHierarchyManager().getWorkspace();
+        HierarchyManager hm = getHierarchyManager();
+        return hm == null ? null : hm.getWorkspace();
     }
 
 }

@@ -75,7 +75,7 @@ public class LinkFactory {
      */
     public static Link createLink(NodeData nodeData) throws LinkException {
         try {
-            return new Link(nodeData.getHierarchyManager().getName(), nodeData.getParent(), nodeData);
+            return new Link(nodeData.getParent().getWorkspace().getName(), nodeData.getParent(), nodeData);
         } catch (RepositoryException e) {
             throw new LinkException("can't find node " + nodeData , e);
         }

@@ -69,8 +69,7 @@ import org.easymock.IAnswer;
 import org.junit.Test;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class DefaultContentTest extends RepositoryTestCase {
 
@@ -81,7 +80,7 @@ public class DefaultContentTest extends RepositoryTestCase {
     @Test
     public void testAddMixin() throws IOException, RepositoryException{
         final Content content = getTestContent();
-        final String repoName = content.getHierarchyManager().getName();
+        final String repoName = content.getWorkspace().getName();
         final String mixDeleted = "mgnl:deleted";
         final Provider repoProvider = ContentRepository.getRepositoryProvider(repoName);
         final String mgnlMixDeleted = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<nodeTypes" + " xmlns:rep=\"internal\""

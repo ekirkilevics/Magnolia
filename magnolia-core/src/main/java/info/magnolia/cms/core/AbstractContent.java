@@ -379,7 +379,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         MetaData md = this.getMetaData();
         md.setModificationDate();
         md.setAuthorId(MgnlContext.getUser().getName());
-        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, getHierarchyManager().getName(), this.getItemType(), getHandle());
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, getWorkspace().getName(), this.getItemType(), getHandle());
     }
 
     @Override
@@ -400,16 +400,19 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(getHierarchyManager() == null ? "null" : getHierarchyManager().getName());
-        builder.append(':').append(getHandle());
         String type = "";
+        String workspaceName = "";
+
         try {
+            workspaceName = getWorkspace() == null ? "null" : getWorkspace().getName();
             type = getItemType().getSystemName();
         }
         catch (RepositoryException e) {
             // ignore
         }
+        StringBuilder builder = new StringBuilder();
+        builder.append(workspaceName);
+        builder.append(':').append(getHandle());
         builder.append('[');
         builder.append(type);
         builder.append(']');

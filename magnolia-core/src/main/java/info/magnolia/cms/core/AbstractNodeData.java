@@ -100,7 +100,7 @@ public abstract class AbstractNodeData implements NodeData{
 
     @Override
     public Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException {
-        if(this.getHierarchyManager().getName().equals(repositoryId)){
+        if(getParent().getWorkspace().getName().equals(repositoryId)){
             return getReferencedContent();
         }
         return getReferencedContent(MgnlContext.getHierarchyManager(repositoryId));
@@ -201,13 +201,20 @@ public abstract class AbstractNodeData implements NodeData{
 
     @Override
     public String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        buffer.append(getHierarchyManager().getName()).append(":");
-        buffer.append(getHandle());
-        buffer.append("[");
-        buffer.append(NodeDataUtil.getTypeName(this));
-        buffer.append("]");
+        String workspaceName = "";
+        try {
+            workspaceName = getParent().getWorkspace().getName();
+        } catch (Exception e) {
+            // ignore
+        }
 
-        return buffer.toString();
+        final StringBuilder builder = new StringBuilder();
+        builder.append(workspaceName).append(":");
+        builder.append(getHandle());
+        builder.append("[");
+        builder.append(NodeDataUtil.getTypeName(this));
+        builder.append("]");
+
+        return builder.toString();
     }
 }

@@ -196,7 +196,7 @@ public class Template extends AbstractRenderable {
     public boolean isAvailable(Content node) {
         // was: TODO is called quite often and should be faster
         try {
-            return Access.isGranted(MgnlContext.getJCRSession(getContent().getHierarchyManager().getName()), getContent().getHandle(), Session.ACTION_READ);
+            return Access.isGranted(MgnlContext.getJCRSession(getContent().getWorkspace().getName()), getContent().getHandle(), Session.ACTION_READ);
         } catch (RepositoryException e) {
             return false;
         }

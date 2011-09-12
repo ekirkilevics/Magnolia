@@ -133,11 +133,11 @@ public class BootstrapUtil {
     }
 
     public static void export(Content content, File directory) throws IOException, RepositoryException{
-        String fileName = content.getHierarchyManager().getName() + content.getHandle().replace("/", ".") + ".xml";
+        String fileName = content.getWorkspace().getName() + content.getHandle().replace("/", ".") + ".xml";
         File file = new File(directory, fileName);
         FileOutputStream out = new FileOutputStream(file);
         try{
-            DataTransporter.executeExport(out,false, true, content.getWorkspace().getSession(), content.getHandle(), content.getHierarchyManager().getName(), DataTransporter.XML);
+            DataTransporter.executeExport(out,false, true, content.getWorkspace().getSession(), content.getHandle(), content.getWorkspace().getName(), DataTransporter.XML);
         }
         finally{
             IOUtils.closeQuietly(out);
