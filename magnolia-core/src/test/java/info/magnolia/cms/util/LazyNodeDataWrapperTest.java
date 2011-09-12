@@ -53,6 +53,7 @@ public class LazyNodeDataWrapperTest {
 
     @Test
     public void testDoesNotCallHierarchyManagerUntilNeeded() throws Exception {
+        // GIVEN
         final HierarchyManager hm = mock(HierarchyManager.class);
         final NodeData nd = mock(NodeData.class);
         final Content content = mock(Content.class);
@@ -62,12 +63,16 @@ public class LazyNodeDataWrapperTest {
         when(content.getWorkspace()).thenReturn(wks);
         when(wks.getName()).thenReturn("blah");
         when(nd.getHandle()).thenReturn("/baz/bar");
+
+        // WHEN
         final LazyNodeDataWrapper lazy = withHierarchyManager(hm, nd);
-        // well we can't do much yet
+
+        // THEN - well we can't do much yet
     }
 
     @Test
     public void testCallHierarchyManagerOnlyFirstTime() throws RepositoryException {
+        // GIVEN
         final HierarchyManager hm = mock(HierarchyManager.class);
         final NodeData nd = mock(NodeData.class);
         final Workspace wks = mock(Workspace.class);
@@ -91,7 +96,10 @@ public class LazyNodeDataWrapperTest {
         when(nd.getJCRProperty()).thenReturn(p);
         when(p.getSession()).thenReturn(s);
 
+        // WHEN
         final LazyNodeDataWrapper lazy = withHierarchyManager(hm, nd);
+
+        // THEN
         assertEquals("hello", lazy.getString());
         // let's call it a second time
         assertEquals("hello", lazy.getString());
@@ -99,6 +107,7 @@ public class LazyNodeDataWrapperTest {
 
     @Test
     public void testWorkOnDeadSession() throws RepositoryException {
+        // GIVEN
         final HierarchyManager systemHM = mock(HierarchyManager.class);
         final NodeData nd = mock(NodeData.class);
         final Content content = mock(Content.class);
@@ -131,8 +140,10 @@ public class LazyNodeDataWrapperTest {
         when(systemSession.isLive()).thenReturn(true);
         when(nd.getJCRProperty()).thenReturn(p);
 
-
+        // WHEN
         final LazyNodeDataWrapper lazy = withHierarchyManager(systemHM, nd);
+
+        // THEN
         // first time the nodeData was null
         assertEquals("hello", lazy.getString());
         // let's call it a second time - the node data session is dead
