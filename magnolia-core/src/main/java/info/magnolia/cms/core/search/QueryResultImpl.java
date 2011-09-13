@@ -80,7 +80,7 @@ public class QueryResultImpl implements QueryResult {
     protected Map<String, Collection<Content>> objectStore = new Hashtable<String, Collection<Content>>();
 
     /**
-     * TODO dlipp: Remove - it's not used internally
+     * TODO dlipp: Remove - it's not used internally.
      */
     protected HierarchyManager hm;
 
