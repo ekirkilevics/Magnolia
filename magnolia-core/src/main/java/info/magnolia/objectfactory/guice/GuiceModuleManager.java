@@ -49,9 +49,12 @@ import info.magnolia.objectfactory.Classes;
 
 
 /**
- * ModuleManager that creates a child Guice Injector in which it will load configuration from module definitions.
+ * ModuleManager that will start observation of a modules configuration node after the module is started. Module
+ * instance providers registers themselves with this class to receive a callback.
  *
  * @version $Id$
+ * @see ModuleInstanceProvider
+ * @see ModuleInstancesConfigurer
  */
 @Singleton
 public class GuiceModuleManager extends ModuleManagerImpl {

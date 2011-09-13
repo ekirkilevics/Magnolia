@@ -35,10 +35,6 @@
       <artifactId>guice</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.inject.extensions</groupId>
-      <artifactId>guice-servlet</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.mycila</groupId>
       <artifactId>mycila-guice</artifactId>
     </dependency>

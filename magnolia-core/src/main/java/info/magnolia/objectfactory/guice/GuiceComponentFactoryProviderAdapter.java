@@ -35,9 +35,9 @@ package info.magnolia.objectfactory.guice;
 
 import java.lang.reflect.InvocationTargetException;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import com.google.inject.Injector;
-import com.google.inject.Provider;
 import com.google.inject.ProvisionException;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentFactoryUtil;
@@ -48,31 +48,32 @@ import info.magnolia.objectfactory.ComponentProvider;
  * Guice Provider which serves as an adapter to a ComponentFactory. Performs member injection on its target
  * ComponentFactory before using it for the first time.
  *
+ * @param <T> the type of the object this provider returns
  * @version $Id$
  */
-public class GuiceComponentFactoryProviderAdapter implements Provider {
+public class GuiceComponentFactoryProviderAdapter<T> implements Provider<T> {
 
     @Inject
     private Injector injector;
     @Inject
     private ComponentProvider componentProvider;
-    private Class<? extends ComponentFactory<?>> factoryClass;
-    private ComponentFactory<?> factory;
+    private Class<? extends ComponentFactory<T>> factoryClass;
+    private ComponentFactory<T> factory;
     private boolean injected = false;
 
-    public GuiceComponentFactoryProviderAdapter(Class<? extends ComponentFactory<?>> implementation) {
+    public GuiceComponentFactoryProviderAdapter(Class<? extends ComponentFactory<T>> implementation) {
         this.factoryClass = implementation;
     }
 
-    public GuiceComponentFactoryProviderAdapter(ComponentFactory<?> factory) {
+    public GuiceComponentFactoryProviderAdapter(ComponentFactory<T> factory) {
         this.factory = factory;
     }
 
     @Override
-    public synchronized Object get() {
+    public synchronized T get() {
         if (this.factory == null) {
             try {
-                this.factory = ComponentFactoryUtil.createFactory((Class<? extends ComponentFactory<Object>>) factoryClass, componentProvider);
+                this.factory = ComponentFactoryUtil.createFactory(factoryClass, componentProvider);
             } catch (InstantiationException e) {
                 throw new ProvisionException("Failed to create ComponentFactory [" + factoryClass + "]", e);
             } catch (IllegalAccessException e) {

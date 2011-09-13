@@ -33,57 +33,33 @@
  */
 package info.magnolia.objectfactory.configuration;
 
-import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.objectfactory.ComponentFactory;
 
 
 /**
- * Configuration for a components which is configured in a workspace.
+ * Configuration for a provider that acts as a factory, supported types are {@link ComponentFactory} and
+ * {@link javax.inject.Provider}.
  *
  * @param <T> the type
  * @version $Id$
  */
-public class ConfiguredComponentConfiguration<T> extends ComponentConfiguration<T> {
+public class ProviderConfiguration<T> extends ComponentConfiguration<T> {
 
-    private String workspace = ContentRepository.CONFIG;
-    private String path;
-    private boolean observed = false;
+    private Class<?> providerClass;
 
-    public ConfiguredComponentConfiguration() {
+    public ProviderConfiguration() {
     }
 
-    public ConfiguredComponentConfiguration(Class<T> type, String workspace, String path, boolean observed) {
+    public ProviderConfiguration(Class<T> type, Class<? extends ComponentFactory<T>> providerClass) {
         super(type);
-        this.workspace = workspace;
-        this.path = path;
-        this.observed = observed;
+        this.providerClass = providerClass;
     }
 
-    public ConfiguredComponentConfiguration(Class<T> type, String path) {
-        super(type);
-        this.path = path;
+    public Class<?> getProviderClass() {
+        return providerClass;
     }
 
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public boolean isObserved() {
-        return observed;
-    }
-
-    public void setObserved(boolean observed) {
-        this.observed = observed;
+    public void setProviderClass(Class<? extends ComponentFactory<T>> providerClass) {
+        this.providerClass = providerClass;
     }
 }

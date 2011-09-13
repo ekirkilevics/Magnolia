@@ -50,7 +50,7 @@ import info.magnolia.objectfactory.ConfiguredComponentFactory;
 import info.magnolia.objectfactory.LazyObservedComponentFactory;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.objectfactory.configuration.ComponentConfiguration;
-import info.magnolia.objectfactory.configuration.ComponentFactoryConfiguration;
+import info.magnolia.objectfactory.configuration.ProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
 import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
@@ -224,9 +224,9 @@ public abstract class AbstractComponentProvider implements ComponentProvider {
             } else if (value instanceof InstanceConfiguration) {
                 InstanceConfiguration config = (InstanceConfiguration) value;
                 registerInstance(config.getType(), config.getInstance());
-            } else if (value instanceof ComponentFactoryConfiguration) {
-                ComponentFactoryConfiguration config = (ComponentFactoryConfiguration) value;
-                registerComponentFactory(config.getType(), config.getFactoryClass());
+            } else if (value instanceof ProviderConfiguration) {
+                ProviderConfiguration config = (ProviderConfiguration) value;
+                registerComponentFactory(config.getType(), config.getProviderClass());
             } else if (value instanceof ConfiguredComponentConfiguration) {
                 ConfiguredComponentConfiguration config = (ConfiguredComponentConfiguration) value;
                 registerConfiguredComponent(config.getType(), config.getWorkspace(), config.getPath(), config.isObserved());

@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,39 +25,50 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.objectfactory.configuration;
+package info.magnolia.objectfactory;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
 
 /**
- * A configuration providing a concrete instance or a factory of type
- * {@link info.magnolia.objectfactory.ComponentFactory} or {@link javax.inject.Provider}.
+ * Holds details about a constructors parameter.
  *
- * @param <T> the type
+ * @see ParameterResolver
  * @version $Id$
  */
-public class InstanceConfiguration<T> extends ComponentConfiguration<T> {
+public class ParameterInfo {
 
-    private Object instance;
+    private Constructor constructor;
+    private int parameterIndex;
+    private Class<?> parameterType;
+    private Type genericParameterType;
 
-    public InstanceConfiguration(Class<T> type, Object instance) {
-        super(type);
-        this.instance = instance;
+    public ParameterInfo(Constructor constructor, int parameterIndex) {
+        this.constructor = constructor;
+        this.parameterIndex = parameterIndex;
+        this.parameterType = constructor.getParameterTypes()[parameterIndex];
+        this.genericParameterType = constructor.getGenericParameterTypes()[parameterIndex];
     }
 
-    public Object getInstance() {
-        return instance;
+    public Constructor getConstructor() {
+        return constructor;
     }
 
-    public void setInstance(T instance) {
-        this.instance = instance;
+    public int getParameterIndex() {
+        return parameterIndex;
     }
 
-    public static <Y> InstanceConfiguration<Y> valueOf(Class<Y> clazz, Object instance) {
-        return new InstanceConfiguration<Y>(clazz, instance);
+    public Class<?> getParameterType() {
+        return parameterType;
+    }
+
+    public Type getGenericParameterType() {
+        return genericParameterType;
     }
 }

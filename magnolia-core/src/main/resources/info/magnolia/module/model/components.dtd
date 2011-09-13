@@ -3,13 +3,15 @@
 <!ELEMENT components (id, configurer*, component*, type-mapping*)>
 <!ELEMENT id (#PCDATA)>
 
-<!ELEMENT component (type?, implementation?, provider?, workspace?, path?, observed?)>
+<!ELEMENT component (type?, implementation?, provider?, workspace?, path?, observed?, scope?, lazy?)>
 <!ELEMENT type (#PCDATA)>
 <!ELEMENT implementation (#PCDATA)>
 <!ELEMENT provider (#PCDATA)>
 <!ELEMENT workspace (#PCDATA)>
 <!ELEMENT path (#PCDATA)>
 <!ELEMENT observed (#PCDATA)>
+<!ELEMENT scope (#PCDATA)>
+<!ELEMENT lazy (#PCDATA)>
 
 <!ELEMENT configurer (class)>
 <!ELEMENT class (#PCDATA)>

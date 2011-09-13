@@ -66,7 +66,7 @@ import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyCheckerImpl;
 import info.magnolia.objectfactory.configuration.ComponentConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfigurationBuilder;
-import info.magnolia.objectfactory.configuration.ComponentFactoryConfiguration;
+import info.magnolia.objectfactory.configuration.ProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
 import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
@@ -153,9 +153,9 @@ public abstract class MgnlTestCase {
             } else if (value instanceof InstanceConfiguration) {
                 InstanceConfiguration config = (InstanceConfiguration) value;
                 ComponentsTestUtil.setInstance(config.getType(), config.getInstance());
-            } else if (value instanceof ComponentFactoryConfiguration) {
-                ComponentFactoryConfiguration config = (ComponentFactoryConfiguration) value;
-                ComponentsTestUtil.setImplementation(config.getType(), config.getFactoryClass());
+            } else if (value instanceof ProviderConfiguration) {
+                ProviderConfiguration config = (ProviderConfiguration) value;
+                ComponentsTestUtil.setImplementation(config.getType(), config.getProviderClass());
             } else if (value instanceof ConfiguredComponentConfiguration) {
                 ConfiguredComponentConfiguration config = (ConfiguredComponentConfiguration) value;
                 ComponentsTestUtil.setConfigured(config.getType(), config.getWorkspace(), config.getPath(), config.isObserved());

@@ -74,5 +74,7 @@ public interface ComponentProvider {
      */
     <T> T newInstance(Class<T> type, Object... parameters);
 
+    <T> T newInstanceWithParameterResolvers(Class<T> type, ParameterResolver... parameters);
+
     ComponentProvider getParent();
 }

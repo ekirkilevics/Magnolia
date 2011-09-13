@@ -53,6 +53,7 @@ import info.magnolia.context.ContextFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.module.model.ComponentDefinition;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -104,6 +105,7 @@ public class GuiceComponentProviderTest {
         MgnlContext.setInstance(null);
         Components.setComponentProvider(null);
     }
+
     @Test
     public void testGetComponentProvider() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
@@ -117,6 +119,7 @@ public class GuiceComponentProviderTest {
         GuiceComponentProvider p = createComponentProvider(configuration);
         assertNull(p.getComponent(StringBuilder.class));
     }
+
     @Test
     public void testInstance() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
@@ -126,6 +129,7 @@ public class GuiceComponentProviderTest {
         assertSame(singletonObject, p.getComponent(SingletonObject.class));
         assertSame(singletonObject, p.getComponent(SingletonObject.class));
     }
+
     @Test
     public void testImplementation() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
@@ -135,6 +139,7 @@ public class GuiceComponentProviderTest {
         assertNotNull(singletonObject);
         assertSame(singletonObject, p.getComponent(SingletonObject.class));
     }
+
     @Test
     public void testConfigured() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
@@ -143,9 +148,24 @@ public class GuiceComponentProviderTest {
         GuiceComponentProvider p = createComponentProviderWithContent2Bean(configuration, true);
         SingletonObject singletonObject = p.getComponent(SingletonObject.class);
         assertNotNull(singletonObject);
+        assertNotSame(singletonObject, p.getComponent(SingletonObject.class));
+        assertEquals("foobar", p.getComponent(SingletonObject.class).getName());
+    }
+
+    @Test
+    public void testConfiguredInSingletonScope() {
+        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
+        ConfiguredComponentConfiguration<SingletonObject> componentConfiguration = new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, "/foo/bar/singleton");
+        componentConfiguration.setScope(ComponentDefinition.SCOPE_SINGLETON);
+        configuration.addComponent(componentConfiguration);
+
+        GuiceComponentProvider p = createComponentProviderWithContent2Bean(configuration, true);
+        SingletonObject singletonObject = p.getComponent(SingletonObject.class);
+        assertNotNull(singletonObject);
         assertSame(singletonObject, p.getComponent(SingletonObject.class));
         assertEquals("foobar", p.getComponent(SingletonObject.class).getName());
     }
+
     @Test
     public void testObserved() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
@@ -160,6 +180,7 @@ public class GuiceComponentProviderTest {
     @Singleton
     public static class OtherSingletonObject {
     }
+
     @Test
     public void testCreateChild() {
 

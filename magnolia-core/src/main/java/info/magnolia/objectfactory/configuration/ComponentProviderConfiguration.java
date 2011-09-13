@@ -37,11 +37,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Singleton;
-
-import com.google.inject.servlet.RequestScoped;
-import com.google.inject.servlet.SessionScoped;
-import info.magnolia.objectfactory.ComponentConfigurer;
 
 
 /**
@@ -97,10 +92,6 @@ public class ComponentProviderConfiguration implements Cloneable {
         this.configurers.addAll(components.configurers);
     }
 
-    public boolean hasConfigFor(Class<?> type) {
-        return components.containsKey(type);
-    }
-
     @Override
     public ComponentProviderConfiguration clone() {
         try {
@@ -114,15 +105,5 @@ public class ComponentProviderConfiguration implements Cloneable {
             // should never happen
             throw new RuntimeException(e);
         }
-    }
-
-    private boolean isTypeMapping(Class clazz) {
-        if (clazz.isAnnotationPresent(Singleton.class))
-            return false;
-        if (clazz.isAnnotationPresent(RequestScoped.class))
-            return false;
-        if (clazz.isAnnotationPresent(SessionScoped.class))
-            return false;
-        return true;
     }
 }

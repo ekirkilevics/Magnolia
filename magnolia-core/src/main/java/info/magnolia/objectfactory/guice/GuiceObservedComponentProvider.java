@@ -34,8 +34,8 @@
 package info.magnolia.objectfactory.guice;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
-import com.google.inject.Provider;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 
@@ -52,14 +52,14 @@ public class GuiceObservedComponentProvider<T> implements Provider<T> {
     @Inject
     private ComponentProvider componentProvider;
     private ObservedComponentFactory<T> observedComponentFactory;
-    private String repository;
+    private String workspace;
     private String path;
     private Class<T> type;
     private T instance;
     private boolean instantiated;
 
-    public GuiceObservedComponentProvider(String repository, String path, Class<T> type) {
-        this.repository = repository;
+    public GuiceObservedComponentProvider(String workspace, String path, Class<T> type) {
+        this.workspace = workspace;
         this.path = path;
         this.type = type;
     }
@@ -68,7 +68,7 @@ public class GuiceObservedComponentProvider<T> implements Provider<T> {
     public synchronized T get() {
         if (!instantiated) {
             if (observedComponentFactory == null) {
-                observedComponentFactory = new ObservedComponentFactory<T>(repository, path, type, componentProvider);
+                observedComponentFactory = new ObservedComponentFactory<T>(workspace, path, type, componentProvider);
             }
             instance = observedComponentFactory.newInstance();
             instantiated = true;

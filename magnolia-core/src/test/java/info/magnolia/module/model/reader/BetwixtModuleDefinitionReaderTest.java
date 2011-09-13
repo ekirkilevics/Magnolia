@@ -335,6 +335,7 @@ public class BetwixtModuleDefinitionReaderTest {
         assertEquals(1, components.getComponents().size());
         ComponentDefinition componentDefinition = components.getComponents().iterator().next();
         assertEquals("com.acme.ComponentKey", componentDefinition.getType());
+        assertEquals("session", componentDefinition.getScope());
         assertEquals("impl", componentDefinition.getImplementation());
         assertEquals("provider", componentDefinition.getProvider());
         assertEquals("true", componentDefinition.getObserved());

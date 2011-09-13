@@ -31,12 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory.guice;
+package info.magnolia.objectfactory;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-
-import com.google.inject.util.Providers;
+import javax.inject.Provider;
 
 /**
  * Parameter resolver which looks for suitable parameters in a set of candidates. Cannot handle null values since its
@@ -44,7 +43,7 @@ import com.google.inject.util.Providers;
  *
  * @version $Id$
  */
-public class CandidateParameterResolver implements ObjectManufacturer.ParameterResolver {
+public class CandidateParameterResolver implements ParameterResolver {
 
     private final Object[] candidates;
 
@@ -53,10 +52,10 @@ public class CandidateParameterResolver implements ObjectManufacturer.ParameterR
     }
 
     @Override
-    public Object resolveParameter(ObjectManufacturer.ConstructorParameter constructorParameter) {
+    public Object resolveParameter(ParameterInfo parameter) {
 
-        Type genericParameterType = constructorParameter.getGenericParameterType();
-        Class<?> parameterType = constructorParameter.getParameterType();
+        Type genericParameterType = parameter.getGenericParameterType();
+        Class<?> parameterType = parameter.getParameterType();
 
         // If the parameter is javax.inject.Provider<T> we will look for T instead and return a provider for it
         if (genericParameterType instanceof ParameterizedType) {
@@ -65,7 +64,12 @@ public class CandidateParameterResolver implements ObjectManufacturer.ParameterR
                 Class<?> actualType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
                 for (final Object extraCandidate : candidates) {
                     if (actualType.isAssignableFrom(extraCandidate.getClass())) {
-                        return Providers.of(extraCandidate);
+                        return new Provider() {
+                            @Override
+                            public Object get() {
+                                return extraCandidate;
+                            }
+                        };
                     }
                 }
                 return UNRESOLVED;

@@ -34,12 +34,12 @@
 package info.magnolia.objectfactory.configuration;
 
 /**
- * A simple type mapping.
+ * A simple mapping from type to implementation.
  *
  * @param <T> the type
  * @version $Id$
  */
-public class ImplementationConfiguration<T> extends ComponentConfiguration {
+public class ImplementationConfiguration<T> extends ComponentConfiguration<T> {
 
     private Class<? extends T> implementation;
 

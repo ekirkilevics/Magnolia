@@ -48,10 +48,6 @@ public class LazyObservedComponentFactory<T> implements ComponentFactory<T> {
     private ObservedComponentFactory<T> observedComponentFactory;
     private ComponentProvider componentProvider;
 
-    public LazyObservedComponentFactory(String repository, String path, Class<T> type) {
-        this(repository, path, type, Components.getComponentProvider());
-    }
-
     public LazyObservedComponentFactory(String repository, String path, Class<T> type, ComponentProvider componentProvider) {
         this.repository = repository;
         this.path = path;
@@ -60,7 +56,7 @@ public class LazyObservedComponentFactory<T> implements ComponentFactory<T> {
     }
 
     @Override
-    public T newInstance() {
+    public synchronized T newInstance() {
         if (observedComponentFactory == null) {
             observedComponentFactory = new ObservedComponentFactory<T>(repository, path, type, componentProvider);
         }

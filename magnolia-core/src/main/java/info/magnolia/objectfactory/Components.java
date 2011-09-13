@@ -104,6 +104,11 @@ public class Components {
         }
 
         @Override
+        public <T> T newInstanceWithParameterResolvers(Class<T> type, ParameterResolver... parameters) {
+            throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
+        }
+
+        @Override
         public ComponentProvider getParent() {
             throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
         }

@@ -41,12 +41,18 @@ package info.magnolia.module.model;
  */
 public class ComponentDefinition {
 
+    public static final String SCOPE_SINGLETON = "singleton";
+    public static final String SCOPE_REQUEST = "request";
+    public static final String SCOPE_SESSION = "session";
+
     private String type;
     private String implementation;
     private String observed;
     private String workspace;
     private String path;
     private String provider;
+    private String scope;
+    private String lazy;
 
     public String getType() {
         return type;
@@ -94,5 +100,21 @@ public class ComponentDefinition {
 
     public void setProvider(String provider) {
         this.provider = provider;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public String getLazy() {
+        return lazy;
+    }
+
+    public void setLazy(String lazy) {
+        this.lazy = lazy;
     }
 }

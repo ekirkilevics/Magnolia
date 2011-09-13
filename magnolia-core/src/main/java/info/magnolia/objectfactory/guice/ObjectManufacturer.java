@@ -36,10 +36,11 @@ package info.magnolia.objectfactory.guice;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
 import javax.inject.Inject;
 
 import info.magnolia.objectfactory.MgnlInstantiationException;
+import info.magnolia.objectfactory.ParameterInfo;
+import info.magnolia.objectfactory.ParameterResolver;
 
 
 /**
@@ -48,54 +49,6 @@ import info.magnolia.objectfactory.MgnlInstantiationException;
  * @version $Id$
  */
 public class ObjectManufacturer {
-
-    /**
-     * Holds details about a constructors parameter.
-     */
-    public class ConstructorParameter {
-
-        private Constructor constructor;
-        private int parameterIndex;
-        private Class<?> parameterType;
-        private Type genericParameterType;
-
-        public ConstructorParameter(Constructor constructor, int parameterIndex) {
-            this.constructor = constructor;
-            this.parameterIndex = parameterIndex;
-            this.parameterType = constructor.getParameterTypes()[parameterIndex];
-            this.genericParameterType = constructor.getGenericParameterTypes()[parameterIndex];
-        }
-
-        public Constructor getConstructor() {
-            return constructor;
-        }
-
-        public int getParameterIndex() {
-            return parameterIndex;
-        }
-
-        public Class<?> getParameterType() {
-            return parameterType;
-        }
-
-        public Type getGenericParameterType() {
-            return genericParameterType;
-        }
-    }
-
-    /**
-     * Used to resolve a parameter when invoking a constructor.
-     */
-    public interface ParameterResolver {
-
-        public static final Object UNRESOLVED = new Object();
-
-        /**
-         * Returns the instance to use for the parameter or <code>UNRESOLVED</code> if it cannot provider a value for
-         * this parameter.
-         */
-        Object resolveParameter(ConstructorParameter constructorParameter);
-    }
 
     /**
      * Creates an object of the given type using parameters provided by a set of parameter resolvers. Will first look
@@ -164,30 +117,26 @@ public class ObjectManufacturer {
     }
 
     private Object[] resolveParameters(Constructor<?> constructor, ParameterResolver[] parameterResolvers) {
-
-        Class<?>[] parameterTypes = constructor.getParameterTypes();
-        Object[] parameters = new Object[parameterTypes.length];
-
-        for (int parameterIndex = 0; parameterIndex < parameterTypes.length; parameterIndex++) {
-
-            ConstructorParameter constructorParameter = new ConstructorParameter(constructor, parameterIndex);
-
-            Object parameter = ParameterResolver.UNRESOLVED;
-
-            for (ParameterResolver parameterResolver : parameterResolvers) {
-                parameter = parameterResolver.resolveParameter(constructorParameter);
-                if (parameter != ParameterResolver.UNRESOLVED) {
-                    break;
-                }
-            }
-
+        Object[] parameters = new Object[constructor.getParameterTypes().length];
+        for (int parameterIndex = 0; parameterIndex < parameters.length; parameterIndex++) {
+            ParameterInfo constructorParameter = new ParameterInfo(constructor, parameterIndex);
+            Object parameter = resolveParameter(constructorParameter, parameterResolvers);
             if (parameter == ParameterResolver.UNRESOLVED) {
                 return null;
             }
-
             parameters[parameterIndex] = parameter;
         }
         return parameters;
+    }
+
+    private Object resolveParameter(ParameterInfo constructorParameter, ParameterResolver[] parameterResolvers) {
+        for (ParameterResolver parameterResolver : parameterResolvers) {
+            Object parameter = parameterResolver.resolveParameter(constructorParameter);
+            if (parameter != ParameterResolver.UNRESOLVED) {
+                return parameter;
+            }
+        }
+        return ParameterResolver.UNRESOLVED;
     }
 
 }

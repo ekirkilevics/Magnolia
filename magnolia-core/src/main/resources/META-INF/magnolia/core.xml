@@ -65,7 +65,7 @@
       <class>info.magnolia.objectfactory.guice.ModuleInstancesConfigurer</class>
     </configurer>
     <configurer>
-      <class>info.magnolia.objectfactory.configuration.ComponentsFromPropertiesConfigurer</class>
+      <class>info.magnolia.objectfactory.configuration.LegacyComponentsConfigurer</class>
     </configurer>
     <component>
       <type>info.magnolia.context.WebContextFactory</type>

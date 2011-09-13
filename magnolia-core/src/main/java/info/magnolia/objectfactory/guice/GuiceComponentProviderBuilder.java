@@ -43,9 +43,9 @@ import com.google.inject.Module;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
 import com.mycila.inject.jsr250.Jsr250;
-import info.magnolia.objectfactory.ComponentConfigurer;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.configuration.ComponentConfigurer;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 

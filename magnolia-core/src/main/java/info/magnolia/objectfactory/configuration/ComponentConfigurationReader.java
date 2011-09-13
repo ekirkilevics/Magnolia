@@ -60,8 +60,8 @@ import info.magnolia.module.model.ComponentsDefinition;
 /**
  * Reads components defined in xml.
  *
- * @see ComponentsDefinition
  * @version $Id$
+ * @see ComponentsDefinition
  */
 public class ComponentConfigurationReader {
 

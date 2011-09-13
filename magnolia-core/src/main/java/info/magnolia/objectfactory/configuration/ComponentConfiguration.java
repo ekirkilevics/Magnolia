@@ -36,25 +36,44 @@ package info.magnolia.objectfactory.configuration;
 /**
  * Represents a configuration of a component for a specific type.
  *
+ * @param <T> the type of the component
  * @version $Id$
  */
-public abstract class ComponentConfiguration implements Cloneable {
+public abstract class ComponentConfiguration<T> implements Cloneable {
 
-    private Class type;
+    private Class<T> type;
+    private String scope;
+    private boolean lazy;
 
     protected ComponentConfiguration() {
     }
 
-    protected ComponentConfiguration(Class type) {
+    protected ComponentConfiguration(Class<T> type) {
         this.type = type;
     }
 
-    public Class getType() {
+    public Class<T> getType() {
         return type;
     }
 
-    public void setType(Class type) {
+    public void setType(Class<T> type) {
         this.type = type;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public boolean isLazy() {
+        return lazy;
+    }
+
+    public void setLazy(boolean lazy) {
+        this.lazy = lazy;
     }
 
     @Override

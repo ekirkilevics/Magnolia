@@ -37,8 +37,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.ParameterResolver;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
-import info.magnolia.objectfactory.configuration.ComponentsFromPropertiesConfigurer;
+import info.magnolia.objectfactory.configuration.LegacyComponentsConfigurer;
 
 
 /**
@@ -67,7 +68,7 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
 
     public void parseConfiguration(final Properties mappings) {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-        new ComponentsFromPropertiesConfigurer() {
+        new LegacyComponentsConfigurer() {
             @Override
             public void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration) {
                 for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
@@ -76,5 +77,10 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
             }
         }.doWithConfiguration(getParent(), configuration);
         configure(configuration);
+    }
+
+    @Override
+    public <T> T newInstanceWithParameterResolvers(Class<T> type, ParameterResolver... parameters) {
+        throw new UnsupportedOperationException();
     }
 }

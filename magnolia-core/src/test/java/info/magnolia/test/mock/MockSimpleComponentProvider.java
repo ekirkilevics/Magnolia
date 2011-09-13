@@ -35,6 +35,7 @@ package info.magnolia.test.mock;
 
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.MgnlInstantiationException;
+import info.magnolia.objectfactory.ParameterResolver;
 
 import java.lang.reflect.Constructor;
 
@@ -78,6 +79,11 @@ public class MockSimpleComponentProvider implements ComponentProvider {
            throw new MgnlInstantiationException(e);
         }
         return newInstance;
+    }
+
+    @Override
+    public <T> T newInstanceWithParameterResolvers(Class<T> type, ParameterResolver... parameters) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

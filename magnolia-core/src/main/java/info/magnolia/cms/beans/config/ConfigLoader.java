@@ -38,6 +38,13 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfigurationBuilder;
+import info.magnolia.objectfactory.guice.GuiceComponentProvider;
+import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,9 +66,11 @@ public class ConfigLoader {
     private static final String JAAS_PROPERTYNAME = "java.security.auth.login.config";
 
     private final ModuleManager moduleManager;
+    private final ModuleRegistry moduleRegistry;
     private final LicenseFileExtractor license;
     private final MessagesManager messagesManager;
     private final VersionConfig versionConfig;
+    private GuiceComponentProvider main;
 
     /**
      * Initialize a ConfigLoader instance. All the supplied parameters will be set in
@@ -73,8 +82,9 @@ public class ConfigLoader {
      * TODO - some of the dependencies here don't belong, we're only calling init() on those, which should be moved to a lifecycle management api (pico has one)
      */
     @Inject
-    public ConfigLoader(ModuleManager moduleManager, LicenseFileExtractor licenseFileExtractor, MessagesManager messagesManager, VersionConfig versionConfig, ServletContext context) {
+    public ConfigLoader(ModuleManager moduleManager, ModuleRegistry moduleRegistry, LicenseFileExtractor licenseFileExtractor, MessagesManager messagesManager, VersionConfig versionConfig, ServletContext context) {
         this.moduleManager = moduleManager;
+        this.moduleRegistry = moduleRegistry;
         this.license = licenseFileExtractor;
         this.messagesManager = messagesManager;
         this.versionConfig = versionConfig;
@@ -104,6 +114,11 @@ public class ConfigLoader {
     }
 
     public void unload() {
+        // See comment in GuiceServletContextListener
+        if (main != null) {
+            Components.setComponentProvider(main.getParent());
+            main.destroy();
+        }
         ContentRepository.shutdown();
     }
 
@@ -125,6 +140,12 @@ public class ConfigLoader {
         log.info("Initializing content repositories"); //$NON-NLS-1$
 
         ContentRepository.init();
+
+        GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
+        builder.withConfiguration(getMainComponents());
+        builder.withParent((GuiceComponentProvider) Components.getComponentProvider());
+        builder.exposeGlobally();
+        main = builder.build();
 
         try {
             moduleManager.checkForInstallOrUpdates();
@@ -148,5 +169,10 @@ public class ConfigLoader {
             log.error("An unspecified error occurred during initialization: " + e.getMessage(), e);
         }
 
+    }
+
+    protected ComponentProviderConfiguration getMainComponents() {
+        ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
+        return configurationBuilder.getComponentsFromModules(moduleRegistry, "main");
     }
 }

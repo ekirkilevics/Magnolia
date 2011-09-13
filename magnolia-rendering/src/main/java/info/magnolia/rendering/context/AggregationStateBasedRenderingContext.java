@@ -36,6 +36,7 @@ package info.magnolia.rendering.context;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.objectfactory.annotation.RequestScoped;
 import info.magnolia.rendering.engine.OutputProvider;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.RenderableDefinition;
@@ -48,8 +49,6 @@ import java.util.Stack;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.jcr.Node;
-
-import com.google.inject.servlet.RequestScoped;
 
 /**
  * RenderingContext implementation that uses AggregationState.

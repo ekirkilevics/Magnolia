@@ -33,6 +33,7 @@
  */
 package info.magnolia.objectfactory.guice;
 
+import java.util.Arrays;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -40,42 +41,18 @@ import javax.inject.Provider;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.mycila.inject.jsr250.Jsr250Injector;
+import info.magnolia.objectfactory.CandidateParameterResolver;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.ParameterResolver;
 
 
 /**
  * ComponentProvider implementation based on Guice.
  *
- * <h3>JSR-299 - Dependency injection</h3>
- * Standardized annotations for dependency injection in Java, these are the most commonly used:
- * <ul>
- *  <li>{@link javax.inject.Inject}</li>
- *  <li>{@link javax.inject.Singleton}</li>
- *  <li>{@link javax.inject.Named}</li>
- * </ul>
- *
- * <h3>JSR-250 - Lifecycle callbacks</h3>
- * Supports {@link javax.annotation.PostConstruct} and {@link javax.annotation.PreDestroy} enabling components to do
- * initialization and cleanup.
- *
- * <h3>Additional scopes</h3>
- * <ul>
- *     <li>{@link com.google.inject.servlet.RequestScoped}</li>
- *     <li>{@link com.google.inject.servlet.SessionScoped}</li>
- * </ul>
- *
- * <h3>Standard providers</h3>
- * These objects will always be available
- * <ul>
- *     <li></li>
- * </ul>
- *
- * TODO document the staged startup in MSCL
- *
+ * @version $Id$
  * @see ComponentProvider
  * @see GuiceComponentProviderBuilder
- * @version $Id$
  */
 public class GuiceComponentProvider implements ComponentProvider {
 
@@ -121,16 +98,25 @@ public class GuiceComponentProvider implements ComponentProvider {
 
     @Override
     public <T> T newInstance(Class<T> type, Object... parameters) {
+        return newInstanceWithParameterResolvers(type, new CandidateParameterResolver(parameters));
+    }
+
+    @Override
+    public <T> T newInstanceWithParameterResolvers(Class<T> type, ParameterResolver... parameterResolvers) {
         if (this.manufacturer == null) {
             this.manufacturer = new ObjectManufacturer();
         }
         Class<? extends T> implementation = getImplementation(type);
-        T instance = (T) manufacturer.newInstance(
-                implementation,
-                new CandidateParameterResolver(parameters),
-                new GuiceParameterResolver(injector));
+        parameterResolvers = concat(parameterResolvers, new GuiceParameterResolver(injector));
+        T instance = (T) manufacturer.newInstance(implementation, parameterResolvers);
         injectMembers(instance);
         return instance;
+    }
+
+    private ParameterResolver[] concat(ParameterResolver[] array, GuiceParameterResolver extra) {
+        ParameterResolver[] newArray = Arrays.copyOf(array, array.length + 1);
+        newArray[array.length] = extra;
+        return newArray;
     }
 
     public Injector getInjector() {

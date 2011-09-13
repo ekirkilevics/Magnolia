@@ -33,57 +33,15 @@
  */
 package info.magnolia.objectfactory.configuration;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-
+import info.magnolia.objectfactory.ComponentProvider;
 
 /**
- * Configuration for a components which is configured in a workspace.
+ * Component configurers are called to customize the ComponentProviderConfiguration before its used to create a
+ * ComponentProvider.
  *
- * @param <T> the type
  * @version $Id$
  */
-public class ConfiguredComponentConfiguration<T> extends ComponentConfiguration<T> {
+public interface ComponentConfigurer {
 
-    private String workspace = ContentRepository.CONFIG;
-    private String path;
-    private boolean observed = false;
-
-    public ConfiguredComponentConfiguration() {
-    }
-
-    public ConfiguredComponentConfiguration(Class<T> type, String workspace, String path, boolean observed) {
-        super(type);
-        this.workspace = workspace;
-        this.path = path;
-        this.observed = observed;
-    }
-
-    public ConfiguredComponentConfiguration(Class<T> type, String path) {
-        super(type);
-        this.path = path;
-    }
-
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public boolean isObserved() {
-        return observed;
-    }
-
-    public void setObserved(boolean observed) {
-        this.observed = observed;
-    }
+    void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration);
 }

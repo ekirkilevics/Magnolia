@@ -38,12 +38,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.inject.Provider;
-import com.google.inject.servlet.RequestScoped;
-import com.google.inject.servlet.SessionScoped;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.objectfactory.annotation.LazySingleton;
+import info.magnolia.objectfactory.annotation.RequestScoped;
+import info.magnolia.objectfactory.annotation.SessionScoped;
 
 /**
  * Registers request and session scopes and providers for accessing MgnlContext.
@@ -94,7 +95,8 @@ public class GuiceContextAndScopesConfigurer extends AbstractGuiceComponentConfi
         });
 
         // But the scopes need to be registered at every level
-        bindScope(RequestScoped.class, MagnoliaServletScopes.REQUEST);
-        bindScope(SessionScoped.class, MagnoliaServletScopes.SESSION);
+        bindScope(RequestScoped.class, MagnoliaScopes.REQUEST);
+        bindScope(SessionScoped.class, MagnoliaScopes.SESSION);
+        bindScope(LazySingleton.class, MagnoliaScopes.LAZY_SINGLETON);
     }
 }

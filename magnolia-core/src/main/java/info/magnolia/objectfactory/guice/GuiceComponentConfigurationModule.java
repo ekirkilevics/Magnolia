@@ -33,17 +33,28 @@
  */
 package info.magnolia.objectfactory.guice;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
-import com.google.inject.Scopes;
+import com.google.inject.binder.ScopedBindingBuilder;
+import com.google.inject.util.Providers;
+import info.magnolia.module.model.ComponentDefinition;
+import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.objectfactory.annotation.LazySingleton;
+import info.magnolia.objectfactory.annotation.RequestScoped;
+import info.magnolia.objectfactory.annotation.SessionScoped;
 import info.magnolia.objectfactory.configuration.ComponentConfiguration;
-import info.magnolia.objectfactory.configuration.ComponentFactoryConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
 import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
 import info.magnolia.objectfactory.configuration.InstanceConfiguration;
+import info.magnolia.objectfactory.configuration.ProviderConfiguration;
 
 
 /**
@@ -63,18 +74,7 @@ public class GuiceComponentConfigurationModule extends AbstractModule {
     protected void configure() {
 
         for (Map.Entry<Class, ComponentConfiguration> entry : configuration.getComponents().entrySet()) {
-            ComponentConfiguration config = entry.getValue();
-            if (config instanceof ImplementationConfiguration) {
-                registerImplementation((ImplementationConfiguration) config);
-            } else if (config instanceof InstanceConfiguration) {
-                registerInstance((InstanceConfiguration) config);
-            } else if (config instanceof ComponentFactoryConfiguration) {
-                registerComponentFactory((ComponentFactoryConfiguration) config);
-            } else if (config instanceof ConfiguredComponentConfiguration) {
-                registerConfiguredComponent((ConfiguredComponentConfiguration) config);
-            } else {
-                throw new IllegalStateException();
-            }
+            bindConfiguration(entry.getValue());
         }
 
         for (Object configurer : configuration.getConfigurers()) {
@@ -84,31 +84,111 @@ public class GuiceComponentConfigurationModule extends AbstractModule {
         }
     }
 
-    private <T> void registerConfiguredComponent(ConfiguredComponentConfiguration configuration) {
-        Class key = configuration.getType();
-        if (configuration.isObserved()) {
-            bind(key).toProvider(new GuiceObservedComponentProvider<T>(configuration.getWorkspace(), configuration.getPath(), key));
+    private <T> void bindConfiguration(ComponentConfiguration<T> configuration) {
+        if (configuration instanceof ImplementationConfiguration) {
+            bindImplementation((ImplementationConfiguration<T>) configuration);
+        } else if (configuration instanceof InstanceConfiguration) {
+            bindInstance((InstanceConfiguration<T>) configuration);
+        } else if (configuration instanceof ProviderConfiguration) {
+            bindProvider((ProviderConfiguration<T>) configuration);
+        } else if (configuration instanceof ConfiguredComponentConfiguration) {
+            ConfiguredComponentConfiguration<T> configured = (ConfiguredComponentConfiguration<T>) configuration;
+            if (configured.isObserved()) {
+                bindObservedComponent(configured);
+            } else {
+                bindConfiguredComponent(configured);
+            }
         } else {
-            bind(key).toProvider(new GuiceConfiguredComponentProvider(configuration.getPath(), configuration.getWorkspace()));
+            throw new IllegalStateException("Component configuration is ambiguous for component with type [" + configuration.getType() + "]");
         }
     }
 
-    private void registerComponentFactory(ComponentFactoryConfiguration configuration) {
-        bind(configuration.getType()).toProvider(new GuiceComponentFactoryProviderAdapter(configuration.getFactoryClass())).in(Scopes.SINGLETON);
+    private <T> void bindConfiguredComponent(ConfiguredComponentConfiguration<T> configuration) {
+        Provider<T> provider = new GuiceConfiguredComponentProvider<T>(configuration.getWorkspace(), configuration.getPath());
+        ScopedBindingBuilder builder = bindProvider(configuration.getType(), provider);
+        bindInScope(builder, configuration);
     }
 
-    private void registerInstance(InstanceConfiguration configuration) {
-        bind(configuration.getType()).toInstance(configuration.getInstance());
+    private <T> void bindObservedComponent(ConfiguredComponentConfiguration<T> configuration) {
+        Class<T> key = configuration.getType();
+        Provider<T> provider = new GuiceObservedComponentProvider<T>(configuration.getWorkspace(), configuration.getPath(), key);
+        ScopedBindingBuilder builder = bindProvider(configuration.getType(), provider);
+        bindInScope(builder, configuration);
     }
 
-    private void registerImplementation(ImplementationConfiguration configuration) {
-        Class key = configuration.getType();
-        Class implementation = configuration.getImplementation();
+    private <T> void bindProvider(ProviderConfiguration<T> configuration) {
+        Class<?> factoryClass = configuration.getProviderClass();
 
+        if (ComponentFactory.class.isAssignableFrom(factoryClass)) {
+            Provider<T> provider = new GuiceComponentFactoryProviderAdapter<T>((Class<? extends ComponentFactory<T>>) factoryClass);
+            ScopedBindingBuilder builder = bindProvider(configuration.getType(), provider);
+            bindInScope(builder, configuration);
+        } else if (Provider.class.isAssignableFrom(factoryClass)) {
+            ScopedBindingBuilder builder = bindProvider(configuration.getType(), (Class<? extends Provider<T>>) factoryClass);
+            bindInScope(builder, configuration);
+        } else {
+            throw new IllegalStateException("Unsupported provider class [" + factoryClass + "] for component with type [" + configuration.getType() + "]");
+        }
+    }
+
+    private <T> void bindInstance(InstanceConfiguration<T> configuration) {
+        Class<T> key = configuration.getType();
+        Object instance = configuration.getInstance();
+        if (instance instanceof Provider) {
+            bindProvider(configuration.getType(), (Provider<T>) instance);
+        } else if (instance instanceof ComponentFactory) {
+            bindProvider(configuration.getType(), new GuiceComponentFactoryProviderAdapter<T>((ComponentFactory<T>) instance));
+        } else {
+            bind(key).toInstance((T) instance);
+        }
+        // we don't apply any scope here since instance are natural singletons
+    }
+
+    private <T> void bindImplementation(ImplementationConfiguration<T> configuration) {
+        Class<T> key = configuration.getType();
+        Class<? extends T> implementation = configuration.getImplementation();
+
+        ScopedBindingBuilder builder;
         if (key.equals(implementation)) {
-            bind(implementation);
+            builder = bind(implementation);
         } else {
-            bind(key).to(implementation);
+            builder = bind(key).to(implementation);
         }
+        bindInScope(builder, configuration);
+    }
+
+    private <T> ScopedBindingBuilder bindProvider(Class<T> type, Provider<T> provider) {
+        return bind(type).toProvider(Providers.guicify(provider));
+    }
+
+    private <T> ScopedBindingBuilder bindProvider(Class<T> type, Class<? extends Provider<T>> provider) {
+        return bind(type).toProvider(provider);
+    }
+
+    private <T> void bindInScope(ScopedBindingBuilder builder, ComponentConfiguration<T> configuration) {
+        Class<? extends Annotation> scopeAnnotation = getScope(configuration);
+        if (scopeAnnotation != null) {
+            builder.in(scopeAnnotation);
+        }
+    }
+
+    private Class<? extends Annotation> getScope(ComponentConfiguration<?> componentConfiguration) {
+        String scope = componentConfiguration.getScope();
+        if (StringUtils.isEmpty(scope)) {
+            return null;
+        }
+        if (ComponentDefinition.SCOPE_SINGLETON.equalsIgnoreCase(scope) && !componentConfiguration.isLazy()) {
+            return Singleton.class;
+        }
+        if (ComponentDefinition.SCOPE_SINGLETON.equalsIgnoreCase(scope) && componentConfiguration.isLazy()) {
+            return LazySingleton.class;
+        }
+        if (ComponentDefinition.SCOPE_REQUEST.equalsIgnoreCase(scope)) {
+            return RequestScoped.class;
+        }
+        if (ComponentDefinition.SCOPE_SESSION.equalsIgnoreCase(scope)) {
+            return SessionScoped.class;
+        }
+        throw new IllegalStateException("Unknown scope [" + scope + "] for component with type [" + componentConfiguration.getType() + "]");
     }
 }

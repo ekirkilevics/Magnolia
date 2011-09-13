@@ -21,6 +21,7 @@
       <workspace>config</workspace>
       <path>/modules/acme/foo</path>
       <observed>true</observed>
+      <scope>session</scope>
     </component>
 
     <type-mapping>

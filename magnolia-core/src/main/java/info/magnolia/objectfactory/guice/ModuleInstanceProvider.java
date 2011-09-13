@@ -34,28 +34,26 @@
 package info.magnolia.objectfactory.guice;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
-import com.google.inject.Injector;
-import com.google.inject.Provider;
-import com.google.inject.ProvisionException;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.ModuleLifecycleContextImpl;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.objectfactory.ComponentConfigurationPath;
+import info.magnolia.objectfactory.ComponentProvider;
 
 /**
- * Guice provider that creates the module class and populates it from repository configuration and updates it if
+ * Provider that creates the module class and populates it from repository configuration and updates it if
  * the configuration changes.
  *
  * @param <T> the type of the module class
@@ -69,9 +67,7 @@ public class ModuleInstanceProvider<T> implements Provider<T> {
     private static final int DEFAULT_MODULE_OBSERVATION_MAX_DELAY = 30000;
 
     @Inject
-    private Injector injector;
-    @Inject
-    private SystemContext systemContext;
+    private ComponentProvider componentProvider;
     private GuiceModuleManager moduleManager;
 
     @Inject
@@ -89,7 +85,7 @@ public class ModuleInstanceProvider<T> implements Provider<T> {
     }
 
     @Override
-    public T get() {
+    public synchronized T get() {
 
         if (instance != null) {
             return instance;
@@ -99,13 +95,10 @@ public class ModuleInstanceProvider<T> implements Provider<T> {
         try {
             moduleClass = moduleManager.getModuleClass(moduleDefinition);
         } catch (ClassNotFoundException e) {
-            throw new ProvisionException(e.getMessage(), e);
+            throw new RuntimeException("Class not found: " + moduleDefinition.getClassName(), e);
         }
 
-        ObjectManufacturer manufacturer = new ObjectManufacturer();
-        instance = (T) manufacturer.newInstance(
-                moduleClass,
-                new GuiceParameterResolver(injector));
+        instance = (T) componentProvider.newInstance(moduleClass);
 
         populate();
 
@@ -136,7 +129,7 @@ public class ModuleInstanceProvider<T> implements Provider<T> {
     }
 
     public void populate() {
-        final HierarchyManager hm = systemContext.getHierarchyManager(path.getRepository());
+        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(path.getRepository());
         if (hm.isExist(path.getPath())) {
             try {
                 final Content node = hm.getContent(path.getPath());

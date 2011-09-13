@@ -150,6 +150,11 @@ public class DefaultComponentProvider implements ComponentProvider {
         }
     }
 
+    @Override
+    public <T> T newInstanceWithParameterResolvers(Class<T> type, ParameterResolver... parameters) {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * @deprecated since 4.5, use {@link Classes#isConcrete(Class)}
      */

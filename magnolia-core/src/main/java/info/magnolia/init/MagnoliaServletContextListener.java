@@ -165,7 +165,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             // Start 'platform' ComponentProvider
             GuiceComponentProviderBuilder builder = new GuiceComponentProviderBuilder();
             builder.withConfiguration(getPlatformComponents());
-            builder.inStage(Stage.DEVELOPMENT);
+            builder.inStage(Stage.PRODUCTION);
             builder.exposeGlobally();
             platform = builder.build();
 
@@ -264,14 +264,8 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     }
 
     protected ComponentProviderConfiguration getSystemComponents() {
-
-        // FIXME we combine these two phases and set guice phase to DEVELOPMENT in order to get lazy init singleton
-
         ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
-        ComponentProviderConfiguration systemComponents = configurationBuilder.getComponentsFromModules(platform.getComponent(ModuleRegistry.class), "system");
-        ComponentProviderConfiguration mainComponents = configurationBuilder.getComponentsFromModules(platform.getComponent(ModuleRegistry.class), "main");
-        systemComponents.combine(mainComponents);
-        return systemComponents;
+        return configurationBuilder.getComponentsFromModules(platform.getComponent(ModuleRegistry.class), "system");
     }
 
     protected void startServer() {

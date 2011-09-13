@@ -36,10 +36,9 @@ package info.magnolia.rendering.template.configured;
 import info.magnolia.cms.core.Access;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.ParameterInfo;
 import info.magnolia.objectfactory.MgnlInstantiationException;
-import info.magnolia.objectfactory.guice.GuiceComponentProvider;
-import info.magnolia.objectfactory.guice.GuiceParameterResolver;
-import info.magnolia.objectfactory.guice.ObjectManufacturer;
+import info.magnolia.objectfactory.ParameterResolver;
 import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.model.RenderingModelImpl;
 import info.magnolia.rendering.template.RenderableDefinition;
@@ -83,28 +82,23 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     public RenderingModel<?> newModel(final Node content, final RenderableDefinition definition, final RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
         try {
 
-            ObjectManufacturer objectManufacturer = new ObjectManufacturer();
-            GuiceComponentProvider componentProvider = (GuiceComponentProvider) Components.getComponentProvider();
-            RenderingModel model = (RenderingModel) objectManufacturer.newInstance(
-                    getModelClass(),
-                    new ObjectManufacturer.ParameterResolver() {
-                        @Override
-                        public Object resolveParameter(ObjectManufacturer.ConstructorParameter constructorParameter) {
-                            if (constructorParameter.getParameterType().equals(Node.class)) {
-                                return content;
-                            }
-                            if (constructorParameter.getParameterType().isAssignableFrom(definition.getClass())) {
-                                return definition;
-                            }
-                            if (constructorParameter.getParameterType().equals(RenderingModel.class)) {
-                                return parentModel;
-                            }
-                            return UNRESOLVED;
+            RenderingModel model = Components.getComponentProvider().newInstanceWithParameterResolvers((Class<? extends RenderingModel>)getModelClass(),
+                new ParameterResolver() {
+                    @Override
+                    public Object resolveParameter(ParameterInfo parameter) {
+                        if (parameter.getParameterType().equals(Node.class)) {
+                            return content;
                         }
-                    },
-                    new GuiceParameterResolver(componentProvider.getInjector()));
-
-            componentProvider.injectMembers(model);
+                        if (parameter.getParameterType().isAssignableFrom(definition.getClass())) {
+                            return definition;
+                        }
+                        if (parameter.getParameterType().equals(RenderingModel.class)) {
+                            return parentModel;
+                        }
+                        return UNRESOLVED;
+                    }
+                }
+            );
 
             // TODO pass the parameter map to the method
             final Map<String, String> params = MgnlContext.getParameters();

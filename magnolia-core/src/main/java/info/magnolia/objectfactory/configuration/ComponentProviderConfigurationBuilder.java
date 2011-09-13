@@ -44,8 +44,6 @@ import info.magnolia.module.model.ComponentsDefinition;
 import info.magnolia.module.model.ConfigurerDefinition;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.TypeMappingDefinition;
-import info.magnolia.objectfactory.ComponentConfigurer;
-import info.magnolia.objectfactory.ComponentFactory;
 
 /**
  * Builder for creating {@link ComponentProviderConfiguration}s from component definitions.
@@ -90,10 +88,7 @@ public class ComponentProviderConfigurationBuilder {
             configuration.addConfigurer(getConfigurer(configurerDefinition));
         }
         for (ComponentDefinition componentDefinition : componentsDefinition.getComponents()) {
-            ComponentConfiguration component = getComponent(componentDefinition);
-            if (component != null) {
-                configuration.addComponent(component);
-            }
+            configuration.addComponent(getComponent(componentDefinition));
         }
         for (TypeMappingDefinition typeMappingDefinition : componentsDefinition.getTypeMappings()) {
             configuration.addTypeMapping(classForName(typeMappingDefinition.getType()), classForName(typeMappingDefinition.getImplementation()));
@@ -103,81 +98,90 @@ public class ComponentProviderConfigurationBuilder {
     protected ComponentConfigurer getConfigurer(ConfigurerDefinition configurerDefinition) {
         Class clazz = classForName(configurerDefinition.getClassName());
         if (!ComponentConfigurer.class.isAssignableFrom(clazz)) {
-            throw new ComponentConfigurationException("Configurer must be of type ComponentConfigurer");
+            throw new ComponentConfigurationException("Configurer must be of type ComponentConfigurer [" + clazz + "]");
         }
         try {
             return (ComponentConfigurer) clazz.newInstance();
         } catch (InstantiationException e) {
-            throw new ComponentConfigurationException("Unable to instantiate configurer");
+            throw new ComponentConfigurationException("Unable to instantiate configurer [" + clazz + "]", e);
         } catch (IllegalAccessException e) {
-            throw new ComponentConfigurationException("Unable to instantiate configurer");
+            throw new ComponentConfigurationException("Unable to instantiate configurer [" + clazz + "]", e);
         }
     }
 
-    protected ComponentConfiguration getComponent(ComponentDefinition componentDefinition) {
-        if (isProvider(componentDefinition)) {
-            return getProvider(componentDefinition);
-        } else if (isImplementation(componentDefinition)) {
-            return getImplementation(componentDefinition);
-        } else if (isConfigured(componentDefinition)) {
-            return getConfigured(componentDefinition);
-        } else if (isObserved(componentDefinition)) {
-            return getObserved(componentDefinition);
+    protected ComponentConfiguration getComponent(ComponentDefinition definition) {
+        if (isProvider(definition)) {
+            return getProvider(definition);
+        } else if (isImplementation(definition)) {
+            return getImplementation(definition);
+        } else if (isConfigured(definition)) {
+            return getConfigured(definition);
+        } else if (isObserved(definition)) {
+            return getObserved(definition);
         } else {
-            throw new ComponentConfigurationException("Unable to add component with key " + componentDefinition.getType());
+            throw new ComponentConfigurationException("Unable to add component with key " + definition.getType());
         }
     }
 
-    protected ComponentConfiguration getObserved(ComponentDefinition componentDefinition) {
-        Class<?> key = classForName(componentDefinition.getType());
-        String workspace = StringUtils.isNotBlank(componentDefinition.getWorkspace()) ? componentDefinition.getWorkspace() : ContentRepository.CONFIG;
-        return new ConfiguredComponentConfiguration(key, workspace, componentDefinition.getPath(), true);
+    protected ComponentConfiguration getObserved(ComponentDefinition definition) {
+        ConfiguredComponentConfiguration configuration = new ConfiguredComponentConfiguration();
+        configuration.setType(classForName(definition.getType()));
+        configuration.setWorkspace(StringUtils.defaultIfEmpty(configuration.getWorkspace(), ContentRepository.CONFIG));
+        configuration.setPath(definition.getPath());
+        configuration.setObserved(true);
+        configuration.setScope(definition.getScope());
+        configuration.setLazy(parseLazyFlag(definition));
+        return configuration;
     }
 
-    protected ComponentConfiguration getConfigured(ComponentDefinition componentDefinition) {
-        Class<?> key = classForName(componentDefinition.getType());
-        String workspace = StringUtils.isNotBlank(componentDefinition.getWorkspace()) ? componentDefinition.getWorkspace() : ContentRepository.CONFIG;
-        return new ConfiguredComponentConfiguration(key, workspace, componentDefinition.getPath(), false);
+    protected ComponentConfiguration getConfigured(ComponentDefinition definition) {
+        ConfiguredComponentConfiguration configuration = new ConfiguredComponentConfiguration();
+        configuration.setType(classForName(definition.getType()));
+        configuration.setWorkspace(StringUtils.defaultIfEmpty(configuration.getWorkspace(), ContentRepository.CONFIG));
+        configuration.setPath(definition.getPath());
+        configuration.setObserved(false);
+        configuration.setScope(definition.getScope());
+        configuration.setLazy(parseLazyFlag(definition));
+        return configuration;
     }
 
-    protected ComponentConfiguration getImplementation(ComponentDefinition componentDefinition) {
-        Class type = classForName(componentDefinition.getType());
-        Class implementation = classForName(componentDefinition.getImplementation());
-
-        if (ComponentFactory.class.isAssignableFrom(implementation)) {
-            return new ComponentFactoryConfiguration(type, implementation);
-        } else {
-            if (type.equals(implementation)) {
-                return new ImplementationConfiguration(type, implementation);
-            } else {
-                return new ImplementationConfiguration(type, implementation);
-            }
-        }
+    protected ImplementationConfiguration getImplementation(ComponentDefinition definition) {
+        ImplementationConfiguration configuration = new ImplementationConfiguration();
+        configuration.setType(classForName(definition.getType()));
+        configuration.setImplementation(classForName(definition.getImplementation()));
+        configuration.setScope(definition.getScope());
+        configuration.setLazy(parseLazyFlag(definition));
+        return configuration;
     }
 
-    protected ComponentConfiguration getProvider(ComponentDefinition componentDefinition) {
-        Class key = classForName(componentDefinition.getType());
-        Class provider = classForName(componentDefinition.getProvider());
-        if (ComponentFactory.class.isAssignableFrom(provider)) {
-            return new ComponentFactoryConfiguration(key, provider);
-        }
-        throw new ComponentConfigurationException("Unknown provider type " + provider);
+    private boolean parseLazyFlag(ComponentDefinition definition) {
+        String lazy = definition.getLazy();
+        return StringUtils.isEmpty(lazy) || Boolean.parseBoolean(lazy);
     }
 
-    protected boolean isObserved(ComponentDefinition componentDefinition) {
-        return StringUtils.isNotBlank(componentDefinition.getPath()) && Boolean.parseBoolean(componentDefinition.getObserved());
+    protected ComponentConfiguration getProvider(ComponentDefinition definition) {
+        ProviderConfiguration configuration = new ProviderConfiguration();
+        configuration.setType(classForName(definition.getType()));
+        configuration.setProviderClass(classForName(definition.getProvider()));
+        configuration.setScope(definition.getScope());
+        configuration.setLazy(parseLazyFlag(definition));
+        return configuration;
     }
 
-    protected boolean isConfigured(ComponentDefinition componentDefinition) {
-        return StringUtils.isNotBlank(componentDefinition.getPath()) && !Boolean.parseBoolean(componentDefinition.getObserved());
+    protected boolean isObserved(ComponentDefinition definition) {
+        return StringUtils.isNotBlank(definition.getPath()) && Boolean.parseBoolean(definition.getObserved());
     }
 
-    protected boolean isImplementation(ComponentDefinition componentDefinition) {
-        return StringUtils.isNotBlank(componentDefinition.getImplementation());
+    protected boolean isConfigured(ComponentDefinition definition) {
+        return StringUtils.isNotBlank(definition.getPath()) && !Boolean.parseBoolean(definition.getObserved());
     }
 
-    protected boolean isProvider(ComponentDefinition componentDefinition) {
-        return StringUtils.isNotBlank(componentDefinition.getProvider());
+    protected boolean isImplementation(ComponentDefinition definition) {
+        return StringUtils.isNotBlank(definition.getImplementation());
+    }
+
+    protected boolean isProvider(ComponentDefinition definition) {
+        return StringUtils.isNotBlank(definition.getProvider());
     }
 
     /**

@@ -39,6 +39,8 @@ import java.lang.reflect.Type;
 import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import info.magnolia.objectfactory.ParameterInfo;
+import info.magnolia.objectfactory.ParameterResolver;
 
 /**
  * Parameter resolver that finds parameters by querying for them in a Guice Injector. Will create javax.inject.Provider
@@ -46,7 +48,7 @@ import com.google.inject.Key;
  *
  * @version $Id$
  */
-public class GuiceParameterResolver implements ObjectManufacturer.ParameterResolver {
+public class GuiceParameterResolver implements ParameterResolver {
 
     private final Injector injector;
 
@@ -59,10 +61,10 @@ public class GuiceParameterResolver implements ObjectManufacturer.ParameterResol
     }
 
     @Override
-    public Object resolveParameter(ObjectManufacturer.ConstructorParameter methodParameter) {
+    public Object resolveParameter(ParameterInfo parameter) {
 
-        Type genericParameterType = methodParameter.getGenericParameterType();
-        Class<?> parameterType = methodParameter.getParameterType();
+        Type genericParameterType = parameter.getGenericParameterType();
+        Class<?> parameterType = parameter.getParameterType();
 
         // We ask for an existing binding so Guice wont create jit bindings for things like Class and String
         // This means that all parameters need to be explicitly bound

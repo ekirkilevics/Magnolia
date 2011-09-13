@@ -33,20 +33,22 @@
  */
 package info.magnolia.objectfactory.guice;
 
-import com.google.inject.ProvisionException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.configuration.ComponentConfigurer;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 /**
  * Guice configuration module that binds providers for module classes.
  *
  * @version $Id$
  */
-public class ModuleInstancesConfigurer extends AbstractGuiceComponentConfigurer {
+public class ModuleInstancesConfigurer implements ComponentConfigurer {
 
     @Override
-    protected void configure() {
+    public void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration) {
 
         ModuleRegistry moduleRegistry = parentComponentProvider.getComponent(ModuleRegistry.class);
         GuiceModuleManager moduleManager = (GuiceModuleManager) parentComponentProvider.getComponent(ModuleManager.class);
@@ -58,10 +60,10 @@ public class ModuleInstancesConfigurer extends AbstractGuiceComponentConfigurer 
                 try {
                     moduleClass = moduleManager.getModuleClass(moduleDefinition);
                 } catch (ClassNotFoundException e) {
-                    throw new ProvisionException(e.getMessage(), e);
+                    throw new RuntimeException("Class not found: " + moduleDefinition.getClassName(), e);
                 }
                 ModuleInstanceProvider provider = new ModuleInstanceProvider(moduleDefinition);
-                bind(moduleClass).toProvider(provider);
+                configuration.registerInstance(moduleClass, provider);
                 moduleManager.registerModuleInstanceProvider(moduleDefinition.getName(), provider);
             }
         }

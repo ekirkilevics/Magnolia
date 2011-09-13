@@ -44,8 +44,6 @@ import org.junit.After;
 import org.junit.Test;
 
 import com.google.inject.ProvisionException;
-import com.google.inject.servlet.RequestScoped;
-import com.google.inject.servlet.SessionScoped;
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
 import com.mockrunner.mock.web.MockHttpSession;
@@ -55,6 +53,8 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.annotation.RequestScoped;
+import info.magnolia.objectfactory.annotation.SessionScoped;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockWebContext;

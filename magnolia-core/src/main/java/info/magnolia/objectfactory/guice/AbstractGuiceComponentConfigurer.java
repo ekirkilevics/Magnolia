@@ -34,8 +34,8 @@
 package info.magnolia.objectfactory.guice;
 
 import com.google.inject.AbstractModule;
-import info.magnolia.objectfactory.ComponentConfigurer;
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.configuration.ComponentConfigurer;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 /**

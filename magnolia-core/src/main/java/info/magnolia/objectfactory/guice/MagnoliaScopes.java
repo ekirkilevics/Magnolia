@@ -40,6 +40,7 @@ import com.google.inject.Key;
 import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
 import com.google.inject.Scope;
+import com.google.inject.Scopes;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
@@ -48,10 +49,22 @@ import info.magnolia.context.WebContext;
  *
  * @version $Id$
  */
-public class MagnoliaServletScopes {
+public class MagnoliaScopes {
 
-    private MagnoliaServletScopes() {
+    private MagnoliaScopes() {
     }
+
+    public static final Scope LAZY_SINGLETON = new Scope() {
+        @Override
+        public <T> Provider<T> scope(Key<T> key, Provider<T> creator) {
+            return Scopes.SINGLETON.scope(key, creator);
+        }
+
+        @Override
+        public String toString() {
+            return "MagnoliaScopes.LAZY_SINGLETON";
+        }
+    };
 
     /**
      * A sentinel attribute value representing null.
@@ -97,7 +110,7 @@ public class MagnoliaServletScopes {
 
         @Override
         public String toString() {
-            return "MagnoliaServletScopes.REQUEST";
+            return "MagnoliaScopes.REQUEST";
         }
     };
 
@@ -138,7 +151,7 @@ public class MagnoliaServletScopes {
 
         @Override
         public String toString() {
-            return "MagnoliaServletScopes.SESSION";
+            return "MagnoliaScopes.SESSION";
         }
     };
 
@@ -151,7 +164,13 @@ public class MagnoliaServletScopes {
                     " MgnlContext does not have a WebContext set, this is most likely" +
                     " because we are not currently processing a HTTP request.", e);
         }
-        return webContext.getRequest();
+        HttpServletRequest request = webContext.getRequest();
+        if (request == null) {
+            throw new OutOfScopeException("Cannot access scoped object." +
+                    " MgnlContext does not have a HttpServletRequest set, this is most likely" +
+                    " because we are not currently processing a HTTP request.");
+        }
+        return request;
     }
 
     private static HttpSession getSession() {

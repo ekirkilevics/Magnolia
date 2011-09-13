@@ -37,8 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.module.model.ComponentDefinition;
 import info.magnolia.objectfactory.Classes;
-import info.magnolia.objectfactory.ComponentConfigurer;
 import info.magnolia.objectfactory.ComponentConfigurationPath;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
@@ -51,15 +51,18 @@ import info.magnolia.objectfactory.ComponentProvider;
  * repository). In the latter case, the component is constructed via
  * {@link info.magnolia.objectfactory.ObservedComponentFactory} and reflects (through observation) the contents of the
  * given path.
- *
+ * <p/>
  * This behaviour exists for backwards compatibility reasons, prefer configuring your components in a module
  * descriptor instead, inside a components tag.
+ * <p/>
+ * In order to remain backwards compatible implementations are added both as type mappings and as components and then
+ * always scoped as lazy singletons.
  *
  * @version $Id$
  */
-public class ComponentsFromPropertiesConfigurer implements ComponentConfigurer {
+public class LegacyComponentsConfigurer implements ComponentConfigurer {
 
-    private final static Logger log = LoggerFactory.getLogger(ComponentsFromPropertiesConfigurer.class);
+    private final static Logger log = LoggerFactory.getLogger(LegacyComponentsConfigurer.class);
 
     @Override
     public void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration) {
@@ -73,7 +76,7 @@ public class ComponentsFromPropertiesConfigurer implements ComponentConfigurer {
         }
     }
 
-    protected <T> void addComponent(ComponentProviderConfiguration configuration, String key, String value) {
+    protected <T> void addComponent(ComponentProviderConfiguration componentProviderConfiguration, String key, String value) {
 
         final Class<T> type = (Class<T>) classForName(key);
         if (type == null) {
@@ -82,21 +85,50 @@ public class ComponentsFromPropertiesConfigurer implements ComponentConfigurer {
         }
 
         if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
-            ComponentConfigurationPath path = new ComponentConfigurationPath(value);
-            configuration.addComponent(new ConfiguredComponentConfiguration(type, path.getRepository(), path.getPath(), true));
+            componentProviderConfiguration.addComponent(getObserved(type, value));
         } else {
             Class<? extends T> valueType = (Class<? extends T>) classForName(value);
             if (valueType == null) {
                 log.debug("{} does not seem to resolve a class or a configuration path. (property key: {})", value, key);
             } else {
                 if (ComponentFactory.class.isAssignableFrom(valueType)) {
-                    configuration.addComponent(new ComponentFactoryConfiguration(type, valueType));
+                    componentProviderConfiguration.addComponent(getComponentFactory(type, (Class<? extends ComponentFactory<T>>) valueType));
                 } else {
-                    configuration.addComponent(new ImplementationConfiguration(type, valueType));
-                    configuration.addTypeMapping(type, valueType);
+                    componentProviderConfiguration.addComponent(getImplementation(type, valueType));
+                    componentProviderConfiguration.addTypeMapping(type, valueType);
                 }
             }
         }
+    }
+
+    protected <T> ImplementationConfiguration getImplementation(Class<T> type, Class<? extends T> implementation) {
+        ImplementationConfiguration configuration = new ImplementationConfiguration<T>();
+        configuration.setType(type);
+        configuration.setImplementation(implementation);
+        configuration.setScope(ComponentDefinition.SCOPE_SINGLETON);
+        configuration.setLazy(true);
+        return configuration;
+    }
+
+    protected <T> ProviderConfiguration<T> getComponentFactory(Class<T> type, Class<? extends ComponentFactory<T>> factoryClass) {
+        ProviderConfiguration<T> configuration = new ProviderConfiguration<T>();
+        configuration.setType(type);
+        configuration.setProviderClass(factoryClass);
+        configuration.setScope(ComponentDefinition.SCOPE_SINGLETON);
+        configuration.setLazy(true);
+        return configuration;
+    }
+
+    protected <T> ConfiguredComponentConfiguration<T> getObserved(Class<T> type, String workspaceAndPath) {
+        ComponentConfigurationPath path = new ComponentConfigurationPath(workspaceAndPath);
+        ConfiguredComponentConfiguration<T> configuration = new ConfiguredComponentConfiguration<T>();
+        configuration.setType(type);
+        configuration.setWorkspace(path.getRepository());
+        configuration.setPath(path.getPath());
+        configuration.setObserved(true);
+        configuration.setScope(ComponentDefinition.SCOPE_SINGLETON);
+        configuration.setLazy(true);
+        return configuration;
     }
 
     protected Class<?> classForName(String value) {

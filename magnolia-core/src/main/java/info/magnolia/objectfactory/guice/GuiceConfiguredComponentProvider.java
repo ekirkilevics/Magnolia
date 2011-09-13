@@ -34,10 +34,10 @@
 package info.magnolia.objectfactory.guice;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import com.google.inject.Provider;
 import com.google.inject.ProvisionException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanException;
@@ -56,36 +56,30 @@ public class GuiceConfiguredComponentProvider<T> implements Provider<T> {
 
     @Inject
     private ComponentProvider componentProvider;
-    private final String path;
     private final String workspace;
-    private T instance;
-    private boolean instantiated;
+    private final String path;
 
-    public GuiceConfiguredComponentProvider(String path, String workspace) {
+    public GuiceConfiguredComponentProvider(String workspace, String path) {
         this.path = path;
         this.workspace = workspace;
     }
 
     @Override
-    public synchronized T get() {
-        if (!instantiated) {
-            final Node node;
-            try {
-                node = MgnlContext.getJCRSession(workspace).getNode(path);
-            } catch (RepositoryException e) {
-                throw new ProvisionException("Can't find a the node [" + workspace + ":" + path + "] to create an instance");
-            }
-
-            try {
-                instance = transformNode(node);
-                instantiated = true;
-            } catch (Content2BeanException e) {
-                throw new ProvisionException(e.getMessage(), e);
-            } catch (RepositoryException e) {
-                throw new ProvisionException(e.getMessage(), e);
-            }
+    public T get() {
+        final Node node;
+        try {
+            node = MgnlContext.getJCRSession(workspace).getNode(path);
+        } catch (RepositoryException e) {
+            throw new ProvisionException("Can't find a the node [" + workspace + ":" + path + "] to create an instance");
         }
-        return instance;
+
+        try {
+            return transformNode(node);
+        } catch (Content2BeanException e) {
+            throw new ProvisionException(e.getMessage(), e);
+        } catch (RepositoryException e) {
+            throw new ProvisionException(e.getMessage(), e);
+        }
     }
 
     @SuppressWarnings("unchecked")
