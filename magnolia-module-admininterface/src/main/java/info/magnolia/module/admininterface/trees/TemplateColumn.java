@@ -101,7 +101,7 @@ public class TemplateColumn extends TreeColumn {
 
         for (TemplateDefinition templateDefinition : templateDefinitons) {
             String title = MessagesUtil.javaScriptString(templateDefinition.getTitle());
-            templateSelect.setOptions(title, templateDefinition.getName());
+            templateSelect.setOptions(title, templateDefinition.getId());
         }
         return templateSelect.getHtml();
     }
