@@ -224,7 +224,9 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
         }
 
     if (!dialogPage){
-        dialogPage = ".magnolia/dialogs/" + paragraph + ".html";
+        //here we need to strip a possibly present module name from the paragraph name
+        var idx = paragraph.indexOf(':');
+        dialogPage = ".magnolia/dialogs/" + (idx != -1 ? paragraph.substring(idx+1) : paragraph) + ".html";
     }
 
 

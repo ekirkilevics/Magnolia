@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogFactory;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
@@ -54,6 +55,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Singleton;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -92,7 +94,7 @@ public class DialogHandlerManager extends ObservedManager {
             log.error("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
             throw new IllegalStateException("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e));
         }
-
+        final String moduleName = getModuleName(node);
         for (Iterator<Content> iter = dialogNodes.iterator(); iter.hasNext();) {
             Content dialogNode = new ExtendingContentWrapper(new SystemContentWrapper(iter.next()));
             try {
@@ -109,7 +111,8 @@ public class DialogHandlerManager extends ObservedManager {
             }
             String name = dialogNode.getNodeData(ND_NAME).getString();
             if (StringUtils.isEmpty(name)) {
-                name = dialogNode.getName();
+                name =  StringUtils.isNotBlank(moduleName) ? (moduleName + ":"  + dialogNode.getName()) : "" + dialogNode.getName();
+                log.debug("Registering dialog with name {}", name);
             }
             String className = NodeDataUtil.getString(dialogNode, CLASS);
 
@@ -128,6 +131,19 @@ public class DialogHandlerManager extends ObservedManager {
                 log.warn("Can't find dialog handler class " + className, e); //$NON-NLS-1$
             }
         }
+    }
+
+    private String getModuleName(final Content node) {
+        try {
+            return node.getParent().getName();
+        } catch (AccessDeniedException e) {
+            log.error("An error occurred while getting the module name for dialogs", e);
+        } catch (PathNotFoundException e) {
+            log.error("An error occurred while getting the module name for dialogs", e);
+        } catch (RepositoryException e) {
+            log.error("An error occurred while getting the module name for dialogs", e);
+        }
+        return "";
     }
 
     @Override

@@ -156,7 +156,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         }
         label.append("<br /><br />"); //$NON-NLS-1$
 
-        final Button button = new Button(radioButtonSet.getName(), paragraphInfo.getName());
+        final Button button = new Button(radioButtonSet.getName(), paragraphInfo.getId());
         button.setLabel(label.toString());
         button.setOnclick("document.getElementById('mgnlFormMain').submit();"); //$NON-NLS-1$
         radioButtonSet.addOption(button);

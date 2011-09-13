@@ -82,15 +82,18 @@ public class DialogMVCServlet extends MVCServlet {
     }
 
     protected String getDialogName(HttpServletRequest request) {
-        String dialogName = RequestFormUtil.getParameter(request, "mgnlDialog"); //$NON-NLS-1$
-
+        String dialogName = request.getParameter("mgnlDialog");
+        if(StringUtils.isEmpty(dialogName)){
+            dialogName = request.getParameter("mgnlParagraph");
+        }
+        final String pathInfo = request.getPathInfo();
+        boolean isSelectOrEditParagraph = pathInfo.contains("selectParagraph") || pathInfo.contains("editParagraph");
         // /.magnolia/dialogs/dialogName.html?foo=bar
-        if (StringUtils.isEmpty(dialogName)) {
-            final String pathInfo = request.getPathInfo();
+        if (StringUtils.isEmpty(dialogName) || isSelectOrEditParagraph) {
             final int extensionIdx = pathInfo.lastIndexOf('.') >= 0 ? pathInfo.lastIndexOf('.') : pathInfo.length();
             dialogName = pathInfo.substring(1, extensionIdx);
         }
-        return dialogName;
+        return isSelectOrEditParagraph ? "adminInterface:" + dialogName : dialogName;
     }
 
 }

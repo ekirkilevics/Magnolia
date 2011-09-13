@@ -33,6 +33,7 @@
  */
 package info.magnolia.templating.editor.client;
 
+
 import info.magnolia.templating.editor.client.jsni.GeneralJavascript;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -195,10 +196,9 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         if (nodeName == null) {
             nodeName = "";
         }
-        int i = dialog.indexOf(":");
-        String dialogName = dialog.substring(i+1);
-        //TODO how do we pass the locale (last arg)         here?
-        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialogName, workspace, "", "", "", "");
+
+        //TODO how do we pass the locale (last arg) here?
+        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", "");
     };
 
     public void moveComponentStart(String id) {
