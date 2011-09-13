@@ -34,7 +34,7 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.context.MgnlContext;
@@ -45,6 +45,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
@@ -99,7 +102,12 @@ public abstract class ObservedManager {
         // Call onClear and reregister the nodes by calling onRegister
         onClear();
 
-        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+        Session session = null;
+        try {
+            session = MgnlContext.getSystemContext().getJCRSession(ContentRepository.CONFIG);
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
 
         // copy to avoid ConcurrentModificationException since the list get changed during iteration
         List<String> uuids = new ArrayList<String>(registeredUUIDs);
@@ -107,8 +115,8 @@ public abstract class ObservedManager {
         for (Iterator<String> iter = uuids.iterator(); iter.hasNext();) {
             String uuid = iter.next();
             try {
-                Content node = hm.getContentByUUID(uuid);
-                reload(node);
+                Node node = session.getNodeByIdentifier(uuid);
+                reload(new DefaultContent(node));
             }
             catch (Exception e) {
                 registeredUUIDs.remove(uuid);

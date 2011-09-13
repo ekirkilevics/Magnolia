@@ -35,7 +35,6 @@ package info.magnolia.context;
 
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.util.DelegateSessionWrapper;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.stats.JCRStats;
 
@@ -57,7 +56,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Basic implementation of the <code>RepositoryAcquiringStrategy</code> providing storage of JCR sessions and hierarchy manager instances to extending classes.
- * @author philipp
+ *
  * @version $Id$
  *
  */
@@ -66,60 +65,32 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
     private final Map<String, Session> jcrSessions = new HashMap<String, Session>();
 
-    private final Map<String, HierarchyManager> hierarchyManagers = new HashMap<String, HierarchyManager>();
-    /**
-     * Second map keeping the same HierarchyManagers as above but with their associated JCR-Session.
-     * Stored sessions are kept in sync with the ones stored int the other map.
-     */
-    private final Map<Session, HierarchyManager> sessionToHierarchyManagers = new HashMap<Session, HierarchyManager>();
-
     @Override
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         log.debug("creating {}:{} HM for {}, using {} strategy", new Object[] {repositoryId, workspaceId, getUserId(), this.getClass().getName()});
-        final String hmAttrName = repositoryId + "_" + workspaceId;
-        HierarchyManager hm = hierarchyManagers.get(hmAttrName);
-
-        if (hm == null) {
-            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-            try {
-                Session jcrSession = getSession(repositoryId, workspaceId);
-                hm = util.createHierarchyManager(getUserId(), jcrSession);
-                hierarchyManagers.put(hmAttrName, hm);
-                sessionToHierarchyManagers.put(unwrap(jcrSession), hm);
-            }
-            catch (RepositoryException e) {
-                throw new UnhandledException(e);
-            }
+        HierarchyManager hm = null;
+        WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
+        try {
+            Session jcrSession = getSession(repositoryId, workspaceId);
+            hm = util.createHierarchyManager(getUserId(), jcrSession);
+        }
+        catch (RepositoryException e) {
+            throw new UnhandledException(e);
         }
 
         return hm;
     }
 
     /**
-     * @return the HierarchyManager associated with the provided session. Caution - in contrast to {@link AbstractRepositoryStrategy#getHierarchyManager(String, String)}
-     * it will not create a HierarchyManager in case there's none mapped to the provided session.
+     * @return create a HierarchyManager wrapping the provided jcrSession and return it.
      */
     @Override
     public HierarchyManager getHierarchyManagerFor(Session jcrSession) {
-        HierarchyManager hm = sessionToHierarchyManagers.get(jcrSession);
-        if (hm == null) {
-            // TODO dlipp - verifiy if this is proper solution or rather a hack
-            hm = sessionToHierarchyManagers.get(unwrap(jcrSession));
+        try {
+            return WorkspaceAccessUtil.getInstance().createHierarchyManager(getUserId(), jcrSession);
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
         }
-        return hm;
-    }
-
-    protected Session unwrap(Session jcrSession) {
-        if (!(jcrSession instanceof DelegateSessionWrapper)) {
-            return jcrSession;
-        }
-        // TODO dlipp - verifiy if this is proper solution or rather a hack
-        DelegateSessionWrapper sessionWrapper = (DelegateSessionWrapper) jcrSession;
-        while (sessionWrapper.getDelegate() instanceof DelegateSessionWrapper) {
-            sessionWrapper = (DelegateSessionWrapper) sessionWrapper.getDelegate();
-        }
-        return sessionWrapper.getDelegate();
-
     }
 
     abstract protected String getUserId();
@@ -157,8 +128,8 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         for (Session session : jcrSessions.values()) {
             releaseSession(session, checkObservation);
         }
-        hierarchyManagers.clear();
-        sessionToHierarchyManagers.clear();
+//        hierarchyManagers.clear();
+//        sessionToHierarchyManagers.clear();
         jcrSessions.clear();
     }
 

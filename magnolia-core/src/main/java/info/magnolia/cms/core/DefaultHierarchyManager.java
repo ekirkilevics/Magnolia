@@ -40,6 +40,7 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
+import info.magnolia.jcr.util.SessionUtil;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.io.ObjectStreamField;
@@ -124,21 +125,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * Reinitialize itself with the partial deserialized data.
-     * */
-    private void reInitialize() {
-        WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-        try {
-            this.jcrSession = util.createRepositorySession(util.getDefaultCredentials(), this.repositoryName, this.workspaceName);
-            this.queryManager = util.createQueryManager(this.jcrSession, this);
-            this.rootNode = this.jcrSession.getRootNode();
-            //this.workspace = this.jcrSession.getWorkspace();
-        } catch (RepositoryException re) {
-            log.error("Failed to load HierarchyManager from persistent storage", re);
-        }
-    }
-
-    /**
      * Set access manager for this hierarchy.
      * @param accessManager
      */
@@ -162,7 +148,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @param queryManager
      */
     protected void setQueryManager(QueryManager queryManager) {
-        this.queryManager = queryManager;
+        throw new UnsupportedOperationException("This Operation is no longer available.");
     }
 
     @Override
@@ -172,23 +158,17 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             try {
                 this.queryManager = util.createQueryManager(this.jcrSession, this);
             } catch (RepositoryException e) {
-                reInitialize();
+                throw new RuntimeException(e);
             }
         }
         return this.queryManager;
     }
 
     private Node getRootNode() {
-        if (null == this.rootNode) {
-            reInitialize();
-        }
         return this.rootNode;
     }
 
     protected Session getJcrSession() {
-        if (null == this.jcrSession) {
-            reInitialize();
-        }
         return this.jcrSession;
     }
 
@@ -458,11 +438,11 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
     AccessDeniedException {
         try {
-            return new DefaultContent(this.getJcrSession().getNodeByUUID(uuid));
+            return new DefaultContent(this.getJcrSession().getNodeByIdentifier(uuid));
         } catch (ItemNotFoundException e) {
             // retry in case session was not updated
             this.getJcrSession().refresh(true);
-            return new DefaultContent(this.getJcrSession().getNodeByUUID(uuid));
+            return new DefaultContent(this.getJcrSession().getNodeByIdentifier(uuid));
         }
     }
 
@@ -516,6 +496,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             this.getJcrSession().save();
         }
         catch (RepositoryException re) {
+            // TODO dlipp - this might end up with logging the error twice. I'd prefer to either log or rethrow - in that context the rethrow.
             log.error(re.getMessage(), re);
             throw re;
         }
@@ -544,5 +525,43 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     public String getName() {
         return this.workspaceName;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((jcrSession == null) ? 0 : jcrSession.hashCode());
+        result = prime * result + ((queryManager == null) ? 0 : queryManager.hashCode());
+        result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DefaultHierarchyManager other = (DefaultHierarchyManager) obj;
+        if (jcrSession == null) {
+            if (other.jcrSession != null)
+                return false;
+        } else if (!SessionUtil.unwrap(jcrSession).equals(SessionUtil.unwrap(other.jcrSession)))
+            return false;
+        if (queryManager == null) {
+            if (other.queryManager != null)
+                return false;
+        } else if (!queryManager.equals(other.queryManager))
+            return false;
+        if (userId == null) {
+            if (other.userId != null)
+                return false;
+        } else if (!userId.equals(other.userId))
+            return false;
+        return true;
+    }
+
 
 }

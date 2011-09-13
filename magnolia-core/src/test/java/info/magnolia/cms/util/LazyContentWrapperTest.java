@@ -38,7 +38,6 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.core.Content;
@@ -67,10 +66,10 @@ import com.mockrunner.mock.web.MockHttpSession;
 
 /**
  * This test requires real repository and authentication which is currently not possible without magnolia-jaas module.
- * 
+ *
  * @author had
  * @version $Id:$
- * 
+ *
  */
 public class LazyContentWrapperTest extends RepositoryTestCase {
 
@@ -113,6 +112,10 @@ public class LazyContentWrapperTest extends RepositoryTestCase {
         super.tearDown();
     }
 
+    /**
+     * We removed reinit functionality for DefaultHierarchyManager. That's why this test does no longer test the expected behavior.
+     * @throws Exception
+     */
     @Test
     public void testClosedSessionResistance() throws Exception {
         HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager("config");
@@ -130,7 +133,7 @@ public class LazyContentWrapperTest extends RepositoryTestCase {
         // close the session SCW has to be able to recover
         hm.getWorkspace().getSession().logout();
 
-        assertFalse(plainContent.getHierarchyManager().getWorkspace().getSession().isLive());
+        //assertFalse(plainContent.getHierarchyManager().getWorkspace().getSession().isLive());
         assertTrue(systemContent.getHierarchyManager().getWorkspace().getSession().isLive());
 
         assertEquals(systemContent.getHierarchyManager(), LifeTimeJCRSessionUtil.getHierarchyManager("config"));

@@ -185,6 +185,10 @@ public class WorkspaceAccessUtil {
     public QueryManager createQueryManager(Session jcrSession, HierarchyManager hm)
     throws RepositoryException {
         javax.jcr.query.QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
+
+        /**
+         * TODO dlipp: do not actually forward HM but null for now - QueryManager etc. internally don't really need the HM!
+         */
         return SearchFactory.getInstance().getQueryManager(jcrQueryManager, hm);
     }
 

@@ -60,8 +60,7 @@ import org.slf4j.LoggerFactory;
  * If the node's type doesn't match the nearest matching ancestors is add instead. This allows to
  * search in paragraph content while retrieving a list of pages.
  *
- * @author Sameer Charles
- * @author Fabrizio Giustina
+ * @version $Id$
  */
 public class QueryResultImpl implements QueryResult {
 
@@ -80,6 +79,9 @@ public class QueryResultImpl implements QueryResult {
      */
     protected Map<String, Collection<Content>> objectStore = new Hashtable<String, Collection<Content>>();
 
+    /**
+     * TODO dlipp: Remove - it's not used internally
+     */
     protected HierarchyManager hm;
 
     protected final long maxResultSize;

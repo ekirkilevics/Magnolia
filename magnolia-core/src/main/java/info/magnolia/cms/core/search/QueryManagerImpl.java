@@ -42,8 +42,8 @@ import javax.jcr.query.InvalidQueryException;
 
 /**
  * Wrapping a JCR {@link javax.jcr.query.QueryManager}.
- * Date: Mar 29, 2005 Time: 2:54:21 PM
- * @author Sameer Charles
+ *
+ * @version $Id$
  */
 
 public class QueryManagerImpl implements QueryManager {
@@ -55,6 +55,37 @@ public class QueryManagerImpl implements QueryManager {
     protected QueryManagerImpl(javax.jcr.query.QueryManager queryManager, HierarchyManager hm) {
         this.queryManager = queryManager;
         this.hm = hm;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((hm == null) ? 0 : hm.hashCode());
+        result = prime * result + ((queryManager == null) ? 0 : queryManager.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        QueryManagerImpl other = (QueryManagerImpl) obj;
+        if (hm == null) {
+            if (other.hm != null)
+                return false;
+        } else if (!hm.equals(other.hm))
+            return false;
+        if (queryManager == null) {
+            if (other.queryManager != null)
+                return false;
+        } else if (!queryManager.equals(other.queryManager))
+            return false;
+        return true;
     }
 
     @Override
