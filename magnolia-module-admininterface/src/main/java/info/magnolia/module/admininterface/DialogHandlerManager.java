@@ -112,7 +112,6 @@ public class DialogHandlerManager extends ObservedManager {
             String name = dialogNode.getNodeData(ND_NAME).getString();
             if (StringUtils.isEmpty(name)) {
                 name =  StringUtils.isNotBlank(moduleName) ? (moduleName + ":"  + dialogNode.getName()) : "" + dialogNode.getName();
-                log.debug("Registering dialog with name {}", name);
             }
             String className = NodeDataUtil.getString(dialogNode, CLASS);
 
