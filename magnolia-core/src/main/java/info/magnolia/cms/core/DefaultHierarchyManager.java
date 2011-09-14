@@ -92,7 +92,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     private QueryManager queryManager;
 
     /**
-     * All serializable properties.
+     * TODO dlipp: can be replaced by {@link Session#getUserID()} once jcr Session is created with proper user (currently not the case).
      * */
     private String userId;
 
