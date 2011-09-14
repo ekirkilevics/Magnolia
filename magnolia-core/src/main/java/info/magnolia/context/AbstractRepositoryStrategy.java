@@ -128,8 +128,6 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         for (Session session : jcrSessions.values()) {
             releaseSession(session, checkObservation);
         }
-//        hierarchyManagers.clear();
-//        sessionToHierarchyManagers.clear();
         jcrSessions.clear();
     }
 
