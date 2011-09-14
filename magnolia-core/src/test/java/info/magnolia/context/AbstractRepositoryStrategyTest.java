@@ -56,8 +56,6 @@ public class AbstractRepositoryStrategyTest extends RepositoryTestCase {
         HierarchyManager hm2 =  ((AbstractContext) MgnlContext.getInstance()).getRepositoryStrategy().getHierarchyManagerFor(session);
 
         // THEN
-        assertTrue(hm.equals(hm2));
-
         assertEquals(hm, hm2);
     }
 }
