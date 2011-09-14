@@ -84,10 +84,7 @@ public class AbsolutePathTransformer{
             }
             return getURI2RepositoryManager().getDefaultMapping().getURI(uuidLink.getHandle());
         }
-
-        else{
-            linkStr = getURI2RepositoryManager().getDefaultMapping().getURI(uuidLink.getHandle());
-        }
+        linkStr = getURI2RepositoryManager().getDefaultMapping().getURI(uuidLink.getHandle());
         linkStr += getURISuffix(uuidLink);
         if(useI18N){
             linkStr = I18nContentSupportFactory.getI18nSupport().toI18NURI(linkStr);

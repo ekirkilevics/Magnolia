@@ -70,10 +70,9 @@ public class ChildrenExistsDelegateTask extends ConditionalDelegateTask {
             if (contentType != null) {
                 return ctx.getHierarchyManager(workspaceName).getContent(
                         pathToCheck).hasChildren(contentType);
-            } else {
-                return ctx.getHierarchyManager(workspaceName).getContent(
-                        pathToCheck).hasChildren();
             }
+            return ctx.getHierarchyManager(workspaceName).getContent(
+                    pathToCheck).hasChildren();
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
         }

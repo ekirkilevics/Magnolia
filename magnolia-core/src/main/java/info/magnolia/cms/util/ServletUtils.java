@@ -156,9 +156,8 @@ public abstract class ServletUtils {
     public static String getOriginalRequestURI(HttpServletRequest request) {
         if (request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE) != null) {
             return (String) request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE);
-        } else {
-            return request.getRequestURI();
         }
+        return request.getRequestURI();
     }
 
     /**
@@ -188,14 +187,13 @@ public abstract class ServletUtils {
             }
 
             return builder.toString();
-        } else {
-            StringBuilder builder = new StringBuilder();
-            builder.append(request.getRequestURL());
-            String queryString = request.getQueryString();
-            if (StringUtils.isNotEmpty(queryString)) {
-                builder.append("?").append(queryString);
-            }
-            return builder.toString();
         }
+        StringBuilder builder = new StringBuilder();
+        builder.append(request.getRequestURL());
+        String queryString = request.getQueryString();
+        if (StringUtils.isNotEmpty(queryString)) {
+            builder.append("?").append(queryString);
+        }
+        return builder.toString();
     }
 }

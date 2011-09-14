@@ -52,9 +52,8 @@ class EnumAwareConvertUtilsBean extends ConvertUtilsBean {
         // nor any known object that has a custom converter for it. It might be an enum !
         if (converter == null && clazz.isEnum()) {
             return enumConverter;
-        } else {
-            return converter;
         }
+        return converter;
     }
 
     private class EnumConverter implements Converter {

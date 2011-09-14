@@ -134,8 +134,7 @@ public class LinkTransformerManager {
                 }
             }
             return getAbsolute(addContextPathToBrowserLinks);
-        } else {
-            return getCompleteUrl();
         }
+        return getCompleteUrl();
     }
 }

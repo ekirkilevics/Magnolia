@@ -116,9 +116,7 @@ public class BinaryNodeData extends AbstractNodeData {
                 throw new RuntimeException("Can't read value of node data " + toString(), e);
             }
         }
-        else {
-            return null;
-        }
+        return null;
     }
 
     @Override

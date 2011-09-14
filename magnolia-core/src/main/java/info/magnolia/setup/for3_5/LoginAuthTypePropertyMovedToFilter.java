@@ -47,10 +47,6 @@ public class LoginAuthTypePropertyMovedToFilter extends MoveAndRenamePropertyTas
 
     @Override
     protected String modifyCurrentValue(String currentValue) {
-        if ("Basic".equals(currentValue)) {
-            return "info.magnolia.cms.security.auth.callback.BasicClientCallback";
-        } else {
-            return "info.magnolia.cms.security.auth.callback.FormClientCallback";
-        }
+        return ("Basic".equals(currentValue)) ? "info.magnolia.cms.security.auth.callback.BasicClientCallback" : "info.magnolia.cms.security.auth.callback.FormClientCallback";
     }
 }

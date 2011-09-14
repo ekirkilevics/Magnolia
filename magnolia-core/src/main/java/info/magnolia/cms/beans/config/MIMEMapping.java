@@ -211,11 +211,7 @@ public class MIMEMapping {
     public static String getContentEncodingOrDefault(String contentType) {
         final String characterEncoding = getContentEncoding(contentType);
 
-        if (StringUtils.isEmpty(characterEncoding)) {
-            return DEFAULT_CHAR_ENCODING;
-        } else {
-            return characterEncoding;
-        }
+        return (StringUtils.isEmpty(characterEncoding)) ? DEFAULT_CHAR_ENCODING : characterEncoding;
     }
 
     /**

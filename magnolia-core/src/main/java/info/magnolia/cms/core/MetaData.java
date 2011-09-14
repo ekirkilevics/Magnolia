@@ -250,15 +250,11 @@ public class MetaData {
                 // node has been modified after last activation
                 return ACTIVATION_STATUS_MODIFIED;
             }
-            else {
-                // activated and not modified ever since
-                return ACTIVATION_STATUS_ACTIVATED;
-            }
+            // activated and not modified ever since
+            return ACTIVATION_STATUS_ACTIVATED;
         }
-        else {
-            // never activated or deactivated
-            return ACTIVATION_STATUS_NOT_ACTIVATED;
-        }
+        // never activated or deactivated
+        return ACTIVATION_STATUS_NOT_ACTIVATED;
     }
 
     /**

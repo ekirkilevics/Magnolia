@@ -97,10 +97,9 @@ public class DefaultMagnoliaPropertiesResolver implements MagnoliaPropertiesReso
         if (StringUtils.isEmpty(propertiesFilesString)) {
             log.debug("{} value in web.xml is undefined, falling back to default: {}", name, defaultValue);
             return defaultValue;
-        } else {
-            log.debug("{} value in web.xml is :'{}'", name, propertiesFilesString);
-            return propertiesFilesString;
         }
+        log.debug("{} value in web.xml is :'{}'", name, propertiesFilesString);
+        return propertiesFilesString;
     }
 
     /**

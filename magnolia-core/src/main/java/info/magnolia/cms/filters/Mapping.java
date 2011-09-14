@@ -80,14 +80,10 @@ public class Mapping {
         if (matcher == null) {
             return -1;
         }
-        else {
-            if (matcher.groupCount() > 0) {
-                return matcher.end(1);
-            }
-            else {
-                return matcher.end();
-            }
+        if (matcher.groupCount() > 0) {
+            return matcher.end(1);
         }
+        return matcher.end();
     }
 
     private Matcher findMatcher(HttpServletRequest request) {

@@ -152,9 +152,7 @@ public class MockNodeData extends AbstractNodeData {
             if(getParent() != null){
                 return getParent().getHandle() + "/" + this.getName();
             }
-            else{
-                return this.getName();
-            }
+            return this.getName();
         }
         catch (RepositoryException e) {
             throw new RuntimeException("Can't build handle", e);

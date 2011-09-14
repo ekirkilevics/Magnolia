@@ -215,9 +215,7 @@ public class LinkFactory {
         if(matcher.matches()){
             return createLink(matcher.group(1), matcher.group(2), matcher.group(5), matcher.group(7), matcher.group(8), matcher.group(10), matcher.group(12));
         }
-        else{
-            throw new LinkException("can't parse [ " + uuidLink + "]");
-        }
+        throw new LinkException("can't parse [ " + uuidLink + "]");
     }
 
     /**
@@ -237,9 +235,7 @@ public class LinkFactory {
             String handle = URI2RepositoryManager.getInstance().getHandle(orgHandle);
             return createLink(repository, handle, matcher.group(3),matcher.group(5),matcher.group(7));
         }
-        else{
-            throw new LinkException("can't parse [ " + link + "]");
-        }
+        throw new LinkException("can't parse [ " + link + "]");
     }
 
     /**

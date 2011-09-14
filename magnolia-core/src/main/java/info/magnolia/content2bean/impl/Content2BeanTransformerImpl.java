@@ -293,12 +293,11 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                             }
 
                             return;
-                        } else {
-                            log.debug("no add method found for property {}", propertyName);
-                            if (dscr.isCollection()) {
-                                log.debug("transform the values to a collection", propertyName);
-                                value = ((Map<Object, Object>) value).values();
-                            }
+                        }
+                        log.debug("no add method found for property {}", propertyName);
+                        if (dscr.isCollection()) {
+                            log.debug("transform the values to a collection", propertyName);
+                            value = ((Map<Object, Object>) value).values();
                         }
                     } else {
                         value = convertPropertyValue(dscr.getType().getType(), value);

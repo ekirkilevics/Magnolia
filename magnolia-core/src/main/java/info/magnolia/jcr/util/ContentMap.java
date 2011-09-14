@@ -227,11 +227,10 @@ public class ContentMap implements Map<String, Object> {
                 }
                 // don't we want to honor other types (e.g. numbers? )
                 return prop.getString();
-            } else {
-                // property doesn't exist, but maybe child of that name does
-                if (content.hasNode(keyStr)) {
-                    return new ContentMap(content.getNode(keyStr));
-                }
+            }
+            // property doesn't exist, but maybe child of that name does
+            if (content.hasNode(keyStr)) {
+                return new ContentMap(content.getNode(keyStr));
             }
 
         } catch (PathNotFoundException e) {

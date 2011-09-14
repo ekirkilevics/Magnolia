@@ -247,9 +247,8 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
         private boolean equalBypasses(final String existingBypasses) {
             if (bypasses != null) {
                 return bypasses.equals(existingBypasses);
-            } else {
-                return existingBypasses == null;
             }
+            return existingBypasses == null;
         }
     }
 }

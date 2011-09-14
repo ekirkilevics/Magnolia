@@ -128,20 +128,19 @@ public class DefaultComponentProvider implements ComponentProvider {
                 setInstanceFactory(type, factory);
                 // now that the factory is registered, we call ourself again
                 return newInstance(type);
-            } else {
-                final Class<?> clazz = Classes.getClassFactory().forName(className);
-                if (!Classes.isConcrete(clazz)) {
-                    throw new MgnlInstantiationException("No concrete implementation defined for " + clazz);
-                }
-                final Object instance = Classes.getClassFactory().newInstance(clazz, parameters);
-
-                if (instance instanceof ComponentFactory) {
-                    final ComponentFactory<T> factory = (ComponentFactory<T>) instance;
-                    setInstanceFactory(type, factory);
-                    return factory.newInstance();
-                }
-                return (T) instance;
             }
+            final Class<?> clazz = Classes.getClassFactory().forName(className);
+            if (!Classes.isConcrete(clazz)) {
+                throw new MgnlInstantiationException("No concrete implementation defined for " + clazz);
+            }
+            final Object instance = Classes.getClassFactory().newInstance(clazz, parameters);
+
+            if (instance instanceof ComponentFactory) {
+                final ComponentFactory<T> factory = (ComponentFactory<T>) instance;
+                setInstanceFactory(type, factory);
+                return factory.newInstance();
+            }
+            return (T) instance;
         } catch (Exception e) {
             if (e instanceof MgnlInstantiationException) {
                 throw (MgnlInstantiationException) e;
@@ -168,9 +167,8 @@ public class DefaultComponentProvider implements ComponentProvider {
         final String className = getImplementationName(type);
         if (!isInRepositoryDefinition(className)) {
             return (Class<? extends C>) Classes.getClassFactory().forName(className);
-        } else {
-            return type;
         }
+        return type;
     }
 
     protected String getImplementationName(Class<?> type) {

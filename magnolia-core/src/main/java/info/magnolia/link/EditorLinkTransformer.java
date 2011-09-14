@@ -56,9 +56,7 @@ public class EditorLinkTransformer implements LinkTransformer {
         if(uuidLink.getNodeData()!=null){
             return binaryTransformer.transform(uuidLink);
         }
-        else{
-            return linkTransformer.transform(uuidLink);
-        }
+        return linkTransformer.transform(uuidLink);
     }
 }
 

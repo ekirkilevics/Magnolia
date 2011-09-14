@@ -104,9 +104,8 @@ public class RecursiveOp extends AbstractNodeOperation {
         catch (Exception e) {
             if (e instanceof RepositoryException) {
                 throw (RepositoryException) e;
-            } else {
-                throw new RuntimeException(e);
             }
+            throw new RuntimeException(e);
         }
         return context;
     }

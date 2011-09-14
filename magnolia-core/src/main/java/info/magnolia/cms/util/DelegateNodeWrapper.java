@@ -583,11 +583,10 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
                 // wrapped is also DNW, and clone is shallow by default, but we want to go deeper here
                 tmp.wrapped = (Node) ((DelegateNodeWrapper) this.getWrappedNode()).clone();
                 return tmp.deepUnwrap(wrapper, false);
-            } else {
-                // still not at the end ...
-                wrapped = ((DelegateNodeWrapper) getWrappedNode()).deepUnwrap(wrapper, true);
-                return this;
             }
+            // still not at the end ...
+            wrapped = ((DelegateNodeWrapper) getWrappedNode()).deepUnwrap(wrapper, true);
+            return this;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Failed to unwrap " + this.getClass().getName() + " due to " + e.getMessage(), e);
         }

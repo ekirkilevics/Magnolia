@@ -206,9 +206,7 @@ public class MockContent extends AbstractContent {
             }
             return current;
         }
-        else {
-            c = children.get(path);
-        }
+        c = children.get(path);
         if (c == null) {
             throw new PathNotFoundException(path);
         }
@@ -231,9 +229,7 @@ public class MockContent extends AbstractContent {
         if (this.getParent() != null && !this.getParent().getName().equals("jcr:root")) {
             return getParent().getHandle() + "/" + this.getName();
         }
-        else{
-            return "/" + this.getName();
-        }
+        return "/" + this.getName();
     }
 
     @Override

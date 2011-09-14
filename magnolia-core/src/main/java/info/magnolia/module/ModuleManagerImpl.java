@@ -200,9 +200,8 @@ public class ModuleManagerImpl implements ModuleManager {
     public ModuleManagerUI getUI() {
         if (SystemProperty.getBooleanProperty("magnolia.update.auto")) {
             return new ModuleManagerNullUI(this);
-        } else {
-            return new ModuleManagerWebUI(this);
         }
+        return new ModuleManagerWebUI(this);
     }
 
     protected ModuleVersionHandler newVersionHandler(ModuleDefinition module) {
@@ -210,9 +209,8 @@ public class ModuleManagerImpl implements ModuleManager {
             final Class<? extends ModuleVersionHandler> versionHandlerClass = module.getVersionHandler();
             if (versionHandlerClass != null) {
                 return Classes.getClassFactory().newInstance(versionHandlerClass);
-            } else {
-                return new DefaultModuleVersionHandler();
             }
+            return new DefaultModuleVersionHandler();
         } catch (MgnlInstantiationException e) {
             throw e; // TODO
         }

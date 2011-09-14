@@ -92,12 +92,10 @@ public class ConfigUtil {
                         + clazz.getClassLoader()
                         + "] class loader in the search.");
                     return null;
-                } else {
-                    return new InputSource(in);
                 }
-            } else {
-                return null;
+                return new InputSource(in);
             }
+            return null;
         }
     }
 

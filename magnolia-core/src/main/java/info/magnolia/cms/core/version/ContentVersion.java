@@ -283,16 +283,12 @@ public class ContentVersion extends DefaultContent {
         if(super.hasContent(name)){
             return new ContentVersionChildWrapper(super.getContent(name), this);
         }
-        else{
-            Content content = base.getContent(name);
-            // only return the node if it was excluded from the versioning, otherwise the node is new
-            if(!rule.isAllowed(content.getNodeTypeName())){
-                return content;
-            }
-            else{
-                throw new PathNotFoundException(base.getHandle() + "/" + name);
-            }
+        Content content = base.getContent(name);
+        // only return the node if it was excluded from the versioning, otherwise the node is new
+        if(!rule.isAllowed(content.getNodeTypeName())){
+            return content;
         }
+        throw new PathNotFoundException(base.getHandle() + "/" + name);
     }
 
     /**
@@ -733,10 +729,8 @@ public class ContentVersion extends DefaultContent {
         if (this.node.hasProperty(name)) {
             return true;
         }
-        else { // check for mgnl:resource node
-            if (this.node.hasNode(name) && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)) {
-                return true;
-            }
+        if (this.node.hasNode(name) && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)) {
+            return true;
         }
         return false;
     }
@@ -748,10 +742,8 @@ public class ContentVersion extends DefaultContent {
             if (this.node.hasProperty(name)) {
                 return this.node.getProperty(name).getType();
             }
-            else { // check for mgnl:resource node
-                if (this.node.hasNode(name) && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)) {
-                    return PropertyType.BINARY;
-                }
+            if (this.node.hasNode(name) && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)) {
+                return PropertyType.BINARY;
             }
         }
         catch (RepositoryException e) {

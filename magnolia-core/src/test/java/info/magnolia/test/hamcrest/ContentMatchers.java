@@ -84,11 +84,10 @@ public class ContentMatchers {
                 try {
                     if (!item.hasNodeData(propertyName)) {
                         return false;
-                    } else {
-                        final NodeData nodeData = item.getNodeData(propertyName);
-                        final Object value = NodeDataUtil.getValueObject(nodeData);
-                        return expectedValue == null ? value == null : expectedValue.equals(value);
                     }
+                    final NodeData nodeData = item.getNodeData(propertyName);
+                    final Object value = NodeDataUtil.getValueObject(nodeData);
+                    return expectedValue == null ? value == null : expectedValue.equals(value);
                 } catch (RepositoryException e) {
                     throw new RuntimeException(e); // TODO
                 }

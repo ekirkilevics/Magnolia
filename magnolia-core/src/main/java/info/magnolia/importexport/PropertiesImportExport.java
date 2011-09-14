@@ -127,11 +127,8 @@ public class PropertiesImportExport {
                     }
                     continue;
                 }
-                // /some/path/prop = hello  will be treated as a property
-                else{
-                    propertyName = StringUtils.substringAfterLast(path, "/");
-                    path = StringUtils.substringBeforeLast(path, "/");
-                }
+                propertyName = StringUtils.substringAfterLast(path, "/");
+                path = StringUtils.substringBeforeLast(path, "/");
             }
             cleaned.put(path + "." + propertyName, properties.get(orgKey));
         }
@@ -177,10 +174,9 @@ public class PropertiesImportExport {
                     return valueStr;
                 }
             }
-        } else {
-            // no type specified, we assume it's a string, no conversion
-            return valueStr;
         }
+        // no type specified, we assume it's a string, no conversion
+        return valueStr;
     }
 
     /**

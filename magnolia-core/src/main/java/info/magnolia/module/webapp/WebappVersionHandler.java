@@ -62,10 +62,9 @@ public class WebappVersionHandler implements ModuleVersionHandler {
             log.info("Content was {}found in the repository, will {}bootstrap web-app.", (anyContent ? "" : "not "), (anyContent ? "not " : ""));
             if (anyContent) {
                 return Version.UNDEFINED_TO;
-            } else {
-                // no content, so we'll execute.
-                return null;
             }
+            // no content, so we'll execute.
+            return null;
 
         } catch (RepositoryException e) {
             //TODO

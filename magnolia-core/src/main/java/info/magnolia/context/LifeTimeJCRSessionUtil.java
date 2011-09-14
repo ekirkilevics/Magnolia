@@ -71,30 +71,24 @@ public class LifeTimeJCRSessionUtil {
         if (useSystemContext) {
             return MgnlContext.getSystemContext().getHierarchyManager(repository);
         }
-        else {
-            // we handle the session
-            return repositoryStrategy.getHierarchyManager(repository, ContentRepository.getDefaultWorkspace(repository));
-        }
+        // we handle the session
+        return repositoryStrategy.getHierarchyManager(repository, ContentRepository.getDefaultWorkspace(repository));
     }
 
     public static Session getSession(String workspace) throws RepositoryException {
         if (useSystemContext) {
             return MgnlContext.getSystemContext().getJCRSession(workspace, workspace);
         }
-        else {
-            // we handle the session
-            return repositoryStrategy.getSession(workspace, ContentRepository.getDefaultWorkspace(workspace));
-        }
+        // we handle the session
+        return repositoryStrategy.getSession(workspace, ContentRepository.getDefaultWorkspace(workspace));
     }
 
     public static QueryManager getQueryManager(String repository) {
         if (useSystemContext) {
             return MgnlContext.getSystemContext().getQueryManager(repository);
         }
-        else {
-            // we handle the session
-            return repositoryStrategy.getQueryManager(repository, ContentRepository.getDefaultWorkspace(repository));
-        }
+        // we handle the session
+        return repositoryStrategy.getQueryManager(repository, ContentRepository.getDefaultWorkspace(repository));
     }
 
     public static void release() {

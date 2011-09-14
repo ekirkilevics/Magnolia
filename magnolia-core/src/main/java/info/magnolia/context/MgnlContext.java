@@ -215,9 +215,8 @@ public class MgnlContext {
         WebContext ctx = getWebContextOrNull();
         if (ctx != null) {
             return ctx.getContextPath();
-        } else {
-            throw new IllegalStateException("Can only get the context path within a WebContext.");
         }
+        throw new IllegalStateException("Can only get the context path within a WebContext.");
     }
 
     /**
@@ -228,9 +227,8 @@ public class MgnlContext {
         final WebContext ctx = getWebContextOrNull();
         if (ctx != null) {
             return ctx.getAggregationState();
-        } else {
-            throw new IllegalStateException("Can only get the aggregation state within a WebContext.");
         }
+        throw new IllegalStateException("Can only get the aggregation state within a WebContext.");
     }
 
     /**

@@ -88,29 +88,28 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
         if (command == null) {
             render("listTasks", out);
             return false;
-        } else {
-            final InstallContext installCtx = moduleManager.getInstallContext();
-            final InstallStatus status = installCtx.getStatus();
-            if ("status".equals(command) || "start".equals(command)) {
-                if (status == null) {
-                    performInstallOrUpdate();
-                    render("inProgress", out);
-                } else {
-                    // template names match statuses
-                    render(status.name(), out);
-                }
-                return false;
-            } else if ("finish".equals(command) && status.equals(InstallStatus.installDone)) {
-                MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
-                    @Override
-                    public void doExec() {
-                        //TODO : actually check for status before executing
-                        moduleManager.startModules();
-                        //moduleManager.getStatus().done();
-                    }
-                }, false);
-                return true;
+        }
+        final InstallContext installCtx = moduleManager.getInstallContext();
+        final InstallStatus status = installCtx.getStatus();
+        if ("status".equals(command) || "start".equals(command)) {
+            if (status == null) {
+                performInstallOrUpdate();
+                render("inProgress", out);
+            } else {
+                // template names match statuses
+                render(status.name(), out);
             }
+            return false;
+        } else if ("finish".equals(command) && status.equals(InstallStatus.installDone)) {
+            MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                @Override
+                public void doExec() {
+                    //TODO : actually check for status before executing
+                    moduleManager.startModules();
+                    //moduleManager.getStatus().done();
+                }
+            }, false);
+            return true;
         }
         throw new IllegalStateException("Unexpected state In ModuleManagerWebUI.");
     }

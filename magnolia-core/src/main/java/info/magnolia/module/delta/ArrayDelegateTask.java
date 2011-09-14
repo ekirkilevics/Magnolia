@@ -125,16 +125,15 @@ public class ArrayDelegateTask implements Task {
     public String getDescription() {
         if (description != null) {
             return description;
-        } else {
-            final StringBuffer buf = new StringBuffer();
-            for (int i = 0; i < tasks.length; i++) {
-                if (i > 0) {
-                    buf.append(" "); // TODO : line break ?
-                }
-                buf.append(tasks[i].getDescription());
-            }
-            return buf.toString();
         }
+        final StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < tasks.length; i++) {
+            if (i > 0) {
+                buf.append(" "); // TODO : line break ?
+            }
+            buf.append(tasks[i].getDescription());
+        }
+        return buf.toString();
     }
 
     @Override

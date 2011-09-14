@@ -74,9 +74,7 @@ public class PathUtil {
         if (path.indexOf("/") >= 0) {
             return StringUtils.substringAfterLast(path, "/");
         }
-        else {
-            return path;
-        }
+        return path;
     }
 
     /**

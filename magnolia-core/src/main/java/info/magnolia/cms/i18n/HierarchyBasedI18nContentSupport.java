@@ -102,13 +102,12 @@ public class HierarchyBasedI18nContentSupport extends AbstractI18nContentSupport
                 log.debug("found a valid Locale code {}", uriToken);
                 if (isLocaleSupported(locale)) {
                     break;
-                } else {
-                    // the URI contains a valid Locale code but it is not
-                    // supported by the current I18n configuration.
-                    // We store it anyway and eventually return it if no exact
-                    // match will be found at the end of this loop.
-                    validUnsupportedLocale = locale;
                 }
+                // the URI contains a valid Locale code but it is not
+                // supported by the current I18n configuration.
+                // We store it anyway and eventually return it if no exact
+                // match will be found at the end of this loop.
+                validUnsupportedLocale = locale;
             }
             locale = null;
         }

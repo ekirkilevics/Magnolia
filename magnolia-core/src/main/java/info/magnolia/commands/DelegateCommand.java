@@ -61,9 +61,7 @@ public class DelegateCommand implements Command {
         if(cmd != null){
             return cmd.execute(ctx);
         }
-        else{
-            log.error("can't find command {}", this.commandName);
-        }
+        log.error("can't find command {}", this.commandName);
         return false;
     }
 

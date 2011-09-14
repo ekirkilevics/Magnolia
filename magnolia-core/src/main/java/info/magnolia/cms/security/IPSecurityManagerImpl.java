@@ -81,11 +81,7 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
     }
 
     protected Rule getRule(String ip) {
-        if (rules.containsKey(ip)) {
-            return rules.get(ip);
-        } else {
-            return rules.get(ALL);
-        }
+        return (rules.containsKey(ip)) ? rules.get(ip) : rules.get(ALL);
     }
 
     public Map<String, Rule> getRules() {

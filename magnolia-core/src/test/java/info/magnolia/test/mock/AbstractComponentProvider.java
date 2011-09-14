@@ -203,9 +203,8 @@ public abstract class AbstractComponentProvider implements ComponentProvider {
         if (definition == null) {
             if (parent != null) {
                 return parent.getImplementation(type);
-            } else {
-                return type;
             }
+            return type;
         }
         if (definition.isFactory()) {
             return type;

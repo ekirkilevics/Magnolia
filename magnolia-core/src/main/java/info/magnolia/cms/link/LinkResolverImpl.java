@@ -72,9 +72,7 @@ public class LinkResolverImpl implements LinkResolver {
         if(isMakeBrowserLinksRelative()){
             return convertToRelativeLinks(str, currentPath);
         }
-        else{
-            return convertToAbsoluteLinks(str, isAddContextPathToBrowserLinks());
-        }
+        return convertToAbsoluteLinks(str, isAddContextPathToBrowserLinks());
     }
 
     @Override

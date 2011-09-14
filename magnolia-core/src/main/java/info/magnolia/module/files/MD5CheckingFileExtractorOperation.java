@@ -96,10 +96,9 @@ class MD5CheckingFileExtractorOperation extends BasicFileExtractorOperation {
                 if (existingFileMD5.equals(repoMD5)) {
                     // resourcePath was found, with correct md5 in repo : repoMD5
                     return out;
-                } else {
-                    log.error("Can't extract " + resourcePath + " as this file was probably modified locally: expected MD5 [" + repoMD5 + "] but current MD5 is [" + existingFileMD5 + "].");
-                    return null;
                 }
+                log.error("Can't extract " + resourcePath + " as this file was probably modified locally: expected MD5 [" + repoMD5 + "] but current MD5 is [" + existingFileMD5 + "].");
+                return null;
             }
             // resourcePath was found, but no md5 found in repo ...
         } else {
