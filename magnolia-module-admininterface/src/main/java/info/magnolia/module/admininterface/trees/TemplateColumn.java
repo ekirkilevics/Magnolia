@@ -48,6 +48,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.UnhandledException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author pbracher
@@ -55,6 +57,8 @@ import org.apache.commons.lang.UnhandledException;
  *
  */
 public class TemplateColumn extends TreeColumn {
+	private static final Logger log = LoggerFactory.getLogger(TemplateColumn.class);
+
     private final TemplateDefinitionRegistry templateManager;
     Select templateSelect;
 
@@ -82,14 +86,14 @@ public class TemplateColumn extends TreeColumn {
     public String getHtml() {
         Content content = this.getWebsiteNode();
         String templateName = content.getMetaData().getTemplate();
-        TemplateDefinition template;
+        TemplateDefinition template = null;
         try {
             template = templateManager.get(templateName);
         }
         catch (RegistrationException e) {
-            throw new UnhandledException(e);
+            log.error("Template with id {} doesn't exist.", templateName);
         }
-        return template != null ? template.getTitle() : StringUtils.defaultString(templateName);
+        return template != null ? template.getTitle() : "Missing: " + StringUtils.defaultString(templateName);
 
     }
 
