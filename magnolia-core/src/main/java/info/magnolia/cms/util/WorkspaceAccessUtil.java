@@ -217,14 +217,14 @@ public class WorkspaceAccessUtil {
     }
 
     protected SimpleCredentials getAdminUserCredentials() {
-        // FIXME: stop using SystemProperty, but pico is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
+        // FIXME: stop using SystemProperty, but IoC is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
         String user = SystemProperty.getProperty("magnolia.connection.jcr.admin.userId", SystemProperty.getProperty("magnolia.connection.jcr.userId", "admin"));
         String pwd = SystemProperty.getProperty("magnolia.connection.jcr.admin.password", SystemProperty.getProperty("magnolia.connection.jcr.password", "admin"));
         return new SimpleCredentials(user, pwd.toCharArray());
     }
 
     protected SimpleCredentials getAnonymousUserCredentials() {
-        // FIXME: stop using SystemProperty, but pico is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
+        // FIXME: stop using SystemProperty, but IoC is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
         // TODO: can also read it from the Login Module properties ... but WAU has no access to that
         String user = SystemProperty.getProperty("magnolia.connection.jcr.anonymous.userId", "anonymous");
         String pwd = SystemProperty.getProperty("magnolia.connection.jcr.anonymous.password", "anonymous");

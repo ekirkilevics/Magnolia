@@ -79,7 +79,7 @@ public class ConfigLoader {
      * @param context ServletContext
      * @see info.magnolia.cms.core.SystemProperty
      *
-     * TODO - some of the dependencies here don't belong, we're only calling init() on those, which should be moved to a lifecycle management api (pico has one)
+     * TODO - some of the dependencies here don't belong, we're only calling init() on those, which should be moved to a lifecycle management api (IoC has one)
      */
     @Inject
     public ConfigLoader(ModuleManager moduleManager, ModuleRegistry moduleRegistry, LicenseFileExtractor licenseFileExtractor, MessagesManager messagesManager, VersionConfig versionConfig, ServletContext context) {

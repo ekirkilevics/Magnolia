@@ -69,7 +69,7 @@ public class PropertiesBasedTypeMapping extends TypeMappingImpl {
                     final Class<?> beanClass = cl.forName(className);
                     final Class<Content2BeanTransformer> transformerClass = cl.forName(transformerClassName);
 
-                    // TODO - we can't instantiate the bastards here, unless we fetch them from pico.
+                    // TODO - we can't instantiate the bastards here, unless we fetch them from IoC.
 
                     final Content2BeanTransformer transformer = cl.newInstance(transformerClass);
 

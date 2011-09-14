@@ -62,7 +62,7 @@ public abstract class SilentSessionOp<R> implements Op<R, RuntimeException> {
     public R exec() {
         Session session = null;
         try {
-            // can't do ... need a session before repo is setup and pico is initialized ...
+            // can't do ... need a session before repo is setup and IoC is initialized ...
             session = MgnlContext.getJCRSession(repository);
         } catch (RepositoryException e) {
             log.error("failed to retrieve repository " + repository + " with " + e.getMessage(), e);
