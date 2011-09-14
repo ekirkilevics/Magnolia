@@ -55,9 +55,9 @@ public abstract class AbstractBarWidget extends FlowPanel {
     private String style;
     private String color;
 
-    public AbstractBarWidget(AbstractBarWidget parentBar, String style) {
+    public AbstractBarWidget(AbstractBarWidget parentBar, String color) {
         this.parentBar = parentBar;
-        this.style = style;
+        this.color = color;
         this.label = new Label("");
 
         addDomHandler(new ClickHandler() {
@@ -67,14 +67,14 @@ public abstract class AbstractBarWidget extends FlowPanel {
             }
         }, ClickEvent.getType());
 
-        setStyle(style);
+        setBackgroundColor(color);
     }
     protected void onSelect() {
-        setStyle("rgb(255, 255, 255)");
+        setBackgroundColor("#FFF");
     }
 
     public void deselect() {
-        setStyle(this.color);
+        setBackgroundColor(this.color);
     }
 
     public String getColor() {
@@ -112,6 +112,10 @@ public abstract class AbstractBarWidget extends FlowPanel {
 
     protected void setClassName(String className) {
         getElement().setClassName(className);
+    }
+
+    protected void setBackgroundColor(String color) {
+        getElement().getStyle().setBackgroundColor(color);
     }
 
     public void attach(Element element) {

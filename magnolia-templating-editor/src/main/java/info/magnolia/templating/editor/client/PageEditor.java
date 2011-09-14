@@ -205,15 +205,15 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         GeneralJavascript.mgnlMoveNodeStart(id);
     }
 
-    public void moveComponentEnd(EditBarWidget source, String path) {
+    public void moveComponentEnd(AbstractBarWidget source, String path) {
         GeneralJavascript.mgnlMoveNodeEnd(source.getElement(), path);
     }
 
-    public void moveComponentOver(EditBarWidget source) {
+    public void moveComponentOver(AbstractBarWidget source) {
         GeneralJavascript.mgnlMoveNodeHigh(source.getElement());
     }
 
-    public void moveComponentOut(EditBarWidget source) {
+    public void moveComponentOut(AbstractBarWidget source) {
         GeneralJavascript.mgnlMoveNodeReset(source.getElement());
     }
 
