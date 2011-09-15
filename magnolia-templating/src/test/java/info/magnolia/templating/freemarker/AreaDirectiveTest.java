@@ -50,8 +50,9 @@ public class AreaDirectiveTest extends AbstractDirectiveTestCase {
     public void testRenderSimpleBarWithoutAreaNode() throws Exception {
         final String result = renderForTest("[@cms.area name=\"stage\" /]", renderableDef);
         assertEquals(
+                "<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" -->\r\n" +
                 "<cms:area content=\"testWorkspace:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                        + "\r\n", result);
+                        + "\r\n<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" -->\r\n", result);
     }
 
     @Test
