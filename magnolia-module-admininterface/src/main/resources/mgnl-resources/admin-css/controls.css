@@ -4,10 +4,9 @@
     top: 0pt;
     left: 0pt;
     margin: 0pt;
-    width: 100%;
 }
 
-/*.mgnlBtnsLeft {
+.mgnlBtnsLeft {
     text-align: left !important;
 }
 
@@ -24,34 +23,29 @@
     font-size: 11px !important;
     height: 15px;
     padding: 1px 8px 1px 10px !important;
-} */
+}
 
-/*.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED {
+.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED {
     font-size: 9px !important;
     height: 5px;
     padding: 0 3px 0 3px !important;
 }
-*/
-.mgnlControlButton,.mgnlControlButton_PUSHED {
+
+.mgnlControlButton,.mgnlControlButton_PUSHED,.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED {
     font-family: Verdana, sans-serif !important;
     color: #F0F2E6 !important;
     cursor: default;
     white-space: nowrap;
     display: inline !important;
     width: auto !important;
-    background-color: transparent !important;
-    background-repeat: repeat !important;
-    font-size: 11px !important;
-    height: 15px;
-    padding: 1px 8px 1px 10px !important;
 }
 
-.mgnlControlButtonTransparent {
+.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall {
     background: transparent;
     white-space: nowrap;
 }
 
-.mgnlControlButton,.mgnlControlButtonTransparent{
+.mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall {
     background-color: #5E9201;
     border-top: 1px solid #ADC97B;
     border-left: 1px solid #ADC97B;
@@ -59,7 +53,7 @@
     border-right: 1px solid #396101;
 }
 
-.mgnlControlButton_PUSHED {
+.mgnlControlButton_PUSHED,.mgnlControlButtonSmall_PUSHED {
     background-color: #9DB517 !important;
     border-top: 1px solid #B9C950;
     border-left: 1px solid #B9C950;
@@ -67,19 +61,19 @@
     border-right: 1px solid #8a2;
 }
 
-/*table.mgnlControlBar, table.mgnlControlBarSmall, table.mgnlControlBarSmall_PUSHED, table.mgnlControlBarSmall_MOUSEOVER {
+table.mgnlControlBar, table.mgnlControlBarSmall, table.mgnlControlBarSmall_PUSHED, table.mgnlControlBarSmall_MOUSEOVER {
     margin: 0px !important;
     padding: 0px !important;
     border-collapse: collapse !important;
     /* this is the default, but enforcing it seems to make safari happier when we embed another table in table-layout:fixed */
-/*    table-layout: auto;
+    table-layout: auto;
 }
-*/
-/*.mgnlControlBarSmall,.mgnlControlBarSmall_PUSHED,.mgnlControlBarSmall_MOUSEOVER {
+
+.mgnlControlBarSmall,.mgnlControlBarSmall_PUSHED,.mgnlControlBarSmall_MOUSEOVER {
     width: 100% !important;
 }
-*/
-.mgnlControlBar,.mgnlControlBar_PUSHED,.mgnlControlBar_MOUSEOVER {
+
+.mgnlControlBar,.mgnlControlBarSmall,.mgnlControlBarSmall_PUSHED,.mgnlControlBarSmall_MOUSEOVER {
     border-top: 1px solid #ADC97B !important;
     border-left: 1px solid #ADC97B !important;
     border-bottom: 1px solid #396101 !important;
@@ -87,10 +81,10 @@
     background-color: transparent !important;
     background-image: url("../admin-images/mgnl-bar.png") !important;
     background-repeat: repeat !important;
-    height: 16px !important;
+    height: 20px; /*TODO set this height else on FF default buttons height screws up layout*/
 }
 
-/*.mgnlControlBar td, .mgnlControlBarSmall td {
+.mgnlControlBar td, .mgnlControlBarSmall td {
     background-color: transparent !important;
     background-repeat: repeat !important;
     background-image: url("../admin-images/mgnl-bar.png") !important;
@@ -123,7 +117,6 @@
 .mgnlControlBar td,.mgnlControlBar_PUSHED td,.mgnlControlBar_MOUSEOVER td {
     padding: 4px 2px 4px 2px !important;
 }
-*/
 
 #mgnlMoveDivShadow,#mgnlMoveDivDenied,#mgnlMoveDivAllowed {
     position: absolute;
@@ -251,5 +244,6 @@ td.smothBarLabel {
     border-top: 1px solid #ac6 !important;
     border-right: 1px solid #680 !important;
     border-bottom: 1px solid #680 !important;
-    height: 16px !important;
+    height: 20px; /*TODO set this height else on FF default buttons height screws up layout*/
+    width: 100% !important;
 }

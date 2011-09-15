@@ -84,7 +84,7 @@ public class EditBarWidget extends AbstractBarWidget {
 
         createMouseEventsHandlers(pageEditor);
 
-        setClassName("mgnlControlBar");
+        setClassName("mgnlControlBarSmall");
 
     }
 
