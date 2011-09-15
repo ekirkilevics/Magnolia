@@ -34,8 +34,12 @@
 package info.magnolia.templating.elements;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.AppendableOnlyOutputProvider;
@@ -55,6 +59,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -104,8 +109,12 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.availableComponents = resolveAvailableComponents();
 
         this.areaNode = resolveAreaNode();
+        //TODO: review. If no area node exists, create it on the fly
+        if(this.areaNode == null) {
+            createNewAreaNode();
+        }
 
-        // build an adhoc area definition if no area definition can be roselved
+        // build an adhoc area definition if no area definition can be resolved
 
         if(areaDefinition == null){
             buildAdHocAreaDefinition();
@@ -123,6 +132,20 @@ public class AreaElement extends AbstractContentTemplatingElement {
             helper.attribute("dialog", this.dialog);
             helper.attribute("showAddButton", String.valueOf(shouldShowAddButton()));
             helper.closeTag(CMS_AREA);
+        }
+    }
+
+    protected void createNewAreaNode() {
+        try {
+            areaNode = NodeUtil.createPath(parentNode, this.name, MgnlNodeType.NT_CONTENTNODE, true);
+            NodeUtil.createPath(areaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA, true);
+            MetaDataUtil.getMetaData(areaNode).setTemplate(templateDefinition.getId());
+        } catch (AccessDeniedException e) {
+            new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
+        } catch (PathNotFoundException e) {
+            new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
+        } catch (RepositoryException e) {
+            new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
         }
     }
 
