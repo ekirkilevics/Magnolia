@@ -49,14 +49,12 @@ import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.ContextFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.module.model.ComponentDefinition;
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
 import info.magnolia.test.AbstractMagnoliaTestCase;
@@ -105,11 +103,9 @@ public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
 
     @Override
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
-        SystemProperty.clear();
-        MgnlContext.setInstance(null);
-        Components.setComponentProvider(null);
+        super.tearDown();
     }
 
     @Test
@@ -194,7 +190,7 @@ public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
         configuration.addComponent(observed);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-        ((MockWebContext)MgnlContext.getWebContext()).setRequest(request);
+        ((MockWebContext) MgnlContext.getWebContext()).setRequest(request);
         GuiceComponentProvider p = createComponentProviderWithContent2Bean(configuration, true);
 
         SingletonObject singletonObject = p.getComponent(SingletonObject.class);

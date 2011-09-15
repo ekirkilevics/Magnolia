@@ -94,7 +94,7 @@ public abstract class ComponentProviderBasedMagnoliaTestCase extends AbstractMag
     }
 
     @Override
-    public void tearDown() {
+    public void tearDown() throws Exception {
         componentProvider.destroy();
         super.tearDown();
     }

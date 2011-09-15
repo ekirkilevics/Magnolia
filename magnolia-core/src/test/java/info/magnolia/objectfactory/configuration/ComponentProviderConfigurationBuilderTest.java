@@ -103,14 +103,15 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
         }
 
         MockSession session = SessionTestUtil.createSession("config",
-                "/foo/bar/component.class=" + SimpleComponent.class.getName()
+                "/foo/bar/component.class=" + SimpleComponent.class.getName(),
+                "/foo/bar/componentWithProperty.class=" + SimpleComponentWithProperty.class.getName()
         );
         MockUtil.setSessionAndHierarchyManager(session);
     }
 
     @After
     @Override
-    public void tearDown() {
+    public void tearDown() throws Exception {
         super.tearDown();
         events.clear();
     }
@@ -302,13 +303,11 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
 
         SimpleComponent simpleComponent2 = componentProvider.getComponent(SimpleComponent.class);
         assertEquals(4, events.size());
-        assertFalse(events.contains("SimpleComponentFactory.preConstruct"));
         assertNotSame(simpleComponent, simpleComponent2);
 
         componentProvider.destroy();
         assertEquals(4, events.size());
         assertFalse(events.contains("SimpleComponent.preDestroy"));
-        assertFalse(events.contains("SimpleComponentFactory.preDestroy"));
     }
 
     @Test
@@ -351,26 +350,43 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
         assertTrue(events.contains("SimpleComponent.preDestroy"));
     }
 
+    public static class SimpleComponentWithProperty extends SimpleComponent {
+
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
     @Test
     public void testObserved() {
         GuiceComponentProvider componentProvider = getComponentProvider("test-components-observed.xml");
         assertTrue(events.isEmpty());
 
-        SimpleComponent simpleComponent = componentProvider.getComponent(SimpleComponent.class);
-        assertEquals(2, events.size());
-        assertTrue(events.contains("SimpleComponent"));
-        assertFalse(events.contains("SimpleComponent.postConstruct"));
+        SimpleComponentWithProperty simpleComponent = componentProvider.getComponent(SimpleComponentWithProperty.class);
+        assertEquals(3, events.size());
+        assertTrue(events.contains("SimpleComponent")); // There's two of these since the proxy also adds it
+        assertTrue(events.contains("SimpleComponent.postConstruct"));
         assertFalse(events.contains("SimpleComponent.preDestroy"));
 
-        SimpleComponent simpleComponent2 = componentProvider.getComponent(SimpleComponent.class);
-        assertEquals(4, events.size());
-        assertFalse(events.contains("SimpleComponentFactory.preConstruct"));
+        SimpleComponentWithProperty simpleComponent2 = componentProvider.getComponent(SimpleComponentWithProperty.class);
+        assertEquals(6, events.size()); // two more from the ctor, one is from the proxy
         assertNotSame(simpleComponent, simpleComponent2);
 
+        // Make sure that its two completely different instances behind the proxies
+        simpleComponent.setName("1");
+        simpleComponent2.setName("2");
+        assertEquals("1", simpleComponent.getName());
+        assertEquals("2", simpleComponent2.getName());
+
         componentProvider.destroy();
-        assertEquals(4, events.size());
+        assertEquals(6, events.size());
         assertFalse(events.contains("SimpleComponent.preDestroy"));
-        assertFalse(events.contains("SimpleComponentFactory.preDestroy"));
     }
 
     private GuiceComponentProvider getComponentProvider(String resourcePath) {

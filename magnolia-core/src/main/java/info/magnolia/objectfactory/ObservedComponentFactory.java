@@ -218,10 +218,10 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
             @Override
             public Object newBeanInstance(TransformationState state, Map properties, ComponentProvider componentProvider) throws Content2BeanException {
                 // TODO here too?
-                if (state.getCurrentType().getType().equals(interf)) {
+/*                if (state.getCurrentType().getType().equals(interf)) {
                     final ClassFactory classFactory = Classes.getClassFactory();
                     return classFactory.newInstance(interf);
-                }
+                }*/
                 return super.newBeanInstance(state, properties, componentProvider);
             }
         };
