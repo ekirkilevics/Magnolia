@@ -41,6 +41,7 @@ import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.ComponentProvider;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class CommandTransformer extends Content2BeanTransformerImpl {
     private static final String DEPRECATED_IMPL_NODE_DATA = "impl";
 
     @Override
-    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType) {
+    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
         if(resolvedType != null){
             return resolvedType;
         }

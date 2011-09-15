@@ -37,6 +37,8 @@ import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
+import info.magnolia.objectfactory.ComponentProvider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,11 +80,11 @@ public class CollectionPropertyHidingTransformer extends Content2BeanTransformer
     }
 
     @Override
-    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType){
+    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider){
         // lazy init, we need TypeMapping
         if (type == null) {
             type = typeMapping.getTypeDescriptor(beanClass);
-            propertyDescriptor = type.getPropertyTypeDescriptor(collectionName);
+            propertyDescriptor = type.getPropertyTypeDescriptor(collectionName, typeMapping);
             addMethod = propertyDescriptor.getAddMethod();
             propertyType = propertyDescriptor.getCollectionEntryType();
         }

@@ -99,8 +99,8 @@ public class TypeDescriptor {
         this.isMap = isMap;
     }
 
-    public PropertyTypeDescriptor getPropertyTypeDescriptor(String properyName) {
-        return getPropertyDescriptors().get(properyName);
+    public PropertyTypeDescriptor getPropertyTypeDescriptor(String propertyName, TypeMapping typeMapping) {
+        return getPropertyDescriptors(typeMapping).get(propertyName);
     }
 
     /**
@@ -113,11 +113,9 @@ public class TypeDescriptor {
     /**
      * This method is not synchronized to avoid thread blocking, but the method guarantees that the returned map is not mutated afterward.
      */
-    public Map<String, PropertyTypeDescriptor> getPropertyDescriptors() {
+    public Map<String, PropertyTypeDescriptor> getPropertyDescriptors(TypeMapping typeMapping) {
          //TODO ---- moved this out to TypeDescriptorFactory or something ?
         if(this.descriptors == null){
-            // TODO this breaks the usage of a custom mapping
-            TypeMapping mapping = TypeMapping.Factory.getDefaultMapping();
 
             // for not making this method synchronized we create a local variable first
             // this guarantees that the map you get is not changed after return
@@ -125,7 +123,7 @@ public class TypeDescriptor {
             PropertyDescriptor[] dscrs = PropertyUtils.getPropertyDescriptors(this.getType());
             for (int i = 0; i < dscrs.length; i++) {
                 PropertyDescriptor descriptor = dscrs[i];
-                tmpDescriptors.put(descriptor.getName(), mapping.getPropertyTypeDescriptor(this.getType(), descriptor.getName()));
+                tmpDescriptors.put(descriptor.getName(), typeMapping.getPropertyTypeDescriptor(this.getType(), descriptor.getName()));
             }
 
             this.descriptors = Collections.unmodifiableMap(tmpDescriptors);

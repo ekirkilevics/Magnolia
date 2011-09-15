@@ -44,7 +44,6 @@ import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.Components;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -116,7 +115,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
      * </ul>
      */
     @Override
-    public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state) throws ClassNotFoundException {
+    public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state, ComponentProvider componentProvider) throws ClassNotFoundException {
         TypeDescriptor typeDscr = null;
         Content node = state.getCurrentContent();
 
@@ -142,36 +141,35 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                 if (state.getLevel() > 2) {
                     // this is not necesserely the parent node of the current
                     String mapProperyName = state.peekContent(1).getName();
-                    propDscr = state.peekType(1).getPropertyTypeDescriptor(mapProperyName);
+                    propDscr = state.peekType(1).getPropertyTypeDescriptor(mapProperyName, typeMapping);
                     if (propDscr != null) {
                         typeDscr = propDscr.getCollectionEntryType();
                     }
                 }
             } else {
-                propDscr = state.getCurrentType().getPropertyTypeDescriptor(node.getName());
+                propDscr = state.getCurrentType().getPropertyTypeDescriptor(node.getName(), typeMapping);
                 if (propDscr != null) {
                     typeDscr = propDscr.getType();
                 }
             }
         }
 
-        typeDscr = onResolveType(typeMapping, state, typeDscr);
+        typeDscr = onResolveType(typeMapping, state, typeDscr, componentProvider);
 
         if (typeDscr != null) {
             // might be that the factory util defines a default implementation for interfaces
             final Class<?> type = typeDscr.getType();
-            typeDscr = typeMapping.getTypeDescriptor(Components.getComponentProvider().getImplementation(type));
+            typeDscr = typeMapping.getTypeDescriptor(componentProvider.getImplementation(type));
 
             // now that we know the property type we should delegate to the custom transformer if any defined
             Content2BeanTransformer customTransformer = typeDscr.getTransformer();
             if (customTransformer != null && customTransformer != this) {
-                TypeDescriptor typeFoundByCustomTransformer = customTransformer.resolveType(typeMapping, state);
+                TypeDescriptor typeFoundByCustomTransformer = customTransformer.resolveType(typeMapping, state, componentProvider);
                 // if no specific type has been provided by the
                 // TODO - is this comparison working ?
                 if (typeFoundByCustomTransformer != TypeMapping.MAP_TYPE) {
                     // might be that the factory util defines a default implementation for interfaces
-                    Class<?> implementation =
-                            Components.getComponentProvider().getImplementation(typeFoundByCustomTransformer.getType());
+                    Class<?> implementation = componentProvider.getImplementation(typeFoundByCustomTransformer.getType());
                     typeDscr = typeMapping.getTypeDescriptor(implementation);
                 }
             }
@@ -193,16 +191,16 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
      * Called once the type should have been resolved. The resolvedType might be null if no type has been resolved.
      * After the call the FactoryUtil and custom transformers are used to get the final type. TODO - check javadoc
      */
-    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType) {
+    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
         return resolvedType;
     }
 
     /**
      * @deprecated since 4.5, use
-     *             {@link #onResolveType(info.magnolia.content2bean.TypeMapping, info.magnolia.content2bean.TransformationState, info.magnolia.content2bean.TypeDescriptor)}
+     *             {@link #onResolveType(info.magnolia.content2bean.TypeMapping, info.magnolia.content2bean.TransformationState, info.magnolia.content2bean.TypeDescriptor, info.magnolia.objectfactory.ComponentProvider)}
      */
-    protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
-        return onResolveType(getTypeMapping(), state, resolvedType);
+    protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
+        return onResolveType(getTypeMapping(), state, resolvedType, componentProvider);
     }
 
     @Override

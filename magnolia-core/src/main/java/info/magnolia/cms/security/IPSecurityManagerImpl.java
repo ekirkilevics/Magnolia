@@ -40,6 +40,7 @@ import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -131,12 +132,11 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
         }
 
         @Override
-        protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state,
-                TypeDescriptor resolvedType) {
+        protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
             if (state.getLevel() == 2 && resolvedType == null) {
                 return typeMapping.getTypeDescriptor(Rule.class);
             }
-            return super.onResolveType(typeMapping, state, resolvedType);
+            return super.onResolveType(typeMapping, state, resolvedType, componentProvider);
         }
 
     }

@@ -88,7 +88,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
 
         TypeDescriptor type = null;
         try {
-            type = transformer.resolveType(typeMapping, state);
+            type = transformer.resolveType(typeMapping, state, componentProvider);
         }
         catch (Throwable e) {
             if(isForceCreation()){
@@ -231,7 +231,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         else{
             // TypeDescriptor beanTypeDescriptor = transformer.getTypeMapping().getTypeDescriptor(bean.getClass());
             TypeDescriptor beanTypeDescriptor = typeMapping.getTypeDescriptor(bean.getClass());
-            final Collection<PropertyTypeDescriptor> dscrs = beanTypeDescriptor.getPropertyDescriptors().values();
+            final Collection<PropertyTypeDescriptor> dscrs = beanTypeDescriptor.getPropertyDescriptors(typeMapping).values();
 
             for (PropertyTypeDescriptor descriptor : dscrs) {
                 transformer.setProperty(typeMapping, state, descriptor, values);
@@ -239,8 +239,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         }
     }
 
-    protected Content2BeanTransformer resolveTransformer(TypeDescriptor type,
-            Content2BeanTransformer transformer) {
+    protected Content2BeanTransformer resolveTransformer(TypeDescriptor type, Content2BeanTransformer transformer) {
         Content2BeanTransformer customTransformer = type.getTransformer();
         if(customTransformer != null){
             transformer = customTransformer;

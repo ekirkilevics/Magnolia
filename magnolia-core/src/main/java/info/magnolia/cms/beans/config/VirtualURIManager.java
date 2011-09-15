@@ -39,6 +39,7 @@ import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
@@ -108,7 +109,7 @@ public final class VirtualURIManager extends ObservedManager {
             log.info("Loading VirtualURIMapping from {}", node.getHandle()); //$NON-NLS-1$
             Content2BeanUtil.setProperties(this.cachedURImapping, node, true, new Content2BeanTransformerImpl(){
                 @Override
-                protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType) {
+                protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
                     if(state.getLevel()==2 && resolvedType == null){
                         return typeMapping.getTypeDescriptor(DefaultVirtualURIMapping.class);
                     }

@@ -81,7 +81,7 @@ public class Content2BeanUtil {
         }
 
         @Override
-        protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType) {
+        protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
             // return resolvedType==null? defaultType : resolvedType;
             return resolvedType==null? typeMapping.getTypeDescriptor(defaultClass) : resolvedType;
         }
@@ -95,7 +95,7 @@ public class Content2BeanUtil {
         }
 
         @Override
-        public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state) throws ClassNotFoundException {
+        public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state, ComponentProvider componentProvider) throws ClassNotFoundException {
             return TypeMapping.MAP_TYPE;
         }
     }
@@ -169,7 +169,7 @@ public class Content2BeanUtil {
      * @deprecated since 4.5- only used in DelegateVoter - use {@link Content2Bean}
      */
     public static Object toBean(Content node, boolean recursive, ComponentProvider componentProvider) throws Content2BeanException {
-        return toBean(node, recursive, getContent2BeanTransformer(), componentProvider);
+        return toBean(node, recursive, componentProvider.getComponent(Content2BeanTransformer.class), componentProvider);
     }
 
     /**
@@ -187,7 +187,7 @@ public class Content2BeanUtil {
      * TODO -- this method has a bunch of usage points
      */
     public static Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer, ComponentProvider componentProvider) throws Content2BeanException {
-        return getContent2BeanProcessor().toBean(node, recursive, transformer, componentProvider);
+        return componentProvider.getComponent(Content2BeanProcessor.class).toBean(node, recursive, transformer, componentProvider);
     }
 
 
@@ -262,7 +262,7 @@ public class Content2BeanUtil {
      * @deprecated since 4.5 - use {@link Content2Bean}
      */
     public static Object setProperties(Object bean, Content node, boolean recursive, Content2BeanTransformer transformer, ComponentProvider componentProvider) throws Content2BeanException {
-        return getContent2BeanProcessor().setProperties(bean, node, recursive, transformer, componentProvider);
+        return componentProvider.getComponent(Content2BeanProcessor.class).setProperties(bean, node, recursive, transformer, componentProvider);
     }
 
 

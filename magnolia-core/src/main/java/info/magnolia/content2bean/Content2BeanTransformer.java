@@ -53,14 +53,14 @@ public interface Content2BeanTransformer {
     public TransformationState newState();
 
     /**
-     * @deprecated since 4.5, use {@link #resolveType(TypeMapping, TransformationState)}
+     * @deprecated since 4.5, use {@link #resolveType(TypeMapping, TransformationState, ComponentProvider)}
      */
     public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException;
 
     /**
      * Resolves the class to use for the current node.
      */
-    public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state) throws ClassNotFoundException;
+    public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state, ComponentProvider componentProvider) throws ClassNotFoundException;
 
     /**
      * Returns the children of the node to be transformed. Those are normally the direct children but might differ.
