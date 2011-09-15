@@ -120,7 +120,7 @@ public class GuiceComponentConfigurationModule extends AbstractModule {
         Class<?> factoryClass = configuration.getProviderClass();
 
         if (ComponentFactory.class.isAssignableFrom(factoryClass)) {
-            Provider<T> provider = new GuiceComponentFactoryProviderAdapter<T>((Class<? extends ComponentFactory<T>>) factoryClass);
+            Provider<T> provider = GuiceUtils.providerForComponentFactory((Class<? extends ComponentFactory<T>>) factoryClass);
             ScopedBindingBuilder builder = bindProvider(configuration.getType(), provider);
             bindInScope(builder, configuration);
         } else if (Provider.class.isAssignableFrom(factoryClass)) {
@@ -137,7 +137,7 @@ public class GuiceComponentConfigurationModule extends AbstractModule {
         if (instance instanceof Provider) {
             bindProvider(configuration.getType(), (Provider<T>) instance);
         } else if (instance instanceof ComponentFactory) {
-            bindProvider(configuration.getType(), new GuiceComponentFactoryProviderAdapter<T>((ComponentFactory<T>) instance));
+            bindProvider(configuration.getType(), GuiceUtils.providerForComponentFactory((ComponentFactory<T>) instance));
         } else {
             bind(key).toInstance((T) instance);
         }

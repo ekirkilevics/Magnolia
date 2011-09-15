@@ -98,6 +98,7 @@ public class GuiceScopesTest {
     @SessionScoped
     public static class MockSessionScopedObject {
     }
+
     @Test
     public void testContextProvidersWhenContextSet() {
         // GIVEN

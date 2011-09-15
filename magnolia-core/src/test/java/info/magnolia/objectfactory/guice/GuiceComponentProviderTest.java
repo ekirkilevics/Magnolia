@@ -47,6 +47,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.mockrunner.mock.web.MockHttpServletRequest;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.ContextFactory;
@@ -58,10 +59,12 @@ import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
+import info.magnolia.test.AbstractMagnoliaTestCase;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 import static org.junit.Assert.assertEquals;
@@ -71,7 +74,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-public class GuiceComponentProviderTest {
+public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
 
     private MockContext mockContext;
 
@@ -88,8 +91,10 @@ public class GuiceComponentProviderTest {
         }
     }
 
+    @Override
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         mockContext = MockUtil.initMockContext();
         MockSession session = SessionTestUtil.createSession("config",
                 "/foo/bar/singleton.class=" + SingletonObject.class.getName(),
@@ -98,8 +103,9 @@ public class GuiceComponentProviderTest {
         MockUtil.setSessionAndHierarchyManager(session);
     }
 
+    @Override
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         ComponentsTestUtil.clear();
         SystemProperty.clear();
         MgnlContext.setInstance(null);
@@ -169,11 +175,39 @@ public class GuiceComponentProviderTest {
     @Test
     public void testObserved() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-        configuration.addComponent(new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, ContentRepository.CONFIG, "/foo/bar/singleton", true));
+        ConfiguredComponentConfiguration<SingletonObject> observed = new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, ContentRepository.CONFIG, "/foo/bar/singleton", true);
+        observed.setScope(ComponentDefinition.SCOPE_SINGLETON);
+        configuration.addComponent(observed);
         GuiceComponentProvider p = createComponentProviderWithContent2Bean(configuration, true);
         SingletonObject singletonObject = p.getComponent(SingletonObject.class);
         assertNotNull(singletonObject);
         assertSame(singletonObject, p.getComponent(SingletonObject.class));
+        assertEquals("foobar", p.getComponent(SingletonObject.class).getName());
+    }
+
+    @Test
+    public void testObservedInRequestScope() {
+
+        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
+        ConfiguredComponentConfiguration<SingletonObject> observed = new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, ContentRepository.CONFIG, "/foo/bar/singleton", true);
+        observed.setScope(ComponentDefinition.SCOPE_REQUEST);
+        configuration.addComponent(observed);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        ((MockWebContext)MgnlContext.getWebContext()).setRequest(request);
+        GuiceComponentProvider p = createComponentProviderWithContent2Bean(configuration, true);
+
+        SingletonObject singletonObject = p.getComponent(SingletonObject.class);
+        assertNotNull(singletonObject);
+        assertSame(singletonObject, p.getComponent(SingletonObject.class));
+        assertEquals("foobar", p.getComponent(SingletonObject.class).getName());
+
+        request.clearAttributes();
+
+        SingletonObject singletonObject2 = p.getComponent(SingletonObject.class);
+        assertNotNull(singletonObject2);
+        assertNotSame(singletonObject2, singletonObject);
+        assertSame(singletonObject2, p.getComponent(SingletonObject.class));
         assertEquals("foobar", p.getComponent(SingletonObject.class).getName());
     }
 

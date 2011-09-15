@@ -13,6 +13,7 @@
       <workspace>config</workspace>
       <path>/server/rendering/engine</path>
       <observed>true</observed>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.rendering.context.RenderingContext</type>

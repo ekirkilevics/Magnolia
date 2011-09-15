@@ -54,10 +54,11 @@ public abstract class AbstractMagnoliaTestCase {
         org.apache.log4j.Logger.getLogger(ContentRepository.class).setLevel(org.apache.log4j.Level.ERROR);
         // don't clear all here. tests should be allowed to set their own implementations, fix the tests that do not clean after themselves instead!
         //ComponentsTestUtil.clear();
+        SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         SystemProperty.clear();
         SystemProperty.setMagnoliaConfigurationProperties(null);
         MgnlContext.setInstance(null);

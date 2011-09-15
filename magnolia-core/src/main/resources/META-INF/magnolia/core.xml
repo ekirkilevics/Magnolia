@@ -80,6 +80,7 @@
       <workspace>config</workspace>
       <path>/server/security</path>
       <observed>true</observed>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.cms.security.IPSecurityManager</type>
@@ -90,6 +91,7 @@
       <workspace>config</workspace>
       <path>/server/webContainerResources</path>
       <observed>true</observed>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.cms.beans.config.VirtualURIManager</type>
@@ -100,6 +102,7 @@
       <workspace>config</workspace>
       <path>/server/URI2RepositoryMapping</path>
       <observed>true</observed>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.cms.core.version.VersionManager</type>
@@ -118,18 +121,21 @@
       <workspace>config</workspace>
       <path>/server/i18n/content</path>
       <observed>true</observed>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.link.LinkTransformerManager</type>
       <workspace>config</workspace>
       <path>/server/rendering/linkManagement</path>
       <observed>true</observed>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.cms.exchange.ActivationManager</type>
       <workspace>config</workspace>
       <path>/server/activation</path>
       <observed>true</observed>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.freemarker.FreemarkerHelper</type>
@@ -140,12 +146,14 @@
       <workspace>config</workspace>
       <path>/server/rendering/freemarker</path>
       <observed>true</observed>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.logging.AuditLoggingManager</type>
       <workspace>config</workspace>
       <path>/server/auditLogging</path>
       <observed>true</observed>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.cms.core.search.SearchFactory</type>

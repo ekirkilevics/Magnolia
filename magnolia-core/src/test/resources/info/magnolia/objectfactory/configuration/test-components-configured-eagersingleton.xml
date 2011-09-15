@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components>
+  <id>main</id>
+  <component>
+    <type>info.magnolia.objectfactory.configuration.ComponentProviderConfigurationBuilderTest$SimpleComponent</type>
+    <path>/foo/bar/component</path>
+    <scope>singleton</scope>
+    <lazy>false</lazy>
+  </component>
+</components>

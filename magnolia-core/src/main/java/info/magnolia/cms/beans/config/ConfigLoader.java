@@ -173,6 +173,6 @@ public class ConfigLoader {
 
     protected ComponentProviderConfiguration getMainComponents() {
         ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
-        return configurationBuilder.getComponentsFromModules(moduleRegistry, "main");
+        return configurationBuilder.getComponentsFromModules("main", moduleRegistry.getModuleDefinitions());
     }
 }

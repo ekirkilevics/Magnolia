@@ -51,12 +51,9 @@ public class GuiceObservedComponentProvider<T> implements Provider<T> {
 
     @Inject
     private ComponentProvider componentProvider;
-    private ObservedComponentFactory<T> observedComponentFactory;
-    private String workspace;
-    private String path;
-    private Class<T> type;
-    private T instance;
-    private boolean instantiated;
+    private final String workspace;
+    private final String path;
+    private final Class<T> type;
 
     public GuiceObservedComponentProvider(String workspace, String path, Class<T> type) {
         this.workspace = workspace;
@@ -66,13 +63,7 @@ public class GuiceObservedComponentProvider<T> implements Provider<T> {
 
     @Override
     public synchronized T get() {
-        if (!instantiated) {
-            if (observedComponentFactory == null) {
-                observedComponentFactory = new ObservedComponentFactory<T>(workspace, path, type, componentProvider);
-            }
-            instance = observedComponentFactory.newInstance();
-            instantiated = true;
-        }
-        return instance;
+        ObservedComponentFactory<T> observedComponentFactory = new ObservedComponentFactory<T>(workspace, path, type, componentProvider);
+        return observedComponentFactory.newInstance();
     }
 }

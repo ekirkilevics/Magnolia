@@ -39,7 +39,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.google.inject.Injector;
-import com.google.inject.Key;
 import com.mycila.inject.jsr250.Jsr250Injector;
 import info.magnolia.objectfactory.CandidateParameterResolver;
 import info.magnolia.objectfactory.ComponentFactory;
@@ -90,7 +89,7 @@ public class GuiceComponentProvider implements ComponentProvider {
 
     @Override
     public <T> T getComponent(Class<T> type) {
-        if (!hasExplicitBindingFor(injector, type)) {
+        if (!GuiceUtils.hasExplicitBindingFor(injector, type)) {
             return null;
         }
         return injector.getInstance(type);
@@ -124,7 +123,7 @@ public class GuiceComponentProvider implements ComponentProvider {
     }
 
     public <T> Provider<T> getProvider(Class<T> type) {
-        if (!hasExplicitBindingFor(injector, type)) {
+        if (!GuiceUtils.hasExplicitBindingFor(injector, type)) {
             return null;
         }
         return injector.getProvider(type);
@@ -141,16 +140,5 @@ public class GuiceComponentProvider implements ComponentProvider {
     @Override
     public GuiceComponentProvider getParent() {
         return parentComponentProvider;
-    }
-
-    private static boolean hasExplicitBindingFor(Injector injector, Class<?> type) {
-        Injector target = injector;
-        do {
-            if (target.getBindings().containsKey(Key.get(type))) {
-                return true;
-            }
-            target = target.getParent();
-        } while (target != null);
-        return false;
     }
 }

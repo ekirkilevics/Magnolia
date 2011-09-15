@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,34 +25,26 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.objectfactory.annotation;
+package info.magnolia.objectfactory.configuration;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-import javax.inject.Scope;
+import org.junit.Test;
 
-import com.mycila.inject.annotation.Jsr250Singleton;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import info.magnolia.init.MagnoliaServletContextListener;
+import info.magnolia.module.model.ComponentsDefinition;
+import static org.junit.Assert.assertTrue;
 
-/**
- * Apply this to implementation classes when you want only one instance that is to be constructed lazily.
- *
- * @version $Id$
- */
-@Target({TYPE, METHOD})
-@Retention(RUNTIME)
-@Documented
-@Scope
-@Jsr250Singleton
-public @interface LazySingleton {
+public class ComponentConfigurationReaderTest {
 
+    @Test
+    public void testCanReadPlatformComponentsFile() {
+        ComponentConfigurationReader reader = new ComponentConfigurationReader();
+        ComponentsDefinition componentsDefinition = reader.readFromResource(MagnoliaServletContextListener.DEFAULT_PLATFORM_COMPONENTS_CONFIG_LOCATION);
+        assertTrue(componentsDefinition.getComponents().size() > 0);
+    }
 }

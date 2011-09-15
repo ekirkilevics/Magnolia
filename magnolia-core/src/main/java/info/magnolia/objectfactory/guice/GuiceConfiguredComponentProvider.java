@@ -70,7 +70,7 @@ public class GuiceConfiguredComponentProvider<T> implements Provider<T> {
         try {
             node = MgnlContext.getJCRSession(workspace).getNode(path);
         } catch (RepositoryException e) {
-            throw new ProvisionException("Can't find a the node [" + workspace + ":" + path + "] to create an instance");
+            throw new ProvisionException("Can't find the node [" + workspace + ":" + path + "] to create an instance");
         }
 
         try {

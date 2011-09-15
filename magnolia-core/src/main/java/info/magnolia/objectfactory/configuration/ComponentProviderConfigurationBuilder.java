@@ -38,7 +38,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.model.ComponentDefinition;
 import info.magnolia.module.model.ComponentsDefinition;
 import info.magnolia.module.model.ConfigurerDefinition;
@@ -71,9 +70,9 @@ public class ComponentProviderConfigurationBuilder {
      * Reads component definitions from module descriptors and return a {@link ComponentProviderConfiguration}
      * containing all components with the given id.
      */
-    public ComponentProviderConfiguration getComponentsFromModules(ModuleRegistry moduleRegistry, String id) {
+    public ComponentProviderConfiguration getComponentsFromModules(String id, List<ModuleDefinition> moduleDefinitions) {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-        for (ModuleDefinition moduleDefinition : moduleRegistry.getModuleDefinitions()) {
+        for (ModuleDefinition moduleDefinition : moduleDefinitions) {
             for (ComponentsDefinition componentsDefinition : moduleDefinition.getComponents()) {
                 if (componentsDefinition.getId().equals(id)) {
                     addComponents(configuration, componentsDefinition);
@@ -123,12 +122,19 @@ public class ComponentProviderConfigurationBuilder {
         }
     }
 
-    protected ComponentConfiguration getObserved(ComponentDefinition definition) {
-        ConfiguredComponentConfiguration configuration = new ConfiguredComponentConfiguration();
+    protected ImplementationConfiguration getImplementation(ComponentDefinition definition) {
+        ImplementationConfiguration configuration = new ImplementationConfiguration();
         configuration.setType(classForName(definition.getType()));
-        configuration.setWorkspace(StringUtils.defaultIfEmpty(configuration.getWorkspace(), ContentRepository.CONFIG));
-        configuration.setPath(definition.getPath());
-        configuration.setObserved(true);
+        configuration.setImplementation(classForName(definition.getImplementation()));
+        configuration.setScope(definition.getScope());
+        configuration.setLazy(parseLazyFlag(definition));
+        return configuration;
+    }
+
+    protected ComponentConfiguration getProvider(ComponentDefinition definition) {
+        ProviderConfiguration configuration = new ProviderConfiguration();
+        configuration.setType(classForName(definition.getType()));
+        configuration.setProviderClass(classForName(definition.getProvider()));
         configuration.setScope(definition.getScope());
         configuration.setLazy(parseLazyFlag(definition));
         return configuration;
@@ -145,35 +151,15 @@ public class ComponentProviderConfigurationBuilder {
         return configuration;
     }
 
-    protected ImplementationConfiguration getImplementation(ComponentDefinition definition) {
-        ImplementationConfiguration configuration = new ImplementationConfiguration();
+    protected ComponentConfiguration getObserved(ComponentDefinition definition) {
+        ConfiguredComponentConfiguration configuration = new ConfiguredComponentConfiguration();
         configuration.setType(classForName(definition.getType()));
-        configuration.setImplementation(classForName(definition.getImplementation()));
+        configuration.setWorkspace(StringUtils.defaultIfEmpty(configuration.getWorkspace(), ContentRepository.CONFIG));
+        configuration.setPath(definition.getPath());
+        configuration.setObserved(true);
         configuration.setScope(definition.getScope());
         configuration.setLazy(parseLazyFlag(definition));
         return configuration;
-    }
-
-    private boolean parseLazyFlag(ComponentDefinition definition) {
-        String lazy = definition.getLazy();
-        return StringUtils.isEmpty(lazy) || Boolean.parseBoolean(lazy);
-    }
-
-    protected ComponentConfiguration getProvider(ComponentDefinition definition) {
-        ProviderConfiguration configuration = new ProviderConfiguration();
-        configuration.setType(classForName(definition.getType()));
-        configuration.setProviderClass(classForName(definition.getProvider()));
-        configuration.setScope(definition.getScope());
-        configuration.setLazy(parseLazyFlag(definition));
-        return configuration;
-    }
-
-    protected boolean isObserved(ComponentDefinition definition) {
-        return StringUtils.isNotBlank(definition.getPath()) && Boolean.parseBoolean(definition.getObserved());
-    }
-
-    protected boolean isConfigured(ComponentDefinition definition) {
-        return StringUtils.isNotBlank(definition.getPath()) && !Boolean.parseBoolean(definition.getObserved());
     }
 
     protected boolean isImplementation(ComponentDefinition definition) {
@@ -182,6 +168,19 @@ public class ComponentProviderConfigurationBuilder {
 
     protected boolean isProvider(ComponentDefinition definition) {
         return StringUtils.isNotBlank(definition.getProvider());
+    }
+
+    protected boolean isConfigured(ComponentDefinition definition) {
+        return StringUtils.isNotBlank(definition.getPath()) && !Boolean.parseBoolean(definition.getObserved());
+    }
+
+    protected boolean isObserved(ComponentDefinition definition) {
+        return StringUtils.isNotBlank(definition.getPath()) && Boolean.parseBoolean(definition.getObserved());
+    }
+
+    protected boolean parseLazyFlag(ComponentDefinition definition) {
+        String lazy = definition.getLazy();
+        return StringUtils.isEmpty(lazy) || Boolean.parseBoolean(lazy);
     }
 
     /**

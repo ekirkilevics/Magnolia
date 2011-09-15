@@ -34,6 +34,7 @@
       <workspace>config</workspace>
       <path>/server/i18n/authoring</path>
       <observed>true</observed>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.cms.gui.dialog.ControlsManager</type>

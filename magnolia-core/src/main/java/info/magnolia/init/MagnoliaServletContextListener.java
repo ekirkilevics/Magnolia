@@ -265,7 +265,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
 
     protected ComponentProviderConfiguration getSystemComponents() {
         ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
-        return configurationBuilder.getComponentsFromModules(platform.getComponent(ModuleRegistry.class), "system");
+        return configurationBuilder.getComponentsFromModules("system", platform.getComponent(ModuleRegistry.class).getModuleDefinitions());
     }
 
     protected void startServer() {

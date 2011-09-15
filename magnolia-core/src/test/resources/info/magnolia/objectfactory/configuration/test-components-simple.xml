@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components>
+  <id>main</id>
+  <component>
+    <type>info.magnolia.objectfactory.configuration.ComponentProviderConfigurationBuilderTest$SimpleComponent</type>
+    <implementation>info.magnolia.objectfactory.configuration.ComponentProviderConfigurationBuilderTest$SimpleComponent</implementation>
+  </component>
+</components>

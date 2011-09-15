@@ -41,11 +41,12 @@ import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
 import com.google.inject.Scope;
 import com.google.inject.Scopes;
+import com.mycila.inject.annotation.Jsr250Singleton;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
 /**
- * Servlet scopes that use WebContext to get request and session. Based on {@link com.google.inject.servlet.ServletScopes}.
+ * Servlet scopes that use WebContext to get request and session.
  *
  * @version $Id$
  */
@@ -54,7 +55,27 @@ public class MagnoliaScopes {
     private MagnoliaScopes() {
     }
 
-    public static final Scope LAZY_SINGLETON = new Scope() {
+    public static final Scope LAZY_SINGLETON = new LazySingletonScope();
+
+    /**
+     * HTTP servlet request scope.
+     */
+    public static final Scope REQUEST = new RequestScope();
+
+    /**
+     * HTTP session scope.
+     */
+    public static final Scope SESSION = new SessionScope();
+
+    /**
+     * Scope for lazy singletons.
+     *
+     * @version $Id$
+     * @see info.magnolia.objectfactory.annotation.LazySingleton
+     */
+    @Jsr250Singleton
+    public static class LazySingletonScope implements Scope {
+
         @Override
         public <T> Provider<T> scope(Key<T> key, Provider<T> creator) {
             return Scopes.SINGLETON.scope(key, creator);
@@ -64,7 +85,7 @@ public class MagnoliaScopes {
         public String toString() {
             return "MagnoliaScopes.LAZY_SINGLETON";
         }
-    };
+    }
 
     /**
      * A sentinel attribute value representing null.
@@ -74,9 +95,13 @@ public class MagnoliaScopes {
     }
 
     /**
-     * HTTP servlet request scope.
+     * Scope for object local to the current request.
+     *
+     * @version $Id$
+     * @see info.magnolia.objectfactory.annotation.RequestScoped
      */
-    public static final Scope REQUEST = new Scope() {
+    public static class RequestScope implements Scope {
+
         @Override
         public <T> Provider<T> scope(Key<T> key, final Provider<T> creator) {
             final String name = key.toString();
@@ -112,12 +137,16 @@ public class MagnoliaScopes {
         public String toString() {
             return "MagnoliaScopes.REQUEST";
         }
-    };
+    }
 
     /**
-     * HTTP session scope.
+     * Scope for object local to the current session.
+     *
+     * @version $Id$
+     * @see info.magnolia.objectfactory.annotation.SessionScoped
      */
-    public static final Scope SESSION = new Scope() {
+    public static class SessionScope implements Scope {
+
         @Override
         public <T> Provider<T> scope(Key<T> key, final Provider<T> creator) {
             final String name = key.toString();
@@ -153,7 +182,7 @@ public class MagnoliaScopes {
         public String toString() {
             return "MagnoliaScopes.SESSION";
         }
-    };
+    }
 
     private static HttpServletRequest getRequest() {
         WebContext webContext;

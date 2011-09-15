@@ -33,11 +33,15 @@
  */
 package info.magnolia.cms.core;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
 
 import info.magnolia.cms.util.DeprecationUtil;
+import info.magnolia.init.AbstractMagnoliaConfigurationProperties;
 import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.init.PropertySource;
+
 import org.apache.commons.lang.StringUtils;
 
 
@@ -167,7 +171,7 @@ public final class SystemProperty {
         return p;
     }
 
-    static MagnoliaConfigurationProperties magnoliaConfigurationProperties;
+    static MagnoliaConfigurationProperties magnoliaConfigurationProperties = new AbstractMagnoliaConfigurationProperties(new ArrayList<PropertySource>()) {};
     private static MagnoliaConfigurationProperties getMagnoliaConfigurationProperties() {
         // can't do Components.getComponent(MagnoliaConfigurationProperties.class) because this currently gets used before Components is ready.
         return magnoliaConfigurationProperties;
