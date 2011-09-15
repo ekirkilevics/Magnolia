@@ -548,7 +548,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         if (jcrSession == null) {
             if (other.jcrSession != null)
                 return false;
-        } else if (!SessionUtil.unwrap(jcrSession).equals(SessionUtil.unwrap(other.jcrSession)))
+        } else if (!SessionUtil.hasSameUnderlyingSession(jcrSession, other.jcrSession))
             return false;
         if (queryManager == null) {
             if (other.queryManager != null)
@@ -562,6 +562,4 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             return false;
         return true;
     }
-
-
 }

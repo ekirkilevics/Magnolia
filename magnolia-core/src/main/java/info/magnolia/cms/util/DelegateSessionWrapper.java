@@ -289,4 +289,15 @@ public abstract class DelegateSessionWrapper implements Session {
         getDelegate().setNamespacePrefix(prefix, uri);
     }
 
+    /**
+     * @return the unwrapped proper JCRSession by removing all the potential wrappers around it.
+     */
+    public Session unwrap() {
+        Session delegate = getDelegate();
+        if (!(delegate instanceof DelegateSessionWrapper)) {
+            return delegate;
+        }
+        DelegateSessionWrapper sessionWrapper = (DelegateSessionWrapper) delegate;
+        return sessionWrapper.unwrap();
+    }
 }

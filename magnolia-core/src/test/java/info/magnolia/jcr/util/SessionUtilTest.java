@@ -33,12 +33,10 @@
  */
 package info.magnolia.jcr.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import info.magnolia.cms.core.version.MgnlVersioningSession;
 import info.magnolia.cms.util.JCRPropertyFilteringSessionWrapper;
-import info.magnolia.context.DefaultRepositoryStrategy;
-import info.magnolia.context.UserContext;
 
 import javax.jcr.Session;
 
@@ -49,20 +47,45 @@ import org.junit.Test;
  */
 public class SessionUtilTest {
     @Test
-    public void testUnwrap() {
+    public void testHasSameUnderlyingSessionWithTwoWrappersOnSameSession() {
         // GIVEN
-        final UserContext context = mock(UserContext.class);
-        final Session jcrSession = mock(Session.class);
-        final Session wrapperOne = new JCRPropertyFilteringSessionWrapper(jcrSession);
-        final Session wrapperTwo = new MgnlVersioningSession(wrapperOne);
-
-        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
+        final Session session = mock(Session.class);
+        final Session wrapperOne = new JCRPropertyFilteringSessionWrapper(session);
+        final Session wrapperTwo = new MgnlVersioningSession(session);
 
         // WHEN
-        Session result = SessionUtil.unwrap(wrapperOne);
+        boolean result = SessionUtil.hasSameUnderlyingSession(wrapperOne, wrapperTwo);
 
         // THEN
-        assertEquals(jcrSession, result);
+        assertTrue(result);
+    }
+
+    @Test
+    public void testHasSameUnderlyingSessionWithOneWrapperOnDifferentSession() {
+        // GIVEN
+        final Session jcrSession = mock(Session.class);
+        final Session otherSession = mock(Session.class);
+
+        final Session wrapperOne = new JCRPropertyFilteringSessionWrapper(jcrSession);
+
+        // WHEN
+        boolean result = SessionUtil.hasSameUnderlyingSession(otherSession, wrapperOne);
+
+        // THEN
+        assertFalse(result);
+    }
+
+    @Test
+    public void testHasSameUnderlyingSessionWithTwoUnwrappedSessions() {
+        // GIVEN
+        final Session jcrSession = mock(Session.class);
+        final Session otherSession = mock(Session.class);
+
+        // WHEN
+        boolean result = SessionUtil.hasSameUnderlyingSession(jcrSession, otherSession);
+
+        // THEN
+        assertFalse(result);
     }
 
 }

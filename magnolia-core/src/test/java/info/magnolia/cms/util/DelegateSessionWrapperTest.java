@@ -31,23 +31,32 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.cms.util;
 
-import info.magnolia.cms.util.DelegateSessionWrapper;
+import static org.junit.Assert.assertEquals;
+import info.magnolia.cms.core.version.MgnlVersioningSession;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import javax.jcr.Session;
 
+import org.junit.Test;
+
 /**
- * Session-related utility methods.
- *
  * @version $Id$
  */
-public class SessionUtil {
+public class DelegateSessionWrapperTest {
 
-    public static boolean hasSameUnderlyingSession(Session first, Session second) {
-        Session firstBase = first instanceof DelegateSessionWrapper ? ((DelegateSessionWrapper) first).unwrap() : first;
-        Session secondBase = second instanceof DelegateSessionWrapper ? ((DelegateSessionWrapper) second).unwrap() : second;
+    @Test
+    public void testUnwrap() {
+        // GIVEN
+        final Session jcrSession = new MockSession("test");
+        final Session wrapperOne = new JCRPropertyFilteringSessionWrapper(jcrSession);
+        final DelegateSessionWrapper wrapperTwo = new MgnlVersioningSession(wrapperOne);
 
-        return firstBase.equals(secondBase);
+        // WHEN
+        Session result = wrapperTwo.unwrap();
+
+        // THEN
+        assertEquals(jcrSession, result);
     }
 }
