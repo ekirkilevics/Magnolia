@@ -34,6 +34,7 @@
 package info.magnolia.templating.editor.client;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -52,7 +53,7 @@ public class PageBarWidget extends AbstractBarWidget {
     private String dialog;
 
     public PageBarWidget(final PageEditor pageEditor, Element element) {
-        super(null, null);
+        super(null, "#FFF");
         this.pageEditor = pageEditor;
 
         String content = element.getAttribute("content");
@@ -72,18 +73,13 @@ public class PageBarWidget extends AbstractBarWidget {
             }
         });
         setClassName("mgnlMainbar mgnlControlBar");
-        addButton(button, null, ButtonPosition.RIGHT);
+        addButton(button, null, Float.RIGHT);
     }
 
     @Override
     protected void onSelect() {
         super.onSelect();
         pageEditor.updateSelection(this, PageEditor.SELECTION_TYPE_PAGE, workspace, path, null, null, "", dialog);
-    }
-
-    @Override
-    protected void setStyle(String color) {
-        super.setStyle(color);
     }
 
     @Override

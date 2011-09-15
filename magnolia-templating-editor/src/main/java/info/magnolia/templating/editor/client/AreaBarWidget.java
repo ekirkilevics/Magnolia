@@ -34,6 +34,7 @@
 package info.magnolia.templating.editor.client;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -85,7 +86,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                     pageEditor.openDialog(dialog, workspace, path, null, name);
                 }
             });
-            addButton(button, null, ButtonPosition.RIGHT);
+            addButton(button, null, Float.LEFT);
         }
 
         if (showAddButton) {
@@ -100,7 +101,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                     }
                 }
             });
-            addButton(addButton, null, ButtonPosition.RIGHT);
+            addButton(addButton, null, Float.LEFT);
         }
     }
 
@@ -146,10 +147,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 }
             }
         });
-        addButton(button, null, ButtonPosition.RIGHT);
-
-        super.setColor("rgb(116, 173, 59)");
-        super.setStyle(super.getColor());
+        addButton(button, null, Float.LEFT);
     }
 
     @Override

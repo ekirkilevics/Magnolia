@@ -34,6 +34,7 @@
 package info.magnolia.templating.editor.client;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -79,11 +80,11 @@ public class EditBarWidget extends AbstractBarWidget {
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
 
-        createButtons(pageEditor, "mgnlControlButtonSmall");
+        createButtons(pageEditor, "mgnlControlButton");
 
         createMouseEventsHandlers(pageEditor);
 
-        setClassName("mgnlControlBarSmall");
+        setClassName("mgnlControlBar");
 
     }
 
@@ -124,7 +125,7 @@ public class EditBarWidget extends AbstractBarWidget {
                 pageEditor.openDialog(dialog, workspace, path, null, null);
             }
         });
-        addButton(edit, buttonStyle, ButtonPosition.LEFT);
+        addButton(edit, buttonStyle, Float.LEFT);
 
         Button move = new Button("Move");
         move.addClickHandler(new ClickHandler() {
@@ -133,7 +134,7 @@ public class EditBarWidget extends AbstractBarWidget {
                 pageEditor.moveComponentStart(id);
             }
         });
-        addButton(move, buttonStyle, ButtonPosition.LEFT);
+        addButton(move, buttonStyle, Float.LEFT);
 
         Button delete = new Button("Delete");
         delete.addClickHandler(new ClickHandler() {
@@ -142,7 +143,7 @@ public class EditBarWidget extends AbstractBarWidget {
                 pageEditor.deleteComponent(path);
             }
         });
-        addButton(delete, buttonStyle, ButtonPosition.RIGHT);
+        addButton(delete, buttonStyle, Float.RIGHT);
     }
 
     @Override

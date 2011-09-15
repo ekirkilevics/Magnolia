@@ -35,6 +35,8 @@ package info.magnolia.templating.editor.client;
 
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -45,19 +47,14 @@ import com.google.gwt.user.client.ui.Label;
  * Base class for horizontal bars with buttons.
  */
 public abstract class AbstractBarWidget extends FlowPanel {
-    /**
-     * ButtonPosition.
-     *
-     */
-    public enum ButtonPosition { LEFT, RIGHT };
+
     private AbstractBarWidget parentBar;
     private Label label;
-    private String style;
-    private String color;
+    private String backgroundColor;
 
-    public AbstractBarWidget(AbstractBarWidget parentBar, String color) {
+    public AbstractBarWidget(AbstractBarWidget parentBar, String backgroundColor) {
         this.parentBar = parentBar;
-        this.color = color;
+        this.backgroundColor = backgroundColor;
         this.label = new Label("");
 
         addDomHandler(new ClickHandler() {
@@ -66,27 +63,14 @@ public abstract class AbstractBarWidget extends FlowPanel {
                 onSelect();
             }
         }, ClickEvent.getType());
-
-        setBackgroundColor(color);
     }
+
     protected void onSelect() {
-        setBackgroundColor("#FFF");
+        getStyle().setBackgroundColor("#FFF");
     }
 
     public void deselect() {
-        setBackgroundColor(this.color);
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    protected void setStyle(String style) {
-        getElement().setAttribute("style", style);
+        getStyle().setBackgroundColor(this.backgroundColor);
     }
 
     protected void setId(String id){
@@ -101,12 +85,13 @@ public abstract class AbstractBarWidget extends FlowPanel {
         this.label.setText(labelText);
     }
 
-    protected void addButton(Button button, String style, ButtonPosition position) {
+    protected void addButton(Button button, String style, Float cssFloat) {
         /*if(style != null && !"".equals(style)) {
             button.setStyleName(style, true);
         }
-        button.setStyleName(position == ButtonPosition.LEFT ? "mgnlBtnsLeft" : "mgnlBtnsRight", true);
         */
+        //button.setStylePrimaryName("mgnlControlButton");
+        button.getElement().getStyle().setFloat(cssFloat);
         add(button);
     }
 
@@ -114,8 +99,11 @@ public abstract class AbstractBarWidget extends FlowPanel {
         getElement().setClassName(className);
     }
 
-    protected void setBackgroundColor(String color) {
-        getElement().getStyle().setBackgroundColor(color);
+    /**
+     * @return the element's underlying {@link Style}. You can use this object to manipulate the css style attribute of the bar.
+     */
+    protected Style getStyle() {
+        return getElement().getStyle();
     }
 
     public void attach(Element element) {
