@@ -34,7 +34,7 @@
 package info.magnolia.templating.editor.client.jsni;
 
 /**
- * A JSNI wrapper around native javascript functions found in general.js.
+ * A JSNI wrapper around native javascript functions found in general.js and some utilities.
  * @version $Id$
  *
  */
