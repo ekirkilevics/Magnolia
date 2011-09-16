@@ -229,6 +229,10 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addConditions(conditions)
         );
 
+        register(DeltaBuilder.update("4.4.6", "")
+                .addTask(new BootstrapConditionally("Security", "Bootstraps security-base role.", "/mgnl-bootstrap/core/userroles.security-base.xml"))
+        );
+
     }
 
     private PropertyValueDelegateTask fixMimetype(String mimeType, final String previouslyWrongValue, final String fixedValue) {
