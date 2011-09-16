@@ -152,7 +152,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
                     try {
                         // TODO: change this once c2b is n2b ...
                         final Node node = session.getNode(path);
-                        onRegister(ContentUtil.wrapAsContent(node));
+                        onRegister(ContentUtil.asContent(node));
                     } catch (RepositoryException e) {
                         log.error("Can't read configuration for " + interf + " from [" + repository + ":" + path + "], will return null.", e);
                     }

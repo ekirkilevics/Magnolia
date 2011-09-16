@@ -680,8 +680,4 @@ public class ContentUtil {
         }
     }
 
-    @Deprecated
-    public static Content wrapAsContent(Node node) throws RepositoryException {
-        return asContent(node);
-    }
 }

@@ -54,7 +54,7 @@ public class ConfiguredRendererProvider implements RendererProvider {
 
     public ConfiguredRendererProvider(String id, Node configNode) throws RepositoryException, Content2BeanException {
         this.id = id;
-        Content content = ContentUtil.wrapAsContent(configNode);
+        Content content = ContentUtil.asContent(configNode);
         this.renderer = (Renderer) Content2BeanUtil.toBean(content, true, Renderer.class);
     }
 

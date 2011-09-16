@@ -84,6 +84,6 @@ public class GuiceConfiguredComponentProvider<T> implements Provider<T> {
 
     @SuppressWarnings("unchecked")
     protected T transformNode(Node node) throws Content2BeanException, RepositoryException {
-        return (T) Content2BeanUtil.toBean(ContentUtil.wrapAsContent(node), true, componentProvider);
+        return (T) Content2BeanUtil.toBean(ContentUtil.asContent(node), true, componentProvider);
     }
 }

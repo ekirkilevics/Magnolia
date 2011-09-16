@@ -55,7 +55,7 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
 
     public ConfiguredTemplateDefinitionProvider(String id, Node configNode) throws RepositoryException, Content2BeanException {
         this.id = id;
-        Content content = ContentUtil.wrapAsContent(configNode);
+        Content content = ContentUtil.asContent(configNode);
         this.templateDefinition = (TemplateDefinition) Content2BeanUtil.toBean(content, true, TemplateDefinition.class);
         if (templateDefinition != null) {
             templateDefinition.setId(id);
