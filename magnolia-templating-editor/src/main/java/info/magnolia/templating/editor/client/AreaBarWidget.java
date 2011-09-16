@@ -79,7 +79,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         setClassName("mgnlAreaControlBar");
 
         if (type.equals(PageEditor.AREA_TYPE_LIST)) {
-            Button button = new Button("Edit&nbsp;area");
+            Button button = new Button(getDictionary().get("buttons.editarea.js"));
             button.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -90,7 +90,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         }
 
         if (showAddButton) {
-            Button addButton = new Button("Add&nbsp;component");
+            Button addButton = new Button(getDictionary().get("buttons.addcomponent.js"));
             addButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -136,7 +136,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         setLabelText(label + "(" + component + ")");
 
-        Button button = new Button("Edit&nbsp;component");
+        Button button = new Button(getDictionary().get("buttons.editcomponent.js"));
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {

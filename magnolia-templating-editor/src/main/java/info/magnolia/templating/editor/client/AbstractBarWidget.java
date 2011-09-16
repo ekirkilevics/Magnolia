@@ -34,11 +34,14 @@
 package info.magnolia.templating.editor.client;
 
 
+import info.magnolia.templating.editor.client.jsni.GeneralJavascript;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -51,6 +54,7 @@ public abstract class AbstractBarWidget extends FlowPanel {
     private AbstractBarWidget parentBar;
     private Label label;
     private String backgroundColor;
+    private Dictionary dictionary;
 
     public AbstractBarWidget(AbstractBarWidget parentBar, String backgroundColor) {
         this.parentBar = parentBar;
@@ -63,6 +67,10 @@ public abstract class AbstractBarWidget extends FlowPanel {
                 onSelect();
             }
         }, ClickEvent.getType());
+
+        //TODO move messages we need to this module?
+        GeneralJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
+        dictionary = Dictionary.getDictionary("mgnlGwtMessages");
     }
 
     protected void onSelect() {
@@ -104,6 +112,13 @@ public abstract class AbstractBarWidget extends FlowPanel {
      */
     protected Style getStyle() {
         return getElement().getStyle();
+    }
+
+    /**
+     * Provides dynamic string lookup of key/value string pairs defined in a module's host HTML page.
+     */
+    protected Dictionary getDictionary() {
+        return dictionary;
     }
 
     public void attach(Element element) {

@@ -118,7 +118,7 @@ public class EditBarWidget extends AbstractBarWidget {
     }
 
     private void createButtons(final PageEditor pageEditor, String buttonStyle) {
-        Button edit = new Button("Edit");
+        Button edit = new Button(getDictionary().get("buttons.edit.js"));
         edit.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -127,7 +127,7 @@ public class EditBarWidget extends AbstractBarWidget {
         });
         addButton(edit, buttonStyle, Float.LEFT);
 
-        Button move = new Button("Move");
+        Button move = new Button(getDictionary().get("buttons.move.js"));
         move.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -136,7 +136,7 @@ public class EditBarWidget extends AbstractBarWidget {
         });
         addButton(move, buttonStyle, Float.LEFT);
 
-        Button delete = new Button("Delete");
+        Button delete = new Button(getDictionary().get("buttons.delete.js"));
         delete.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {

@@ -65,7 +65,7 @@ public class PageBarWidget extends AbstractBarWidget {
         this.dialog = element.getAttribute("dialog");
 
         setLabelText(label);
-        Button button = new Button("Edit&nbsp;page&nbsp;properties");
+        Button button = new Button(getDictionary().get("buttons.properties.js"));
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {

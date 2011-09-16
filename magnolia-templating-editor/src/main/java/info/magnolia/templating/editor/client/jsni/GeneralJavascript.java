@@ -67,4 +67,11 @@ public final class GeneralJavascript {
     public static native void mgnlDeleteNode(String path) /*-{
         $wnd.mgnlDeleteNode(path,'', '');
     }-*/;
+
+    /**
+     * Exposes the messages object corresponding to the passed in basename as a global (thus accessible by GWT Dictionary) variable named <em>mgnlGwtMessages</em>.
+     */
+    public static native void exposeMgnlMessagesToGwtDictionary(String basename) /*-{
+        $wnd.mgnlGwtMessages = $wnd.mgnlMessages.messages[basename];
+    }-*/;
 }
