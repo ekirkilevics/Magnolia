@@ -74,6 +74,7 @@
     <component>
       <type>info.magnolia.cms.beans.config.ServerConfiguration</type>
       <provider>info.magnolia.cms.beans.config.ServerConfiguration$InstanceFactory</provider>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.cms.security.SecuritySupport</type>
@@ -85,6 +86,7 @@
     <component>
       <type>info.magnolia.cms.security.IPSecurityManager</type>
       <provider>info.magnolia.cms.security.IPSecurityManagerImpl$InstanceFactory</provider>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.cms.filters.WebContainerResources</type>
