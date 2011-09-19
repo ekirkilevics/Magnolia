@@ -39,6 +39,7 @@ import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -73,6 +74,10 @@ public class InitElementTest {
         final ServerConfiguration serverCfg = new ServerConfiguration();
         serverCfg.setAdmin(true);
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
+
+        final I18nContentSupport defSupport = mock(I18nContentSupport.class);
+        when(defSupport.getLocale()).thenReturn(new Locale("en"));
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, defSupport);
 
         element = new InitElement(serverCfg, new AggregationStateBasedRenderingContext(new AggregationState()));
         out = new StringWriter();
