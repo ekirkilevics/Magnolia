@@ -276,6 +276,12 @@ public class DataTransporter {
             } else {
                 // create readers/filters and chain
                 XMLReader initialReader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
+                try{
+                    initialReader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                }catch (SAXException e) {
+                    log.error("could not set parser feature");
+                }
+
 
                 XMLFilter magnoliaV2Filter = null;
 
