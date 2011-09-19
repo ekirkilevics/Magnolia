@@ -66,28 +66,9 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     public static final String SELECTION_TYPE_COMPONENT_IN_LIST = "COMPONENT_IN_LIST";
     public static final String SELECTION_TYPE_COMPONENT_IN_SINGLE = "COMPONENT_IN_SINGLE";
 
-    public static final String ACTION_OPEN_DIALOG = "openDialog";
-    public static final String ACTION_UPDATE_SELECTION = "updateSelection";
-    public static final String ACTION_ADD_COMPONENT = "addComponent";
-    public static final String ACTION_MOVE = "move";
-    public static final String ACTION_MOVE_BEFORE = "moveBefore";
-    public static final String ACTION_MOVE_AFTER = "moveAfter";
-
-    public static final String PARAM_SELECTED_WORKSPACE = "selectedWorkspace";
-    public static final String PARAM_SELECTED_PATH = "selectedPath";
-    public static final String PARAM_SELECTED_COLLECTION_NAME = "selectedCollectionName";
-    public static final String PARAM_SELECTED_NODE_NAME = "selectedNodeName";
-    public static final String PARAM_AVAILABLE_COMPONENTS = "components";
-    public static final String PARAM_DIALOG = "dialog";
-    public static final String PARAM_SOURCE_PATH = "sourcePath";
-    public static final String PARAM_DESTINATION_PATH = "destinationPath";
-
     private boolean pageEditBarAlreadyProcessed = false;
     private AbstractBarWidget selectedBar;
     private String locale;
-
-    public PageEditor() {
-    }
 
     @Override
     public void onModuleLoad() {
@@ -99,6 +80,60 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
+    }
+
+    /**
+     * TODO: rename and/or remove arguments no longer needed (collectionName, nodeName).
+     */
+    public  void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName){
+        if (collectionName == null) {
+            collectionName = "";
+        }
+        if (nodeName == null) {
+            nodeName = "";
+        }
+
+        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", locale);
+    };
+
+    public void moveComponentStart(String id) {
+        GeneralJavascript.mgnlMoveNodeStart(id);
+    }
+
+    public void moveComponentEnd(AbstractBarWidget source, String path) {
+        GeneralJavascript.mgnlMoveNodeEnd(source.getElement(), path);
+    }
+
+    public void moveComponentOver(AbstractBarWidget source) {
+        GeneralJavascript.mgnlMoveNodeHigh(source.getElement());
+    }
+
+    public void moveComponentOut(AbstractBarWidget source) {
+        GeneralJavascript.mgnlMoveNodeReset(source.getElement());
+    }
+
+    public void deleteComponent(String path) {
+        GeneralJavascript.mgnlDeleteNode(path);
+    }
+
+    public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {
+        if (this.selectedBar != null && (this.selectedBar != selectedBar)) {
+            this.selectedBar.deselect();
+        }
+        this.selectedBar = selectedBar;
+    }
+
+    public void addComponent(String workspace, String path, String collectionName, String nodeName, String availableComponents) {
+        if (collectionName == null) {
+            collectionName = "";
+        }
+        if (nodeName == null) {
+            nodeName = "mgnlNew";
+        }
+        if (availableComponents == null) {
+            availableComponents = "";
+        }
+        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", locale);
     }
 
     /**
@@ -203,60 +238,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             }
         }
         return null;
-    }
-
-    /**
-     * TODO: rename and/or remove arguments no longer needed (collectionName, nodeName).
-     */
-    public  void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName){
-        if (collectionName == null) {
-            collectionName = "";
-        }
-        if (nodeName == null) {
-            nodeName = "";
-        }
-
-        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", locale);
-    };
-
-    public void moveComponentStart(String id) {
-        GeneralJavascript.mgnlMoveNodeStart(id);
-    }
-
-    public void moveComponentEnd(AbstractBarWidget source, String path) {
-        GeneralJavascript.mgnlMoveNodeEnd(source.getElement(), path);
-    }
-
-    public void moveComponentOver(AbstractBarWidget source) {
-        GeneralJavascript.mgnlMoveNodeHigh(source.getElement());
-    }
-
-    public void moveComponentOut(AbstractBarWidget source) {
-        GeneralJavascript.mgnlMoveNodeReset(source.getElement());
-    }
-
-    public void deleteComponent(String path) {
-        GeneralJavascript.mgnlDeleteNode(path);
-    }
-
-    public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {
-        if (this.selectedBar != null && (this.selectedBar != selectedBar)) {
-            this.selectedBar.deselect();
-        }
-        this.selectedBar = selectedBar;
-    }
-
-    public void addComponent(String workspace, String path, String collectionName, String nodeName, String availableComponents) {
-        if (collectionName == null) {
-            collectionName = "";
-        }
-        if (nodeName == null) {
-            nodeName = "mgnlNew";
-        }
-        if (availableComponents == null) {
-            availableComponents = "";
-        }
-        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", locale);
     }
 
 }
