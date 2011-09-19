@@ -36,13 +36,13 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.servlets.MVCServlet;
 import info.magnolia.cms.servlets.MVCServletHandler;
-import info.magnolia.cms.util.RequestFormUtil;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
