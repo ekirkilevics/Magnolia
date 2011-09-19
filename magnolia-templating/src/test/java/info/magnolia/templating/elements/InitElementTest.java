@@ -115,6 +115,16 @@ public class InitElementTest {
         assertTrue(out.toString().contains("/.resources/admin-css/admin-all.css"));
     }
 
+    @Test
+    public void testOutputContainsGwtLocaleMetaProperty() throws Exception {
+        //GIVEN look at setUp method()
+
+        //WHEN
+        element.begin(out);
+        //THEN
+        assertTrue(out.toString().contains("<meta name=\"gwt:property\" content=\"locale=en\"/>"));
+    }
+
     @After
     public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
