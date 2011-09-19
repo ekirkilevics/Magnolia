@@ -215,7 +215,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             nodeName = "";
         }
 
-        //TODO how do we pass the locale (last arg) here?
         GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", locale);
     };
 
