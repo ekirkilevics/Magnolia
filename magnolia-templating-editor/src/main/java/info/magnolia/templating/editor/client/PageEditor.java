@@ -40,6 +40,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.Event;
@@ -83,8 +84,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     private boolean pageEditBarAlreadyProcessed = false;
     private AbstractBarWidget selectedBar;
-
-    //private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
+    private String locale;
 
     public PageEditor() {
     }
@@ -93,11 +93,29 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     public void onModuleLoad() {
         Element documentElement = Document.get().getDocumentElement();
         detectCmsTag(documentElement, null);
+        locale = detectCurrentLocale(documentElement);
     }
 
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
+    }
+
+    /**
+     * A String representing the value for the GWT meta property whose content is <em>locale</em>.
+     * See also <a href='http://code.google.com/webtoolkit/doc/latest/DevGuideI18nLocale.html#LocaleSpecifying'>GWT Dev Guide to i18n</a>
+     */
+    private String detectCurrentLocale(Element element) {
+        final NodeList<Element> meta = element.getOwnerDocument().getElementsByTagName("meta");
+        for (int i = 0; i < meta.getLength(); i++) {
+            MetaElement metaTag = ((MetaElement) meta.getItem(i));
+            if ("gwt:property".equals(metaTag.getName()) && metaTag.getContent().contains("locale")) {
+                String[] split = metaTag.getContent().split("=");
+                locale = split.length == 2 ? split[1] : "en";
+                GWT.log("Detected Locale " + locale);
+            }
+        }
+        return locale;
     }
 
     private void detectCmsTag(Element element, AreaBarWidget parentBar) {
@@ -198,7 +216,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         }
 
         //TODO how do we pass the locale (last arg) here?
-        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", "");
+        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", locale);
     };
 
     public void moveComponentStart(String id) {
@@ -238,7 +256,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         if (availableComponents == null) {
             availableComponents = "";
         }
-        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", "");
+        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", locale);
     }
 
 }
