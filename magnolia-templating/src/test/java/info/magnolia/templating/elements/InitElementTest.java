@@ -68,7 +68,8 @@ public class InitElementTest {
         final WebContext ctx = mock(WebContext.class);
         final User user = mock(User.class);
         when(ctx.getUser()).thenReturn(user);
-        when(ctx.getLocale()).thenReturn(new Locale("en"));
+        final Locale localeEn = new Locale("en");
+        when(ctx.getLocale()).thenReturn(localeEn);
         MgnlContext.setInstance(ctx);
 
         final ServerConfiguration serverCfg = new ServerConfiguration();
@@ -76,7 +77,7 @@ public class InitElementTest {
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
 
         final I18nContentSupport defSupport = mock(I18nContentSupport.class);
-        when(defSupport.getLocale()).thenReturn(new Locale("en"));
+        when(defSupport.getLocale()).thenReturn(localeEn);
         ComponentsTestUtil.setInstance(I18nContentSupport.class, defSupport);
 
         element = new InitElement(serverCfg, new AggregationStateBasedRenderingContext(new AggregationState()));
