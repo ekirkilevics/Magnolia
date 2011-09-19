@@ -113,6 +113,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 String[] split = metaTag.getContent().split("=");
                 locale = split.length == 2 ? split[1] : "en";
                 GWT.log("Detected Locale " + locale);
+                break;
             }
         }
         return locale;
