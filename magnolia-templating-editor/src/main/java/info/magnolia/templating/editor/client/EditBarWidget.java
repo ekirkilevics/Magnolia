@@ -80,7 +80,7 @@ public class EditBarWidget extends AbstractBarWidget {
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
 
-        createButtons(pageEditor, "mgnlControlButton");
+        createButtons(pageEditor);
 
         createMouseEventsHandlers(pageEditor);
 
@@ -117,33 +117,34 @@ public class EditBarWidget extends AbstractBarWidget {
         }, MouseOutEvent.getType());
     }
 
-    private void createButtons(final PageEditor pageEditor, String buttonStyle) {
-        Button edit = new Button(getDictionary().get("buttons.edit.js"));
+    private void createButtons(final PageEditor pageEditor) {
+        final Button edit = new Button(getDictionary().get("buttons.edit.js"));
         edit.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 pageEditor.openDialog(dialog, workspace, path, null, null);
+
             }
         });
-        addButton(edit, buttonStyle, Float.LEFT);
+        addButton(edit, Float.LEFT);
 
-        Button move = new Button(getDictionary().get("buttons.move.js"));
+        final Button move = new Button(getDictionary().get("buttons.move.js"));
         move.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 pageEditor.moveComponentStart(id);
             }
         });
-        addButton(move, buttonStyle, Float.LEFT);
+        addButton(move, Float.LEFT);
 
-        Button delete = new Button(getDictionary().get("buttons.delete.js"));
+        final Button delete = new Button(getDictionary().get("buttons.delete.js"));
         delete.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 pageEditor.deleteComponent(path);
             }
         });
-        addButton(delete, buttonStyle, Float.RIGHT);
+        addButton(delete, Float.RIGHT);
     }
 
     @Override

@@ -73,7 +73,7 @@ public class PageBarWidget extends AbstractBarWidget {
             }
         });
         setClassName("mgnlMainbar mgnlControlBar");
-        addButton(button, null, Float.RIGHT);
+        addButton(button, Float.RIGHT);
     }
 
     @Override

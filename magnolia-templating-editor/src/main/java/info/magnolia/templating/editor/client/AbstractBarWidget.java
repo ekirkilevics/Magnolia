@@ -41,6 +41,10 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -93,13 +97,26 @@ public abstract class AbstractBarWidget extends FlowPanel {
         this.label.setText(labelText);
     }
 
-    protected void addButton(Button button, String style, Float cssFloat) {
-        /*if(style != null && !"".equals(style)) {
-            button.setStyleName(style, true);
-        }
-        */
-        //button.setStylePrimaryName("mgnlControlButton");
+    protected void addButton(final Button button, final Float cssFloat) {
+        button.setStylePrimaryName("mgnlControlButton");
         button.getElement().getStyle().setFloat(cssFloat);
+
+        button.addMouseDownHandler(new MouseDownHandler() {
+
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                //add push button style
+                button.setStyleName("mgnlControlButton_PUSHED", true);
+            }
+        });
+        button.addMouseUpHandler(new MouseUpHandler() {
+
+            @Override
+            public void onMouseUp(MouseUpEvent event) {
+                //remove push button style
+                button.setStyleName("mgnlControlButton_PUSHED", false);
+            }
+        });
         add(button);
     }
 

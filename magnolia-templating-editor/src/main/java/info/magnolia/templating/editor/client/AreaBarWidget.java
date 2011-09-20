@@ -86,7 +86,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                     pageEditor.openDialog(dialog, workspace, path, null, name);
                 }
             });
-            addButton(button, null, Float.LEFT);
+            addButton(button, Float.LEFT);
         }
 
         if (showAddButton) {
@@ -101,7 +101,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                     }
                 }
             });
-            addButton(addButton, null, Float.LEFT);
+            addButton(addButton, Float.LEFT);
         }
     }
 
@@ -147,7 +147,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 }
             }
         });
-        addButton(button, null, Float.LEFT);
+        addButton(button, Float.LEFT);
     }
 
     @Override

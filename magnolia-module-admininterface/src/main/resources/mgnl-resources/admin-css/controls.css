@@ -237,13 +237,47 @@ td.smothBarLabel {
     font: 11px verdana, arial, helvetica, sans-serif;
 }
 
+
+/*
+* new styles (since Magnolia 4.5)
+*/
 .mgnlAreaControlBar {
     background-color: rgb(107, 171, 251) !important;
-    /*Choose proper colors for borders*/
+    /*TODO Choose proper colors for borders*/
     border-left: 1px solid #ac6 !important;
     border-top: 1px solid #ac6 !important;
     border-right: 1px solid #680 !important;
     border-bottom: 1px solid #680 !important;
     height: 20px; /*TODO set this height else on FF default buttons height screws up layout*/
     width: 100% !important;
+}
+
+button.mgnlControlButton {
+    height: 18px;
+    padding: 2px!important;
+    margin: 1px 1px 0px 1px;
+    background-color: transparent;
+    border-top: 1px solid #ADC97B;
+    border-left: 1px solid #ADC97B;
+    border-bottom: 1px solid #396101;
+    border-right: 1px solid #396101;
+    line-height: 10px; /*FF needs it*/
+}
+
+button.mgnlControlButton_PUSHED {
+    height: 18px;
+    padding: 2px !important;
+    background-color: #86AC41 !important;
+    border-top: 1px solid #396101 !important;
+    border-left: 1px solid #ADC97B !important;
+    border-bottom: 1px solid #ADC97B !important;
+    border-right: 1px solid #396101 !important;
+}
+
+.mgnlAreaControlBar button.mgnlControlButton {
+    /*TODO Choose proper colors for borders*/
+}
+.mgnlAreaControlBar button.mgnlControlButton_PUSHED {
+    /*TODO Choose proper colors for background-color*/
+    background-color: rgb(107, 171, 251) !important;
 }
