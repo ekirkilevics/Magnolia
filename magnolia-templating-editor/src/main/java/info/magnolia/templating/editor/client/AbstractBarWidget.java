@@ -77,12 +77,16 @@ public abstract class AbstractBarWidget extends FlowPanel {
         dictionary = Dictionary.getDictionary("mgnlGwtMessages");
     }
 
+    /**
+     * Called when this bar widget is selected/clicked. Default implementation does nothing.
+     */
     protected void onSelect() {
-        getStyle().setBackgroundColor("#FFF");
     }
 
+    /**
+     * Called when this bar widget is no longer selected. Default implementation does nothing.
+     */
     public void deselect() {
-        getStyle().setBackgroundColor(this.backgroundColor);
     }
 
     protected void setId(String id){
