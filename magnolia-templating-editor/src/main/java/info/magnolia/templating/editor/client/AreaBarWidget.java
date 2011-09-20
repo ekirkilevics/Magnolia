@@ -78,7 +78,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         setClassName("mgnlAreaControlBar");
 
-        if (type.equals(PageEditor.AREA_TYPE_LIST)) {
+        if (element.hasAttribute("dialog") && type.equals(PageEditor.AREA_TYPE_LIST)) {
             Button button = new Button(getDictionary().get("buttons.editarea.js"));
             button.addClickHandler(new ClickHandler() {
                 @Override
