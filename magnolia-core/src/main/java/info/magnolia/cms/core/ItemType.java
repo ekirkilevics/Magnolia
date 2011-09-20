@@ -47,37 +47,37 @@ public final class ItemType implements Serializable {
     /**
      * Node type: base.
      */
-    public static final String NT_BASE = "nt:base"; //$NON-NLS-1$
+    public static final String NT_BASE = "nt:base";
 
     /**
      * Node type: unstructured.
      */
-    public static final String NT_UNSTRUCTURED = "nt:unstructured"; //$NON-NLS-1$
+    public static final String NT_UNSTRUCTURED = "nt:unstructured";
 
     /**
      * Node type: hierarchyNode.
      */
-    public static final String NT_HIERARCHY = "nt:hierarchyNode"; //$NON-NLS-1$
+    public static final String NT_HIERARCHY = "nt:hierarchyNode";
 
     /**
      * Node type: folder.
      */
-    public static final String NT_FOLDER = "mgnl:folder"; //$NON-NLS-1$
+    public static final String NT_FOLDER = "mgnl:folder";
 
     /**
      * Node type: base.
      */
-    public static final String NT_FILE = "nt:file"; //$NON-NLS-1$
+    public static final String NT_FILE = "nt:file";
 
     /**
      * Node type: resource.
      */
-    public static final String NT_RESOURCE = "mgnl:resource"; //$NON-NLS-1$
+    public static final String NT_RESOURCE = "mgnl:resource";
 
     /**
      * Node type: metadata.
      */
-    public static final String NT_METADATA = "mgnl:metaData"; //$NON-NLS-1$
+    public static final String NT_METADATA = "mgnl:metaData";
 
     /**
      * "wfe:workItem".
@@ -87,24 +87,24 @@ public final class ItemType implements Serializable {
     /**
      * "wfe:expression".
      */
-    public static final ItemType EXPRESSION = new ItemType("expression"); //$NON-NLS-1$
+    public static final ItemType EXPRESSION = new ItemType("expression");
 
     /**
      * Mixin: node has access control.
      */
-    public static final String MIX_ACCESSCONTROLLABLE = "mix:accessControllable"; //$NON-NLS-1$
+    public static final String MIX_ACCESSCONTROLLABLE = "mix:accessControllable";
 
     /**
      * Mixin: node can be referenced.
      */
-    public static final String MIX_REFERENCEABLE = "mix:referenceable"; //$NON-NLS-1$
+    public static final String MIX_REFERENCEABLE = "mix:referenceable";
 
     /**
      * Mixin: node can be versioned.
      */
-    public static final String MIX_VERSIONABLE = "mix:versionable"; //$NON-NLS-1$
+    public static final String MIX_VERSIONABLE = "mix:versionable";
 
-    public static final String MIX_LOCKABLE = "mix:lockable"; //$NON-NLS-1$
+    public static final String MIX_LOCKABLE = "mix:lockable";
 
     public static final String DELETED_NODE_MIXIN = "mgnl:deleted";
 
@@ -113,7 +113,7 @@ public final class ItemType implements Serializable {
      * @deprecated use ItemType.CONTENT
      */
     @Deprecated
-    public static final String NT_CONTENT = "mgnl:content"; //$NON-NLS-1$
+    public static final String NT_CONTENT = "mgnl:content";
 
     public static final String MGNL_NODE_DATA = "mgnl:nodeData";
 
@@ -132,21 +132,21 @@ public final class ItemType implements Serializable {
      * @deprecated use ItemType.CONTENTNODE
      */
     @Deprecated
-    public static final String NT_CONTENTNODE = "mgnl:contentNode"; //$NON-NLS-1$
+    public static final String NT_CONTENTNODE = "mgnl:contentNode";
 
-    public static final ItemType CONTENT = new ItemType("mgnl:content"); //$NON-NLS-1$
+    public static final ItemType CONTENT = new ItemType("mgnl:content");
 
-    public static final ItemType CONTENTNODE = new ItemType("mgnl:contentNode"); //$NON-NLS-1$
+    public static final ItemType CONTENTNODE = new ItemType("mgnl:contentNode");
 
-    public static final ItemType USER = new ItemType("mgnl:user"); //$NON-NLS-1$
+    public static final ItemType USER = new ItemType("mgnl:user");
 
-    public static final ItemType ROLE = new ItemType("mgnl:role"); //$NON-NLS-1$
+    public static final ItemType ROLE = new ItemType("mgnl:role");
 
-    public static final ItemType GROUP = new ItemType("mgnl:group"); //$NON-NLS-1$
+    public static final ItemType GROUP = new ItemType("mgnl:group");
 
-    public static final ItemType SYSTEM = new ItemType("mgnl:reserve"); //$NON-NLS-1$
+    public static final ItemType SYSTEM = new ItemType("mgnl:reserve");
 
-    public static final ItemType JCR_CONTENT = new ItemType("jcr:content"); //$NON-NLS-1$
+    public static final ItemType JCR_CONTENT = new ItemType("jcr:content");
 
     public static final ItemType FOLDER = new ItemType(NT_FOLDER);
 
