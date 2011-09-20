@@ -86,7 +86,7 @@ public abstract class AbstractNodeData implements NodeData{
 
     @Override
     public String getString(String lineBreak) {
-        return getString().replaceAll("\n", lineBreak); //$NON-NLS-1$
+        return getString().replaceAll("\n", lineBreak);
     }
 
     @Override

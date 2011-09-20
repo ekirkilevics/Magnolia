@@ -196,7 +196,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getType();
             }
             catch (Exception e) {
-                log.warn("Unable to read property type for {}", name); //$NON-NLS-1$
+                log.warn("Unable to read property type for {}", name);
             }
         }
         return PropertyType.UNDEFINED;

@@ -196,7 +196,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     private String getNodePath(String parent, String label) {
-        if (StringUtils.isEmpty(parent) || (parent.equals("/"))) { //$NON-NLS-1$
+        if (StringUtils.isEmpty(parent) || (parent.equals("/"))) {
             return label;
         }
         if (!parent.endsWith("/")) {
@@ -206,8 +206,8 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     private String getNodePath(String path) {
-        if (path != null && path.startsWith("/")) { //$NON-NLS-1$
-            return path.replaceFirst("/", StringUtils.EMPTY); //$NON-NLS-1$
+        if (path != null && path.startsWith("/")) {
+            return path.replaceFirst("/", StringUtils.EMPTY);
         }
         return path;
     }
@@ -232,7 +232,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      */
     @Override
     public Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        if (path.equals("/")) { //$NON-NLS-1$
+        if (path.equals("/")) {
             return this.getRoot();
         }
         try {
@@ -361,7 +361,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     private String makeRelative(String path) {
-        return StringUtils.stripStart(path, "/"); //$NON-NLS-1$
+        return StringUtils.stripStart(path, "/");
     }
 
     /**

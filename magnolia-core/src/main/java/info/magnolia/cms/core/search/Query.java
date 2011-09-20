@@ -47,14 +47,14 @@ import javax.jcr.version.VersionException;
 /**
  * Equivalent to {@link javax.jcr.query.Query} but working with {@link Content} objects.
  * Date: Apr 4, 2005 Time: 11:02:35 AM
- * @author Sameer Charles
+ * @version $Id$
  */
 
 public interface Query {
 
-    String XPATH = "xpath"; //$NON-NLS-1$
+    String XPATH = "xpath";
 
-    String SQL = "sql"; //$NON-NLS-1$
+    String SQL = "sql";
 
     /**
      * <i>Description inherited from javax.jcr.query.Query#execute()</i><br>

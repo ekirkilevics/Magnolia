@@ -62,25 +62,25 @@ public class MetaData {
      * Top level atoms viewed as metadata of the specified content these must be set by the authoring system itself, but
      * could be changed via custom templates if necessary.
      */
-    public static final String TITLE = "title"; //$NON-NLS-1$
+    public static final String TITLE = "title";
 
-    public static final String CREATION_DATE = "creationdate"; //$NON-NLS-1$
+    public static final String CREATION_DATE = "creationdate";
 
-    public static final String LAST_MODIFIED = "lastmodified"; //$NON-NLS-1$
+    public static final String LAST_MODIFIED = "lastmodified";
 
-    public static final String LAST_ACTION = "lastaction"; //$NON-NLS-1$
+    public static final String LAST_ACTION = "lastaction";
 
-    public static final String AUTHOR_ID = "authorid"; //$NON-NLS-1$
+    public static final String AUTHOR_ID = "authorid";
 
-    public static final String ACTIVATOR_ID = "activatorid"; //$NON-NLS-1$
+    public static final String ACTIVATOR_ID = "activatorid";
 
-    public static final String TEMPLATE = "template"; //$NON-NLS-1$
+    public static final String TEMPLATE = "template";
 
-    public static final String TEMPLATE_TYPE = "templatetype"; //$NON-NLS-1$
+    public static final String TEMPLATE_TYPE = "templatetype";
 
-    public static final String ACTIVATED = "activated"; //$NON-NLS-1$
+    public static final String ACTIVATED = "activated";
 
-    public static final String DEFAULT_META_NODE = "MetaData"; //$NON-NLS-1$
+    public static final String DEFAULT_META_NODE = "MetaData";
 
     public static final int ACTIVATION_STATUS_NOT_ACTIVATED = 0;
 
@@ -162,7 +162,7 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData");
             }
         }
         catch (RepositoryException e) {
@@ -399,8 +399,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
-                log.debug("cannot set property - " + name); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData");
+                log.debug("cannot set property - " + name);
             }
         }
     }
@@ -425,8 +425,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
-                log.debug("cannot set property - " + name); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData");
+                log.debug("cannot set property - " + name);
             }
         }
     }
@@ -451,8 +451,8 @@ public class MetaData {
         }
         catch (NullPointerException e) {
             if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
-                log.debug("cannot set property - " + name); //$NON-NLS-1$
+                log.debug("MetaData has not been created or this node does not support MetaData");
+                log.debug("cannot set property - " + name);
             }
         }
     }
@@ -490,7 +490,7 @@ public class MetaData {
             return property.getDate();
         }
         catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -508,7 +508,7 @@ public class MetaData {
             return property.getBoolean();
         }
         catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -526,7 +526,7 @@ public class MetaData {
             return property.getDouble();
         }
         catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -544,7 +544,7 @@ public class MetaData {
             return property.getLong();
         }
         catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -567,7 +567,7 @@ public class MetaData {
             return property.getString();
         }
         catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -609,15 +609,15 @@ public class MetaData {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("title", this.getTitle()) //$NON-NLS-1$
-        .append("template", this.getTemplate()) //$NON-NLS-1$
-        .append("authorId", this.getAuthorId()) //$NON-NLS-1$
-        .append("label", this.getLabel()) //$NON-NLS-1$
-        .append("activatorId", this.getActivatorId()) //$NON-NLS-1$
-        .append("isActivated", this.getIsActivated()) //$NON-NLS-1$
-        .append("creationDate", this.getCreationDate()) //$NON-NLS-1$
-        .append("lastActionDate", this.getLastActionDate()) //$NON-NLS-1$
-        .append("modificationDate", this.getModificationDate()) //$NON-NLS-1$
+        return new ToStringBuilder(this).append("title", this.getTitle())
+        .append("template", this.getTemplate())
+        .append("authorId", this.getAuthorId())
+        .append("label", this.getLabel())
+        .append("activatorId", this.getActivatorId())
+        .append("isActivated", this.getIsActivated())
+        .append("creationDate", this.getCreationDate())
+        .append("lastActionDate", this.getLastActionDate())
+        .append("modificationDate", this.getModificationDate())
         .toString();
     }
 

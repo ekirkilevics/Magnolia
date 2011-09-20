@@ -132,7 +132,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * User who created this version.
      */
-    public static final String VERSION_USER = "versionUser"; //$NON-NLS-1$
+    public static final String VERSION_USER = "versionUser";
 
     /**
      * Name of the base node.

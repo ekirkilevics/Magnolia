@@ -140,7 +140,7 @@ public final class Path {
         }
 
         if (root == null) {
-            throw new IOException("Invalid magnolia " + SystemProperty.MAGNOLIA_APP_ROOTDIR + " path"); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new IOException("Invalid magnolia " + SystemProperty.MAGNOLIA_APP_ROOTDIR + " path");
         }
     }
 
@@ -156,10 +156,10 @@ public final class Path {
     }
 
     public static String getUniqueLabel(HierarchyManager hierarchyManager, String parent, String label) {
-        if (parent.equals("/")) { //$NON-NLS-1$
+        if (parent.equals("/")) {
             parent = StringUtils.EMPTY;
         }
-        while (hierarchyManager.isExist(parent + "/" + label)) { //$NON-NLS-1$
+        while (hierarchyManager.isExist(parent + "/" + label)) {
             label = createUniqueName(label);
         }
         return label;
@@ -193,7 +193,7 @@ public final class Path {
             return false;
         }
 
-        if (path.startsWith("/") || path.startsWith(File.separator)) { //$NON-NLS-1$
+        if (path.startsWith("/") || path.startsWith(File.separator)) {
             return true;
         }
 
@@ -244,7 +244,7 @@ public final class Path {
             }
             else
             {
-                newLabel.append("-"); //$NON-NLS-1$
+                newLabel.append("-");
             }
         }
         if (newLabel.length() == 0)
@@ -345,16 +345,16 @@ public final class Path {
     }
 
     public static String getAbsolutePath(String path, String label) {
-        if (StringUtils.isEmpty(path) || (path.equals("/"))) { //$NON-NLS-1$
-            return "/" + label; //$NON-NLS-1$
+        if (StringUtils.isEmpty(path) || (path.equals("/"))) {
+            return "/" + label;
         }
 
-        return path + "/" + label; //$NON-NLS-1$
+        return path + "/" + label;
     }
 
     public static String getAbsolutePath(String path) {
-        if (!path.startsWith("/")) { //$NON-NLS-1$
-            return "/" + path; //$NON-NLS-1$
+        if (!path.startsWith("/")) {
+            return "/" + path;
         }
         return path;
     }
@@ -364,10 +364,10 @@ public final class Path {
      */
     @Deprecated
     public static String getNodePath(String path, String label) {
-        if (StringUtils.isEmpty(path) || (path.equals("/"))) { //$NON-NLS-1$
+        if (StringUtils.isEmpty(path) || (path.equals("/"))) {
             return label;
         }
-        return getNodePath(path + "/" + label); //$NON-NLS-1$
+        return getNodePath(path + "/" + label);
     }
 
     /**
@@ -375,8 +375,8 @@ public final class Path {
      */
     @Deprecated
     public static String getNodePath(String path) {
-        if (path.startsWith("/")) { //$NON-NLS-1$
-            return path.replaceFirst("/", StringUtils.EMPTY); //$NON-NLS-1$
+        if (path.startsWith("/")) {
+            return path.replaceFirst("/", StringUtils.EMPTY);
         }
         return path;
     }
@@ -386,10 +386,10 @@ public final class Path {
      */
     @Deprecated
     public static String getParentPath(String path) {
-        int lastIndexOfSlash = path.lastIndexOf("/"); //$NON-NLS-1$
+        int lastIndexOfSlash = path.lastIndexOf("/");
         if (lastIndexOfSlash > 0) {
-            return StringUtils.substringBefore(path, "/"); //$NON-NLS-1$
+            return StringUtils.substringBefore(path, "/");
         }
-        return "/"; //$NON-NLS-1$
+        return "/";
     }
 }

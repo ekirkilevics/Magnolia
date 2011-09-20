@@ -350,7 +350,7 @@ public class DefaultContent extends AbstractContent {
         while (propertyIterator.hasNext()) {
             Property property = (Property) propertyIterator.next();
             try {
-                if (!property.getName().startsWith("jcr:") && !property.getName().startsWith("mgnl:")) { //$NON-NLS-1$ //$NON-NLS-2$
+                if (!property.getName().startsWith("jcr:") && !property.getName().startsWith("mgnl:")) {
                     nodeDatas.add(getNodeData(property.getName()));
                 }
             }
@@ -376,7 +376,7 @@ public class DefaultContent extends AbstractContent {
             return this.node.getPath();
         }
         catch (RepositoryException e) {
-            log.error("Failed to get handle: " + e.getMessage(), e); //$NON-NLS-1$
+            log.error("Failed to get handle: " + e.getMessage(), e);
             return StringUtils.EMPTY;
         }
     }
@@ -632,12 +632,12 @@ public class DefaultContent extends AbstractContent {
         Access.tryPermission(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_SET_PROPERTY);
         // TODO: there seems to be bug somewhere as we are able to add mixins even when the method below returns false
         if (!this.node.canAddMixin(type)) {
-            log.debug("Node - " + this.node.getPath() + " does not allow mixin type - " + type); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("Node - " + this.node.getPath() + " does not allow mixin type - " + type);
         }
         try {
             this.node.addMixin(type);
         } catch (Exception e) {
-            log.error("Failed to add  mixin type - " + type + " to a node " + this.node.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
+            log.error("Failed to add  mixin type - " + type + " to a node " + this.node.getPath());
         }
     }
 

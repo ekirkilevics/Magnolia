@@ -254,7 +254,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
         }
         // fix all getChildren calls from the root node
-        if ("rep:root".equalsIgnoreCase(type)) { //$NON-NLS-1$
+        if ("rep:root".equalsIgnoreCase(type)) {
             type = ItemType.CONTENT.getSystemName();
         }
         // --------------------------------------------------
