@@ -57,7 +57,7 @@ public class AreaBarWidget extends AbstractBarWidget {
     private boolean showAddButton = true;
 
     public AreaBarWidget(AbstractBarWidget parentBar, final PageEditor pageEditor, Element element) {
-        super(parentBar, "rgb(107, 171, 251)");
+        super(parentBar);
         this.pageEditor = pageEditor;
 
         String content = element.getAttribute("content");

@@ -63,7 +63,7 @@ public class EditBarWidget extends AbstractBarWidget {
 
     public EditBarWidget(AbstractBarWidget parentBar, final PageEditor pageEditor, Element element) {
 
-        super(parentBar, "rgb(116, 173, 59)");
+        super(parentBar);
         this.pageEditor = pageEditor;
 
         String content = element.getAttribute("content");

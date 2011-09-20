@@ -53,7 +53,7 @@ public class PageBarWidget extends AbstractBarWidget {
     private String dialog;
 
     public PageBarWidget(final PageEditor pageEditor, Element element) {
-        super(null, "#FFF");
+        super(null);
         this.pageEditor = pageEditor;
 
         String content = element.getAttribute("content");

@@ -57,12 +57,10 @@ public abstract class AbstractBarWidget extends FlowPanel {
 
     private AbstractBarWidget parentBar;
     private Label label;
-    private String backgroundColor;
     private Dictionary dictionary;
 
-    public AbstractBarWidget(AbstractBarWidget parentBar, String backgroundColor) {
+    public AbstractBarWidget(AbstractBarWidget parentBar) {
         this.parentBar = parentBar;
-        this.backgroundColor = backgroundColor;
         this.label = new Label("");
 
         addDomHandler(new ClickHandler() {
