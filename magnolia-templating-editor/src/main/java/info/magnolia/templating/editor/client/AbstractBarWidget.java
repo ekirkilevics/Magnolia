@@ -61,6 +61,7 @@ public abstract class AbstractBarWidget extends FlowPanel {
 
     public AbstractBarWidget(AbstractBarWidget parentBar) {
         this.parentBar = parentBar;
+        //TODO do we really want this label into the bar?
         this.label = new Label("");
 
         addDomHandler(new ClickHandler() {
