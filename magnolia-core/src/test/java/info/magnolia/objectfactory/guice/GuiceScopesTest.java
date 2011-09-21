@@ -129,6 +129,7 @@ public class GuiceScopesTest {
         // GIVEN
         AggregationState aggregationState = new AggregationState();
         WebContext context = mock(WebContext.class);
+        when(context.getRequest()).thenReturn(new MockHttpServletRequest());
         when(context.getAggregationState()).thenReturn(aggregationState);
         MgnlContext.setInstance(context);
         GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockSingletonWithContextProviders.class);

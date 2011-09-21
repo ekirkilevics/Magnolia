@@ -37,7 +37,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -163,10 +162,8 @@ public class GuiceComponentProviderLifecycleTest {
         assertLifeCycleSequenceContainsAll(LifecycleMultiple.class, "AB", "BA");
     }
 
-    @Ignore
     @Test
     public void testExtends() {
-        // Order of @PreDestroy fails, issue filed with MycilaGuice https://code.google.com/p/mycila/issues/detail?id=30
         assertLifeCycleSequence(LifecycleExtends.class, "AX", "XA");
     }
     @Test
@@ -182,11 +179,9 @@ public class GuiceComponentProviderLifecycleTest {
         assertLifeCycleSequence(LifecyclePrivateMethods.class, "D", "D");
     }
 
-    @Ignore
     @Test
     public void testSameNamePrivateMethods() {
-        // Order of @PreDestroy fails, issue filed with MycilaGuice https://code.google.com/p/mycila/issues/detail?id=30
-        assertLifeCycleSequence(LifecycleSameNamePrivateMethods.class, "ED", "DE");
+        assertLifeCycleSequence(LifecycleSameNamePrivateMethods.class, "DE", "ED");
     }
 
     private void assertLifeCycleSequenceContainsAll(final Class<? extends LifecycleBase> clazz, String startSequence, String endSequence) {

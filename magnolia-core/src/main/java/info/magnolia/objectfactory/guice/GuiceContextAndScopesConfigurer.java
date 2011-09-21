@@ -68,31 +68,31 @@ public class GuiceContextAndScopesConfigurer extends AbstractGuiceComponentConfi
             public WebContext get() {
                 return MgnlContext.getWebContext();
             }
-        });
+        }).in(RequestScoped.class);
         bind(AggregationState.class).toProvider(new Provider<AggregationState>() {
             @Override
             public AggregationState get() {
                 return MgnlContext.getAggregationState();
             }
-        });
+        }).in(RequestScoped.class);
         bind(HttpSession.class).toProvider(new Provider<HttpSession>() {
             @Override
             public HttpSession get() {
                 return MgnlContext.getWebContext().getRequest().getSession();
             }
-        });
+        }).in(SessionScoped.class);
         bind(HttpServletRequest.class).toProvider(new Provider<HttpServletRequest>() {
             @Override
             public HttpServletRequest get() {
                 return MgnlContext.getWebContext().getRequest();
             }
-        });
+        }).in(RequestScoped.class);
         bind(HttpServletResponse.class).toProvider(new Provider<HttpServletResponse>() {
             @Override
             public HttpServletResponse get() {
                 return MgnlContext.getWebContext().getResponse();
             }
-        });
+        }).in(RequestScoped.class);
 
         // But the scopes need to be registered at every level
         bindScope(RequestScoped.class, MagnoliaScopes.REQUEST);

@@ -118,12 +118,6 @@ public class GuiceComponentProviderBuilder {
 //                binder().requireExplicitBindings();
 
                 // JSR-250 support added by Mycila
-                try {
-                    bind(Class.forName("com.mycila.inject.jsr250.Jsr250KeyProvider"));
-                    bind(Class.forName("com.mycila.inject.jsr250.Jsr250PostConstructHandler"));
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
                 install(Jsr250.newJsr250Module());
 
                 install(new GuiceComponentConfigurationModule(configuration));

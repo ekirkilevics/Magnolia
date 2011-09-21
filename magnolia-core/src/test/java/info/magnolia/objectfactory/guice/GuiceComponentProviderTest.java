@@ -44,7 +44,6 @@ import javax.inject.Singleton;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
@@ -251,12 +250,8 @@ public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
         }
     }
 
-    @Ignore
     @Test
     public void testLifecycle() {
-
-        // This fails because Guice creates an extra internal binding and Mycila destroys each of them
-        // Issue filed with MycilaGuice https://code.google.com/p/mycila/issues/detail?id=31
 
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
         configuration.registerImplementation(SomeInterface.class, LifecycleSuperClass.class);

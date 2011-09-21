@@ -43,7 +43,6 @@ import org.apache.commons.lang.StringUtils;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.binder.ScopedBindingBuilder;
-import com.google.inject.util.Providers;
 import info.magnolia.module.model.ComponentDefinition;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.annotation.LazySingleton;
@@ -158,7 +157,7 @@ public class GuiceComponentConfigurationModule extends AbstractModule {
     }
 
     private <T> ScopedBindingBuilder bindProvider(Class<T> type, Provider<T> provider) {
-        return bind(type).toProvider(Providers.guicify(provider));
+        return bind(type).toProvider(GuiceUtils.guicify(provider));
     }
 
     private <T> ScopedBindingBuilder bindProvider(Class<T> type, Class<? extends Provider<T>> provider) {
