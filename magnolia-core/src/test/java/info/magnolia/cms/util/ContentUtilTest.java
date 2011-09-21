@@ -33,7 +33,12 @@
  */
 package info.magnolia.cms.util;
 
+import static info.magnolia.nodebuilder.Ops.addNode;
+import static java.util.Arrays.asList;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.nodebuilder.NodeBuilder;
@@ -41,23 +46,21 @@ import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
-import static info.magnolia.nodebuilder.Ops.*;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static java.util.Arrays.asList;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Tests for {@link ContentUtil} which do rely on an actual repository, i.e not using {@link info.magnolia.test.RepositoryTestCase}.
@@ -577,6 +580,21 @@ public class ContentUtilTest extends MgnlTestCase {
             assertTrue(t instanceof RepositoryException);
             assertEquals("No ancestor of type mgnl:contentNode found for null:/root/a/aa[mgnl:content]", t.getMessage());
         }
+    }
+
+    @Test
+    public void testAsContent() throws Exception{
+        // GIVEN
+        MockSession session = SessionTestUtil.createSession("testWorkspace","/foo/bar/sub1.@uuid=1");
+
+        Node node = session.getNode("/foo/bar/sub1");
+
+        // WHEN
+        Content content = ContentUtil.asContent(node);
+
+        // THEN
+        assertEquals(node, content.getJCRNode());
+        assertTrue(content instanceof DefaultContent);
     }
 
     private final static class ContentTypeRejector implements Content.ContentFilter {

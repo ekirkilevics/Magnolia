@@ -34,6 +34,7 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
@@ -68,6 +69,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Some easy to use methods to handle with Content objects.
+ *
+ * @version $Id$
  */
 public class ContentUtil {
     private final static Logger log = LoggerFactory.getLogger(ContentUtil.class);
@@ -641,43 +644,10 @@ public class ContentUtil {
     }
 
     public static Content asContent(Node content) {
-        if (content == null) {
-            return null;
-        }
         try {
-            final Session session = content.getSession();
-            final String workspaceName = session.getWorkspace().getName();
-
-            // First check if its a node acquired from the current context
-            try {
-                HierarchyManager hm = MgnlContext.getHierarchyManager(workspaceName);
-                if (hm.getWorkspace().getSession().equals(session)) {
-                    return hm.getContent(content.getPath());
-                }
-            } catch (IllegalStateException ignored) {
-                // Thrown when there's no context set
-            } catch (IllegalArgumentException ignored) {
-                // Thrown when there's no repository configured
-            }
-
-            try {
-                // Then see if its a node acquired from the system context
-                HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(workspaceName);
-                if (hm.getWorkspace().getSession().equals(session)) {
-                    return hm.getContent(content.getPath());
-                }
-            } catch (IllegalStateException ignored) {
-                // Thrown when there's no context set
-            } catch (IllegalArgumentException ignored) {
-                // Thrown when there's no repository configured
-            }
-
-            // Give up
-            throw new IllegalStateException( "Can't create a Content object, unable to find a HierarchyManager for the nodes session");
-
+            return new DefaultContent(content);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
-
 }
