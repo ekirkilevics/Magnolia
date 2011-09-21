@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
-  <name>templating</name>
+  <name>templating-compatibility</name>
   <displayName>Magnolia Templating Compatibility</displayName>
   <!--<class>info.magnolia.module.templating.TemplatingModule</class>-->
   <!--<versionHandler>info.magnolia.module.templating.setup.TemplatingModuleVersionHandler</versionHandler>-->
