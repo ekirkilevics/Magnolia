@@ -91,9 +91,6 @@ public class AggregationState {
      * This URI might have been modified by various filters.
      */
     public String getCurrentURI() {
-        if (currentURI == null) {
-            return originalURI;
-        }
         return currentURI;
     }
 
@@ -259,11 +256,10 @@ public class AggregationState {
      * The original URI/URL can only be set once. A call to this methods resets the original URI/URL and allows to set them freshly.
      */
     public void resetURIs() {
-        this.originalURI=null;
-        this.originalURL=null;
-        this.originalBrowserURI=null;
-        this.originalBrowserURL=null;
-        // current uri have been resolved from the original, but if original changes, current has to follow, otherwise forward: virtual uri mappings will result in infinite loop since currentURI will be the original one forcing forward to act again and again
+        this.originalURI = null;
+        this.originalURL = null;
+        this.originalBrowserURI = null;
+        this.originalBrowserURL = null;
         this.currentURI = null;
     }
 }

@@ -196,4 +196,14 @@ public abstract class ServletUtils {
         }
         return builder.toString();
     }
+
+    /**
+     * Returns the request uri for the request. If the request is an include it will return the uri being included. The
+     * returned uri is not decoded.
+     */
+    public static String getRequestUri(HttpServletRequest request) {
+        if (request.getAttribute(INCLUDE_REQUEST_URI_ATTRIBUTE) != null)
+            return (String) request.getAttribute(INCLUDE_REQUEST_URI_ATTRIBUTE);
+        return request.getRequestURI();
+    }
 }
