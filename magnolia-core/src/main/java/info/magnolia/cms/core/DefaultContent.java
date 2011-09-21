@@ -137,8 +137,6 @@ public class DefaultContent extends AbstractContent {
      * @throws RepositoryException if an error occurs
      */
     public DefaultContent(Node node) throws RepositoryException, AccessDeniedException {
-        // TODO: this check seems bit pointless ... we wouldn't have got the node if we were not allowed to read it
-        Access.tryPermission(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_READ);
         this.setNode(node);
         this.setPath(this.getHandle());
     }
