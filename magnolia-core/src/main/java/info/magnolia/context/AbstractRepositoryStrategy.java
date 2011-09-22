@@ -72,7 +72,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
         try {
             Session jcrSession = getSession(repositoryId, workspaceId);
-            hm = util.createHierarchyManager(getUserId(), jcrSession);
+            hm = util.createHierarchyManager(jcrSession);
         }
         catch (RepositoryException e) {
             throw new UnhandledException(e);
@@ -87,7 +87,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
     @Override
     public HierarchyManager getHierarchyManagerFor(Session jcrSession) {
         try {
-            return WorkspaceAccessUtil.getInstance().createHierarchyManager(getUserId(), jcrSession);
+            return WorkspaceAccessUtil.getInstance().createHierarchyManager(jcrSession);
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
         }

@@ -40,6 +40,7 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.SessionUtil;
 import info.magnolia.logging.AuditLoggingUtil;
 
@@ -63,7 +64,8 @@ import org.slf4j.LoggerFactory;
  * Default JCR-based implementation of {@link HierarchyManager}.
  *
  * @author Sameer Charles
- * $Id:HierarchyManager.java 2719 2006-04-27 14:38:44Z scharles $
+ * @version $Id$
+ *
  * @deprecated since 4.5. Use Session and its methods instead.
  */
 @Deprecated
@@ -83,44 +85,30 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultHierarchyManager.class);
 
-    private Node rootNode;
-
-    //private Workspace workspace;
-
     private Session jcrSession;
-
-    private QueryManager queryManager;
-
-    /**
-     * TODO dlipp: can be replaced by {@link Session#getUserID()} once jcr Session is created with proper user (currently not the case).
-     * */
-    private String userId;
 
     private String repositoryName;
 
-    private String workspaceName;
-
     protected DefaultHierarchyManager() {}
 
-    public DefaultHierarchyManager(String userId, Session jcrSession, AccessManager unused) throws RepositoryException {
+    public DefaultHierarchyManager(Session jcrSession) throws RepositoryException{
+        this.jcrSession = jcrSession;
+        this.repositoryName = ContentRepository.getParentRepositoryName(jcrSession.getWorkspace().getName());
+    }
+
+    public DefaultHierarchyManager(String userId, Session jcrSession, AccessManager ignoredAccessManager) throws RepositoryException {
         this(userId, jcrSession);
     }
 
-    public DefaultHierarchyManager(String userId, Session jcrSession)
-    throws RepositoryException {
-        this.userId = userId;
-        this.jcrSession = jcrSession;
-        this.rootNode = jcrSession.getRootNode();
-        this.workspaceName = jcrSession.getWorkspace().getName();
-        this.repositoryName = ContentRepository.getParentRepositoryName(this.workspaceName);
+    public DefaultHierarchyManager(String ignoredUserId, Session jcrSession) throws RepositoryException {
+        this(jcrSession);
     }
 
-    // only used in tests
-    public DefaultHierarchyManager(String userId, Session jcrSession, String repositoryName) throws RepositoryException {
-        this.userId = userId;
+    /**
+     * Only used in tests.
+     */
+    public DefaultHierarchyManager(Session jcrSession, String repositoryName) {
         this.jcrSession = jcrSession;
-        this.rootNode = jcrSession.getRootNode();
-        this.workspaceName = jcrSession.getWorkspace().getName();
         this.repositoryName = repositoryName;
     }
 
@@ -153,19 +141,21 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     @Override
     public QueryManager getQueryManager() {
-        if (null == this.queryManager) {
-            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-            try {
-                this.queryManager = util.createQueryManager(this.jcrSession, this);
-            } catch (RepositoryException e) {
-                throw new RuntimeException(e);
-            }
+        QueryManager qm;
+        try {
+            qm = WorkspaceAccessUtil.getInstance().createQueryManager(this.jcrSession, this);
+        } catch (RepositoryException e) {
+           throw new RuntimeRepositoryException(e);
         }
-        return this.queryManager;
+        return qm;
     }
 
-    private Node getRootNode() {
-        return this.rootNode;
+    private Node getRootNode() throws RepositoryException {
+        return jcrSession.getRootNode();
+    }
+
+    private String getWorkspaceName() {
+        return jcrSession.getWorkspace().getName();
     }
 
     protected Session getJcrSession() {
@@ -191,7 +181,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     RepositoryException, AccessDeniedException {
         Content content = new DefaultContent(this.getRootNode(), this.getNodePath(path, label), contentType);
         setMetaData(content.getMetaData());
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, workspaceName, content.getItemType(), content.getHandle());
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, getWorkspaceName(), content.getItemType(), content.getHandle());
         return content;
     }
 
@@ -219,7 +209,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     protected void setMetaData(MetaData md) throws RepositoryException, AccessDeniedException {
         md.setCreationDate();
         md.setModificationDate();
-        md.setAuthorId(this.userId);
+        md.setAuthorId(this.jcrSession.getUserID());
         md.setTitle(StringUtils.EMPTY);
     }
 
@@ -264,7 +254,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
                 node = this.createContent(StringUtils.substringBeforeLast(path, "/"), StringUtils.substringAfterLast(
                         path,
                 "/"), type.toString());
-                AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, workspaceName, node.getItemType(), node.getHandle());
+                AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, getWorkspaceName(), node.getItemType(), node.getHandle());
             }
             else {
                 throw e;
@@ -357,7 +347,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             type = new ItemType(aNode.getProperty(ItemType.JCR_PRIMARY_TYPE).getString());
             aNode.remove();
         }
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, workspaceName, type, path);
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, getWorkspaceName(), type, path);
     }
 
     private String makeRelative(String path) {
@@ -467,7 +457,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         Access.tryPermission(jcrSession, source, Session.ACTION_REMOVE);
         Access.tryPermission(jcrSession, destination, Session.ACTION_ADD_NODE);
         this.getWorkspace().move(source, destination);
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MOVE, workspaceName, source, destination);
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MOVE, getWorkspaceName(), source, destination);
     }
 
     /**
@@ -483,7 +473,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         Access.tryPermission(jcrSession, source, Session.ACTION_READ);
         Access.tryPermission(jcrSession, destination, Session.ACTION_ADD_NODE);
         this.getWorkspace().copy(source, destination);
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_COPY, workspaceName, source, destination);
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_COPY, getWorkspaceName(), source, destination);
     }
 
     /**
@@ -523,7 +513,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     @Override
     public String getName() {
-        return this.workspaceName;
+        return getWorkspaceName();
     }
 
     @Override
@@ -531,8 +521,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((jcrSession == null) ? 0 : jcrSession.hashCode());
-        result = prime * result + ((queryManager == null) ? 0 : queryManager.hashCode());
-        result = prime * result + ((userId == null) ? 0 : userId.hashCode());
         return result;
     }
 
@@ -549,16 +537,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             if (other.jcrSession != null)
                 return false;
         } else if (!SessionUtil.hasSameUnderlyingSession(jcrSession, other.jcrSession))
-            return false;
-        if (queryManager == null) {
-            if (other.queryManager != null)
-                return false;
-        } else if (!queryManager.equals(other.queryManager))
-            return false;
-        if (userId == null) {
-            if (other.userId != null)
-                return false;
-        } else if (!userId.equals(other.userId))
             return false;
         return true;
     }

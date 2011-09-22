@@ -164,7 +164,7 @@ public class MockUtil {
     public static void setSessionAndHierarchyManager(Session session) throws RepositoryException {
         String workspaceName = session.getWorkspace().getName();
         MockUtil.getMockContext().addSession(workspaceName, session);
-        MockUtil.getMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager("userId", session, "magnolia"));
+        MockUtil.getMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager(session, "magnolia"));
     }
 
     /**
@@ -173,7 +173,7 @@ public class MockUtil {
     public static void setSystemContextSessionAndHierarchyManager(Session session) throws RepositoryException {
         String workspaceName = session.getWorkspace().getName();
         MockUtil.getSystemMockContext().addSession(workspaceName, session);
-        MockUtil.getSystemMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager("userId", session, "magnolia"));
+        MockUtil.getSystemMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager(session, "magnolia"));
     }
 
     public static void createContent(Content root, InputStream propertiesStream) throws IOException, RepositoryException {
