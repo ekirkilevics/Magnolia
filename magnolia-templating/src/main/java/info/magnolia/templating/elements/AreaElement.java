@@ -202,7 +202,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         return null;
     }
 
-    protected AreaDefinition resolveAreaDefinition() throws RenderException {
+    protected AreaDefinition resolveAreaDefinition() {
         if (areaDefinition != null) {
             return areaDefinition;
         }

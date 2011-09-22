@@ -33,16 +33,16 @@
  */
 package info.magnolia.templating.elements;
 
-import java.io.IOException;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.RenderableDefinition;
+
+import java.io.IOException;
+
+import javax.jcr.Node;
 
 
 /**
@@ -81,7 +81,7 @@ public abstract class AbstractTemplatingElement implements TemplatingElement {
         return renderingContext.getCurrentContent();
     }
 
-    protected String getDefinitionMessage(RenderableDefinition definition, String key) throws RepositoryException {
+    protected String getDefinitionMessage(RenderableDefinition definition, String key) {
         Messages messages = MessagesUtil.chain(definition.getI18nBasename(), MessagesUtil.chainWithDefault(DEFAULT_I18N_BASENAME));
         return messages.getWithDefault(key, key);
     }

@@ -33,11 +33,8 @@
  */
 package info.magnolia.rendering.template.registry;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.module.ModuleRegistry;
@@ -52,7 +49,6 @@ import info.magnolia.test.mock.jcr.MockEvent;
 import info.magnolia.test.mock.jcr.MockObservationManager;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
-import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -103,7 +99,7 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
     }
 
     @Test
-    public void testRegistersTemplatesOnStart() throws RepositoryException, IOException, RegistrationException {
+    public void testRegistersTemplatesOnStart() throws RegistrationException {
 
         // GIVEN
         ConfiguredTemplateDefinitionManager manager = new ConfiguredTemplateDefinitionManager(moduleRegistry, templateDefinitionRegistry);
@@ -124,7 +120,7 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
     }
 
     @Test
-    public void testReloadsTemplatesOnChange() throws RepositoryException, IOException, RegistrationException, InterruptedException {
+    public void testReloadsTemplatesOnChange() throws RepositoryException, RegistrationException, InterruptedException {
 
         // GIVEN
         ConfiguredTemplateDefinitionManager manager = new ConfiguredTemplateDefinitionManager(moduleRegistry, templateDefinitionRegistry);

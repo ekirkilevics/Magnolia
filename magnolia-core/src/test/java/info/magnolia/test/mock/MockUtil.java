@@ -161,7 +161,7 @@ public class MockUtil {
     /**
      * Installs the session in the current context and creates a delegating hierarchy manager that uses this session.
      */
-    public static void setSessionAndHierarchyManager(Session session) throws RepositoryException {
+    public static void setSessionAndHierarchyManager(Session session) {
         String workspaceName = session.getWorkspace().getName();
         MockUtil.getMockContext().addSession(workspaceName, session);
         MockUtil.getMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager(session, "magnolia"));
@@ -170,7 +170,7 @@ public class MockUtil {
     /**
      * Installs the session in the system context and creates a delegating hierarchy manager that uses this session.
      */
-    public static void setSystemContextSessionAndHierarchyManager(Session session) throws RepositoryException {
+    public static void setSystemContextSessionAndHierarchyManager(Session session) {
         String workspaceName = session.getWorkspace().getName();
         MockUtil.getSystemMockContext().addSession(workspaceName, session);
         MockUtil.getSystemMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager(session, "magnolia"));
@@ -190,7 +190,7 @@ public class MockUtil {
         importer.createContent(root, propertiesStream);
     }
 
-    public static Content createContent(final String name, Object[][] data, Content[] children) throws RepositoryException {
+    public static Content createContent(final String name, Object[][] data, Content[] children) {
         OrderedMap nodeDatas = MockUtil.createNodeDatas(data);
         OrderedMap childrenMap = new ListOrderedMap();
 
@@ -201,7 +201,7 @@ public class MockUtil {
         return new MockContent(name, nodeDatas, childrenMap);
     }
 
-    public static Content createNode(String name, Object[][] data) throws RepositoryException {
+    public static Content createNode(String name, Object[][] data) {
         return createContent(name, data, new Content[]{});
     }
 

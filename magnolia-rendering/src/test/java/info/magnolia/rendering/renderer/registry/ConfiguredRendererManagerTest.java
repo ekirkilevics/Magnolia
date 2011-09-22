@@ -33,11 +33,8 @@
  */
 package info.magnolia.rendering.renderer.registry;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.objectfactory.Components;
@@ -51,7 +48,6 @@ import info.magnolia.test.mock.jcr.MockEvent;
 import info.magnolia.test.mock.jcr.MockObservationManager;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
-import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -119,7 +115,7 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
     }
 
     @Test
-    public void testRegistersRenderersOnStart() throws RepositoryException, IOException, RegistrationException {
+    public void testRegistersRenderersOnStart() throws RegistrationException {
 
         // GIVEN
         ConfiguredRendererManager manager = new ConfiguredRendererManager(moduleRegistry, rendererRegistry);
@@ -135,7 +131,7 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
     }
 
     @Test
-    public void testReloadsRenderersOnChange() throws RepositoryException, IOException, RegistrationException, InterruptedException {
+    public void testReloadsRenderersOnChange() throws RepositoryException, RegistrationException, InterruptedException {
 
         // GIVEN
         ConfiguredRendererManager manager = new ConfiguredRendererManager(moduleRegistry, rendererRegistry);

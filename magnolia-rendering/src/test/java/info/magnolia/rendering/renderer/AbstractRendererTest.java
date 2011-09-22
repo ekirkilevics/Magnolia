@@ -46,7 +46,6 @@ import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.test.mock.jcr.MockNode;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -80,7 +79,7 @@ public class AbstractRendererTest {
     }
 
     @Test(expected = RenderException.class)
-    public void testRenderWhenGetIdentifierThrowsException() throws IOException, RepositoryException, RenderException {
+    public void testRenderWhenGetIdentifierThrowsException() throws RepositoryException, RenderException {
         // GIVEN
         Node content = mock(Node.class);
         doThrow(new RepositoryException()).when(content).getIdentifier();

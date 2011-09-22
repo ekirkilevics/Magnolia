@@ -46,7 +46,6 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockWebContext;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 
@@ -98,7 +97,7 @@ public class PlainTextRendererTest {
         assertEquals("In a crooked little town, they were lost and never found", out.toString());
     }
 
-    private Content getNode(String configNode, String path) throws IOException, RepositoryException {
+    private Content getNode(String configNode, String path) throws RepositoryException {
         MockContent content = new MockContent(path);
         content.setNodeData("text", configNode);
         content.setNodeData("contentType", "mgnl:contentNode");

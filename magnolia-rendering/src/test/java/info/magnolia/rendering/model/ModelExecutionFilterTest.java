@@ -227,7 +227,7 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
         MgnlContext.getAggregationState().setRepository(ContentRepository.WEBSITE);
     }
 
-    private void setupRendererThatReturnsMockRenderingModel(RenderingModel renderingModel) throws RenderException, RegistrationException {
+    private void setupRendererThatReturnsMockRenderingModel(RenderingModel renderingModel) throws RenderException {
         final RenderingModelBasedRenderer renderer = mock(RenderingModelBasedRenderer.class);
         when(renderer.newModel(any(Node.class), any(RenderableDefinition.class), any(RenderingModel.class))).thenReturn(renderingModel);
 

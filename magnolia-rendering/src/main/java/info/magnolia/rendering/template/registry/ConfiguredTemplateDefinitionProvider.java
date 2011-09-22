@@ -41,7 +41,6 @@ import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 /**
  * TemplateDefinitionProvider that instantiates a template from a configuration node.
@@ -53,7 +52,7 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
     private String id;
     private TemplateDefinition templateDefinition;
 
-    public ConfiguredTemplateDefinitionProvider(String id, Node configNode) throws RepositoryException, Content2BeanException {
+    public ConfiguredTemplateDefinitionProvider(String id, Node configNode) throws Content2BeanException {
         this.id = id;
         Content content = ContentUtil.asContent(configNode);
         this.templateDefinition = (TemplateDefinition) Content2BeanUtil.toBean(content, true, TemplateDefinition.class);

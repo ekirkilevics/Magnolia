@@ -66,7 +66,7 @@ public class BinaryMockNodeDataTest extends TestCase {
         assertEquals(resourceNode.getNodeData("attribute").getString(), "value");
     }
 
-    public void testThatTheBinaryContentCanBeReadMultipleTimes() throws RepositoryException, IOException{
+    public void testThatTheBinaryContentCanBeReadMultipleTimes() throws IOException{
         BinaryMockNodeData binaryNodeData = new BinaryMockNodeData("file", new ByteArrayInputStream(BYTES));
 
         // THEN we can read the content twice

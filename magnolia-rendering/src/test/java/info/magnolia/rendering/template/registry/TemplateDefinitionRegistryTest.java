@@ -104,7 +104,7 @@ public class TemplateDefinitionRegistryTest {
     }
 
     @Test
-    public void testGetTemplateDefinitionsIgnoresFailingProvider() throws RegistrationException {
+    public void testGetTemplateDefinitionsIgnoresFailingProvider() {
 
         // GIVEN
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
@@ -128,7 +128,7 @@ public class TemplateDefinitionRegistryTest {
     }
 
     @Test
-    public void testUnregisterAndRegister() throws RegistrationException {
+    public void testUnregisterAndRegister() {
         // GIVEN
         String providerId = "onlyOneToRemove";
         final TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();

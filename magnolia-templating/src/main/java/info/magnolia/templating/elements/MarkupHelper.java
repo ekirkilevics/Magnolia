@@ -89,7 +89,7 @@ public class MarkupHelper implements Appendable {
         return this;
     }
 
-    public MarkupHelper openTag(String tagName) throws IOException, RenderException {
+    public MarkupHelper openTag(String tagName) throws IOException {
         appendable.append(LESS_THAN).append(tagName);
         return this;
     }

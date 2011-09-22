@@ -33,19 +33,13 @@
  */
 package info.magnolia.link;
 
+import static org.easymock.classextension.EasyMock.*;
 import static org.junit.Assert.*;
-
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
-
-import java.io.IOException;
-
-import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
@@ -78,19 +72,19 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     @Test
-    public void testParsingLinks() throws IOException, RepositoryException {
+    public void testParsingLinks() {
         String res = LinkUtil.convertAbsoluteLinksToUUIDs(HTML_WITH_ABSOLUTE_LINK);
         assertEquals(HTML_WITH_UUIDS, res);
     }
 
     @Test
-    public void testParsingLinksWithBackslashInQueryParam() throws IOException, RepositoryException {
+    public void testParsingLinksWithBackslashInQueryParam() {
         String res = LinkUtil.convertAbsoluteLinksToUUIDs("look <a href=\"/parent/sub.html?p4if_p=\\File%20Box\\Quick%20Reference%20Guides\\Strategy%20Management\\WIT\">here</a> for results");
         assertEquals("look <a href=\"${link:{uuid:{2},repository:{website},handle:{/parent/sub},nodeData:{},extension:{html}}}?p4if_p=\\File%20Box\\Quick%20Reference%20Guides\\Strategy%20Management\\WIT\">here</a> for results", res);
     }
 
     @Test
-    public void testParsingLinksShouldNotTouchNonContentAbsoluteLinks() throws IOException, RepositoryException {
+    public void testParsingLinksShouldNotTouchNonContentAbsoluteLinks() {
         doTestParsingLinksShouldNotParse("/somthing/else.html");
     }
 
@@ -108,13 +102,13 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     @Test
-    public void testParsingLinksShouldPreserverParameters() throws IOException, RepositoryException {
+    public void testParsingLinksShouldPreserverParameters() {
         doTestParsingLinks("http://www.magnolia-cms.com/foo?bar=baz", "http://www.magnolia-cms.com/foo?bar=baz");
         doTestParsingLinks(UUID_PATTERN_SIMPLE + "?bar=baz", HREF_ABSOLUTE_LINK + "?bar=baz");
     }
 
     @Test
-    public void testParsingLinksShouldPreserveAnchors() throws IOException, RepositoryException {
+    public void testParsingLinksShouldPreserveAnchors() {
         doTestParsingLinks(UUID_PATTERN_SIMPLE + "#bar", HREF_ABSOLUTE_LINK + "#bar");
         doTestParsingLinks("http://www.magnolia-cms.com/foo#bar", "http://www.magnolia-cms.com/foo#bar");
     }
@@ -169,7 +163,7 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     @Test
-    public void testMakeUUIDFromAbsolutePath() throws IOException, RepositoryException, LinkException {
+    public void testMakeUUIDFromAbsolutePath() throws LinkException {
         String uuid = LinkFactory.parseLink("/parent/sub").getUUID();
         assertEquals("2", uuid);
     }
@@ -252,7 +246,7 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     @Test
-    public void testMakeCompleteURL() throws LinkException, RepositoryException {
+    public void testMakeCompleteURL() {
         ServerConfiguration serverConfiguration = Components.getSingleton(ServerConfiguration.class);
         String base = serverConfiguration.getDefaultBaseUrl();
         serverConfiguration.setDefaultBaseUrl("http://some.site/yay/");
