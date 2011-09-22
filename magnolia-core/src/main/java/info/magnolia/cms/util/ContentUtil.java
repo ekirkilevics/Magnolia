@@ -42,7 +42,6 @@ import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.NodeUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
