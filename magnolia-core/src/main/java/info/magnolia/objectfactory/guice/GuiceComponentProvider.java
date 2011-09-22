@@ -90,7 +90,7 @@ public class GuiceComponentProvider implements ComponentProvider {
     @Override
     public <T> T getComponent(Class<T> type) {
         if (!GuiceUtils.hasExplicitBindingFor(injector, type)) {
-            return null;
+            throw new IllegalStateException("No component configuration for type [" + type.getName() + "] found. Please add a configuration to your module descriptor.");
         }
         return injector.getInstance(type);
     }
