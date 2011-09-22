@@ -69,9 +69,5 @@ public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition
 
     public void addArea(String name, AreaDefinition areaDefinition){
         this.areaDefinitions.put(name, areaDefinition);
-        // TODO is this really the right place for setting this fallback value?
-        if(areaDefinition.getRenderType() == null && areaDefinition instanceof ConfiguredAreaDefinition){
-            ((ConfiguredAreaDefinition)areaDefinition).setRenderType(getRenderType());
-        }
     }
 }
