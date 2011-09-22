@@ -11,9 +11,11 @@
       <name>info.magnolia.module.templating.MagnoliaTemplatingUtilities</name>
       <value>info.magnolia.module.templating.MagnoliaTemplatingUtilities</value>
     </property>
+
+    <!-- FIXME this rendering engine doesn't work anymore -->
     <property>
       <name>info.magnolia.module.templating.engine.RenderingEngine</name>
-      <value>/server/rendering/engine</value>
+      <value>info.magnolia.module.templating.engine.DefaultRenderingEngine</value>
     </property>
     <property>
       <name>info.magnolia.module.templating.ParagraphManager</name>
