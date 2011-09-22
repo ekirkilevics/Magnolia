@@ -58,7 +58,7 @@ public abstract class AbstractRegistry<D, P extends Provider<D>> {
         return providers;
     }
 
-    public void register(P provider) throws RegistrationException {
+    public void register(P provider) {
         synchronized (providers) {
             providers.put(provider.getId(), provider);
         }

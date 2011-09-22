@@ -77,13 +77,11 @@ public class GuiceConfiguredComponentProvider<T> implements Provider<T> {
             return transformNode(node);
         } catch (Content2BeanException e) {
             throw new ProvisionException(e.getMessage(), e);
-        } catch (RepositoryException e) {
-            throw new ProvisionException(e.getMessage(), e);
         }
     }
 
     @SuppressWarnings("unchecked")
-    protected T transformNode(Node node) throws Content2BeanException, RepositoryException {
+    protected T transformNode(Node node) throws Content2BeanException{
         return (T) Content2BeanUtil.toBean(ContentUtil.asContent(node), true, componentProvider);
     }
 }

@@ -40,7 +40,6 @@ import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.rendering.renderer.Renderer;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 /**
  * RendererProvider that instantiates a renderer from a configuration node.
@@ -52,7 +51,7 @@ public class ConfiguredRendererProvider implements RendererProvider {
     private String id;
     private Renderer renderer;
 
-    public ConfiguredRendererProvider(String id, Node configNode) throws RepositoryException, Content2BeanException {
+    public ConfiguredRendererProvider(String id, Node configNode) throws Content2BeanException {
         this.id = id;
         Content content = ContentUtil.asContent(configNode);
         this.renderer = (Renderer) Content2BeanUtil.toBean(content, true, Renderer.class);
