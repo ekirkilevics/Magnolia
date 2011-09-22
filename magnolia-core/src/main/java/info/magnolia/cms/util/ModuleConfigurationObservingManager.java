@@ -83,7 +83,12 @@ public abstract class ModuleConfigurationObservingManager {
             @Override
             public void onEvent(EventIterator events) {
                 synchronized (reloadMonitor) {
-                    reload();
+                    MgnlContext.doInSystemContext(new MgnlContext.VoidOp(){
+						@Override
+						public void doExec() {
+							reload();
+						}
+                    }, true);
                 }
             }
         }, 1000, 5000);
