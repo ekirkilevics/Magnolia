@@ -1,6 +1,6 @@
+<div id="navigation">
 
-
-[#include "/samples/macros/macro.navigation.ftl"]
+[#include "/samples/macros/navigation.ftl"]
 
 [#assign maxDepth = def.parameters.navigationMaxDepth!2]
 [#assign rootLevel = def.parameters.navigationRootLevel!0]
@@ -16,4 +16,8 @@
 [#else]
     <p style="background-color: yellow; color: red; font-weight: bold; padding: 3px">Missing navigation (content is null)</p>
 [/#if]
+
+</div><!-- end  ${def.name!} -->
+
+
 

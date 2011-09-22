@@ -28,9 +28,7 @@
             </div><!-- end header -->
 
             <h1>${content.title!content.@name}</h1>
-            <p>${content.@path} (${content.@id})</p>
-            <p>From JCR NODE: ${cmsfn.asJCRNode(content).path} </p>
-
+            <p>${content.text!}</p>
 
             <div id="wrapper-2">
 

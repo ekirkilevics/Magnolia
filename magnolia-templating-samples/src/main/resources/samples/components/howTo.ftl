@@ -24,7 +24,7 @@ Text: ${content.text!("No text defined yet")}
 
 
 
-[#include "/samples/includes/inc.searchForm.ftl" ]
+[#include "/samples/includes/searchForm.ftl" ]
 
 
 <h4>Display Component's Sources</h4>

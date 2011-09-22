@@ -290,6 +290,9 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>65f8b4c4-1732-4863-b8dc-2253ef07999a</sv:value>
       </sv:property>
+      <sv:property sv:name="dialog" sv:type="String">
+        <sv:value>samples:mainProperties</sv:value>
+      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
@@ -319,7 +322,7 @@
           <sv:value>2011-04-27T15:54:40.884+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-06-24T09:03:54.431+02:00</sv:value>
+          <sv:value>2011-09-21T17:41:37.261+02:00</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="availableComponents">
@@ -411,7 +414,7 @@
         <sv:value>freemarker</sv:value>
       </sv:property>
       <sv:property sv:name="templateScript" sv:type="String">
-        <sv:value>/samples/areas/listWrappedWithDiv.ftl</sv:value>
+        <sv:value>/samples/areas/list.ftl</sv:value>
       </sv:property>
       <sv:property sv:name="type" sv:type="String">
         <sv:value>list</sv:value>
@@ -433,7 +436,7 @@
           <sv:value>2011-04-27T15:54:40.884+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-08-29T17:29:20.058+02:00</sv:value>
+          <sv:value>2011-09-22T14:02:16.231+02:00</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="availableComponents">
@@ -673,7 +676,7 @@
         <sv:value>freemarker</sv:value>
       </sv:property>
       <sv:property sv:name="templateScript" sv:type="String">
-        <sv:value>/samples/areas/listWrappedWithDiv.ftl</sv:value>
+        <sv:value>/samples/areas/list.ftl</sv:value>
       </sv:property>
       <sv:property sv:name="type" sv:type="String">
         <sv:value>list</sv:value>
@@ -695,7 +698,7 @@
           <sv:value>2011-04-27T15:54:40.884+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-08-29T17:29:22.476+02:00</sv:value>
+          <sv:value>2011-09-22T14:01:50.457+02:00</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="availableComponents">

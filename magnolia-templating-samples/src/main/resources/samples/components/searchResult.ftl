@@ -22,7 +22,7 @@
 [/#if]
 
 
-[#include "/samples/includes/inc.searchForm.ftl" ]
+[#include "/samples/includes/searchForm.ftl" ]
 
 
 
