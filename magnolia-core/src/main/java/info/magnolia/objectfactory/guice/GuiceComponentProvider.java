@@ -43,6 +43,7 @@ import com.mycila.inject.jsr250.Jsr250Injector;
 import info.magnolia.objectfactory.CandidateParameterResolver;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.NoSuchComponentException;
 import info.magnolia.objectfactory.ParameterResolver;
 
 
@@ -88,9 +89,9 @@ public class GuiceComponentProvider implements ComponentProvider {
     }
 
     @Override
-    public <T> T getComponent(Class<T> type) {
+    public <T> T getComponent(Class<T> type) throws NoSuchComponentException{
         if (!GuiceUtils.hasExplicitBindingFor(injector, type)) {
-            throw new IllegalStateException("No component configuration for type [" + type.getName() + "] found. Please add a configuration to your module descriptor.");
+            throw new NoSuchComponentException("No component configuration for type [" + type.getName() + "] found. Please add a configuration to your module descriptor.");
         }
         return injector.getInstance(type);
     }

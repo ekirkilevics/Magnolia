@@ -63,7 +63,7 @@ public interface ComponentProvider {
      *
      * @return the component that is mapped for this type or null if there is none
      */
-    <T> T getComponent(Class<T> type);
+    <T> T getComponent(Class<T> type) throws NoSuchComponentException;
 
     /**
      * Creates a new instance of the passed interface / class by using the registered implementation. The parameters are

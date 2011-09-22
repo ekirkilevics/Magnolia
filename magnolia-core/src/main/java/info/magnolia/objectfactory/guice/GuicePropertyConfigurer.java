@@ -39,6 +39,7 @@ import javax.inject.Named;
 
 import com.google.inject.Key;
 import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.objectfactory.NoSuchComponentException;
 
 /**
  * Guice configuration module which exposes Magnolia properties.
@@ -52,9 +53,13 @@ public class GuicePropertyConfigurer extends AbstractGuiceComponentConfigurer {
 
         // If we have a parent and it has a MagnoliaConfigurationProperties component expose all its properties
         if (parentComponentProvider != null) {
-            MagnoliaConfigurationProperties configurationProperties = parentComponentProvider.getComponent(MagnoliaConfigurationProperties.class);
-            if (configurationProperties != null) {
+            try{
+                MagnoliaConfigurationProperties configurationProperties = parentComponentProvider.getComponent(MagnoliaConfigurationProperties.class);
                 installProperties(configurationProperties);
+            }
+            catch(NoSuchComponentException e){
+                // happens if the MagnoliaConfigurationProperties isn't registered
+                // this is the case in tests
             }
         }
     }

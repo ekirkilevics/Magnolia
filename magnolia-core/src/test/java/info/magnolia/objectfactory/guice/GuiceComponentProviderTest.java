@@ -54,6 +54,7 @@ import info.magnolia.context.SystemContext;
 import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.module.model.ComponentDefinition;
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.NoSuchComponentException;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
 import info.magnolia.test.AbstractMagnoliaTestCase;
@@ -64,12 +65,7 @@ import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
 
@@ -114,11 +110,11 @@ public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
         assertSame(p, p.getComponent(ComponentProvider.class));
     }
 
-    @Test
-    public void getComponentReturnsNullForUnconfiguredType() {
+    @Test (expected=NoSuchComponentException.class)
+    public void getComponentThrowsExeptionForUnconfiguredType() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
         GuiceComponentProvider p = createComponentProvider(configuration);
-        assertNull(p.getComponent(StringBuilder.class));
+        p.getComponent(StringBuilder.class);
     }
 
     @Test
@@ -227,7 +223,14 @@ public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
         assertNotNull(child.getComponent(SingletonObject.class));
         assertSame(parent.getComponent(SingletonObject.class), child.getComponent(SingletonObject.class));
 
-        assertNull(parent.getComponent(OtherSingletonObject.class));
+        try{
+            parent.getComponent(OtherSingletonObject.class);
+            fail("the parent should not know " + OtherSingletonObject.class);
+        }
+        catch(NoSuchComponentException e){
+            // this is expected
+        }
+
         assertNotNull(child.getComponent(OtherSingletonObject.class));
     }
 
