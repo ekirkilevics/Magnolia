@@ -53,38 +53,39 @@ import javax.inject.Singleton;
 /**
  * Extracts license information from the info/magnolia/cms/license/license.xml file.
  * @author Sameer Charles
- * @version 1.1
+ *
+ * @version $Id$
  */
 @Singleton
 public class LicenseFileExtractor {
     private static final Logger log = LoggerFactory.getLogger(LicenseFileExtractor.class);
 
-    public static final String VERSION_NUMBER = "VersionNumber"; //$NON-NLS-1$
+    public static final String VERSION_NUMBER = "VersionNumber";
 
     /**
      * Same as VERSION_NUMBER, but read from the manifest.
      */
-    public static final String IMPLEMENTATION_VERSION = "ImplementationVersion"; //$NON-NLS-1$
+    public static final String IMPLEMENTATION_VERSION = "ImplementationVersion";
 
-    public static final String BUILD_NUMBER = "BuildNumber"; //$NON-NLS-1$
+    public static final String BUILD_NUMBER = "BuildNumber";
 
-    public static final String PROVIDER = "Provider"; //$NON-NLS-1$
+    public static final String PROVIDER = "Provider";
 
-    public static final String PROVIDER_ADDRESS = "ProviderAddress"; //$NON-NLS-1$
+    public static final String PROVIDER_ADDRESS = "ProviderAddress";
 
-    public static final String PROVIDER_EMAIL = "ProviderEmail"; //$NON-NLS-1$
+    public static final String PROVIDER_EMAIL = "ProviderEmail";
 
-    public static final String EDITION = "Edition"; //$NON-NLS-1$
+    public static final String EDITION = "Edition";
 
-    public static final String PRODUCT_DOMAIN = "ProductDomain"; //$NON-NLS-1$
+    public static final String PRODUCT_DOMAIN = "ProductDomain";
 
-    private static final String LICENSE_FILE_PATH = "info/magnolia/cms/license/license.xml"; //$NON-NLS-1$
+    private static final String LICENSE_FILE_PATH = "info/magnolia/cms/license/license.xml";
 
-    private static final String ELEMENT_META = "Meta"; //$NON-NLS-1$
+    private static final String ELEMENT_META = "Meta";
 
-    private static final String NOT_DEFINED = "Not Defined"; //$NON-NLS-1$
+    private static final String NOT_DEFINED = "Not Defined";
 
-    private static final String OS_NAME = "OSName"; //$NON-NLS-1$
+    private static final String OS_NAME = "OSName";
 
     private Map values;
 
@@ -104,8 +105,8 @@ public class LicenseFileExtractor {
     }
 
     public String getOSName() {
-        String osName = System.getProperty("os.name"); //$NON-NLS-1$
-        return osName.replaceAll(" ", "-"); //$NON-NLS-1$ //$NON-NLS-2$
+        String osName = System.getProperty("os.name");
+        return osName.replaceAll(" ", "-");
     }
 
     public void init() {
@@ -120,7 +121,7 @@ public class LicenseFileExtractor {
             this.load(document);
         }
         catch (Exception e) {
-            log.error("failed to load license information"); //$NON-NLS-1$
+            log.error("failed to load license information");
             log.error(e.getMessage(), e);
         }
         finally {
@@ -156,8 +157,8 @@ public class LicenseFileExtractor {
             values.put(element.getName(), element.getText());
         }
 
-        String osName = System.getProperty("os.name"); //$NON-NLS-1$
-        values.put(OS_NAME, osName.replaceAll(" ", "-")); //$NON-NLS-1$ //$NON-NLS-2$
+        String osName = System.getProperty("os.name");
+        values.put(OS_NAME, osName.replaceAll(" ", "-"));
 
         values.put(IMPLEMENTATION_VERSION, getVersionFromManifest());
 
@@ -167,12 +168,12 @@ public class LicenseFileExtractor {
      * Print version info to System.out.
      */
     public void printVersionInfo() {
-        System.out.println("---------------------------------------------"); //$NON-NLS-1$
-        System.out.println("MAGNOLIA LICENSE"); //$NON-NLS-1$
-        System.out.println("---------------------------------------------"); //$NON-NLS-1$
-        System.out.println("Version number : " + get(LicenseFileExtractor.VERSION_NUMBER)); //$NON-NLS-1$
-        System.out.println("Build          : " + get(LicenseFileExtractor.BUILD_NUMBER)); //$NON-NLS-1$
-        System.out.println("Edition        : " + get(LicenseFileExtractor.EDITION)); //$NON-NLS-1$
-        System.out.println("Provider       : " + get(LicenseFileExtractor.PROVIDER) + " (" + get(LicenseFileExtractor.PROVIDER_EMAIL) + ")"); //$NON-NLS-1$ $NON-NLS-3$ $NON-NLS-5$
+        System.out.println("---------------------------------------------");
+        System.out.println("MAGNOLIA LICENSE");
+        System.out.println("---------------------------------------------");
+        System.out.println("Version number : " + get(LicenseFileExtractor.VERSION_NUMBER));
+        System.out.println("Build          : " + get(LicenseFileExtractor.BUILD_NUMBER));
+        System.out.println("Edition        : " + get(LicenseFileExtractor.EDITION));
+        System.out.println("Provider       : " + get(LicenseFileExtractor.PROVIDER) + " (" + get(LicenseFileExtractor.PROVIDER_EMAIL) + ")");
     }
 }

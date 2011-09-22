@@ -47,6 +47,8 @@ import org.slf4j.LoggerFactory;
  * AbstractMessagesImpl will do the job as good as possible without to know the session (user) and all the other
  * contextual things. Endusers will use the MessageManager to resolve messages.
  * @author Philipp Bracher
+ *
+ * @version $Id$
  */
 
 public abstract class AbstractMessagesImpl implements Messages {
@@ -56,7 +58,7 @@ public abstract class AbstractMessagesImpl implements Messages {
     /**
      * Name of the javascript object used to make the messages public to the javascripts.
      */
-    public static final String JS_OBJECTNAME = "mgnlMessages"; //$NON-NLS-1$
+    public static final String JS_OBJECTNAME = "mgnlMessages";
 
     /**
      * The name of the bundle.
@@ -113,7 +115,7 @@ public abstract class AbstractMessagesImpl implements Messages {
     @Override
     public String getWithDefault(String key, String defaultMsg) {
         String msg = get(key);
-        if (msg.startsWith("???")) { //$NON-NLS-1$
+        if (msg.startsWith("???")) {
             msg = defaultMsg;
         }
         return msg;

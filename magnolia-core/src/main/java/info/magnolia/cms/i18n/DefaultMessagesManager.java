@@ -62,6 +62,8 @@ import java.util.Map;
 /**
  * Default MessagesManager implementation.
  * @author philipp
+ *
+ * @version $Id$
  */
 @Singleton
 public class DefaultMessagesManager extends MessagesManager {
@@ -147,7 +149,7 @@ public class DefaultMessagesManager extends MessagesManager {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
         try {
-            log.info("Loading i18n configuration - {}", I18N_CONFIG_PATH); //$NON-NLS-1$
+            log.info("Loading i18n configuration - {}", I18N_CONFIG_PATH);
 
             // checks if node exists
             if (!hm.isExist(I18N_CONFIG_PATH)) {
@@ -156,7 +158,7 @@ public class DefaultMessagesManager extends MessagesManager {
                 return;
             }
 
-            final Content configNode = hm.getContent(I18N_CONFIG_PATH); //$NON-NLS-1$
+            final Content configNode = hm.getContent(I18N_CONFIG_PATH);
 
             setDefaultLocale(NodeDataUtil.getString(configNode, FALLBACK_NODEDATA, FALLBACK_LOCALE));
 
@@ -180,7 +182,7 @@ public class DefaultMessagesManager extends MessagesManager {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to load i18n configuration - {}", I18N_CONFIG_PATH, e); //$NON-NLS-1$
+            log.error("Failed to load i18n configuration - {}", I18N_CONFIG_PATH, e);
         }
     }
 
@@ -188,7 +190,7 @@ public class DefaultMessagesManager extends MessagesManager {
      * Register an event listener: reload configuration when something changes.
      */
     private void registerEventListener() {
-        log.info("Registering event listener for i18n"); //$NON-NLS-1$
+        log.info("Registering event listener for i18n");
         ObservationUtil.registerChangeListener(ContentRepository.CONFIG, I18N_CONFIG_PATH, new EventListener() {
 
             @Override

@@ -68,14 +68,14 @@ public class MessagesUtil {
      * @return Javascript-Construct of this text
      */
     public static void generateJavaScript(Writer out, Messages messages) throws IOException {
-        out.write("/* ###################################\n"); //$NON-NLS-1$
-        out.write("### Generated AbstractMessagesImpl\n"); //$NON-NLS-1$
-        out.write("################################### */\n\n"); //$NON-NLS-1$
+        out.write("/* ###################################\n");
+        out.write("### Generated AbstractMessagesImpl\n");
+        out.write("################################### */\n\n");
 
         for (Iterator iter = messages.keys(); iter.hasNext();) {
             String key = (String) iter.next();
 
-            if (key.endsWith(".js")) { //$NON-NLS-1$
+            if (key.endsWith(".js")) {
                 String msg = javaScriptString(messages.get(key));
                 out.write(AbstractMessagesImpl.JS_OBJECTNAME
                     + ".add('"
@@ -85,7 +85,7 @@ public class MessagesUtil {
                     + "','"
                     + messages.getBasename()
                     + "');");
-                out.write("\n"); //$NON-NLS-1$
+                out.write("\n");
             }
         }
     }

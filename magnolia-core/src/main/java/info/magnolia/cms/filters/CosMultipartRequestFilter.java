@@ -66,7 +66,7 @@ public class CosMultipartRequestFilter extends OncePerRequestAbstractMgnlFilter 
         throws IOException, ServletException {
 
         String type = null;
-        String type1 = request.getHeader("Content-Type"); //$NON-NLS-1$
+        String type1 = request.getHeader("Content-Type");
         String type2 = request.getContentType();
         if (type1 == null && type2 != null) {
             type = type2;
@@ -98,7 +98,7 @@ public class CosMultipartRequestFilter extends OncePerRequestAbstractMgnlFilter 
      */
     private static MultipartForm parseParameters(HttpServletRequest request) throws IOException {
         MultipartForm form = new MultipartForm();
-        String encoding = StringUtils.defaultString(request.getCharacterEncoding(), "UTF-8"); //$NON-NLS-1$
+        String encoding = StringUtils.defaultString(request.getCharacterEncoding(), "UTF-8");
         MultipartRequest multi = new MultipartRequest(
             request,
             Path.getTempDirectoryPath(),

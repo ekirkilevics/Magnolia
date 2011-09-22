@@ -76,7 +76,7 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl implements Seriali
             return getBundle().getString(key);
         }
         catch (MissingResourceException e) {
-            return "???" + key + "???"; //$NON-NLS-1$ //$NON-NLS-2$
+            return "???" + key + "???";
         }
     }
 

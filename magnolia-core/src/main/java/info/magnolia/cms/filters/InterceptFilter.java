@@ -66,48 +66,48 @@ public class InterceptFilter extends AbstractMgnlFilter {
     /**
      * Request parameter: the INTERCEPT holds the name of an administrative action to perform.
      */
-    public static final String INTERCEPT = "mgnlIntercept"; //$NON-NLS-1$
+    public static final String INTERCEPT = "mgnlIntercept";
 
     /**
      * Action: sort a paragraph.
      */
-    private static final String ACTION_NODE_SORT = "NODE_SORT"; //$NON-NLS-1$
+    private static final String ACTION_NODE_SORT = "NODE_SORT";
 
     /**
      * Action: delete a paragraph.
      */
-    private static final String ACTION_NODE_DELETE = "NODE_DELETE"; //$NON-NLS-1$
+    private static final String ACTION_NODE_DELETE = "NODE_DELETE";
 
     /**
      * Action: preview a page.
      */
-    private static final String ACTION_PREVIEW = "PREVIEW"; //$NON-NLS-1$
+    private static final String ACTION_PREVIEW = "PREVIEW";
 
     /**
      * request parameter: repository name.
      */
-    private static final String PARAM_REPOSITORY = "mgnlRepository"; //$NON-NLS-1$
+    private static final String PARAM_REPOSITORY = "mgnlRepository";
 
     /**
      * request parameter: node path, used for paragraph deletion.
      */
-    private static final String PARAM_PATH = "mgnlPath"; //$NON-NLS-1$
+    private static final String PARAM_PATH = "mgnlPath";
 
     /**
      * request parameter: sort-above paragraph.
      */
-    private static final String PARAM_PATH_SORT_ABOVE = "mgnlPathSortAbove"; //$NON-NLS-1$
+    private static final String PARAM_PATH_SORT_ABOVE = "mgnlPathSortAbove";
 
     /**
      * request parameter: selected paragraph.
      */
-    private static final String PARAM_PATH_SELECTED = "mgnlPathSelected"; //$NON-NLS-1$
+    private static final String PARAM_PATH_SELECTED = "mgnlPathSelected";
 
     /**
      * Attribute used for enabling the preview mode.
      * @deprecated added in 4.0 for backward compatibility but should not be public.
      */
-    public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview"; //$NON-NLS-1$
+    public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview";
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
@@ -180,7 +180,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
                     hm.save();
                 }
                 catch (RepositoryException e) {
-                    log.error("Exception caught: {}", e.getMessage(), e); //$NON-NLS-1$
+                    log.error("Exception caught: {}", e.getMessage(), e);
                 }
             }
             else if (ACTION_NODE_SORT.equals(action)) {
@@ -188,7 +188,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
                 try {
                     String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
                     String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
-                    String pathParent = StringUtils.substringBeforeLast(pathSelected, "/"); //$NON-NLS-1$
+                    String pathParent = StringUtils.substringBeforeLast(pathSelected, "/");
                     String srcName = StringUtils.substringAfterLast(pathSelected, "/");
                     String destName = StringUtils.substringAfterLast(pathSortAbove, "/");
                     if (StringUtils.equalsIgnoreCase(destName, "mgnlNew")) {
@@ -200,7 +200,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
                     hm.save();
                 }
                 catch (RepositoryException e) {
-                    log.error("Exception caught: {}", e.getMessage(), e); //$NON-NLS-1$
+                    log.error("Exception caught: {}", e.getMessage(), e);
                 }
             } else {
                 log.warn("Unknown action {}", action);

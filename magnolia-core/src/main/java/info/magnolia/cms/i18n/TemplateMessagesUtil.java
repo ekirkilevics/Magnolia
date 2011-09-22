@@ -40,6 +40,8 @@ package info.magnolia.cms.i18n;
  *
  * This class is deprecated use the fallBackMessages property of the Message class to make chains.
  * @author philipp
+ *
+ * @version $Id$
  * @deprecated officially since 4.0 - informally since 3.0
  */
 public final class TemplateMessagesUtil {
@@ -47,12 +49,12 @@ public final class TemplateMessagesUtil {
     /**
      * Use this basename if the string is not found in the custom basename.
      */
-    public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages_templating"; //$NON-NLS-1$
+    public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages_templating";
 
     /**
      * Name of the custom basename.
      */
-    public static final String CUSTOM_BASENAME = "info.magnolia.module.admininterface.messages_templating_custom"; //$NON-NLS-1$
+    public static final String CUSTOM_BASENAME = "info.magnolia.module.admininterface.messages_templating_custom";
 
     /**
      * Util has no public constructor.

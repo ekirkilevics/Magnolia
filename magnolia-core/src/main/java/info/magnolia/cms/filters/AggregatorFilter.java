@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
 public class AggregatorFilter extends AbstractMgnlFilter{
     private static final Logger log = LoggerFactory.getLogger(AggregatorFilter.class);
 
-    private final String VERSION_NUMBER = "mgnlVersion"; //$NON-NLS-1$
+    private final String VERSION_NUMBER = "mgnlVersion";
 
 
     @Override
@@ -143,7 +143,7 @@ public class AggregatorFilter extends AbstractMgnlFilter{
             templateName = requestedPage.getMetaData().getTemplate();
 
             if (StringUtils.isBlank(templateName)) {
-                log.error("No template configured for page [{}].", requestedPage.getHandle()); //$NON-NLS-1$
+                log.error("No template configured for page [{}].", requestedPage.getHandle());
             }
         }
         else {
@@ -152,11 +152,11 @@ public class AggregatorFilter extends AbstractMgnlFilter{
             }
             else {
                 // check again, resource might have different name
-                int lastIndexOfSlash = handle.lastIndexOf("/"); //$NON-NLS-1$
+                int lastIndexOfSlash = handle.lastIndexOf("/");
 
                 if (lastIndexOfSlash > 0) {
 
-                    final String handleToUse = StringUtils.substringBeforeLast(handle, "/"); //$NON-NLS-1$
+                    final String handleToUse = StringUtils.substringBeforeLast(handle, "/");
 
                     try {
                         requestedData = hierarchyManager.getNodeData(handleToUse);
