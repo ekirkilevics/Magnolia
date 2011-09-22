@@ -34,7 +34,9 @@
 package info.magnolia.objectfactory;
 
 /**
- * Thrown by {@link ComponentProvider} methods
+ * Thrown by {@link ComponentProvider} methods.
+ *
+ * @version $Id$
  *
  */
 public class NoSuchComponentException extends IllegalStateException {
