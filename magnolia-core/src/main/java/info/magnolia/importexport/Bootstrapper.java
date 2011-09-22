@@ -96,7 +96,7 @@ public final class Bootstrapper {
                 break;
             }
 
-            log.info("Repository [{}] has been initialized.", repositoryName); //$NON-NLS-1$
+            log.info("Repository [{}] has been initialized.", repositoryName);
         }
     }
 
@@ -107,7 +107,7 @@ public final class Bootstrapper {
         Set<File> xmlfileset = getBootstrapFiles(bootdirs, repositoryName, filter);
 
         if (xmlfileset.isEmpty()) {
-            log.debug("No bootstrap files found for repository [{}], skipping...", repositoryName); //$NON-NLS-1$
+            log.debug("No bootstrap files found for repository [{}], skipping...", repositoryName);
             return true;
         }
 
@@ -134,9 +134,9 @@ public final class Bootstrapper {
         catch (OutOfMemoryError e) {
             int maxMem = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
             int needed = Math.max(256, maxMem + 128);
-            log.error("Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
-                    + "{} MB were not enough, try to increase the amount of memory available by adding the -Xmx{}m parameter to the server startup script.\n" //$NON-NLS-1$
-                    + "You will need to completely remove the Magnolia webapp before trying again", //$NON-NLS-1$
+            log.error("Unable to complete bootstrapping: out of memory.\n"
+                    + "{} MB were not enough, try to increase the amount of memory available by adding the -Xmx{}m parameter to the server startup script.\n"
+                    + "You will need to completely remove the Magnolia webapp before trying again",
                     Integer.toString(maxMem), Integer.toString(needed));
             return false;
         }

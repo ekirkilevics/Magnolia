@@ -80,7 +80,7 @@ public class BootstrapUtil {
             String name = StringUtils.removeEnd(StringUtils.substringAfterLast(resourceName, "/"), ".xml");
 
             String repository = StringUtils.substringBefore(name, ".");
-            String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), "."); //$NON-NLS-1$
+            String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), ".");
             String nodeName = StringUtils.substringAfterLast(name, ".");
             String fullPath;
             if (StringUtils.isEmpty(pathName)) {

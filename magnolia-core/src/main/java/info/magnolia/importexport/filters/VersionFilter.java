@@ -42,6 +42,8 @@ import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
  * SAX filter, strips version information from a JCR XML (system view).
+ *
+ * @version $Id$
  */
 public class VersionFilter extends XMLFilterImpl {
 
@@ -106,14 +108,14 @@ public class VersionFilter extends XMLFilterImpl {
             inVersionElement++;
             return;
         }
-        if ("sv:node".equals(qName)) { //$NON-NLS-1$
-            String attName = atts.getValue("sv:name"); //$NON-NLS-1$
+        if ("sv:node".equals(qName)) {
+            String attName = atts.getValue("sv:name");
             if (attName != null && ArrayUtils.contains(FILTERED_NODES, attName)) {
                 inVersionElement++;
                 return;
             }
-        } else if ("sv:property".equals(qName)) { //$NON-NLS-1$
-            String attName = atts.getValue("sv:name"); //$NON-NLS-1$
+        } else if ("sv:property".equals(qName)) {
+            String attName = atts.getValue("sv:name");
             if (attName != null && ArrayUtils.contains(FILTERED_PROPERTIES, attName)) {
                 inVersionElement++;
                 return;

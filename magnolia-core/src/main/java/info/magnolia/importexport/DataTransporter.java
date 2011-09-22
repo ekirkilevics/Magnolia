@@ -94,6 +94,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * Utility class for manipulation of XML files (mainly JCR XML).
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  * @author Oliver Lietz
+ *
+ * @version $Id$
  */
 public class DataTransporter {
 
@@ -203,8 +205,8 @@ public class DataTransporter {
             String key = (String) iter.next();
             String value = (String) properties.get(key);
 
-            String name = StringUtils.substringAfterLast(key, "."); //$NON-NLS-1$
-            String path = StringUtils.substringBeforeLast(key, ".").replace('.', '/'); //$NON-NLS-1$
+            String name = StringUtils.substringAfterLast(key, ".");
+            String path = StringUtils.substringBeforeLast(key, ".").replace('.', '/');
             Content node = ContentUtil.getContent(repositoryName, path);
             if (node != null) {
                 try {
@@ -254,7 +256,7 @@ public class DataTransporter {
         Workspace ws = hm.getWorkspace();
 
         if (log.isDebugEnabled()) {
-            log.debug("Importing content into repository: [{}] from: [{}] into path: [{}]", //$NON-NLS-1$
+            log.debug("Importing content into repository: [{}] from: [{}] into path: [{}]",
                     new Object[]{repositoryName, name, basepath});
         }
 
@@ -263,7 +265,7 @@ public class DataTransporter {
                 ContentUtil.createPath(hm, basepath, ItemType.CONTENT);
             }
             catch (RepositoryException e) {
-                log.error("can't create path [{}]", basepath); //$NON-NLS-1$
+                log.error("can't create path [{}]", basepath);
             }
         }
 
@@ -357,7 +359,7 @@ public class DataTransporter {
         }
         catch (RepositoryException e) {
             log.error(MessageFormat.format(
-                    "Unable to save changes to the [{0}] repository due to a {1} Exception: {2}.", //$NON-NLS-1$
+                    "Unable to save changes to the [{0}] repository due to a {1} Exception: {2}.",
                     new Object[]{repositoryName, e.getClass().getName(), e.getMessage()}), e);
             throw new IOException(e.getMessage());
         }
@@ -369,12 +371,12 @@ public class DataTransporter {
      */
     protected static InputStream getXslStreamForXmlFile(File file) {
         InputStream xslStream = null;
-        String xlsFilename = StringUtils.substringBeforeLast(file.getAbsolutePath(), ".") + ".xsl"; //$NON-NLS-1$
+        String xlsFilename = StringUtils.substringBeforeLast(file.getAbsolutePath(), ".") + ".xsl";
         File xslFile = new File(xlsFilename);
         if (xslFile.exists()) {
             try {
                 xslStream = new FileInputStream(xslFile);
-                log.info("XSL file for [" + file.getName() + "] found (" + xslFile.getName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                log.info("XSL file for [" + file.getName() + "] found (" + xslFile.getName() + ")");
             } catch (FileNotFoundException e) { // should never happen (xslFile.exists())
                 e.printStackTrace();
             }
@@ -470,7 +472,7 @@ public class DataTransporter {
         }
 
         // write to a temp file and then re-read it to remove version history
-        File tempFile = File.createTempFile("export-" + repository + session.getUserID(), ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
+        File tempFile = File.createTempFile("export-" + repository + session.getUserID(), ".xml");
         OutputStream fileStream = new FileOutputStream(tempFile);
 
         try {
@@ -483,7 +485,7 @@ public class DataTransporter {
         readFormatted(reader, tempFile, stream);
 
         if (!tempFile.delete()) {
-            log.warn("Could not delete temporary export file {}", tempFile.getAbsolutePath()); //$NON-NLS-1$
+            log.warn("Could not delete temporary export file {}", tempFile.getAbsolutePath());
         }
     }
 

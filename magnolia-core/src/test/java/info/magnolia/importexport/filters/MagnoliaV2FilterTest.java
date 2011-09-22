@@ -75,7 +75,7 @@ public class MagnoliaV2FilterTest extends XMLTestCase {
 
         final InputStream input = getClass().getResourceAsStream(inputResourcePath);
         assertNotNull("Can't open stream to resource " + inputResourcePath, input);
-        File outputFile = File.createTempFile("v2filter-out-", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
+        File outputFile = File.createTempFile("v2filter-out-", ".xml");
         OutputStream os = new FileOutputStream(outputFile);
 
         // simulate DataTransporter Formatting
@@ -124,7 +124,7 @@ public class MagnoliaV2FilterTest extends XMLTestCase {
         }
 
         assertTrue("Document " + outputFile.getAbsolutePath() + " is not formatted as expected", xmlDiff.identical());
-        outputFile.delete(); // Delete working file on success (keep for diagnostits on error )
+        outputFile.delete(); // Delete working file on success (keep for diagnostics on error )
 
     }
 

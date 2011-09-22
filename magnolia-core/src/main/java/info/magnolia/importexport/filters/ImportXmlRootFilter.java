@@ -43,6 +43,8 @@ import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
  * XML Filter for cleaning up version store from imported root node files.
+ *
+ * @version $Id$
  */
 public class ImportXmlRootFilter extends XMLFilterImpl {
 
@@ -123,16 +125,16 @@ public class ImportXmlRootFilter extends XMLFilterImpl {
         }
 
         // filter if it is the version store
-        if ("sv:node".equals(qName)) { //$NON-NLS-1$
-            String attName = atts.getValue("sv:name"); //$NON-NLS-1$
+        if ("sv:node".equals(qName)) {
+            String attName = atts.getValue("sv:name");
             attName = UnicodeNormalizer.normalizeNFC(attName);
-            // remember if there was a root node presend
+            // remember if there was a root node present
             if ("jcr:root".equals(attName)) {
                 this.rootNodeFound = true;
                 this.isRootNode = true;
             }
 
-            if ("jcr:system".equals(attName)) { //$NON-NLS-1$
+            if ("jcr:system".equals(attName)) {
                 inFilterElement++;
                 return;
             }

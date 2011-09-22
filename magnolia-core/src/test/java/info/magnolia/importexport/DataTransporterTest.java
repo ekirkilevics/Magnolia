@@ -84,7 +84,7 @@ public class DataTransporterTest extends XMLTestCase {
     @Test
     public void testParseAndFormat() throws Exception {
         File inputFile = new File(getClass().getResource("/test-formatted-input.xml").getFile());
-        File outputFile = File.createTempFile("export-test-", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
+        File outputFile = File.createTempFile("export-test-", ".xml");
         OutputStream outputStream = new FileOutputStream(outputFile);
 
         XMLReader reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
@@ -115,7 +115,7 @@ public class DataTransporterTest extends XMLTestCase {
     @Test
     public void testRemoveNs() throws Exception {
         InputStream input = getClass().getResourceAsStream("/test-unwantedns.xml");
-        File outputFile = File.createTempFile("export-test-", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
+        File outputFile = File.createTempFile("export-test-", ".xml");
         OutputStream outputStream = new FileOutputStream(outputFile);
 
         XMLReader reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
