@@ -33,13 +33,14 @@
  */
 package info.magnolia.test.mock;
 
-import java.util.Map;
-import java.util.Properties;
-
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.ParameterResolver;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.LegacyComponentsConfigurer;
+import info.magnolia.objectfactory.guice.ObjectManufacturer;
+
+import java.util.Map;
+import java.util.Properties;
 
 
 /**
@@ -81,6 +82,13 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
 
     @Override
     public <T> T newInstanceWithParameterResolvers(Class<T> type, ParameterResolver... parameters) {
-        throw new UnsupportedOperationException();
+        ObjectManufacturer manufacturer = new ObjectManufacturer();
+        Class<? extends T> implementation;
+        try {
+            implementation = getImplementation(type);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return (T) manufacturer.newInstance(implementation, parameters);
     }
 }
