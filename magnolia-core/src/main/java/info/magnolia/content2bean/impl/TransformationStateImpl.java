@@ -62,6 +62,11 @@ public class TransformationStateImpl implements TransformationState {
     }
 
     @Override
+    public void setCurrentBean(Object bean) {
+        beanStack.set(beanStack.size() - 1, bean);
+    }
+
+    @Override
     public TypeDescriptor getCurrentType() {
         return (TypeDescriptor) typeStack.peek();
     }

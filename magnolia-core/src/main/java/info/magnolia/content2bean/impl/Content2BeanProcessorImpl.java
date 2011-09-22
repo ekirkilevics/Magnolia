@@ -126,6 +126,8 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
 
                 transformer.initBean(state, values);
 
+                bean = state.getCurrentBean();
+
                 state.popBean();
             }
             else{

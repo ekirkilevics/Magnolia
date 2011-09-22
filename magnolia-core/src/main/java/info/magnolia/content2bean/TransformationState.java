@@ -60,6 +60,8 @@ public interface TransformationState {
 
     public Object getCurrentBean();
 
+    public void setCurrentBean(Object bean);
+
     public Object peekBean(int pos);
 
     public void pushContent(Content node);
