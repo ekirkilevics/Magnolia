@@ -42,6 +42,7 @@ import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.NodeUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -71,6 +72,8 @@ import org.slf4j.LoggerFactory;
  * Some easy to use methods to handle with Content objects.
  *
  * @version $Id$
+ *
+ * @deprecated since 4.5 - use {@link NodeUtil} instead.
  */
 public class ContentUtil {
     private final static Logger log = LoggerFactory.getLogger(ContentUtil.class);
