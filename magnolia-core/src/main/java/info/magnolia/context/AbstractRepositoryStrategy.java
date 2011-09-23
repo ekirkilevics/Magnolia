@@ -59,6 +59,8 @@ import org.slf4j.LoggerFactory;
  *
  * @version $Id$
  *
+ *     // TODO dlipp: deprecate everything except getJCRSession & release
+ *
  */
 public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringStrategy {
     private static final Logger log = LoggerFactory.getLogger(AbstractRepositoryStrategy.class);
@@ -99,6 +101,14 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return this.getHierarchyManager(repositoryId, workspaceId).getQueryManager();
     }
+
+    // TODO dlipp: implement new method as beyond:
+
+    /*
+    public Session getJCRSession(String logicalWorkspaceName) {
+
+    }
+    */
 
     @Override
     public Session getSession(String repositoryName, String workspaceName) throws LoginException, RepositoryException {
