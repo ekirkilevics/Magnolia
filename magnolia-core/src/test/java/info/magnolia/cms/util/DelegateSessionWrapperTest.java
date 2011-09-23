@@ -50,8 +50,7 @@ public class DelegateSessionWrapperTest {
     public void testUnwrap() {
         // GIVEN
         final Session jcrSession = new MockSession("test");
-        final Session wrapperOne = new JCRPropertyFilteringSessionWrapper(jcrSession);
-        final DelegateSessionWrapper wrapperTwo = new MgnlVersioningSession(wrapperOne);
+        final DelegateSessionWrapper wrapperTwo = new MgnlVersioningSession(jcrSession);
 
         // WHEN
         Session result = wrapperTwo.unwrap();

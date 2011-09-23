@@ -36,7 +36,6 @@ package info.magnolia.jcr.util;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import info.magnolia.cms.core.version.MgnlVersioningSession;
-import info.magnolia.cms.util.JCRPropertyFilteringSessionWrapper;
 
 import javax.jcr.Session;
 
@@ -50,7 +49,7 @@ public class SessionUtilTest {
     public void testHasSameUnderlyingSessionWithTwoWrappersOnSameSession() {
         // GIVEN
         final Session session = mock(Session.class);
-        final Session wrapperOne = new JCRPropertyFilteringSessionWrapper(session);
+        final Session wrapperOne = new MgnlVersioningSession(session);
         final Session wrapperTwo = new MgnlVersioningSession(session);
 
         // WHEN
@@ -66,7 +65,7 @@ public class SessionUtilTest {
         final Session jcrSession = mock(Session.class);
         final Session otherSession = mock(Session.class);
 
-        final Session wrapperOne = new JCRPropertyFilteringSessionWrapper(jcrSession);
+        final Session wrapperOne = new MgnlVersioningSession(jcrSession);
 
         // WHEN
         boolean result = SessionUtil.hasSameUnderlyingSession(otherSession, wrapperOne);
