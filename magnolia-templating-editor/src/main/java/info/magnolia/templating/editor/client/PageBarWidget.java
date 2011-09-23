@@ -48,8 +48,6 @@ public class PageBarWidget extends AbstractBarWidget {
 
     private String workspace;
     private String path;
-
-    private String label;
     private String dialog;
 
     public PageBarWidget(final PageEditor pageEditor, Element element) {
@@ -60,11 +58,8 @@ public class PageBarWidget extends AbstractBarWidget {
         int i = content.indexOf(':');
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
-
-        this.label = element.getAttribute("label");
         this.dialog = element.getAttribute("dialog");
 
-        setLabelText(label);
         Button button = new Button(getDictionary().get("buttons.properties.js"));
         button.addClickHandler(new ClickHandler() {
             @Override

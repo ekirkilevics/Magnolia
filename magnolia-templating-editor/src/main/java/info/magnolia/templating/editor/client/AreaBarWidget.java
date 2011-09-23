@@ -74,8 +74,6 @@ public class AreaBarWidget extends AbstractBarWidget {
             this.showAddButton = Boolean.parseBoolean(element.getAttribute("showAddButton"));
         }
 
-        setLabelText("Area");
-
         setClassName("mgnlAreaControlBar");
 
         if (element.hasAttribute("dialog") && type.equals(PageEditor.AREA_TYPE_LIST)) {
@@ -130,18 +128,12 @@ public class AreaBarWidget extends AbstractBarWidget {
         this.dialog = element.getAttribute("dialog");
         this.availableComponents = "";
 
-        // TODO this also changes the area bar from being a drop-target to a drag-anchor, we need to know the name
-        // TODO of the component to implement that
-        String component = element.getAttribute("template");
-
-        setLabelText(label + "(" + component + ")");
-
         Button button = new Button(getDictionary().get("buttons.editcomponent.js"));
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 if (showAddButton) {
-                    pageEditor.openDialog(dialog, workspace, path, null, name);
+                    pageEditor.addComponent(workspace, path, null, name, availableComponents);
                 } else {
                     pageEditor.openDialog(dialog, workspace, path, null, null);
                 }

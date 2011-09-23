@@ -78,7 +78,6 @@ public class EditElement extends AbstractContentTemplatingElement {
             helper.startContent(content);
             helper.openTag(CMS_EDIT).attribute("content", getNodePath(content));
             helper.attribute("format", format);
-            helper.attribute("label", templateDefinition.getTitle());
             String dialog = resolveDialog(templateDefinition);
             helper.attribute("dialog", dialog);
 

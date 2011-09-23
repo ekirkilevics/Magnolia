@@ -56,7 +56,6 @@ public class EditBarWidget extends AbstractBarWidget {
     private String path;
 
     private String componentId; // name of the component, needed for drag n drop
-    private String label;
     private String dialog;
     private String format; // bar or button (its likely too late to make a decision here)
     private String id;
@@ -76,7 +75,6 @@ public class EditBarWidget extends AbstractBarWidget {
         setId("__"+id);
 
         this.componentId = element.getAttribute("template");
-        this.label = element.getAttribute("label");
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
 

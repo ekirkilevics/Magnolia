@@ -48,7 +48,6 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 
 /**
  * Base class for horizontal bars with buttons.
@@ -56,13 +55,10 @@ import com.google.gwt.user.client.ui.Label;
 public abstract class AbstractBarWidget extends FlowPanel {
 
     private AbstractBarWidget parentBar;
-    private Label label;
     private Dictionary dictionary;
 
     public AbstractBarWidget(AbstractBarWidget parentBar) {
         this.parentBar = parentBar;
-        //TODO do we really want this label into the bar?
-        this.label = new Label("");
 
         addDomHandler(new ClickHandler() {
             @Override
@@ -94,10 +90,6 @@ public abstract class AbstractBarWidget extends FlowPanel {
 
     public AbstractBarWidget getParentBar() {
         return parentBar;
-    }
-
-    protected void setLabelText(String labelText) {
-        this.label.setText(labelText);
     }
 
     protected void addButton(final Button button, final Float cssFloat) {
