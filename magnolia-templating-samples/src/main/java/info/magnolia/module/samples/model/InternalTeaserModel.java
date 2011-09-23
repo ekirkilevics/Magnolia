@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.samples.model;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.templating.MagnoliaTemplatingUtilities;
 import info.magnolia.rendering.model.RenderingModel;
@@ -60,7 +61,7 @@ public class InternalTeaserModel extends RenderingModelImpl<RenderableDefinition
         if(identifier == null){
             return null;
         }
-        return content.getSession().getNodeByIdentifier(identifier);
+        return MgnlContext.getJCRSession("website").getNodeByIdentifier(identifier);
     }
 
     public String getTeaserLink(){

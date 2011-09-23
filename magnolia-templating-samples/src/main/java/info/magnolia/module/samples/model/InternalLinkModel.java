@@ -33,9 +33,7 @@
  */
 package info.magnolia.module.samples.model;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.link.LinkUtil;
@@ -46,10 +44,11 @@ import info.magnolia.rendering.template.RenderableDefinition;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.ValueFormatException;
 
 /**
- * Resolving internal links, either uuid or path link.
+ * Resolving internal links, either identifier or path link.
  *
  * @version $Id$
  */
@@ -74,25 +73,25 @@ public class InternalLinkModel extends RenderingModelImpl<RenderableDefinition> 
     public class LinkItem {
 
         private ContentMap targetContentMap = null;
-        private Content targetContent = null;
+        private Node targetNode = null;
         private String targetLink = null;
 
         //TODO cringele: should be refactored when LinkUtil returns Node (SCRUM-242)
         public LinkItem(Node componentNode, String propertyName) throws ValueFormatException, PathNotFoundException, RepositoryException{
             if(componentNode.hasProperty(propertyName)){
                 String targetValue = componentNode.getProperty(propertyName).getString();
-                HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+                Session session = MgnlContext.getJCRSession("website");
 
                 //Link by path
                 if(targetValue.startsWith("/")){
-                    targetContent = hm.getContent(targetValue);
+                    targetNode = session.getNode(targetValue);
                 }
-                //Link by uuid
                 else {
-                    targetContent = hm.getContentByUUID(targetValue);
+                    //Link by identifier
+                    targetNode = session.getNodeByIdentifier(targetValue);
                 }
-                targetContentMap = new ContentMap(targetContent.getJCRNode());
-                targetLink = LinkUtil.createLink(targetContent);
+                targetContentMap = new ContentMap(targetNode);
+                targetLink = LinkUtil.createLink(new DefaultContent(targetNode));
             }
 
         }
