@@ -73,6 +73,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sameer Charles
  * $Id$
+ *
+ * @deprecated since 4.5 - has no direct replacement. Some of its functionality will be dropped, other will be located in {@link info.magnolia.jcr.registry.SessionProviderManager} instead.
  */
 public final class ContentRepository {
     private static final Logger log = LoggerFactory.getLogger(ContentRepository.class);
