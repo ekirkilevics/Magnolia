@@ -39,7 +39,6 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.context.AbstractContext;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.MgnlContext.Op;
 import info.magnolia.jcr.util.NodeUtil;
@@ -717,13 +716,10 @@ public class DefaultContent extends AbstractContent {
         return false;
     }
 
-    /**
-     * SCRUM-368 - first step in getting completely rid of it: do not store in DefaultContent but retrieve from repository strategy.
-     */
     @Override
     public HierarchyManager getHierarchyManager() {
         try {
-            return ((AbstractContext) MgnlContext.getInstance()).getRepositoryStrategy().getHierarchyManagerFor(node.getSession());
+            return new DefaultHierarchyManager(node.getSession());
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
         }
