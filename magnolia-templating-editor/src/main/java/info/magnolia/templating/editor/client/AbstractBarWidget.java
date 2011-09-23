@@ -120,7 +120,7 @@ public abstract class AbstractBarWidget extends FlowPanel {
     }
 
     /**
-     * @return the element's underlying {@link Style}. You can use this object to manipulate the css style attribute of the bar.
+     * @return the element's underlying {@link Style}. You can use this object to manipulate the css style attribute of this bar widget.
      */
     protected Style getStyle() {
         return getElement().getStyle();
