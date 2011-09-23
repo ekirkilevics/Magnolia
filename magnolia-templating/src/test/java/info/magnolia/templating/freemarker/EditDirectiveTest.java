@@ -61,7 +61,7 @@ public class EditDirectiveTest extends AbstractDirectiveTestCase {
         String result = renderForTest("[@cms.edit /]", renderableDef);
         assertEquals("<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
                 + "\r\n"
-                + "<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
+                + "<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
                 + "\r\n"
                 + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
                 + "\r\n", result);
@@ -72,7 +72,7 @@ public class EditDirectiveTest extends AbstractDirectiveTestCase {
         final String result = renderForTest("[@cms.edit dialog='testDialog' /]", renderableDef);
         assertEquals("<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
                 + "\r\n"
-                        + "<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
+                        + "<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
                 + "\r\n"
                 + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
                 + "\r\n", result);
