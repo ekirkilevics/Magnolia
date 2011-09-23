@@ -72,7 +72,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
     }
 
     public MockHierarchyManager(String name) {
-        super();
+        super(null);
         if (name != null) {
             this.name = name;
         }

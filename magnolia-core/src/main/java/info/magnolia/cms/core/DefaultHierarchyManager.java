@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
@@ -87,13 +86,8 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     private Session jcrSession;
 
-    private String repositoryName;
-
-    protected DefaultHierarchyManager() {}
-
-    public DefaultHierarchyManager(Session jcrSession) throws RepositoryException{
+    public DefaultHierarchyManager(Session jcrSession) {
         this.jcrSession = jcrSession;
-        this.repositoryName = ContentRepository.getParentRepositoryName(jcrSession.getWorkspace().getName());
     }
 
     public DefaultHierarchyManager(String userId, Session jcrSession, AccessManager ignoredAccessManager) throws RepositoryException {
@@ -107,9 +101,8 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     /**
      * Only used in tests.
      */
-    public DefaultHierarchyManager(Session jcrSession, String repositoryName) {
+    public DefaultHierarchyManager(Session jcrSession, String ignored) {
         this.jcrSession = jcrSession;
-        this.repositoryName = repositoryName;
     }
 
     /**
