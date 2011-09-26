@@ -33,8 +33,12 @@
  */
 package info.magnolia.templating.editor.client;
 
+
+import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -60,15 +64,60 @@ public class PageBarWidget extends AbstractBarWidget {
         this.path = content.substring(i + 1);
         this.dialog = element.getAttribute("dialog");
 
-        Button button = new Button(getDictionary().get("buttons.properties.js"));
-        button.addClickHandler(new ClickHandler() {
+        if(LegacyJavascript.isPreviewMode()){
+            createPreviewModeBar();
+        } else {
+            createAuthoringModeBar();
+        }
+    }
+
+    private void createAuthoringModeBar() {
+
+        Button properties = new Button(getDictionary().get("buttons.properties.js"));
+        properties.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 pageEditor.openDialog(dialog, workspace, path, null, null);
             }
         });
+        addButton(properties, Float.RIGHT);
+
+        Button preview = new Button(getDictionary().get("buttons.preview.js"));
+        preview.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                pageEditor.preview(true);
+            }
+        });
+        addButton(preview, Float.LEFT);
+
+        Button adminCentral = new Button(getDictionary().get("buttons.admincentral.js"));
+        adminCentral.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                pageEditor.showTree(workspace, path);
+            }
+        });
+        addButton(adminCentral, Float.LEFT);
+
         setClassName("mgnlMainbar mgnlControlBar");
-        addButton(button, Float.RIGHT);
+    }
+
+    private void createPreviewModeBar() {
+        Button preview = new Button(getDictionary().get("buttons.preview.js"));
+        preview.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                pageEditor.preview(false);
+            }
+        });
+        preview.getElement().getStyle().setTop(4.0, Unit.PX);
+        preview.getElement().getStyle().setLeft(4.0, Unit.PX);
+        addButton(preview, Float.LEFT);
+        //bar has to show up on the left hand side
+        getStyle().setTop(0.0, Unit.PX);
+        getStyle().setLeft(0.0, Unit.PX);
+        setClassName("mgnlMainbarPreview");
     }
 
     @Override

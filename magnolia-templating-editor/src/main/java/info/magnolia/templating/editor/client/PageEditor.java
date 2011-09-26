@@ -34,7 +34,7 @@
 package info.magnolia.templating.editor.client;
 
 
-import info.magnolia.templating.editor.client.jsni.GeneralJavascript;
+import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -93,27 +93,27 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             nodeName = "";
         }
 
-        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", locale);
+        LegacyJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", locale);
     };
 
     public void moveComponentStart(String id) {
-        GeneralJavascript.mgnlMoveNodeStart(id);
+        LegacyJavascript.mgnlMoveNodeStart(id);
     }
 
     public void moveComponentEnd(AbstractBarWidget source, String path) {
-        GeneralJavascript.mgnlMoveNodeEnd(source.getElement(), path);
+        LegacyJavascript.mgnlMoveNodeEnd(source.getElement(), path);
     }
 
     public void moveComponentOver(AbstractBarWidget source) {
-        GeneralJavascript.mgnlMoveNodeHigh(source.getElement());
+        LegacyJavascript.mgnlMoveNodeHigh(source.getElement());
     }
 
     public void moveComponentOut(AbstractBarWidget source) {
-        GeneralJavascript.mgnlMoveNodeReset(source.getElement());
+        LegacyJavascript.mgnlMoveNodeReset(source.getElement());
     }
 
     public void deleteComponent(String path) {
-        GeneralJavascript.mgnlDeleteNode(path);
+        LegacyJavascript.mgnlDeleteNode(path);
     }
 
     public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {
@@ -133,7 +133,16 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         if (availableComponents == null) {
             availableComponents = "";
         }
-        GeneralJavascript.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", locale);
+        LegacyJavascript.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", locale);
+    }
+
+    public void preview(boolean isPreview) {
+        LegacyJavascript.mgnlPreview(isPreview);
+     }
+
+    public void showTree(String workspace, String path) {
+        LegacyJavascript.showTree(workspace, path);
+
     }
 
     /**
@@ -168,6 +177,9 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                         PageBarWidget pageBarWidget = new PageBarWidget(this, child);
                         pageBarWidget.attach(child);
                         pageEditBarAlreadyProcessed = true;
+                        if(LegacyJavascript.isPreviewMode()) {
+                            break;
+                        }
                     //avoid processing cms:edit marker twice if this is an area
                     } else if(!isAreaEditBar(child, areas)) {
                         EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
@@ -239,5 +251,4 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         }
         return null;
     }
-
 }

@@ -34,7 +34,7 @@
 package info.magnolia.templating.editor.client;
 
 
-import info.magnolia.templating.editor.client.jsni.GeneralJavascript;
+import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -68,7 +68,7 @@ public abstract class AbstractBarWidget extends FlowPanel {
         }, ClickEvent.getType());
 
         //TODO move messages we need to this module?
-        GeneralJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
+        LegacyJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
         dictionary = Dictionary.getDictionary("mgnlGwtMessages");
     }
 

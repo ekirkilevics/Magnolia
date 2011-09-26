@@ -34,13 +34,13 @@
 package info.magnolia.templating.editor.client.jsni;
 
 /**
- * A JSNI wrapper around native javascript functions found in general.js and some utilities.
+ * A JSNI wrapper around native javascript functions found in general.js, inline.js and others plus some utilities.
  * @version $Id$
  *
  */
-public final class GeneralJavascript {
+public final class LegacyJavascript {
 
-    private GeneralJavascript() {
+    private LegacyJavascript() {
         //do not instantiate it.
     }
 
@@ -73,5 +73,20 @@ public final class GeneralJavascript {
      */
     public static native void exposeMgnlMessagesToGwtDictionary(String basename) /*-{
         $wnd.mgnlGwtMessages = $wnd.mgnlMessages.messages[basename];
+    }-*/;
+
+    public static native void showTree(String workspace, String path) /*-{
+        $wnd.MgnlAdminCentral.showTree(workspace, path)
+    }-*/;
+
+    public static native void mgnlPreview(boolean setPreview) /*-{
+        $wnd.mgnlPreview(setPreview)
+    }-*/;
+
+    /**
+     * @return <code>true</code> if the current page is in preview mode, <code>false</code> otherwise.
+     */
+    public static native boolean isPreviewMode() /*-{
+        return $wnd.location.href.indexOf('mgnlPreview=true') != -1;
     }-*/;
 }
