@@ -151,6 +151,31 @@
     </nodeType>
 
     <!--
+    magnolia page node type
+    -->
+    <nodeType name="mgnl:page" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+        <supertypes>
+            <supertype>mgnl:content</supertype>
+        </supertypes>
+    </nodeType>
+    <!--
+    magnolia area node type
+    -->
+    <nodeType name="mgnl:area" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+        <supertypes>
+            <supertype>mgnl:contentNode</supertype>
+        </supertypes>
+    </nodeType>
+    <!--
+    magnolia component node type
+    -->
+    <nodeType name="mgnl:component" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+        <supertypes>
+            <supertype>mgnl:contentNode</supertype>
+        </supertypes>
+    </nodeType>
+
+    <!--
     magnolia user node type
     -->
     <nodeType name="mgnl:user" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">

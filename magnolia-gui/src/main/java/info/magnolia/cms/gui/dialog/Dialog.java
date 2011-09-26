@@ -209,6 +209,12 @@ public class Dialog extends DialogControlImpl {
         if (this.getConfigValue("paragraph").indexOf(",") == -1) { //$NON-NLS-1$ //$NON-NLS-2$
             out.write(new Hidden("mgnlParagraph", this.getConfigValue("paragraph"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         } // else multiple paragraph selection -> radios for selection
+        if (StringUtils.isNotEmpty(this.getConfigValue("collectionNodeCreationItemType"))) {
+            out.write(new Hidden("mgnlCollectionNodeCreationItemType", this.getConfigValue("collectionNodeCreationItemType"), false).getHtml());
+        }
+        if (StringUtils.isNotEmpty(this.getConfigValue("creationItemType"))) {
+            out.write(new Hidden("mgnlCreationItemType", this.getConfigValue("creationItemType"), false).getHtml());
+        }
     }
 
     protected void drawHtmlPreSubsTabSet(Writer out) throws IOException {

@@ -61,7 +61,7 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
 
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");");
 
-        tree.addItemType(ItemType.CONTENT);
+        tree.addItemType(ItemType.CONTENT.getSystemName(), false);
         tree.addIcon(ItemType.DELETED_NODE_MIXIN, "/.resources/icons/16/document_deleted.gif");
 
         TreeColumn column0 = TreeColumn.createLabelColumn(tree, msgs.get("tree.web.page"), true);
@@ -119,7 +119,7 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
         menuNewPage.setLabel(msgs.get("tree.web.menu.new")); //$NON-NLS-1$
         menuNewPage.setIcon(request.getContextPath() + "/.resources/icons/16/document_plain_earth_add.gif"); //$NON-NLS-1$
 
-        menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.CONTENT.getSystemName() + "');"); //$NON-NLS-1$ //$NON-NLS-2$
+        menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.PAGE.getSystemName() + "');"); //$NON-NLS-1$ //$NON-NLS-2$
         menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionPermissionWrite(" //$NON-NLS-1$
                 + tree.getJavascriptTree()
                 + ")"); //$NON-NLS-1$

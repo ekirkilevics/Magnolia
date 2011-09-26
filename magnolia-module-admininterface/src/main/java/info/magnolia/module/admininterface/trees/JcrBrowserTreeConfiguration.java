@@ -34,7 +34,9 @@
 package info.magnolia.module.admininterface.trees;
 
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.Tree;
+import info.magnolia.cms.i18n.Messages;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version $Revision: $ ($Author: $)
  */
 public class JcrBrowserTreeConfiguration extends ConfigTreeConfiguration {
+
     @Override
     public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
         super.prepareTree(tree, browseMode, request);
@@ -57,5 +60,55 @@ public class JcrBrowserTreeConfiguration extends ConfigTreeConfiguration {
         tree.addItemType(ItemType.ROLE.getSystemName());
         tree.addItemType(ItemType.SYSTEM.getSystemName());
         tree.addIcon(ItemType.DELETED_NODE_MIXIN, "/.resources/icons/16/document_deleted.gif");
+    }
+
+    @Override
+    public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
+        final Messages msgs = getMessages();
+
+        ContextMenuItem menuNewPage = new ContextMenuItem("newPage");
+        menuNewPage.setLabel(msgs.get("!!New page"));
+        menuNewPage.setIcon(request.getContextPath() + "/.resources/icons/16/folder_cubes.gif");
+        menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.PAGE.getSystemName() + "');");
+        menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
+                + tree.getJavascriptTree()
+                + ")");
+        menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode("
+                + tree.getJavascriptTree()
+                + ")");
+
+        ContextMenuItem menuNewArea = new ContextMenuItem("newArea");
+        menuNewArea.setLabel(msgs.get("!!New area"));
+        menuNewArea.setIcon(request.getContextPath() + "/.resources/icons/16/cubes.gif");
+        menuNewArea.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.AREA.getSystemName() + "');");
+        menuNewArea.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
+                + tree.getJavascriptTree()
+                + ")");
+
+        ContextMenuItem menuNewComponent = new ContextMenuItem("newComponent");
+        menuNewComponent.setLabel(msgs.get("!!New component"));
+        menuNewComponent.setIcon(request.getContextPath() + "/.resources/icons/16/cubes.gif");
+        menuNewComponent.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.COMPONENT.getSystemName() + "');");
+        menuNewComponent.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
+                + tree.getJavascriptTree()
+                + ")");
+
+        if (!browseMode) {
+            tree.addMenuItem(menuNewPage);
+            tree.addMenuItem(menuNewArea);
+            tree.addMenuItem(menuNewComponent);
+        }
+
+        super.prepareContextMenu(tree, browseMode, request);
+    }
+
+    @Override
+    public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
+        tree.addFunctionBarItemFromContextMenu("newPage");
+        tree.addFunctionBarItemFromContextMenu("newArea");
+        tree.addFunctionBarItemFromContextMenu("newComponent");
+        // null is separator :)
+        tree.addFunctionBarItem(null);
+        super.prepareFunctionBar(tree, browseMode, request);
     }
 }

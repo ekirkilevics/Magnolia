@@ -150,6 +150,9 @@ public final class ItemType implements Serializable {
 
     public static final ItemType FOLDER = new ItemType(NT_FOLDER);
 
+    public static final ItemType PAGE = new ItemType(MgnlNodeType.NT_PAGE);
+    public static final ItemType AREA = new ItemType(MgnlNodeType.NT_AREA);
+    public static final ItemType COMPONENT = new ItemType(MgnlNodeType.NT_COMPONENT);
 
     /**
      * Stable serialVersionUID.

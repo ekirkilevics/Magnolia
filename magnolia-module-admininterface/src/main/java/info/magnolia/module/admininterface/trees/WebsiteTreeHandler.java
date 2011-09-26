@@ -72,7 +72,7 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
         String view = super.createNode();
         try {
             // todo: default template
-            if (this.getCreateItemType().equals(ItemType.CONTENT.getSystemName())) {
+            if (this.getCreateItemType().equals(ItemType.PAGE.getSystemName())) {
                 // TODO dlipp: use JCR-API directly
                 Content parentNode = this.getHierarchyManager().getContent(this.getPath());
                 Content newNode = parentNode.getContent(this.getNewNodeName());

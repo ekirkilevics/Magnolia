@@ -140,6 +140,7 @@ public class SaveHandlerImpl implements SaveHandler {
     private boolean create;
 
     private ItemType creationItemType = ItemType.CONTENTNODE;
+    private ItemType collectionNodeCreationItemType = ItemType.CONTENTNODE;
 
     /**
      * The name of the repository to store the data. Website is default.
@@ -805,6 +806,16 @@ public class SaveHandlerImpl implements SaveHandler {
         this.creationItemType = creationItemType;
     }
 
+    @Override
+    public ItemType getCollectionNodeCreationItemType() {
+        return collectionNodeCreationItemType;
+    }
+
+    @Override
+    public void setCollectionNodeCreationItemType(ItemType collectionNodeCreationItemType) {
+        this.collectionNodeCreationItemType = collectionNodeCreationItemType;
+    }
+
     /**
      * @return the form containing the values passed
      */
@@ -894,7 +905,7 @@ public class SaveHandlerImpl implements SaveHandler {
             }
             catch (RepositoryException re) {
                 // nodeCollection does not exist -> create
-                nodeCollection = rootNode.createContent(this.getNodeCollectionName(), ItemType.CONTENTNODE);
+                nodeCollection = rootNode.createContent(this.getNodeCollectionName(), this.getCollectionNodeCreationItemType());
                 log.debug("Create - {}" + nodeCollection.getHandle()); //$NON-NLS-1$
             }
         }

@@ -65,8 +65,8 @@ public class ConfigTreeConfiguration extends AbstractTreeConfiguration {
 
         tree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif"); //$NON-NLS-1$
 
-        tree.addItemType(ItemType.CONTENT.getSystemName());
-        tree.addItemType(ItemType.CONTENTNODE.getSystemName());
+        tree.addItemType(ItemType.CONTENT.getSystemName(), false);
+        tree.addItemType(ItemType.CONTENTNODE.getSystemName(), false);
         tree.addItemType(Tree.ITEM_TYPE_NODEDATA);
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setHtmlEdit();

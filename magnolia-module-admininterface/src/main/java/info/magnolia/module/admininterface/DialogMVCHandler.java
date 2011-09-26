@@ -139,7 +139,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     private String jsExecutedAfterSaving;
 
-    private String itemType = ItemType.CONTENTNODE.getSystemName();
+    private String itemType;
 
     private I18nAuthoringSupport i18nAuthoringSupport;
 
@@ -258,6 +258,12 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
                 String paragraphName = params.getParameter("mgnlParagraph");
                 this.dialog.setConfig("paragraph", paragraphName);
             }
+            if (StringUtils.isEmpty(this.dialog.getConfigValue("collectionNodeCreationItemType"))) {
+                this.dialog.setConfig("collectionNodeCreationItemType", params.getParameter("mgnlCollectionNodeCreationItemType"));
+            }
+            if (StringUtils.isEmpty(this.dialog.getConfigValue("creationItemType"))) {
+                this.dialog.setConfig("creationItemType", params.getParameter("mgnlCreationItemType"));
+            }
         }
 
         return passed;
@@ -320,7 +326,14 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         saveHandler.setNodeName(form.getParameter("mgnlNode")); //$NON-NLS-1$
         saveHandler.setParagraph(form.getParameter("mgnlParagraph")); //$NON-NLS-1$
         saveHandler.setRepository(form.getParameter("mgnlRepository")); //$NON-NLS-1$
-        saveHandler.setCreationItemType(new ItemType(getItemType()));
+        if (StringUtils.isNotEmpty(form.getParameter("mgnlCollectionNodeCreationItemType"))) {
+            saveHandler.setCollectionNodeCreationItemType(new ItemType(form.getParameter("mgnlCollectionNodeCreationItemType")));
+        }
+        if (StringUtils.isNotEmpty(getItemType())) {
+            saveHandler.setCreationItemType(new ItemType(getItemType()));
+        } else if (StringUtils.isNotEmpty(form.getParameter("mgnlCreationItemType"))) {
+            saveHandler.setCreationItemType(new ItemType(form.getParameter("mgnlCreationItemType")));
+        }
 
         if (this.saveHandler instanceof DialogAwareSaveHandler) {
             ((DialogAwareSaveHandler) saveHandler).setDialog(this.getDialog());

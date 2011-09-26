@@ -78,6 +78,10 @@ public interface SaveHandler {
      */
     public abstract void setCreationItemType(ItemType creationItemType);
 
+    public abstract ItemType getCollectionNodeCreationItemType();
+
+    public abstract void setCollectionNodeCreationItemType(ItemType collectionNodeCreationItemType);
+
     /**
      * @return Returns the nodeCollectionName.
      */

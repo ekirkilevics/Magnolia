@@ -74,6 +74,8 @@ public class ParagraphEditDialog extends ConfiguredDialog {
 
             // needed for the creation of new paragraphs
             dialogHandler.getDialog().setConfig("paragraph", paragraphName);
+            dialogHandler.getDialog().setConfig("collectionNodeCreationItemType", ItemType.AREA.getSystemName());
+            dialogHandler.getDialog().setConfig("creationItemType", ItemType.COMPONENT.getSystemName());
         } catch (InvalidDialogHandlerException e) {
             if (dialogName.equals(paragraphName)) {
                 // we're probably in the hack of getDialogUsedByParagraph (trying to load a dialog by paragraph name), except there's no such dialog
@@ -152,7 +154,8 @@ public class ParagraphEditDialog extends ConfiguredDialog {
             saveHandler.setNodeName(nodeName); // protected variable init'd in constructor
             saveHandler.setParagraph(params.getParameter("mgnlParagraph"));
             saveHandler.setRepository(repository); // protected variable init'd in constructor
-            saveHandler.setCreationItemType(new ItemType(getItemType()));
+            saveHandler.setCollectionNodeCreationItemType(ItemType.AREA);
+            saveHandler.setCreationItemType(ItemType.COMPONENT);
 
 
             boolean result = saveHandler.save();

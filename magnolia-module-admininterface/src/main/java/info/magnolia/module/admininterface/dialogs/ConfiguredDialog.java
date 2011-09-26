@@ -61,7 +61,7 @@ public class ConfiguredDialog extends DialogMVCHandler {
         this.configNode = configNode;
 
         // TODO content2bean should be used
-        this.setItemType(NodeDataUtil.getString(configNode, "itemType", this.getItemType()));
+        this.setItemType(NodeDataUtil.getString(configNode, "itemType", null));
         this.setJsExecutedAfterSaving(NodeDataUtil.getString(configNode, "jsExecutedAfterSaving", this.getJsExecutedAfterSaving()));
     }
 

@@ -287,6 +287,10 @@ public class Tree extends ControlImpl {
         addItemType(type, icon, true);
     }
 
+    public void addItemType(String type, boolean strict) {
+        addItemType(type, null, strict);
+    }
+
     /**
      * Adds an itemType to the list of existing types and associates an icon with it.
      * The type can be specified as a strict, in which case only the items of given type will be displayed, but sub types will be ignored,

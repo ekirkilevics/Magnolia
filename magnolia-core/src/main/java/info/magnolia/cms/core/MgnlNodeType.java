@@ -107,6 +107,10 @@ public final class MgnlNodeType {
      */
     public static final String NT_CONTENTNODE = MGNL_PREFIX + "contentNode";
 
+    public static final String NT_PAGE = MGNL_PREFIX + "page";
+    public static final String NT_AREA = MGNL_PREFIX + "area";
+    public static final String NT_COMPONENT = MGNL_PREFIX + "component";
+
     /**
      * TODO dlipp: to be replaced by mgnl:property? NodeData is Content-API term...
      */
