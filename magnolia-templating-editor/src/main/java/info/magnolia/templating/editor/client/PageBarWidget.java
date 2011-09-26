@@ -104,7 +104,7 @@ public class PageBarWidget extends AbstractBarWidget {
     }
 
     private void createPreviewModeBar() {
-        Button preview = new Button(getDictionary().get("buttons.preview.js"));
+        Button preview = new Button(getDictionary().get("buttons.preview.hidden.js"));
         preview.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -113,6 +113,7 @@ public class PageBarWidget extends AbstractBarWidget {
         });
         preview.getElement().getStyle().setTop(4.0, Unit.PX);
         preview.getElement().getStyle().setLeft(4.0, Unit.PX);
+        preview.getElement().getStyle().setBackgroundColor("#9DB517");
         addButton(preview, Float.LEFT);
         //bar has to show up on the left hand side
         getStyle().setTop(0.0, Unit.PX);
