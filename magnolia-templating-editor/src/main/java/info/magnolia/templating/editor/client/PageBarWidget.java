@@ -67,7 +67,6 @@ public class PageBarWidget extends AbstractBarWidget {
 
         if(LegacyJavascript.isPreviewMode()){
             createPreviewModeBar();
-            previewMode = true;
         } else {
             createAuthoringModeBar();
         }
@@ -103,6 +102,8 @@ public class PageBarWidget extends AbstractBarWidget {
         addButton(adminCentral, Float.LEFT);
 
         setClassName("mgnlMainbar mgnlControlBar");
+
+        previewMode = false;
     }
 
     private void createPreviewModeBar() {
@@ -121,6 +122,8 @@ public class PageBarWidget extends AbstractBarWidget {
         getStyle().setTop(0.0, Unit.PX);
         getStyle().setLeft(0.0, Unit.PX);
         setClassName("mgnlMainbarPreview");
+
+        previewMode = true;
     }
 
     public final boolean isPreviewMode() {
