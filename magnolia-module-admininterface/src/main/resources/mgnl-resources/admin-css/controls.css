@@ -279,3 +279,13 @@ button.mgnlControlButton_PUSHED {
     border-style: solid;
     border-width: 1px;
 }
+
+.mgnlAreaLabel {
+    display: inline !important;
+    vertical-align: middle;
+    font-family: Verdana, sans-serif !important;
+    font-size: 12px;
+    color: #F0F2E6 !important;
+    white-space: nowrap;
+    margin-left: 2px;
+}

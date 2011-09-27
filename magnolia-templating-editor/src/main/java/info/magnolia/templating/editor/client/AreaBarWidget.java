@@ -38,6 +38,7 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * Area bar.
@@ -65,16 +66,21 @@ public class AreaBarWidget extends AbstractBarWidget {
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
 
-        this.label = element.getAttribute("label");
         this.name = element.getAttribute("name");
         this.availableComponents = element.getAttribute("availableComponents");
         this.type = element.getAttribute("type");
         this.dialog = element.getAttribute("dialog");
+        this.label = element.getAttribute("label");
         if (element.hasAttribute("showAddButton")) {
             this.showAddButton = Boolean.parseBoolean(element.getAttribute("showAddButton"));
         }
 
         setClassName("mgnlAreaControlBar");
+
+        Label areaName = new Label(this.label, false);
+        //set primary style overrides gwt default css class, in this case gwt-Label
+        areaName.setStylePrimaryName("mgnlAreaLabel");
+        add(areaName);
 
         if (element.hasAttribute("dialog") && type.equals(PageEditor.AREA_TYPE_LIST)) {
             Button button = new Button(getDictionary().get("buttons.editarea.js"));
@@ -84,7 +90,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                     pageEditor.openDialog(dialog, workspace, path, null, name);
                 }
             });
-            addButton(button, Float.LEFT);
+            addButton(button, Float.RIGHT);
         }
 
         if (showAddButton) {
@@ -99,7 +105,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                     }
                 }
             });
-            addButton(addButton, Float.LEFT);
+            addButton(addButton, Float.RIGHT);
         }
     }
 
@@ -139,7 +145,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 }
             }
         });
-        addButton(button, Float.LEFT);
+        addButton(button, Float.RIGHT);
     }
 
     @Override

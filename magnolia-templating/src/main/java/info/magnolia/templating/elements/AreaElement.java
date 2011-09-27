@@ -87,6 +87,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private String type;
     private String dialog;
     private String availableComponents;
+    private String label;
 
 
 
@@ -106,6 +107,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.name = resolveName();
         this.dialog = resolveDialog();
         this.type = resolveType();
+        this.label = resolveLabel();
         this.availableComponents = resolveAvailableComponents();
 
         this.areaNode = resolveAreaNode();
@@ -130,6 +132,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
             helper.attribute("availableComponents", this.availableComponents);
             helper.attribute("type", this.type);
             helper.attribute("dialog", this.dialog);
+            helper.attribute("label", this.label);
             helper.attribute("showAddButton", String.valueOf(shouldShowAddButton()));
             helper.closeTag(CMS_AREA);
         }
@@ -239,6 +242,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     private String resolveName() {
         return name != null ? name : (areaDefinition != null ? areaDefinition.getName() : null);
+    }
+
+    private String resolveLabel() {
+        return label != null ? label : (areaDefinition != null && StringUtils.isNotBlank(areaDefinition.getTitle()) ? areaDefinition.getTitle() : name);
     }
 
     protected String resolveAvailableComponents() {

@@ -177,7 +177,9 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                         PageBarWidget pageBarWidget = new PageBarWidget(this, child);
                         pageBarWidget.attach(child);
                         pageEditBarAlreadyProcessed = true;
-                        if(LegacyJavascript.isPreviewMode()) {
+
+                        if(pageBarWidget.isPreviewMode()) {
+                            //we just need the preview bar here
                             break;
                         }
                     //avoid processing cms:edit marker twice if this is an area

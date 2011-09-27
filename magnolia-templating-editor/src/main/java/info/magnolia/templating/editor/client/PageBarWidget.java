@@ -53,6 +53,7 @@ public class PageBarWidget extends AbstractBarWidget {
     private String workspace;
     private String path;
     private String dialog;
+    private boolean previewMode = false;
 
     public PageBarWidget(final PageEditor pageEditor, Element element) {
         super(null);
@@ -66,6 +67,7 @@ public class PageBarWidget extends AbstractBarWidget {
 
         if(LegacyJavascript.isPreviewMode()){
             createPreviewModeBar();
+            previewMode = true;
         } else {
             createAuthoringModeBar();
         }
@@ -119,6 +121,10 @@ public class PageBarWidget extends AbstractBarWidget {
         getStyle().setTop(0.0, Unit.PX);
         getStyle().setLeft(0.0, Unit.PX);
         setClassName("mgnlMainbarPreview");
+    }
+
+    public final boolean isPreviewMode() {
+        return previewMode;
     }
 
     @Override
