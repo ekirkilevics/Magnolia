@@ -77,7 +77,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         setClassName("mgnlAreaControlBar");
 
-        Label areaName = new Label(this.label, false);
+        Label areaName = new Label(this.label);
         //set primary style overrides gwt default css class, in this case gwt-Label
         areaName.setStylePrimaryName("mgnlAreaLabel");
         add(areaName);
