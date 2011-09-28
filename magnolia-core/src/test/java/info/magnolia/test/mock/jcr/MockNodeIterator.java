@@ -38,12 +38,14 @@ import java.util.Collection;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
+import info.magnolia.jcr.iterator.RangeIteratorImpl;
+
 /**
  * Iterates over a collections of MockNodes.
  *
  * @version $Id$
  */
-public class MockNodeIterator extends MockRangeIterator<Node> implements NodeIterator {
+public class MockNodeIterator extends RangeIteratorImpl<Node> implements NodeIterator {
 
     public MockNodeIterator(Collection<? extends Node> children) {
         super((Collection<Node>) children);

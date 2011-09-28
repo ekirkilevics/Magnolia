@@ -36,7 +36,7 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.util.ChildWrappingNodeWrapper;
+import info.magnolia.jcr.wrapper.ChildWrappingNodeWrapper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.MgnlContext.Op;
 import info.magnolia.logging.AuditLoggingUtil;

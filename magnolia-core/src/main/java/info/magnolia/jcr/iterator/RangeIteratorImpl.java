@@ -31,59 +31,77 @@
  * intact.
  *
  */
-package info.magnolia.test.mock.jcr;
+package info.magnolia.jcr.iterator;
 
 import java.util.Collection;
 import java.util.Iterator;
-import javax.jcr.Item;
+import javax.jcr.RangeIterator;
 
 /**
- * Mock implementation of JCR-Item Iterator.
+ * Intended as a base class when implementing JCR iterators, sub-classes need only implement the special next methods
+ * such as nextNode() for NodeIterator.
  *
+ * @param <T>
  * @version $Id$
- * @deprecated use MockRangeIterator or one of its subclasses instead
  */
-@Deprecated
-public class MockItemIterator<T extends Item> {
+public class RangeIteratorImpl<T> implements RangeIterator {
 
-    private final Iterator<T> internalIterator;
-    private long count = 0;
-    private final Collection<T> list;
+    private final Iterator<T> iterator;
+    private final long size;
+    private long position = 0;
 
-    public MockItemIterator(Collection<T> list) {
-        this.list = list;
-        this.internalIterator = list.iterator();
+    public RangeIteratorImpl(Collection<T> collection) {
+        this.iterator = collection.iterator();
+        this.size = collection.size();
     }
 
-    public T nextItem() {
-        count++;
-        return internalIterator.next();
+    public RangeIteratorImpl(RangeIterator rangeIterator) {
+        this.iterator = rangeIterator;
+        this.size = rangeIterator.getSize();
+        this.position = rangeIterator.getPosition();
     }
 
-    public long getPosition() {
-        return count;
+    public RangeIteratorImpl(Iterator<T> iterator, int size) {
+        this.iterator = iterator;
+        this.size = size;
     }
 
-    public long getSize() {
-        return list.size();
-    }
-
+    @Override
     public void skip(long skipNum) {
-        for (int i = 0; i < skipNum; i++) {
-            internalIterator.next();
+        while (skipNum > 0) {
+            next();
+            skipNum--;
         }
     }
 
+    @Override
+    public long getSize() {
+        return size;
+    }
+
+    @Override
+    public long getPosition() {
+        return position;
+    }
+
+    @Override
     public boolean hasNext() {
-        return internalIterator.hasNext();
+        return iterator.hasNext();
     }
 
+    @Override
     public Object next() {
-        return internalIterator.next();
+        return nextElement();
     }
 
+    @Override
     public void remove() {
-        internalIterator.remove();
+        iterator.remove();
     }
 
+    protected T nextElement() {
+        T element = iterator.next();
+        position++;
+        return element;
+    }
 }

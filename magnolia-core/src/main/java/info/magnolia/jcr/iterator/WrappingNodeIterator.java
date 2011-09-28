@@ -31,33 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.jcr.iterator;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 
-import org.junit.Test;
-
-import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
-import info.magnolia.test.mock.jcr.MockNode;
-import static org.junit.Assert.*;
+import info.magnolia.jcr.wrapper.ChildWrappingNodeWrapper;
 
 /**
+ * Node iterator wrapping all returned nodes using provided node wrapper.
+ *
  * @version $Id$
  */
-public class VersionUtilTest {
-    @Test
-    public void testGetNodeTypeName() throws Exception {
+public class WrappingNodeIterator extends DelegatingNodeIterator {
 
-        String primaryTypeName = "primaryTypeValue";
-        final MockNode node = new MockNode("test", primaryTypeName);
-        assertEquals(primaryTypeName, VersionUtil.getNodeTypeName(node));
+    private final ChildWrappingNodeWrapper wrapper;
 
-        final String frozenPrimaryTypeName = "frozenPrimaryTypeValue";
-        node.setProperty(MgnlNodeType.JCR_FROZEN_PRIMARY_TYPE, frozenPrimaryTypeName);
-        assertEquals(frozenPrimaryTypeName, VersionUtil.getNodeTypeName(node));
+    public WrappingNodeIterator(NodeIterator iterator, ChildWrappingNodeWrapper wrapper) {
+        super(iterator);
+        this.wrapper = wrapper;
+    }
 
-        final Node wrapper = new JCRPropertiesFilteringNodeWrapper(node);
-        assertEquals(frozenPrimaryTypeName, VersionUtil.getNodeTypeName(wrapper));
+    @Override
+    public Object next() {
+        return wrapper.wrap((Node) super.next());
+    }
+
+    @Override
+    public Node nextNode() {
+        return wrapper.wrap(super.nextNode());
     }
 }

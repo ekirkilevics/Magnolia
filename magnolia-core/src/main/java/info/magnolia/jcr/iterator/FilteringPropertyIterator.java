@@ -31,32 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
-
-import info.magnolia.cms.core.MgnlNodeType;
+package info.magnolia.jcr.iterator;
 
 import javax.jcr.Property;
-import javax.jcr.RepositoryException;
+import javax.jcr.PropertyIterator;
 
-import org.apache.jackrabbit.commons.predicate.Predicate;
+import info.magnolia.jcr.predicate.Predicate;
 
 /**
- * Simple predicate implementation hiding all jcr properties.
- * @author had
- * @version $Id: $
+ * PropertyIterator hiding all properties that do not pass the predicate.
+ *
+ * @version $Id$
  */
-public class JCRPropertyHidingPredicate implements Predicate {
+public class FilteringPropertyIterator extends FilteringIteratorBase<Property> implements PropertyIterator {
+
+    public FilteringPropertyIterator(PropertyIterator iterator, Predicate<Property> predicate) {
+        super(iterator, predicate);
+    }
 
     @Override
-    public boolean evaluate(Object object) {
-        if (!(object instanceof Property)) {
-            return false;
-        }
-        try {
-            return !((Property) object).getName().startsWith(MgnlNodeType.JCR_PREFIX);
-        } catch (RepositoryException e) {
-            // either invalid or not accessible to the current user
-            return false;
-        }
+    public Property nextProperty() {
+        return next();
     }
 }

@@ -31,25 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.wrapper;
 
 import javax.jcr.Node;
 
-import org.apache.jackrabbit.commons.predicate.Predicate;
+import info.magnolia.jcr.predicate.JCRPropertyHidingPredicate;
+import info.magnolia.jcr.predicate.Predicate;
 
 /**
  * Filtering node wrapper with hardcoded predicate to simplify unwrapping when needed.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
-public class JCRPropertiesFilteringNodeWrapper extends PropertiesFilteringNodeWrapper {
+public class JCRPropertiesFilteringNodeWrapper extends PropertyFilteringNodeWrapper {
 
     public JCRPropertiesFilteringNodeWrapper(Node wrapped) {
-        super(wrapped, new  JCRPropertyHidingPredicate());
+        super(wrapped, new JCRPropertyHidingPredicate());
     }
 
     public JCRPropertiesFilteringNodeWrapper(Node wrapped, Predicate predicate) {
         // ignore passed in predicate. This init method exists only to allow automatic wrapping
-        super(wrapped, new  JCRPropertyHidingPredicate());
+        super(wrapped, new JCRPropertyHidingPredicate());
     }
 }

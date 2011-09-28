@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.wrapper;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -45,11 +45,14 @@ import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.version.VersionException;
 
+import info.magnolia.cms.util.DelegateNodeWrapper;
+import info.magnolia.jcr.iterator.WrappingNodeIterator;
+
 
 /**
  * Wrapper providing support for wrapping all child nodes of the wrapped node incl those returned by the NodeIterators.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
 public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper {
 
@@ -89,29 +92,27 @@ public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper {
     }
 
     @Override
-    public Node addNode(String relPath) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException,
-    RepositoryException {
+    public Node addNode(String relPath) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException, RepositoryException {
         return wrap(super.addNode(relPath));
     }
 
     @Override
-    public Node addNode(String relPath, String primaryNodeTypeName) throws ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException,
-    VersionException, ConstraintViolationException, RepositoryException {
+    public Node addNode(String relPath, String primaryNodeTypeName) throws ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException, VersionException, ConstraintViolationException, RepositoryException {
         return wrap(super.addNode(relPath, primaryNodeTypeName));
     }
 
     @Override
     public NodeIterator getNodes() throws RepositoryException {
-        return new WrappingNodesIterator(super.getNodes(), this);
+        return new WrappingNodeIterator(super.getNodes(), this);
     }
 
     @Override
     public NodeIterator getNodes(String namePattern) throws RepositoryException {
-        return new WrappingNodesIterator(super.getNodes(namePattern), this);
+        return new WrappingNodeIterator(super.getNodes(namePattern), this);
     }
 
     @Override
     public NodeIterator getNodes(String[] nameGlobs) throws RepositoryException {
-        return new WrappingNodesIterator(super.getNodes(nameGlobs), this);
+        return new WrappingNodeIterator(super.getNodes(nameGlobs), this);
     }
 }

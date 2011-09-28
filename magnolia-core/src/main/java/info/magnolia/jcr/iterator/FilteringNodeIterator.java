@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,73 +25,32 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.test.mock.jcr;
+package info.magnolia.jcr.iterator;
 
-import java.util.Collection;
-import java.util.Iterator;
-import javax.jcr.RangeIterator;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+
+import info.magnolia.jcr.predicate.Predicate;
 
 /**
+ * NodeIterator hiding all properties that do not pass the predicate.
+ *
  * @version $Id$
  */
-public class MockRangeIterator<T> implements RangeIterator {
+public class FilteringNodeIterator extends FilteringIteratorBase<Node> implements NodeIterator {
 
-    private Iterator<T> iterator;
-    private int size;
-    private int position = 0;
-
-    public MockRangeIterator(Collection<T> collection) {
-        this.iterator = collection.iterator();
-        this.size = collection.size();
-    }
-
-    public MockRangeIterator(Iterator<T> iterator, int size) {
-        this.iterator = iterator;
-        this.size = size;
+    public FilteringNodeIterator(NodeIterator nodeIterator, Predicate<Node> predicate) {
+        super(nodeIterator, predicate);
     }
 
     @Override
-    public void skip(long skipNum) {
-        while (skipNum > 0) {
-            next();
-            skipNum--;
-        }
-    }
-
-    @Override
-    public long getSize() {
-        return size;
-    }
-
-    @Override
-    public long getPosition() {
-        return position;
-    }
-
-    @Override
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
-
-    @Override
-    public Object next() {
-        return nextElement();
-    }
-
-    @Override
-    public void remove() {
-        iterator.remove();
-    }
-
-    protected T nextElement() {
-        T element = iterator.next();
-        position++;
-        return element;
+    public Node nextNode() {
+        return next();
     }
 }

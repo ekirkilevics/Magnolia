@@ -37,7 +37,7 @@ import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.DelegateNodeWrapper;
-import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
+import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.MgnlContext.Op;

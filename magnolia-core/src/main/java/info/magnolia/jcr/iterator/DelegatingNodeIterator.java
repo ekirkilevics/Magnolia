@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,52 +25,33 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.iterator;
 
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
-
-import org.apache.jackrabbit.commons.predicate.Predicate;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 
 /**
- * Property iterator hiding all properties that do not pass the predicate.
- * @author had
- * @version $Id: $
+ * Delegating NodeIterator intended to be used by subclasses for decoration.
+ *
+ * @version $Id$
  */
-public class FilteringPropertyIterator implements PropertyIterator {
+public class DelegatingNodeIterator implements NodeIterator {
 
-    private final PropertyIterator iterator;
-    private Property nextItem;
-    private final Predicate predicate;
+    private NodeIterator iterator;
 
-    public FilteringPropertyIterator(PropertyIterator iterator, Predicate predicate) {
+    public DelegatingNodeIterator(NodeIterator iterator) {
         this.iterator = iterator;
-        this.predicate = predicate;
-    }
-    @Override
-    public Property nextProperty() {
-        if (nextItem != null) {
-            Property temp = nextItem;
-            nextItem = null;
-            return temp;
-        }
-        return iterator.nextProperty();
     }
 
     @Override
-    public long getPosition() {
-        return iterator.getPosition();
-    }
-
-    @Override
-    public long getSize() {
-        return iterator.getSize();
+    public Node nextNode() {
+        return iterator.nextNode();
     }
 
     @Override
@@ -79,27 +60,27 @@ public class FilteringPropertyIterator implements PropertyIterator {
     }
 
     @Override
+    public long getSize() {
+        return iterator.getSize();
+    }
+
+    @Override
+    public long getPosition() {
+        return iterator.getPosition();
+    }
+
+    @Override
     public boolean hasNext() {
-        while (nextItem == null) {
-            if (!iterator.hasNext()) {
-                return false;
-            }
-            nextItem = iterator.nextProperty();
-            if (!predicate.evaluate(nextItem)) {
-                nextItem = null;
-            }
-        }
-        return true;
+        return iterator.hasNext();
     }
 
     @Override
     public Object next() {
-        return nextProperty();
+        return iterator.next();
     }
 
     @Override
     public void remove() {
         iterator.remove();
     }
-
 }

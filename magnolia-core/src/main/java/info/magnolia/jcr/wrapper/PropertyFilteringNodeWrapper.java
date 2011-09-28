@@ -31,29 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.wrapper;
 
 import java.lang.reflect.InvocationTargetException;
-
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 
-import org.apache.jackrabbit.commons.predicate.Predicate;
+import info.magnolia.jcr.iterator.FilteringPropertyIterator;
+import info.magnolia.jcr.predicate.Predicate;
 
 /**
  * Node wrapper passing on Predicate to its children to hide properties.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
-public class PropertiesFilteringNodeWrapper extends ChildWrappingNodeWrapper {
+public class PropertyFilteringNodeWrapper extends ChildWrappingNodeWrapper {
 
-    private final Predicate predicate;
+    private final Predicate<Property> predicate;
 
-    public PropertiesFilteringNodeWrapper(Node wrapped, Predicate predicate) {
-        super(wrapped, PropertiesFilteringNodeWrapper.class);
+    public PropertyFilteringNodeWrapper(Node wrapped, Predicate<Property> predicate) {
+        super(wrapped, PropertyFilteringNodeWrapper.class);
         this.predicate = predicate;
     }
 
@@ -64,12 +64,12 @@ public class PropertiesFilteringNodeWrapper extends ChildWrappingNodeWrapper {
 
     @Override
     public PropertyIterator getProperties(String namePattern) throws RepositoryException {
-        return  new FilteringPropertyIterator(super.getProperties(namePattern), predicate);
+        return new FilteringPropertyIterator(super.getProperties(namePattern), predicate);
     }
 
     @Override
     public PropertyIterator getProperties(String[] nameGlobs) throws RepositoryException {
-        return  new FilteringPropertyIterator(super.getProperties(nameGlobs), predicate);
+        return new FilteringPropertyIterator(super.getProperties(nameGlobs), predicate);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class PropertiesFilteringNodeWrapper extends ChildWrappingNodeWrapper {
         if (predicate.evaluate(prop)) {
             return prop;
         }
-        throw new PathNotFoundException("Property " + relPath + " is not accesible via this wrapper.");
+        throw new PathNotFoundException("Property " + relPath + " is not accessible via this wrapper.");
     }
 
     @Override

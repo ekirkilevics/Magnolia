@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,39 +25,21 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.jcr.util;
-
-import javax.jcr.Node;
-
-import org.junit.Test;
-
-import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
-import info.magnolia.test.mock.jcr.MockNode;
-import static org.junit.Assert.*;
+package info.magnolia.jcr.predicate;
 
 /**
+ * Represents a condition that evaluates to true or false.
+ *
+ * @param <T>
  * @version $Id$
  */
-public class VersionUtilTest {
-    @Test
-    public void testGetNodeTypeName() throws Exception {
+public interface Predicate<T> {
 
-        String primaryTypeName = "primaryTypeValue";
-        final MockNode node = new MockNode("test", primaryTypeName);
-        assertEquals(primaryTypeName, VersionUtil.getNodeTypeName(node));
-
-        final String frozenPrimaryTypeName = "frozenPrimaryTypeValue";
-        node.setProperty(MgnlNodeType.JCR_FROZEN_PRIMARY_TYPE, frozenPrimaryTypeName);
-        assertEquals(frozenPrimaryTypeName, VersionUtil.getNodeTypeName(node));
-
-        final Node wrapper = new JCRPropertiesFilteringNodeWrapper(node);
-        assertEquals(frozenPrimaryTypeName, VersionUtil.getNodeTypeName(wrapper));
-    }
+    boolean evaluate(T t);
 }

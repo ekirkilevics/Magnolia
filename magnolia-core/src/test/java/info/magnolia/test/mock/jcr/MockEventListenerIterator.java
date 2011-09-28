@@ -37,10 +37,12 @@ import java.util.Collection;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 
+import info.magnolia.jcr.iterator.RangeIteratorImpl;
+
 /**
  * @version $Id$
  */
-public class MockEventListenerIterator extends MockRangeIterator<EventListener> implements EventListenerIterator {
+public class MockEventListenerIterator extends RangeIteratorImpl<EventListener> implements EventListenerIterator {
 
     public MockEventListenerIterator(Collection<EventListener> collection) {
         super(collection);

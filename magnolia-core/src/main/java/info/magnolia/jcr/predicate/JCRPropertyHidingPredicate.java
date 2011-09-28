@@ -31,59 +31,27 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.predicate;
 
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
+
+import info.magnolia.cms.core.MgnlNodeType;
 
 /**
- * Node iterator wrapping all returned nodes using provided node wrapper.
- * @author had
- * @version $Id: $
+ * Simple predicate implementation hiding all jcr properties.
+ *
+ * @version $Id$
  */
-public class WrappingNodesIterator implements NodeIterator {
-
-    private final ChildWrappingNodeWrapper wrapper;
-    private final NodeIterator nodes;
-
-    public WrappingNodesIterator(NodeIterator nodes, ChildWrappingNodeWrapper childWrappingNodeWrapper) {
-        this.nodes = nodes;
-        this.wrapper = childWrappingNodeWrapper;
-    }
+public class JCRPropertyHidingPredicate implements Predicate<Property> {
 
     @Override
-    public Node nextNode() {
-        return wrapper.wrap(nodes.nextNode());
+    public boolean evaluate(Property property) {
+        try {
+            return !property.getName().startsWith(MgnlNodeType.JCR_PREFIX);
+        } catch (RepositoryException e) {
+            // either invalid or not accessible to the current user
+            return false;
+        }
     }
-
-    @Override
-    public long getPosition() {
-        return nodes.getPosition();
-    }
-
-    @Override
-    public long getSize() {
-        return nodes.getSize();
-    }
-
-    @Override
-    public void skip(long skipNum) {
-        nodes.skip(skipNum);
-    }
-
-    @Override
-    public boolean hasNext() {
-        return nodes.hasNext();
-    }
-
-    @Override
-    public Object next() {
-        return nextNode();
-    }
-
-    @Override
-    public void remove() {
-        nodes.remove();
-    }
-
 }

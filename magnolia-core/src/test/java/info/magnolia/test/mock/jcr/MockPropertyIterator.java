@@ -38,12 +38,14 @@ import java.util.Collection;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 
+import info.magnolia.jcr.iterator.RangeIteratorImpl;
+
 /**
  * Iterates over a collections of MockProperties.
  *
  * @version $Id$
  */
-public class MockPropertyIterator extends MockRangeIterator<Property> implements PropertyIterator {
+public class MockPropertyIterator extends RangeIteratorImpl<Property> implements PropertyIterator {
 
     public MockPropertyIterator(Collection<? extends Property> children) {
         super((Collection<Property>) children);

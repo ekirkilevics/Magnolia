@@ -38,10 +38,12 @@ import java.util.Collection;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 
+import info.magnolia.jcr.iterator.RangeIteratorImpl;
+
 /**
  * @version $Id$
  */
-public class MockEventIterator extends MockRangeIterator<Event> implements EventIterator {
+public class MockEventIterator extends RangeIteratorImpl<Event> implements EventIterator {
 
     public MockEventIterator(Collection<Event> collection) {
         super(collection);

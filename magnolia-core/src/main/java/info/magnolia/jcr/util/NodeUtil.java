@@ -37,7 +37,10 @@ import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.DelegateNodeWrapper;
-import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
+import info.magnolia.jcr.iterator.FilteringNodeIterator;
+import info.magnolia.jcr.iterator.NodeIterableAdapter;
+import info.magnolia.jcr.predicate.Predicate;
+import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +53,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
 import org.apache.jackrabbit.commons.iterator.NodeIterable;
-import org.apache.jackrabbit.commons.predicate.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -423,17 +424,17 @@ public class NodeUtil {
      * TODO cringele : shouldn't @param nodeType be aligned to JCR API? There it is nodeTypeName, nodeType is used for NodeType object
      */
     public static Iterable<Node> getNodes(Node parent, final String nodeType) throws RepositoryException {
-        NodeIterator iterator = new FilteringNodeIterator(parent.getNodes(), new Predicate() {
+        NodeIterator iterator = new FilteringNodeIterator(parent.getNodes(), new Predicate<Node>() {
             @Override
-            public boolean evaluate(Object node) {
+            public boolean evaluate(Node node) {
                 try {
-                    return ((Node) node).isNodeType(nodeType);
+                    return node.isNodeType(nodeType);
                 } catch (RepositoryException e) {
                     // TODO dlipp - is that what we want? Shouldn't we rethrow the exception?
                     return false;
                 }
             }
         });
-        return new NodeIterable(iterator);
+        return new NodeIterableAdapter(iterator);
     }
 }

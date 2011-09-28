@@ -34,7 +34,7 @@
 package info.magnolia.jcr.util;
 
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
+import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
