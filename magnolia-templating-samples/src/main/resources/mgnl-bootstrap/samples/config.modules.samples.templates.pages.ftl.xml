@@ -149,7 +149,7 @@
         <sv:value>/samples/areas/navigation.ftl</sv:value>
       </sv:property>
       <sv:property sv:name="type" sv:type="String">
-        <sv:value>single</sv:value>
+        <sv:value>noComponent</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
