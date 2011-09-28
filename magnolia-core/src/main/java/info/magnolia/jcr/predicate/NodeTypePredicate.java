@@ -31,33 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.jcr.predicate;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.jcr.util.NodeUtil;
+
 /**
- * A {@link NodeFilter} filter that filters out all nodes except those of the specified node type. The node
+ * Predicate that filters out all nodes except those of the specified node type. The node
  * type can be the primary node type or a mixin.
  *
  * @version $Id$
  */
-public class NodeTypeFilter implements NodeFilter {
+public class NodeTypePredicate implements Predicate<Node> {
 
     private String nodeTypeName;
 
-    public NodeTypeFilter(String nodeTypeName) {
+    public NodeTypePredicate(String nodeTypeName) {
         this.nodeTypeName = nodeTypeName;
     }
 
     @Override
-    public boolean accept(Node node) throws RepositoryException {
-        return NodeUtil.isNodeType(node, nodeTypeName);
+    public boolean evaluate(Node node) {
+        try {
+            return NodeUtil.isNodeType(node, nodeTypeName);
+        } catch (RepositoryException e) {
+            return false;
+        }
     }
 
     @Override
     public String toString() {
-        return "NodeTypeFilter for type " + nodeTypeName;
+        return "NodeTypePredicate for type " + nodeTypeName;
     }
 
     @Override
@@ -66,11 +72,11 @@ public class NodeTypeFilter implements NodeFilter {
             return true;
         }
 
-        if (obj == null || !(obj instanceof NodeTypeFilter)) {
+        if (obj == null || !(obj instanceof NodeTypePredicate)) {
             return false;
         }
 
-        NodeTypeFilter that = (NodeTypeFilter) obj;
+        NodeTypePredicate that = (NodeTypePredicate) obj;
         return this.nodeTypeName == null ? that.nodeTypeName == null : this.nodeTypeName.equals(that.nodeTypeName);
     }
 

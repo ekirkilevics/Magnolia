@@ -69,10 +69,10 @@ public class NodeUtil {
     /**
      * Node filter accepting everything.
      */
-    public static NodeFilter ALL_NODES_FILTER = new NodeFilter() {
+    public static Predicate<Node> ALL_NODES_FILTER = new Predicate<Node>() {
 
         @Override
-        public boolean accept(Node node) {
+        public boolean evaluate(Node node) {
             return true;
         }
     };
@@ -80,32 +80,40 @@ public class NodeUtil {
     /**
      * Node filter accepting everything except nodes with namespace jcr (version and system store).
      */
-    public static NodeFilter ALL_NODES_EXCEPT_JCR_FILTER = new NodeFilter() {
+    public static Predicate<Node> ALL_NODES_EXCEPT_JCR_FILTER = new Predicate<Node>() {
 
         @Override
-        public boolean accept(Node node) throws RepositoryException {
-            return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX);
+        public boolean evaluate(Node node) {
+            try {
+                return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX);
+            } catch (RepositoryException e) {
+                return false;
+            }
         }
     };
 
     /**
      * Node filter accepting everything except meta data and jcr types.
      */
-    public static NodeFilter EXCLUDE_META_DATA_FILTER = new NodeFilter() {
+    public static Predicate<Node> EXCLUDE_META_DATA_FILTER = new Predicate<Node>() {
 
         @Override
-        public boolean accept(Node node) throws RepositoryException {
-            return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX) && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
+        public boolean evaluate(Node node) {
+            try {
+                return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX) && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
+            } catch (RepositoryException e) {
+                return false;
+            }
         }
     };
 
     /**
      * Node filter accepting all nodes of a type with namespace mgnl.
      */
-    public static NodeFilter MAGNOLIA_FILTER = new NodeFilter() {
+    public static Predicate<Node> MAGNOLIA_FILTER = new Predicate<Node>() {
 
         @Override
-        public boolean accept(Node node) throws RepositoryException {
+        public boolean evaluate(Node node) {
 
             try {
                 String nodeTypeName = node.getPrimaryNodeType().getName();
@@ -113,7 +121,7 @@ public class NodeUtil {
                 return nodeTypeName.startsWith(MgnlNodeType.MGNL_PREFIX);
             } catch (RepositoryException e) {
                 // TODO should we really mask this error? shouldn't it be thrown instead?
-                log.error("Unable to read nodetype for node {}", node.getPath());
+                log.error("Unable to read nodetype for node {}", getNodePathIfPossible(node));
             }
             return false;
         }
@@ -382,30 +390,19 @@ public class NodeUtil {
         visit(node, visitor, EXCLUDE_META_DATA_FILTER);
     }
 
-    public static void visit(Node node, NodeVisitor visitor, NodeFilter filter) throws RepositoryException {
+    public static void visit(Node node, NodeVisitor visitor, Predicate<Node> predicate) throws RepositoryException {
         // TODO should it really visit the start node even if it doesn't match the filter?
         visitor.visit(node);
-        for (Node child : getNodes(node, filter)) {
-            visit(child, visitor, filter);
+        for (Node child : getNodes(node, predicate)) {
+            visit(child, visitor, predicate);
         }
         if (visitor instanceof PostNodeVisitor) {
             ((PostNodeVisitor) visitor).postVisit(node);
         }
     }
 
-    public static Iterable<Node> getNodes(Node parent, final NodeFilter filter) throws RepositoryException {
-        NodeIterator iterator = new FilteringNodeIterator(parent.getNodes(), new Predicate() {
-            @Override
-            public boolean evaluate(Object node) {
-                try {
-                    return filter.accept((Node) node);
-                } catch (RepositoryException e) {
-                    // TODO dlipp - is that what we want? Shouldn't we rethrow the exception?
-                    return false;
-                }
-            }
-        });
-        return new NodeIterable(iterator);
+    public static Iterable<Node> getNodes(Node parent, final Predicate<Node> predicate) throws RepositoryException {
+        return new NodeIterable(new FilteringNodeIterator(parent.getNodes(), predicate));
     }
 
     public static List<Node> asList(Iterable<Node> nodes) {
@@ -436,5 +433,24 @@ public class NodeUtil {
             }
         });
         return new NodeIterableAdapter(iterator);
+    }
+
+    /**
+     * Used for building exception messages where we want to avoid handling another exception inside a throws clause.
+     */
+    public static String getNodeIdentifierIfPossible(Node content) {
+        try {
+            return content.getIdentifier();
+        } catch (RepositoryException e) {
+            return "<not available>";
+        }
+    }
+
+    public static String getNodePathIfPossible(Node node) {
+        try {
+            return node.getPath();
+        } catch (RepositoryException e) {
+            return "<not available>";
+        }
     }
 }

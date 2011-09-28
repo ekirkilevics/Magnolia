@@ -41,6 +41,7 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.RequestDispatchUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.renderer.Renderer;
@@ -198,7 +199,7 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
         MetaData metaData = MetaDataUtil.getMetaData(content);
 
         if (metaData == null || StringUtils.isEmpty(metaData.getTemplate())) {
-            throw new ServletException("No template name set for node with identifier: " + getNodeIdentifierSafely(content));
+            throw new ServletException("No template name set for node with identifier: " + NodeUtil.getNodeIdentifierIfPossible(content));
         }
 
         TemplateDefinition templateDefinition;
@@ -254,14 +255,4 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
         return false;
     }
 
-    /**
-     * Used for building exception messages where we want to avoid handling another exception inside a throws clause.
-     */
-    private static String getNodeIdentifierSafely(Node content) {
-        try {
-            return content.getIdentifier();
-        } catch (RepositoryException e) {
-            return "<not available>";
-        }
-    }
 }

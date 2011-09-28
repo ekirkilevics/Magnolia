@@ -35,7 +35,7 @@ package info.magnolia.rendering.template.registry;
 
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.ModuleConfigurationObservingManager;
-import info.magnolia.jcr.util.NodeTypeFilter;
+import info.magnolia.jcr.predicate.NodeTypePredicate;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.NodeVisitor;
 import info.magnolia.module.ModuleRegistry;
@@ -91,7 +91,7 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
                         }
                     }
                 }
-            }, new NodeTypeFilter(MgnlNodeType.NT_CONTENT));
+            }, new NodeTypePredicate(MgnlNodeType.NT_CONTENT));
         }
 
         this.registeredIds = templateDefinitionRegistry.unregisterAndRegister(registeredIds, providers);
