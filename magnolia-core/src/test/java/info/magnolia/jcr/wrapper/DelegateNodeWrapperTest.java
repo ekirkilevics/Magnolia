@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.wrapper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;

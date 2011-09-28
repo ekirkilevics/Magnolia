@@ -36,7 +36,7 @@ package info.magnolia.jcr.util;
 import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.DelegateNodeWrapper;
+import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
 import info.magnolia.jcr.predicate.Predicate;
@@ -53,7 +53,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.commons.iterator.NodeIterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -402,7 +401,11 @@ public class NodeUtil {
     }
 
     public static Iterable<Node> getNodes(Node parent, final Predicate<Node> predicate) throws RepositoryException {
-        return new NodeIterable(new FilteringNodeIterator(parent.getNodes(), predicate));
+        return asIterable(new FilteringNodeIterator(parent.getNodes(), predicate));
+    }
+
+    public static Iterable<Node> asIterable(NodeIterator iterator) {
+        return new NodeIterableAdapter(iterator);
     }
 
     public static List<Node> asList(Iterable<Node> nodes) {
@@ -432,7 +435,7 @@ public class NodeUtil {
                 }
             }
         });
-        return new NodeIterableAdapter(iterator);
+        return asIterable(iterator);
     }
 
     /**

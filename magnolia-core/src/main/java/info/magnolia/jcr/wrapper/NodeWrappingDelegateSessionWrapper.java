@@ -31,31 +31,51 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.wrapper;
 
-import static org.junit.Assert.assertEquals;
-import info.magnolia.cms.core.version.MgnlVersioningSession;
-import info.magnolia.test.mock.jcr.MockSession;
-
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.junit.Test;
-
 /**
+ * Basic Node wrapper providing support for wrapping all children in whatever wrapper necessary.
+ *
  * @version $Id$
  */
-public class DelegateSessionWrapperTest {
+public abstract class NodeWrappingDelegateSessionWrapper extends DelegateSessionWrapper {
 
-    @Test
-    public void testUnwrap() {
-        // GIVEN
-        final Session jcrSession = new MockSession("test");
-        final DelegateSessionWrapper wrapperTwo = new MgnlVersioningSession(jcrSession);
+    private final Session wrapped;
 
-        // WHEN
-        Session result = wrapperTwo.unwrap();
+    public NodeWrappingDelegateSessionWrapper(Session wrapped) {
+        this.wrapped = wrapped;
+    }
 
-        // THEN
-        assertEquals(jcrSession, result);
+    public abstract Node wrap(Node node);
+
+    @Override
+    public Session getDelegate() {
+        return wrapped;
+    }
+
+    @Override
+    public Node getNode(String absPath) throws PathNotFoundException, RepositoryException {
+        return wrap(super.getNode(absPath));
+    }
+
+    @Override
+    public Node getNodeByIdentifier(String id) throws ItemNotFoundException, RepositoryException {
+        return wrap(super.getNodeByIdentifier(id));
+    }
+
+    @Override
+    public Node getNodeByUUID(String uuid) throws ItemNotFoundException, RepositoryException {
+        return wrap(super.getNodeByUUID(uuid));
+    }
+
+    @Override
+    public Node getRootNode() throws RepositoryException {
+        return wrap(super.getRootNode());
     }
 }

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.wrapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,8 +69,8 @@ import org.xml.sax.SAXException;
 
 /**
  * Wrapper executing all calls on the delegated instance of Session.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
 public abstract class DelegateSessionWrapper implements Session {
 

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.wrapper;
 
 import info.magnolia.exception.RuntimeRepositoryException;
 

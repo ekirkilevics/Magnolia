@@ -37,7 +37,6 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.context.MgnlContext;
 
 

@@ -34,7 +34,7 @@
 package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.DelegateNodeWrapper;
+import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 
 import java.util.Calendar;
 

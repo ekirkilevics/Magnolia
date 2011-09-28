@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.core.version;
 
-import info.magnolia.cms.util.NodeWrappingDelegateSessionWrapper;
+import info.magnolia.jcr.wrapper.NodeWrappingDelegateSessionWrapper;
 
 import javax.jcr.Node;
 import javax.jcr.Session;

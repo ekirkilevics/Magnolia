@@ -36,7 +36,7 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.util.DelegateNodeWrapper;
+import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.exception.RuntimeRepositoryException;

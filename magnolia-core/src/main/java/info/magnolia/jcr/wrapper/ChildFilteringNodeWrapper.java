@@ -56,11 +56,6 @@ public class ChildFilteringNodeWrapper extends ChildWrappingNodeWrapper {
     }
 
     @Override
-    public Node wrap(Node node) {
-        return new ChildFilteringNodeWrapper(node, predicate);
-    }
-
-    @Override
     public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
         Node node = super.getNode(relPath);
         if (!predicate.evaluate(node)) {
@@ -96,5 +91,10 @@ public class ChildFilteringNodeWrapper extends ChildWrappingNodeWrapper {
     @Override
     public boolean hasNodes() throws RepositoryException {
         return getNodes().hasNext();
+    }
+
+    @Override
+    public Node wrap(Node node) {
+        return new ChildFilteringNodeWrapper(node, predicate);
     }
 }

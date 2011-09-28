@@ -45,7 +45,6 @@ import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.version.VersionException;
 
-import info.magnolia.cms.util.DelegateNodeWrapper;
 import info.magnolia.jcr.iterator.WrappingNodeIterator;
 
 
@@ -66,24 +65,6 @@ public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper {
     public ChildWrappingNodeWrapper(Node wrapped, Class childWrappingClass) {
         super(wrapped);
         this.childWrappingClass = childWrappingClass;
-    }
-
-    public Node wrap(Node node) {
-        try {
-            return (Node) childWrappingClass.getConstructor(Node.class).newInstance(node);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
-        } catch (SecurityException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -114,5 +95,23 @@ public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper {
     @Override
     public NodeIterator getNodes(String[] nameGlobs) throws RepositoryException {
         return new WrappingNodeIterator(super.getNodes(nameGlobs), this);
+    }
+
+    public Node wrap(Node node) {
+        try {
+            return (Node) childWrappingClass.getConstructor(Node.class).newInstance(node);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException(e);
+        } catch (SecurityException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

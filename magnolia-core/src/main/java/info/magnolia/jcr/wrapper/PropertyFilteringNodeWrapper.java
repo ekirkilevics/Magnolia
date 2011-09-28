@@ -75,10 +75,10 @@ public class PropertyFilteringNodeWrapper extends ChildWrappingNodeWrapper {
     @Override
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
         Property prop = super.getProperty(relPath);
-        if (predicate.evaluate(prop)) {
-            return prop;
+        if (!predicate.evaluate(prop)) {
+            throw new PathNotFoundException("Property " + relPath + " is not accessible via this wrapper.");
         }
-        throw new PathNotFoundException("Property " + relPath + " is not accessible via this wrapper.");
+        return prop;
     }
 
     @Override
@@ -99,5 +99,4 @@ public class PropertyFilteringNodeWrapper extends ChildWrappingNodeWrapper {
             throw new RuntimeException(e);
         }
     }
-
 }
