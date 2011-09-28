@@ -112,7 +112,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
         this.areaNode = resolveAreaNode();
         //TODO: review. If no area node exists, create it on the fly
-        if(this.areaNode == null) {
+        if(!AreaDefinition.TYPE_NO_COMPONENT.equals(type) && this.areaNode == null) {
             createNewAreaNode();
         }
 
@@ -141,8 +141,13 @@ public class AreaElement extends AbstractContentTemplatingElement {
     protected void createNewAreaNode() {
         try {
             areaNode = NodeUtil.createPath(parentNode, this.name, MgnlNodeType.NT_AREA, true);
-            NodeUtil.createPath(areaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA, true);
-            MetaDataUtil.getMetaData(areaNode).setTemplate(templateDefinition.getId());
+            NodeUtil.createPath(areaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA,true);
+            if(AreaDefinition.TYPE_SINGLE.equals(type)) {
+                Node component = NodeUtil.createPath(areaNode, "0", MgnlNodeType.NT_CONTENTNODE, true);
+                NodeUtil.createPath(component, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA,true);
+                MetaDataUtil.getMetaData(component).setTemplate(availableComponents);
+                component.save();
+            }
         } catch (AccessDeniedException e) {
             new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
         } catch (PathNotFoundException e) {
@@ -166,13 +171,21 @@ public class AreaElement extends AbstractContentTemplatingElement {
         try {
             if (isEnabled()) {
                 Map<String, Object> contextObjects = new HashMap<String, Object>();
-                List<ContentMap> components = new ArrayList<ContentMap>();
+
                 if (areaNode != null) {
+                    List<ContentMap> components = new ArrayList<ContentMap>();
                     for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_CONTENTNODE)) {
                         components.add(new ContentMap(node));
                     }
+                    if(AreaDefinition.TYPE_SINGLE.equals(type)) {
+                        if(components.size() > 1) {
+                            throw new RenderException("Can't render single area [" + areaNode + "]: expected one child node but found more.");
+                        }
+                        contextObjects.put(ATTRIBUTE_COMPONENT, components.get(0));
+                    } else {
+                        contextObjects.put(ATTRIBUTE_COMPONENTS, components);
+                    }
                 }
-                contextObjects.put(ATTRIBUTE_COMPONENTS, components);
                 // FIXME we shouldn't manipulate the area definition directly
                 // we should use merge with the proxy approach
                 if(areaDefinition.getRenderType() == null && areaDefinition instanceof ConfiguredAreaDefinition){
