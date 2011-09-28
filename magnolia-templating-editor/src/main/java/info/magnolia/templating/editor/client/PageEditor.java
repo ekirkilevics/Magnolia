@@ -34,6 +34,7 @@
 package info.magnolia.templating.editor.client;
 
 
+import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -56,9 +57,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     public static final String MARKER_EDIT = "cms:edit";
     public static final String MARKER_AREA = "cms:area";
-
-    public static final String AREA_TYPE_LIST = "list";
-    public static final String AREA_TYPE_SINGLE = "single";
 
     public static final String SELECTION_TYPE_PAGE = "PAGE";
     public static final String SELECTION_TYPE_AREA_LIST = "AREA_LIST";
@@ -187,7 +185,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                         EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
                         editBarWidget.attach(child);
                     }
-                    if (parentBar != null && parentBar.getType().equals(AREA_TYPE_SINGLE)) {
+                    if (parentBar != null && parentBar.getType().equals(AreaDefinition.TYPE_SINGLE)) {
                         parentBar.mutateIntoSingleBar(child);
                     }
 

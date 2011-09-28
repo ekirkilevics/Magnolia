@@ -33,6 +33,8 @@
  */
 package info.magnolia.templating.editor.client;
 
+import info.magnolia.rendering.template.AreaDefinition;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -82,7 +84,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         areaName.setStylePrimaryName("mgnlAreaLabel");
         add(areaName);
 
-        if (element.hasAttribute("dialog") && type.equals(PageEditor.AREA_TYPE_LIST)) {
+        if (element.hasAttribute("dialog") && AreaDefinition.TYPE_LIST.equals(type)) {
             Button button = new Button(getDictionary().get("buttons.editarea.js"));
             button.addClickHandler(new ClickHandler() {
                 @Override
@@ -98,9 +100,9 @@ public class AreaBarWidget extends AbstractBarWidget {
             addButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    if (type.equals(PageEditor.AREA_TYPE_LIST)) {
+                    if (AreaDefinition.TYPE_LIST.equals(type)) {
                         pageEditor.addComponent(workspace, path, name, null, availableComponents);
-                    } else if (type.equals(PageEditor.AREA_TYPE_SINGLE)) {
+                    } else if (AreaDefinition.TYPE_SINGLE.equals(type)) {
                         pageEditor.addComponent(workspace, path, null, name, availableComponents);
                     }
                 }
@@ -112,9 +114,9 @@ public class AreaBarWidget extends AbstractBarWidget {
     @Override
     protected void onSelect() {
         super.onSelect();
-        if (type.equals(PageEditor.AREA_TYPE_LIST)) {
+        if (AreaDefinition.TYPE_LIST.equals(type)) {
             pageEditor.updateSelection(this, PageEditor.SELECTION_TYPE_AREA_LIST, workspace, path, name, null, availableComponents, dialog);
-        } else if (type.equals(PageEditor.AREA_TYPE_SINGLE)) {
+        } else if (AreaDefinition.TYPE_SINGLE.equals(type)) {
             if (showAddButton) {
                 pageEditor.updateSelection(this, PageEditor.SELECTION_TYPE_AREA_SINGLE, workspace, path, null, name, availableComponents, dialog);
             } else {
