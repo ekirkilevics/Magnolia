@@ -58,15 +58,16 @@ import org.slf4j.LoggerFactory;
  * Basic implementation of the <code>RepositoryAcquiringStrategy</code> providing storage of JCR sessions and hierarchy manager instances to extending classes.
  *
  * @version $Id$
- *
- *     // TODO dlipp: deprecate everything except getJCRSession & release
- *
  */
 public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringStrategy {
     private static final Logger log = LoggerFactory.getLogger(AbstractRepositoryStrategy.class);
 
     private final Map<String, Session> jcrSessions = new HashMap<String, Session>();
 
+
+    /**
+     * @deprecated since 4.5 - directly operate on JCR-Session instead
+     */
     @Override
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         log.debug("creating {}:{} HM for {}, using {} strategy", new Object[] {repositoryId, workspaceId, getUserId(), this.getClass().getName()});
@@ -97,13 +98,15 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
     abstract protected String getUserId();
 
+    /**
+     * @deprecated since 4.5 - use {@link javax.jcr.query.QueryManager} instead.
+     */
     @Override
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return this.getHierarchyManager(repositoryId, workspaceId).getQueryManager();
     }
 
     // TODO dlipp: implement new method as beyond:
-
     /*
     public Session getJCRSession(String logicalWorkspaceName) {
 
