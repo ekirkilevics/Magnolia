@@ -90,7 +90,7 @@ public class RangeIteratorImpl<T> implements RangeIterator {
     }
 
     @Override
-    public Object next() {
+    public T next() {
         return nextElement();
     }
 

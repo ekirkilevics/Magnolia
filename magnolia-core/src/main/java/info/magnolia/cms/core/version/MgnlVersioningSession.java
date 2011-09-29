@@ -45,13 +45,12 @@ import javax.jcr.Session;
  */
 public class MgnlVersioningSession extends NodeWrappingDelegateSessionWrapper {
 
-
     public MgnlVersioningSession(Session wrapped) {
         super(wrapped);
     }
 
     @Override
-    public Node wrap(Node node) {
+    protected Node wrapNode(Node node) {
         return new MgnlVersioningNodeWrapper(node);
     }
 }

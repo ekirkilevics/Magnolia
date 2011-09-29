@@ -70,7 +70,7 @@ public class MgnlVersioningNodeWrapper extends ChildWrappingNodeWrapper {
     private static final Logger log = LoggerFactory.getLogger(MgnlVersioningNodeWrapper.class);
 
     public MgnlVersioningNodeWrapper(Node wrapped) {
-        super(wrapped, MgnlVersioningNodeWrapper.class);
+        super(wrapped);
     }
 
 

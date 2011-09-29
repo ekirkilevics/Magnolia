@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,37 +25,22 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.jcr.util;
-
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
+package info.magnolia.jcr.wrapper;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 /**
- * Various utility methods useful for JCR-Versioning.
+ * Factory for wrapping nodes.
  *
  * @version $Id$
  */
-public class VersionUtil {
+public interface NodeWrapperFactory {
 
-    /**
-     * Return the NodeType-name for the provided Node. It it's a JCPropertiesFilteringNodeWrapper the unwrapped node will be used for retrieving the property from.
-     * As it's about versioning, the frozen primary type if existing (else primary type) will be returned.
-     */
-    public static String getNodeTypeName(Node node) throws RepositoryException {
-        node = NodeUtil.deepUnwrap(node, JCRPropertiesFilteringNodeWrapper.class);
-
-        if (node.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
-            return node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString();
-        }
-        return node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
-    }
+    Node wrapNode(Node node);
 }

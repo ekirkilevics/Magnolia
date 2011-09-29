@@ -40,42 +40,35 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 /**
- * Basic Node wrapper providing support for wrapping all children in whatever wrapper necessary.
+ * Session wrapper for wrapping nodes returned by a session.
  *
  * @version $Id$
  */
 public abstract class NodeWrappingDelegateSessionWrapper extends DelegateSessionWrapper {
 
-    private final Session wrapped;
-
     public NodeWrappingDelegateSessionWrapper(Session wrapped) {
-        this.wrapped = wrapped;
-    }
-
-    public abstract Node wrap(Node node);
-
-    @Override
-    public Session getDelegate() {
-        return wrapped;
+        super(wrapped);
     }
 
     @Override
     public Node getNode(String absPath) throws PathNotFoundException, RepositoryException {
-        return wrap(super.getNode(absPath));
+        return wrapNode(super.getNode(absPath));
     }
 
     @Override
     public Node getNodeByIdentifier(String id) throws ItemNotFoundException, RepositoryException {
-        return wrap(super.getNodeByIdentifier(id));
+        return wrapNode(super.getNodeByIdentifier(id));
     }
 
     @Override
     public Node getNodeByUUID(String uuid) throws ItemNotFoundException, RepositoryException {
-        return wrap(super.getNodeByUUID(uuid));
+        return wrapNode(super.getNodeByUUID(uuid));
     }
 
     @Override
     public Node getRootNode() throws RepositoryException {
-        return wrap(super.getRootNode());
+        return wrapNode(super.getRootNode());
     }
+
+    protected abstract Node wrapNode(Node node);
 }

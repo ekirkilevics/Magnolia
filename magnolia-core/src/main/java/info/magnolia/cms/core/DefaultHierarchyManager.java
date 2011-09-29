@@ -36,7 +36,7 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.exception.RuntimeRepositoryException;
@@ -331,9 +331,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         }
         else {
             Node aNode = this.getRootNode().getNode(makeRelative(path));
-            if (aNode instanceof DelegateNodeWrapper) {
-                aNode = ((DelegateNodeWrapper) aNode).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
-            }
+            aNode = NodeUtil.deepUnwrap(aNode, JCRPropertiesFilteringNodeWrapper.class);
             if (aNode.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
                 type = new ItemType(aNode.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString());
             }

@@ -36,7 +36,6 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
@@ -170,12 +169,8 @@ public class DefaultContent extends AbstractContent {
      * @param node
      */
     protected void setNode(Node node) throws RepositoryException {
-        if (node instanceof DelegateNodeWrapper) {
-            // Default content takes care of filtering jcr properties on its own
-            this.node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
-        } else {
-            this.node = node;
-        }
+        // Default content takes care of filtering jcr properties on its own
+        this.node = NodeUtil.deepUnwrap(node, JCRPropertiesFilteringNodeWrapper.class);
     }
 
     /**

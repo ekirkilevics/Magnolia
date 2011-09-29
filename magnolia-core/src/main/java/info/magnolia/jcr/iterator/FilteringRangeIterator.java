@@ -36,29 +36,31 @@ package info.magnolia.jcr.iterator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import javax.jcr.RangeIterator;
+
 import info.magnolia.jcr.predicate.Predicate;
 
 
 /**
- * Base class for implementing JCR iterators. Intentionally does not implement Iterator&lt;T&gt; since that would
- * prevent subclasses from implementing NodeIterator, PropertyIterator etc. This doesn't work because they implement
- * Iterator without a type parameter, so until JCR adopts generics we don't implement Iterator&lt;T&gt; here.
+ * Base class for implementing filtering JCR iterators. Does not support getSize() since that would require iterating
+ * through the entire target iterator to count the number of nodes that match the predicate.
  *
  * @param <T>
  * @version $Id$
  */
-public abstract class FilteringIteratorBase<T> {
+public class FilteringRangeIterator<T> implements RangeIterator {
 
     private final Iterator<T> iterator;
     private final Predicate<T> predicate;
     private long position;
     private T next;
 
-    public FilteringIteratorBase(Iterator<T> iterator, Predicate<T> predicate) {
+    public FilteringRangeIterator(Iterator<T> iterator, Predicate<T> predicate) {
         this.iterator = iterator;
         this.predicate = predicate;
     }
 
+    @Override
     public boolean hasNext() {
         if (next == null) {
             seekNext();
@@ -66,6 +68,7 @@ public abstract class FilteringIteratorBase<T> {
         return next != null;
     }
 
+    @Override
     public T next() {
         if (next == null) {
             seekNext();
@@ -78,19 +81,23 @@ public abstract class FilteringIteratorBase<T> {
         throw new NoSuchElementException();
     }
 
+    @Override
     public void remove() {
         iterator.remove();
     }
 
+    @Override
     public long getPosition() {
         return position;
     }
 
+    @Override
     public void skip(long skipNum) {
         while (skipNum-- > 0)
             next();
     }
 
+    @Override
     public long getSize() {
         // getSize() is optional and we don't support it since that would require walking through the entire iterator
         return -1;

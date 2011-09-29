@@ -37,7 +37,7 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
 import info.magnolia.jcr.predicate.Predicate;
-import info.magnolia.jcr.wrapper.ChildWrappingNodeWrapper;
+import info.magnolia.jcr.wrapper.NodeWrapperFactory;
 
 /**
  * NodeIterator hiding all nodes that do not pass the predicate, returned nodes can also we wrapped effectively
@@ -45,25 +45,30 @@ import info.magnolia.jcr.wrapper.ChildWrappingNodeWrapper;
  *
  * @version $Id$
  */
-public class FilteringNodeIterator extends FilteringIteratorBase<Node> implements NodeIterator {
+public class FilteringNodeIterator extends FilteringRangeIterator<Node> implements NodeIterator {
 
-    private ChildWrappingNodeWrapper wrapperFactory;
+    private NodeWrapperFactory wrapperFactory;
 
     public FilteringNodeIterator(NodeIterator nodeIterator, Predicate<Node> predicate) {
         super(nodeIterator, predicate);
     }
 
-    public FilteringNodeIterator(NodeIterator nodeIterator, Predicate<Node> predicate, ChildWrappingNodeWrapper wrapperFactory) {
+    public FilteringNodeIterator(NodeIterator nodeIterator, Predicate<Node> predicate, NodeWrapperFactory wrapperFactory) {
         super(nodeIterator, predicate);
         this.wrapperFactory = wrapperFactory;
     }
 
     @Override
+    public Node next() {
+        return wrapNode(super.next());
+    }
+
+    @Override
     public Node nextNode() {
-        return wrapNode(next());
+        return wrapNode(super.next());
     }
 
     protected Node wrapNode(Node node) {
-        return wrapperFactory != null ? wrapperFactory.wrap(node) : node;
+        return wrapperFactory != null ? wrapperFactory.wrapNode(node) : node;
     }
 }

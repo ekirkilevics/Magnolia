@@ -33,8 +33,6 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -53,33 +51,25 @@ import info.magnolia.jcr.iterator.WrappingNodeIterator;
  *
  * @version $Id$
  */
-public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper {
-
-    private final Class childWrappingClass;
+public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper implements NodeWrapperFactory {
 
     public ChildWrappingNodeWrapper(Node wrapped) {
         super(wrapped);
-        childWrappingClass = this.getClass();
-    }
-
-    public ChildWrappingNodeWrapper(Node wrapped, Class childWrappingClass) {
-        super(wrapped);
-        this.childWrappingClass = childWrappingClass;
     }
 
     @Override
     public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
-        return wrap(super.getNode(relPath));
+        return wrapNode(super.getNode(relPath));
     }
 
     @Override
     public Node addNode(String relPath) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException, RepositoryException {
-        return wrap(super.addNode(relPath));
+        return wrapNode(super.addNode(relPath));
     }
 
     @Override
     public Node addNode(String relPath, String primaryNodeTypeName) throws ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException, VersionException, ConstraintViolationException, RepositoryException {
-        return wrap(super.addNode(relPath, primaryNodeTypeName));
+        return wrapNode(super.addNode(relPath, primaryNodeTypeName));
     }
 
     @Override
@@ -97,21 +87,14 @@ public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper {
         return wrapNodeIterator(super.getNodes(nameGlobs));
     }
 
-    public Node wrap(Node node) {
+    @Override
+    public Node wrapNode(Node node) {
         try {
-            return (Node) childWrappingClass.getConstructor(Node.class).newInstance(node);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
-        } catch (SecurityException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            ChildWrappingNodeWrapper clone = (ChildWrappingNodeWrapper) super.clone();
+            clone.wrapped = node;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Unable to clone node wrapper [" + getClass() + "]", e);
         }
     }
 

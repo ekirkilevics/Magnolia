@@ -147,9 +147,7 @@ public class NodeUtil {
      * TODO cringele : shouldn't @param nodeType be aligned to JCR API? There it is nodeTypeName, nodeType is used for NodeType object
      */
     public static boolean isNodeType(Node node, String type) throws RepositoryException {
-        if (node instanceof DelegateNodeWrapper) {
-            node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
-        }
+        node = NodeUtil.deepUnwrap(node, JCRPropertiesFilteringNodeWrapper.class);
         final String actualType = node.getProperty(MgnlNodeType.JCR_PRIMARY_TYPE).getString();
         // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original
         // node type
@@ -169,6 +167,16 @@ public class NodeUtil {
             unwrappedNode = ((DelegateNodeWrapper) unwrappedNode).getWrappedNode();
         }
         return unwrappedNode;
+    }
+
+    /**
+     * Removes a wrapper by type. The wrapper can be deep in a chain of wrappers in which case wrappers before it will
+     * be cloned creating a new chain that leads to the same real node.
+     */
+    public static Node deepUnwrap(Node node, Class<? extends DelegateNodeWrapper> wrapper) throws RepositoryException {
+        if (node instanceof DelegateNodeWrapper)
+            return ((DelegateNodeWrapper)node).deepUnwrap(wrapper);
+        return node;
     }
 
     /**

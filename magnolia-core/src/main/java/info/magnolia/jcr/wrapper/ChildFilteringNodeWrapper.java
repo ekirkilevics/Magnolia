@@ -68,7 +68,7 @@ public class ChildFilteringNodeWrapper extends ChildWrappingNodeWrapper {
         if (!predicate.evaluate(node)) {
             throw new PathNotFoundException("Path not found [" + relPath + "]");
         }
-        return wrap(node);
+        return wrapNode(node);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class ChildFilteringNodeWrapper extends ChildWrappingNodeWrapper {
     }
 
     @Override
-    public Node wrap(Node node) {
+    public Node wrapNode(Node node) {
         return filterDescendants ? new ChildFilteringNodeWrapper(node, predicate) : node;
     }
 

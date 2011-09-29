@@ -43,7 +43,7 @@ import info.magnolia.jcr.predicate.Predicate;
  *
  * @version $Id$
  */
-public class FilteringPropertyIterator extends FilteringIteratorBase<Property> implements PropertyIterator {
+public class FilteringPropertyIterator extends FilteringRangeIterator<Property> implements PropertyIterator {
 
     public FilteringPropertyIterator(PropertyIterator iterator, Predicate<Property> predicate) {
         super(iterator, predicate);

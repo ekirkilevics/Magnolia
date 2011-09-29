@@ -36,7 +36,7 @@ package info.magnolia.jcr.iterator;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
-import info.magnolia.jcr.wrapper.ChildWrappingNodeWrapper;
+import info.magnolia.jcr.wrapper.NodeWrapperFactory;
 
 /**
  * Node iterator wrapping all returned nodes using provided node wrapper.
@@ -45,20 +45,20 @@ import info.magnolia.jcr.wrapper.ChildWrappingNodeWrapper;
  */
 public class WrappingNodeIterator extends DelegatingNodeIterator {
 
-    private final ChildWrappingNodeWrapper wrapper;
+    private final NodeWrapperFactory wrapperFactory;
 
-    public WrappingNodeIterator(NodeIterator iterator, ChildWrappingNodeWrapper wrapper) {
+    public WrappingNodeIterator(NodeIterator iterator, NodeWrapperFactory wrapperFactory) {
         super(iterator);
-        this.wrapper = wrapper;
+        this.wrapperFactory = wrapperFactory;
     }
 
     @Override
     public Object next() {
-        return wrapper.wrap((Node) super.next());
+        return wrapperFactory.wrapNode((Node) super.next());
     }
 
     @Override
     public Node nextNode() {
-        return wrapper.wrap(super.nextNode());
+        return wrapperFactory.wrapNode(super.nextNode());
     }
 }

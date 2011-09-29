@@ -33,7 +33,6 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import java.lang.reflect.InvocationTargetException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
@@ -44,7 +43,8 @@ import info.magnolia.jcr.iterator.FilteringPropertyIterator;
 import info.magnolia.jcr.predicate.Predicate;
 
 /**
- * Node wrapper passing on Predicate to its children to hide properties.
+ * Node wrapper that filters out properties based on a predicate, child nodes acquired via this wrapper are also
+ * wrapped in order to filter properties on them as well.
  *
  * @version $Id$
  */
@@ -53,7 +53,7 @@ public class PropertyFilteringNodeWrapper extends ChildWrappingNodeWrapper {
     private final Predicate<Property> predicate;
 
     public PropertyFilteringNodeWrapper(Node wrapped, Predicate<Property> predicate) {
-        super(wrapped, PropertyFilteringNodeWrapper.class);
+        super(wrapped);
         this.predicate = predicate;
     }
 
@@ -74,29 +74,10 @@ public class PropertyFilteringNodeWrapper extends ChildWrappingNodeWrapper {
 
     @Override
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
-        Property prop = super.getProperty(relPath);
-        if (!predicate.evaluate(prop)) {
+        Property property = super.getProperty(relPath);
+        if (!predicate.evaluate(property)) {
             throw new PathNotFoundException("Property " + relPath + " is not accessible via this wrapper.");
         }
-        return prop;
-    }
-
-    @Override
-    public Node wrap(Node node) {
-        try {
-            return this.getClass().getConstructor(Node.class, Predicate.class).newInstance(node, predicate);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
-        } catch (SecurityException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+        return property;
     }
 }
