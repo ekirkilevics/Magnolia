@@ -33,26 +33,11 @@
  */
 package info.magnolia.rendering.template;
 
-import java.util.Map;
-
-
 /**
- * Definition for a Area.
- *
+ * Holds information about component inheritance.
  * @version $Id$
+ *
  */
-public interface AreaDefinition extends TemplateDefinition, Cloneable {
-
-    String TYPE_NO_COMPONENT = "noComponent";
-    String TYPE_LIST = "list";
-    String TYPE_SINGLE = "single";
-    String DEFAULT_TYPE = TYPE_LIST;
-
-    Map<String, ComponentAvailability> getAvailableComponents();
-
-    boolean isEnabled();
-
-    String getType();
-
-    Inheritance getInheritance();
+public interface Inheritance {
+    boolean isInherit();
 }

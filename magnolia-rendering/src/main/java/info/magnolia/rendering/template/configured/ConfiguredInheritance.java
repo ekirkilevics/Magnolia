@@ -31,28 +31,24 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template;
+package info.magnolia.rendering.template.configured;
 
-import java.util.Map;
-
+import info.magnolia.rendering.template.Inheritance;
 
 /**
- * Definition for a Area.
- *
+ * An holder for inheritance properties defined in the configuration.
  * @version $Id$
  */
-public interface AreaDefinition extends TemplateDefinition, Cloneable {
+public class ConfiguredInheritance implements Inheritance {
+    private boolean inherit;
 
-    String TYPE_NO_COMPONENT = "noComponent";
-    String TYPE_LIST = "list";
-    String TYPE_SINGLE = "single";
-    String DEFAULT_TYPE = TYPE_LIST;
+    @Override
+    public boolean isInherit() {
+        return inherit;
+    }
 
-    Map<String, ComponentAvailability> getAvailableComponents();
+    public void setInherit(boolean inherit) {
+        this.inherit = inherit;
+    }
 
-    boolean isEnabled();
-
-    String getType();
-
-    Inheritance getInheritance();
 }
