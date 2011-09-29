@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sv:node sv:name="howTo-freemarker" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>mgnl:content</sv:value>
+    <sv:value>mgnl:page</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
     <sv:value>mix:lockable</sv:value>
@@ -40,7 +40,7 @@
   </sv:node>
   <sv:node sv:name="main">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
+      <sv:value>mgnl:area</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>c0dd8a53-b9f4-4f91-b95a-991344487713</sv:value>
@@ -64,7 +64,7 @@
     </sv:node>
     <sv:node sv:name="0">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:component</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>dde1327a-6f64-45d2-a0ae-b7cbe3c1138a</sv:value>
@@ -98,7 +98,7 @@
     </sv:node>
     <sv:node sv:name="00">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:component</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>da5f5d19-59d1-4b2d-be1c-984bf9ec2f84</sv:value>
@@ -134,7 +134,7 @@
     </sv:node>
     <sv:node sv:name="03">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:component</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>0ef24ece-1e66-4754-aca5-52f6c9568873</sv:value>
@@ -216,7 +216,7 @@
     </sv:node>
     <sv:node sv:name="02">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:component</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>05bd0be2-5bdd-49e6-b5c0-12eb790ff125</sv:value>
@@ -256,7 +256,7 @@
   </sv:node>
   <sv:node sv:name="extras">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
+      <sv:value>mgnl:area</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>91d7b578-0e44-49ca-93e7-34b352a69311</sv:value>
@@ -280,7 +280,7 @@
     </sv:node>
     <sv:node sv:name="0">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:component</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>dab66b3d-9225-415d-9561-ac9f89483aa0</sv:value>
@@ -319,7 +319,7 @@
     </sv:node>
     <sv:node sv:name="00">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:component</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>4a96a947-7e98-4f71-9b2d-d41b6201580d</sv:value>
@@ -352,7 +352,7 @@
       </sv:node>
       <sv:node sv:name="links">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:contentNode</sv:value>
+          <sv:value>mgnl:area</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>f04e3fe6-7e25-47f7-bfbe-58abc2ee01a0</sv:value>
@@ -370,7 +370,7 @@
         </sv:node>
         <sv:node sv:name="0">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:component</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>ccb2f675-1c31-4de6-b3e0-65152b9e9785</sv:value>
@@ -404,7 +404,7 @@
         </sv:node>
         <sv:node sv:name="00">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:component</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>60668187-16a1-4d8a-93ff-be12d28eb929</sv:value>
@@ -438,7 +438,7 @@
   </sv:node>
   <sv:node sv:name="footer">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
+      <sv:value>mgnl:area</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>633734ca-f71e-4fde-9864-227bcbfc9195</sv:value>
@@ -471,7 +471,7 @@
     </sv:node>
     <sv:node sv:name="0">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:component</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>ed5b257c-fc1e-4c0f-ae69-e5b64148977f</sv:value>
@@ -509,7 +509,7 @@
     </sv:node>
     <sv:node sv:name="00">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:component</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>cedc7829-edb9-43dc-abdb-02f0ea588a00</sv:value>
@@ -542,7 +542,7 @@
       </sv:node>
       <sv:node sv:name="links">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:contentNode</sv:value>
+          <sv:value>mgnl:component</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>dbf842fb-ff71-4ca5-b705-764edd4c4041</sv:value>
@@ -560,7 +560,7 @@
         </sv:node>
         <sv:node sv:name="0">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:component</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>92c1cb52-2710-4fbe-9cf0-d39bf4425418</sv:value>
@@ -594,7 +594,7 @@
         </sv:node>
         <sv:node sv:name="00">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:component</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>cc787cde-ad92-4e2c-b1e2-c0a9b1767359</sv:value>
@@ -628,7 +628,7 @@
         </sv:node>
         <sv:node sv:name="02">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:component</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>137daaeb-4751-4e04-8416-0e53035949eb</sv:value>
@@ -664,7 +664,7 @@
     </sv:node>
     <sv:node sv:name="01">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:component</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>53d7ee09-f7a5-422b-91df-0d187ee1ee48</sv:value>
@@ -700,7 +700,7 @@
       </sv:node>
       <sv:node sv:name="links">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:contentNode</sv:value>
+          <sv:value>mgnl:area</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>052e6383-f000-4076-aed4-a0ff36325398</sv:value>
@@ -727,7 +727,7 @@
         </sv:node>
         <sv:node sv:name="00">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:component</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>ecbc660d-62ed-4c98-972f-ac2029c3196a</sv:value>
@@ -761,7 +761,7 @@
         </sv:node>
         <sv:node sv:name="01">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:component</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>438441cf-9ef9-431e-ae6e-2db0121f8ae2</sv:value>
@@ -795,7 +795,7 @@
         </sv:node>
         <sv:node sv:name="02">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:component</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>539c6c9b-f7f7-4159-8815-07df22f791a6</sv:value>
@@ -832,7 +832,7 @@
   </sv:node>
   <sv:node sv:name="articles">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:content</sv:value>
+      <sv:value>mgnl:page</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>f852bc93-54c6-43c2-b4b9-a94656ba8a05</sv:value>
@@ -862,7 +862,7 @@
     </sv:node>
     <sv:node sv:name="article1">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:content</sv:value>
+        <sv:value>mgnl:page</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>00e03af6-672e-4dd6-92a7-516fd09d4452</sv:value>
@@ -892,7 +892,7 @@
       </sv:node>
       <sv:node sv:name="subarticle1">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:content</sv:value>
+          <sv:value>mgnl:page</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>2f71c770-8881-49bd-a55e-e3456964b517</sv:value>
@@ -925,7 +925,7 @@
         </sv:node>
         <sv:node sv:name="navigation">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:area</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>25c4cb2e-6288-4383-b8dc-bc451280d703</sv:value>
@@ -947,7 +947,7 @@
         </sv:node>
         <sv:node sv:name="stage">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:area</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>e776c9ff-52ae-40f0-846c-c18bb2548c84</sv:value>
@@ -969,7 +969,7 @@
         </sv:node>
         <sv:node sv:name="main">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:area</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>504e9961-b5a0-4870-befb-8b7c5b629515</sv:value>
@@ -991,7 +991,7 @@
         </sv:node>
         <sv:node sv:name="extras">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:area</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>4cf48eb4-6d17-4d19-8961-63fbe19b999e</sv:value>
@@ -1013,7 +1013,7 @@
         </sv:node>
         <sv:node sv:name="footer">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
+            <sv:value>mgnl:area</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>037bb43c-a57a-4c80-a4d6-7608ca6f067b</sv:value>
@@ -1033,7 +1033,7 @@
       </sv:node>
       <sv:node sv:name="subarticle2">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:content</sv:value>
+          <sv:value>mgnl:page</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>39de4a5e-1280-4590-aa6a-f0ff9f6695b4</sv:value>
@@ -1067,7 +1067,7 @@
       </sv:node>
       <sv:node sv:name="subarticle3">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:content</sv:value>
+          <sv:value>mgnl:page</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>3e9f196b-cec1-49c3-9f4b-8de98accd86e</sv:value>
@@ -1102,7 +1102,7 @@
     </sv:node>
     <sv:node sv:name="article2">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:content</sv:value>
+        <sv:value>mgnl:page</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>39cdc6a2-5b20-484c-9a2f-b85dadc38f0c</sv:value>
@@ -1133,7 +1133,7 @@
     </sv:node>
     <sv:node sv:name="navigation">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:area</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>98f54126-919b-4f84-a4ac-613d5c5b7911</sv:value>
@@ -1155,7 +1155,7 @@
     </sv:node>
     <sv:node sv:name="stage">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:area</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>86f79b48-914a-4188-b204-e90d725bf8ce</sv:value>
@@ -1177,7 +1177,7 @@
     </sv:node>
     <sv:node sv:name="main">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:area</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>c4303590-df1c-4471-b45f-0fc216b047cd</sv:value>
@@ -1199,7 +1199,7 @@
     </sv:node>
     <sv:node sv:name="extras">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:area</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>2deaa6bd-32da-4a0f-9c27-b1a11000e515</sv:value>
@@ -1221,7 +1221,7 @@
     </sv:node>
     <sv:node sv:name="footer">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+        <sv:value>mgnl:area</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>2ce72d5c-a92a-48fe-9975-5351e5b27af9</sv:value>
@@ -1241,7 +1241,7 @@
   </sv:node>
   <sv:node sv:name="news">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:content</sv:value>
+      <sv:value>mgnl:page</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>53052434-5a1c-4680-beb2-6237fba816f9</sv:value>
@@ -1271,7 +1271,7 @@
     </sv:node>
     <sv:node sv:name="news1">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:content</sv:value>
+        <sv:value>mgnl:page</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>05375011-ba7d-437b-a11c-d6c8029cbdc1</sv:value>
@@ -1302,7 +1302,7 @@
     </sv:node>
     <sv:node sv:name="news2">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:content</sv:value>
+        <sv:value>mgnl:page</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>8f384e21-7bfa-4134-9e2e-fb64cfacb67e</sv:value>
@@ -1334,7 +1334,7 @@
   </sv:node>
   <sv:node sv:name="events">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:content</sv:value>
+      <sv:value>mgnl:page</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>cd7dd6cb-6225-4a91-be5e-be727d47e883</sv:value>
@@ -1367,7 +1367,7 @@
     </sv:node>
     <sv:node sv:name="event1">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:content</sv:value>
+        <sv:value>mgnl:page</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>d337a253-7216-4a8d-b8d3-d29599413d4f</sv:value>
@@ -1401,7 +1401,7 @@
     </sv:node>
     <sv:node sv:name="event2">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:content</sv:value>
+        <sv:value>mgnl:page</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>e5485f95-b5b7-43c1-88e0-ca1128435631</sv:value>
@@ -1436,7 +1436,7 @@
   </sv:node>
   <sv:node sv:name="navigation">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
+      <sv:value>mgnl:area</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>9e794bdd-6731-46d3-ae4f-d84b4b82c420</sv:value>
@@ -1461,7 +1461,7 @@
   </sv:node>
   <sv:node sv:name="stage">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
+      <sv:value>mgnl:area</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>73e4e41c-b1c3-40df-84bd-a3695ce7cada</sv:value>
