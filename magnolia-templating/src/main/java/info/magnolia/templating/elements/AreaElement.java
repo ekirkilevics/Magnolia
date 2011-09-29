@@ -142,12 +142,6 @@ public class AreaElement extends AbstractContentTemplatingElement {
         try {
             areaNode = NodeUtil.createPath(parentNode, this.name, MgnlNodeType.NT_AREA, true);
             NodeUtil.createPath(areaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA,true);
-            if(AreaDefinition.TYPE_SINGLE.equals(type)) {
-                Node component = NodeUtil.createPath(areaNode, "0", MgnlNodeType.NT_CONTENTNODE, true);
-                NodeUtil.createPath(component, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA,true);
-                MetaDataUtil.getMetaData(component).setTemplate(availableComponents);
-                component.save();
-            }
         } catch (AccessDeniedException e) {
             new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
         } catch (PathNotFoundException e) {
@@ -174,7 +168,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
                 if (areaNode != null) {
                     List<ContentMap> components = new ArrayList<ContentMap>();
-                    for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_CONTENTNODE)) {
+                    for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_COMPONENT)) {
                         components.add(new ContentMap(node));
                     }
                     if(AreaDefinition.TYPE_SINGLE.equals(type)) {
