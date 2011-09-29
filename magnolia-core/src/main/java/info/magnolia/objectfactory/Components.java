@@ -70,6 +70,10 @@ public class Components {
         return getComponent(type);
     }
 
+    public static <T> T newInstance(Class<T> type, Object... parameters) {
+        return getComponentProvider().newInstance(type, parameters);
+    }
+
     /**
      * Returns a component from the currently set {@link ComponentProvider}. Consider using IoC to inject the component instead.
      */
@@ -112,5 +116,6 @@ public class Components {
         public ComponentProvider getParent() {
             throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
         }
+
     }
 }
