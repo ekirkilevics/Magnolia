@@ -35,10 +35,11 @@ package info.magnolia.templating.elements;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.InheritanceContentWrapper;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
@@ -175,7 +176,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
                     List<ContentMap> components = new ArrayList<ContentMap>();
 
                     if(isInherit()) {
-                        AreaInheritanceWrapper wrapper = new AreaInheritanceWrapper(new DefaultContent(areaNode));
+                        InheritanceContentWrapper wrapper = new InheritanceContentWrapper(ContentUtil.asContent(areaNode));
                         for(Content content : wrapper.getChildren(MgnlNodeType.NT_COMPONENT)) {
                             components.add(new ContentMap(content.getJCRNode()));
                         }
