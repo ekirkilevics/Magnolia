@@ -34,6 +34,8 @@
 package info.magnolia.templating.elements;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -87,7 +89,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private String dialog;
     private String availableComponents;
     private String label;
-
+    private boolean inherit;
 
 
     public AreaElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
@@ -122,6 +124,8 @@ public class AreaElement extends AbstractContentTemplatingElement {
             buildAdHocAreaDefinition();
         }
 
+        this.inherit = areaDefinition.getInheritance().isInherit();
+
         if (isAdmin()) {
             MarkupHelper helper = new MarkupHelper(out);
             if(areaNode != null){
@@ -133,6 +137,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
             helper.attribute("type", this.type);
             helper.attribute("dialog", this.dialog);
             helper.attribute("label", this.label);
+            helper.attribute("inherit", String.valueOf(this.inherit));
             helper.attribute("showAddButton", String.valueOf(shouldShowAddButton()));
             helper.closeTag(CMS_AREA);
         }
@@ -168,8 +173,16 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
                 if (areaNode != null) {
                     List<ContentMap> components = new ArrayList<ContentMap>();
-                    for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_COMPONENT)) {
-                        components.add(new ContentMap(node));
+
+                    if(isInherit()) {
+                        AreaInheritanceWrapper wrapper = new AreaInheritanceWrapper(new DefaultContent(areaNode));
+                        for(Content content : wrapper.getChildren(MgnlNodeType.NT_COMPONENT)) {
+                            components.add(new ContentMap(content.getJCRNode()));
+                        }
+                    } else {
+                        for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_COMPONENT)) {
+                            components.add(new ContentMap(node));
+                        }
                     }
                     if(AreaDefinition.TYPE_SINGLE.equals(type)) {
                         if(components.size() > 1) {
@@ -326,5 +339,13 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     public void setDialog(String dialog) {
         this.dialog = dialog;
+    }
+
+    public boolean isInherit() {
+        return inherit;
+    }
+
+    public void setInherit(boolean inherit) {
+        this.inherit = inherit;
     }
 }
