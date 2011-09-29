@@ -110,8 +110,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.availableComponents = resolveAvailableComponents();
 
         this.areaNode = resolveAreaNode();
+
         //TODO: review. If no area node exists, create it on the fly
-        if(!AreaDefinition.TYPE_NO_COMPONENT.equals(type) && this.areaNode == null) {
+        if(this.areaNode == null) {
             createNewAreaNode();
         }
 
