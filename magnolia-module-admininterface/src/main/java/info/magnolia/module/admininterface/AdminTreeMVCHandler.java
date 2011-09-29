@@ -631,7 +631,15 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         // if there was a displayValue passed show it instead of the written value
         displayValue = StringUtils.defaultString(this.getRequest().getParameter("displayValue"), value); //$NON-NLS-1$
 
+        displayValue = encodeHTML(displayValue);
+
         return VIEW_VALUE;
+    }
+    
+    public String encodeHTML(String value){
+        value = value.replace("<", "&lt;");
+        value = value.replace(">", "&gt;");
+        return value;
     }
 
     /**

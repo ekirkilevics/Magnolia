@@ -960,10 +960,6 @@
 
         html = mgnlAlertCallbackMessage(html);
 
-        html = html.replace(/&/g,"&amp;");
-        html = html.replace(/</g,"&lt;");
-        html = html.replace(/>/g,"&gt;");
-
         document.getElementById(lastEditedHtmlObjectId).innerHTML=html;
 
         if (isLabel)
