@@ -47,6 +47,8 @@ public interface ComponentProvider {
 
     /**
      * Returns the implementation type mapped for a given type. This is primarily used by Content2Bean.
+     *
+     * @throws ClassNotFoundException in case there's no implementation for the provided type
      */
     <T> Class<? extends T> getImplementation(Class<T> type) throws ClassNotFoundException;
 
@@ -62,6 +64,7 @@ public interface ComponentProvider {
      * Returns the component mapped for a given type.
      *
      * @return the component that is mapped for this type or null if there is none
+     * @throws NoSuchComponentException in case the component wasn't found
      */
     <T> T getComponent(Class<T> type) throws NoSuchComponentException;
 
@@ -69,8 +72,6 @@ public interface ComponentProvider {
      * Creates a new instance of the passed interface / class by using the registered implementation. The parameters are
      * used to build the object. Most likely they are passed to the constructor. If this fails a
      * {@link MgnlInstantiationException} is thrown.
-     *
-     * @throws MgnlInstantiationException
      */
     <T> T newInstance(Class<T> type, Object... parameters);
 
