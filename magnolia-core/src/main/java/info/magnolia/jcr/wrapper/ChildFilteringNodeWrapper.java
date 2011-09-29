@@ -42,17 +42,24 @@ import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.predicate.Predicate;
 
 /**
- * NodeWrapper that hides children based on a predicate.
+ * NodeWrapper that hides children based on a predicate. Can optionally extend the filtering criteria to descendant
+ * nodes as well.
  *
  * @version $Id$
  */
 public class ChildFilteringNodeWrapper extends ChildWrappingNodeWrapper {
 
     private Predicate<Node> predicate;
+    private boolean filterDescendants = false;
 
     public ChildFilteringNodeWrapper(Node wrapped, Predicate<Node> predicate) {
         super(wrapped);
         this.predicate = predicate;
+    }
+
+    public ChildFilteringNodeWrapper(Node wrapped, Predicate<Node> predicate, boolean filterDescendants) {
+        this(wrapped, predicate);
+        this.filterDescendants = filterDescendants;
     }
 
     @Override
@@ -61,31 +68,27 @@ public class ChildFilteringNodeWrapper extends ChildWrappingNodeWrapper {
         if (!predicate.evaluate(node)) {
             throw new PathNotFoundException("Path not found [" + relPath + "]");
         }
-        return node;
+        return wrap(node);
     }
 
     @Override
     public NodeIterator getNodes() throws RepositoryException {
-        return new FilteringNodeIterator(super.getNodes(), predicate);
+        return wrapNodeIterator(super.getNodes());
     }
 
     @Override
     public NodeIterator getNodes(String namePattern) throws RepositoryException {
-        return new FilteringNodeIterator(super.getNodes(namePattern), predicate);
+        return wrapNodeIterator(super.getNodes(namePattern));
     }
 
     @Override
     public NodeIterator getNodes(String[] nameGlobs) throws RepositoryException {
-        return new FilteringNodeIterator(super.getNodes(nameGlobs), predicate);
+        return wrapNodeIterator(super.getNodes(nameGlobs));
     }
 
     @Override
     public boolean hasNode(String relPath) throws RepositoryException {
-        if (!super.hasNode(relPath)) {
-            return false;
-        }
-        Node node = super.getNode(relPath);
-        return predicate.evaluate(node);
+        return super.hasNode(relPath) && predicate.evaluate(super.getNode(relPath));
     }
 
     @Override
@@ -95,6 +98,11 @@ public class ChildFilteringNodeWrapper extends ChildWrappingNodeWrapper {
 
     @Override
     public Node wrap(Node node) {
-        return new ChildFilteringNodeWrapper(node, predicate);
+        return filterDescendants ? new ChildFilteringNodeWrapper(node, predicate) : node;
+    }
+
+    @Override
+    protected NodeIterator wrapNodeIterator(NodeIterator nodeIterator) {
+        return new FilteringNodeIterator(nodeIterator, predicate, filterDescendants ? this : null);
     }
 }

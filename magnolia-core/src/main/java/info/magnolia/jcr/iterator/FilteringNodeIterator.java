@@ -37,20 +37,33 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
 import info.magnolia.jcr.predicate.Predicate;
+import info.magnolia.jcr.wrapper.ChildWrappingNodeWrapper;
 
 /**
- * NodeIterator hiding all properties that do not pass the predicate.
+ * NodeIterator hiding all nodes that do not pass the predicate, returned nodes can also we wrapped effectively
+ * extending the condition to the whole hierarchy.
  *
  * @version $Id$
  */
 public class FilteringNodeIterator extends FilteringIteratorBase<Node> implements NodeIterator {
 
+    private ChildWrappingNodeWrapper wrapperFactory;
+
     public FilteringNodeIterator(NodeIterator nodeIterator, Predicate<Node> predicate) {
         super(nodeIterator, predicate);
     }
 
+    public FilteringNodeIterator(NodeIterator nodeIterator, Predicate<Node> predicate, ChildWrappingNodeWrapper wrapperFactory) {
+        super(nodeIterator, predicate);
+        this.wrapperFactory = wrapperFactory;
+    }
+
     @Override
     public Node nextNode() {
-        return next();
+        return wrapNode(next());
+    }
+
+    protected Node wrapNode(Node node) {
+        return wrapperFactory != null ? wrapperFactory.wrap(node) : node;
     }
 }

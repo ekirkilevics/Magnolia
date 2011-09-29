@@ -84,17 +84,17 @@ public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper {
 
     @Override
     public NodeIterator getNodes() throws RepositoryException {
-        return new WrappingNodeIterator(super.getNodes(), this);
+        return wrapNodeIterator(super.getNodes());
     }
 
     @Override
     public NodeIterator getNodes(String namePattern) throws RepositoryException {
-        return new WrappingNodeIterator(super.getNodes(namePattern), this);
+        return wrapNodeIterator(super.getNodes(namePattern));
     }
 
     @Override
     public NodeIterator getNodes(String[] nameGlobs) throws RepositoryException {
-        return new WrappingNodeIterator(super.getNodes(nameGlobs), this);
+        return wrapNodeIterator(super.getNodes(nameGlobs));
     }
 
     public Node wrap(Node node) {
@@ -113,5 +113,9 @@ public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper {
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected NodeIterator wrapNodeIterator(NodeIterator nodeIterator) {
+        return new WrappingNodeIterator(nodeIterator, this);
     }
 }

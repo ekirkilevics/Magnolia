@@ -36,6 +36,7 @@ package info.magnolia.jcr.util;
 import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.jcr.predicate.NodeTypePredicate;
 import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
@@ -352,8 +353,8 @@ public class NodeUtil {
         return path + "/" + name;
     }
 
-    public static Node createPath(Node parent, String path, String type) throws RepositoryException, PathNotFoundException, AccessDeniedException {
-        return createPath(parent, path, type, false);
+    public static Node createPath(Node parent, String path, String primaryNodeTypeName) throws RepositoryException, PathNotFoundException, AccessDeniedException {
+        return createPath(parent, path, primaryNodeTypeName, false);
     }
 
     public static Node createPath(Node parent, String path, String primaryNodeTypeName, boolean save) throws RepositoryException, PathNotFoundException, AccessDeniedException {
@@ -400,8 +401,16 @@ public class NodeUtil {
         }
     }
 
-    public static Iterable<Node> getNodes(Node parent, final Predicate<Node> predicate) throws RepositoryException {
+    public static Iterable<Node> getNodes(Node parent, Predicate<Node> predicate) throws RepositoryException {
         return asIterable(new FilteringNodeIterator(parent.getNodes(), predicate));
+    }
+
+    public static Iterable<Node> getNodes(Node parent) throws RepositoryException {
+        return getNodes(parent, EXCLUDE_META_DATA_FILTER);
+    }
+
+    public static Iterable<Node> getNodes(Node parent, String nodeTypeName) throws RepositoryException {
+        return getNodes(parent, new NodeTypePredicate(nodeTypeName));
     }
 
     public static Iterable<Node> asIterable(NodeIterator iterator) {
@@ -414,28 +423,6 @@ public class NodeUtil {
             nodesList.add(node);
         }
         return nodesList;
-    }
-
-    public static Iterable<Node> getNodes(Node node) throws RepositoryException {
-        return getNodes(node, EXCLUDE_META_DATA_FILTER);
-    }
-
-    /**
-     * TODO cringele : shouldn't @param nodeType be aligned to JCR API? There it is nodeTypeName, nodeType is used for NodeType object
-     */
-    public static Iterable<Node> getNodes(Node parent, final String nodeType) throws RepositoryException {
-        NodeIterator iterator = new FilteringNodeIterator(parent.getNodes(), new Predicate<Node>() {
-            @Override
-            public boolean evaluate(Node node) {
-                try {
-                    return node.isNodeType(nodeType);
-                } catch (RepositoryException e) {
-                    // TODO dlipp - is that what we want? Shouldn't we rethrow the exception?
-                    return false;
-                }
-            }
-        });
-        return asIterable(iterator);
     }
 
     /**
