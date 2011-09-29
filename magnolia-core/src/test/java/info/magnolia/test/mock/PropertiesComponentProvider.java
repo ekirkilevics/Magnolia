@@ -80,6 +80,7 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
         configure(configuration);
     }
 
+    // TODO dlipp: check whether this method shouldn't be moved to super class
     @Override
     public <T> T newInstanceWithParameterResolvers(Class<T> type, ParameterResolver... parameters) {
         ObjectManufacturer manufacturer = new ObjectManufacturer();
