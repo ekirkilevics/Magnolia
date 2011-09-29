@@ -174,7 +174,11 @@ public class AreaElement extends AbstractContentTemplatingElement {
                         if(components.size() > 1) {
                             throw new RenderException("Can't render single area [" + areaNode + "]: expected one child node but found more.");
                         }
-                        contextObjects.put(ATTRIBUTE_COMPONENT, components.get(0));
+                        if(components.size() == 1) {
+                            contextObjects.put(ATTRIBUTE_COMPONENT, components.get(0));
+                        } else {
+                            contextObjects.put(ATTRIBUTE_COMPONENT, null);
+                        }
                     } else {
                         contextObjects.put(ATTRIBUTE_COMPONENTS, components);
                     }
