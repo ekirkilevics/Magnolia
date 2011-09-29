@@ -34,6 +34,7 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.test.mock.jcr.MockProperty;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -203,6 +204,9 @@ public class MockJCRNode implements Node {
 
     @Override
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
+        if ("jcr:primaryType".equals(relPath)) {
+            return new MockProperty(relPath, mockContent.getNodeTypeName());
+        }
         return mockContent.getNodeData(relPath).getJCRProperty();
     }
 
