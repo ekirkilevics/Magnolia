@@ -57,8 +57,7 @@ import javax.servlet.ServletContext;
 /**
  * This class is an entry point to all config.
  *
- * @author Sameer Charles
- * @version 1.1
+ * @version $Id$
  */
 @Singleton
 public class ConfigLoader {
@@ -100,9 +99,9 @@ public class ConfigLoader {
                 return;
             }
         } else {
-            log.info("JAAS config file set by parent container or some other application"); //$NON-NLS-1$
-            log.info("Config in use {}", System.getProperty(JAAS_PROPERTYNAME)); //$NON-NLS-1$ //$NON-NLS-2$
-            log.info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
+            log.info("JAAS config file set by parent container or some other application");
+            log.info("Config in use {}", System.getProperty(JAAS_PROPERTYNAME));
+            log.info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured");
         }
     }
 
@@ -137,7 +136,7 @@ public class ConfigLoader {
         license.printVersionInfo();
 
         final long millis = System.currentTimeMillis();
-        log.info("Initializing content repositories"); //$NON-NLS-1$
+        log.info("Initializing content repositories");
 
         ContentRepository.init();
 
@@ -159,7 +158,7 @@ public class ConfigLoader {
             versionConfig.init();
 
             // finished
-            log.info("Configuration loaded (took {} seconds)", Long.toString((System.currentTimeMillis() - millis) / 1000)); //$NON-NLS-1$
+            log.info("Configuration loaded (took {} seconds)", Long.toString((System.currentTimeMillis() - millis) / 1000));
 
         } catch (ModuleManagementException e) {
             log.error("A module error occurred during initialization: " + e.getMessage(), e);
