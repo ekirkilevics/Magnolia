@@ -50,6 +50,6 @@ public class MockEventListenerIterator extends RangeIteratorImpl<EventListener> 
 
     @Override
     public EventListener nextEventListener() {
-        return (EventListener) next();
+        return next();
     }
 }
