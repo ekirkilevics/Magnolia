@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,25 +31,33 @@
  * intact.
  *
  */
-package info.magnolia.context;
+package info.magnolia.test.mock;
 
-import info.magnolia.objectfactory.Components;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.NoSuchComponentException;
+import info.magnolia.objectfactory.ParameterInfo;
+import info.magnolia.objectfactory.ParameterResolver;
 
 /**
- * All Threads share the same jcr sessions. The releaseThread() method is empty.
+ * ParameterResolver to be used with MockComponentProvider.
  *
  * @version $Id$
- *
  */
-public class SingleJCRSessionSystemContext extends AbstractSystemContext {
-    private static final Logger log = LoggerFactory.getLogger(SingleJCRSessionSystemContext.class);
+public class MockParameterResolver implements ParameterResolver {
+    private final ComponentProvider componentProvider;
 
-    public SingleJCRSessionSystemContext() {
-        this.setRepositoryStrategy(Components.newInstance(SystemRepositoryStrategy.class));
+    public MockParameterResolver(MockComponentProvider componentProvider) {
+        this.componentProvider = componentProvider;
     }
 
+    @Override
+    public Object resolveParameter(ParameterInfo parameter) {
+        Object result;
+        try {
+            result = componentProvider.getComponent(parameter.getParameterType());
+        } catch (NoSuchComponentException e) {
+            result = UNRESOLVED;
+        }
+        return result;
+    }
 }

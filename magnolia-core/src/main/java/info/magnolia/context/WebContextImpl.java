@@ -36,6 +36,7 @@ package info.magnolia.context;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.Security;
+import info.magnolia.objectfactory.Components;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -94,7 +95,11 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
         //reset();
         //setUser(getAnonymousUser());
         setAttributeStrategy(new RequestAttributeStrategy(this));
-        setRepositoryStrategy(new DefaultRepositoryStrategy(this));
+        setRepositoryStrategy(createRepositoryStrategy());
+    }
+
+    private DefaultRepositoryStrategy createRepositoryStrategy() {
+        return Components.newInstance(DefaultRepositoryStrategy.class, this);
     }
 
     @Override
@@ -226,7 +231,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
     }
 
     public void login() {
-        setRepositoryStrategy(new DefaultRepositoryStrategy(this));
+        setRepositoryStrategy(createRepositoryStrategy());
     }
 
     /**

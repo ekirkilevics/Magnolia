@@ -39,18 +39,20 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.security.SystemUserManager;
 import info.magnolia.cms.util.UrlPattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.jcr.registry.SessionProviderRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jcr.Credentials;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 
 import org.apache.commons.lang.UnhandledException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Uses a single full access AccessManager. JCR sessions are only released if no event listener were registered.
@@ -59,8 +61,9 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
 
     private static final Logger log = LoggerFactory.getLogger(SystemRepositoryStrategy.class);
 
-    public SystemRepositoryStrategy(SystemContext context) {
-        // TODO: deprecate?
+    @Inject
+    public SystemRepositoryStrategy(SessionProviderRegistry sessionProviderRegistry) {
+        super(sessionProviderRegistry);
     }
 
     /**
@@ -72,6 +75,10 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
         return null;
     }
 
+    /**
+     * TODO dlipp - Check whether we can't completely drop that method.
+     * @dperecated since 4.5 - should no longer be needed.
+     */
     protected List<Permission> getSystemPermissions() {
         List<Permission> acl = new ArrayList<Permission>();
         UrlPattern p = UrlPattern.MATCH_ALL;

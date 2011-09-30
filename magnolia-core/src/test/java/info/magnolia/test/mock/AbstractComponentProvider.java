@@ -178,7 +178,7 @@ public abstract class AbstractComponentProvider implements ComponentProvider {
             ComponentDefinition<T> definition = getComponentDefinition(type);
             if (definition == null) {
                 if (parent != null) {
-                    return parent.newInstance(type);
+                    return parent.newInstance(type, parameters);
                 }
                 if (!Classes.isConcrete(type)) {
                     throw new MgnlInstantiationException("No concrete implementation defined for " + type);
@@ -314,6 +314,7 @@ public abstract class AbstractComponentProvider implements ComponentProvider {
     }
 
     protected <T> T createInstance(Class<T> implementationType, Object... parameters) {
+
         return Classes.getClassFactory().newInstance(implementationType, parameters);
     }
 

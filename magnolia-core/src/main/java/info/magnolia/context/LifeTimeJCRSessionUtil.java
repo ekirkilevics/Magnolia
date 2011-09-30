@@ -33,12 +33,13 @@
  */
 package info.magnolia.context;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.objectfactory.Components;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Returns HierarchyManagers which use a life time session. If the SystemContext uses single session the same session
  * will be used. Otherwise an own instance of SystemRepositoryStrategy is used.
- * @author philipp
+ *
  * @version $Id$
  */
 public class LifeTimeJCRSessionUtil {
@@ -63,7 +64,7 @@ public class LifeTimeJCRSessionUtil {
         useSystemContext = !(ctx instanceof ThreadDependentSystemContext);
         if (!useSystemContext) {
             log.info("Will handle lifetime sessions because the system context is of type {}", ThreadDependentSystemContext.class);
-            repositoryStrategy = new SystemRepositoryStrategy(ctx);
+            repositoryStrategy = Components.newInstance(SystemRepositoryStrategy.class);
         }
     }
 

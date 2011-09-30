@@ -33,12 +33,14 @@
  */
 package info.magnolia.context;
 
+import info.magnolia.objectfactory.Components;
+
 import javax.inject.Singleton;
 
 /**
  * A system context which creates JCR sessions per thread (request). The sessions are released but not if any event
  * listener has been registered on a session.
- * @author philipp
+ *
  * @version $Id$
  */
 @Singleton
@@ -47,7 +49,7 @@ public class JCRSessionPerThreadSystemContext extends AbstractSystemContext impl
     @Override
     public RepositoryAcquiringStrategy getRepositoryStrategy() {
         if (repositoryStrategyThreadLocal.get() == null) {
-            repositoryStrategyThreadLocal.set(new SystemRepositoryStrategy(this));
+            repositoryStrategyThreadLocal.set(Components.newInstance(SystemRepositoryStrategy.class));
         }
         return repositoryStrategyThreadLocal.get();
     }

@@ -152,7 +152,6 @@ public class DefaultComponentProviderTest {
      */
     @Test
     public void testSingletonDefinedInRepositoryUsesGivenRepoName() throws RepositoryException, IOException {
-        Components.getSingleton(String.class);
         setDefaultImplementationsAndInitMockRepository("dummy:/test", "dummy",
                 "test.class=" + TestImplementation.class.getName()
         );

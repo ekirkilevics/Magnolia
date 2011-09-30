@@ -33,10 +33,13 @@
  */
 package info.magnolia.test.mock;
 
+import info.magnolia.objectfactory.CandidateParameterResolver;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentConfigurationPath;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.LazyObservedComponentFactory;
+import info.magnolia.objectfactory.ParameterResolver;
+import info.magnolia.objectfactory.guice.ObjectManufacturer;
 
 import java.util.Properties;
 
@@ -116,5 +119,24 @@ public class MockComponentProvider extends PropertiesComponentProvider {
         } catch (ClassNotFoundException e) {
             return null;
         }
+    }
+
+    @Override
+    protected <T> T createInstance(Class<T> implementationType, Object... parameters) {
+        return newInstanceWithParameterResolvers(implementationType, new CandidateParameterResolver(parameters), new MockParameterResolver(this));
+    }
+
+    @Override
+    public <T> T newInstanceWithParameterResolvers(Class<T> type, ParameterResolver... parameterResolvers) {
+        ObjectManufacturer manufacturer = new ObjectManufacturer();
+        Class<? extends T> implementation;
+        try {
+            implementation = getImplementation(type);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        T instance = (T) manufacturer.newInstance(implementation, parameterResolvers);
+        return instance;
     }
 }

@@ -34,6 +34,9 @@
 package info.magnolia.context;
 
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.jcr.registry.SessionProviderRegistry;
+
+import javax.inject.Inject;
 import javax.security.auth.Subject;
 
 /**
@@ -43,7 +46,9 @@ public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
 
     protected UserContext context;
 
-    public DefaultRepositoryStrategy(UserContext context) {
+    @Inject
+    public DefaultRepositoryStrategy(SessionProviderRegistry sessionProviderRegistry, UserContext context) {
+        super(sessionProviderRegistry);
         this.context = context;
     }
 

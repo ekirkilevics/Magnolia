@@ -41,6 +41,7 @@ import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemRepositoryStrategy;
 import info.magnolia.importexport.BootstrapUtil;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.test.mock.MockContext;
 
 import java.io.File;
@@ -111,7 +112,8 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     protected void modifyContextesToUseRealRepository() {
         // create a mock web context with same repository acquiring strategy as the system context
         MockContext systemContext = (MockContext) MgnlContext.getSystemContext();
-        SystemRepositoryStrategy repositoryStrategy = new SystemRepositoryStrategy(systemContext);
+        SystemRepositoryStrategy repositoryStrategy = Components.newInstance(SystemRepositoryStrategy.class);
+
         systemContext.setRepositoryStrategy(repositoryStrategy);
         MockContext ctx = (MockContext) MgnlContext.getInstance();
         ctx.setRepositoryStrategy(repositoryStrategy);

@@ -36,11 +36,13 @@ package info.magnolia.context;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
+import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.stats.JCRStats;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.jcr.Credentials;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
@@ -64,6 +66,12 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
     private final Map<String, Session> jcrSessions = new HashMap<String, Session>();
 
+    private final SessionProviderRegistry sessionProviderRegistry;
+
+    @Inject
+    public AbstractRepositoryStrategy(SessionProviderRegistry sessionProviderRegistry) {
+        this.sessionProviderRegistry = sessionProviderRegistry;
+    }
 
     /**
      * @deprecated since 4.5 - directly operate on JCR-Session instead

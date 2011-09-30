@@ -57,6 +57,10 @@
       <type>info.magnolia.cms.filters.FilterManager</type>
       <implementation>info.magnolia.cms.filters.FilterManagerImpl</implementation>
     </component>
+    <component>
+      <type>info.magnolia.jcr.registry.SessionProviderRegistry</type>
+      <implementation>info.magnolia.jcr.registry.SessionProviderRegistry</implementation>
+    </component>
   </components>
 
   <components>
