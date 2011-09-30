@@ -39,5 +39,5 @@ package info.magnolia.rendering.template;
  *
  */
 public interface Inheritance {
-    boolean isInherit();
+    boolean isEnabled();
 }

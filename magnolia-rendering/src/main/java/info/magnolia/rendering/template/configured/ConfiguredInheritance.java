@@ -40,15 +40,15 @@ import info.magnolia.rendering.template.Inheritance;
  * @version $Id$
  */
 public class ConfiguredInheritance implements Inheritance {
-    private boolean inherit;
+    private boolean enabled;
 
     @Override
-    public boolean isInherit() {
-        return inherit;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setInherit(boolean inherit) {
-        this.inherit = inherit;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
 }

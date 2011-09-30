@@ -125,7 +125,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
             buildAdHocAreaDefinition();
         }
 
-        this.inherit = areaDefinition.getInheritance().isInherit();
+        this.inherit = isInheritanceEnabled();
 
         if (isAdmin()) {
             MarkupHelper helper = new MarkupHelper(out);
@@ -276,6 +276,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     private String resolveLabel() {
         return label != null ? label : (areaDefinition != null && StringUtils.isNotBlank(areaDefinition.getTitle()) ? areaDefinition.getTitle() : name);
+    }
+
+    private boolean isInheritanceEnabled() {
+        return areaDefinition != null && areaDefinition.getInheritance() != null && areaDefinition.getInheritance().isEnabled();
     }
 
     protected String resolveAvailableComponents() {
