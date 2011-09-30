@@ -174,7 +174,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
                 if (areaNode != null) {
                     List<ContentMap> components = new ArrayList<ContentMap>();
-
+                    //TODO fgrilli: move the wrapping inside resolveAreaNode()
                     if(isInherit()) {
                         //FIXME fgrilli: replace with Node-based inheritance wrapper
                         InheritanceContentWrapper wrapper = new InheritanceContentWrapper(ContentUtil.asContent(areaNode));
