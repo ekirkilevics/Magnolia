@@ -204,6 +204,11 @@ public class AreaElement extends AbstractContentTemplatingElement {
                     ((ConfiguredAreaDefinition)areaDefinition).setRenderType(this.templateDefinition.getRenderType());
                 }
                 renderingEngine.render(areaNode, areaDefinition, contextObjects, new AppendableOnlyOutputProvider(out));
+                // FIXME we shouldn't manipulate the area definition directly
+                // we should use merge with the proxy approach
+                if(areaDefinition.getI18nBasename() == null && areaDefinition instanceof ConfiguredAreaDefinition){
+                    ((ConfiguredAreaDefinition)areaDefinition).setI18nBasename(this.templateDefinition.getI18nBasename());
+                }
             }
 
             if (isAdmin()) {
