@@ -176,6 +176,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
                     List<ContentMap> components = new ArrayList<ContentMap>();
 
                     if(isInherit()) {
+                        //FIXME fgrilli: replace with Node-based inheritance wrapper
                         InheritanceContentWrapper wrapper = new InheritanceContentWrapper(ContentUtil.asContent(areaNode));
                         for(Content content : wrapper.getChildren(MgnlNodeType.NT_COMPONENT)) {
                             components.add(new ContentMap(content.getJCRNode()));
