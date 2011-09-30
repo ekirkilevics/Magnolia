@@ -31,16 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory.guice;
+package info.magnolia.objectfactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import javax.inject.Inject;
 
-import info.magnolia.objectfactory.MgnlInstantiationException;
-import info.magnolia.objectfactory.ParameterInfo;
-import info.magnolia.objectfactory.ParameterResolver;
 
 
 /**

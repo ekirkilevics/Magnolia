@@ -44,6 +44,7 @@ import info.magnolia.objectfactory.CandidateParameterResolver;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.NoSuchComponentException;
+import info.magnolia.objectfactory.ObjectManufacturer;
 import info.magnolia.objectfactory.ParameterResolver;
 
 

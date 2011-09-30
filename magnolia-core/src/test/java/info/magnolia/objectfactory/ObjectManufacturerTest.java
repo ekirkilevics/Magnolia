@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory.guice;
+package info.magnolia.objectfactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -44,6 +44,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import info.magnolia.objectfactory.CandidateParameterResolver;
 import info.magnolia.objectfactory.MgnlInstantiationException;
+import info.magnolia.objectfactory.ObjectManufacturer;
+import info.magnolia.objectfactory.guice.GuiceParameterResolver;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;

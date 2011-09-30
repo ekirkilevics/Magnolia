@@ -34,10 +34,10 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.ObjectManufacturer;
 import info.magnolia.objectfactory.ParameterResolver;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.LegacyComponentsConfigurer;
-import info.magnolia.objectfactory.guice.ObjectManufacturer;
 
 import java.util.Map;
 import java.util.Properties;

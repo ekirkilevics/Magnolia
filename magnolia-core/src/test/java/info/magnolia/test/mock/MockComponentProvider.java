@@ -38,8 +38,8 @@ import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentConfigurationPath;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.LazyObservedComponentFactory;
+import info.magnolia.objectfactory.ObjectManufacturer;
 import info.magnolia.objectfactory.ParameterResolver;
-import info.magnolia.objectfactory.guice.ObjectManufacturer;
 
 import java.util.Properties;
 
