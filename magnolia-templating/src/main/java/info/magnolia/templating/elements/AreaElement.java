@@ -34,15 +34,13 @@
 package info.magnolia.templating.elements;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.InheritanceContentWrapper;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.AppendableOnlyOutputProvider;
 import info.magnolia.rendering.engine.RenderException;
@@ -112,6 +110,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.label = resolveLabel();
         this.availableComponents = resolveAvailableComponents();
 
+        this.inherit = isInheritanceEnabled();
         this.areaNode = resolveAreaNode();
 
         //TODO: review. If no area node exists, create it on the fly
@@ -124,8 +123,6 @@ public class AreaElement extends AbstractContentTemplatingElement {
         if(areaDefinition == null){
             buildAdHocAreaDefinition();
         }
-
-        this.inherit = isInheritanceEnabled();
 
         if (isAdmin()) {
             MarkupHelper helper = new MarkupHelper(out);
@@ -174,18 +171,11 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
                 if (areaNode != null) {
                     List<ContentMap> components = new ArrayList<ContentMap>();
-                    //TODO fgrilli: move the wrapping inside resolveAreaNode()
-                    if(isInherit()) {
-                        //FIXME fgrilli: replace with Node-based inheritance wrapper
-                        InheritanceContentWrapper wrapper = new InheritanceContentWrapper(ContentUtil.asContent(areaNode));
-                        for(Content content : wrapper.getChildren(MgnlNodeType.NT_COMPONENT)) {
-                            components.add(new ContentMap(content.getJCRNode()));
-                        }
-                    } else {
-                        for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_COMPONENT)) {
-                            components.add(new ContentMap(node));
-                        }
+
+                    for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_COMPONENT)) {
+                        components.add(new ContentMap(node));
                     }
+
                     if(AreaDefinition.TYPE_SINGLE.equals(type)) {
                         if(components.size() > 1) {
                             throw new RenderException("Can't render single area [" + areaNode + "]: expected one component node but found more.");
@@ -225,9 +215,14 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     protected Node resolveAreaNode() throws RenderException {
         final Node content = getTargetContent();
+
         try {
             if(content.hasNode(name)){
-                return content.getNode(name);
+                Node area = content.getNode(name);
+                if(isInherit()) {
+                    area = new InheritanceNodeWrapper(area);
+                }
+                return area;
             }
         }
         catch (RepositoryException e) {
