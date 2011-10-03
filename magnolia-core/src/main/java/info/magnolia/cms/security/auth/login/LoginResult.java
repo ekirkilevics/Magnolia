@@ -36,6 +36,7 @@ package info.magnolia.cms.security.auth.login;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 
+import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
 
 
@@ -63,11 +64,13 @@ public class LoginResult {
     private static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
 
 
-    private int status;
+    private final int status;
 
     private User user;
 
     private LoginException loginException;
+
+    private Subject subject;
 
     public static final int STATUS_IN_PROCESS = 4;
 
@@ -86,9 +89,10 @@ public class LoginResult {
         this.loginException = loginException;
     }
 
-    public LoginResult(int status, User user) {
+    public LoginResult(int status, User user, Subject subject) {
         this.status = status;
         this.user = user;
+        this.subject = subject;
     }
 
     public int getStatus() {
@@ -97,6 +101,10 @@ public class LoginResult {
 
     public User getUser() {
         return this.user;
+    }
+
+    public Subject getSubject() {
+        return this.subject;
     }
 
     /**

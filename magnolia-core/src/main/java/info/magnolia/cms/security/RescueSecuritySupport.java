@@ -97,7 +97,7 @@ public class RescueSecuritySupport extends SecuritySupportBase {
             loginContext.login();
             User user = new RescueUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
             user.setSubject(loginContext.getSubject());
-            return new LoginResult(LoginResult.STATUS_SUCCEEDED, user);
+            return new LoginResult(LoginResult.STATUS_SUCCEEDED, user, loginContext.getSubject());
         } catch (LoginException e) {
             throw new RuntimeException(e);
         }
@@ -138,15 +138,15 @@ public class RescueSecuritySupport extends SecuritySupportBase {
     protected class RescueUser implements User {
         private static final long serialVersionUID = 1L;
 
-        private String name;
+        private final String name;
 
-        private String password;
+        private final String password;
 
         private Subject subject;
 
-        private Collection<String> groups = new ArrayList<String>();
+        private final Collection<String> groups = new ArrayList<String>();
 
-        private Collection<String> roles = new ArrayList<String>();
+        private final Collection<String> roles = new ArrayList<String>();
 
         public RescueUser(String name, String password) {
             this.name = name;

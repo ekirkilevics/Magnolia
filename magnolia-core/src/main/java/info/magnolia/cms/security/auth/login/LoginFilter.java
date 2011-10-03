@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.security.auth.Subject;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -74,6 +75,7 @@ public class LoginFilter extends AbstractMgnlFilter {
                     request.getSession().invalidate();
                 }
                 MgnlContext.login(loginResult.getUser());
+                request.getSession(true).setAttribute(Subject.class.getName(), loginResult.getSubject());
                 AuditLoggingUtil.log(loginResult, request);
                 // do not continue the login handler chain after a successful login ... otherwise previous success will be invalidated by above session wipeout
                 break;

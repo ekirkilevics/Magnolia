@@ -62,8 +62,8 @@ public abstract class SecuritySupportBase implements SecuritySupport {
             LoginContext loginContext = createLoginContext(callbackHandler, customLoginModule);
             loginContext.login();
             subject = loginContext.getSubject();
-            subject.getPrincipals(User.class);
-            return new LoginResult(LoginResult.STATUS_SUCCEEDED, extractUser(subject));
+
+            return new LoginResult(LoginResult.STATUS_SUCCEEDED, extractUser(subject), subject);
         }
         catch (LoginException e) {
             logLoginException(e);

@@ -33,21 +33,24 @@
  */
 package info.magnolia.logging;
 
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.model.Pair;
-import junit.framework.TestCase;
-
-import javax.security.auth.login.LoginException;
-import javax.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
+import javax.security.auth.login.LoginException;
+import javax.servlet.http.HttpServletRequest;
+
+import junit.framework.TestCase;
 
 /**
  *
@@ -76,7 +79,7 @@ public class AuditLoggingUtilTest extends TestCase {
     public void testLogsLoginSuccesses() {
         final User user = createStrictMock(User.class);
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
-        final LoginResult loginResult = new LoginResult(LoginResult.STATUS_SUCCEEDED, user);
+        final LoginResult loginResult = new LoginResult(LoginResult.STATUS_SUCCEEDED, user, null);
         expect(request.getParameter("mgnlUserId")).andReturn("greg");
         expect(request.getRemoteAddr()).andReturn("127.0.0.1");
 

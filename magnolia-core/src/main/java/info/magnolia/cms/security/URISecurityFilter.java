@@ -33,16 +33,21 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.security.auth.ACL;
+import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-import javax.jcr.LoginException;
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.security.AccessControlException;
+import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,18 +102,36 @@ public class URISecurityFilter extends BaseSecurityFilter {
             permission = Session.ACTION_READ;
         }
         final String uri = MgnlContext.getAggregationState().getCurrentURI();
-        try {
-            MgnlContext.getJCRSession("uri").checkPermission(uri, permission);
-            log.debug("user {} has been granted permission {} to access uri {}", new Object[] {MgnlContext.getUser().getName(), permission, uri});
-            return true;
-        } catch (AccessControlException ade) {
-            log.debug(ade.getMessage());
-        } catch (LoginException e) {
-            log.debug(e.getMessage());
-        } catch (RepositoryException ade) {
-            log.debug(ade.getMessage());
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            log.warn("no session == running as anonymous");
+            return false;
         }
-        log.debug("user {} has been denied permission {} to access uri {}", new Object[] {MgnlContext.getUser().getName(), permission, uri});
-        return false;
+        List<Permission> permissions = null;
+        Subject sbj = (Subject) session.getAttribute(Subject.class.getName());
+        Set<PrincipalCollection> allPermissions = sbj.getPrincipals(PrincipalCollection.class);
+        for (PrincipalCollection principal : allPermissions) {
+            Iterator<Principal> iter = principal.iterator();
+            while (iter.hasNext()) {
+                Principal maybeAcl = iter.next();
+                if (maybeAcl instanceof ACL) {
+                    ACL acl = ((ACL) maybeAcl);
+                    if ("uri".equals(acl.getWorkspace())) {
+                        permissions = acl.getList();
+                        break;
+                    }
+                }
+            }
+        }
+        if (permissions == null) {
+            log.warn("no permissions found for " + MgnlContext.getUser().getName());
+            return false;
+        }
+        AccessManagerImpl ami = new AccessManagerImpl();
+        ami.setPermissionList(permissions);
+        boolean grant = ami.isGranted(uri, ami.convertPermissions(permission));
+        // MgnlContext.getJCRSession("uri").checkPermission(uri, permission);
+        log.debug("user {} has " + (grant ? "" : "NOT ") + "been granted permission {} to access uri {}", new Object[] { MgnlContext.getUser().getName(), permission, uri });
+        return grant;
     }
 }
