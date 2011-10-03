@@ -36,6 +36,8 @@ package info.magnolia.cms.security;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.jcr.Session;
+
 import org.apache.commons.lang.StringUtils;
 
 
@@ -90,5 +92,25 @@ public class AccessManagerImpl implements AccessManager, Serializable {
             }
         }
         return permission;
+    }
+
+    /**
+     * Return String-representation of permissions convert from provided long-permission (old).
+     */
+    public static long convertPermissions(String newPermissions) {
+        String[] perms = newPermissions.split(", ");
+        long oldPerms = 0;
+        for (String perm : perms) {
+            if (Session.ACTION_ADD_NODE.equals(perm)) {
+                oldPerms += Permission.WRITE;
+            } else if (Session.ACTION_READ.equals(perm)) {
+                oldPerms += Permission.READ;
+            } else if (Session.ACTION_REMOVE.equals(perm)) {
+                oldPerms += Permission.REMOVE;
+            } else if (Session.ACTION_SET_PROPERTY.equals(perm)) {
+                oldPerms += Permission.SET;
+            }
+        }
+        return oldPerms;
     }
 }
