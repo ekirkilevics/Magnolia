@@ -42,6 +42,7 @@ import info.magnolia.jaas.sp.AbstractLoginModule;
 import info.magnolia.jaas.sp.UserAwareLoginModule;
 
 import java.io.Serializable;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,17 +55,28 @@ import javax.security.auth.login.LoginException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.core.security.UserPrincipal;
+import org.apache.jackrabbit.core.security.principal.AdminPrincipal;
 
 /**
  * Authentication module implementation using JCR to retrieve the users.
- * @author Sameer Charles $Id$
+ * @version $Id: MagnoliaAuthenticationModule.java 45632 2011-05-28 12:46:32Z had $
  */
 // JR requires login module to be serializable!
-public class JCRAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule, Serializable {
+public class MagnoliaAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule, Serializable {
 
     private static final boolean logAdmin = false;
     protected User user;
 
+    /**
+     * As silly as it seems this class sole purpose of existence is to implement Serializable required by JR itself.
+     * @author had
+     * @version $Id: JCRAuthenticationModule.java 45632 2011-05-28 12:46:32Z had $
+     */
+    public class MagnoliaJRAdminPrincipal extends AdminPrincipal implements Principal, Serializable {
+        public MagnoliaJRAdminPrincipal(String name) {
+            super(name);
+        }
+    }
 
     /**
      * Checks is the credentials exist in the repository.

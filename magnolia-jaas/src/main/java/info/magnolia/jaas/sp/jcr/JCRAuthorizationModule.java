@@ -198,12 +198,4 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
             mergePrincipals(principalList, securitySupport.getGroupManager().getACLs(group).values());
         }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean release() {
-        return true;
-    }
 }

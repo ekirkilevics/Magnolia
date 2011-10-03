@@ -39,9 +39,7 @@ import info.magnolia.cms.security.auth.callback.RealmCallback;
 import info.magnolia.cms.util.BooleanUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,7 +52,6 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,28 +186,18 @@ public abstract class AbstractLoginModule implements LoginModule {
 
         // if the realm is not defined in the jaas configuration
         // we ask use a callback to get the value
+        RealmCallback realmCallback = null;
         if(this.useRealmCallback){
-            callbacks = (Callback[]) ArrayUtils.add(callbacks, new RealmCallback());
+            realmCallback = new RealmCallback();
         }
 
         this.success = false;
         try {
-            // TODO: really?
-            RealmCallback realmCallback = null;
-            log.debug("Removing RealmCallback unsupported by JR before passing through to JR CallbackHandler.");
-            List<Callback> tmp = new ArrayList<Callback>();
-            for (Callback callback : callbacks) {
-                if (!(callback instanceof RealmCallback)) {
-                    tmp.add(callback);
-                } else {
-                    realmCallback = (RealmCallback) callback;
-                }
-            }
-            callbacks = tmp.toArray(new Callback[tmp.size()]);
+            // TODO: RealmCallback unsupported by JR therefore it can't be passed on when callback handler is JR. But since other handlers might support it, we should exclude only for JR
             this.callbackHandler.handle(callbacks);
             this.name = ((NameCallback) callbacks[0]).getName();
             this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
-            if(this.useRealmCallback && realmCallback != null){
+            if (realmCallback != null) {
                 // TODO: this code is absolutely unsafe !!!!
                 if (!StringUtils.isBlank(realmCallback.getRealm())) {
                     this.realm = new Realm.RealmImpl(realmCallback.getRealm());
@@ -219,19 +206,15 @@ public abstract class AbstractLoginModule implements LoginModule {
 
             this.validateUser();
         } catch (IOException ioe) {
-            if (log.isDebugEnabled()) {
-                log.debug("Exception caught", ioe);
-            }
+            log.debug("Exception caught", ioe);
             throw new LoginException(ioe.toString());
         } catch (UnsupportedCallbackException ce) {
-            if (log.isDebugEnabled()) {
-                log.debug(ce.getMessage(), ce);
-            }
+            log.debug(ce.getMessage(), ce);
             throw new LoginException(ce.getCallback().toString() + " not available");
         }
 
+        // TODO: should not we set success BEFORE calling validateUser to give it chance to decide whether to throw an exception or reset the value to false?
         this.success = true;
-
         this.setSharedStatus(STATUS_SUCCEEDED);
         return this.success;
     }
@@ -316,7 +299,9 @@ public abstract class AbstractLoginModule implements LoginModule {
     /**
      * Releases all associated memory.
      */
-    public abstract boolean release();
+    public boolean release() {
+        return true;
+    }
 
     /**
      * Checks if the credentials exist in the repository.
