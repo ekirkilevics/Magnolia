@@ -82,8 +82,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Provider implementation for Apache JackRabbit JCR repository.
- * @author Sameer Charles
- * @author Fabrizio Giustina
+ *
  * @version $Id$
  */
 public class ProviderImpl implements Provider {
@@ -100,19 +99,19 @@ public class ProviderImpl implements Provider {
 
     private static final Logger log = LoggerFactory.getLogger(ProviderImpl.class);
 
-    private static final String CONFIG_FILENAME_KEY = "configFile"; //$NON-NLS-1$
+    private static final String CONFIG_FILENAME_KEY = "configFile";
 
-    private static final String REPOSITORY_HOME_KEY = "repositoryHome"; //$NON-NLS-1$
+    private static final String REPOSITORY_HOME_KEY = "repositoryHome";
 
-    private static final String CONTEXT_FACTORY_CLASS_KEY = "contextFactoryClass"; //$NON-NLS-1$
+    private static final String CONTEXT_FACTORY_CLASS_KEY = "contextFactoryClass";
 
-    private static final String PROVIDER_URL_KEY = "providerURL"; //$NON-NLS-1$
+    private static final String PROVIDER_URL_KEY = "providerURL";
 
-    private static final String BIND_NAME_KEY = "bindName"; //$NON-NLS-1$
+    private static final String BIND_NAME_KEY = "bindName";
 
-    private static final String MGNL_NODETYPES = "/mgnl-nodetypes/magnolia-nodetypes.xml"; //$NON-NLS-1$
+    private static final String MGNL_NODETYPES = "/mgnl-nodetypes/magnolia-nodetypes.xml";
 
-    private static final String CUSTOM_NODETYPES = "customNodeTypes"; //$NON-NLS-1$
+    private static final String CUSTOM_NODETYPES = "customNodeTypes";
 
     private RepositoryMapping repositoryMapping;
 
@@ -256,7 +255,7 @@ public class ProviderImpl implements Provider {
     @Override
     public Repository getUnderlyingRepository() throws RepositoryNotInitializedException {
         if (this.repository == null) {
-            throw new RepositoryNotInitializedException("Null repository"); //$NON-NLS-1$
+            throw new RepositoryNotInitializedException("Null repository");
         }
         return this.repository;
     }
@@ -273,7 +272,7 @@ public class ProviderImpl implements Provider {
             if (log.isDebugEnabled()) {
                 log.debug(e.getMessage());
             }
-            log.info("Registering prefix [{}] with URI {}", namespacePrefix, uri); //$NON-NLS-1$
+            log.info("Registering prefix [{}] with URI {}", namespacePrefix, uri);
             workspace.getNamespaceRegistry().registerNamespace(namespacePrefix, uri);
         }
     }
@@ -393,7 +392,7 @@ public class ProviderImpl implements Provider {
                 {
                     if (ite.getTargetException() instanceof NoSuchNodeTypeException)
                     {
-                        log.info("Registering nodetype {} on repository {}", ntname, repositoryMapping.getName()); //$NON-NLS-1$
+                        log.info("Registering nodetype {} on repository {}", ntname, repositoryMapping.getName());
 
                         try
                         {
