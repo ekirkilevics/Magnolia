@@ -37,9 +37,9 @@ import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.FilteringPropertyIterator;
-import info.magnolia.cms.util.JCRPropertyHidingPredicate;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.iterator.FilteringPropertyIterator;
+import info.magnolia.jcr.predicate.JCRPropertyHidingPredicate;
 
 import java.util.ArrayList;
 import java.util.Collection;
