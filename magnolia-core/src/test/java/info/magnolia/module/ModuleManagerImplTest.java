@@ -33,11 +33,13 @@
  */
 package info.magnolia.module;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.Delta;
@@ -71,6 +73,8 @@ public class ModuleManagerImplTest {
         moduleRegistry = new ModuleRegistryImpl();
         ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
         ComponentsTestUtil.setInstance(SystemContext.class, createStrictMock(SystemContext.class));
+        ComponentsTestUtil.setInstance(SessionProviderRegistry.class, new SessionProviderRegistry());
+        ContentRepository.initSessionProviderRegistry();
 
         // shunt log4j
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);

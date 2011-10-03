@@ -34,14 +34,20 @@
 package info.magnolia.jcr.registry;
 
 import info.magnolia.registry.RegistrationException;
+import info.magnolia.repository.RepositoryNameMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Singleton;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Central registry of all SessionsProviders.
@@ -50,36 +56,86 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class SessionProviderRegistry {
-    private final Map<String, SessionProvider> providers = new HashMap<String, SessionProvider>();
 
-    protected Map<String, SessionProvider> getProviders() {
-        return providers;
+    private static final Logger log = LoggerFactory.getLogger(SessionProviderRegistry.class);
+
+    private final Map<String, RepositoryNameMap> logical2PhysicalWorkspaceMapping = new HashMap<String, RepositoryNameMap>();
+    private final Map<String, SessionProvider> repository2SessionProviderMapping = new HashMap<String, SessionProvider>();
+
+    protected Map<String, SessionProvider> getSessionProviders() {
+        return repository2SessionProviderMapping;
     }
 
     public void register(SessionProvider provider) {
-        synchronized (providers) {
-            providers.put(provider.getLogicalWorkspaceName(), provider);
+        synchronized (repository2SessionProviderMapping) {
+            repository2SessionProviderMapping.put(provider.getLogicalWorkspaceName(), provider);
         }
     }
 
-    public void unregister(String id) {
-        synchronized (providers) {
-            providers.remove(id);
+    public void unregisterSessionProvider(String repositoryName) {
+        synchronized (repository2SessionProviderMapping) {
+            repository2SessionProviderMapping.remove(repositoryName);
         }
     }
 
-    public SessionProvider get(String id) throws RegistrationException {
-
+    public SessionProvider getSessionProvider(String repositoryName) throws RegistrationException {
         SessionProvider provider;
-        synchronized (providers) {
-            provider = providers.get(id);
+        synchronized (repository2SessionProviderMapping) {
+            provider = repository2SessionProviderMapping.get(repositoryName);
             if (provider == null) {
-                List<String> types = new ArrayList<String>(providers.keySet());
+                List<String> types = new ArrayList<String>(repository2SessionProviderMapping.keySet());
                 Collections.sort(types);
-                throw new RegistrationException("Can't find a registration for logical workspaceName [" + id + "]. Registered workspaces are " + types);
+                throw new RegistrationException("Can't find a registration for logical workspaceName [" + repositoryName + "]. Registered workspaces are " + types);
             }
         }
         return provider;
     }
 
+    /**
+     * Add a mapping from a logicalWorkspaceName to a physical repo/workspaceName.
+     */
+    public void addLogical2PhysicalWorkspaceMapping(String logicalWorkspaceName, String repositoryName, String physicalWorkspaceName) {
+        String workspaceName =  StringUtils.isEmpty(physicalWorkspaceName) ? logicalWorkspaceName : physicalWorkspaceName;
+        RepositoryNameMap nameMap = new RepositoryNameMap(repositoryName, workspaceName);
+        synchronized (logical2PhysicalWorkspaceMapping) {
+            logical2PhysicalWorkspaceMapping.put(logicalWorkspaceName, nameMap);
+        }
+    }
+
+    public Iterator<String> getAllLogicalWorkspaceNames() {
+        return logical2PhysicalWorkspaceMapping.keySet().iterator();
+    }
+
+    public boolean hasMappingFor(String logicalWorkspaceName) {
+        return logical2PhysicalWorkspaceMapping.containsKey(logicalWorkspaceName);
+    }
+
+    public String getRepositoryNameFor(String logicalWorkspaceName) {
+        RepositoryNameMap nameMap = logical2PhysicalWorkspaceMapping.get(logicalWorkspaceName);
+        return (nameMap==null) ? logicalWorkspaceName : nameMap.getRepositoryName();
+    }
+
+    public String getWorkspaceNameFor(String logicalWorkspaceName) {
+        RepositoryNameMap nameMap = logical2PhysicalWorkspaceMapping.get(logicalWorkspaceName);
+        return (nameMap == null) ? logicalWorkspaceName : nameMap.getWorkspaceName();
+    }
+
+    public String getLogicalWorkspaceNameFor(String physicalWorkspaceName) {
+        Iterator<String> keys = logical2PhysicalWorkspaceMapping.keySet().iterator();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            RepositoryNameMap nameMap = logical2PhysicalWorkspaceMapping.get(key);
+            if (nameMap.getWorkspaceName().equalsIgnoreCase(physicalWorkspaceName)) {
+                return key;
+            }
+        }
+        // TODO dlipp: logging an error & continue with a "guessed" value doesn't see right.
+        log.error("No Repository/Workspace name mapping defined for "+physicalWorkspaceName);
+        return physicalWorkspaceName;
+    }
+
+    public void clear() {
+        logical2PhysicalWorkspaceMapping.clear();
+        repository2SessionProviderMapping.clear();
+    }
 }

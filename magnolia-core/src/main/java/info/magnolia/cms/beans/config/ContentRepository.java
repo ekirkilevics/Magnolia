@@ -41,10 +41,11 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
-import info.magnolia.repository.RepositoryNameMap;
 import info.magnolia.repository.RepositoryNotInitializedException;
 
 import java.io.IOException;
@@ -60,7 +61,6 @@ import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 
 import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -160,10 +160,7 @@ public final class ContentRepository {
      */
     private static Map<String, RepositoryMapping> repositoryMapping = new Hashtable<String, RepositoryMapping>();
 
-    /**
-     * holds all repository names as configured in repositories.xml.
-     */
-    private static Map<String, RepositoryNameMap> repositoryNameMap = new Hashtable<String, RepositoryNameMap>();
+    private static SessionProviderRegistry sessionProviderRegistry;
 
     /**
      * Utility class, don't instantiate.
@@ -193,6 +190,7 @@ public final class ContentRepository {
      *</pre>
      */
     public static void init() {
+        initSessionProviderRegistry();
         log.info("Loading JCR");
         repositories.clear();
         try {
@@ -202,6 +200,10 @@ public final class ContentRepository {
         catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    public static void initSessionProviderRegistry(){
+        ContentRepository.sessionProviderRegistry = Components.getComponent(SessionProviderRegistry.class);
     }
 
     /**
@@ -216,8 +218,9 @@ public final class ContentRepository {
         }
         repositoryProviders.clear();
         repositoryMapping.clear();
-        repositoryNameMap.clear();
         repositories.clear();
+
+        sessionProviderRegistry.clear();
     }
 
     /**
@@ -321,6 +324,7 @@ public final class ContentRepository {
             else {
                 map.addWorkspace(DEFAULT_WORKSPACE);
             }
+            log.debug("Adding repositoryMapping name= {}, map= {}", new String[]{name, map.toString()});
             repositoryMapping.put(name, map);
             try {
                 loadRepository(map);
@@ -380,7 +384,7 @@ public final class ContentRepository {
      * */
     public static void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
         log.info("Loading workspace {}", workspaceId);
-        if(!repositoryNameMap.containsKey(workspaceId)){
+        if(sessionProviderRegistry.hasMappingFor(workspaceId)){
             addMappedRepositoryName(workspaceId, repositoryId, workspaceId);
         }
         RepositoryMapping map = getRepositoryMapping(repositoryId);
@@ -430,40 +434,29 @@ public final class ContentRepository {
      * within <Repository/>.
      * */
     public static String getParentRepositoryName(String workspaceName) throws RepositoryException {
-        Iterator<RepositoryNameMap> values = repositoryNameMap.values().iterator();
-        while (values.hasNext()) {
-            RepositoryNameMap map = values.next();
-            if (workspaceName.equalsIgnoreCase(map.getWorkspaceName())) {
-                return map.getRepositoryName();
-            }
-        }
-        throw new RepositoryException("No mapping found for "+workspaceName+" repository in magnolia repositories.xml");
+        throw new UnsupportedOperationException("This function is no longer supported");
     }
 
     /**
      * Get mapped repository name.
      * @param name
      * @return mapped name as in repositories.xml RepositoryMapping element
+     *
+     * @deprecated since 4.5 - use {@link SessionProviderRegistry#getRepositoryNameFor(String)}
      */
     public static String getMappedRepositoryName(String name) {
-        RepositoryNameMap nameMap = repositoryNameMap.get(name);
-        if(nameMap==null){
-            return name;
-        }
-        return nameMap.getRepositoryName();
+        return sessionProviderRegistry.getRepositoryNameFor(name);
     }
 
     /**
      * Get mapped workspace name.
      * @param name
      * @return mapped name as in repositories.xml RepositoryMapping element
+     *
+     * @deprecated since 4.5 - use {@link SessionProviderRegistry#getWorkspaceNameFor(String)}
      */
     public static String getMappedWorkspaceName(String name) {
-        RepositoryNameMap nameMap = repositoryNameMap.get(name);
-        if (nameMap == null) {
-            return name;
-        }
-        return nameMap.getWorkspaceName();
+        return sessionProviderRegistry.getWorkspaceNameFor(name);
     }
 
     /**
@@ -480,13 +473,11 @@ public final class ContentRepository {
      * @param name
      * @param repositoryName
      * @param workspaceName
+     *
+     * @deprecated since 4.5 - use {@link SessionProviderRegistry#addLogical2PhysicalWorkspaceMapping(String, String, String)}
      */
     public static void addMappedRepositoryName(String name, String repositoryName, String workspaceName) {
-        if (StringUtils.isEmpty(workspaceName)) {
-            workspaceName = name;
-        }
-        RepositoryNameMap nameMap = new RepositoryNameMap(repositoryName, workspaceName);
-        repositoryNameMap.put(name, nameMap);
+        sessionProviderRegistry.addLogical2PhysicalWorkspaceMapping(name, repositoryName, workspaceName);
     }
 
     /**
@@ -567,27 +558,22 @@ public final class ContentRepository {
     /**
      * Gets repository names array as configured in repositories.xml.
      * @return repository names
+     *
+     * @deprecated since 4.5 - use {@link SessionProviderRegistry#getAllLogicalWorkspaceNames()}
      */
     public static Iterator<String> getAllRepositoryNames() {
-        return repositoryNameMap.keySet().iterator();
+        return sessionProviderRegistry.getAllLogicalWorkspaceNames();
     }
 
     /**
      * get internal workspace name.
      * @param workspaceName
      * @return workspace name as configured in magnolia repositories.xml
+     *
+     * @deprecated since 4.5 - use {@link SessionProviderRegistry#getLogicalWorkspaceNameFor(String)}
      * */
     public static String getInternalWorkspaceName(String workspaceName) {
-        Iterator<String> keys = repositoryNameMap.keySet().iterator();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            RepositoryNameMap nameMap = repositoryNameMap.get(key);
-            if (nameMap.getWorkspaceName().equalsIgnoreCase(workspaceName)) {
-                return key;
-            }
-        }
-        log.error("No Repository/Workspace name mapping defined for "+workspaceName);
-        return workspaceName;
+        return sessionProviderRegistry.getLogicalWorkspaceNameFor(workspaceName);
     }
 
 }
