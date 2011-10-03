@@ -37,6 +37,8 @@ import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.FilteringPropertyIterator;
+import info.magnolia.cms.util.JCRPropertyHidingPredicate;
 import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Property;
@@ -127,17 +130,28 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
         // remove duplicates
         Collection<String> groups = new HashSet<String>();
         if (node.hasNode(NODE_GROUPS)) {
-            for (PropertyIterator iter = node.getNode(NODE_GROUPS).getProperties();iter.hasNext();) {
+            for (PropertyIterator iter = new FilteringPropertyIterator(node.getNode(NODE_GROUPS).getProperties(), new JCRPropertyHidingPredicate()); iter.hasNext();) {
                 Property subgroup = iter.nextProperty();
-                groups.add(getResourceName(subgroup.getString()));
+                try {
+                    groups.add(getResourceName(subgroup.getString()));
+                } catch (ItemNotFoundException e) {
+                    log.warn("assigned group " + subgroup.getString() + " doesn't exist.");
+                }
             }
         }
         Collection<String> roles = new HashSet<String>();
         if (node.hasNode(NODE_ROLES)) {
             RoleManager roleMan = SecuritySupport.Factory.getInstance().getRoleManager();
-            for (PropertyIterator iter = node.getNode(NODE_ROLES).getProperties();iter.hasNext();) {
+            for (PropertyIterator iter = new FilteringPropertyIterator(node.getNode(NODE_ROLES).getProperties(), new JCRPropertyHidingPredicate()); iter.hasNext();) {
                 Property role = iter.nextProperty();
-                roles.add(roleMan.getRoleNameById(role.getString()));
+                try {
+                    String roleName = roleMan.getRoleNameById(role.getString());
+                    if (roleName != null) {
+                        roles.add(roleName);
+                    }
+                } catch (ItemNotFoundException e) {
+                    log.warn("assigned role " + role.getString() + " doesn't exist.");
+                }
             }
         }
         MgnlGroup group = new MgnlGroup(node.getIdentifier(), node.getName(), groups, roles);
