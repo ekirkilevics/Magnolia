@@ -33,10 +33,14 @@
  */
 package info.magnolia.cms.core;
 
+import info.magnolia.cms.security.AccessManagerImpl;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.PrincipalCollection;
+
 import java.security.Principal;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -63,6 +67,7 @@ import org.slf4j.LoggerFactory;
  * @deprecated this class will change package as part of removal direct JR dependencies.
  */
 // TODO: should extend just abstract control provider!!!
+@Deprecated
 public class MagnoliaAccessProvider extends CombinedProvider {
 
     /**
@@ -91,16 +96,16 @@ public class MagnoliaAccessProvider extends CombinedProvider {
      */
     public class ACLBasedPermissions extends AbstractCompiledPermissions {
 
-        private final PrincipalCollection acls;
+        private final AccessManagerImpl ami = new AccessManagerImpl();
 
-        public ACLBasedPermissions(PrincipalCollection acls) {
-            this.acls = acls;
+        public ACLBasedPermissions(List<Permission> permissions) {
+            ami.setPermissionList(permissions);
         }
 
         @Override
         public boolean canRead(Path itemPath, ItemId itemId) throws RepositoryException {
-            log.error("IMPLEMENT CHECK FOR " + itemPath + " :: " + itemId);
-            return false;
+            log.error("Read request for " + itemPath + " :: " + itemId);
+            return ami.isGranted(itemPath.getString(), Permission.READ);
         }
 
         @Override
@@ -137,32 +142,32 @@ public class MagnoliaAccessProvider extends CombinedProvider {
         checkInitialized();
         // superuser is also admin user!
         if (isAdminOrSystem(principals)) {
-            // TODO: retrieve admin user name in configurable manner.
-            if ("admin".equals(session.getUserID()) && "uri".equals(session.getWorkspace().getName())) {
-                // special admin user has meaning only within the system. Do not allow such user access over uri.
-                return new DenyAllPermissions();
-            }
             return getAdminPermissions();
         }
 
-        boolean hasSomePermissions = false;
+        final String workspaceName = super.session.getWorkspace().getName();
+
         for  (Iterator<Principal> iter = principals.iterator(); iter.hasNext(); ) {
             Principal princ = iter.next();
             if (princ instanceof PrincipalCollection) {
                 log.debug("found mgnl principal " + princ);
                 PrincipalCollection collection = (PrincipalCollection) princ;
-                if (collection.iterator().hasNext() && collection.iterator().next() instanceof ACL) {
-                    String name = super.session.getWorkspace().getName();
-                    //TODO: filter out only those permissions relevant to the given workspace!
-                    return getUserPermissions(collection);
+                if (collection.iterator().hasNext()) {
+                    Principal maybeAcl = collection.iterator().next();
+                    if (maybeAcl instanceof ACL) {
+                        ACL acl = ((ACL) maybeAcl);
+                        if (workspaceName.equals(acl.getWorkspace())) {
+                            return getUserPermissions(acl.getList());
+                        }
+                    }
                 }
             }
         }
-        // it should never come to this, but if it does ... sorry ... no access
+
         return new DenyAllPermissions();
     }
 
-    private CompiledPermissions getUserPermissions(PrincipalCollection collection) {
+    private CompiledPermissions getUserPermissions(List<Permission> collection) {
         return new ACLBasedPermissions(collection);
     }
 
@@ -210,5 +215,4 @@ public class MagnoliaAccessProvider extends CombinedProvider {
         sb.delete(0,4);
         return sb.toString();
     }
-
 }
