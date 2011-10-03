@@ -82,52 +82,52 @@ public final class ContentRepository {
     /**
      * default repository ID's.
      */
-    public static final String WEBSITE = "website"; //$NON-NLS-1$
+    public static final String WEBSITE = "website";
 
-    public static final String USERS = "users"; //$NON-NLS-1$
+    public static final String USERS = "users";
 
-    public static final String USER_ROLES = "userroles"; //$NON-NLS-1$
+    public static final String USER_ROLES = "userroles";
 
-    public static final String USER_GROUPS = "usergroups"; //$NON-NLS-1$
+    public static final String USER_GROUPS = "usergroups";
 
-    public static final String CONFIG = "config"; //$NON-NLS-1$
+    public static final String CONFIG = "config";
 
-    public static final String DEFAULT_WORKSPACE = "default"; //$NON-NLS-1$
+    public static final String DEFAULT_WORKSPACE = "default";
 
     public static final String VERSION_STORE = "mgnlVersion";
 
     /**
      * magnolia namespace.
      */
-    public static final String NAMESPACE_PREFIX = "mgnl"; //$NON-NLS-1$
+    public static final String NAMESPACE_PREFIX = "mgnl";
 
-    public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl"; //$NON-NLS-1$
+    public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl";
 
     /**
      * repository element string.
      */
-    private static final String ELEMENT_REPOSITORY = "Repository"; //$NON-NLS-1$
+    private static final String ELEMENT_REPOSITORY = "Repository";
 
-    private static final String ELEMENT_REPOSITORYMAPPING = "RepositoryMapping"; //$NON-NLS-1$
+    private static final String ELEMENT_REPOSITORYMAPPING = "RepositoryMapping";
 
-    private static final String ELEMENT_PARAM = "param"; //$NON-NLS-1$
+    private static final String ELEMENT_PARAM = "param";
 
-    private static final String ELEMENT_WORKSPACE = "workspace"; //$NON-NLS-1$
+    private static final String ELEMENT_WORKSPACE = "workspace";
 
     /**
      * Attribute names.
      */
-    private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
+    private static final String ATTRIBUTE_NAME = "name";
 
-    private static final String ATTRIBUTE_LOAD_ON_STARTUP = "loadOnStartup"; //$NON-NLS-1$
+    private static final String ATTRIBUTE_LOAD_ON_STARTUP = "loadOnStartup";
 
-    private static final String ATTRIBUTE_PROVIDER = "provider"; //$NON-NLS-1$
+    private static final String ATTRIBUTE_PROVIDER = "provider";
 
-    private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
+    private static final String ATTRIBUTE_VALUE = "value";
 
-    private static final String ATTRIBUTE_REPOSITORY_NAME = "repositoryName"; //$NON-NLS-1$
+    private static final String ATTRIBUTE_REPOSITORY_NAME = "repositoryName";
 
-    private static final String ATTRIBUTE_WORKSPACE_NAME = "workspaceName"; //$NON-NLS-1$
+    private static final String ATTRIBUTE_WORKSPACE_NAME = "workspaceName";
 
     /**
      * repository user.
@@ -193,11 +193,11 @@ public final class ContentRepository {
      *</pre>
      */
     public static void init() {
-        log.info("Loading JCR"); //$NON-NLS-1$
+        log.info("Loading JCR");
         repositories.clear();
         try {
             loadRepositories();
-            log.debug("JCR loaded"); //$NON-NLS-1$
+            log.debug("JCR loaded");
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -249,7 +249,7 @@ public final class ContentRepository {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(repository);
 
         if (hm == null) {
-            throw new RuntimeException("Repository [" + repository + "] not loaded"); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new RuntimeException("Repository [" + repository + "] not loaded");
         }
 
         Content startPage = hm.getRoot();
@@ -274,7 +274,7 @@ public final class ContentRepository {
      * @see #init()
      */
     public static void reload() {
-        log.info("Reloading JCR"); //$NON-NLS-1$
+        log.info("Reloading JCR");
         init();
     }
 
@@ -326,7 +326,7 @@ public final class ContentRepository {
                 loadRepository(map);
             }
             catch (Exception e) {
-                log.error("Failed to load JCR \"" + map.getName() + "\" " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                log.error("Failed to load JCR \"" + map.getName() + "\" " + e.getMessage(), e);
             }
         }
     }
@@ -357,7 +357,7 @@ public final class ContentRepository {
      */
     public static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
     InstantiationException, IllegalAccessException, ClassNotFoundException {
-        log.info("Loading JCR {}", map.getName()); //$NON-NLS-1$
+        log.info("Loading JCR {}", map.getName());
         Provider handlerClass = Classes.newInstance(map.getProvider());
         handlerClass.init(map);
         Repository repository = handlerClass.getUnderlyingRepository();
@@ -379,7 +379,7 @@ public final class ContentRepository {
      * @throws RepositoryException
      * */
     public static void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
-        log.info("Loading workspace {}", workspaceId); //$NON-NLS-1$
+        log.info("Loading workspace {}", workspaceId);
         if(!repositoryNameMap.containsKey(workspaceId)){
             addMappedRepositoryName(workspaceId, repositoryId, workspaceId);
         }
