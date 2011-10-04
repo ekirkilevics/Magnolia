@@ -65,7 +65,7 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  *
  */
-public class InheritanceNodeWrapper extends DelegateNodeWrapper implements NodeWrapperFactory {
+public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
 
     private Node start;
 
@@ -190,7 +190,7 @@ public class InheritanceNodeWrapper extends DelegateNodeWrapper implements NodeW
         // add direct children
         nodes.add(getWrappedNode().getNodes());
 
-        return new ChainedNodeIterator(nodes);
+        return wrapNodeIterator(new ChainedNodeIterator(nodes));
     }
 
     @Override
@@ -210,7 +210,7 @@ public class InheritanceNodeWrapper extends DelegateNodeWrapper implements NodeW
         // add direct children
         nodes.add(getWrappedNode().getNodes(namePattern));
 
-        return new ChainedNodeIterator(nodes);
+        return wrapNodeIterator(new ChainedNodeIterator(nodes));
     }
 
     @Override

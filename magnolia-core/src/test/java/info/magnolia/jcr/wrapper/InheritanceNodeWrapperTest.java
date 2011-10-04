@@ -41,8 +41,12 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -125,22 +129,21 @@ public class InheritanceNodeWrapperTest {
 
     }
 
-    @Ignore
-    //TODO fgrilli
+    @Test
     public void testCollectionInheritance() throws Exception {
         setUpNode("testCollectionInheritance");
         Node page11 = getWrapped("/page1/page11");
         Node page12 = getWrapped("/page1/page12");
         Node page13 = getWrapped("/page1/page13");
 
-        /*List<Node> col1 = new ArrayList<Node>(page11.getNode("collection").getNodes());
+        List<Node> col1 = new ArrayList<Node>(asCollection(page11.getNode("collection").getNodes()));
         assertEquals(2, col1.size());
         assertEquals("comp11", col1.get(0).getName());
         assertTrue(((InheritanceNodeWrapper)col1.get(0)).isInherited());
         assertEquals("comp12", col1.get(1).getName());
         assertTrue(((InheritanceNodeWrapper)col1.get(1)).isInherited());
 
-        List<Node> col2 = new ArrayList<Node>(page12.getNode("collection").getNodes());
+        List<Node> col2 = new ArrayList<Node>(asCollection(page12.getNode("collection").getNodes()));
         assertEquals(4, col2.size());
         assertEquals("comp11", col2.get(0).getName());
         assertTrue(((InheritanceNodeWrapper)col2.get(0)).isInherited());
@@ -152,13 +155,13 @@ public class InheritanceNodeWrapperTest {
         assertFalse(((InheritanceNodeWrapper)col2.get(3)).isInherited());
 
         // this page has no collection container
-        List<Node> col3 = new ArrayList<Node>(page13.getNode("collection").getNodes());
+        List<Node> col3 = new ArrayList<Node>(asCollection(page13.getNode("collection").getNodes()));
         assertEquals(2, col3.size());
         assertEquals("comp11", col3.get(0).getName());
         assertTrue(((InheritanceNodeWrapper)col3.get(0)).isInherited());
         assertEquals("comp12", col3.get(1).getName());
         assertTrue(((InheritanceNodeWrapper)col3.get(1)).isInherited());
-        */
+
 
     }
 
@@ -166,5 +169,13 @@ public class InheritanceNodeWrapperTest {
         Node node = session.getNode(absPath);
         InheritanceNodeWrapper wrapped = new InheritanceNodeWrapper(node);
         return wrapped;
+    }
+
+    private Collection<Node> asCollection(NodeIterator it) {
+        List<Node> list = new ArrayList<Node>();
+        while(it.hasNext()) {
+            list.add(it.nextNode());
+        }
+        return list;
     }
 }
