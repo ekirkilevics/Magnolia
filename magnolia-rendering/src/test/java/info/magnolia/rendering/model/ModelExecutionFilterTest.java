@@ -113,8 +113,6 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
                 return definition;
             }
         });
-
-        ContentRepository.initSessionProviderRegistry();
     }
 
     @Test
