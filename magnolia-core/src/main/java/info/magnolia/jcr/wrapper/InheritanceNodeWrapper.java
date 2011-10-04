@@ -43,6 +43,7 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -169,7 +170,7 @@ public class InheritanceNodeWrapper extends DelegateNodeWrapper implements NodeW
         if(inherited == null){
             throw new PathNotFoundException("Can't inherit a node [" + relPath + "] on node [" + getWrappedNode().getPath() + "]");
         }
-        return inherited;
+        return wrapNode(inherited);
     }
 
     @Override
@@ -210,6 +211,24 @@ public class InheritanceNodeWrapper extends DelegateNodeWrapper implements NodeW
         nodes.add(getWrappedNode().getNodes(namePattern));
 
         return new ChainedNodeIterator(nodes);
+    }
+
+    @Override
+    public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
+        try {
+            if (getWrappedNode().hasProperty(relPath)) {
+                return getWrappedNode().getProperty(relPath);
+            }
+            Node inherited = getNodeSafely(findNextAnchor(), resolveInnerPath());
+            if(inherited != null){
+                return inherited.getProperty(relPath);
+            }
+        }
+        catch (RepositoryException e) {
+            throw new RuntimeException("Can't inherit property " + relPath + "  for " + getWrappedNode(), e);
+
+        }
+        return null;
     }
 
     /**
