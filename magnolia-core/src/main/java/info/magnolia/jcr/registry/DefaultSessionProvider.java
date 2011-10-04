@@ -35,7 +35,6 @@ package info.magnolia.jcr.registry;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.repository.Provider;
 
 import javax.jcr.Credentials;
 import javax.jcr.Repository;
@@ -50,11 +49,13 @@ import javax.jcr.Session;
 public class DefaultSessionProvider implements SessionProvider {
 
     private final String logicalWorkspaceName;
-    private final Provider repositoryProvider;
+    private final Repository repository;
+    private final String physicalWorkspaceName;
 
-    public DefaultSessionProvider(String logicalWorkspaceName, Provider repositoryProvider) {
+    public DefaultSessionProvider(String logicalWorkspaceName, Repository repository, String physicalWorkspaceName) {
         this.logicalWorkspaceName = logicalWorkspaceName;
-        this.repositoryProvider = repositoryProvider;
+        this.repository = repository;
+        this.physicalWorkspaceName = physicalWorkspaceName;
     }
 
     @Override
@@ -66,9 +67,7 @@ public class DefaultSessionProvider implements SessionProvider {
     public Session createSession(Credentials credentials) {
         Session session;
         try {
-            Repository repository = repositoryProvider.getUnderlyingRepository();
-            // TODO dlipp: use logicalWorkspaceName instead?
-            session = repository.login(credentials, ContentRepository.getMappedWorkspaceName(logicalWorkspaceName));
+            session = repository.login(credentials, ContentRepository.getMappedWorkspaceName(physicalWorkspaceName));
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }

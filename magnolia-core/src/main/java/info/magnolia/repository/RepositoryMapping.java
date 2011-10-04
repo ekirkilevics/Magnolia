@@ -40,8 +40,9 @@ import java.util.Map;
 
 /**
  * Bean representing existing repository and mapping it to its provider and list of existing workspaces provided by this repository.
- *
- * @version $Id$
+ * Date: Aug 16, 2004 Time: 4:03:23 PM
+ * @author Sameer Charles
+ * @version 2.0
  */
 public class RepositoryMapping {
 
