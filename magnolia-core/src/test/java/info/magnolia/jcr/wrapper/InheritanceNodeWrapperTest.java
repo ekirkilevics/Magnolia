@@ -51,7 +51,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
