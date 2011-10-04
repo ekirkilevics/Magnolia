@@ -62,6 +62,7 @@ import org.apache.commons.lang.StringUtils;
  * <p>
  * The {@link #getNodes()} and {@link #getNodes(String)} methods merge the direct and inherited children by first adding the
  * inherited children to the iterator and then the direct children.
+ *
  * @version $Id$
  *
  */
@@ -241,6 +242,7 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
             throw new RuntimeRepositoryException(e);
         }
     }
+
     @Override
     public Node wrapNode(Node node) {
         if(node instanceof InheritanceNodeWrapper) {
