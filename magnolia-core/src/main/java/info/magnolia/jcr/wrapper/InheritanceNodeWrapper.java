@@ -222,13 +222,13 @@ public class InheritanceNodeWrapper extends DelegateNodeWrapper implements NodeW
             Node inherited = getNodeSafely(findNextAnchor(), resolveInnerPath());
             if(inherited != null){
                 return inherited.getProperty(relPath);
+            } else {
+                throw new PathNotFoundException("No property exists at " + relPath + " or current Session does not have read access to it.");
             }
         }
         catch (RepositoryException e) {
             throw new RuntimeException("Can't inherit property " + relPath + "  for " + getWrappedNode(), e);
-
         }
-        return null;
     }
 
     /**

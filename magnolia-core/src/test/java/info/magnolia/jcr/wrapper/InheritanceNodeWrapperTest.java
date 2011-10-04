@@ -70,7 +70,7 @@ public class InheritanceNodeWrapperTest {
         MgnlContext.setInstance(null);
     }
 
-    @Test
+    @Test(expected=RuntimeException.class)
     public void testRoot() throws Exception {
         setUpNode("testPropertyInheritance");
         Node root = new InheritanceNodeWrapper(session.getRootNode());
@@ -83,7 +83,7 @@ public class InheritanceNodeWrapperTest {
         setUpNode("testPropertyInheritance");
         Node page11 = getWrapped("/page1/page11");
         Node page12 = getWrapped("/page1/page12");
-        // direct node data
+        // direct property
         assertEquals("page11", page11.getProperty("nd").getString());
         // inherited from parent
         assertEquals("page1", page12.getProperty("nd").getString());
