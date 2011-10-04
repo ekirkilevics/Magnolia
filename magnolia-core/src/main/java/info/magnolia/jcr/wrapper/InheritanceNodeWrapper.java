@@ -73,6 +73,7 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
     public InheritanceNodeWrapper(Node node) {
         this(node, node);
     }
+
     public InheritanceNodeWrapper(Node node, Node start) {
         super(node);
         this.start = start;
@@ -113,7 +114,6 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
             throw new RuntimeRepositoryException(e);
         }
     }
-
 
     /**
      * This method returns null if no node has been found.
