@@ -42,6 +42,7 @@ import javax.jcr.NodeIterator;
 import org.apache.commons.collections.iterators.IteratorChain;
 /**
  * An implementation of {@link NodeIterator} which will chain several iterators making them behave like one.
+ *
  * @version $Id$
  *
  */
@@ -65,7 +66,7 @@ public class ChainedNodeIterator implements NodeIterator {
     @Override
     public void skip(long skipNum) {
         while (skipNum > 0) {
-            iterators.next();
+            next();
             skipNum--;
         }
     }
@@ -87,7 +88,7 @@ public class ChainedNodeIterator implements NodeIterator {
 
     @Override
     public Object next() {
-        return iterators.next();
+        return nextNode();
     }
 
     @Override
