@@ -49,7 +49,7 @@ public class ChainedNodeIterator implements NodeIterator {
 
     private IteratorChain iterators = new IteratorChain();
     private long position = 0;
-    long size = 0;
+    private long size = 0;
 
     public ChainedNodeIterator(List<NodeIterator> iterators) {
         for(NodeIterator it : iterators) {
