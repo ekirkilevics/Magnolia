@@ -34,13 +34,11 @@
 package info.magnolia.jcr.registry;
 
 import info.magnolia.registry.RegistrationException;
+import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryNameMap;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Singleton;
@@ -59,33 +57,42 @@ public class SessionProviderRegistry {
 
     private static final Logger log = LoggerFactory.getLogger(SessionProviderRegistry.class);
 
+    /**
+     * RepositoryMapping's as defined in repository.xml.
+     */
     private final Map<String, RepositoryNameMap> logical2PhysicalWorkspaceMapping = new HashMap<String, RepositoryNameMap>();
-    private final Map<String, SessionProvider> repository2SessionProviderMapping = new HashMap<String, SessionProvider>();
 
-    protected Map<String, SessionProvider> getSessionProviders() {
-        return repository2SessionProviderMapping;
+    /**
+     * JCR providers as mapped in repositories.xml.
+     */
+    private final Map<String, Provider> repository2ProviderMapping = new HashMap<String, Provider>();
+
+    protected Map<String, Provider> getProviders() {
+        return repository2ProviderMapping;
     }
 
-    public void register(SessionProvider provider) {
-        synchronized (repository2SessionProviderMapping) {
-            repository2SessionProviderMapping.put(provider.getLogicalWorkspaceName(), provider);
+    public void register(String repositoryName, Provider provider) {
+        synchronized (repository2ProviderMapping) {
+            repository2ProviderMapping.put(repositoryName, provider);
         }
     }
 
-    public void unregisterSessionProvider(String repositoryName) {
-        synchronized (repository2SessionProviderMapping) {
-            repository2SessionProviderMapping.remove(repositoryName);
+    public void unregisterProvider(String repositoryName) {
+        synchronized (repository2ProviderMapping) {
+            repository2ProviderMapping.remove(repositoryName);
         }
     }
 
-    public SessionProvider getSessionProvider(String repositoryName) throws RegistrationException {
-        SessionProvider provider;
-        synchronized (repository2SessionProviderMapping) {
-            provider = repository2SessionProviderMapping.get(repositoryName);
+    public Provider getProvider(String repositoryName) throws RegistrationException {
+        Provider provider = repository2ProviderMapping.get(repositoryName);
+        if (provider == null) {
+            final String mappedRepositoryName = getRepositoryNameFor(repositoryName);
+            if (mappedRepositoryName != null) {
+                provider = repository2ProviderMapping.get(mappedRepositoryName);
+            }
             if (provider == null) {
-                List<String> types = new ArrayList<String>(repository2SessionProviderMapping.keySet());
-                Collections.sort(types);
-                throw new RegistrationException("Can't find a registration for logical workspaceName [" + repositoryName + "]. Registered workspaces are " + types);
+                final String s = "Failed to retrieve repository provider '" + repositoryName + "' (mapped as '" + mappedRepositoryName + "'). Your Magnolia instance might not have been initialized properly.";
+                throw new RegistrationException(s);
             }
         }
         return provider;
@@ -136,6 +143,16 @@ public class SessionProviderRegistry {
 
     public void clear() {
         logical2PhysicalWorkspaceMapping.clear();
-        repository2SessionProviderMapping.clear();
+        repository2ProviderMapping.clear();
+    }
+
+    public void shutdown() {
+        log.info("Shutting down JCR");
+        final Iterator<Provider> providers = repository2ProviderMapping.values().iterator();
+        while (providers.hasNext()) {
+            final Provider provider = providers.next();
+            provider.shutdownRepository();
+        }
+        repository2ProviderMapping.clear();
     }
 }
