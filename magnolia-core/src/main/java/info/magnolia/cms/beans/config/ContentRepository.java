@@ -202,6 +202,10 @@ public final class ContentRepository {
         }
     }
 
+    /**
+     * Set sessionProviderRegistry from Components - must be triggered (also in Tests) before ContentRepository can properly be used.
+     */
+    // TODO dlipp: find solution, where this call doesn't have to be triggered manually.
     public static void initSessionProviderRegistry(){
         ContentRepository.sessionProviderRegistry = Components.getComponent(SessionProviderRegistry.class);
     }
