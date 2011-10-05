@@ -36,6 +36,7 @@ package info.magnolia.templating.functions;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -191,16 +192,43 @@ public class TemplatingFunctions {
         List<Node> ancestors = new ArrayList<Node>();
         int depth = content.getDepth();
         for(int i=1; i<depth; ++i){
-            Node possibelAncestor = (Node)content.getAncestor(i);
+            Node possibleAncestor = (Node)content.getAncestor(i);
             if(nodeTypeName == null){
-                ancestors.add(possibelAncestor);
+                ancestors.add(possibleAncestor);
             } else {
-                if(possibelAncestor.isNodeType(nodeTypeName)){
-                    ancestors.add(possibelAncestor);
+                if(possibleAncestor.isNodeType(nodeTypeName)){
+                    ancestors.add(possibleAncestor);
                 }
             }
         }
         return ancestors;
+    }
+
+    //TODO fgrilli: implement missing methods.
+    public ContentMap inherit(Node content, String innerPath) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    public String inheritProperty(Node content, String innerPath) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    /**
+     * @param aggregate collect over several ancestors, respects the ordering information?
+     */
+    public List<ContentMap> inheritList(Node content, String innerPath, boolean aggregate) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    public boolean isFromCurrentPage(Node content) {
+        return !isInherited(content);
+    }
+
+    public boolean isInherited(Node content) {
+        if(content instanceof InheritanceNodeWrapper) {
+            return ((InheritanceNodeWrapper)content).isInherited();
+        }
+        return false;
     }
 
     private boolean isRoot(Node content) throws RepositoryException {
