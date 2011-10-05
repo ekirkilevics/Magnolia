@@ -91,7 +91,7 @@ public class TemplatingFunctionsTest {
     private ContentMap childPageSubPageContentMap;
 
     @Before
-    public void setUpNodeHierarchie() throws PathNotFoundException, RepositoryException{
+    public void setUpNodeHierarchy() throws PathNotFoundException, RepositoryException{
         root = new MockNode();
 
         topPage            = createChildNodes(root,       DEPTH_1_PAGE_NAMES,      MgnlNodeType.NT_CONTENT);
