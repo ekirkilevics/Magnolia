@@ -100,4 +100,9 @@ public class FreemarkerRenderer extends AbstractRenderer {
         return new HashMap<String, Object>();
     }
 
+
+    public FreemarkerHelper getFmHelper() {
+        return fmHelper;
+    }
+
 }
