@@ -635,7 +635,7 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public String toString() {
-        return "MockNode [primaryType=" + primaryType + super.toString() + "]";
+        return "MockNode [primaryType=" + primaryType + ", "+ super.toString() + "]";
     }
 
     protected boolean removeProperty(String propertyName) {
