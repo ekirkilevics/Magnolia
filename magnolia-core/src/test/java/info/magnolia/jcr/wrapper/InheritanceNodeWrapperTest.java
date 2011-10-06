@@ -73,7 +73,7 @@ public class InheritanceNodeWrapperTest {
         MgnlContext.setInstance(null);
     }
 
-    @Test(expected=RuntimeException.class)
+    @Test(expected=RepositoryException.class)
     public void testRoot() throws Exception {
         setUpNode("testPropertyInheritance");
         Node root = new InheritanceNodeWrapper(session.getRootNode());
