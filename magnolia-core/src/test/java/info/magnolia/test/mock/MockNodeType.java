@@ -33,6 +33,15 @@
  */
 package info.magnolia.test.mock;
 
+import info.magnolia.cms.core.MgnlNodeType;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import javax.jcr.Value;
 import javax.jcr.nodetype.NodeDefinition;
 import javax.jcr.nodetype.NodeType;
@@ -47,9 +56,30 @@ import javax.jcr.nodetype.PropertyDefinition;
 public class MockNodeType implements NodeType {
 
     private final String name;
+    //Key is the supertype, value is a list of its subtypes.
+    private static final Map<String, List<String>> nodeTypeHierarchy = new HashMap<String, List<String>>();
+    private NodeType[] superTypes = new NodeType[]{};
+
+    static {
+        nodeTypeHierarchy.put(MgnlNodeType.NT_CONTENT, Arrays.asList(new String[]{ MgnlNodeType.NT_PAGE }));
+        nodeTypeHierarchy.put(MgnlNodeType.NT_CONTENTNODE, Arrays.asList(new String[]{ MgnlNodeType.NT_AREA, MgnlNodeType.NT_COMPONENT, MgnlNodeType.USER, MgnlNodeType.GROUP, MgnlNodeType.ROLE}));
+    }
 
     public MockNodeType(String nodeTypeName) {
         this.name = nodeTypeName;
+        if(NT_BASE.equals(nodeTypeName)) {
+            return;
+        }
+        List<MockNodeType> superTypes = new ArrayList<MockNodeType>();
+        superTypes.add(new MockNodeType(NT_BASE));
+
+        for(Entry<String, List<String>> entry : nodeTypeHierarchy.entrySet()) {
+            if(entry.getValue().contains(nodeTypeName)) {
+               superTypes.add(new MockNodeType(entry.getKey()));
+            }
+        }
+        this.superTypes = superTypes.toArray(this.superTypes);
+
     }
 
     @Override
@@ -132,15 +162,11 @@ public class MockNodeType implements NodeType {
     @Override
     public NodeTypeIterator getSubtypes() {
         throw new UnsupportedOperationException("Not Implemented");
-
-
     }
 
     @Override
     public NodeType[] getSupertypes() {
-        throw new UnsupportedOperationException("Not Implemented");
-
-
+        return superTypes;
     }
 
     @Override

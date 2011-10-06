@@ -61,6 +61,7 @@ import javax.jcr.Value;
 import javax.jcr.lock.Lock;
 import javax.jcr.nodetype.NodeDefinition;
 import javax.jcr.nodetype.NodeType;
+import javax.jcr.nodetype.NodeTypeIterator;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 
@@ -411,7 +412,15 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public boolean isNodeType(String nodeTypeName) {
-        return primaryType.equals(nodeTypeName);
+        if(primaryType.equals(nodeTypeName)) {
+            return true;
+        }
+        for(NodeType nodeType : getPrimaryNodeType().getSupertypes()){
+            if(nodeTypeName.equals(nodeType.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

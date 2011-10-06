@@ -49,8 +49,8 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 /**
  * This wrapper inherits nodes from the parent hierarchy. The method {@link #isAnchor()} defines
- * the anchor to which the inheritance is performed relative to. By default the anchor is a page
- * (mgnl:page).
+ * the anchor to which the inheritance is performed relative to. By default the anchor is of type
+ * (mgnl:content).
  * <p>
  * The inheritance is then performed as follows:
  * <ul>
@@ -105,11 +105,11 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
     }
 
     /**
-     * True if this node is an anchor. By default true if this node is of type {@link MgnlNodeType#NT_PAGE}.
+     * True if this node is an anchor. By default true if this node is of type {@link MgnlNodeType#NT_CONTENT}.
      */
     protected boolean isAnchor() {
         try {
-            return this.isNodeType(MgnlNodeType.NT_PAGE);
+            return this.isNodeType(MgnlNodeType.NT_CONTENT);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
