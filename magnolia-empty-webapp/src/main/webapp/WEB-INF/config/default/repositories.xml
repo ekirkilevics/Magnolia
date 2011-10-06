@@ -78,7 +78,6 @@
         <Map name="usergroups" repositoryName="magnolia" workspaceName="usergroups" />
         <Map name="mgnlSystem" repositoryName="magnolia" workspaceName="mgnlSystem" /> <!-- System internal data -->
         <Map name="mgnlVersion" repositoryName="magnolia" workspaceName="mgnlVersion" /> <!-- magnolia version workspace -->
-        <Map name="uri" repositoryName="magnolia" workspaceName="uri" /> <!-- uri workspace, used currently only for authorization of uri access over repository security-->
     </RepositoryMapping>
 
     <!-- magnolia default repository -->
@@ -98,6 +97,5 @@
         <workspace name="usergroups" />
         <workspace name="mgnlSystem" />
         <workspace name="mgnlVersion" />
-        <workspace name="uri" />
     </Repository>
 </JCR>
