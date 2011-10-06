@@ -39,10 +39,16 @@ import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
@@ -204,20 +210,59 @@ public class TemplatingFunctions {
         return ancestors;
     }
 
-    //TODO fgrilli: implement missing methods.
-    public ContentMap inherit(Node content, String innerPath) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    // TODO fgrilli: review functions: log errors? return null? rethrow exceptions?
+    public ContentMap inherit(Node content, String relPath) {
+        if(StringUtils.isBlank(relPath)) {
+            return new ContentMap(content);
+        }
+        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
+        try {
+            InheritanceNodeWrapper subNode = (InheritanceNodeWrapper) inheritedNode.getNode(relPath);
+            return new ContentMap(subNode.getWrappedNode());
+        } catch (PathNotFoundException e) {
+            e.printStackTrace();
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public String inheritProperty(Node content, String innerPath) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public Property inheritProperty(Node content, String relPath) {
+        if(StringUtils.isBlank(relPath)) {
+            return null;
+        }
+        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
+        try {
+            Property property = inheritedNode.getProperty(relPath);
+            return property;
+        } catch (PathNotFoundException e) {
+            e.printStackTrace();
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    /**
-     * @param aggregate collect over several ancestors, respects the ordering information?
-     */
-    public List<ContentMap> inheritList(Node content, String innerPath, boolean aggregate) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public List<ContentMap> inheritList(Node content, String relPath) {
+        if(StringUtils.isBlank(relPath)) {
+            return Collections.emptyList();
+        }
+        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
+        try {
+            InheritanceNodeWrapper subNode = (InheritanceNodeWrapper) inheritedNode.getNode(relPath);
+            NodeIterator it = subNode.getNodes();
+            List<ContentMap> list = new ArrayList<ContentMap>();
+            while(it.hasNext()) {
+                InheritanceNodeWrapper child = (InheritanceNodeWrapper) it.nextNode();
+                list.add(new ContentMap(child.getWrappedNode()));
+            }
+            return list;
+        } catch (PathNotFoundException e) {
+            e.printStackTrace();
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 
     public boolean isFromCurrentPage(Node content) {

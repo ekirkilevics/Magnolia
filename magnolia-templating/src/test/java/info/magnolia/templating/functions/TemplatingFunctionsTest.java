@@ -33,12 +33,11 @@
  */
 package info.magnolia.templating.functions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockNode;
 
@@ -719,6 +718,44 @@ public class TemplatingFunctionsTest {
          for(Iterator<Node> itResult=resultList.iterator(); itResult.hasNext();){
             assertNodeEqualsNode(itResult.next(), itCompare.next());
          }
+     }
+
+     @Test
+     public void testIsInherited() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(childPage);
+
+         // THEN
+         assertTrue(functions.isInherited(inheritedNode.getNode("comp-L2-1")));
+         assertTrue(functions.isInherited(inheritedNode.getNode("comp-L2-2")));
+         assertTrue(functions.isInherited(inheritedNode.getNode("comp-L2-3")));
+    }
+
+     @Test
+     public void testIsFromCurrentPage() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(childPage);
+
+         // THEN
+         assertTrue(functions.isFromCurrentPage(inheritedNode.getNode("comp-L3-1")));
+     }
+
+     @Test
+     public void testInherit() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         ContentMap resultContentMap = functions.inherit(childPage, "comp-L3-1");
+
+         // THEN
+         assertMapEqualsMap(resultContentMap, childPageComponentContentMap);
      }
 
 
