@@ -37,6 +37,7 @@ import info.magnolia.jcr.wrapper.DelegateSessionWrapper;
 
 import javax.jcr.Session;
 
+
 /**
  * Session-related utility methods.
  *

@@ -33,21 +33,13 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.security.auth.ACL;
-import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
-import java.security.Principal;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 import javax.jcr.Session;
-import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,51 +79,35 @@ public class URISecurityFilter extends BaseSecurityFilter {
             return false;
         }
 
-        AccessManager accessManager = MgnlContext.getAccessManager(URI_REPOSITORY, URI_WORKSPACE);
-        return isAuthorized(accessManager, request);
+        return isAuthorized(request);
+    }
+
+    /**
+     * Validates user permissions on URI.
+     * 
+     * @deprecated since 4.5 use {@link #isAuthorized(HttpServletRequest)} instead.
+     */
+    @Deprecated
+    protected boolean isAuthorized(AccessManager accessManager, HttpServletRequest request) {
+        return isAuthorized(request);
     }
 
     /**
      * Validates user permissions on URI.
      */
-    protected boolean isAuthorized(AccessManager accessManager, HttpServletRequest request) {
+    protected boolean isAuthorized(HttpServletRequest request) {
         String permission;
-        if (request.getMethod().equalsIgnoreCase("POST")) {
-            permission = Session.ACTION_ADD_NODE;
-        } else {
+        if (request.getMethod().equalsIgnoreCase("HEAD") || request.getMethod().equalsIgnoreCase("GET")) {
             permission = Session.ACTION_READ;
+        } else {
+            permission = Session.ACTION_ADD_NODE;
         }
+
         final String uri = MgnlContext.getAggregationState().getCurrentURI();
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            log.warn("no session == running as anonymous");
-            return false;
-        }
-        List<Permission> permissions = null;
-        Subject sbj = (Subject) session.getAttribute(Subject.class.getName());
-        Set<PrincipalCollection> allPermissions = sbj.getPrincipals(PrincipalCollection.class);
-        for (PrincipalCollection principal : allPermissions) {
-            Iterator<Principal> iter = principal.iterator();
-            while (iter.hasNext()) {
-                Principal maybeAcl = iter.next();
-                if (maybeAcl instanceof ACL) {
-                    ACL acl = ((ACL) maybeAcl);
-                    if ("uri".equals(acl.getWorkspace())) {
-                        permissions = acl.getList();
-                        break;
-                    }
-                }
-            }
-        }
-        if (permissions == null) {
-            log.warn("no permissions found for " + MgnlContext.getUser().getName());
-            return false;
-        }
-        AccessManagerImpl ami = new AccessManagerImpl();
-        ami.setPermissionList(permissions);
-        boolean grant = ami.isGranted(uri, ami.convertPermissions(permission));
-        // MgnlContext.getJCRSession("uri").checkPermission(uri, permission);
+
+        boolean grant = PermissionUtil.isGranted("uri", uri, permission);
         log.debug("user {} has " + (grant ? "" : "NOT ") + "been granted permission {} to access uri {}", new Object[] { MgnlContext.getUser().getName(), permission, uri });
         return grant;
     }
+
 }

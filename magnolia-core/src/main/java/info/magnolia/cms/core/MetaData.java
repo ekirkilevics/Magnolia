@@ -36,20 +36,21 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Property;
-import javax.jcr.Session;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -137,21 +138,6 @@ public class MetaData {
         return this.node.getPath();
     }
 
-    private void allowUpdate() throws AccessDeniedException {
-        // if node is null, MetaData has not been created and allowUpdate can abort silently
-        if (node == null) {
-            return;
-        }
-        try {
-            // was Permission.WRITE, but since we only update properties of metadata, this should be enough.
-            Access.tryPermission(session, Path.getAbsolutePath(node.getPath()), Session.ACTION_SET_PROPERTY);
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-            throw new AccessDeniedException(re.getMessage());
-        }
-    }
-
     /**
      * Part of metadata, same as name of actual storage node. This value is unique at the hierarchy level context.
      * @return String value of the requested metadata
@@ -196,7 +182,6 @@ public class MetaData {
      * @param value
      */
     public void setTitle(String value) throws AccessDeniedException {
-        allowUpdate();
         setProperty(this.getInternalPropertyName(TITLE), value);
     }
 
@@ -204,7 +189,6 @@ public class MetaData {
      * Part of metadata, adds creation date of the current node.
      */
     public void setCreationDate() throws AccessDeniedException {
-        allowUpdate();
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
         setProperty(this.getInternalPropertyName(CREATION_DATE), value);
     }
@@ -221,7 +205,6 @@ public class MetaData {
      * Part of metadata, adds activated status of the current node.
      */
     public void setActivated() throws AccessDeniedException {
-        allowUpdate();
         setProperty(this.getInternalPropertyName(ACTIVATED), true);
     }
 
@@ -229,7 +212,6 @@ public class MetaData {
      * Part of metadata, adds activated status of the current node.
      */
     public void setUnActivated() throws AccessDeniedException {
-        allowUpdate();
         setProperty(this.getInternalPropertyName(ACTIVATED), false);
     }
 
@@ -261,7 +243,6 @@ public class MetaData {
      * Part of metadata, adds activated date of the current node.
      */
     public void setLastActivationActionDate() throws AccessDeniedException {
-        allowUpdate();
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
         setProperty(this.getInternalPropertyName(LAST_ACTION), value);
     }
@@ -278,7 +259,6 @@ public class MetaData {
      * Part of metadata, adds modification date of the current node.
      */
     public void setModificationDate() throws AccessDeniedException {
-        allowUpdate();
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
         setProperty(this.getInternalPropertyName(LAST_MODIFIED), value);
     }
@@ -308,7 +288,6 @@ public class MetaData {
      * @param value
      */
     public void setAuthorId(String value) throws AccessDeniedException {
-        allowUpdate();
         setProperty(this.getInternalPropertyName(AUTHOR_ID), value);
     }
 
@@ -325,7 +304,6 @@ public class MetaData {
      * @param value
      */
     public void setActivatorId(String value) throws AccessDeniedException {
-        allowUpdate();
         setProperty(this.getInternalPropertyName(ACTIVATOR_ID), value);
     }
 
@@ -342,7 +320,6 @@ public class MetaData {
      * @param value
      */
     public void setTemplate(String value) throws AccessDeniedException {
-        allowUpdate();
         setProperty(this.getInternalPropertyName(TEMPLATE), value);
     }
 
@@ -353,12 +330,10 @@ public class MetaData {
      */
     @Deprecated
     public void setTemplateType(String value) throws AccessDeniedException {
-        allowUpdate();
         setProperty(this.getInternalPropertyName(TEMPLATE_TYPE), value);
     }
 
     public void setProperty(String name, String value) throws AccessDeniedException {
-        allowUpdate();
         name = this.getInternalPropertyName(name);
         try {
             this.node.getProperty(name).setValue(value);
@@ -380,7 +355,6 @@ public class MetaData {
     }
 
     public void setProperty(String name, long value) throws AccessDeniedException {
-        allowUpdate();
         name = this.getInternalPropertyName(name);
         try {
             this.node.getProperty(name).setValue(value);
@@ -406,7 +380,6 @@ public class MetaData {
     }
 
     public void setProperty(String name, double value) throws AccessDeniedException {
-        allowUpdate();
         name = this.getInternalPropertyName(name);
         try {
             this.node.getProperty(name).setValue(value);
@@ -432,7 +405,6 @@ public class MetaData {
     }
 
     public void setProperty(String name, boolean value) throws AccessDeniedException {
-        allowUpdate();
         name = this.getInternalPropertyName(name);
         try {
             this.node.getProperty(name).setValue(value);
@@ -458,7 +430,6 @@ public class MetaData {
     }
 
     public void setProperty(String name, Calendar value) throws AccessDeniedException {
-        allowUpdate();
         name = this.getInternalPropertyName(name);
         try {
             this.node.getProperty(name).setValue(value);

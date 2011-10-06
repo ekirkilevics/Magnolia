@@ -33,7 +33,8 @@
  */
 package info.magnolia.cms.security;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.RescueSecuritySupport.RescueUserManager;
 import info.magnolia.test.MgnlTestCase;
@@ -48,7 +49,6 @@ import org.junit.Test;
 public class RescueSecuritySupportTest extends MgnlTestCase{
 
     private RescueSecuritySupport securitySupport;
-
     //this is our GIVEN
     @Override
     @Before

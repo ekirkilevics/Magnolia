@@ -33,12 +33,13 @@
  */
 package info.magnolia.cms.core.search;
 
-import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.security.PermissionUtil;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -139,7 +140,7 @@ public class QueryResultImpl implements QueryResult {
         if ((nodeType == null || nodeType.length == 0) || isNodeType(node, nodeType) && !node.isNodeType(ItemType.NT_RESOURCE)) {
             if (this.dirtyHandles.get(node.getPath()) == null) {
                 // TODO: yet another of those silly checks ... if we were not allowed, we would not have the node here
-                boolean isAllowed = Access.isGranted(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_READ);
+                boolean isAllowed = PermissionUtil.isGranted(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_READ);
                 if (isAllowed) {
                     collection.add(new DefaultContent(node));
                     this.dirtyHandles.put(node.getPath(), StringUtils.EMPTY);

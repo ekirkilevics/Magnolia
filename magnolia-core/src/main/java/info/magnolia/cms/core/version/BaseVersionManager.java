@@ -33,8 +33,10 @@
  */
 package info.magnolia.cms.core.version;
 
+import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.JCRSessionOp;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Rule;
@@ -388,6 +390,9 @@ public abstract class BaseVersionManager {
      * @throws javax.jcr.version.VersionException
      */
     public synchronized void restore(final Node node, Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
+        // FYI: restore is done in SC!!! Check permissions manually
+        Access.tryPermission(node.getSession(), node.getPath(), Session.ACTION_SET_PROPERTY + "," + Session.ACTION_REMOVE + "," + Session.ACTION_ADD_NODE);
+
         // get the cloned node from version store
         final Node versionedNode = this.getVersionedNode(node);
 
@@ -452,10 +457,11 @@ public abstract class BaseVersionManager {
 
     /**
      * Removes all versions of the node associated with given UUID.
-     * @param uuid
      * @throws RepositoryException if fails to remove versioned node from the version store
      */
-    public synchronized void removeVersionHistory(final String uuid) throws RepositoryException {
+    public synchronized void removeVersionHistory(final Node node) throws RepositoryException {
+        Access.tryPermission(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY);
+        final String uuid = node.getIdentifier();
         MgnlContext.doInSystemContext(new JCRSessionOp<Void>(VersionManager.VERSION_WORKSPACE) {
 
             @Override

@@ -35,6 +35,7 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.NodeTypeFilter;
 import info.magnolia.context.MgnlContext;
@@ -384,9 +385,9 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     @Override
     public boolean isGranted(long permissions) {
-        final String action = Access.convertPermissions(permissions);
+        final String action = PermissionUtil.convertPermissions(permissions);
         try {
-            return Access.isGranted(this.getJCRNode().getSession(), getHandle(), action);
+            return PermissionUtil.isGranted(this.getJCRNode().getSession(), getHandle(), action);
         } catch (RepositoryException e) {
             log.error("An error occurred while trying to access path {} with action {}", new Object[]{getHandle(), action}, e);
             return false;

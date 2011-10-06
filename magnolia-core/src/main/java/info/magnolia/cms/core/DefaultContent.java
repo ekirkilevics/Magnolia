@@ -36,11 +36,11 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.MgnlContext.Op;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.util.ArrayList;
@@ -121,7 +121,6 @@ public class DefaultContent extends AbstractContent {
      * @throws RepositoryException if an error occurs
      */
     DefaultContent(Node rootNode, String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        Access.tryPermission(rootNode.getSession(), Path.getAbsolutePath(rootNode.getPath(), path), Session.ACTION_READ);
         this.setPath(path);
         this.setRootNode(rootNode);
         this.setNode(this.rootNode.getNode(this.path));
@@ -154,7 +153,6 @@ public class DefaultContent extends AbstractContent {
     throws PathNotFoundException,
     RepositoryException,
     AccessDeniedException {
-        Access.tryPermission(rootNode.getSession(), Path.getAbsolutePath(rootNode.getPath(), path), Session.ACTION_SET_PROPERTY + "," + Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE);
         this.setPath(path);
         this.setRootNode(rootNode);
         this.setNode(this.rootNode.addNode(this.path, contentType));
@@ -214,16 +212,9 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
-        try {
-            Access.tryPermission(node.getSession(), Path.getAbsolutePath(getHandle(), name), Session.ACTION_READ);
-        }
-        // FIXME: should be thrown but return a dummy node data
-        catch (AccessDeniedException e) {
-            return new NonExistingNodeData(this, name);
-        }
-
         // create an empty dummy
         if(!hasNodeData(name) && !createIfNotExisting){
+            // TODO: This could also mean that user just doesn't have permission
             return new NonExistingNodeData(this, name);
         }
 
@@ -461,14 +452,12 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public void restore(String versionName, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
-        Access.tryPermission(this.node.getSession(), this.getHandle(), Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY);
         Version version = this.getVersionHistory().getVersion(versionName);
         this.restore(version, removeExisting);
     }
 
     @Override
     public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
-        Access.tryPermission(this.node.getSession(), this.getHandle(), Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY);
         VersionManager.getInstance().restore(this, version, removeExisting);
     }
 
@@ -544,8 +533,7 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public void removeVersionHistory() throws AccessDeniedException, RepositoryException {
-        Access.tryPermission(this.node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY);
-        VersionManager.getInstance().removeVersionHistory(this.node.getUUID());
+        VersionManager.getInstance().removeVersionHistory(this.node);
     }
 
     @Override
@@ -558,7 +546,6 @@ public class DefaultContent extends AbstractContent {
         final String nodePath = Path.getAbsolutePath(this.node.getPath());
         final String workspaceName = this.node.getSession().getWorkspace().getName();
         log.debug("removing {} from {}", this.node.getPath(), workspaceName);
-        Access.tryPermission(this.node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_REMOVE);
         final ItemType nodeType = this.getItemType();
         if (!workspaceName.equals("mgnlVersion")) {
             MgnlContext.doInSystemContext(new Op<Void, RepositoryException>() {
@@ -619,8 +606,6 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public void addMixin(String type) throws RepositoryException {
-        // TODO: was Permission.SET, is this OK?
-        Access.tryPermission(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_SET_PROPERTY);
         // TODO: there seems to be bug somewhere as we are able to add mixins even when the method below returns false
         if (!this.node.canAddMixin(type)) {
             log.debug("Node - " + this.node.getPath() + " does not allow mixin type - " + type);
@@ -634,8 +619,6 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public void removeMixin(String type) throws RepositoryException {
-        // TODO: was Permission.SET, is this OK?
-        Access.tryPermission(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_SET_PROPERTY);
         this.node.removeMixin(type);
     }
 

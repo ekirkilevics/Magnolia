@@ -39,17 +39,22 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.AccessManagerImpl;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.User;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.security.auth.Subject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,6 +125,7 @@ public class MgnlContext {
      *
      * @deprecated since 4.5 - use {@link #getJCRSession(String)}
      */
+    @Deprecated
     public static HierarchyManager getHierarchyManager(String repositoryId) {
         return getInstance().getHierarchyManager(repositoryId);
     }
@@ -527,6 +533,42 @@ public class MgnlContext {
      */
     public static Session getJCRSession(String repository, String workspace) throws LoginException, RepositoryException {
         return getInstance().getJCRSession(repository, workspace);
+    }
+
+    public static Subject getSubject() {
+        WebContext ctx = getWebContextOrNull();
+        if (ctx != null) {
+            // TODO: move this to MgnlContext
+            HttpSession session = ctx.getRequest().getSession(false);
+            Subject subject = null;
+            if (session != null) {
+                subject = (Subject) session.getAttribute(Subject.class.getName());
+                if (subject == null) {
+                    log.warn("Subject is missing. Security configuration might be broken.");
+                }
+                return subject;
+            } else {
+                // TODO: not in a session ... anonymous user subject
+            }
+        }
+        // TODO: Not in a web context ... deal with it :D
+        return null;
+    }
+
+    /**
+     * Returns Access Manager instance
+     * 
+     * @param permissions
+     * @return
+     * @deprecated Signature of this method will change to contain workspace name instead of permission list
+     */
+    @Deprecated
+    public static AccessManager getAccessManager(List<Permission> permissions) {
+        // TODO: use provider instead of fixed impl
+        // TODO: retrieve permissions yourself from subject
+        AccessManagerImpl ami = new AccessManagerImpl();
+        ami.setPermissionList(permissions);
+        return ami;
     }
 
 }

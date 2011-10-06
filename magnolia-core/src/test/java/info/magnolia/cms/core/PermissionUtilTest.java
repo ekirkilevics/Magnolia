@@ -35,6 +35,7 @@ package info.magnolia.cms.core;
 
 import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionUtil;
 
 import javax.jcr.Session;
 
@@ -43,24 +44,25 @@ import org.junit.Test;
 /**
  * @version $Id$
  */
-public class AccessTest {
+public class PermissionUtilTest {
 
     @Test
     public void testConvertPermissions() {
-        assertEquals(Session.ACTION_READ, Access.convertPermissions(Permission.READ));
-        assertEquals("add_node,read,set_property", Access.convertPermissions(Permission.WRITE));
-        assertEquals(Session.ACTION_REMOVE, Access.convertPermissions(Permission.REMOVE));
-        assertEquals(Session.ACTION_SET_PROPERTY, Access.convertPermissions(Permission.SET));
-        assertEquals("add_node,read,remove,set_property", Access.convertPermissions(Permission.ALL));
+        assertEquals(Session.ACTION_READ, PermissionUtil.convertPermissions(Permission.READ));
+        assertEquals("add_node,read,set_property", PermissionUtil.convertPermissions(Permission.WRITE));
+        assertEquals(Session.ACTION_REMOVE, PermissionUtil.convertPermissions(Permission.REMOVE));
+        assertEquals(Session.ACTION_SET_PROPERTY, PermissionUtil.convertPermissions(Permission.SET));
+        assertEquals("add_node,read,remove,set_property", PermissionUtil.convertPermissions(Permission.ALL));
         // and any combo of the above
-        assertEquals("read,set_property", Access.convertPermissions(Permission.READ + Permission.SET));
+        assertEquals("read,set_property", PermissionUtil.convertPermissions(Permission.READ + Permission.SET));
         // and custom permissions in combo with basic ones (128 => random custom permission which set bit above all (63))
-        assertEquals(Session.ACTION_READ, Access.convertPermissions(Permission.READ + 128));
+        assertEquals(Session.ACTION_READ, PermissionUtil.convertPermissions(Permission.READ + 128));
 
     }
 
     @Test
     public void testIsGrantedForEmptyPermissionString() {
-        assertEquals("Empty-string must not be granted.", false, Access.isGranted(null, "ignored", ""));
+        assertEquals("Empty-string must not be granted.", false, PermissionUtil.isGranted((Session) null, "ignored", ""));
+        assertEquals("Empty-string must not be granted.", false, PermissionUtil.isGranted("config", "ignored", ""));
     }
 }

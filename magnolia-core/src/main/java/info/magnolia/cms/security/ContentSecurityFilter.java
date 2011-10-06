@@ -34,12 +34,13 @@
 package info.magnolia.cms.security;
 
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import info.magnolia.context.MgnlContext;
+
 import java.io.IOException;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.context.MgnlContext;
+import javax.jcr.Session;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Used to check if the user can read the requested content. This filter normally resides behind the cache filter.
@@ -51,21 +52,8 @@ public class ContentSecurityFilter extends BaseSecurityFilter {
     @Override
     public boolean isAllowed(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String repositoryName = MgnlContext.getAggregationState().getRepository();
-        AccessManager accessManager = MgnlContext.getAccessManager(repositoryName);
-        return isAuthorized(accessManager);
-    }
-
-    /**
-     * Check for read permissions of the aggregated handle.
-     * @deprecated since 4.3 when overriding this method, override isAllowed() instead
-     */
-    @Deprecated
-    protected boolean isAuthorized(AccessManager accessManager) {
         String handle = MgnlContext.getAggregationState().getHandle();
-        // HM might wrap the path so we need to make sure the wrapped path is actually checked here.
-        String repositoryName = MgnlContext.getAggregationState().getRepository();
-        HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
-        return hm.isGranted(handle, Permission.READ);
+        return PermissionUtil.isGranted(repositoryName, handle, Session.ACTION_READ);
     }
 
 

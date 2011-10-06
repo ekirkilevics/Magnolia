@@ -36,11 +36,12 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.SessionUtil;
+import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.io.ObjectStreamField;
@@ -324,7 +325,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      */
     @Override
     public void delete(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        Access.tryPermission(jcrSession, path, Session.ACTION_REMOVE);
         ItemType type = null;
         if (this.isNodeData(path)) {
             this.getNodeData(makeRelative(path)).delete();
@@ -361,7 +361,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      */
     @Override
     public boolean isExist(String path) {
-        if (!Access.isGranted(jcrSession, path, Session.ACTION_READ)) {
+        if (!PermissionUtil.isGranted(jcrSession, path, Session.ACTION_READ)) {
             return false;
         }
         try {
@@ -381,7 +381,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     @Override
     public boolean isGranted(String path, long oldPermissions) {
-        return (Access.isGranted(jcrSession, path, Access.convertPermissions(oldPermissions)));
+        return (PermissionUtil.isGranted(jcrSession, path, PermissionUtil.convertPermissions(oldPermissions)));
     }
 
     /**
@@ -391,7 +391,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      */
     @Override
     public boolean isNodeData(String path) throws AccessDeniedException {
-        Access.tryPermission(jcrSession, path, Session.ACTION_READ);
         boolean result = false;
         String nodePath = getNodePath(path);
         if (StringUtils.isEmpty(nodePath)) {
@@ -445,8 +444,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     @Override
     public void moveTo(String source, String destination) throws PathNotFoundException, RepositoryException,
     AccessDeniedException {
-        Access.tryPermission(jcrSession, source, Session.ACTION_REMOVE);
-        Access.tryPermission(jcrSession, destination, Session.ACTION_ADD_NODE);
         this.getWorkspace().move(source, destination);
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MOVE, getWorkspaceName(), source, destination);
     }
@@ -461,8 +458,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     @Override
     public void copyTo(String source, String destination) throws PathNotFoundException, RepositoryException,
     AccessDeniedException {
-        Access.tryPermission(jcrSession, source, Session.ACTION_READ);
-        Access.tryPermission(jcrSession, destination, Session.ACTION_ADD_NODE);
         this.getWorkspace().copy(source, destination);
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_COPY, getWorkspaceName(), source, destination);
     }
@@ -517,18 +512,23 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         DefaultHierarchyManager other = (DefaultHierarchyManager) obj;
         if (jcrSession == null) {
-            if (other.jcrSession != null)
+            if (other.jcrSession != null) {
                 return false;
-        } else if (!SessionUtil.hasSameUnderlyingSession(jcrSession, other.jcrSession))
+            }
+        } else if (!SessionUtil.hasSameUnderlyingSession(jcrSession, other.jcrSession)) {
             return false;
+        }
         return true;
     }
 }

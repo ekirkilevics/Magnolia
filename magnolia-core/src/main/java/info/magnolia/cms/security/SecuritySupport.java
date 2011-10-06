@@ -33,11 +33,11 @@
  */
 package info.magnolia.cms.security;
 
-import javax.security.auth.Subject;
-
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.objectfactory.Components;
+
+import javax.security.auth.Subject;
 
 /**
  * Entry point to get the various managers like {@link UserManager}, {@link GroupManager} and {@link RoleManager}.

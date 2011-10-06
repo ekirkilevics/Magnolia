@@ -33,9 +33,9 @@
  */
 package info.magnolia.jcr.util;
 
-import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.jcr.predicate.NodeTypePredicate;
 import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
@@ -339,7 +339,7 @@ public class NodeUtil {
      */
     public static boolean isGranted(Node node, long permissions) {
         try {
-            return Access.isGranted(node.getSession(), node.getPath(), Access.convertPermissions(permissions));
+            return PermissionUtil.isGranted(node.getSession(), node.getPath(), PermissionUtil.convertPermissions(permissions));
         } catch (RepositoryException e) {
             // TODO dlipp - apply consistent ExceptionHandling
             throw new RuntimeException(e);
