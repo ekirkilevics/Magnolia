@@ -47,6 +47,7 @@ import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.NodeType;
 
@@ -756,6 +757,18 @@ public class TemplatingFunctionsTest {
 
          // THEN
          assertMapEqualsMap(resultContentMap, childPageComponentContentMap);
+     }
+
+     @Test
+     public void testNonExistingInheritedPropertyShouldReturnNull() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         Property property = functions.inheritProperty(topPage, "foobar");
+
+         // THEN
+         assertNull(property);
      }
 
 
