@@ -34,8 +34,8 @@
 package info.magnolia.templating.renderers;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.Access;
 import info.magnolia.cms.gui.inline.BarMain;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.model.RenderingModel;
@@ -87,7 +87,7 @@ public class PlainTextTemplateRenderer extends AbstractRenderer {
                 out.write("<html>\n");
                 out.write("<body>\n");
 
-                if (Access.isGranted(content.getSession(), content.getPath(), Session.ACTION_SET_PROPERTY)) {
+                if (PermissionUtil.isGranted(content.getSession(), content.getPath(), Session.ACTION_SET_PROPERTY)) {
                     BarMain bar = new BarMain();
                     bar.setPath(content.getPath());
                     bar.setDialog(dialogName);

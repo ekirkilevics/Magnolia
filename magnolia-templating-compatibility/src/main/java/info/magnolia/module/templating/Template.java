@@ -33,10 +33,10 @@
  */
 package info.magnolia.module.templating;
 
-import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.HashMap;
@@ -196,7 +196,7 @@ public class Template extends AbstractRenderable {
     public boolean isAvailable(Content node) {
         // was: TODO is called quite often and should be faster
         try {
-            return Access.isGranted(MgnlContext.getJCRSession(getContent().getWorkspace().getName()), getContent().getHandle(), Session.ACTION_READ);
+            return PermissionUtil.isGranted(MgnlContext.getJCRSession(getContent().getWorkspace().getName()), getContent().getHandle(), Session.ACTION_READ);
         } catch (RepositoryException e) {
             return false;
         }

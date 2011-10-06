@@ -36,13 +36,13 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.text.MessageFormat;
 import java.util.Iterator;
 
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
@@ -153,12 +153,7 @@ public class Navigation {
      * @return
      */
     protected boolean isMenuPointRendered(Content mp) {
-        try {
-            return MgnlContext.getJCRSession(ContentRepository.CONFIG).hasPermission(mp.getHandle(), Session.ACTION_READ);
-        } catch (RepositoryException e) {
-            log.debug("Failed to read navigation permission", e);
-            return false;
-        }
+        return PermissionUtil.isGranted(ContentRepository.CONFIG, mp.getHandle(), Session.ACTION_READ);
     }
 
     /**

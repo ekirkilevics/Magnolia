@@ -33,7 +33,7 @@
  */
 package info.magnolia.rendering.template.configured;
 
-import info.magnolia.cms.core.Access;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.ParameterInfo;
@@ -118,7 +118,7 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
         try {
             // should not fact that we are able to get path already show that we can read this node???
             // ... unless of course this "content" was created with system session ... so make sure we check using user session and not the node session
-            return Access.isGranted(MgnlContext.getJCRSession(content.getSession().getWorkspace().getName()), content.getPath(), Session.ACTION_READ);
+            return PermissionUtil.isGranted(MgnlContext.getJCRSession(content.getSession().getWorkspace().getName()), content.getPath(), Session.ACTION_READ);
         } catch (RepositoryException e) {
             return false;
         }
