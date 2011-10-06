@@ -108,23 +108,8 @@ public class PermissionUtil {
      * Convenience call hiding all ugly details of permission conversions.
      * 
      */
-    public static boolean isGranted(String path, String requiredPermissions, List<Permission> availablePermissions) {
-        AccessManager ami = MgnlContext.getAccessManager(availablePermissions);
-        return ami.isGranted(path, PermissionUtil.convertPermissions(requiredPermissions));
-    }
-
-    /**
-     * Convenience call hiding all ugly details of permission conversions.
-     * 
-     */
     public static boolean isGranted(String workspace, String path, String requiredPermissions) {
-        Subject subject = MgnlContext.getSubject();
-        List<Permission> availablePermissions = getPermissions(subject, workspace);
-        if (availablePermissions == null) {
-            log.warn("no permissions found for " + MgnlContext.getUser().getName());
-            return false;
-        }
-        AccessManager ami = MgnlContext.getAccessManager(availablePermissions);
+        AccessManager ami = MgnlContext.getAccessManager(workspace);
         return ami.isGranted(path, PermissionUtil.convertPermissions(requiredPermissions));
     }
 

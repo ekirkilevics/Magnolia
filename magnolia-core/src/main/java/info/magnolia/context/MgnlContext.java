@@ -41,6 +41,7 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.User;
 
 import java.util.List;
@@ -138,12 +139,19 @@ public class MgnlContext {
     }
 
     /**
-     * Get access manager for the specified repository on default workspace.
-     * @deprecated security is handled by JCR now
+     * Get access manager for the specified workspace.
      */
-    @Deprecated
-    public static AccessManager getAccessManager(String repositoryId) {
-        return getAccessManager(repositoryId, repositoryId);
+    public static AccessManager getAccessManager(String workspace) {
+        Subject subject = MgnlContext.getSubject();
+        List<Permission> availablePermissions = PermissionUtil.getPermissions(subject, workspace);
+        if (availablePermissions == null) {
+            log.warn("no permissions found for " + MgnlContext.getUser().getName());
+        }
+        // TODO: use provider instead of fixed impl
+        // TODO: retrieve permissions yourself from subject
+        AccessManagerImpl ami = new AccessManagerImpl();
+        ami.setPermissionList(availablePermissions);
+        return ami;
     }
 
     /**
@@ -554,21 +562,4 @@ public class MgnlContext {
         // TODO: Not in a web context ... deal with it :D
         return null;
     }
-
-    /**
-     * Returns Access Manager instance
-     * 
-     * @param permissions
-     * @return
-     * @deprecated Signature of this method will change to contain workspace name instead of permission list
-     */
-    @Deprecated
-    public static AccessManager getAccessManager(List<Permission> permissions) {
-        // TODO: use provider instead of fixed impl
-        // TODO: retrieve permissions yourself from subject
-        AccessManagerImpl ami = new AccessManagerImpl();
-        ami.setPermissionList(permissions);
-        return ami;
-    }
-
 }

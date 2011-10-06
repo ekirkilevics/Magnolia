@@ -34,10 +34,10 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.PrincipalCollection;
-import info.magnolia.context.MgnlContext;
 
 import java.security.Principal;
 import java.util.Iterator;
@@ -100,7 +100,9 @@ public class MagnoliaAccessProvider extends CombinedProvider {
         private final AccessManager ami;
 
         public ACLBasedPermissions(List<Permission> permissions) {
-            ami = MgnlContext.getAccessManager(permissions);
+            // TODO: use provider instead of fixed impl
+            ami = new AccessManagerImpl();
+            ami.setPermissionList(permissions);
         }
 
         @Override
@@ -140,7 +142,9 @@ public class MagnoliaAccessProvider extends CombinedProvider {
                     if (maybeAcl instanceof ACL) {
                         ACL acl = ((ACL) maybeAcl);
                         if (workspaceName.equals(acl.getWorkspace())) {
-                            return MgnlContext.getAccessManager(acl.getList()).isGranted("/", Permission.READ);
+                            AccessManagerImpl ami = new AccessManagerImpl();
+                            ami.setPermissionList(acl.getList());
+                            return ami.isGranted("/", Permission.READ);
                         }
                     }
                 }

@@ -162,7 +162,7 @@ public abstract class AbstractLoginModule implements LoginModule {
             this.sharedState.put("roleNames", new LinkedHashSet<String>());
         }
         String realmName = (String) options.get(OPTION_REALM);
-        this.realm = StringUtils.isBlank(realmName) ? Realm.DEFAULT_REALM : Realm.Factory.newRealm(realmName);
+        this.realm = StringUtils.isBlank(realmName) ? Realm.DEFAULT_REALM : new Realm.RealmImpl(realmName);
 
         this.useRealmCallback = BooleanUtil.toBoolean((String) options.get(OPTION_USE_REALM_CALLBACK), true);
         this.skipOnPreviousSuccess = BooleanUtil.toBoolean((String) options.get(OPTION_SKIP_ON_PREVIOUS_SUCCESS), false);
@@ -195,7 +195,7 @@ public abstract class AbstractLoginModule implements LoginModule {
             this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
             if(this.useRealmCallback){
                 String aRealm = ((RealmCallback) callbacks[2]).getRealm();
-                this.realm = StringUtils.isBlank(aRealm) ? this.realm : Realm.Factory.newRealm(aRealm);
+                this.realm = StringUtils.isBlank(aRealm) ? this.realm : new Realm.RealmImpl(aRealm);
             }
 
             this.validateUser();
