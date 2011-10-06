@@ -110,6 +110,9 @@ public class JackrabbitAuthenticationModule implements LoginModule, Serializable
             return false;
         }
         Subject mgnlChainSubject = (Subject) session.getAttribute(Subject.class.getName());
+        if (mgnlChainSubject == null) {
+            throw new LoginException("invalid setup or deserialization error");
+        }
         Set<Principal> mgnlPrincipals = mgnlChainSubject.getPrincipals();
         subject.getPrincipals().addAll(mgnlPrincipals);
         if (isAdmin()) {

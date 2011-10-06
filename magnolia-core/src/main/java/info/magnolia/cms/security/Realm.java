@@ -81,11 +81,26 @@ public interface Realm extends Principal {
         }
 
         @Override
+        public int hashCode() {
+            return this.name.hashCode();
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (o == null || !(o instanceof Realm) ) {
                 return false;
             }
             return this.name.equals(((Realm) o).getName());
+        }
+    }
+
+    /**
+     * Factory for providing realms.
+     * 
+     */
+    public class Factory {
+        public static Realm newRealm(String realmName) {
+            return new RealmImpl(realmName);
         }
     }
 }

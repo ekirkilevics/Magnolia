@@ -52,6 +52,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,11 +161,8 @@ public abstract class AbstractLoginModule implements LoginModule {
         if (this.sharedState.get("roleNames") == null) {
             this.sharedState.put("roleNames", new LinkedHashSet<String>());
         }
-        if (StringUtils.isBlank((String) options.get(OPTION_REALM))) {
-            this.realm = Realm.DEFAULT_REALM;
-        } else {
-            this.realm = new Realm.RealmImpl((String) options.get(OPTION_REALM));
-        }
+        String realmName = (String) options.get(OPTION_REALM);
+        this.realm = StringUtils.isBlank(realmName) ? Realm.DEFAULT_REALM : Realm.Factory.newRealm(realmName);
 
         this.useRealmCallback = BooleanUtil.toBoolean((String) options.get(OPTION_USE_REALM_CALLBACK), true);
         this.skipOnPreviousSuccess = BooleanUtil.toBoolean((String) options.get(OPTION_SKIP_ON_PREVIOUS_SUCCESS), false);
@@ -186,22 +184,18 @@ public abstract class AbstractLoginModule implements LoginModule {
 
         // if the realm is not defined in the jaas configuration
         // we ask use a callback to get the value
-        RealmCallback realmCallback = null;
         if(this.useRealmCallback){
-            realmCallback = new RealmCallback();
+            callbacks = (Callback[]) ArrayUtils.add(callbacks, new RealmCallback());
         }
 
         this.success = false;
         try {
-            // TODO: RealmCallback unsupported by JR therefore it can't be passed on when callback handler is JR. But since other handlers might support it, we should exclude only for JR
             this.callbackHandler.handle(callbacks);
             this.name = ((NameCallback) callbacks[0]).getName();
             this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
-            if (realmCallback != null) {
-                // TODO: this code is absolutely unsafe !!!!
-                if (!StringUtils.isBlank(realmCallback.getRealm())) {
-                    this.realm = new Realm.RealmImpl(realmCallback.getRealm());
-                }
+            if(this.useRealmCallback){
+                String aRealm = ((RealmCallback) callbacks[2]).getRealm();
+                this.realm = StringUtils.isBlank(aRealm) ? this.realm : Realm.Factory.newRealm(aRealm);
             }
 
             this.validateUser();

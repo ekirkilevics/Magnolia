@@ -33,10 +33,11 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.security.AccessManagerImpl;
+import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.PrincipalCollection;
+import info.magnolia.context.MgnlContext;
 
 import java.security.Principal;
 import java.util.Iterator;
@@ -96,10 +97,10 @@ public class MagnoliaAccessProvider extends CombinedProvider {
      */
     public class ACLBasedPermissions extends AbstractCompiledPermissions {
 
-        private final AccessManagerImpl ami = new AccessManagerImpl();
+        private final AccessManager ami;
 
         public ACLBasedPermissions(List<Permission> permissions) {
-            ami.setPermissionList(permissions);
+            ami = MgnlContext.getAccessManager(permissions);
         }
 
         @Override
@@ -120,7 +121,35 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
     @Override
     public boolean canAccessRoot(Set<Principal> principals) throws RepositoryException {
+        checkInitialized();
+        // superuser is also admin user!
+        if (isAdminOrSystem(principals)) {
+            return true;
+        }
+
+        final String workspaceName = super.session.getWorkspace().getName();
+
+        for (Iterator<Principal> iter = principals.iterator(); iter.hasNext();) {
+            Principal princ = iter.next();
+            if (princ instanceof PrincipalCollection) {
+                log.debug("found mgnl principal " + princ);
+                PrincipalCollection collection = (PrincipalCollection) princ;
+                Iterator<Principal> aclIter = collection.iterator();
+                while (aclIter.hasNext()) {
+                    Principal maybeAcl = aclIter.next();
+                    if (maybeAcl instanceof ACL) {
+                        ACL acl = ((ACL) maybeAcl);
+                        if (workspaceName.equals(acl.getWorkspace())) {
+                            return MgnlContext.getAccessManager(acl.getList()).isGranted("/", Permission.READ);
+                        }
+                    }
+                }
+            }
+
+        }
+
         try {
+            // JR delegates to the ACL editor ... not sure this is what we want ...
             boolean ret = super.canAccessRoot(principals);
             log.debug("canAccessRoot({})=>{}", principals, ret);
             return ret;
@@ -174,7 +203,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
     @Override
     public AccessControlEditor getEditor(Session editingSession) {
         log.debug("getEditor({})", editingSession);
-        return super.getEditor(editingSession);
+        return new MagnoliaACLEditor(super.getEditor(editingSession));
     }
 
     @Override
@@ -215,4 +244,5 @@ public class MagnoliaAccessProvider extends CombinedProvider {
         sb.delete(0,4);
         return sb.toString();
     }
+
 }
