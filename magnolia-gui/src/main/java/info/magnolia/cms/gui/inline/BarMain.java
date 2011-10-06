@@ -34,7 +34,6 @@
 package info.magnolia.cms.gui.inline;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
@@ -44,6 +43,7 @@ import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -306,11 +306,11 @@ public class BarMain extends Bar {
         if (ServerConfiguration.getInstance().isAdmin()) {
 
             final AggregationState aggregationState = MgnlContext.getAggregationState();
-            final String permission = Access.convertPermissions(Permission.SET);
+            final String permission = PermissionUtil.convertPermissions(Permission.SET);
             final Node mainContent = aggregationState.getMainContent().getJCRNode();
             boolean isGranted;
             try {
-                isGranted = Access.isGranted(mainContent.getSession(), mainContent.getPath(), permission);
+                isGranted = PermissionUtil.isGranted(mainContent.getSession(), mainContent.getPath(), permission);
             } catch (RepositoryException e) {
                 // TODO dlipp - apply consistent ExceptionHandling
                 throw new RuntimeException(e);
