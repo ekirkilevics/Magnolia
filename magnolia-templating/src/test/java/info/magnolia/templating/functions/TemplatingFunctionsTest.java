@@ -33,7 +33,11 @@
  */
 package info.magnolia.templating.functions;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
@@ -722,7 +726,7 @@ public class TemplatingFunctionsTest {
      }
 
      @Test
-     public void testIsInherited() throws RepositoryException {
+     public void testNodeIsInherited() throws RepositoryException {
          // GIVEN
          TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -736,7 +740,7 @@ public class TemplatingFunctionsTest {
     }
 
      @Test
-     public void testIsFromCurrentPage() throws RepositoryException {
+     public void testNodeIsFromCurrentPage() throws RepositoryException {
          // GIVEN
          TemplatingFunctions functions = new TemplatingFunctions();
 
@@ -748,15 +752,65 @@ public class TemplatingFunctionsTest {
      }
 
      @Test
-     public void testInherit() throws RepositoryException {
+     public void testContentMapIsInherited() throws RepositoryException {
          // GIVEN
          TemplatingFunctions functions = new TemplatingFunctions();
 
          // WHEN
-         ContentMap resultContentMap = functions.inherit(childPage, "comp-L3-1");
+         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(childPage);
 
          // THEN
-         assertMapEqualsMap(resultContentMap, childPageComponentContentMap);
+         assertTrue(functions.isInherited(new ContentMap(inheritedNode.getNode("comp-L2-1"))));
+         assertTrue(functions.isInherited(new ContentMap(inheritedNode.getNode("comp-L2-2"))));
+         assertTrue(functions.isInherited(new ContentMap(inheritedNode.getNode("comp-L2-3"))));
+     }
+
+     @Test
+     public void testContentMapIsFromCurrentPage() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(childPage);
+
+         // THEN
+         assertTrue(functions.isFromCurrentPage(new ContentMap(inheritedNode.getNode("comp-L3-1"))));
+     }
+
+     @Test
+     public void testInheritFromNode() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         Node node = functions.inherit(childPage, "comp-L3-1");
+
+         // THEN
+         assertNodeEqualsNode(node, childPageComponent);
+     }
+
+     @Test
+     public void testInheritedNodeIsUnwrapped() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         Node node = functions.inherit(childPage, "comp-L3-1");
+
+         // THEN
+         assertFalse(node instanceof InheritanceNodeWrapper);
+     }
+
+     @Test
+     public void testInheritFromContentMap() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         ContentMap contentMap = functions.inherit(childPageContentMap, "comp-L3-1");
+
+         // THEN
+         assertMapEqualsMap(contentMap, childPageComponentContentMap);
      }
 
      @Test
@@ -765,12 +819,12 @@ public class TemplatingFunctionsTest {
          TemplatingFunctions functions = new TemplatingFunctions();
 
          // WHEN
-         ContentMap resultContentMap = functions.inherit(childPage, "iMaybeExistSomewhereElseButNotHere");
-         ContentMap resultContentMap2 = functions.inherit(childPage, null);
+         ContentMap resultContentMap = functions.inherit(childPageContentMap, "iMaybeExistSomewhereElseButNotHere");
+         Node node = functions.inherit(childPage, "iMaybeExistSomewhereElseButNotHere");
 
          // THEN
          assertNull(resultContentMap);
-         assertNull(resultContentMap2);
+         assertNull(node);
      }
 
      @Test
@@ -780,9 +834,11 @@ public class TemplatingFunctionsTest {
 
          // WHEN
          Property property = functions.inheritProperty(topPage, "iMaybeExistSomewhereElseButNotHere");
+         Property property2 = functions.inheritProperty(topPageComponent, "iMaybeExistSomewhereElseButNotHere");
 
          // THEN
          assertNull(property);
+         assertNull(property2);
      }
 
 
