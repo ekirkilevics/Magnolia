@@ -33,7 +33,6 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.jcr.registry.SessionProviderRegistry;
 
 import javax.inject.Inject;
@@ -50,15 +49,6 @@ public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
     public DefaultRepositoryStrategy(SessionProviderRegistry sessionProviderRegistry, UserContext context) {
         super(sessionProviderRegistry);
         this.context = context;
-    }
-
-    /**
-     * @deprecated since 4.5 Access Manager is no longer supported. Security is checked directly by repository.
-     */
-    @Override
-    @Deprecated
-    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return null;
     }
 
     /**

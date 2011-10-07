@@ -480,7 +480,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         // checking parent node
         testCallBack.checkParent(hm);
 
-        expect(ctx.getHierarchyManager("some-repo", "some-workspace")).andReturn(hm).anyTimes();
+        expect(ctx.getHierarchyManager("some-workspace")).andReturn(hm).anyTimes();
         expect(ctx.getPostedForm()).andReturn(form).anyTimes();
 
         // copying temp node

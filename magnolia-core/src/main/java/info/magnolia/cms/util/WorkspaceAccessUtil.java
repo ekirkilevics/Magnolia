@@ -33,30 +33,20 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.User;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.core.search.SearchFactory;
-import info.magnolia.cms.core.version.MgnlVersioningSession;
-import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.registry.RegistrationException;
 
 import javax.inject.Singleton;
-import javax.jcr.Credentials;
-import javax.jcr.LoginException;
-import javax.jcr.NoSuchWorkspaceException;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
-import javax.jcr.RepositoryException;
-import javax.jcr.Repository;
-import javax.security.auth.Subject;
-
-import java.util.List;
 
 /**
  * This class replaces SessionStore and provide generic methods to create Magnolia specific JCR-workspace access objects.
@@ -96,128 +86,17 @@ public class WorkspaceAccessUtil {
     public SimpleCredentials getCredentials(User user) {
         return new SimpleCredentials(user.getName(),user.getPassword().toCharArray());
     }
-    /**
-     * Login to the specified repository/default workspace using given credentials.
-     * @param credentials
-     * @param repositoryName
-     * @return newly created JCR session
-     * @throws RepositoryException if login fails or workspace does not exist
-     * */
-    public Session createRepositorySession(SimpleCredentials credentials,
-            String repositoryName) throws RepositoryException {
-        return this.createRepositorySession
-        (credentials, repositoryName, ContentRepository.getDefaultWorkspace(repositoryName));
+
+    public Session createRepositorySession(SimpleCredentials sc, String workspaceName) throws RepositoryException {
+    	try {
+			return Components.getComponent(SessionProviderRegistry.class).get(workspaceName).createSession(getAdminUserCredentials());
+		} catch (RegistrationException e) {
+			throw new RepositoryException(e);
+		}
     }
 
-    /**
-     * Login to the specified repository/workspace using given credentials.
-     * @param credentials
-     * @param repositoryName
-     * @param workspaceName
-     * @return newly created JCR session
-     * @throws RepositoryException
-     * @throws NoSuchWorkspaceException
-     * @throws LoginException
-     * @throws RepositoryException if login fails or workspace does not exist
-     * */
-    public Session createRepositorySession(Credentials credentials,
-            String repositoryName,
-            String workspaceName) throws LoginException, NoSuchWorkspaceException, RepositoryException {
-        return createRepositorySession(credentials, ContentRepository.getRepository(repositoryName), workspaceName);
-    }
-
-    /**
-     * Login to the specified repository/workspace using given credentials.
-     * @param credentials
-     * @param repository
-     * @param workspaceName
-     * @return newly created JCR session
-     * @throws RepositoryException
-     * @throws NoSuchWorkspaceException
-     * @throws LoginException
-     * @throws RepositoryException if login fails or workspace does not exist
-     * */
-    public Session createRepositorySession(Credentials credentials,
-            Repository repository,
-            String workspaceName) throws LoginException, NoSuchWorkspaceException, RepositoryException {
-        Session session = repository.login(credentials, ContentRepository.getMappedWorkspaceName(workspaceName));
-        if (ContentRepository.VERSION_STORE.equals(workspaceName)) {
-            //do not wrapp version store in versioning session or we get infinite redirect loop and stack overflow
-            return session;
-        }
-        return new MgnlVersioningSession(session);
-    }
-
-    /**
-     * Create access manager of jaas authorized subject.
-     * @param subject
-     * @param repositoryName
-     * @return newly created accessmanager
-     * */
-    public AccessManager createAccessManager(Subject subject, String repositoryName) {
-        return this.createAccessManager(subject, repositoryName, ContentRepository.getDefaultWorkspace(repositoryName));
-    }
-
-    /**
-     * Create access manager of jaas authorized subject.
-     * @param subject
-     * @param repositoryName
-     * @param workspaceName
-     * @return newly created accessmanager
-     * */
-    public AccessManager createAccessManager(Subject subject, String repositoryName, String workspaceName) {
-        return null;
-    }
-
-    /**
-     * Create access manager for the given permission list.
-     * @param permissions
-     * */
-    public AccessManager createAccessManager(List<Permission> permissions, String repositoryName, String workspaceName) {
-        return null;
-    }
-
-    /**
-     * Create new access controlled magnolia query manager.
-     * @param jcrSession
-     * @param accessManager
-     * */
-    public QueryManager createQueryManager(Session jcrSession, HierarchyManager hm)
-    throws RepositoryException {
-        javax.jcr.query.QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
-
-        /**
-         * TODO dlipp: do not actually forward HM but null for now - QueryManager etc. internally don't really need the HM!
-         */
-        return SearchFactory.getInstance().getQueryManager(jcrQueryManager, hm);
-    }
-
-    /**
-     * Create new instance of DefaultHierarchyManager for the given session.
-     * @param userId this is used in MetaData of objects created via this HierarchyManager instance
-     * @param jcrSession
-     * @param accessManager
-     * @param queryManager
-     *
-     * @deprecated since 4.5 - use {@link WorkspaceAccessUtil#createHierarchyManager(Session)} - or better directly the JCR-API.
-     */
-    public HierarchyManager createHierarchyManager(String ignoredUserId,
-            Session jcrSession,
-            AccessManager ignoredAccessManager) throws RepositoryException {
-        return createHierarchyManager(jcrSession);
-    }
-
-    public HierarchyManager createHierarchyManager(Session jcrSession) throws RepositoryException {
-        return new DefaultHierarchyManager(jcrSession);
-    }
-
-    public HierarchyManager createHierarchyManager(String userId, Session jcrSession) throws RepositoryException {
-        return new DefaultHierarchyManager(userId ,jcrSession);
-    }
-
-    public Session createAdminRepositorySession(String workspace) throws RepositoryException {
-        // TODO: how safe is it to expose method like this? (not worse then old system context, but not better either
-        return createRepositorySession(getAdminUserCredentials(), workspace);
+    public Session createAdminRepositorySession(String workspaceName) throws RepositoryException {
+    	return createRepositorySession(getAdminUserCredentials(), workspaceName);
     }
 
     protected SimpleCredentials getAdminUserCredentials() {
@@ -235,9 +114,4 @@ public class WorkspaceAccessUtil {
         return new SimpleCredentials(user, pwd.toCharArray());
     }
 
-    public Session createRepositorySession(String workspace) throws RepositoryException {
-        String user = MgnlContext.getUser().getName();
-        String pwd = MgnlContext.getUser().getPassword();
-        return createRepositorySession(new SimpleCredentials(user, pwd.toCharArray()), workspace);
-    }
 }

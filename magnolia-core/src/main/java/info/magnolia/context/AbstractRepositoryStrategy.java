@@ -33,10 +33,9 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.jcr.registry.SessionProviderRegistry;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.stats.JCRStats;
 
 import java.util.HashMap;
@@ -51,7 +50,6 @@ import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 
-import org.apache.commons.lang.UnhandledException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,72 +71,27 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         this.sessionProviderRegistry = sessionProviderRegistry;
     }
 
-    /**
-     * @deprecated since 4.5 - directly operate on JCR-Session instead
-     */
-    @Override
-    public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        log.debug("creating {}:{} HM for {}, using {} strategy", new Object[] {repositoryId, workspaceId, getUserId(), this.getClass().getName()});
-        HierarchyManager hm = null;
-        WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-        try {
-            Session jcrSession = getSession(repositoryId, workspaceId);
-            hm = util.createHierarchyManager(jcrSession);
-        }
-        catch (RepositoryException e) {
-            throw new UnhandledException(e);
-        }
-
-        return hm;
-    }
-
-    /**
-     * @return create a HierarchyManager wrapping the provided jcrSession and return it.
-     */
-    @Override
-    public HierarchyManager getHierarchyManagerFor(Session jcrSession) {
-        try {
-            return WorkspaceAccessUtil.getInstance().createHierarchyManager(jcrSession);
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     abstract protected String getUserId();
 
-    /**
-     * @deprecated since 4.5 - use {@link javax.jcr.query.QueryManager} instead.
-     */
     @Override
-    public QueryManager getQueryManager(String repositoryId, String workspaceId) {
-        return this.getHierarchyManager(repositoryId, workspaceId).getQueryManager();
-    }
-
-    // TODO dlipp: implement new method as beyond:
-    /*
-    public Session getJCRSession(String logicalWorkspaceName) {
-
-    }
-    */
-
-    @Override
-    public Session getSession(String repositoryName, String workspaceName) throws LoginException, RepositoryException {
+    public Session getSession(String workspaceName) throws LoginException, RepositoryException {
         WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-        return getRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
+        return getRepositorySession(util.getDefaultCredentials(), workspaceName);
     }
 
-    protected Session getRepositorySession(Credentials credentials, String repositoryName, String workspaceName) throws LoginException, RepositoryException {
-        final String repoSessAttrName = repositoryName + "_" + workspaceName;
-
-        Session jcrSession = jcrSessions.get(repoSessAttrName);
+    protected Session getRepositorySession(Credentials credentials, String workspaceName) throws LoginException, RepositoryException {
+        Session jcrSession = jcrSessions.get(workspaceName);
 
         if (jcrSession == null) {
-            log.debug("creating jcr session {} by thread {}", repositoryName, Thread.currentThread().getName());
+            log.debug("creating jcr session {} by thread {}", workspaceName, Thread.currentThread().getName());
 
-            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-            jcrSession = util.createRepositorySession(credentials, repositoryName, workspaceName);
-            jcrSessions.put(repoSessAttrName, jcrSession);
-            incSessionCount(workspaceName);
+            try {
+				jcrSession = sessionProviderRegistry.get(workspaceName).createSession(credentials);
+				jcrSessions.put(workspaceName, jcrSession);
+				incSessionCount(workspaceName);
+			} catch (RegistrationException e) {
+				throw new RepositoryException(e);
+			}
         }
 
         return jcrSession;

@@ -399,7 +399,7 @@ public final class ContentRepository {
             Provider provider) {
         try {
             SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
-            Session session = WorkspaceAccessUtil.getInstance().createRepositorySession(sc, repository, wspID);
+            Session session = WorkspaceAccessUtil.getInstance().createRepositorySession(sc, wspID);
             try {
                 provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
                 provider.registerNodeTypes();
@@ -429,7 +429,7 @@ public final class ContentRepository {
      * Returns magnolia specific Repository name where this workspace is registered
      * within <Repository/>.
      * */
-    public static String getParentRepositoryName(String workspaceName) throws RepositoryException {
+    private static String getParentRepositoryName(String workspaceName) throws RepositoryException {
         Iterator<RepositoryNameMap> values = repositoryNameMap.values().iterator();
         while (values.hasNext()) {
             RepositoryNameMap map = values.next();
@@ -445,7 +445,7 @@ public final class ContentRepository {
      * @param name
      * @return mapped name as in repositories.xml RepositoryMapping element
      */
-    public static String getMappedRepositoryName(String name) {
+    private static String getMappedRepositoryName(String name) {
         RepositoryNameMap nameMap = repositoryNameMap.get(name);
         if(nameMap==null){
             return name;
@@ -471,7 +471,7 @@ public final class ContentRepository {
      * @param name
      * @param repositoryName
      */
-    public static void addMappedRepositoryName(String name, String repositoryName) {
+    private static void addMappedRepositoryName(String name, String repositoryName) {
         addMappedRepositoryName(name, repositoryName, null);
     }
 
@@ -481,7 +481,7 @@ public final class ContentRepository {
      * @param repositoryName
      * @param workspaceName
      */
-    public static void addMappedRepositoryName(String name, String repositoryName, String workspaceName) {
+    private static void addMappedRepositoryName(String name, String repositoryName, String workspaceName) {
         if (StringUtils.isEmpty(workspaceName)) {
             workspaceName = name;
         }
@@ -559,7 +559,7 @@ public final class ContentRepository {
     /**
      * Returns <code>true</code> if a mapping for the given repository name does exist.
      */
-    public static boolean hasRepositoryMapping(String repositoryID) {
+    private static boolean hasRepositoryMapping(String repositoryID) {
         String name = getMappedRepositoryName(repositoryID);
         return name != null && repositoryMapping.containsKey(name);
     }

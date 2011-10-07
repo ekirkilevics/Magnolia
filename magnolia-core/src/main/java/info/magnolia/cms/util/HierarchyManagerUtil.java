@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,29 +25,26 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.cms.core.search;
+package info.magnolia.cms.util;
 
+import javax.jcr.Session;
+
+import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.objectfactory.Components;
-
 
 /**
- * Factory to create {@link QueryManager} objects.
- * @author Sameer Charles
+ * Util to deal with {@link HierarchyManager}s.
  */
+public class HierarchyManagerUtil {
 
-public abstract class SearchFactory {
-
-    public static SearchFactory getInstance() {
-        return Components.getSingleton(SearchFactory.class);
-    }
-
-    public abstract QueryManager getQueryManager(javax.jcr.query.QueryManager queryManager, HierarchyManager hm);
+	public static HierarchyManager asHierarchyManager(Session session) {
+		return new DefaultHierarchyManager(session);
+	}
 
 }

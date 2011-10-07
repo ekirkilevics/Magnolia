@@ -39,12 +39,8 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.AccessManagerImpl;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.User;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -126,55 +122,24 @@ public class MgnlContext {
      *
      * @deprecated since 4.5 - use {@link #getJCRSession(String)}
      */
-    @Deprecated
-    public static HierarchyManager getHierarchyManager(String repositoryId) {
-        return getInstance().getHierarchyManager(repositoryId);
+    public static HierarchyManager getHierarchyManager(String workspaceName) {
+        return getInstance().getHierarchyManager(workspaceName);
     }
 
     /**
-     * Get hierarchy manager initialized for this user.
+     * @see Context#getAccessManager(String)
      */
-    public static HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        return getInstance().getHierarchyManager(repositoryId, workspaceId);
-    }
-
-    /**
-     * Get access manager for the specified workspace.
-     */
-    public static AccessManager getAccessManager(String workspace) {
-        Subject subject = MgnlContext.getSubject();
-        List<Permission> availablePermissions = PermissionUtil.getPermissions(subject, workspace);
-        if (availablePermissions == null) {
-            log.warn("no permissions found for " + MgnlContext.getUser().getName());
-        }
-        // TODO: use provider instead of fixed impl
-        // TODO: retrieve permissions yourself from subject
-        AccessManagerImpl ami = new AccessManagerImpl();
-        ami.setPermissionList(availablePermissions);
-        return ami;
-    }
-
-    /**
-     * Get access manager for the specified repository on the specified workspace.
-     * @deprecated since 4.5 - security is handled by JCR now
-     */
-    @Deprecated
-    public static AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return null;
+    public static AccessManager getAccessManager(String name) {
+    	return getInstance().getAccessManager(name);
     }
 
     /**
      * Get QueryManager created for this user on the specified repository.
+     * @deprecated since 4.5 - use the jcr query manager.
      */
-    public static QueryManager getQueryManager(String repositoryId) {
-        return getInstance().getQueryManager(repositoryId);
-    }
-
-    /**
-     * Get QueryManager created for this user on the specified repository and workspace.
-     */
-    public static QueryManager getQueryManager(String repositoryId, String workspaceId) {
-        return getInstance().getQueryManager(repositoryId, workspaceId);
+    @Deprecated
+    public static QueryManager getQueryManager(String workspaceName) {
+        return getInstance().getQueryManager(workspaceName);
     }
 
     /**
@@ -525,24 +490,14 @@ public class MgnlContext {
     /**
      * Note: this is the way to go, if you no longer want to rely on the Content-API.
      *
-     * @param repository - repository to get session for
+     * @param workspaceName - repository to get session for
      * @return a JCR session to the provided repository
      */
-    public static Session getJCRSession(String repository) throws LoginException, RepositoryException {
-        return getInstance().getJCRSession(repository);
+    public static Session getJCRSession(String workspaceName) throws LoginException, RepositoryException {
+        return getInstance().getJCRSession(workspaceName);
     }
 
-    /**
-     * Note: this is the way to go, if you no longer want to rely on the Content-API.
-     *
-     * @param repository - repository to get session for
-     * @param workspace - workspace to get session for
-     * @return a JCR session to the provided repository
-     */
-    public static Session getJCRSession(String repository, String workspace) throws LoginException, RepositoryException {
-        return getInstance().getJCRSession(repository, workspace);
-    }
-
+    // FIXME philipp: move to UserContext, use context attributes
     public static Subject getSubject() {
         WebContext ctx = getWebContextOrNull();
         if (ctx != null) {

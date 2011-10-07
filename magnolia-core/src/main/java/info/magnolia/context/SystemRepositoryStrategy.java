@@ -34,7 +34,6 @@
 package info.magnolia.context;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.security.SystemUserManager;
@@ -46,6 +45,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.jcr.Credentials;
+import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
@@ -64,15 +64,6 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
     @Inject
     public SystemRepositoryStrategy(SessionProviderRegistry sessionProviderRegistry) {
         super(sessionProviderRegistry);
-    }
-
-    /**
-     * @deprecated since 4.5, permissions are checked directly by jcr now. Use Session.hasPermission() directly
-     */
-    @Override
-    @Deprecated
-    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return null;
     }
 
     /**
@@ -95,10 +86,10 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
     }
 
     @Override
-    public Session getSession(String repositoryName, String workspaceName) {
+    public Session getSession(String workspaceName) throws LoginException, RepositoryException {
         Credentials creds = new SimpleCredentials(ContentRepository.REPOSITORY_USER,ContentRepository.REPOSITORY_PSWD.toCharArray());
         try {
-            return super.getRepositorySession(creds, repositoryName, workspaceName);
+            return super.getRepositorySession(creds, workspaceName);
         } catch (RepositoryException e) {
             throw new UnhandledException(e);
         }

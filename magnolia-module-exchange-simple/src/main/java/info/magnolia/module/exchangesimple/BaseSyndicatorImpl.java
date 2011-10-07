@@ -576,7 +576,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     }
 
     private HierarchyManager getSystemHierarchyManager() {
-        return MgnlContext.getSystemContext().getHierarchyManager(this.repositoryName, this.workspaceName);
+        return MgnlContext.getSystemContext().getHierarchyManager(this.workspaceName);
     }
 
     /**

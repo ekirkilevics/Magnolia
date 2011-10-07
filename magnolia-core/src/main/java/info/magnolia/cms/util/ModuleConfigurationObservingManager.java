@@ -152,7 +152,7 @@ public abstract class ModuleConfigurationObservingManager {
     }
 
     protected Session getSession() throws RepositoryException {
-        return MgnlContext.getSystemContext().getJCRSession(ContentRepository.CONFIG, ContentRepository.CONFIG);
+        return MgnlContext.getSystemContext().getJCRSession(ContentRepository.CONFIG);
     }
 
     protected List<String> getObservedPaths() {

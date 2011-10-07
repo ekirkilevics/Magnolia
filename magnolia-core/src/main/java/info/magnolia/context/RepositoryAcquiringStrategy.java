@@ -37,25 +37,14 @@ import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.AccessManager;
-
 /**
  * Contract for repository access providers. Each provider needs to be able to provide heirarchy manager, query manager for repositories that are searchable and access manager for repositories with enabled security. If given functionality is not available on the reporisotry, provider needs to return null.
  *
  * @version $Id$
  */
 public interface RepositoryAcquiringStrategy {
-    HierarchyManager getHierarchyManager(String repositoryId, String workspaceId);
 
-    HierarchyManager getHierarchyManagerFor(Session jcrSession);
-    /**
-     * @deprecated since 4.5
-     */
-    @Deprecated
-    AccessManager getAccessManager(String repositoryId, String workspaceId);
-    QueryManager getQueryManager(String repositoryId, String workspaceId);
+    Session getSession(String workspaceName) throws LoginException, RepositoryException;
+
     void release();
-    Session getSession(String repositoryId, String workspaceId) throws LoginException, RepositoryException;
 }

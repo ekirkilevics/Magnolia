@@ -34,10 +34,10 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.core.search.QueryManagerImpl;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.PermissionUtil;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.SessionUtil;
@@ -135,13 +135,11 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     @Override
     public QueryManager getQueryManager() {
-        QueryManager qm;
-        try {
-            qm = WorkspaceAccessUtil.getInstance().createQueryManager(this.jcrSession, this);
-        } catch (RepositoryException e) {
-           throw new RuntimeRepositoryException(e);
-        }
-        return qm;
+    	try {
+			return new QueryManagerImpl(getJcrSession().getWorkspace().getQueryManager(), this);
+		} catch (RepositoryException e) {
+			throw new RuntimeRepositoryException(e);
+		}
     }
 
     private Node getRootNode() throws RepositoryException {

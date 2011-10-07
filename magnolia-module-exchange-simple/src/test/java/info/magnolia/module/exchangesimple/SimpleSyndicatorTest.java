@@ -126,7 +126,7 @@ public class SimpleSyndicatorTest {
             public void run() {
                 try {
                     // TODO: shouldn't repo be set even tho there is no  subscriber???
-                    expect(sysctx.getHierarchyManager(null,null)).andReturn(hm);
+                    expect(sysctx.getHierarchyManager(null)).andReturn(hm);
                     expect(hm.getContentByUUID("some-real-uuid")).andReturn(content);
                     expect(content.getMetaData()).andReturn(meta);
                     //meta.setUnActivated();
@@ -155,7 +155,7 @@ public class SimpleSyndicatorTest {
                     Subscriber subscriber = createStrictMock(Subscriber.class);
                     subscribers.add(subscriber);
                     // TODO: shouldn't repo be set even tho there is no  subscriber???
-                    expect(sysctx.getHierarchyManager(null,null)).andReturn(hm);
+                    expect(sysctx.getHierarchyManager(null)).andReturn(hm);
                     expect(hm.getContentByUUID("some-real-uuid")).andReturn(content);
                     expect(subscriber.isActive()).andReturn(false);
                     expect(content.getMetaData()).andReturn(meta);

@@ -38,8 +38,6 @@ import info.magnolia.cms.beans.config.DefaultVirtualURIMapping;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.search.DefaultSearchFactory;
-import info.magnolia.cms.core.search.SearchFactory;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.UnicodeNormalizer;
@@ -74,7 +72,6 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     public void setUp() throws Exception {
         ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
         ComponentsTestUtil.setImplementation(UnicodeNormalizer.Normalizer.class, "info.magnolia.cms.util.UnicodeNormalizer$NonNormalizer");
-        ComponentsTestUtil.setInstance(SearchFactory.class, new DefaultSearchFactory());
 
         super.setUp();
     }
