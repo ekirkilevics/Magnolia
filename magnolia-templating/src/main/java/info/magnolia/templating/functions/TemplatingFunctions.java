@@ -87,6 +87,7 @@ public class TemplatingFunctions {
         return content == null ? null: asNodeList(NodeUtil.getNodes(content, nodeTypeName));
     }
 
+    //TODO fgrilli: should we unwrap children?
     protected List<Node> asNodeList(Iterable<Node> nodes) {
         List<Node> childList = new ArrayList<Node>();
         for (Node child : nodes) {
@@ -103,6 +104,7 @@ public class TemplatingFunctions {
         return content == null ? null : asContentMapList(NodeUtil.getNodes(asJCRNode(content), nodeTypeName));
     }
 
+    //TODO fgrilli: should we unwrap children?
     protected List<ContentMap> asContentMapList(Iterable<Node> nodes) {
         List<ContentMap> childList = new ArrayList<ContentMap>();
         for (Node child : nodes) {
