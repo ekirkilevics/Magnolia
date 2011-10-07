@@ -161,10 +161,6 @@
       <observed>true</observed>
       <scope>singleton</scope>
     </component>
-    <component>
-      <type>info.magnolia.cms.core.search.SearchFactory</type>
-      <implementation>info.magnolia.cms.core.search.DefaultSearchFactory</implementation>
-    </component>
     <type-mapping>
       <type>info.magnolia.voting.Voting</type>
       <implementation>info.magnolia.voting.DefaultVoting</implementation>

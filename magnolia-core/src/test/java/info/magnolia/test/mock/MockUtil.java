@@ -33,20 +33,14 @@
  */
 package info.magnolia.test.mock;
 
-import static org.easymock.EasyMock.anyBoolean;
-import static org.easymock.EasyMock.anyInt;
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.*;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -143,11 +137,9 @@ public class MockUtil {
     public static MockHierarchyManager createAndSetHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
         MockHierarchyManager hm = createHierarchyManager(repository, propertiesStream);
         MockContext ctx = getMockContext(true);
-        ctx.addHierarchyManager(repository, hm);
         ctx.addSession(repository, hm.getJcrSession());
 
         MockContext sysCtx = getSystemMockContext(true);
-        sysCtx.addHierarchyManager(repository, hm);
         sysCtx.addSession(repository, hm.getJcrSession());
         hm.save();
         return hm;
@@ -164,7 +156,6 @@ public class MockUtil {
     public static void setSessionAndHierarchyManager(Session session) {
         String workspaceName = session.getWorkspace().getName();
         MockUtil.getMockContext().addSession(workspaceName, session);
-        MockUtil.getMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager(session, "magnolia"));
     }
 
     /**
@@ -173,7 +164,6 @@ public class MockUtil {
     public static void setSystemContextSessionAndHierarchyManager(Session session) {
         String workspaceName = session.getWorkspace().getName();
         MockUtil.getSystemMockContext().addSession(workspaceName, session);
-        MockUtil.getSystemMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager(session, "magnolia"));
     }
 
     public static void createContent(Content root, InputStream propertiesStream) throws IOException, RepositoryException {

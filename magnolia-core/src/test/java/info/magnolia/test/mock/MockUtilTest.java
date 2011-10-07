@@ -61,14 +61,6 @@ public class MockUtilTest {
     }
 
     @Test
-    public void testGettingHierarchyManagerFromContext() throws IOException, RepositoryException{
-        MockContext ctx = MockUtil.initMockContext();
-        HierarchyManager hm = initTestData();
-        ctx.addHierarchyManager(ContentRepository.CONFIG, hm);
-        assertEquals(MgnlContext.getHierarchyManager(ContentRepository.CONFIG), hm);
-    }
-
-    @Test
     public void testReadingNodes() throws IOException, RepositoryException{
         HierarchyManager hm = initTestData();
 

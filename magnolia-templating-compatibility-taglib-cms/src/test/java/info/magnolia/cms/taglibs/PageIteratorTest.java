@@ -34,7 +34,6 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.test.MgnlTagTestCase;
 import info.magnolia.test.mock.MockContent;
@@ -43,6 +42,7 @@ import info.magnolia.test.mock.MockHierarchyManager;
 import java.io.IOException;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.servlet.jsp.JspException;
 
 import junit.framework.Assert;
@@ -60,7 +60,7 @@ public class PageIteratorTest extends MgnlTagTestCase {
      * {@inheritDoc}
      */
     @Override
-    protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {
+    protected Session initWebsiteData() throws IOException, RepositoryException {
         return null;
     }
 

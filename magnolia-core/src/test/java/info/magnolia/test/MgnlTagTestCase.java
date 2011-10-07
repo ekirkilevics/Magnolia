@@ -33,33 +33,33 @@
  */
 package info.magnolia.test;
 
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.link.LinkResolver;
 import info.magnolia.cms.link.LinkResolverImpl;
-import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import info.magnolia.test.mock.MockWebContext;
+
+import java.io.IOException;
+import java.util.Locale;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.servlet.jsp.JspException;
 
 import org.junit.After;
 import org.junit.Before;
 
-import java.io.IOException;
-import java.util.Locale;
-
-import com.mockrunner.mock.web.MockPageContext;
-import com.mockrunner.mock.web.MockServletConfig;
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
 import com.mockrunner.mock.web.MockJspWriter;
-import static org.easymock.EasyMock.*;
+import com.mockrunner.mock.web.MockPageContext;
+import com.mockrunner.mock.web.MockServletConfig;
 
 /**
  * A base class to simplify the testing of tag library output.
@@ -76,9 +76,9 @@ public abstract class MgnlTagTestCase extends MgnlTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        HierarchyManager hm = initWebsiteData();
+        Session session = initWebsiteData();
         webContext = new MockWebContext();
-        webContext.addHierarchyManager(ContentRepository.WEBSITE, hm);
+        webContext.addSession(ContentRepository.WEBSITE, session);
 
         MgnlContext.setInstance(webContext);
 
@@ -180,11 +180,11 @@ public abstract class MgnlTagTestCase extends MgnlTestCase {
      *
      * (Obviously, mytagtest is a placeholder name, and in your implementation you would change this)
      *
-     * @return A HierarchyManager initialized with the appropriate data needed to run the tests
+     * @return A Session initialized with the appropriate data needed to run the tests
      * @throws IOException
      * @throws RepositoryException
      */
-    abstract protected HierarchyManager initWebsiteData() throws IOException, RepositoryException;
+    abstract protected Session initWebsiteData() throws IOException, RepositoryException;
     // return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("outtest.properties"));
 
 }

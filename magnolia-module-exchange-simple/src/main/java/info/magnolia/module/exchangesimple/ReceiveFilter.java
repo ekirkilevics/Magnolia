@@ -532,14 +532,13 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      * @throws ExchangeException
      */
     protected HierarchyManager getHierarchyManager(HttpServletRequest request) throws ExchangeException {
-        String repositoryName = request.getHeader(BaseSyndicatorImpl.REPOSITORY_NAME);
         String workspaceName = request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME);
 
-        if (StringUtils.isEmpty(repositoryName) || StringUtils.isEmpty(workspaceName)) {
-            throw new ExchangeException("Repository or workspace name not sent, unable to activate. Repository: " + repositoryName + ", workspace: " + workspaceName) ;
+        if (StringUtils.isEmpty(workspaceName)) {
+            throw new ExchangeException("Repository or workspace name not sent, unable to activate. Workspace: " + workspaceName) ;
         }
 
-        return MgnlContext.getHierarchyManager(repositoryName, workspaceName);
+        return MgnlContext.getHierarchyManager(workspaceName);
     }
 
     /**

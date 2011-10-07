@@ -33,15 +33,11 @@
  */
 package info.magnolia.cms.taglibs;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
@@ -52,6 +48,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -64,7 +61,7 @@ public class EditBarTest extends MgnlTagTestCase {
     private Content currentContent;
 
     @Override
-    protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {
+    protected Session initWebsiteData() throws IOException, RepositoryException {
         return null;
     }
 

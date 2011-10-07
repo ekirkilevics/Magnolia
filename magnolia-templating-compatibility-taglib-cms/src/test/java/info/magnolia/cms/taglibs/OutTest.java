@@ -42,13 +42,14 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTagTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockNodeData;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Locale;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.servlet.jsp.JspException;
 
 /**
@@ -153,7 +154,7 @@ public class OutTest extends MgnlTagTestCase {
     }
 
     @Override
-    protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {
-        return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("outtest.properties"));
+    protected Session initWebsiteData() throws IOException, RepositoryException {
+        return SessionTestUtil.createSession("test", this.getClass().getResourceAsStream("outtest.properties"));
     }
 }

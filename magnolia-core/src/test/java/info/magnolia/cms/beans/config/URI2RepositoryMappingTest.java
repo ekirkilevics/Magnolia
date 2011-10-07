@@ -48,6 +48,7 @@ import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockRepositoryAcquiringStrategy;
 
 import javax.jcr.PropertyType;
+import javax.jcr.Session;
 import javax.jcr.Workspace;
 
 import org.junit.After;
@@ -111,10 +112,10 @@ public class URI2RepositoryMappingTest {
     @Test
     public void testGetHandleStripsExtensionInclTheDot() throws Exception {
         WebContext context = mock(WebContext.class);
-        HierarchyManager hm = mock(HierarchyManager.class);
+        Session hm = mock(Session.class);
         MgnlContext.setInstance(context);
         MockRepositoryAcquiringStrategy strategy = Components.getSingleton(MockRepositoryAcquiringStrategy.class);
-        strategy.addHierarchyManager("config", hm);
+        strategy.addSession("config", hm);
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
         ServerConfiguration.getInstance().setDefaultExtension("ext");
