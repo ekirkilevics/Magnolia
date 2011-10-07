@@ -215,7 +215,7 @@ public class TemplatingFunctions {
             return null;
         }
         if(StringUtils.isBlank(relPath)) {
-            throw new IllegalArgumentException("relative path cannot be blank");
+            throw new IllegalArgumentException("relative path cannot be null or empty");
         }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
         try {
@@ -240,7 +240,7 @@ public class TemplatingFunctions {
             return null;
         }
         if(StringUtils.isBlank(relPath)) {
-            throw new IllegalArgumentException("relative path cannot be blank");
+            throw new IllegalArgumentException("relative path cannot be null or empty");
         }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
         try {
@@ -267,7 +267,7 @@ public class TemplatingFunctions {
             return null;
         }
         if(StringUtils.isBlank(relPath)) {
-            throw new IllegalArgumentException("relative path cannot be blank");
+            throw new IllegalArgumentException("relative path cannot be null or empty");
         }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
         Node subNode = inheritedNode.getNode(relPath);
@@ -279,7 +279,7 @@ public class TemplatingFunctions {
             return null;
         }
         if(StringUtils.isBlank(relPath)) {
-            throw new IllegalArgumentException("relative path cannot be blank");
+            throw new IllegalArgumentException("relative path cannot be null or empty");
         }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content.getJCRNode());
         Node subNode = inheritedNode.getNode(relPath);
