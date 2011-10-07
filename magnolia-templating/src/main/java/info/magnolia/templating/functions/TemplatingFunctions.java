@@ -213,7 +213,7 @@ public class TemplatingFunctions {
     // TODO fgrilli: review functions: log errors? return null? rethrow exceptions?
     public ContentMap inherit(Node content, String relPath) {
         if(StringUtils.isBlank(relPath)) {
-            return new ContentMap(content);
+            return null;
         }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
         try {

@@ -760,12 +760,26 @@ public class TemplatingFunctionsTest {
      }
 
      @Test
+     public void testNonExistingInheritedRelPathShouldReturnNull() throws RepositoryException {
+         // GIVEN
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         ContentMap resultContentMap = functions.inherit(childPage, "iMaybeExistSomewhereElseButNotHere");
+         ContentMap resultContentMap2 = functions.inherit(childPage, null);
+
+         // THEN
+         assertNull(resultContentMap);
+         assertNull(resultContentMap2);
+     }
+
+     @Test
      public void testNonExistingInheritedPropertyShouldReturnNull() throws RepositoryException {
          // GIVEN
          TemplatingFunctions functions = new TemplatingFunctions();
 
          // WHEN
-         Property property = functions.inheritProperty(topPage, "foobar");
+         Property property = functions.inheritProperty(topPage, "iMaybeExistSomewhereElseButNotHere");
 
          // THEN
          assertNull(property);
