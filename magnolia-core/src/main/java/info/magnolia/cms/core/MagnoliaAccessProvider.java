@@ -85,9 +85,13 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
         @Override
         protected Result buildResult(Path absPath) throws RepositoryException {
-            return null;
+            return Result.EMPTY;
         }
 
+        @Override
+        public Result getResult(Path absPath) throws RepositoryException {
+            return Result.EMPTY;
+        }
     }
 
     /**
@@ -113,8 +117,22 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
         @Override
         protected Result buildResult(Path absPath) throws RepositoryException {
-            log.error("BUILD RESULT FOR " + absPath);
-            return null;
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Result getResult(Path absPath) throws RepositoryException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean grants(Path absPath, int permissions) throws RepositoryException {
+            return ami.isGranted(absPath.getString(), Permission.READ);
+        }
+
+        @Override
+        public int getPrivileges(Path absPath) throws RepositoryException {
+            throw new UnsupportedOperationException();
         }
 
     }
