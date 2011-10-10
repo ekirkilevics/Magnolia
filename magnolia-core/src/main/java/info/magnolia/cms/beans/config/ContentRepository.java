@@ -41,7 +41,10 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.registry.DefaultSessionProvider;
+import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNameMap;
@@ -399,10 +402,14 @@ public final class ContentRepository {
             Provider provider) {
         try {
             SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
+            // TODO dlipp - hack for now. Logical and physical workspaceName are identical here!
+            Components.getComponent(SessionProviderRegistry.class).register(new DefaultSessionProvider(wspID, repository, wspID));
             Session session = WorkspaceAccessUtil.getInstance().createRepositorySession(sc, wspID);
             try {
                 provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
                 provider.registerNodeTypes();
+
+
             }
             finally {
                 session.logout();

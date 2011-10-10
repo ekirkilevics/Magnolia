@@ -42,6 +42,7 @@ import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.cms.util.HierarchyManagerUtil;
 import info.magnolia.jcr.registry.SessionProviderRegistry;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.test.RepositoryTestCase;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
     @Test
     public void testRepositorySessions() throws Exception {
         UserContext context = createMock(UserContext.class);
-        SessionProviderRegistry registry = createMock(SessionProviderRegistry.class);
+        SessionProviderRegistry registry = Components.getSingleton(SessionProviderRegistry.class);
         DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(registry, context);
         Session session = strategy.getSession("website");
         assertNotNull(session);
@@ -74,7 +75,7 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
     public void testHierarchyManagers() throws LoginException, RepositoryException {
         UserContext context = createMock(UserContext.class);
         User user = createMock(User.class);
-        SessionProviderRegistry registry = createMock(SessionProviderRegistry.class);
+        SessionProviderRegistry registry = Components.getSingleton(SessionProviderRegistry.class);
 
         Set principalSet = new HashSet();
         PrincipalCollection principals = createMock(PrincipalCollection.class);
@@ -86,10 +87,10 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
         expect(user.getSubject()).andReturn(subject).anyTimes();
         expect(principals.get("magnolia_website")).andReturn(acl).anyTimes();
         expect(acl.getList()).andReturn(new ArrayList()).anyTimes();
-        replay(context, user, registry, principals, acl);
+        replay(context, user, principals, acl);
         DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(registry, context);
         HierarchyManager hierarchyManager = HierarchyManagerUtil.asHierarchyManager(strategy.getSession("website"));
         assertNotNull(hierarchyManager);
-        verify(context, user, registry, principals, acl);
+        verify(context, user, principals, acl);
     }
 }
