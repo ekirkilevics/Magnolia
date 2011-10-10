@@ -39,6 +39,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.MgnlContext.Op;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.logging.AuditLoggingUtil;
@@ -133,8 +134,12 @@ public class DefaultContent extends AbstractContent {
      * operation
      * @throws RepositoryException if an error occurs
      */
-    public DefaultContent(Node node) throws RepositoryException, AccessDeniedException {
-        this.setNode(node);
+    public DefaultContent(Node node){
+        try {
+            this.setNode(node);
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
         this.setPath(this.getHandle());
     }
 
@@ -283,17 +288,9 @@ public class DefaultContent extends AbstractContent {
 
             while (nodeIterator.hasNext()) {
                 Node subNode = (Node) nodeIterator.next();
-                try {
-                    Content content = new DefaultContent(subNode);
-                    if (filter.accept(content)) {
-                        children.add(content);
-                    }
-                }
-                catch (PathNotFoundException e) {
-                    log.error("Exception caught", e);
-                }
-                catch (AccessDeniedException e) {
-                    // ignore, simply wont add content in a list
+                Content content = new DefaultContent(subNode);
+                if (filter.accept(content)) {
+                    children.add(content);
                 }
             }
         }

@@ -60,7 +60,7 @@ public class MockObjectTest {
     private static Logger log = LoggerFactory.getLogger(MockObjectTest.class);
 
     @Test
-    public void testRootNodeOfHierarchyManger() {
+    public void testRootNodeOfHierarchyManger() throws Exception{
         MockHierarchyManager hm = new MockHierarchyManager();
         Content root = hm.getRoot();
         assertEquals(root.getName(), "jcr:root");

@@ -36,7 +36,7 @@ package info.magnolia.cms.i18n;
 import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockHierarchyManager;
+import info.magnolia.test.mock.jcr.MockNode;
 
 import java.util.Locale;
 
@@ -154,8 +154,10 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
         defSupport.addLocale(new LocaleDefinition("de", "CH", true));
         defSupport.addLocale(new LocaleDefinition("it", null, false));
-        MockContent content = new MockContent("/foo/de/bar/");
-        content.setHierarchyManager(new MockHierarchyManager());
+
+        MockNode node = new MockNode("/foo/de/bar/");
+        MockContent content = new MockContent(node);
+        //content.setHierarchyManager(new MockHierarchyManager(null));
 
         // no language
         NodeData defaultblah = content.setNodeData("blah", "val_blah");
@@ -169,8 +171,9 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
         assertEquals(defaultFoo, localized);
 
         // exact match on the lang/country
-        content = new MockContent("/de_CH/foo/bar/");
-        content.setHierarchyManager(new MockHierarchyManager());
+        node = new MockNode("/de_CH/foo/bar/");
+        content = new MockContent(node);
+        //content.setHierarchyManager(new MockHierarchyManager(null));
         NodeData swissBlah = content.setNodeData("blah", "val_de_ch_blah");
         defSupport.setLocale(new Locale("de", "CH"));
         localized = defSupport.getNodeData(content, "blah");

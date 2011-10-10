@@ -39,7 +39,8 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockHierarchyManager;
+import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
@@ -246,14 +247,15 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     @Test
-    public void testMakeCompleteURL() {
+    public void testMakeCompleteURL() throws Exception {
         ServerConfiguration serverConfiguration = Components.getSingleton(ServerConfiguration.class);
         String base = serverConfiguration.getDefaultBaseUrl();
         serverConfiguration.setDefaultBaseUrl("http://some.site/yay/");
         String url = null;
         try {
+            MockSession session = new MockSession("website");
             MockContent c = new MockContent("bla");
-            c.setHierarchyManager(new MockHierarchyManager("website"));
+            ((MockNode) c.getJCRNode()).setSession(session);
             url = LinkTransformerManager.getInstance().getCompleteUrl().transform(LinkFactory.createLink(c));
         } finally {
             // restore

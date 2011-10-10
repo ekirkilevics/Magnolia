@@ -33,103 +33,35 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.cms.core.AbstractNodeData;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.core.DefaultNodeData;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.test.mock.jcr.MockValue;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
-import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.jcr.Value;
-import javax.jcr.ValueFormatException;
 
 
 /**
- * @author philipp
  * @version $Id$
  */
-public class MockNodeData extends AbstractNodeData {
-
-    private final String name;
-    private final int type;
-    private Object value;
+public class MockNodeData extends DefaultNodeData {
 
     public MockNodeData(String name, Object value) {
         super(null, name);
-        this.name = name;
-        this.value = value;
-        this.type = NodeDataUtil.getJCRPropertyType(value);
+        try {
+            getJCRProperty().setValue(new MockValue(value));
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     public MockNodeData(String name, int type) {
         super(null, name);
-        this.name = name;
-        this.type = type;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getString() {
-        return value !=null ? value.toString() : "";
-    }
-
-    @Override
-    public int getType() {
-        return type;
-    }
-
-    @Override
-    public boolean getBoolean() {
-        try {
-            return ((Boolean) value).booleanValue();
-        } catch (Exception e) {
-            // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
-            return false;
-        }
-    }
-
-    @Override
-    public Calendar getDate() {
-        try {
-            return (Calendar) value;
-        } catch (Exception e) {
-            // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
-            return null;
-        }
-    }
-
-    @Override
-    public double getDouble() {
-        try {
-            return ((Double) value).doubleValue();
-        } catch (Exception e) {
-            // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
-            return 0;
-        }
-    }
-
-    @Override
-    public long getLong() {
-        try {
-            if (value instanceof Integer) {
-                return ((Integer)value).longValue();
-            }
-            return ((Long) value).longValue();
-        } catch (Exception e) {
-            // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
-            return 0;
-        }
     }
 
     @Override
@@ -160,59 +92,6 @@ public class MockNodeData extends AbstractNodeData {
     }
 
     @Override
-    protected Content getContentFromJCRReference() throws RepositoryException {
-        if (value instanceof Content) {
-            return (Content) value;
-        }
-        throw new ValueFormatException("Not a reference");
-    }
-
-    @Override
-    public boolean isExist() {
-        return value != null;
-    }
-
-    @Override
-    public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
-        this.value = Boolean.valueOf(value);
-    }
-
-    @Override
-    public void setValue(Calendar value) throws RepositoryException, AccessDeniedException {
-        this.value = value;
-    }
-
-    @Override
-    public void setValue(double value) throws RepositoryException, AccessDeniedException {
-        this.value = Double.valueOf(value);
-    }
-
-    @Override
-    public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
-        throw new UnsupportedOperationException("Streams can only be set on BinaryMockNodeData objects");
-    }
-
-    @Override
-    public void setValue(int value) throws RepositoryException, AccessDeniedException {
-        this.value = Integer.valueOf(value);
-    }
-
-    @Override
-    public void setValue(long value) throws RepositoryException, AccessDeniedException {
-        this.value = Long.valueOf(value);
-    }
-
-    @Override
-    public void setValue(String value) throws RepositoryException, AccessDeniedException {
-        this.value = value;
-    }
-
-    @Override
-    public void setValue(Content value) throws RepositoryException, AccessDeniedException {
-        this.value = value;
-    }
-
-    @Override
     public void save() throws RepositoryException {
         // nothing to do
     }
@@ -228,56 +107,15 @@ public class MockNodeData extends AbstractNodeData {
     }
 
     @Override
-    public Property getJCRProperty() throws PathNotFoundException {
+    public Property getJCRProperty() {
         if(isExist()){
             return new MockJCRProperty(this);
         }
-        throw new PathNotFoundException(getHandle());
-    }
-
-    @Override
-    public Value getValue() {
-        return new MockJCRValue(this);
-    }
-
-    @Override
-    public Value[] getValues() {
-        Value[] values = new Value[1];
-        values[0] = getValue();
-        return values;
+        throw new RuntimeRepositoryException(new PathNotFoundException(getHandle()));
     }
 
     @Override
     public void refresh(boolean keepChanges) throws RepositoryException {
         // nothing to do
     }
-
-    @Override
-    public void setValue(Value value) throws RepositoryException, AccessDeniedException {
-        switch (value.getType()) {
-        case PropertyType.STRING:
-            setValue(value.getString());
-            break;
-        case PropertyType.LONG:
-            setValue(value.getLong());
-            break;
-        case PropertyType.DATE:
-            setValue(value.getDate());
-            break;
-        case PropertyType.BOOLEAN:
-            setValue(value.getBoolean());
-        // TODO complete when required...
-            break;
-
-        default:
-            throw new UnsupportedOperationException("Not implemented");
-
-        }
-    }
-
-    @Override
-    public void setValue(Value[] value) throws RepositoryException, AccessDeniedException {
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
 }

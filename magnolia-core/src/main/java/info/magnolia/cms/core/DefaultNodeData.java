@@ -230,7 +230,7 @@ public class DefaultNodeData extends AbstractNodeData {
     }
 
     protected Node getJCRNode() {
-        return parent.getJCRNode();
+        return parent == null ? null : parent.getJCRNode();
     }
 
     @Override

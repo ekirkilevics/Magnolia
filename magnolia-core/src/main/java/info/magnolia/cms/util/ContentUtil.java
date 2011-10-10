@@ -34,14 +34,14 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.NodeUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -646,10 +646,6 @@ public class ContentUtil {
     }
 
     public static Content asContent(Node content) {
-        try {
-            return new DefaultContent(content);
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+        return new DefaultContent(content);
     }
 }

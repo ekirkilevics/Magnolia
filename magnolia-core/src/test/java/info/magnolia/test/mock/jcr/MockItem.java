@@ -53,7 +53,7 @@ import javax.jcr.version.VersionException;
  */
 public abstract class MockItem implements Item {
 
-    final private String name;
+    private String name;
     private MockNode parent;
     private Session session;
 
@@ -92,6 +92,10 @@ public abstract class MockItem implements Item {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public Node getParent() throws ItemNotFoundException {
         return parent;
@@ -104,6 +108,9 @@ public abstract class MockItem implements Item {
             parentNode = getParent();
         } catch (ItemNotFoundException e1) {
             // aha - it's the root already...
+            return getName();
+        }
+        if (parentNode == null) {
             return getName();
         }
         // CAUTION: we really need different behavior here - depending whether we're children of root or children of other childs!

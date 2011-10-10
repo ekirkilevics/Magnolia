@@ -40,6 +40,8 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockValue;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.ByteArrayInputStream;
@@ -113,10 +115,9 @@ public class MockUtil {
      * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, InputStream)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
-        MockHierarchyManager hm = new MockHierarchyManager(repository);
-        Content root = hm.getRoot();
+        Content root = new MockContent("jcr:root");
         createContent(root, propertiesStream);
-        return hm;
+        return new MockHierarchyManager(root.getJCRNode().getSession());
     }
 
     /**
@@ -181,14 +182,18 @@ public class MockUtil {
     }
 
     public static Content createContent(final String name, Object[][] data, Content[] children) {
-        OrderedMap nodeDatas = MockUtil.createNodeDatas(data);
-        OrderedMap childrenMap = new ListOrderedMap();
-
+        MockNode node = new MockNode(name);
         for (Content child : children) {
-            childrenMap.put(child.getName(), child);
+            node.addNode((MockNode)child.getJCRNode());
         }
 
-        return new MockContent(name, nodeDatas, childrenMap);
+        for (Object[] aData : data) {
+            String propertyName = (String) aData[0];
+            Object value = aData[1];
+            node.setProperty(propertyName, new MockValue(value));
+        }
+
+        return new MockContent(node);
     }
 
     public static Content createNode(String name, Object[][] data) {

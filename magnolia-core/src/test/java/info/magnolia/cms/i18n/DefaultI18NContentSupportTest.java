@@ -42,7 +42,6 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockHierarchyManager;
 
 import java.util.Locale;
 
@@ -140,7 +139,7 @@ public class DefaultI18NContentSupportTest extends MgnlTestCase {
         defSupport.addLocale(new LocaleDefinition("de", "CH", true));
         defSupport.addLocale(new LocaleDefinition("it", null, false));
         MockContent content = new MockContent("boo");
-        content.setHierarchyManager(new MockHierarchyManager());
+        //content.setHierarchyManager(new MockHierarchyManager());
 
         // no language
         NodeData defaultblah = content.setNodeData("blah", "val_blah");
