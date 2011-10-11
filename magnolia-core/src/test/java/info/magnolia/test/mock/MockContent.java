@@ -115,7 +115,7 @@ public class MockContent extends DefaultContent {
                 nodeData = new BinaryMockNodeData(name, (MockContent) binaryNode);
             }
             else{
-                nodeData = new MockNodeData(name, type);
+                nodeData = new MockNodeData(this, name, type);
             }
             addNodeData(nodeData);
             return nodeData;

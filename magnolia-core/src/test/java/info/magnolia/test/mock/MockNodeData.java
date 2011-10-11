@@ -34,15 +34,9 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.DefaultNodeData;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.test.mock.jcr.MockValue;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 
@@ -51,71 +45,43 @@ import javax.jcr.RepositoryException;
  */
 public class MockNodeData extends DefaultNodeData {
 
-    public MockNodeData(String name, Object value) {
-        super(null, name);
+
+    public MockNodeData(MockContent content, String name, Object value) {
+        super(content, name);
         try {
-            getJCRProperty().setValue(new MockValue(value));
+            NodeDataUtil.setValue(this, value);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
+    public MockNodeData(String name, Object value) {
+        this(new MockContent("test"), name, value);
+    }
+
     public MockNodeData(String name, int type) {
-        super(null, name);
+        super(new MockContent("test"), name);
     }
 
     @Override
-    public InputStream getStream() {
-        final String s = getString();
-        if (s == null) {
-            // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
-            return null;
+    public boolean equals(Object arg0) {
+        if (arg0 == null || !(arg0 instanceof MockNodeData)) {
+            return false;
+        }
+        MockNodeData other = (MockNodeData) arg0;
+        if (!getName().equals(other.getName())) {
+            return false;
+        }
+        if (!getValue().equals(other.getValue())) {
+            return false;
         }
         try {
-            return new ByteArrayInputStream(s.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public String getHandle() {
-        try {
-            if(getParent() != null){
-                return getParent().getHandle() + "/" + this.getName();
+            if (!getParent().equals(other.getParent())) {
+                return false;
             }
-            return this.getName();
+        } catch (RepositoryException e) {
+            return false;
         }
-        catch (RepositoryException e) {
-            throw new RuntimeException("Can't build handle", e);
-        }
-    }
-
-    @Override
-    public void save() throws RepositoryException {
-        // nothing to do
-    }
-
-    @Override
-    public void delete() throws RepositoryException {
-        getParent().deleteNodeData(this.name);
-    }
-
-    @Override
-    public long getContentLength() {
-        return getString().length();
-    }
-
-    @Override
-    public Property getJCRProperty() {
-        if(isExist()){
-            return new MockJCRProperty(this);
-        }
-        throw new RuntimeRepositoryException(new PathNotFoundException(getHandle()));
-    }
-
-    @Override
-    public void refresh(boolean keepChanges) throws RepositoryException {
-        // nothing to do
+        return true;
     }
 }
