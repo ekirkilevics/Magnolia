@@ -41,6 +41,7 @@ import info.magnolia.context.SystemContext;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.MockValue;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
@@ -117,6 +118,8 @@ public class MockUtil {
     public static MockHierarchyManager createHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
         Content root = new MockContent("jcr:root");
         createContent(root, propertiesStream);
+        MockSession session = new MockSession("test");
+        session.setRootNode((MockNode) root.getJCRNode());
         return new MockHierarchyManager(root.getJCRNode().getSession());
     }
 

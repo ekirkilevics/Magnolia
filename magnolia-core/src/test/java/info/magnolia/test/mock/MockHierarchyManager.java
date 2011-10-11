@@ -92,6 +92,11 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
     }
 
     @Override
+    public Content wrapAsContent(Node rootNode, String path) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        return new MockContent((MockNode) rootNode, path);
+    }
+
+    @Override
     protected Content wrapAsContent(Node rootNode, String path, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return new MockContent((MockNode) rootNode, path, contentType);
     }

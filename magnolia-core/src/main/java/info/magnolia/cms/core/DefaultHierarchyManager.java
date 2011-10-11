@@ -222,13 +222,16 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             return this.getRoot();
         }
         try {
-            return (new DefaultContent(this.getRootNode(), getNodePath(path)));
+            return wrapAsContent(this.getRootNode(), getNodePath(path));
         } catch (ItemNotFoundException e) {
             this.getJcrSession().refresh(true);
-            return (new DefaultContent(this.getRootNode(), getNodePath(path)));
+            return wrapAsContent(this.getRootNode(), getNodePath(path));
         }
     }
 
+    public Content wrapAsContent(Node rootNode, String path) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        return new DefaultContent(rootNode, path);
+    }
     /**
      * Like getContent() but creates the node if not yet existing. Attention save is not called!
      * @param path the path of the node

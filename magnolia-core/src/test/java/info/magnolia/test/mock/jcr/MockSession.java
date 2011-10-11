@@ -312,7 +312,7 @@ public class MockSession implements Session {
 
     @Override
     public void save() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        // nothing to do
     }
 
     @Override
@@ -320,8 +320,9 @@ public class MockSession implements Session {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
-    protected void setRootNode(MockNode root) {
+    public void setRootNode(MockNode root) {
         this.rootNode = root;
+        root.setSession(this);
     }
 
     public void setValueFactory(ValueFactory valueFactory) {
