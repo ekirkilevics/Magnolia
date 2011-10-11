@@ -48,7 +48,6 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockHierarchyManager;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,7 +70,6 @@ public class MailUtilTest {
         MockContent peteNode = new MockContent("pete");
         peteNode.createContent("groups").setNodeData("0", "no-mail-group-uuid");
         peteNode.setNodeData("email", "test@pete.com");
-        peteNode.setHierarchyManager(new MockHierarchyManager("blah"));
         SystemContext ctx = createMock(SystemContext.class);
         MgnlContext.setInstance(ctx);
         ComponentsTestUtil.setInstance(SystemContext.class, ctx);
