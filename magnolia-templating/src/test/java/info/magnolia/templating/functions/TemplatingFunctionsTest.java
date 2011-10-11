@@ -884,8 +884,8 @@ public class TemplatingFunctionsTest {
     private void assertNodeEqualsNode(Node node1, Node node2) throws RepositoryException {
         assertNotNull(node1.getName());
         assertEquals(node1.getName(), node2.getName());
-        assertNotNull(node1.getUUID());
-        assertEquals(node1.getUUID(), node2.getUUID());
+        assertNotNull(node1.getIdentifier());
+        assertEquals(node1.getIdentifier(), node2.getIdentifier());
         assertNotNull(node1.getIdentifier());
         assertEquals(node1.getIdentifier(), node2.getIdentifier());
         assertNotNull(node1.getPath());
@@ -935,8 +935,8 @@ public class TemplatingFunctionsTest {
     private void assertNodeEqualsMap(Node node, ContentMap map) throws RepositoryException {
         assertNotNull(node.getName());
         assertEquals(node.getName(), map.get("@name"));
-        assertNotNull(node.getUUID());
-        assertEquals(node.getUUID(), map.get("@uuid"));
+        assertNotNull(node.getIdentifier());
+        assertEquals(node.getIdentifier(), map.get("@uuid"));
         assertNotNull(node.getIdentifier());
         assertEquals(node.getIdentifier(), map.get("@id"));
         assertEquals(node.getIdentifier(), map.get("@uuid"));
