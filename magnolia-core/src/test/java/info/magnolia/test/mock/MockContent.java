@@ -66,6 +66,14 @@ public class MockContent extends DefaultContent {
         super(node);
     }
 
+    public MockContent(MockNode rootNode, String path) throws PathNotFoundException, RepositoryException, AccessDeniedException{
+        super(rootNode, path);
+    }
+
+    public MockContent(MockNode rootNode, String path, String contentType) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        super(rootNode, path, contentType);
+    }
+
     public void setUUID(String identifier) {
         ((MockNode) getJCRNode()).setIdentifier(identifier);
     }
@@ -144,4 +152,22 @@ public class MockContent extends DefaultContent {
         addContent(new MockContent("MetaData"));
         return (MockMetaData) getMetaData();
     }
+
+    @Override
+    public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        MockContent c = new MockContent(name, new ItemType(contentType));
+        addContent(c);
+
+        if (c.isNodeType(ItemType.NT_RESOURCE)) {
+            final BinaryMockNodeData binND = new BinaryMockNodeData(name, c);
+            addNodeData(binND);
+        }
+        return c;
+    }
+
+    @Override
+    public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        return (new MockContent((MockNode) node, name));
+    }
+
 }

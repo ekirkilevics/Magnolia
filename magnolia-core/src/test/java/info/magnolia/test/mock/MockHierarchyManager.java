@@ -33,11 +33,15 @@
  */
 package info.magnolia.test.mock;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultHierarchyManager;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
@@ -82,4 +86,13 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         }
     }
 
+    @Override
+    protected Content wrapAsContent(Node node) {
+        return new MockContent((MockNode) node);
+    }
+
+    @Override
+    protected Content wrapAsContent(Node rootNode, String path, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        return new MockContent((MockNode) rootNode, path, contentType);
+    }
 }

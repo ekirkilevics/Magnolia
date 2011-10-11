@@ -121,7 +121,7 @@ public class DefaultContent extends AbstractContent {
      * operation
      * @throws RepositoryException if an error occurs
      */
-    DefaultContent(Node rootNode, String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    protected DefaultContent(Node rootNode, String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         this.setPath(path);
         this.setRootNode(rootNode);
         this.setNode(this.rootNode.getNode(this.path));
@@ -154,7 +154,7 @@ public class DefaultContent extends AbstractContent {
      * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
      * operation
      */
-    DefaultContent(Node rootNode, String path, String contentType)
+    protected DefaultContent(Node rootNode, String path, String contentType)
     throws PathNotFoundException,
     RepositoryException,
     AccessDeniedException {

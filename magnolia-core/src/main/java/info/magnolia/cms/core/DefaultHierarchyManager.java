@@ -171,10 +171,14 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     @Override
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException,
     RepositoryException, AccessDeniedException {
-        Content content = new DefaultContent(this.getRootNode(), this.getNodePath(path, label), contentType);
+        Content content = wrapAsContent(this.getRootNode(), this.getNodePath(path, label), contentType);
         setMetaData(content.getMetaData());
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, getWorkspaceName(), content.getItemType(), content.getHandle());
         return content;
+    }
+
+    protected Content wrapAsContent(Node rootNode, String path, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        return new DefaultContent(rootNode, path, contentType);
     }
 
     private String getNodePath(String parent, String label) {
@@ -416,12 +420,16 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
     AccessDeniedException {
         try {
-            return new DefaultContent(this.getJcrSession().getNodeByIdentifier(uuid));
+            return wrapAsContent(this.getJcrSession().getNodeByIdentifier(uuid));
         } catch (ItemNotFoundException e) {
             // retry in case session was not updated
             this.getJcrSession().refresh(true);
-            return new DefaultContent(this.getJcrSession().getNodeByIdentifier(uuid));
+            return wrapAsContent(this.getJcrSession().getNodeByIdentifier(uuid));
         }
+    }
+
+    protected Content wrapAsContent(Node node) {
+        return new DefaultContent(node);
     }
 
     /**
