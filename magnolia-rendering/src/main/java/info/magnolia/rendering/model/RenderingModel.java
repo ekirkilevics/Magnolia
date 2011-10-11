@@ -94,4 +94,11 @@ public interface RenderingModel <RD extends RenderableDefinition> {
      */
     String execute();
 
+    /**
+     * The top root model of the rendering process.
+     * In for example the scope of rendering a page this would be the pages model.
+     *
+     */
+    RenderingModel<?> getRoot();
+
 }
