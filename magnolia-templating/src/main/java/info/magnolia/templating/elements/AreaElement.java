@@ -135,7 +135,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         }
     }
 
-    protected Node createNewAreaNode() {
+    private Node createNewAreaNode() {
         try {
             Node areaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA, true);
             NodeUtil.createPath(areaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA,true);
