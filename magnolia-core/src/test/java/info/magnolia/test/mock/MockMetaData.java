@@ -78,17 +78,17 @@ public class MockMetaData extends MetaData {
 
     @Override
     public void setProperty(String name, boolean value) throws AccessDeniedException {
-        mockContent.addNodeData(new MockNodeData(name, Boolean.valueOf(value)));
+        mockContent.addNodeData(new MockNodeData(mockContent, name, Boolean.valueOf(value)));
     }
 
     @Override
     public void setProperty(String name, Calendar value) throws AccessDeniedException {
-        mockContent.addNodeData(new MockNodeData(name, value));
+        mockContent.addNodeData(new MockNodeData(mockContent, name, value));
     }
 
     @Override
     public void setProperty(String name, String value) throws AccessDeniedException {
-        mockContent.addNodeData(new MockNodeData(name, value));
+        mockContent.addNodeData(new MockNodeData(mockContent, name, value));
     }
 
 }

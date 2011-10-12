@@ -291,6 +291,7 @@ public class MockNode extends AbstractNode {
 
     @Override
     public Node getParent() throws ItemNotFoundException {
+        // TODO dlipp - check this impl. It's convenient but probably wrong as we're only throwing exception in case both conditions apply.
         if (ROOT_NODE_NAME.equals(getName()) && parent == null) {
             throw new ItemNotFoundException("This is the rootNode - it doesn't have a parent!");
         }

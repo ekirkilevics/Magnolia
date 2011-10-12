@@ -42,6 +42,7 @@ import javax.jcr.RepositoryException;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.NonExistingNodeData;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -89,6 +90,20 @@ public class MockContent extends DefaultContent {
             throw new RuntimeRepositoryException(e);
         }
     }
+
+    @Override
+    public MockMetaData getMetaData() {
+        try {
+            if(!hasContent(MetaData.DEFAULT_META_NODE)){
+                createContent(MetaData.DEFAULT_META_NODE, ItemType.NT_METADATA);
+            }
+
+            return new MockMetaData((MockContent) getContent(MetaData.DEFAULT_META_NODE));
+        } catch (RepositoryException e) {
+            throw new RuntimeException("Can't create/read the meta data node.", e);
+        }
+    }
+
 
     @Override
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
@@ -150,7 +165,7 @@ public class MockContent extends DefaultContent {
 
     public MockMetaData createMetaData() {
         addContent(new MockContent("MetaData"));
-        return (MockMetaData) getMetaData();
+        return getMetaData();
     }
 
     @Override
