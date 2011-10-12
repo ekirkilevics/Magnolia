@@ -66,7 +66,7 @@ public class TemplatingFunctions {
         return content == null ? null : new ContentMap(content);
     }
 
-    //TODO LinkUtil needs to be Node capable and not only Content. Switch to node based impl when SCRUM-242 will be done.
+    //TODO fgrilli: LinkUtil needs to be Node capable and not only Content. Switch to node based impl when SCRUM-242 will be done.
     public String link(Node content) throws RepositoryException{
         return content == null ? null : LinkUtil.createLink(ContentUtil.asContent(content));
     }
