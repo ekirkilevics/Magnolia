@@ -33,10 +33,11 @@
  */
 package info.magnolia.templating.functions;
 
-import info.magnolia.context.MgnlContext;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
+import info.magnolia.link.LinkUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,14 +66,9 @@ public class TemplatingFunctions {
         return content == null ? null : new ContentMap(content);
     }
 
-//    //TODO cringele : these would be the right way of creating links. LinkUtil needs to be Node capable and not only Content. (SCRUM-242)
-//    public String link(Node content) throws RepositoryException{
-//        return content == null ? null : LinkUtil.createLink(content);
-//    }
-
-    //TODO cringele : hacky way of creating a link, but serves for now until LinkUtill is Node capable (SCRUM-242)
+    //TODO LinkUtil needs to be Node capable and not only Content. Switch to node based impl when SCRUM-242 will be done.
     public String link(Node content) throws RepositoryException{
-        return content == null ? null : MgnlContext.getContextPath()+content.getPath();
+        return content == null ? null : LinkUtil.createLink(ContentUtil.asContent(content));
     }
 
     public String link(ContentMap contentMap) throws RepositoryException{

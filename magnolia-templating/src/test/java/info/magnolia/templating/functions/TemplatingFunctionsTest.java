@@ -39,11 +39,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.i18n.DefaultI18nContentSupport;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
+import info.magnolia.link.LinkTransformerManager;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,6 +61,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -97,6 +103,7 @@ public class TemplatingFunctionsTest {
     @Before
     public void setUpNodeHierarchy() throws PathNotFoundException, RepositoryException{
         root = new MockNode();
+        root.setSession(new MockSession("website"));
 
         topPage            = createChildNodes(root,       DEPTH_1_PAGE_NAMES,      MgnlNodeType.NT_CONTENT);
         topPageComponent   = createChildNodes(topPage,    DEPTH_2_COMPONENT_NAMES, MgnlNodeType.NT_CONTENTNODE);
@@ -110,6 +117,17 @@ public class TemplatingFunctionsTest {
         childPageContentMap = new ContentMap(childPage);
         childPageComponentContentMap = new ContentMap(childPageComponent);
         childPageSubPageContentMap = new ContentMap(childPageSubPage);
+
+        LinkTransformerManager linkTransformerManager = new LinkTransformerManager();
+        linkTransformerManager.setAddContextPathToBrowserLinks(true);
+        ComponentsTestUtil.setInstance(LinkTransformerManager.class, linkTransformerManager);
+
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+    }
+
+    @After
+    public void tearDown() {
+        ComponentsTestUtil.clear();
     }
 
     @Test
