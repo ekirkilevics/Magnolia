@@ -277,7 +277,7 @@ public class TemplatingFunctions {
         if(StringUtils.isBlank(relPath)) {
             throw new IllegalArgumentException("relative path cannot be null or empty");
         }
-        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content.getJCRNode());
+        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(asJCRNode(content));
         Node subNode = inheritedNode.getNode(relPath);
         return children(new ContentMap(subNode));
 
@@ -288,8 +288,7 @@ public class TemplatingFunctions {
     }
 
     public boolean isFromCurrentPage(ContentMap content) {
-        Node node = content.getJCRNode();
-        return isFromCurrentPage(node);
+        return isFromCurrentPage(asJCRNode(content));
     }
 
     public boolean isInherited(Node content) {
@@ -300,8 +299,7 @@ public class TemplatingFunctions {
     }
 
     public boolean isInherited(ContentMap content) {
-        Node node = content.getJCRNode();
-        return isInherited(node);
+        return isInherited(asJCRNode(content));
     }
 
     private boolean isRoot(Node content) throws RepositoryException {
