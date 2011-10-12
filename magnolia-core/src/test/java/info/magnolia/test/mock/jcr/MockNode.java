@@ -634,7 +634,7 @@ public class MockNode extends AbstractNode {
 
     @Override
     public Property setProperty(String name, String value, int type) throws RepositoryException {
-        return setProperty(name, new MockValue(value, PropertyType.REFERENCE));
+        return setProperty(name, new MockValue(value, type));
     }
 
     @Override
