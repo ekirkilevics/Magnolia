@@ -38,7 +38,6 @@ import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockNodeData;
 
 import javax.jcr.RepositoryException;
 
@@ -61,7 +60,7 @@ public class PropertyValuesTaskTest {
     @Test
     public void testExistingPropertyIsReplaced() throws RepositoryException {
         final MockContent node = new MockContent("foo");
-        node.addNodeData(new MockNodeData("bar", "old-value"));
+        node.addNodeData("bar", "old-value");
 
         final PropertyValuesTask pvd = new DummyPropertyValuesDelta();
 
@@ -94,7 +93,7 @@ public class PropertyValuesTaskTest {
         ctx.warn("Property \"bar\" was expected to exist at /foo with value \"old-value\" but has the value \"wrong-value\" instead.");
 
         final MockContent node = new MockContent("foo");
-        node.addNodeData(new MockNodeData("bar", "wrong-value"));
+        node.addNodeData("bar", "wrong-value");
 
         final PropertyValuesTask pvd = new DummyPropertyValuesDelta();
 
@@ -125,7 +124,7 @@ public class PropertyValuesTaskTest {
         ctx.warn("Property \"bar\" was expected not to exist at /foo, but exists with value \"old-value\" and was going to be created with value \"newValue\".");
 
         final MockContent node = new MockContent("foo");
-        node.addNodeData(new MockNodeData("bar", "old-value"));
+        node.addNodeData("bar", "old-value");
 
         final PropertyValuesTask pvd = new DummyPropertyValuesDelta();
 

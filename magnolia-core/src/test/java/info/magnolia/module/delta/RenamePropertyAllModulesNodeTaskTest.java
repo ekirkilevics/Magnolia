@@ -33,15 +33,12 @@
  */
 package info.magnolia.module.delta;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockNodeData;
 import info.magnolia.test.mock.MockUtil;
 
 import org.junit.Before;
@@ -68,7 +65,7 @@ public class RenamePropertyAllModulesNodeTaskTest {
         modulesNode.addContent(testModule);
         final MockContent foo = new MockContent("foo");
         testModule.addContent(foo);
-        foo.addNodeData(new MockNodeData("before", "remainingValue"));
+        foo.addNodeData("before", "remainingValue");
 
         when(ctx.hasModulesNode()).thenReturn(true);
         when(ctx.getModulesNode()).thenReturn(modulesNode);

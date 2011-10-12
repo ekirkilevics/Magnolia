@@ -48,6 +48,7 @@ import info.magnolia.cms.core.NonExistingNodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 
 
 /**
@@ -145,6 +146,10 @@ public class MockContent extends DefaultContent {
         }
     }
 
+    public void addNodeData(String name, Object value) {
+        new MockNodeData(this, name, value);
+    }
+
     public void addNodeData(MockNodeData nd) {
         // TODO dlipp - how to treat BinaryNodeDatas?
         try {
@@ -184,5 +189,17 @@ public class MockContent extends DefaultContent {
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return (new MockContent((MockNode) node, name));
     }
+
+    @Override
+    public void delete() throws RepositoryException {
+        final MockNode parent = (MockNode) getParent().getJCRNode();
+        ((MockSession) getJCRNode().getSession()).removeFromCache((MockNode) getJCRNode());
+        final boolean removedFromParent = parent.removeFromChildren(getJCRNode());
+
+        if (!removedFromParent) {
+            throw new RepositoryException("MockContent could not delete itself");
+        }
+    }
+
 
 }
