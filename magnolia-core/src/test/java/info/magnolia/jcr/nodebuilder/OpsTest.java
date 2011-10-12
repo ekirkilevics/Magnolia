@@ -122,8 +122,9 @@ public class OpsTest {
         op.exec(rootNode, eh);
         fail("should have failed");
     }
+
     @Test
-    public void testRenameProperty() {
+    public void testRenameProperty() throws RepositoryException {
         rootNode.setProperty(PROPERTY_NAME, PROPERTY_VALUE);
         final String newName = "newName";
 

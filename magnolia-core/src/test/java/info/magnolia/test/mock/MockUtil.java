@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -193,7 +194,11 @@ public class MockUtil {
         for (Object[] aData : data) {
             String propertyName = (String) aData[0];
             Object value = aData[1];
-            node.setProperty(propertyName, new MockValue(value));
+            try {
+                node.setProperty(propertyName, new MockValue(value));
+            } catch (RepositoryException e) {
+                throw new RuntimeRepositoryException(e);
+            }
         }
 
         return new MockContent(node);

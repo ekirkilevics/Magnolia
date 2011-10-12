@@ -37,7 +37,6 @@ import java.io.InputStream;
 
 import javax.jcr.NamespaceRegistry;
 import javax.jcr.Session;
-import javax.jcr.Workspace;
 import javax.jcr.lock.LockManager;
 import javax.jcr.nodetype.NodeTypeManager;
 import javax.jcr.observation.ObservationManager;
@@ -45,12 +44,13 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionManager;
 
+import org.apache.jackrabbit.commons.AbstractWorkspace;
 import org.xml.sax.ContentHandler;
 
 /**
  * @version $Id$
  */
-public class MockWorkspace implements Workspace {
+public class MockWorkspace extends AbstractWorkspace {
 
     final private String name;
 

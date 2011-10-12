@@ -39,40 +39,47 @@ import java.util.Calendar;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Binary;
+import javax.jcr.InvalidItemStateException;
 import javax.jcr.Item;
+import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.ItemVisitor;
 import javax.jcr.Node;
 import javax.jcr.Property;
+import javax.jcr.ReferentialIntegrityException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.nodetype.PropertyDefinition;
 import javax.jcr.version.VersionException;
+
+import org.apache.jackrabbit.commons.AbstractProperty;
 
 /**
  * Mock-impl. for javax.jcr.Property - basically wrapping a MockValue.
  *
  * @version $Id$
  */
-public class MockProperty extends MockItem implements Property {
+public class MockProperty extends AbstractProperty {
 
+    private String name;
+    private MockNode parent;
+    private Session session;
     private MockValue value;
 
-    public MockProperty(String name, Object objectValue) {
-        this(name, new MockValue(objectValue));
+    public MockProperty(String name, MockValue value, MockNode parent) {
+        this.name = name;
+        this.parent = parent;
+        this.value = value;
+        setSessionFrom(parent);
     }
 
-    public MockProperty(String name, MockValue value) {
-        super(name);
-        this.value = value;
-    }
-
-    public MockProperty(String name, MockValue value, MockNode node) {
-        super(name, node);
-        this.value = value;
+    public MockProperty(String name, Object objectValue, MockNode parent) {
+        this(name, new MockValue(objectValue), parent);
     }
 
     @Override
@@ -131,18 +138,29 @@ public class MockProperty extends MockItem implements Property {
     }
 
     @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
     public Node getNode() {
-        try {
-            return getParent();
-        } catch (ItemNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        return getParent();
+    }
+
+    @Override
+    public Node getParent() {
+        return parent;
     }
 
     @Override
     public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
         // References not implemented
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    }
+
+    @Override
+    public Session getSession() {
+        return session;
     }
 
     @Override
@@ -161,7 +179,7 @@ public class MockProperty extends MockItem implements Property {
     }
 
     @Override
-    public Value getValue() throws ValueFormatException, RepositoryException {
+    public Value getValue() {
         return value;
     }
 
@@ -171,8 +189,21 @@ public class MockProperty extends MockItem implements Property {
     }
 
     @Override
+    public boolean isModified() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+
+    @Override
     public boolean isMultiple() throws RepositoryException {
         // Multiple not supported (yet)
+        return false;
+    }
+
+    @Override
+    public boolean isNew() {
+        // TODO Auto-generated method stub
         return false;
     }
 
@@ -187,78 +218,44 @@ public class MockProperty extends MockItem implements Property {
     }
 
     @Override
-    public void setValue(BigDecimal value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        setValueFromObject(value);
-    }
-
-    @Override
-    public void setValue(Binary value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public void setValue(boolean value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        setValueFromObject(value);
-    }
-
-    @Override
-    public void setValue(Calendar value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        setValueFromObject(value);
-    }
-
-    @Override
-    public void setValue(double value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        setValueFromObject(value);
-    }
-
-    @Override
-    public void setValue(InputStream value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public void setValue(long value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        setValueFromObject(value);
-    }
-
-    @Override
-    public void setValue(Node value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        // References not implemented
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public void setValue(String value) {
-        setValueFromObject(value);
-    }
-
-    @Override
-    public void setValue(String[] values) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public void setValue(Value value) {
-        this.value = (MockValue) value;
-    }
-
-    @Override
-    public void setValue(Value[] values) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    protected void setValueFromObject(Object object) {
-        value = new MockValue(object);
-    }
-
-    @Override
-    public String toString() {
-        return "MockProperty [value=" + value + super.toString() + "]";
+    public void refresh(boolean keepChanges) throws InvalidItemStateException, RepositoryException {
     }
 
     @Override
     public void remove() {
         ((MockNode) getNode()).removeProperty(getName());
         setParent(null);
+    }
+
+    @Override
+    public void save() throws AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException, ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
+    }
+
+    public void setParent(MockNode parent) {
+        this.parent = parent;
+        setSessionFrom(parent);
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    private void setSessionFrom(MockNode parent) {
+        setSession(parent == null ? null : parent.getSession());
+    }
+
+    @Override
+    public void setValue(BigDecimal value) throws RepositoryException {
+        getParent().setProperty(getName(), value);
+    }
+
+    @Override
+    public void setValue(Binary value) throws RepositoryException {
+        getParent().setProperty(getName(), value);
+    }
+
+    @Override
+    public void setValue(Value value) {
+        this.value = (MockValue) value;
     }
 }

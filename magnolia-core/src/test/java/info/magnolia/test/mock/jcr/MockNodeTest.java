@@ -121,7 +121,7 @@ public class MockNodeTest {
     @Test
     public void testGetNodeWithExistingPath() throws Exception {
         final MockNode child = (MockNode) root.addNode("child");
-        final MockItem childOfChild = (MockItem) child.addNode("childOfChild");
+        final MockNode childOfChild = (MockNode) child.addNode("childOfChild");
 
         assertEquals(child, root.getNode("child"));
         assertEquals(childOfChild, root.getNode("child/childOfChild"));
