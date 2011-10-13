@@ -102,14 +102,15 @@ public class PropertyUtil {
         } else if (propertyValue instanceof Long) {
             node.setProperty(propertyName, ((Long) propertyValue).longValue());
         } else if (propertyValue instanceof Double) {
-            node.setProperty(propertyName, ((Double) propertyValue).doubleValue());
+            node.setProperty(propertyName, (Double) propertyValue);
         } else if (propertyValue instanceof Boolean) {
-            node.setProperty(propertyName, ((Boolean) propertyValue).booleanValue());
+            node.setProperty(propertyName, (Boolean) propertyValue);
         } else if (propertyValue instanceof InputStream) {
             node.setProperty(propertyName, (InputStream) propertyValue);
-        } else
+        } else {
             // TODO dlipp: verify if this is desired default-behavior: NodeDataUtil#setValue sets propertyValue.toString() as default!
             throw new IllegalArgumentException("Cannot set property to a value of type " + propertyValue.getClass());
+        }
     }
 
     /**
@@ -119,27 +120,21 @@ public class PropertyUtil {
         Value value = null;
         if (type == PropertyType.STRING) {
             value = valueFactory.createValue(valueStr);
-        }
-        else if (type == PropertyType.BOOLEAN) {
+        } else if (type == PropertyType.BOOLEAN) {
             value = valueFactory.createValue(BooleanUtils.toBoolean(valueStr));
-        }
-        else if (type == PropertyType.DOUBLE) {
+        } else if (type == PropertyType.DOUBLE) {
             try {
                 value = valueFactory.createValue(Double.parseDouble(valueStr));
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 value = valueFactory.createValue(0d);
             }
-        }
-        else if (type == PropertyType.LONG) {
+        } else if (type == PropertyType.LONG) {
             try {
                 value = valueFactory.createValue(Long.parseLong(valueStr));
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 value = valueFactory.createValue(0L);
             }
-        }
-        else if (type == PropertyType.DATE) {
+        } else if (type == PropertyType.DATE) {
             try {
                 Calendar date = new GregorianCalendar();
                 try {
@@ -170,8 +165,7 @@ public class PropertyUtil {
                     // ignore, it sets the current date / time
                 }
                 value = valueFactory.createValue(date);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
@@ -184,31 +178,31 @@ public class PropertyUtil {
      * @return JCR-PropertyType corresponding to provided Object.
      */
     public static int getJCRPropertyType(Object obj) {
-        if(obj instanceof String) {
+        if (obj instanceof String) {
             return PropertyType.STRING;
         }
-        if(obj instanceof Double) {
+        if (obj instanceof Double) {
             return PropertyType.DOUBLE;
         }
-        if(obj instanceof Float) {
+        if (obj instanceof Float) {
             return PropertyType.DOUBLE;
         }
-        if(obj instanceof Long) {
+        if (obj instanceof Long) {
             return PropertyType.LONG;
         }
-        if(obj instanceof Integer) {
+        if (obj instanceof Integer) {
             return PropertyType.LONG;
         }
-        if(obj instanceof Boolean) {
+        if (obj instanceof Boolean) {
             return PropertyType.BOOLEAN;
         }
-        if(obj instanceof Calendar) {
+        if (obj instanceof Calendar) {
             return PropertyType.DATE;
         }
-        if(obj instanceof InputStream) {
+        if (obj instanceof InputStream) {
             return PropertyType.BINARY;
         }
-        if(obj instanceof Content) {
+        if (obj instanceof Content) {
             return PropertyType.REFERENCE;
         }
         return PropertyType.UNDEFINED;
@@ -226,51 +220,45 @@ public class PropertyUtil {
     }
 
     public static String getDateFormat() {
-        String dateFormat = null;
-        try{
-            dateFormat = FastDateFormat.getDateInstance(
+        try {
+            return FastDateFormat.getDateInstance(
                     FastDateFormat.SHORT,
                     MgnlContext.getLocale()).getPattern();
+        } catch (IllegalStateException e) {
+            // this happens if the context is not (yet) set
+            return DateUtil.YYYY_MM_DD;
         }
-        // this happens if the context is not (yet) set
-        catch(IllegalStateException e){
-            dateFormat = DateUtil.YYYY_MM_DD;
-        }
-        return dateFormat;
     }
 
     public static List<String> getValuesStringList(Value[] values) {
         ArrayList<String> list = new ArrayList<String>();
-        try{
-            Value value;
-            for( int i = 0; i < values.length; i++) {
-                value = values[i];
+        try {
+            for (Value value : values) {
                 switch (value.getType()) {
-                case (PropertyType.STRING):
-                    list.add(value.getString());
-                break;
-                case (PropertyType.DOUBLE):
-                    list.add(Double.toString(value.getDouble()));
-                break;
-                case (PropertyType.LONG):
-                    list.add(Long.toString(value.getLong()));
-                break;
-                case (PropertyType.BOOLEAN):
-                    list.add(Boolean.toString(value.getBoolean()));
-                break;
-                case (PropertyType.DATE):
-                    Date valueDate = value.getDate().getTime();
-                list.add(DateUtil.format(valueDate, PropertyUtil.getDateFormat()));
-                break;
-                case (PropertyType.BINARY):
-                    // for lack of better solution, fall through to the default - empty string
-                default:
-                    list.add(StringUtils.EMPTY);
+                    case (PropertyType.STRING):
+                        list.add(value.getString());
+                        break;
+                    case (PropertyType.DOUBLE):
+                        list.add(Double.toString(value.getDouble()));
+                        break;
+                    case (PropertyType.LONG):
+                        list.add(Long.toString(value.getLong()));
+                        break;
+                    case (PropertyType.BOOLEAN):
+                        list.add(Boolean.toString(value.getBoolean()));
+                        break;
+                    case (PropertyType.DATE):
+                        Date valueDate = value.getDate().getTime();
+                        list.add(DateUtil.format(valueDate, PropertyUtil.getDateFormat()));
+                        break;
+                    case (PropertyType.BINARY):
+                        // for lack of better solution, fall through to the default - empty string
+                    default:
+                        list.add(StringUtils.EMPTY);
                 }
             }
-        }
-        catch (Exception e) {
-            log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+        } catch (RepositoryException e) {
+            log.debug("RepositoryException caught: " + e.getMessage(), e);
         }
         return list;
     }
@@ -278,19 +266,19 @@ public class PropertyUtil {
     public static Value createValue(Object obj, ValueFactory valueFactory) throws RepositoryException {
         switch (PropertyUtil.getJCRPropertyType(obj)) {
             case PropertyType.STRING:
-                return valueFactory.createValue((String)obj);
+                return valueFactory.createValue((String) obj);
             case PropertyType.BOOLEAN:
-                return valueFactory.createValue(((Boolean)obj).booleanValue());
+                return valueFactory.createValue((Boolean) obj);
             case PropertyType.DATE:
-                return valueFactory.createValue((Calendar)obj);
+                return valueFactory.createValue((Calendar) obj);
             case PropertyType.LONG:
-                return obj instanceof Long ? valueFactory.createValue(((Long)obj).longValue()) : valueFactory.createValue(((Integer)obj).longValue());
+                return obj instanceof Long ? valueFactory.createValue(((Long) obj).longValue()) : valueFactory.createValue(((Integer) obj).longValue());
             case PropertyType.DOUBLE:
-                return obj instanceof Double ? valueFactory.createValue(((Double)obj).doubleValue()) : valueFactory.createValue(((Float)obj).doubleValue());
+                return obj instanceof Double ? valueFactory.createValue((Double) obj) : valueFactory.createValue(((Float) obj).doubleValue());
             case PropertyType.BINARY:
-                return valueFactory.createValue((InputStream)obj);
+                return valueFactory.createValue((InputStream) obj);
             case PropertyType.REFERENCE:
-                return valueFactory.createValue(((Content)obj).getJCRNode());
+                return valueFactory.createValue(((Content) obj).getJCRNode());
             default:
                 return (obj != null ? valueFactory.createValue(obj.toString()) : valueFactory.createValue(StringUtils.EMPTY));
         }
@@ -301,7 +289,7 @@ public class PropertyUtil {
      * If the Node did not contain such a Property,
      * then return <b>null</b>.
      */
-    public static String getString(Node node,String name){
+    public static String getString(Node node, String name) {
         return getString(node, name, null);
     }
 
@@ -310,30 +298,31 @@ public class PropertyUtil {
      * If the Node did not contain such a Property,
      * then return the default value.
      */
-    public static String getString(Node node,String name, String defaultValue){
-        try{
-            if(node.hasProperty(name)){
+    public static String getString(Node node, String name, String defaultValue) {
+        try {
+            if (node.hasProperty(name)) {
                 return node.getProperty(name).getString();
             }
             return defaultValue;
-        }catch(Exception e){
-            log.error("can't read value '"+name+"' of the Node '"+node.toString()+"' will return default value", e);
+        } catch (RepositoryException e) {
+            log.error("can't read value '" + name + "' of the Node '" + node.toString() + "' will return default value", e);
             return defaultValue;
         }
     }
+
     /**
      * Return the boolean representing the node property value.
      * If the Node did not contain such a Property,
      * then return the default value.
      */
-    public static boolean getBoolean(Node node,String name, boolean defaultValue){
-        try{
-            if(node.hasProperty(name)){
+    public static boolean getBoolean(Node node, String name, boolean defaultValue) {
+        try {
+            if (node.hasProperty(name)) {
                 return node.getProperty(name).getBoolean();
             }
             return defaultValue;
-        }catch(Exception e){
-            log.error("can't read value '"+name+"' of the Node '"+node.toString()+"' will return default value", e);
+        } catch (RepositoryException e) {
+            log.error("can't read value '" + name + "' of the Node '" + node.toString() + "' will return default value", e);
             return defaultValue;
         }
     }
