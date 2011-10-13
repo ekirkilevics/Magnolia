@@ -283,7 +283,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
             Iterator<ComponentAvailability> iterator = areaDefinition.getAvailableComponents().values().iterator();
             List<String> componentIds = new ArrayList<String>();
             while (iterator.hasNext()) {
-                componentIds.add(iterator.next().getId());
+                ComponentAvailability availableComponent = iterator.next();
+                if(availableComponent.isEnabled()) {
+                    componentIds.add(availableComponent.getId());
+                }
             }
             return StringUtils.join(componentIds, ',');
         }

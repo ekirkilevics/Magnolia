@@ -49,6 +49,8 @@ public class ConfiguredComponentAvailability implements ComponentAvailability {
 
     private String id;
 
+    private boolean enabled = true;
+
     @Override
     public String getId() {
         return this.id;
@@ -66,5 +68,16 @@ public class ConfiguredComponentAvailability implements ComponentAvailability {
     public void setRoles(Collection<String> roles) {
         this.roles = roles;
     }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+
 
 }

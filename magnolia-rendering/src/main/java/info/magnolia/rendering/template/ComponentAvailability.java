@@ -47,4 +47,6 @@ public interface ComponentAvailability {
 
     Collection<String> getRoles();
 
+    boolean isEnabled();
+
 }
