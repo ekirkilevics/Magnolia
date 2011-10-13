@@ -40,12 +40,12 @@ import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.ExtendingContentWrapper;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.SystemContentWrapper;
+import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.cms.util.ExtendingContentWrapper;
-import info.magnolia.cms.util.SystemContentWrapper;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -105,9 +105,9 @@ public class DialogHandlerManager extends ObservedManager {
             catch (RepositoryException e) {
                 log.error("Can't check for node type of the dialog node [" + dialogNode.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
                 throw new IllegalStateException("Can't check for node type of the dialog node ["
-                    + dialogNode.getHandle()
-                    + "]: "
-                    + ExceptionUtils.getMessage(e));
+                        + dialogNode.getHandle()
+                        + "]: "
+                        + ExceptionUtils.getMessage(e));
             }
             String name = dialogNode.getNodeData(ND_NAME).getString();
             if (StringUtils.isEmpty(name)) {
@@ -127,7 +127,7 @@ public class DialogHandlerManager extends ObservedManager {
                 registerDialogHandler(name, dialogClass, dialogNode);
             }
             catch (ClassNotFoundException e) {
-                log.warn("Can't find dialog handler class " + className, e); //$NON-NLS-1$
+                log.warn("Can't find dialog handler class " + className, e);
             }
         }
     }
@@ -151,7 +151,7 @@ public class DialogHandlerManager extends ObservedManager {
     }
 
     protected void registerDialogHandler(String name, Class< ? extends DialogMVCHandler> dialogHandler, Content configNode) {
-        log.debug("Registering dialog handler [{}] from {}", name, configNode.getHandle()); //$NON-NLS-1$
+        log.debug("Registering dialog handler [{}] from {}", name, configNode.getHandle());
 
         // remember the uuid for a reload
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
@@ -160,10 +160,11 @@ public class DialogHandlerManager extends ObservedManager {
     /**
      * @deprecated since 4.3.2, is obsolete since fix for MAGNOLIA-2907
      */
+    @Deprecated
     public Content getDialogConfigNode(String dialogName) {
         final Object[] handlerConfig = dialogHandlers.get(dialogName);
         if (handlerConfig == null) {
-            throw new InvalidDialogHandlerException(dialogName);
+            throw new InvalidDialogHandlerException(dialogName, dialogHandlers.keySet().toString());
         }
         return (Content) handlerConfig[1];
     }
@@ -173,7 +174,7 @@ public class DialogHandlerManager extends ObservedManager {
         Object[] handlerConfig = dialogHandlers.get(name);
 
         if (handlerConfig == null) {
-            throw new InvalidDialogHandlerException(name);
+            throw new InvalidDialogHandlerException(name, dialogHandlers.keySet().toString());
         }
 
         return instantiateHandler(name, request, response, handlerConfig);
@@ -188,7 +189,7 @@ public class DialogHandlerManager extends ObservedManager {
     }
 
     protected DialogMVCHandler instantiateHandler(String name, HttpServletRequest request,
-        HttpServletResponse response, Object[] handlerConfig) {
+            HttpServletResponse response, Object[] handlerConfig) {
 
         try {
             Class< ? extends DialogMVCHandler> dialogHandlerClass = (Class< ? extends DialogMVCHandler>) handlerConfig[0];
@@ -199,25 +200,25 @@ public class DialogHandlerManager extends ObservedManager {
             if (configNode != null) {
                 try {
                     Constructor< ? extends DialogMVCHandler> constructor = dialogHandlerClass.getConstructor(new Class[]{
-                        String.class,
-                        HttpServletRequest.class,
-                        HttpServletResponse.class,
-                        Content.class});
+                            String.class,
+                            HttpServletRequest.class,
+                            HttpServletResponse.class,
+                            Content.class});
                     return constructor.newInstance(name, request, response, configNode);
                 }
                 catch (NoSuchMethodException e) {
                     Constructor< ? extends DialogMVCHandler> constructor = dialogHandlerClass.getConstructor(new Class[]{
-                        String.class,
-                        HttpServletRequest.class,
-                        HttpServletResponse.class});
+                            String.class,
+                            HttpServletRequest.class,
+                            HttpServletResponse.class});
                     return constructor.newInstance(name, request, response);
                 }
             }
 
             Constructor< ? extends DialogMVCHandler> constructor = dialogHandlerClass.getConstructor(new Class[]{
-                String.class,
-                HttpServletRequest.class,
-                HttpServletResponse.class});
+                    String.class,
+                    HttpServletRequest.class,
+                    HttpServletResponse.class});
             return constructor.newInstance(name, request, response);
         }
         catch (Exception e) {

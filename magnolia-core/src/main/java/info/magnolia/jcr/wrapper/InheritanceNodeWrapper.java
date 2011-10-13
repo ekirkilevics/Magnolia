@@ -206,7 +206,7 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
             }
         }
         catch (RepositoryException e) {
-            throw new RuntimeException("Can't inherit children from " + getWrappedNode(), e);
+            throw new RepositoryException("Can't inherit children from " + getWrappedNode(), e);
         }
         // add direct children
         nodes.add(getWrappedNode().getNodes(namePattern));

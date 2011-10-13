@@ -38,9 +38,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.AccessManagerImpl;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.HierarchyManagerUtil;
@@ -49,7 +46,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -57,8 +53,8 @@ import java.util.Set;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.security.auth.Subject;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -204,16 +200,7 @@ public abstract class AbstractContext implements Context, Serializable {
 
     @Override
     public AccessManager getAccessManager(String name) {
-        Subject subject = MgnlContext.getSubject();
-        List<Permission> availablePermissions = PermissionUtil.getPermissions(subject, name);
-        if (availablePermissions == null) {
-            log.warn("no permissions found for " + MgnlContext.getUser().getName());
-        }
-        // TODO: use provider instead of fixed impl
-        // TODO: retrieve permissions yourself from subject
-        AccessManagerImpl ami = new AccessManagerImpl();
-        ami.setPermissionList(availablePermissions);
-        return ami;
+        throw new NotImplementedException();
     }
 
     @Override

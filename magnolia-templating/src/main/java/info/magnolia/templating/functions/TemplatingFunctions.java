@@ -33,17 +33,16 @@
  */
 package info.magnolia.templating.functions;
 
-import info.magnolia.context.MgnlContext;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
+import info.magnolia.link.LinkUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
@@ -67,14 +66,9 @@ public class TemplatingFunctions {
         return content == null ? null : new ContentMap(content);
     }
 
-//    //TODO cringele : these would be the right way of creating links. LinkUtil needs to be Node capable and not only Content. (SCRUM-242)
-//    public String link(Node content) throws RepositoryException{
-//        return content == null ? null : LinkUtil.createLink(content);
-//    }
-
-    //TODO cringele : hacky way of creating a link, but serves for now until LinkUtill is Node capable (SCRUM-242)
-    public String link(Node content) throws RepositoryException{
-        return content == null ? null : MgnlContext.getContextPath()+content.getPath();
+    //TODO fgrilli: LinkUtil needs to be Node capable and not only Content. Switch to node based impl when SCRUM-242 will be done.
+    public String link(Node content) {
+        return content == null ? null : LinkUtil.createLink(ContentUtil.asContent(content));
     }
 
     public String link(ContentMap contentMap) throws RepositoryException{
@@ -82,14 +76,15 @@ public class TemplatingFunctions {
     }
 
     public List<Node> children(Node content) throws RepositoryException {
-        return content == null ? null : nodeChildrenFrom(NodeUtil.getNodes(content, NodeUtil.EXCLUDE_META_DATA_FILTER));
+        return content == null ? null : asNodeList(NodeUtil.getNodes(content, NodeUtil.EXCLUDE_META_DATA_FILTER));
     }
 
     public List<Node> children(Node content, String nodeTypeName) throws RepositoryException {
-        return content == null ? null: nodeChildrenFrom(NodeUtil.getNodes(content, nodeTypeName));
+        return content == null ? null: asNodeList(NodeUtil.getNodes(content, nodeTypeName));
     }
 
-    protected List<Node> nodeChildrenFrom(Iterable<Node> nodes) {
+    //TODO fgrilli: should we unwrap children?
+    protected List<Node> asNodeList(Iterable<Node> nodes) {
         List<Node> childList = new ArrayList<Node>();
         for (Node child : nodes) {
             childList.add(child);
@@ -98,14 +93,15 @@ public class TemplatingFunctions {
     }
 
     public List<ContentMap> children(ContentMap content) throws RepositoryException {
-        return content == null ? null : contentMapChildrenFrom(NodeUtil.getNodes(asJCRNode(content), NodeUtil.EXCLUDE_META_DATA_FILTER));
+        return content == null ? null : asContentMapList(NodeUtil.getNodes(asJCRNode(content), NodeUtil.EXCLUDE_META_DATA_FILTER));
     }
 
     public List<ContentMap> children(ContentMap content, String nodeTypeName) throws RepositoryException {
-        return content == null ? null : contentMapChildrenFrom(NodeUtil.getNodes(asJCRNode(content), nodeTypeName));
+        return content == null ? null : asContentMapList(NodeUtil.getNodes(asJCRNode(content), nodeTypeName));
     }
 
-    protected List<ContentMap> contentMapChildrenFrom(Iterable<Node> nodes) {
+    //TODO fgrilli: should we unwrap children?
+    protected List<ContentMap> asContentMapList(Iterable<Node> nodes) {
         List<ContentMap> childList = new ArrayList<ContentMap>();
         for (Node child : nodes) {
             childList.add(new ContentMap(child));
@@ -210,63 +206,89 @@ public class TemplatingFunctions {
         return ancestors;
     }
 
-    // TODO fgrilli: review functions: log errors? return null? rethrow exceptions?
-    public ContentMap inherit(Node content, String relPath) {
-        if(StringUtils.isBlank(relPath)) {
-            return new ContentMap(content);
-        }
-        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
-        try {
-            InheritanceNodeWrapper subNode = (InheritanceNodeWrapper) inheritedNode.getNode(relPath);
-            return new ContentMap(subNode.getWrappedNode());
-        } catch (PathNotFoundException e) {
-            e.printStackTrace();
-        } catch (RepositoryException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public Property inheritProperty(Node content, String relPath) {
-        if(StringUtils.isBlank(relPath)) {
+    public Node inherit(Node content, String relPath) throws RepositoryException {
+        if(content == null) {
             return null;
         }
+        if(StringUtils.isBlank(relPath)) {
+            throw new IllegalArgumentException("relative path cannot be null or empty");
+        }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
         try {
-            Property property = inheritedNode.getProperty(relPath);
-            return property;
+            Node subNode = inheritedNode.getNode(relPath);
+            return NodeUtil.unwrap(subNode);
         } catch (PathNotFoundException e) {
-            e.printStackTrace();
-        } catch (RepositoryException e) {
-            e.printStackTrace();
+          //TODO fgrilli: rethrow exception?
         }
         return null;
     }
 
-    public List<ContentMap> inheritList(Node content, String relPath) {
+    public ContentMap inherit(ContentMap content, String relPath) throws RepositoryException {
+        if(content == null) {
+            return null;
+        }
+        Node node = inherit(content.getJCRNode(), relPath);
+        return node == null ? null : new ContentMap(node);
+    }
+
+    public Property inheritProperty(Node content, String relPath) throws RepositoryException {
+        if(content == null) {
+            return null;
+        }
         if(StringUtils.isBlank(relPath)) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("relative path cannot be null or empty");
         }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
         try {
-            InheritanceNodeWrapper subNode = (InheritanceNodeWrapper) inheritedNode.getNode(relPath);
-            NodeIterator it = subNode.getNodes();
-            List<ContentMap> list = new ArrayList<ContentMap>();
-            while(it.hasNext()) {
-                InheritanceNodeWrapper child = (InheritanceNodeWrapper) it.nextNode();
-                list.add(new ContentMap(child.getWrappedNode()));
-            }
-            return list;
+            return inheritedNode.getProperty(relPath);
+
         } catch (PathNotFoundException e) {
-            e.printStackTrace();
-        } catch (RepositoryException e) {
-            e.printStackTrace();
+            //TODO fgrilli: rethrow exception?
+        } catch(RepositoryException e) {
+          //TODO fgrilli:rethrow exception?
         }
-        return Collections.emptyList();
+
+        return null;
+    }
+
+    public Property inheritProperty(ContentMap content, String relPath) throws RepositoryException {
+        if(content == null) {
+            return null;
+        }
+        return inheritProperty(content.getJCRNode(), relPath);
+    }
+
+    public List<Node> inheritList(Node content, String relPath) throws RepositoryException{
+        if(content == null) {
+            return null;
+        }
+        if(StringUtils.isBlank(relPath)) {
+            throw new IllegalArgumentException("relative path cannot be null or empty");
+        }
+        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
+        Node subNode = inheritedNode.getNode(relPath);
+        return children(subNode);
+    }
+
+    public List<ContentMap> inheritList(ContentMap content, String relPath) throws RepositoryException{
+        if(content == null) {
+            return null;
+        }
+        if(StringUtils.isBlank(relPath)) {
+            throw new IllegalArgumentException("relative path cannot be null or empty");
+        }
+        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(asJCRNode(content));
+        Node subNode = inheritedNode.getNode(relPath);
+        return children(new ContentMap(subNode));
+
     }
 
     public boolean isFromCurrentPage(Node content) {
         return !isInherited(content);
+    }
+
+    public boolean isFromCurrentPage(ContentMap content) {
+        return isFromCurrentPage(asJCRNode(content));
     }
 
     public boolean isInherited(Node content) {
@@ -274,6 +296,10 @@ public class TemplatingFunctions {
             return ((InheritanceNodeWrapper)content).isInherited();
         }
         return false;
+    }
+
+    public boolean isInherited(ContentMap content) {
+        return isInherited(asJCRNode(content));
     }
 
     private boolean isRoot(Node content) throws RepositoryException {

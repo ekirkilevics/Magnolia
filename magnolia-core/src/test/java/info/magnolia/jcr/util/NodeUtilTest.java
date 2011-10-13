@@ -237,4 +237,9 @@ public class NodeUtilTest {
         assertEquals("alpha",iterator.next().getName());
         assertTrue(!iterator.hasNext());
     }
+
+    @Test
+    public void testGetNameFromNode() throws RuntimeException {
+        assertEquals(FIRST_CHILD, NodeUtil.getName(first));
+    }
 }

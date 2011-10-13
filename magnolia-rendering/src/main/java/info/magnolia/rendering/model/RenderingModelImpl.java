@@ -60,6 +60,7 @@ public class RenderingModelImpl<RD extends RenderableDefinition> implements Rend
         return this.parentModel;
     }
 
+    @Override
     public RenderingModel<?> getRoot(){
         RenderingModel<?> model = this;
         while(model.getParent() != null){

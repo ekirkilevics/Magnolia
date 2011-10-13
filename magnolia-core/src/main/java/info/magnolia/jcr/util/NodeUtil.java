@@ -434,6 +434,19 @@ public class NodeUtil {
     }
 
     /**
+     * This method return the node's name on success, otherwise it handles the {@link RepositoryException} by throwing a {@link RuntimeException}.
+     * @param content Node to get the name from.
+     * @return the name of the node passed.
+     */
+    public static String getName(Node content){
+        try {
+            return content.getName();
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Used for building exception messages where we want to avoid handling another exception inside a throws clause.
      */
     public static String getNodeIdentifierIfPossible(Node content) {
@@ -451,4 +464,6 @@ public class NodeUtil {
             return "<not available>";
         }
     }
+
+
 }

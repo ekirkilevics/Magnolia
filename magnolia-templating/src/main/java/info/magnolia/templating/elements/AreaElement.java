@@ -113,13 +113,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.inherit = isInheritanceEnabled();
         this.areaNode = resolveAreaNode();
 
-        //TODO: review. If no area node exists, create it on the fly
-        if(this.areaNode == null) {
-            createNewAreaNode();
-        }
-
         // build an adhoc area definition if no area definition can be resolved
-
         if(areaDefinition == null){
             buildAdHocAreaDefinition();
         }
@@ -141,9 +135,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
         }
     }
 
-    protected void createNewAreaNode() {
+    private Node createNewAreaNode() {
         try {
-            areaNode = NodeUtil.createPath(parentNode, this.name, MgnlNodeType.NT_AREA, true);
+            Node areaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA, true);
             NodeUtil.createPath(areaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA,true);
         } catch (AccessDeniedException e) {
             new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
@@ -152,6 +146,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         } catch (RepositoryException e) {
             new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
         }
+        return areaNode;
     }
 
     protected void buildAdHocAreaDefinition() {
@@ -215,20 +210,21 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     protected Node resolveAreaNode() throws RenderException {
         final Node content = getTargetContent();
-
+        Node area = null;
         try {
             if(content.hasNode(name)){
-                Node area = content.getNode(name);
-                if(isInherit()) {
-                    area = new InheritanceNodeWrapper(area);
-                }
-                return area;
+                area = content.getNode(name);
+            } else {
+               area = createNewAreaNode();
             }
         }
         catch (RepositoryException e) {
             throw new RenderException("Can't access area node [" + name + "] on [" + content + "]", e);
         }
-        return null;
+        if(isInherit()) {
+            area = new InheritanceNodeWrapper(area);
+        }
+        return area;
     }
 
     protected AreaDefinition resolveAreaDefinition() {

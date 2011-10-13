@@ -41,9 +41,9 @@ import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.GroupList;
 import info.magnolia.cms.security.auth.PrincipalCollection;
+import info.magnolia.cms.security.auth.PrincipalCollectionImpl;
 import info.magnolia.cms.security.auth.RoleList;
 import info.magnolia.jaas.principal.GroupListImpl;
-import info.magnolia.jaas.principal.PrincipalCollectionImpl;
 import info.magnolia.jaas.principal.RoleListImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 
