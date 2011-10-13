@@ -40,24 +40,33 @@ import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.PrincipalCollection;
 
 import java.security.Principal;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.jcr.ItemNotFoundException;
+import javax.jcr.NamespaceException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.security.AccessControlException;
 import javax.jcr.security.AccessControlPolicy;
 
 import org.apache.jackrabbit.core.ItemImpl;
+import org.apache.jackrabbit.core.cache.GrowingLRUMap;
 import org.apache.jackrabbit.core.id.ItemId;
+import org.apache.jackrabbit.core.id.PropertyId;
 import org.apache.jackrabbit.core.security.authorization.AbstractCompiledPermissions;
 import org.apache.jackrabbit.core.security.authorization.AccessControlEditor;
 import org.apache.jackrabbit.core.security.authorization.CompiledPermissions;
 import org.apache.jackrabbit.core.security.authorization.combined.CombinedProvider;
+import org.apache.jackrabbit.spi.Name;
 import org.apache.jackrabbit.spi.Path;
+import org.apache.jackrabbit.spi.commons.conversion.CachingPathResolver;
+import org.apache.jackrabbit.spi.commons.conversion.IllegalNameException;
+import org.apache.jackrabbit.spi.commons.conversion.NameResolver;
+import org.apache.jackrabbit.spi.commons.conversion.ParsingPathResolver;
+import org.apache.jackrabbit.spi.commons.conversion.PathResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,36 +81,18 @@ import org.slf4j.LoggerFactory;
 public class MagnoliaAccessProvider extends CombinedProvider {
 
     /**
-     * Compiled user permissions denying access to all resources.
-     * @author had
-     * @version $Id: $
-     */
-    public class DenyAllPermissions extends AbstractCompiledPermissions {
-
-        @Override
-        public boolean canRead(Path itemPath, ItemId itemId) throws RepositoryException {
-            return false;
-        }
-
-        @Override
-        protected Result buildResult(Path absPath) throws RepositoryException {
-            return Result.EMPTY;
-        }
-
-        @Override
-        public Result getResult(Path absPath) throws RepositoryException {
-            return Result.EMPTY;
-        }
-    }
-
-    /**
-     * Permission based on user ACL for given workspace.
+     * Permission based on user ACL for given workspace. Caches the result of resolving paths from ids, the caching
+     * implementation based {@link org.apache.jackrabbit.core.security.authorization.principalbased.ACLProvider.CompiledPermissionImpl}.
+     *
      * @author had
      * @version $Id: $
      */
     public class ACLBasedPermissions extends AbstractCompiledPermissions {
 
         private final AccessManager ami;
+        @SuppressWarnings("unchecked")
+        private final Map<ItemId, Boolean> readCache = new GrowingLRUMap(1024, 5000);
+        private final Object monitor = new Object();
 
         public ACLBasedPermissions(List<Permission> permissions) {
             // TODO: use provider instead of fixed impl
@@ -111,8 +102,30 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
         @Override
         public boolean canRead(Path itemPath, ItemId itemId) throws RepositoryException {
-            log.error("Read request for " + itemPath + " :: " + itemId);
-            return ami.isGranted(itemPath.getString(), Permission.READ);
+
+            if (itemPath == null) {
+
+                // we deal only with permissions on nodes
+                if (!itemId.denotesNode()) {
+                    itemId = ((PropertyId)itemId).getParentId();
+                }
+
+                synchronized (monitor) {
+
+                    if (readCache.containsKey(itemId)) {
+                        return readCache.get(itemId);
+                    }
+
+                    itemPath = session.getHierarchyManager().getPath(itemId);
+                    boolean canRead = canRead(itemPath, itemId);
+                    readCache.put(itemId, canRead);
+                    return canRead;
+                }
+            }
+
+            String path = pathResolver.getJCRPath(itemPath);
+            log.error("Read request for " + path + " :: " + itemId);
+            return ami.isGranted(path, Permission.READ);
         }
 
         @Override
@@ -127,7 +140,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
         @Override
         public boolean grants(Path absPath, int permissions) throws RepositoryException {
-            return ami.isGranted(absPath.getString(), Permission.READ);
+            return ami.isGranted(pathResolver.getJCRPath(absPath), permissions);
         }
 
         @Override
@@ -139,9 +152,26 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
     private static final Logger log = LoggerFactory.getLogger(MagnoliaAccessProvider.class);
 
+    /**
+     * Used to convert a jackrabbit Path abstraction into a path string with slashes and no namespaces.
+     */
+    private final PathResolver pathResolver = new CachingPathResolver(new ParsingPathResolver(null, new NameResolver() {
+
+        @Override
+        public Name getQName(String name) throws IllegalNameException, NamespaceException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String getJCRName(Name name) throws NamespaceException {
+            return name.getLocalName();
+        }
+    }));
+
     @Override
     public boolean canAccessRoot(Set<Principal> principals) throws RepositoryException {
         checkInitialized();
+
         // superuser is also admin user!
         if (isAdminOrSystem(principals)) {
             return true;
@@ -149,25 +179,11 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
         final String workspaceName = super.session.getWorkspace().getName();
 
-        for (Iterator<Principal> iter = principals.iterator(); iter.hasNext();) {
-            Principal princ = iter.next();
-            if (princ instanceof PrincipalCollection) {
-                log.debug("found mgnl principal " + princ);
-                PrincipalCollection collection = (PrincipalCollection) princ;
-                Iterator<Principal> aclIter = collection.iterator();
-                while (aclIter.hasNext()) {
-                    Principal maybeAcl = aclIter.next();
-                    if (maybeAcl instanceof ACL) {
-                        ACL acl = ((ACL) maybeAcl);
-                        if (workspaceName.equals(acl.getWorkspace())) {
-                            AccessManagerImpl ami = new AccessManagerImpl();
-                            ami.setPermissionList(acl.getList());
-                            return ami.isGranted("/", Permission.READ);
-                        }
-                    }
-                }
-            }
-
+        ACL acl = findACLForWorkspace(principals, workspaceName);
+        if (acl != null) {
+            AccessManagerImpl ami = new AccessManagerImpl();
+            ami.setPermissionList(acl.getList());
+            return ami.isGranted("/", Permission.READ);
         }
 
         try {
@@ -191,6 +207,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
     public CompiledPermissions compilePermissions(Set<Principal> principals) throws RepositoryException {
         log.debug("compile permissions for {} at {}", printUserNames(principals), session == null ? null : session.getWorkspace().getName());
         checkInitialized();
+
         // superuser is also admin user!
         if (isAdminOrSystem(principals)) {
             return getAdminPermissions();
@@ -198,28 +215,35 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
         final String workspaceName = super.session.getWorkspace().getName();
 
-        for  (Iterator<Principal> iter = principals.iterator(); iter.hasNext(); ) {
-            Principal princ = iter.next();
-            if (princ instanceof PrincipalCollection) {
-                log.debug("found mgnl principal " + princ);
-                PrincipalCollection collection = (PrincipalCollection) princ;
-                if (collection.iterator().hasNext()) {
-                    Principal maybeAcl = collection.iterator().next();
+        ACL acl = findACLForWorkspace(principals, workspaceName);
+        if (acl != null) {
+            return getUserPermissions(acl.getList());
+        }
+
+        return CompiledPermissions.NO_PERMISSION;
+    }
+
+    private ACL findACLForWorkspace(Collection<Principal> principals, String workspaceName) {
+        for (Principal principal : principals) {
+            if (principal instanceof PrincipalCollection) {
+                log.debug("found mgnl principal " + principal);
+                PrincipalCollection collection = (PrincipalCollection) principal;
+                for (Principal maybeAcl : collection) {
                     if (maybeAcl instanceof ACL) {
-                        ACL acl = ((ACL) maybeAcl);
+                        ACL acl = (ACL) maybeAcl;
                         if (workspaceName.equals(acl.getWorkspace())) {
-                            return getUserPermissions(acl.getList());
+                            return acl;
                         }
                     }
                 }
             }
         }
 
-        return new DenyAllPermissions();
+        return null;
     }
 
-    private CompiledPermissions getUserPermissions(List<Permission> collection) {
-        return new ACLBasedPermissions(collection);
+    private CompiledPermissions getUserPermissions(List<Permission> permissions) {
+        return new ACLBasedPermissions(permissions);
     }
 
     @Override
