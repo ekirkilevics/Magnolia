@@ -46,7 +46,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
 
-
 /**
  * @version $Id$
  */
@@ -74,7 +73,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
      * Set mock workspace if observation or similar things are needed. Will only work when using a MockSession.
      */
     public void setWorkspace(Workspace workspace) {
-        ((MockJCRSession) getJcrSession()).setWorkspace(workspace);
+        ((MockSession) getJcrSession()).setWorkspace(workspace);
     }
 
     @Override

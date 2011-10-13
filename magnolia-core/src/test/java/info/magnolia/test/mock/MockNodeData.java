@@ -66,6 +66,11 @@ public class MockNodeData extends DefaultNodeData {
         super(new MockContent("test"), name);
     }
 
+    // TODO dlipp - type is ignored here - check it out!
+    public MockNodeData(MockContent parent, String name, int type) {
+        super(parent, name);
+    }
+
     @Override
     public boolean equals(Object arg0) {
         if (arg0 == null || !(arg0 instanceof MockNodeData)) {

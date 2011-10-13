@@ -33,6 +33,7 @@
  */
 package info.magnolia.test.mock;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
@@ -82,14 +83,23 @@ public class MockContent extends DefaultContent {
 
     @Override
     public String getHandle() {
+        Content parent;
         try {
-            if (this.getParent() != null && !this.getParent().getName().equals("jcr:root")) {
-                return getParent().getHandle() + "/" + this.getName();
-            }
-            return "/" + this.getName();
+            parent = getParent();
+        }
+        catch (ItemNotFoundException e) {
+            // ok - then we don't have a parent...
+            parent = null;
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
+        String handle;
+        if (parent != null && !parent.getName().equals("jcr:root")) {
+            handle = parent.getHandle() + "/" + this.getName();
+        } else {
+            handle = "/" + this.getName();
+        }
+        return handle;
     }
 
     @Override
@@ -109,7 +119,7 @@ public class MockContent extends DefaultContent {
     @Override
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Node parentNode = getJCRNode().getParent();
-        return parentNode == null ? null: super.getParent();
+        return parentNode == null ? null: new MockContent((MockNode) parentNode);
     }
 
     @Override
@@ -136,7 +146,7 @@ public class MockContent extends DefaultContent {
 
             if(type == PropertyType.BINARY){
                 Content binaryNode = createContent(name, ItemType.NT_RESOURCE);
-                nodeData = new BinaryMockNodeData(name, (MockContent) binaryNode);
+                nodeData = new BinaryMockNodeData(this, name, (MockContent) binaryNode);
             }
             else{
                 nodeData = new MockNodeData(this, name, type);
@@ -148,6 +158,10 @@ public class MockContent extends DefaultContent {
 
     public void addNodeData(String name, Object value) {
         new MockNodeData(this, name, value);
+    }
+
+    public void addBinaryNodeData(String name, MockContent wrappedContent) {
+        new BinaryMockNodeData(this, name, wrappedContent);
     }
 
     public void addNodeData(MockNodeData nd) {
@@ -179,7 +193,7 @@ public class MockContent extends DefaultContent {
         addContent(c);
 
         if (c.isNodeType(ItemType.NT_RESOURCE)) {
-            final BinaryMockNodeData binND = new BinaryMockNodeData(name, c);
+            final BinaryMockNodeData binND = new BinaryMockNodeData(this, name, c);
             addNodeData(binND);
         }
         return c;
@@ -201,5 +215,18 @@ public class MockContent extends DefaultContent {
         }
     }
 
+    @Override
+    protected Content wrapAsContent(Node node) {
+        return new MockContent((MockNode)node);
+    }
 
+    @Override
+    protected Content wrapAsContent(Node node, String name) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        return new MockContent((MockNode) node, name);
+    }
+
+    @Override
+    protected Content wrapAsContent(Node node, String name, String contentType) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        return new MockContent((MockNode) node, name, contentType);
+    }
 }

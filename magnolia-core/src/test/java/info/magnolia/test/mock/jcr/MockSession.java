@@ -35,6 +35,7 @@ package info.magnolia.test.mock.jcr;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -69,11 +70,10 @@ public class MockSession extends AbstractSession {
     private ValueFactory valueFactory = null;
     private boolean live = true;
 
-    final private Workspace workspace;
+    private Workspace workspace;
 
     public MockSession(MockWorkspace workspace) {
-        this.workspace = workspace;
-        workspace.setSession(this);
+        setWorkspace(workspace);
 
         rootNode = new MockNode();
         rootNode.setSession(this);
@@ -81,6 +81,13 @@ public class MockSession extends AbstractSession {
 
     public MockSession(String name) {
         this(new MockWorkspace(name));
+    }
+
+    public void setWorkspace(Workspace workspace) {
+        this.workspace = workspace;
+        if (workspace instanceof MockWorkspace) {
+            ((MockWorkspace) workspace).setSession(this);
+        }
     }
 
     @Override
@@ -279,5 +286,16 @@ public class MockSession extends AbstractSession {
 
     public void setLive(boolean live) {
         this.live = live;
+    }
+
+    public void removeFromCache(MockNode node) {
+        Iterator<String> keys = nodesCache.keySet().iterator();
+        String current;
+        while (keys.hasNext()) {
+            current = keys.next();
+            if (node.equals(nodesCache.get(current))){
+                nodesCache.remove(current);
+            }
+        }
     }
 }

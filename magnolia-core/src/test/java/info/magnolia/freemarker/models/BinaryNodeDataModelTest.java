@@ -36,6 +36,7 @@ package info.magnolia.freemarker.models;
 import static org.junit.Assert.*;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.test.mock.BinaryMockNodeData;
+import info.magnolia.test.mock.MockContent;
 
 import org.junit.Test;
 
@@ -48,7 +49,7 @@ import freemarker.template.utility.DeepUnwrap;
 public class BinaryNodeDataModelTest {
     @Test
     public void testCanBeUnwrappedByDeepUnWrap() throws TemplateModelException {
-        final NodeData c = new BinaryMockNodeData("test");
+        final NodeData c = new BinaryMockNodeData(new MockContent("test"), "test");
         final BinaryNodeDataModel model = new BinaryNodeDataModel(c, new MagnoliaObjectWrapper(null /* not needed in the context of this test*/));
 
         final Object unwrapped = DeepUnwrap.unwrap(model);

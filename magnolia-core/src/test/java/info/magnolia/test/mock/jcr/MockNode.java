@@ -351,6 +351,10 @@ public class MockNode extends AbstractNode {
 
     @Override
     public Session getSession() {
+        if (session == null) {
+            // init on demand in order to avoid NPE's
+            session = new MockSession("test");
+        }
         return session;
     }
 
@@ -511,7 +515,7 @@ public class MockNode extends AbstractNode {
         }
     }
 
-    protected boolean removeFromChildren(Node childNode) {
+    public boolean removeFromChildren(Node childNode) {
         if (children.containsValue(childNode)) {
             Iterator<String> childrenNames = children.keySet().iterator();
             while (childrenNames.hasNext()) {

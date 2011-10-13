@@ -192,13 +192,13 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new DefaultContent(this.node, name));
+        return wrapAsContent(this.node, name);
     }
 
     @Override
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
     AccessDeniedException {
-        Content content = new DefaultContent(this.node, name, contentType);
+        Content content = wrapAsContent(this.node, name, contentType);
         MetaData metaData = content.getMetaData();
         metaData.setCreationDate();
         return content;
@@ -288,7 +288,7 @@ public class DefaultContent extends AbstractContent {
 
             while (nodeIterator.hasNext()) {
                 Node subNode = (Node) nodeIterator.next();
-                Content content = new DefaultContent(subNode);
+                Content content = wrapAsContent(subNode);
                 if (filter.accept(content)) {
                     children.add(content);
                 }
@@ -303,6 +303,18 @@ public class DefaultContent extends AbstractContent {
             Collections.sort(children, orderCriteria);
         }
         return children;
+    }
+
+    protected Content wrapAsContent(Node node) {
+        return new DefaultContent(node);
+    }
+
+    protected Content wrapAsContent(Node node, String name) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        return new DefaultContent(node, name);
+    }
+
+    protected Content wrapAsContent(Node node, String name, String contentType) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        return new DefaultContent(node, name, contentType);
     }
 
     @Override
@@ -362,7 +374,7 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new DefaultContent(this.node.getParent()));
+        return wrapAsContent(this.node.getParent());
     }
 
     @Override
@@ -370,7 +382,7 @@ public class DefaultContent extends AbstractContent {
         if (level > this.getLevel()) {
             throw new PathNotFoundException();
         }
-        return (new DefaultContent((Node)this.node.getAncestor(level)));
+        return wrapAsContent((Node)this.node.getAncestor(level));
     }
 
     @Override
@@ -704,4 +716,5 @@ public class DefaultContent extends AbstractContent {
     public Workspace getWorkspace() throws RepositoryException {
         return node.getSession().getWorkspace();
     }
+
 }
