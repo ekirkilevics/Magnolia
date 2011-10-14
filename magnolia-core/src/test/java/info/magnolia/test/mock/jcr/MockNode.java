@@ -73,7 +73,7 @@ import org.apache.jackrabbit.commons.AbstractNode;
  */
 public class MockNode extends AbstractNode {
 
-    public static final String ROOT_NODE_NAME = "/";
+    public static final String ROOT_NODE_NAME = "jcr:root";
 
     public static String generateIdentifier() {
         return UUID.randomUUID().toString();
@@ -580,6 +580,7 @@ public class MockNode extends AbstractNode {
 
     public void setParent(MockNode parent) {
         this.parent = parent;
+        setSessionFrom(parent);
     }
 
     @Override
@@ -678,9 +679,13 @@ public class MockNode extends AbstractNode {
         this.session = session;
     }
 
+    private void setSessionFrom(MockNode parent) {
+        setSession(parent == null ? null : parent.getSession());
+    }
+
     @Override
     public String toString() {
-        return "MockNode [primaryType=" + primaryType + ", "+ super.toString() + "]";
+        return "MockNode [primaryType=" + primaryType + ", name="+ name + "]";
     }
 
     @Override

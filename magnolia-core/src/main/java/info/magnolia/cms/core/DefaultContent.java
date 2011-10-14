@@ -92,11 +92,6 @@ public class DefaultContent extends AbstractContent {
     protected Node node;
 
     /**
-     * Path for the jcr node.
-     */
-    private String path;
-
-    /**
      * root node.
      */
     private Node rootNode;
@@ -122,9 +117,8 @@ public class DefaultContent extends AbstractContent {
      * @throws RepositoryException if an error occurs
      */
     protected DefaultContent(Node rootNode, String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        this.setPath(path);
         this.setRootNode(rootNode);
-        this.setNode(this.rootNode.getNode(this.path));
+        this.setNode(this.rootNode.getNode(path));
     }
 
     /**
@@ -140,7 +134,6 @@ public class DefaultContent extends AbstractContent {
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
-        this.setPath(this.getHandle());
     }
 
     /**
@@ -158,9 +151,8 @@ public class DefaultContent extends AbstractContent {
     throws PathNotFoundException,
     RepositoryException,
     AccessDeniedException {
-        this.setPath(path);
         this.setRootNode(rootNode);
-        this.setNode(this.rootNode.addNode(this.path, contentType));
+        this.setNode(this.rootNode.addNode(path, contentType));
         // add mix:lockable as default for all nodes created using this manager
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
         // MAGNOLIA-1518
@@ -181,13 +173,6 @@ public class DefaultContent extends AbstractContent {
      */
     protected void setRootNode(Node node) {
         this.rootNode = node;
-    }
-
-    /**
-     * @param path
-     */
-    protected void setPath(String path) {
-        this.path = path;
     }
 
     @Override

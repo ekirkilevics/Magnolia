@@ -83,7 +83,7 @@ public class MockWorkspace extends AbstractWorkspace {
 
     @Override
     public void createWorkspace(String name, String srcWorkspace) {
-
+        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
@@ -159,13 +159,13 @@ public class MockWorkspace extends AbstractWorkspace {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
-    protected void setSession(MockSession session) {
-        this.session = session;
-    }
-
     @Override
     public String toString() {
         return "MockWorkspace [name=" + name + "]";
+    }
+
+    protected void setSession(MockSession session) {
+        this.session = session;
     }
 
     public void setObservationManager(ObservationManager observationManager) {
