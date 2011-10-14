@@ -31,33 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory.configuration;
+package info.magnolia.module;
 
+import info.magnolia.module.model.ModuleDefinition;
 
 /**
- * Configuration for a provider that acts as a factory, supported types are
- * {@link info.magnolia.objectfactory.ComponentFactory} and {@link javax.inject.Provider}.
+ * Listener for acting on module lifecycle events.
  *
- * @param <T> the type
  * @version $Id$
+ * @see ModuleManager
  */
-public class ProviderConfiguration<T> extends ComponentConfiguration<T> {
+public interface ModuleLifecycleListener {
 
-    private Class<?> providerClass;
+    /**
+     * Called after a module has started.
+     *
+     * @param moduleDefinition module definition for the module that was started
+     * @param moduleInstance null if the module does not have a module class
+     */
+    void onModuleStarted(ModuleDefinition moduleDefinition, Object moduleInstance);
 
-    public ProviderConfiguration() {
-    }
+    /**
+     * Called after a module has been restarted.
+     *
+     * @param moduleDefinition module definition for the module that was restarted
+     * @param moduleInstance null if the module does not have a module class
+     */
+    void onModuleRestarted(ModuleDefinition moduleDefinition, Object moduleInstance);
 
-    public ProviderConfiguration(Class<T> type, Class<?> providerClass) {
-        super(type);
-        this.providerClass = providerClass;
-    }
-
-    public Class<?> getProviderClass() {
-        return providerClass;
-    }
-
-    public void setProviderClass(Class<?> providerClass) {
-        this.providerClass = providerClass;
-    }
+    /**
+     * Called after a module has stopped.
+     *
+     * @param moduleDefinition module definition for the module that was stopped
+     * @param moduleInstance null if the module does not have a module class
+     */
+    void onModuleStopped(ModuleDefinition moduleDefinition, Object moduleInstance);
 }

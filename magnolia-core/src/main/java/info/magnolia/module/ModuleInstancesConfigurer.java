@@ -31,17 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory.guice;
+package info.magnolia.module;
 
-import info.magnolia.module.ModuleManager;
-import info.magnolia.module.ModuleRegistry;
-import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentConfigurer;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 /**
- * Guice configuration module that binds providers for module classes.
+ * Configurer that configures a {@link ModuleInstanceProvider} for each module class.
  *
  * @version $Id$
  */
@@ -51,20 +48,13 @@ public class ModuleInstancesConfigurer implements ComponentConfigurer {
     public void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration) {
 
         ModuleRegistry moduleRegistry = parentComponentProvider.getComponent(ModuleRegistry.class);
-        GuiceModuleManager moduleManager = (GuiceModuleManager) parentComponentProvider.getComponent(ModuleManager.class);
+        ModuleManagerImpl moduleManager = (ModuleManagerImpl) parentComponentProvider.getComponent(ModuleManager.class);
 
         for (String moduleName : moduleRegistry.getModuleNames()) {
-            final ModuleDefinition moduleDefinition = moduleRegistry.getDefinition(moduleName);
-            if (moduleDefinition.getClassName() != null) {
-                final Class<Object> moduleClass;
-                try {
-                    moduleClass = moduleManager.getModuleClass(moduleDefinition);
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException("Class not found: " + moduleDefinition.getClassName(), e);
-                }
-                ModuleInstanceProvider provider = new ModuleInstanceProvider(moduleDefinition);
-                configuration.registerInstance(moduleClass, provider);
-                moduleManager.registerModuleInstanceProvider(moduleDefinition.getName(), provider);
+            Class<?> moduleClass = moduleManager.getModuleClass(moduleName);
+            if (moduleClass != null) {
+                ModuleInstanceProvider provider = new ModuleInstanceProvider(moduleName);
+                configuration.registerProvider(moduleClass, provider);
             }
         }
     }

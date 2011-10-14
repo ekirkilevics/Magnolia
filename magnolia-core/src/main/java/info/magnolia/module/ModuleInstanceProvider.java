@@ -31,25 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory.guice;
+package info.magnolia.module;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.ModuleLifecycleContextImpl;
-import info.magnolia.module.ModuleManager;
 import info.magnolia.module.model.ModuleDefinition;
-import info.magnolia.objectfactory.ComponentConfigurationPath;
 import info.magnolia.objectfactory.ComponentProvider;
 
 /**
@@ -59,7 +57,7 @@ import info.magnolia.objectfactory.ComponentProvider;
  * @param <T> the type of the module class
  * @version $Id$
  */
-public class ModuleInstanceProvider<T> implements Provider<T> {
+public class ModuleInstanceProvider<T> extends AbstractModuleLifecycleListener implements Provider<T> {
 
     private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ModuleInstanceProvider.class);
 
@@ -68,20 +66,21 @@ public class ModuleInstanceProvider<T> implements Provider<T> {
 
     @Inject
     private ComponentProvider componentProvider;
-    private GuiceModuleManager moduleManager;
+    private ModuleManagerImpl moduleManager;
 
     @Inject
-    private void init(ModuleManager moduleManager) {
-        this.moduleManager = (GuiceModuleManager) moduleManager;
+    private void initialize(ModuleManager moduleManager) {
+        this.moduleManager = (ModuleManagerImpl) moduleManager;
+        this.moduleManager.addListener(moduleName, this);
     }
 
-    private ModuleDefinition moduleDefinition;
-    private ComponentConfigurationPath path;
+    private final String moduleName;
+    private final String path;
     private T instance;
 
-    public ModuleInstanceProvider(ModuleDefinition moduleDefinition) {
-        this.moduleDefinition = moduleDefinition;
-        this.path = new ComponentConfigurationPath("/modules/" + moduleDefinition.getName() + "/config");
+    public ModuleInstanceProvider(String moduleName) {
+        this.moduleName = moduleName;
+        this.path = "/modules/" + moduleName + "/config";
     }
 
     @Override
@@ -91,54 +90,61 @@ public class ModuleInstanceProvider<T> implements Provider<T> {
             return instance;
         }
 
-        Class<Object> moduleClass;
-        try {
-            moduleClass = moduleManager.getModuleClass(moduleDefinition);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Class not found: " + moduleDefinition.getClassName(), e);
-        }
+        Class<?> moduleClass = moduleManager.getModuleClass(moduleName);
 
         instance = (T) componentProvider.newInstance(moduleClass);
 
-        populate();
+        populateModuleInstance();
 
         return instance;
     }
 
-    public void startObservation() {
-        ObservationUtil.registerDeferredChangeListener(path.getRepository(), path.getPath(), new EventListener() {
+    @Override
+    public void onModuleStarted(final ModuleDefinition moduleDefinition, Object moduleInstance) {
+        ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, path, new EventListener() {
+
             @Override
             public void onEvent(EventIterator events) {
-                restartModule();
+                synchronized (ModuleInstanceProvider.this) {
+                    MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                        @Override
+                        public void doExec() {
+                            moduleManager.restartModule(moduleDefinition.getName(), new ModuleRestartOperation() {
+
+                                @Override
+                                public void exec(ModuleDefinition moduleDefinition, Object moduleInstance) {
+                                    populateModuleInstance();
+                                }
+                            });
+                        }
+                    }, true);
+                }
             }
         }, DEFAULT_MODULE_OBSERVATION_DELAY, DEFAULT_MODULE_OBSERVATION_MAX_DELAY);
+
+        moduleManager.removeListener(this);
     }
 
-    private void restartModule() {
-        // TODO we should keep only one instance of the lifecycle context
-        final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
-        lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_MODULE_RESTART);
-        MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
-            @Override
-            public void doExec() {
-                moduleManager.stopModule(instance, moduleDefinition, lifecycleContext);
-                populate();
-                moduleManager.startModule(instance, moduleDefinition, lifecycleContext);
-            }
-        }, true);
-    }
+    protected void populateModuleInstance() {
 
-    public void populate() {
-        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(path.getRepository());
-        if (hm.isExist(path.getPath())) {
-            try {
-                final Content node = hm.getContent(path.getPath());
-                Content2BeanUtil.setProperties(instance, node, true);
-            } catch (RepositoryException e) {
-                log.error("Can't read {}, can not populate {}.", new Object[]{path.getPath(), instance, e});
-            } catch (Content2BeanException e) {
-                throw new RuntimeException(e); // TODO
+        Node node;
+        try {
+            Session session = MgnlContext.getJCRSession(ContentRepository.CONFIG);
+            if (!session.nodeExists(path)) {
+                return;
             }
+            node = session.getNode(path);
+        } catch (RepositoryException e) {
+            log.error("Can't read {}, can not populate {}.", new Object[]{path, instance, e});
+            return;
+        }
+
+        try {
+            Content2BeanUtil.setProperties(instance, ContentUtil.asContent(node), true);
+        } catch (Content2BeanException e) {
+            log.error("Can't read {}, can not populate {}.", new Object[]{path, instance, e});
+        } catch (Throwable e) {
+            log.error("Can't initialize module " + instance + ": " + e.getMessage(), e);
         }
     }
 }

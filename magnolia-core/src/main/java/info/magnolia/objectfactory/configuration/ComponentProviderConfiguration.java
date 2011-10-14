@@ -38,6 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Provider;
+
 
 /**
  * Configuration used to create component providers.
@@ -82,8 +84,12 @@ public class ComponentProviderConfiguration implements Cloneable {
         registerImplementation(type, type);
     }
 
-    public <T> void registerInstance(Class<T> type, T instance) {
+    public void registerInstance(Class<?> type, Object instance) {
         addComponent(InstanceConfiguration.valueOf(type, instance));
+    }
+
+    public void registerProvider(Class<?> type, Provider<?> provider) {
+        registerInstance(type, provider);
     }
 
     public void combine(ComponentProviderConfiguration components) {

@@ -85,6 +85,20 @@ public interface ModuleManager {
     void stopModules();
 
     /**
+     * Adds a listener that will receive events for all modules. If the listener has previously been registered to
+     * listen to a specific module it will not receive two invocations for that module.
+     */
+    void addListener(ModuleLifecycleListener listener);
+
+    /**
+     * Adds a listener that will receive events only for a specific module. If the listener has previously been
+     * registered it will be re-registered and will only receive events for this module.
+     */
+    void addListener(String moduleName, ModuleLifecycleListener listener);
+
+    void removeListener(ModuleLifecycleListener listener);
+
+    /**
      * Use this to retrieve the configured singleton impl of ModuleManager.
      * @deprecated since 4.5, use IoC.
      */

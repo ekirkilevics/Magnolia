@@ -31,33 +31,28 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory.configuration;
+package info.magnolia.module;
 
+import info.magnolia.module.model.ModuleDefinition;
 
 /**
- * Configuration for a provider that acts as a factory, supported types are
- * {@link info.magnolia.objectfactory.ComponentFactory} and {@link javax.inject.Provider}.
+ * Abstract implementation of {@link ModuleLifecycleListener}.
  *
- * @param <T> the type
  * @version $Id$
+ * @see ModuleManager
+ * @see ModuleLifecycleListener
  */
-public class ProviderConfiguration<T> extends ComponentConfiguration<T> {
+public class AbstractModuleLifecycleListener implements ModuleLifecycleListener {
 
-    private Class<?> providerClass;
-
-    public ProviderConfiguration() {
+    @Override
+    public void onModuleStarted(ModuleDefinition moduleDefinition, Object moduleInstance) {
     }
 
-    public ProviderConfiguration(Class<T> type, Class<?> providerClass) {
-        super(type);
-        this.providerClass = providerClass;
+    @Override
+    public void onModuleRestarted(ModuleDefinition moduleDefinition, Object moduleInstance) {
     }
 
-    public Class<?> getProviderClass() {
-        return providerClass;
-    }
-
-    public void setProviderClass(Class<?> providerClass) {
-        this.providerClass = providerClass;
+    @Override
+    public void onModuleStopped(ModuleDefinition moduleDefinition, Object moduleInstance) {
     }
 }

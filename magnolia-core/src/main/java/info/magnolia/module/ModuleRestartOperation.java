@@ -31,33 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory.configuration;
+package info.magnolia.module;
 
+import info.magnolia.module.model.ModuleDefinition;
 
 /**
- * Configuration for a provider that acts as a factory, supported types are
- * {@link info.magnolia.objectfactory.ComponentFactory} and {@link javax.inject.Provider}.
+ * Called by ModuleManager to perform an operation as a module is restarted.
  *
- * @param <T> the type
  * @version $Id$
+ * @see ModuleManagerImpl#restartModule(String, ModuleRestartOperation)
  */
-public class ProviderConfiguration<T> extends ComponentConfiguration<T> {
+public interface ModuleRestartOperation {
 
-    private Class<?> providerClass;
-
-    public ProviderConfiguration() {
-    }
-
-    public ProviderConfiguration(Class<T> type, Class<?> providerClass) {
-        super(type);
-        this.providerClass = providerClass;
-    }
-
-    public Class<?> getProviderClass() {
-        return providerClass;
-    }
-
-    public void setProviderClass(Class<?> providerClass) {
-        this.providerClass = providerClass;
-    }
+    /**
+     * @param moduleDefinition
+     * @param moduleInstance null if the module does not have a module class
+     */
+    void exec(ModuleDefinition moduleDefinition, Object moduleInstance);
 }
