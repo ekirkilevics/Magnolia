@@ -67,8 +67,11 @@ import javax.jcr.version.VersionHistory;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.commons.AbstractNode;
+import org.apache.jackrabbit.util.ChildrenCollectorFilter;
 
 /**
+ * Mock implementation of a Node. Initially gets a random generated UUID set.
+ *
  * @version $Id$
  */
 public class MockNode extends AbstractNode {
@@ -322,8 +325,9 @@ public class MockNode extends AbstractNode {
     }
 
     @Override
-    public PropertyIterator getProperties(String namePattern) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public PropertyIterator getProperties(String namePattern) throws RepositoryException {
+        // Inspired by org.apache.jackrabbit.core.NodeImpl
+        return ChildrenCollectorFilter.collectProperties(this, namePattern);
     }
 
     @Override

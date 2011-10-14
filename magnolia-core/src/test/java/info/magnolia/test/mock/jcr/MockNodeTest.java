@@ -172,6 +172,24 @@ public class MockNodeTest {
 
         assertTrue(!iterator.hasNext());
     }
+
+    @Test
+    public void testGetPropertiesWithNamePattern() throws Exception {
+        // GIVEN
+        final String propertyName = "test";
+        final String propertyValue = "value";
+        root.setProperty(propertyName, propertyValue);
+
+        // WHEN
+        PropertyIterator result = root.getProperties("t*");
+
+        // THEN
+        Property property = result.nextProperty();
+        assertEquals(propertyName, property.getName());
+        assertEquals(propertyValue, property.getString());
+    }
+
+
     @Test
     public void testSetPropertyWithStringAndBoolean() throws Exception {
         root.setProperty("boolean", false);
