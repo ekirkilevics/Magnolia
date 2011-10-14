@@ -209,7 +209,7 @@ public class MockNode extends AbstractNode {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
-    protected Map<String, MockNode> getChildren() {
+    public Map<String, MockNode> getChildren() {
         return this.children;
     }
 
@@ -291,15 +291,19 @@ public class MockNode extends AbstractNode {
 
     @Override
     public Node getParent() throws ItemNotFoundException {
-        // TODO dlipp - check this impl. It's convenient but probably wrong as we're only throwing exception in case both conditions apply.
-        if (ROOT_NODE_NAME.equals(getName()) && parent == null) {
+        if (isRoot()) {
             throw new ItemNotFoundException("This is the rootNode - it doesn't have a parent!");
         }
-        if (parent == null) {
-            // prevent NullpointerException e.g. in AbstractNode#getPath()
-            parent = new MockNode(ROOT_NODE_NAME);
-        }
         return parent;
+    }
+
+    private boolean isRoot() {
+        return ROOT_NODE_NAME.equals(getName()) && parent == null;
+    }
+
+    @Override
+    public String getPath() throws RepositoryException {
+        return isRoot() ? "/" : super.getPath();
     }
 
     @Override
