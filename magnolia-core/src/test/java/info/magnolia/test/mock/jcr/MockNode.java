@@ -351,10 +351,6 @@ public class MockNode extends AbstractNode {
 
     @Override
     public Session getSession() {
-        if (session == null) {
-            // init on demand in order to avoid NPE's
-            session = new MockSession("test");
-        }
         return session;
     }
 

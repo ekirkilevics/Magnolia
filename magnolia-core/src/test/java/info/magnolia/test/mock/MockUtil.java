@@ -119,7 +119,7 @@ public class MockUtil {
     public static MockHierarchyManager createHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
         Content root = new MockContent("jcr:root");
         createContent(root, propertiesStream);
-        MockSession session = new MockSession("test");
+        MockSession session = new MockSession(repository);
         session.setRootNode((MockNode) root.getJCRNode());
         return new MockHierarchyManager(root.getJCRNode().getSession());
     }
