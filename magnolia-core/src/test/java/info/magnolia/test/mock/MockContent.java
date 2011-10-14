@@ -207,7 +207,11 @@ public class MockContent extends DefaultContent {
     @Override
     public void delete() throws RepositoryException {
         final MockNode parent = (MockNode) getParent().getJCRNode();
-        ((MockSession) getJCRNode().getSession()).removeFromCache((MockNode) getJCRNode());
+        MockSession session = (MockSession) getJCRNode().getSession();
+        //for mocks it's perfectly valid (in many cases) to not have a session
+        if (session != null) {
+            session.removeFromCache((MockNode) getJCRNode());
+        }
         final boolean removedFromParent = parent.removeFromChildren(getJCRNode());
 
         if (!removedFromParent) {
