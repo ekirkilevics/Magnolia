@@ -35,10 +35,7 @@ package info.magnolia.test.mock.jcr;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 import javax.jcr.Credentials;
@@ -63,8 +60,6 @@ import org.xml.sax.ContentHandler;
  * @version $Id$
  */
 public class MockSession extends AbstractSession {
-
-    final private Map<String, MockNode> nodesCache = new LinkedHashMap<String, MockNode>();
 
     private MockNode rootNode = null;
     private ValueFactory valueFactory = null;
@@ -93,10 +88,6 @@ public class MockSession extends AbstractSession {
     @Override
     public void addLockToken(String lt) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    protected void cacheContent(MockNode node) throws RepositoryException {
-        nodesCache.put(node.getPath(), node);
     }
 
     @Override
@@ -156,15 +147,10 @@ public class MockSession extends AbstractSession {
 
     @Override
     public Node getNode(String absPath) throws PathNotFoundException, RepositoryException {
-        MockNode c = nodesCache.get(absPath);
-        if (c == null) {
-            if ("/".equals(absPath)) {
-                return rootNode;
-            }
-            c = (MockNode) rootNode.getNode(StringUtils.removeStart(absPath, "/"));
-            cacheContent(c);
+        if ("/".equals(absPath)) {
+            return rootNode;
         }
-        return c;
+        return rootNode.getNode(StringUtils.removeStart(absPath, "/"));
     }
 
     @Override
@@ -286,16 +272,5 @@ public class MockSession extends AbstractSession {
 
     public void setLive(boolean live) {
         this.live = live;
-    }
-
-    public void removeFromCache(MockNode node) {
-        Iterator<String> keys = nodesCache.keySet().iterator();
-        String current;
-        while (keys.hasNext()) {
-            current = keys.next();
-            if (node.equals(nodesCache.get(current))){
-                nodesCache.remove(current);
-            }
-        }
     }
 }
