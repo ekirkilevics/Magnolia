@@ -329,7 +329,7 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
         // THEN
         } catch (RuntimeException e) {
             assertEquals(e.getMessage(),
-                    "Can't find referenced node for value: TestMockHierarchyManager:/impl/node3[mgnl:contentNode]");
+                    "Can't find referenced node for value: test:/impl/node3[mgnl:contentNode]");
         }
     }
 
@@ -364,7 +364,7 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
 
         // THEN
         } catch (RuntimeException e) {
-            assertEquals("Can't find referenced node for value: TestMockHierarchyManager:/impl/node[mgnl:contentNode]", e.getMessage());
+            assertEquals("Can't find referenced node for value: test:/impl/node[mgnl:contentNode]", e.getMessage());
         }
     }
 

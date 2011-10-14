@@ -129,8 +129,15 @@ public class MockUtil {
      * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, String)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(String propertiesStr) throws IOException, RepositoryException {
+        return createHierarchyManager("testSession", propertiesStr);
+    }
+
+    /**
+     * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, String)} instead.
+     */
+    public static MockHierarchyManager createHierarchyManager(String workspace, String propertiesStr) throws IOException, RepositoryException {
         final ByteArrayInputStream in = new ByteArrayInputStream(propertiesStr.getBytes());
-        return createHierarchyManager(null, in);
+        return createHierarchyManager(workspace, in);
     }
 
     /**
@@ -225,7 +232,7 @@ public class MockUtil {
      * we want to get from this HierarchyManager.
      */
     public static Content createNode(String returnFromPath, String... propertiesFormat) throws RepositoryException, IOException {
-        return createHierarchyManager(propsStr(propertiesFormat)).getContent(returnFromPath);
+        return createHierarchyManager("TEST", propsStr(propertiesFormat)).getContent(returnFromPath);
     }
 
     private static String propsStr(String... s) {

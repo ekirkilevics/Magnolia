@@ -306,7 +306,10 @@ public class MockNode extends AbstractNode {
 
     @Override
     public String getPath() throws RepositoryException {
-        return isRoot() ? "/" : super.getPath();
+        if (parent == null) {
+            return ROOT_NODE_NAME.equals(getName()) ? "/" : "";
+        }
+        return super.getPath();
     }
 
     @Override
