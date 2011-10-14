@@ -140,7 +140,8 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
         @Override
         public boolean grants(Path absPath, int permissions) throws RepositoryException {
-            return ami.isGranted(pathResolver.getJCRPath(absPath), permissions);
+            long magnoliaPermissions = convertJackrabbitPermissionsToMagnoliaPermissions(permissions);
+            return ami.isGranted(pathResolver.getJCRPath(absPath), magnoliaPermissions);
         }
 
         @Override
@@ -167,6 +168,33 @@ public class MagnoliaAccessProvider extends CombinedProvider {
             return name.getLocalName();
         }
     }));
+
+    private static final long permissionMapping[][] = {
+            {org.apache.jackrabbit.core.security.authorization.Permission.READ, Permission.READ},
+            {org.apache.jackrabbit.core.security.authorization.Permission.SET_PROPERTY, Permission.SET},
+            {org.apache.jackrabbit.core.security.authorization.Permission.ADD_NODE, Permission.ADD},
+            {org.apache.jackrabbit.core.security.authorization.Permission.REMOVE_NODE, Permission.REMOVE},
+            {org.apache.jackrabbit.core.security.authorization.Permission.REMOVE_PROPERTY, Permission.REMOVE},
+            {org.apache.jackrabbit.core.security.authorization.Permission.READ_AC, Permission.EXECUTE},
+            {org.apache.jackrabbit.core.security.authorization.Permission.MODIFY_AC, Permission.EXECUTE},
+            {org.apache.jackrabbit.core.security.authorization.Permission.NODE_TYPE_MNGMT, Permission.ADD},
+            {org.apache.jackrabbit.core.security.authorization.Permission.VERSION_MNGMT, Permission.EXECUTE},
+            {org.apache.jackrabbit.core.security.authorization.Permission.LOCK_MNGMT, Permission.EXECUTE},
+            {org.apache.jackrabbit.core.security.authorization.Permission.LIFECYCLE_MNGMT, Permission.EXECUTE},
+            {org.apache.jackrabbit.core.security.authorization.Permission.RETENTION_MNGMT, Permission.EXECUTE},
+    };
+
+    private long convertJackrabbitPermissionsToMagnoliaPermissions(long jackRabbitPermissions) {
+        long magnoliaPermissions = 0;
+        for (long[] mapping : permissionMapping) {
+            long jackrabbitPermission = mapping[0];
+            long magnoliaPermission = mapping[1];
+            if ((jackRabbitPermissions & jackrabbitPermission) != 0) {
+                magnoliaPermissions = magnoliaPermissions | magnoliaPermission;
+            }
+        }
+        return magnoliaPermissions;
+    }
 
     @Override
     public boolean canAccessRoot(Set<Principal> principals) throws RepositoryException {
