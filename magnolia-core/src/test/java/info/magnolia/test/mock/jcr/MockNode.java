@@ -359,6 +359,10 @@ public class MockNode extends AbstractNode {
 
     @Override
     public Session getSession() {
+        if (session == null && parent != null) {
+            // fallback - avoid session has to be set on every level
+            return parent.getSession();
+        }
         return session;
     }
 
