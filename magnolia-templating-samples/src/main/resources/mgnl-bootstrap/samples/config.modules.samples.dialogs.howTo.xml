@@ -222,6 +222,9 @@
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.sampleProperties.date</sv:value>
       </sv:property>
+      <sv:property sv:name="type" sv:type="String">
+        <sv:value>Date</sv:value>
+      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
@@ -239,7 +242,7 @@
           <sv:value>2008-09-25T13:57:00.582+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-08-24T16:26:33.190+02:00</sv:value>
+          <sv:value>2011-10-14T12:09:16.461+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
