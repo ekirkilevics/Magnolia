@@ -33,13 +33,6 @@
  */
 package info.magnolia.test.mock;
 
-import javax.jcr.ItemNotFoundException;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.ItemType;
@@ -49,13 +42,48 @@ import info.magnolia.cms.core.NonExistingNodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockProperty;
 import info.magnolia.test.mock.jcr.MockSession;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.jackrabbit.util.ChildrenCollectorFilter;
 
 
 /**
  * @version $Id$
  */
 public class MockContent extends DefaultContent {
+
+    /**
+     * Filters a name of a NodeData or Content instance according to the same rules applied by Jackrabbit
+     * in the Property and Node interfaces.
+     */
+    private static class NamePatternFilter implements Predicate {
+        private final String namePattern;
+
+        public NamePatternFilter(String namePattern) {
+            this.namePattern = namePattern;
+        }
+
+        @Override
+        public boolean evaluate(Object object) {
+            return matchesNamePattern(object, namePattern);
+        }
+    }
+
 
     public MockContent(String name) {
         this(new MockNode(name));
@@ -113,6 +141,27 @@ public class MockContent extends DefaultContent {
         } catch (RepositoryException e) {
             throw new RuntimeException("Can't create/read the meta data node.", e);
         }
+    }
+
+
+    @Override
+    public Collection<NodeData> getNodeDataCollection(String namePattern) {
+        // FIXME try to find a better solution than filtering now
+        // problem is that getNodeData(name, type) will have to add the node data
+        // as setValue() might be called later on an the node data starts to exist
+        ArrayList<NodeData> onlyExistingNodeDatas = new ArrayList<NodeData>();
+        final String pattern = namePattern == null ? "*" : namePattern;
+        try {
+            PropertyIterator iterator = getJCRNode().getProperties(pattern);
+            Property current;
+            while(iterator.hasNext()) {
+                current = iterator.nextProperty();
+                onlyExistingNodeDatas.add(new MockNodeData(this, current.getName(), ((MockProperty) current).getObjectValue()));
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+        return onlyExistingNodeDatas;
     }
 
 
@@ -202,6 +251,45 @@ public class MockContent extends DefaultContent {
     @Override
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return (new MockContent((MockNode) node, name));
+    }
+
+    @Override
+    public Collection<Content> getChildren(final ContentFilter filter, final String namePattern, Comparator<Content> orderCriteria) {
+        // copy
+        final Collection<MockNode> children = ((MockNode)node).getChildren().values();
+        final Collection<Content> contentChildren = new ArrayList<Content>();
+        for(MockNode current: children) {
+            contentChildren.add(wrapAsContent(current));
+        }
+
+        final Predicate filterPredicate = new Predicate() {
+            @Override
+            public boolean evaluate(Object object) {
+                return filter.accept((Content) object);
+            }
+        };
+
+        CollectionUtils.filter(contentChildren, filterPredicate);
+
+        if (namePattern != null) {
+            CollectionUtils.filter(contentChildren, new NamePatternFilter(namePattern));
+        }
+
+
+        return contentChildren;
+    }
+
+
+    private static boolean matchesNamePattern(Object object, String namePattern) {
+        final String name;
+        if (object instanceof NodeData) {
+            name = ((NodeData) object).getName();
+        } else if (object instanceof Content) {
+            name = ((Content) object).getName();
+        } else {
+            throw new IllegalStateException("Unsupported object type: " + object.getClass());
+        }
+        return ChildrenCollectorFilter.matches(name, namePattern);
     }
 
     @Override

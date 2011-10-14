@@ -147,4 +147,8 @@ public class MockValue implements Value {
         return "MockValue [type=" + type + ", value=" + value + "]";
     }
 
+    public Object getValue() {
+        return value;
+    }
+
 }

@@ -118,6 +118,7 @@ public class MockUtil {
      */
     public static MockHierarchyManager createHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
         Content root = new MockContent("jcr:root");
+        // TODO dlipp - check whether we have to set UUID here (done in old code)
         createContent(root, propertiesStream);
         MockSession session = new MockSession(repository);
         session.setRootNode((MockNode) root.getJCRNode());

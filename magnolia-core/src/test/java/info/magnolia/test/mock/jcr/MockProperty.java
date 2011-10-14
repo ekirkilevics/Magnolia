@@ -258,4 +258,8 @@ public class MockProperty extends AbstractProperty {
     public void setValue(Value value) {
         this.value = (MockValue) value;
     }
+
+    public Object getObjectValue() {
+        return ((MockValue) getValue()).getValue();
+    }
 }
