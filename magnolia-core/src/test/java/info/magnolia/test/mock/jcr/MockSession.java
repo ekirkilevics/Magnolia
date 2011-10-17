@@ -44,6 +44,7 @@ import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -174,6 +175,12 @@ public class MockSession extends AbstractSession {
     @Override
     public Node getNodeByUUID(String uuid) throws RepositoryException {
         return getNodeByIdentifier(uuid);
+    }
+
+    @Override
+    public Property getProperty(String absPath) throws RepositoryException {
+        Node node = getNode(StringUtils.substringBeforeLast(absPath, "/"));
+        return node.getProperty(StringUtils.substringAfterLast(absPath, "/"));
     }
 
     @Override
