@@ -73,17 +73,17 @@ public class BinaryMockNodeData extends MockNodeData {
     // content stored
     private byte[] bytes;
 
-    public BinaryMockNodeData(MockContent parent, String name) {
-        super(parent, name, PropertyType.BINARY);
+    public BinaryMockNodeData(String name) {
+        super(name, PropertyType.BINARY);
     }
 
-    public BinaryMockNodeData(MockContent parent, String name, MockContent wrappedContent) {
-        this(parent, name);
+    public BinaryMockNodeData(String name, MockContent wrappedContent) {
+        this(name);
         this.wrappedContent = wrappedContent;
     }
 
-    public BinaryMockNodeData(MockContent parent, String name, InputStream stream) {
-        this(parent, name);
+    public BinaryMockNodeData(String name, InputStream stream) {
+        this(name);
         try {
             setValue(stream);
         }
@@ -92,8 +92,8 @@ public class BinaryMockNodeData extends MockNodeData {
         }
     }
 
-    public BinaryMockNodeData(MockContent parent, String name, InputStream stream, String fileName, String mimeType, int size) {
-        this(parent, name, stream);
+    public BinaryMockNodeData(String name, InputStream stream, String fileName, String mimeType, int size) {
+        this(name, stream);
         try {
             setAttribute(FileProperties.PROPERTY_FILENAME, StringUtils.substringBeforeLast(fileName, "."));
             setAttribute(FileProperties.PROPERTY_EXTENSION, StringUtils.substringAfterLast(fileName, "."));
@@ -126,7 +126,7 @@ public class BinaryMockNodeData extends MockNodeData {
     @Override
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
         if (wrappedContent != null) {
-            wrappedContent.addNodeData(new BinaryMockNodeData(new MockContent("test"), ItemType.JCR_DATA, value));
+            wrappedContent.addNodeData(new BinaryMockNodeData(ItemType.JCR_DATA, value));
         }
         if(value != null){
             try {

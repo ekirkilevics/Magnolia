@@ -195,7 +195,7 @@ public class MockContent extends DefaultContent {
 
             if(type == PropertyType.BINARY){
                 Content binaryNode = createContent(name, ItemType.NT_RESOURCE);
-                nodeData = new BinaryMockNodeData(this, name, (MockContent) binaryNode);
+                nodeData = new BinaryMockNodeData(name, (MockContent) binaryNode);
             }
             else{
                 nodeData = new MockNodeData(this, name, type);
@@ -210,7 +210,7 @@ public class MockContent extends DefaultContent {
     }
 
     public void addBinaryNodeData(String name, MockContent wrappedContent) {
-        new BinaryMockNodeData(this, name, wrappedContent);
+        new BinaryMockNodeData(name, wrappedContent);
     }
 
     public void addNodeData(MockNodeData nd) {
@@ -242,7 +242,7 @@ public class MockContent extends DefaultContent {
         addContent(c);
 
         if (c.isNodeType(ItemType.NT_RESOURCE)) {
-            final BinaryMockNodeData binND = new BinaryMockNodeData(this, name, c);
+            final BinaryMockNodeData binND = new BinaryMockNodeData(name, c);
             addNodeData(binND);
         }
         return c;

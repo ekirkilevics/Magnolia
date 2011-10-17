@@ -57,7 +57,7 @@ public class BinaryMockNodeDataTest extends TestCase {
     public void testThatAttributesAreSetOnTheWrappedNode() throws AccessDeniedException, UnsupportedOperationException, RepositoryException{
         // GIVEN a binary node data which wraps a resource node
         MockContent resourceNode = new MockContent("file", new ItemType(ItemType.NT_FILE));
-        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData(new MockContent("test"), "file", resourceNode);
+        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData("file", resourceNode);
 
         // WHEN setting an attribute
         binaryNodeData.setAttribute("attribute", "value");
@@ -67,7 +67,7 @@ public class BinaryMockNodeDataTest extends TestCase {
     }
 
     public void testThatTheBinaryContentCanBeReadMultipleTimes() throws IOException{
-        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData(new MockContent("test"), "file", new ByteArrayInputStream(BYTES));
+        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData("file", new ByteArrayInputStream(BYTES));
 
         // THEN we can read the content twice
         for (int i = 0; i < 2; i++) {
@@ -79,7 +79,7 @@ public class BinaryMockNodeDataTest extends TestCase {
     public void testThatStreamIsSetOnTheWrappedNode() throws AccessDeniedException, UnsupportedOperationException, RepositoryException, IOException{
         // GIVEN a binary node data which wraps a resource node
         MockContent resourceNode = new MockContent("file", new ItemType(ItemType.NT_FILE));
-        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData(new MockContent("test"), "file", resourceNode);
+        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData("file", resourceNode);
 
         // WHEN setting the stream
         binaryNodeData.setValue(new ByteArrayInputStream(BYTES));

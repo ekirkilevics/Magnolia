@@ -91,7 +91,7 @@ public abstract class BaseLinkTest extends MgnlTestCase {
 
         // add a binary
         MockContent page = (MockContent) hm.getContent(HANDLE_PARENT_SUB);
-        page.addNodeData(new BinaryMockNodeData(page, "file", null, "test.jpg", "image/jpeg", 5000));
+        page.addNodeData(new BinaryMockNodeData("file", null, "test.jpg", "image/jpeg", 5000));
 
         allMocks = new ArrayList();
         allMocks.add(webContext);
