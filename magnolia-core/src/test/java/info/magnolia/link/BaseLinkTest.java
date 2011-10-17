@@ -38,6 +38,7 @@ import static org.easymock.classextension.EasyMock.createMock;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
@@ -91,7 +92,10 @@ public abstract class BaseLinkTest extends MgnlTestCase {
 
         // add a binary
         MockContent page = (MockContent) hm.getContent(HANDLE_PARENT_SUB);
-        page.addNodeData(new BinaryMockNodeData("file", null, "test.jpg", "image/jpeg", 5000));
+        BinaryMockNodeData bmnd = page.addBinaryNodeData("file");
+        bmnd.setAttribute(FileProperties.PROPERTY_FILENAME, "test");
+        bmnd.setAttribute(FileProperties.PROPERTY_EXTENSION, "jpg");
+        bmnd.setAttribute("jcr:mimeType", "image/jpeg");
 
         allMocks = new ArrayList();
         allMocks.add(webContext);

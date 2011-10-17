@@ -35,6 +35,8 @@ package info.magnolia.test.mock.jcr;
 
 import info.magnolia.jcr.util.PropertyUtil;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -44,6 +46,8 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * @version $Id$
@@ -58,8 +62,14 @@ public class MockValue implements Value {
     }
 
     public MockValue(Object value, int type) {
-        this.value = value;
         this.type = type;
+        Object valueToSet;
+        try {
+            valueToSet = value instanceof InputStream ? IOUtils.toByteArray((InputStream) value) : value;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        this.value = valueToSet;
     }
 
     @Override
@@ -122,8 +132,8 @@ public class MockValue implements Value {
 
     @Override
     public InputStream getStream() throws RepositoryException {
-        if (value instanceof InputStream) {
-            return (InputStream) value;
+        if (value instanceof byte[]) {
+            return new ByteArrayInputStream((byte[]) value);
         }
         throw new ValueFormatException("Value can't be converted to InputStream: " + value);
     }

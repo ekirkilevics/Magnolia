@@ -56,6 +56,7 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Workspace;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -174,11 +175,16 @@ public class MockContent extends DefaultContent {
     @Override
     public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
         if(hasNodeData(name)){
-            // TODO dlipp - isn't that the wrong - should MockNodeData just wrap Property?
-            Property property = getJCRNode().getProperty(name);
-            MockNodeData nd = new MockNodeData(property.getName(), property.getValue());
-            nd.setParent(this);
-            return nd;
+            Property property;
+            try {
+                property = getJCRNode().getProperty(name);
+                MockNodeData nd = new MockNodeData(property.getName(), property.getValue());
+                nd.setParent(this);
+                return nd;
+            } catch (PathNotFoundException e) {
+                // exception although hasNodeData returned tru -> then it's a binary!
+            }
+            return new BinaryMockNodeData(this, name);
         }
         else if(!createIfNotExisting){
             //&& type != PropertyType.BINARY){
@@ -187,21 +193,15 @@ public class MockContent extends DefaultContent {
             return new NonExistingNodeData(getParent(), name);
         }
         else{
-            MockNodeData nodeData;
-            // TODO if(type == PropertyType.UNDEFINED){
-            //    if (hasContent(name) && getContent(name).isNodeType(ItemType.NT_RESOURCE)) {
-            //        type = PropertyType.BINARY;
-            //    } - else ?
-
+            NodeData nd;
             if(type == PropertyType.BINARY){
-                Content binaryNode = createContent(name, ItemType.NT_RESOURCE);
-                nodeData = new BinaryMockNodeData(name, (MockContent) binaryNode);
+                nd = addBinaryNodeData(name);
             }
             else{
-                nodeData = new MockNodeData(this, name, type);
+                nd = new MockNodeData(this, name, type);
+                addNodeData((MockNodeData) nd);
             }
-            addNodeData(nodeData);
-            return nodeData;
+            return nd;
         }
     }
 
@@ -209,8 +209,8 @@ public class MockContent extends DefaultContent {
         new MockNodeData(this, name, value);
     }
 
-    public void addBinaryNodeData(String name, MockContent wrappedContent) {
-        new BinaryMockNodeData(name, wrappedContent);
+    public BinaryMockNodeData addBinaryNodeData(String name) {
+        return new BinaryMockNodeData(this, name);
     }
 
     public void addNodeData(MockNodeData nd) {
@@ -242,8 +242,8 @@ public class MockContent extends DefaultContent {
         addContent(c);
 
         if (c.isNodeType(ItemType.NT_RESOURCE)) {
-            final BinaryMockNodeData binND = new BinaryMockNodeData(name, c);
-            addNodeData(binND);
+            // TODO dlipp - to be verified
+            addBinaryNodeData(name);
         }
         return c;
     }
@@ -317,4 +317,10 @@ public class MockContent extends DefaultContent {
     protected Content wrapAsContent(Node node, String name, String contentType) throws AccessDeniedException, PathNotFoundException, RepositoryException {
         return new MockContent((MockNode) node, name, contentType);
     }
+
+    @Override
+    public Workspace getWorkspace() throws RepositoryException {
+        return node.getSession() != null ? node.getSession().getWorkspace() : null;
+    }
+
 }
