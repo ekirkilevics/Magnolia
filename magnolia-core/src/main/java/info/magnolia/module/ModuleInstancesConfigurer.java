@@ -31,11 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory.guice;
+package info.magnolia.module;
 
-import info.magnolia.module.ModuleManager;
-import info.magnolia.module.ModuleRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentConfigurer;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
@@ -47,24 +49,25 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
  */
 public class ModuleInstancesConfigurer implements ComponentConfigurer {
 
+    private static final Logger log = LoggerFactory.getLogger(ModuleInstancesConfigurer.class);
+
     @Override
     public void doWithConfiguration(ComponentProvider parentComponentProvider, ComponentProviderConfiguration configuration) {
 
         ModuleRegistry moduleRegistry = parentComponentProvider.getComponent(ModuleRegistry.class);
-        GuiceModuleManager moduleManager = (GuiceModuleManager) parentComponentProvider.getComponent(ModuleManager.class);
 
         for (String moduleName : moduleRegistry.getModuleNames()) {
             final ModuleDefinition moduleDefinition = moduleRegistry.getDefinition(moduleName);
             if (moduleDefinition.getClassName() != null) {
-                final Class<Object> moduleClass;
+                final Class<?> moduleClass;
                 try {
-                    moduleClass = moduleManager.getModuleClass(moduleDefinition);
+                    moduleClass = Classes.getClassFactory().forName(moduleDefinition.getClassName());
                 } catch (ClassNotFoundException e) {
-                    throw new RuntimeException("Class not found: " + moduleDefinition.getClassName(), e);
+                    log.error("Module class not found :" + moduleDefinition.getClassName(), e);
+                    continue;
                 }
-                ModuleInstanceProvider provider = new ModuleInstanceProvider(moduleDefinition);
+                ModuleInstanceProvider provider = new ModuleInstanceProvider(moduleDefinition.getName());
                 configuration.registerInstance(moduleClass, provider);
-                moduleManager.registerModuleInstanceProvider(moduleDefinition.getName(), provider);
             }
         }
     }

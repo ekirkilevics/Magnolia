@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,38 +25,36 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.objectfactory.configuration;
+package info.magnolia.module;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
- * Configuration for a provider that acts as a factory, supported types are
- * {@link info.magnolia.objectfactory.ComponentFactory} and {@link javax.inject.Provider}.
+ * Provider for the module instance of a module.
  *
- * @param <T> the type
+ * @param <T> the type of the module class
  * @version $Id$
  */
-public class ProviderConfiguration<T> extends ComponentConfiguration<T> {
+public class ModuleInstanceProvider<T> implements Provider<T> {
 
-    private Class<?> providerClass;
+    @Inject
+    private ModuleRegistry moduleRegistry;
+    public String moduleName;
 
-    public ProviderConfiguration() {
+    public ModuleInstanceProvider(String moduleName) {
+        this.moduleName = moduleName;
     }
 
-    public ProviderConfiguration(Class<T> type, Class<?> providerClass) {
-        super(type);
-        this.providerClass = providerClass;
-    }
-
-    public Class<?> getProviderClass() {
-        return providerClass;
-    }
-
-    public void setProviderClass(Class<?> providerClass) {
-        this.providerClass = providerClass;
+    @Override
+    @SuppressWarnings("unchecked")
+    public synchronized T get() {
+        return (T) moduleRegistry.getModuleInstance(moduleName);
     }
 }
