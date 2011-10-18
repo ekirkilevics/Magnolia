@@ -208,11 +208,6 @@ public class MockProperty extends AbstractProperty {
     }
 
     @Override
-    public boolean isNode() {
-        return false;
-    }
-
-    @Override
     public boolean isSame(Item otherItem) throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
@@ -246,12 +241,16 @@ public class MockProperty extends AbstractProperty {
 
     @Override
     public void setValue(BigDecimal value) throws RepositoryException {
-        getParent().setProperty(getName(), value);
+        setValueFromObject(value);
     }
 
     @Override
     public void setValue(Binary value) throws RepositoryException {
-        getParent().setProperty(getName(), value);
+        setValueFromObject(value);
+    }
+
+    private void setValueFromObject(Object value) {
+        setValue(new MockValue(value));
     }
 
     @Override

@@ -256,10 +256,10 @@ public class MockNode extends AbstractNode {
     }
 
     @Override
-    public Node getNode(String path) throws PathNotFoundException, RepositoryException {
+    public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
         Node c;
-        if (path.contains("/")) {
-            String[] names = StringUtils.split(path, "/");
+        if (relPath.contains("/")) {
+            String[] names = StringUtils.split(relPath, "/");
             Node current = this;
             for (String name : names) {
                 if (name.equals("..")) {
@@ -270,9 +270,9 @@ public class MockNode extends AbstractNode {
             }
             return current;
         }
-        c = children.get(path);
+        c = children.get(relPath);
         if (c == null) {
-            throw new PathNotFoundException(getPath() + "/" + path);
+            throw new PathNotFoundException(relPath);
         }
         return c;
     }

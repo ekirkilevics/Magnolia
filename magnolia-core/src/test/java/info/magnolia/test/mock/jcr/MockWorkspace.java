@@ -33,6 +33,8 @@
  */
 package info.magnolia.test.mock.jcr;
 
+import info.magnolia.test.mock.MockQueryManager;
+
 import java.io.InputStream;
 
 import javax.jcr.NamespaceRegistry;
@@ -131,7 +133,7 @@ public class MockWorkspace extends AbstractWorkspace {
 
     @Override
     public QueryManager getQueryManager() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return new MockQueryManager(this.session);
     }
 
     @Override

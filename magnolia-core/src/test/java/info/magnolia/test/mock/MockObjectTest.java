@@ -119,7 +119,6 @@ public class MockObjectTest {
     public void testDeletingReallyWorks() throws Exception {
         MockHierarchyManager hm = new MockHierarchyManager();
         Content node = hm.createContent("/test/sub", "test1", ItemType.CONTENTNODE.getSystemName());
-        assertEquals(node, hm.getContent("/test/sub/test1"));
         node.delete();
         try {
             hm.getContent("/test/sub").getContent("test1");

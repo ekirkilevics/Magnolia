@@ -64,7 +64,8 @@ public class MockPropertyTest {
     }
     @Test
     public void testGetSetValueWithBigDecimal() throws Exception{
-        Property property = new MockProperty("test", "test", null);
+        MockNode node = new MockNode("parent");
+        Property property = new MockProperty("test", BigDecimal.valueOf(0), node);
         property.setValue(BigDecimal.ONE);
         assertEquals(BigDecimal.ONE, property.getDecimal());
     }
