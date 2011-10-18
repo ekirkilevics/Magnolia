@@ -610,7 +610,7 @@ public class MockNode extends AbstractNode {
 
     @Override
     public Property setProperty(String name, Binary value) throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return setProperty(name, new MockValue(value));
     }
 
     @Override
