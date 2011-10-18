@@ -37,8 +37,6 @@ import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.objectfactory.Components;
 
-import javax.security.auth.Subject;
-
 /**
  * Entry point to get the various managers like {@link UserManager}, {@link GroupManager} and {@link RoleManager}.
  * @author gjoseph
@@ -73,11 +71,4 @@ public interface SecuritySupport {
             return Components.getSingleton(SecuritySupport.class);
         }
     }
-
-    /**
-     * extracts magnolia user from the list of principals.
-     * @param subject
-     * @return
-     */
-    User extractUser(Subject subject);
 }

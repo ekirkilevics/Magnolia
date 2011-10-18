@@ -54,7 +54,6 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.security.auth.Subject;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
@@ -81,7 +80,6 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
     private final Collection<String> roles;
 
     private final String name;
-    private Subject subject;
     private final String language;
     private final String encodedPassword;
     private boolean enabled = true;
@@ -345,23 +343,6 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
             }
         }
         return allRoles;
-    }
-
-    @Override
-    public Subject getSubject() {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("getSubject()=>{}", this.subject);
-        }
-        return this.subject;
-    }
-
-    @Override
-    @Deprecated
-    public void setSubject(Subject subject) {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("setsubject({})", subject);
-        }
-        this.subject = subject;
     }
 
     public String getPath() {

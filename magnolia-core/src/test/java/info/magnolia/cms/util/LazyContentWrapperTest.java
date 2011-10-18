@@ -44,6 +44,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.SecuritySupportImpl;
 import info.magnolia.cms.security.User;
@@ -102,7 +103,7 @@ public class LazyContentWrapperTest extends RepositoryTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setSession(session);
         MgnlContext.setInstance(ContextFactory.getInstance().createWebContext(req, null, null));
-        ((UserContextImpl) MgnlContext.getInstance()).login(dummy);
+        ((UserContextImpl) MgnlContext.getInstance()).login(PermissionUtil.createSubject(dummy));
     }
 
     @Override

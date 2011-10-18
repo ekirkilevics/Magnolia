@@ -39,6 +39,9 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.AccessManagerImpl;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 
@@ -46,6 +49,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -53,6 +57,7 @@ import java.util.Set;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.security.auth.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +74,11 @@ public abstract class AbstractContext implements Context, Serializable {
     @Override
     public User getUser() {
         return Security.getSystemUser();
+    }
+
+    @Override
+    public Subject getSubject() {
+        return Security.getSystemSubject();
     }
 
     /**
@@ -116,13 +126,17 @@ public abstract class AbstractContext implements Context, Serializable {
         getAttributeStrategy().setAttribute(name, value, scope);
     }
 
-    /**
-     * @deprecated since 4.5
-     */
     @Override
-    @Deprecated
-    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return getRepositoryStrategy().getAccessManager(repositoryId, workspaceId);
+    public AccessManager getAccessManager(String name) {
+        Subject subject = getSubject();
+        List<Permission> availablePermissions = PermissionUtil.getPermissions(subject, name);
+        if (availablePermissions == null) {
+            log.warn("no permissions found for " + getUser().getName());
+        }
+        // TODO: use provider instead of fixed impl
+        AccessManagerImpl ami = new AccessManagerImpl();
+        ami.setPermissionList(availablePermissions);
+        return ami;
     }
 
     @Override
@@ -137,7 +151,7 @@ public abstract class AbstractContext implements Context, Serializable {
 
     @Override
     public Session getJCRSession(String repositoryId, String workspaceId) throws LoginException, RepositoryException {
-        return getRepositoryStrategy().getSession(repositoryId,  workspaceId);
+        return getRepositoryStrategy().getSession(repositoryId, workspaceId);
     }
 
     @Override
@@ -218,8 +232,8 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     @Override
-    public AccessManager getAccessManager(String repositoryId) {
-        return this.getAccessManager(repositoryId, ContentRepository.getDefaultWorkspace(repositoryId));
+    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
+        return getAccessManager(workspaceId);
     }
 
     @Override

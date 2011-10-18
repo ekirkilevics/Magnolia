@@ -39,17 +39,8 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.AccessManagerImpl;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionUtil;
-import info.magnolia.cms.security.RoleManager;
-import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.auth.PrincipalCollectionImpl;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -60,7 +51,6 @@ import javax.security.auth.Subject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,8 +112,8 @@ public class MgnlContext {
         return getInstance().getMessages(basename);
     }
 
-    public static void login(User user) {
-        ((UserContext)getInstance()).login(user);
+    public static void login(Subject subject) {
+        ((UserContext)getInstance()).login(subject);
     }
 
     /**
@@ -144,21 +134,10 @@ public class MgnlContext {
     }
 
     /**
-     * Get access manager for the specified workspace.
-     * 
-     * @param workspace
-     *            Name of the workspace, not that of the repository!!! See repositories.xml for repository to workspace mapping.
+     * Get access manager for a resource, usually a workspace.
      */
-    public static AccessManager getAccessManager(String workspace) {
-        Subject subject = MgnlContext.getSubject();
-        List<Permission> availablePermissions = PermissionUtil.getPermissions(subject, workspace);
-        if (availablePermissions == null) {
-            log.warn("no permissions found for " + MgnlContext.getUser().getName());
-        }
-        // TODO: use provider instead of fixed impl
-        AccessManagerImpl ami = new AccessManagerImpl();
-        ami.setPermissionList(availablePermissions);
-        return ami;
+    public static AccessManager getAccessManager(String name) {
+        return getInstance().getAccessManager(name);
     }
 
     /**
@@ -552,38 +531,6 @@ public class MgnlContext {
     }
 
     public static Subject getSubject() {
-        WebContext ctx = getWebContextOrNull();
-        User user = null;
-        SecuritySupport ssbase = SecuritySupport.Factory.getInstance();
-        if (ctx != null) {
-            // TODO: move this to MgnlContext
-            HttpSession session = ctx.getRequest().getSession(false);
-            Subject subject = null;
-            if (session != null) {
-                subject = (Subject) session.getAttribute(Subject.class.getName());
-                if (subject == null) {
-                    log.warn("Subject is missing. Security configuration might be broken.");
-                }
-                return subject;
-            } else {
-                // not in a session, anonymous user
-                user = ssbase.getUserManager().getAnonymousUser();
-            }
-        } else {
-            // Not in a web context ... deal with it :D
-            user = getInstance().getUser();
-        }
-        // create fake subject and populate it with principals
-        Subject subj = new Subject();
-        subj.getPrincipals().add(user);
-        RoleManager roleMan = ssbase.getRoleManager();
-        List<Principal> acls = new ArrayList<Principal>();
-        for (String role : user.getAllRoles()) {
-            acls.addAll(roleMan.getACLs(role).values());
-        }
-        PrincipalCollectionImpl pci = new PrincipalCollectionImpl();
-        pci.addAll(acls);
-        subj.getPrincipals().add(pci);
-        return subj;
+        return getInstance().getSubject();
     }
 }

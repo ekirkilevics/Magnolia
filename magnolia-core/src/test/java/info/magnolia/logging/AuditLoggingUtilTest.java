@@ -38,6 +38,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.context.MgnlContext;
@@ -79,7 +80,7 @@ public class AuditLoggingUtilTest extends TestCase {
     public void testLogsLoginSuccesses() {
         final User user = createStrictMock(User.class);
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
-        final LoginResult loginResult = new LoginResult(LoginResult.STATUS_SUCCEEDED, user, null);
+        final LoginResult loginResult = new LoginResult(LoginResult.STATUS_SUCCEEDED, PermissionUtil.createSubject(user));
         expect(request.getParameter("mgnlUserId")).andReturn("greg");
         expect(request.getRemoteAddr()).andReturn("127.0.0.1");
 

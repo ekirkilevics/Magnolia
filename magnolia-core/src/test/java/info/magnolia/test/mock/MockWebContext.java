@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import javax.security.auth.Subject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +59,7 @@ import info.magnolia.context.WebContext;
 public class MockWebContext extends MockContext implements WebContext, UserContext {
 
     private AggregationState aggregationState = new MockAggregationState();
+    private Subject subject;
     private User user;
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -123,13 +125,23 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
     }
 
     @Override
-    public void login(User user) {
-        this.user = user;
+    public void login(Subject subject) {
+        this.subject = subject;
     }
 
     @Override
     public void logout() {
         this.user = null;
+    }
+
+    @Override
+    public Subject getSubject() {
+        return subject;
+    }
+
+    @Override
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     @Override

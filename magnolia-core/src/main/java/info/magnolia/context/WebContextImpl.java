@@ -246,7 +246,7 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
         if (session != null) {
             session.invalidate();
         }
-        login(Security.getAnonymousUser());
+        login(Security.getAnonymousSubject());
     }
 
     /**

@@ -109,10 +109,10 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
         Subject subject = new Subject(false, principalSet, new HashSet(), new HashSet());
         expect(context.getUser()).andReturn(user).anyTimes();
         expect(user.getName()).andReturn("admin").anyTimes();
-        expect(user.getSubject()).andReturn(subject).anyTimes();
         expect(principals.get("magnolia_website")).andReturn(acl).anyTimes();
         expect(acl.getList()).andReturn(new ArrayList()).anyTimes();
         replay(context, user, registry, principals, acl);
+
         DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(registry, context);
         HierarchyManager hierarchyManager = strategy.getHierarchyManager("magnolia", "website");
         assertNotNull(hierarchyManager);

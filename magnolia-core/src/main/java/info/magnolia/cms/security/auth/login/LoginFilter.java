@@ -34,7 +34,6 @@
 package info.magnolia.cms.security.auth.login;
 
 import info.magnolia.cms.filters.AbstractMgnlFilter;
-import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
 
@@ -75,10 +74,9 @@ public class LoginFilter extends AbstractMgnlFilter {
                 if(request.getSession(false) != null){
                     request.getSession().invalidate();
                 }
-                User user = loginResult.getUser();
-                if (user != null) {
-                    MgnlContext.login(user);
-                    request.getSession(true).setAttribute(Subject.class.getName(), loginResult.getSubject());
+                Subject subject = loginResult.getSubject();
+                if (subject != null) {
+                    MgnlContext.login(subject);
                     AuditLoggingUtil.log(loginResult, request);
                     // do not continue the login handler chain after a successful login ... otherwise previous success will be invalidated by above session wipeout
                     break;

@@ -33,6 +33,13 @@
  */
 package info.magnolia.cms.security;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import javax.security.auth.Subject;
+
+import info.magnolia.cms.security.auth.PrincipalCollectionImpl;
+
 /**
  * Get the current role or user manager.
  * @author philipp
@@ -73,5 +80,29 @@ public class Security {
         return getSecuritySupport().getUserManager(Realm.REALM_SYSTEM.getName()).getSystemUser();
     }
 
+    public static Subject getSystemSubject() {
+        return createSubjectAndPopulate(Security.getSystemUser());
+    }
+
+    public static Subject getAnonymousSubject() {
+        return createSubjectAndPopulate(Security.getAnonymousUser());
+    }
+
+    private static Subject createSubjectAndPopulate(User user) {
+
+        RoleManager roleManager = getRoleManager();
+
+        List<Principal> acls = new ArrayList<Principal>();
+        for (String role : user.getAllRoles()) {
+            acls.addAll(roleManager.getACLs(role).values());
+        }
+
+        PrincipalCollectionImpl principalCollection = new PrincipalCollectionImpl();
+        principalCollection.addAll(acls);
+
+        Subject subject = PermissionUtil.createSubject(user);
+        subject.getPrincipals().add(principalCollection);
+        return subject;
+    }
 
 }

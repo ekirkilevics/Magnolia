@@ -33,10 +33,13 @@
  */
 package info.magnolia.context;
 
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 
 import java.util.Locale;
+
+import javax.security.auth.Subject;
 
 import org.apache.commons.lang.LocaleUtils;
 
@@ -50,8 +53,10 @@ public class UserContextImpl extends AbstractContext implements UserContext {
     private static final long serialVersionUID = 222L;
 
     private static final String SESSION_USER = UserContextImpl.class.getName() + ".user";
+    private static final String SESSION_SUBJECT = Subject.class.getName();
 
     private User user;
+    private Subject subject;
 
     public UserContextImpl() {
 
@@ -82,20 +87,36 @@ public class UserContextImpl extends AbstractContext implements UserContext {
     }
 
     @Override
-    public void login(User user) {
+    public Subject getSubject() {
+        if (subject == null) {
+            subject = (Subject) getAttribute(SESSION_SUBJECT, Context.SESSION_SCOPE);
+            if (subject == null) {
+                subject = Security.getAnonymousSubject();
+            }
+        }
+        return this.subject;
+    }
+
+    @Override
+    public void login(Subject subject) {
+        User user = PermissionUtil.extractUser(subject);
         setLocaleFor(user);
         if(!user.getName().equals(Security.getAnonymousUser().getName())){
+            setAttribute(SESSION_SUBJECT, subject, Context.SESSION_SCOPE);
             setAttribute(SESSION_USER, user, Context.SESSION_SCOPE);
         }
+        this.subject = null;
         this.user = null;
     }
 
     @Override
     public void logout() {
+        removeAttribute(SESSION_SUBJECT, Context.SESSION_SCOPE);
         removeAttribute(SESSION_USER, Context.SESSION_SCOPE);
+        subject = null;
         user = null;
         locale = null;
-        login(Security.getAnonymousUser());
+        login(Security.getAnonymousSubject());
     }
 
     protected void setLocaleFor(User user) {

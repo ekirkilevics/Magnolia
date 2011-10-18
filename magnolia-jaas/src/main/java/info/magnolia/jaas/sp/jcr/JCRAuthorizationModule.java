@@ -36,6 +36,7 @@ package info.magnolia.jaas.sp.jcr;
 import info.magnolia.cms.security.ACLImpl;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.ACL;
@@ -105,7 +106,7 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
 
         // can't obtain SS instance at creation time as repo is not initialized yet and class can't be instantiated.
         SecuritySupport securitySupport = SecuritySupport.Factory.getInstance();
-        user = securitySupport.extractUser(subject);
+        user = PermissionUtil.extractUser(subject);
         // not all jaas modules will support magnolia users
         if(user == null) {
             user = securitySupport.getUserManager().getUser(subject);

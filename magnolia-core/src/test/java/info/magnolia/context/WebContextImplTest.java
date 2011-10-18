@@ -36,15 +36,19 @@ package info.magnolia.context;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.*;
 import static org.junit.Assert.*;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.Realm;
+import info.magnolia.cms.security.RoleManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.test.ComponentsTestUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Locale;
 
+import javax.security.auth.Subject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,6 +66,7 @@ implements Serializable {
 
     // setting the user attribute on the session is done in UserContextImpl, which is why the following constant uses this class' name.
     private static final String SESSION_USER = UserContextImpl.class.getName() + ".user";
+    private static final String SESSION_SUBJECT = Subject.class.getName();
 
     @After
     public void tearDown() throws Exception {
@@ -80,7 +85,11 @@ implements Serializable {
         SecuritySupport securitySupport = createMock(SecuritySupport.class);
         ComponentsTestUtil.setInstance(SecuritySupport.class, securitySupport);
         UserManager userManager = createMock(UserManager.class);
+        RoleManager roleManager = createMock(RoleManager.class);
+        Subject subject = PermissionUtil.createSubject(user);
         User anonymousUser = createMock(User.class);
+
+        // login
         expect(user.getLanguage()).andReturn("en");
         expect(request.getSession(false)).andReturn(session).anyTimes();
         expect(user.getName()).andReturn("toto");
@@ -88,21 +97,36 @@ implements Serializable {
         expect(userManager.getAnonymousUser()).andReturn(anonymousUser);
         expect(anonymousUser.getName()).andReturn("anonymous");
         session.setAttribute(SESSION_USER, user);
+        session.setAttribute(SESSION_SUBJECT, subject);
+
+        // assertSame user
         expect(session.getAttribute(SESSION_USER)).andReturn(user);
+
+        // assertSame subject
+        expect(session.getAttribute(SESSION_SUBJECT)).andReturn(subject);
+
+        // logout
         session.invalidate();
         expect(securitySupport.getUserManager(Realm.REALM_SYSTEM.getName())).andReturn(userManager);
         expect(userManager.getAnonymousUser()).andReturn(anonymousUser);
+        expect(securitySupport.getRoleManager()).andReturn(roleManager);
+        expect(anonymousUser.getAllRoles()).andReturn(new ArrayList<String>());
         expect(anonymousUser.getLanguage()).andReturn("en");
         expect(anonymousUser.getName()).andReturn("anonymous");
         expect(securitySupport.getUserManager("system")).andReturn(userManager);
         expect(userManager.getAnonymousUser()).andReturn(anonymousUser);
         expect(anonymousUser.getName()).andReturn("anonymous");
+
+        // assertSame user
         expect(session.getAttribute(SESSION_USER)).andReturn(anonymousUser);
+
         replay(request, response, servletContext, user, session, securitySupport, userManager, anonymousUser);
+
         WebContextImpl context = (WebContextImpl) newWebContextImpl(request, response, servletContext);
-        context.login(user);
+        context.login(subject);
         assertEquals(Locale.ENGLISH, context.getLocale());
         assertSame(user, context.getUser());
+        assertSame(subject, context.getSubject());
         context.logout();
         assertSame(anonymousUser, context.getUser());
         verify(request, response, servletContext, user, session, securitySupport, userManager, anonymousUser);

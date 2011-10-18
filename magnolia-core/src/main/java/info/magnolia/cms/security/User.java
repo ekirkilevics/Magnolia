@@ -37,8 +37,6 @@ import java.io.Serializable;
 import java.security.Principal;
 import java.util.Collection;
 
-import javax.security.auth.Subject;
-
 /**
  * Represents a magnolia user.
  *
@@ -135,17 +133,4 @@ public interface User extends Principal, Serializable {
      */
     Collection<String> getAllRoles();
 
-    /**
-     * Returns the jaas subject if available.
-     * @deprecated
-     */
-    @Deprecated
-    Subject getSubject();
-
-    /**
-     * The jass login handler will set the subject.
-     * @deprecated
-     */
-    @Deprecated
-    void setSubject(Subject subject);
 }

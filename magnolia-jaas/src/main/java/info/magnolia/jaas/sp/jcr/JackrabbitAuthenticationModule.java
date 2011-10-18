@@ -34,7 +34,7 @@
 package info.magnolia.jaas.sp.jcr;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
+import info.magnolia.context.SystemContext;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -51,7 +51,6 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,12 +76,6 @@ public class JackrabbitAuthenticationModule implements LoginModule, Serializable
     @Override
     public boolean login() throws LoginException {
 
-        WebContext ctx = MgnlContext.getWebContextOrNull();
-        HttpSession session = null;
-        if (ctx != null) {
-            session = ctx.getRequest().getSession(false);
-        }
-
         if (this.callbackHandler == null) {
             throw new LoginException("Error: no CallbackHandler available");
         }
@@ -100,7 +93,7 @@ public class JackrabbitAuthenticationModule implements LoginModule, Serializable
             throw new LoginException(ce.getCallback().toString() + " not available");
         }
 
-        if (ctx == null || session == null) {
+        if (!MgnlContext.hasInstance() || (MgnlContext.getInstance() instanceof SystemContext)) {
             if (isAdmin()) {
                 this.subject.getPrincipals().add(new MagnoliaJRAdminPrincipal("admin"));
                 log.debug("logged in as admin ... repo init or authentication check");
@@ -109,7 +102,8 @@ public class JackrabbitAuthenticationModule implements LoginModule, Serializable
             // TODO: initialization, workflow, scheduled jobs etc ... we need to either delegate to our chain or replay same things here
             return false;
         }
-        Subject mgnlChainSubject = (Subject) session.getAttribute(Subject.class.getName());
+
+        Subject mgnlChainSubject = MgnlContext.getSubject();
         if (mgnlChainSubject == null) {
             throw new LoginException("invalid setup or deserialization error");
         }

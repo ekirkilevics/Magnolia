@@ -68,7 +68,7 @@ public class PermissionUtil {
      * @param request
      * @return
      */
-    public static List<Permission> getPermissions(Subject subject, String workspace) {
+    public static List<Permission> getPermissions(Subject subject, String name) {
         if (subject == null) {
             // FIXME: this needs to be cached if we really run anonymous w/o session
             log.warn("no session == running as anonymous");
@@ -78,7 +78,7 @@ public class PermissionUtil {
             List<Permission> permissions = new ArrayList<Permission>();
             for (String role : roles) {
                 for (ACL acl : roleMan.getACLs(role).values()) {
-                    if (workspace.equals(acl.getWorkspace())) {
+                    if (name.equals(acl.getWorkspace())) {
                         // merge URI permissions from all roles
                         permissions.addAll(acl.getList());
                     }
@@ -94,7 +94,7 @@ public class PermissionUtil {
                 Principal maybeAcl = iter.next();
                 if (maybeAcl instanceof ACL) {
                     ACL acl = ((ACL) maybeAcl);
-                    if (workspace.equals(acl.getRepository())) {
+                    if (name.equals(acl.getRepository())) {
                         permissions = acl.getList();
                         break;
                     }
@@ -183,5 +183,21 @@ public class PermissionUtil {
             permissions.append(Session.ACTION_SET_PROPERTY);
         }
         return permissions.toString();
+    }
+
+    public static Subject createSubject(User user) {
+        Subject subject = new Subject();
+        subject.getPrincipals().add(user);
+        return subject;
+    }
+
+    /**
+     * Extracts magnolia user from the list of principals.
+     * @param subject
+     * @return
+     */
+    public static User extractUser(Subject subject) {
+        Iterator<User> iterator = subject.getPrincipals(User.class).iterator();
+        return iterator.hasNext() ? iterator.next() : null;
     }
 }

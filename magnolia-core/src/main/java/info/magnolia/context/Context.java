@@ -45,6 +45,7 @@ import java.util.Map;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.security.auth.Subject;
 
 
 /**
@@ -94,6 +95,8 @@ public interface Context extends org.apache.commons.chain.Context {
      */
     public User getUser();
 
+    public Subject getSubject();
+
     /**
      * @param locale
      */
@@ -124,11 +127,9 @@ public interface Context extends org.apache.commons.chain.Context {
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId);
 
     /**
-     * Get access manager for the specified repository on default workspace.
-     * @param repositoryId
-     * @return access manager
+     * Get access manager for a resource, usually a workspace.
      */
-    public AccessManager getAccessManager(String repositoryId);
+    public AccessManager getAccessManager(String name);
 
     /**
      * Get access manager for the specified repository on the specified workspace.

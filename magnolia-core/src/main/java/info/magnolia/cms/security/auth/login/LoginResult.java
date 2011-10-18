@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.security.auth.login;
 
-import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 
 import javax.security.auth.Subject;
@@ -66,8 +65,6 @@ public class LoginResult {
 
     private final int status;
 
-    private User user;
-
     private LoginException loginException;
 
     private Subject subject;
@@ -89,18 +86,13 @@ public class LoginResult {
         this.loginException = loginException;
     }
 
-    public LoginResult(int status, User user, Subject subject) {
+    public LoginResult(int status, Subject subject) {
         this.status = status;
-        this.user = user;
         this.subject = subject;
     }
 
     public int getStatus() {
         return this.status;
-    }
-
-    public User getUser() {
-        return this.user;
     }
 
     public Subject getSubject() {

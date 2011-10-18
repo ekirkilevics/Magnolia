@@ -33,7 +33,7 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.security.User;
+import javax.security.auth.Subject;
 
 /**
  * User aware context.
@@ -41,6 +41,8 @@ import info.magnolia.cms.security.User;
  * @version $Id: $
  */
 public interface UserContext extends Context {
-    void login(User user);
+
+    void login(Subject subject);
+
     void logout();
 }
