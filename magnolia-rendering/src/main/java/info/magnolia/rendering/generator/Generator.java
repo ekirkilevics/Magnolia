@@ -38,7 +38,7 @@ import info.magnolia.rendering.template.AutoGenerationConfiguration;
 /**
  * TODO: write javadoc.
  * @version $Id$
- *
+ * @param <C>
  */
 public interface Generator<C extends AutoGenerationConfiguration> {
     void generate(C configuration);
