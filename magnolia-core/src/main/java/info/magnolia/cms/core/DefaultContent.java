@@ -43,6 +43,7 @@ import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.logging.AuditLoggingUtil;
+import info.magnolia.test.mock.MockContent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -700,6 +701,14 @@ public class DefaultContent extends AbstractContent {
     @Override
     public Workspace getWorkspace() throws RepositoryException {
         return node.getSession().getWorkspace();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof MockContent)) {
+            return false;
+        }
+        return getJCRNode().equals(((MockContent)obj).getJCRNode());
     }
 
     protected HierarchyManager createHierarchyManager(Session session) {

@@ -189,6 +189,13 @@ public class MockNodeTest {
         assertEquals(propertyValue, property.getString());
     }
 
+    @Test
+    public void testGetPath() throws Exception {
+        final Node child = root.addNode("child");
+        final Node grandChild = child.addNode("childOfChild");
+
+        assertEquals("/child/childOfChild", grandChild.getPath());
+    }
 
     @Test
     public void testSetPropertyWithStringAndBoolean() throws Exception {
