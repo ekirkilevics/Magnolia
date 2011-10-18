@@ -138,8 +138,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private Node createNewAreaNode() {
         Node newAreaNode = null;
         try {
-            newAreaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA, true);
-            NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA,true);
+            newAreaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA);
+            newAreaNode.addNode(MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
+            newAreaNode.getSession().save();
         } catch (AccessDeniedException e) {
             new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
         } catch (PathNotFoundException e) {
