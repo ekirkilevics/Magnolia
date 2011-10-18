@@ -60,7 +60,9 @@ import javax.jcr.version.VersionException;
 import org.apache.jackrabbit.commons.AbstractProperty;
 
 /**
- * Mock-impl. for javax.jcr.Property - basically wrapping a MockValue.
+ * Mock-impl. for javax.jcr.Property - basically wrapping a MockValue. It's currently overriding all setValue methods
+ * from AbstractProperty. This has the advantage, we don't need a parent (Node) set. Not sure how we could benefit from
+ * delegating the set to the Node.
  *
  * @version $Id$
  */
@@ -194,7 +196,6 @@ public class MockProperty extends AbstractProperty {
         return false;
     }
 
-
     @Override
     public boolean isMultiple() throws RepositoryException {
         // Multiple not supported (yet)
@@ -246,6 +247,36 @@ public class MockProperty extends AbstractProperty {
 
     @Override
     public void setValue(Binary value) throws RepositoryException {
+        setValueFromObject(value);
+    }
+
+    @Override
+    public void setValue(boolean value) throws RepositoryException {
+        setValueFromObject(value);
+    }
+
+    @Override
+    public void setValue(Calendar value) throws RepositoryException {
+        setValueFromObject(value);
+    }
+
+    @Override
+    public void setValue(double value) throws RepositoryException {
+        setValueFromObject(value);
+    }
+
+    @Override
+    public void setValue(InputStream value) throws RepositoryException {
+        setValueFromObject(value);
+    }
+
+    @Override
+    public void setValue(long value) throws RepositoryException {
+        setValueFromObject(value);
+    }
+
+    @Override
+    public void setValue(String value) throws RepositoryException {
         setValueFromObject(value);
     }
 

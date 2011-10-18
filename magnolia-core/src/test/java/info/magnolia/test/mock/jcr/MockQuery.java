@@ -31,7 +31,9 @@
  * intact.
  *
  */
-package info.magnolia.test.mock;
+package info.magnolia.test.mock.jcr;
+
+import info.magnolia.test.mock.MockQueryResult;
 
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
@@ -50,8 +52,8 @@ import javax.jcr.version.VersionException;
 
 /**
  * Mock Implementation of the JCR Query.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
 public class MockQuery implements Query {
 
@@ -68,8 +70,7 @@ public class MockQuery implements Query {
 
     @Override
     public void bindValue(String varName, Value value) throws IllegalArgumentException, RepositoryException {
-        // TODO Auto-generated method stub
-
+        // do nothing for now
     }
 
     @Override
@@ -79,13 +80,11 @@ public class MockQuery implements Query {
 
     @Override
     public String[] getBindVariableNames() throws RepositoryException {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public String getLanguage() {
-        // TODO Auto-generated method stub
         return null;
     }
 

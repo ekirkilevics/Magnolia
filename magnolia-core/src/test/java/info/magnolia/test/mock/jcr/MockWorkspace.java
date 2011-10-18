@@ -33,7 +33,6 @@
  */
 package info.magnolia.test.mock.jcr;
 
-import info.magnolia.test.mock.MockQueryManager;
 
 import java.io.InputStream;
 

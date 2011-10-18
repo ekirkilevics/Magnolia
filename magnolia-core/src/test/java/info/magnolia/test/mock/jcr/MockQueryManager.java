@@ -31,7 +31,8 @@
  * intact.
  *
  */
-package info.magnolia.test.mock;
+package info.magnolia.test.mock.jcr;
+
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -43,8 +44,8 @@ import javax.jcr.query.qom.QueryObjectModelFactory;
 
 /**
  * Mock implementation of the JCR Query Manager.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
 public class MockQueryManager implements QueryManager {
 
@@ -61,20 +62,16 @@ public class MockQueryManager implements QueryManager {
 
     @Override
     public QueryObjectModelFactory getQOMFactory() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Query getQuery(Node node) throws InvalidQueryException, RepositoryException {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public String[] getSupportedQueryLanguages() throws RepositoryException {
-        // TODO Auto-generated method stub
         return null;
     }
-
 }

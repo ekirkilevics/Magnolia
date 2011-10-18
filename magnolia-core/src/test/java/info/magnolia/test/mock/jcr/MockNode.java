@@ -70,7 +70,8 @@ import org.apache.jackrabbit.commons.AbstractNode;
 import org.apache.jackrabbit.util.ChildrenCollectorFilter;
 
 /**
- * Mock implementation of a Node. Initially gets a random generated UUID set.
+ * Mock implementation of a Node. Initially gets a random generated UUID set. It's currently overriding all setValue methods
+ * from {@link AbstractNode} . This has the advantage, we don't need a session and a value-factory.
  *
  * @version $Id$
  */
