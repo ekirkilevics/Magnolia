@@ -859,6 +859,59 @@ public class TemplatingFunctionsTest {
          assertNull(property2);
      }
 
+     @Test
+     public void testExternalLinkNoProtocol(){
+         // GIVEN
+         topPage.setProperty("link", "www.external.ch");
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         String link = functions.getExternalLink(topPage, "link");
+
+         // THEN
+         assertEquals("http://www.external.ch", link);
+     }
+
+     @Test
+     public void testExternalLinkWithProtocol(){
+         // GIVEN
+         topPage.setProperty("link", "http://www.external.ch");
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         String link = functions.getExternalLink(topPage, "link");
+
+         // THEN
+         assertEquals("http://www.external.ch", link);
+     }
+
+     @Test
+     public void testExternalLinkTitleWithTitle(){
+         // GIVEN
+         topPage.setProperty("link", "www.external.ch");
+         topPage.setProperty("linkTitle", "Link Title");
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         String linkTitle = functions.getExternalLinkTitle(topPage, "link", "linkTitle");
+
+         // THEN
+         assertEquals("Link Title", linkTitle);
+     }
+
+     @Test
+     public void testExternalLinkTitleNoTitleSet(){
+         // GIVEN
+         topPage.setProperty("link", "www.external.ch");
+         TemplatingFunctions functions = new TemplatingFunctions();
+
+         // WHEN
+         String linkTitle = functions.getExternalLinkTitle(topPage, "link", "linkTitle");
+
+         // THEN
+         assertEquals("http://www.external.ch", linkTitle);
+     }
+
 
     /**
      * Checks each Node of the list @param nodeList with the passed nodeNames in @param originNodeNames.
