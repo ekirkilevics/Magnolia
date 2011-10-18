@@ -93,11 +93,6 @@ public class DefaultContent extends AbstractContent {
     protected Node node;
 
     /**
-     * root node.
-     */
-    private Node rootNode;
-
-    /**
      * node metadata.
      */
     private MetaData metaData;
@@ -118,8 +113,7 @@ public class DefaultContent extends AbstractContent {
      * @throws RepositoryException if an error occurs
      */
     protected DefaultContent(Node rootNode, String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        this.setRootNode(rootNode);
-        this.setNode(this.rootNode.getNode(path));
+        this.setNode(rootNode.getNode(path));
     }
 
     /**
@@ -152,8 +146,7 @@ public class DefaultContent extends AbstractContent {
     throws PathNotFoundException,
     RepositoryException,
     AccessDeniedException {
-        this.setRootNode(rootNode);
-        this.setNode(this.rootNode.addNode(path, contentType));
+        this.setNode(rootNode.addNode(path, contentType));
         // add mix:lockable as default for all nodes created using this manager
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
         // MAGNOLIA-1518
@@ -167,13 +160,6 @@ public class DefaultContent extends AbstractContent {
     protected void setNode(Node node) throws RepositoryException {
         // Default content takes care of filtering jcr properties on its own
         this.node = NodeUtil.deepUnwrap(node, JCRPropertiesFilteringNodeWrapper.class);
-    }
-
-    /**
-     * @param node
-     */
-    protected void setRootNode(Node node) {
-        this.rootNode = node;
     }
 
     @Override
@@ -708,7 +694,8 @@ public class DefaultContent extends AbstractContent {
         if (obj == null || !(obj instanceof MockContent)) {
             return false;
         }
-        return getJCRNode().equals(((MockContent)obj).getJCRNode());
+        MockContent otherContent = (MockContent) obj;
+        return getJCRNode().equals(otherContent.getJCRNode());
     }
 
     protected HierarchyManager createHierarchyManager(Session session) {
