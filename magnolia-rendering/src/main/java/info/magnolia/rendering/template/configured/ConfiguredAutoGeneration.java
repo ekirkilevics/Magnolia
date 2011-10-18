@@ -31,13 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template;
+package info.magnolia.rendering.template.configured;
+
+import info.magnolia.rendering.generator.Generator;
+import info.magnolia.rendering.template.AutoGenerationConfiguration;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Holds information about component inheritance.
+ * Implementation of {@link AutoGenerationConfiguration}.
  * @version $Id$
  *
  */
-public interface Inheritance {
-    boolean isEnabled();
+public class ConfiguredAutoGeneration implements AutoGenerationConfiguration {
+    private Map<String, Object> content = new HashMap<String, Object>();
+    private Class<Generator<AutoGenerationConfiguration>> generatorClass;
+
+    @Override
+    public Map<String, Object> getContent() {
+        return content;
+    }
+
+    @Override
+    public Class<Generator<AutoGenerationConfiguration>> getGeneratorClass() {
+        return generatorClass;
+    }
+
+    public void setContent(Map<String, Object> content) {
+        this.content = content;
+    }
+
+    public void setGeneratorClass(Class<Generator<AutoGenerationConfiguration>> generatorClass) {
+        this.generatorClass = generatorClass;
+    }
+
 }

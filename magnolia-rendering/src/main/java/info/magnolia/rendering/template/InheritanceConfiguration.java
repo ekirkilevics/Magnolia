@@ -31,24 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template.configured;
-
-import info.magnolia.rendering.template.InheritanceConfiguration;
+package info.magnolia.rendering.template;
 
 /**
- * An holder for inheritance properties defined in the configuration.
+ * Holds information about component inheritance.
  * @version $Id$
+ *
  */
-public class ConfiguredInheritance implements InheritanceConfiguration {
-    private boolean enabled;
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
+public interface InheritanceConfiguration {
+    boolean isEnabled();
 }

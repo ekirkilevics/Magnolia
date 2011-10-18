@@ -33,6 +33,7 @@
  */
 package info.magnolia.rendering.template;
 
+
 import java.util.Map;
 
 
@@ -54,5 +55,7 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
 
     String getType();
 
-    Inheritance getInheritance();
+    InheritanceConfiguration getInheritance();
+
+    AutoGenerationConfiguration getAutoGeneration();
 }

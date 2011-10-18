@@ -31,24 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template.configured;
+package info.magnolia.rendering.template;
 
-import info.magnolia.rendering.template.InheritanceConfiguration;
+import info.magnolia.rendering.generator.Generator;
+
+import java.util.Map;
 
 /**
- * An holder for inheritance properties defined in the configuration.
+ * TODO write javadoc.
  * @version $Id$
+ *
  */
-public class ConfiguredInheritance implements InheritanceConfiguration {
-    private boolean enabled;
+public interface AutoGenerationConfiguration {
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
+    Map<String, Object> getContent();
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
+    Class<Generator<AutoGenerationConfiguration>> getGeneratorClass();
 }
