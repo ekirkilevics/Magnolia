@@ -48,6 +48,7 @@ import java.util.TimeZone;
 
 import javax.jcr.Binary;
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -327,4 +328,20 @@ public class PropertyUtil {
         }
     }
 
+    /**
+     * Return the Property relative to the Node.
+     * Return null in case of Exception.
+     */
+    public static Property getProperty(Node node, String relativePath) {
+        try {
+            return node.getProperty(relativePath);
+        }
+        catch (PathNotFoundException e) {
+            log.error("Property Access Exception ",e);
+        }
+        catch (RepositoryException e) {
+            log.error("Property Access Exception ",e);
+        }
+        return null;
+    }
 }
