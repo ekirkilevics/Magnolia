@@ -33,6 +33,8 @@
  */
 package info.magnolia.jcr.util;
 
+import static org.mockito.Mockito.*;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -41,6 +43,7 @@ import info.magnolia.test.mock.jcr.MockValue;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
+import javax.jcr.Binary;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
@@ -182,5 +185,11 @@ public class PropertyUtilTest {
         root.setProperty(PROPERTY_NAME+"xx",value);
         boolean res = PropertyUtil.getBoolean(root, PROPERTY_NAME, defaultValue);
         assertEquals(defaultValue,res);
+    }
+    @Test
+    public void testSetPropertyToBinary() throws RepositoryException {
+        final Object value = mock(Binary.class);
+        PropertyUtil.setProperty(root, PROPERTY_NAME, value);
+        assertEquals(value, root.getProperty(PROPERTY_NAME).getBinary());
     }
 }

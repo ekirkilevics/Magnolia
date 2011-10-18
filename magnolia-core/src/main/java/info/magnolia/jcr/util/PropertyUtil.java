@@ -199,6 +199,9 @@ public class PropertyUtil {
         if (obj instanceof Calendar) {
             return PropertyType.DATE;
         }
+        if (obj instanceof Binary) {
+            return PropertyType.BINARY;
+        }
         if (obj instanceof InputStream) {
             return PropertyType.BINARY;
         }
