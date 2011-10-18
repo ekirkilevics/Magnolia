@@ -33,10 +33,12 @@
  */
 package info.magnolia.objectfactory.configuration;
 
+import info.magnolia.objectfactory.ComponentFactory;
+
 
 /**
- * Configuration for a provider that acts as a factory, supported types are
- * {@link info.magnolia.objectfactory.ComponentFactory} and {@link javax.inject.Provider}.
+ * Configuration for a provider that acts as a factory, supported types are {@link ComponentFactory} and
+ * {@link javax.inject.Provider}.
  *
  * @param <T> the type
  * @version $Id$
@@ -48,7 +50,7 @@ public class ProviderConfiguration<T> extends ComponentConfiguration<T> {
     public ProviderConfiguration() {
     }
 
-    public ProviderConfiguration(Class<T> type, Class<?> providerClass) {
+    public ProviderConfiguration(Class<T> type, Class<? extends ComponentFactory<T>> providerClass) {
         super(type);
         this.providerClass = providerClass;
     }
@@ -57,7 +59,7 @@ public class ProviderConfiguration<T> extends ComponentConfiguration<T> {
         return providerClass;
     }
 
-    public void setProviderClass(Class<?> providerClass) {
+    public void setProviderClass(Class<? extends ComponentFactory<T>> providerClass) {
         this.providerClass = providerClass;
     }
 }

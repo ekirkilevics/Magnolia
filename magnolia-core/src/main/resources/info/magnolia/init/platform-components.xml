@@ -3,7 +3,7 @@
   <id>platform</id>
   <component>
     <type>info.magnolia.module.ModuleManager</type>
-    <implementation>info.magnolia.module.ModuleManagerImpl</implementation>
+    <implementation>info.magnolia.objectfactory.guice.GuiceModuleManager</implementation>
   </component>
   <component>
     <type>info.magnolia.module.ModuleRegistry</type>

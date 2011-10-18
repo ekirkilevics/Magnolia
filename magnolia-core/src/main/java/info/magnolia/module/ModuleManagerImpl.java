@@ -59,6 +59,7 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -84,6 +85,9 @@ public class ModuleManagerImpl implements ModuleManager {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ModuleManagerImpl.class);
 
+    private static final int DEFAULT_MODULE_OBSERVATION_DELAY = 5000;
+    private static final int DEFAULT_MODULE_OBSERVATION_MAX_DELAY = 30000;
+
     // TODO : expose a method to retrieve a given module's node ?
     // TODO : see InstallContextImpl.getOrCreateCurrentModuleConfigNode()
     static final String MODULES_NODE = "modules";
@@ -101,7 +105,6 @@ public class ModuleManagerImpl implements ModuleManager {
     private final ModuleRegistry registry;
     private final ModuleDefinitionReader moduleDefinitionReader;
     private final DependencyChecker dependencyChecker;
-    private final ModuleLifecycleEventDispatcher moduleLifecycleEventDispatcher = new ModuleLifecycleEventDispatcher();
 
     /**
      * @deprecated since 4.5 - use IoC - temporarily kept for tests ?
@@ -320,9 +323,35 @@ public class ModuleManagerImpl implements ModuleManager {
                     moduleNodes.add(moduleNode);
                 }
 
-                startModule(moduleInstance, moduleDefinition, lifecycleContext);
+                if (moduleInstance != null) {
+                    // TODO MAGNOLIA-3538 populateModuleInstance(moduleInstance, moduleProperties);
 
-                moduleLifecycleEventDispatcher.fireStarted(moduleDefinition, moduleInstance);
+                    // TODO - move this to ModuleAdapterFactory.ModuleAdapter as well
+                    startModule(moduleInstance, moduleDefinition, lifecycleContext);
+
+                    // This is now done in info.magnolia.objectfactory.pico.ModuleAdapterFactory.ModuleAdapter observing the config,
+                    // TODO MAGNOLIA-3538 populateModuleInstance(moduleInstance, moduleProperties);
+                    /*
+                    ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, "/modules/" + moduleName + "/config", new EventListener() {
+
+                        public void onEvent(EventIterator events) {
+                            final Object moduleInstance = registry.getModuleInstance(moduleName);
+                            final ModuleDefinition moduleDefinition = registry.getDefinition(moduleName);
+
+                            // TODO we should keep only one instance of the lifecycle context
+                            final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
+                            lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_MODULE_RESTART);
+                            MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                                public void doExec() {
+                                    stopModule(moduleInstance, moduleDefinition, lifecycleContext);
+                                    // populateModuleInstance(moduleInstance, moduleProperties);
+                                    startModule(moduleInstance, moduleDefinition, lifecycleContext);
+                                }
+                            }, true);
+                        }
+                    }, DEFAULT_MODULE_OBSERVATION_DELAY, DEFAULT_MODULE_OBSERVATION_MAX_DELAY);
+                    */
+                }
             }
             catch (Throwable th) {
                 log.error("Can't start module " + moduleName, th);
@@ -366,21 +395,27 @@ public class ModuleManagerImpl implements ModuleManager {
         }
     }
 
-    public synchronized void restartModule(String moduleName, ModuleRestartOperation restartOperation) {
+    /**
+     * @deprecated since 4.5 - we want to introduce interfaces for the few properties managed here, or dropped support for it altogether.
+     */
+    protected void populateModuleInstance(Object moduleInstance, Map<String, Object> moduleProperties) {
+        try {
+            BeanUtils.populate(moduleInstance, moduleProperties);
+        }
+        catch (Throwable e) {
+            log.error("Can't initialize module " + moduleInstance + ": " + e.getMessage(), e);
+        }
 
-        ModuleDefinition moduleDefinition = getModuleDefinition(moduleName);
-        Object moduleInstance = registry.getModuleInstance(moduleName);
-
-        ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
-        lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_MODULE_RESTART);
-
-        stopModule(moduleInstance, moduleDefinition, lifecycleContext);
-
-        restartOperation.exec(moduleDefinition, moduleInstance);
-
-        startModule(moduleInstance, moduleDefinition, lifecycleContext);
-
-        moduleLifecycleEventDispatcher.fireRestarted(moduleDefinition, moduleInstance);
+        /** This is now done in info.magnolia.objectfactory.pico.ModuleAdapterFactory.ModuleAdapter
+        if (moduleProperties.get("configNode") != null) {
+            try {
+                Content2BeanUtil.setProperties(moduleInstance, (Content) moduleProperties.get("configNode"), true);
+            }
+            catch (Content2BeanException e) {
+                log.error("Wasn't able to configure module " + moduleInstance + ": " + e.getMessage(), e);
+            }
+        }
+         */
     }
 
     @Override
@@ -394,53 +429,11 @@ public class ModuleManagerImpl implements ModuleManager {
             Collections.reverse(shutdownOrder);
             for (ModuleDefinition md : shutdownOrder) {
                 Object module = registry.getModuleInstance(md.getName());
-                stopModule(module, md, lifecycleContext);
-                moduleLifecycleEventDispatcher.fireStopped(md, module);
+                if (module instanceof ModuleLifecycle) {
+                    stopModule(module, md, lifecycleContext);
+                }
+
             }
-        }
-    }
-
-    @Override
-    public void addListener(ModuleLifecycleListener listener) {
-        moduleLifecycleEventDispatcher.addListener(listener);
-    }
-
-    @Override
-    public void addListener(String moduleName, ModuleLifecycleListener listener) {
-        moduleLifecycleEventDispatcher.addListener(moduleName, listener);
-    }
-
-    @Override
-    public void removeListener(ModuleLifecycleListener listener) {
-        moduleLifecycleEventDispatcher.removeListener(listener);
-    }
-
-    private ModuleDefinition getModuleDefinition(String moduleName) {
-        List<ModuleDefinition> moduleDefinitions =  orderedModuleDescriptors;
-        for (ModuleDefinition moduleDefinition : moduleDefinitions) {
-            if (moduleDefinition.getName().equals(moduleName)) {
-                return moduleDefinition;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @return null if the module doesn't have a module class defined
-     * @throws RuntimeException if the class cannot be found
-     */
-    public Class<?> getModuleClass(String moduleName) {
-
-        ModuleDefinition moduleDefinition = getModuleDefinition(moduleName);
-
-        if (moduleDefinition == null || StringUtils.isEmpty(moduleDefinition.getClassName())) {
-            return null;
-        }
-
-        try {
-            return Classes.getClassFactory().forName(moduleDefinition.getClassName());
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Module class not found: " + moduleDefinition.getClassName(), e);
         }
     }
 
