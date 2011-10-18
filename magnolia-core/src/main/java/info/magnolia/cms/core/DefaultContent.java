@@ -691,7 +691,7 @@ public class DefaultContent extends AbstractContent {
     @Override
     public HierarchyManager getHierarchyManager() {
         try {
-            return new DefaultHierarchyManager(node.getSession());
+            return createHierarchyManager(node.getSession());
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
         }
@@ -700,6 +700,10 @@ public class DefaultContent extends AbstractContent {
     @Override
     public Workspace getWorkspace() throws RepositoryException {
         return node.getSession().getWorkspace();
+    }
+
+    protected HierarchyManager createHierarchyManager(Session session) {
+        return new DefaultHierarchyManager(session);
     }
 
     protected boolean hasBinaryNode(String name) throws RepositoryException {

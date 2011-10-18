@@ -200,7 +200,7 @@ public class MockSession extends AbstractSession {
 
     @Override
     public String getUserID() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return "admin";
     }
 
     @Override

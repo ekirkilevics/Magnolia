@@ -35,8 +35,10 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultHierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 
@@ -84,6 +86,16 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
             throw new RuntimeRepositoryException(e);
         }
     }
+
+    @Override
+    public Content createContent(String path, String label, String contentType) throws PathNotFoundException,
+    RepositoryException, AccessDeniedException {
+        Node parent = NodeUtil.createPath(getJcrSession().getRootNode(), path, ItemType.CONTENTNODE.getSystemName());
+        Content content = wrapAsContent(parent, label, contentType);
+//        setMetaData(content.getMetaData());
+        return content;
+    }
+
 
     @Override
     protected Content wrapAsContent(Node node) {

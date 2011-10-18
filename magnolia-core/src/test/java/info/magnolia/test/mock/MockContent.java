@@ -35,6 +35,7 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
@@ -56,6 +57,7 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Workspace;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -316,6 +318,11 @@ public class MockContent extends DefaultContent {
     @Override
     protected Content wrapAsContent(Node node, String name, String contentType) throws AccessDeniedException, PathNotFoundException, RepositoryException {
         return new MockContent((MockNode) node, name, contentType);
+    }
+
+    @Override
+    protected HierarchyManager createHierarchyManager(Session session) {
+        return new MockHierarchyManager(session);
     }
 
     @Override

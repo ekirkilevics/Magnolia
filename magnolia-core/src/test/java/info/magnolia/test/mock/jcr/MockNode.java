@@ -162,7 +162,7 @@ public class MockNode extends AbstractNode {
 
     @Override
     public boolean canAddMixin(String mixinName) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return !StringUtils.isEmpty(mixinName);
     }
 
     @Override
