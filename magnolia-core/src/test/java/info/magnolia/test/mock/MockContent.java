@@ -192,7 +192,14 @@ public class MockContent extends DefaultContent {
             //&& type != PropertyType.BINARY){
             // binaries might have been created via property format or import, so we currently only have them as MockContent instances in the system
             // todo - better fix and/or remove them from child nodes ?
-            return new NonExistingNodeData(getParent(), name);
+            Content parent;
+            try {
+                parent = getParent();
+            } catch (ItemNotFoundException e) {
+                // that's ok - we use null then
+                parent = null;
+            }
+            return new NonExistingNodeData(parent, name);
         }
         else{
             NodeData nd;
