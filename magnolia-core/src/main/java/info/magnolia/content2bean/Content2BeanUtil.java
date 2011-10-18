@@ -145,7 +145,7 @@ public class Content2BeanUtil {
      * @deprecated since 4.5 - only used in tests - use {@link Content2Bean}
      */
     public static Object toBean(Content node, final Class defaultClass) throws Content2BeanException {
-        return toBean(node, false, new DefaultClassTransformer( defaultClass));
+        return toBean(node, false, defaultClass);
     }
 
     /**
@@ -153,7 +153,15 @@ public class Content2BeanUtil {
      * @deprecated since 4.5 - TODO used in FilterManagerImpl, ParagraphManager and TemplateManager - use {@link Content2Bean}
      */
     public static Object toBean(Content node, boolean recursive, final Class defaultClass) throws Content2BeanException {
-        return toBean(node, recursive, new DefaultClassTransformer(defaultClass));
+        return toBean(node, recursive, new Content2BeanTransformerImpl(){
+            @Override
+            protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
+                if(resolvedType==null && state.getLevel() == 1){
+                    return typeMapping.getTypeDescriptor(defaultClass);
+                }
+                return resolvedType;
+            }
+        });
     }
 
     /**
@@ -245,8 +253,16 @@ public class Content2BeanUtil {
     /**
      * @deprecated since 4.5 - TODO - only used locally - use {@link Content2Bean}
      */
-    public static Object setProperties(Object bean, Content node, boolean recursive, Class defaultClass) throws Content2BeanException {
-        return setProperties(bean, node, recursive, new DefaultClassTransformer( defaultClass));
+    public static Object setProperties(Object bean, Content node, boolean recursive, final Class defaultClass) throws Content2BeanException {
+        return setProperties(bean, node, recursive, new Content2BeanTransformerImpl(){
+            @Override
+            protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
+                if(resolvedType==null && state.getLevel() == 2){
+                    return typeMapping.getTypeDescriptor(defaultClass);
+                }
+                return resolvedType;
+            }
+        });
     }
 
     /**
