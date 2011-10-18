@@ -116,11 +116,10 @@ public class MockUtil {
     /**
      * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, InputStream)} instead.
      */
-    public static MockHierarchyManager createHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
+    public static MockHierarchyManager createHierarchyManager(String workspace, InputStream propertiesStream) throws IOException, RepositoryException {
         Content root = new MockContent("jcr:root");
-        // TODO dlipp - check whether we have to set UUID here (done in old code)
         createContent(root, propertiesStream);
-        MockSession session = new MockSession(repository);
+        MockSession session = new MockSession(workspace);
         session.setRootNode((MockNode) root.getJCRNode());
         return new MockHierarchyManager(root.getJCRNode().getSession());
     }
