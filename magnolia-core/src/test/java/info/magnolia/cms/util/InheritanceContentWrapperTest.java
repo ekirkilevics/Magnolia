@@ -36,6 +36,8 @@ package info.magnolia.cms.util;
 import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.NonExistingNodeData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
@@ -74,7 +76,9 @@ public class InheritanceContentWrapperTest {
         setUpContent("testPropertyInheritance");
         Content root = new InheritanceContentWrapper(hm.getRoot());
         // following will call protected method resolveInnerPath() which in turn calls findAnchor()
-        root.getNodeData("whateverThatIsNotOnTheNodeItself");
+        NodeData nd = root.getNodeData("whateverThatIsNotOnTheNodeItself");
+
+        assertTrue(nd instanceof NonExistingNodeData);
     }
 
     @Test
