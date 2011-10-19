@@ -72,6 +72,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public class MockUtil {
 
+    private static final String DEFAULT_TEST_WORKSPACE_NAME = "testSession";
+
     /**
      * Mocks the current and system context.
      */
@@ -110,7 +112,7 @@ public class MockUtil {
      * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, InputStream)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(InputStream propertiesStream) throws IOException, RepositoryException {
-        return createHierarchyManager(null, propertiesStream);
+        return createHierarchyManager(DEFAULT_TEST_WORKSPACE_NAME, propertiesStream);
     }
 
     /**
@@ -128,7 +130,7 @@ public class MockUtil {
      * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, String)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(String propertiesStr) throws IOException, RepositoryException {
-        return createHierarchyManager("testSession", propertiesStr);
+        return createHierarchyManager(DEFAULT_TEST_WORKSPACE_NAME, propertiesStr);
     }
 
     /**

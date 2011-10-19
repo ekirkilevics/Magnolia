@@ -38,6 +38,7 @@ import info.magnolia.jcr.util.PropertyUtil;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
@@ -65,7 +66,7 @@ public class MockValue implements Value {
         this.type = type;
         Object valueToSet;
         try {
-            valueToSet = value instanceof InputStream ? IOUtils.toByteArray((InputStream) value) : value;
+            valueToSet = value instanceof InputStream ? new String(IOUtils.toByteArray((InputStream) value)) : value;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -132,8 +133,12 @@ public class MockValue implements Value {
 
     @Override
     public InputStream getStream() throws RepositoryException {
-        if (value instanceof byte[]) {
-            return new ByteArrayInputStream((byte[]) value);
+        if (value instanceof String) {
+            try {
+                return new ByteArrayInputStream(((String) value).getBytes("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
         }
         throw new ValueFormatException("Value can't be converted to InputStream: " + value);
     }

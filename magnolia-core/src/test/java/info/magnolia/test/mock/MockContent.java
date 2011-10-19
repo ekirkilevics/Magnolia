@@ -38,6 +38,7 @@ import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.NonExistingNodeData;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -52,6 +53,7 @@ import java.util.Comparator;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
@@ -160,6 +162,15 @@ public class MockContent extends DefaultContent {
             while(iterator.hasNext()) {
                 current = iterator.nextProperty();
                 onlyExistingNodeDatas.add(new MockNodeData(this, current.getName(), ((MockProperty) current).getObjectValue()));
+            }
+            // now checking for binaryNodes
+            NodeIterator nodeIterator = getJCRNode().getNodes(pattern);
+            Node currentNode;
+            while(nodeIterator.hasNext()) {
+                currentNode = nodeIterator.nextNode();
+                if (MgnlNodeType.NT_RESOURCE.equals(currentNode.getPrimaryNodeType().getName())) {
+                    onlyExistingNodeDatas.add(new BinaryMockNodeData(this, currentNode.getName()));
+                }
             }
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);

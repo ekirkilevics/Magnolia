@@ -41,6 +41,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @version $Id$
+ *
+ * TODO dlipp - doesn't have any members any longer. Check whether it can safely be dropped!
  */
 public class BinaryMockNodeData extends BinaryNodeData {
     private static final Logger log = LoggerFactory.getLogger(BinaryMockNodeData.class);
