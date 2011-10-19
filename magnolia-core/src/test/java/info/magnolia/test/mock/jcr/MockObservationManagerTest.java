@@ -113,12 +113,6 @@ public class MockObservationManagerTest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void willRefuseToFilterOnNodeType() throws RepositoryException {
-        MockObservationManager om = new MockObservationManager();
-        om.addEventListener(new SimpleEventListener(), Event.NODE_ADDED, null, false, null, new String[]{}, false);
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
     public void willRefuseToFilterLocalChanges() throws RepositoryException {
         MockObservationManager om = new MockObservationManager();
         om.addEventListener(new SimpleEventListener(), Event.NODE_ADDED, null, false, null, null, true);
@@ -131,7 +125,8 @@ public class MockObservationManagerTest {
         SimpleEventListener removeListener = new SimpleEventListener();
 
         om.addEventListener(addListener, Event.NODE_ADDED, null, false, null, null, false);
-        om.addEventListener(removeListener, Event.NODE_REMOVED, null, false, null, null, false);
+        // set nodeTypeName - will currently be ignored
+        om.addEventListener(removeListener, Event.NODE_REMOVED, null, false, null, new String[]{"mgnl:content"}, false);
 
         // Event without node type
         om.fireEvent(new MockEvent());
