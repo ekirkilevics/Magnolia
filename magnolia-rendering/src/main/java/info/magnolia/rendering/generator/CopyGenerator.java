@@ -33,15 +33,15 @@
  */
 package info.magnolia.rendering.generator;
 
+import static info.magnolia.rendering.template.AutoGenerationConfiguration.NODE_TYPE;
+import static info.magnolia.rendering.template.AutoGenerationConfiguration.TEMPLATE_ID;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.AutoGenerationConfiguration;
-import static info.magnolia.rendering.template.AutoGenerationConfiguration.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,8 +62,6 @@ import org.slf4j.LoggerFactory;
 public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
 
     private static final Logger log = LoggerFactory.getLogger(CopyGenerator.class);
-
-    protected static final String MGNL_TEMPLATE = MgnlNodeType.MGNL_PREFIX + MetaData.TEMPLATE;
 
     private Node parent;
 
@@ -99,10 +97,10 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
 
             try {
                 newNode = NodeUtil.createPath(parentNode, name, (String)newNodeConfig.get(NODE_TYPE));
-                Node metaData = newNode.addNode(MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
-                metaData.setProperty(MGNL_TEMPLATE, (String)newNodeConfig.get(TEMPLATE_ID));
+                MetaData metaData = MetaDataUtil.getMetaData(newNode);
+                metaData.setTemplate((String)newNodeConfig.get(TEMPLATE_ID));
                 MetaDataUtil.updateMetaData(newNode);
-                log.debug("creating {}", newNode.getPath());
+                log.info("creating {}", newNode.getPath());
 
                 for(Entry<String, Object> property : newNodeConfig.entrySet()) {
                     String propertyName = property.getKey();
@@ -110,7 +108,7 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
                         continue;
                     }
                     //a sub content
-                    if(property.getValue().getClass().isAssignableFrom(HashMap.class)) {
+                    if(property.getValue() instanceof HashMap) {
                         Map<String,Object> map = new HashMap<String,Object>();
                         map.put(propertyName, property.getValue());
                         createNode(newNode, map);
