@@ -100,7 +100,8 @@ public class Security {
         PrincipalCollectionImpl principalCollection = new PrincipalCollectionImpl();
         principalCollection.addAll(acls);
 
-        Subject subject = PermissionUtil.createSubject(user);
+        Subject subject = new Subject();
+        subject.getPrincipals().add(user);
         subject.getPrincipals().add(principalCollection);
         return subject;
     }

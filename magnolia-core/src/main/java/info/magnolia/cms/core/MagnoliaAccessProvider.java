@@ -36,11 +36,10 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PrincipalUtil;
 import info.magnolia.cms.security.auth.ACL;
-import info.magnolia.cms.security.auth.PrincipalCollection;
 
 import java.security.Principal;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -207,7 +206,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
         final String workspaceName = super.session.getWorkspace().getName();
 
-        ACL acl = findACLForWorkspace(principals, workspaceName);
+        ACL acl = PrincipalUtil.findAccessControlList(principals, workspaceName);
         if (acl != null) {
             AccessManagerImpl ami = new AccessManagerImpl();
             ami.setPermissionList(acl.getList());
@@ -243,31 +242,12 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
         final String workspaceName = super.session.getWorkspace().getName();
 
-        ACL acl = findACLForWorkspace(principals, workspaceName);
+        ACL acl = PrincipalUtil.findAccessControlList(principals, workspaceName);
         if (acl != null) {
             return getUserPermissions(acl.getList());
         }
 
         return CompiledPermissions.NO_PERMISSION;
-    }
-
-    private ACL findACLForWorkspace(Collection<Principal> principals, String workspaceName) {
-        for (Principal principal : principals) {
-            if (principal instanceof PrincipalCollection) {
-                log.debug("found mgnl principal " + principal);
-                PrincipalCollection collection = (PrincipalCollection) principal;
-                for (Principal maybeAcl : collection) {
-                    if (maybeAcl instanceof ACL) {
-                        ACL acl = (ACL) maybeAcl;
-                        if (workspaceName.equals(acl.getWorkspace())) {
-                            return acl;
-                        }
-                    }
-                }
-            }
-        }
-
-        return null;
     }
 
     private CompiledPermissions getUserPermissions(List<Permission> permissions) {

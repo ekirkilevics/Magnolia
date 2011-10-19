@@ -33,7 +33,7 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.security.PermissionUtil;
+import info.magnolia.cms.security.PrincipalUtil;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 
@@ -99,7 +99,7 @@ public class UserContextImpl extends AbstractContext implements UserContext {
 
     @Override
     public void login(Subject subject) {
-        User user = PermissionUtil.extractUser(subject);
+        User user = PrincipalUtil.extractUser(subject);
         setLocaleFor(user);
         if(!user.getName().equals(Security.getAnonymousUser().getName())){
             setAttribute(SESSION_SUBJECT, subject, Context.SESSION_SCOPE);

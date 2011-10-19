@@ -44,7 +44,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.SecuritySupportImpl;
 import info.magnolia.cms.security.User;
@@ -64,6 +63,7 @@ import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpSession;
+import info.magnolia.test.mock.MockUtil;
 
 /**
  * This test requires real repository and authentication which is currently not possible without magnolia-jaas module.
@@ -103,7 +103,7 @@ public class LazyContentWrapperTest extends RepositoryTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setSession(session);
         MgnlContext.setInstance(ContextFactory.getInstance().createWebContext(req, null, null));
-        ((UserContextImpl) MgnlContext.getInstance()).login(PermissionUtil.createSubject(dummy));
+        ((UserContextImpl) MgnlContext.getInstance()).login(MockUtil.createSubject(dummy));
     }
 
     @Override

@@ -43,6 +43,8 @@ import static org.easymock.EasyMock.replay;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.PrincipalUtil;
+import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.importexport.PropertiesImportExport;
@@ -60,6 +62,7 @@ import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Workspace;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
+import javax.security.auth.Subject;
 
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.ListOrderedMap;
@@ -248,4 +251,7 @@ public class MockUtil {
         replay(ws, om);
     }
 
+    public static Subject createSubject(User user) {
+        return PrincipalUtil.createSubject(user);
+    }
 }

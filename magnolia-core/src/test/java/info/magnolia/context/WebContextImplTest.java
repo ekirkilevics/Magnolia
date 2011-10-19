@@ -36,13 +36,13 @@ package info.magnolia.context;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.*;
 import static org.junit.Assert.*;
-import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.Realm;
 import info.magnolia.cms.security.RoleManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ implements Serializable {
         ComponentsTestUtil.setInstance(SecuritySupport.class, securitySupport);
         UserManager userManager = createMock(UserManager.class);
         RoleManager roleManager = createMock(RoleManager.class);
-        Subject subject = PermissionUtil.createSubject(user);
+        Subject subject = MockUtil.createSubject(user);
         User anonymousUser = createMock(User.class);
 
         // login
