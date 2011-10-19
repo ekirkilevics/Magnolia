@@ -37,6 +37,7 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.AutoGenerationConfiguration;
@@ -100,7 +101,7 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
                 newNode = NodeUtil.createPath(parentNode, name, (String)newNodeConfig.get(NODE_TYPE));
                 Node metaData = newNode.addNode(MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
                 metaData.setProperty(MGNL_TEMPLATE, (String)newNodeConfig.get(TEMPLATE_ID));
-
+                MetaDataUtil.updateMetaData(newNode);
                 log.debug("creating {}", newNode.getPath());
 
                 for(Entry<String, Object> property : newNodeConfig.entrySet()) {
