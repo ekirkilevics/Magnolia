@@ -284,8 +284,9 @@ public class MockNode extends AbstractNode {
     }
 
     @Override
-    public NodeIterator getNodes(String namePattern) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public NodeIterator getNodes(String namePattern) throws RepositoryException {
+        // Inspired by org.apache.jackrabbit.core.NodeImpl#getNodes(String)
+        return ChildrenCollectorFilter.collectChildNodes(this, namePattern);
     }
 
     @Override
@@ -330,7 +331,7 @@ public class MockNode extends AbstractNode {
 
     @Override
     public PropertyIterator getProperties(String namePattern) throws RepositoryException {
-        // Inspired by org.apache.jackrabbit.core.NodeImpl
+        // Inspired by org.apache.jackrabbit.core.NodeImpl#getProperties(String)
         return ChildrenCollectorFilter.collectProperties(this, namePattern);
     }
 

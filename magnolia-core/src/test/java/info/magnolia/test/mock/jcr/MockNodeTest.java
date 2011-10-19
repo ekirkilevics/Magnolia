@@ -33,10 +33,8 @@
  */
 package info.magnolia.test.mock.jcr;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -46,6 +44,7 @@ import java.util.UUID;
 
 import javax.jcr.ItemVisitor;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
@@ -148,6 +147,25 @@ public class MockNodeTest {
         assertTrue(root.hasNodes());
         assertTrue(!child.hasNodes());
     }
+
+    @Test
+    public void testGetNodesWithNamePattern() throws Exception {
+        // GIVEN
+        final String childOneName = "test";
+        final String childTwoName = "value";
+        root.addNode(childOneName);
+        root.addNode(childTwoName);
+
+        // WHEN
+        NodeIterator result = root.getNodes("val*");
+
+        // THEN
+        Node current = result.nextNode();
+        assertEquals(childTwoName, current.getName());
+        assertFalse(result.hasNext());
+    }
+
+
     @Test
     public void testHasProperties() throws Exception {
         assertTrue(!root.hasProperties());
