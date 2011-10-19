@@ -90,20 +90,20 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
 
             Map<String, Object> newNodeConfig = (Map<String, Object>) entry.getValue();
 
-            if(!newNodeConfig.containsKey(NODE_TYPE)  || !newNodeConfig.containsKey(TEMPLATE_ID)) {
+            if(!newNodeConfig.containsKey(NODE_TYPE) || !newNodeConfig.containsKey(TEMPLATE_ID)) {
                 throw new RenderException("nodeType and templateId parameters expected but not found.");
             }
             String name = entry.getKey();
             Node newNode = null;
 
             try {
-                newNode = NodeUtil.createPath(parentNode, entry.getKey(), (String)newNodeConfig.get(NODE_TYPE));
+                newNode = NodeUtil.createPath(parentNode, name, (String)newNodeConfig.get(NODE_TYPE));
                 Node metaData = newNode.addNode(MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
                 metaData.setProperty(MGNL_TEMPLATE, (String)newNodeConfig.get(TEMPLATE_ID));
 
                 log.debug("creating {}", newNode.getPath());
 
-                for( Entry<String, Object> property : newNodeConfig.entrySet()) {
+                for(Entry<String, Object> property : newNodeConfig.entrySet()) {
                     String propertyName = property.getKey();
                     if(NODE_TYPE.equals(propertyName) || TEMPLATE_ID.equals(propertyName)) {
                         continue;

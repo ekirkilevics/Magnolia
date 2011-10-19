@@ -41,6 +41,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.AutoGenerationConfiguration;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
@@ -265,6 +266,27 @@ public class CopyGeneratorTest {
         metaData = session.getNode("/foo/autogen-foo/same-level-as-nested/MetaData");
         template = metaData.getProperty(MGNL_TEMPLATE);
         assertEquals(TEMPLATE_ID_VALUE,template.getString());
+    }
+
+    @Test(expected=RenderException.class)
+    public void testGenerateThrowsRenderExceptionIfNodeTypeOrTemplateIdAreNotFound() throws Exception {
+       //GIVEN
+        Node parent = session.getNode("/foo");
+        AutoGenerationConfiguration config = mock(AutoGenerationConfiguration.class);
+
+        Map<String, Object> content = new HashMap<String, Object>();
+        Map<String, Object> nodeConfig = new HashMap<String, Object>();
+        nodeConfig.put("foo", "bar");
+
+        content.put("autogen-foo", nodeConfig);
+
+        when(config.getContent()).thenReturn(content);
+
+        //WHEN
+        new CopyGenerator(parent).generate(config);
+
+        //THEN BooOOOM
+
     }
 
     @After
