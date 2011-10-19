@@ -140,11 +140,7 @@ public class MockValue implements Value {
 
     @Override
     public String getString() throws ValueFormatException, IllegalStateException, RepositoryException {
-        // TODO dlipp: check whether this is the desired behavior...
-        if (value instanceof String) {
-            return (String) value;
-        }
-        throw new ValueFormatException("Value can't be converted to String: " + value);
+        return value == null ? "" : value.toString();
     }
 
     @Override

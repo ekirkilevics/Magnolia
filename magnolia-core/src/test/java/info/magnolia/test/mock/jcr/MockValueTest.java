@@ -35,6 +35,7 @@ package info.magnolia.test.mock.jcr;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -45,6 +46,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFormatException;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 /**
@@ -158,14 +160,10 @@ public class MockValueTest {
     }
     @Test
     public void testGetStream() throws Exception {
-        Object objectValue = new InputStream() {
-            @Override
-            public int read() throws IOException {
-                return 0;
-            }
-        };
+        byte[] bytes = "Hallo".getBytes();
+        ByteArrayInputStream objectValue = new ByteArrayInputStream(bytes);
         MockValue jcrValue = new MockValue(objectValue);
-        assertEquals(objectValue, jcrValue.getStream());
+        assertEquals(new String(bytes), new String(IOUtils.toByteArray(jcrValue.getStream())));
     }
 
     @Test(expected = ValueFormatException.class)
@@ -179,10 +177,13 @@ public class MockValueTest {
         assertEquals(objectValue, jcrValue.getString());
     }
 
-    @Test(expected = ValueFormatException.class)
-    public void testGetStringWithWrongValueType() throws Exception {
-        new MockValue(Boolean.FALSE).getString();
+    @Test
+    public void testGetStringWithNonString() throws Exception {
+        Object objectValue = Boolean.FALSE;
+        MockValue jcrValue = new MockValue(objectValue);
+        assertEquals("false", jcrValue.getString());
     }
+
     @Test
     public void testGetType() throws Exception {
         assertEquals(PropertyType.STRING, new MockValue("string").getType());
