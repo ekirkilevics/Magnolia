@@ -33,6 +33,8 @@
  */
 package info.magnolia.context;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.version.MgnlVersioningSession;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.registry.RegistrationException;
@@ -87,6 +89,11 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
             try {
 				jcrSession = sessionProviderRegistry.get(workspaceName).createSession(credentials);
+
+				if (!ContentRepository.VERSION_STORE.equals(workspaceName)) {
+		            jcrSession = new MgnlVersioningSession(jcrSession);
+		        }
+
 				jcrSessions.put(workspaceName, jcrSession);
 				incSessionCount(workspaceName);
 			} catch (RegistrationException e) {
