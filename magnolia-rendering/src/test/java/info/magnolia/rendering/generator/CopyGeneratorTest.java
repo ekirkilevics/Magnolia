@@ -70,14 +70,13 @@ public class CopyGeneratorTest {
 
     @Before
     public void setUp() throws Exception{
-        session = SessionTestUtil.createSession("website", "/foo/bar");
+        session = SessionTestUtil.createSession("website", "/foo");
     }
 
     /*
-     * We expect a structure like the following will be created, where "foo" and "bar" already exist.
+     * We expect a structure like the following will be created, where "foo" already exists.
      *
      * + foo
-     * + bar
      * + autogen-foo
      */
     @Test(expected=UnsupportedOperationException.class)
@@ -127,12 +126,11 @@ public class CopyGeneratorTest {
     }
 
     /*
-     * We expect a structure like the following will be created, where "foo" and "bar" already exist.
+     * We expect a structure like the following will be created,  where "foo" already exists.
      *
      * + foo
-     * |  + autogen-foo
-     * |    + nested-autogen
-     * + bar
+     *   + autogen-foo
+     *     + nested-autogen
      */
     @Test(expected=UnsupportedOperationException.class)
     public void testNestedNodesCreation() throws Exception {
@@ -193,14 +191,13 @@ public class CopyGeneratorTest {
         assertEquals(TEMPLATE_ID_VALUE,template.getString());
     }
     /*
-     * We expect a structure like the following will be created, where "foo" and "bar" already exist.
+     * We expect a structure like the following will be created,  where "foo" already exists.
      *
      * + foo
-     * |  + autogen-foo
-     * |  + same-level-autogen-foo
-     * |    + nested-autogen
-     * |    + same-level-as-nested
-     * + bar
+     *   + autogen-foo
+     *   + same-level-autogen-foo
+     *     + nested-autogen
+     *     + same-level-as-nested
      */
     @Test(expected=UnsupportedOperationException.class)
     public void testSameLevelNestedNodesCreation() throws Exception {
