@@ -323,24 +323,13 @@ public class ModuleManagerImpl implements ModuleManager {
                     moduleInstance = null;
                 }
 
-                // Prepare properties for module instances; if the bean has "moduleDefinition",
-                // "name", "moduleNode" or "configNode" properties, they will be populated accordingly.
-                final Map<String, Object> moduleProperties = new HashMap<String, Object>();
-                moduleProperties.put("moduleDefinition", moduleDefinition);
-                moduleProperties.put("name", moduleName);
-
                 if (modulesParentNode.hasContent(moduleName)) {
-                    final Content moduleNode = new SystemContentWrapper(modulesParentNode.getChildByName(moduleName));
-                    moduleNodes.add(moduleNode);
-                    moduleProperties.put("moduleNode", moduleNode);
-                    if (moduleNode.hasContent("config")) {
-                        final Content configNode = new SystemContentWrapper(moduleNode.getContent("config"));
-                        moduleProperties.put("configNode", configNode);
-                    }
+                    moduleNodes.add(new SystemContentWrapper(modulesParentNode.getContent(moduleName)));
                 }
 
                 if (moduleInstance != null) {
-                    populateModuleInstance(moduleInstance, moduleProperties);
+
+                    populateModuleInstance(moduleInstance, getModuleInstanceProperties(moduleDefinition));
 
                     startModule(moduleInstance, moduleDefinition, lifecycleContext);
 
@@ -359,7 +348,7 @@ public class ModuleManagerImpl implements ModuleManager {
                                 @Override
                                 public void doExec() {
                                     stopModule(moduleInstance, moduleDefinition, lifecycleContext);
-                                    populateModuleInstance(moduleInstance, moduleProperties);
+                                    populateModuleInstance(moduleInstance, getModuleInstanceProperties(moduleDefinition));
                                     startModule(moduleInstance, moduleDefinition, lifecycleContext);
                                 }
                             }, true);
@@ -409,24 +398,42 @@ public class ModuleManagerImpl implements ModuleManager {
         }
     }
 
-    protected void populateModuleInstance(Object moduleInstance, Map<String, Object> moduleProperties) {
+    /**
+     * Builds a map of properties to be set on the module instance, the properties are "moduleDefinition", "name",
+     * "moduleNode" and "configNode". This map is rebuilt every-time reloading takes place just in case the nodes have
+     * changed since startup. One situation where this is necessary is when a module does not have a config node at
+     * startup but one is added later on, see MAGNOLIA-3457.
+     */
+    protected Map<String, Object> getModuleInstanceProperties(ModuleDefinition moduleDefinition) {
 
-        // re-populate the module properties in case the nodes have changed since startup, required since a module
-        // might not have a config node at startup but we still want it to take effect if its added later on
-        // see MAGNOLIA-3457
+        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+
+        final String moduleNodePath = "/modules/" + moduleDefinition.getName();
+        Content moduleNode = null;
         try {
-            ModuleDefinition moduleDefinition = (ModuleDefinition) moduleProperties.get("moduleDefinition");
-
-            final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
-            final Content moduleNode = new SystemContentWrapper(hm.getContent("/modules/" + moduleDefinition.getName()));
-            final Content configNode = new SystemContentWrapper(moduleNode.getContent("config"));
-
-            moduleProperties.put("moduleNode", moduleNode);
-            moduleProperties.put("configNode", configNode);
-
+            moduleNode = hm.isExist(moduleNodePath) ? new SystemContentWrapper(hm.getContent(moduleNodePath)) : null;
         } catch (RepositoryException e) {
-            log.error("Wasn't able to configure module " + moduleInstance + ": " + e.getMessage(), e);
+            log.error("Wasn't able to acquire module node " + moduleNodePath + ": " + e.getMessage(), e);
         }
+
+        final String moduleConfigPath = "/modules/" + moduleDefinition.getName() + "/config";
+        Content configNode = null;
+        try {
+            configNode = hm.isExist(moduleConfigPath) ? new SystemContentWrapper(hm.getContent(moduleConfigPath)) : null;
+        } catch (RepositoryException e) {
+            log.error("Wasn't able to acquire module config node " + moduleConfigPath + ": " + e.getMessage(), e);
+        }
+
+        final Map<String, Object> moduleProperties = new HashMap<String, Object>();
+        moduleProperties.put("moduleDefinition", moduleDefinition);
+        moduleProperties.put("name", moduleDefinition.getName());
+        moduleProperties.put("moduleNode", moduleNode);
+        moduleProperties.put("configNode", configNode);
+
+        return moduleProperties;
+    }
+
+    protected void populateModuleInstance(Object moduleInstance, Map<String, Object> moduleProperties) {
 
         try {
             BeanUtils.populate(moduleInstance, moduleProperties);
