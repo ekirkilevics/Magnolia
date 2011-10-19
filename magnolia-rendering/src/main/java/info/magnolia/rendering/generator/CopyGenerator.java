@@ -100,7 +100,7 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
                 MetaData metaData = MetaDataUtil.getMetaData(newNode);
                 metaData.setTemplate((String)newNodeConfig.get(TEMPLATE_ID));
                 MetaDataUtil.updateMetaData(newNode);
-                log.info("creating {}", newNode.getPath());
+                log.debug("creating {}", newNode.getPath());
 
                 for(Entry<String, Object> property : newNodeConfig.entrySet()) {
                     String propertyName = property.getKey();
