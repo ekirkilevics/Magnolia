@@ -44,10 +44,10 @@ import java.util.Map;
  */
 public interface AreaDefinition extends TemplateDefinition, Cloneable {
 
-    String TYPE_NO_COMPONENT = "noComponent";
-    String TYPE_LIST = "list";
-    String TYPE_SINGLE = "single";
-    String DEFAULT_TYPE = TYPE_LIST;
+    static final String TYPE_NO_COMPONENT = "noComponent";
+    static final String TYPE_LIST = "list";
+    static final String TYPE_SINGLE = "single";
+    static final String DEFAULT_TYPE = TYPE_LIST;
 
     Map<String, ComponentAvailability> getAvailableComponents();
 

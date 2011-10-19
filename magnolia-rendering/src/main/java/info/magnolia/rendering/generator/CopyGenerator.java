@@ -38,7 +38,9 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.AutoGenerationConfiguration;
+import static info.magnolia.rendering.template.AutoGenerationConfiguration.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,49 +59,59 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
-    private Node parent;
+
     private static final Logger log = LoggerFactory.getLogger(CopyGenerator.class);
 
-    public CopyGenerator(Node parent) {
+    protected static final String MGNL_TEMPLATE = MgnlNodeType.MGNL_PREFIX + MetaData.TEMPLATE;
+
+    private Node parent;
+
+    public CopyGenerator(final Node parent) {
+        if(parent == null) {
+            throw new IllegalArgumentException("parent node cannot be null");
+        }
         this.parent = parent;
     }
 
     @Override
-    public void generate(AutoGenerationConfiguration autoGenerationConfig) {
+    public void generate(AutoGenerationConfiguration autoGenerationConfig) throws RenderException {
         if(autoGenerationConfig == null) {
             throw new IllegalArgumentException("Expected an instance of AutoGenerationConfiguration but got null instead");
         }
         createNode(parent, autoGenerationConfig.getContent());
     }
 
-    private void createNode(Node parentNode, Map<String,Object> content) {
+    @SuppressWarnings("unchecked")
+    private void createNode(Node parentNode, Map<String,Object> content) throws RenderException {
         if(content == null) {
             return;
         }
-        for(Entry<String, Object> c: content.entrySet()) {
-            Map<String, Object> newNodeConfig = (Map<String, Object>) c.getValue();
-            //TODO fgrilli: use constants.
-            if(!newNodeConfig.containsKey("nodeType")  || !newNodeConfig.containsKey("templateId")) {
-                //throw new RenderException("nodeType and templateId parameters expected but not found.");
+        for(Entry<String, Object> entry: content.entrySet()) {
+
+            Map<String, Object> newNodeConfig = (Map<String, Object>) entry.getValue();
+
+            if(!newNodeConfig.containsKey(NODE_TYPE)  || !newNodeConfig.containsKey(TEMPLATE_ID)) {
+                throw new RenderException("nodeType and templateId parameters expected but not found.");
             }
-            String name = c.getKey();
+            String name = entry.getKey();
             Node newNode = null;
+
             try {
-                newNode = NodeUtil.createPath(parentNode, c.getKey(), (String)newNodeConfig.get("nodeType"));
+                newNode = NodeUtil.createPath(parentNode, entry.getKey(), (String)newNodeConfig.get(NODE_TYPE));
                 Node metaData = newNode.addNode(MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
-                metaData.setProperty("mgnl:template", (String)newNodeConfig.get("templateId"));
+                metaData.setProperty(MGNL_TEMPLATE, (String)newNodeConfig.get(TEMPLATE_ID));
 
                 log.debug("creating {}", newNode.getPath());
 
-                for( Entry<String, Object>  property : newNodeConfig.entrySet()) {
+                for( Entry<String, Object> property : newNodeConfig.entrySet()) {
                     String propertyName = property.getKey();
-                    if("nodeType".equals(propertyName) || "templateId".equals(propertyName)) {
+                    if(NODE_TYPE.equals(propertyName) || TEMPLATE_ID.equals(propertyName)) {
                         continue;
                     }
                     //a sub content
                     if(property.getValue().getClass().isAssignableFrom(HashMap.class)) {
                         Map<String,Object> map = new HashMap<String,Object>();
-                        map.put(property.getKey(), property.getValue());
+                        map.put(propertyName, property.getValue());
                         createNode(newNode, map);
                     } else {
                         newNode.setProperty(propertyName, (String)property.getValue());

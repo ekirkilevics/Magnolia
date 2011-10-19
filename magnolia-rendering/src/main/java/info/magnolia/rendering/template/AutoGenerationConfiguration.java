@@ -38,11 +38,15 @@ import info.magnolia.rendering.generator.Generator;
 import java.util.Map;
 
 /**
- * TODO write javadoc.
+ * AutoGeneration configuration.
  * @version $Id$
  *
  */
 public interface AutoGenerationConfiguration {
+
+    static final String TEMPLATE_ID = "templateId";
+
+    static final String NODE_TYPE = "nodeType";
 
     Map<String, Object> getContent();
 

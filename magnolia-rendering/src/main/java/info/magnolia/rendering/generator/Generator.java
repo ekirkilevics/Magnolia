@@ -33,13 +33,16 @@
  */
 package info.magnolia.rendering.generator;
 
+import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.AutoGenerationConfiguration;
 
 /**
- * TODO: write javadoc.
+ * A generator to be implemented in order to create nodes based on the passed in configuration.
+ * @param <C> a configuration object implementing {@link AutoGenerationConfiguration}.
  * @version $Id$
- * @param <C>
+ *
  */
 public interface Generator<C extends AutoGenerationConfiguration> {
-    void generate(C configuration);
+
+    void generate(C configuration) throws RenderException;
 }
