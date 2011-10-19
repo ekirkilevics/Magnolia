@@ -183,7 +183,7 @@ public class MockContentTest {
     public void testOrderBefore() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
- "/node/b\n" +
+            "/node/b\n" +
             "/node/c\n");
         Content node = hm.getContent("/node");
         node.orderBefore("c", "b");
@@ -202,7 +202,7 @@ public class MockContentTest {
     public void testOrderBefore2() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
- "/node/b\n" +
+            "/node/b\n" +
             "/node/c\n");
         Content node = hm.getContent("/node");
         node.orderBefore("a", "c");
@@ -221,7 +221,7 @@ public class MockContentTest {
     public void testOrderBeforeFirstNode() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
- "/node/b\n" +
+            "/node/b\n" +
             "/node/c\n");
         Content node = hm.getContent("/node");
         node.orderBefore("c", "a");
