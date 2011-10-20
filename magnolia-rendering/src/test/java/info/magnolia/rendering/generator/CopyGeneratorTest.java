@@ -100,7 +100,7 @@ public class CopyGeneratorTest {
         Map<String, Object> content = new HashMap<String, Object>();
         Map<String, Object> firstNodeProps = new HashMap<String, Object>();
         firstNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
-        firstNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
+        firstNodeProps.put(TEMPLATE_ID, null);
         firstNodeProps.put("anotherProp", "some value");
         content.put("autogen-foo", firstNodeProps);
 
@@ -117,11 +117,11 @@ public class CopyGeneratorTest {
 
         //THEN
         Node newNode = session.getNode("/foo/autogen-foo");
-        assertNodeAndMetaData(newNode);
+        assertNodeAndMetaData(newNode, null, USER_NAME);
         assertPropertyEquals(newNode, "anotherProp", "some value");
 
         Node secondNode = session.getNode("/foo/same-level-autogen");
-        assertNodeAndMetaData(secondNode);
+        assertNodeAndMetaData(secondNode, TEMPLATE_ID_VALUE, USER_NAME);
         assertPropertyEquals(secondNode, "someProp", "a different value");
     }
 
@@ -164,15 +164,15 @@ public class CopyGeneratorTest {
 
         //THEN
         Node newNode = session.getNode("/foo/autogen-foo");
-        assertNodeAndMetaData(newNode);
+        assertNodeAndMetaData(newNode, TEMPLATE_ID_VALUE, USER_NAME);
         assertPropertyEquals(newNode, "anotherProp", "some value");
 
         Node secondNode = session.getNode("/foo/autogen-foo/nested-autogen");
-        assertNodeAndMetaData(secondNode);
+        assertNodeAndMetaData(secondNode, TEMPLATE_ID_VALUE, USER_NAME);
         assertPropertyEquals(secondNode, "someProp", "a different value");
 
         Node secondSubNode = session.getNode("/foo/autogen-foo/nested-autogen/nestedSubNode-autogen");
-        assertNodeAndMetaData(secondSubNode);
+        assertNodeAndMetaData(secondSubNode, TEMPLATE_ID_VALUE, USER_NAME);
 
     }
     /*
@@ -222,16 +222,16 @@ public class CopyGeneratorTest {
 
         //THEN
         Node newNode = session.getNode("/foo/autogen-foo");
-        assertNodeAndMetaData(newNode);
+        assertNodeAndMetaData(newNode, TEMPLATE_ID_VALUE, USER_NAME);
 
         Node secondNode = session.getNode("/foo/same-level-autogen-foo");
-        assertNodeAndMetaData(secondNode);
+        assertNodeAndMetaData(secondNode, TEMPLATE_ID_VALUE, USER_NAME);
 
         Node nestedNode = session.getNode("/foo/autogen-foo/nested-autogen");
-        assertNodeAndMetaData(nestedNode);
+        assertNodeAndMetaData(nestedNode, TEMPLATE_ID_VALUE, USER_NAME);
 
         Node sameLevelAsNested = session.getNode("/foo/autogen-foo/same-level-as-nested");
-        assertNodeAndMetaData(sameLevelAsNested);
+        assertNodeAndMetaData(sameLevelAsNested, TEMPLATE_ID_VALUE, USER_NAME);
     }
 
     @Test(expected=RenderException.class)
@@ -261,16 +261,16 @@ public class CopyGeneratorTest {
         MgnlContext.setInstance(null);
     }
 
-    private void assertNodeAndMetaData(Node node) throws RepositoryException {
+    protected void assertNodeAndMetaData(Node node, String template, String authorId) throws RepositoryException {
         assertTrue(node.isNodeType(MgnlNodeType.NT_CONTENTNODE));
         MetaData metaData = MetaDataUtil.getMetaData(node);
-        assertEquals(TEMPLATE_ID_VALUE, metaData.getTemplate());
-        assertEquals(USER_NAME, metaData.getAuthorId());
+        assertEquals(template, metaData.getTemplate());
+        assertEquals(authorId, metaData.getAuthorId());
         assertNotNull(metaData.getModificationDate());
         assertFalse(metaData.getIsActivated());
     }
 
-    private void assertPropertyEquals(Node node, String relPath, String value) throws PathNotFoundException, RepositoryException, ValueFormatException {
+    protected void assertPropertyEquals(Node node, String relPath, String value) throws PathNotFoundException, RepositoryException, ValueFormatException {
         Property prop = node.getProperty(relPath);
         assertEquals(value, prop.getString());
     }
