@@ -256,10 +256,10 @@ public class TemplatingFunctionsTest {
         MgnlContext.setInstance(context);
 
         // WHEN
-        String resultLink = functions.link(topPage);
+        String resultLink = functions.link(topPageContentMap);
 
         // THEN
-        assertEquals(CONTEXT_PATH+topPage.getPath(), resultLink);
+        assertEquals(CONTEXT_PATH+topPageContentMap.get("@path"), resultLink);
     }
 
     @Test
@@ -272,10 +272,10 @@ public class TemplatingFunctionsTest {
         MgnlContext.setInstance(context);
 
         // WHEN
-        String resultLink = functions.link(childPage);
+        String resultLink = functions.link(childPageContentMap);
 
         // THEN
-        assertEquals(CONTEXT_PATH+childPage.getPath(), resultLink);
+        assertEquals(CONTEXT_PATH+childPageContentMap.get("@path"), resultLink);
     }
 
     @Test
