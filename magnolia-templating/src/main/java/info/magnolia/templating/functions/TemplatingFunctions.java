@@ -327,9 +327,12 @@ public class TemplatingFunctions {
     }
 
     /**
-     * @return The external link prepended with <code>http://</code> in case the protocol is missing or an empty String if the link does not exist.
+     * Returns an external link prepended with <code>http://</code> in case the protocol is missing or an empty String if the link does not exist.
+     * @param content The node where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
+     * @return The link prepended with <code>http://</code>
      */
-    public String getExternalLink(Node content, String linkPropertyName){
+    public String externalLink(Node content, String linkPropertyName){
         String externalLink = PropertyUtil.getString(content, linkPropertyName);
         if(StringUtils.isBlank(externalLink)){
             return StringUtils.EMPTY;
@@ -340,14 +343,52 @@ public class TemplatingFunctions {
         return externalLink;
     }
 
-    public String getExternalLinkTitle(Node content, String linkPropertyName, String linkTitlePropertyName){
+    /**
+     * Returns an external link prepended with <code>http://</code> in case the protocol is missing or an empty String if the link does not exist.
+     * @param content The node's map representation where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
+     * @return The link prepended with <code>http://</code>
+     */
+    public String externalLink(ContentMap content, String linkPropertyName){
+        return externalLink(asJCRNode(content), linkPropertyName);
+    }
+
+    /**
+     * Return a link title based on the @param linkTitlePropertyName.
+     * When property @param linkTitlePropertyName is empty or null, the link itself is provided as the linkTitle (prepended with <code>http://</code>).
+     *
+     * @param content The node where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
+     * @param linkTitlePropertyName The property where the link title value is stored
+     * @return the resolved link title value
+     */
+    public String externalLinkTitle(Node content, String linkPropertyName, String linkTitlePropertyName){
         String linkTitle = PropertyUtil.getString(content, linkTitlePropertyName);
         if(StringUtils.isNotEmpty(linkTitle)){
             return linkTitle;
         }
-        return getExternalLink(content, linkPropertyName);
+        return externalLink(content, linkPropertyName);
     }
 
+    /**
+     * Return a link title based on the @param linkTitlePropertyName.
+     * When property @param linkTitlePropertyName is empty or null, the link itself is provided as the linkTitle (prepended with <code>http://</code>).
+     *
+     * @param content The node where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
+     * @param linkTitlePropertyName The property where the link title value is stored
+     * @return the resolved link title value
+     */
+    public String externalLinkTitle(ContentMap content, String linkPropertyName, String linkTitlePropertyName){
+        return externalLinkTitle(asJCRNode(content), linkPropertyName, linkTitlePropertyName);
+    }
+
+    /**
+     * Checks if passed string has a <code>http://</code> protocol.
+     *
+     * @param link The link to check
+     * @return If @param link contains a <code>http://</code> protocol
+     */
     private boolean hasProtocol(String link) {
         return link != null && link.contains("://");
     }
