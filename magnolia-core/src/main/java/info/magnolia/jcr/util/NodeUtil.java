@@ -36,11 +36,12 @@ package info.magnolia.jcr.util;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.PermissionUtil;
-import info.magnolia.jcr.predicate.NodeTypePredicate;
-import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
+import info.magnolia.jcr.predicate.NodeTypePredicate;
 import info.magnolia.jcr.predicate.Predicate;
+import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.StringUtils;
@@ -126,6 +128,24 @@ public class NodeUtil {
             return false;
         }
     };
+
+    /**
+     * Get a Node by identifier.
+     */
+    public static Node getNodeByIdentifier(String workspace, String identifier) throws RepositoryException {
+        Node target = null;
+        Session jcrSession;
+        if(workspace==null || identifier==null){
+            return target;
+        }
+
+        jcrSession = MgnlContext.getJCRSession(workspace);
+        if(jcrSession!=null){
+            target =  jcrSession.getNodeByIdentifier(identifier);
+        }
+        return target;
+    }
+
 
     /**
      * from default content.

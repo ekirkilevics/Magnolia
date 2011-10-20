@@ -35,12 +35,16 @@ package info.magnolia.jcr.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.MockValue;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
 
+import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
@@ -221,6 +225,29 @@ public class PropertyUtilTest {
         root.setProperty(propertyName, propertyValue);
         res = PropertyUtil.getProperty(root, "myProperty"+2);
         assertEquals("Should be Null  ",null,res);
+    }
+
+    @Test
+    public void testGetHandle() throws RepositoryException {
+
+        try{
+            // GIVEN
+            String nodeName = "testNode";
+            MockUtil.initMockContext();
+            MockSession session = new MockSession("website");
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode(nodeName);
+
+            // WHEN
+            String res = PropertyUtil.getHandle(addedNode);
+
+            //THEN
+            assertEquals("Should be /testNode  ","/"+nodeName,res);
+
+         }finally{
+             MgnlContext.setInstance(null);
+         }
     }
 
 }

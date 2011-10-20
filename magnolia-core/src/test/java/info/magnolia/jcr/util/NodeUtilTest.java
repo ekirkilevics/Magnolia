@@ -46,7 +46,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.version.VersionedNode;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -242,4 +245,63 @@ public class NodeUtilTest {
     public void testGetNameFromNode() throws RuntimeException {
         assertEquals(FIRST_CHILD, NodeUtil.getName(first));
     }
+
+    @Test
+    public void testGetNodeByIdentifier() throws RepositoryException{
+        //INIT
+        try{
+           // GIVEN
+           MockUtil.initMockContext();
+           MockSession session = new MockSession("website");
+           MockUtil.setSessionAndHierarchyManager(session);
+           Node rootNode = session.getRootNode();
+           Node addedNode = rootNode.addNode(FIRST_CHILD);
+           String identifier = addedNode.getIdentifier();
+
+           // WHEN
+           Node res = NodeUtil.getNodeByIdentifier("website", identifier);
+
+           //THEN
+           assertEquals("Both Node should be Identical ",addedNode, res);
+
+        }finally{
+            MgnlContext.setInstance(null);
+        }
+    }
+
+    @Test
+    public void testGetNodeByIdentifierMissingParam() throws RepositoryException{
+        //INIT
+        try{
+           //WHEN
+           Node res = NodeUtil.getNodeByIdentifier("website", null);
+           //THEN
+           assertEquals("Both Node should be Identical ",null, res);
+
+        }finally{
+            MgnlContext.setInstance(null);
+        }
+    }
+
+    @Test(expected=RepositoryException.class)
+    public void testGetNodeByIdentifierNoNodeFound() throws RepositoryException{
+        //INIT
+        try{
+           //GIVEN
+           MockUtil.initMockContext();
+           MockSession session = new MockSession("website");
+           MockUtil.setSessionAndHierarchyManager(session);
+           Node rootNode = session.getRootNode();
+           Node addedNode = rootNode.addNode(FIRST_CHILD);
+           String identifier = addedNode.getIdentifier();
+
+           //WHEN
+           NodeUtil.getNodeByIdentifier("website", identifier+1);
+
+           assertTrue("Should get an Exception ",false);
+        }finally{
+            MgnlContext.setInstance(null);
+        }
+    }
+
 }
