@@ -253,7 +253,7 @@ public class MockNode extends AbstractNode {
 
     @Override
     public String getName() {
-        return name;
+        return isRoot() ? "" : name;
     }
 
     @Override
@@ -303,15 +303,15 @@ public class MockNode extends AbstractNode {
     }
 
     private boolean isRoot() {
-        return ROOT_NODE_NAME.equals(getName()) && parent == null;
+        return ROOT_NODE_NAME.equals(name) && parent == null;
     }
 
     @Override
     public String getPath() throws RepositoryException {
         if (parent == null) {
-            return ROOT_NODE_NAME.equals(getName()) ? "/" : "";
+            return ROOT_NODE_NAME.equals(name) ? "/" : "/" + getName();
         }
-        return super.getPath();
+        return parent.getPath() == "/" ?  "/" + getName() : parent.getPath() + "/" + getName();
     }
 
     @Override
@@ -636,7 +636,7 @@ public class MockNode extends AbstractNode {
     }
 
     @Override
-    public Property setProperty(String name, long value) throws RepositoryException {
+    public Property setProperty(String name, long value) {
         return setProperty(name, new MockValue(value));
     }
 
@@ -646,12 +646,12 @@ public class MockNode extends AbstractNode {
     }
 
     @Override
-    public Property setProperty(String name, String value) throws RepositoryException {
+    public Property setProperty(String name, String value) {
         return setProperty(name, new MockValue(value));
     }
 
     @Override
-    public Property setProperty(String name, String value, int type) throws RepositoryException {
+    public Property setProperty(String name, String value, int type) {
         return setProperty(name, new MockValue(value, type));
     }
 
@@ -666,7 +666,7 @@ public class MockNode extends AbstractNode {
     }
 
     @Override
-    public Property setProperty(String name, Value value) throws RepositoryException{
+    public Property setProperty(String name, Value value) {
         MockProperty property = (MockProperty) this.properties.get(name);
         if (property == null) {
             property = new MockProperty(name, (MockValue) value, this);

@@ -200,7 +200,7 @@ public class NodeUtilTest {
         assertEquals(FIRST_CHILD, names.get(0));
         assertEquals(SECOND_CHILD, names.get(1));
         assertEquals(THIRD_CHILD, names.get(2));
-        assertEquals(MockNode.ROOT_NODE_NAME, names.get(3));
+        assertEquals("", names.get(3));
     }
     @Test
     public void testGetNodes() throws RepositoryException {

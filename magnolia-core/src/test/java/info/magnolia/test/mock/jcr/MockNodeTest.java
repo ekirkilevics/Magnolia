@@ -216,6 +216,28 @@ public class MockNodeTest {
     }
 
     @Test
+    public void testGetPathReturnsSlashOnRoot() throws RepositoryException {
+        assertEquals("/", root.getPath());
+    }
+
+    @Test
+    public void testGetPathWorksWithoutRootSet() throws RepositoryException {
+        // GIVEN
+        final MockNode node = new MockNode("test");
+
+        // WHEN
+        final String result = node.getPath();
+
+        // THEN
+        assertEquals("/test", result);
+    }
+
+    @Test
+    public void testGetNameReturnsEmptyStringForRoot() {
+        assertEquals("", root.getName());
+    }
+
+    @Test
     public void testSetPropertyWithStringAndBoolean() throws Exception {
         root.setProperty("boolean", false);
 

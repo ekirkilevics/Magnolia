@@ -62,8 +62,7 @@ public class MockObjectTest {
     @Test
     public void testRootNodeOfHierarchyManger() throws Exception{
         MockHierarchyManager hm = new MockHierarchyManager();
-        Content root = hm.getRoot();
-        assertEquals(root.getName(), "jcr:root");
+        assertNotNull(hm.getRoot());
     }
 
     @Test

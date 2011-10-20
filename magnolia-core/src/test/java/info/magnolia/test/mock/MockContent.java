@@ -116,23 +116,11 @@ public class MockContent extends DefaultContent {
 
     @Override
     public String getHandle() {
-        Content parent;
         try {
-            parent = getParent();
-        }
-        catch (ItemNotFoundException e) {
-            // ok - then we don't have a parent...
-            parent = null;
+            return getJCRNode().getPath();
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
-        String handle;
-        if (parent != null && !parent.getName().equals("jcr:root")) {
-            handle = parent.getHandle() + "/" + this.getName();
-        } else {
-            handle = "/" + this.getName();
-        }
-        return handle;
     }
 
     @Override
@@ -147,7 +135,6 @@ public class MockContent extends DefaultContent {
             throw new RuntimeException("Can't create/read the meta data node.", e);
         }
     }
-
 
     @Override
     public Collection<NodeData> getNodeDataCollection(String namePattern) {

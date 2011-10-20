@@ -328,8 +328,7 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
 
         // THEN
         } catch (RuntimeException e) {
-            assertEquals(e.getMessage(),
-                    "Can't find referenced node for value: testSession:/impl/node3[mgnl:contentNode]");
+            assertEquals("Can't find referenced node for value: testSession:/impl/node3[mgnl:contentNode]", e.getMessage());
         }
     }
 

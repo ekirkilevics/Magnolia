@@ -37,6 +37,7 @@ import static org.junit.Assert.*;
 import info.magnolia.cms.core.BinaryNodeData;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.test.mock.jcr.MockNode;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -260,5 +261,54 @@ public class MockContentTest {
         assertEquals(true, node.getNodeData("a").isExist());
         assertEquals(true, node.getNodeData("c").isExist());
         assertEquals(false, node.getNodeData("b").isExist());
+    }
+
+    @Test
+    public void testGetHandle() throws Exception {
+        // GIVEN
+        MockContent content = new MockContent("test");
+
+        // WHEN
+        final String result = content.getHandle();
+
+        // THEN
+        assertEquals("/test", result);
+    }
+
+    @Test
+    public void testGetHandleOnRoot() throws Exception {
+        // GIVE
+        MockContent root = new MockContent(MockNode.ROOT_NODE_NAME);
+
+        // WHEN
+        final String result = root.getHandle();
+
+        // THEN
+        assertEquals("/", result);
+    }
+
+
+    @Test
+    public void testGetName() throws Exception {
+        // GIVEN
+        MockContent content = new MockContent("test");
+
+        // WHEN
+        final String result = content.getHandle();
+
+        // THEN
+        assertEquals("/test", result);
+    }
+
+    @Test
+    public void testGetNameOnRoot() throws Exception {
+        // GIVE
+        MockContent root = new MockContent(MockNode.ROOT_NODE_NAME);
+
+        // WHEN
+        final String result = root.getName();
+
+        // THEN
+        assertEquals("", result);
     }
 }
