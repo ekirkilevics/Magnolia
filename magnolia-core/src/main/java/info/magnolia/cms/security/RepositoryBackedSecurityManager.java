@@ -244,19 +244,6 @@ public abstract class RepositoryBackedSecurityManager {
                 continue;
             }
             String name = StringUtils.substringAfter(aclEntry.getName(), "acl_");
-            ACL acl;
-            String repositoryName;
-            String workspaceName;
-            if (!StringUtils.contains(name, "_")) {
-                repositoryName = name;
-                workspaceName = ContentRepository.getDefaultWorkspace(name);
-                name += ("_" + workspaceName); // default workspace must be added to the name
-            }
-            else {
-                String[] tokens = StringUtils.split(name, "_");
-                repositoryName = tokens[0];
-                workspaceName = tokens[1];
-            }
 
             List<Permission> permissionList = new ArrayList<Permission>();
             // add acl
@@ -271,13 +258,14 @@ public abstract class RepositoryBackedSecurityManager {
                 permissionList.add(permission);
             }
 
+            ACL acl;
             // get the existing acl object if created before with some
             // other role
             if (principalList.containsKey(name)) {
                 acl = principalList.get(name);
                 permissionList.addAll(acl.getList());
             }
-            acl = new ACLImpl(name, repositoryName, workspaceName, permissionList);
+            acl = new ACLImpl(name, permissionList);
             principalList.put(name, acl);
 
         }

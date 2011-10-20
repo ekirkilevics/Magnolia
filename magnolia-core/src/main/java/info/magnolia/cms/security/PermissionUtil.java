@@ -34,15 +34,11 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.security.auth.ACL;
-import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.context.MgnlContext;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -65,7 +61,6 @@ public class PermissionUtil {
     /**
      * Retrieves permissions for current user.
      * 
-     * @param request
      * @return
      */
     public static List<Permission> getPermissions(Subject subject, String name) {
@@ -78,7 +73,7 @@ public class PermissionUtil {
             List<Permission> permissions = new ArrayList<Permission>();
             for (String role : roles) {
                 for (ACL acl : roleMan.getACLs(role).values()) {
-                    if (name.equals(acl.getWorkspace())) {
+                    if (name.equals(acl.getName())) {
                         // merge URI permissions from all roles
                         permissions.addAll(acl.getList());
                     }
@@ -86,22 +81,9 @@ public class PermissionUtil {
             }
             return permissions;
         }
-        List<Permission> permissions = null;
-        Set<PrincipalCollection> allPermissions = subject.getPrincipals(PrincipalCollection.class);
-        for (PrincipalCollection principal : allPermissions) {
-            Iterator<Principal> iter = principal.iterator();
-            while (iter.hasNext()) {
-                Principal maybeAcl = iter.next();
-                if (maybeAcl instanceof ACL) {
-                    ACL acl = ((ACL) maybeAcl);
-                    if (name.equals(acl.getRepository())) {
-                        permissions = acl.getList();
-                        break;
-                    }
-                }
-            }
-        }
-        return permissions;
+
+        ACL acl = PrincipalUtil.findAccessControlList(subject, name);
+        return acl != null ? acl.getList() : null;
     }
 
     /**

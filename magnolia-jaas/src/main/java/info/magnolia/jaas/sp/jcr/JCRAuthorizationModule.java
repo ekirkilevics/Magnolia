@@ -106,7 +106,7 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
 
         // can't obtain SS instance at creation time as repo is not initialized yet and class can't be instantiated.
         SecuritySupport securitySupport = SecuritySupport.Factory.getInstance();
-        user = PrincipalUtil.extractUser(subject);
+        user = PrincipalUtil.findPrincipal(subject, User.class);
         // not all jaas modules will support magnolia users
         if(user == null) {
             user = securitySupport.getUserManager().getUser(subject);
@@ -139,7 +139,7 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
                 Collection<Permission> permissions = new HashSet<Permission>(oldACL.getList());
                 permissions.addAll(princ.getList());
                 principalList.remove(oldACL);
-                princ = new ACLImpl(princ.getName(), princ.getRepository(), princ.getWorkspace(), new ArrayList<Permission>(permissions));
+                princ = new ACLImpl(princ.getName(), new ArrayList<Permission>(permissions));
             }
             principalList.add(princ);
         }

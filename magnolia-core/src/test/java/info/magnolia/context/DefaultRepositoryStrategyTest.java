@@ -39,18 +39,19 @@ import static org.junit.Assert.*;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.test.RepositoryTestCase;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.jcr.Session;
-import javax.security.auth.Subject;
 
 import org.junit.Test;
 
@@ -102,15 +103,14 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
         User user = createMock(User.class);
         SessionProviderRegistry registry = createMock(SessionProviderRegistry.class);
 
-        Set principalSet = new HashSet();
+        Set<Principal> principalSet = new HashSet<Principal>();
         PrincipalCollection principals = createMock(PrincipalCollection.class);
         principalSet.add(principals);
         ACL acl = createMock(ACL.class);
-        Subject subject = new Subject(false, principalSet, new HashSet(), new HashSet());
         expect(context.getUser()).andReturn(user).anyTimes();
         expect(user.getName()).andReturn("admin").anyTimes();
         expect(principals.get("magnolia_website")).andReturn(acl).anyTimes();
-        expect(acl.getList()).andReturn(new ArrayList()).anyTimes();
+        expect(acl.getList()).andReturn(new ArrayList<Permission>()).anyTimes();
         replay(context, user, registry, principals, acl);
 
         DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(registry, context);

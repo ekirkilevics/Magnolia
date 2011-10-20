@@ -53,13 +53,29 @@ public class PrincipalUtil {
         return subject;
     }
 
-    public static <T extends Principal> T findPrincipal(Iterable<Principal> principals, Class<T> clazz) {
+    public static <T extends Principal> T findPrincipal(Subject subject, Class<T> clazz) {
+        return findPrincipal(subject.getPrincipals(), clazz, null);
+    }
+
+    public static ACL findAccessControlList(Iterable<Principal> principals, String name) {
+        return findPrincipal(principals, ACL.class, name);
+    }
+
+    public static ACL findAccessControlList(Subject subject, String name) {
+        return findPrincipal(subject.getPrincipals(), ACL.class, name);
+    }
+
+    public static <T extends Principal> T removePrincipal(Iterable<Principal> principals, Class<T> clazz) {
+        return removePrincipal(principals, clazz, null);
+    }
+
+    private static <T extends Principal> T findPrincipal(Iterable<Principal> principals, Class<T> clazz, String name) {
         for (Principal principal : principals) {
-            if (clazz.isAssignableFrom(principal.getClass())) {
+            if (matches(principal, clazz, name)) {
                 return (T) principal;
             }
             if (principal instanceof PrincipalCollection) {
-                T t = findPrincipal((PrincipalCollection) principal, clazz);
+                T t = findPrincipal((PrincipalCollection) principal, clazz, name);
                 if (t != null) {
                     return t;
                 }
@@ -68,19 +84,15 @@ public class PrincipalUtil {
         return null;
     }
 
-    public static <T extends Principal> T findPrincipal(Subject subject, Class<T> clazz) {
-        return findPrincipal(subject.getPrincipals(), clazz);
-    }
-
-    public static <T extends Principal> T removePrincipal(Iterable<Principal> principals, Class<T> clazz) {
+    private static <T extends Principal> T removePrincipal(Iterable<Principal> principals, Class<T> clazz, String name) {
         for (Iterator<Principal> iterator = principals.iterator(); iterator.hasNext(); ) {
             Principal principal = iterator.next();
-            if (clazz.isAssignableFrom(principal.getClass())) {
+            if (matches(principal, clazz, name)) {
                 iterator.remove();
                 return (T) principal;
             }
             if (principal instanceof PrincipalCollection) {
-                T t = removePrincipal((PrincipalCollection) principal, clazz);
+                T t = removePrincipal((PrincipalCollection) principal, clazz, name);
                 if (t != null) {
                     return t;
                 }
@@ -89,40 +101,8 @@ public class PrincipalUtil {
         return null;
     }
 
-    public static <T extends Principal> T removePrincipal(Subject subject, Class<T> clazz) {
-        return removePrincipal(subject.getPrincipals(), clazz);
-    }
-
-    /**
-     * Extracts magnolia user from the list of principals.
-     *
-     * @param subject
-     * @return
-     */
-    public static User extractUser(Subject subject) {
-        return findPrincipal(subject.getPrincipals(), User.class);
-    }
-
-    public static ACL findAccessControlList(Iterable<Principal> principals, String name) {
-        for (Principal principal : principals) {
-            if (principal instanceof ACL) {
-                ACL acl = (ACL) principal;
-                if (name.equals(acl.getWorkspace())) {
-                    return acl;
-                }
-            }
-            if (principal instanceof PrincipalCollection) {
-                ACL acl = findAccessControlList((PrincipalCollection) principal, name);
-                if (acl != null) {
-                    return acl;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public static ACL findAccessControlList(Subject subject, String name) {
-        return findAccessControlList(subject.getPrincipals(), name);
+    private static boolean matches(Principal principal, Class<? extends Principal> clazz, String name) {
+        return (clazz == null || clazz.isAssignableFrom(principal.getClass())) &&
+                (name == null || name.equals(principal.getName()));
     }
 }

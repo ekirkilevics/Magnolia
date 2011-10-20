@@ -181,6 +181,6 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", this.name).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", getName()).toString();
     }
 }

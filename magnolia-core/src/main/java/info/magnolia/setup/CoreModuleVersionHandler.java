@@ -70,6 +70,7 @@ import info.magnolia.setup.for3_6_2.UpdateGroups;
 import info.magnolia.setup.for3_6_2.UpdateRoles;
 import info.magnolia.setup.for3_6_2.UpdateUsers;
 import info.magnolia.setup.for4_3.UpdateUserPermissions;
+import info.magnolia.setup.for4_5.RenameACLNodesTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -233,6 +234,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new BootstrapConditionally("Security", "Bootstraps security-base role.", "/mgnl-bootstrap/core/userroles.security-base.xml"))
         );
 
+        register(DeltaBuilder.update("4.5", "")
+                .addTask(new RenameACLNodesTask("Security", "Renames ACL nodes"))
+        );
     }
 
     private PropertyValueDelegateTask fixMimetype(String mimeType, final String previouslyWrongValue, final String fixedValue) {
