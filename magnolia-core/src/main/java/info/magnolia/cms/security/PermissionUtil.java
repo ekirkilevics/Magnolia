@@ -185,19 +185,4 @@ public class PermissionUtil {
         return permissions.toString();
     }
 
-    public static Subject createSubject(User user) {
-        Subject subject = new Subject();
-        subject.getPrincipals().add(user);
-        return subject;
-    }
-
-    /**
-     * Extracts magnolia user from the list of principals.
-     * @param subject
-     * @return
-     */
-    public static User extractUser(Subject subject) {
-        Iterator<User> iterator = subject.getPrincipals(User.class).iterator();
-        return iterator.hasNext() ? iterator.next() : null;
-    }
 }

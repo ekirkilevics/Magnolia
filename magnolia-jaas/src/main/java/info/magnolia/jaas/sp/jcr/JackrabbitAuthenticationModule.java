@@ -33,32 +33,39 @@
  */
 package info.magnolia.jaas.sp.jcr;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
-
 import java.io.IOException;
 import java.io.Serializable;
-import java.security.Principal;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
-
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
+import org.apache.jackrabbit.core.security.UserPrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.security.PrincipalUtil;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.UserManager;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
+
 /**
- * Login module for internal JR authentication - piggybacks on existing Magnolia authentication.
+ * Login module for internal Jackrabbit authentication, validates the JackRabbit 'admin' user and uses the Subject
+ * provided by the magnolia context.
+ *
+ * Note that Jackrabbit requires the login module to be serializable.
+ *
+ * @version $Id$
  */
-// JR requires login module to be serializable!
 public class JackrabbitAuthenticationModule implements LoginModule, Serializable {
 
     private static final Logger log = LoggerFactory.getLogger(JackrabbitAuthenticationModule.class);
@@ -84,44 +91,45 @@ public class JackrabbitAuthenticationModule implements LoginModule, Serializable
         callbacks[0] = new NameCallback("name");
         callbacks[1] = new PasswordCallback("pswd", false);
 
+        char[] password;
         try {
             this.callbackHandler.handle(callbacks);
             this.name = ((NameCallback) callbacks[0]).getName();
+            password = ((PasswordCallback) callbacks[1]).getPassword();
         } catch (IOException ioe) {
             throw new LoginException(ioe.toString());
         } catch (UnsupportedCallbackException ce) {
             throw new LoginException(ce.getCallback().toString() + " not available");
         }
 
-        if (!MgnlContext.hasInstance() || (MgnlContext.getInstance() instanceof SystemContext)) {
-            if (isAdmin()) {
-                this.subject.getPrincipals().add(new MagnoliaJRAdminPrincipal("admin"));
-                log.debug("logged in as admin ... repo init or authentication check");
-                return true;
+        // When we log in to register workspaces and node types we do it as 'admin', we do this in SystemContext but we
+        // can't use the context here because it's bound to the system user which is configured in the repository and
+        // attempting to access it would fail. More specifically calling MgnlContext.getSubject() fails as a result of
+        // trying to use SecuritySupport.
+        if (ContentRepository.REPOSITORY_USER.equals(this.name)) {
+            if (!Arrays.equals(password, ContentRepository.REPOSITORY_PSWD.toCharArray())) {
+                throw new FailedLoginException();
             }
-            // TODO: initialization, workflow, scheduled jobs etc ... we need to either delegate to our chain or replay same things here
-            return false;
+            compileAdminPrincipals();
+            return true;
         }
 
-        Subject mgnlChainSubject = MgnlContext.getSubject();
-        if (mgnlChainSubject == null) {
-            throw new LoginException("invalid setup or deserialization error");
-        }
-        Set<Principal> mgnlPrincipals = mgnlChainSubject.getPrincipals();
-        subject.getPrincipals().addAll(mgnlPrincipals);
-        if (isAdmin()) {
-            Iterator<Principal> iter = subject.getPrincipals().iterator();
-            while (iter.hasNext()) {
-                Principal next = iter.next();
-                if (next instanceof org.apache.jackrabbit.core.security.UserPrincipal) {
-                    iter.remove();
-                    log.debug("logged in as admin ... executing system context op on behalf of user " + next.getName());
-                    break;
-                }
-            }
-            this.subject.getPrincipals().add(new MagnoliaJRAdminPrincipal("admin"));
+        Context context = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
+        if (context == null) {
+            throw new FailedLoginException("Cannot login, magnolia context is not set");
         }
 
+        Subject magnoliaSubject = context.getSubject();
+        if (magnoliaSubject == null) {
+            throw new FailedLoginException("Cannot login, invalid setup or deserialization error");
+        }
+
+        if (isSuperuser(magnoliaSubject)) {
+            compileAdminPrincipals();
+            return true;
+        }
+
+        compileUserPrincipals(magnoliaSubject);
         return true;
     }
 
@@ -142,8 +150,20 @@ public class JackrabbitAuthenticationModule implements LoginModule, Serializable
         return true;
     }
 
-    private boolean isAdmin() {
-        // TODO: make admin user name configurable (read from properties)
-        return this.name != null && this.name.equals("admin");
+    private void compileUserPrincipals(Subject magnoliaSubject) {
+        subject.getPrincipals().addAll(magnoliaSubject.getPrincipals());
+        subject.getPrincipals().add(new UserPrincipal(name));
+    }
+
+    private void compileAdminPrincipals() {
+        this.subject.getPrincipals().add(new MagnoliaJRAdminPrincipal(ContentRepository.REPOSITORY_USER));
+    }
+
+    /**
+     * Returns true if the subject has a principal that represents the magnolia superuser.
+     */
+    private boolean isSuperuser(Subject magnoliaSubject) {
+        User user = PrincipalUtil.findPrincipal(magnoliaSubject, User.class);
+        return user != null && UserManager.SYSTEM_USER.equals(user.getName());
     }
 }

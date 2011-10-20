@@ -33,8 +33,6 @@
  */
 package info.magnolia.jaas.sp.jcr;
 
-import info.magnolia.cms.security.MgnlUser;
-import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
@@ -42,27 +40,20 @@ import info.magnolia.jaas.sp.AbstractLoginModule;
 import info.magnolia.jaas.sp.UserAwareLoginModule;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.core.security.UserPrincipal;
 
 /**
  * Authentication module implementation using JCR to retrieve the users.
  * @author Sameer Charles $Id$
  */
-// JR requires login module to be serializable!
 public class JCRAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule, Serializable {
 
-    private static final boolean logAdmin = false;
     protected User user;
 
 
@@ -84,7 +75,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
             throw new AccountLockedException("User account " + this.name + " is locked.");
         }
 
-        if (!UserManager.ANONYMOUS_USER.equals(user.getName()) && !isAdmin()) {
+        if (!UserManager.ANONYMOUS_USER.equals(user.getName())) {
             // update last access date for all non anonymous users
             getUserManager().updateLastAccessTimestamp(user);
         }
@@ -92,35 +83,18 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
 
     private UserManager getUserManager() {
         // can't get the factory upfront and can't use IoC as this class is instantiated by JCR/JAAS before anything else is ready.
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("getting user manager for realm " + realm.getName());
-        }
+        log.debug("getting user manager for realm " + realm.getName());
         return SecuritySupport.Factory.getInstance().getUserManager(realm.getName());
     }
 
 
 
     protected void initUser() throws LoginException {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("initializing user {}", name);
-        }
-        // we do not verify admin user, against our user base (which is in repo we are trying to access with this user), but we still check the password.
-        // This user has assigned no privileges, just dummy near empty user object (with name and pwd only).
-        if (isAdmin()) {
-            Map<String, String> props = new HashMap<String, String>();
-            //TODO: double check if we need to reset pwd here or if getAdminSession() is enough!!!
-            props.put(MgnlUserManager.PROPERTY_PASSWORD, new String(Base64.encodeBase64("admin".getBytes())));
-            MgnlUser user = new MgnlUser(name, null, Collections.EMPTY_LIST, Collections.EMPTY_LIST,props);
-            this.user = user;
-            // admin user is used by system and have no access to regular user stuff
-            return;
-        }
+        log.debug("initializing user {}", name);
 
         long start = System.currentTimeMillis();
         this.user = getUserManager().getUser(name);
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("initialized user {} in {}ms", name, (System.currentTimeMillis() - start));
-        }
+        log.debug("initialized user {} in {}ms", name, (System.currentTimeMillis() - start));
     }
 
     protected void matchPassword() throws LoginException {
@@ -140,33 +114,12 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
      */
     @Override
     public void setEntity() {
-        if (isAdmin()) {
-            // JR specific principal for repo only authentication. This part will be probably different per repo.
-            this.subject.getPrincipals().add(new MagnoliaJRAdminPrincipal(name));
-            // admin user is used by system and have no access to regular user stuff
-            return;
-        } else if ("superuser".equals(name)) {
-            // add admin principal also for our superuser to make sure system doesn't deny him any access
-            this.subject.getPrincipals().add(new MagnoliaJRAdminPrincipal(name));
-        } else {
-            // TODO: make JR dependency pluggable!!!
-            // and ordinary JR User principal for everybody else
-            this.subject.getPrincipals().add(new UserPrincipal(name));
 
-        }
-
-        // our user has our principal!!!!
         this.subject.getPrincipals().add(this.user);
         this.subject.getPrincipals().add(this.realm);
 
-
         collectGroupNames();
         collectRoleNames();
-    }
-
-    private boolean isAdmin() {
-        // TODO: make admin user name configurable (read from properties)
-        return this.name != null && this.name.equals("admin");
     }
 
     /**
