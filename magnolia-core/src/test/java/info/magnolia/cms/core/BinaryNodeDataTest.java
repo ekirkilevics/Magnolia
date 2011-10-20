@@ -31,7 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.test.mock;
+package info.magnolia.cms.core;
+
+import info.magnolia.cms.core.BinaryNodeData;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.test.mock.MockContent;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -39,16 +45,17 @@ import java.io.InputStream;
 
 import javax.jcr.RepositoryException;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.AccessDeniedException;
-import junit.framework.TestCase;
-
-
-public class BinaryMockNodeDataTest extends TestCase {
+/**
+ *
+ * TODO dlipp - move to package of BinaryNodeData...
+ *
+ */
+public class BinaryNodeDataTest extends TestCase {
 
     private static final byte[] BYTES = {'C', 'O', 'N', 'T', 'E', 'N', 'T'};
 
@@ -60,7 +67,7 @@ public class BinaryMockNodeDataTest extends TestCase {
         // GIVEN a binary node data which wraps a resource node
         MockContent parent = new MockContent("parent");
         final String binaryNodeAndAttributeName = "file";
-        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData(parent, binaryNodeAndAttributeName);
+        BinaryNodeData binaryNodeData = new BinaryNodeData(parent, binaryNodeAndAttributeName);
 
         // WHEN setting an attribute
         binaryNodeData.setAttribute("attribute", "value");
@@ -73,7 +80,7 @@ public class BinaryMockNodeDataTest extends TestCase {
 
     public void testThatTheBinaryContentCanBeReadMultipleTimes() throws Exception{
         MockContent parent = new MockContent("parent");
-        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData(parent, "file");
+        BinaryNodeData binaryNodeData = new BinaryNodeData(parent, "file");
         binaryNodeData.setValue(new ByteArrayInputStream(BYTES));
 
         // THEN we can read the content twice
@@ -91,7 +98,7 @@ public class BinaryMockNodeDataTest extends TestCase {
         // GIVEN a binary node data which wraps a resource node
         MockContent parent = new MockContent("parent");
         final String binaryNodeAndAttributeName = "file";
-        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData(parent, binaryNodeAndAttributeName);
+        BinaryNodeData binaryNodeData = new BinaryNodeData(parent, binaryNodeAndAttributeName);
 
         // WHEN setting the stream
         binaryNodeData.setValue(new ByteArrayInputStream(BYTES));

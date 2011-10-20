@@ -200,7 +200,7 @@ public class DefaultContent extends AbstractContent {
         }
 
         if(type == PropertyType.BINARY){
-            return new BinaryNodeData(this, name);
+            return addBinaryNodeData(name);
         }
         return new DefaultNodeData(this, name);
     }
@@ -462,6 +462,10 @@ public class DefaultContent extends AbstractContent {
     @Override
     public Version addVersion(Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
         return VersionManager.getInstance().addVersion(this.getJCRNode(), rule);
+    }
+
+    public BinaryNodeData addBinaryNodeData(String name) {
+        return new BinaryNodeData(this, name);
     }
 
     /**

@@ -34,6 +34,7 @@
 package info.magnolia.test.mock;
 
 import static org.junit.Assert.*;
+import info.magnolia.cms.core.BinaryNodeData;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
@@ -173,7 +174,7 @@ public class MockContentTest {
         assertEquals("bar", IOUtils.toString(st.getStream()));
 
         final NodeData bin = content.getNodeData("bin");
-        assertTrue(bin instanceof BinaryMockNodeData);
+        assertTrue(bin instanceof BinaryNodeData);
         assertEquals(PropertyType.BINARY, bin.getType());
         assertEquals("some-data", IOUtils.toString(bin.getStream()));
         assertEquals("some-data", bin.getString());

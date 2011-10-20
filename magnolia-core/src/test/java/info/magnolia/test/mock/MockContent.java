@@ -169,7 +169,7 @@ public class MockContent extends DefaultContent {
             while(nodeIterator.hasNext()) {
                 currentNode = nodeIterator.nextNode();
                 if (MgnlNodeType.NT_RESOURCE.equals(currentNode.getPrimaryNodeType().getName())) {
-                    onlyExistingNodeDatas.add(new BinaryMockNodeData(this, currentNode.getName()));
+                    onlyExistingNodeDatas.add(addBinaryNodeData(currentNode.getName()));
                 }
             }
         } catch (RepositoryException e) {
@@ -197,7 +197,7 @@ public class MockContent extends DefaultContent {
             } catch (PathNotFoundException e) {
                 // exception although hasNodeData returned tru -> then it's a binary!
             }
-            return new BinaryMockNodeData(this, name);
+            return addBinaryNodeData(name);
         }
         else if(!createIfNotExisting){
             //&& type != PropertyType.BINARY){
@@ -229,12 +229,7 @@ public class MockContent extends DefaultContent {
         new MockNodeData(this, name, value);
     }
 
-    public BinaryMockNodeData addBinaryNodeData(String name) {
-        return new BinaryMockNodeData(this, name);
-    }
-
     public void addNodeData(MockNodeData nd) {
-        // TODO dlipp - how to treat BinaryNodeDatas?
         try {
             nd.setParent(this);
             getJCRNode().setProperty(nd.getName(), nd.getValue());
