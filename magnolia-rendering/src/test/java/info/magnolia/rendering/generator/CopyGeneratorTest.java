@@ -235,7 +235,7 @@ public class CopyGeneratorTest {
     }
 
     @Test(expected=RenderException.class)
-    public void testGenerateThrowsRenderExceptionIfNodeTypeOrTemplateIdAreNotFound() throws Exception {
+    public void testGenerateThrowsRenderExceptionIfNodeTypeIsNotFound() throws Exception {
        //GIVEN
         Node parent = session.getNode("/foo");
         AutoGenerationConfiguration config = mock(AutoGenerationConfiguration.class);
