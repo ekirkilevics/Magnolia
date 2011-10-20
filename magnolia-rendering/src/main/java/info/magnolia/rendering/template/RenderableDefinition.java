@@ -78,4 +78,7 @@ public interface RenderableDefinition {
 
     // FIXME get rid of this method
     boolean isAvailable(Node content);
+
+    AutoGenerationConfiguration getAutoGeneration();
+
 }

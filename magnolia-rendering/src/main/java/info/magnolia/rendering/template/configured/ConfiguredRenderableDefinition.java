@@ -41,6 +41,7 @@ import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.objectfactory.ParameterResolver;
 import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.model.RenderingModelImpl;
+import info.magnolia.rendering.template.AutoGenerationConfiguration;
 import info.magnolia.rendering.template.RenderableDefinition;
 
 import java.lang.reflect.InvocationTargetException;
@@ -71,6 +72,7 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     private String i18nBasename;
     //TODO: use generics again once we get rid of templating-compatibility module
     private Class modelClass = RenderingModelImpl.class;
+    private AutoGenerationConfiguration autoGeneration = new ConfiguredAutoGeneration();
 
     protected Map<String, Object> parameters = new HashMap<String, Object>();
 
@@ -211,6 +213,15 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     }
 
     @Override
+    public AutoGenerationConfiguration getAutoGeneration() {
+        return this.autoGeneration;
+    }
+
+    public void setAutoGeneration(AutoGenerationConfiguration autoGeneration) {
+        this.autoGeneration = autoGeneration;
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
         .append("id", this.id)
@@ -219,6 +230,7 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
         .append("description", this.description)
         .append("title", this.title)
         .append("templateScript", this.templateScript)
+        .append("autoGeneration", this.autoGeneration)
         .toString();
     }
 }

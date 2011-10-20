@@ -134,7 +134,8 @@ public class AreaElement extends AbstractContentTemplatingElement {
             helper.closeTag(CMS_AREA);
         }
     }
-
+    //TODO fgrilli: we should probably place autogeneration code all in one place. Currently autogeneration happens here for areas and in DefaultRenderingEngine
+    //for other types. The reason we areas autogeneration is not there too is because of missing info on node type for the node to be created.
     private Node createNewAreaNode() {
         Node newAreaNode = null;
         try {

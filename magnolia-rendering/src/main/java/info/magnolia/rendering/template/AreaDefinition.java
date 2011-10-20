@@ -57,5 +57,4 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
 
     InheritanceConfiguration getInheritance();
 
-    AutoGenerationConfiguration getAutoGeneration();
 }

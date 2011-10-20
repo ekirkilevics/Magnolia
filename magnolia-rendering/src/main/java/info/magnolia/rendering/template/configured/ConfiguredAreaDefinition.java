@@ -34,7 +34,6 @@
 package info.magnolia.rendering.template.configured;
 
 import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.rendering.template.AutoGenerationConfiguration;
 import info.magnolia.rendering.template.ComponentAvailability;
 import info.magnolia.rendering.template.InheritanceConfiguration;
 
@@ -53,7 +52,6 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
     private boolean enabled = true;
     private String type;
     private InheritanceConfiguration inheritance = new ConfiguredInheritance();
-    private AutoGenerationConfiguration autoGeneration = new ConfiguredAutoGeneration();
 
     @Override
     public Map<String, ComponentAvailability> getAvailableComponents() {
@@ -95,13 +93,5 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
         this.inheritance = inheritanceConfiguration;
     }
 
-    @Override
-    public AutoGenerationConfiguration getAutoGeneration() {
-        return this.autoGeneration;
-    }
-
-    public void setAutoGeneration(AutoGenerationConfiguration autoGeneration) {
-        this.autoGeneration = autoGeneration;
-    }
 
 }
