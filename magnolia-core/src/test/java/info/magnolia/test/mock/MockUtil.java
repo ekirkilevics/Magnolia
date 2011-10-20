@@ -36,9 +36,10 @@ package info.magnolia.test.mock;
 import static org.easymock.EasyMock.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.PrincipalUtil;
+import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -58,6 +59,7 @@ import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Workspace;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
+import javax.security.auth.Subject;
 
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.ListOrderedMap;
@@ -203,11 +205,7 @@ public class MockUtil {
         for (Object[] aData : data) {
             String propertyName = (String) aData[0];
             Object value = aData[1];
-            try {
-                node.setProperty(propertyName, new MockValue(value));
-            } catch (RepositoryException e) {
-                throw new RuntimeRepositoryException(e);
-            }
+            node.setProperty(propertyName, new MockValue(value));
         }
 
         return new MockContent(node);
@@ -260,4 +258,7 @@ public class MockUtil {
         replay(ws, om);
     }
 
+    public static Subject createSubject(User user) {
+        return PrincipalUtil.createSubject(user);
+    }
 }

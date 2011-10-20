@@ -60,14 +60,12 @@ public interface ModuleRegistry {
      * can typically co-exist in a system and have the same module class).
      * @see #getModuleInstance(Class) for a type-safer method to get module instances
      * @throws IllegalArgumentException if no such module is registered.
-     * TODO ? @deprecated since 4.5, use IoC instead -- see not how this could still be useful --
      */
     Object getModuleInstance(String name);
 
     /**
      * Returns the module's instance. This is useful for modules of known type.
      * @throws IllegalArgumentException if no such module is registered or if multiple modules are registered for this class.
-     * TODO ? @deprecated since 4.5, use IoC instead
      */
     <T> T getModuleInstance(Class<T> moduleClass);
 

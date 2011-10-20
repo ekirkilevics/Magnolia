@@ -42,6 +42,7 @@ import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.model.Pair;
 
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class AuditLoggingUtilTest extends TestCase {
     public void testLogsLoginSuccesses() {
         final User user = createStrictMock(User.class);
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
-        final LoginResult loginResult = new LoginResult(LoginResult.STATUS_SUCCEEDED, user, null);
+        final LoginResult loginResult = new LoginResult(LoginResult.STATUS_SUCCEEDED, MockUtil.createSubject(user));
         expect(request.getParameter("mgnlUserId")).andReturn("greg");
         expect(request.getRemoteAddr()).andReturn("127.0.0.1");
 

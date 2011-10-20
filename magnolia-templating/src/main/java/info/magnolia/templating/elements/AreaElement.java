@@ -136,9 +136,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
     }
 
     private Node createNewAreaNode() {
+        Node newAreaNode = null;
         try {
-            Node areaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA, true);
-            NodeUtil.createPath(areaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA,true);
+            newAreaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA, true);
+            NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA,true);
         } catch (AccessDeniedException e) {
             new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
         } catch (PathNotFoundException e) {
@@ -146,9 +147,8 @@ public class AreaElement extends AbstractContentTemplatingElement {
         } catch (RepositoryException e) {
             new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
         }
-        return areaNode;
+        return newAreaNode;
     }
-
     protected void buildAdHocAreaDefinition() {
         ConfiguredAreaDefinition addHocAreaDefinition = new ConfiguredAreaDefinition();
         addHocAreaDefinition.setName(this.name);
@@ -204,7 +204,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 }
             }
         } catch (Exception e) {
-            throw new RenderException("Can't render area " + areaNode, e);
+            throw new RenderException("Can't render area " + areaNode + " with name " + this.name, e);
         }
     }
 
@@ -282,7 +282,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
             Iterator<ComponentAvailability> iterator = areaDefinition.getAvailableComponents().values().iterator();
             List<String> componentIds = new ArrayList<String>();
             while (iterator.hasNext()) {
-                componentIds.add(iterator.next().getId());
+                ComponentAvailability availableComponent = iterator.next();
+                if(availableComponent.isEnabled()) {
+                    componentIds.add(availableComponent.getId());
+                }
             }
             return StringUtils.join(componentIds, ',');
         }

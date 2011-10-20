@@ -63,7 +63,7 @@ public abstract class SecuritySupportBase implements SecuritySupport {
             loginContext.login();
             subject = loginContext.getSubject();
 
-            return new LoginResult(LoginResult.STATUS_SUCCEEDED, extractUser(subject), subject);
+            return new LoginResult(LoginResult.STATUS_SUCCEEDED, subject);
         }
         catch (LoginException e) {
             logLoginException(e);
@@ -90,11 +90,4 @@ public abstract class SecuritySupportBase implements SecuritySupport {
         return new LoginContext(loginContextName, callbackHandler);
     }
 
-    @Override
-    public User extractUser(Subject subject) {
-        for (User userPrincipal : subject.getPrincipals(User.class)) {
-            return userPrincipal;
-        }
-        return null;
-    }
 }

@@ -56,8 +56,12 @@
       <implementation>info.magnolia.rendering.template.configured.ConfiguredComponentAvailability</implementation>
     </type-mapping>
     <type-mapping>
-      <type>info.magnolia.rendering.template.Inheritance</type>
+      <type>info.magnolia.rendering.template.InheritanceConfiguration</type>
       <implementation>info.magnolia.rendering.template.configured.ConfiguredInheritance</implementation>
+    </type-mapping>
+    <type-mapping>
+      <type>info.magnolia.rendering.template.AutoGenerationConfiguration</type>
+      <implementation>info.magnolia.rendering.template.configured.ConfiguredAutoGeneration</implementation>
     </type-mapping>
   </components>
   <dependencies>

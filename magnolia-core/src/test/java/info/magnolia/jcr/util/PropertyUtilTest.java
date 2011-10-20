@@ -192,4 +192,25 @@ public class PropertyUtilTest {
         PropertyUtil.setProperty(root, PROPERTY_NAME, value);
         assertEquals(value, root.getProperty(PROPERTY_NAME).getBinary());
     }
+
+    @Test
+    public void testGetProperty() throws RepositoryException {
+        Property res = null;
+        String propertyValue = "value";
+        String propertyName = "myProperty";
+        root.setProperty(propertyName, propertyValue);
+        res = PropertyUtil.getProperty(root, "myProperty");
+        assertEquals("Props Name should be "+propertyName,propertyName, res.getName());
+        assertEquals("Props Value should be "+propertyValue,propertyValue, res.getString());
+    }
+    @Test
+    public void testGetPropertyPathNotFoundException() throws RepositoryException {
+        Property res = null;
+        String propertyValue = "value";
+        String propertyName = "myProperty";
+        root.setProperty(propertyName, propertyValue);
+        res = PropertyUtil.getProperty(root, "myProperty"+2);
+        assertEquals("Should be Null  ",null,res);
+    }
+
 }

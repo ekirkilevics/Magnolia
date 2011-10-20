@@ -53,6 +53,7 @@ import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.voting.voters.VoterSet;
 
@@ -93,7 +94,7 @@ public class CacheConfigurationSetupTest extends RepositoryTestCase {
         expect(anonymous.getName()).andStubReturn(UserManager.ANONYMOUS_USER);
         replay(anonymous);
 
-        MgnlContext.login(anonymous);
+        MgnlContext.login(MockUtil.createSubject(anonymous));
 
         //Logger.getLogger("info.magnolia.content2bean").setLevel(Level.DEBUG);
         cacheConf = (CacheConfiguration) Content2BeanUtil.toBean(content, true, CacheConfiguration.class);

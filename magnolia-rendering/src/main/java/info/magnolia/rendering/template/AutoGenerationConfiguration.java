@@ -33,20 +33,22 @@
  */
 package info.magnolia.rendering.template;
 
-import java.util.Collection;
+import info.magnolia.rendering.generator.Generator;
 
+import java.util.Map;
 
 /**
- * An entry of {@link AreaDefinition#getAvailableComponents()}.
- *
+ * AutoGeneration configuration.
  * @version $Id$
+ *
  */
-public interface ComponentAvailability {
+public interface AutoGenerationConfiguration {
 
-    String getId();
+    static final String TEMPLATE_ID = "templateId";
 
-    Collection<String> getRoles();
+    static final String NODE_TYPE = "nodeType";
 
-    boolean isEnabled();
+    Map<String, Object> getContent();
 
+    Class<Generator<AutoGenerationConfiguration>> getGeneratorClass();
 }

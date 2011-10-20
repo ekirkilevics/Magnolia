@@ -36,9 +36,11 @@ package info.magnolia.cms.security;
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.login.LoginResult;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
@@ -95,11 +97,25 @@ public class RescueSecuritySupport extends SecuritySupportBase {
         try {
             LoginContext loginContext = createLoginContext(callbackHandler, customLoginModule);
             loginContext.login();
+
+            Subject subject = loginContext.getSubject();
             User user = new RescueUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
-            user.setSubject(loginContext.getSubject());
-            return new LoginResult(LoginResult.STATUS_SUCCEEDED, user, loginContext.getSubject());
+            replaceUserPrincipal(subject, user);
+            return new LoginResult(LoginResult.STATUS_SUCCEEDED, subject);
         } catch (LoginException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void replaceUserPrincipal(Subject subject, User user) {
+        Iterator<Principal> iterator = subject.getPrincipals().iterator();
+        while (iterator.hasNext()) {
+            Principal next = iterator.next();
+            if (next instanceof User) {
+                iterator.remove();
+                subject.getPrincipals().add(user);
+                break;
+            }
         }
     }
 
@@ -141,8 +157,6 @@ public class RescueSecuritySupport extends SecuritySupportBase {
         private final String name;
 
         private final String password;
-
-        private Subject subject;
 
         private final Collection<String> groups = new ArrayList<String>();
 
@@ -243,16 +257,6 @@ public class RescueSecuritySupport extends SecuritySupportBase {
         @Override
         public Collection<String> getAllRoles() {
             return Collections.unmodifiableCollection(roles);
-        }
-
-        @Override
-        public Subject getSubject() {
-            return subject;
-        }
-
-        @Override
-        public void setSubject(Subject subject) {
-            this.subject = subject;
         }
     }
 }

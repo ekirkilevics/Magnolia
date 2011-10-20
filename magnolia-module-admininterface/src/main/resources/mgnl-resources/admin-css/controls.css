@@ -289,6 +289,6 @@ button.mgnlControlButton_PUSHED {
     margin-top: 2px !important;
     margin-left: 2px !important;
     overflow: hidden;
-    width: 60%;
+    width: 30%;
     text-overflow: ellipsis; /*FF does not support this. Maybe it will in version 7*/
 }

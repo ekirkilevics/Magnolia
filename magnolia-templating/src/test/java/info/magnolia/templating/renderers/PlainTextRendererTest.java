@@ -53,8 +53,9 @@ import info.magnolia.rendering.model.RenderingModelImpl;
 import info.magnolia.rendering.template.configured.ConfiguredRenderableDefinition;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockWebContext;
+import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -159,7 +160,7 @@ public class PlainTextRendererTest {
 
     private Content getNode(String configNode, String path) throws RepositoryException {
         MockContent content = new MockContent(path);
-        content.setHierarchyManager(new MockHierarchyManager("website"));
+        ((MockNode) content.getJCRNode()).setSession(new MockSession("website"));
         content.setNodeData("text", configNode);
         content.setNodeData("contentType", "mgnl:contentNode");
 

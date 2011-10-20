@@ -37,7 +37,6 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.test.MgnlTagTestCase;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockHierarchyManager;
 
 import java.io.IOException;
 
@@ -49,8 +48,9 @@ import junit.framework.Assert;
 
 
 /**
- * @author fgiust
  * @version $Revision$ ($Author$)
+ *
+ * FIXME dlipp - missing @Test annotations so no test is actually run!
  */
 public class PageIteratorTest extends MgnlTagTestCase {
 
@@ -70,8 +70,6 @@ public class PageIteratorTest extends MgnlTagTestCase {
 
         MockContent mainContent = new MockContent("main");
         MockContent currentContent = new MockContent("active");
-        MockHierarchyManager session = new MockHierarchyManager("test");
-        currentContent.setHierarchyManager(session);
 
         MockContent mainContentChild = new MockContent("mainchild");
 

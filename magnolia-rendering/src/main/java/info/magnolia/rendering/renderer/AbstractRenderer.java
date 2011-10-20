@@ -77,7 +77,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         if (content != null) {
             String uuid;
             try {
-                uuid = content.getUUID();
+                uuid = content.getIdentifier();
             }
             catch (RepositoryException e) {
                 throw new RenderException(e);

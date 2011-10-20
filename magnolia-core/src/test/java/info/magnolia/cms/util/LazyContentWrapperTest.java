@@ -63,6 +63,7 @@ import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpSession;
+import info.magnolia.test.mock.MockUtil;
 
 /**
  * This test requires real repository and authentication which is currently not possible without magnolia-jaas module.
@@ -102,7 +103,7 @@ public class LazyContentWrapperTest extends RepositoryTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setSession(session);
         MgnlContext.setInstance(ContextFactory.getInstance().createWebContext(req, null, null));
-        ((UserContextImpl) MgnlContext.getInstance()).login(dummy);
+        ((UserContextImpl) MgnlContext.getInstance()).login(MockUtil.createSubject(dummy));
     }
 
     @Override

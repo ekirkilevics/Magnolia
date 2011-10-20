@@ -33,13 +33,13 @@
  */
 package info.magnolia.rendering.template.configured;
 
-import info.magnolia.rendering.template.Inheritance;
+import info.magnolia.rendering.template.InheritanceConfiguration;
 
 /**
  * An holder for inheritance properties defined in the configuration.
  * @version $Id$
  */
-public class ConfiguredInheritance implements Inheritance {
+public class ConfiguredInheritance implements InheritanceConfiguration {
     private boolean enabled;
 
     @Override

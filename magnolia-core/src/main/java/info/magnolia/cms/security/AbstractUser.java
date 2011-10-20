@@ -33,36 +33,12 @@
  */
 package info.magnolia.cms.security;
 
-import javax.security.auth.Subject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
- * Handles the {@linkplain Subject subject}.
- * @version $Id$
+ * Abstract user implementation.
  *
+ * @version $Id$
  */
 public abstract class AbstractUser implements User {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(AbstractUser.class);
-
-    protected Subject subject;
-
-
-    @Override
-    public Subject getSubject() {
-        return this.subject;
-    }
-
-
-    @Override
-    public void setSubject(Subject subject) {
-        this.subject = subject;
-    }
 
 }

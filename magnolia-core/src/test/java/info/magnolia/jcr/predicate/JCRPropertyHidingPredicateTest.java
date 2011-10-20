@@ -31,22 +31,42 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template;
+package info.magnolia.jcr.predicate;
 
-import java.util.Collection;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
 
+import org.junit.Test;
+
+import info.magnolia.test.mock.jcr.MockProperty;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
- * An entry of {@link AreaDefinition#getAvailableComponents()}.
- *
- * @version $Id$
+ * Test case for JCRPropertyHidingPredicate.
  */
-public interface ComponentAvailability {
+public class JCRPropertyHidingPredicateTest {
 
-    String getId();
+    @Test
+    public void testEvaluate() throws Exception {
+        JCRPropertyHidingPredicate predicate = new JCRPropertyHidingPredicate();
 
-    Collection<String> getRoles();
+        assertTrue(predicate.evaluate(new MockProperty("someProperty", "", null)));
+        assertFalse(predicate.evaluate(new MockProperty("jcr:someProperty", "", null)));
+    }
 
-    boolean isEnabled();
-
+    @Test
+    public void testReturnsFalseOnException() {
+        JCRPropertyHidingPredicate predicate = new JCRPropertyHidingPredicate();
+        Property property = mock(Property.class);
+        try {
+            when(property.getName()).thenThrow(new RepositoryException());
+        } catch (RepositoryException e) {
+            fail();
+        }
+        predicate.evaluate(property);
+    }
 }

@@ -33,20 +33,11 @@
  */
 package info.magnolia.rendering.template;
 
-import java.util.Collection;
-
-
 /**
- * An entry of {@link AreaDefinition#getAvailableComponents()}.
- *
+ * Holds information about component inheritance.
  * @version $Id$
+ *
  */
-public interface ComponentAvailability {
-
-    String getId();
-
-    Collection<String> getRoles();
-
+public interface InheritanceConfiguration {
     boolean isEnabled();
-
 }

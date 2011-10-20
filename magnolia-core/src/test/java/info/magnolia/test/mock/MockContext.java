@@ -38,6 +38,7 @@ import info.magnolia.context.AbstractMapBasedContext;
 import info.magnolia.context.SystemContext;
 
 import javax.jcr.Session;
+import javax.security.auth.Subject;
 
 /**
  * A mock context where you can set a mocked hierarchy manger on it.
@@ -48,6 +49,7 @@ import javax.jcr.Session;
 public class MockContext extends AbstractMapBasedContext implements SystemContext{
 
     private User user;
+    private Subject subject;
 
     public MockContext() {
         this.setRepositoryStrategy(new MockRepositoryAcquiringStrategy());
@@ -67,6 +69,18 @@ public class MockContext extends AbstractMapBasedContext implements SystemContex
             return this.user;
         }
         return super.getUser();
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    @Override
+    public Subject getSubject() {
+        if (this.subject != null) {
+            return this.subject;
+        }
+        return super.getSubject();
     }
 
     @Override

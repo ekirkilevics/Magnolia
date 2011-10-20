@@ -45,6 +45,7 @@ import java.util.Map;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.security.auth.Subject;
 
 
 /**
@@ -93,6 +94,8 @@ public interface Context extends org.apache.commons.chain.Context {
      * If this is not a UserContext this method will very likely return the system user.
      */
     public User getUser();
+
+    public Subject getSubject();
 
     /**
      * @param locale

@@ -35,6 +35,7 @@ package info.magnolia.cms.util;
 
 /**
  * Util to handle exceptions.
+ *
  * @version $Revision: $ ($Author: $)
  */
 public class ExceptionUtil {
@@ -45,11 +46,10 @@ public class ExceptionUtil {
      * parameter - throw its cause exception, if the cause exception is a
      * RuntimeException - throw the given RuntimeException otherwise.
      */
-     public static <E extends Throwable> void unwrapIf(RuntimeException e,
-             Class<E> unwrapIf) throws E {
+    public static <E extends Throwable> void unwrapIf(RuntimeException e, Class<E> unwrapIf) throws E {
         final Throwable wrapped = e.getCause();
         if (unwrapIf != null && unwrapIf.isInstance(wrapped)) {
-           throw (E) wrapped;
+            throw (E) wrapped;
         } else if (wrapped != null && wrapped instanceof RuntimeException) {
             throw (RuntimeException) wrapped;
         } else {

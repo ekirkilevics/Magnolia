@@ -63,6 +63,7 @@ import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpSession;
+import info.magnolia.test.mock.MockUtil;
 
 /**
  * @author pbaerfuss
@@ -98,7 +99,7 @@ public class SystemContentWrapperTest extends RepositoryTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setSession(session);
         MgnlContext.setInstance(ContextFactory.getInstance().createWebContext(req, null, null));
-        ((UserContextImpl) MgnlContext.getInstance()).login(dummy);
+        ((UserContextImpl) MgnlContext.getInstance()).login(MockUtil.createSubject(dummy));
     }
 
     @Override

@@ -37,7 +37,10 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.Delta;
@@ -66,6 +69,8 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -306,10 +311,10 @@ public class ModuleManagerImpl implements ModuleManager {
                     try {
                         final ClassFactory classFactory = Classes.getClassFactory();
                         final Class<?> moduleClass = classFactory.forName(moduleClassName);
-                        // we registered the module class already
-                        moduleInstance = Components.getComponent(moduleClass);
+                        // We use the currently set ComponentProvider which is main
+                        moduleInstance = Components.newInstance(moduleClass);
                     } catch (Throwable t) {
-                        log.error("Can't retrieve " + moduleClassName + " for module " + moduleName + " : " + t.getClass() + " : " + t.getMessage(), t);
+                        log.error("Can't instantiate " + moduleClassName + " for module " + moduleName + " : " + t.getClass() + " : " + t.getMessage(), t);
                         continue;
                     }
                     // Still registering module instances with ModuleRegistry, although now one should use IoC and *depend* on such objects instead.
@@ -319,21 +324,19 @@ public class ModuleManagerImpl implements ModuleManager {
                 }
 
                 if (modulesParentNode.hasContent(moduleName)) {
-                    final Content moduleNode = new SystemContentWrapper(modulesParentNode.getContent(moduleName));
-                    moduleNodes.add(moduleNode);
+                    moduleNodes.add(new SystemContentWrapper(modulesParentNode.getContent(moduleName)));
                 }
 
                 if (moduleInstance != null) {
-                    // TODO MAGNOLIA-3538 populateModuleInstance(moduleInstance, moduleProperties);
 
-                    // TODO - move this to ModuleAdapterFactory.ModuleAdapter as well
+                    populateModuleInstance(moduleInstance, getModuleInstanceProperties(moduleDefinition));
+
                     startModule(moduleInstance, moduleDefinition, lifecycleContext);
 
-                    // This is now done in info.magnolia.objectfactory.pico.ModuleAdapterFactory.ModuleAdapter observing the config,
-                    // TODO MAGNOLIA-3538 populateModuleInstance(moduleInstance, moduleProperties);
-                    /*
+                    // start observation
                     ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, "/modules/" + moduleName + "/config", new EventListener() {
 
+                        @Override
                         public void onEvent(EventIterator events) {
                             final Object moduleInstance = registry.getModuleInstance(moduleName);
                             final ModuleDefinition moduleDefinition = registry.getDefinition(moduleName);
@@ -342,15 +345,15 @@ public class ModuleManagerImpl implements ModuleManager {
                             final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
                             lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_MODULE_RESTART);
                             MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                                @Override
                                 public void doExec() {
                                     stopModule(moduleInstance, moduleDefinition, lifecycleContext);
-                                    // populateModuleInstance(moduleInstance, moduleProperties);
+                                    populateModuleInstance(moduleInstance, getModuleInstanceProperties(moduleDefinition));
                                     startModule(moduleInstance, moduleDefinition, lifecycleContext);
                                 }
                             }, true);
                         }
                     }, DEFAULT_MODULE_OBSERVATION_DELAY, DEFAULT_MODULE_OBSERVATION_MAX_DELAY);
-                    */
                 }
             }
             catch (Throwable th) {
@@ -396,9 +399,42 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     /**
-     * @deprecated since 4.5 - we want to introduce interfaces for the few properties managed here, or dropped support for it altogether.
+     * Builds a map of properties to be set on the module instance, the properties are "moduleDefinition", "name",
+     * "moduleNode" and "configNode". This map is rebuilt every-time reloading takes place just in case the nodes have
+     * changed since startup. One situation where this is necessary is when a module does not have a config node at
+     * startup but one is added later on, see MAGNOLIA-3457.
      */
+    protected Map<String, Object> getModuleInstanceProperties(ModuleDefinition moduleDefinition) {
+
+        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+
+        final String moduleNodePath = "/modules/" + moduleDefinition.getName();
+        Content moduleNode = null;
+        try {
+            moduleNode = hm.isExist(moduleNodePath) ? new SystemContentWrapper(hm.getContent(moduleNodePath)) : null;
+        } catch (RepositoryException e) {
+            log.error("Wasn't able to acquire module node " + moduleNodePath + ": " + e.getMessage(), e);
+        }
+
+        final String moduleConfigPath = "/modules/" + moduleDefinition.getName() + "/config";
+        Content configNode = null;
+        try {
+            configNode = hm.isExist(moduleConfigPath) ? new SystemContentWrapper(hm.getContent(moduleConfigPath)) : null;
+        } catch (RepositoryException e) {
+            log.error("Wasn't able to acquire module config node " + moduleConfigPath + ": " + e.getMessage(), e);
+        }
+
+        final Map<String, Object> moduleProperties = new HashMap<String, Object>();
+        moduleProperties.put("moduleDefinition", moduleDefinition);
+        moduleProperties.put("name", moduleDefinition.getName());
+        moduleProperties.put("moduleNode", moduleNode);
+        moduleProperties.put("configNode", configNode);
+
+        return moduleProperties;
+    }
+
     protected void populateModuleInstance(Object moduleInstance, Map<String, Object> moduleProperties) {
+
         try {
             BeanUtils.populate(moduleInstance, moduleProperties);
         }
@@ -406,7 +442,6 @@ public class ModuleManagerImpl implements ModuleManager {
             log.error("Can't initialize module " + moduleInstance + ": " + e.getMessage(), e);
         }
 
-        /** This is now done in info.magnolia.objectfactory.pico.ModuleAdapterFactory.ModuleAdapter
         if (moduleProperties.get("configNode") != null) {
             try {
                 Content2BeanUtil.setProperties(moduleInstance, (Content) moduleProperties.get("configNode"), true);
@@ -415,7 +450,6 @@ public class ModuleManagerImpl implements ModuleManager {
                 log.error("Wasn't able to configure module " + moduleInstance + ": " + e.getMessage(), e);
             }
         }
-         */
     }
 
     @Override

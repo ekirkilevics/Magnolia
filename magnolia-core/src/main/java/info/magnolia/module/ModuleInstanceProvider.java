@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,28 +25,36 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.rendering.template;
+package info.magnolia.module;
 
-import java.util.Collection;
-
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
- * An entry of {@link AreaDefinition#getAvailableComponents()}.
+ * Provider for the module instance of a module.
  *
+ * @param <T> the type of the module class
  * @version $Id$
  */
-public interface ComponentAvailability {
+public class ModuleInstanceProvider<T> implements Provider<T> {
 
-    String getId();
+    @Inject
+    private ModuleRegistry moduleRegistry;
+    public String moduleName;
 
-    Collection<String> getRoles();
+    public ModuleInstanceProvider(String moduleName) {
+        this.moduleName = moduleName;
+    }
 
-    boolean isEnabled();
-
+    @Override
+    @SuppressWarnings("unchecked")
+    public synchronized T get() {
+        return (T) moduleRegistry.getModuleInstance(moduleName);
+    }
 }

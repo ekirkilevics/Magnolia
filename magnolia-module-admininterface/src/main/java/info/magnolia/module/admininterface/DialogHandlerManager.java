@@ -38,7 +38,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogFactory;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExtendingContentWrapper;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -55,7 +54,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Singleton;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,15 +64,11 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * Manages all the dialog handlers.
- *
- * @author philipp
  */
 @Singleton
 public class DialogHandlerManager extends ObservedManager {
 
     private static final String CLASS = "class";
-
-    private static final String ND_NAME = "name";
 
     /**
      * All handlers are registered here.
@@ -94,7 +88,6 @@ public class DialogHandlerManager extends ObservedManager {
             log.error("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
             throw new IllegalStateException("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e));
         }
-        final String moduleName = getModuleName(node);
         for (Iterator<Content> iter = dialogNodes.iterator(); iter.hasNext();) {
             Content dialogNode = new ExtendingContentWrapper(new SystemContentWrapper(iter.next()));
             try {
@@ -109,40 +102,35 @@ public class DialogHandlerManager extends ObservedManager {
                         + "]: "
                         + ExceptionUtils.getMessage(e));
             }
-            String name = dialogNode.getNodeData(ND_NAME).getString();
-            if (StringUtils.isEmpty(name)) {
-                name =  StringUtils.isNotBlank(moduleName) ? (moduleName + ":"  + dialogNode.getName()) : "" + dialogNode.getName();
-            }
-            String className = NodeDataUtil.getString(dialogNode, CLASS);
 
+            String dialogName;
             try {
-                // dialog class is not mandatory
-                Class< ? extends DialogMVCHandler> dialogClass;
+                dialogName = getDialogName(dialogNode);
+            } catch (RepositoryException e) {
+                log.warn("Can't establish name for dialog [" + dialogNode.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
+                continue;
+            }
+
+            // dialog class is not mandatory
+            String className = NodeDataUtil.getString(dialogNode, CLASS);
+            Class< ? extends DialogMVCHandler> dialogClass = null;
+            try {
                 if (StringUtils.isNotEmpty(className)) {
                     dialogClass = Classes.getClassFactory().forName(className);
                 }
-                else {
-                    dialogClass = null;
-                }
-                registerDialogHandler(name, dialogClass, dialogNode);
             }
             catch (ClassNotFoundException e) {
                 log.warn("Can't find dialog handler class " + className, e);
             }
+
+            registerDialogHandler(dialogName, dialogClass, dialogNode);
         }
     }
 
-    private String getModuleName(final Content node) {
-        try {
-            return node.getParent().getName();
-        } catch (AccessDeniedException e) {
-            log.error("An error occurred while getting the module name for dialogs", e);
-        } catch (PathNotFoundException e) {
-            log.error("An error occurred while getting the module name for dialogs", e);
-        } catch (RepositoryException e) {
-            log.error("An error occurred while getting the module name for dialogs", e);
-        }
-        return "";
+    protected String getDialogName(Content node) throws RepositoryException {
+        Content moduleNode = node.getAncestor(2);
+        Content dialogsNode = node.getAncestor(3);
+        return moduleNode.getName() + ":" + StringUtils.removeStart(node.getHandle(), dialogsNode.getHandle() + "/");
     }
 
     @Override

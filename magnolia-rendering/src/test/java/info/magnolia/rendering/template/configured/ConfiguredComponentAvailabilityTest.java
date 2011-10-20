@@ -31,22 +31,60 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template;
+package info.magnolia.rendering.template.configured;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
+import org.junit.Test;
 
 /**
- * An entry of {@link AreaDefinition#getAvailableComponents()}.
- *
  * @version $Id$
+ * @author cringele
  */
-public interface ComponentAvailability {
+public class ConfiguredComponentAvailabilityTest {
 
-    String getId();
+    @Test
+    public void testSetAndGetRole() {
+        // GIVEN
+        ConfiguredComponentAvailability avComp = new ConfiguredComponentAvailability();
+        Collection<String> testRoles = new ArrayList<String>();
+        testRoles.add("superuser");
 
-    Collection<String> getRoles();
+        // WHEN
+        avComp.setRoles(testRoles);
 
-    boolean isEnabled();
+        // THEN
+        assertEquals(avComp.getRoles(), testRoles);
+    }
+
+    @Test
+    public void testSetAndGetId() {
+        // GIVEN
+        ConfiguredComponentAvailability avComp = new ConfiguredComponentAvailability();
+        String testId = "some id";
+        // WHEN
+        avComp.setId(testId);
+
+        // THEN
+        assertEquals(avComp.getId(), testId);
+    }
+
+    @Test
+    public void testSetAndGetEnabled() {
+        // GIVEN
+        ConfiguredComponentAvailability avComp = new ConfiguredComponentAvailability();
+        boolean enabled = true;
+        // WHEN
+        avComp.setEnabled(enabled);
+
+        // THEN
+        assertEquals(avComp.isEnabled(), enabled);
+    }
+
+
+
 
 }

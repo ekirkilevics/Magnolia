@@ -31,22 +31,18 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template;
+package info.magnolia.rendering.generator;
 
-import java.util.Collection;
-
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.template.AutoGenerationConfiguration;
 
 /**
- * An entry of {@link AreaDefinition#getAvailableComponents()}.
- *
+ * A generator to be implemented in order to create nodes based on the passed in configuration.
+ * @param <C> a configuration object implementing {@link AutoGenerationConfiguration}.
  * @version $Id$
+ *
  */
-public interface ComponentAvailability {
+public interface Generator<C extends AutoGenerationConfiguration> {
 
-    String getId();
-
-    Collection<String> getRoles();
-
-    boolean isEnabled();
-
+    void generate(C configuration) throws RenderException;
 }

@@ -82,7 +82,7 @@ public class ComponentProviderConfiguration implements Cloneable {
         registerImplementation(type, type);
     }
 
-    public <T> void registerInstance(Class<T> type, T instance) {
+    public <T> void registerInstance(Class<T> type, Object instance) {
         addComponent(InstanceConfiguration.valueOf(type, instance));
     }
 

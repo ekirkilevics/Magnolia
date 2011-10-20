@@ -34,8 +34,9 @@
 package info.magnolia.rendering.template.configured;
 
 import info.magnolia.rendering.template.AreaDefinition;
+import info.magnolia.rendering.template.AutoGenerationConfiguration;
 import info.magnolia.rendering.template.ComponentAvailability;
-import info.magnolia.rendering.template.Inheritance;
+import info.magnolia.rendering.template.InheritanceConfiguration;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -51,7 +52,8 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
 
     private boolean enabled = true;
     private String type;
-    private Inheritance inheritance = new ConfiguredInheritance();
+    private InheritanceConfiguration inheritance = new ConfiguredInheritance();
+    private AutoGenerationConfiguration autoGeneration = new ConfiguredAutoGeneration();
 
     @Override
     public Map<String, ComponentAvailability> getAvailableComponents() {
@@ -85,12 +87,21 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
     }
 
     @Override
-    public Inheritance getInheritance() {
+    public InheritanceConfiguration getInheritance() {
         return inheritance;
     }
 
-    public void setInheritance(Inheritance inheritance) {
-        this.inheritance = inheritance;
+    public void setInheritance(InheritanceConfiguration inheritanceConfiguration) {
+        this.inheritance = inheritanceConfiguration;
+    }
+
+    @Override
+    public AutoGenerationConfiguration getAutoGeneration() {
+        return this.autoGeneration;
+    }
+
+    public void setAutoGeneration(AutoGenerationConfiguration autoGeneration) {
+        this.autoGeneration = autoGeneration;
     }
 
 }

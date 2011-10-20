@@ -43,7 +43,7 @@ import java.util.Iterator;
  * A collection of {@link Principal principals}.
  * @author Sameer Charles $Id$
  */
-public interface PrincipalCollection extends Principal, Serializable {
+public interface PrincipalCollection extends Principal, Serializable, Iterable<Principal> {
 
     @Override
     public String getName();
@@ -62,6 +62,7 @@ public interface PrincipalCollection extends Principal, Serializable {
 
     public boolean contains(Principal principal);
 
+    @Override
     public Iterator<Principal> iterator();
 
     /**

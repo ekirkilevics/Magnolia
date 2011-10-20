@@ -36,6 +36,7 @@ package info.magnolia.templating.functions;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkUtil;
 
@@ -305,5 +306,33 @@ public class TemplatingFunctions {
     private boolean isRoot(Node content) throws RepositoryException {
         return content.getDepth() == 0;
     }
+
+
+    /**
+     * @return The external link prepended with <code>http://</code> in case the protocol is missing or an empty String if the link does not exist.
+     */
+    public String getExternalLink(Node content, String linkPropertyName){
+        String externalLink = PropertyUtil.getString(content, linkPropertyName);
+        if(StringUtils.isBlank(externalLink)){
+            return StringUtils.EMPTY;
+        }
+        if(!hasProtocol(externalLink)){
+            externalLink = "http://"+externalLink;
+        }
+        return externalLink;
+    }
+
+    public String getExternalLinkTitle(Node content, String linkPropertyName, String linkTitlePropertyName){
+        String linkTitle = PropertyUtil.getString(content, linkTitlePropertyName);
+        if(StringUtils.isNotEmpty(linkTitle)){
+            return linkTitle;
+        }
+        return getExternalLink(content, linkPropertyName);
+    }
+
+    private boolean hasProtocol(String link) {
+        return link != null && link.contains("://");
+    }
+
 
 }
