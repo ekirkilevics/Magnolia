@@ -39,6 +39,7 @@ import info.magnolia.module.model.ModuleDefinition;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +93,10 @@ public interface InstallContext {
     ModuleDefinition getCurrentModuleDefinition();
 
     boolean isModuleRegistered(String moduleName);
+
+    Session getJCRSession(String workspaceName) throws RepositoryException;
+
+    Session getConfigJCRSession(String workspaceName) throws RepositoryException;
 
     /**
      * Log messages kept in the InstallContext.
