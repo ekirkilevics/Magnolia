@@ -35,16 +35,9 @@ package info.magnolia.rendering.template.configured;
 
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.ParameterInfo;
-import info.magnolia.objectfactory.MgnlInstantiationException;
-import info.magnolia.objectfactory.ParameterResolver;
-import info.magnolia.rendering.model.RenderingModel;
-import info.magnolia.rendering.model.RenderingModelImpl;
 import info.magnolia.rendering.template.AutoGenerationConfiguration;
 import info.magnolia.rendering.template.RenderableDefinition;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,7 +45,6 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 
@@ -71,49 +63,10 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     private String description;
     private String i18nBasename;
     //TODO: use generics again once we get rid of templating-compatibility module
-    private Class modelClass = RenderingModelImpl.class;
+    private Class modelClass;
     private AutoGenerationConfiguration autoGeneration = new ConfiguredAutoGeneration();
 
     protected Map<String, Object> parameters = new HashMap<String, Object>();
-
-    /**
-     * Instantiates the model based on the class defined by the {@link #modelClass} property. All the request parameters
-     * are then mapped to the model's properties.
-     */
-    @Override
-    public RenderingModel<?> newModel(final Node content, final RenderableDefinition definition, final RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        try {
-
-            RenderingModel model = Components.getComponentProvider().newInstanceWithParameterResolvers((Class<? extends RenderingModel>)getModelClass(),
-                new ParameterResolver() {
-                    @Override
-                    public Object resolveParameter(ParameterInfo parameter) {
-                        if (parameter.getParameterType().equals(Node.class)) {
-                            return content;
-                        }
-                        if (parameter.getParameterType().isAssignableFrom(definition.getClass())) {
-                            return definition;
-                        }
-                        if (parameter.getParameterType().equals(RenderingModel.class)) {
-                            return parentModel;
-                        }
-                        return UNRESOLVED;
-                    }
-                }
-            );
-
-            // TODO pass the parameter map to the method
-            final Map<String, String> params = MgnlContext.getParameters();
-            if (params != null) {
-                BeanUtils.populate(model, params);
-            }
-
-            return model;
-
-        } catch (MgnlInstantiationException e) {
-            throw new IllegalArgumentException("Can't instantiate model " + getModelClass(), e);
-        }
-    }
 
     @Override
     public boolean isAvailable(Node content) {
@@ -190,6 +143,7 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
         this.i18nBasename = basename;
     }
 
+    @Override
     @SuppressWarnings("rawtypes")
     public Class getModelClass() {
         return this.modelClass;

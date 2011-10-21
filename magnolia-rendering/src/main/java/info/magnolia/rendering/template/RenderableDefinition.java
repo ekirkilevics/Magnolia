@@ -33,9 +33,6 @@
  */
 package info.magnolia.rendering.template;
 
-import info.magnolia.rendering.model.RenderingModel;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -70,11 +67,7 @@ public interface RenderableDefinition {
      */
     Map<String, Object> getParameters();
 
-    /**
-     * Create the model based on the current content.
-     */
-    // FIXME get rid of this method
-    RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
+    Class getModelClass();
 
     // FIXME get rid of this method
     boolean isAvailable(Node content);
