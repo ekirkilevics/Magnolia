@@ -584,7 +584,7 @@ public class MockNode extends AbstractNode {
 
     @Override
     public void save() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        // do nothing
     }
 
     public void setIdentifier(String identifier) {
