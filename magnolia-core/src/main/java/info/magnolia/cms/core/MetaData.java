@@ -45,7 +45,6 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -94,32 +93,24 @@ public class MetaData {
      */
     private Node node;
 
-    private Session session;
-
     /**
-     * Package private constructor.
      * @param workingNode current <code>Node</code> on which <code>MetaData</code> is requested
-     * @deprecated since 4.5 use MetaData(Node, Session) instead.
+     * @param ignoredAccessManager no longer required hence use other constructor.
+     *
+     * @deprecated since 4.5 use MetaData(Node) instead.
      */
     @Deprecated
-    protected MetaData(Node workingNode, AccessManager manager) {
-        try {
-            this.node = workingNode.getNode(DEFAULT_META_NODE);
-        } catch (PathNotFoundException e) {
-            try {
-                log.debug("{} does not support MetaData, check node type definition of {}", workingNode.getPath(), workingNode.getPrimaryNodeType().getName());
-            } catch (RepositoryException re) {
-                // should never come here
-            }
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
+    protected MetaData(Node workingNode, AccessManager ignoredAccessManager) {
+        this(workingNode);
     }
 
     protected MetaData() {
     }
 
-    public MetaData(Node workingNode, Session session) {
+    /**
+     * @param workingNode current <code>Node</code> on which <code>MetaData</code> is requested
+     */
+    public MetaData(Node workingNode) {
         try {
             this.node = workingNode.getNode(DEFAULT_META_NODE);
         } catch (PathNotFoundException e) {
@@ -131,7 +122,6 @@ public class MetaData {
         } catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
-        this.session = session;
     }
 
     public String getHandle() throws RepositoryException {

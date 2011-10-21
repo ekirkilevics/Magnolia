@@ -71,7 +71,6 @@ import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.UnhandledException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -225,11 +224,7 @@ public class DefaultContent extends AbstractContent {
     @Override
     public MetaData getMetaData() {
         if (this.metaData == null) {
-            try {
-                this.metaData = new MetaData(this.node, this.node.getSession());
-            } catch (RepositoryException e) {
-                throw new UnhandledException(e);
-            }
+            this.metaData = new MetaData(this.node);
         }
         return this.metaData;
     }
