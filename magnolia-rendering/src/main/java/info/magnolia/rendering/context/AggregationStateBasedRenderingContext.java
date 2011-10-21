@@ -44,6 +44,7 @@ import info.magnolia.rendering.util.AppendableWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.EmptyStackException;
 import java.util.Stack;
 
 import javax.inject.Inject;
@@ -61,11 +62,30 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
     // TODO dlipp: add reasonable javadoc! Uses and updates the {@link AggregationState}.
     // FIXME we should not use the AggregationState anymore
 
+    private static class StackState {
+
+        RenderableDefinition renderableDefinition;
+        OutputProvider outputProvider;
+        Content legacyContent;
+
+        private StackState(RenderableDefinition renderableDefinition, OutputProvider outputProvider, Content legacyContent) {
+            this.renderableDefinition = renderableDefinition;
+            this.outputProvider = outputProvider;
+            this.legacyContent = legacyContent;
+        }
+    }
+
     private final AggregationState aggregationState;
+    private final Stack<StackState> stack = new Stack<StackState>();
     private RenderableDefinition currentRenderableDefinition;
-    private final Stack<Node> contentStack = new Stack<Node>();
-    private final Stack<RenderableDefinition> definitionStack = new Stack<RenderableDefinition>();
-    private OutputProvider out;
+    private OutputProvider currentOutputProvider;
+
+    /**
+     * We keep the current state in local variables and start using the stack only for the second push operation. This
+     * variable is 0 before the first push, 1 when we have local variables set, and greater than 1 when we have things
+     * on stack.
+     */
+    private int depth = 0;
 
     @Inject
     public AggregationStateBasedRenderingContext(Provider<AggregationState> aggregationStateProvider) {
@@ -78,11 +98,9 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
 
     @Override
     public Node getMainContent() {
-        // there is still a possiblity of call to this method before push!
-        if (aggregationState.getMainContent() == null) {
-            return null;
-        }
-        return aggregationState.getMainContent().getJCRNode();
+        // there is still a possibility of call to this method before push!
+        Content mainContent = aggregationState.getMainContent();
+        return mainContent != null ? mainContent.getJCRNode() : null;
     }
 
     @Override
@@ -97,34 +115,61 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
     }
 
     @Override
-    public void push(Node content, RenderableDefinition renderableDefinition, OutputProvider out) {
+    public void push(Node content, RenderableDefinition renderableDefinition) {
+        push(content, renderableDefinition, null);
+    }
+
+    @Override
+    public void push(Node content, RenderableDefinition renderableDefinition, OutputProvider outputProvider) {
+
+        // Creating the Content object can fail with an exception, by doing it before anything else we don't risk ending
+        // up having inconsistent state due to a partially completed push.
+        Content legacyContent = ContentUtil.asContent(content);
+
         if (aggregationState.getMainContent() == null) {
-            aggregationState.setMainContent(ContentUtil.asContent(content));
+            aggregationState.setMainContent(legacyContent);
         }
 
-        contentStack.push(aggregationState.getCurrentContent().getJCRNode());
-        definitionStack.push(currentRenderableDefinition);
-
-        aggregationState.setCurrentContent(ContentUtil.asContent(content));
+        if (depth > 0) {
+            stack.push(new StackState(currentRenderableDefinition, currentOutputProvider, aggregationState.getCurrentContent()));
+        }
+        aggregationState.setCurrentContent(legacyContent);
         currentRenderableDefinition = renderableDefinition;
-        this.out = out;
+        currentOutputProvider = outputProvider != null ? outputProvider : currentOutputProvider;
+        depth++;
     }
 
     @Override
     public void pop() {
-        currentRenderableDefinition = definitionStack.pop();
-        aggregationState.setCurrentContent(ContentUtil.asContent(contentStack.pop()));
+        if (depth == 0) {
+            throw new EmptyStackException();
+        } else if (depth == 1) {
+            aggregationState.setCurrentContent(null);
+            currentRenderableDefinition = null;
+            currentOutputProvider = null;
+        } else {
+            StackState state = stack.pop();
+            aggregationState.setCurrentContent(state.legacyContent);
+            currentRenderableDefinition = state.renderableDefinition;
+            currentOutputProvider = state.outputProvider;
+        }
+        depth--;
         // Note that we do not restore main content
     }
 
     @Override
+    public OutputProvider getOutputProvider() {
+        return currentOutputProvider;
+    }
+
+    @Override
     public AppendableWriter getAppendable() throws RenderException, IOException {
-        return new AppendableWriter(this.out.getAppendable());
+        return new AppendableWriter(this.currentOutputProvider.getAppendable());
     }
 
     @Override
     public OutputStream getOutputStream() throws RenderException, IOException {
-        return this.out.getOutputStream();
+        return this.currentOutputProvider.getOutputStream();
     }
 
 }
