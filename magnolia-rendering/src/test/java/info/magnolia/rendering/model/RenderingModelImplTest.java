@@ -35,6 +35,7 @@ package info.magnolia.rendering.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.template.configured.ConfiguredRenderableDefinition;
 import info.magnolia.test.mock.jcr.MockNode;
 
@@ -51,13 +52,26 @@ public class RenderingModelImplTest {
     public void testGetContent() {
         // GIVEN
         MockNode content = new MockNode();
-        RenderingModelImpl model = new RenderingModelImpl(content, null,null);
+        RenderingModelImpl<ConfiguredRenderableDefinition> model = new RenderingModelImpl<ConfiguredRenderableDefinition>(content, null,null);
 
         // WHEN
         Node result = model.getContent();
 
         // THEN
         assertEquals(content, result);
+    }
+
+    @Test
+    public void testGetContentMap() {
+        // GIVEN
+        MockNode content = new MockNode();
+        RenderingModelImpl<ConfiguredRenderableDefinition> model = new RenderingModelImpl<ConfiguredRenderableDefinition>(content, null,null);
+
+        // WHEN
+        ContentMap result = model.getContentMap();
+
+        // THEN
+        assertEquals(content, result.getJCRNode());
     }
 
     @Test
@@ -93,7 +107,7 @@ public class RenderingModelImplTest {
         RenderingModelImpl<ConfiguredRenderableDefinition> childOfChild = new RenderingModelImpl<ConfiguredRenderableDefinition>(null, null, child);
 
         // WHEN
-        RenderingModel result = childOfChild.getRoot();
+        RenderingModel<?> result = childOfChild.getRoot();
 
         // THEN
         assertEquals(parent, result);
