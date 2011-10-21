@@ -34,8 +34,9 @@
 package info.magnolia.context;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.version.MgnlVersioningSession;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
+import info.magnolia.cms.security.User;
 import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.stats.JCRStats;
@@ -48,6 +49,7 @@ import javax.jcr.Credentials;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
@@ -77,8 +79,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
     @Override
     public Session getSession(String workspaceName) throws LoginException, RepositoryException {
-        WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-        return getRepositorySession(util.getDefaultCredentials(), workspaceName);
+        return getRepositorySession(getDefaultCredentials(), workspaceName);
     }
 
     protected Session getRepositorySession(Credentials credentials, String workspaceName) throws LoginException, RepositoryException {
@@ -156,4 +157,34 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         return jcrSessions.size();
     }
 
+    protected SimpleCredentials getAdminUserCredentials() {
+        // FIXME: stop using SystemProperty, but IoC is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
+        String user = SystemProperty.getProperty("magnolia.connection.jcr.admin.userId", SystemProperty.getProperty("magnolia.connection.jcr.userId", "admin"));
+        String pwd = SystemProperty.getProperty("magnolia.connection.jcr.admin.password", SystemProperty.getProperty("magnolia.connection.jcr.password", "admin"));
+        return new SimpleCredentials(user, pwd.toCharArray());
+    }
+
+    protected SimpleCredentials getAnonymousUserCredentials() {
+        // FIXME: stop using SystemProperty, but IoC is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
+        // TODO: can also read it from the Login Module properties ... but WAU has no access to that
+        String user = SystemProperty.getProperty("magnolia.connection.jcr.anonymous.userId", "anonymous");
+        String pwd = SystemProperty.getProperty("magnolia.connection.jcr.anonymous.password", "anonymous");
+        return new SimpleCredentials(user, pwd.toCharArray());
+    }
+
+    public SimpleCredentials getCredentials(User user) {
+        return new SimpleCredentials(user.getName(),user.getPassword().toCharArray());
+    }
+
+    /**
+     * @return Default SimpleCredentials as configured in magnolia.properties
+     * */
+    public SimpleCredentials getDefaultCredentials() {
+        User user = MgnlContext.getUser();
+        if (user == null) {
+            // there is no user logged in, so this is just a system call. Returned credentials are used only to access repository, but do not allow any access over Magnolia.
+            return getAnonymousUserCredentials();
+        }
+        return getCredentials(user);
+    }
 }

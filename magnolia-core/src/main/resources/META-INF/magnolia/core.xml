@@ -42,10 +42,6 @@
       <implementation>info.magnolia.context.JCRSessionPerThreadSystemContext</implementation>
     </component>
     <component>
-      <type>info.magnolia.cms.util.WorkspaceAccessUtil</type>
-      <implementation>info.magnolia.cms.util.WorkspaceAccessUtil</implementation>
-    </component>
-    <component>
       <type>info.magnolia.cms.beans.config.ConfigLoader</type>
       <implementation>info.magnolia.cms.beans.config.ConfigLoader</implementation>
     </component>
