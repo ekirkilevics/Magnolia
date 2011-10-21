@@ -33,7 +33,6 @@
  */
 package info.magnolia.test.mock.jcr;
 
-import info.magnolia.test.mock.MockQueryResult;
 
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
