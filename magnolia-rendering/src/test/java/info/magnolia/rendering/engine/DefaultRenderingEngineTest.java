@@ -34,15 +34,10 @@
 package info.magnolia.rendering.engine;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
@@ -66,42 +61,6 @@ import org.junit.Test;
 public class DefaultRenderingEngineTest {
 
     private static final String FREEMARKER_RENDERER_TYPE = "freemarker";
-
-    @Test
-    public void testGetAggregationStateSafely() {
-        // GIVEN
-        final WebContext context = mock(WebContext.class);
-        final AggregationState aggregationState = new AggregationState();
-        when(context.getAggregationState()).thenReturn(aggregationState);
-        MgnlContext.setInstance(context);
-        try {
-
-            // WHEN
-            AggregationState result = DefaultRenderingEngine.getAggregationStateSafely();
-
-            // THEN
-            assertEquals(aggregationState, result);
-        } finally {
-            MgnlContext.setInstance(null);
-        }
-    }
-
-    @Test
-    public void testGetAggregationStateSafelyWithNonWebContext() {
-        // GIVEN
-        final Context context = mock(Context.class);
-        MgnlContext.setInstance(context);
-        try {
-
-            // WHEN
-            AggregationState result = DefaultRenderingEngine.getAggregationStateSafely();
-
-            // THEN
-            assertNull(result);
-        } finally {
-            MgnlContext.setInstance(null);
-        }
-    }
 
     @Test(expected = RenderException.class)
     public void testGetRendererForThrowsExceptionWhenNoneIsRegistered() throws RenderException {

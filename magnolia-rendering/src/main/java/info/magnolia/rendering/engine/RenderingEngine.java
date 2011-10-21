@@ -41,7 +41,9 @@ import info.magnolia.rendering.template.RenderableDefinition;
 
 
 /**
- * Renders content to a writer.
+ * The RenderingEngine is the main entry point for rendering content. It's main task is to prepare for rendering by
+ * setting up the {@link RenderingContext} and then calling on a {@link info.magnolia.rendering.renderer.Renderer} to
+ * do the actual rendering.
  *
  * @version $Id$
  */
