@@ -382,18 +382,18 @@ public class NodeUtil {
     }
 
     /**
-     * Creates a node under the specified parent with the provided path and returns it. Should the node already exist, the method will simply return it.
+     * Creates a node under the specified parent and relative path, then returns it. Should the node already exist, the method will simply return it.
      */
-    public static Node createPath(Node parent, String path, String primaryNodeTypeName) throws RepositoryException, PathNotFoundException, AccessDeniedException {
-        return createPath(parent, path, primaryNodeTypeName, false);
+    public static Node createPath(Node parent, String relPath, String primaryNodeTypeName) throws RepositoryException, PathNotFoundException, AccessDeniedException {
+        return createPath(parent, relPath, primaryNodeTypeName, false);
     }
 
     /**
-     * Creates a node under the specified parent with the provided path and returns it. Should the node already exist, the method will simply return it.
+     * Creates a node under the specified parent and relative path, then returns it. Should the node already exist, the method will simply return it.
      */
-    public static Node createPath(Node parent, String path, String primaryNodeTypeName, boolean save) throws RepositoryException, PathNotFoundException, AccessDeniedException {
+    public static Node createPath(Node parent, String relPath, String primaryNodeTypeName, boolean save) throws RepositoryException, PathNotFoundException, AccessDeniedException {
         // remove leading /
-        String currentPath = StringUtils.removeStart(path, "/");
+        String currentPath = StringUtils.removeStart(relPath, "/");
 
         if (StringUtils.isEmpty(currentPath)) {
             return parent;
