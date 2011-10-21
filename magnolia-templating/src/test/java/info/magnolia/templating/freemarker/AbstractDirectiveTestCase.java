@@ -33,8 +33,7 @@
  */
 package info.magnolia.templating.freemarker;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import freemarker.cache.StringTemplateLoader;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
@@ -64,8 +63,8 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockJCRSession;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -251,7 +250,7 @@ public abstract class AbstractDirectiveTestCase {
         return map;
     }
 
-    protected MockJCRSession getSession() {
-        return (MockJCRSession) session.getJcrSession();
+    protected MockSession getSession() {
+        return (MockSession) session.getJcrSession();
     }
 }
