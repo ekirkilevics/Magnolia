@@ -42,6 +42,7 @@ import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -145,15 +146,6 @@ public class TemplatingFunctions {
         return contentMap == null ? null : asContentMap(this.root(contentMap.getJCRNode(), nodeTypeName));
     }
 
-    //TODO cringele: finish code for ancestors(ContentMap)
-//    public List<ContentMap> ancestors(ContentMap contentMap) throws RepositoryException {
-//        return contentMap == null ? null : this.ancestors(contentMap.getJCRNode());
-//    }
-//
-//    public List<ContentMap> ancestors(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
-//        return contentMap == null ? null : this.ancestors(contentMap.getJCRNode(), nodeTypeName));
-//    }
-
     public Node parent(Node content) throws RepositoryException {
         return this.parent(content, null);
     }
@@ -201,6 +193,15 @@ public class TemplatingFunctions {
             parentNode = this.parent(parentNode, nodeTypeName);
         }
         return parentNode;
+    }
+
+    public List<ContentMap> ancestors(ContentMap contentMap) throws RepositoryException {
+        return ancestors(contentMap, null);
+    }
+
+    public List<ContentMap> ancestors(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
+        List<Node> ancestorsAsNodes = this.ancestors(contentMap.getJCRNode(), nodeTypeName);
+        return asContentMapList(ancestorsAsNodes);
     }
 
     public List<Node> ancestors(Node content) throws RepositoryException{
@@ -381,6 +382,28 @@ public class TemplatingFunctions {
      */
     public String externalLinkTitle(ContentMap content, String linkPropertyName, String linkTitlePropertyName){
         return externalLinkTitle(asJCRNode(content), linkPropertyName, linkTitlePropertyName);
+    }
+
+    public List<ContentMap> asContentMapList(Collection<Node> nodeList) {
+        if(nodeList != null) {
+            List<ContentMap> contentMapList = new ArrayList<ContentMap>();
+            for (Node node : nodeList) {
+                contentMapList.add(asContentMap(node));
+            }
+            return contentMapList;
+        }
+        return null;
+    }
+
+    public List<Node> asNodeList(Collection<ContentMap> contentMapList) {
+        if(contentMapList != null) {
+            List<Node> nodeList = new ArrayList<Node>();
+            for (ContentMap node : contentMapList) {
+                nodeList.add(node.getJCRNode());
+            }
+            return nodeList;
+        }
+        return null;
     }
 
     /**
