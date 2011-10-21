@@ -113,7 +113,7 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
                         map.put(propertyName, property.getValue());
                         createNode(newNode, map);
                     } else {
-                        newNode.setProperty(propertyName, (String)property.getValue());
+                        newNode.setProperty(propertyName, property.getValue().toString());
                     }
                 }
                 newNode.getSession().save();
