@@ -56,7 +56,6 @@ import org.apache.commons.lang.StringUtils;
  * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
  *
  * @version $Id$
- * TODO dlipp: to be reviewed - see SCRUM-277
  */
 public class TemplatingFunctions {
 
