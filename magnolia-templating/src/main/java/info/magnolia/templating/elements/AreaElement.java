@@ -63,7 +63,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.core.ItemManager;
 
 
 /**
@@ -143,6 +142,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         try {
             newAreaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA);
             NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
+            newAreaNode.getSession().save();
         } catch (AccessDeniedException e) {
             new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
         } catch (PathNotFoundException e) {
