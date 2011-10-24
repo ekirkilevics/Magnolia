@@ -173,7 +173,7 @@ public class PropertyUtilTest {
         BigDecimal value = BigDecimal.ONE;
         root.setProperty(PROPERTY_NAME, value);
         String res = PropertyUtil.getString(root, PROPERTY_NAME, defaultValue);
-        assertEquals(defaultValue, res);
+        assertEquals(value.toString(), res);
     }
 
     @Test
