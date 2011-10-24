@@ -40,10 +40,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.model.RenderingModel;
+import info.magnolia.rendering.model.RenderingModelImpl;
 import info.magnolia.rendering.template.RenderableDefinition;
+import info.magnolia.test.AbstractMagnoliaTestCase;
+import info.magnolia.test.mock.MockComponentProvider;
 import info.magnolia.test.mock.jcr.MockNode;
 
 import java.util.LinkedHashMap;
@@ -58,15 +62,41 @@ import org.junit.Test;
 /**
  * @version $Id$
  */
-public class AbstractRendererTest {
+public class AbstractRendererTest extends AbstractMagnoliaTestCase {
+
+    public static class DummyModel extends RenderingModelImpl<RenderableDefinition> {
+
+        public DummyModel(Node content, RenderableDefinition definition, RenderingModel<?> parent) {
+            super(content, definition, parent);
+        }
+
+        @Override
+        public String execute() {
+            return "keepOnGoing";
+        }
+    }
+
+    public static class SkipRenderingDummyModel extends RenderingModelImpl<RenderableDefinition> {
+
+        public SkipRenderingDummyModel(Node content, RenderableDefinition definition, RenderingModel<?> parent) {
+            super(content, definition, parent);
+        }
+
+        @Override
+        public String execute() {
+            return RenderingModel.SKIP_RENDERING;
+        }
+    }
 
     private static final String CONTENT_IDENTIFIER = "12345";
     private MockNode content;
     private RenderingModel<?> parentModel;
     private RenderingContext ctx;
 
+    @Override
     @Before
-    public void setUp() throws RepositoryException {
+    public void setUp() throws Exception {
+        super.setUp();
         MockNode root = new MockNode();
         content = (MockNode) root.addNode("content");
         content.setIdentifier(CONTENT_IDENTIFIER);
@@ -76,6 +106,8 @@ public class AbstractRendererTest {
         parentModel = mock(RenderingModel.class);
         when(context.getAttribute(AbstractRenderer.MODEL_ATTRIBUTE)).thenReturn(parentModel);
         ctx = mock(RenderingContext.class);
+
+        Components.setComponentProvider(new MockComponentProvider());
     }
 
     @Test(expected = RenderException.class)
@@ -96,10 +128,9 @@ public class AbstractRendererTest {
         // GIVEN
         Map<String, Object> contextObjects = new LinkedHashMap<String, Object>();
         RenderableDefinition definition = mock(RenderableDefinition.class);
-        RenderingModel newModel = mock(RenderingModel.class);
-        when(definition.newModel(content, definition, parentModel)).thenReturn(newModel);
-        when(newModel.execute()).thenReturn("keepOnGoing");
+        when(definition.getModelClass()).thenReturn(DummyModel.class);
         when(ctx.getCurrentContent()).thenReturn(content);
+        when(ctx.getRenderableDefinition()).thenReturn(definition);
 
         AbstractRenderer renderer = new DummyRenderer() {
             @Override
@@ -117,9 +148,7 @@ public class AbstractRendererTest {
     public void testRenderWithModelAttributePrefixBeingNullAndRenderingSkipped() throws Exception {
         // GIVEN
         RenderableDefinition definition = mock(RenderableDefinition.class);
-        RenderingModel newModel = mock(RenderingModel.class);
-        when(definition.newModel(content, definition, parentModel)).thenReturn(newModel);
-        when(newModel.execute()).thenReturn(RenderingModel.SKIP_RENDERING);
+        when(definition.getModelClass()).thenReturn(SkipRenderingDummyModel.class);
         when(ctx.getCurrentContent()).thenReturn(content);
         when(ctx.getRenderableDefinition()).thenReturn(definition);
 
@@ -141,9 +170,7 @@ public class AbstractRendererTest {
         // GIVEN
         Map<String, Object> contextObjects = new LinkedHashMap<String, Object>();
         RenderableDefinition definition = mock(RenderableDefinition.class);
-        RenderingModel newModel = mock(RenderingModel.class);
-        when(definition.newModel(content, definition, parentModel)).thenReturn(newModel);
-        when(newModel.execute()).thenReturn("keepOnGoing");
+        when(definition.getModelClass()).thenReturn(DummyModel.class);
         when(ctx.getCurrentContent()).thenReturn(content);
         when(ctx.getRenderableDefinition()).thenReturn(definition);
 

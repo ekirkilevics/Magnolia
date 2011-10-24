@@ -127,6 +127,19 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     @Override
+    public AccessManager getAccessManager(String name) {
+        Subject subject = getSubject();
+        List<Permission> availablePermissions = PermissionUtil.getPermissions(subject, name);
+        if (availablePermissions == null) {
+            log.warn("no permissions found for " + getUser().getName());
+        }
+        // TODO: use provider instead of fixed impl
+        AccessManagerImpl ami = new AccessManagerImpl();
+        ami.setPermissionList(availablePermissions);
+        return ami;
+    }
+
+    @Override
     public Session getJCRSession(String workspaceName) throws LoginException, RepositoryException {
     	return getRepositoryStrategy().getSession(workspaceName);
     }
@@ -207,18 +220,6 @@ public abstract class AbstractContext implements Context, Serializable {
 		}
     }
 
-    @Override
-    public AccessManager getAccessManager(String name) {
-        Subject subject = getSubject();
-        List<Permission> availablePermissions = PermissionUtil.getPermissions(subject, name);
-        if (availablePermissions == null) {
-            log.warn("no permissions found for " + getUser().getName());
-        }
-        // TODO: use provider instead of fixed impl
-        AccessManagerImpl ami = new AccessManagerImpl();
-        ami.setPermissionList(availablePermissions);
-        return ami;
-    }
     @Override
     public QueryManager getQueryManager(String workspaceName) {
         return this.getHierarchyManager(workspaceName).getQueryManager();

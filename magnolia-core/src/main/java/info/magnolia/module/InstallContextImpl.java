@@ -44,6 +44,7 @@ import info.magnolia.module.model.ModuleDefinition;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -158,6 +159,16 @@ public class InstallContextImpl implements InstallContext {
     @Override
     public HierarchyManager getConfigHierarchyManager() {
         return getHierarchyManager(ContentRepository.CONFIG);
+    }
+
+    @Override
+    public Session getJCRSession(String workspaceName) throws RepositoryException {
+        return MgnlContext.getSystemContext().getJCRSession(workspaceName);
+    }
+
+    @Override
+    public Session getConfigJCRSession(String workspaceName) throws RepositoryException {
+        return getJCRSession(ContentRepository.CONFIG);
     }
 
     @Override

@@ -62,10 +62,6 @@ public class ACLImpl implements ACL {
 
     private final List list;
 
-    private String repository;
-
-    private String workspace;
-
     public ACLImpl() {
         this.list = new ArrayList();
     }
@@ -87,40 +83,6 @@ public class ACLImpl implements ACL {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Get repository ID for which this ACL has been constructed.
-     * @return repository ID
-     */
-    @Override
-    public String getRepository() {
-        return this.repository;
-    }
-
-    /**
-     * Set repository ID for which this ACL will be constructed.
-     * @param repository
-     */
-    public void setRepository(String repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Get workspace ID for which this ACL has been constructed.
-     * @return workspace ID
-     */
-    @Override
-    public String getWorkspace() {
-        return this.workspace;
-    }
-
-    /**
-     * Set workspace ID for which this ACL will be constructed.
-     * @param workspace
-     */
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
     }
 
     /**
@@ -153,9 +115,10 @@ public class ACLImpl implements ACL {
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", this.name).append(
-                "workspace",
-                this.workspace).append("repository", this.repository).append("list", this.list).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("name", this.name)
+                .append("list", this.list)
+                .toString();
     }
 
 }

@@ -33,26 +33,24 @@
  */
 package info.magnolia.rendering.engine;
 
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
+import java.util.Collections;
+import java.util.Map;
+import javax.inject.Provider;
+import javax.jcr.Node;
+
+import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
+import info.magnolia.rendering.template.AutoGenerationConfiguration;
 import info.magnolia.rendering.template.RenderableDefinition;
-import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 
-import java.util.Collections;
-import java.util.Map;
-
-import javax.inject.Provider;
-import javax.jcr.Node;
-
 /**
- * Default implementation of {@link RenderingEngine}. Maintains the {@link AggregationState}.
- * @version $Id$
+ * Default implementation of {@link RenderingEngine}.
  *
+ * @version $Id$
  */
 public class DefaultRenderingEngine implements RenderingEngine {
 
@@ -81,14 +79,7 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
     @Override
     public void render(Node content, Map<String, Object> contextObjects, OutputProvider out) throws RenderException {
-        TemplateDefinition templateDefinition;
-        try {
-            templateDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(content);
-        }
-        catch (RegistrationException e) {
-            throw new RenderException("Can't render node " + content, e);
-        }
-        render(content, templateDefinition, contextObjects, out);
+        render(content, getRenderableDefinitionFor(content), contextObjects, out);
     }
 
     @Override
@@ -96,8 +87,14 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
         final Renderer renderer = getRendererFor(definition);
         final RenderingContext renderingContext = getRenderingContext();
-        renderingContext.push(content, definition, out);
 
+        //TODO fgrilli: is there a more suitable place for autogeneration?
+        final AutoGenerationConfiguration autoGeneration = definition.getAutoGeneration();
+        if (autoGeneration != null && autoGeneration.getGeneratorClass() != null) {
+            Components.newInstance(autoGeneration.getGeneratorClass(), content).generate(autoGeneration);
+        }
+
+        renderingContext.push(content, definition, out);
         try {
             renderer.render(renderingContext, contextObjects);
         } finally {
@@ -105,21 +102,24 @@ public class DefaultRenderingEngine implements RenderingEngine {
         }
     }
 
+    protected RenderableDefinition getRenderableDefinitionFor(Node content) throws RenderException {
+        try {
+            return templateDefinitionAssignment.getAssignedTemplateDefinition(content);
+        } catch (RegistrationException e) {
+            throw new RenderException("Can't resolve RenderableDefinition for node [" + content + "]", e);
+        }
+    }
+
     protected Renderer getRendererFor(RenderableDefinition definition) throws RenderException {
         final String renderType = definition.getRenderType();
-        if(renderType == null){
+        if (renderType == null) {
             throw new RenderException("No renderType defined for definition [" + definition + "]");
         }
         try {
             return rendererRegistry.get(renderType);
+        } catch (RegistrationException e) {
+            throw new RenderException("Can't find renderer [" + renderType + "]", e);
         }
-        catch (RegistrationException e) {
-            throw new RenderException("Can't find renderer for type " + renderType, e);
-        }
-    }
-
-    protected static AggregationState getAggregationStateSafely() {
-        return MgnlContext.isWebContext() ? MgnlContext.getAggregationState() : null;
     }
 
     @Override

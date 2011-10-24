@@ -96,10 +96,12 @@ public interface Realm extends Principal {
 
     /**
      * Factory for providing realms.
-     * 
      */
     public class Factory {
         public static Realm newRealm(String realmName) {
+            if (REALM_ADMIN.getName().equals(realmName)) return REALM_ADMIN;
+            if (REALM_ALL.getName().equals(realmName)) return REALM_ALL;
+            if (REALM_SYSTEM.getName().equals(realmName)) return REALM_SYSTEM;
             return new RealmImpl(realmName);
         }
     }

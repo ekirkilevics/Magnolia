@@ -89,8 +89,8 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
 
             Map<String, Object> newNodeConfig = (Map<String, Object>) entry.getValue();
 
-            if(!newNodeConfig.containsKey(NODE_TYPE) || !newNodeConfig.containsKey(TEMPLATE_ID)) {
-                throw new RenderException("nodeType and templateId parameters expected but not found.");
+            if(!newNodeConfig.containsKey(NODE_TYPE)) {
+                throw new RenderException("nodeType parameter expected but not found.");
             }
             String name = entry.getKey();
             Node newNode = null;
@@ -113,7 +113,7 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
                         map.put(propertyName, property.getValue());
                         createNode(newNode, map);
                     } else {
-                        newNode.setProperty(propertyName, (String)property.getValue());
+                        newNode.setProperty(propertyName, property.getValue().toString());
                     }
                 }
                 newNode.getSession().save();

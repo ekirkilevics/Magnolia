@@ -46,7 +46,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.version.VersionedNode;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -200,7 +203,7 @@ public class NodeUtilTest {
         assertEquals(FIRST_CHILD, names.get(0));
         assertEquals(SECOND_CHILD, names.get(1));
         assertEquals(THIRD_CHILD, names.get(2));
-        assertEquals("", names.get(3));
+        assertEquals(MockNode.ROOT_NODE_NAME, names.get(3));
     }
     @Test
     public void testGetNodes() throws RepositoryException {
@@ -241,5 +244,76 @@ public class NodeUtilTest {
     @Test
     public void testGetNameFromNode() throws RuntimeException {
         assertEquals(FIRST_CHILD, NodeUtil.getName(first));
+    }
+
+    @Test
+    public void testGetNodeByIdentifier() throws RepositoryException{
+        //INIT
+        try{
+           // GIVEN
+           MockUtil.initMockContext();
+           MockSession session = new MockSession("website");
+           MockUtil.setSessionAndHierarchyManager(session);
+           Node rootNode = session.getRootNode();
+           Node addedNode = rootNode.addNode(FIRST_CHILD);
+           String identifier = addedNode.getIdentifier();
+
+           // WHEN
+           Node res = NodeUtil.getNodeByIdentifier("website", identifier);
+
+           //THEN
+           assertEquals("Both Node should be Identical ",addedNode, res);
+
+        }finally{
+            MgnlContext.setInstance(null);
+        }
+    }
+
+    @Test
+    public void testGetNodeByIdentifierMissingParam() throws RepositoryException{
+        //INIT
+        try{
+           //WHEN
+           Node res = NodeUtil.getNodeByIdentifier("website", null);
+           //THEN
+           assertEquals("Both Node should be Identical ",null, res);
+
+        }finally{
+            MgnlContext.setInstance(null);
+        }
+    }
+
+    @Test(expected=RepositoryException.class)
+    public void testGetNodeByIdentifierNoNodeFound() throws RepositoryException{
+        //INIT
+        try{
+           //GIVEN
+           MockUtil.initMockContext();
+           MockSession session = new MockSession("website");
+           MockUtil.setSessionAndHierarchyManager(session);
+           Node rootNode = session.getRootNode();
+           Node addedNode = rootNode.addNode(FIRST_CHILD);
+           String identifier = addedNode.getIdentifier();
+
+           //WHEN
+           NodeUtil.getNodeByIdentifier("website", identifier+1);
+
+           assertTrue("Should get an Exception ",false);
+        }finally{
+            MgnlContext.setInstance(null);
+        }
+    }
+    @Test
+    public void testGetHandleIfPossible() throws RepositoryException {
+        // GIVEN
+        final String nodeName = "testNode";
+        Node root = new MockNode(MockNode.ROOT_NODE_NAME);
+        Node addedNode = root.addNode(nodeName);
+
+        // WHEN
+        String res = NodeUtil.getHandleIfPossible(addedNode);
+
+        // THEN
+        assertEquals("Should be /testNode  ", "/" + nodeName, res);
     }
 }

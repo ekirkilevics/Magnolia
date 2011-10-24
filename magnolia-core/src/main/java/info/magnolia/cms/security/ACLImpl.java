@@ -47,14 +47,10 @@ public class ACLImpl implements ACL {
     private static final long serialVersionUID = 7683918091476831307L;
 
     private final List<Permission> permissions;
-    private final String workspaceName;
-    private final String repositoryName;
     private final String name;
 
-    public ACLImpl(String name, String repositoryName, String workspaceName, List<Permission> permissions) {
+    public ACLImpl(String name, List<Permission> permissions) {
         this.name = name;
-        this.repositoryName = repositoryName;
-        this.workspaceName = workspaceName;
         this.permissions = permissions;
     }
 
@@ -66,15 +62,5 @@ public class ACLImpl implements ACL {
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public String getRepository() {
-        return repositoryName;
-    }
-
-    @Override
-    public String getWorkspace() {
-        return workspaceName;
     }
 }

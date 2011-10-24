@@ -42,26 +42,17 @@ import java.util.List;
 
 /**
  * A concrete ACL (workspace, path and permissions). Also implements the JAAS {@link Principal}.
- * @author Sameer Charles $Id$
+ *
+ * @version $Id$
  */
 public interface ACL extends Principal, Serializable {
 
     @Override
-    public String getName();
-
-    /**
-     * Get repository ID for which this ACL has been constructed.
-     */
-    public String getRepository();
-
-    /**
-     * Get workspace ID for which this ACL has been constructed.
-     */
-    public String getWorkspace();
+    String getName();
 
     /**
      * Returns list of permissions for this principal.
      */
-    public List<Permission> getList();
+    List<Permission> getList();
 
 }

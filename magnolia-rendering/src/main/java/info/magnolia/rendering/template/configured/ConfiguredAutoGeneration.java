@@ -39,6 +39,8 @@ import info.magnolia.rendering.template.AutoGenerationConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * Implementation of {@link AutoGenerationConfiguration}.
  * @version $Id$
@@ -64,6 +66,11 @@ public class ConfiguredAutoGeneration implements AutoGenerationConfiguration {
 
     public void setGeneratorClass(Class<Generator<AutoGenerationConfiguration>> generatorClass) {
         this.generatorClass = generatorClass;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

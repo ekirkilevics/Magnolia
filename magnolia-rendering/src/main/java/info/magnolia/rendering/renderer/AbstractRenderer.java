@@ -36,6 +36,10 @@ package info.magnolia.rendering.renderer;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.MgnlInstantiationException;
+import info.magnolia.objectfactory.ParameterInfo;
+import info.magnolia.objectfactory.ParameterResolver;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.model.EarlyExecutionAware;
@@ -50,6 +54,7 @@ import java.util.Map.Entry;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 
@@ -94,9 +99,11 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
 
         if (model == null) {
             model = newModel(content, definition, parentModel);
-            actionResult = model.execute();
-            if (RenderingModel.SKIP_RENDERING.equals(actionResult)) {
-                return;
+            if (model != null) {
+                actionResult = model.execute();
+                if (RenderingModel.SKIP_RENDERING.equals(actionResult)) {
+                    return;
+                }
             }
         }
 
@@ -129,13 +136,56 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     }
 
     /**
-     * Creates the model for this rendering process. Will set the properties
+     * Instantiates the model based on the class defined by the
+     * {@link info.magnolia.rendering.template.RenderableDefinition#getModelClass()} property. All the request
+     * parameters are then mapped to the model's properties.
      */
     @Override
-    public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws RenderException {
+    public RenderingModel<?> newModel(final Node content, final RenderableDefinition definition, final RenderingModel<?> parentModel) throws RenderException {
+
+        Class clazz = definition.getModelClass();
+        if (clazz == null) {
+            return null;
+        }
+
+        // TODO this check exists because the legacy RenderableDefinitions extend the new ones, we do not support old models
+        if (!RenderingModel.class.isAssignableFrom(clazz)) {
+            throw new RenderException("Can only render models of type [" + RenderingModel.class.getName() + "]");
+        }
+
+        Class<? extends RenderingModel> modelClass = (Class<? extends RenderingModel>)clazz;
+
         try {
             final Node wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
-            return definition.newModel(wrappedContent, definition, parentModel);
+
+            RenderingModel model = Components.getComponentProvider().newInstanceWithParameterResolvers(modelClass,
+                new ParameterResolver() {
+                    @Override
+                    public Object resolveParameter(ParameterInfo parameter) {
+                        if (parameter.getParameterType().equals(Node.class)) {
+                            return wrappedContent;
+                        }
+                        if (parameter.getParameterType().isAssignableFrom(definition.getClass())) {
+                            return definition;
+                        }
+                        if (parameter.getParameterType().equals(RenderingModel.class)) {
+                            return parentModel;
+                        }
+                        return UNRESOLVED;
+                    }
+                }
+            );
+
+            // TODO pass the parameter map to the method
+            final Map<String, String> params = MgnlContext.getParameters();
+            if (params != null) {
+                BeanUtils.populate(model, params);
+            }
+
+            return model;
+
+        } catch (MgnlInstantiationException e) {
+            throw new IllegalArgumentException("Can't instantiate model: " + modelClass, e);
         } catch (Exception e) {
             throw new RenderException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
         }

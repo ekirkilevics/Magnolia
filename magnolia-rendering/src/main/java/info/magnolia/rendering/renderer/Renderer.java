@@ -33,18 +33,26 @@
  */
 package info.magnolia.rendering.renderer;
 
+import java.util.Map;
+
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 
-import java.util.Map;
-
 /**
- * Renders a content with the passed {@link info.magnolia.rendering.template.RenderableDefinition}.
- * 
+ * Responsible for rendering a renderable.
+ *
  * @version $Id$
+ * @see info.magnolia.rendering.renderer.registry.RendererRegistry
+ * @see info.magnolia.rendering.engine.RenderingEngine
  */
 public interface Renderer {
 
+    /**
+     * Called by {@link info.magnolia.rendering.engine.RenderingEngine} after it has setup the {@link RenderingContext}.
+     *
+     * @param ctx            rendering context prepared by the caller
+     * @param contextObjects objects to expose to the template script
+     */
     void render(RenderingContext ctx, Map<String, Object> contextObjects) throws RenderException;
 
 }

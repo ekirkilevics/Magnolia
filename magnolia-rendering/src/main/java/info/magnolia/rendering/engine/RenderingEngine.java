@@ -33,33 +33,49 @@
  */
 package info.magnolia.rendering.engine;
 
+import java.util.Map;
+import javax.jcr.Node;
+
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.template.RenderableDefinition;
 
-import java.util.Map;
-
-import javax.jcr.Node;
-
 
 /**
- * Renders content to a writer.
+ * The RenderingEngine is the main entry point for rendering content. It's main task is to prepare for rendering by
+ * setting up the {@link RenderingContext} and then calling on a {@link info.magnolia.rendering.renderer.Renderer} to
+ * do the actual rendering.
  *
  * @version $Id$
  */
 public interface RenderingEngine {
 
     /**
-     * Renders the content with its assigned template. Uses {@link info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment}.
+     * Renders the content with its assigned template. Uses {@link info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment}
+     * to resolve the template assigned to the node.
+     *
+     * @param content the node to render
+     * @param out     the OutputProvider to be used for output or null if the OutputProvider already set in RenderingContext should be used
      */
     void render(Node content, OutputProvider out) throws RenderException;
 
     /**
-     * The context is exposed to the template script.
+     * Renders the content with its assigned template and exposes the given context objects to the template script. Uses
+     * {@link info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment} to resolve the template assigned
+     * to the node.
+     *
+     * @param content        the node to render
+     * @param contextObjects objects to expose to the template script
+     * @param out            the OutputProvider to be used for output or null if the OutputProvider already set in RenderingContext should be used
      */
     void render(Node content, Map<String, Object> contextObjects, OutputProvider out) throws RenderException;
 
     /**
-     * Uses a specific {@link RenderableDefinition} to render the content.
+     * Uses a specific {@link RenderableDefinition} to render the content and exposes the given context objects to the
+     * template script.
+     *
+     * @param content        the node to render
+     * @param contextObjects objects to expose to the template script
+     * @param out            the OutputProvider to be used for output or null if the OutputProvider already set in RenderingContext should be used
      */
     void render(Node content, RenderableDefinition definition, Map<String, Object> contextObjects, OutputProvider out) throws RenderException;
 

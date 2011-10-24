@@ -134,8 +134,10 @@ public class MgnlContext {
     }
 
     /**
-     * Get QueryManager created for this user on the specified repository.
-     * @deprecated since 4.5 - use the jcr query manager.
+     * Get access manager for the specified repository on the specified workspace.
+     *
+     * @deprecated since 4.5 - security is handled by JCR now and non JCR permissions require only workspace name as identifier.
+     * Use {@link #getAccessManager(String)} instead.
      */
     @Deprecated
     public static QueryManager getQueryManager(String workspaceName) {

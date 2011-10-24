@@ -348,17 +348,5 @@ public class PropertyUtil {
         return null;
     }
 
-    /**
-     * Return the Path of the node.
-     * Return an empty String in case of exception
-     */
-    public static  String getHandle(Node node) {
-        try {
-            return node.getPath();
-        }
-        catch (RepositoryException e) {
-            log.error("Failed to get handle: " + e.getMessage(), e);
-            return StringUtils.EMPTY;
-        }
-    }
+
 }

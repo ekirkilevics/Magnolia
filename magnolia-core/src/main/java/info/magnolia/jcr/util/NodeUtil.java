@@ -36,11 +36,12 @@ package info.magnolia.jcr.util;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.PermissionUtil;
-import info.magnolia.jcr.predicate.NodeTypePredicate;
-import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
+import info.magnolia.jcr.predicate.NodeTypePredicate;
 import info.magnolia.jcr.predicate.Predicate;
+import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.StringUtils;
@@ -126,6 +128,24 @@ public class NodeUtil {
             return false;
         }
     };
+
+    /**
+     * Get a Node by identifier.
+     */
+    public static Node getNodeByIdentifier(String workspace, String identifier) throws RepositoryException {
+        Node target = null;
+        Session jcrSession;
+        if(workspace==null || identifier==null){
+            return target;
+        }
+
+        jcrSession = MgnlContext.getJCRSession(workspace);
+        if(jcrSession!=null){
+            target =  jcrSession.getNodeByIdentifier(identifier);
+        }
+        return target;
+    }
+
 
     /**
      * from default content.
@@ -361,20 +381,26 @@ public class NodeUtil {
         return path + "/" + name;
     }
 
-    public static Node createPath(Node parent, String path, String primaryNodeTypeName) throws RepositoryException, PathNotFoundException, AccessDeniedException {
-        return createPath(parent, path, primaryNodeTypeName, false);
+    /**
+     * Creates a node under the specified parent and relative path, then returns it. Should the node already exist, the method will simply return it.
+     */
+    public static Node createPath(Node parent, String relPath, String primaryNodeTypeName) throws RepositoryException, PathNotFoundException, AccessDeniedException {
+        return createPath(parent, relPath, primaryNodeTypeName, false);
     }
 
-    public static Node createPath(Node parent, String path, String primaryNodeTypeName, boolean save) throws RepositoryException, PathNotFoundException, AccessDeniedException {
+    /**
+     * Creates a node under the specified parent and relative path, then returns it. Should the node already exist, the method will simply return it.
+     */
+    public static Node createPath(Node parent, String relPath, String primaryNodeTypeName, boolean save) throws RepositoryException, PathNotFoundException, AccessDeniedException {
         // remove leading /
-        String currentPath = StringUtils.removeStart(path, "/");
+        String currentPath = StringUtils.removeStart(relPath, "/");
 
         if (StringUtils.isEmpty(currentPath)) {
             return parent;
         }
 
         Node root = parent;
-        String[] names = currentPath.split("/"); //$NON-NLS-1$
+        String[] names = currentPath.split("/");
 
         for (int i = 0; i < names.length; i++) {
             String name = names[i];
@@ -464,6 +490,18 @@ public class NodeUtil {
             return "<not available>";
         }
     }
-
+    /**
+     * Return the Path of the node.
+     * Return an empty String in case of exception
+     */
+    public static  String getHandleIfPossible(Node node) {
+        try {
+            return node.getPath();
+        }
+        catch (RepositoryException e) {
+            log.error("Failed to get handle: " + e.getMessage(), e);
+            return StringUtils.EMPTY;
+        }
+    }
 
 }

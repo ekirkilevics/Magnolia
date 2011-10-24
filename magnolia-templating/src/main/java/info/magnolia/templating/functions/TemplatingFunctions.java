@@ -33,6 +33,7 @@
  */
 package info.magnolia.templating.functions;
 
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
@@ -41,6 +42,7 @@ import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -54,7 +56,6 @@ import org.apache.commons.lang.StringUtils;
  * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
  *
  * @version $Id$
- * TODO dlipp: to be reviewed - see SCRUM-277
  */
 public class TemplatingFunctions {
 
@@ -118,6 +119,24 @@ public class TemplatingFunctions {
         return contentMap == null ? null : asContentMap(this.parent(contentMap.getJCRNode(), nodeTypeName));
     }
 
+    /**
+     * Returns the page node of the passed node.
+     * If the passed Node is a page, the passed node will be returned.
+     * If the passed Node has no parent page at all, null is returned.
+     *
+     * FIXME cringele model: test missing.
+     *
+     * @param content
+     * @return returns the page node of the passed content node.
+     * @throws RepositoryException
+     */
+    public Node page(Node content) throws RepositoryException{
+        if(content.isNodeType(MgnlNodeType.NT_PAGE)) {
+            return content;
+        }
+        return parent(content, MgnlNodeType.NT_PAGE);
+    }
+
     public ContentMap root(ContentMap contentMap) throws RepositoryException {
         return contentMap == null ? null : asContentMap(this.root(contentMap.getJCRNode()));
     }
@@ -125,15 +144,6 @@ public class TemplatingFunctions {
     public ContentMap root(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
         return contentMap == null ? null : asContentMap(this.root(contentMap.getJCRNode(), nodeTypeName));
     }
-
-    //TODO cringele: finish code for ancestors(ContentMap)
-//    public List<ContentMap> ancestors(ContentMap contentMap) throws RepositoryException {
-//        return contentMap == null ? null : this.ancestors(contentMap.getJCRNode());
-//    }
-//
-//    public List<ContentMap> ancestors(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
-//        return contentMap == null ? null : this.ancestors(contentMap.getJCRNode(), nodeTypeName));
-//    }
 
     public Node parent(Node content) throws RepositoryException {
         return this.parent(content, null);
@@ -182,6 +192,15 @@ public class TemplatingFunctions {
             parentNode = this.parent(parentNode, nodeTypeName);
         }
         return parentNode;
+    }
+
+    public List<ContentMap> ancestors(ContentMap contentMap) throws RepositoryException {
+        return ancestors(contentMap, null);
+    }
+
+    public List<ContentMap> ancestors(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
+        List<Node> ancestorsAsNodes = this.ancestors(contentMap.getJCRNode(), nodeTypeName);
+        return asContentMapList(ancestorsAsNodes);
     }
 
     public List<Node> ancestors(Node content) throws RepositoryException{
@@ -307,11 +326,13 @@ public class TemplatingFunctions {
         return content.getDepth() == 0;
     }
 
-
     /**
-     * @return The external link prepended with <code>http://</code> in case the protocol is missing or an empty String if the link does not exist.
+     * Returns an external link prepended with <code>http://</code> in case the protocol is missing or an empty String if the link does not exist.
+     * @param content The node where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
+     * @return The link prepended with <code>http://</code>
      */
-    public String getExternalLink(Node content, String linkPropertyName){
+    public String externalLink(Node content, String linkPropertyName){
         String externalLink = PropertyUtil.getString(content, linkPropertyName);
         if(StringUtils.isBlank(externalLink)){
             return StringUtils.EMPTY;
@@ -322,17 +343,76 @@ public class TemplatingFunctions {
         return externalLink;
     }
 
-    public String getExternalLinkTitle(Node content, String linkPropertyName, String linkTitlePropertyName){
+    /**
+     * Returns an external link prepended with <code>http://</code> in case the protocol is missing or an empty String if the link does not exist.
+     * @param content The node's map representation where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
+     * @return The link prepended with <code>http://</code>
+     */
+    public String externalLink(ContentMap content, String linkPropertyName){
+        return externalLink(asJCRNode(content), linkPropertyName);
+    }
+
+    /**
+     * Return a link title based on the @param linkTitlePropertyName.
+     * When property @param linkTitlePropertyName is empty or null, the link itself is provided as the linkTitle (prepended with <code>http://</code>).
+     *
+     * @param content The node where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
+     * @param linkTitlePropertyName The property where the link title value is stored
+     * @return the resolved link title value
+     */
+    public String externalLinkTitle(Node content, String linkPropertyName, String linkTitlePropertyName){
         String linkTitle = PropertyUtil.getString(content, linkTitlePropertyName);
         if(StringUtils.isNotEmpty(linkTitle)){
             return linkTitle;
         }
-        return getExternalLink(content, linkPropertyName);
+        return externalLink(content, linkPropertyName);
     }
 
+    /**
+     * Return a link title based on the @param linkTitlePropertyName.
+     * When property @param linkTitlePropertyName is empty or null, the link itself is provided as the linkTitle (prepended with <code>http://</code>).
+     *
+     * @param content The node where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
+     * @param linkTitlePropertyName The property where the link title value is stored
+     * @return the resolved link title value
+     */
+    public String externalLinkTitle(ContentMap content, String linkPropertyName, String linkTitlePropertyName){
+        return externalLinkTitle(asJCRNode(content), linkPropertyName, linkTitlePropertyName);
+    }
+
+    public List<ContentMap> asContentMapList(Collection<Node> nodeList) {
+        if(nodeList != null) {
+            List<ContentMap> contentMapList = new ArrayList<ContentMap>();
+            for (Node node : nodeList) {
+                contentMapList.add(asContentMap(node));
+            }
+            return contentMapList;
+        }
+        return null;
+    }
+
+    public List<Node> asNodeList(Collection<ContentMap> contentMapList) {
+        if(contentMapList != null) {
+            List<Node> nodeList = new ArrayList<Node>();
+            for (ContentMap node : contentMapList) {
+                nodeList.add(node.getJCRNode());
+            }
+            return nodeList;
+        }
+        return null;
+    }
+
+    /**
+     * Checks if passed string has a <code>http://</code> protocol.
+     *
+     * @param link The link to check
+     * @return If @param link contains a <code>http://</code> protocol
+     */
     private boolean hasProtocol(String link) {
         return link != null && link.contains("://");
     }
-
 
 }

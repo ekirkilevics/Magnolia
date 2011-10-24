@@ -99,7 +99,7 @@ public class UserContextImpl extends AbstractContext implements UserContext {
 
     @Override
     public void login(Subject subject) {
-        User user = PrincipalUtil.extractUser(subject);
+        User user = PrincipalUtil.findPrincipal(subject, User.class);
         setLocaleFor(user);
         if(!user.getName().equals(Security.getAnonymousUser().getName())){
             setAttribute(SESSION_SUBJECT, subject, Context.SESSION_SCOPE);

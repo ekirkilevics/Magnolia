@@ -33,15 +33,14 @@
  */
 package info.magnolia.rendering.context;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import javax.jcr.Node;
+
 import info.magnolia.rendering.engine.OutputProvider;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.util.AppendableWriter;
-
-import java.io.IOException;
-import java.io.OutputStream;
-
-import javax.jcr.Node;
 
 
 /**
@@ -55,7 +54,20 @@ public interface RenderingContext {
 
     RenderableDefinition getRenderableDefinition();
 
-    void push(Node content, RenderableDefinition renderableDefinition, OutputProvider out);
+    OutputProvider getOutputProvider();
+
+    /**
+     * Pushes the content and renderableDefinition to be used for rendering. Output will be written using the
+     * OutputProvider already set.
+     */
+    void push(Node content, RenderableDefinition renderableDefinition);
+
+    /**
+     * Pushes the content and renderableDefinition to be used for rendering.
+     *
+     * @param outputProvider the OutputProvider to be used for output or null to use the OutputProvider already set
+     */
+    void push(Node content, RenderableDefinition renderableDefinition, OutputProvider outputProvider);
 
     void pop();
 
