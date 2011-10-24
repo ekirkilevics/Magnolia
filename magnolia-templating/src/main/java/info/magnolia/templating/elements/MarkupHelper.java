@@ -80,12 +80,12 @@ public class MarkupHelper implements Appendable {
     }
 
     public MarkupHelper startContent(Node node) throws IOException, RenderException {
-        appendable.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(node)).append(QUOTE).append(XML_END_COMMENT).append(LINE_BREAK);
+        appendable.append(CMS_BEGIN_CONTENT_COMMENT).append(node != null ?  getNodePath(node) : "").append(QUOTE).append(XML_END_COMMENT).append(LINE_BREAK);
         return this;
     }
 
     public MarkupHelper endContent(Node node) throws IOException, RenderException {
-        appendable.append(CMS_END_CONTENT_COMMENT).append(getNodePath(node)).append(QUOTE).append(XML_END_COMMENT).append(LINE_BREAK);
+        appendable.append(CMS_END_CONTENT_COMMENT).append(node != null ?  getNodePath(node) : "").append(QUOTE).append(XML_END_COMMENT).append(LINE_BREAK);
         return this;
     }
 

@@ -72,7 +72,7 @@ import org.slf4j.LoggerFactory;
  *
  * @version $Id$
  *
- * @deprecated since 4.5 - use {@link NodeUtil} instead.
+ * @deprecated since 4.5 - use {@link info.magnolia.jcr.util.NodeUtil} instead.
  */
 public class ContentUtil {
     private final static Logger log = LoggerFactory.getLogger(ContentUtil.class);
@@ -215,7 +215,6 @@ public class ContentUtil {
      * Get a subnode case insensitive.
      * @param node
      * @param name
-     * @return
      */
     public static Content getCaseInsensitive(Content node, String name) {
         if (name == null || node == null) {
@@ -647,6 +646,9 @@ public class ContentUtil {
 
     public static Content asContent(Node content) {
         try {
+            if(content == null) {
+                return null;
+            }
             return new DefaultContent(content);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);

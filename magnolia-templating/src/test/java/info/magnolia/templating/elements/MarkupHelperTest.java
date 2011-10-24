@@ -34,8 +34,8 @@
 package info.magnolia.templating.elements;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.io.StringWriter;
 
 import org.junit.Test;
@@ -48,7 +48,7 @@ import org.junit.Test;
 public class MarkupHelperTest {
 
     @Test
-    public void testParam() throws IOException {
+    public void testParam() throws Exception {
         final StringWriter out = new StringWriter();
         final MarkupHelper compo = new MarkupHelper(out);
         final String paramName = "param1";
@@ -58,12 +58,22 @@ public class MarkupHelperTest {
     }
 
     @Test
-    public void testParamsKeepCamelCaseNotation() throws IOException {
+    public void testParamsKeepCamelCaseNotation() throws Exception {
         final StringWriter out = new StringWriter();
         final MarkupHelper compo = new MarkupHelper(out);
         final String paramName = "iAmACamelCaseParamName";
         final String paramValue = "iAmACamelCaseParamValue";
         compo.attribute(paramName, paramValue);
         assertEquals(out.toString(), " iAmACamelCaseParamName=\"iAmACamelCaseParamValue\"", out.toString());
+    }
+
+    @Test
+    public void testNullContentAsEmptyString() throws Exception{
+        final StringWriter out = new StringWriter();
+        final MarkupHelper compo = new MarkupHelper(out);
+        compo.startContent(null);
+        assertTrue(out.toString().contains("cms:begin cms:content=\"\""));
+        compo.endContent(null);
+        assertTrue(out.toString().contains("cms:end cms:content=\"\""));
     }
 }

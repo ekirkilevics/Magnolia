@@ -63,6 +63,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.core.ItemManager;
 
 
 /**
@@ -109,14 +110,14 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.type = resolveType();
         this.label = resolveLabel();
         this.availableComponents = resolveAvailableComponents();
-
         this.inherit = isInheritanceEnabled();
-        this.areaNode = resolveAreaNode();
 
         // build an adhoc area definition if no area definition can be resolved
         if(areaDefinition == null){
             buildAdHocAreaDefinition();
         }
+
+        this.areaNode = resolveAreaNode();
 
         if (isAdmin()) {
             MarkupHelper helper = new MarkupHelper(out);
@@ -130,6 +131,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
             helper.attribute("dialog", this.dialog);
             helper.attribute("label", this.label);
             helper.attribute("inherit", String.valueOf(this.inherit));
+            helper.attribute("optional", String.valueOf(this.areaDefinition.isOptional()));
             helper.attribute("showAddButton", String.valueOf(shouldShowAddButton()));
             helper.closeTag(CMS_AREA);
         }
@@ -139,8 +141,8 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private Node createNewAreaNode() {
         Node newAreaNode = null;
         try {
-            newAreaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA, true);
-            NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA,true);
+            newAreaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA);
+            NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
         } catch (AccessDeniedException e) {
             new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
         } catch (PathNotFoundException e) {
@@ -217,7 +219,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
             if(content.hasNode(name)){
                 area = content.getNode(name);
             } else {
-               area = createNewAreaNode();
+                //autocreate and save area only if it's not optional
+                if(!areaDefinition.isOptional()) {
+                    area = createNewAreaNode();
+                }
             }
         }
         catch (RepositoryException e) {

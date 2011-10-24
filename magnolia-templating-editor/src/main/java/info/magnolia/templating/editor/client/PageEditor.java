@@ -34,7 +34,6 @@
 package info.magnolia.templating.editor.client;
 
 
-import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -143,6 +142,14 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     }
 
+    public void createArea(String workspace, String path) {
+        GWT.log("Creating area in workspace " + workspace + " at path " + path);
+    }
+
+    public void removeArea(String workspace, String path) {
+        GWT.log("Removing area in workspace " + workspace + " at path " + path);
+    }
+
     /**
      * A String representing the value for the GWT meta property whose content is <em>locale</em>.
      * See also <a href='http://code.google.com/webtoolkit/doc/latest/DevGuideI18nLocale.html#LocaleSpecifying'>GWT Dev Guide to i18n</a>
@@ -185,10 +192,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                         EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
                         editBarWidget.attach(child);
                     }
-                    if (parentBar != null && parentBar.getType().equals(AreaDefinition.TYPE_SINGLE)) {
-                        parentBar.mutateIntoSingleBar(child);
-                    }
-
                 } else if (child.getTagName().equalsIgnoreCase(MARKER_AREA)) {
                     Element edit = findCmsEditMarkerForArea(child, edits);
                     if(edit != null) {
@@ -203,15 +206,25 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         }
     }
 
+    /**
+     * Tries to find a match between the provided edit bar tag and the area tags found in DOM. Best match is when area and edit tags have the exact same content.
+     * However there might be the case where an optional area is in DOM but still needs to be created (manually via the UI). In the case the content wll be null,
+     * therefore we rely on name and optional attributes on having the same values in area and edit tags.
+     */
     private boolean isAreaEditBar(Element edit, NodeList<Element> areas) {
 
         String editContent = edit.getAttribute("content");
         int i = editContent.lastIndexOf("/");
-
-        if(i == -1) {
-            return false;
+        String match = null;
+        if(i != -1) {
+            match = editContent.substring(0, i);
+        } else {
+            //try with name and optional
+            match = edit.getAttribute("name");
         }
-        String match = editContent.substring(0, i);
+       if(match == null || match.length() == 0) {
+           return false;
+       }
         //GWT only shows these messages in dev mode.
         GWT.log("String to match area is " + match);
 
@@ -219,8 +232,10 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
             Element area = areas.getItem(j);
             String areaContent = area.getAttribute("content");
+            String areaName = area.getAttribute("name");
+            boolean optional = Boolean.valueOf(area.getAttribute("optional"));
 
-            if(match.equals(areaContent)) {
+            if(match.equals(areaContent) || (optional && match.equals(areaName))) {
                 GWT.log("found match with element " + area);
                 return true;
             }
@@ -229,26 +244,31 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     /**
-     * Looks in DOM for an existing &lt;cms:edit ... &gt; marker associated with an area element. For an edit bar to be associated with the passed in element,
-     * they must have the same content value.
+     * Tries to find a match between the provided edit area tag and the edit tags found in DOM. Best match is when area and edit tags have the exact same content.
+     * However there might be the case where an optional area is in DOM but still needs to be created (manually via the UI). In the case the content wll be null,
+     * therefore we rely on name and optional attributes on having the same values in area and edit tags.
      */
     private Element findCmsEditMarkerForArea(Element area, NodeList<Element> edits) {
         String content = area.getAttribute("content");
         String name = area.getAttribute("name");
+        boolean optional = Boolean.valueOf(area.getAttribute("optional"));
 
-        String match = content + (name != null ? ("/" + name) : "");
+        String bestMatch = content + (name != null ? ("/" + name) : "");
         //GWT shows these messages only in dev mode.
-        GWT.log("String to match edit bar is " + match);
+        GWT.log("String to match edit bar is " + bestMatch + ". Or if area is optional try with name [" + name +"]");
 
         for(int i=0; i < edits.getLength(); i++){
             Element edit = edits.getItem(i);
             String editContent = edit.getAttribute("content");
+            String editName = edit.getAttribute("name");
+            boolean editOptional = Boolean.valueOf(edit.getAttribute("optional"));
 
-            if(match.equals(editContent)) {
+            if(bestMatch.equals(editContent) || (optional && editOptional &&  name.equals(editName))) {
                 GWT.log("found match with element " + edit);
                 return edit;
             }
         }
         return null;
     }
+
 }
