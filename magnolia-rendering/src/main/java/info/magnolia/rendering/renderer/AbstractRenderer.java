@@ -45,6 +45,7 @@ import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.model.EarlyExecutionAware;
 import info.magnolia.rendering.model.ModelExecutionFilter;
 import info.magnolia.rendering.model.RenderingModel;
+import info.magnolia.rendering.model.RenderingModelImpl;
 import info.magnolia.rendering.template.RenderableDefinition;
 
 import java.util.HashMap;
@@ -145,12 +146,13 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
 
         Class clazz = definition.getModelClass();
         if (clazz == null) {
-            return null;
-        }
+            clazz = RenderingModelImpl.class;
+        } else {
 
-        // TODO this check exists because the legacy RenderableDefinitions extend the new ones, we do not support old models
-        if (!RenderingModel.class.isAssignableFrom(clazz)) {
-            throw new RenderException("Can only render models of type [" + RenderingModel.class.getName() + "]");
+            // TODO this check exists because the legacy RenderableDefinitions extend the new ones, we do not support old models
+            if (!RenderingModel.class.isAssignableFrom(clazz)) {
+                throw new RenderException("Can only render models of type [" + RenderingModel.class.getName() + "]");
+            }
         }
 
         Class<? extends RenderingModel> modelClass = (Class<? extends RenderingModel>)clazz;
