@@ -67,6 +67,7 @@ public interface RenderableDefinition {
      */
     Map<String, Object> getParameters();
 
+    //TODO: use generics again once we get rid of templating-compatibility module
     Class getModelClass();
 
     // FIXME get rid of this method
