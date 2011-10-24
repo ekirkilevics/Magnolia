@@ -435,21 +435,6 @@ public final class ContentRepository {
     }
 
     /**
-     * Returns magnolia specific Repository name where this workspace is registered
-     * within <Repository/>.
-     * */
-    private static String getParentRepositoryName(String workspaceName) throws RepositoryException {
-        Iterator<RepositoryNameMap> values = repositoryNameMap.values().iterator();
-        while (values.hasNext()) {
-            RepositoryNameMap map = values.next();
-            if (workspaceName.equalsIgnoreCase(map.getWorkspaceName())) {
-                return map.getRepositoryName();
-            }
-        }
-        throw new RepositoryException("No mapping found for "+workspaceName+" repository in magnolia repositories.xml");
-    }
-
-    /**
      * Get mapped repository name.
      * @param name
      * @return mapped name as in repositories.xml RepositoryMapping element
@@ -473,15 +458,6 @@ public final class ContentRepository {
             return name;
         }
         return nameMap.getWorkspaceName();
-    }
-
-    /**
-     * Add a mapped repository name.
-     * @param name
-     * @param repositoryName
-     */
-    private static void addMappedRepositoryName(String name, String repositoryName) {
-        addMappedRepositoryName(name, repositoryName, null);
     }
 
     /**
@@ -563,14 +539,6 @@ public final class ContentRepository {
         }
         log.debug("No mapping for the repository {}", repositoryID);
         return null;
-    }
-
-    /**
-     * Returns <code>true</code> if a mapping for the given repository name does exist.
-     */
-    private static boolean hasRepositoryMapping(String repositoryID) {
-        String name = getMappedRepositoryName(repositoryID);
-        return name != null && repositoryMapping.containsKey(name);
     }
 
     /**
