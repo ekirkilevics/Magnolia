@@ -80,7 +80,7 @@ public class UserContextImpl extends AbstractContext implements UserContext {
         if (user == null) {
             user = (User) getAttribute(SESSION_USER, Context.SESSION_SCOPE);
             if (user == null) {
-                user = Security.getAnonymousUser();
+                user = PrincipalUtil.findPrincipal(getSubject(), User.class);
             }
         }
         return this.user;
