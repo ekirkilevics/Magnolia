@@ -37,11 +37,12 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.predicate.NodeTypePredicate;
+import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
-import info.magnolia.jcr.predicate.NodeTypePredicate;
 import info.magnolia.jcr.predicate.Predicate;
-import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
 import java.util.ArrayList;
@@ -116,16 +117,12 @@ public class NodeUtil {
 
         @Override
         public boolean evaluate(Node node) {
-
             try {
-                String nodeTypeName = node.getPrimaryNodeType().getName();
-                // accept only "magnolia" nodes
-                return nodeTypeName.startsWith(MgnlNodeType.MGNL_PREFIX);
+                return node.getPrimaryNodeType().getName().startsWith(MgnlNodeType.MGNL_PREFIX);
             } catch (RepositoryException e) {
-                // TODO should we really mask this error? shouldn't it be thrown instead?
                 log.error("Unable to read nodetype for node {}", getNodePathIfPossible(node));
+                return false;
             }
-            return false;
         }
     };
 
@@ -133,19 +130,15 @@ public class NodeUtil {
      * Get a Node by identifier.
      */
     public static Node getNodeByIdentifier(String workspace, String identifier) throws RepositoryException {
-        Node target = null;
-        Session jcrSession;
-        if(workspace==null || identifier==null){
-            return target;
+        if (workspace == null || identifier == null) {
+            return null;
         }
-
-        jcrSession = MgnlContext.getJCRSession(workspace);
-        if(jcrSession!=null){
-            target =  jcrSession.getNodeByIdentifier(identifier);
+        Session jcrSession = MgnlContext.getJCRSession(workspace);
+        if (jcrSession == null) {
+            return null;
         }
-        return target;
+        return jcrSession.getNodeByIdentifier(identifier);
     }
-
 
     /**
      * from default content.
@@ -425,7 +418,6 @@ public class NodeUtil {
     }
 
     public static void visit(Node node, NodeVisitor visitor, Predicate<Node> predicate) throws RepositoryException {
-        // TODO should it really visit the start node even if it doesn't match the filter?
         visitor.visit(node);
         for (Node child : getNodes(node, predicate)) {
             visit(child, visitor, predicate);
@@ -460,24 +452,26 @@ public class NodeUtil {
     }
 
     /**
-     * This method return the node's name on success, otherwise it handles the {@link RepositoryException} by throwing a {@link RuntimeException}.
-     * @param content Node to get the name from.
+     * This method return the node's name on success, otherwise it handles the {@link RepositoryException} by throwing
+     * {@link RuntimeRepositoryException}.
+     *
+     * @param node Node to get the name from.
      * @return the name of the node passed.
      */
-    public static String getName(Node content){
+    public static String getName(Node node){
         try {
-            return content.getName();
+            return node.getName();
         } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeRepositoryException(e);
         }
     }
 
     /**
      * Used for building exception messages where we want to avoid handling another exception inside a throws clause.
      */
-    public static String getNodeIdentifierIfPossible(Node content) {
+    public static String getNodeIdentifierIfPossible(Node node) {
         try {
-            return content.getIdentifier();
+            return node.getIdentifier();
         } catch (RepositoryException e) {
             return "<not available>";
         }
@@ -490,18 +484,18 @@ public class NodeUtil {
             return "<not available>";
         }
     }
+
     /**
      * Return the Path of the node.
-     * Return an empty String in case of exception
+     *
+     * @return the path for the node or an empty String in case of exception
      */
-    public static  String getHandleIfPossible(Node node) {
+    public static String getHandleIfPossible(Node node) {
         try {
             return node.getPath();
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             log.error("Failed to get handle: " + e.getMessage(), e);
             return StringUtils.EMPTY;
         }
     }
-
 }
