@@ -490,7 +490,7 @@ public class NodeUtil {
      *
      * @return the path for the node or an empty String in case of exception
      */
-    public static String getHandleIfPossible(Node node) {
+    public static String getPathIfPossible(Node node) {
         try {
             return node.getPath();
         } catch (RepositoryException e) {

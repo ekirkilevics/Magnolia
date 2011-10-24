@@ -333,16 +333,13 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testGetHandleIfPossible() throws RepositoryException {
+    public void testPathIfPossible() throws RepositoryException {
         // GIVEN
-        final String nodeName = "testNode";
-        Node root = new MockNode(MockNode.ROOT_NODE_NAME);
-        Node addedNode = root.addNode(nodeName);
 
         // WHEN
-        String res = NodeUtil.getHandleIfPossible(addedNode);
+        String res = NodeUtil.getPathIfPossible(first);
 
         // THEN
-        assertEquals("Should be /testNode  ", "/" + nodeName, res);
+        assertEquals("Should be /testNode  ", "/" + FIRST_CHILD, res);
     }
 }
