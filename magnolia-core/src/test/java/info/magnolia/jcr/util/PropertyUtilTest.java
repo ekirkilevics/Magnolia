@@ -40,7 +40,6 @@ import info.magnolia.test.mock.jcr.MockValue;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
@@ -223,17 +222,4 @@ public class PropertyUtilTest {
         assertEquals("Should be Null  ",null,res);
     }
 
-    @Test
-    public void testGetHandle() throws RepositoryException {
-        // GIVEN
-        final String nodeName = "testNode";
-        Node root = new MockNode(MockNode.ROOT_NODE_NAME);
-        Node addedNode = root.addNode(nodeName);
-
-        // WHEN
-        String res = PropertyUtil.getHandle(addedNode);
-
-        // THEN
-        assertEquals("Should be /testNode  ", "/" + nodeName, res);
-    }
 }
