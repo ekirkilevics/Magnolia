@@ -44,6 +44,7 @@ import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.HierarchyManagerUtil;
+import info.magnolia.exception.RuntimeRepositoryException;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -216,7 +217,7 @@ public abstract class AbstractContext implements Context, Serializable {
         try {
 			return HierarchyManagerUtil.asHierarchyManager(getJCRSession(workspaceName));
 		} catch (RepositoryException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeRepositoryException(e);
 		}
     }
 
