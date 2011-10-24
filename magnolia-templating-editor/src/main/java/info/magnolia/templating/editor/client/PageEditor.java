@@ -187,7 +187,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                             //we just need the preview bar here
                             break;
                         }
-                    //avoid processing cms:edit marker twice if this is an area
+                        //avoid processing cms:edit marker twice if this is an area
                     } else if(!isAreaEditBar(child, areas)) {
                         EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
                         editBarWidget.attach(child);
@@ -208,7 +208,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     /**
      * Tries to find a match between the provided edit bar tag and the area tags found in DOM. Best match is when area and edit tags have the exact same content.
-     * However there might be the case where an optional area is in DOM but still needs to be created (manually via the UI). In the case the content wll be null,
+     * However there might be the case where an optional area is in DOM but still needs to be created (manually via the UI). In that case content will be null,
      * therefore we rely on name and optional attributes on having the same values in area and edit tags.
      */
     private boolean isAreaEditBar(Element edit, NodeList<Element> areas) {
@@ -222,9 +222,9 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             //try with name and optional
             match = edit.getAttribute("name");
         }
-       if(match == null || match.length() == 0) {
-           return false;
-       }
+        if(match == null || match.length() == 0) {
+            return false;
+        }
         //GWT only shows these messages in dev mode.
         GWT.log("String to match area is " + match);
 
@@ -245,7 +245,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     /**
      * Tries to find a match between the provided edit area tag and the edit tags found in DOM. Best match is when area and edit tags have the exact same content.
-     * However there might be the case where an optional area is in DOM but still needs to be created (manually via the UI). In the case the content wll be null,
+     * However there might be the case where an optional area is in DOM but still needs to be created (manually via the UI). In that case content will be null,
      * therefore we rely on name and optional attributes on having the same values in area and edit tags.
      */
     private Element findCmsEditMarkerForArea(Element area, NodeList<Element> edits) {
