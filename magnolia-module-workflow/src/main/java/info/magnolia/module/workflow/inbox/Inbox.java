@@ -63,6 +63,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -197,7 +198,26 @@ public class Inbox extends AbstractList {
         list.addColumn(new ListColumn("name", msgs.get("inbox.item"), "100", true));
         list.addColumn(new ListColumn("repository", msgs.get("inbox.repository"), "100px", true));
         list.addColumn(new ListColumn("workflow", msgs.get("inbox.workflow"), "100px", true));
-        list.addColumn(new ListColumn("comment", msgs.get("inbox.comment"), "200", true));
+        list.addColumn(new ListColumn() {
+            {
+                setName("comment");
+                setLabel(msgs.get("inbox.comment"));
+                setWidth("200px");
+                setSeparator(true);
+            }
+
+            @Override
+            public Object getValue() {
+                if (super.getValue() instanceof String) { 
+                    String comment = (String) super.getValue(); 
+                    return StringEscapeUtils.escapeHtml(comment);
+                }else{
+                    openwfe.org.engine.workitem.StringAttribute comment = (openwfe.org.engine.workitem.StringAttribute) super.getValue();
+                    comment.setValue(StringEscapeUtils.escapeHtml(comment.getValue().toString()));
+                    return comment;
+                }
+            }
+        });
         list.addColumn(new ListColumn() {
 
             {
