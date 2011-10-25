@@ -123,7 +123,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
             }
 
             String path = pathResolver.getJCRPath(itemPath);
-            log.error("Read request for " + path + " :: " + itemId);
+            log.debug("Read request for " + path + " :: " + itemId);
             return ami.isGranted(path, Permission.READ);
         }
 
@@ -169,18 +169,18 @@ public class MagnoliaAccessProvider extends CombinedProvider {
     }));
 
     private static final long permissionMapping[][] = {
-            {org.apache.jackrabbit.core.security.authorization.Permission.READ, Permission.READ},
-            {org.apache.jackrabbit.core.security.authorization.Permission.SET_PROPERTY, Permission.SET},
-            {org.apache.jackrabbit.core.security.authorization.Permission.ADD_NODE, Permission.ADD},
-            {org.apache.jackrabbit.core.security.authorization.Permission.REMOVE_NODE, Permission.REMOVE},
-            {org.apache.jackrabbit.core.security.authorization.Permission.REMOVE_PROPERTY, Permission.REMOVE},
-            {org.apache.jackrabbit.core.security.authorization.Permission.READ_AC, Permission.EXECUTE},
-            {org.apache.jackrabbit.core.security.authorization.Permission.MODIFY_AC, Permission.EXECUTE},
-            {org.apache.jackrabbit.core.security.authorization.Permission.NODE_TYPE_MNGMT, Permission.ADD},
-            {org.apache.jackrabbit.core.security.authorization.Permission.VERSION_MNGMT, Permission.EXECUTE},
-            {org.apache.jackrabbit.core.security.authorization.Permission.LOCK_MNGMT, Permission.EXECUTE},
-            {org.apache.jackrabbit.core.security.authorization.Permission.LIFECYCLE_MNGMT, Permission.EXECUTE},
-            {org.apache.jackrabbit.core.security.authorization.Permission.RETENTION_MNGMT, Permission.EXECUTE},
+        {org.apache.jackrabbit.core.security.authorization.Permission.READ, Permission.READ},
+        {org.apache.jackrabbit.core.security.authorization.Permission.SET_PROPERTY, Permission.SET},
+        {org.apache.jackrabbit.core.security.authorization.Permission.ADD_NODE, Permission.ADD},
+        {org.apache.jackrabbit.core.security.authorization.Permission.REMOVE_NODE, Permission.REMOVE},
+        {org.apache.jackrabbit.core.security.authorization.Permission.REMOVE_PROPERTY, Permission.REMOVE},
+        {org.apache.jackrabbit.core.security.authorization.Permission.READ_AC, Permission.EXECUTE},
+        {org.apache.jackrabbit.core.security.authorization.Permission.MODIFY_AC, Permission.EXECUTE},
+        {org.apache.jackrabbit.core.security.authorization.Permission.NODE_TYPE_MNGMT, Permission.ADD},
+        {org.apache.jackrabbit.core.security.authorization.Permission.VERSION_MNGMT, Permission.EXECUTE},
+        {org.apache.jackrabbit.core.security.authorization.Permission.LOCK_MNGMT, Permission.EXECUTE},
+        {org.apache.jackrabbit.core.security.authorization.Permission.LIFECYCLE_MNGMT, Permission.EXECUTE},
+        {org.apache.jackrabbit.core.security.authorization.Permission.RETENTION_MNGMT, Permission.EXECUTE},
     };
 
     private long convertJackrabbitPermissionsToMagnoliaPermissions(long jackRabbitPermissions) {
