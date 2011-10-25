@@ -56,7 +56,7 @@ import com.google.gwt.user.client.ui.HTML;
 
 /**
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the <code>&lt;html&gt;</code> element).
- * //TODO fgrilli remove queryString from url before reloading page else interceptor filter params stay there and can lead to confusing behavior in certain situations.
+ * TODO fgrilli remove queryString from url before reloading page else interceptor filter params stay there and can lead to confusing behavior in certain situations.
  * @version $Id$
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
