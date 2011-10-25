@@ -170,6 +170,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
             @Override
             public void onError(Request request, Throwable exception) {
+                //TODO fgrilli: give some feedback to this unlucky user.
                 Window.Location.reload();
             }
         });
