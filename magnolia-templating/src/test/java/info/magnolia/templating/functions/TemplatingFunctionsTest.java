@@ -217,6 +217,39 @@ public class TemplatingFunctionsTest {
         assertMapEqualsMap(resultContentMap, topPageContentMap);
     }
 
+
+    @Test
+    public void testLinkForIdentifierFromNodeDepth1() throws RepositoryException {
+        // GIVEN
+        // TemplatingFunctions functions = new TemplatingFunctions();
+        //
+        // String identifier = NodeUtil.getNodeIdentifierIfPossible(topPage);
+        //
+        // // WHEN
+        // String resultLink = functions.link(REPOSITORY,identifier);
+        //
+        // // THEN
+        // assertEquals(CONTEXT_PATH + topPage.getPath(), resultLink);
+
+        // FIXME To be implemented when core will commit the new Test Utility
+    }
+
+    @Test
+    public void testLinkForIdentifierFromNodeDepth2() throws RepositoryException {
+        // GIVEN
+        // TemplatingFunctions functions = new TemplatingFunctions();
+        //
+        // String identifier = NodeUtil.getNodeIdentifierIfPossible(topPage);
+        //
+        // // WHEN
+        // String resultLink = functions.link(REPOSITORY,identifier);
+        //
+        // // THEN
+        // assertEquals(CONTEXT_PATH + topPage.getPath(), resultLink);
+
+        // FIXME To be implemented when core will commit the new Test Utility
+    }
+
     @Test
     public void testLinkFromNodeDepth1() throws RepositoryException {
         // GIVEN

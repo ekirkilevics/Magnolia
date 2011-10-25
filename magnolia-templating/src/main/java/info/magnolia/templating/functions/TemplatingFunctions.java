@@ -71,6 +71,17 @@ public class TemplatingFunctions {
         return content == null ? null : new ContentMap(content);
     }
 
+    /**
+     * Create link for the Node identified by nodeIdentifier in the specified workspace.
+     */
+    public String link(String workspace, String nodeIdentifier) {
+        try {
+            return LinkUtil.createLink(workspace, nodeIdentifier);
+        } catch (RepositoryException e) {
+            return null;
+        }
+    }
+
     //TODO fgrilli: LinkUtil needs to be Node capable and not only Content. Switch to node based impl when SCRUM-242 will be done.
     public String link(Node content) {
         return content == null ? null : LinkUtil.createLink(ContentUtil.asContent(content));
