@@ -51,7 +51,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
@@ -153,23 +152,25 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         GWT.log("Creating ["+ itemType + "] in workspace [" + workspace + "] at path [" + parent +"/"+ relPath +"]");
         //TODO fgrilli: use URLBuilder or try to encode url?
         StringBuilder url = new StringBuilder();
-        url.append(GWT.getHostPageBaseURL() + ".magnolia/pageeditor/PageEditorServlet?");
+        url.append(LegacyJavascript.getContextPath() + ".magnolia/pageeditor/PageEditorServlet?");
         url.append("action=create");
         url.append("&workspace="+workspace);
         url.append("&parent="+parent);
         url.append("&relPath="+relPath);
         url.append("&itemType="+itemType);
-        RequestBuilder req = new RequestBuilder(RequestBuilder.POST, url.toString());
+
+        RequestBuilder req = new RequestBuilder(RequestBuilder.GET, url.toString());
         req.setCallback(new RequestCallback() {
 
             @Override
             public void onResponseReceived(Request request, Response response) {
                 //String queryString = Location.getQueryString();
-                Location.reload();
+                Window.Location.reload();
             }
 
             @Override
             public void onError(Request request, Throwable exception) {
+                Window.alert(exception.getMessage());
                 Window.Location.reload();
             }
         });
