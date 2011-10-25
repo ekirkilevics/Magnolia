@@ -74,7 +74,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         GWT.log("Area ["+this.name+"] is of type " + this.type);
 
-        if(AreaDefinition.TYPE_SINGLE.equals(this.type)) {
+        if(AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
             this.availableComponents = "";
         } else {
             this.availableComponents = element.getAttribute("availableComponents");
@@ -158,7 +158,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 createButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
-                        pageEditor.createArea(workspace, path);
+                        pageEditor.createComponent(workspace, path, name, "mgnl:area");
                     }
                 });
                 addButton(createButton, Float.RIGHT);
@@ -168,7 +168,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 removeButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
-                        pageEditor.removeArea(workspace, path);
+                        pageEditor.deleteComponent(path + "/" + name);
                     }
                 });
                 addButton(removeButton, Float.RIGHT);

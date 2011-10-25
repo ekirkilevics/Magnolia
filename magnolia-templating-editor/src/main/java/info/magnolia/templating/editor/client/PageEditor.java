@@ -43,13 +43,20 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the <code>&lt;html&gt;</code> element).
- *
+ * //TODO fgrilli remove queryString from url before reloading page else interceptor filter params stay there and can lead to confusing behavior in certain situations.
  * @version $Id$
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
@@ -142,12 +149,36 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     }
 
-    public void createArea(String workspace, String path) {
-        GWT.log("Creating area in workspace " + workspace + " at path " + path);
-    }
+    public void createComponent(String workspace, String parent, String relPath, String itemType) {
+        GWT.log("Creating ["+ itemType + "] in workspace [" + workspace + "] at path [" + parent +"/"+ relPath +"]");
 
-    public void removeArea(String workspace, String path) {
-        GWT.log("Removing area in workspace " + workspace + " at path " + path);
+        StringBuilder url = new StringBuilder();
+        url.append(GWT.getHostPageBaseURL() + ".magnolia/pageeditor/PageEditorServlet?");
+        url.append("action=create");
+        url.append("&workspace="+workspace);
+        url.append("&parent="+parent);
+        url.append("&relPath="+relPath);
+        url.append("&itemType="+itemType);
+        RequestBuilder req = new RequestBuilder(RequestBuilder.POST, url.toString());
+        req.setCallback(new RequestCallback() {
+
+            @Override
+            public void onResponseReceived(Request request, Response response) {
+                //String queryString = Location.getQueryString();
+                Location.reload();
+            }
+
+            @Override
+            public void onError(Request request, Throwable exception) {
+                Window.Location.reload();
+            }
+        });
+        try {
+            req.send();
+        } catch (RequestException e) {
+           //TODO fgrilli: handle it.
+        }
+
     }
 
     /**

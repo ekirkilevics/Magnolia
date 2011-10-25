@@ -120,9 +120,8 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
         if (isAdmin()) {
             MarkupHelper helper = new MarkupHelper(out);
-            if(areaNode != null){
-                helper.startContent(areaNode);
-            }
+
+            helper.startContent(areaNode);
             helper.openTag(CMS_AREA).attribute("content", getNodePath(parentNode));
             helper.attribute("name", this.name);
             helper.attribute("availableComponents", this.availableComponents);
@@ -131,6 +130,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
             helper.attribute("label", this.label);
             helper.attribute("inherit", String.valueOf(this.inherit));
             helper.attribute("optional", String.valueOf(this.areaDefinition.isOptional()));
+            if(areaNode != null && this.areaDefinition.isOptional()) {
+                helper.attribute("created", "true");
+            }
             helper.attribute("showAddButton", String.valueOf(shouldShowAddButton()));
             helper.closeTag(CMS_AREA);
         }
@@ -203,9 +205,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
             if (isAdmin()) {
                 MarkupHelper helper = new MarkupHelper(out);
-                if(areaNode != null){
-                    helper.endContent(areaNode);
-                }
+                helper.endContent(areaNode);
             }
         } catch (Exception e) {
             throw new RenderException("Can't render area " + areaNode + " with name " + this.name, e);
