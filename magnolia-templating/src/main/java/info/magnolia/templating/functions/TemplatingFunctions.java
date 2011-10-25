@@ -33,13 +33,16 @@
  */
 package info.magnolia.templating.functions;
 
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkUtil;
+import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -403,6 +406,22 @@ public class TemplatingFunctions {
             return nodeList;
         }
         return null;
+    }
+    public boolean isEditMode(){
+        // TODO : see CmsFunctions.isEditMode, which checks a couple of other properties.
+        return isAuthorInstance() && !isPreviewMode();
+    }
+
+    public boolean isPreviewMode(){
+        return MgnlContext.getAggregationState().isPreviewMode();
+    }
+
+    public boolean isAuthorInstance(){
+        return Components.getComponent(ServerConfiguration.class).isAdmin();
+    }
+
+    public boolean isPublicInstance(){
+        return !isAuthorInstance();
     }
 
     /**
