@@ -39,6 +39,8 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ConfigUtil;
+import info.magnolia.cms.util.RepositoryConstants;
+import info.magnolia.cms.util.WorkspaceMapping;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.registry.DefaultSessionProvider;
 import info.magnolia.jcr.registry.SessionProviderRegistry;
@@ -47,7 +49,6 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
-import info.magnolia.repository.RepositoryNameMap;
 import info.magnolia.repository.RepositoryNotInitializedException;
 
 import java.io.IOException;
@@ -63,7 +64,6 @@ import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 
 import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -72,10 +72,12 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * TODO needs serious refactoring and cleanup.
+ * TODO dlipp
+ * - move mappings to WorkspaceMapping
+ * - adapt all references to deprecated constants
+ * - change class to no longer be all static
  *
- * @author Sameer Charles
- * $Id$
+ * @version $Id$
  *
  * @deprecated since 4.5 - has no direct replacement. Some of its functionality will be dropped, other will be located in {@link info.magnolia.jcr.registry.SessionProviderManager} instead.
  */
@@ -83,28 +85,45 @@ public final class ContentRepository {
     private static final Logger log = LoggerFactory.getLogger(ContentRepository.class);
 
     /**
-     * default repository ID's.
+     * @deprecated Use {@link RepositoryConstants#WEBSITE} instead
      */
-    public static final String WEBSITE = "website";
+    public static final String WEBSITE = RepositoryConstants.WEBSITE;
 
-    public static final String USERS = "users";
+    /**
+     * @deprecated Use {@link RepositoryConstants#USERS} instead
+     */
+    public static final String USERS = RepositoryConstants.USERS;
 
-    public static final String USER_ROLES = "userroles";
+    /**
+     * @deprecated Use {@link RepositoryConstants#USER_ROLES} instead
+     */
+    public static final String USER_ROLES = RepositoryConstants.USER_ROLES;
 
-    public static final String USER_GROUPS = "usergroups";
+    /**
+     * @deprecated Use {@link RepositoryConstants#USER_GROUPS} instead
+     */
+    public static final String USER_GROUPS = RepositoryConstants.USER_GROUPS;
 
-    public static final String CONFIG = "config";
+    /**
+     * @deprecated Use {@link RepositoryConstants#CONFIG} instead
+     */
+    public static final String CONFIG = RepositoryConstants.CONFIG;
 
-    public static final String DEFAULT_WORKSPACE = "default";
-
-    public static final String VERSION_STORE = "mgnlVersion";
+    /**
+     * @deprecated Use {@link RepositoryConstants#VERSION_STORE} instead
+     */
+    public static final String VERSION_STORE = RepositoryConstants.VERSION_STORE;
 
     /**
      * magnolia namespace.
+     * @deprecated Use {@link RepositoryConstants#NAMESPACE_PREFIX} instead
      */
-    public static final String NAMESPACE_PREFIX = "mgnl";
+    public static final String NAMESPACE_PREFIX = RepositoryConstants.NAMESPACE_PREFIX;
 
-    public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl";
+    /**
+     * @deprecated Use {@link RepositoryConstants#NAMESPACE_URI} instead
+     */
+    public static final String NAMESPACE_URI = RepositoryConstants.NAMESPACE_URI;
 
     /**
      * repository element string.
@@ -137,6 +156,9 @@ public final class ContentRepository {
      */
     public static String REPOSITORY_USER;
 
+    // TODO dlipp - use IoC in next step
+    private static final WorkspaceMapping workspaceMapping = Components.getSingleton(WorkspaceMapping.class);
+
     /**
      * repository default password.
      */
@@ -147,26 +169,6 @@ public final class ContentRepository {
         REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
     }
 
-    /**
-     * All available repositories store.
-     */
-    private static Map<String, Repository> repositories = new Hashtable<String, Repository>();
-
-    /**
-     * JCR providers as mapped in repositories.xml.
-     */
-    private static Map<String, Provider> repositoryProviders = new Hashtable<String, Provider>();
-
-    /**
-     * Repositories configuration as defined in repositories mapping file via attribute
-     * <code>magnolia.repositories.config</code>.
-     */
-    private static Map<String, RepositoryMapping> repositoryMapping = new Hashtable<String, RepositoryMapping>();
-
-    /**
-     * holds all repository names as configured in repositories.xml.
-     */
-    private static Map<String, RepositoryNameMap> repositoryNameMap = new Hashtable<String, RepositoryNameMap>();
 
     /**
      * Utility class, don't instantiate.
@@ -197,7 +199,7 @@ public final class ContentRepository {
      */
     public static void init() {
         log.info("Loading JCR");
-        repositories.clear();
+        workspaceMapping.clearRepositories();
         try {
             loadRepositories();
             log.debug("JCR loaded");
@@ -212,15 +214,12 @@ public final class ContentRepository {
      */
     public static void shutdown() {
         log.info("Shutting down JCR");
-        final Iterator<Provider> providers = repositoryProviders.values().iterator();
+        final Iterator<Provider> providers = workspaceMapping.getRepositoryProviders();
         while (providers.hasNext()) {
             final Provider provider = providers.next();
             provider.shutdownRepository();
         }
-        repositoryProviders.clear();
-        repositoryMapping.clear();
-        repositoryNameMap.clear();
-        repositories.clear();
+        workspaceMapping.clearAll();
     }
 
     /**
@@ -232,7 +231,7 @@ public final class ContentRepository {
      * @throws RepositoryException exception while accessing the repository
      */
     public static boolean checkIfInitialized() throws AccessDeniedException, RepositoryException {
-        Iterator<String> repositoryNames = getAllRepositoryNames();
+        Iterator<String> repositoryNames = workspaceMapping.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
             String repository = repositoryNames.next();
             if (checkIfInitialized(repository)) {
@@ -322,9 +321,9 @@ public final class ContentRepository {
                 }
             }
             else {
-                map.addWorkspace(DEFAULT_WORKSPACE);
+                map.addWorkspace(WorkspaceMapping.DEFAULT_WORKSPACE_NAME);
             }
-            repositoryMapping.put(name, map);
+            workspaceMapping.addWorkspaceNameToRepositoryMapping(name, map);
             try {
                 loadRepository(map);
             }
@@ -343,7 +342,7 @@ public final class ContentRepository {
         Iterator children = repositoryMapping.getChildren().iterator();
         while (children.hasNext()) {
             Element nameMap = (Element) children.next();
-            addMappedRepositoryName(
+            workspaceMapping.addMappedRepositoryName(
                     nameMap.getAttributeValue(ATTRIBUTE_NAME),
                     nameMap.getAttributeValue(ATTRIBUTE_REPOSITORY_NAME),
                     nameMap.getAttributeValue(ATTRIBUTE_WORKSPACE_NAME));
@@ -364,8 +363,8 @@ public final class ContentRepository {
         Provider handlerClass = Classes.newInstance(map.getProvider());
         handlerClass.init(map);
         Repository repository = handlerClass.getUnderlyingRepository();
-        repositories.put(map.getName(), repository);
-        repositoryProviders.put(map.getName(), handlerClass);
+        workspaceMapping.addWorkspaceNameToRepository(map.getName(), repository);
+        workspaceMapping.addWorkspaceNameToProvider(map.getName(), handlerClass);
         if (map.isLoadOnStartup()) {
             // load hierarchy managers for each workspace
             Iterator<String> workspaces = map.getWorkspaces().iterator();
@@ -383,20 +382,19 @@ public final class ContentRepository {
      * */
     public static void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
         log.info("Loading workspace {}", workspaceId);
-        if(!repositoryNameMap.containsKey(workspaceId)){
-            addMappedRepositoryName(workspaceId, repositoryId, workspaceId);
-        }
-        RepositoryMapping map = getRepositoryMapping(repositoryId);
-        if(!map.getWorkspaces().contains(workspaceId)){
-            map.addWorkspace(workspaceId);
-        }
-        Provider provider = getRepositoryProvider(repositoryId);
+        workspaceMapping.addWorkspaceNameToRepositoryNameIfNotYetAvailable(workspaceId, repositoryId, workspaceId);
+        Provider provider = workspaceMapping.getRepositoryProvider(repositoryId);
         provider.registerWorkspace(workspaceId);
-        registerNameSpacesAndNodeTypes(getRepository(repositoryId),  workspaceId, map, provider);
+        Repository repo = workspaceMapping.getRepository(repositoryId);
+        RepositoryMapping map = workspaceMapping.getRepositoryMapping(repositoryId);
+
+        registerNameSpacesAndNodeTypes(repo,  workspaceId, map, provider);
     }
 
     /**
      * Load hierarchy manager for the specified repository and workspace.
+     *
+     * TODO dlipp - better naming!
      */
     private static void registerNameSpacesAndNodeTypes(Repository repository, String wspID, RepositoryMapping map,
             Provider provider) {
@@ -407,7 +405,7 @@ public final class ContentRepository {
             try {
                 Session session = Components.getComponent(SessionProviderRegistry.class).get(wspID).createSession(sc);
                 try {
-                    provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
+                    provider.registerNamespace(RepositoryConstants.NAMESPACE_PREFIX, RepositoryConstants.NAMESPACE_URI, session.getWorkspace());
                     provider.registerNodeTypes();
                 }
                 finally {
@@ -435,136 +433,50 @@ public final class ContentRepository {
     }
 
     /**
-     * Get mapped repository name.
-     * @param name
-     * @return mapped name as in repositories.xml RepositoryMapping element
+     * @deprecated since 4.5 - use {@link WorkspaceMapping#getAllRepositoryNames()} directly.
      */
-    private static String getMappedRepositoryName(String name) {
-        RepositoryNameMap nameMap = repositoryNameMap.get(name);
-        if(nameMap==null){
-            return name;
-        }
-        return nameMap.getRepositoryName();
+    public static Iterator<String> getAllRepositoryNames() {
+        return workspaceMapping.getAllRepositoryNames();
     }
 
+    /**
+     * @deprecated since 4.5 - use {@link WorkspaceMapping#getRepositoryMapping(String)} directly.
+     */
+    public static RepositoryMapping getRepositoryMapping(String repositoryID) {
+        return workspaceMapping.getRepositoryMapping(repositoryID);
+    }
+
+    /**
+     * @deprecated since 4.5 - use {@link WorkspaceMapping#getRepositoryProvider(String)} directly.
+     */
+    public static Provider getRepositoryProvider(String repositoryID) {
+        return workspaceMapping.getRepositoryProvider(repositoryID);
+    }
+
+    /**
+     * @deprecated since 4.5 - use {@link WorkspaceMapping#getMappedWorkspaceName(String)} directly.
+     */
     /**
      * Get mapped workspace name.
      * @param name
      * @return mapped name as in repositories.xml RepositoryMapping element
      */
     public static String getMappedWorkspaceName(String name) {
-        RepositoryNameMap nameMap = repositoryNameMap.get(name);
-        if (nameMap == null) {
-            return name;
-        }
-        return nameMap.getWorkspaceName();
+        return workspaceMapping.getMappedWorkspaceName(name);
     }
 
     /**
-     * Add a mapped repository name.
-     * @param name
-     * @param repositoryName
-     * @param workspaceName
+     * @deprecated since 4.5 - user {@link WorkspaceMapping#getInternalWorkspaceName(String)} directly.
      */
-    private static void addMappedRepositoryName(String name, String repositoryName, String workspaceName) {
-        if (StringUtils.isEmpty(workspaceName)) {
-            workspaceName = name;
-        }
-        RepositoryNameMap nameMap = new RepositoryNameMap(repositoryName, workspaceName);
-        repositoryNameMap.put(name, nameMap);
+    public static String getInternalWorkspaceName(String workspaceName) {
+        return workspaceMapping.getInternalWorkspaceName(workspaceName);
     }
 
     /**
-     * Get default workspace name.
-     * @return default name if there are no workspaces defined or there is no workspace present with name "default",
-     * otherwise return same name as repository name.
+     * @deprecated since 4.5 - user {@link WorkspaceMapping#getDefaultWorkspace(String)} directly.
      */
     public static String getDefaultWorkspace(String repositoryId) {
-        RepositoryMapping mapping = getRepositoryMapping(repositoryId);
-        if (mapping == null) {
-            return DEFAULT_WORKSPACE;
-        }
-        Collection<String> workspaces = mapping.getWorkspaces();
-        if (workspaces.contains(getMappedWorkspaceName(repositoryId))) {
-            return repositoryId;
-        }
-        return DEFAULT_WORKSPACE;
-    }
-
-    /**
-     * Returns repository specified by the <code>repositoryID</code> as configured in repository config.
-     */
-    public static Repository getRepository(String repositoryID) {
-        Repository repository = repositories.get(repositoryID);
-        if (repository == null) {
-            final String mappedRepositoryName = getMappedRepositoryName(repositoryID);
-            if (mappedRepositoryName != null) {
-                repository = repositories.get(mappedRepositoryName);
-            }
-            if (repository == null) {
-                final String s = "Failed to retrieve repository '" + repositoryID + "' (mapped as '" + mappedRepositoryName + "'). Your Magnolia instance might not have been initialized properly.";
-                log.warn(s);
-                throw new IllegalArgumentException(s);
-            }
-        }
-        return repository;
-    }
-
-    /**
-     * Returns repository provider specified by the <code>repositoryID</code> as configured in repository config.
-     */
-    public static Provider getRepositoryProvider(String repositoryID) {
-        Provider provider = repositoryProviders.get(repositoryID);
-        if (provider == null) {
-            final String mappedRepositoryName = getMappedRepositoryName(repositoryID);
-            if (mappedRepositoryName != null) {
-                provider = repositoryProviders.get(mappedRepositoryName);
-            }
-            if (provider == null) {
-                final String s = "Failed to retrieve repository provider '" + repositoryID + "' (mapped as '" + mappedRepositoryName + "'). Your Magnolia instance might not have been initialized properly.";
-                log.warn(s);
-                throw new IllegalArgumentException(s);
-            }
-        }
-        return provider;
-    }
-
-    /**
-     * returns repository mapping as configured.
-     */
-    public static RepositoryMapping getRepositoryMapping(String repositoryID) {
-        String name = getMappedRepositoryName(repositoryID);
-        if (name != null && repositoryMapping.containsKey(name)) {
-            return repositoryMapping.get(getMappedRepositoryName(repositoryID));
-        }
-        log.debug("No mapping for the repository {}", repositoryID);
-        return null;
-    }
-
-    /**
-     * Gets repository names array as configured in repositories.xml.
-     * @return repository names
-     */
-    public static Iterator<String> getAllRepositoryNames() {
-        return repositoryNameMap.keySet().iterator();
-    }
-
-    /**
-     * get internal workspace name.
-     * @param workspaceName
-     * @return workspace name as configured in magnolia repositories.xml
-     * */
-    public static String getInternalWorkspaceName(String workspaceName) {
-        Iterator<String> keys = repositoryNameMap.keySet().iterator();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            RepositoryNameMap nameMap = repositoryNameMap.get(key);
-            if (nameMap.getWorkspaceName().equalsIgnoreCase(workspaceName)) {
-                return key;
-            }
-        }
-        log.error("No Repository/Workspace name mapping defined for "+workspaceName);
-        return workspaceName;
+        return workspaceMapping.getDefaultWorkspace(repositoryId);
     }
 
 }
