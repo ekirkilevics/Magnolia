@@ -597,6 +597,18 @@ public class ContentUtilTest extends MgnlTestCase {
         assertTrue(content instanceof DefaultContent);
     }
 
+    @Test
+    public void testAsContentReturnsNullIfNodeIsNull() throws Exception{
+        // GIVEN
+        Node node = null;
+
+        // WHEN
+        Content content = ContentUtil.asContent(node);
+
+        // THEN
+        assertNull(content);
+    }
+
     private final static class ContentTypeRejector implements Content.ContentFilter {
         private final List<String> rejectedTypes;
 
