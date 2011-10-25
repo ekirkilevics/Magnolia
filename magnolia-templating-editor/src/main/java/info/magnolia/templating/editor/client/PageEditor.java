@@ -151,7 +151,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     public void createComponent(String workspace, String parent, String relPath, String itemType) {
         GWT.log("Creating ["+ itemType + "] in workspace [" + workspace + "] at path [" + parent +"/"+ relPath +"]");
-
+        //TODO fgrilli: use URLBuilder or try to encode url?
         StringBuilder url = new StringBuilder();
         url.append(GWT.getHostPageBaseURL() + ".magnolia/pageeditor/PageEditorServlet?");
         url.append("action=create");
