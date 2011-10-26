@@ -58,12 +58,12 @@
       <implementation>info.magnolia.jcr.registry.SessionProviderRegistry</implementation>
     </component>
     <component>
-        <type>info.magnolia.cms.util.WorkspaceMapping</type>
-        <implementation>info.magnolia.cms.util.WorkspaceMapping</implementation>
+        <type>info.magnolia.repository.WorkspaceMapping</type>
+        <implementation>info.magnolia.repository.WorkspaceMapping</implementation>
     </component>
     <component>
-        <type>info.magnolia.cms.util.RepositoryLoader</type>
-        <implementation>info.magnolia.cms.util.RepositoryLoader</implementation>
+        <type>info.magnolia.repository.RepositoryLoader</type>
+        <implementation>info.magnolia.repository.RepositoryLoader</implementation>
     </component>
   </components>
 
