@@ -460,5 +460,15 @@ public class TemplatingFunctions {
         return link != null && link.contains("://");
     }
 
-
+    /**
+     * Util method to create html attributes <code>name="value"</code>. If the value is empty an empty string will be returned.
+     * This is mainlly helpful to avoid empty attributes.
+     */
+    public String createAttribute(String name, String value){
+        value = StringUtils.trim(value);
+        if(StringUtils.isNotEmpty(value)){
+            return new StringBuffer().append(name).append("=\"").append(value).append("\"").toString();
+        }
+        return StringUtils.EMPTY;
+    }
 }

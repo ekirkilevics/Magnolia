@@ -1345,6 +1345,33 @@ public class TemplatingFunctionsTest {
         assertTrue("should not be Public ", res);
     }
 
+
+    @Test
+    public void testCreateAttribute(){
+       // GIVEN
+       TemplatingFunctions functions = new TemplatingFunctions();
+       String value = " value ";
+       String name = "name";
+
+       // WHEN
+       String res = functions.createAttribute(name, value);
+       // THEN
+       assertEquals(name+"=\""+value.trim()+"\"", res);
+    }
+
+    @Test
+    public void testCreateAttributeNoValue(){
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+        String value = "";
+        String name = "name";
+
+        // WHEN
+        String res = functions.createAttribute(name, value);
+        // THEN
+        assertEquals("", res);
+    }
+
     /**
      * Set the Server to Admin Mode
      */
