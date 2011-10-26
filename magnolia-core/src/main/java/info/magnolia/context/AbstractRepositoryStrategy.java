@@ -157,6 +157,9 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         return jcrSessions.size();
     }
 
+    /**
+     * TODO dlipp - get properties from ContentRepository (for now)
+     */
     protected SimpleCredentials getAdminUserCredentials() {
         // FIXME: stop using SystemProperty, but IoC is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
         String user = SystemProperty.getProperty("magnolia.connection.jcr.admin.userId", SystemProperty.getProperty("magnolia.connection.jcr.userId", "admin"));
@@ -164,6 +167,9 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         return new SimpleCredentials(user, pwd.toCharArray());
     }
 
+    /**
+     * TODO dlipp - get properties from ContentRepository (for now)
+     */
     protected SimpleCredentials getAnonymousUserCredentials() {
         // FIXME: stop using SystemProperty, but IoC is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
         // TODO: can also read it from the Login Module properties ... but WAU has no access to that
@@ -178,6 +184,8 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
     /**
      * @return Default SimpleCredentials as configured in magnolia.properties
+     *
+     * TODO dlipp - rename: doesn't get default credentials but the ones of the user (if set) or the anonymous ones...
      * */
     public SimpleCredentials getDefaultCredentials() {
         User user = MgnlContext.getUser();

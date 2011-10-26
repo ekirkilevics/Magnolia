@@ -31,12 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.repository;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.predicate.Predicate;
@@ -46,9 +47,6 @@ import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
-import info.magnolia.repository.Provider;
-import info.magnolia.repository.RepositoryMapping;
-import info.magnolia.repository.RepositoryNotInitializedException;
 
 import java.io.IOException;
 import java.util.Collection;

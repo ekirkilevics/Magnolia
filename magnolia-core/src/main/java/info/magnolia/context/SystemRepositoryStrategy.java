@@ -33,7 +33,6 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.security.SystemUserManager;
@@ -48,7 +47,6 @@ import javax.jcr.Credentials;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.SimpleCredentials;
 
 import org.apache.commons.lang.UnhandledException;
 import org.slf4j.Logger;
@@ -87,7 +85,7 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
 
     @Override
     public Session getSession(String workspaceName) throws LoginException, RepositoryException {
-        Credentials creds = new SimpleCredentials(ContentRepository.REPOSITORY_USER,ContentRepository.REPOSITORY_PSWD.toCharArray());
+        Credentials creds = getAdminUserCredentials();
         try {
             return super.getRepositorySession(creds, workspaceName);
         } catch (RepositoryException e) {

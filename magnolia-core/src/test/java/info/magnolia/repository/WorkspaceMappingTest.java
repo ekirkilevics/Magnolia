@@ -31,9 +31,10 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.repository;
 
 import static org.junit.Assert.*;
+import info.magnolia.repository.WorkspaceMapping;
 
 import org.junit.Test;
 

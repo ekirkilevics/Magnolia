@@ -31,11 +31,8 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.repository;
 
-import info.magnolia.repository.Provider;
-import info.magnolia.repository.RepositoryMapping;
-import info.magnolia.repository.RepositoryNameMap;
 
 import java.util.Collection;
 import java.util.Hashtable;
@@ -53,6 +50,8 @@ import org.slf4j.LoggerFactory;
  *
  * TODO dlipp - naming? Does it keep workspace or repository mappings?
  * TODO dlipp - check naming of all maps and methods!
+ *
+ * TODO dlipp - move newly created replacements for ContentRepo to info.magnolia.repository
  *
  * @version $Id$
  */

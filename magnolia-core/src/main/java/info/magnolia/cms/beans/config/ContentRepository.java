@@ -35,16 +35,17 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.RepositoryConstants;
-import info.magnolia.cms.util.RepositoryLoader;
-import info.magnolia.cms.util.WorkspaceMapping;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.Provider;
+import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.repository.RepositoryLoader;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
+import info.magnolia.repository.WorkspaceMapping;
 
 import java.util.Iterator;
 
+import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 
 
@@ -53,7 +54,7 @@ import javax.jcr.RepositoryException;
  *
  * @version $Id$
  *
- * @deprecated since 4.5 - Use {@link info.magnolia.cms.util.RepositoryConstants}, {@link info.magnolia.cms.util.WorkspaceMapping}, {@link info.magnolia.jcr.registry.SessionProviderRegistry} instead.
+ * @deprecated since 4.5 - Use {@link info.magnolia.repository.RepositoryConstants}, {@link info.magnolia.repository.WorkspaceMapping}, {@link info.magnolia.jcr.registry.SessionProviderRegistry} instead.
  */
 public final class ContentRepository {
 
@@ -197,6 +198,13 @@ public final class ContentRepository {
      */
     public static Provider getRepositoryProvider(String repositoryID) {
         return workspaceMapping.getRepositoryProvider(repositoryID);
+    }
+
+    /**
+     * @deprecated since 4.5 - use {@link WorkspaceMapping#getRepository(String)} directly.
+     */
+    public Repository getRepository(String repositoryID) {
+        return workspaceMapping.getRepository(repositoryID);
     }
 
     /**
