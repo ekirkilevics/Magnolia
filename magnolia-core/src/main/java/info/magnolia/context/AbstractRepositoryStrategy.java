@@ -79,7 +79,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
     @Override
     public Session getSession(String workspaceName) throws LoginException, RepositoryException {
-        return getRepositorySession(getDefaultCredentials(), workspaceName);
+        return getRepositorySession(getUserCredentials(), workspaceName);
     }
 
     protected Session getRepositorySession(Credentials credentials, String workspaceName) throws LoginException, RepositoryException {
@@ -183,11 +183,9 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
     }
 
     /**
-     * @return Default SimpleCredentials as configured in magnolia.properties
-     *
-     * TODO dlipp - rename: doesn't get default credentials but the ones of the user (if set) or the anonymous ones...
+     * @return credentials of current user - anonymous if unknown.
      * */
-    public SimpleCredentials getDefaultCredentials() {
+    public SimpleCredentials getUserCredentials() {
         User user = MgnlContext.getUser();
         if (user == null) {
             // there is no user logged in, so this is just a system call. Returned credentials are used only to access repository, but do not allow any access over Magnolia.

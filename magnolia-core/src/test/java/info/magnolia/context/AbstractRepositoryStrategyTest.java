@@ -75,13 +75,13 @@ public class AbstractRepositoryStrategyTest extends RepositoryTestCase {
     }
 
     @Test
-    public void testGetDefaultCredentialsReturnsAnonymousIfUserIsNotSet() {
+    public void testGetUserCredentialsReturnsAnonymousIfUserIsNotSet() {
         // GIVEN
         Context context = mock(Context.class);
         MgnlContext.setInstance(context);
 
         // WHEN
-        SimpleCredentials credentials = strategy.getDefaultCredentials();
+        SimpleCredentials credentials = strategy.getUserCredentials();
 
         // THEN
         assertEquals("anonymous", credentials.getUserID());
@@ -89,7 +89,7 @@ public class AbstractRepositoryStrategyTest extends RepositoryTestCase {
     }
 
     @Test
-    public void testGetDefaultCredentialsReturnsCredentialsFromContextUserIfSet() {
+    public void testGetUserCredentialsReturnsCredentialsFromContextUserIfSet() {
         // GIVEN
         Context context = mock(Context.class);
         MgnlContext.setInstance(context);
@@ -99,7 +99,7 @@ public class AbstractRepositoryStrategyTest extends RepositoryTestCase {
         when(user.getPassword()).thenReturn("password");
 
         // WHEN
-        SimpleCredentials credentials = strategy.getDefaultCredentials();
+        SimpleCredentials credentials = strategy.getUserCredentials();
 
         // THEN
         assertEquals("user", credentials.getUserID());

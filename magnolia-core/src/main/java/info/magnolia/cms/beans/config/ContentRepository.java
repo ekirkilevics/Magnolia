@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.Provider;
@@ -101,8 +100,17 @@ public final class ContentRepository {
 
     /**
      * repository user.
+     *
+     * @deprecated since 4.5 - user {@link info.magnolia.repository.RepositoryLoader#getRepositoryUser()} instead.
      */
     public static String REPOSITORY_USER;
+
+    /**
+     * repository default password.
+     *
+     * @deprecated since 4.5 - user {@link info.magnolia.repository.RepositoryLoader#getRepositoryPassword()} instead.
+     */
+    public static String REPOSITORY_PSWD;
 
     /**
      * Needs to be references here as long as the deprecated methods delegating to it are there.
@@ -111,15 +119,9 @@ public final class ContentRepository {
 
     private static final RepositoryLoader repositoryLoader = Components.getSingleton(RepositoryLoader.class);
 
-    /**
-     * repository default password.
-     */
-    public static String REPOSITORY_PSWD;
-
     static {
-        // TODO dlipp - where to put these two variables?
-        REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
-        REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
+        REPOSITORY_USER = repositoryLoader.getRepositoryUser();
+        REPOSITORY_PSWD = repositoryLoader.getRepositoryPassword();
     }
 
     /**

@@ -33,8 +33,7 @@
  */
 package info.magnolia.repository;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MgnlNodeType;
+    import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ConfigUtil;
@@ -107,12 +106,26 @@ public final class RepositoryLoader {
     private static final String ATTRIBUTE_WORKSPACE_NAME = "workspaceName";
 
     private final WorkspaceMapping workspaceMapping;
+
+    private String repositoryUser;
+
+    private String repositoryPassword;
     /**
      * Utility class, don't instantiate.
      */
     @Inject
     RepositoryLoader(WorkspaceMapping workspaceMapping) {
         this.workspaceMapping = workspaceMapping;
+        repositoryUser = SystemProperty.getProperty("magnolia.connection.jcr.userId");
+        repositoryPassword = SystemProperty.getProperty("magnolia.connection.jcr.password");
+    }
+
+    public String getRepositoryUser() {
+        return repositoryUser;
+    }
+
+    public String getRepositoryPassword() {
+        return repositoryPassword;
     }
 
     /**
@@ -343,11 +356,12 @@ public final class RepositoryLoader {
     private void registerNameSpacesAndNodeTypes(Repository repository, String wspID, RepositoryMapping map,
             Provider provider) {
         try {
-            SimpleCredentials sc = new SimpleCredentials(ContentRepository.REPOSITORY_USER, ContentRepository.REPOSITORY_PSWD.toCharArray());
-            // TODO dlipp - hack for now. Logical and physical workspaceName are identical here!
-            Components.getComponent(SessionProviderRegistry.class).register(new DefaultSessionProvider(wspID, repository, wspID));
+            SimpleCredentials sc = new SimpleCredentials(getRepositoryUser(), getRepositoryPassword().toCharArray());
+            SessionProviderRegistry sessionProviderRegistry = Components.getComponent(SessionProviderRegistry.class);
+            // FIXME dlipp - hack for now. Logical and physical workspaceName are identical here!
+            sessionProviderRegistry.register(new DefaultSessionProvider(wspID, repository, wspID));
             try {
-                Session session = Components.getComponent(SessionProviderRegistry.class).get(wspID).createSession(sc);
+                Session session = sessionProviderRegistry.get(wspID).createSession(sc);
                 try {
                     provider.registerNamespace(RepositoryConstants.NAMESPACE_PREFIX, RepositoryConstants.NAMESPACE_URI, session.getWorkspace());
                     provider.registerNodeTypes();
