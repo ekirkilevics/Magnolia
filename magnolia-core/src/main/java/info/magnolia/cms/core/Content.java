@@ -728,7 +728,7 @@ public interface Content extends Cloneable {
     /**
      * Implement this interface to be used as node filter by getChildren().
      *
-     * @deprecated since 4.5 - use {@link info.magnolia.jcr.predicate.Predicate} instead
+     * @deprecated since 4.5 - use {@link org.apache.jackrabbit.commons.predicate.Predicate} instead.
      */
     public interface ContentFilter {
 

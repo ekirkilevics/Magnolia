@@ -39,8 +39,8 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.predicate.Predicate;
 import info.magnolia.jcr.registry.DefaultSessionProvider;
+import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Classes;
@@ -208,9 +208,9 @@ public final class RepositoryLoader {
         Node startPage = session.getRootNode();
 
         // return any kind of children
-        Iterable<Node> children = NodeUtil.getNodes(startPage, new Predicate<Node>() {
+        Iterable<Node> children = NodeUtil.getNodes(startPage, new AbstractPredicate<Node>() {
             @Override
-            public boolean evaluate(Node content) {
+            public boolean evaluateTyped(Node content) {
                 String name;
                 try {
                     name = content.getName();

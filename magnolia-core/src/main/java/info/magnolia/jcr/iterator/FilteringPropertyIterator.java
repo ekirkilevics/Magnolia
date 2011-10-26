@@ -33,10 +33,10 @@
  */
 package info.magnolia.jcr.iterator;
 
+import info.magnolia.jcr.predicate.AbstractPredicate;
+
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
-
-import info.magnolia.jcr.predicate.Predicate;
 
 /**
  * PropertyIterator hiding all properties that do not pass the predicate.
@@ -45,7 +45,7 @@ import info.magnolia.jcr.predicate.Predicate;
  */
 public class FilteringPropertyIterator extends FilteringRangeIterator<Property> implements PropertyIterator {
 
-    public FilteringPropertyIterator(PropertyIterator iterator, Predicate<Property> predicate) {
+    public FilteringPropertyIterator(PropertyIterator iterator, AbstractPredicate<Property> predicate) {
         super(iterator, predicate);
     }
 

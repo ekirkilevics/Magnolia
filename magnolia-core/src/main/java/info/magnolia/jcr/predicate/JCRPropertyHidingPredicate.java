@@ -43,10 +43,10 @@ import info.magnolia.cms.core.MgnlNodeType;
  *
  * @version $Id$
  */
-public class JCRPropertyHidingPredicate implements Predicate<Property> {
+public class JCRPropertyHidingPredicate extends AbstractPredicate<Property> {
 
     @Override
-    public boolean evaluate(Property property) {
+    public boolean evaluateTyped(Property property) {
         try {
             return !property.getName().startsWith(MgnlNodeType.JCR_PREFIX);
         } catch (RepositoryException e) {

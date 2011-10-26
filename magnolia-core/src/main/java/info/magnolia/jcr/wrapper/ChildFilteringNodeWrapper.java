@@ -33,13 +33,13 @@
  */
 package info.magnolia.jcr.wrapper;
 
+import info.magnolia.jcr.iterator.FilteringNodeIterator;
+import info.magnolia.jcr.predicate.AbstractPredicate;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-
-import info.magnolia.jcr.iterator.FilteringNodeIterator;
-import info.magnolia.jcr.predicate.Predicate;
 
 /**
  * NodeWrapper that hides children based on a predicate. Can optionally extend the filtering criteria to descendant
@@ -49,15 +49,15 @@ import info.magnolia.jcr.predicate.Predicate;
  */
 public class ChildFilteringNodeWrapper extends ChildWrappingNodeWrapper {
 
-    private Predicate<Node> predicate;
+    private AbstractPredicate<Node> predicate;
     private boolean filterDescendants = false;
 
-    public ChildFilteringNodeWrapper(Node wrapped, Predicate<Node> predicate) {
+    public ChildFilteringNodeWrapper(Node wrapped, AbstractPredicate<Node> predicate) {
         super(wrapped);
         this.predicate = predicate;
     }
 
-    public ChildFilteringNodeWrapper(Node wrapped, Predicate<Node> predicate, boolean filterDescendants) {
+    public ChildFilteringNodeWrapper(Node wrapped, AbstractPredicate<Node> predicate, boolean filterDescendants) {
         this(wrapped, predicate);
         this.filterDescendants = filterDescendants;
     }

@@ -37,10 +37,12 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
-import info.magnolia.jcr.predicate.NodeTypePredicate;
-import info.magnolia.jcr.predicate.Predicate;
+
+import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
+import org.apache.jackrabbit.commons.predicate.NodeTypePredicate;
+import org.apache.jackrabbit.commons.predicate.Predicate;
+import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
@@ -69,23 +71,11 @@ public class NodeUtil {
     private static final Logger log = LoggerFactory.getLogger(NodeUtil.class);
 
     /**
-     * Node filter accepting everything.
-     */
-    public static Predicate<Node> ALL_NODES_FILTER = new Predicate<Node>() {
-
-        @Override
-        public boolean evaluate(Node node) {
-            return true;
-        }
-    };
-
-    /**
      * Node filter accepting everything except nodes with namespace jcr (version and system store).
      */
-    public static Predicate<Node> ALL_NODES_EXCEPT_JCR_FILTER = new Predicate<Node>() {
-
+    public static Predicate ALL_NODES_EXCEPT_JCR_FILTER = new AbstractPredicate<Node>() {
         @Override
-        public boolean evaluate(Node node) {
+        public boolean evaluateTyped(Node node) {
             try {
                 return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX);
             } catch (RepositoryException e) {
@@ -97,10 +87,10 @@ public class NodeUtil {
     /**
      * Node filter accepting everything except meta data and jcr types.
      */
-    public static Predicate<Node> EXCLUDE_META_DATA_FILTER = new Predicate<Node>() {
+    public static AbstractPredicate<Node> EXCLUDE_META_DATA_FILTER = new AbstractPredicate<Node>() {
 
         @Override
-        public boolean evaluate(Node node) {
+        public boolean evaluateTyped(Node node) {
             try {
                 return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX) && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
             } catch (RepositoryException e) {
@@ -112,10 +102,10 @@ public class NodeUtil {
     /**
      * Node filter accepting all nodes of a type with namespace mgnl.
      */
-    public static Predicate<Node> MAGNOLIA_FILTER = new Predicate<Node>() {
+    public static AbstractPredicate<Node> MAGNOLIA_FILTER = new AbstractPredicate<Node>() {
 
         @Override
-        public boolean evaluate(Node node) {
+        public boolean evaluateTyped(Node node) {
 
             try {
                 String nodeTypeName = node.getPrimaryNodeType().getName();
@@ -424,7 +414,7 @@ public class NodeUtil {
         visit(node, visitor, EXCLUDE_META_DATA_FILTER);
     }
 
-    public static void visit(Node node, NodeVisitor visitor, Predicate<Node> predicate) throws RepositoryException {
+    public static void visit(Node node, NodeVisitor visitor, Predicate predicate) throws RepositoryException {
         // TODO should it really visit the start node even if it doesn't match the filter?
         visitor.visit(node);
         for (Node child : getNodes(node, predicate)) {
@@ -435,7 +425,7 @@ public class NodeUtil {
         }
     }
 
-    public static Iterable<Node> getNodes(Node parent, Predicate<Node> predicate) throws RepositoryException {
+    public static Iterable<Node> getNodes(Node parent, Predicate predicate) throws RepositoryException {
         return asIterable(new FilteringNodeIterator(parent.getNodes(), predicate));
     }
 
@@ -444,7 +434,7 @@ public class NodeUtil {
     }
 
     public static Iterable<Node> getNodes(Node parent, String nodeTypeName) throws RepositoryException {
-        return getNodes(parent, new NodeTypePredicate(nodeTypeName));
+        return getNodes(parent, new NodeTypePredicate(nodeTypeName, false));
     }
 
     public static Iterable<Node> asIterable(NodeIterator iterator) {
