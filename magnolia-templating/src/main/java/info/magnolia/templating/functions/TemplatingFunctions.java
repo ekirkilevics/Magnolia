@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
@@ -471,4 +472,12 @@ public class TemplatingFunctions {
         }
         return StringUtils.EMPTY;
     }
+
+    /**
+     * Returns an instance of SiblingsHelper for the given node.
+     */
+    public SiblingsHelper siblings(Node node) throws RepositoryException {
+        return SiblingsHelper.of(ContentUtil.asContent(node));
+    }
+
 }

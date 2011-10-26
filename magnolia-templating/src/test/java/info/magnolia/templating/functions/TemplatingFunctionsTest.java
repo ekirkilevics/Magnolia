@@ -42,6 +42,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.PropertyUtil;
@@ -1371,6 +1372,20 @@ public class TemplatingFunctionsTest {
         // THEN
         assertEquals("", res);
     }
+
+    @Test
+    public void testSiblings() throws RepositoryException{
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+        // WHEN
+        SiblingsHelper s = functions.siblings(topPage);
+        assertEquals("Indexes are 0-based ", 0, s.getIndex());
+        s.next();
+        s.next();
+        assertEquals("Should have skipped nodes of different type.",2, s.getIndex());
+    }
+
+
 
     /**
      * Set the Server to Admin Mode
