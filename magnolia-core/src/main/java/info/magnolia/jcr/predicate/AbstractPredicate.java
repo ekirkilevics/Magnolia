@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,56 +33,25 @@
  */
 package info.magnolia.jcr.predicate;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import info.magnolia.jcr.util.NodeUtil;
+import org.apache.jackrabbit.commons.predicate.Predicate;
 
 /**
- * Predicate that filters out all nodes except those of the specified node type. The node
- * type can be the primary node type or a mixin.
+ * Superclass for Predicates. Introduces generics not yet available in jackrabbit-commons.
  *
+ * @param <T> type of objects to be evaluated
  * @version $Id$
  */
-public class NodeTypePredicate implements Predicate<Node> {
-
-    private String nodeTypeName;
-
-    public NodeTypePredicate(String nodeTypeName) {
-        this.nodeTypeName = nodeTypeName;
-    }
+public abstract class AbstractPredicate<T> implements Predicate {
 
     @Override
-    public boolean evaluate(Node node) {
+    public boolean evaluate(Object object) {
         try {
-            return NodeUtil.isNodeType(node, nodeTypeName);
-        } catch (RepositoryException e) {
+            // delegate to typed method
+            return evaluateTyped((T) object);
+        } catch (ClassCastException e) {
             return false;
         }
     }
 
-    @Override
-    public String toString() {
-        return "NodeTypePredicate for type " + nodeTypeName;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-
-        if (obj == null || !(obj instanceof NodeTypePredicate)) {
-            return false;
-        }
-
-        NodeTypePredicate that = (NodeTypePredicate) obj;
-        return this.nodeTypeName == null ? that.nodeTypeName == null : this.nodeTypeName.equals(that.nodeTypeName);
-    }
-
-    @Override
-    public int hashCode() {
-        // any prime is good default
-        return this.nodeTypeName == null ? 23 : this.nodeTypeName.hashCode();
-    }
+    public abstract boolean evaluateTyped(T t);
 }

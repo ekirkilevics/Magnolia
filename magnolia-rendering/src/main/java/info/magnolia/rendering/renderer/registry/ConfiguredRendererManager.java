@@ -35,7 +35,6 @@ package info.magnolia.rendering.renderer.registry;
 
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.ModuleConfigurationObservingManager;
-import info.magnolia.jcr.predicate.NodeTypePredicate;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.NodeVisitor;
 import info.magnolia.module.ModuleRegistry;
@@ -50,6 +49,7 @@ import javax.inject.Singleton;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.jackrabbit.commons.predicate.NodeTypePredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +90,7 @@ public class ConfiguredRendererManager extends ModuleConfigurationObservingManag
                         }
                     }
                 }
-            }, new NodeTypePredicate(MgnlNodeType.NT_CONTENT));
+            }, new NodeTypePredicate(MgnlNodeType.NT_CONTENT, false));
         }
 
         this.registeredIds = registry.unregisterAndRegister(registeredIds, providers);

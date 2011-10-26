@@ -33,14 +33,14 @@
  */
 package info.magnolia.jcr.wrapper;
 
+import info.magnolia.jcr.iterator.FilteringPropertyIterator;
+import info.magnolia.jcr.predicate.AbstractPredicate;
+
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
-
-import info.magnolia.jcr.iterator.FilteringPropertyIterator;
-import info.magnolia.jcr.predicate.Predicate;
 
 /**
  * Node wrapper that filters out properties based on a predicate, child nodes acquired via this wrapper are also
@@ -50,9 +50,9 @@ import info.magnolia.jcr.predicate.Predicate;
  */
 public class PropertyFilteringNodeWrapper extends ChildWrappingNodeWrapper {
 
-    private final Predicate<Property> predicate;
+    private final AbstractPredicate<Property> predicate;
 
-    public PropertyFilteringNodeWrapper(Node wrapped, Predicate<Property> predicate) {
+    public PropertyFilteringNodeWrapper(Node wrapped, AbstractPredicate<Property> predicate) {
         super(wrapped);
         this.predicate = predicate;
     }

@@ -33,11 +33,11 @@
  */
 package info.magnolia.jcr.iterator;
 
+import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.wrapper.NodeWrapperFactory;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
-
-import info.magnolia.jcr.predicate.Predicate;
-import info.magnolia.jcr.wrapper.NodeWrapperFactory;
 
 /**
  * NodeIterator hiding all nodes that do not pass the predicate, returned nodes can also we wrapped effectively
@@ -49,11 +49,11 @@ public class FilteringNodeIterator extends FilteringRangeIterator<Node> implemen
 
     private NodeWrapperFactory wrapperFactory;
 
-    public FilteringNodeIterator(NodeIterator nodeIterator, Predicate<Node> predicate) {
+    public FilteringNodeIterator(NodeIterator nodeIterator, AbstractPredicate<Node> predicate) {
         super(nodeIterator, predicate);
     }
 
-    public FilteringNodeIterator(NodeIterator nodeIterator, Predicate<Node> predicate, NodeWrapperFactory wrapperFactory) {
+    public FilteringNodeIterator(NodeIterator nodeIterator, AbstractPredicate<Node> predicate, NodeWrapperFactory wrapperFactory) {
         super(nodeIterator, predicate);
         this.wrapperFactory = wrapperFactory;
     }

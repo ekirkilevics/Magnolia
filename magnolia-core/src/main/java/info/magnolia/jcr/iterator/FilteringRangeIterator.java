@@ -38,7 +38,7 @@ import java.util.NoSuchElementException;
 
 import javax.jcr.RangeIterator;
 
-import info.magnolia.jcr.predicate.Predicate;
+import org.apache.jackrabbit.commons.predicate.Predicate;
 
 
 /**
@@ -51,11 +51,11 @@ import info.magnolia.jcr.predicate.Predicate;
 public class FilteringRangeIterator<T> implements RangeIterator {
 
     private final Iterator<T> iterator;
-    private final Predicate<T> predicate;
+    private final Predicate predicate;
     private long position;
     private T next;
 
-    public FilteringRangeIterator(Iterator<T> iterator, Predicate<T> predicate) {
+    public FilteringRangeIterator(Iterator<T> iterator, Predicate predicate) {
         this.iterator = iterator;
         this.predicate = predicate;
     }
