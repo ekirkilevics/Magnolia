@@ -61,6 +61,10 @@
         <type>info.magnolia.cms.util.WorkspaceMapping</type>
         <implementation>info.magnolia.cms.util.WorkspaceMapping</implementation>
     </component>
+    <component>
+        <type>info.magnolia.cms.util.RepositoryLoader</type>
+        <implementation>info.magnolia.cms.util.RepositoryLoader</implementation>
+    </component>
   </components>
 
   <components>

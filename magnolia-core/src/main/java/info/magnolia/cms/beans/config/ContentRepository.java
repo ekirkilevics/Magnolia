@@ -33,56 +33,29 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.cms.util.RepositoryConstants;
+import info.magnolia.cms.util.RepositoryLoader;
 import info.magnolia.cms.util.WorkspaceMapping;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.registry.DefaultSessionProvider;
-import info.magnolia.jcr.registry.SessionProviderRegistry;
-import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.registry.RegistrationException;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
-import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.SimpleCredentials;
-
-import org.apache.commons.lang.BooleanUtils;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
- * TODO dlipp
- * - move mappings to WorkspaceMapping
- * - adapt all references to deprecated constants
- * - change class to no longer be all static
+ * Legacy type - will be dropped with one of the next release.
  *
  * @version $Id$
  *
- * @deprecated since 4.5 - has no direct replacement. Some of its functionality will be dropped, other will be located in {@link info.magnolia.jcr.registry.SessionProviderManager} instead.
+ * @deprecated since 4.5 - Use {@link info.magnolia.cms.util.RepositoryConstants}, {@link info.magnolia.cms.util.WorkspaceMapping}, {@link info.magnolia.jcr.registry.SessionProviderRegistry} instead.
  */
 public final class ContentRepository {
-    private static final Logger log = LoggerFactory.getLogger(ContentRepository.class);
 
     /**
      * @deprecated Use {@link RepositoryConstants#WEBSITE} instead
@@ -126,38 +99,16 @@ public final class ContentRepository {
     public static final String NAMESPACE_URI = RepositoryConstants.NAMESPACE_URI;
 
     /**
-     * repository element string.
-     */
-    private static final String ELEMENT_REPOSITORY = "Repository";
-
-    private static final String ELEMENT_REPOSITORYMAPPING = "RepositoryMapping";
-
-    private static final String ELEMENT_PARAM = "param";
-
-    private static final String ELEMENT_WORKSPACE = "workspace";
-
-    /**
-     * Attribute names.
-     */
-    private static final String ATTRIBUTE_NAME = "name";
-
-    private static final String ATTRIBUTE_LOAD_ON_STARTUP = "loadOnStartup";
-
-    private static final String ATTRIBUTE_PROVIDER = "provider";
-
-    private static final String ATTRIBUTE_VALUE = "value";
-
-    private static final String ATTRIBUTE_REPOSITORY_NAME = "repositoryName";
-
-    private static final String ATTRIBUTE_WORKSPACE_NAME = "workspaceName";
-
-    /**
      * repository user.
      */
     public static String REPOSITORY_USER;
 
-    // TODO dlipp - use IoC in next step
+    /**
+     * Needs to be references here as long as the deprecated methods delegating to it are there.
+     */
     private static final WorkspaceMapping workspaceMapping = Components.getSingleton(WorkspaceMapping.class);
+
+    private static final RepositoryLoader repositoryLoader = Components.getSingleton(RepositoryLoader.class);
 
     /**
      * repository default password.
@@ -165,10 +116,10 @@ public final class ContentRepository {
     public static String REPOSITORY_PSWD;
 
     static {
+        // TODO dlipp - where to put these two variables?
         REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
         REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
     }
-
 
     /**
      * Utility class, don't instantiate.
@@ -178,258 +129,53 @@ public final class ContentRepository {
     }
 
     /**
-     * loads all configured repository using ID as Key, as configured in repositories.xml.
-     *
-     * <pre>
-     * &lt;Repository name="website"
-     *                id="website"
-     *                provider="info.magnolia.jackrabbit.ProviderImpl"
-     *                loadOnStartup="true" >
-     *   &lt;param name="configFile"
-     *             value="WEB-INF/config/repositories/website.xml"/>
-     *   &lt;param name="repositoryHome"
-     *             value="repositories/website"/>
-     *   &lt;param name="contextFactoryClass"
-     *             value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
-     *   &lt;param name="providerURL"
-     *             value="localhost"/>
-     *   &lt;param name="id" value="website"/>
-     * &lt;/Repository>
-     *</pre>
+     * @deprecated since 4.5 - use {@link RepositoryLoader#init()} instead
      */
     public static void init() {
-        log.info("Loading JCR");
-        workspaceMapping.clearRepositories();
-        try {
-            loadRepositories();
-            log.debug("JCR loaded");
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
+        repositoryLoader.init();
     }
 
     /**
-     * Shuts down all repositories (through Provider instances) and clears all mappings.
+     * @deprecated since 4.5 - use {@link RepositoryLoader#shutdown()} instead
      */
     public static void shutdown() {
-        log.info("Shutting down JCR");
-        final Iterator<Provider> providers = workspaceMapping.getRepositoryProviders();
-        while (providers.hasNext()) {
-            final Provider provider = providers.next();
-            provider.shutdownRepository();
-        }
-        workspaceMapping.clearAll();
+        repositoryLoader.shutdown();
     }
 
     /**
-     * Verify the initialization state of all the repositories. This methods returns <code>false</code> only if
-     * <strong>all</strong> the repositories are empty (no node else than the root one).
-     * @return <code>false</code> if all the repositories are empty, <code>true</code> if at least one of them has
-     * content.
-     * @throws AccessDeniedException repository authentication failed
-     * @throws RepositoryException exception while accessing the repository
+     * @deprecated since 4.5 - use {@link RepositoryLoader#checkIfInitialized()} instead
      */
     public static boolean checkIfInitialized() throws AccessDeniedException, RepositoryException {
-        Iterator<String> repositoryNames = workspaceMapping.getAllRepositoryNames();
-        while (repositoryNames.hasNext()) {
-            String repository = repositoryNames.next();
-            if (checkIfInitialized(repository)) {
-                return true;
-            }
-        }
-        return false;
+        return repositoryLoader.checkIfInitialized();
     }
 
     /**
-     * @param repository
-     * @throws RepositoryException
-     * @throws AccessDeniedException
+     * @deprecated since 4.5 - use {@link RepositoryLoader#checkIfInitialized(String)} instead
      */
     public static boolean checkIfInitialized(String repository) throws RepositoryException, AccessDeniedException {
-        log.debug("Checking [{}] repository.", repository);
-        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(repository);
-
-        if (hm == null) {
-            throw new RuntimeException("Repository [" + repository + "] not loaded");
-        }
-
-        Content startPage = hm.getRoot();
-
-        // return any kind of children
-        Collection<Content> children = startPage.getChildren(new Content.ContentFilter() {
-            @Override
-            public boolean accept(Content content) {
-                return (!content.getName().startsWith(MgnlNodeType.JCR_PREFIX) && !content.getName().startsWith("rep:"));
-            }
-        });
-
-        if (!children.isEmpty()) {
-            log.debug("Content found in [{}].", repository);
-            return true;
-        }
-        return false;
+        return repositoryLoader.checkIfInitialized(repository);
     }
 
     /**
-     * Re-load all configured repositories.
-     * @see #init()
+     * @deprecated since 4.5 - use {@link RepositoryLoader#reload()} instead
      */
     public static void reload() {
-        log.info("Reloading JCR");
-        init();
+        repositoryLoader.reload();
     }
 
     /**
-     * Load repository mappings and params using repositories.xml.
-     * @throws Exception
-     */
-    private static void loadRepositories() throws Exception {
-        Document document = buildDocument();
-        Element root = document.getRootElement();
-        loadRepositoryNameMap(root);
-        Collection repositoryElements = root.getChildren(ELEMENT_REPOSITORY);
-        Iterator children = repositoryElements.iterator();
-        while (children.hasNext()) {
-            Element element = (Element) children.next();
-            String name = element.getAttributeValue(ATTRIBUTE_NAME);
-            String load = element.getAttributeValue(ATTRIBUTE_LOAD_ON_STARTUP);
-            String provider = element.getAttributeValue(ATTRIBUTE_PROVIDER);
-            RepositoryMapping map = new RepositoryMapping();
-            map.setName(name);
-            map.setProvider(provider);
-            boolean loadOnStartup = BooleanUtils.toBoolean(load);
-            map.setLoadOnStartup(loadOnStartup);
-            /* load repository parameters */
-            Iterator params = element.getChildren(ELEMENT_PARAM).iterator();
-            Map parameters = new Hashtable();
-            while (params.hasNext()) {
-                Element param = (Element) params.next();
-                String value = param.getAttributeValue(ATTRIBUTE_VALUE);
-                parameters.put(param.getAttributeValue(ATTRIBUTE_NAME), value);
-            }
-            // TODO : it looks like params here are not interpolated
-            map.setParameters(parameters);
-            List workspaces = element.getChildren(ELEMENT_WORKSPACE);
-            if (workspaces != null && !workspaces.isEmpty()) {
-                Iterator wspIterator = workspaces.iterator();
-                while (wspIterator.hasNext()) {
-                    Element workspace = (Element) wspIterator.next();
-                    String wspName = workspace.getAttributeValue(ATTRIBUTE_NAME);
-                    log.info("Loading workspace {}", wspName);
-                    map.addWorkspace(wspName);
-                }
-            }
-            else {
-                map.addWorkspace(WorkspaceMapping.DEFAULT_WORKSPACE_NAME);
-            }
-            workspaceMapping.addWorkspaceNameToRepositoryMapping(name, map);
-            try {
-                loadRepository(map);
-            }
-            catch (Exception e) {
-                log.error("Failed to load JCR \"" + map.getName() + "\" " + e.getMessage(), e);
-            }
-        }
-    }
-
-    /**
-     * load repository name mapping.
-     * @param root element of repositories.xml
-     */
-    private static void loadRepositoryNameMap(Element root) {
-        Element repositoryMapping = root.getChild(ELEMENT_REPOSITORYMAPPING);
-        Iterator children = repositoryMapping.getChildren().iterator();
-        while (children.hasNext()) {
-            Element nameMap = (Element) children.next();
-            workspaceMapping.addMappedRepositoryName(
-                    nameMap.getAttributeValue(ATTRIBUTE_NAME),
-                    nameMap.getAttributeValue(ATTRIBUTE_REPOSITORY_NAME),
-                    nameMap.getAttributeValue(ATTRIBUTE_WORKSPACE_NAME));
-        }
-    }
-
-    /**
-     * This method initializes the repository. You must not call this method twice.
-     * @param map
-     * @throws RepositoryNotInitializedException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws ClassNotFoundException
+     * @deprecated since 4.5 - use {@link RepositoryLoader#loadRepository(RepositoryMapping)} instead
      */
     public static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
     InstantiationException, IllegalAccessException, ClassNotFoundException {
-        log.info("Loading JCR {}", map.getName());
-        Provider handlerClass = Classes.newInstance(map.getProvider());
-        handlerClass.init(map);
-        Repository repository = handlerClass.getUnderlyingRepository();
-        workspaceMapping.addWorkspaceNameToRepository(map.getName(), repository);
-        workspaceMapping.addWorkspaceNameToProvider(map.getName(), handlerClass);
-        if (map.isLoadOnStartup()) {
-            // load hierarchy managers for each workspace
-            Iterator<String> workspaces = map.getWorkspaces().iterator();
-            while (workspaces.hasNext()) {
-                String wspID = workspaces.next();
-                registerNameSpacesAndNodeTypes(repository, wspID, map, handlerClass);
-            }
-        }
+        repositoryLoader.loadRepository(map);
     }
 
     /**
-     * @param repositoryId
-     * @param workspaceId
-     * @throws RepositoryException
-     * */
+     * @deprecated since 4.5 - use {@link RepositoryLoader#loadWorkspace(String, String)} instead
+     */
     public static void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
-        log.info("Loading workspace {}", workspaceId);
-        workspaceMapping.addWorkspaceNameToRepositoryNameIfNotYetAvailable(workspaceId, repositoryId, workspaceId);
-        Provider provider = workspaceMapping.getRepositoryProvider(repositoryId);
-        provider.registerWorkspace(workspaceId);
-        Repository repo = workspaceMapping.getRepository(repositoryId);
-        RepositoryMapping map = workspaceMapping.getRepositoryMapping(repositoryId);
-
-        registerNameSpacesAndNodeTypes(repo,  workspaceId, map, provider);
-    }
-
-    /**
-     * Load hierarchy manager for the specified repository and workspace.
-     *
-     * TODO dlipp - better naming!
-     */
-    private static void registerNameSpacesAndNodeTypes(Repository repository, String wspID, RepositoryMapping map,
-            Provider provider) {
-        try {
-            SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
-            // TODO dlipp - hack for now. Logical and physical workspaceName are identical here!
-            Components.getComponent(SessionProviderRegistry.class).register(new DefaultSessionProvider(wspID, repository, wspID));
-            try {
-                Session session = Components.getComponent(SessionProviderRegistry.class).get(wspID).createSession(sc);
-                try {
-                    provider.registerNamespace(RepositoryConstants.NAMESPACE_PREFIX, RepositoryConstants.NAMESPACE_URI, session.getWorkspace());
-                    provider.registerNodeTypes();
-                }
-                finally {
-                    session.logout();
-                }
-            } catch (RegistrationException e) {
-                throw new RepositoryException(e);
-            }
-        }
-        catch (RepositoryException e) {
-            log.error("Failed to initialize hierarchy manager for JCR " + map.getName(), e);
-        }
-    }
-
-    /**
-     * Builds JDOM document.
-     * @return document
-     * @throws IOException
-     * @throws JDOMException
-     */
-    private static Document buildDocument() throws JDOMException, IOException {
-        String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_REPOSITORIES_CONFIG);
-        final String tokenizedConfig = ConfigUtil.getTokenizedConfigFile(path);
-        return ConfigUtil.string2JDOM(tokenizedConfig);
+        repositoryLoader.loadWorkspace(repositoryId, workspaceId);
     }
 
     /**
