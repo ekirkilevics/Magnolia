@@ -35,11 +35,11 @@ package info.magnolia.templating.functions;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.objectfactory.Components;
@@ -54,6 +54,7 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+
 
 /**
  * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
@@ -78,6 +79,20 @@ public class TemplatingFunctions {
         try {
             return LinkUtil.createLink(workspace, nodeIdentifier);
         } catch (RepositoryException e) {
+            return null;
+        }
+    }
+
+
+    /**
+     * FIXME Add a LinkUtil.createLink(Property property)....
+     * Dirty Hack
+     */
+    public String link(Property property) {
+        try {
+            NodeData equivNodeData = ContentUtil.asContent(property.getParent()).getNodeData(property.getName());
+            return LinkUtil.createLink(equivNodeData);
+        } catch (Exception e) {
             return null;
         }
     }
@@ -347,7 +362,7 @@ public class TemplatingFunctions {
      * @return The link prepended with <code>http://</code>
      */
     public String externalLink(Node content, String linkPropertyName){
-        String externalLink = PropertyUtil.getString(content, linkPropertyName);
+        String externalLink = NodeUtil.getStringIfPossible(content, linkPropertyName);
         if(StringUtils.isBlank(externalLink)){
             return StringUtils.EMPTY;
         }
@@ -377,7 +392,7 @@ public class TemplatingFunctions {
      * @return the resolved link title value
      */
     public String externalLinkTitle(Node content, String linkPropertyName, String linkTitlePropertyName){
-        String linkTitle = PropertyUtil.getString(content, linkTitlePropertyName);
+        String linkTitle = NodeUtil.getStringIfPossible(content, linkTitlePropertyName);
         if(StringUtils.isNotEmpty(linkTitle)){
             return linkTitle;
         }

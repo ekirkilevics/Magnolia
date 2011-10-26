@@ -44,6 +44,7 @@ import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.test.ComponentsTestUtil;
@@ -217,6 +218,44 @@ public class TemplatingFunctionsTest {
         assertMapEqualsMap(resultContentMap, topPageContentMap);
     }
 
+
+    @Test
+    public void testLinkForPropertyFromNodeDepth1() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+        String value = "value";
+        String name = "myProperty";
+        topPage.setProperty(name, value);
+
+        MockWebContext context = new MockWebContext();
+        context.setContextPath(CONTEXT_PATH);
+        MgnlContext.setInstance(context);
+
+        // WHEN
+        String resultLink = functions.link(PropertyUtil.getProperty(topPage,name));
+
+        // THEN
+        assertEquals(CONTEXT_PATH + topPage.getPath()+"/"+name, resultLink);
+    }
+
+    @Test
+    public void testLinkForPropertyFromNodeDepth2() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+        String value = "value";
+        String name = "myProperty";
+        childPage.setProperty(name, value);
+
+        MockWebContext context = new MockWebContext();
+        context.setContextPath(CONTEXT_PATH);
+        MgnlContext.setInstance(context);
+
+        // WHEN
+        String resultLink = functions.link(PropertyUtil.getProperty(childPage,name));
+
+        // THEN
+        assertEquals(CONTEXT_PATH + childPage.getPath()+"/"+name, resultLink);
+    }
 
     @Test
     public void testLinkForIdentifierFromNodeDepth1() throws RepositoryException {
