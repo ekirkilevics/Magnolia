@@ -41,6 +41,7 @@ import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.objectfactory.Components;
@@ -363,7 +364,7 @@ public class TemplatingFunctions {
      * @return The link prepended with <code>http://</code>
      */
     public String externalLink(Node content, String linkPropertyName){
-        String externalLink = NodeUtil.getStringIfPossible(content, linkPropertyName);
+        String externalLink = PropertyUtil.getString(content, linkPropertyName);
         if(StringUtils.isBlank(externalLink)){
             return StringUtils.EMPTY;
         }
@@ -393,7 +394,7 @@ public class TemplatingFunctions {
      * @return the resolved link title value
      */
     public String externalLinkTitle(Node content, String linkPropertyName, String linkTitlePropertyName){
-        String linkTitle = NodeUtil.getStringIfPossible(content, linkTitlePropertyName);
+        String linkTitle = PropertyUtil.getString(content, linkTitlePropertyName);
         if(StringUtils.isNotEmpty(linkTitle)){
             return linkTitle;
         }
