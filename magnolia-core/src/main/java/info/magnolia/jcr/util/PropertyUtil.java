@@ -285,48 +285,7 @@ public class PropertyUtil {
         }
     }
 
-    /**
-     * Return the String representing the node property value.
-     * If the Node did not contain such a Property,
-     * then return <b>null</b>.
-     */
-    public static String getString(Node node, String name) {
-        return getString(node, name, null);
-    }
 
-    /**
-     * Return the String representing the node property value.
-     * If the Node did not contain such a Property,
-     * then return the default value.
-     */
-    public static String getString(Node node, String name, String defaultValue) {
-        try {
-            if (node.hasProperty(name)) {
-                return node.getProperty(name).getString();
-            }
-            return defaultValue;
-        } catch (RepositoryException e) {
-            log.error("can't read value '" + name + "' of the Node '" + node.toString() + "' will return default value", e);
-            return defaultValue;
-        }
-    }
-
-    /**
-     * Return the boolean representing the node property value.
-     * If the Node did not contain such a Property,
-     * then return the default value.
-     */
-    public static boolean getBoolean(Node node, String name, boolean defaultValue) {
-        try {
-            if (node.hasProperty(name)) {
-                return node.getProperty(name).getBoolean();
-            }
-            return defaultValue;
-        } catch (RepositoryException e) {
-            log.error("can't read value '" + name + "' of the Node '" + node.toString() + "' will return default value", e);
-            return defaultValue;
-        }
-    }
 
     /**
      * Return the Property relative to the Node.

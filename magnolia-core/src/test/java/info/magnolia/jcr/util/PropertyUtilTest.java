@@ -141,67 +141,7 @@ public class PropertyUtilTest {
         assertEquals(identifier, root.getProperty(PROPERTY_NAME).getString());
     }
 
-    @Test
-    public void testGetStringTwoArgs() throws RepositoryException {
-        String value = "value";
-        root.setProperty(PROPERTY_NAME, value);
-        String res = PropertyUtil.getString(root, PROPERTY_NAME);
-        assertEquals(value, res);
-    }
 
-    @Test
-    public void testGetStringThreeArgs() throws RepositoryException {
-        String defaultValue = "defaultValue";
-        String value = "value";
-        root.setProperty(PROPERTY_NAME, value);
-        String res = PropertyUtil.getString(root, PROPERTY_NAME, defaultValue);
-        assertEquals(value, res);
-    }
-
-    @Test
-    public void testGetStringThreeArgsBadNodeName() throws RepositoryException {
-        String defaultValue = "defaultValue";
-        String value = "value";
-        root.setProperty(PROPERTY_NAME + "xx", value);
-        String res = PropertyUtil.getString(root, PROPERTY_NAME, defaultValue);
-        assertEquals(defaultValue, res);
-    }
-
-    @Test
-    public void testGetStringThreeArgsBadNodeType() throws RepositoryException {
-        String defaultValue = "defaultValue";
-        BigDecimal value = BigDecimal.ONE;
-        root.setProperty(PROPERTY_NAME, value);
-        String res = PropertyUtil.getString(root, PROPERTY_NAME, defaultValue);
-        assertEquals(defaultValue, res);
-    }
-
-    @Test
-    public void testGetBoolean() throws RepositoryException {
-        boolean defaultValue = false;
-        boolean value = true;
-        root.setProperty(PROPERTY_NAME, value);
-        boolean res = PropertyUtil.getBoolean(root, PROPERTY_NAME, defaultValue);
-        assertEquals(value, res);
-    }
-
-    @Test
-    public void testGetBooleanBadNodeName() throws RepositoryException {
-        boolean defaultValue = false;
-        boolean value = true;
-        root.setProperty(PROPERTY_NAME + "xx", value);
-        boolean res = PropertyUtil.getBoolean(root, PROPERTY_NAME, defaultValue);
-        assertEquals(defaultValue, res);
-    }
-
-    @Test
-    public void testGetBooleanBadNodeType() throws RepositoryException {
-        boolean defaultValue = false;
-        BigDecimal value = BigDecimal.ONE;
-        root.setProperty(PROPERTY_NAME + "xx", value);
-        boolean res = PropertyUtil.getBoolean(root, PROPERTY_NAME, defaultValue);
-        assertEquals(defaultValue, res);
-    }
     @Test
     public void testGetProperty() throws RepositoryException {
         Property res = null;

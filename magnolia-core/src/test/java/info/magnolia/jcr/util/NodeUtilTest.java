@@ -33,6 +33,7 @@
  */
 package info.magnolia.jcr.util;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -342,4 +343,111 @@ public class NodeUtilTest {
         // THEN
         assertEquals("Should be /testNode  ", "/" + FIRST_CHILD, res);
     }
+
+
+    @Test
+    public void testGetStringIfPossibleTwoArgs() throws RepositoryException {
+        // GIVEN
+        String propertyName = "propertyName";
+        String propertyValue = "propertyValue";
+        first.setProperty(propertyName, propertyValue);
+
+        // WHEN
+        String res = NodeUtil.getStringIfPossible(first, propertyName);
+
+        // THEN
+        assertEquals(propertyValue, res);
+    }
+
+    @Test
+    public void testGetStringIfPossibleThreeArgs() throws RepositoryException {
+        // GIVEN
+        String propertyName = "propertyName";
+        String propertyValue = "propertyValue";
+        String defaultValue = "defaultValue";
+        first.setProperty(propertyName, propertyValue);
+
+        // WHEN
+        String res = NodeUtil.getStringIfPossible(first, propertyName,defaultValue);
+
+        // THEN
+        assertEquals(propertyValue, res);
+    }
+
+    @Test
+    public void testGetStringIfPossibleThreeArgsBadNodeName() throws RepositoryException {
+        // GIVEN
+        String propertyName = "propertyName";
+        String propertyValue = "propertyValue";
+        String defaultValue = "defaultValue";
+        first.setProperty(propertyName, propertyValue);
+
+        // WHEN
+        String res = NodeUtil.getStringIfPossible(first, propertyName+1,defaultValue);
+
+        // THEN
+        assertEquals(defaultValue, res);
+    }
+
+    @Test
+    public void testGetStringIfPossibleThreeArgsBadNodeType() throws RepositoryException {
+        // GIVEN
+        String propertyName = "propertyName";
+        BigDecimal propertyValue = BigDecimal.ONE;
+        String defaultValue = "defaultValue";
+        first.setProperty(propertyName, propertyValue);
+
+        // WHEN
+        String res = NodeUtil.getStringIfPossible(first, propertyName,defaultValue);
+
+        // THEN
+        assertEquals(defaultValue, res);
+    }
+
+    @Test
+    public void testGetBooleanIfPossible() throws RepositoryException {
+        // GIVEN
+        boolean defaultValue = false;
+        boolean propertyValue = true;
+        String propertyName = "propertyName";
+        first.setProperty(propertyName, propertyValue);
+
+        // WHEN
+        boolean res = NodeUtil.getBooleanIfPossible(first, propertyName,defaultValue);
+
+        // THEN
+        assertEquals(propertyValue, res);
+    }
+
+    @Test
+    public void testGetBooleanIfPossibleBadNodeName() throws RepositoryException {
+        // GIVEN
+        boolean defaultValue = false;
+        boolean propertyValue = true;
+        String propertyName = "propertyName";
+        first.setProperty(propertyName, propertyValue);
+
+        // WHEN
+        boolean res = NodeUtil.getBooleanIfPossible(first, propertyName+1,defaultValue);
+
+        // THEN
+        assertEquals(defaultValue, res);
+    }
+
+    @Test
+    public void testGetBooleanIfPossibleBadNodeType() throws RepositoryException {
+        // GIVEN
+        boolean defaultValue = false;
+        BigDecimal propertyValue = BigDecimal.ONE;
+        String propertyName = "propertyName";
+        first.setProperty(propertyName, propertyValue);
+
+        // WHEN
+        boolean res = NodeUtil.getBooleanIfPossible(first, propertyName,defaultValue);
+
+        // THEN
+        assertEquals(defaultValue, res);
+    }
+
+
 }
