@@ -31,43 +31,40 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template;
+package info.magnolia.rendering.template.registry;
 
-import java.util.Map;
+import javax.inject.Singleton;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
+import info.magnolia.cms.security.PermissionUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.rendering.template.TemplateDefinition;
 
 /**
- * Base interface for all renderables. Defines for instance the template's title, template script and render type.
+ * Default implementation of {@link TemplateAvailability}.
  *
  * @version $Id$
  */
-public interface RenderableDefinition {
+@Singleton
+public class DefaultTemplateAvailability implements TemplateAvailability {
 
-    String getId();
+    @Override
+    public boolean isAvailable(Node content, TemplateDefinition templateDefinition) {
+        return hasReadAccess(content);
+    }
 
-    void setId(String id);
-
-    String getName();
-
-    String getRenderType();
-
-    String getTitle();
-
-    String getDescription();
-
-    String getI18nBasename();
-
-    String getTemplateScript();
-
-    /**
-     * An arbitrary list of parameters. Used to omit subclass with getters and setters for each
-     * extra parameter.
-     */
-    Map<String, Object> getParameters();
-
-    //TODO: use generics again once we get rid of templating-compatibility module
-    Class getModelClass();
-
-    AutoGenerationConfiguration getAutoGeneration();
-
+    protected boolean hasReadAccess(Node content) {
+        try {
+            // should not fact that we are able to get path already show that we can read this node???
+            // ... unless of course this "content" was created with system session ... so make sure we check using user session and not the node session
+            return PermissionUtil.isGranted(
+                    MgnlContext.getJCRSession(content.getSession().getWorkspace().getName()),
+                    content.getPath(),
+                    Session.ACTION_READ);
+        } catch (RepositoryException e) {
+            return false;
+        }
+    }
 }

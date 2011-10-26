@@ -31,43 +31,18 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template;
+package info.magnolia.rendering.template.registry;
 
-import java.util.Map;
+import javax.jcr.Node;
 
+import info.magnolia.rendering.template.TemplateDefinition;
 
 /**
- * Base interface for all renderables. Defines for instance the template's title, template script and render type.
+ * Strategy interface for controlling where templates can be used.
  *
  * @version $Id$
  */
-public interface RenderableDefinition {
+public interface TemplateAvailability {
 
-    String getId();
-
-    void setId(String id);
-
-    String getName();
-
-    String getRenderType();
-
-    String getTitle();
-
-    String getDescription();
-
-    String getI18nBasename();
-
-    String getTemplateScript();
-
-    /**
-     * An arbitrary list of parameters. Used to omit subclass with getters and setters for each
-     * extra parameter.
-     */
-    Map<String, Object> getParameters();
-
-    //TODO: use generics again once we get rid of templating-compatibility module
-    Class getModelClass();
-
-    AutoGenerationConfiguration getAutoGeneration();
-
+    boolean isAvailable(Node content, TemplateDefinition templateDefinition);
 }

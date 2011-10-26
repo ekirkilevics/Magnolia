@@ -45,6 +45,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -65,6 +66,12 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
     //FIXME this probably should not be hardcoded.
     private static final String DELETED_PAGE_TEMPLATE = "adminInterface:mgnlDeleted";
 
+    private TemplateAvailability templateAvailability;
+
+    @Inject
+    public TemplateDefinitionRegistry(TemplateAvailability templateAvailability) {
+        this.templateAvailability = templateAvailability;
+    }
 
     public TemplateDefinition getTemplateDefinition(String id) throws RegistrationException {
 
@@ -101,7 +108,6 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
         return templateDefinitions;
     }
 
-    // TODO move this to an independent template availability component
     public Collection<TemplateDefinition> getAvailableTemplates(Node content) {
 
         try {
@@ -117,7 +123,7 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
         final ArrayList<TemplateDefinition> availableTemplateDefinitions = new ArrayList<TemplateDefinition>();
         final Collection<TemplateDefinition> templateDefinitions = getTemplateDefinitions();
         for (TemplateDefinition templateDefinition : templateDefinitions) {
-            if(!DELETED_PAGE_TEMPLATE.equals(templateDefinition.getId()) && templateDefinition.isAvailable(content)){
+            if (templateAvailability.isAvailable(content, templateDefinition)) {
                 availableTemplateDefinitions.add(templateDefinition);
             }
         }
@@ -127,7 +133,6 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
     /**
      * Get the Template that could be used for the provided content as a default.
      */
-    // TODO move this to an independent template availability component
     public TemplateDefinition getDefaultTemplate(Node content) {
 
         // try to use the same as the parent
@@ -137,7 +142,8 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
         } catch (RegistrationException e) {
             log.warn("Can't resolve default template for node " + content, e);
         }
-        if (definition != null && definition.isAvailable(content)){
+
+        if (definition != null && templateAvailability.isAvailable(content, definition)) {
             return definition;
         }
 

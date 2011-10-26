@@ -56,7 +56,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         MockNode metaData = (MockNode) node.addNode(MetaData.DEFAULT_META_NODE);
         metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.TEMPLATE, templateId);
 
-        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
+        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry(null);
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
         TemplateDefinitionProvider provider = mock(TemplateDefinitionProvider.class);
         when(provider.getId()).thenReturn(templateId);
