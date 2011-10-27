@@ -1009,6 +1009,33 @@ public class TemplatingFunctionsTest {
     }
 
     @Test
+    public void testInheritFromNodeNoContent() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+        Node content = null;
+
+        // WHEN
+        Node node = functions.inherit(content, "comp-L3-1");
+
+        // THEN
+        assertEquals(node, null);
+    }
+
+    @Test
+    public void testInheritFromNodeOnlyContent() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        Node node = functions.inherit(childPage);
+
+        // THEN
+        assertEquals(node.getParent(), childPage.getParent());
+        assertEquals(node.getPath(), childPage.getPath());
+        assertEquals(node.getIdentifier(), childPage.getIdentifier());
+    }
+
+    @Test
     public void testInheritedNodeIsUnwrapped() throws RepositoryException {
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
@@ -1030,6 +1057,20 @@ public class TemplatingFunctionsTest {
 
         // THEN
         assertMapEqualsMap(contentMap, childPageComponentContentMap);
+    }
+
+    @Test
+    public void testInheritFromContentMapOnlyContentMap() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+
+        // WHEN
+        ContentMap contentMap = functions.inherit(childPageContentMap);
+
+        // THEN
+        assertEquals(contentMap.getJCRNode().getParent().getPath(), childPageContentMap.getJCRNode().getParent().getPath());
+        assertEquals(contentMap.getJCRNode().getPath(), childPageContentMap.getJCRNode().getPath());
+        assertEquals(contentMap.getJCRNode().getIdentifier(), childPageContentMap.getJCRNode().getIdentifier());
     }
 
     @Test

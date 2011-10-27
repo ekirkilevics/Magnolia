@@ -33,6 +33,7 @@
  */
 package info.magnolia.templating.functions;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
@@ -42,6 +43,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
+import info.magnolia.jcr.util.SessionUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.objectfactory.Components;
@@ -264,14 +266,20 @@ public class TemplatingFunctions {
         return ancestors;
     }
 
+    public Node inherit(Node content) throws RepositoryException {
+        return inherit(content,null);
+    }
+
     public Node inherit(Node content, String relPath) throws RepositoryException {
         if (content == null) {
             return null;
         }
-        if (StringUtils.isBlank(relPath)) {
-            throw new IllegalArgumentException("relative path cannot be null or empty");
-        }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
+
+        if (StringUtils.isBlank(relPath)) {
+            return inheritedNode;
+        }
+
         try {
             Node subNode = inheritedNode.getNode(relPath);
             return NodeUtil.unwrap(subNode);
@@ -281,6 +289,10 @@ public class TemplatingFunctions {
         return null;
     }
 
+    public ContentMap inherit(ContentMap content) throws RepositoryException {
+        return inherit(content, null);
+    }
+
     public ContentMap inherit(ContentMap content, String relPath) throws RepositoryException {
         if (content == null) {
             return null;
@@ -288,6 +300,7 @@ public class TemplatingFunctions {
         Node node = inherit(content.getJCRNode(), relPath);
         return node == null ? null : new ContentMap(node);
     }
+
 
     public Property inheritProperty(Node content, String relPath) throws RepositoryException {
         if (content == null) {
@@ -507,4 +520,21 @@ public class TemplatingFunctions {
     public SiblingsHelper siblings(ContentMap node) throws RepositoryException {
         return siblings(asJCRNode(node));
     }
+
+    /**
+     * Return the Node for the Given Path
+     * from the website repository.
+     */
+    public Node content(String path){
+        return content(ContentRepository.WEBSITE,path);
+    }
+
+    /**
+     * Return the Node for the Given Path
+     * from the given repository.
+     */
+    public Node content(String repository, String path){
+        return SessionUtil.getNode(repository, path);
+    }
+
 }
