@@ -43,7 +43,6 @@ import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.logging.AuditLoggingUtil;
-import info.magnolia.test.mock.MockContent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -690,10 +689,10 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof MockContent)) {
+        if (obj == null || !(obj instanceof DefaultContent)) {
             return false;
         }
-        MockContent otherContent = (MockContent) obj;
+        DefaultContent otherContent = (DefaultContent) obj;
         return getJCRNode().equals(otherContent.getJCRNode());
     }
 
