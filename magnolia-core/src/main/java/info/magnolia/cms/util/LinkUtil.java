@@ -45,7 +45,7 @@ import info.magnolia.link.LinkException;
  * It stores the links in the following format: ${link:{uuid:{},path:{}}}. We store already the UUID.
  * @author philipp
  * @version $Revision$ ($Author$)
- * @deprecated use {@link info.magnolia.link.LinkUtil} instead
+ * @deprecated since 4.0 - use {@link info.magnolia.link.LinkUtil} instead
  */
 public final class LinkUtil extends info.magnolia.link.LinkUtil {
     /**
