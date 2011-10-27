@@ -41,7 +41,7 @@ import info.magnolia.repository.definition.RepositoryDefinition;
  * Date: Aug 16, 2004 Time: 4:03:23 PM
  * @author Sameer Charles
  * @version 2.0
- * @deprecated use {@link RepositoryDefinition} instead
+ * @deprecated since 4.5 - use {@link RepositoryDefinition} instead.
  */
 @Deprecated
 public class RepositoryMapping extends RepositoryDefinition {

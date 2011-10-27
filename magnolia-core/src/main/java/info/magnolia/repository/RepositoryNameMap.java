@@ -36,7 +36,7 @@ package info.magnolia.repository;
 /**
  * Mapping storing location of the available workspaces in existing repositories.
  * @author Sameer Charles
- * @deprecated use {@link info.magnolia.repository.definition.WorkspaceMappingDefinition} instead.
+ * @deprecated since 4.5 - use {@link info.magnolia.repository.definition.WorkspaceMappingDefinition} instead.
  * $Id$
  */
 @Deprecated
