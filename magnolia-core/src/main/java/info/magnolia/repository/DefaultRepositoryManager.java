@@ -152,18 +152,18 @@ public final class DefaultRepositoryManager implements RepositoryManager {
     }
 
     /**
-     * @param repository
+     * @param workspace
      * @throws RepositoryException
      * @throws AccessDeniedException
      */
     @Override
     public boolean checkIfInitialized(String workspace) throws RepositoryException, AccessDeniedException {
-        log.debug("Checking [{}] repository.", repository);
+        log.debug("Checking [{}] repository.", workspace);
         // TODO cant we login without using the system context?
-        Session session = MgnlContext.getSystemContext().getJCRSession(repository);
+        Session session = MgnlContext.getSystemContext().getJCRSession(workspace);
 
         if (session == null) {
-            throw new RuntimeException("Repository [" + repository + "] not loaded");
+            throw new RuntimeException("Repository [" + workspace + "] not loaded");
         }
 
         Node startPage = session.getRootNode();
@@ -183,7 +183,7 @@ public final class DefaultRepositoryManager implements RepositoryManager {
         });
 
         if (children.iterator().hasNext()) {
-            log.debug("Content found in [{}].", repository);
+            log.debug("Content found in [{}].", workspace);
             return true;
         }
         return false;
