@@ -62,7 +62,7 @@ public interface Provider {
     Repository getUnderlyingRepository() throws RepositoryNotInitializedException;
 
     /**
-     * @deprecated typo - use get #getUnderlyingRepository() - since 4.0
+     * @deprecated since 4.0 - typo - use get #getUnderlyingRepository() instead
      */
     Repository getUnderlineRepository() throws RepositoryNotInitializedException;
 
