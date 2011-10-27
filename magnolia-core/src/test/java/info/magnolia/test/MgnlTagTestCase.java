@@ -39,8 +39,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.link.LinkResolver;
-import info.magnolia.cms.link.LinkResolverImpl;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.test.mock.MockWebContext;
@@ -90,8 +88,6 @@ public abstract class MgnlTagTestCase extends MgnlTestCase {
         // set up necessary items not configured in the repository
         ComponentsTestUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        ComponentsTestUtil.setInstance(LinkResolver.class, new LinkResolverImpl());
-
         setupPageContext();
     }
 
