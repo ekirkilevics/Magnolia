@@ -72,6 +72,8 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
 import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
 import info.magnolia.objectfactory.configuration.InstanceConfiguration;
+import info.magnolia.repository.DefaultRepositoryManager;
+import info.magnolia.repository.RepositoryManager;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 import static org.junit.Assert.assertTrue;
@@ -136,6 +138,7 @@ public abstract class MgnlTestCase {
         ComponentsTestUtil.setInstance(ModuleRegistry.class, mr);
         ComponentsTestUtil.setInstance(MagnoliaConfigurationProperties.class, configurationProperties);
 
+        ComponentsTestUtil.setImplementation(RepositoryManager.class, DefaultRepositoryManager.class);
         ComponentsTestUtil.setInstance(SessionProviderRegistry.class, new SessionProviderRegistry());
 
         ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
