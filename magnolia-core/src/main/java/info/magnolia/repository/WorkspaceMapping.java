@@ -241,13 +241,12 @@ public class WorkspaceMapping {
      * @param name
      * @return mapped name as in repositories.xml RepositoryMapping element
      */
-    public static String getMappedWorkspaceName(String name) {
+    public String getMappedWorkspaceName(String name) {
         WorkspaceMappingDefinition nameMap = workspaceMappingDefinitions.get(name);
         if (nameMap == null) {
             return name;
         }
         return nameMap.getWorkspaceName();
     }
-
 
 }

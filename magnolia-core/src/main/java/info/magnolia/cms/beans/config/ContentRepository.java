@@ -38,7 +38,6 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.repository.DefaultRepositoryManager;
 import info.magnolia.repository.RepositoryManager;
 import info.magnolia.repository.RepositoryNotInitializedException;
 import info.magnolia.repository.WorkspaceMapping;
@@ -134,7 +133,7 @@ public final class ContentRepository {
     }
 
     /**
-     * @deprecated since 4.5 - use {@link DefaultRepositoryManager#init()} instead
+     * @deprecated since 4.5 - use {@link info.magnolia.repository.DefaultRepositoryManager#init()} instead
      */
     public static void init() {
         repositoryManager.init();
