@@ -45,7 +45,6 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.MockValue;
-import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -111,14 +110,14 @@ public class MockUtil {
     }
 
     /**
-     * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, InputStream)} instead.
+     * @deprecated since 4.5 - use {@link info.magnolia.test.mock.jcr.SessionTestUtil#createSession(String, InputStream)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(InputStream propertiesStream) throws IOException, RepositoryException {
         return createHierarchyManager(DEFAULT_TEST_WORKSPACE_NAME, propertiesStream);
     }
 
     /**
-     * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, InputStream)} instead.
+     * @deprecated since 4.5 - use {@link info.magnolia.test.mock.jcr.SessionTestUtil#createSession(String, InputStream)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(String workspace, InputStream propertiesStream) throws IOException, RepositoryException {
         Content root = new MockContent("jcr:root");
@@ -129,7 +128,7 @@ public class MockUtil {
     }
 
     /**
-     * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, String)} instead.
+     * @deprecated since 4.5 - use {@link info.magnolia.test.mock.jcr.SessionTestUtil#createSession(String, String)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(String propertiesStr) throws IOException, RepositoryException {
         return createHierarchyManager(DEFAULT_TEST_WORKSPACE_NAME, propertiesStr);
