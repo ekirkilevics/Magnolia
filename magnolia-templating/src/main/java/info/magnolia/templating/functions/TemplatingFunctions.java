@@ -53,10 +53,10 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-
 
 /**
  * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
@@ -64,7 +64,6 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class TemplatingFunctions {
-
 
     public Node asJCRNode(ContentMap contentMap) {
         return contentMap == null ? null : contentMap.getJCRNode();
@@ -85,26 +84,34 @@ public class TemplatingFunctions {
         }
     }
 
-
     /**
-     * FIXME Add a LinkUtil.createLink(Property property)....
-     * Dirty Hack
+     * FIXME Add a LinkUtil.createLink(Property property).... Dirty Hack
      */
     public String link(Property property) {
         try {
-            NodeData equivNodeData = ContentUtil.asContent(property.getParent()).getNodeData(property.getName());
+            Node parentNode = null;
+            String propertyName = null;
+            if (property.getType() == PropertyType.BINARY) {
+                parentNode = property.getParent().getParent();
+                propertyName = property.getParent().getName();
+            } else {
+                parentNode = property.getParent();
+                propertyName = property.getName();
+            }
+            NodeData equivNodeData = ContentUtil.asContent(parentNode).getNodeData(propertyName);
             return LinkUtil.createLink(equivNodeData);
         } catch (Exception e) {
             return null;
         }
     }
 
-    //TODO fgrilli: LinkUtil needs to be Node capable and not only Content. Switch to node based impl when SCRUM-242 will be done.
+    // TODO fgrilli: LinkUtil needs to be Node capable and not only Content. Switch to node based impl when SCRUM-242
+    // will be done.
     public String link(Node content) {
         return content == null ? null : LinkUtil.createLink(ContentUtil.asContent(content));
     }
 
-    public String link(ContentMap contentMap) throws RepositoryException{
+    public String link(ContentMap contentMap) throws RepositoryException {
         return contentMap == null ? null : this.link(asJCRNode(contentMap));
     }
 
@@ -113,10 +120,10 @@ public class TemplatingFunctions {
     }
 
     public List<Node> children(Node content, String nodeTypeName) throws RepositoryException {
-        return content == null ? null: asNodeList(NodeUtil.getNodes(content, nodeTypeName));
+        return content == null ? null : asNodeList(NodeUtil.getNodes(content, nodeTypeName));
     }
 
-    //TODO fgrilli: should we unwrap children?
+    // TODO fgrilli: should we unwrap children?
     protected List<Node> asNodeList(Iterable<Node> nodes) {
         List<Node> childList = new ArrayList<Node>();
         for (Node child : nodes) {
@@ -126,14 +133,15 @@ public class TemplatingFunctions {
     }
 
     public List<ContentMap> children(ContentMap content) throws RepositoryException {
-        return content == null ? null : asContentMapList(NodeUtil.getNodes(asJCRNode(content), NodeUtil.EXCLUDE_META_DATA_FILTER));
+        return content == null ? null : asContentMapList(NodeUtil.getNodes(asJCRNode(content),
+                NodeUtil.EXCLUDE_META_DATA_FILTER));
     }
 
     public List<ContentMap> children(ContentMap content, String nodeTypeName) throws RepositoryException {
         return content == null ? null : asContentMapList(NodeUtil.getNodes(asJCRNode(content), nodeTypeName));
     }
 
-    //TODO fgrilli: should we unwrap children?
+    // TODO fgrilli: should we unwrap children?
     protected List<ContentMap> asContentMapList(Iterable<Node> nodes) {
         List<ContentMap> childList = new ArrayList<ContentMap>();
         for (Node child : nodes) {
@@ -151,9 +159,8 @@ public class TemplatingFunctions {
     }
 
     /**
-     * Returns the page node of the passed node.
-     * If the passed Node is a page, the passed node will be returned.
-     * If the passed Node has no parent page at all, null is returned.
+     * Returns the page node of the passed node. If the passed Node is a page, the passed node will be returned. If the
+     * passed Node has no parent page at all, null is returned.
      *
      * FIXME cringele model: test missing.
      *
@@ -161,8 +168,8 @@ public class TemplatingFunctions {
      * @return returns the page node of the passed content node.
      * @throws RepositoryException
      */
-    public Node page(Node content) throws RepositoryException{
-        if(content.isNodeType(MgnlNodeType.NT_PAGE)) {
+    public Node page(Node content) throws RepositoryException {
+        if (content.isNodeType(MgnlNodeType.NT_PAGE)) {
             return content;
         }
         return parent(content, MgnlNodeType.NT_PAGE);
@@ -181,18 +188,18 @@ public class TemplatingFunctions {
     }
 
     public Node parent(Node content, String nodeTypeName) throws RepositoryException {
-        if(content == null) {
+        if (content == null) {
             return null;
         }
-        if(isRoot(content)) {
+        if (isRoot(content)) {
             return null;
         }
-        if(nodeTypeName==null ){
+        if (nodeTypeName == null) {
             return content.getParent();
         }
         Node parent = content.getParent();
-        while(!parent.isNodeType(nodeTypeName)){
-            if(isRoot(parent)){
+        while (!parent.isNodeType(nodeTypeName)) {
+            if (isRoot(parent)) {
                 return null;
             }
             parent = parent.getParent();
@@ -200,26 +207,26 @@ public class TemplatingFunctions {
         return parent;
     }
 
-    public Node root(Node content) throws RepositoryException{
+    public Node root(Node content) throws RepositoryException {
         return this.root(content, null);
     }
 
-    public Node root(Node content, String nodeTypeName) throws RepositoryException{
-        if(content == null) {
+    public Node root(Node content, String nodeTypeName) throws RepositoryException {
+        if (content == null) {
             return null;
         }
-        if(nodeTypeName==null ){
+        if (nodeTypeName == null) {
             return (Node) content.getAncestor(0);
         }
-        if(isRoot(content) && content.isNodeType(nodeTypeName)) {
+        if (isRoot(content) && content.isNodeType(nodeTypeName)) {
             return content;
         }
 
         Node parentNode = this.parent(content, nodeTypeName);
-        if(parentNode == null){
+        if (parentNode == null) {
             return null;
         }
-        while(!parentNode.isNodeType(nodeTypeName) && parentNode != null){
+        while (!parentNode.isNodeType(nodeTypeName) && parentNode != null) {
             parentNode = this.parent(parentNode, nodeTypeName);
         }
         return parentNode;
@@ -234,22 +241,22 @@ public class TemplatingFunctions {
         return asContentMapList(ancestorsAsNodes);
     }
 
-    public List<Node> ancestors(Node content) throws RepositoryException{
+    public List<Node> ancestors(Node content) throws RepositoryException {
         return content == null ? null : this.ancestors(content, null);
     }
 
-    public List<Node> ancestors(Node content, String nodeTypeName) throws RepositoryException{
-        if(content == null) {
+    public List<Node> ancestors(Node content, String nodeTypeName) throws RepositoryException {
+        if (content == null) {
             return null;
         }
         List<Node> ancestors = new ArrayList<Node>();
         int depth = content.getDepth();
-        for(int i=1; i<depth; ++i){
-            Node possibleAncestor = (Node)content.getAncestor(i);
-            if(nodeTypeName == null){
+        for (int i = 1; i < depth; ++i) {
+            Node possibleAncestor = (Node) content.getAncestor(i);
+            if (nodeTypeName == null) {
                 ancestors.add(possibleAncestor);
             } else {
-                if(possibleAncestor.isNodeType(nodeTypeName)){
+                if (possibleAncestor.isNodeType(nodeTypeName)) {
                     ancestors.add(possibleAncestor);
                 }
             }
@@ -258,10 +265,10 @@ public class TemplatingFunctions {
     }
 
     public Node inherit(Node content, String relPath) throws RepositoryException {
-        if(content == null) {
+        if (content == null) {
             return null;
         }
-        if(StringUtils.isBlank(relPath)) {
+        if (StringUtils.isBlank(relPath)) {
             throw new IllegalArgumentException("relative path cannot be null or empty");
         }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
@@ -269,13 +276,13 @@ public class TemplatingFunctions {
             Node subNode = inheritedNode.getNode(relPath);
             return NodeUtil.unwrap(subNode);
         } catch (PathNotFoundException e) {
-          //TODO fgrilli: rethrow exception?
+            // TODO fgrilli: rethrow exception?
         }
         return null;
     }
 
     public ContentMap inherit(ContentMap content, String relPath) throws RepositoryException {
-        if(content == null) {
+        if (content == null) {
             return null;
         }
         Node node = inherit(content.getJCRNode(), relPath);
@@ -283,10 +290,10 @@ public class TemplatingFunctions {
     }
 
     public Property inheritProperty(Node content, String relPath) throws RepositoryException {
-        if(content == null) {
+        if (content == null) {
             return null;
         }
-        if(StringUtils.isBlank(relPath)) {
+        if (StringUtils.isBlank(relPath)) {
             throw new IllegalArgumentException("relative path cannot be null or empty");
         }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
@@ -294,26 +301,26 @@ public class TemplatingFunctions {
             return inheritedNode.getProperty(relPath);
 
         } catch (PathNotFoundException e) {
-            //TODO fgrilli: rethrow exception?
-        } catch(RepositoryException e) {
-          //TODO fgrilli:rethrow exception?
+            // TODO fgrilli: rethrow exception?
+        } catch (RepositoryException e) {
+            // TODO fgrilli:rethrow exception?
         }
 
         return null;
     }
 
     public Property inheritProperty(ContentMap content, String relPath) throws RepositoryException {
-        if(content == null) {
+        if (content == null) {
             return null;
         }
         return inheritProperty(content.getJCRNode(), relPath);
     }
 
-    public List<Node> inheritList(Node content, String relPath) throws RepositoryException{
-        if(content == null) {
+    public List<Node> inheritList(Node content, String relPath) throws RepositoryException {
+        if (content == null) {
             return null;
         }
-        if(StringUtils.isBlank(relPath)) {
+        if (StringUtils.isBlank(relPath)) {
             throw new IllegalArgumentException("relative path cannot be null or empty");
         }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
@@ -321,11 +328,11 @@ public class TemplatingFunctions {
         return children(subNode);
     }
 
-    public List<ContentMap> inheritList(ContentMap content, String relPath) throws RepositoryException{
-        if(content == null) {
+    public List<ContentMap> inheritList(ContentMap content, String relPath) throws RepositoryException {
+        if (content == null) {
             return null;
         }
-        if(StringUtils.isBlank(relPath)) {
+        if (StringUtils.isBlank(relPath)) {
             throw new IllegalArgumentException("relative path cannot be null or empty");
         }
         InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(asJCRNode(content));
@@ -343,8 +350,8 @@ public class TemplatingFunctions {
     }
 
     public boolean isInherited(Node content) {
-        if(content instanceof InheritanceNodeWrapper) {
-            return ((InheritanceNodeWrapper)content).isInherited();
+        if (content instanceof InheritanceNodeWrapper) {
+            return ((InheritanceNodeWrapper) content).isInherited();
         }
         return false;
     }
@@ -358,64 +365,78 @@ public class TemplatingFunctions {
     }
 
     /**
-     * Returns an external link prepended with <code>http://</code> in case the protocol is missing or an empty String if the link does not exist.
-     * @param content The node where the link property is stored on.
-     * @param linkPropertyName The property where the link value is stored in.
+     * Returns an external link prepended with <code>http://</code> in case the protocol is missing or an empty String
+     * if the link does not exist.
+     *
+     * @param content
+     *            The node where the link property is stored on.
+     * @param linkPropertyName
+     *            The property where the link value is stored in.
      * @return The link prepended with <code>http://</code>
      */
-    public String externalLink(Node content, String linkPropertyName){
+    public String externalLink(Node content, String linkPropertyName) {
         String externalLink = PropertyUtil.getString(content, linkPropertyName);
-        if(StringUtils.isBlank(externalLink)){
+        if (StringUtils.isBlank(externalLink)) {
             return StringUtils.EMPTY;
         }
-        if(!hasProtocol(externalLink)){
-            externalLink = "http://"+externalLink;
+        if (!hasProtocol(externalLink)) {
+            externalLink = "http://" + externalLink;
         }
         return externalLink;
     }
 
     /**
-     * Returns an external link prepended with <code>http://</code> in case the protocol is missing or an empty String if the link does not exist.
-     * @param content The node's map representation where the link property is stored on.
-     * @param linkPropertyName The property where the link value is stored in.
+     * Returns an external link prepended with <code>http://</code> in case the protocol is missing or an empty String
+     * if the link does not exist.
+     *
+     * @param content
+     *            The node's map representation where the link property is stored on.
+     * @param linkPropertyName
+     *            The property where the link value is stored in.
      * @return The link prepended with <code>http://</code>
      */
-    public String externalLink(ContentMap content, String linkPropertyName){
+    public String externalLink(ContentMap content, String linkPropertyName) {
         return externalLink(asJCRNode(content), linkPropertyName);
     }
 
     /**
-     * Return a link title based on the @param linkTitlePropertyName.
-     * When property @param linkTitlePropertyName is empty or null, the link itself is provided as the linkTitle (prepended with <code>http://</code>).
+     * Return a link title based on the @param linkTitlePropertyName. When property @param linkTitlePropertyName is
+     * empty or null, the link itself is provided as the linkTitle (prepended with <code>http://</code>).
      *
-     * @param content The node where the link property is stored on.
-     * @param linkPropertyName The property where the link value is stored in.
-     * @param linkTitlePropertyName The property where the link title value is stored
+     * @param content
+     *            The node where the link property is stored on.
+     * @param linkPropertyName
+     *            The property where the link value is stored in.
+     * @param linkTitlePropertyName
+     *            The property where the link title value is stored
      * @return the resolved link title value
      */
-    public String externalLinkTitle(Node content, String linkPropertyName, String linkTitlePropertyName){
+    public String externalLinkTitle(Node content, String linkPropertyName, String linkTitlePropertyName) {
         String linkTitle = PropertyUtil.getString(content, linkTitlePropertyName);
-        if(StringUtils.isNotEmpty(linkTitle)){
+        if (StringUtils.isNotEmpty(linkTitle)) {
             return linkTitle;
         }
         return externalLink(content, linkPropertyName);
     }
 
     /**
-     * Return a link title based on the @param linkTitlePropertyName.
-     * When property @param linkTitlePropertyName is empty or null, the link itself is provided as the linkTitle (prepended with <code>http://</code>).
+     * Return a link title based on the @param linkTitlePropertyName. When property @param linkTitlePropertyName is
+     * empty or null, the link itself is provided as the linkTitle (prepended with <code>http://</code>).
      *
-     * @param content The node where the link property is stored on.
-     * @param linkPropertyName The property where the link value is stored in.
-     * @param linkTitlePropertyName The property where the link title value is stored
+     * @param content
+     *            The node where the link property is stored on.
+     * @param linkPropertyName
+     *            The property where the link value is stored in.
+     * @param linkTitlePropertyName
+     *            The property where the link title value is stored
      * @return the resolved link title value
      */
-    public String externalLinkTitle(ContentMap content, String linkPropertyName, String linkTitlePropertyName){
+    public String externalLinkTitle(ContentMap content, String linkPropertyName, String linkTitlePropertyName) {
         return externalLinkTitle(asJCRNode(content), linkPropertyName, linkTitlePropertyName);
     }
 
     public List<ContentMap> asContentMapList(Collection<Node> nodeList) {
-        if(nodeList != null) {
+        if (nodeList != null) {
             List<ContentMap> contentMapList = new ArrayList<ContentMap>();
             for (Node node : nodeList) {
                 contentMapList.add(asContentMap(node));
@@ -426,7 +447,7 @@ public class TemplatingFunctions {
     }
 
     public List<Node> asNodeList(Collection<ContentMap> contentMapList) {
-        if(contentMapList != null) {
+        if (contentMapList != null) {
             List<Node> nodeList = new ArrayList<Node>();
             for (ContentMap node : contentMapList) {
                 nodeList.add(node.getJCRNode());
@@ -435,27 +456,29 @@ public class TemplatingFunctions {
         }
         return null;
     }
-    public boolean isEditMode(){
+
+    public boolean isEditMode() {
         // TODO : see CmsFunctions.isEditMode, which checks a couple of other properties.
         return isAuthorInstance() && !isPreviewMode();
     }
 
-    public boolean isPreviewMode(){
+    public boolean isPreviewMode() {
         return MgnlContext.getAggregationState().isPreviewMode();
     }
 
-    public boolean isAuthorInstance(){
+    public boolean isAuthorInstance() {
         return Components.getComponent(ServerConfiguration.class).isAdmin();
     }
 
-    public boolean isPublicInstance(){
+    public boolean isPublicInstance() {
         return !isAuthorInstance();
     }
 
     /**
      * Checks if passed string has a <code>http://</code> protocol.
      *
-     * @param link The link to check
+     * @param link
+     *            The link to check
      * @return If @param link contains a <code>http://</code> protocol
      */
     private boolean hasProtocol(String link) {
@@ -463,12 +486,12 @@ public class TemplatingFunctions {
     }
 
     /**
-     * Util method to create html attributes <code>name="value"</code>. If the value is empty an empty string will be returned.
-     * This is mainlly helpful to avoid empty attributes.
+     * Util method to create html attributes <code>name="value"</code>. If the value is empty an empty string will be
+     * returned. This is mainlly helpful to avoid empty attributes.
      */
-    public String createAttribute(String name, String value){
+    public String createAttribute(String name, String value) {
         value = StringUtils.trim(value);
-        if(StringUtils.isNotEmpty(value)){
+        if (StringUtils.isNotEmpty(value)) {
             return new StringBuffer().append(name).append("=\"").append(value).append("\"").toString();
         }
         return StringUtils.EMPTY;
