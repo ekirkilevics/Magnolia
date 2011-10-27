@@ -37,6 +37,7 @@ import info.magnolia.repository.definition.RepositoryDefinition;
 
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Workspace;
 import java.io.InputStream;
 
@@ -114,4 +115,6 @@ public interface Provider {
     boolean registerWorkspace(String workspaceName) throws RepositoryException;
 
     void shutdownRepository();
+
+    Session getSystemSession(String workspaceName) throws RepositoryException;
 }

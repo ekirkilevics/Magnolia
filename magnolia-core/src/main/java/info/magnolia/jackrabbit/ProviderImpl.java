@@ -533,4 +533,13 @@ public class ProviderImpl implements Provider {
         return false;
     }
 
+    public Session getSystemSession(String workspaceName) throws RepositoryException {
+
+        // FIXME: stop using SystemProperty, but IoC is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
+
+        String user = SystemProperty.getProperty("magnolia.connection.jcr.admin.userId", SystemProperty.getProperty("magnolia.connection.jcr.userId", "admin"));
+        String pwd = SystemProperty.getProperty("magnolia.connection.jcr.admin.password", SystemProperty.getProperty("magnolia.connection.jcr.password", "admin"));
+        return this.repository.login(new SimpleCredentials(user, pwd.toCharArray()), workspaceName);
+    }
+
 }
