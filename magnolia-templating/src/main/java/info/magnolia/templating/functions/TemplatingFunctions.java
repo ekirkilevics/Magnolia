@@ -164,8 +164,6 @@ public class TemplatingFunctions {
      * Returns the page node of the passed node. If the passed Node is a page, the passed node will be returned. If the
      * passed Node has no parent page at all, null is returned.
      *
-     * FIXME cringele model: test missing.
-     *
      * @param content
      * @return returns the page node of the passed content node.
      * @throws RepositoryException
