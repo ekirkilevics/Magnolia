@@ -36,7 +36,6 @@ package info.magnolia.module.fckeditor.dialogs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.dialog.DialogBox;
-import info.magnolia.cms.link.LinkHelper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.link.EditorLinkTransformer;
 import info.magnolia.link.LinkException;
@@ -481,7 +480,7 @@ public class FckEditorDialog extends DialogBox {
             }
 
             // this section is for backward compatibility - see MAGNOLIA-2088
-            final Matcher matcher = LinkHelper.LINK_OR_IMAGE_PATTERN.matcher(value);
+            final Matcher matcher = LinkUtil.LINK_OR_IMAGE_PATTERN.matcher(value);
             final StringBuffer res = new StringBuffer();
             while (matcher.find()) {
                 final String src = matcher.group(4);
