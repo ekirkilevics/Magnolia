@@ -33,8 +33,6 @@
  */
 package info.magnolia.repository.definition;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +40,6 @@ import java.util.Map;
 import org.apache.commons.lang.BooleanUtils;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 
 /**
  * Reads repositories.xml.
@@ -81,18 +77,12 @@ public class RepositoryMappingDefinitionReader {
     private static final String DEFAULT_WORKSPACE_NAME = "default";
 
     /**
-     * Load repository mappings and params using repositories.xml.
+     * Load repository mappings and params from provided document (created from repositories.xml).
      */
-    public RepositoryMappingDefinition read(InputStream inputStream) throws JDOMException, IOException {
-
-        SAXBuilder builder = new SAXBuilder();
-        Document document = builder.build(inputStream);
+    public RepositoryMappingDefinition read(Document document) {
         Element root = document.getRootElement();
-
         RepositoryMappingDefinition definition = new RepositoryMappingDefinition();
-
         parseRepositoryMapping(root, definition);
-
         parseRepositories(root, definition);
 
         return definition;

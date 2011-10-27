@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.jdom.Document;
+import org.jdom.input.SAXBuilder;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -17,8 +19,11 @@ public class RepositoryMappingDefinitionReaderTest {
     public void testParse() throws Exception {
 
         InputStream stream = getClass().getResourceAsStream("test-repositories.xml");
+        SAXBuilder builder = new SAXBuilder();
+        Document document = builder.build(stream);
 
-        RepositoryMappingDefinition definition = new RepositoryMappingDefinitionReader().read(stream);
+
+        RepositoryMappingDefinition definition = new RepositoryMappingDefinitionReader().read(document);
 
         assertNotNull(definition);
 

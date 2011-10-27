@@ -39,20 +39,20 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.registry.DefaultSessionProvider;
 import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.registry.DefaultSessionProvider;
 import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
+import info.magnolia.repository.definition.RepositoryDefinition;
+import info.magnolia.repository.definition.RepositoryMappingDefinition;
+import info.magnolia.repository.definition.RepositoryMappingDefinitionReader;
+import info.magnolia.repository.definition.WorkspaceMappingDefinition;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -62,9 +62,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 
-import org.apache.commons.lang.BooleanUtils;
 import org.jdom.Document;
-import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,32 +76,6 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public final class RepositoryLoader {
     private static final Logger log = LoggerFactory.getLogger(RepositoryLoader.class);
-
-    /**
-     * repository element string.
-     */
-    private static final String ELEMENT_REPOSITORY = "Repository";
-
-    private static final String ELEMENT_REPOSITORYMAPPING = "RepositoryMapping";
-
-    private static final String ELEMENT_PARAM = "param";
-
-    private static final String ELEMENT_WORKSPACE = "workspace";
-
-    /**
-     * Attribute names.
-     */
-    private static final String ATTRIBUTE_NAME = "name";
-
-    private static final String ATTRIBUTE_LOAD_ON_STARTUP = "loadOnStartup";
-
-    private static final String ATTRIBUTE_PROVIDER = "provider";
-
-    private static final String ATTRIBUTE_VALUE = "value";
-
-    private static final String ATTRIBUTE_REPOSITORY_NAME = "repositoryName";
-
-    private static final String ATTRIBUTE_WORKSPACE_NAME = "workspaceName";
 
     private final WorkspaceMapping workspaceMapping;
 
@@ -242,67 +214,17 @@ public final class RepositoryLoader {
      * @throws Exception
      */
     private void loadRepositories() throws Exception {
+        RepositoryMappingDefinitionReader reader = new RepositoryMappingDefinitionReader();
         Document document = buildDocument();
-        Element root = document.getRootElement();
-        loadRepositoryNameMap(root);
-        Collection repositoryElements = root.getChildren(ELEMENT_REPOSITORY);
-        Iterator children = repositoryElements.iterator();
-        while (children.hasNext()) {
-            Element element = (Element) children.next();
-            String name = element.getAttributeValue(ATTRIBUTE_NAME);
-            String load = element.getAttributeValue(ATTRIBUTE_LOAD_ON_STARTUP);
-            String provider = element.getAttributeValue(ATTRIBUTE_PROVIDER);
-            RepositoryMapping map = new RepositoryMapping();
-            map.setName(name);
-            map.setProvider(provider);
-            boolean loadOnStartup = BooleanUtils.toBoolean(load);
-            map.setLoadOnStartup(loadOnStartup);
-            /* load repository parameters */
-            Iterator params = element.getChildren(ELEMENT_PARAM).iterator();
-            Map parameters = new Hashtable();
-            while (params.hasNext()) {
-                Element param = (Element) params.next();
-                String value = param.getAttributeValue(ATTRIBUTE_VALUE);
-                parameters.put(param.getAttributeValue(ATTRIBUTE_NAME), value);
-            }
-            // TODO : it looks like params here are not interpolated
-            map.setParameters(parameters);
-            List workspaces = element.getChildren(ELEMENT_WORKSPACE);
-            if (workspaces != null && !workspaces.isEmpty()) {
-                Iterator wspIterator = workspaces.iterator();
-                while (wspIterator.hasNext()) {
-                    Element workspace = (Element) wspIterator.next();
-                    String wspName = workspace.getAttributeValue(ATTRIBUTE_NAME);
-                    log.info("Loading workspace {}", wspName);
-                    map.addWorkspace(wspName);
-                }
-            }
-            else {
-                map.addWorkspace(WorkspaceMapping.DEFAULT_WORKSPACE_NAME);
-            }
-            workspaceMapping.addWorkspaceNameToRepositoryMapping(name, map);
-            try {
-                loadRepository(map);
-            }
-            catch (Exception e) {
-                log.error("Failed to load JCR \"" + map.getName() + "\" " + e.getMessage(), e);
-            }
-        }
-    }
+        RepositoryMappingDefinition mapping = reader.read(document);
 
-    /**
-     * load repository name mapping.
-     * @param root element of repositories.xml
-     */
-    private void loadRepositoryNameMap(Element root) {
-        Element repositoryMapping = root.getChild(ELEMENT_REPOSITORYMAPPING);
-        Iterator children = repositoryMapping.getChildren().iterator();
-        while (children.hasNext()) {
-            Element nameMap = (Element) children.next();
-            workspaceMapping.addMappedRepositoryName(
-                    nameMap.getAttributeValue(ATTRIBUTE_NAME),
-                    nameMap.getAttributeValue(ATTRIBUTE_REPOSITORY_NAME),
-                    nameMap.getAttributeValue(ATTRIBUTE_WORKSPACE_NAME));
+        for(RepositoryDefinition repo: mapping.getRepositories()) {
+            workspaceMapping.addRepositoryDefinition(repo);
+            loadRepository(repo);
+        }
+
+        for(WorkspaceMappingDefinition wsDef: mapping.getWorkspaceMappings()) {
+            workspaceMapping.addWorkspaceMappingDefinition(wsDef);
         }
     }
 
@@ -314,7 +236,7 @@ public final class RepositoryLoader {
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      */
-    public void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
+    public void loadRepository(RepositoryDefinition map) throws RepositoryNotInitializedException,
     InstantiationException, IllegalAccessException, ClassNotFoundException {
         log.info("Loading JCR {}", map.getName());
         Provider handlerClass = Classes.newInstance(map.getProvider());
@@ -339,11 +261,13 @@ public final class RepositoryLoader {
      * */
     public void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
         log.info("Loading workspace {}", workspaceId);
-        workspaceMapping.addWorkspaceNameToRepositoryNameIfNotYetAvailable(workspaceId, repositoryId, workspaceId);
+
+        // TODO dlipp - we should create an WorkspaceMappingDefinition here
+        workspaceMapping.addWorkspaceNameToRepositoryNameIfNotYetAvailable(new WorkspaceMappingDefinition(workspaceId, repositoryId, workspaceId));
         Provider provider = workspaceMapping.getRepositoryProvider(repositoryId);
         provider.registerWorkspace(workspaceId);
         Repository repo = workspaceMapping.getRepository(repositoryId);
-        RepositoryMapping map = workspaceMapping.getRepositoryMapping(repositoryId);
+        RepositoryDefinition map = workspaceMapping.getRepositoryMapping(repositoryId);
 
         registerNameSpacesAndNodeTypes(repo,  workspaceId, map, provider);
     }
@@ -353,7 +277,7 @@ public final class RepositoryLoader {
      *
      * TODO dlipp - better naming!
      */
-    private void registerNameSpacesAndNodeTypes(Repository repository, String wspID, RepositoryMapping map,
+    private void registerNameSpacesAndNodeTypes(Repository repository, String wspID, RepositoryDefinition map,
             Provider provider) {
         try {
             SimpleCredentials sc = new SimpleCredentials(getRepositoryUser(), getRepositoryPassword().toCharArray());

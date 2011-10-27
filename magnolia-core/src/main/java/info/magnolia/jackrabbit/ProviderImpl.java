@@ -37,8 +37,8 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.repository.Provider;
-import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
+import info.magnolia.repository.definition.RepositoryDefinition;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -113,7 +113,7 @@ public class ProviderImpl implements Provider {
 
     private static final String CUSTOM_NODETYPES = "customNodeTypes";
 
-    private RepositoryMapping repositoryMapping;
+    private RepositoryDefinition repositoryMapping;
 
     private Repository repository;
 
@@ -165,7 +165,7 @@ public class ProviderImpl implements Provider {
      * @see info.magnolia.repository.Provider#init(info.magnolia.repository.RepositoryMapping)
      */
     @Override
-    public void init(RepositoryMapping repositoryMapping) throws RepositoryNotInitializedException {
+    public void init(RepositoryDefinition repositoryMapping) throws RepositoryNotInitializedException {
         checkXmlSettings();
 
         this.repositoryMapping = repositoryMapping;

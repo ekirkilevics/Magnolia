@@ -1,11 +1,13 @@
 package info.magnolia.repository;
 
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.repository.definition.RepositoryDefinition;
+
 import java.util.Iterator;
+
 import javax.jcr.Credentials;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-
-import info.magnolia.cms.security.AccessDeniedException;
 
 // WorkspaceAccessUtil
 // LifetimeJCRSessionUtil
@@ -35,14 +37,14 @@ public interface RepositoryManager {
 
     boolean checkIfInitialized(String repository) throws RepositoryException, AccessDeniedException;
 
-    void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException, InstantiationException, IllegalAccessException, ClassNotFoundException;
+    void loadRepository(RepositoryDefinition map) throws RepositoryNotInitializedException, InstantiationException, IllegalAccessException, ClassNotFoundException;
 
     void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException;
 
 
     Iterator<String> getAllRepositoryNames();
 
-    RepositoryMapping getRepositoryMapping(String repositoryId);
+    RepositoryDefinition getRepositoryMapping(String repositoryId);
 
     Provider getRepositoryProvider(String repositoryId);
 

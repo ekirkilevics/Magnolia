@@ -38,9 +38,9 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.repository.RepositoryLoader;
-import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
 import info.magnolia.repository.WorkspaceMapping;
+import info.magnolia.repository.definition.RepositoryDefinition;
 
 import java.util.Iterator;
 
@@ -167,9 +167,9 @@ public final class ContentRepository {
     }
 
     /**
-     * @deprecated since 4.5 - use {@link RepositoryLoader#loadRepository(RepositoryMapping)} instead
+     * @deprecated since 4.5 - use {@link RepositoryLoader#loadRepository(RepositoryDefinition)} instead
      */
-    public static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
+    public static void loadRepository(RepositoryDefinition map) throws RepositoryNotInitializedException,
     InstantiationException, IllegalAccessException, ClassNotFoundException {
         repositoryLoader.loadRepository(map);
     }
@@ -191,7 +191,7 @@ public final class ContentRepository {
     /**
      * @deprecated since 4.5 - use {@link WorkspaceMapping#getRepositoryMapping(String)} directly.
      */
-    public static RepositoryMapping getRepositoryMapping(String repositoryID) {
+    public static RepositoryDefinition getRepositoryMapping(String repositoryID) {
         return workspaceMapping.getRepositoryMapping(repositoryID);
     }
 

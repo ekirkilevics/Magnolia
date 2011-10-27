@@ -34,6 +34,9 @@
 package info.magnolia.repository;
 
 
+import info.magnolia.repository.definition.RepositoryDefinition;
+import info.magnolia.repository.definition.WorkspaceMappingDefinition;
+
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -75,12 +78,12 @@ public class WorkspaceMapping {
      * Repositories configuration as defined in repositories mapping file via attribute
      * <code>magnolia.repositories.config</code>.
      */
-    private static Map<String, RepositoryMapping> repositoryMapping = new Hashtable<String, RepositoryMapping>();
+    private static Map<String, RepositoryDefinition> repositoryDefinitions = new Hashtable<String, RepositoryDefinition>();
 
     /**
      * holds all repository names as configured in repositories.xml.
      */
-    private static Map<String, RepositoryNameMap> repositoryNameMap = new Hashtable<String, RepositoryNameMap>();
+    private static Map<String, WorkspaceMappingDefinition> workspaceMappingDefinitions = new Hashtable<String, WorkspaceMappingDefinition>();
 
 
     public void clearRepositories() {
@@ -89,8 +92,8 @@ public class WorkspaceMapping {
 
     public void clearAll() {
         repositoryProviders.clear();
-        repositoryMapping.clear();
-        repositoryNameMap.clear();
+        repositoryDefinitions.clear();
+        workspaceMappingDefinitions.clear();
         clearRepositories();
     }
 
@@ -98,18 +101,19 @@ public class WorkspaceMapping {
         return repositoryProviders.values().iterator();
     }
 
-    public void addWorkspaceNameToRepositoryMapping(String workspaceName, RepositoryMapping mapping) {
-        repositoryMapping.put(workspaceName, mapping);
+    public void addRepositoryDefinition(RepositoryDefinition mapping) {
+        repositoryDefinitions.put(mapping.getName(), mapping);
     }
 
     // TODO dlipp - find better method- and param-name
-    public void addWorkspaceNameToRepositoryNameIfNotYetAvailable(String name, String repositoryId, String workspaceId) {
-        if(!repositoryNameMap.containsKey(name)){
-            addMappedRepositoryName(name, repositoryId, workspaceId);
+    public void addWorkspaceNameToRepositoryNameIfNotYetAvailable(WorkspaceMappingDefinition definition) {
+        if(!workspaceMappingDefinitions.containsKey(definition.getLogicalWorkspaceName())){
+            addWorkspaceMappingDefinition(definition);
         }
-        RepositoryMapping map = getRepositoryMapping(repositoryId);
-        if(!map.getWorkspaces().contains(workspaceId)){
-            map.addWorkspace(workspaceId);
+        // TODO dlipp - comment why the next lines are needed
+        RepositoryDefinition map = getRepositoryMapping(definition.getRepositoryName());
+        if(!map.getWorkspaces().contains(definition.getWorkspaceName())){
+            map.addWorkspace(definition.getWorkspaceName());
         }
     }
 
@@ -127,7 +131,7 @@ public class WorkspaceMapping {
      * @return mapped name as in repositories.xml RepositoryMapping element
      */
     public String getMappedRepositoryName(String name) {
-        RepositoryNameMap nameMap = repositoryNameMap.get(name);
+        WorkspaceMappingDefinition nameMap = workspaceMappingDefinitions.get(name);
         if(nameMap==null){
             return name;
         }
@@ -135,9 +139,8 @@ public class WorkspaceMapping {
     }
 
 
-    public void addMappedRepositoryName(String name, String repositoryName, String workspaceName) {
-        RepositoryNameMap nameMap = new RepositoryNameMap(repositoryName, workspaceName);
-        repositoryNameMap.put(name, nameMap);
+    public void addWorkspaceMappingDefinition(WorkspaceMappingDefinition definition) {
+        workspaceMappingDefinitions.put(definition.getLogicalWorkspaceName(), definition);
     }
 
     /**
@@ -146,7 +149,7 @@ public class WorkspaceMapping {
      * otherwise return same name as repository name.
      */
     public String getDefaultWorkspace(String repositoryId) {
-        RepositoryMapping mapping = getRepositoryMapping(repositoryId);
+        RepositoryDefinition mapping = getRepositoryMapping(repositoryId);
         if (mapping == null) {
             return DEFAULT_WORKSPACE_NAME;
         }
@@ -198,10 +201,10 @@ public class WorkspaceMapping {
     /**
      * returns repository mapping as configured.
      */
-    public RepositoryMapping getRepositoryMapping(String repositoryID) {
+    public RepositoryDefinition getRepositoryMapping(String repositoryID) {
         String name = getMappedRepositoryName(repositoryID);
-        if (name != null && repositoryMapping.containsKey(name)) {
-            return repositoryMapping.get(getMappedRepositoryName(repositoryID));
+        if (name != null && repositoryDefinitions.containsKey(name)) {
+            return repositoryDefinitions.get(getMappedRepositoryName(repositoryID));
         }
         log.debug("No mapping for the repository {}", repositoryID);
         return null;
@@ -212,7 +215,7 @@ public class WorkspaceMapping {
      * @return repository names
      */
     public Iterator<String> getAllRepositoryNames() {
-        return repositoryNameMap.keySet().iterator();
+        return workspaceMappingDefinitions.keySet().iterator();
     }
 
     /**
@@ -221,10 +224,10 @@ public class WorkspaceMapping {
      * @return workspace name as configured in magnolia repositories.xml
      * */
     public String getInternalWorkspaceName(String workspaceName) {
-        Iterator<String> keys = repositoryNameMap.keySet().iterator();
+        Iterator<String> keys = workspaceMappingDefinitions.keySet().iterator();
         while (keys.hasNext()) {
             String key = keys.next();
-            RepositoryNameMap nameMap = repositoryNameMap.get(key);
+            WorkspaceMappingDefinition nameMap = workspaceMappingDefinitions.get(key);
             if (nameMap.getWorkspaceName().equalsIgnoreCase(workspaceName)) {
                 return key;
             }
@@ -239,7 +242,7 @@ public class WorkspaceMapping {
      * @return mapped name as in repositories.xml RepositoryMapping element
      */
     public static String getMappedWorkspaceName(String name) {
-        RepositoryNameMap nameMap = repositoryNameMap.get(name);
+        WorkspaceMappingDefinition nameMap = workspaceMappingDefinitions.get(name);
         if (nameMap == null) {
             return name;
         }
