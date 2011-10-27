@@ -1,29 +1,20 @@
 package info.magnolia.repository.definition;
 
+import static org.junit.Assert.*;
+
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.jdom.Document;
-import org.jdom.input.SAXBuilder;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class RepositoryMappingDefinitionReaderTest {
 
     @Test
     public void testParse() throws Exception {
-
         InputStream stream = getClass().getResourceAsStream("test-repositories.xml");
-        SAXBuilder builder = new SAXBuilder();
-        Document document = builder.build(stream);
 
-
-        RepositoryMappingDefinition definition = new RepositoryMappingDefinitionReader().read(document);
+        RepositoryMappingDefinition definition = new RepositoryMappingDefinitionReader().read(stream);
 
         assertNotNull(definition);
 

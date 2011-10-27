@@ -54,16 +54,16 @@
       <implementation>info.magnolia.cms.filters.FilterManagerImpl</implementation>
     </component>
     <component>
+      <type>info.magnolia.repository.RepositoryManager</type>
+      <implementation>info.magnolia.repository.DefaultRepositoryManager</implementation>
+    </component>
+    <component>
       <type>info.magnolia.jcr.registry.SessionProviderRegistry</type>
       <implementation>info.magnolia.jcr.registry.SessionProviderRegistry</implementation>
     </component>
     <component>
         <type>info.magnolia.repository.WorkspaceMapping</type>
         <implementation>info.magnolia.repository.WorkspaceMapping</implementation>
-    </component>
-    <component>
-        <type>info.magnolia.repository.RepositoryLoader</type>
-        <implementation>info.magnolia.repository.RepositoryLoader</implementation>
     </component>
   </components>
 

@@ -33,11 +33,13 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.repository.RepositoryLoader;
+import info.magnolia.repository.DefaultRepositoryManager;
+import info.magnolia.repository.RepositoryManager;
 import info.magnolia.repository.RepositoryNotInitializedException;
 import info.magnolia.repository.WorkspaceMapping;
 import info.magnolia.repository.definition.RepositoryDefinition;
@@ -101,14 +103,14 @@ public final class ContentRepository {
     /**
      * repository user.
      *
-     * @deprecated since 4.5 - user {@link info.magnolia.repository.RepositoryLoader#getRepositoryUser()} instead.
+     * @deprecated since 4.5 - not yet decided how it will be replaced
      */
     public static String REPOSITORY_USER;
 
     /**
      * repository default password.
      *
-     * @deprecated since 4.5 - user {@link info.magnolia.repository.RepositoryLoader#getRepositoryPassword()} instead.
+     * @deprecated since 4.5 - not yet decided how it will be replaced
      */
     public static String REPOSITORY_PSWD;
 
@@ -117,11 +119,11 @@ public final class ContentRepository {
      */
     private static final WorkspaceMapping workspaceMapping = Components.getSingleton(WorkspaceMapping.class);
 
-    private static final RepositoryLoader repositoryLoader = Components.getSingleton(RepositoryLoader.class);
+    private static final RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
 
     static {
-        REPOSITORY_USER = repositoryLoader.getRepositoryUser();
-        REPOSITORY_PSWD = repositoryLoader.getRepositoryPassword();
+        REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
+        REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
     }
 
     /**
@@ -132,53 +134,53 @@ public final class ContentRepository {
     }
 
     /**
-     * @deprecated since 4.5 - use {@link RepositoryLoader#init()} instead
+     * @deprecated since 4.5 - use {@link DefaultRepositoryManager#init()} instead
      */
     public static void init() {
-        repositoryLoader.init();
+        repositoryManager.init();
     }
 
     /**
-     * @deprecated since 4.5 - use {@link RepositoryLoader#shutdown()} instead
+     * @deprecated since 4.5 - use {@link DefaultRepositoryManager#shutdown()} instead
      */
     public static void shutdown() {
-        repositoryLoader.shutdown();
+        repositoryManager.shutdown();
     }
 
     /**
-     * @deprecated since 4.5 - use {@link RepositoryLoader#checkIfInitialized()} instead
+     * @deprecated since 4.5 - use {@link DefaultRepositoryManager#checkIfInitialized()} instead
      */
     public static boolean checkIfInitialized() throws AccessDeniedException, RepositoryException {
-        return repositoryLoader.checkIfInitialized();
+        return repositoryManager.checkIfInitialized();
     }
 
     /**
-     * @deprecated since 4.5 - use {@link RepositoryLoader#checkIfInitialized(String)} instead
+     * @deprecated since 4.5 - use {@link DefaultRepositoryManager#checkIfInitialized(String)} instead
      */
     public static boolean checkIfInitialized(String repository) throws RepositoryException, AccessDeniedException {
-        return repositoryLoader.checkIfInitialized(repository);
+        return repositoryManager.checkIfInitialized(repository);
     }
 
     /**
-     * @deprecated since 4.5 - use {@link RepositoryLoader#reload()} instead
+     * @deprecated since 4.5 - use {@link DefaultRepositoryManager#reload()} instead
      */
     public static void reload() {
-        repositoryLoader.reload();
+        repositoryManager.reload();
     }
 
     /**
-     * @deprecated since 4.5 - use {@link RepositoryLoader#loadRepository(RepositoryDefinition)} instead
+     * @deprecated since 4.5 - use {@link DefaultRepositoryManager#loadRepository(RepositoryDefinition)} instead
      */
     public static void loadRepository(RepositoryDefinition map) throws RepositoryNotInitializedException,
     InstantiationException, IllegalAccessException, ClassNotFoundException {
-        repositoryLoader.loadRepository(map);
+        repositoryManager.loadRepository(map);
     }
 
     /**
-     * @deprecated since 4.5 - use {@link RepositoryLoader#loadWorkspace(String, String)} instead
+     * @deprecated since 4.5 - use {@link DefaultRepositoryManager#loadWorkspace(String, String)} instead
      */
     public static void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
-        repositoryLoader.loadWorkspace(repositoryId, workspaceId);
+        repositoryManager.loadWorkspace(repositoryId, workspaceId);
     }
 
     /**
