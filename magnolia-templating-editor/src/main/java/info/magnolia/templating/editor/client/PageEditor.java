@@ -48,6 +48,9 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
@@ -150,8 +153,8 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     public void createComponent(String workspace, String parent, String relPath, String itemType) {
         GWT.log("Creating ["+ itemType + "] in workspace [" + workspace + "] at path [" + parent +"/"+ relPath +"]");
-        //TODO fgrilli: use URLBuilder or try to encode url?
-        StringBuilder url = new StringBuilder();
+
+        final StringBuilder url = new StringBuilder();
         url.append(LegacyJavascript.getContextPath() + ".magnolia/pageeditor/PageEditorServlet?");
         url.append("action=create");
         url.append("&workspace="+workspace);
@@ -159,25 +162,36 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         url.append("&relPath="+relPath);
         url.append("&itemType="+itemType);
 
-        RequestBuilder req = new RequestBuilder(RequestBuilder.GET, url.toString());
+        RequestBuilder req = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
         req.setCallback(new RequestCallback() {
 
             @Override
             public void onResponseReceived(Request request, Response response) {
-                //String queryString = Location.getQueryString();
-                Window.Location.reload();
+                int status = response.getStatusCode();
+
+                if(status == Response.SC_OK) {
+                    Window.Location.reload();
+                } else {
+                    JSONValue jsonValue = JSONParser.parseStrict(response.getText());
+                    String responseText;
+                    if(jsonValue.isObject() != null) {
+                        responseText = jsonValue.isObject().get("message").toString();
+                    } else {
+                        responseText = response.getText();
+                    }
+                    Window.alert("An error occured on the server: response status code is "+ status + "\nResponse is " + responseText);
+                }
             }
 
             @Override
             public void onError(Request request, Throwable exception) {
-                //TODO fgrilli: give some feedback to this unlucky user.
-                Window.Location.reload();
+                Window.alert(exception.getMessage());
             }
         });
         try {
             req.send();
         } catch (RequestException e) {
-           //TODO fgrilli: handle it.
+            Window.alert("An error occured whilst trying to send a request to the server: " + e.getMessage());
         }
 
     }
@@ -239,7 +253,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     /**
-     * Tries to find a match between the provided edit bar tag and the area tags found in DOM. Best match is when area and edit tags have the exact same content.
+     * Tries to find a match between the provided edit bar tag and the area tags found in DOM. Best match is when area and edit tags have the exact same <code>content</code> attribute value.
      * However there might be the case where an optional area is in DOM but still needs to be created (manually via the UI). In that case content will be null,
      * therefore we rely on name and optional attributes on having the same values in area and edit tags.
      */
@@ -276,7 +290,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     /**
-     * Tries to find a match between the provided edit area tag and the edit tags found in DOM. Best match is when area and edit tags have the exact same content.
+     * Tries to find a match between the provided edit area tag and the edit tags found in DOM. Best match is when area and edit tags have the exact same <code>content</code> attribute value.
      * However there might be the case where an optional area is in DOM but still needs to be created (manually via the UI). In that case content will be null,
      * therefore we rely on name and optional attributes on having the same values in area and edit tags.
      */

@@ -39,6 +39,7 @@ import info.magnolia.jcr.util.NodeUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.servlet.ServletException;
@@ -46,10 +47,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
- * PageEditorServlet.
+ * A servlet used to communicate between GWT client and Magnolia server-side code. After performing an action (i.e. create a new node),
+ * it will return a json response with the action output.
  * @version $Id$
  *
  */
@@ -63,16 +63,32 @@ public class PageEditorServlet extends HttpServlet{
         String relPath = req.getParameter("relPath");
         String itemType = req.getParameter("itemType");
 
+        StringBuilder jsonResponse = new StringBuilder("{");
+        jsonResponse.append("\"action\":");
+        jsonResponse.append("\""+ action +"\",");
+
         try {
-            checkMandatoryParameters(action, workspace, parent, relPath, itemType);
+            checkMandatoryParameters(req.getParameterMap(), "action", "workspace", "parent", "relPath", "itemType");
             createNode(workspace, parent, relPath, itemType);
-            //TODO fgrilli: everything went fine, say it in json string, in case the client wants to know it.
+            jsonResponse.append("\"result\":");
+            jsonResponse.append("\"OK\",");
+            jsonResponse.append("\"path\":");
+            jsonResponse.append("\""+ parent + "/"+ relPath +"\",");
+            jsonResponse.append("\"workspace\":");
+            jsonResponse.append("\""+ workspace +"\",");
+            jsonResponse.append("\"itemType\":");
+            jsonResponse.append("\""+ itemType +"\"");
         } catch (Exception e) {
-            //TODO fgrilli: spit out error as json
-            PrintWriter writer = resp.getWriter();
-            writer.write(e.getMessage());
-            writer.flush();
+            jsonResponse.append("\"result\":");
+            jsonResponse.append("\"FAIL\",");
+            jsonResponse.append("\"message\":");
+            jsonResponse.append("\""+ e.getMessage() + "\"");
         }
+        jsonResponse.append("}");
+
+        PrintWriter writer = resp.getWriter();
+        writer.write(jsonResponse.toString());
+        writer.flush();
     }
 
     private void createNode(String workspace, String parent, String relPath, String itemType) throws Exception {
@@ -82,10 +98,12 @@ public class PageEditorServlet extends HttpServlet{
         newNode.getSession().save();
     }
 
-    private void checkMandatoryParameters(String... params) {
-        for(String param: params) {
-            if(StringUtils.isBlank(param)) {
-                throw new IllegalArgumentException("No param can be null or empty");
+    @SuppressWarnings("rawtypes")
+    private void checkMandatoryParameters(Map reqParams, String... mandatoryParams) {
+
+        for(String param: mandatoryParams) {
+            if(!reqParams.containsKey(param)) {
+                throw new IllegalArgumentException(param + " cannot be null or empty");
             }
         }
     }

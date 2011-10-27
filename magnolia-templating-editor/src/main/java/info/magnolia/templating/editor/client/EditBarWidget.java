@@ -146,20 +146,6 @@ public class EditBarWidget extends AbstractBarWidget {
     }
 
     @Override
-    protected void onSelect() {
-        super.onSelect();
-        pageEditor.updateSelection(this, PageEditor.SELECTION_TYPE_COMPONENT_IN_LIST, workspace, path, null, null, getComponentsAvailableInThisArea(), dialog);
-    }
-
-    private String getComponentsAvailableInThisArea() {
-        AbstractBarWidget parentBar = getParentBar();
-        if (parentBar instanceof AreaBarWidget) {
-            return ((AreaBarWidget) parentBar).getAvailableComponents();
-        }
-        return "";
-    }
-
-    @Override
     public void attach(Element element) {
         element.appendChild(getElement());
         onAttach();

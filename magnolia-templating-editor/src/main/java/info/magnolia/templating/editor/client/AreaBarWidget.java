@@ -99,45 +99,6 @@ public class AreaBarWidget extends AbstractBarWidget {
     }
 
     @Override
-    protected void onSelect() {
-        super.onSelect();
-        if (AreaDefinition.TYPE_LIST.equals(type)) {
-            pageEditor.updateSelection(this, PageEditor.SELECTION_TYPE_AREA_LIST, workspace, path, name, null, availableComponents, dialog);
-        } else if (AreaDefinition.TYPE_SINGLE.equals(type)) {
-            if (showAddButton) {
-                pageEditor.updateSelection(this, PageEditor.SELECTION_TYPE_AREA_SINGLE, workspace, path, null, name, availableComponents, dialog);
-            } else {
-                pageEditor.updateSelection(this, PageEditor.SELECTION_TYPE_COMPONENT_IN_SINGLE, workspace, path, null, null, availableComponents, dialog);
-            }
-        }
-    }
-
-    public void mutateIntoSingleBar(Element element) {
-
-        String content = element.getAttribute("content");
-        int i = content.indexOf(':');
-        this.workspace = content.substring(0, i);
-        this.path = content.substring(i + 1);
-
-        this.label = element.getAttribute("label");
-        this.dialog = element.getAttribute("dialog");
-        this.availableComponents = "";
-        //TODO create this button only if non optional or optional AND created
-        Button button = new Button(getDictionary().get("buttons.editcomponent.js"));
-        button.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if (showAddButton) {
-                    pageEditor.addComponent(workspace, path, null, name, availableComponents);
-                } else {
-                    pageEditor.openDialog(dialog, workspace, path, null, null);
-                }
-            }
-        });
-        addButton(button, Float.RIGHT);
-    }
-
-    @Override
     public void attach(Element element) {
         element.appendChild(getElement());
         onAttach();
@@ -180,7 +141,7 @@ public class AreaBarWidget extends AbstractBarWidget {
     }
 
     private void createEditAndAddComponentButtons(final PageEditor pageEditor, final Element element) {
-        if (element.hasAttribute("dialog") && AreaDefinition.TYPE_LIST.equals(type)) {
+        if (!AreaDefinition.TYPE_NO_COMPONENT.equals(type) && element.hasAttribute("dialog")) {
             Button editButton = new Button(getDictionary().get("buttons.editarea.js"));
             editButton.addClickHandler(new ClickHandler() {
                 @Override
