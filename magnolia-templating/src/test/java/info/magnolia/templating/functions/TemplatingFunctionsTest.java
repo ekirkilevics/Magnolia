@@ -1385,6 +1385,17 @@ public class TemplatingFunctionsTest {
         assertEquals("Should have skipped nodes of different type.",2, s.getIndex());
     }
 
+    @Test
+    public void testSiblingsContentMap() throws RepositoryException{
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+        // WHEN
+        SiblingsHelper s = functions.siblings(topPageContentMap);
+        assertEquals("Indexes are 0-based ", 0, s.getIndex());
+        s.next();
+        s.next();
+        assertEquals("Should have skipped nodes of different type.",2, s.getIndex());
+    }
 
 
     /**

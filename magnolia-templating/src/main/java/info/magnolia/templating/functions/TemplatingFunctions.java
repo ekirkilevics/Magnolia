@@ -504,4 +504,7 @@ public class TemplatingFunctions {
         return SiblingsHelper.of(ContentUtil.asContent(node));
     }
 
+    public SiblingsHelper siblings(ContentMap node) throws RepositoryException {
+        return siblings(asJCRNode(node));
+    }
 }
