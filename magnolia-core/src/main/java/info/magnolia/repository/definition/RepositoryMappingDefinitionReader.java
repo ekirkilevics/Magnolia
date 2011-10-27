@@ -35,7 +35,6 @@ package info.magnolia.repository.definition;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,9 +102,10 @@ public class RepositoryMappingDefinitionReader {
      * Parses &lt;Repository&gt;.
      */
     private void parseRepositories(Element root, RepositoryMappingDefinition definition) {
-        Collection repositoryElements = root.getChildren(ELEMENT_REPOSITORY);
-        for (Object repositoryElement : repositoryElements) {
-            parseRepository((Element) repositoryElement, definition);
+        @SuppressWarnings("unchecked")
+        List<Element> repositoryElements = root.getChildren(ELEMENT_REPOSITORY);
+        for (Element repositoryElement : repositoryElements) {
+            parseRepository(repositoryElement, definition);
         }
     }
 
@@ -132,15 +132,15 @@ public class RepositoryMappingDefinitionReader {
         repository.setParameters(parameters);
 
         // parse workspace names
-        List workspaces = repositoryElement.getChildren(ELEMENT_WORKSPACE);
+        @SuppressWarnings("unchecked")
+        List<Element> workspaces = repositoryElement.getChildren(ELEMENT_WORKSPACE);
         if (workspaces == null || workspaces.isEmpty()) {
             // TODO this does not belong in the parser
-            repository.getWorkspaces().add(DEFAULT_WORKSPACE_NAME);
+            repository.addWorkspace(DEFAULT_WORKSPACE_NAME);
         } else {
-            for (Object element : workspaces) {
-                Element workspaceElement = (Element) element;
-                String workspaceName = workspaceElement.getAttributeValue(ATTRIBUTE_NAME);
-                repository.getWorkspaces().add(workspaceName);
+            for (Element element : workspaces) {
+                String workspaceName = element.getAttributeValue(ATTRIBUTE_NAME);
+                repository.addWorkspace(workspaceName);
             }
         }
 
@@ -152,12 +152,13 @@ public class RepositoryMappingDefinitionReader {
      */
     private void parseRepositoryMapping(Element root, RepositoryMappingDefinition definition) {
         Element repositoryMappingElement = root.getChild(ELEMENT_REPOSITORYMAPPING);
-        for (Object child : repositoryMappingElement.getChildren()) {
-            Element element = (Element) child;
+        @SuppressWarnings("unchecked")
+        List<Element> children = repositoryMappingElement.getChildren();
+        for (Element child : children) {
             definition.addMapping(
-                    element.getAttributeValue(ATTRIBUTE_NAME),
-                    element.getAttributeValue(ATTRIBUTE_REPOSITORY_NAME),
-                    element.getAttributeValue(ATTRIBUTE_WORKSPACE_NAME));
+                    child.getAttributeValue(ATTRIBUTE_NAME),
+                    child.getAttributeValue(ATTRIBUTE_REPOSITORY_NAME),
+                    child.getAttributeValue(ATTRIBUTE_WORKSPACE_NAME));
         }
     }
 
