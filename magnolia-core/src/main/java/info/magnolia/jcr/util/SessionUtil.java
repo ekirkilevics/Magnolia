@@ -33,10 +33,18 @@
  */
 package info.magnolia.jcr.util;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.wrapper.DelegateSessionWrapper;
 
+import javax.jcr.LoginException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Session-related utility methods.
@@ -45,10 +53,40 @@ import javax.jcr.Session;
  */
 public class SessionUtil {
 
+    private final static Logger log = LoggerFactory.getLogger(SessionUtil.class);
+
     public static boolean hasSameUnderlyingSession(Session first, Session second) {
         Session firstBase = first instanceof DelegateSessionWrapper ? ((DelegateSessionWrapper) first).unwrap() : first;
         Session secondBase = second instanceof DelegateSessionWrapper ? ((DelegateSessionWrapper) second).unwrap() : second;
 
         return firstBase.equals(secondBase);
+    }
+
+    /**
+     * Return the Node for the Given Path from the given repository. In case of Exception, return null.
+     */
+    public static Node getNode(String repository, String path) {
+        Node res = null;
+        Session session;
+        if (StringUtils.isBlank(repository) || StringUtils.isBlank(path)) {
+            log.debug("getNode return null why even nodePath: '" + path + "' or repository: '" + repository
+                    + "' is empty");
+            return res;
+        }
+        try {
+            session = MgnlContext.getJCRSession(repository);
+            if (session != null) {
+                res = session.getNode(path);
+            }
+        } catch (LoginException e) {
+            log.error("Exeption during node Search for nodePath: '" + path + "' in repository: '" + repository + "'", e);
+        } catch (PathNotFoundException e) {
+            log.error("Exeption during node Search for nodePath: '" + path + "' in repository: '" + repository + "'", e);
+        } catch (RepositoryException e) {
+            log.error("Exeption during node Search for nodePath: '" + path + "' in repository: '" + repository + "'", e);
+        } catch (IllegalArgumentException e) {
+            log.error("Exeption during node Search for nodePath: '" + path + "' in repository: '" + repository + "'", e);
+        }
+        return res;
     }
 }

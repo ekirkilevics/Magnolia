@@ -33,10 +33,17 @@
  */
 package info.magnolia.jcr.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import info.magnolia.cms.core.version.MgnlVersioningSession;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.junit.Test;
@@ -87,4 +94,90 @@ public class SessionUtilTest {
         assertFalse(result);
     }
 
+    @Test
+    public void testGetNode() throws RepositoryException {
+        try {
+            // GIVEN
+            MockUtil.initMockContext();
+            String repository = "website";
+            MockSession session = new MockSession(repository);
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode("1");
+            String path = addedNode.getPath();
+
+            // WHEN
+            Node returnedNode = SessionUtil.getNode(repository, path);
+
+            // THEN
+            assertEquals(addedNode, returnedNode);
+        } finally {
+            MgnlContext.setInstance(null);
+        }
+    }
+
+    @Test
+    public void testGetNodeNoSessionPassed() throws RepositoryException {
+        try {
+            // GIVEN
+            MockUtil.initMockContext();
+            String repository = "website";
+            MockSession session = new MockSession(repository);
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode("1");
+            String path = addedNode.getPath();
+
+            // WHEN
+            Node returnedNode = SessionUtil.getNode(null, path);
+
+            // THEN
+            assertEquals(null, returnedNode);
+        } finally {
+            MgnlContext.setInstance(null);
+        }
+    }
+
+    @Test
+    public void testGetNodeBadPath() throws RepositoryException {
+        try {
+            // GIVEN
+            MockUtil.initMockContext();
+            String repository = "website";
+            MockSession session = new MockSession(repository);
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode("1");
+            String path = addedNode.getPath();
+
+            // WHEN
+            Node returnedNode = SessionUtil.getNode(repository, path + 1);
+
+            // THEN
+            assertEquals(null, returnedNode);
+        } finally {
+            MgnlContext.setInstance(null);
+        }
+    }
+
+    public void testGetNodeBadSession() throws RepositoryException {
+        try {
+            // GIVEN
+            MockUtil.initMockContext();
+            String repository = "website";
+            MockSession session = new MockSession(repository);
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode("1");
+            String path = addedNode.getPath();
+
+            // WHEN
+            Node returnedNode = SessionUtil.getNode("dms", path);
+
+            // THEN
+            assertEquals(null, returnedNode);
+        } finally {
+            MgnlContext.setInstance(null);
+        }
+    }
 }
