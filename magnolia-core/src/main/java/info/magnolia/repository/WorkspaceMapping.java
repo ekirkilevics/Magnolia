@@ -33,57 +33,51 @@
  */
 package info.magnolia.repository;
 
-
-import info.magnolia.repository.definition.RepositoryDefinition;
-import info.magnolia.repository.definition.WorkspaceMappingDefinition;
-
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.inject.Singleton;
 import javax.jcr.Repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.magnolia.repository.definition.RepositoryDefinition;
+import info.magnolia.repository.definition.WorkspaceMappingDefinition;
+
 /**
- * Keeps mapping between sessions, physical- and logical workspace names.
- *
- * TODO dlipp - naming? Does it keep workspace or repository mappings?
- * TODO dlipp - check naming of all maps and methods!
- *
- * TODO dlipp - move newly created replacements for ContentRepo to info.magnolia.repository
+ * Maintains a registry of repositories and a list of mappings from logical workspaces to the real workspaces in the
+ * repositories. It also keeps lookup maps of providers and {@link Repository} instances for each repository.
  *
  * @version $Id$
  */
 @Singleton
 public class WorkspaceMapping {
+
     private static final Logger log = LoggerFactory.getLogger(WorkspaceMapping.class);
 
     public static final String DEFAULT_WORKSPACE_NAME = "default";
 
     /**
-     * All available repositories store.
+     * Map of Repository instances for each repository.
      */
-    private static Map<String, Repository> repositories = new Hashtable<String, Repository>();
+    private Map<String, Repository> repositories = new Hashtable<String, Repository>();
 
     /**
-     * JCR providers as mapped in repositories.xml.
+     * Map of Provider instances for each repository.
      */
-    private static Map<String, Provider> repositoryProviders = new Hashtable<String, Provider>();
+    private Map<String, Provider> providers = new Hashtable<String, Provider>();
 
     /**
-     * Repositories configuration as defined in repositories mapping file via attribute
-     * <code>magnolia.repositories.config</code>.
+     * Map of configured repositories.
      */
-    private static Map<String, RepositoryDefinition> repositoryDefinitions = new Hashtable<String, RepositoryDefinition>();
+    private Map<String, RepositoryDefinition> repositoryDefinitions = new Hashtable<String, RepositoryDefinition>();
 
     /**
-     * holds all repository names as configured in repositories.xml.
+     * Map of configured workspace mappings.
      */
-    private static Map<String, WorkspaceMappingDefinition> workspaceMappingDefinitions = new Hashtable<String, WorkspaceMappingDefinition>();
+    private Map<String, WorkspaceMappingDefinition> workspaceMappingDefinitions = new Hashtable<String, WorkspaceMappingDefinition>();
 
 
     public void clearRepositories() {
@@ -91,90 +85,94 @@ public class WorkspaceMapping {
     }
 
     public void clearAll() {
-        repositoryProviders.clear();
+        providers.clear();
         repositoryDefinitions.clear();
         workspaceMappingDefinitions.clear();
         clearRepositories();
     }
 
-    public Iterator<Provider> getRepositoryProviders() {
-        return repositoryProviders.values().iterator();
-    }
-
-    public void addRepositoryDefinition(RepositoryDefinition mapping) {
-        repositoryDefinitions.put(mapping.getName(), mapping);
-    }
-
-    // TODO dlipp - find better method- and param-name
-    public void addWorkspaceNameToRepositoryNameIfNotYetAvailable(WorkspaceMappingDefinition definition) {
-        if(!workspaceMappingDefinitions.containsKey(definition.getLogicalWorkspaceName())){
-            addWorkspaceMappingDefinition(definition);
-        }
-        // TODO dlipp - comment why the next lines are needed
-        RepositoryDefinition map = getRepositoryMapping(definition.getRepositoryName());
-        if(!map.getWorkspaces().contains(definition.getWorkspaceName())){
-            map.addWorkspace(definition.getWorkspaceName());
-        }
-    }
-
-    public void addWorkspaceNameToRepository(String workspaceName, Repository repo) {
-        repositories.put(workspaceName, repo);
-    }
-
-    public void addWorkspaceNameToProvider(String workspaceName, Provider provider) {
-        repositoryProviders.put(workspaceName, provider);
+    public void addRepositoryDefinition(RepositoryDefinition repositoryDefinition) {
+        repositoryDefinitions.put(repositoryDefinition.getName(), repositoryDefinition);
     }
 
     /**
-     * Get mapped repository name.
-     * @param name
-     * @return mapped name as in repositories.xml RepositoryMapping element
+     * Adds workspace mapping, if the physical workspace doesn't exist it is added.
      */
-    public String getMappedRepositoryName(String name) {
-        WorkspaceMappingDefinition nameMap = workspaceMappingDefinitions.get(name);
-        if(nameMap==null){
-            return name;
+    public void addWorkspaceMapping(WorkspaceMappingDefinition mapping) {
+        if (workspaceMappingDefinitions.containsKey(mapping.getLogicalWorkspaceName())) {
+            return;
         }
-        return nameMap.getRepositoryName();
-    }
 
+        addWorkspaceMappingDefinition(mapping);
+
+        RepositoryDefinition repositoryDefinition = getRepositoryDefinition(mapping.getRepositoryName());
+        if (!repositoryDefinition.getWorkspaces().contains(mapping.getWorkspaceName())) {
+            repositoryDefinition.addWorkspace(mapping.getWorkspaceName());
+        }
+    }
 
     public void addWorkspaceMappingDefinition(WorkspaceMappingDefinition definition) {
         workspaceMappingDefinitions.put(definition.getLogicalWorkspaceName(), definition);
     }
 
     /**
+     * Returns a configured repository definition.
+     */
+    public RepositoryDefinition getRepositoryDefinition(String repositoryId) {
+        return repositoryDefinitions.get(repositoryId);
+    }
+
+    public Iterator<String> getLogicalWorkspaceNames() {
+        return workspaceMappingDefinitions.keySet().iterator();
+    }
+
+    public WorkspaceMappingDefinition getWorkspaceMapping(String logicalWorkspaceName) {
+        return workspaceMappingDefinitions.get(logicalWorkspaceName);
+    }
+
+    /**
+     * Returns the name of the repository that a logical workspace name is mapped to.
+     */
+    public String getRepositoryName(String logicalWorkspaceName) {
+        WorkspaceMappingDefinition mapping = workspaceMappingDefinitions.get(logicalWorkspaceName);
+        return mapping != null ? mapping.getRepositoryName() : null;
+    }
+
+    /**
      * Get default workspace name.
+     *
      * @return default name if there are no workspaces defined or there is no workspace present with name "default",
-     * otherwise return same name as repository name.
+     *         otherwise return same name as repository name.
      */
     public String getDefaultWorkspace(String repositoryId) {
-        RepositoryDefinition mapping = getRepositoryMapping(repositoryId);
+        RepositoryDefinition mapping = getRepositoryDefinition(repositoryId);
         if (mapping == null) {
             return DEFAULT_WORKSPACE_NAME;
         }
         Collection<String> workspaces = mapping.getWorkspaces();
-        if (workspaces.contains(getMappedRepositoryName(repositoryId))) {
+        if (workspaces.contains(getRepositoryName(repositoryId))) {
             return repositoryId;
         }
         return DEFAULT_WORKSPACE_NAME;
     }
 
+    public void addRepositoryToLookup(String repositoryId, Repository repository) {
+        repositories.put(repositoryId, repository);
+    }
+
+    public void addProviderToLookup(String repositoryId, Provider provider) {
+        providers.put(repositoryId, provider);
+    }
+
     /**
      * Returns repository specified by the <code>repositoryID</code> as configured in repository config.
      */
-    public Repository getRepository(String repositoryID) {
-        Repository repository = repositories.get(repositoryID);
+    public Repository getRepository(String repositoryId) {
+        Repository repository = repositories.get(repositoryId);
         if (repository == null) {
-            final String mappedRepositoryName = getMappedRepositoryName(repositoryID);
-            if (mappedRepositoryName != null) {
-                repository = repositories.get(mappedRepositoryName);
-            }
-            if (repository == null) {
-                final String s = "Failed to retrieve repository '" + repositoryID + "' (mapped as '" + mappedRepositoryName + "'). Your Magnolia instance might not have been initialized properly.";
-                log.warn(s);
-                throw new IllegalArgumentException(s);
-            }
+            final String s = "Failed to retrieve repository '" + repositoryId + "'. Your Magnolia instance might not have been initialized properly.";
+            log.warn(s);
+            throw new IllegalArgumentException(s);
         }
         return repository;
     }
@@ -182,71 +180,25 @@ public class WorkspaceMapping {
     /**
      * Returns repository provider specified by the <code>repositoryID</code> as configured in repository config.
      */
-    public Provider getRepositoryProvider(String repositoryID) {
-        Provider provider = repositoryProviders.get(repositoryID);
+    public Provider getProvider(String repositoryId) {
+        Provider provider = providers.get(repositoryId);
         if (provider == null) {
-            final String mappedRepositoryName = getMappedRepositoryName(repositoryID);
-            if (mappedRepositoryName != null) {
-                provider = repositoryProviders.get(mappedRepositoryName);
-            }
-            if (provider == null) {
-                final String s = "Failed to retrieve repository provider '" + repositoryID + "' (mapped as '" + mappedRepositoryName + "'). Your Magnolia instance might not have been initialized properly.";
-                log.warn(s);
-                throw new IllegalArgumentException(s);
-            }
+            final String s = "Failed to retrieve repository provider '" + repositoryId + "'. Your Magnolia instance might not have been initialized properly.";
+            log.warn(s);
+            throw new IllegalArgumentException(s);
         }
         return provider;
     }
 
-    /**
-     * returns repository mapping as configured.
-     */
-    public RepositoryDefinition getRepositoryMapping(String repositoryID) {
-        String name = getMappedRepositoryName(repositoryID);
-        if (name != null && repositoryDefinitions.containsKey(name)) {
-            return repositoryDefinitions.get(getMappedRepositoryName(repositoryID));
-        }
-        log.debug("No mapping for the repository {}", repositoryID);
-        return null;
+    public Iterator<Provider> getRepositoryProviders() {
+        return providers.values().iterator();
     }
 
-    /**
-     * Gets repository names array as configured in repositories.xml.
-     * @return repository names
-     */
-    public Iterator<String> getAllRepositoryNames() {
-        return workspaceMappingDefinitions.keySet().iterator();
+    public boolean hasRepository(String repositoryId) {
+        return repositoryDefinitions.containsKey(repositoryId);
     }
 
-    /**
-     * get internal workspace name.
-     * @param workspaceName
-     * @return workspace name as configured in magnolia repositories.xml
-     * */
-    public String getInternalWorkspaceName(String workspaceName) {
-        Iterator<String> keys = workspaceMappingDefinitions.keySet().iterator();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            WorkspaceMappingDefinition nameMap = workspaceMappingDefinitions.get(key);
-            if (nameMap.getWorkspaceName().equalsIgnoreCase(workspaceName)) {
-                return key;
-            }
-        }
-        log.error("No Repository/Workspace name mapping defined for "+workspaceName);
-        return workspaceName;
+    public Collection<WorkspaceMappingDefinition> getWorkspaceMappings() {
+        return workspaceMappingDefinitions.values();
     }
-
-    /**
-     * Get mapped workspace name.
-     * @param name
-     * @return mapped name as in repositories.xml RepositoryMapping element
-     */
-    public String getMappedWorkspaceName(String name) {
-        WorkspaceMappingDefinition nameMap = workspaceMappingDefinitions.get(name);
-        if (nameMap == null) {
-            return name;
-        }
-        return nameMap.getWorkspaceName();
-    }
-
 }

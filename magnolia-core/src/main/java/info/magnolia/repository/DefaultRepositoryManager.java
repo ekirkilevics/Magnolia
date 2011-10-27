@@ -33,28 +33,9 @@
  */
 package info.magnolia.repository;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.ConfigUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.predicate.AbstractPredicate;
-import info.magnolia.jcr.registry.DefaultSessionProvider;
-import info.magnolia.jcr.registry.SessionProviderRegistry;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.registry.RegistrationException;
-import info.magnolia.repository.definition.RepositoryDefinition;
-import info.magnolia.repository.definition.RepositoryMappingDefinition;
-import info.magnolia.repository.definition.RepositoryMappingDefinitionReader;
-import info.magnolia.repository.definition.WorkspaceMappingDefinition;
-
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Iterator;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.Credentials;
@@ -62,12 +43,26 @@ import javax.jcr.Node;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.SimpleCredentials;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.core.version.MgnlVersioningSession;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.ConfigUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.repository.definition.RepositoryDefinition;
+import info.magnolia.repository.definition.RepositoryMappingDefinition;
+import info.magnolia.repository.definition.RepositoryMappingDefinitionReader;
+import info.magnolia.repository.definition.WorkspaceMappingDefinition;
 
 /**
  * Manages all used Repositories.
@@ -76,13 +71,10 @@ import org.slf4j.LoggerFactory;
  */
 @Singleton
 public final class DefaultRepositoryManager implements RepositoryManager {
+
     private static final Logger log = LoggerFactory.getLogger(DefaultRepositoryManager.class);
 
     private final WorkspaceMapping workspaceMapping;
-
-    private String repositoryUser;
-
-    private String repositoryPassword;
 
     /**
      * Utility class, don't instantiate.
@@ -144,14 +136,12 @@ public final class DefaultRepositoryManager implements RepositoryManager {
      *
      * @return <code>false</code> if all the repositories are empty, <code>true</code> if at least one of them has
      *         content.
-     * @throws AccessDeniedException
-     *             repository authentication failed
-     * @throws RepositoryException
-     *             exception while accessing the repository
+     * @throws AccessDeniedException repository authentication failed
+     * @throws RepositoryException   exception while accessing the repository
      */
     @Override
     public boolean checkIfInitialized() throws AccessDeniedException, RepositoryException {
-        Iterator<String> repositoryNames = workspaceMapping.getAllRepositoryNames();
+        Iterator<String> repositoryNames = workspaceMapping.getLogicalWorkspaceNames();
         while (repositoryNames.hasNext()) {
             String repository = repositoryNames.next();
             if (checkIfInitialized(repository)) {
@@ -167,8 +157,9 @@ public final class DefaultRepositoryManager implements RepositoryManager {
      * @throws AccessDeniedException
      */
     @Override
-    public boolean checkIfInitialized(String repository) throws RepositoryException, AccessDeniedException {
+    public boolean checkIfInitialized(String workspace) throws RepositoryException, AccessDeniedException {
         log.debug("Checking [{}] repository.", repository);
+        // TODO cant we login without using the system context?
         Session session = MgnlContext.getSystemContext().getJCRSession(repository);
 
         if (session == null) {
@@ -215,6 +206,7 @@ public final class DefaultRepositoryManager implements RepositoryManager {
      * @throws Exception
      */
     private void loadRepositories() throws Exception {
+
         String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_REPOSITORIES_CONFIG);
         final String tokenizedConfig = ConfigUtil.getTokenizedConfigFile(path);
         InputStream stream = IOUtils.toInputStream(tokenizedConfig);
@@ -222,39 +214,41 @@ public final class DefaultRepositoryManager implements RepositoryManager {
         RepositoryMappingDefinitionReader reader = new RepositoryMappingDefinitionReader();
         RepositoryMappingDefinition mapping = reader.read(stream);
 
-        for(RepositoryDefinition repo: mapping.getRepositories()) {
-            workspaceMapping.addRepositoryDefinition(repo);
-            loadRepository(repo);
+        for (RepositoryDefinition repositoryDefinition : mapping.getRepositories()) {
+            workspaceMapping.addRepositoryDefinition(repositoryDefinition);
+            loadRepository(repositoryDefinition);
         }
 
-        for(WorkspaceMappingDefinition wsDef: mapping.getWorkspaceMappings()) {
-            workspaceMapping.addWorkspaceMappingDefinition(wsDef);
+        for (WorkspaceMappingDefinition workspaceMapping : mapping.getWorkspaceMappings()) {
+            this.workspaceMapping.addWorkspaceMappingDefinition(workspaceMapping);
         }
     }
 
     /**
      * This method initializes the repository. You must not call this method twice.
      *
-     * @param map
+     * @param definition
      * @throws RepositoryNotInitializedException
+     *
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      */
     @Override
-    public void loadRepository(RepositoryDefinition map) throws RepositoryNotInitializedException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-        log.info("Loading JCR {}", map.getName());
-        Provider handlerClass = Classes.newInstance(map.getProvider());
-        handlerClass.init(map);
-        Repository repository = handlerClass.getUnderlyingRepository();
-        workspaceMapping.addWorkspaceNameToRepository(map.getName(), repository);
-        workspaceMapping.addWorkspaceNameToProvider(map.getName(), handlerClass);
-        if (map.isLoadOnStartup()) {
+    public void loadRepository(RepositoryDefinition definition) throws RepositoryNotInitializedException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+        log.info("Loading JCR {}", definition.getName());
+
+        Class<? extends Provider> providerClass = Classes.getClassFactory().forName(definition.getProvider());
+        Provider provider = Components.getComponentProvider().newInstance(providerClass);
+        provider.init(definition);
+        Repository repository = provider.getUnderlyingRepository();
+        workspaceMapping.addRepositoryToLookup(definition.getName(), repository);
+        workspaceMapping.addProviderToLookup(definition.getName(), provider);
+
+        if (definition.isLoadOnStartup()) {
             // load hierarchy managers for each workspace
-            Iterator<String> workspaces = map.getWorkspaces().iterator();
-            while (workspaces.hasNext()) {
-                String wspID = workspaces.next();
-                registerNameSpacesAndNodeTypes(repository, wspID, map, handlerClass);
+            for (String workspaceId : definition.getWorkspaces()) {
+                registerNameSpacesAndNodeTypes(workspaceId, definition, provider);
             }
         }
     }
@@ -263,92 +257,114 @@ public final class DefaultRepositoryManager implements RepositoryManager {
      * @param repositoryId
      * @param workspaceId
      * @throws RepositoryException
-     * */
+     */
     @Override
     public void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
         log.info("Loading workspace {}", workspaceId);
 
-        // TODO dlipp - we should create an WorkspaceMappingDefinition here
-        workspaceMapping.addWorkspaceNameToRepositoryNameIfNotYetAvailable(new WorkspaceMappingDefinition(workspaceId,
-                repositoryId, workspaceId));
-        Provider provider = workspaceMapping.getRepositoryProvider(repositoryId);
-        provider.registerWorkspace(workspaceId);
-        Repository repo = workspaceMapping.getRepository(repositoryId);
-        RepositoryDefinition map = workspaceMapping.getRepositoryMapping(repositoryId);
+        workspaceMapping.addWorkspaceMapping(new WorkspaceMappingDefinition(workspaceId, repositoryId, workspaceId));
 
-        registerNameSpacesAndNodeTypes(repo, workspaceId, map, provider);
+        Provider provider = workspaceMapping.getProvider(repositoryId);
+        provider.registerWorkspace(workspaceId);
+        RepositoryDefinition repositoryDefinition = workspaceMapping.getRepositoryDefinition(repositoryId);
+
+        registerNameSpacesAndNodeTypes(workspaceId, repositoryDefinition, provider);
     }
 
-    /**
-     * Load hierarchy manager for the specified repository and workspace.
-     *
-     * TODO dlipp - better naming!
-     */
-    private void registerNameSpacesAndNodeTypes(Repository repository, String wspID, RepositoryDefinition map, Provider provider) {
+    private void registerNameSpacesAndNodeTypes(String physicalWorkspaceName, RepositoryDefinition repositoryDefinition, Provider provider) {
         try {
-            SimpleCredentials sc = new SimpleCredentials(ContentRepository.REPOSITORY_USER, ContentRepository.REPOSITORY_PSWD.toCharArray());
-            SessionProviderRegistry sessionProviderRegistry = Components.getComponent(SessionProviderRegistry.class);
-            // FIXME dlipp - hack for now. Logical and physical workspaceName are identical here!
-            sessionProviderRegistry.register(new DefaultSessionProvider(wspID, repository, wspID));
+            Session session = provider.getSystemSession(physicalWorkspaceName);
             try {
-                Session session = sessionProviderRegistry.get(wspID).createSession(sc);
-                try {
-                    provider.registerNamespace(RepositoryConstants.NAMESPACE_PREFIX, RepositoryConstants.NAMESPACE_URI,
-                            session.getWorkspace());
-                    provider.registerNodeTypes();
-                } finally {
-                    session.logout();
-                }
-            } catch (RegistrationException e) {
-                throw new RepositoryException(e);
+                provider.registerNamespace(RepositoryConstants.NAMESPACE_PREFIX, RepositoryConstants.NAMESPACE_URI, session.getWorkspace());
+                provider.registerNodeTypes();
+            } finally {
+                session.logout();
             }
         } catch (RepositoryException e) {
-            log.error("Failed to initialize hierarchy manager for JCR " + map.getName(), e);
+            log.error("Failed to initialize hierarchy manager for JCR " + repositoryDefinition.getName(), e);
         }
     }
 
     @Override
     public Session getSession(String logicalWorkspaceName, Credentials credentials) throws RepositoryException {
-        throw new NotImplementedException("Work in progress");
+        WorkspaceMappingDefinition mapping = this.workspaceMapping.getWorkspaceMapping(logicalWorkspaceName);
+        Repository repository = this.workspaceMapping.getRepository(mapping.getRepositoryName());
+        String physicalWorkspaceName = mapping.getWorkspaceName();
+
+        Session session = repository.login(credentials, physicalWorkspaceName);
+
+        if (RepositoryConstants.VERSION_STORE.equals(logicalWorkspaceName)) {
+            //do not wrapp version store in versioning session or we get infinite redirect loop and stack overflow
+            return session;
+        }
+        return new MgnlVersioningSession(session);
+
+        // TODO increase counter here?
     }
 
     @Override
     public Session getSystemSession(String logicalWorkspaceName) throws RepositoryException {
-        throw new NotImplementedException("Work in progress");
+        WorkspaceMappingDefinition mapping = this.workspaceMapping.getWorkspaceMapping(logicalWorkspaceName);
+        Provider provider = this.workspaceMapping.getProvider(mapping.getRepositoryName());
+        return provider.getSystemSession(mapping.getWorkspaceName());
+    }
+
+    // TODO this also needs to be closed somehow
+    // NO THIS DOESNT WORK, SESSIONS ARE NOT THREAD SAFE, HOW CAN WE FIX THIS...
+    private final SystemSessionAcquisitionStrategy systemSessionAcquisitionStrategy = new SystemSessionAcquisitionStrategy(this);
+
+    @Override
+    public SessionAcquisitionStrategy getLifetimeSessionStrategy() {
+        return systemSessionAcquisitionStrategy;
     }
 
     @Override
-    public Iterator<String> getAllRepositoryNames() {
-        return workspaceMapping.getAllRepositoryNames();
+    public Iterator<String> getLogicalWorkspaceNames() {
+        return workspaceMapping.getLogicalWorkspaceNames();
     }
 
     @Override
-    public RepositoryDefinition getRepositoryMapping(String repositoryId) {
-        return workspaceMapping.getRepositoryMapping(repositoryId);
+    public RepositoryDefinition getRepositoryDefinition(String repositoryId) {
+        return workspaceMapping.getRepositoryDefinition(repositoryId);
     }
 
     @Override
     public Provider getRepositoryProvider(String repositoryId) {
-        return workspaceMapping.getRepositoryProvider(repositoryId);
+        return workspaceMapping.getProvider(repositoryId);
     }
 
     @Override
-    public String getMappedWorkspaceName(String logicalWorkspaceName) {
-        return workspaceMapping.getMappedWorkspaceName(logicalWorkspaceName);
+    public String getPhysicalWorkspaceName(String logicalWorkspaceName) {
+        return workspaceMapping.getWorkspaceMapping(logicalWorkspaceName).getWorkspaceName();
     }
 
     @Override
-    public String getMappedRepositoryName(String logicalWorkspaceName) {
-        return workspaceMapping.getMappedRepositoryName(logicalWorkspaceName);
-    }
-
-    @Override
-    public String getInternalWorkspaceName(String workspaceName) {
-        return workspaceMapping.getInternalWorkspaceName(workspaceName);
+    public String getRepositoryName(String logicalWorkspaceName) {
+        return workspaceMapping.getWorkspaceMapping(logicalWorkspaceName).getRepositoryName();
     }
 
     @Override
     public String getDefaultWorkspace(String repositoryId) {
         return workspaceMapping.getDefaultWorkspace(repositoryId);
+    }
+
+    @Override
+    public Collection<WorkspaceMappingDefinition> getWorkspaceMappings() {
+        return workspaceMapping.getWorkspaceMappings();
+    }
+
+    @Override
+    public boolean hasRepository(String repositoryId) {
+        return workspaceMapping.hasRepository(repositoryId);
+    }
+
+    @Override
+    public Repository getRepository(String repositoryId) {
+        return workspaceMapping.getRepository(repositoryId);
+    }
+
+    @Override
+    public void addWorkspaceMapping(WorkspaceMappingDefinition mapping) {
+        workspaceMapping.addWorkspaceMapping(mapping);
     }
 }
