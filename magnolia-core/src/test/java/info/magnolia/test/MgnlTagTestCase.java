@@ -33,17 +33,19 @@
  */
 package info.magnolia.test;
 
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
-import info.magnolia.cms.link.LinkResolver;
-import info.magnolia.cms.link.LinkResolverImpl;
-import info.magnolia.test.mock.MockWebContext;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import info.magnolia.test.mock.MockWebContext;
+
+import java.io.IOException;
+import java.util.Locale;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspException;
@@ -51,15 +53,11 @@ import javax.servlet.jsp.JspException;
 import org.junit.After;
 import org.junit.Before;
 
-import java.io.IOException;
-import java.util.Locale;
-
-import com.mockrunner.mock.web.MockPageContext;
-import com.mockrunner.mock.web.MockServletConfig;
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
 import com.mockrunner.mock.web.MockJspWriter;
-import static org.easymock.EasyMock.*;
+import com.mockrunner.mock.web.MockPageContext;
+import com.mockrunner.mock.web.MockServletConfig;
 
 /**
  * A base class to simplify the testing of tag library output.
@@ -90,7 +88,6 @@ public abstract class MgnlTagTestCase extends MgnlTestCase {
         // set up necessary items not configured in the repository
         ComponentsTestUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        ComponentsTestUtil.setInstance(LinkResolver.class, new LinkResolverImpl());
 
         setupPageContext();
     }
