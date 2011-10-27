@@ -49,8 +49,6 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
@@ -172,14 +170,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 if(status == Response.SC_OK) {
                     Window.Location.reload();
                 } else {
-                    JSONValue jsonValue = JSONParser.parseStrict(response.getText());
-                    String responseText;
-                    if(jsonValue.isObject() != null) {
-                        responseText = jsonValue.isObject().get("message").toString();
-                    } else {
-                        responseText = response.getText();
-                    }
-                    Window.alert("An error occured on the server: response status code is "+ status + "\nResponse is " + responseText);
+                    Window.alert("An error occured on the server: response status code is "+ status);
                 }
             }
 
