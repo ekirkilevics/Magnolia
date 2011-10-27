@@ -54,6 +54,7 @@ import java.util.Collections;
 import javax.jcr.RepositoryException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -88,6 +89,7 @@ public class EditBarTest extends MgnlTagTestCase {
         webContext.setParameters(Collections.singletonMap(Resource.MGNL_PREVIEW_ATTRIBUTE, "false"));
     }
 
+    @Ignore
     @Test
     public void testDisplaysParagraphNameAsLabel() throws Exception {
         final String paraTitle = "testParaTitleKey";

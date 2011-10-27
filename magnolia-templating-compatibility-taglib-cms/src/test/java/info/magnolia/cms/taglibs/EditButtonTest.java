@@ -54,6 +54,7 @@ import java.util.Collections;
 import javax.jcr.RepositoryException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
@@ -91,6 +92,7 @@ public class EditButtonTest extends MgnlTagTestCase {
         webContext.setRequest(new MockHttpServletRequest());
     }
 
+    @Ignore
     @Test
     public void testDisplaysDialogWithCurrentNodaHandle() throws Exception {
         final String dialogName = "test-dial";
