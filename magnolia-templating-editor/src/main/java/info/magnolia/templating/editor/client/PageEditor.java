@@ -166,12 +166,19 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             @Override
             public void onResponseReceived(Request request, Response response) {
                 int status = response.getStatusCode();
-
-                if(status == Response.SC_OK) {
+                String responseText = "";
+                switch(status) {
+                case Response.SC_OK:
                     Window.Location.reload();
-                } else {
-                    Window.alert("An error occured on the server: response status code is "+ status);
+                    break;
+                case Response.SC_UNAUTHORIZED:
+                    responseText = "Is your session expired? Please, try to login again.";
+                    break;
+                default:
+                    responseText = "See logs for more details.";
                 }
+
+                Window.alert("An error occured on the server: response status code is "+ status + "\n" + responseText);
             }
 
             @Override
