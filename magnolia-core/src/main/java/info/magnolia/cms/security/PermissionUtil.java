@@ -167,4 +167,18 @@ public class PermissionUtil {
         return permissions.toString();
     }
 
+    /**
+     * Checks whether given session has requested permission on provided path. Throws an exception if permission is not granted on given path.
+     * @throws AccessDeniedException when permission is not granted.
+     */
+    public static void verifyIsGrantedOrThrowException(Session jcrSession, String path, String action) throws AccessDeniedException {
+        try {
+            if (!jcrSession.hasPermission( path, action)) {
+                throw new AccessDeniedException("Not allowed to access " + path + " with permission " + action);
+            }
+        } catch (RepositoryException e) {
+            throw new AccessDeniedException("Exception occured while checking permissions for " + path + " with permission " + action, e);
+        }
+    }
+
 }

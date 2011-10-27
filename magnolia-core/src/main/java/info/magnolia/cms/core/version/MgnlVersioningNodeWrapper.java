@@ -33,9 +33,9 @@
  */
 package info.magnolia.cms.core.version;
 
-import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.MgnlContext.Op;
 import info.magnolia.jcr.wrapper.ChildWrappingNodeWrapper;
@@ -110,7 +110,7 @@ public class MgnlVersioningNodeWrapper extends ChildWrappingNodeWrapper {
         wrapped = getWrappedNode();
         final String nodePath = Path.getAbsolutePath(wrapped.getPath());
         log.debug("removing {} from {}", wrapped.getPath(), getSession().getWorkspace().getName());
-        Access.tryPermission(getSession(), Path.getAbsolutePath(getPath()), Session.ACTION_REMOVE);
+        PermissionUtil.verifyIsGrantedOrThrowException(getSession(), Path.getAbsolutePath(getPath()), Session.ACTION_REMOVE);
         NodeType nodeType = this.getPrimaryNodeType();
         String workspaceName = getSession().getWorkspace().getName();
         if (!workspaceName.equals("mgnlVersion")) {
