@@ -70,11 +70,11 @@ public class LifeTimeJCRSessionUtil {
 
     @Deprecated
     public static HierarchyManager getHierarchyManager(String workspaceName) {
-    	try {
-			return HierarchyManagerUtil.asHierarchyManager(getSession(workspaceName));
-		} catch (RepositoryException e) {
-			throw new RuntimeException(e);
-		}
+        try {
+            return HierarchyManagerUtil.asHierarchyManager(getSession(workspaceName));
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -88,7 +88,7 @@ public class LifeTimeJCRSessionUtil {
 
     @Deprecated
     public static QueryManager getQueryManager(String workspaceName) {
-    	return getHierarchyManager(workspaceName).getQueryManager();
+        return getHierarchyManager(workspaceName).getQueryManager();
     }
 
     public static void release() {
