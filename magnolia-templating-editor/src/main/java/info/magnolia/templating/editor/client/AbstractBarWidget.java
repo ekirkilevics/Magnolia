@@ -78,12 +78,6 @@ public abstract class AbstractBarWidget extends FlowPanel {
     protected void onSelect() {
     }
 
-    /**
-     * Called when this bar widget is no longer selected. Default implementation does nothing.
-     */
-    public void deselect() {
-    }
-
     protected void setId(String id){
         getElement().setId(id);
     }

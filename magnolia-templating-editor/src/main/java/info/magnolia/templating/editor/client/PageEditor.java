@@ -77,11 +77,15 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     @Override
     public void onModuleLoad() {
         Element documentElement = Document.get().getDocumentElement();
+
         final NodeList<Element> edits = documentElement.getOwnerDocument().getElementsByTagName(MARKER_EDIT);
-        final NodeList<Element> areas = documentElement.getOwnerDocument().getElementsByTagName(MARKER_AREA);
         GWT.log("found "+ edits.getLength() + " cms:edit tags");
+
+        final NodeList<Element> areas = documentElement.getOwnerDocument().getElementsByTagName(MARKER_AREA);
         GWT.log("found "+ areas.getLength() + " cms:area tags");
-        detectCmsTag(documentElement, null, edits, areas);
+
+        processCmsTags(documentElement, null, edits, areas);
+
         locale = detectCurrentLocale(documentElement);
     }
 
@@ -122,13 +126,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     public void deleteComponent(String path) {
         LegacyJavascript.mgnlDeleteNode(path);
-    }
-
-    public void updateSelection(AbstractBarWidget selectedBar, String type, String workspace, String path, String collectionName, String nodeName, String availableComponents, String dialog) {
-        if (this.selectedBar != null && (this.selectedBar != selectedBar)) {
-            this.selectedBar.deselect();
-        }
-        this.selectedBar = selectedBar;
     }
 
     public void addComponent(String workspace, String path, String collectionName, String nodeName, String availableComponents) {
@@ -222,7 +219,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         return locale;
     }
 
-    private void detectCmsTag(Element element, AreaBarWidget parentBar, NodeList<Element> edits, NodeList<Element> areas ) {
+    private void processCmsTags(Element element, AreaBarWidget parentBar, NodeList<Element> edits, NodeList<Element> areas ) {
         for (int i = 0; i < element.getChildCount(); i++) {
             Node childNode = element.getChild(i);
             if (childNode.getNodeType() == Element.ELEMENT_NODE) {
@@ -257,7 +254,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                         parentBar = areaBarWidget;
                     }
                 }
-                detectCmsTag(child, parentBar, edits, areas);
+                processCmsTags(child, parentBar, edits, areas);
             }
         }
     }

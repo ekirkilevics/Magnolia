@@ -131,12 +131,6 @@ public class PageBarWidget extends AbstractBarWidget {
     }
 
     @Override
-    protected void onSelect() {
-        super.onSelect();
-        pageEditor.updateSelection(this, PageEditor.SELECTION_TYPE_PAGE, workspace, path, null, null, "", dialog);
-    }
-
-    @Override
     public void attach(Element element) {
         element.appendChild(getElement());
         onAttach();
