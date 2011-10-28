@@ -33,29 +33,20 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.core.version.MgnlVersioningSession;
-import info.magnolia.cms.security.User;
-import info.magnolia.jcr.registry.SessionProviderRegistry;
-import info.magnolia.registry.RegistrationException;
-import info.magnolia.stats.JCRStats;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.inject.Inject;
-import javax.jcr.Credentials;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.SimpleCredentials;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.magnolia.repository.RepositoryManager;
 
 
 /**
@@ -68,42 +59,28 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
     private final Map<String, Session> jcrSessions = new HashMap<String, Session>();
 
-    private final SessionProviderRegistry sessionProviderRegistry;
+    protected final RepositoryManager repositoryManager;
 
     @Inject
-    public AbstractRepositoryStrategy(SessionProviderRegistry sessionProviderRegistry) {
-        this.sessionProviderRegistry = sessionProviderRegistry;
+    protected AbstractRepositoryStrategy(RepositoryManager repositoryManager) {
+        this.repositoryManager = repositoryManager;
     }
-
-    abstract protected String getUserId();
 
     @Override
     public Session getSession(String workspaceName) throws LoginException, RepositoryException {
-        return getRepositorySession(getUserCredentials(), workspaceName);
-    }
-
-    protected Session getRepositorySession(Credentials credentials, String workspaceName) throws LoginException, RepositoryException {
         Session jcrSession = jcrSessions.get(workspaceName);
 
         if (jcrSession == null) {
             log.debug("creating jcr session {} by thread {}", workspaceName, Thread.currentThread().getName());
 
-            try {
-				jcrSession = sessionProviderRegistry.get(workspaceName).createSession(credentials);
-
-				if (!ContentRepository.VERSION_STORE.equals(workspaceName)) {
-		            jcrSession = new MgnlVersioningSession(jcrSession);
-		        }
-
-				jcrSessions.put(workspaceName, jcrSession);
-				incSessionCount(workspaceName);
-			} catch (RegistrationException e) {
-				throw new RepositoryException(e);
-			}
+            jcrSession = internalGetSession(workspaceName);
+            jcrSessions.put(workspaceName, jcrSession);
         }
 
         return jcrSession;
     }
+
+    protected abstract Session internalGetSession(String workspaceName) throws RepositoryException;
 
     protected void release(boolean checkObservation) {
         log.debug("releasing jcr sessions");
@@ -123,7 +100,6 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
                     session.logout();
                     log.debug("logged out jcr session: {} by thread {}", session, Thread.currentThread().getName());
 
-                    decSessionCount(workspaceName);
                 } else {
                     log.warn("won't close session because of registered observation listener {}", workspaceName);
                     if (log.isDebugEnabled()) {
@@ -142,55 +118,10 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         }
     }
 
-    protected void incSessionCount(String workspaceName) {
-        JCRStats.getInstance().incSessionCount();
-    }
-
-    protected void decSessionCount(String workspaceName) {
-        JCRStats.getInstance().decSessionCount();
-    }
-
     /**
      * Returns the number of sessions managed by this strategy.
      */
     protected int getLocalSessionCount() {
         return jcrSessions.size();
-    }
-
-    /**
-     * TODO dlipp - get properties from ContentRepository (for now)
-     */
-    protected SimpleCredentials getAdminUserCredentials() {
-        // FIXME: stop using SystemProperty, but IoC is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
-        String user = SystemProperty.getProperty("magnolia.connection.jcr.admin.userId", SystemProperty.getProperty("magnolia.connection.jcr.userId", "admin"));
-        String pwd = SystemProperty.getProperty("magnolia.connection.jcr.admin.password", SystemProperty.getProperty("magnolia.connection.jcr.password", "admin"));
-        return new SimpleCredentials(user, pwd.toCharArray());
-    }
-
-    /**
-     * TODO dlipp - get properties from ContentRepository (for now)
-     */
-    protected SimpleCredentials getAnonymousUserCredentials() {
-        // FIXME: stop using SystemProperty, but IoC is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
-        // TODO: can also read it from the Login Module properties ... but WAU has no access to that
-        String user = SystemProperty.getProperty("magnolia.connection.jcr.anonymous.userId", "anonymous");
-        String pwd = SystemProperty.getProperty("magnolia.connection.jcr.anonymous.password", "anonymous");
-        return new SimpleCredentials(user, pwd.toCharArray());
-    }
-
-    public SimpleCredentials getCredentials(User user) {
-        return new SimpleCredentials(user.getName(),user.getPassword().toCharArray());
-    }
-
-    /**
-     * @return credentials of current user - anonymous if unknown.
-     * */
-    public SimpleCredentials getUserCredentials() {
-        User user = MgnlContext.getUser();
-        if (user == null) {
-            // there is no user logged in, so this is just a system call. Returned credentials are used only to access repository, but do not allow any access over Magnolia.
-            return getAnonymousUserCredentials();
-        }
-        return getCredentials(user);
     }
 }

@@ -61,10 +61,6 @@
       <type>info.magnolia.jcr.registry.SessionProviderRegistry</type>
       <implementation>info.magnolia.jcr.registry.SessionProviderRegistry</implementation>
     </component>
-    <component>
-        <type>info.magnolia.repository.WorkspaceMapping</type>
-        <implementation>info.magnolia.repository.WorkspaceMapping</implementation>
-    </component>
   </components>
 
   <components>

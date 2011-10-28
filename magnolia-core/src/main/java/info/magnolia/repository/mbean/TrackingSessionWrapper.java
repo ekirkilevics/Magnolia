@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,35 +25,41 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.repository;
+package info.magnolia.repository.mbean;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import javax.jcr.Session;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import info.magnolia.jcr.wrapper.DelegateSessionWrapper;
+import info.magnolia.stats.JCRStats;
 
 /**
+ * Tracks the session to keep count of open sessions.
+ *
  * @version $Id$
  */
-public class WorkspaceMappingTest {
+public class TrackingSessionWrapper extends DelegateSessionWrapper {
 
-    @Test
-    @Ignore
-    public void testUnknownRepositoryShouldYieldMeaningfulExceptionMessage() {
-        WorkspaceMapping mapping = new WorkspaceMapping();
-        try {
-            mapping.getRepository("dummy");
-            fail("should have failed, since we haven't set any repository at all");
-        } catch (Throwable t) {
-            assertEquals("Failed to retrieve repository 'dummy' (mapped as 'dummy'). Your Magnolia instance might not have been initialized properly.", t.getMessage());
-        }
+    private JCRStats jcrStats;
+    private boolean closed = false;
+
+    public TrackingSessionWrapper(Session wrapped, JCRStats jcrStats) {
+        super(wrapped);
+        this.jcrStats = jcrStats;
+        this.jcrStats.incSessionCount();
     }
 
+    @Override
+    public void logout() {
+        super.logout();
+        if (!closed) {
+            jcrStats.decSessionCount();
+            closed = true;
+        }
+    }
 }

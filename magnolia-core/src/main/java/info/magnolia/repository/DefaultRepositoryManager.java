@@ -36,7 +36,6 @@ package info.magnolia.repository;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.Credentials;
 import javax.jcr.Node;
@@ -63,6 +62,8 @@ import info.magnolia.repository.definition.RepositoryDefinition;
 import info.magnolia.repository.definition.RepositoryMappingDefinition;
 import info.magnolia.repository.definition.RepositoryMappingDefinitionReader;
 import info.magnolia.repository.definition.WorkspaceMappingDefinition;
+import info.magnolia.repository.mbean.TrackingSessionWrapper;
+import info.magnolia.stats.JCRStats;
 
 /**
  * Manages all used Repositories.
@@ -74,15 +75,7 @@ public final class DefaultRepositoryManager implements RepositoryManager {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultRepositoryManager.class);
 
-    private final WorkspaceMapping workspaceMapping;
-
-    /**
-     * Utility class, don't instantiate.
-     */
-    @Inject
-    DefaultRepositoryManager(WorkspaceMapping workspaceMapping) {
-        this.workspaceMapping = workspaceMapping;
-    }
+    private final WorkspaceMapping workspaceMapping = new WorkspaceMapping();
 
     /**
      * loads all configured repository using ID as Key, as configured in repositories.xml.
@@ -215,6 +208,9 @@ public final class DefaultRepositoryManager implements RepositoryManager {
         RepositoryMappingDefinition mapping = reader.read(stream);
 
         for (RepositoryDefinition repositoryDefinition : mapping.getRepositories()) {
+            if (repositoryDefinition.getWorkspaces().isEmpty()) {
+                repositoryDefinition.addWorkspace("default");
+            }
             workspaceMapping.addRepositoryDefinition(repositoryDefinition);
             loadRepository(repositoryDefinition);
         }
@@ -242,8 +238,8 @@ public final class DefaultRepositoryManager implements RepositoryManager {
         Provider provider = Components.getComponentProvider().newInstance(providerClass);
         provider.init(definition);
         Repository repository = provider.getUnderlyingRepository();
-        workspaceMapping.addRepositoryToLookup(definition.getName(), repository);
-        workspaceMapping.addProviderToLookup(definition.getName(), provider);
+        workspaceMapping.setRepository(definition.getName(), repository);
+        workspaceMapping.setRepositoryProvider(definition.getName(), provider);
 
         if (definition.isLoadOnStartup()) {
             // load hierarchy managers for each workspace
@@ -264,7 +260,7 @@ public final class DefaultRepositoryManager implements RepositoryManager {
 
         workspaceMapping.addWorkspaceMapping(new WorkspaceMappingDefinition(workspaceId, repositoryId, workspaceId));
 
-        Provider provider = workspaceMapping.getProvider(repositoryId);
+        Provider provider = getRepositoryProvider(repositoryId);
         provider.registerWorkspace(workspaceId);
         RepositoryDefinition repositoryDefinition = workspaceMapping.getRepositoryDefinition(repositoryId);
 
@@ -288,34 +284,27 @@ public final class DefaultRepositoryManager implements RepositoryManager {
     @Override
     public Session getSession(String logicalWorkspaceName, Credentials credentials) throws RepositoryException {
         WorkspaceMappingDefinition mapping = this.workspaceMapping.getWorkspaceMapping(logicalWorkspaceName);
-        Repository repository = this.workspaceMapping.getRepository(mapping.getRepositoryName());
+        Repository repository = getRepository(mapping.getRepositoryName());
         String physicalWorkspaceName = mapping.getWorkspaceName();
 
         Session session = repository.login(credentials, physicalWorkspaceName);
-
-        if (RepositoryConstants.VERSION_STORE.equals(logicalWorkspaceName)) {
-            //do not wrapp version store in versioning session or we get infinite redirect loop and stack overflow
-            return session;
-        }
-        return new MgnlVersioningSession(session);
-
-        // TODO increase counter here?
+        return wrapSession(session, logicalWorkspaceName);
     }
 
     @Override
     public Session getSystemSession(String logicalWorkspaceName) throws RepositoryException {
         WorkspaceMappingDefinition mapping = this.workspaceMapping.getWorkspaceMapping(logicalWorkspaceName);
-        Provider provider = this.workspaceMapping.getProvider(mapping.getRepositoryName());
-        return provider.getSystemSession(mapping.getWorkspaceName());
+        Provider provider = getRepositoryProvider(mapping.getRepositoryName());
+        return wrapSession(provider.getSystemSession(mapping.getWorkspaceName()), logicalWorkspaceName);
     }
 
-    // TODO this also needs to be closed somehow
-    // NO THIS DOESNT WORK, SESSIONS ARE NOT THREAD SAFE, HOW CAN WE FIX THIS...
-    private final SystemSessionAcquisitionStrategy systemSessionAcquisitionStrategy = new SystemSessionAcquisitionStrategy(this);
-
-    @Override
-    public SessionAcquisitionStrategy getLifetimeSessionStrategy() {
-        return systemSessionAcquisitionStrategy;
+    private Session wrapSession(Session session, String logicalWorkspaceName) {
+        session = new TrackingSessionWrapper(session, JCRStats.getInstance());
+        if (RepositoryConstants.VERSION_STORE.equals(logicalWorkspaceName)) {
+            //do not wrapp version store in versioning session or we get infinite redirect loop and stack overflow
+            return session;
+        }
+        return new MgnlVersioningSession(session);
     }
 
     @Override
@@ -330,7 +319,7 @@ public final class DefaultRepositoryManager implements RepositoryManager {
 
     @Override
     public Provider getRepositoryProvider(String repositoryId) {
-        return workspaceMapping.getProvider(repositoryId);
+        return workspaceMapping.getRepositoryProvider(repositoryId);
     }
 
     @Override
@@ -341,11 +330,6 @@ public final class DefaultRepositoryManager implements RepositoryManager {
     @Override
     public String getRepositoryName(String logicalWorkspaceName) {
         return workspaceMapping.getWorkspaceMapping(logicalWorkspaceName).getRepositoryName();
-    }
-
-    @Override
-    public String getDefaultWorkspace(String repositoryId) {
-        return workspaceMapping.getDefaultWorkspace(repositoryId);
     }
 
     @Override

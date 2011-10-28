@@ -33,65 +33,27 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.cms.security.SystemUserManager;
-import info.magnolia.cms.util.UrlPattern;
-import info.magnolia.jcr.registry.SessionProviderRegistry;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
-import javax.jcr.Credentials;
-import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.commons.lang.UnhandledException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.repository.RepositoryManager;
 
 /**
  * Uses a single full access AccessManager. JCR sessions are only released if no event listener were registered.
+ *
+ * @version $Id$
  */
 public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
 
-    private static final Logger log = LoggerFactory.getLogger(SystemRepositoryStrategy.class);
-
     @Inject
-    public SystemRepositoryStrategy(SessionProviderRegistry sessionProviderRegistry) {
-        super(sessionProviderRegistry);
-    }
-
-    /**
-     * TODO dlipp - Check whether we can't completely drop that method.
-     * @dperecated since 4.5 - should no longer be needed.
-     */
-    protected List<Permission> getSystemPermissions() {
-        List<Permission> acl = new ArrayList<Permission>();
-        UrlPattern p = UrlPattern.MATCH_ALL;
-        Permission permission = new PermissionImpl();
-        permission.setPattern(p);
-        permission.setPermissions(Permission.ALL);
-        acl.add(permission);
-        return acl;
+    public SystemRepositoryStrategy(RepositoryManager repositoryManager) {
+        super(repositoryManager);
     }
 
     @Override
-    protected String getUserId() {
-        return SystemUserManager.SYSTEM_USER;
-    }
-
-    @Override
-    public Session getSession(String workspaceName) throws LoginException, RepositoryException {
-        Credentials creds = getAdminUserCredentials();
-        try {
-            return super.getRepositorySession(creds, workspaceName);
-        } catch (RepositoryException e) {
-            throw new UnhandledException(e);
-        }
-
+    protected Session internalGetSession(String workspaceName) throws RepositoryException {
+        return repositoryManager.getSystemSession(workspaceName);
     }
 
     @Override

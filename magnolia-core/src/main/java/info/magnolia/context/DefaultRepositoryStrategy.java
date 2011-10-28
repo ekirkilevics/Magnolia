@@ -33,35 +33,50 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.jcr.registry.SessionProviderRegistry;
-
 import javax.inject.Inject;
-import javax.security.auth.Subject;
+import javax.jcr.Credentials;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.security.User;
+import info.magnolia.repository.RepositoryManager;
 
 /**
  * Uses a user based access manager.
+ *
+ * @version $Id$
  */
 public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
 
     protected UserContext context;
 
     @Inject
-    public DefaultRepositoryStrategy(SessionProviderRegistry sessionProviderRegistry, UserContext context) {
-        super(sessionProviderRegistry);
+    public DefaultRepositoryStrategy(RepositoryManager repositoryManager, UserContext context) {
+        super(repositoryManager);
         this.context = context;
     }
 
-    /**
-     * @deprecated since 4.5 JAAS subject is no longer passed around by strategy. There should be no need to access it.
-     */
-    @Deprecated
-    protected Subject getSubject() {
-        return null;
+    @Override
+    protected Session internalGetSession(String workspaceName) throws RepositoryException {
+        return repositoryManager.getSession(workspaceName, getCredentials());
     }
 
-    @Override
-    protected String getUserId() {
-        return this.context.getUser().getName();
+    /**
+     * @return credentials of current user - anonymous if unknown.
+     */
+    protected Credentials getCredentials() {
+        User user = MgnlContext.getUser();
+        if (user == null) {
+            // there is no user logged in, so this is just a system call. Returned credentials are used only to access repository, but do not allow any access over Magnolia.
+            // FIXME: stop using SystemProperty, but IoC is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
+            // TODO: can also read it from the Login Module properties ... but WAU has no access to that
+            String user1 = SystemProperty.getProperty("magnolia.connection.jcr.anonymous.userId", "anonymous");
+            String pwd = SystemProperty.getProperty("magnolia.connection.jcr.anonymous.password", "anonymous");
+            return new SimpleCredentials(user1, pwd.toCharArray());
+        }
+        return new SimpleCredentials(user.getName(), user.getPassword().toCharArray());
     }
 
     @Override

@@ -39,7 +39,6 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.repository.RepositoryManager;
-import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
 import info.magnolia.repository.definition.RepositoryDefinition;
 import info.magnolia.repository.definition.WorkspaceMappingDefinition;
@@ -209,7 +208,7 @@ public final class ContentRepository {
      * @throws ClassNotFoundException
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#loadRepository(info.magnolia.repository.definition.RepositoryDefinition)} directly.
      */
-    public static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
+    public static void loadRepository(RepositoryDefinition map) throws RepositoryNotInitializedException,
     InstantiationException, IllegalAccessException, ClassNotFoundException {
         Components.getComponent(RepositoryManager.class).loadRepository(map);
     }
@@ -310,6 +309,7 @@ public final class ContentRepository {
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getRepositoryProvider(String)}  directly.
      */
     public static Provider getRepositoryProvider(String repositoryID) {
+        repositoryID = getMappedRepositoryName(repositoryID);
         return Components.getComponent(RepositoryManager.class).getRepositoryProvider(repositoryID);
     }
 

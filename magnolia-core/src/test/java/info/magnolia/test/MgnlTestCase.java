@@ -56,7 +56,6 @@ import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.init.properties.ClasspathPropertySource;
 import info.magnolia.init.properties.InitPathsPropertySource;
 import info.magnolia.init.properties.ModulePropertiesSource;
-import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleManagerImpl;
@@ -139,7 +138,6 @@ public abstract class MgnlTestCase {
         ComponentsTestUtil.setInstance(MagnoliaConfigurationProperties.class, configurationProperties);
 
         ComponentsTestUtil.setImplementation(RepositoryManager.class, DefaultRepositoryManager.class);
-        ComponentsTestUtil.setInstance(SessionProviderRegistry.class, new SessionProviderRegistry());
 
         ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
         ComponentProviderConfiguration configuration = configurationBuilder.getComponentsFromModules("system", mr.getModuleDefinitions());

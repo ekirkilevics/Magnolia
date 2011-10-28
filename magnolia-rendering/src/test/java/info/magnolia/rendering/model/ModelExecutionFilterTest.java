@@ -40,7 +40,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.registry.RegistrationException;
@@ -82,7 +81,6 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
         components.registerImplementation(TemplateDefinitionRegistry.class);
         components.registerImplementation(ModelExecutionFilter.class);
         components.registerImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
-        components.registerInstance(SessionProviderRegistry.class, new SessionProviderRegistry());
     }
 
     @Override

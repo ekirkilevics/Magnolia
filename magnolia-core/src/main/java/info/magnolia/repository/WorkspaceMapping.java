@@ -37,7 +37,6 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
-import javax.inject.Singleton;
 import javax.jcr.Repository;
 
 import org.slf4j.Logger;
@@ -52,12 +51,9 @@ import info.magnolia.repository.definition.WorkspaceMappingDefinition;
  *
  * @version $Id$
  */
-@Singleton
 public class WorkspaceMapping {
 
     private static final Logger log = LoggerFactory.getLogger(WorkspaceMapping.class);
-
-    public static final String DEFAULT_WORKSPACE_NAME = "default";
 
     /**
      * Map of Repository instances for each repository.
@@ -138,29 +134,19 @@ public class WorkspaceMapping {
         return mapping != null ? mapping.getRepositoryName() : null;
     }
 
-    /**
-     * Get default workspace name.
-     *
-     * @return default name if there are no workspaces defined or there is no workspace present with name "default",
-     *         otherwise return same name as repository name.
-     */
-    public String getDefaultWorkspace(String repositoryId) {
-        RepositoryDefinition mapping = getRepositoryDefinition(repositoryId);
-        if (mapping == null) {
-            return DEFAULT_WORKSPACE_NAME;
-        }
-        Collection<String> workspaces = mapping.getWorkspaces();
-        if (workspaces.contains(getRepositoryName(repositoryId))) {
-            return repositoryId;
-        }
-        return DEFAULT_WORKSPACE_NAME;
+    public boolean hasRepository(String repositoryId) {
+        return repositoryDefinitions.containsKey(repositoryId);
     }
 
-    public void addRepositoryToLookup(String repositoryId, Repository repository) {
+    public Collection<WorkspaceMappingDefinition> getWorkspaceMappings() {
+        return workspaceMappingDefinitions.values();
+    }
+
+    public void setRepository(String repositoryId, Repository repository) {
         repositories.put(repositoryId, repository);
     }
 
-    public void addProviderToLookup(String repositoryId, Provider provider) {
+    public void setRepositoryProvider(String repositoryId, Provider provider) {
         providers.put(repositoryId, provider);
     }
 
@@ -180,7 +166,7 @@ public class WorkspaceMapping {
     /**
      * Returns repository provider specified by the <code>repositoryID</code> as configured in repository config.
      */
-    public Provider getProvider(String repositoryId) {
+    public Provider getRepositoryProvider(String repositoryId) {
         Provider provider = providers.get(repositoryId);
         if (provider == null) {
             final String s = "Failed to retrieve repository provider '" + repositoryId + "'. Your Magnolia instance might not have been initialized properly.";
@@ -192,13 +178,5 @@ public class WorkspaceMapping {
 
     public Iterator<Provider> getRepositoryProviders() {
         return providers.values().iterator();
-    }
-
-    public boolean hasRepository(String repositoryId) {
-        return repositoryDefinitions.containsKey(repositoryId);
-    }
-
-    public Collection<WorkspaceMappingDefinition> getWorkspaceMappings() {
-        return workspaceMappingDefinitions.values();
     }
 }

@@ -39,6 +39,7 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -67,6 +68,7 @@ public class ContentRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void testUnknownRepositoryShouldAlsoYieldMeaningfulExceptionMessageForRepositoryProviders() {
         try {
             ContentRepository.getRepositoryProvider("dummy");
