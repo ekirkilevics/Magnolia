@@ -75,48 +75,6 @@ public class TemplatingFunctions {
         return content == null ? null : new ContentMap(content);
     }
 
-    /**
-     * Create link for the Node identified by nodeIdentifier in the specified workspace.
-     */
-    public String link(String workspace, String nodeIdentifier) {
-        try {
-            return LinkUtil.createLink(workspace, nodeIdentifier);
-        } catch (RepositoryException e) {
-            return null;
-        }
-    }
-
-    /**
-     * FIXME Add a LinkUtil.createLink(Property property).... Dirty Hack
-     */
-    public String link(Property property) {
-        try {
-            Node parentNode = null;
-            String propertyName = null;
-            if (property.getType() == PropertyType.BINARY) {
-                parentNode = property.getParent().getParent();
-                propertyName = property.getParent().getName();
-            } else {
-                parentNode = property.getParent();
-                propertyName = property.getName();
-            }
-            NodeData equivNodeData = ContentUtil.asContent(parentNode).getNodeData(propertyName);
-            return LinkUtil.createLink(equivNodeData);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    // TODO fgrilli: LinkUtil needs to be Node capable and not only Content. Switch to node based impl when SCRUM-242
-    // will be done.
-    public String link(Node content) {
-        return content == null ? null : LinkUtil.createLink(ContentUtil.asContent(content));
-    }
-
-    public String link(ContentMap contentMap) throws RepositoryException {
-        return contentMap == null ? null : this.link(asJCRNode(contentMap));
-    }
-
     public List<Node> children(Node content) throws RepositoryException {
         return content == null ? null : asNodeList(NodeUtil.getNodes(content, NodeUtil.EXCLUDE_META_DATA_FILTER));
     }
@@ -125,54 +83,12 @@ public class TemplatingFunctions {
         return content == null ? null : asNodeList(NodeUtil.getNodes(content, nodeTypeName));
     }
 
-    // TODO fgrilli: should we unwrap children?
-    protected List<Node> asNodeList(Iterable<Node> nodes) {
-        List<Node> childList = new ArrayList<Node>();
-        for (Node child : nodes) {
-            childList.add(child);
-        }
-        return childList;
-    }
-
     public List<ContentMap> children(ContentMap content) throws RepositoryException {
-        return content == null ? null : asContentMapList(NodeUtil.getNodes(asJCRNode(content),
-                NodeUtil.EXCLUDE_META_DATA_FILTER));
+        return content == null ? null : asContentMapList(NodeUtil.getNodes(asJCRNode(content), NodeUtil.EXCLUDE_META_DATA_FILTER));
     }
 
     public List<ContentMap> children(ContentMap content, String nodeTypeName) throws RepositoryException {
         return content == null ? null : asContentMapList(NodeUtil.getNodes(asJCRNode(content), nodeTypeName));
-    }
-
-    // TODO fgrilli: should we unwrap children?
-    protected List<ContentMap> asContentMapList(Iterable<Node> nodes) {
-        List<ContentMap> childList = new ArrayList<ContentMap>();
-        for (Node child : nodes) {
-            childList.add(new ContentMap(child));
-        }
-        return childList;
-    }
-
-    public ContentMap parent(ContentMap contentMap) throws RepositoryException {
-        return contentMap == null ? null : asContentMap(this.parent(contentMap.getJCRNode()));
-    }
-
-    public ContentMap parent(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
-        return contentMap == null ? null : asContentMap(this.parent(contentMap.getJCRNode(), nodeTypeName));
-    }
-
-    /**
-     * Returns the page node of the passed node. If the passed Node is a page, the passed node will be returned. If the
-     * passed Node has no parent page at all, null is returned.
-     *
-     * @param content
-     * @return returns the page node of the passed content node.
-     * @throws RepositoryException
-     */
-    public Node page(Node content) throws RepositoryException {
-        if (content.isNodeType(MgnlNodeType.NT_PAGE)) {
-            return content;
-        }
-        return parent(content, MgnlNodeType.NT_PAGE);
     }
 
     public ContentMap root(ContentMap contentMap) throws RepositoryException {
@@ -181,6 +97,39 @@ public class TemplatingFunctions {
 
     public ContentMap root(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
         return contentMap == null ? null : asContentMap(this.root(contentMap.getJCRNode(), nodeTypeName));
+    }
+
+    public Node root(Node content) throws RepositoryException {
+        return this.root(content, null);
+    }
+
+    public Node root(Node content, String nodeTypeName) throws RepositoryException {
+        if (content == null) {
+            return null;
+        }
+        if (nodeTypeName == null) {
+            return (Node) content.getAncestor(0);
+        }
+        if (isRoot(content) && content.isNodeType(nodeTypeName)) {
+            return content;
+        }
+
+        Node parentNode = this.parent(content, nodeTypeName);
+        if (parentNode == null) {
+            return null;
+        }
+        while (!parentNode.isNodeType(nodeTypeName) && parentNode != null) {
+            parentNode = this.parent(parentNode, nodeTypeName);
+        }
+        return parentNode;
+    }
+
+    public ContentMap parent(ContentMap contentMap) throws RepositoryException {
+        return contentMap == null ? null : asContentMap(this.parent(contentMap.getJCRNode()));
+    }
+
+    public ContentMap parent(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
+        return contentMap == null ? null : asContentMap(this.parent(contentMap.getJCRNode(), nodeTypeName));
     }
 
     public Node parent(Node content) throws RepositoryException {
@@ -207,29 +156,34 @@ public class TemplatingFunctions {
         return parent;
     }
 
-    public Node root(Node content) throws RepositoryException {
-        return this.root(content, null);
+    /**
+     * Returns the page's {@link ContentMap} of the passed {@link ContentMap}. If the passed {@link ContentMap} represents a page, the passed {@link ContentMap} will be returned.
+     * If the passed {@link ContentMap} has no parent page at all, null is returned.
+     *
+     * @param content the {@link ContentMap} to get the page's {@link ContentMap} from.
+     * @return returns the page {@link ContentMap} of the passed content {@link ContentMap}.
+     * @throws RepositoryException
+     */
+    public ContentMap page(ContentMap content) throws RepositoryException {
+        return content == null ? null : asContentMap(page(content.getJCRNode()));
     }
 
-    public Node root(Node content, String nodeTypeName) throws RepositoryException {
+    /**
+     * Returns the page {@link Node} of the passed node. If the passed {@link Node} is a page, the passed {@link Node} will be returned.
+     * If the passed Node has no parent page at all, null is returned.
+     *
+     * @param content the {@link Node} to get the page from.
+     * @return returns the page {@link Node} of the passed content {@link Node}.
+     * @throws RepositoryException
+     */
+    public Node page(Node content) throws RepositoryException {
         if (content == null) {
             return null;
         }
-        if (nodeTypeName == null) {
-            return (Node) content.getAncestor(0);
-        }
-        if (isRoot(content) && content.isNodeType(nodeTypeName)) {
+        if (content.isNodeType(MgnlNodeType.NT_PAGE)) {
             return content;
         }
-
-        Node parentNode = this.parent(content, nodeTypeName);
-        if (parentNode == null) {
-            return null;
-        }
-        while (!parentNode.isNodeType(nodeTypeName) && parentNode != null) {
-            parentNode = this.parent(parentNode, nodeTypeName);
-        }
-        return parentNode;
+        return parent(content, MgnlNodeType.NT_PAGE);
     }
 
     public List<ContentMap> ancestors(ContentMap contentMap) throws RepositoryException {
@@ -352,14 +306,6 @@ public class TemplatingFunctions {
 
     }
 
-    public boolean isFromCurrentPage(Node content) {
-        return !isInherited(content);
-    }
-
-    public boolean isFromCurrentPage(ContentMap content) {
-        return isFromCurrentPage(asJCRNode(content));
-    }
-
     public boolean isInherited(Node content) {
         if (content instanceof InheritanceNodeWrapper) {
             return ((InheritanceNodeWrapper) content).isInherited();
@@ -371,18 +317,62 @@ public class TemplatingFunctions {
         return isInherited(asJCRNode(content));
     }
 
-    private boolean isRoot(Node content) throws RepositoryException {
-        return content.getDepth() == 0;
+    public boolean isFromCurrentPage(Node content) {
+        return !isInherited(content);
+    }
+
+    public boolean isFromCurrentPage(ContentMap content) {
+        return isFromCurrentPage(asJCRNode(content));
+    }
+
+    /**
+     * Create link for the Node identified by nodeIdentifier in the specified workspace.
+     */
+    public String link(String workspace, String nodeIdentifier) {
+        try {
+            return LinkUtil.createLink(workspace, nodeIdentifier);
+        } catch (RepositoryException e) {
+            return null;
+        }
+    }
+
+    /**
+     * FIXME Add a LinkUtil.createLink(Property property).... Dirty Hack
+     */
+    public String link(Property property) {
+        try {
+            Node parentNode = null;
+            String propertyName = null;
+            if (property.getType() == PropertyType.BINARY) {
+                parentNode = property.getParent().getParent();
+                propertyName = property.getParent().getName();
+            } else {
+                parentNode = property.getParent();
+                propertyName = property.getName();
+            }
+            NodeData equivNodeData = ContentUtil.asContent(parentNode).getNodeData(propertyName);
+            return LinkUtil.createLink(equivNodeData);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    // TODO fgrilli: LinkUtil needs to be Node capable and not only Content. Switch to node based impl when SCRUM-242
+    // will be done.
+    public String link(Node content) {
+        return content == null ? null : LinkUtil.createLink(ContentUtil.asContent(content));
+    }
+
+    public String link(ContentMap contentMap) throws RepositoryException {
+        return contentMap == null ? null : this.link(asJCRNode(contentMap));
     }
 
     /**
      * Returns an external link prepended with <code>http://</code> in case the protocol is missing or an empty String
      * if the link does not exist.
      *
-     * @param content
-     *            The node where the link property is stored on.
-     * @param linkPropertyName
-     *            The property where the link value is stored in.
+     * @param content The node where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
      * @return The link prepended with <code>http://</code>
      */
     public String externalLink(Node content, String linkPropertyName) {
@@ -400,10 +390,8 @@ public class TemplatingFunctions {
      * Returns an external link prepended with <code>http://</code> in case the protocol is missing or an empty String
      * if the link does not exist.
      *
-     * @param content
-     *            The node's map representation where the link property is stored on.
-     * @param linkPropertyName
-     *            The property where the link value is stored in.
+     * @param content The node's map representation where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
      * @return The link prepended with <code>http://</code>
      */
     public String externalLink(ContentMap content, String linkPropertyName) {
@@ -414,12 +402,9 @@ public class TemplatingFunctions {
      * Return a link title based on the @param linkTitlePropertyName. When property @param linkTitlePropertyName is
      * empty or null, the link itself is provided as the linkTitle (prepended with <code>http://</code>).
      *
-     * @param content
-     *            The node where the link property is stored on.
-     * @param linkPropertyName
-     *            The property where the link value is stored in.
-     * @param linkTitlePropertyName
-     *            The property where the link title value is stored
+     * @param content The node where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
+     * @param linkTitlePropertyName The property where the link title value is stored
      * @return the resolved link title value
      */
     public String externalLinkTitle(Node content, String linkPropertyName, String linkTitlePropertyName) {
@@ -434,38 +419,13 @@ public class TemplatingFunctions {
      * Return a link title based on the @param linkTitlePropertyName. When property @param linkTitlePropertyName is
      * empty or null, the link itself is provided as the linkTitle (prepended with <code>http://</code>).
      *
-     * @param content
-     *            The node where the link property is stored on.
-     * @param linkPropertyName
-     *            The property where the link value is stored in.
-     * @param linkTitlePropertyName
-     *            The property where the link title value is stored
+     * @param content The node where the link property is stored on.
+     * @param linkPropertyName The property where the link value is stored in.
+     * @param linkTitlePropertyName The property where the link title value is stored
      * @return the resolved link title value
      */
     public String externalLinkTitle(ContentMap content, String linkPropertyName, String linkTitlePropertyName) {
         return externalLinkTitle(asJCRNode(content), linkPropertyName, linkTitlePropertyName);
-    }
-
-    public List<ContentMap> asContentMapList(Collection<Node> nodeList) {
-        if (nodeList != null) {
-            List<ContentMap> contentMapList = new ArrayList<ContentMap>();
-            for (Node node : nodeList) {
-                contentMapList.add(asContentMap(node));
-            }
-            return contentMapList;
-        }
-        return null;
-    }
-
-    public List<Node> asNodeList(Collection<ContentMap> contentMapList) {
-        if (contentMapList != null) {
-            List<Node> nodeList = new ArrayList<Node>();
-            for (ContentMap node : contentMapList) {
-                nodeList.add(node.getJCRNode());
-            }
-            return nodeList;
-        }
-        return null;
     }
 
     public boolean isEditMode() {
@@ -486,19 +446,8 @@ public class TemplatingFunctions {
     }
 
     /**
-     * Checks if passed string has a <code>http://</code> protocol.
-     *
-     * @param link
-     *            The link to check
-     * @return If @param link contains a <code>http://</code> protocol
-     */
-    private boolean hasProtocol(String link) {
-        return link != null && link.contains("://");
-    }
-
-    /**
-     * Util method to create html attributes <code>name="value"</code>. If the value is empty an empty string will be
-     * returned. This is mainlly helpful to avoid empty attributes.
+     * Util method to create html attributes <code>name="value"</code>. If the value is empty an empty string will be returned.
+     * This is mainly helpful to avoid empty attributes.
      */
     public String createAttribute(String name, String value) {
         value = StringUtils.trim(value);
@@ -524,7 +473,7 @@ public class TemplatingFunctions {
      * from the website repository.
      */
     public Node content(String path){
-        return content(ContentRepository.WEBSITE,path);
+        return content(ContentRepository.WEBSITE, path);
     }
 
     /**
@@ -533,6 +482,66 @@ public class TemplatingFunctions {
      */
     public Node content(String repository, String path){
         return SessionUtil.getNode(repository, path);
+    }
+
+    public List<ContentMap> asContentMapList(Collection<Node> nodeList) {
+        if (nodeList != null) {
+            List<ContentMap> contentMapList = new ArrayList<ContentMap>();
+            for (Node node : nodeList) {
+                contentMapList.add(asContentMap(node));
+            }
+            return contentMapList;
+        }
+        return null;
+    }
+
+    public List<Node> asNodeList(Collection<ContentMap> contentMapList) {
+        if (contentMapList != null) {
+            List<Node> nodeList = new ArrayList<Node>();
+            for (ContentMap node : contentMapList) {
+                nodeList.add(node.getJCRNode());
+            }
+            return nodeList;
+        }
+        return null;
+    }
+
+    // TODO fgrilli: should we unwrap children?
+    protected List<Node> asNodeList(Iterable<Node> nodes) {
+        List<Node> childList = new ArrayList<Node>();
+        for (Node child : nodes) {
+            childList.add(child);
+        }
+        return childList;
+    }
+
+    // TODO fgrilli: should we unwrap children?
+    protected List<ContentMap> asContentMapList(Iterable<Node> nodes) {
+        List<ContentMap> childList = new ArrayList<ContentMap>();
+        for (Node child : nodes) {
+            childList.add(new ContentMap(child));
+        }
+        return childList;
+    }
+
+    /**
+     * Checks if passed string has a <code>http://</code> protocol.
+     *
+     * @param link The link to check
+     * @return If @param link contains a <code>http://</code> protocol
+     */
+    private boolean hasProtocol(String link) {
+        return link != null && link.contains("://");
+    }
+
+    /**
+     * Checks if the passed {@link Node} is the jcr root '/' of the workspace.
+     * @param content {@link Node} to check if its root.
+     * @return if @param content is the jcr workspace root.
+     * @throws RepositoryException
+     */
+    private boolean isRoot(Node content) throws RepositoryException {
+        return content.getDepth() == 0;
     }
 
 }
