@@ -268,28 +268,29 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
      * therefore we rely on name and optional attributes on having the same values in area and edit tags.
      */
     private boolean isAreaEditBar(Element edit, NodeList<Element> areas) {
-        String editContent = edit.getAttribute("content");
-        int i = editContent.lastIndexOf("/");
-        String match = null;
-        if(i != -1) {
-            match = editContent.substring(0, i);
-        } else {
-            //try with name and optional
-            match = edit.getAttribute("name");
-        }
-        if(isEmpty(match)) {
-            return false;
-        }
+
+        String content = edit.getAttribute("content");
+        String name = edit.getAttribute("name");
+        boolean optional = Boolean.valueOf(edit.getAttribute("optional"));
+        String bestMatch = optional ? name : content;
 
         for(int j=0; j < areas.getLength(); j++) {
 
             Element area = areas.getItem(j);
+
             String areaContent = area.getAttribute("content");
             String areaName = area.getAttribute("name");
-            boolean optional = Boolean.valueOf(area.getAttribute("optional"));
+            boolean areaOptional = Boolean.valueOf(area.getAttribute("optional"));
+            boolean created = Boolean.valueOf(area.getAttribute("created"));
 
-            if(match.equals(areaContent) || (optional && match.equals(areaName))) {
-                GWT.log("element is an area edit bar");
+            String areaMatch = areaContent + (isNotEmpty(areaName) ? "/" + areaName : "");
+
+            if(areaOptional && !created) {
+                areaMatch = areaName;
+            }
+
+            if(bestMatch.equals(areaMatch)) {
+                GWT.log("element is an area edit bar (matched with [" + areaMatch + "])");
                 return true;
             }
         }
@@ -309,7 +310,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         //if area is optional and not yet created, best match is its name, else is content + name
         String bestMatch = optional && !created ? name : content + (isNotEmpty(name) ? "/" + name : "");
 
-        GWT.log("Best match for "+ (optional ? "optional" : "required ") + " area and edit bar is " + bestMatch);
+        GWT.log("Best match for "+ (optional ? "optional" : "required") + " area and edit bar is [" + bestMatch + "]");
 
         for(int i=0; i < edits.getLength(); i++){
             Element edit = edits.getItem(i);
