@@ -71,7 +71,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     public static final String SELECTION_TYPE_COMPONENT_IN_SINGLE = "COMPONENT_IN_SINGLE";
 
     private boolean pageEditBarAlreadyProcessed = false;
-    private AbstractBarWidget selectedBar;
     private String locale;
 
     @Override
