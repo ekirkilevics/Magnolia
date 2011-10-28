@@ -6,7 +6,7 @@ Much less flexible. Needing cmsfn.page back again? --]
 [#macro renderNavigation pageNode maxDepth depth=0 ]
 
     [#-- Is top page of the site structure -> rendering the top page on same navigation level as its sub-pages--]
-    [#assign isRootPage = (pageNode.@path==cmsfn.root(content, "mgnl:content").@path)!false]
+    [#assign isRootPage = (pageNode.@path==cmsfn.page(content).@path)!false]
     [#if isRootPage && depth == 0]
         [#if pageNode.@path != content.@path]
             <li>
@@ -26,8 +26,8 @@ Much less flexible. Needing cmsfn.page back again? --]
         [#list childPages as childPage]
 
             [#-- will need something again as cmsfn.page(content) [#assign isSelected = (childPage.@path == cmsfn.parent(content, "mgnl:content").@path)!false] --]
-            [#assign isSelected = (childPage.@path == content.@path)!false]
-            [#assign isSelectedParent = (childPage.@path == cmsfn.parent(content).@path)!false]
+            [#assign isSelected = (childPage.@path == cmsfn.page(content).@path)!false]
+            [#assign isSelectedParent = (childPage.@path == cmsfn.parent(content, "mgnl:page").@path)!false]
 
             [#if isSelected || isSelectedParent]
                 <li class="selected">

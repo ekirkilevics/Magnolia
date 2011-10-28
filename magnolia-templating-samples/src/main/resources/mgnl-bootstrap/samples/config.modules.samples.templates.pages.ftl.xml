@@ -25,7 +25,7 @@
     <sv:value>freemarker</sv:value>
   </sv:property>
   <sv:property sv:name="templateScript" sv:type="String">
-    <sv:value>/samples/templates/main.ftl</sv:value>
+    <sv:value>/samples/pages/main.ftl</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
     <sv:value>Samples main FTL template</sv:value>
