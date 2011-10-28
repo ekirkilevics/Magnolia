@@ -115,10 +115,7 @@ public class TemplatingFunctions {
         }
 
         Node parentNode = this.parent(content, nodeTypeName);
-        if (parentNode == null) {
-            return null;
-        }
-        while (!parentNode.isNodeType(nodeTypeName) && parentNode != null) {
+        while (parent(parentNode, nodeTypeName) != null) {
             parentNode = this.parent(parentNode, nodeTypeName);
         }
         return parentNode;
