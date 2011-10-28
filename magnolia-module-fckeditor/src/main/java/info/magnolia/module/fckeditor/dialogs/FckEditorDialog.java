@@ -36,23 +36,24 @@ package info.magnolia.module.fckeditor.dialogs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.dialog.DialogBox;
-import info.magnolia.cms.link.LinkHelper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.link.EditorLinkTransformer;
 import info.magnolia.link.LinkException;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.link.LinkUtil;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.regex.Matcher;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.regex.Matcher;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -481,7 +482,7 @@ public class FckEditorDialog extends DialogBox {
             }
 
             // this section is for backward compatibility - see MAGNOLIA-2088
-            final Matcher matcher = LinkHelper.LINK_OR_IMAGE_PATTERN.matcher(value);
+            final Matcher matcher = LinkUtil.LINK_OR_IMAGE_PATTERN.matcher(value);
             final StringBuffer res = new StringBuffer();
             while (matcher.find()) {
                 final String src = matcher.group(4);
