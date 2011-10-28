@@ -40,8 +40,8 @@ import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
  * Demonstrates how to extend the default template to add some custom parameters.
  * You can also add parameters without having to create a custom template class, by
  * creating a content node <code>'parameters'</code> in the template definition
- * <code>(modules/samples/templates/mysample/parameters)</code> which you will be able to access it from
- * the template definition like <code>def.nameofparam</code>.
+ * <code>(modules/samples/templates/pages/mysamplePage/parameters)</code> which you will be able to access it from
+ * the template definition like <code>def.parameters.nameOfParam</code>.
  *
  * @author tmiyar
  */
