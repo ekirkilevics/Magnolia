@@ -77,7 +77,11 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     @Override
     public void onModuleLoad() {
         Element documentElement = Document.get().getDocumentElement();
-        detectCmsTag(documentElement, null);
+        final NodeList<Element> edits = documentElement.getOwnerDocument().getElementsByTagName(MARKER_EDIT);
+        final NodeList<Element> areas = documentElement.getOwnerDocument().getElementsByTagName(MARKER_AREA);
+        GWT.log("found "+ edits.getLength() + " cms:edit tags");
+        GWT.log("found "+ areas.getLength() + " cms:area tags");
+        detectCmsTag(documentElement, null, edits, areas);
         locale = detectCurrentLocale(documentElement);
     }
 
@@ -218,40 +222,42 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         return locale;
     }
 
-    private void detectCmsTag(Element element, AreaBarWidget parentBar) {
-        final NodeList<Element> edits = element.getOwnerDocument().getElementsByTagName(MARKER_EDIT);
-        final NodeList<Element> areas = element.getOwnerDocument().getElementsByTagName(MARKER_AREA);
-
+    private void detectCmsTag(Element element, AreaBarWidget parentBar, NodeList<Element> edits, NodeList<Element> areas ) {
         for (int i = 0; i < element.getChildCount(); i++) {
             Node childNode = element.getChild(i);
             if (childNode.getNodeType() == Element.ELEMENT_NODE) {
                 Element child = (Element) childNode;
                 if (child.getTagName().equalsIgnoreCase(MARKER_EDIT)) {
+                    GWT.log("processing element " + child);
                     //We assume the first cms:edit we encounter in DOM is the page edit bar.
-                    if(!pageEditBarAlreadyProcessed){
+                    if(!pageEditBarAlreadyProcessed) {
+                        GWT.log("element was detected as page edit bar. Injecting it...");
                         PageBarWidget pageBarWidget = new PageBarWidget(this, child);
                         pageBarWidget.attach(child);
                         pageEditBarAlreadyProcessed = true;
 
                         if(pageBarWidget.isPreviewMode()) {
                             //we just need the preview bar here
+                            GWT.log("We're in preview mode, stop processing DOM.");
                             break;
                         }
                         //avoid processing cms:edit marker twice if this is an area
                     } else if(!isAreaEditBar(child, areas)) {
+                        GWT.log("element is a plain edit bar. Injecting it...");
                         EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
                         editBarWidget.attach(child);
                     }
                 } else if (child.getTagName().equalsIgnoreCase(MARKER_AREA)) {
+                    GWT.log("processing element " + child);
                     Element edit = findCmsEditMarkerForArea(child, edits);
                     if(edit != null) {
+                        GWT.log("element was detected as area edit bar. Injecting it...");
                         AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, child);
                         areaBarWidget.attach(edit);
                         parentBar = areaBarWidget;
                     }
                 }
-
-                detectCmsTag(child, parentBar);
+                detectCmsTag(child, parentBar, edits, areas);
             }
         }
     }
@@ -262,7 +268,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
      * therefore we rely on name and optional attributes on having the same values in area and edit tags.
      */
     private boolean isAreaEditBar(Element edit, NodeList<Element> areas) {
-
         String editContent = edit.getAttribute("content");
         int i = editContent.lastIndexOf("/");
         String match = null;
@@ -272,11 +277,9 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             //try with name and optional
             match = edit.getAttribute("name");
         }
-        if(match == null || match.length() == 0) {
+        if(isEmpty(match)) {
             return false;
         }
-        //GWT only shows these messages in dev mode.
-        GWT.log("String to match area is " + match);
 
         for(int j=0; j < areas.getLength(); j++) {
 
@@ -286,7 +289,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             boolean optional = Boolean.valueOf(area.getAttribute("optional"));
 
             if(match.equals(areaContent) || (optional && match.equals(areaName))) {
-                GWT.log("found match with element " + area);
+                GWT.log("element is an area edit bar");
                 return true;
             }
         }
@@ -302,23 +305,33 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         String content = area.getAttribute("content");
         String name = area.getAttribute("name");
         boolean optional = Boolean.valueOf(area.getAttribute("optional"));
+        boolean created = Boolean.valueOf(area.getAttribute("created"));
+        //if area is optional and not yet created, best match is its name, else is content + name
+        String bestMatch = optional && !created ? name : content + (isNotEmpty(name) ? "/" + name : "");
 
-        String bestMatch = content + (name != null ? ("/" + name) : "");
-        //GWT shows these messages only in dev mode.
-        GWT.log("String to match edit bar is " + bestMatch + ". Or if area is optional try with name [" + name +"]");
+        GWT.log("Best match for "+ (optional ? "optional" : "required ") + " area and edit bar is " + bestMatch);
 
         for(int i=0; i < edits.getLength(); i++){
             Element edit = edits.getItem(i);
-            String editContent = edit.getAttribute("content");
+            String toMatch = edit.getAttribute("content");
             String editName = edit.getAttribute("name");
+            toMatch += (isNotEmpty(editName) ? "/" + editName : "");
             boolean editOptional = Boolean.valueOf(edit.getAttribute("optional"));
 
-            if(bestMatch.equals(editContent) || (optional && editOptional &&  name.equals(editName))) {
+            if(toMatch.equals(bestMatch) || (optional && editOptional &&  bestMatch.equals(editName))) {
                 GWT.log("found match with element " + edit);
                 return edit;
             }
         }
+        GWT.log("No match found. Area won't have an edit bar associated.");
         return null;
     }
 
+    private boolean isNotEmpty(String string) {
+        return !isEmpty(string);
+    }
+
+    private boolean isEmpty(String string) {
+        return string == null || string.length() == 0;
+    }
 }
