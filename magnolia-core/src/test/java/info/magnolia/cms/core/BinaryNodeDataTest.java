@@ -33,9 +33,6 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.core.BinaryNodeData;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.test.mock.MockContent;
 

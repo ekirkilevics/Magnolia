@@ -142,7 +142,7 @@ public abstract class AbstractContext implements Context, Serializable {
 
     @Override
     public Session getJCRSession(String workspaceName) throws LoginException, RepositoryException {
-    	return getRepositoryStrategy().getSession(workspaceName);
+        return getRepositoryStrategy().getSession(workspaceName);
     }
 
     /**
@@ -215,10 +215,10 @@ public abstract class AbstractContext implements Context, Serializable {
     @Override
     public HierarchyManager getHierarchyManager(String workspaceName) {
         try {
-			return HierarchyManagerUtil.asHierarchyManager(getJCRSession(workspaceName));
-		} catch (RepositoryException e) {
-			throw new RuntimeRepositoryException(e);
-		}
+            return HierarchyManagerUtil.asHierarchyManager(getJCRSession(workspaceName));
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     @Override

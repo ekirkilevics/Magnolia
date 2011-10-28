@@ -135,11 +135,11 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     @Override
     public QueryManager getQueryManager() {
-    	try {
-			return new QueryManagerImpl(getJcrSession().getWorkspace().getQueryManager(), this);
-		} catch (RepositoryException e) {
-			throw new RuntimeRepositoryException(e);
-		}
+        try {
+            return new QueryManagerImpl(getJcrSession().getWorkspace().getQueryManager(), this);
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     private Node getRootNode() throws RepositoryException {

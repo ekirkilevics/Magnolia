@@ -43,8 +43,8 @@ import info.magnolia.cms.core.HierarchyManager;
  */
 public class HierarchyManagerUtil {
 
-	public static HierarchyManager asHierarchyManager(Session session) {
-		return new DefaultHierarchyManager(session);
-	}
+    public static HierarchyManager asHierarchyManager(Session session) {
+        return new DefaultHierarchyManager(session);
+    }
 
 }
