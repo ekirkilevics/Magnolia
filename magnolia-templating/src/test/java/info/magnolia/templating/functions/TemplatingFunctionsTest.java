@@ -44,7 +44,6 @@ import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkTransformerManager;
-import info.magnolia.nodebuilder.NodeOperationException;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.MockWebContext;
@@ -1540,7 +1539,7 @@ public class TemplatingFunctionsTest {
     }
 
     /**
-     * Checks all mandatory {@link NodeOperationException} values. None should be null and all values should equal.
+     * Checks all mandatory {@link info.magnolia.nodebuilder.NodeOperationException} values. None should be null and all values should equal.
      *
      * @param expected {@link Node} to compare with @param actual {@link Node}
      * @param actual {@link Node} to compare with @param expected {@link Node}
