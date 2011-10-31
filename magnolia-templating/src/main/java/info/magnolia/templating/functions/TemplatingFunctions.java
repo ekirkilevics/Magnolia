@@ -335,7 +335,8 @@ public class TemplatingFunctions {
     }
 
     /**
-     * FIXME Add a LinkUtil.createLink(Property property).... Dirty Hack
+     * FIXME Add a LinkUtil.createLink(Property property).... Dirty Hack.
+     * FIXME: Should be changed when a decision is made on SCRUM-525.
      */
     public String link(Property property) {
         try {
