@@ -53,6 +53,7 @@ import info.magnolia.test.mock.jcr.MockSession;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -1228,6 +1229,25 @@ public class TemplatingFunctionsTest {
 
         // THEN
         assertEquals(CONTEXT_PATH + childPage.getPath()+"/"+name, resultLink);
+    }
+
+    @Test
+    public void testLanguage() throws RepositoryException {
+        // GIVEN
+        TemplatingFunctions functions = new TemplatingFunctions();
+        String langue = "fr";
+        MockWebContext context = new MockWebContext();
+        context.setContextPath(CONTEXT_PATH);
+        Locale locale = new Locale(langue);
+        context.setLocale(locale);
+        MgnlContext.setInstance(context);
+
+
+        // WHEN
+        String langueRes = functions.language();
+
+        // THEN
+        assertEquals(langue,langueRes);
     }
 
     @Test

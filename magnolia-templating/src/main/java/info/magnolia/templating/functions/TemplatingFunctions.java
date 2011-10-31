@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
@@ -364,6 +365,13 @@ public class TemplatingFunctions {
         return contentMap == null ? null : this.link(asJCRNode(contentMap));
     }
 
+    /**
+     * Get the language used currently.
+     * @return
+     */
+    public String language(){
+        return I18nContentSupportFactory.getI18nSupport().getLocale().toString();
+    }
     /**
      * Returns an external link prepended with <code>http://</code> in case the protocol is missing or an empty String
      * if the link does not exist.
