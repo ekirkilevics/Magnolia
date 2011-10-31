@@ -234,6 +234,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         );
 
         register(DeltaBuilder.update("4.5", "")
+                .addCondition(new SystemTmpDirCondition())
                 .addTask(new RenameACLNodesTask())
         );
     }
