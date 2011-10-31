@@ -98,7 +98,7 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
 
             try {
                 if(parentNode != null && parentNode.hasNode(name)) {
-                    log.info("path {} was already found in repository. No need to create it.", parentNode.getPath() + "/" + name);
+                    log.debug("path {} was already found in repository. No need to create it.", parentNode.getPath() + "/" + name);
                     break;
                 }
             } catch (RepositoryException re) {
