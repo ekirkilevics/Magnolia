@@ -49,12 +49,14 @@ import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFormatException;
 
@@ -121,11 +123,11 @@ public class CopyGeneratorTest {
         //THEN
         Node newNode = session.getNode("/foo/autogen-foo");
         assertNodeAndMetaData(newNode, null, USER_NAME);
-        assertPropertyEquals(newNode, "anotherProp", "some value");
+        assertPropertyEquals(newNode, "anotherProp", "some value", PropertyType.STRING);
 
         Node secondNode = session.getNode("/foo/same-level-autogen");
         assertNodeAndMetaData(secondNode, TEMPLATE_ID_VALUE, USER_NAME);
-        assertPropertyEquals(secondNode, "someProp", "a different value");
+        assertPropertyEquals(secondNode, "someProp", "a different value", PropertyType.STRING);
     }
 
     /*
@@ -168,11 +170,11 @@ public class CopyGeneratorTest {
         //THEN
         Node newNode = session.getNode("/foo/autogen-foo");
         assertNodeAndMetaData(newNode, TEMPLATE_ID_VALUE, USER_NAME);
-        assertPropertyEquals(newNode, "anotherProp", "some value");
+        assertPropertyEquals(newNode, "anotherProp", "some value", PropertyType.STRING);
 
         Node secondNode = session.getNode("/foo/autogen-foo/nested-autogen");
         assertNodeAndMetaData(secondNode, TEMPLATE_ID_VALUE, USER_NAME);
-        assertPropertyEquals(secondNode, "someProp", "a different value");
+        assertPropertyEquals(secondNode, "someProp", "a different value", PropertyType.STRING);
 
         Node secondSubNode = session.getNode("/foo/autogen-foo/nested-autogen/nestedSubNode-autogen");
         assertNodeAndMetaData(secondSubNode, TEMPLATE_ID_VALUE, USER_NAME);
@@ -278,19 +280,51 @@ public class CopyGeneratorTest {
 
         //THEN
         Node newNode = session.getNode("/foo/autogen-foo");
-        assertPropertyEquals(newNode, "someProp", "original value");
+        assertPropertyEquals(newNode, "someProp", "original value", PropertyType.STRING);
 
 
         //GIVEN
         newNode.getProperty("someProp").setValue("a different value");
         newNode.getSession().save();
-        assertPropertyEquals(newNode, "someProp", "a different value");
+        assertPropertyEquals(newNode, "someProp", "a different value", PropertyType.STRING);
 
         //WHEN
         new CopyGenerator(parent).generate(config);
 
         //THEN
-        assertPropertyEquals(newNode, "someProp", "a different value");
+        assertPropertyEquals(newNode, "someProp", "a different value", PropertyType.STRING);
+
+    }
+
+    @Test
+    public void testCreateDifferentPropertyTypes() throws Exception{
+        //GIVEN
+        Node parent = session.getNode("/foo");
+        AutoGenerationConfiguration config = mock(AutoGenerationConfiguration.class);
+
+        Map<String, Object> content = new HashMap<String, Object>();
+        Map<String, Object> nodeProps = new HashMap<String, Object>();
+        nodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nodeProps.put(TEMPLATE_ID, null);
+        nodeProps.put("stringProp", "a string");
+        nodeProps.put("booleanProp", true);
+        nodeProps.put("longProp", 100L);
+        nodeProps.put("doubleProp", 3.14d);
+        nodeProps.put("calendarProp", Calendar.getInstance());
+        content.put("autogen-foo", nodeProps);
+
+        when(config.getContent()).thenReturn(content);
+
+        //WHEN
+        new CopyGenerator(parent).generate(config);
+
+        //THEN
+        Node newNode = session.getNode("/foo/autogen-foo");
+        assertPropertyEquals(newNode, "stringProp", "a string", PropertyType.STRING);
+        assertPropertyEquals(newNode, "booleanProp", true, PropertyType.BOOLEAN);
+        assertPropertyEquals(newNode, "longProp", 100L, PropertyType.LONG);
+        assertPropertyEquals(newNode, "doubleProp", 3.14d, PropertyType.DOUBLE);
+        assertPropertyEquals(newNode, "calendarProp", null, PropertyType.DATE);
 
     }
 
@@ -309,8 +343,25 @@ public class CopyGeneratorTest {
         assertFalse(metaData.getIsActivated());*/
     }
 
-    protected void assertPropertyEquals(Node node, String relPath, String value) throws PathNotFoundException, RepositoryException, ValueFormatException {
+    protected void assertPropertyEquals(Node node, String relPath, Object value, int type) throws PathNotFoundException, RepositoryException, ValueFormatException {
         Property prop = node.getProperty(relPath);
-        assertEquals(value, prop.getString());
+        assertEquals(prop.getType(), type);
+
+        switch(type) {
+        case PropertyType.STRING:
+            assertEquals(value, prop.getValue().getString());
+            break;
+        case PropertyType.BOOLEAN:
+            assertEquals(value, prop.getValue().getBoolean());
+            break;
+        case PropertyType.LONG:
+            assertEquals(value, prop.getValue().getLong());
+            break;
+        case PropertyType.DOUBLE:
+            assertEquals(value, prop.getValue().getDouble());
+            break;
+        default:
+            //ignore for the moment
+        }
     }
 }

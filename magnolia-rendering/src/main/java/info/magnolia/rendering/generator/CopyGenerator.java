@@ -40,6 +40,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.AutoGenerationConfiguration;
 
@@ -77,6 +78,7 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
         if(autoGenerationConfig == null) {
             throw new IllegalArgumentException("Expected an instance of AutoGenerationConfiguration but got null instead");
         }
+
         createNode(parent, autoGenerationConfig.getContent());
     }
 
@@ -87,26 +89,34 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
         }
         for(Entry<String, Object> entry: content.entrySet()) {
 
-            Map<String, Object> newNodeConfig = (Map<String, Object>) entry.getValue();
+            final Map<String, Object> newNodeConfig = (Map<String, Object>) entry.getValue();
 
             if(!newNodeConfig.containsKey(NODE_TYPE)) {
                 throw new RenderException("nodeType parameter expected but not found.");
             }
-            String name = entry.getKey();
+            final String name = entry.getKey();
+
+            try {
+                if(parentNode != null && parentNode.hasNode(name)) {
+                    log.info("path {} was already found in repository. No need to create it.", parentNode.getPath() + "/" + name);
+                    break;
+                }
+            } catch (RepositoryException re) {
+                throw new RenderException(re);
+            }
+
             Node newNode = null;
 
             try {
                 newNode = NodeUtil.createPath(parentNode, name, (String)newNodeConfig.get(NODE_TYPE));
                 MetaData metaData = MetaDataUtil.getMetaData(newNode);
                 metaData.setTemplate((String)newNodeConfig.get(TEMPLATE_ID));
-                //FIXME fgrilli: metadata should be updated only when newNode.isNew() == true. Currently I cannot do this change as
-                //MockNode will throw a UOEon isNew() call.
                 MetaDataUtil.updateMetaData(newNode);
                 log.debug("creating {}", newNode.getPath());
 
                 for(Entry<String, Object> property : newNodeConfig.entrySet()) {
                     String propertyName = property.getKey();
-                    if(NODE_TYPE.equals(propertyName) || TEMPLATE_ID.equals(propertyName) || newNode.hasProperty(propertyName)) {
+                    if(NODE_TYPE.equals(propertyName) || TEMPLATE_ID.equals(propertyName)) {
                         continue;
                     }
                     //a sub content
@@ -115,7 +125,7 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
                         map.put(propertyName, property.getValue());
                         createNode(newNode, map);
                     } else {
-                        newNode.setProperty(propertyName, property.getValue().toString());
+                        PropertyUtil.setProperty(newNode, propertyName, property.getValue());
                     }
                 }
                 newNode.getSession().save();
