@@ -189,6 +189,9 @@ public final class DefaultRepositoryManager implements RepositoryManager {
      */
     @Override
     public void reload() {
+
+        // TODO what exactly is this method supposed to do?!
+
         log.info("Reloading JCR");
         init();
     }
@@ -251,20 +254,20 @@ public final class DefaultRepositoryManager implements RepositoryManager {
 
     /**
      * @param repositoryId
-     * @param workspaceId
+     * @param workspaceName
      * @throws RepositoryException
      */
     @Override
-    public void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
-        log.info("Loading workspace {}", workspaceId);
+    public void loadWorkspace(String repositoryId, String workspaceName) throws RepositoryException {
+        log.info("Loading workspace {}", workspaceName);
 
-        workspaceMapping.addWorkspaceMapping(new WorkspaceMappingDefinition(workspaceId, repositoryId, workspaceId));
+        workspaceMapping.addWorkspaceMapping(new WorkspaceMappingDefinition(workspaceName, repositoryId, workspaceName));
 
         Provider provider = getRepositoryProvider(repositoryId);
-        provider.registerWorkspace(workspaceId);
+        provider.registerWorkspace(workspaceName);
         RepositoryDefinition repositoryDefinition = workspaceMapping.getRepositoryDefinition(repositoryId);
 
-        registerNameSpacesAndNodeTypes(workspaceId, repositoryDefinition, provider);
+        registerNameSpacesAndNodeTypes(workspaceName, repositoryDefinition, provider);
     }
 
     private void registerNameSpacesAndNodeTypes(String physicalWorkspaceName, RepositoryDefinition repositoryDefinition, Provider provider) {
@@ -308,6 +311,11 @@ public final class DefaultRepositoryManager implements RepositoryManager {
     }
 
     @Override
+    public WorkspaceMappingDefinition getWorkspaceMapping(String logicalWorkspaceName) {
+        return workspaceMapping.getWorkspaceMapping(logicalWorkspaceName);
+    }
+
+    @Override
     public Iterator<String> getLogicalWorkspaceNames() {
         return workspaceMapping.getLogicalWorkspaceNames();
     }
@@ -323,23 +331,13 @@ public final class DefaultRepositoryManager implements RepositoryManager {
     }
 
     @Override
-    public String getPhysicalWorkspaceName(String logicalWorkspaceName) {
-        return workspaceMapping.getWorkspaceMapping(logicalWorkspaceName).getWorkspaceName();
-    }
-
-    @Override
-    public String getRepositoryName(String logicalWorkspaceName) {
-        return workspaceMapping.getWorkspaceMapping(logicalWorkspaceName).getRepositoryName();
-    }
-
-    @Override
     public Collection<WorkspaceMappingDefinition> getWorkspaceMappings() {
         return workspaceMapping.getWorkspaceMappings();
     }
 
     @Override
     public boolean hasRepository(String repositoryId) {
-        return workspaceMapping.hasRepository(repositoryId);
+        return workspaceMapping.getRepositoryDefinition(repositoryId) != null;
     }
 
     @Override
@@ -350,5 +348,10 @@ public final class DefaultRepositoryManager implements RepositoryManager {
     @Override
     public void addWorkspaceMapping(WorkspaceMappingDefinition mapping) {
         workspaceMapping.addWorkspaceMapping(mapping);
+    }
+
+    @Override
+    public boolean hasWorkspace(String logicalWorkspaceName) {
+        return workspaceMapping.getWorkspaceMapping(logicalWorkspaceName) != null;
     }
 }

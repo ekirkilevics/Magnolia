@@ -134,10 +134,6 @@ public class WorkspaceMapping {
         return mapping != null ? mapping.getRepositoryName() : null;
     }
 
-    public boolean hasRepository(String repositoryId) {
-        return repositoryDefinitions.containsKey(repositoryId);
-    }
-
     public Collection<WorkspaceMappingDefinition> getWorkspaceMappings() {
         return workspaceMappingDefinitions.values();
     }

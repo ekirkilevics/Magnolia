@@ -109,16 +109,16 @@ public final class ContentRepository {
     public static final String DEFAULT_WORKSPACE = "default";
 
     /**
-     * repository user.
+     * Name of the repository admin user.
      *
-     * @deprecated since 4.5 - not yet decided how it will be replaced
+     * @deprecated since 4.5 - do not use
      */
     public static String REPOSITORY_USER;
 
     /**
-     * repository default password.
+     * Password for the repository admin user.
      *
-     * @deprecated since 4.5 - not yet decided how it will be replaced
+     * @deprecated since 4.5 - do not use
      */
     public static String REPOSITORY_PSWD;
 
@@ -135,24 +135,8 @@ public final class ContentRepository {
     }
 
     /**
-     * loads all configured repository using ID as Key, as configured in repositories.xml.
+     * Loads all configured repositories.
      *
-     * <pre>
-     * &lt;Repository name="website"
-     *                id="website"
-     *                provider="info.magnolia.jackrabbit.ProviderImpl"
-     *                loadOnStartup="true" >
-     *   &lt;param name="configFile"
-     *             value="WEB-INF/config/repositories/website.xml"/>
-     *   &lt;param name="repositoryHome"
-     *             value="repositories/website"/>
-     *   &lt;param name="contextFactoryClass"
-     *             value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
-     *   &lt;param name="providerURL"
-     *             value="localhost"/>
-     *   &lt;param name="id" value="website"/>
-     * &lt;/Repository>
-     *</pre>
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#init()} directly.
      */
     public static void init() {
@@ -161,6 +145,7 @@ public final class ContentRepository {
 
     /**
      * Shuts down all repositories (through Provider instances) and clears all mappings.
+     *
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#shutdown()} directly.
      */
     public static void shutdown() {
@@ -168,10 +153,10 @@ public final class ContentRepository {
     }
 
     /**
-     * Verify the initialization state of all the repositories. This methods returns <code>false</code> only if
-     * <strong>all</strong> the repositories are empty (no node else than the root one).
-     * @return <code>false</code> if all the repositories are empty, <code>true</code> if at least one of them has
-     * content.
+     * Verify the initialization state of all the workspaces. This methods returns <code>false</code> only if
+     * <strong>all</strong> the workspaces are empty (no node else than the root one).
+     *
+     * @return <code>false</code> if all the workspaces are empty, <code>true</code> if at least one of them has content.
      * @throws AccessDeniedException repository authentication failed
      * @throws RepositoryException exception while accessing the repository
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#checkIfInitialized()} directly.
@@ -181,17 +166,20 @@ public final class ContentRepository {
     }
 
     /**
-     * @param repository
+     * Checks if a workspace has been initialized.
+     *
      * @throws RepositoryException
      * @throws AccessDeniedException
+     * @throws RuntimeException if the workspace doesn't exist or has not yet been loaded
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#checkIfInitialized(String)} directly.
      */
-    public static boolean checkIfInitialized(String repository) throws RepositoryException, AccessDeniedException {
-        return Components.getComponent(RepositoryManager.class).checkIfInitialized(repository);
+    public static boolean checkIfInitialized(String logicalWorkspaceName) throws RepositoryException, AccessDeniedException {
+        return Components.getComponent(RepositoryManager.class).checkIfInitialized(logicalWorkspaceName);
     }
 
     /**
-     * Re-load all configured repositories.
+     * Reload all configured repositories.
+     *
      * @see #init()
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#reload()} directly.
      */
@@ -200,89 +188,97 @@ public final class ContentRepository {
     }
 
     /**
-     * This method initializes the repository. You must not call this method twice.
-     * @param map
+     * Adds a repository definition and loads it. You must not call this method twice.
+     *
+     * @param repositoryDefinition
      * @throws RepositoryNotInitializedException
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#loadRepository(info.magnolia.repository.definition.RepositoryDefinition)} directly.
      */
-    public static void loadRepository(RepositoryDefinition map) throws RepositoryNotInitializedException,
-    InstantiationException, IllegalAccessException, ClassNotFoundException {
-        Components.getComponent(RepositoryManager.class).loadRepository(map);
+    public static void loadRepository(RepositoryDefinition repositoryDefinition) throws RepositoryNotInitializedException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+        Components.getComponent(RepositoryManager.class).loadRepository(repositoryDefinition);
     }
 
     /**
-     * @param repositoryId
-     * @param workspaceId
-     * @throws RepositoryException
+     * Loads a previously not loaded workspace.
+     *
+     * If there's no logical workspace defined with the name it is added, if there's no physical workspace name by this name it is added.
+     *
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#loadWorkspace(String, String)} directly.
      * */
-    public static void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
-        Components.getComponent(RepositoryManager.class).loadWorkspace(repositoryId, workspaceId);
+    public static void loadWorkspace(String repositoryId, String workspaceName) throws RepositoryException {
+        Components.getComponent(RepositoryManager.class).loadWorkspace(repositoryId, workspaceName);
     }
 
     /**
-     * Returns magnolia specific Repository name where this workspace is registered
-     * within <Repository/>.
+     * Returns magnolia specific Repository name where this workspace is registered within <Repository/>.
+     *
+     * Note: if more than one repository has a physical workspace by this name this method is ambigious as to which it returns
+     *
+     * @throws RepositoryException if no physical workspace exists by that name
      * @deprecated since 4.5 - do not use.
-     * */
-    public static String getParentRepositoryName(String workspaceName) throws RepositoryException {
-        throw new UnsupportedOperationException("Deprecated since 4.5");
+     */
+    public static String getParentRepositoryName(String physicalWorkspaceName) throws RepositoryException {
+        RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
+        for (WorkspaceMappingDefinition mapping : repositoryManager.getWorkspaceMappings()) {
+            if (physicalWorkspaceName.equalsIgnoreCase(mapping.getWorkspaceName())) {
+                return mapping.getRepositoryName();
+            }
+        }
+        throw new RepositoryException("No mapping found for "+physicalWorkspaceName+" repository in magnolia repositories.xml");
     }
 
     /**
-     * Get mapped repository name.
-     * @param name
-     * @return mapped name as in repositories.xml RepositoryMapping element
+     * Returns the name of the repository for a logical workspace name.
+     *
+     * @returns the repository name or if the logical name doesn't exist it is returned
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getRepositoryName(String)}  directly.
      */
-    public static String getMappedRepositoryName(String name) {
-        return Components.getComponent(RepositoryManager.class).getRepositoryName(name);
+    public static String getMappedRepositoryName(String logicalWorkspaceName) {
+        RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
+        WorkspaceMappingDefinition mapping = repositoryManager.getWorkspaceMapping(logicalWorkspaceName);
+        return mapping != null ? mapping.getRepositoryName() : logicalWorkspaceName;
     }
 
     /**
-     * Get mapped workspace name.
-     * @param name
-     * @return mapped name as in repositories.xml RepositoryMapping element
+     * Returns the physical workspace name given a logical workspace name.
+     *
+     * @returns the physical name or if the logical name doesn't exist it is returned
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getPhysicalWorkspaceName(String)}  directly.
      */
-    public static String getMappedWorkspaceName(String name) {
-        String physicalWorkspaceName = Components.getComponent(RepositoryManager.class).getPhysicalWorkspaceName(name);
-        if (physicalWorkspaceName == null)
-            return name;
-        return physicalWorkspaceName;
+    public static String getMappedWorkspaceName(String logicalWorkspaceName) {
+        RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
+        WorkspaceMappingDefinition mapping = repositoryManager.getWorkspaceMapping(logicalWorkspaceName);
+        return mapping != null ? mapping.getWorkspaceName() : logicalWorkspaceName;
     }
 
     /**
-     * Add a mapped repository name.
-     * @param name
-     * @param repositoryName
+     * Adds a workspace mapping.
+     *
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#addWorkspaceMapping(info.magnolia.repository.definition.WorkspaceMappingDefinition)}  directly.
      */
-    public static void addMappedRepositoryName(String name, String repositoryName) {
-        addMappedRepositoryName(name, repositoryName, null);
+    public static void addMappedRepositoryName(String logicalWorkspaceName, String repositoryName) {
+        addMappedRepositoryName(logicalWorkspaceName, repositoryName, null);
     }
 
     /**
-     * Add a mapped repository name.
-     * @param name
-     * @param repositoryName
-     * @param workspaceName
+     * Adds a workspace mapping.
+     *
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#addWorkspaceMapping(info.magnolia.repository.definition.WorkspaceMappingDefinition)}  directly.
      */
-    public static void addMappedRepositoryName(String name, String repositoryName, String workspaceName) {
+    public static void addMappedRepositoryName(String logicalWorkspaceName, String repositoryName, String workspaceName) {
         if (StringUtils.isEmpty(workspaceName)) {
-            workspaceName = name;
+            workspaceName = logicalWorkspaceName;
         }
-        Components.getComponent(RepositoryManager.class).addWorkspaceMapping(new WorkspaceMappingDefinition(name, repositoryName, workspaceName));
+        Components.getComponent(RepositoryManager.class).addWorkspaceMapping(new WorkspaceMappingDefinition(logicalWorkspaceName, repositoryName, workspaceName));
     }
 
     /**
      * Get default workspace name.
-     * @return default name if there are no workspaces defined or there is no workspace present with name "default",
-     * otherwise return same name as repository name.
+     *
+     * @return default name if there are no workspaces defined or there is no workspace present with name "default", otherwise return same name as repository name.
      */
     public static String getDefaultWorkspace(String repositoryId) {
         RepositoryDefinition mapping = getRepositoryMapping(repositoryId);
@@ -297,41 +293,62 @@ public final class ContentRepository {
     }
 
     /**
-     * Returns repository specified by the <code>repositoryID</code> as configured in repository config.
+     * Returns the repository for a repository or a workspace.
+     *
+     * @throws IllegalArgumentException if there is no repository or workspace by this name
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getRepository(String)}  directly.
      */
-    public static Repository getRepository(String repositoryID) {
-        return Components.getComponent(RepositoryManager.class).getRepository(repositoryID);
+    public static Repository getRepository(String repositoryOrLogicalWorkspace) {
+        RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
+        if (!repositoryManager.hasRepository(repositoryOrLogicalWorkspace)) {
+            repositoryOrLogicalWorkspace = getMappedRepositoryName(repositoryOrLogicalWorkspace);
+        }
+        return repositoryManager.getRepository(repositoryOrLogicalWorkspace);
     }
 
     /**
-     * Returns repository provider specified by the <code>repositoryID</code> as configured in repository config.
+     * Returns the repository provider for either a repository or the provider for the repository which contains the workspace.
+     *
+     * @throws IllegalArgumentException if there is no repository or workspace by this name
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getRepositoryProvider(String)}  directly.
      */
-    public static Provider getRepositoryProvider(String repositoryID) {
-        repositoryID = getMappedRepositoryName(repositoryID);
-        return Components.getComponent(RepositoryManager.class).getRepositoryProvider(repositoryID);
+    public static Provider getRepositoryProvider(String repositoryOrLogicalWorkspace) {
+        RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
+        if (!repositoryManager.hasRepository(repositoryOrLogicalWorkspace)) {
+            repositoryOrLogicalWorkspace = getMappedRepositoryName(repositoryOrLogicalWorkspace);
+        }
+        return repositoryManager.getRepositoryProvider(repositoryOrLogicalWorkspace);
     }
 
     /**
-     * returns repository mapping as configured.
+     * Returns the repository definition for a repository or the repository for a given workspace.
+     *
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getRepositoryDefinition(String)}  directly.
      */
-    public static RepositoryDefinition getRepositoryMapping(String repositoryID) {
-        return Components.getComponent(RepositoryManager.class).getRepositoryDefinition(repositoryID);
+    public static RepositoryDefinition getRepositoryMapping(String repositoryOrLogicalWorkspace) {
+        RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
+        if (!repositoryManager.hasRepository(repositoryOrLogicalWorkspace)) {
+            repositoryOrLogicalWorkspace = getMappedRepositoryName(repositoryOrLogicalWorkspace);
+        }
+        return repositoryManager.getRepositoryDefinition(repositoryOrLogicalWorkspace);
     }
 
     /**
-     * Returns <code>true</code> if a mapping for the given repository name does exist.
+     * Returns <code>true</code> if a mapping for the given repository name or workspace name exist.
+     *
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#hasRepository(String)} directly.
      */
-    public static boolean hasRepositoryMapping(String repositoryID) {
-        return Components.getComponent(RepositoryManager.class).hasRepository(repositoryID);
+    public static boolean hasRepositoryMapping(String repositoryOrLogicalWorkspace) {
+        RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
+        if (!repositoryManager.hasRepository(repositoryOrLogicalWorkspace)) {
+            repositoryOrLogicalWorkspace = getMappedRepositoryName(repositoryOrLogicalWorkspace);
+        }
+        return repositoryManager.hasRepository(repositoryOrLogicalWorkspace);
     }
 
     /**
-     * Gets repository names array as configured in repositories.xml.
-     * @return repository names
+     * Gets the names of all logical workspaces.
+     * 
      * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getLogicalWorkspaceNames()} directly.
      */
     public static Iterator<String> getAllRepositoryNames() {
@@ -339,21 +356,23 @@ public final class ContentRepository {
     }
 
     /**
-     * get internal workspace name.
-     * @param workspaceName
-     * @return workspace name as configured in magnolia repositories.xml
+     * Returns the logical workspace name given a physical workspace name. Note that this method will return the FIRST
+     * physical workspace it finds with this name. If there are more workspaces with this name it is not defined which
+     * is returned.
+     *
+     * @return the logical workspace name or if no such logical workspace exists returns the physical workspace name given as an argument
      * @deprecated since 4.5 - do not use.
      * */
-    public static String getInternalWorkspaceName(String workspaceName) {
+    public static String getInternalWorkspaceName(String physicalWorkspaceName) {
         RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
         Collection<WorkspaceMappingDefinition> repositoryNameMap = repositoryManager.getWorkspaceMappings();
         for (WorkspaceMappingDefinition mappingDefinition : repositoryNameMap) {
-            if (mappingDefinition.getWorkspaceName().equalsIgnoreCase(workspaceName)) {
+            if (mappingDefinition.getWorkspaceName().equalsIgnoreCase(physicalWorkspaceName)) {
                 return mappingDefinition.getLogicalWorkspaceName();
             }
         }
-        log.error("No Repository/Workspace name mapping defined for "+workspaceName);
-        return workspaceName;
+        log.error("No Repository/Workspace name mapping defined for "+physicalWorkspaceName);
+        return physicalWorkspaceName;
     }
 
 

@@ -125,13 +125,9 @@ public interface RepositoryManager {
      *
      * TODO not sure if the workspaceId is supposed to be logical or physical, likely physical since we also pass a repo id which would be useless otherwise
      */
-    void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException;
+    void loadWorkspace(String repositoryId, String workspaceName) throws RepositoryException;
 
-    /**
-     * Gets repository names array as configured in repositories.xml.
-     * @return repository names
-     */
-    Iterator<String> getLogicalWorkspaceNames();
+    boolean hasRepository(String repositoryId);
 
     /**
      * Returns repository mapping as configured, or null if not found.
@@ -139,26 +135,25 @@ public interface RepositoryManager {
     RepositoryDefinition getRepositoryDefinition(String repositoryId);
 
     /**
-     * Returns repository provider specified by the <code>repositoryID</code> as configured in repository config.
+     * Returns repository provider specified by the <code>repositoryId</code> as configured in repository config.
      *
      * @throws IllegalArgumentException if there is no such repository
      */
     Provider getRepositoryProvider(String repositoryId);
 
-    /**
-     * Returns the physical workspace name.
-     * @param logicalWorkspaceName
-     * @return mapped name as in repositories.xml RepositoryMapping element
-     */
-    String getPhysicalWorkspaceName(String logicalWorkspaceName);
+    Repository getRepository(String repositoryId);
 
-    String getRepositoryName(String logicalWorkspaceName);
+    /**
+     * Gets repository names array as configured in repositories.xml.
+     * @return repository names
+     */
+    Iterator<String> getLogicalWorkspaceNames();
+
+    WorkspaceMappingDefinition getWorkspaceMapping(String logicalWorkspaceName);
 
     Collection<WorkspaceMappingDefinition> getWorkspaceMappings();
 
-    boolean hasRepository(String repositoryId);
-
-    Repository getRepository(String repositoryId);
+    boolean hasWorkspace(String logicalWorkspaceName);
 
     void addWorkspaceMapping(WorkspaceMappingDefinition mapping);
 }

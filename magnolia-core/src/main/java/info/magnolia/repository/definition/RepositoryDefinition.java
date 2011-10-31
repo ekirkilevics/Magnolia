@@ -45,6 +45,8 @@ import java.util.Map;
  */
 public class RepositoryDefinition {
 
+    // TODO naming, the name clashes with the pojo used for module definition, maybe RepositoryConnectorDefinition ?
+
     // TODO thread safety issues here, make immutable?
 
     private String name;
