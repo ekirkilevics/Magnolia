@@ -99,24 +99,23 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
                 newNode = NodeUtil.createPath(parentNode, name, (String)newNodeConfig.get(NODE_TYPE));
                 MetaData metaData = MetaDataUtil.getMetaData(newNode);
                 metaData.setTemplate((String)newNodeConfig.get(TEMPLATE_ID));
+                //FIXME fgrilli: metadata should be updated only when newNode.isNew() == true. Currently I cannot do this change as
+                //MockNode will throw a UOEon isNew() call.
                 MetaDataUtil.updateMetaData(newNode);
                 log.debug("creating {}", newNode.getPath());
 
                 for(Entry<String, Object> property : newNodeConfig.entrySet()) {
                     String propertyName = property.getKey();
-                    if(NODE_TYPE.equals(propertyName) || TEMPLATE_ID.equals(propertyName)) {
+                    if(NODE_TYPE.equals(propertyName) || TEMPLATE_ID.equals(propertyName) || newNode.hasProperty(propertyName)) {
                         continue;
                     }
-                    //only set property value when property does not exist, else any subsequent change, i.e. via dialog, will be overwritten with the default value.
-                    if(!newNode.hasProperty(propertyName)) {
-                        //a sub content
-                        if(property.getValue() instanceof HashMap) {
-                            Map<String,Object> map = new HashMap<String,Object>();
-                            map.put(propertyName, property.getValue());
-                            createNode(newNode, map);
-                        } else {
-                            newNode.setProperty(propertyName, property.getValue().toString());
-                        }
+                    //a sub content
+                    if(property.getValue() instanceof HashMap) {
+                        Map<String,Object> map = new HashMap<String,Object>();
+                        map.put(propertyName, property.getValue());
+                        createNode(newNode, map);
+                    } else {
+                        newNode.setProperty(propertyName, property.getValue().toString());
                     }
                 }
                 newNode.getSession().save();
