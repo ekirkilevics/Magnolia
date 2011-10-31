@@ -153,7 +153,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
             throw new RenderException("Can only render models of type [" + RenderingModel.class.getName() + "]");
         }
 
-        Class<? extends RenderingModel> modelClass = (Class<? extends RenderingModel>)clazz;
+        Class<? extends RenderingModel> modelClass = clazz;
 
         try {
             final Node wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
