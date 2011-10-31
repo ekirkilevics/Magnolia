@@ -258,6 +258,42 @@ public class CopyGeneratorTest {
 
     }
 
+    @Test
+    public void testNewPropertyValueIsNotOverwritten() throws Exception{
+        //GIVEN
+        Node parent = session.getNode("/foo");
+        AutoGenerationConfiguration config = mock(AutoGenerationConfiguration.class);
+
+        Map<String, Object> content = new HashMap<String, Object>();
+        Map<String, Object> nodeProps = new HashMap<String, Object>();
+        nodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nodeProps.put(TEMPLATE_ID, null);
+        nodeProps.put("someProp", "original value");
+        content.put("autogen-foo", nodeProps);
+
+        when(config.getContent()).thenReturn(content);
+
+        //WHEN
+        new CopyGenerator(parent).generate(config);
+
+        //THEN
+        Node newNode = session.getNode("/foo/autogen-foo");
+        assertPropertyEquals(newNode, "someProp", "original value");
+
+
+        //GIVEN
+        newNode.getProperty("someProp").setValue("a different value");
+        newNode.getSession().save();
+        assertPropertyEquals(newNode, "someProp", "a different value");
+
+        //WHEN
+        new CopyGenerator(parent).generate(config);
+
+        //THEN
+        assertPropertyEquals(newNode, "someProp", "a different value");
+
+    }
+
     @After
     public void tearDown() throws Exception {
         session = null;

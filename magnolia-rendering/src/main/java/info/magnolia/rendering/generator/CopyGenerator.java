@@ -107,13 +107,16 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
                     if(NODE_TYPE.equals(propertyName) || TEMPLATE_ID.equals(propertyName)) {
                         continue;
                     }
-                    //a sub content
-                    if(property.getValue() instanceof HashMap) {
-                        Map<String,Object> map = new HashMap<String,Object>();
-                        map.put(propertyName, property.getValue());
-                        createNode(newNode, map);
-                    } else {
-                        newNode.setProperty(propertyName, property.getValue().toString());
+                    //only set property value when property does not exist, else any subsequent change, i.e. via dialog, will be overwritten with the default value.
+                    if(!newNode.hasProperty(propertyName)) {
+                        //a sub content
+                        if(property.getValue() instanceof HashMap) {
+                            Map<String,Object> map = new HashMap<String,Object>();
+                            map.put(propertyName, property.getValue());
+                            createNode(newNode, map);
+                        } else {
+                            newNode.setProperty(propertyName, property.getValue().toString());
+                        }
                     }
                 }
                 newNode.getSession().save();
