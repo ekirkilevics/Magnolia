@@ -367,7 +367,7 @@ public class TemplatingFunctions {
 
     /**
      * Get the language used currently.
-     * @return
+     * @return The language as a String.
      */
     public String language(){
         return I18nContentSupportFactory.getI18nSupport().getLocale().toString();
@@ -454,7 +454,7 @@ public class TemplatingFunctions {
      * Util method to create html attributes <code>name="value"</code>. If the value is empty an empty string will be returned.
      * This is mainly helpful to avoid empty attributes.
      */
-    public String createAttribute(String name, String value) {
+    public String createHtmlAttribute(String name, String value) {
         value = StringUtils.trim(value);
         if (StringUtils.isNotEmpty(value)) {
             return new StringBuffer().append(name).append("=\"").append(value).append("\"").toString();

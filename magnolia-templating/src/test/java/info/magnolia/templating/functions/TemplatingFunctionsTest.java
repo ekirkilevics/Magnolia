@@ -1634,27 +1634,27 @@ public class TemplatingFunctionsTest {
 
 
     @Test
-    public void testCreateAttribute(){
+    public void testCreateHtmlAttribute(){
        // GIVEN
        TemplatingFunctions functions = new TemplatingFunctions();
        String value = " value ";
        String name = "name";
 
        // WHEN
-       String res = functions.createAttribute(name, value);
+       String res = functions.createHtmlAttribute(name, value);
        // THEN
        assertEquals(name+"=\""+value.trim()+"\"", res);
     }
 
     @Test
-    public void testCreateAttributeNoValue(){
+    public void testCreateHtmlAttributeNoValue(){
         // GIVEN
         TemplatingFunctions functions = new TemplatingFunctions();
         String value = "";
         String name = "name";
 
         // WHEN
-        String res = functions.createAttribute(name, value);
+        String res = functions.createHtmlAttribute(name, value);
         // THEN
         assertEquals("", res);
     }
