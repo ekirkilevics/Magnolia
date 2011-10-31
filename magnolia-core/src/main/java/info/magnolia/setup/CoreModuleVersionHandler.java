@@ -33,10 +33,6 @@
  */
 package info.magnolia.setup;
 
-import static info.magnolia.nodebuilder.Ops.addNode;
-import static info.magnolia.nodebuilder.Ops.addProperty;
-import static info.magnolia.nodebuilder.Ops.getNode;
-import static info.magnolia.nodebuilder.Ops.remove;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.AbstractModuleVersionHandler;
@@ -74,6 +70,9 @@ import info.magnolia.setup.for4_5.RenameACLNodesTask;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
+import static info.magnolia.nodebuilder.Ops.*;
 
 /**
  * 3.5 being the first version of core as a module, it is always "installed",
@@ -235,7 +234,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         );
 
         register(DeltaBuilder.update("4.5", "")
-                .addTask(new RenameACLNodesTask("Security", "Renames ACL nodes"))
+                .addTask(new RenameACLNodesTask())
         );
     }
 
@@ -292,6 +291,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u2.workspaceHasOldIndexer();
 
         conditions.add(new CheckNodeTypesDefinition());
+        conditions.add(new SystemTmpDirCondition());
+
         return conditions;
     }
+
 }

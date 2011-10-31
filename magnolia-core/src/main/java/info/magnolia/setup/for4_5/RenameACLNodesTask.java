@@ -33,6 +33,13 @@
  */
 package info.magnolia.setup.for4_5;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.AbstractRepositoryTask;
+import info.magnolia.module.delta.TaskExecutionException;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -41,24 +48,16 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AbstractRepositoryTask;
-import info.magnolia.module.delta.TaskExecutionException;
-
 /**
  * Renames ACL nodes for all roles from the old format of acl_repositoryName_workspaceName to acl_workspaceName.
  *
  * @version $Id$
  */
 public class RenameACLNodesTask extends AbstractRepositoryTask {
+    private final static Logger log = LoggerFactory.getLogger(RenameACLNodesTask.class);
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    public RenameACLNodesTask(String name, String description) {
-        super(name, description);
+    public RenameACLNodesTask() {
+        super("Security", "Renames ACL nodes.");
     }
 
     @Override

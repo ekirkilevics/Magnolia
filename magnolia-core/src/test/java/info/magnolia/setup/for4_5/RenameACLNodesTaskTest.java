@@ -33,16 +33,18 @@
  */
 package info.magnolia.setup.for4_5;
 
-import javax.jcr.Node;
-import javax.jcr.Session;
-
-import org.junit.Test;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.RepositoryTestCase;
+
+import javax.jcr.Node;
+import javax.jcr.Session;
+
+import org.junit.Test;
+
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -67,7 +69,7 @@ public class RenameACLNodesTaskTest extends RepositoryTestCase {
         when(installContext.getJCRSession(ContentRepository.USER_ROLES)).thenReturn(session);
 
         // When
-        RenameACLNodesTask task = new RenameACLNodesTask("", "");
+        RenameACLNodesTask task = new RenameACLNodesTask();
         task.execute(installContext);
 
         // Then
