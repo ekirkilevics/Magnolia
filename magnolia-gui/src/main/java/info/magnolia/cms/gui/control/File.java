@@ -39,9 +39,6 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.MessagesManager;
 import org.apache.commons.lang.StringUtils;
 
-import javax.jcr.RepositoryException;
-
-
 /**
  * @author Vinzenz Wyser
  * @version 2.0

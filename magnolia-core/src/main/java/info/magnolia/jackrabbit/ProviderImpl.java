@@ -533,6 +533,7 @@ public class ProviderImpl implements Provider {
         return false;
     }
 
+    @Override
     public Session getSystemSession(String workspaceName) throws RepositoryException {
 
         // FIXME: stop using SystemProperty, but IoC is not ready yet when this is called (config loader calls repo.init() which results in authentication calls being made and this method being invoked
