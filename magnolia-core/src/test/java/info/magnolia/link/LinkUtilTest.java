@@ -253,8 +253,7 @@ public class LinkUtilTest extends BaseLinkTest {
         String url = null;
         try {
             MockSession session = new MockSession("website");
-            MockContent c = new MockContent("bla");
-            ((MockNode) c.getJCRNode()).setSession(session);
+            MockContent c = new MockContent((MockNode) session.getRootNode());
             url = LinkTransformerManager.getInstance().getCompleteUrl().transform(LinkFactory.createLink(c));
         } finally {
             // restore
