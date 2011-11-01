@@ -57,7 +57,6 @@ import com.google.gwt.user.client.ui.HTML;
 
 /**
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the <code>&lt;html&gt;</code> element).
- * TODO fgrilli remove queryString from url before reloading page else interceptor filter params stay there and can lead to confusing behavior in certain situations.
  * @version $Id$
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
@@ -73,6 +72,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     private boolean pageEditBarAlreadyProcessed = false;
     private String locale;
+    private String url;
     private static Dictionary dictionary;
 
     @Override
@@ -92,9 +92,20 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
         processCmsTags(documentElement, null, edits, areas);
 
+        url = Window.Location.getHref();
+
+        if (url.contains("?")) {
+
+        	if (GWT.isScript())
+        		Window.Location.replace(url.substring(0, url.indexOf("?")));
+
+        	else if (url.contains("&"))
+        		Window.Location.replace(url.substring(0, url.indexOf("&")));
+        }
+
     }
 
-    @Override
+	@Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
     }
