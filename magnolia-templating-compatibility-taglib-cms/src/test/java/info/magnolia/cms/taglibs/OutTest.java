@@ -41,7 +41,6 @@ import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTagTestCase;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockNodeData;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.IOException;
@@ -52,6 +51,9 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.servlet.jsp.JspException;
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  * @author Ryan Gardner
  * @version $Revision$ ($Author$)
@@ -60,6 +62,7 @@ public class OutTest extends MgnlTagTestCase {
     private AggregationState agState;
 
     @Override
+    @Before
     public void setUp() throws Exception {
         super.setUp();
         agState = initAgState();
@@ -83,6 +86,7 @@ public class OutTest extends MgnlTagTestCase {
         return out;
     }
 
+    @Test
     public void testUUIDLinkOutRelative() throws IOException, RepositoryException, JspException {
         Out out = basicUUID_test_instance(Out.LINK_RESOLVING_RELATIVE);
         out.doEndTag();
@@ -90,32 +94,38 @@ public class OutTest extends MgnlTagTestCase {
         assertJspContent("JSP Content should be cleared after each test", "");
     }
 
+    @Test
     public void testUUIDLinkOutAbsolute() throws IOException, RepositoryException, JspException {
         Out out = basicUUID_test_instance(Out.LINK_RESOLVING_ABSOLUTE);
         out.doEndTag();
         assertJspContent("UUID link is resolved as an absolute link", "/main/linkTarget.html");
     }
 
+    @Test
     public void testUUIDLinkOutNone() throws IOException, RepositoryException, JspException {
         Out out = basicUUID_test_instance(Out.LINK_RESOLVING_NONE);
         out.doEndTag();
         assertJspContent("UUID link is output unresolved", "3");
     }
 
+    @Test
     public void testDateFormattingShouldUseAggregationStateLanguageIfNotSpecified() throws Exception {
         doTestForDateProperty(null, null, "Jul 8, 2008");
         agState.setLocale(Locale.GERMAN);
         doTestForDateProperty(null, null, "08.07.2008");
     }
 
+    @Test
     public void testDateFormattingShouldUseGivenLanguageIfSpecified() throws Exception {
         doTestForDateProperty("fr", null, "8 juil. 2008");
     }
 
+    @Test
     public void testDateFormattingShouldUseGivenPatternIfSpecified() throws Exception {
         doTestForDateProperty(null, "EEEE, d. MMMM yyyy", "Tuesday, 8. July 2008");
     }
 
+    @Test
     public void testDateFormattingShouldUseGivenPatternAndLanguageIfSpecified() throws Exception {
         doTestForDateProperty("fr", "EEEE, d. MMMM yyyy", "mardi, 8. juillet 2008");
     }
@@ -124,7 +134,7 @@ public class OutTest extends MgnlTagTestCase {
         final Calendar cal = Calendar.getInstance();
         cal.set(2008, 6, 8, 18, 55, 20);
         final MockContent testNode = new MockContent("test");
-        testNode.addNodeData(new MockNodeData("myDate", cal));
+        testNode.addNodeData("myDate", cal);
 
         final Out out = new Out();
         out.setContentNode(testNode);
