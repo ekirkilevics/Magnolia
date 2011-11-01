@@ -93,4 +93,12 @@ public final class LegacyJavascript {
     public static native String getContextPath() /*-{
         return $wnd.location.protocol + "//"+ $wnd.location.host + $wnd.contextPath + "/"
     }-*/;
+
+    public static boolean isNotEmpty(final String string) {
+        return !isEmpty(string);
+    }
+
+    public static boolean isEmpty(final String string) {
+        return string == null || string.length() == 0;
+    }
 }

@@ -279,7 +279,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             boolean areaOptional = Boolean.valueOf(area.getAttribute("optional"));
             boolean created = Boolean.valueOf(area.getAttribute("created"));
 
-            String areaMatch = areaContent + (isNotEmpty(areaName) ? "/" + areaName : "");
+            String areaMatch = areaContent + (LegacyJavascript.isNotEmpty(areaName) ? "/" + areaName : "");
 
             if(areaOptional && !created) {
                 areaMatch = areaName;
@@ -304,7 +304,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         boolean optional = Boolean.valueOf(area.getAttribute("optional"));
         boolean created = Boolean.valueOf(area.getAttribute("created"));
         //if area is optional and not yet created, best match is its name, else is content + name
-        String bestMatch = optional && !created ? name : content + (isNotEmpty(name) ? "/" + name : "");
+        String bestMatch = optional && !created ? name : content + (LegacyJavascript.isNotEmpty(name) ? "/" + name : "");
 
         GWT.log("Best match for "+ (optional ? "optional" : "required") + " area and edit bar is [" + bestMatch + "]");
 
@@ -312,7 +312,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             Element edit = edits.getItem(i);
             String toMatch = edit.getAttribute("content");
             String editName = edit.getAttribute("name");
-            toMatch += (isNotEmpty(editName) ? "/" + editName : "");
+            toMatch += (LegacyJavascript.isNotEmpty(editName) ? "/" + editName : "");
             boolean editOptional = Boolean.valueOf(edit.getAttribute("optional"));
 
             if(toMatch.equals(bestMatch) || (optional && editOptional &&  bestMatch.equals(editName))) {
@@ -322,13 +322,5 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         }
         GWT.log("No match found. Area won't have an edit bar associated.");
         return null;
-    }
-
-    private boolean isNotEmpty(String string) {
-        return !isEmpty(string);
-    }
-
-    private boolean isEmpty(String string) {
-        return string == null || string.length() == 0;
     }
 }
