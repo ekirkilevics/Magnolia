@@ -45,7 +45,16 @@ import javax.jcr.RepositoryException;
  */
 public class MockNodeData extends DefaultNodeData {
 
+    /**
+     * Creates a MockNodeData for a property that already exist on the parent node.
+     */
+    public MockNodeData(MockContent parent, String name, int type) {
+        super(parent, name);
+    }
 
+    /**
+     * Adds a property on the parent content.
+     */
     public MockNodeData(MockContent content, String name, Object value) {
         super(content, name);
         try {
@@ -71,11 +80,6 @@ public class MockNodeData extends DefaultNodeData {
      */
     public MockNodeData(String name, int type) {
         super(new MockContent("test"), name);
-    }
-
-    // TODO dlipp - type is ignored here - check it out!
-    public MockNodeData(MockContent parent, String name, int type) {
-        super(parent, name);
     }
 
     @Override

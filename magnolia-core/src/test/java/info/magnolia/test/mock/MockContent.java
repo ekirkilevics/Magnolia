@@ -44,9 +44,7 @@ import info.magnolia.cms.core.NonExistingNodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.test.mock.jcr.MockNode;
-import info.magnolia.test.mock.jcr.MockProperty;
 import info.magnolia.test.mock.jcr.MockSession;
-import info.magnolia.test.mock.jcr.MockValue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,6 +59,7 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.Value;
 import javax.jcr.Workspace;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -146,10 +145,10 @@ public class MockContent extends DefaultContent {
         final String pattern = namePattern == null ? "*" : namePattern;
         try {
             PropertyIterator iterator = getJCRNode().getProperties(pattern);
-            Property current;
             while(iterator.hasNext()) {
-                current = iterator.nextProperty();
-                onlyExistingNodeDatas.add(new MockNodeData(this, current.getName(), ((MockProperty) current).getObjectValue()));
+                Property property = iterator.nextProperty();
+                MockNodeData nodeData = new MockNodeData(this, property.getName(), property.getType());
+                onlyExistingNodeDatas.add(nodeData);
             }
             // now checking for binaryNodes
             NodeIterator nodeIterator = getJCRNode().getNodes(pattern);
@@ -179,7 +178,8 @@ public class MockContent extends DefaultContent {
             Property property;
             try {
                 property = getJCRNode().getProperty(name);
-                return addNodeData(property.getName(), ((MockValue) property.getValue()).getValue());
+                Value value = property.getValue();
+                return new MockNodeData(this, name, value.getType());
             } catch (PathNotFoundException e) {
                 // exception although hasNodeData returned true -> then it's a binary!
             }

@@ -44,6 +44,10 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.servlet.jsp.JspException;
 
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import junit.framework.Assert;
 
 
@@ -65,6 +69,7 @@ public class PageIteratorTest extends MgnlTagTestCase {
     }
 
     @Override
+    @Before
     public void setUp() throws Exception {
         super.setUp();
 
@@ -90,6 +95,8 @@ public class PageIteratorTest extends MgnlTagTestCase {
      * Test for MAGNOLIA-3007
      * @throws JspException
      */
+    @Ignore
+    @Test
     public void testIterateOnCurrentPage() throws JspException, RepositoryException {
         PageIterator tag = new PageIterator();
 
@@ -100,6 +107,8 @@ public class PageIteratorTest extends MgnlTagTestCase {
     /**
      * Test for MAGNOLIA-3209
      */
+    @Ignore
+    @Test
     public void testIterateOnPagesNotOnParagraphs() throws JspException, RepositoryException {
         PageIterator tag = new PageIterator();
 

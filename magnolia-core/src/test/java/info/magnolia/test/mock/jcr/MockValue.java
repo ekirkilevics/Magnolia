@@ -66,7 +66,13 @@ public class MockValue implements Value {
         this.type = type;
         Object valueToSet;
         try {
-            valueToSet = value instanceof InputStream ? new String(IOUtils.toByteArray((InputStream) value)) : value;
+            if (value instanceof InputStream) {
+                valueToSet = new String(IOUtils.toByteArray((InputStream) value));
+            } else if (value instanceof Integer) {
+                valueToSet = (long)((Integer)value).intValue();
+            } else {
+                valueToSet = value;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
