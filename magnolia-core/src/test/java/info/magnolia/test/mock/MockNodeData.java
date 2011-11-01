@@ -56,12 +56,19 @@ public class MockNodeData extends DefaultNodeData {
     }
 
     /**
-     * @deprecated since 4.5 - don't use it at all will: add test-MockContent so e.g. the property value will be added to this one!!!
+     * TODO dlipp: check whether we can completely delete this constructor
+     *
+     * @deprecated since 4.5 - use at your own risk - internally adds a test-MockContent so e.g. the property value will be added to this one!!!
      */
     public MockNodeData(String name, Object value) {
         this(new MockContent("test"), name, value);
     }
 
+    /**
+     * TODO dlipp: check whether we can completely delete this constructor
+     *
+     * @deprecated since 4.5 - use at your own risk - internally adds a test-MockContent so e.g. the property value will be added to this one!!!
+     */
     public MockNodeData(String name, int type) {
         super(new MockContent("test"), name);
     }
@@ -83,11 +90,7 @@ public class MockNodeData extends DefaultNodeData {
         if (!getValue().equals(other.getValue())) {
             return false;
         }
-        try {
-            if (!getParent().equals(other.getParent())) {
-                return false;
-            }
-        } catch (RepositoryException e) {
+        if (!getParent().equals(other.getParent())) {
             return false;
         }
         return true;

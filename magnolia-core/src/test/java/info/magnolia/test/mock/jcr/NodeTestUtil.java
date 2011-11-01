@@ -33,7 +33,6 @@
  */
 package info.magnolia.test.mock.jcr;
 
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.PropertiesImportExport;
 
 import java.io.IOException;
@@ -84,11 +83,7 @@ public class NodeTestUtil {
             childrenMap.put(child.getName(), child);
         }
 
-        try {
-            return new MockNode(name, values, childrenMap);
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+        return new MockNode(name, values, childrenMap);
     }
 
     public static Map<String, MockValue> createValues(Object[][] data) {

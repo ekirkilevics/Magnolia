@@ -153,7 +153,8 @@ public class FreemarkerParagraphRendererTest {
         par.setTemplatePath("test_action.ftl");
         par.setModelClass(SimpleTestState.class);
         final MockContent c = new MockContent("plop");
-        c.addNodeData(new MockNodeData("boo", "yay"));
+        //c.addNodeData(new MockNodeData("boo", "yay"));
+        c.addNodeData("boo", "yay");
         final StringWriter out = new StringWriter();
         renderer.render(c, par, out);
         assertEquals("yay : it works : success", out.toString());

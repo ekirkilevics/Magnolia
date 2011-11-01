@@ -102,8 +102,8 @@ public class TemplatingFunctionsTest {
 
     @Before
     public void setUpNodeHierarchy() throws PathNotFoundException, RepositoryException{
-        root = new MockNode();
-        root.setSession(new MockSession("website"));
+        MockSession session = new MockSession("website");
+        root = (MockNode) session.getRootNode();
 
         topPage            = createChildNodes(root,       DEPTH_1_PAGE_NAMES,      MgnlNodeType.NT_PAGE);
         topPageComponent   = createChildNodes(topPage,    DEPTH_2_COMPONENT_NAMES, MgnlNodeType.NT_COMPONENT);

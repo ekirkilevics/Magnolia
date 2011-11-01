@@ -120,10 +120,9 @@ public class MockUtil {
      * @deprecated since 4.5 - use {@link info.magnolia.test.mock.jcr.SessionTestUtil#createSession(String, InputStream)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(String workspace, InputStream propertiesStream) throws IOException, RepositoryException {
-        Content root = new MockContent("jcr:root");
-        createContent(root, propertiesStream);
         MockSession session = new MockSession(workspace);
-        session.setRootNode((MockNode) root.getJCRNode());
+        MockContent root = new MockContent((MockNode) session.getRootNode());
+        createContent(root, propertiesStream);
         return new MockHierarchyManager(root.getJCRNode().getSession());
     }
 

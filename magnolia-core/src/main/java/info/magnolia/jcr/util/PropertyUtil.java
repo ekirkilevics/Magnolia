@@ -71,7 +71,7 @@ public class PropertyUtil {
     private static final Logger log = LoggerFactory.getLogger(PropertyUtil.class);
 
     public static void renameProperty(Property property, String newName) throws RepositoryException {
-        Node node = property.getNode();
+        Node node = property.getParent();
         node.setProperty(newName, property.getValue());
         property.remove();
     }

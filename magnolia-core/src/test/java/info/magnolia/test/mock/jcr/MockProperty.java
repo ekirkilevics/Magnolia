@@ -145,8 +145,8 @@ public class MockProperty extends AbstractProperty {
     }
 
     @Override
-    public Node getNode() {
-        return getParent();
+    public Node getNode() throws RepositoryException {
+        return getSession().getNodeByIdentifier(getValue().getString());
     }
 
     @Override
@@ -162,6 +162,10 @@ public class MockProperty extends AbstractProperty {
 
     @Override
     public Session getSession() {
+        if (session == null && parent != null) {
+            // fallback - avoid session has to be set on every level
+            return parent.getSession();
+        }
         return session;
     }
 
@@ -219,7 +223,7 @@ public class MockProperty extends AbstractProperty {
 
     @Override
     public void remove() {
-        ((MockNode) getNode()).removeProperty(getName());
+        ((MockNode) getParent()).removeProperty(getName());
         setParent(null);
     }
 

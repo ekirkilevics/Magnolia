@@ -311,4 +311,25 @@ public class MockContentTest {
         // THEN
         assertEquals("", result);
     }
+
+    @Test
+    public void testSetNodeDataReferencingOtherContent() throws Exception {
+        // GIVEN
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+                "/node.a=lol\n" +
+                "/node.c=boum\n");
+        final Content node = hm.getContent("/node");
+
+        MockContent a = (MockContent) node.createContent("a");
+        MockContent b = (MockContent) node.createContent("b");
+        b.setUUID("12345-abc");
+        final String referenceToB = "ref2b";
+        a.setNodeData(referenceToB, b);
+
+        // WHEN
+        Object result = a.getNodeData(referenceToB).getReferencedContent();
+
+        // THEN
+        assertEquals(b, result);
+    }
 }

@@ -219,8 +219,8 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     @Override
     public NodeData setNodeData(String name, Content value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        NodeData nodeData = newNodeDataInstance(name, PropertyType.STRING, true);
-        nodeData.setValue(value.getUUID());
+        NodeData nodeData = newNodeDataInstance(name, PropertyType.REFERENCE, true);
+        nodeData.setValue(value);
         return nodeData;
     }
 

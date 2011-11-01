@@ -107,7 +107,7 @@ public class MockSessionTest {
         final MockSession mockSession = new MockSession("test");
         final MockNode parent = (MockNode) mockSession.getRootNode();
         final MockNode foo = new MockNode("foo");
-        final MockNode bar = new MockNode("bar");
+        final MockNode bar = (MockNode) foo.addNode("bar");
         final MockNode zed = new MockNode("zed");
         final MockNode apple = new MockNode("apple");
         parent.addNode(foo);

@@ -56,7 +56,7 @@ public abstract class AbstractNodeData implements NodeData{
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractNodeData.class);
 
     protected String name;
-    protected Content parent;
+    private final Content parent;
     private int multiValue = MULTIVALUE_UNDEFINED;
 
     protected AbstractNodeData(Content parent, String name) {
@@ -90,12 +90,8 @@ public abstract class AbstractNodeData implements NodeData{
     }
 
     @Override
-    public Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {
+    public Content getParent() {
         return this.parent;
-    }
-
-    public void setParent(Content parent) {
-        this.parent = parent;
     }
 
     @Override

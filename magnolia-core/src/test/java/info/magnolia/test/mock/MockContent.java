@@ -46,6 +46,7 @@ import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockProperty;
 import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.jcr.MockValue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -178,11 +179,9 @@ public class MockContent extends DefaultContent {
             Property property;
             try {
                 property = getJCRNode().getProperty(name);
-                MockNodeData nd = new MockNodeData(property.getName(), property.getValue());
-                nd.setParent(this);
-                return nd;
+                return addNodeData(property.getName(), ((MockValue) property.getValue()).getValue());
             } catch (PathNotFoundException e) {
-                // exception although hasNodeData returned tru -> then it's a binary!
+                // exception although hasNodeData returned true -> then it's a binary!
             }
             return addBinaryNodeData(name);
         }
@@ -205,24 +204,14 @@ public class MockContent extends DefaultContent {
                 nd = addBinaryNodeData(name);
             }
             else{
-                nd = new MockNodeData(this, name, type);
-                addNodeData((MockNodeData) nd);
+                nd = addNodeData(name, type);
             }
             return nd;
         }
     }
 
-    public void addNodeData(String name, Object value) {
-        new MockNodeData(this, name, value);
-    }
-
-    public void addNodeData(MockNodeData nd) {
-        try {
-            nd.setParent(this);
-            getJCRNode().setProperty(nd.getName(), nd.getValue());
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+    public MockNodeData addNodeData(String name, Object value) {
+        return new MockNodeData(this, name, value);
     }
 
     public void addContent(MockContent content) {

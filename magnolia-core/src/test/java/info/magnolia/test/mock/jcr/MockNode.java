@@ -113,7 +113,7 @@ public class MockNode extends AbstractNode {
         this(name, MgnlNodeType.NT_CONTENTNODE);
     }
 
-    public MockNode(String name, Map<String, MockValue> properties, Map<String, MockNode> children)  throws RepositoryException{
+    public MockNode(String name, Map<String, MockValue> properties, Map<String, MockNode> children) {
         this(name);
         Iterator<String> propertiesIterator = properties.keySet().iterator();
         while (propertiesIterator.hasNext()) {
@@ -692,6 +692,10 @@ public class MockNode extends AbstractNode {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
+    /**
+     *
+     * @deprecated since 4.5 - might be dangerous, should at least get reduced visibility!
+     */
     public void setSession(Session session) {
         this.session = session;
     }

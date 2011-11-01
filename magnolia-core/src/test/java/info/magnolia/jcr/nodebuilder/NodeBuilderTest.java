@@ -44,6 +44,7 @@ import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.MockValue;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFactory;
 
@@ -58,17 +59,13 @@ public class NodeBuilderTest {
     private static final String CHILD_NAME = "child";
     private static final String PROPERTY_NAME = "property1";
     private static final String PROPERTY_VALUE = "propertValue";
-    private MockNode rootNode;
     private MockSession session;
     private MockValue propertyValue;
 
     @Before
     public void setUp() {
-        rootNode = new MockNode("root");
         propertyValue = new MockValue(PROPERTY_VALUE);
         session = new MockSession("testSession");
-        rootNode.setSession(session);
-
 
         final ValueFactory valueFactory = mock(ValueFactory.class);
         when(valueFactory.createValue(PROPERTY_VALUE)).thenReturn(propertyValue);
@@ -78,6 +75,8 @@ public class NodeBuilderTest {
     public void testExecWithSeveralChildOps() throws Exception {
         final NodeOperation addNodeOp = Ops.addNode(CHILD_NAME);
         final NodeOperation addPropertyOp = Ops.addProperty(PROPERTY_NAME, PROPERTY_VALUE);
+
+        final Node rootNode = session.getRootNode();
 
         NodeBuilder builder = new NodeBuilder(rootNode, addNodeOp, addPropertyOp);
         builder.exec();
@@ -91,6 +90,7 @@ public class NodeBuilderTest {
      */
     @Test
     public void testRealisticUsageScenario() throws RepositoryException {
+        final Node rootNode = session.getRootNode();
         final MockNode childNode = (MockNode) rootNode.addNode(CHILD_NAME);
         final String childOfChildName = "childOfChild";
 

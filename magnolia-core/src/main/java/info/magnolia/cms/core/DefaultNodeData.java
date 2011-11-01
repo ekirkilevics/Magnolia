@@ -230,6 +230,7 @@ public class DefaultNodeData extends AbstractNodeData {
     }
 
     protected Node getJCRNode() {
+        Content parent = getParent();
         return parent == null ? null : parent.getJCRNode();
     }
 

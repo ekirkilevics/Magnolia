@@ -63,7 +63,8 @@ public class MockNodeTest {
 
     @Before
     public void init() {
-        root = new MockNode();
+        MockSession session = new MockSession("test");
+        root = (MockNode) session.getRootNode();
     }
     @Test
     public void testConstructionFromNamePropertiesAndChildren() throws Exception {
@@ -107,7 +108,7 @@ public class MockNodeTest {
         final MockNode child = (MockNode) root.addNode("child");
 
         assertEquals(root, child.getParent());
-        assertEquals(root.getChildren().get("child"), child);
+        assertEquals(child, root.getChildren().get("child"));
     }
     @Test
     public void testAddNodeWithParamStringString() throws Exception {
@@ -320,5 +321,17 @@ public class MockNodeTest {
 
         // throws IllegalArgumentException if its not a valid uuid
         UUID.fromString(node.getIdentifier());
+    }
+
+    @Test
+    public void testSetReferenceProperty() throws Exception {
+        final String reference2bPropertyName = "reference2b";
+        Node a = root.addNode("a");
+        Node b= root.addNode("b");
+        a.setProperty(reference2bPropertyName, b);
+
+        Node referencedByPropertyB = a.getProperty(reference2bPropertyName).getNode();
+
+        assertEquals(b, referencedByPropertyB);
     }
 }
