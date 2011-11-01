@@ -45,6 +45,8 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Button;
 
+import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
+
 /**
  * Edit bar.
  */

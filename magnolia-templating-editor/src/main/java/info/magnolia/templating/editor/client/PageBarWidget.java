@@ -34,6 +34,7 @@
 package info.magnolia.templating.editor.client;
 
 
+import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
 import com.google.gwt.dom.client.Element;

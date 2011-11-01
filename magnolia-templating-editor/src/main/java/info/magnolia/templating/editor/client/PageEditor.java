@@ -49,6 +49,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
@@ -72,6 +73,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     private boolean pageEditBarAlreadyProcessed = false;
     private String locale;
+    private static Dictionary dictionary;
 
     @Override
     public void onModuleLoad() {
@@ -83,9 +85,13 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         final NodeList<Element> areas = documentElement.getOwnerDocument().getElementsByTagName(MARKER_AREA);
         GWT.log("found "+ areas.getLength() + " cms:area tags");
 
+        locale = detectCurrentLocale(documentElement);
+        //TODO move messages we need to this module?
+        LegacyJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
+        dictionary = Dictionary.getDictionary("mgnlGwtMessages");
+
         processCmsTags(documentElement, null, edits, areas);
 
-        locale = detectCurrentLocale(documentElement);
     }
 
     @Override
@@ -198,6 +204,13 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             Window.alert("An error occured whilst trying to send a request to the server: " + e.getMessage());
         }
 
+    }
+
+    /**
+     * Provides dynamic string lookup of key/value string pairs defined in a module's host HTML page.
+     */
+    public static Dictionary getDictionary() {
+        return dictionary;
     }
 
     /**

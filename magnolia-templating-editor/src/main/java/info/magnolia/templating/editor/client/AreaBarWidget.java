@@ -33,6 +33,7 @@
  */
 package info.magnolia.templating.editor.client;
 
+import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
 import info.magnolia.rendering.template.AreaDefinition;
 
 import com.google.gwt.core.client.GWT;

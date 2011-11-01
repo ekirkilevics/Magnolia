@@ -34,8 +34,6 @@
 package info.magnolia.templating.editor.client;
 
 
-import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
@@ -45,7 +43,6 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -55,7 +52,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 public abstract class AbstractBarWidget extends FlowPanel {
 
     private AbstractBarWidget parentBar;
-    private Dictionary dictionary;
 
     public AbstractBarWidget(AbstractBarWidget parentBar) {
         this.parentBar = parentBar;
@@ -67,9 +63,6 @@ public abstract class AbstractBarWidget extends FlowPanel {
             }
         }, ClickEvent.getType());
 
-        //TODO move messages we need to this module?
-        LegacyJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
-        dictionary = Dictionary.getDictionary("mgnlGwtMessages");
     }
 
     /**
@@ -118,13 +111,6 @@ public abstract class AbstractBarWidget extends FlowPanel {
      */
     protected Style getStyle() {
         return getElement().getStyle();
-    }
-
-    /**
-     * Provides dynamic string lookup of key/value string pairs defined in a module's host HTML page.
-     */
-    protected Dictionary getDictionary() {
-        return dictionary;
     }
 
     public void attach(Element element) {
