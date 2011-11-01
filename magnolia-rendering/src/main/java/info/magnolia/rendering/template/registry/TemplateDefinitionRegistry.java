@@ -36,9 +36,11 @@ package info.magnolia.rendering.template.registry;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.AbstractRegistry;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,6 +52,7 @@ import javax.inject.Singleton;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +84,7 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
             templateDefinitionProvider = providers.get(id);
         }
         if (templateDefinitionProvider == null) {
-            throw new RegistrationException("No TemplateDefinition registered for id: " + id + ", availables ids are " + providers.keySet());
+            throw new RegistrationException("No TemplateDefinition registered for id: " + id + ", available ids are " + providers.keySet());
         }
         TemplateDefinition templateDefinition = templateDefinitionProvider.getDefinition();
         templateDefinition.setId(id);
@@ -123,7 +126,7 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
         final ArrayList<TemplateDefinition> availableTemplateDefinitions = new ArrayList<TemplateDefinition>();
         final Collection<TemplateDefinition> templateDefinitions = getTemplateDefinitions();
         for (TemplateDefinition templateDefinition : templateDefinitions) {
-            if (templateAvailability.isAvailable(content, templateDefinition)) {
+            if (!templateDefinition.getId().equals(DELETED_PAGE_TEMPLATE) && templateAvailability.isAvailable(content, templateDefinition)) {
                 availableTemplateDefinitions.add(templateDefinition);
             }
         }
@@ -136,24 +139,37 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
     public TemplateDefinition getDefaultTemplate(Node content) {
 
         // try to use the same as the parent
-        TemplateDefinition definition = null;
+        TemplateDefinition parentTemplate = null;
         try {
-            definition = this.get(MetaDataUtil.getTemplate(content));
-        } catch (RegistrationException e) {
-            log.warn("Can't resolve default template for node " + content, e);
+            parentTemplate = getTemplateDefinition(content.getParent());
+        } catch (RepositoryException e) {
+            log.error("Failed to determine template assigned to parent of node: " + NodeUtil.getNodePathIfPossible(content), e);
         }
 
-        if (definition != null && templateAvailability.isAvailable(content, definition)) {
-            return definition;
+        if (parentTemplate != null && templateAvailability.isAvailable(content, parentTemplate)) {
+            return parentTemplate;
         }
 
         // otherwise use the first available template
         Collection<TemplateDefinition> templates = getAvailableTemplates(content);
-        if (!templates.isEmpty()) {
-            return templates.iterator().next();
+        if (templates.isEmpty()) {
+            return null;
         }
 
-        return null;
+        return templates.iterator().next();
     }
 
+    private TemplateDefinition getTemplateDefinition(Node node) throws RepositoryException {
+        String templateId = MetaDataUtil.getTemplate(node);
+        if (StringUtils.isEmpty(templateId)) {
+            return null;
+        }
+        try {
+            // TODO Ioc
+            TemplateDefinitionAssignment templateDefinitionAssignment = Components.getComponent(TemplateDefinitionAssignment.class);
+            return templateDefinitionAssignment.getAssignedTemplateDefinition(node);
+        } catch (RegistrationException e) {
+            return null;
+        }
+    }
 }
