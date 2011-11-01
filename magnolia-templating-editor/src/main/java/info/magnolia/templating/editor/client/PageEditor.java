@@ -56,7 +56,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
- * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the <code>&lt;html&gt;</code> element).
+ * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the {@code <html>} element).
+ *
  * @version $Id$
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
@@ -80,10 +81,10 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         Element documentElement = Document.get().getDocumentElement();
 
         final NodeList<Element> edits = documentElement.getOwnerDocument().getElementsByTagName(MARKER_EDIT);
-        GWT.log("found "+ edits.getLength() + " cms:edit tags");
+        GWT.log("found " + edits.getLength() + " cms:edit tags");
 
         final NodeList<Element> areas = documentElement.getOwnerDocument().getElementsByTagName(MARKER_AREA);
-        GWT.log("found "+ areas.getLength() + " cms:area tags");
+        GWT.log("found " + areas.getLength() + " cms:area tags");
 
         locale = detectCurrentLocale(documentElement);
         //TODO move messages we need to this module?
@@ -96,16 +97,16 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
         if (url.contains("?")) {
 
-        	if (GWT.isScript())
-        		Window.Location.replace(url.substring(0, url.indexOf("?")));
-
-        	else if (url.contains("&"))
-        		Window.Location.replace(url.substring(0, url.indexOf("&")));
+            if (GWT.isScript()) {
+                Window.Location.replace(url.substring(0, url.indexOf("?")));
+            } else if (url.contains("&")) {
+                Window.Location.replace(url.substring(0, url.indexOf("&")));
+            }
         }
 
     }
 
-	@Override
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
     }
@@ -113,7 +114,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     /**
      * TODO: rename and/or remove arguments no longer needed (collectionName, nodeName).
      */
-    public  void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName){
+    public void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName) {
         if (collectionName == null) {
             collectionName = "";
         }
@@ -122,7 +123,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         }
 
         LegacyJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", locale);
-    };
+    }
 
     public void moveComponentStart(String id) {
         LegacyJavascript.mgnlMoveNodeStart(id);
@@ -159,7 +160,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     public void preview(boolean isPreview) {
         LegacyJavascript.mgnlPreview(isPreview);
-     }
+    }
 
     public void showTree(String workspace, String path) {
         LegacyJavascript.showTree(workspace, path);
@@ -167,15 +168,15 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     public void createComponent(String workspace, String parent, String relPath, String itemType) {
-        GWT.log("Creating ["+ itemType + "] in workspace [" + workspace + "] at path [" + parent +"/"+ relPath +"]");
+        GWT.log("Creating [" + itemType + "] in workspace [" + workspace + "] at path [" + parent + "/" + relPath + "]");
 
         final StringBuilder url = new StringBuilder();
         url.append(LegacyJavascript.getContextPath() + ".magnolia/pageeditor/PageEditorServlet?");
         url.append("action=create");
-        url.append("&workspace="+workspace);
-        url.append("&parent="+parent);
-        url.append("&relPath="+relPath);
-        url.append("&itemType="+itemType);
+        url.append("&workspace=" + workspace);
+        url.append("&parent=" + parent);
+        url.append("&relPath=" + relPath);
+        url.append("&itemType=" + itemType);
 
         RequestBuilder req = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
         req.setCallback(new RequestCallback() {
@@ -186,21 +187,21 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 String responseText = "";
                 boolean reload = false;
 
-                switch(status) {
-                case Response.SC_OK:
-                    reload = true;
-                    break;
-                case Response.SC_UNAUTHORIZED:
-                    responseText = "Is your session expired? Please, try to login again.";
-                    break;
-                default:
-                    responseText = "See logs for more details.";
+                switch (status) {
+                    case Response.SC_OK:
+                        reload = true;
+                        break;
+                    case Response.SC_UNAUTHORIZED:
+                        responseText = "Is your session expired? Please, try to login again.";
+                        break;
+                    default:
+                        responseText = "See logs for more details.";
                 }
 
-                if(reload) {
+                if (reload) {
                     Window.Location.reload();
                 } else {
-                    Window.alert("An error occured on the server: response status code is "+ status + "\n" + responseText);
+                    Window.alert("An error occured on the server: response status code is " + status + "\n" + responseText);
                 }
             }
 
@@ -242,7 +243,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         return locale;
     }
 
-    private void processCmsTags(Element element, AreaBarWidget parentBar, NodeList<Element> edits, NodeList<Element> areas ) {
+    private void processCmsTags(Element element, AreaBarWidget parentBar, NodeList<Element> edits, NodeList<Element> areas) {
         for (int i = 0; i < element.getChildCount(); i++) {
             Node childNode = element.getChild(i);
             if (childNode.getNodeType() == Element.ELEMENT_NODE) {
@@ -250,19 +251,19 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 if (child.getTagName().equalsIgnoreCase(MARKER_EDIT)) {
                     GWT.log("processing element " + child);
                     //We assume the first cms:edit we encounter in DOM is the page edit bar.
-                    if(!pageEditBarAlreadyProcessed) {
+                    if (!pageEditBarAlreadyProcessed) {
                         GWT.log("element was detected as page edit bar. Injecting it...");
                         PageBarWidget pageBarWidget = new PageBarWidget(this, child);
                         pageBarWidget.attach(child);
                         pageEditBarAlreadyProcessed = true;
 
-                        if(pageBarWidget.isPreviewMode()) {
+                        if (pageBarWidget.isPreviewMode()) {
                             //we just need the preview bar here
                             GWT.log("We're in preview mode, stop processing DOM.");
                             break;
                         }
                         //avoid processing cms:edit marker twice if this is an area
-                    } else if(!isAreaEditBar(child, areas)) {
+                    } else if (!isAreaEditBar(child, areas)) {
                         GWT.log("element is a plain edit bar. Injecting it...");
                         EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
                         editBarWidget.attach(child);
@@ -270,7 +271,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 } else if (child.getTagName().equalsIgnoreCase(MARKER_AREA)) {
                     GWT.log("processing element " + child);
                     Element edit = findCmsEditMarkerForArea(child, edits);
-                    if(edit != null) {
+                    if (edit != null) {
                         GWT.log("element was detected as area edit bar. Injecting it...");
                         AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, child);
                         areaBarWidget.attach(edit);
@@ -294,7 +295,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         boolean optional = Boolean.valueOf(edit.getAttribute("optional"));
         String bestMatch = optional ? name : content;
 
-        for(int j=0; j < areas.getLength(); j++) {
+        for (int j = 0; j < areas.getLength(); j++) {
 
             Element area = areas.getItem(j);
 
@@ -305,11 +306,11 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
             String areaMatch = areaContent + (LegacyJavascript.isNotEmpty(areaName) ? "/" + areaName : "");
 
-            if(areaOptional && !created) {
+            if (areaOptional && !created) {
                 areaMatch = areaName;
             }
 
-            if(bestMatch.equals(areaMatch)) {
+            if (bestMatch.equals(areaMatch)) {
                 GWT.log("element is an area edit bar (matched with [" + areaMatch + "])");
                 return true;
             }
@@ -330,16 +331,16 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         //if area is optional and not yet created, best match is its name, else is content + name
         String bestMatch = optional && !created ? name : content + (LegacyJavascript.isNotEmpty(name) ? "/" + name : "");
 
-        GWT.log("Best match for "+ (optional ? "optional" : "required") + " area and edit bar is [" + bestMatch + "]");
+        GWT.log("Best match for " + (optional ? "optional" : "required") + " area and edit bar is [" + bestMatch + "]");
 
-        for(int i=0; i < edits.getLength(); i++){
+        for (int i = 0; i < edits.getLength(); i++) {
             Element edit = edits.getItem(i);
             String toMatch = edit.getAttribute("content");
             String editName = edit.getAttribute("name");
             toMatch += (LegacyJavascript.isNotEmpty(editName) ? "/" + editName : "");
             boolean editOptional = Boolean.valueOf(edit.getAttribute("optional"));
 
-            if(toMatch.equals(bestMatch) || (optional && editOptional &&  bestMatch.equals(editName))) {
+            if (toMatch.equals(bestMatch) || (optional && editOptional && bestMatch.equals(editName))) {
                 GWT.log("found match with element " + edit);
                 return edit;
             }
