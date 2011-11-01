@@ -35,9 +35,9 @@ package info.magnolia.repository;
 
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Iterator;
 import javax.inject.Singleton;
 import javax.jcr.Credentials;
+import javax.jcr.NoSuchWorkspaceException;
 import javax.jcr.Node;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
@@ -77,26 +77,6 @@ public final class DefaultRepositoryManager implements RepositoryManager {
 
     private final WorkspaceMapping workspaceMapping = new WorkspaceMapping();
 
-    /**
-     * loads all configured repository using ID as Key, as configured in repositories.xml.
-     *
-     * <pre>
-     * &lt;Repository name="website"
-     *                id="website"
-     *                provider="info.magnolia.jackrabbit.ProviderImpl"
-     *                loadOnStartup="true" >
-     *   &lt;param name="configFile"
-     *             value="WEB-INF/config/repositories/website.xml"/>
-     *   &lt;param name="repositoryHome"
-     *             value="repositories/website"/>
-     *   &lt;param name="contextFactoryClass"
-     *             value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
-     *   &lt;param name="providerURL"
-     *             value="localhost"/>
-     *   &lt;param name="id" value="website"/>
-     * &lt;/Repository>
-     * </pre>
-     */
     @Override
     public void init() {
         log.info("Loading JCR");
@@ -109,54 +89,35 @@ public final class DefaultRepositoryManager implements RepositoryManager {
         }
     }
 
-    /**
-     * Shuts down all repositories (through Provider instances) and clears all mappings.
-     */
     @Override
     public void shutdown() {
         log.info("Shutting down JCR");
-        final Iterator<Provider> providers = workspaceMapping.getRepositoryProviders();
-        while (providers.hasNext()) {
-            final Provider provider = providers.next();
+        for (RepositoryDefinition repositoryDefinition : workspaceMapping.getRepositoryDefinitions()) {
+            Provider provider = workspaceMapping.getRepositoryProvider(repositoryDefinition.getName());
             provider.shutdownRepository();
         }
         workspaceMapping.clearAll();
     }
 
-    /**
-     * Verify the initialization state of all the repositories. This methods returns <code>false</code> only if
-     * <strong>all</strong> the repositories are empty (no node else than the root one).
-     *
-     * @return <code>false</code> if all the repositories are empty, <code>true</code> if at least one of them has
-     *         content.
-     * @throws AccessDeniedException repository authentication failed
-     * @throws RepositoryException   exception while accessing the repository
-     */
     @Override
     public boolean checkIfInitialized() throws AccessDeniedException, RepositoryException {
-        Iterator<String> repositoryNames = workspaceMapping.getLogicalWorkspaceNames();
-        while (repositoryNames.hasNext()) {
-            String repository = repositoryNames.next();
-            if (checkIfInitialized(repository)) {
+        Collection<String> workspaceNames = workspaceMapping.getLogicalWorkspaceNames();
+        for (String workspace : workspaceNames) {
+            if (checkIfInitialized(workspace)) {
                 return true;
             }
         }
         return false;
     }
 
-    /**
-     * @param workspace
-     * @throws RepositoryException
-     * @throws AccessDeniedException
-     */
     @Override
-    public boolean checkIfInitialized(String workspace) throws RepositoryException, AccessDeniedException {
-        log.debug("Checking [{}] repository.", workspace);
+    public boolean checkIfInitialized(String logicalWorkspace) throws RepositoryException, AccessDeniedException {
+        log.debug("Checking [{}] repository.", logicalWorkspace);
         // TODO cant we login without using the system context?
-        Session session = MgnlContext.getSystemContext().getJCRSession(workspace);
+        Session session = MgnlContext.getSystemContext().getJCRSession(logicalWorkspace);
 
         if (session == null) {
-            throw new RuntimeException("Repository [" + workspace + "] not loaded");
+            throw new RuntimeException("Repository [" + logicalWorkspace + "] not loaded");
         }
 
         Node startPage = session.getRootNode();
@@ -176,17 +137,12 @@ public final class DefaultRepositoryManager implements RepositoryManager {
         });
 
         if (children.iterator().hasNext()) {
-            log.debug("Content found in [{}].", workspace);
+            log.debug("Content found in [{}].", logicalWorkspace);
             return true;
         }
         return false;
     }
 
-    /**
-     * Re-load all configured repositories.
-     *
-     * @see #init()
-     */
     @Override
     public void reload() {
 
@@ -196,11 +152,6 @@ public final class DefaultRepositoryManager implements RepositoryManager {
         init();
     }
 
-    /**
-     * Load repository mappings and params using repositories.xml.
-     *
-     * @throws Exception
-     */
     private void loadRepositories() throws Exception {
 
         String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_REPOSITORIES_CONFIG);
@@ -223,16 +174,6 @@ public final class DefaultRepositoryManager implements RepositoryManager {
         }
     }
 
-    /**
-     * This method initializes the repository. You must not call this method twice.
-     *
-     * @param definition
-     * @throws RepositoryNotInitializedException
-     *
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws ClassNotFoundException
-     */
     @Override
     public void loadRepository(RepositoryDefinition definition) throws RepositoryNotInitializedException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         log.info("Loading JCR {}", definition.getName());
@@ -245,29 +186,23 @@ public final class DefaultRepositoryManager implements RepositoryManager {
         workspaceMapping.setRepositoryProvider(definition.getName(), provider);
 
         if (definition.isLoadOnStartup()) {
-            // load hierarchy managers for each workspace
             for (String workspaceId : definition.getWorkspaces()) {
                 registerNameSpacesAndNodeTypes(workspaceId, definition, provider);
             }
         }
     }
 
-    /**
-     * @param repositoryId
-     * @param workspaceName
-     * @throws RepositoryException
-     */
     @Override
-    public void loadWorkspace(String repositoryId, String workspaceName) throws RepositoryException {
-        log.info("Loading workspace {}", workspaceName);
+    public void loadWorkspace(String repositoryId, String physicalWorkspaceName) throws RepositoryException {
+        log.info("Loading workspace {}", physicalWorkspaceName);
 
-        workspaceMapping.addWorkspaceMapping(new WorkspaceMappingDefinition(workspaceName, repositoryId, workspaceName));
+        workspaceMapping.addWorkspaceMapping(new WorkspaceMappingDefinition(physicalWorkspaceName, repositoryId, physicalWorkspaceName));
 
         Provider provider = getRepositoryProvider(repositoryId);
-        provider.registerWorkspace(workspaceName);
+        provider.registerWorkspace(physicalWorkspaceName);
         RepositoryDefinition repositoryDefinition = workspaceMapping.getRepositoryDefinition(repositoryId);
 
-        registerNameSpacesAndNodeTypes(workspaceName, repositoryDefinition, provider);
+        registerNameSpacesAndNodeTypes(physicalWorkspaceName, repositoryDefinition, provider);
     }
 
     private void registerNameSpacesAndNodeTypes(String physicalWorkspaceName, RepositoryDefinition repositoryDefinition, Provider provider) {
@@ -280,15 +215,16 @@ public final class DefaultRepositoryManager implements RepositoryManager {
                 session.logout();
             }
         } catch (RepositoryException e) {
-            log.error("Failed to initialize hierarchy manager for JCR " + repositoryDefinition.getName(), e);
+            log.error("Failed to initialize workspace " + physicalWorkspaceName + " in repository " + repositoryDefinition.getName(), e);
         }
     }
 
     @Override
     public Session getSession(String logicalWorkspaceName, Credentials credentials) throws RepositoryException {
         WorkspaceMappingDefinition mapping = this.workspaceMapping.getWorkspaceMapping(logicalWorkspaceName);
+        if (mapping == null) throw new NoSuchWorkspaceException(logicalWorkspaceName);
         Repository repository = getRepository(mapping.getRepositoryName());
-        String physicalWorkspaceName = mapping.getWorkspaceName();
+        String physicalWorkspaceName = mapping.getPhysicalWorkspaceName();
 
         Session session = repository.login(credentials, physicalWorkspaceName);
         return wrapSession(session, logicalWorkspaceName);
@@ -297,27 +233,23 @@ public final class DefaultRepositoryManager implements RepositoryManager {
     @Override
     public Session getSystemSession(String logicalWorkspaceName) throws RepositoryException {
         WorkspaceMappingDefinition mapping = this.workspaceMapping.getWorkspaceMapping(logicalWorkspaceName);
+        if (mapping == null) throw new NoSuchWorkspaceException(logicalWorkspaceName);
         Provider provider = getRepositoryProvider(mapping.getRepositoryName());
-        return wrapSession(provider.getSystemSession(mapping.getWorkspaceName()), logicalWorkspaceName);
+        return wrapSession(provider.getSystemSession(mapping.getPhysicalWorkspaceName()), logicalWorkspaceName);
     }
 
     private Session wrapSession(Session session, String logicalWorkspaceName) {
         session = new TrackingSessionWrapper(session, JCRStats.getInstance());
         if (RepositoryConstants.VERSION_STORE.equals(logicalWorkspaceName)) {
-            //do not wrapp version store in versioning session or we get infinite redirect loop and stack overflow
+            //do not wrap version store in versioning session or we get infinite redirect loop and stack overflow
             return session;
         }
         return new MgnlVersioningSession(session);
     }
 
     @Override
-    public WorkspaceMappingDefinition getWorkspaceMapping(String logicalWorkspaceName) {
-        return workspaceMapping.getWorkspaceMapping(logicalWorkspaceName);
-    }
-
-    @Override
-    public Iterator<String> getLogicalWorkspaceNames() {
-        return workspaceMapping.getLogicalWorkspaceNames();
+    public boolean hasRepository(String repositoryId) {
+        return workspaceMapping.getRepositoryDefinition(repositoryId) != null;
     }
 
     @Override
@@ -328,16 +260,6 @@ public final class DefaultRepositoryManager implements RepositoryManager {
     @Override
     public Provider getRepositoryProvider(String repositoryId) {
         return workspaceMapping.getRepositoryProvider(repositoryId);
-    }
-
-    @Override
-    public Collection<WorkspaceMappingDefinition> getWorkspaceMappings() {
-        return workspaceMapping.getWorkspaceMappings();
-    }
-
-    @Override
-    public boolean hasRepository(String repositoryId) {
-        return workspaceMapping.getRepositoryDefinition(repositoryId) != null;
     }
 
     @Override
@@ -353,5 +275,20 @@ public final class DefaultRepositoryManager implements RepositoryManager {
     @Override
     public boolean hasWorkspace(String logicalWorkspaceName) {
         return workspaceMapping.getWorkspaceMapping(logicalWorkspaceName) != null;
+    }
+
+    @Override
+    public Collection<WorkspaceMappingDefinition> getWorkspaceMappings() {
+        return workspaceMapping.getWorkspaceMappings();
+    }
+
+    @Override
+    public WorkspaceMappingDefinition getWorkspaceMapping(String logicalWorkspaceName) {
+        return workspaceMapping.getWorkspaceMapping(logicalWorkspaceName);
+    }
+
+    @Override
+    public Collection<String> getWorkspaceNames() {
+        return workspaceMapping.getLogicalWorkspaceNames();
     }
 }

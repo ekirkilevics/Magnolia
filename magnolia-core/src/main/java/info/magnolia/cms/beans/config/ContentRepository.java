@@ -223,7 +223,7 @@ public final class ContentRepository {
     public static String getParentRepositoryName(String physicalWorkspaceName) throws RepositoryException {
         RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
         for (WorkspaceMappingDefinition mapping : repositoryManager.getWorkspaceMappings()) {
-            if (physicalWorkspaceName.equalsIgnoreCase(mapping.getWorkspaceName())) {
+            if (physicalWorkspaceName.equalsIgnoreCase(mapping.getPhysicalWorkspaceName())) {
                 return mapping.getRepositoryName();
             }
         }
@@ -234,7 +234,7 @@ public final class ContentRepository {
      * Returns the name of the repository for a logical workspace name.
      *
      * @returns the repository name or if the logical name doesn't exist it is returned
-     * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getRepositoryName(String)}  directly.
+     * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getWorkspaceMapping(String)}.
      */
     public static String getMappedRepositoryName(String logicalWorkspaceName) {
         RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
@@ -246,12 +246,12 @@ public final class ContentRepository {
      * Returns the physical workspace name given a logical workspace name.
      *
      * @returns the physical name or if the logical name doesn't exist it is returned
-     * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getPhysicalWorkspaceName(String)}  directly.
+     * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getWorkspaceMapping(String)}.
      */
     public static String getMappedWorkspaceName(String logicalWorkspaceName) {
         RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
         WorkspaceMappingDefinition mapping = repositoryManager.getWorkspaceMapping(logicalWorkspaceName);
-        return mapping != null ? mapping.getWorkspaceName() : logicalWorkspaceName;
+        return mapping != null ? mapping.getPhysicalWorkspaceName() : logicalWorkspaceName;
     }
 
     /**
@@ -349,10 +349,10 @@ public final class ContentRepository {
     /**
      * Gets the names of all logical workspaces.
      * 
-     * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getLogicalWorkspaceNames()} directly.
+     * @deprecated since 4.5 - use {@link info.magnolia.repository.RepositoryManager#getWorkspaceNames()} directly.
      */
     public static Iterator<String> getAllRepositoryNames() {
-        return Components.getComponent(RepositoryManager.class).getLogicalWorkspaceNames();
+        return Components.getComponent(RepositoryManager.class).getWorkspaceNames().iterator();
     }
 
     /**
@@ -367,7 +367,7 @@ public final class ContentRepository {
         RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
         Collection<WorkspaceMappingDefinition> repositoryNameMap = repositoryManager.getWorkspaceMappings();
         for (WorkspaceMappingDefinition mappingDefinition : repositoryNameMap) {
-            if (mappingDefinition.getWorkspaceName().equalsIgnoreCase(physicalWorkspaceName)) {
+            if (mappingDefinition.getPhysicalWorkspaceName().equalsIgnoreCase(physicalWorkspaceName)) {
                 return mappingDefinition.getLogicalWorkspaceName();
             }
         }

@@ -34,7 +34,7 @@
 package info.magnolia.repository.definition;
 
 /**
- * Represents a workspace mapping as defined in repositories.xml.
+ * Represents a mapping from a logical workspace name to a physical workspace name in a repository.
  *
  * @version $Id$
  */
@@ -42,12 +42,12 @@ public class WorkspaceMappingDefinition {
 
     private final String logicalWorkspaceName;
     private final String repositoryName;
-    private final String workspaceName;
+    private final String physicalWorkspaceName;
 
-    public WorkspaceMappingDefinition(String logicalWorkspaceName, String repositoryName, String workspaceName) {
+    public WorkspaceMappingDefinition(String logicalWorkspaceName, String repositoryName, String physicalWorkspaceName) {
         this.logicalWorkspaceName = logicalWorkspaceName;
         this.repositoryName = repositoryName;
-        this.workspaceName = workspaceName;
+        this.physicalWorkspaceName = physicalWorkspaceName;
     }
 
     public String getLogicalWorkspaceName() {
@@ -58,7 +58,7 @@ public class WorkspaceMappingDefinition {
         return repositoryName;
     }
 
-    public String getWorkspaceName() {
-        return workspaceName;
+    public String getPhysicalWorkspaceName() {
+        return physicalWorkspaceName;
     }
 }

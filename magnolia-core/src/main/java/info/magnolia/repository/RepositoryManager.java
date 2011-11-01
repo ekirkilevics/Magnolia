@@ -38,45 +38,28 @@ import info.magnolia.repository.definition.RepositoryDefinition;
 import info.magnolia.repository.definition.WorkspaceMappingDefinition;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.jcr.Credentials;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-// WorkspaceAccessUtil
-// LifetimeJCRSessionUtil
-// ContentRepository
-// JCRStats
-
 
 /**
- * Main repository abstraction.
+ * Manages JCR repositories. Initialization of a repository is handled by {@link Provider}s. Magnolia can be configured
+ * to have its workspaces in more than one repository. This is abstracted through this class which maps a set of
+ * "logical" workspace names to their actual "physical" workspace names in a repository.
  *
+ * Configuration of providers and workspace mappings are done in repositories.xml.
+ *
+ * @see Provider
+ * @see info.magnolia.repository.definition.RepositoryMappingDefinitionReader
  * @version $Id$
  */
 public interface RepositoryManager {
 
     /**
-     * loads all configured repository using ID as Key, as configured in repositories.xml.
-     *
-     * <pre>
-     * &lt;Repository name="website"
-     *                id="website"
-     *                provider="info.magnolia.jackrabbit.ProviderImpl"
-     *                loadOnStartup="true" >
-     *   &lt;param name="configFile"
-     *             value="WEB-INF/config/repositories/website.xml"/>
-     *   &lt;param name="repositoryHome"
-     *             value="repositories/website"/>
-     *   &lt;param name="contextFactoryClass"
-     *             value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory"/>
-     *   &lt;param name="providerURL"
-     *             value="localhost"/>
-     *   &lt;param name="id" value="website"/>
-     * &lt;/Repository>
-     *</pre>
+     * Initializes by loading configuration from repositories.xml.
      */
     void init();
 
@@ -85,7 +68,7 @@ public interface RepositoryManager {
      */
     void shutdown();
 
-    // The implementation of this in ContentRepository seems fishy, it clears the Repository instances and reads the xml again
+    // TODO The implementation of this in ContentRepository seems fishy, it clears the Repository instances and reads the xml again
     // what is the effect on things added after init() ?
     /**
      * Re-load all configured repositories.
@@ -98,21 +81,19 @@ public interface RepositoryManager {
     Session getSystemSession(String logicalWorkspaceName) throws RepositoryException;
 
     /**
-     * Verify the initialization state of all the repositories. This methods returns <code>false</code> only if
-     * <strong>all</strong> the repositories are empty (no node else than the root one).
-     * @return <code>false</code> if all the repositories are empty, <code>true</code> if at least one of them has
-     * content.
+     * Verify the initialization state of all the workspaces. This methods returns <code>false</code> only if
+     * <strong>all</strong> the workspaces are empty (no node else than the root one).
+     *
+     * @return <code>false</code> if all the workspaces are empty, <code>true</code> if at least one of them has content.
      * @throws AccessDeniedException repository authentication failed
      * @throws RepositoryException exception while accessing the repository
      */
     boolean checkIfInitialized() throws AccessDeniedException, RepositoryException;
 
     /**
-     * @param workspace
-     * @throws RepositoryException
-     * @throws AccessDeniedException
+     * Verifies the initialization state of a workspace.
      */
-    boolean checkIfInitialized(String workspace) throws RepositoryException, AccessDeniedException;
+    boolean checkIfInitialized(String logicalWorkspace) throws RepositoryException, AccessDeniedException;
 
     /**
      * Adds a repository definition and instantiates its provider. If the loadOnStartup property is true it also
@@ -122,10 +103,9 @@ public interface RepositoryManager {
 
     /**
      * Loads a workspace by registering namespaces and node types on a workspace that has not previously been loaded.
-     *
-     * TODO not sure if the workspaceId is supposed to be logical or physical, likely physical since we also pass a repo id which would be useless otherwise
+     * Also adds a workspace mapping that maps the physical workspace name as a logical name.
      */
-    void loadWorkspace(String repositoryId, String workspaceName) throws RepositoryException;
+    void loadWorkspace(String repositoryId, String physicalWorkspaceName) throws RepositoryException;
 
     boolean hasRepository(String repositoryId);
 
@@ -135,25 +115,31 @@ public interface RepositoryManager {
     RepositoryDefinition getRepositoryDefinition(String repositoryId);
 
     /**
-     * Returns repository provider specified by the <code>repositoryId</code> as configured in repository config.
+     * Returns the provider instance for a repository.
      *
      * @throws IllegalArgumentException if there is no such repository
      */
     Provider getRepositoryProvider(String repositoryId);
 
+    /**
+     * Returns repository instance for a repository.
+     *
+     * @throws IllegalArgumentException if there is no such repository
+     */
     Repository getRepository(String repositoryId);
 
-    /**
-     * Gets repository names array as configured in repositories.xml.
-     * @return repository names
-     */
-    Iterator<String> getLogicalWorkspaceNames();
-
-    WorkspaceMappingDefinition getWorkspaceMapping(String logicalWorkspaceName);
-
-    Collection<WorkspaceMappingDefinition> getWorkspaceMappings();
+    void addWorkspaceMapping(WorkspaceMappingDefinition mapping);
 
     boolean hasWorkspace(String logicalWorkspaceName);
 
-    void addWorkspaceMapping(WorkspaceMappingDefinition mapping);
+    Collection<WorkspaceMappingDefinition> getWorkspaceMappings();
+
+    WorkspaceMappingDefinition getWorkspaceMapping(String logicalWorkspaceName);
+
+    /**
+     * Returns workspace names.
+     *
+     * @return repository names
+     */
+    Collection<String> getWorkspaceNames();
 }

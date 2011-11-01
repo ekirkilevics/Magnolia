@@ -162,7 +162,7 @@ public class ProviderImpl implements Provider {
     }
 
     /**
-     * @see info.magnolia.repository.Provider#init(info.magnolia.repository.RepositoryMapping)
+     * @see info.magnolia.repository.Provider#init(info.magnolia.repository.definition.RepositoryDefinition)
      */
     @Override
     public void init(RepositoryDefinition repositoryMapping) throws RepositoryNotInitializedException {

@@ -61,17 +61,17 @@ public class RepositoryMappingDefinitionReaderTest {
         WorkspaceMappingDefinition mapping1 = iterator.next();
         assertEquals("website", mapping1.getLogicalWorkspaceName());
         assertEquals("magnolia", mapping1.getRepositoryName());
-        assertEquals("website", mapping1.getWorkspaceName());
+        assertEquals("website", mapping1.getPhysicalWorkspaceName());
 
         WorkspaceMappingDefinition mapping2 = iterator.next();
         assertEquals("data", mapping2.getLogicalWorkspaceName());
         assertEquals("anotherRepository", mapping2.getRepositoryName());
-        assertEquals("physicalName", mapping2.getWorkspaceName());
+        assertEquals("physicalName", mapping2.getPhysicalWorkspaceName());
 
         WorkspaceMappingDefinition mapping3 = iterator.next();
         assertEquals("config", mapping3.getLogicalWorkspaceName());
         assertEquals("magnolia", mapping3.getRepositoryName());
-        assertEquals("config", mapping3.getWorkspaceName());
+        assertEquals("config", mapping3.getPhysicalWorkspaceName());
 
         Collection<RepositoryDefinition> repositories = definition.getRepositories();
         assertEquals(3, repositories.size());

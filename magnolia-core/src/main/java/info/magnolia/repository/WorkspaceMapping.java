@@ -35,7 +35,6 @@ package info.magnolia.repository;
 
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 import javax.jcr.Repository;
 
@@ -102,8 +101,8 @@ public class WorkspaceMapping {
         addWorkspaceMappingDefinition(mapping);
 
         RepositoryDefinition repositoryDefinition = getRepositoryDefinition(mapping.getRepositoryName());
-        if (!repositoryDefinition.getWorkspaces().contains(mapping.getWorkspaceName())) {
-            repositoryDefinition.addWorkspace(mapping.getWorkspaceName());
+        if (!repositoryDefinition.getWorkspaces().contains(mapping.getPhysicalWorkspaceName())) {
+            repositoryDefinition.addWorkspace(mapping.getPhysicalWorkspaceName());
         }
     }
 
@@ -118,20 +117,12 @@ public class WorkspaceMapping {
         return repositoryDefinitions.get(repositoryId);
     }
 
-    public Iterator<String> getLogicalWorkspaceNames() {
-        return workspaceMappingDefinitions.keySet().iterator();
+    public Collection<String> getLogicalWorkspaceNames() {
+        return workspaceMappingDefinitions.keySet();
     }
 
     public WorkspaceMappingDefinition getWorkspaceMapping(String logicalWorkspaceName) {
         return workspaceMappingDefinitions.get(logicalWorkspaceName);
-    }
-
-    /**
-     * Returns the name of the repository that a logical workspace name is mapped to.
-     */
-    public String getRepositoryName(String logicalWorkspaceName) {
-        WorkspaceMappingDefinition mapping = workspaceMappingDefinitions.get(logicalWorkspaceName);
-        return mapping != null ? mapping.getRepositoryName() : null;
     }
 
     public Collection<WorkspaceMappingDefinition> getWorkspaceMappings() {
@@ -172,7 +163,7 @@ public class WorkspaceMapping {
         return provider;
     }
 
-    public Iterator<Provider> getRepositoryProviders() {
-        return providers.values().iterator();
+    public Collection<RepositoryDefinition> getRepositoryDefinitions() {
+        return repositoryDefinitions.values();
     }
 }
