@@ -34,6 +34,7 @@
 package info.magnolia.context;
 
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.objectfactory.Components;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
@@ -67,6 +68,6 @@ public class WebContextFactoryImpl implements WebContextFactory, Serializable {
      * Override this method if you need to provide a specific subclass of AggregationState.
      */
     protected AggregationState newAggregationState() {
-        return new AggregationState();
+        return Components.newInstance(AggregationState.class);
     }
 }

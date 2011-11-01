@@ -37,6 +37,7 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
 
 import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
@@ -450,7 +451,7 @@ public class NodeUtil {
     }
 
     /**
-     * This method return the node's name on success, otherwise it handles the {@link RepositoryException} by throwing a {@link RuntimeException}.
+     * This method return the node's name on success, otherwise it handles the {@link RepositoryException} by throwing a {@link RuntimeRepositoryException}.
      * @param content Node to get the name from.
      * @return the name of the node passed.
      */
@@ -458,7 +459,7 @@ public class NodeUtil {
         try {
             return content.getName();
         } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeRepositoryException(e);
         }
     }
 
@@ -480,15 +481,16 @@ public class NodeUtil {
             return "<not available>";
         }
     }
+
     /**
      * Return the Path of the node.
-     * Return an empty String in case of exception
+     *
+     * @return the path for the node or an empty String in case of exception
      */
-    public static  String getHandleIfPossible(Node node) {
+    public static String getPathIfPossible(Node node) {
         try {
             return node.getPath();
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             log.error("Failed to get handle: " + e.getMessage(), e);
             return StringUtils.EMPTY;
         }

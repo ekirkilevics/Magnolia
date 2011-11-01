@@ -33,23 +33,20 @@
  */
 package info.magnolia.jcr.util;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.core.version.VersionedNode;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.cms.core.version.VersionedNode;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.test.mock.MockUtil;
-import info.magnolia.test.mock.jcr.MockNode;
-import info.magnolia.test.mock.jcr.MockSession;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -81,6 +78,7 @@ public class NodeUtilTest {
         second = root.addNode(SECOND_CHILD);
         third = root.addNode(THIRD_CHILD);
     }
+
     @Test
     public void testHasMixin() throws Exception {
         final String mixin1 = "mixin1";
@@ -90,10 +88,11 @@ public class NodeUtilTest {
         assertFalse(NodeUtil.hasMixin(root, "mixin2"));
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testHasMixinFailsWithEmptyMixin() throws Exception {
         NodeUtil.hasMixin(root, null);
     }
+
     @Test
     public void testUnwrap() throws Exception {
         final Version version = mock(Version.class);
@@ -102,6 +101,7 @@ public class NodeUtilTest {
 
         assertEquals(root, NodeUtil.unwrap(wrapper));
     }
+
     @Test
     public void testOrderBeforeWithExistingNodeAndSibling() throws Exception {
         NodeUtil.orderBefore(third, FIRST_CHILD);
@@ -111,6 +111,7 @@ public class NodeUtilTest {
         assertEquals(first, kidsIterator.next());
         assertEquals(second, kidsIterator.next());
     }
+
     @Test
     public void testOrderBeforeWithNullSibling() throws Exception {
         // should result in putting firstChild at the end of the children
@@ -121,6 +122,7 @@ public class NodeUtilTest {
         assertEquals(third, orderedKids.next());
         assertEquals(first, orderedKids.next());
     }
+
     @Test
     public void testOrderAfterWithExistingNodeAndSibling() throws Exception {
         NodeUtil.orderAfter(third, FIRST_CHILD);
@@ -130,6 +132,7 @@ public class NodeUtilTest {
         assertEquals(third, kidsIterator.next());
         assertEquals(second, kidsIterator.next());
     }
+
     @Test
     public void testOrderAfterWithNullSibling() throws RepositoryException {
         // should result in putting thirdChild at the begin of the children
@@ -139,6 +142,7 @@ public class NodeUtilTest {
         assertEquals(first, orderedKids.next());
         assertEquals(second, orderedKids.next());
     }
+
     @Test
     public void testOrderFirst() throws RepositoryException {
         NodeUtil.orderFirst(second);
@@ -147,6 +151,7 @@ public class NodeUtilTest {
         assertEquals(first, orderedKids.next());
         assertEquals(third, orderedKids.next());
     }
+
     @Test
     public void testOrderLast() throws RepositoryException {
         NodeUtil.orderLast(second);
@@ -155,6 +160,7 @@ public class NodeUtilTest {
         assertEquals(third, orderedKids.next());
         assertEquals(second, orderedKids.next());
     }
+
     @Test
     public void testCreatePath() throws RepositoryException {
         final String pathToCreate = "/xxx/yyy/zzz";
@@ -162,16 +168,18 @@ public class NodeUtilTest {
         assertNotNull(zzz);
         assertEquals(PropertyType.TYPENAME_STRING, zzz.getPrimaryNodeType().getName());
     }
+
     @Test
     public void testCreatePathDoesntCreateNewWhenExisting() throws RepositoryException {
         Node returnedNode = NodeUtil.createPath(root, FIRST_CHILD, PropertyType.TYPENAME_STRING);
         assertNotNull(returnedNode);
         assertEquals("createPath was called with existing subpath: existing node should be returned - not a new instance!", first, returnedNode);
     }
+
     @Test
     public void testVisit() throws RepositoryException {
         final AtomicInteger counter = new AtomicInteger(0);
-        NodeUtil.visit(root, new NodeVisitor(){
+        NodeUtil.visit(root, new NodeVisitor() {
             @Override
             public void visit(Node node) throws RepositoryException {
                 counter.incrementAndGet();
@@ -179,13 +187,14 @@ public class NodeUtilTest {
         });
         assertEquals(4, counter.get());
     }
+
     @Test
     public void testPostVisit() throws RepositoryException {
 
         final AtomicInteger counter1 = new AtomicInteger(0);
         final AtomicInteger counter2 = new AtomicInteger(0);
         final List<String> names = new ArrayList<String>();
-        NodeUtil.visit(root, new PostNodeVisitor(){
+        NodeUtil.visit(root, new PostNodeVisitor() {
             @Override
             public void visit(Node node) throws RepositoryException {
                 counter1.incrementAndGet();
@@ -203,8 +212,10 @@ public class NodeUtilTest {
         assertEquals(FIRST_CHILD, names.get(0));
         assertEquals(SECOND_CHILD, names.get(1));
         assertEquals(THIRD_CHILD, names.get(2));
+        // root's name is ""
         assertEquals("", names.get(3));
     }
+
     @Test
     public void testGetNodes() throws RepositoryException {
         first.addNode("alpha", MgnlNodeType.NT_CONTENT);
@@ -213,10 +224,11 @@ public class NodeUtilTest {
 
         Iterable<Node> iterable = NodeUtil.getNodes(first);
         Iterator<Node> iterator = iterable.iterator();
-        assertEquals("alpha",iterator.next().getName());
+        assertEquals("alpha", iterator.next().getName());
         assertEquals("gamma", iterator.next().getName());
         assertTrue(!iterator.hasNext());
     }
+
     @Test
     public void testGetNodeWithContentType() throws RepositoryException {
         root.addNode("alpha", MgnlNodeType.NT_CONTENT);
@@ -225,10 +237,11 @@ public class NodeUtilTest {
 
         Iterable<Node> iterable = NodeUtil.getNodes(root, MgnlNodeType.NT_CONTENT);
         Iterator<Node> iterator = iterable.iterator();
-        assertEquals("alpha",iterator.next().getName());
+        assertEquals("alpha", iterator.next().getName());
         assertEquals("gamma", iterator.next().getName());
         assertTrue(!iterator.hasNext());
     }
+
     @Test
     public void testGetNodesWithNodeFilter() throws RepositoryException {
         first.addNode("alpha", MgnlNodeType.NT_CONTENT);
@@ -237,83 +250,92 @@ public class NodeUtilTest {
         Iterable<Node> iterable = NodeUtil.getNodes(first, NodeUtil.MAGNOLIA_FILTER);
         Iterator<Node> iterator = iterable.iterator();
 
-        assertEquals("alpha",iterator.next().getName());
+        assertEquals("alpha", iterator.next().getName());
         assertTrue(!iterator.hasNext());
     }
 
     @Test
-    public void testGetNameFromNode() throws RuntimeException {
+    public void testGetNameFromNode() {
         assertEquals(FIRST_CHILD, NodeUtil.getName(first));
     }
 
+    @Test(expected = RuntimeRepositoryException.class)
+    public void testGetNameFromNodeThrowsRuntimeRepositoryException() {
+        Node node = mock(Node.class);
+        try {
+            when(node.getName()).thenThrow(new RepositoryException());
+        } catch (RepositoryException e) {
+            fail();
+        }
+        NodeUtil.getName(node);
+    }
+
     @Test
-    public void testGetNodeByIdentifier() throws RepositoryException{
+    public void testGetNodeByIdentifier() throws RepositoryException {
         //INIT
-        try{
-           // GIVEN
-           MockUtil.initMockContext();
-           MockSession session = new MockSession("website");
-           MockUtil.setSessionAndHierarchyManager(session);
-           Node rootNode = session.getRootNode();
-           Node addedNode = rootNode.addNode(FIRST_CHILD);
-           String identifier = addedNode.getIdentifier();
+        try {
+            // GIVEN
+            MockUtil.initMockContext();
+            MockSession session = new MockSession("website");
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode(FIRST_CHILD);
+            String identifier = addedNode.getIdentifier();
 
-           // WHEN
-           Node res = NodeUtil.getNodeByIdentifier("website", identifier);
+            // WHEN
+            Node res = NodeUtil.getNodeByIdentifier("website", identifier);
 
-           //THEN
-           assertEquals("Both Node should be Identical ",addedNode, res);
+            //THEN
+            assertEquals("Both Node should be Identical ", addedNode, res);
 
-        }finally{
+        } finally {
             MgnlContext.setInstance(null);
         }
     }
 
     @Test
-    public void testGetNodeByIdentifierMissingParam() throws RepositoryException{
+    public void testGetNodeByIdentifierMissingParam() throws RepositoryException {
         //INIT
-        try{
-           //WHEN
-           Node res = NodeUtil.getNodeByIdentifier("website", null);
-           //THEN
-           assertEquals("Both Node should be Identical ",null, res);
+        try {
+            //WHEN
+            Node res = NodeUtil.getNodeByIdentifier("website", null);
+            //THEN
+            assertEquals("Both Node should be Identical ", null, res);
 
-        }finally{
+        } finally {
             MgnlContext.setInstance(null);
         }
     }
 
-    @Test(expected=RepositoryException.class)
-    public void testGetNodeByIdentifierNoNodeFound() throws RepositoryException{
+    @Test(expected = RepositoryException.class)
+    public void testGetNodeByIdentifierNoNodeFound() throws RepositoryException {
         //INIT
-        try{
-           //GIVEN
-           MockUtil.initMockContext();
-           MockSession session = new MockSession("website");
-           MockUtil.setSessionAndHierarchyManager(session);
-           Node rootNode = session.getRootNode();
-           Node addedNode = rootNode.addNode(FIRST_CHILD);
-           String identifier = addedNode.getIdentifier();
+        try {
+            //GIVEN
+            MockUtil.initMockContext();
+            MockSession session = new MockSession("website");
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode(FIRST_CHILD);
+            String identifier = addedNode.getIdentifier();
 
-           //WHEN
-           NodeUtil.getNodeByIdentifier("website", identifier+1);
+            //WHEN
+            NodeUtil.getNodeByIdentifier("website", identifier + 1);
 
-           assertTrue("Should get an Exception ",false);
-        }finally{
+            assertTrue("Should get an Exception ", false);
+        } finally {
             MgnlContext.setInstance(null);
         }
     }
+
     @Test
-    public void testGetHandleIfPossible() throws RepositoryException {
+    public void testGetPathIfPossible() {
         // GIVEN
-        final String nodeName = "testNode";
-        Node root = new MockNode(MockNode.ROOT_NODE_NAME);
-        Node addedNode = root.addNode(nodeName);
 
         // WHEN
-        String res = NodeUtil.getHandleIfPossible(addedNode);
+        String res = NodeUtil.getPathIfPossible(first);
 
         // THEN
-        assertEquals("Should be /testNode  ", "/" + nodeName, res);
+        assertEquals("Should be /testNode  ", "/" + FIRST_CHILD, res);
     }
 }

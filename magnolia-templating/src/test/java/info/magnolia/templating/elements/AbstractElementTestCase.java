@@ -111,7 +111,7 @@ public abstract class AbstractElementTestCase {
         when(p1provider.getDefinition()).thenReturn(p1);
         when(p1provider.getId()).thenReturn(p1.getName());
 
-        final TemplateDefinitionRegistry pman = new TemplateDefinitionRegistry();
+        final TemplateDefinitionRegistry pman = new TemplateDefinitionRegistry(null);
         pman.register(p0provider);
         pman.register(p1provider);
 

@@ -45,8 +45,10 @@ import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.model.EarlyExecutionAware;
 import info.magnolia.rendering.model.ModelExecutionFilter;
 import info.magnolia.rendering.model.RenderingModel;
+import info.magnolia.rendering.model.RenderingModelImpl;
 import info.magnolia.rendering.template.RenderableDefinition;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -144,40 +146,41 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     public RenderingModel<?> newModel(final Node content, final RenderableDefinition definition, final RenderingModel<?> parentModel) throws RenderException {
 
         Class clazz = definition.getModelClass();
+
+        // if none is set we default to RenderingModelImpl, so there will always be a model available in templates
         if (clazz == null) {
-            return null;
+            clazz = RenderingModelImpl.class;
         }
 
-        // TODO this check exists because the legacy RenderableDefinitions extend the new ones, we do not support old models
-        if (!RenderingModel.class.isAssignableFrom(clazz)) {
-            throw new RenderException("Can only render models of type [" + RenderingModel.class.getName() + "]");
-        }
+        final Node wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
 
-        Class<? extends RenderingModel> modelClass = clazz;
+        return newModel(clazz, wrappedContent, definition, parentModel);
+    }
+
+    protected <T extends RenderingModel<?>> T newModel(Class<T> modelClass, final Node content, final RenderableDefinition definition, final RenderingModel<?> parentModel) throws RenderException {
 
         try {
-            final Node wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
 
-            RenderingModel model = Components.getComponentProvider().newInstanceWithParameterResolvers(modelClass,
-                new ParameterResolver() {
-                    @Override
-                    public Object resolveParameter(ParameterInfo parameter) {
-                        if (parameter.getParameterType().equals(Node.class)) {
-                            return wrappedContent;
+            T model = Components.getComponentProvider().newInstanceWithParameterResolvers(modelClass,
+                    new ParameterResolver() {
+                        @Override
+                        public Object resolveParameter(ParameterInfo parameter) {
+                            if (parameter.getParameterType().equals(Node.class)) {
+                                return content;
+                            }
+                            if (parameter.getParameterType().isAssignableFrom(definition.getClass())) {
+                                return definition;
+                            }
+                            if (parameter.getParameterType().equals(RenderingModel.class)) {
+                                return parentModel;
+                            }
+                            return UNRESOLVED;
                         }
-                        if (parameter.getParameterType().isAssignableFrom(definition.getClass())) {
-                            return definition;
-                        }
-                        if (parameter.getParameterType().equals(RenderingModel.class)) {
-                            return parentModel;
-                        }
-                        return UNRESOLVED;
                     }
-                }
             );
 
-            // TODO pass the parameter map to the method
-            final Map<String, String> params = MgnlContext.getParameters();
+            // populate the instance with values given as request parameters
+            Map<String, String> params = MgnlContext.getParameters();
             if (params != null) {
                 BeanUtils.populate(model, params);
             }
@@ -185,8 +188,10 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
             return model;
 
         } catch (MgnlInstantiationException e) {
-            throw new IllegalArgumentException("Can't instantiate model: " + modelClass, e);
-        } catch (Exception e) {
+            throw new RenderException("Can't instantiate model: " + modelClass, e);
+        } catch (InvocationTargetException e) {
+            throw new RenderException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
+        } catch (IllegalAccessException e) {
             throw new RenderException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
         }
     }

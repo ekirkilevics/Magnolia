@@ -34,7 +34,6 @@
 package info.magnolia.templating.editor.client;
 
 
-import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -44,13 +43,19 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the <code>&lt;html&gt;</code> element).
- *
+ * TODO fgrilli remove queryString from url before reloading page else interceptor filter params stay there and can lead to confusing behavior in certain situations.
  * @version $Id$
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
@@ -143,6 +148,40 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     }
 
+    public void createComponent(String workspace, String parent, String relPath, String itemType) {
+        GWT.log("Creating ["+ itemType + "] in workspace [" + workspace + "] at path [" + parent +"/"+ relPath +"]");
+        //TODO fgrilli: use URLBuilder or try to encode url?
+        StringBuilder url = new StringBuilder();
+        url.append(LegacyJavascript.getContextPath() + ".magnolia/pageeditor/PageEditorServlet?");
+        url.append("action=create");
+        url.append("&workspace="+workspace);
+        url.append("&parent="+parent);
+        url.append("&relPath="+relPath);
+        url.append("&itemType="+itemType);
+
+        RequestBuilder req = new RequestBuilder(RequestBuilder.GET, url.toString());
+        req.setCallback(new RequestCallback() {
+
+            @Override
+            public void onResponseReceived(Request request, Response response) {
+                //String queryString = Location.getQueryString();
+                Window.Location.reload();
+            }
+
+            @Override
+            public void onError(Request request, Throwable exception) {
+                //TODO fgrilli: give some feedback to this unlucky user.
+                Window.Location.reload();
+            }
+        });
+        try {
+            req.send();
+        } catch (RequestException e) {
+           //TODO fgrilli: handle it.
+        }
+
+    }
+
     /**
      * A String representing the value for the GWT meta property whose content is <em>locale</em>.
      * See also <a href='http://code.google.com/webtoolkit/doc/latest/DevGuideI18nLocale.html#LocaleSpecifying'>GWT Dev Guide to i18n</a>
@@ -180,15 +219,11 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                             //we just need the preview bar here
                             break;
                         }
-                    //avoid processing cms:edit marker twice if this is an area
+                        //avoid processing cms:edit marker twice if this is an area
                     } else if(!isAreaEditBar(child, areas)) {
                         EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
                         editBarWidget.attach(child);
                     }
-                    if (parentBar != null && parentBar.getType().equals(AreaDefinition.TYPE_SINGLE)) {
-                        parentBar.mutateIntoSingleBar(child);
-                    }
-
                 } else if (child.getTagName().equalsIgnoreCase(MARKER_AREA)) {
                     Element edit = findCmsEditMarkerForArea(child, edits);
                     if(edit != null) {
@@ -203,15 +238,25 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         }
     }
 
+    /**
+     * Tries to find a match between the provided edit bar tag and the area tags found in DOM. Best match is when area and edit tags have the exact same content.
+     * However there might be the case where an optional area is in DOM but still needs to be created (manually via the UI). In that case content will be null,
+     * therefore we rely on name and optional attributes on having the same values in area and edit tags.
+     */
     private boolean isAreaEditBar(Element edit, NodeList<Element> areas) {
 
         String editContent = edit.getAttribute("content");
         int i = editContent.lastIndexOf("/");
-
-        if(i == -1) {
+        String match = null;
+        if(i != -1) {
+            match = editContent.substring(0, i);
+        } else {
+            //try with name and optional
+            match = edit.getAttribute("name");
+        }
+        if(match == null || match.length() == 0) {
             return false;
         }
-        String match = editContent.substring(0, i);
         //GWT only shows these messages in dev mode.
         GWT.log("String to match area is " + match);
 
@@ -219,8 +264,10 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
             Element area = areas.getItem(j);
             String areaContent = area.getAttribute("content");
+            String areaName = area.getAttribute("name");
+            boolean optional = Boolean.valueOf(area.getAttribute("optional"));
 
-            if(match.equals(areaContent)) {
+            if(match.equals(areaContent) || (optional && match.equals(areaName))) {
                 GWT.log("found match with element " + area);
                 return true;
             }
@@ -229,26 +276,31 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     /**
-     * Looks in DOM for an existing &lt;cms:edit ... &gt; marker associated with an area element. For an edit bar to be associated with the passed in element,
-     * they must have the same content value.
+     * Tries to find a match between the provided edit area tag and the edit tags found in DOM. Best match is when area and edit tags have the exact same content.
+     * However there might be the case where an optional area is in DOM but still needs to be created (manually via the UI). In that case content will be null,
+     * therefore we rely on name and optional attributes on having the same values in area and edit tags.
      */
     private Element findCmsEditMarkerForArea(Element area, NodeList<Element> edits) {
         String content = area.getAttribute("content");
         String name = area.getAttribute("name");
+        boolean optional = Boolean.valueOf(area.getAttribute("optional"));
 
-        String match = content + (name != null ? ("/" + name) : "");
+        String bestMatch = content + (name != null ? ("/" + name) : "");
         //GWT shows these messages only in dev mode.
-        GWT.log("String to match edit bar is " + match);
+        GWT.log("String to match edit bar is " + bestMatch + ". Or if area is optional try with name [" + name +"]");
 
         for(int i=0; i < edits.getLength(); i++){
             Element edit = edits.getItem(i);
             String editContent = edit.getAttribute("content");
+            String editName = edit.getAttribute("name");
+            boolean editOptional = Boolean.valueOf(edit.getAttribute("optional"));
 
-            if(match.equals(editContent)) {
+            if(bestMatch.equals(editContent) || (optional && editOptional &&  name.equals(editName))) {
                 GWT.log("found match with element " + edit);
                 return edit;
             }
         }
         return null;
     }
+
 }

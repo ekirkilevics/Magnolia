@@ -33,17 +33,11 @@
  */
 package info.magnolia.rendering.template.configured;
 
-import info.magnolia.cms.security.PermissionUtil;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.rendering.template.AutoGenerationConfiguration;
 import info.magnolia.rendering.template.RenderableDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -67,17 +61,6 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     private AutoGenerationConfiguration autoGeneration = new ConfiguredAutoGeneration();
 
     protected Map<String, Object> parameters = new HashMap<String, Object>();
-
-    @Override
-    public boolean isAvailable(Node content) {
-        try {
-            // should not fact that we are able to get path already show that we can read this node???
-            // ... unless of course this "content" was created with system session ... so make sure we check using user session and not the node session
-            return PermissionUtil.isGranted(MgnlContext.getJCRSession(content.getSession().getWorkspace().getName()), content.getPath(), Session.ACTION_READ);
-        } catch (RepositoryException e) {
-            return false;
-        }
-    }
 
     @Override
     public String getId() {

@@ -51,6 +51,8 @@ import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
+import info.magnolia.rendering.template.registry.DefaultTemplateAvailability;
+import info.magnolia.rendering.template.registry.TemplateAvailability;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentProviderBasedMagnoliaTestCase;
@@ -81,6 +83,7 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
         components.registerImplementation(TemplateDefinitionRegistry.class);
         components.registerImplementation(ModelExecutionFilter.class);
         components.registerImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+        components.registerImplementation(TemplateAvailability.class, DefaultTemplateAvailability.class);
     }
 
     @Override

@@ -89,4 +89,8 @@ public final class LegacyJavascript {
     public static native boolean isPreviewMode() /*-{
         return $wnd.location.href.indexOf('mgnlPreview=true') != -1;
     }-*/;
+
+    public static native String getContextPath() /*-{
+        return $wnd.location.protocol + "//"+ $wnd.location.host + $wnd.contextPath + "/"
+    }-*/;
 }

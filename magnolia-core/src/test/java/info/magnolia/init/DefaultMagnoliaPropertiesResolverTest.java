@@ -36,17 +36,20 @@ package info.magnolia.init;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaInitPaths;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 /**
  * @version $Id$
@@ -156,5 +159,22 @@ public class DefaultMagnoliaPropertiesResolverTest {
         final List<String> locations = new DefaultMagnoliaPropertiesResolver(ctx, initPaths).getLocations();
         assertEquals(1, locations.size());
         assertEquals("WEB-INF/" + user + "/magnolia.properties", locations.get(0));
+    }
+
+
+    @Test
+    public void unexistingContextParamsAttributesAndPropertiesAreNotSubstituted() {
+        assertNull("Can't run this test if a system property called 'myProp' does exist.", System.getProperty("mySysProp"));
+        assertNull("Can't run this test if an environment property called 'myEnvProp' does exist.", System.getenv("myEnvProp"));
+
+        expect(ctx.getInitParameter("magnolia.initialization.file")).andReturn("WEB-INF/${contextParam/myParam}/${contextAttribute/myAttr}/${systemProperty/mySysProp}/${env/myEnvProp}/magnolia.properties,WEB-INF/config/default/magnolia.properties");
+        expect(ctx.getAttribute("myAttr")).andReturn(null);
+        expect(ctx.getInitParameter("myParam")).andReturn(null);
+
+        replay(ctx);
+        final List<String> locations = new DefaultMagnoliaPropertiesResolver(ctx, initPaths).getLocations();
+        assertEquals(2, locations.size());
+        assertEquals("WEB-INF/${contextParam/myParam}/${contextAttribute/myAttr}/${systemProperty/mySysProp}/${env/myEnvProp}/magnolia.properties", locations.get(0));
+        assertEquals("WEB-INF/config/default/magnolia.properties", locations.get(1));
     }
 }

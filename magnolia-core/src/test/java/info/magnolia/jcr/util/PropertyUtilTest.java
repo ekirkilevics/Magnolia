@@ -198,7 +198,7 @@ public class PropertyUtilTest {
     public void testGetBooleanBadNodeType() throws RepositoryException {
         boolean defaultValue = false;
         BigDecimal value = BigDecimal.ONE;
-        root.setProperty(PROPERTY_NAME + "xx", value);
+        root.setProperty(PROPERTY_NAME, value);
         boolean res = PropertyUtil.getBoolean(root, PROPERTY_NAME, defaultValue);
         assertEquals(defaultValue, res);
     }

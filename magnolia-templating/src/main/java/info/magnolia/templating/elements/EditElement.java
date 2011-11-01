@@ -74,17 +74,26 @@ public class EditElement extends AbstractContentTemplatingElement {
         TemplateDefinition templateDefinition = getRequiredTemplateDefinition();
 
         MarkupHelper helper = new MarkupHelper(out);
-        if (content != null) {
-            helper.startContent(content);
-            helper.openTag(CMS_EDIT).attribute("content", getNodePath(content));
-            helper.attribute("format", format);
-            String dialog = resolveDialog(templateDefinition);
-            helper.attribute("dialog", dialog);
+        helper.startContent(content);
+        helper.openTag(CMS_EDIT);
 
-            helper.attribute("template", templateDefinition.getId());
-
-            helper.closeTag(CMS_EDIT);
+        if(content != null) {
+            helper.attribute("content", getNodePath(content));
+        } else {
+            //null content probably means that the area is optional and hasn't been created yet. Still we need to generate
+            //the cms:edit tag in order to render the area bar
+            helper.attribute("name", templateDefinition.getName());
+            helper.attribute("optional", "true");
         }
+
+        helper.attribute("format", format);
+        String dialog = resolveDialog(templateDefinition);
+        helper.attribute("dialog", dialog);
+
+        helper.attribute("template", templateDefinition.getId());
+
+        helper.closeTag(CMS_EDIT);
+
     }
 
     private TemplateDefinition getRequiredTemplateDefinition() {

@@ -33,13 +33,18 @@
  */
 package info.magnolia.templating.functions;
 
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.SiblingsHelper;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkUtil;
+import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,6 +56,7 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+
 
 /**
  * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
@@ -66,6 +72,31 @@ public class TemplatingFunctions {
 
     public ContentMap asContentMap(Node content) {
         return content == null ? null : new ContentMap(content);
+    }
+
+    /**
+     * Create link for the Node identified by nodeIdentifier in the specified workspace.
+     */
+    public String link(String workspace, String nodeIdentifier) {
+        try {
+            return LinkUtil.createLink(workspace, nodeIdentifier);
+        } catch (RepositoryException e) {
+            return null;
+        }
+    }
+
+
+    /**
+     * FIXME Add a LinkUtil.createLink(Property property)....
+     * Dirty Hack
+     */
+    public String link(Property property) {
+        try {
+            NodeData equivNodeData = ContentUtil.asContent(property.getParent()).getNodeData(property.getName());
+            return LinkUtil.createLink(equivNodeData);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     //TODO fgrilli: LinkUtil needs to be Node capable and not only Content. Switch to node based impl when SCRUM-242 will be done.
@@ -404,6 +435,22 @@ public class TemplatingFunctions {
         }
         return null;
     }
+    public boolean isEditMode(){
+        // TODO : see CmsFunctions.isEditMode, which checks a couple of other properties.
+        return isAuthorInstance() && !isPreviewMode();
+    }
+
+    public boolean isPreviewMode(){
+        return MgnlContext.getAggregationState().isPreviewMode();
+    }
+
+    public boolean isAuthorInstance(){
+        return Components.getComponent(ServerConfiguration.class).isAdmin();
+    }
+
+    public boolean isPublicInstance(){
+        return !isAuthorInstance();
+    }
 
     /**
      * Checks if passed string has a <code>http://</code> protocol.
@@ -413,6 +460,25 @@ public class TemplatingFunctions {
      */
     private boolean hasProtocol(String link) {
         return link != null && link.contains("://");
+    }
+
+    /**
+     * Util method to create html attributes <code>name="value"</code>. If the value is empty an empty string will be returned.
+     * This is mainlly helpful to avoid empty attributes.
+     */
+    public String createAttribute(String name, String value){
+        value = StringUtils.trim(value);
+        if(StringUtils.isNotEmpty(value)){
+            return new StringBuffer().append(name).append("=\"").append(value).append("\"").toString();
+        }
+        return StringUtils.EMPTY;
+    }
+
+    /**
+     * Returns an instance of SiblingsHelper for the given node.
+     */
+    public SiblingsHelper siblings(Node node) throws RepositoryException {
+        return SiblingsHelper.of(ContentUtil.asContent(node));
     }
 
 }

@@ -71,16 +71,18 @@ public class LoginFilter extends AbstractMgnlFilter {
                 // do not continue with the filter chain
                 return;
             } else if (loginResult.getStatus() == LoginResult.STATUS_SUCCEEDED) {
-                if(request.getSession(false) != null){
+                Subject subject = loginResult.getSubject();
+                if (subject == null) {
+                    log.error("Invalid login result from handler [" + handler.getClass().getName() + "] returned STATUS_SUCCEEDED but no subject");
+                    throw new ServletException("Invalid login result");
+                }
+                if (request.getSession(false) != null) {
                     request.getSession().invalidate();
                 }
-                Subject subject = loginResult.getSubject();
-                if (subject != null) {
-                    MgnlContext.login(subject);
-                    AuditLoggingUtil.log(loginResult, request);
-                    // do not continue the login handler chain after a successful login ... otherwise previous success will be invalidated by above session wipeout
-                    break;
-                }
+                MgnlContext.login(subject);
+                AuditLoggingUtil.log(loginResult, request);
+                // do not continue the login handler chain after a successful login ... otherwise previous success will be invalidated by above session wipeout
+                break;
             } else {
                 // just log.
                 AuditLoggingUtil.log(loginResult, request);

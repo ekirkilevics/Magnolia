@@ -35,6 +35,7 @@ package info.magnolia.templating.editor.client;
 
 import info.magnolia.rendering.template.AreaDefinition;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -48,16 +49,16 @@ import com.google.gwt.user.client.ui.Label;
 public class AreaBarWidget extends AbstractBarWidget {
 
     private PageEditor pageEditor;
-
     private String workspace;
     private String path;
-
     private String label;
     private String name;
     private String availableComponents;
     private String type;
     private String dialog;
     private boolean showAddButton = true;
+    private boolean optional = false;
+    private boolean created = true;
 
     public AreaBarWidget(AbstractBarWidget parentBar, final PageEditor pageEditor, Element element) {
         super(parentBar);
@@ -69,46 +70,32 @@ public class AreaBarWidget extends AbstractBarWidget {
         this.path = content.substring(i + 1);
 
         this.name = element.getAttribute("name");
-        this.availableComponents = element.getAttribute("availableComponents");
         this.type = element.getAttribute("type");
+
+        GWT.log("Area ["+this.name+"] is of type " + this.type);
+
+        if(AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
+            this.availableComponents = "";
+        } else {
+            this.availableComponents = element.getAttribute("availableComponents");
+        }
+
         this.dialog = element.getAttribute("dialog");
         this.label = element.getAttribute("label");
         if (element.hasAttribute("showAddButton")) {
             this.showAddButton = Boolean.parseBoolean(element.getAttribute("showAddButton"));
         }
+        if (element.hasAttribute("optional")) {
+            this.optional = Boolean.parseBoolean(element.getAttribute("optional"));
+            this.created = Boolean.parseBoolean(element.getAttribute("created"));
+        }
 
         setClassName("mgnlAreaControlBar");
-
         Label areaName = new Label(this.label);
         //setStylePrimaryName(..) replaces gwt default css class, in this case gwt-Label
         areaName.setStylePrimaryName("mgnlAreaLabel");
         add(areaName);
-
-        if (element.hasAttribute("dialog") && AreaDefinition.TYPE_LIST.equals(type)) {
-            Button button = new Button(getDictionary().get("buttons.editarea.js"));
-            button.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    pageEditor.openDialog(dialog, workspace, path, null, name);
-                }
-            });
-            addButton(button, Float.RIGHT);
-        }
-
-        if (showAddButton) {
-            Button addButton = new Button(getDictionary().get("buttons.addcomponent.js"));
-            addButton.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    if (AreaDefinition.TYPE_LIST.equals(type)) {
-                        pageEditor.addComponent(workspace, path, name, null, availableComponents);
-                    } else if (AreaDefinition.TYPE_SINGLE.equals(type)) {
-                        pageEditor.addComponent(workspace, path, null, name, availableComponents);
-                    }
-                }
-            });
-            addButton(addButton, Float.RIGHT);
-        }
+        createButtons(pageEditor, element);
     }
 
     @Override
@@ -135,7 +122,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         this.label = element.getAttribute("label");
         this.dialog = element.getAttribute("dialog");
         this.availableComponents = "";
-
+        //TODO create this button only if non optional or optional AND created
         Button button = new Button(getDictionary().get("buttons.editcomponent.js"));
         button.addClickHandler(new ClickHandler() {
             @Override
@@ -162,5 +149,61 @@ public class AreaBarWidget extends AbstractBarWidget {
 
     public String getType() {
         return type;
+    }
+
+    private void createButtons(final PageEditor pageEditor, final Element element) {
+        if(this.optional) {
+            if(!this.created) {
+                Button createButton = new Button(getDictionary().get("buttons.createarea.js"));
+                createButton.addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        pageEditor.createComponent(workspace, path, name, "mgnl:area");
+                    }
+                });
+                addButton(createButton, Float.RIGHT);
+
+            } else {
+                Button removeButton = new Button(getDictionary().get("buttons.removearea.js"));
+                removeButton.addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        pageEditor.deleteComponent(path + "/" + name);
+                    }
+                });
+                addButton(removeButton, Float.RIGHT);
+                createEditAndAddComponentButtons(pageEditor, element);
+            }
+        } else {
+            createEditAndAddComponentButtons(pageEditor, element);
+        }
+    }
+
+    private void createEditAndAddComponentButtons(final PageEditor pageEditor, final Element element) {
+        if (element.hasAttribute("dialog") && AreaDefinition.TYPE_LIST.equals(type)) {
+            Button editButton = new Button(getDictionary().get("buttons.editarea.js"));
+            editButton.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    pageEditor.openDialog(dialog, workspace, path, null, name);
+                }
+            });
+            addButton(editButton, Float.RIGHT);
+        }
+
+        if (this.showAddButton) {
+            Button addButton = new Button(getDictionary().get("buttons.addcomponent.js"));
+            addButton.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    if (AreaDefinition.TYPE_LIST.equals(type)) {
+                        pageEditor.addComponent(workspace, path, name, null, availableComponents);
+                    } else if (AreaDefinition.TYPE_SINGLE.equals(type)) {
+                        pageEditor.addComponent(workspace, path, null, name, availableComponents);
+                    }
+                }
+            });
+            addButton(addButton, Float.RIGHT);
+        }
     }
 }

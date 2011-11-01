@@ -41,8 +41,6 @@ import info.magnolia.cms.security.RoleManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
-import info.magnolia.repository.DefaultRepositoryManager;
-import info.magnolia.repository.RepositoryManager;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 
@@ -57,7 +55,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -70,11 +67,6 @@ implements Serializable {
     // setting the user attribute on the session is done in UserContextImpl, which is why the following constant uses this class' name.
     private static final String SESSION_USER = UserContextImpl.class.getName() + ".user";
     private static final String SESSION_SUBJECT = Subject.class.getName();
-
-    @Before
-    public void setUp() throws Exception {
-        ComponentsTestUtil.setInstance(RepositoryManager.class, new DefaultRepositoryManager());
-    }
 
     @After
     public void tearDown() throws Exception {

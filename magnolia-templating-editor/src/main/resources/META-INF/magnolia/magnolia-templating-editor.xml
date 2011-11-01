@@ -10,4 +10,13 @@
       <version>4.5/*</version>
     </dependency>
   </dependencies>
+  <servlets>
+    <servlet>
+      <name>PageEditorServlet</name>
+      <class>info.magnolia.templating.editor.servlet.PageEditorServlet</class>
+      <mappings>
+        <mapping>/.magnolia/pageeditor/*</mapping>
+      </mappings>
+    </servlet>
+  </servlets>
 </module>

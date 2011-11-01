@@ -109,20 +109,19 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.type = resolveType();
         this.label = resolveLabel();
         this.availableComponents = resolveAvailableComponents();
-
         this.inherit = isInheritanceEnabled();
-        this.areaNode = resolveAreaNode();
 
         // build an adhoc area definition if no area definition can be resolved
         if(areaDefinition == null){
             buildAdHocAreaDefinition();
         }
 
+        this.areaNode = resolveAreaNode();
+
         if (isAdmin()) {
             MarkupHelper helper = new MarkupHelper(out);
-            if(areaNode != null){
-                helper.startContent(areaNode);
-            }
+
+            helper.startContent(areaNode);
             helper.openTag(CMS_AREA).attribute("content", getNodePath(parentNode));
             helper.attribute("name", this.name);
             helper.attribute("availableComponents", this.availableComponents);
@@ -130,6 +129,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
             helper.attribute("dialog", this.dialog);
             helper.attribute("label", this.label);
             helper.attribute("inherit", String.valueOf(this.inherit));
+            helper.attribute("optional", String.valueOf(this.areaDefinition.isOptional()));
+            if(areaNode != null && this.areaDefinition.isOptional()) {
+                helper.attribute("created", "true");
+            }
             helper.attribute("showAddButton", String.valueOf(shouldShowAddButton()));
             helper.closeTag(CMS_AREA);
         }
@@ -139,8 +142,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private Node createNewAreaNode() {
         Node newAreaNode = null;
         try {
-            newAreaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA, true);
-            NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA,true);
+            newAreaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA);
+            NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
+            newAreaNode.getSession().save();
         } catch (AccessDeniedException e) {
             new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
         } catch (PathNotFoundException e) {
@@ -201,9 +205,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
             if (isAdmin()) {
                 MarkupHelper helper = new MarkupHelper(out);
-                if(areaNode != null){
-                    helper.endContent(areaNode);
-                }
+                helper.endContent(areaNode);
             }
         } catch (Exception e) {
             throw new RenderException("Can't render area " + areaNode + " with name " + this.name, e);
@@ -217,7 +219,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
             if(content.hasNode(name)){
                 area = content.getNode(name);
             } else {
-               area = createNewAreaNode();
+                //autocreate and save area only if it's not optional
+                if(!areaDefinition.isOptional()) {
+                    area = createNewAreaNode();
+                }
             }
         }
         catch (RepositoryException e) {

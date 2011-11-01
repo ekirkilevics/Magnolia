@@ -214,7 +214,6 @@ public class ContentUtil {
      * Get a subnode case insensitive.
      * @param node
      * @param name
-     * @return
      */
     public static Content getCaseInsensitive(Content node, String name) {
         if (name == null || node == null) {
@@ -645,6 +644,9 @@ public class ContentUtil {
     }
 
     public static Content asContent(Node content) {
+        if(content == null) {
+            return null;
+        }
         return new DefaultContent(content);
     }
 }

@@ -202,6 +202,12 @@ public class ContentMap implements Map<String, Object> {
                 } else if (type == PropertyType.BINARY) {
                     // this should actually never happen. there is no reason why anyone should stream binary data into
                     // template ... or is there?
+                } else if(type == PropertyType.BOOLEAN){
+                    return prop.getBoolean();
+                } else if(type == PropertyType.LONG){
+                    return prop.getLong();
+                } else if(type == PropertyType.DOUBLE){
+                    return prop.getDouble();
                 } else if (prop.isMultiple()) {
 
                     Value[] values = prop.getValues();

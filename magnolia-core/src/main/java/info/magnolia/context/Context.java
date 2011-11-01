@@ -120,7 +120,7 @@ public interface Context extends org.apache.commons.chain.Context {
     public HierarchyManager getHierarchyManager(String workspaceName);
 
     /**
-     * Get a an {@link AccessManager} for logical entities. The accesses to the repository are handled by the repository itself.
+     * Get a an {@link info.magnolia.cms.security.AccessManager} for logical entities. The accesses to the repository are handled by the repository itself.
      */
     public AccessManager getAccessManager(String name);
 

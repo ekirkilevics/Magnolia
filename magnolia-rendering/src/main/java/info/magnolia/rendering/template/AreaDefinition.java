@@ -57,4 +57,10 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
 
     InheritanceConfiguration getInheritance();
 
+    /**
+     * If an area is optional it has first to be created explicitly (i.e. via a create button). Optional areas can be removed (i.e. via a remove button), whereas
+     * non optional (namely required) areas are always created and can not be removed. <strong>By default, areas are required.</strong>
+     */
+    boolean isOptional();
+
 }
