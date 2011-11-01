@@ -33,19 +33,18 @@
  */
 package info.magnolia.rendering.engine;
 
-import java.util.Collections;
-import java.util.Map;
-import javax.inject.Provider;
-import javax.jcr.Node;
-
-import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
-import info.magnolia.rendering.template.AutoGenerationConfiguration;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
+
+import java.util.Collections;
+import java.util.Map;
+
+import javax.inject.Provider;
+import javax.jcr.Node;
 
 /**
  * Default implementation of {@link RenderingEngine}.
@@ -87,12 +86,6 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
         final Renderer renderer = getRendererFor(definition);
         final RenderingContext renderingContext = getRenderingContext();
-
-        //TODO fgrilli: is there a more suitable place for autogeneration?
-        final AutoGenerationConfiguration autoGeneration = definition.getAutoGeneration();
-        if (autoGeneration != null && autoGeneration.getGeneratorClass() != null) {
-            Components.newInstance(autoGeneration.getGeneratorClass(), content).generate(autoGeneration);
-        }
 
         renderingContext.push(content, definition, out);
         try {
