@@ -101,13 +101,24 @@ public class MockNode extends AbstractNode {
 
     private final LinkedHashMap<String, Property> properties = new LinkedHashMap<String, Property>();
 
+    /**
+     * Normally only set for rootNode - children will retrieve it from there.
+     */
     private Session session;
 
     /**
-     * Creates a root node -> name == ROOT_NODE_NAME.
+     * Create a root node (name = ROOT_NODE_NAME) without a session.
      */
     public MockNode() {
         this(ROOT_NODE_NAME);
+    }
+
+    /**
+     * Create a root node and attach it to the provided session.
+     */
+    public MockNode(MockSession session) {
+        this();
+        this.session = session;
     }
     public MockNode(String name) {
         this(name, MgnlNodeType.NT_CONTENTNODE);
@@ -597,7 +608,6 @@ public class MockNode extends AbstractNode {
 
     public void setParent(MockNode parent) {
         this.parent = parent;
-        setSessionFrom(parent);
     }
 
     @Override
@@ -690,18 +700,6 @@ public class MockNode extends AbstractNode {
     @Override
     public Property setProperty(String name, Value[] values, int type) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    /**
-     *
-     * @deprecated since 4.5 - might be dangerous, should at least get reduced visibility!
-     */
-    public void setSession(Session session) {
-        this.session = session;
-    }
-
-    private void setSessionFrom(MockNode parent) {
-        setSession(parent == null ? null : parent.getSession());
     }
 
     @Override

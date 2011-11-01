@@ -159,8 +159,9 @@ public class PlainTextRendererTest {
     }
 
     private Content getNode(String configNode, String path) throws RepositoryException {
+        MockSession session = new MockSession("website");
         MockContent content = new MockContent(path);
-        ((MockNode) content.getJCRNode()).setSession(new MockSession("website"));
+        ((MockNode)content.getJCRNode()).setParent((MockNode) session.getRootNode());
         content.setNodeData("text", configNode);
         content.setNodeData("contentType", "mgnl:contentNode");
 

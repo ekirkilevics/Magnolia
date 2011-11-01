@@ -71,8 +71,7 @@ public class MockSession extends AbstractSession {
     public MockSession(MockWorkspace workspace) {
         setWorkspace(workspace);
 
-        rootNode = new MockNode();
-        rootNode.setSession(this);
+        rootNode = new MockNode(this);
     }
 
     public MockSession(String name) {
@@ -261,11 +260,6 @@ public class MockSession extends AbstractSession {
     @Override
     public void save() {
         // nothing to do
-    }
-
-    public void setRootNode(MockNode root) {
-        this.rootNode = root;
-        root.setSession(this);
     }
 
     public void setValueFactory(ValueFactory valueFactory) {
