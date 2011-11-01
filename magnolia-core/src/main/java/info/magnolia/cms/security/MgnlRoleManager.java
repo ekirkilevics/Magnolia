@@ -107,7 +107,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
     @Override
     public void removePermission(Role role, String repository, String path, long permission) {
         try {
-            Session session = MgnlContext.getJCRSession(ContentRepository.REPOSITORY_USER);
+            Session session = MgnlContext.getJCRSession(ContentRepository.USER_ROLES);
             Node roleNode = session.getNodeByIdentifier(role.getId());
             Node aclNode = getAclNode(roleNode, repository);
             NodeIterator children = aclNode.getNodes();
