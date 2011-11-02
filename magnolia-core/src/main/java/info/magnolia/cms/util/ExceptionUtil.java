@@ -66,7 +66,7 @@ public class ExceptionUtil {
      * in turn produce unexpected and undesirable effects on calling code. Just resist the urge to use this outside
      * "multi-catch" scenarios.
      */
-    @SuppressWarnings({"unchecked", "varargs"})
+    @SuppressWarnings("unchecked")
     public static void rethrow(Throwable e, Class<? extends Throwable>... allowedExceptions) {
         if (RuntimeException.class.isInstance(e)) {
             throw (RuntimeException) e;
