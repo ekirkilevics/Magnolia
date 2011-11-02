@@ -49,6 +49,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
@@ -92,17 +93,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         dictionary = Dictionary.getDictionary("mgnlGwtMessages");
 
         processCmsTags(documentElement, null, edits, areas);
-
-        url = Window.Location.getHref();
-
-        if (url.contains("?")) {
-
-            if (GWT.isScript()) {
-                Window.Location.replace(url.substring(0, url.indexOf("?")));
-            } else if (url.contains("&")) {
-                Window.Location.replace(url.substring(0, url.indexOf("&")));
-            }
-        }
 
     }
 
@@ -199,7 +189,12 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 }
 
                 if (reload) {
-                    Window.Location.reload();
+                    UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
+
+                    urlBuilder.removeParameter("mgnlIntercept");
+                    urlBuilder.removeParameter("mgnlPath");
+
+                    Window.Location.replace(urlBuilder.buildString());
                 } else {
                     Window.alert("An error occured on the server: response status code is " + status + "\n" + responseText);
                 }
