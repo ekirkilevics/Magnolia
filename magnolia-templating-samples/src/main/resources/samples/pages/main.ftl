@@ -17,30 +17,31 @@
             [@cms.edit /]
             <div id="header">
 
-                [#-- ****** navigation ****** --]
-                <div id="navigation">
-                    [@cms.area name="navigation" /]
-                </div><!-- end navigation -->
+                [#-- ****** navigation area ****** --]
+                [@cms.area name="navigation" /]
 
-                [#-- ****** stage ****** --]
+                [#-- ****** stage area ****** --]
                 [@cms.area name="stage"/]
 
             </div><!-- end header -->
 
+            [#-- ****** page content ****** --]
             <h1>${content.title!content.@name}</h1>
-            <p>${content.text!}</p>
+            [#if content.text?has_content]
+                <p>${content.text}</p>
+            [/#if]
 
             <div id="wrapper-2">
 
-                [#-- ****** main ****** --]
+                [#-- ****** main area ****** --]
                 [@cms.area name="main" /]
 
-                [#-- ****** extras ****** --]
+                [#-- ****** extras area ****** --]
                 [@cms.area name="extras"/]
 
             </div><!-- end wrapper-2 -->
 
-            [#-- ****** footer  ****** --]
+            [#-- ****** footer area ****** --]
             [@cms.area name="footer" /]
 
 
