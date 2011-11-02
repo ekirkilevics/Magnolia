@@ -245,6 +245,7 @@ td.smothBarLabel {
     background-color: #6BABFB;
     height: 20px;
     width: 100%;
+    clear: both;
 }
 
 button.mgnlControlButton {
