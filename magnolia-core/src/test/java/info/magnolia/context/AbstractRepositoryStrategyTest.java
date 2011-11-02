@@ -105,8 +105,10 @@ public class AbstractRepositoryStrategyTest extends RepositoryTestCase {
     }
 */
 
+    @Override
     @After
-    public void teardDown() {
+    public void tearDown() throws Exception {
+        super.tearDown();
         MgnlContext.setInstance(null);
     }
 }
