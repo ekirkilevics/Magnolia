@@ -35,7 +35,6 @@ package info.magnolia.templating.freemarker;
 
 import freemarker.core.CollectionAndSequence;
 import freemarker.core.Environment;
-import freemarker.template.SimpleHash;
 import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateDirectiveBody;
@@ -204,19 +203,6 @@ public abstract class AbstractDirective<C extends TemplatingElement> implements 
     protected Object mandatoryObject(Map<String, TemplateModel> params, String key) throws TemplateModelException {
         final TemplateModel model = _param(params, key, TemplateModel.class, true);
         return DeepUnwrap.unwrap(model);
-    }
-
-    protected Map<String, Object> map(Map<String, TemplateModel> params, String key) throws TemplateModelException {
-        final SimpleHash model = _param(params, key, SimpleHash.class, false);
-        if(model == null) {
-            return Collections.emptyMap();
-        }
-        return model.toMap();
-    }
-
-    protected Map<String, Object> mandatoryMap(Map<String, TemplateModel> params, String key) throws TemplateModelException {
-        final SimpleHash model = _param(params, key, SimpleHash.class, true);
-        return model.toMap();
     }
 
     protected List<String> mandatoryStringList(Map<String, TemplateModel> params, String key) throws TemplateModelException {
