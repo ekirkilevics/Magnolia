@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.samples.setup;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
@@ -48,6 +47,7 @@ import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,11 +117,11 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapConditionally("Samples user", "Adds user if does not exist",
                         "/mgnl-bootstrap-samples/samples/users.admin.patrick.xml"))
                 .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample templates.",
-                            ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/sample-templates"))
+                            RepositoryConstants.CONFIG, "/modules/adminInterface/config/menu/config/sample-templates"))
                 .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample components.",
-                            ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/sample-components"))
+                            RepositoryConstants.CONFIG, "/modules/adminInterface/config/menu/config/sample-components"))
                 .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample dialogs.",
-                            ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/sample-dialogs"))
+                            RepositoryConstants.CONFIG, "/modules/adminInterface/config/menu/config/sample-dialogs"))
 
                 .addTask(new RegisterModuleServletsTask())
                 .addTasks(getCommonTasks())
@@ -129,9 +129,9 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
 
         register(DeltaBuilder.update("4.5", "")
                 .addTask(new RemoveNodeTask("Remove sample filter", "Removes the samples menu config item sample templates.",
-                            ContentRepository.CONFIG, "/server/filters/sample"))
+                            RepositoryConstants.CONFIG, "/server/filters/sample"))
                 .addTask(new RemoveNodeTask("Remove sample filter menu item", "Removes the samples menu config item sample templates.",
-                            ContentRepository.CONFIG, "/modules/adminInterface/config/menu/samples/filter"))
+                            RepositoryConstants.CONFIG, "/modules/adminInterface/config/menu/samples/filter"))
         );
     }
 

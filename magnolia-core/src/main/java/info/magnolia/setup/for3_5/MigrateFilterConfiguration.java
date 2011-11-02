@@ -33,7 +33,6 @@
  */
 package info.magnolia.setup.for3_5;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
@@ -41,6 +40,7 @@ import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.ImportUUIDBehavior;
 
@@ -58,9 +58,9 @@ public class MigrateFilterConfiguration extends BootstrapConditionally {
     public MigrateFilterConfiguration(String newFilterConfigurationBootstrapFile) {
         super("Filters", "Installs or updates the new filter (and secure/unsecure URIs) configuration.", newFilterConfigurationBootstrapFile,
             new ArrayDelegateTask("Backup and transform existing filters", new Task[] {
-                new CreateNodeTask("Backup", "Create install node", ContentRepository.CONFIG, "/server", "install", ItemType.CONTENT.getSystemName()),
-                new CreateNodeTask("Backup", "Create backup node", ContentRepository.CONFIG, "/server/install", "backup", ItemType.CONTENT.getSystemName()),
-                new MoveNodeTask("Filters", "Moves existing filter configuration to a backup location", ContentRepository.CONFIG, "/server/filters", FILTER_BACKUP_PATH, true),
+                new CreateNodeTask("Backup", "Create install node", RepositoryConstants.CONFIG, "/server", "install", ItemType.CONTENT.getSystemName()),
+                new CreateNodeTask("Backup", "Create backup node", RepositoryConstants.CONFIG, "/server/install", "backup", ItemType.CONTENT.getSystemName()),
+                new MoveNodeTask("Filters", "Moves existing filter configuration to a backup location", RepositoryConstants.CONFIG, "/server/filters", FILTER_BACKUP_PATH, true),
                 new BootstrapSingleResource("Bootstrap", "Bootstraps the new filter configuration", newFilterConfigurationBootstrapFile, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW),
                 new CheckAndUpdateExistingFilters(FILTER_BACKUP_PATH)
             }));

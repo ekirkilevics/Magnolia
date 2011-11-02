@@ -35,8 +35,8 @@ package info.magnolia.cms.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.ModuleRegistry;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockEvent;
@@ -74,7 +74,7 @@ public class ModuleConfigurationObservingManagerTest extends MgnlTestCase {
                 + "/modules/zed\n"
         );
 
-        MockUtil.getSystemMockContext().addSession(ContentRepository.CONFIG, session);
+        MockUtil.getSystemMockContext().addSession(RepositoryConstants.CONFIG, session);
 
         Set<String> moduleNames = new LinkedHashSet<String>();
         moduleNames.add("foo");

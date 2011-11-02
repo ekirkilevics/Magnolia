@@ -44,6 +44,7 @@ import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.DataTransporter;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -228,7 +229,7 @@ public class ExportPage extends TemplatedMVCHandler {
     public String exportxml() throws Exception {
 
         if (StringUtils.isEmpty(mgnlRepository)) {
-            mgnlRepository = ContentRepository.WEBSITE;
+            mgnlRepository = RepositoryConstants.WEBSITE;
         }
         if (StringUtils.isEmpty(mgnlPath)) {
             mgnlPath = "/"; //$NON-NLS-1$

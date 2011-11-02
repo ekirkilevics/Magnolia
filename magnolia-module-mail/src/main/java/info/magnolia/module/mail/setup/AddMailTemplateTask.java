@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.mail.setup;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.repository.RepositoryConstants;
 
 /**
  * Adds a mail template configuration.
@@ -50,11 +50,11 @@ public class AddMailTemplateTask extends ArrayDelegateTask {
 
     public AddMailTemplateTask(String templateName, String description, String from, String subject, String templatePath, String type) {
         super("Mail template", "Adds the " + templateName + " " + description + ".", new Task[]{
-                new CreateNodeTask(null, null, ContentRepository.CONFIG, "/modules/mail/config/templatesConfiguration", templateName, ItemType.CONTENTNODE.getSystemName()),
-                new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "from", from),
-                new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "subject", subject),
-                new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "templateFile", templatePath),
-                new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "type", type)
+                new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/modules/mail/config/templatesConfiguration", templateName, ItemType.CONTENTNODE.getSystemName()),
+                new NewPropertyTask(null, null, RepositoryConstants.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "from", from),
+                new NewPropertyTask(null, null, RepositoryConstants.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "subject", subject),
+                new NewPropertyTask(null, null, RepositoryConstants.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "templateFile", templatePath),
+                new NewPropertyTask(null, null, RepositoryConstants.CONFIG, "/modules/mail/config/templatesConfiguration/" + templateName, "type", type)
         });
     }
 }

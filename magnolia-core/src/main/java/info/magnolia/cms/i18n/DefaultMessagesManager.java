@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.i18n;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -41,6 +40,8 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
+
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.map.LazyMap;
 import org.apache.commons.lang.StringUtils;
@@ -146,7 +147,7 @@ public class DefaultMessagesManager extends MessagesManager {
     protected void load() {
 
         // reading the configuration from the repository, no need for context
-        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.CONFIG);
 
         try {
             log.info("Loading i18n configuration - {}", I18N_CONFIG_PATH);
@@ -191,7 +192,7 @@ public class DefaultMessagesManager extends MessagesManager {
      */
     private void registerEventListener() {
         log.info("Registering event listener for i18n");
-        ObservationUtil.registerChangeListener(ContentRepository.CONFIG, I18N_CONFIG_PATH, new EventListener() {
+        ObservationUtil.registerChangeListener(RepositoryConstants.CONFIG, I18N_CONFIG_PATH, new EventListener() {
 
             @Override
             public void onEvent(EventIterator iterator) {

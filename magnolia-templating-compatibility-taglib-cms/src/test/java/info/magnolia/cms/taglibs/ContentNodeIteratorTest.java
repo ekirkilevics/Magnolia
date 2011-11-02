@@ -37,10 +37,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
@@ -84,7 +84,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         });
 
         // need some basic i18n config
-        MockUtil.createAndSetHierarchyManager(ContentRepository.CONFIG,
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.CONFIG,
                 "/server/i18n/content/class=info.magnolia.cms.i18n.DefaultI18nContentSupport\n" +
                 "/server/i18n/content/enabled=false\n"
         );

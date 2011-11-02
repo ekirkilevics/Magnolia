@@ -35,7 +35,6 @@ package info.magnolia.link;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.runtime.FileProperties;
@@ -44,6 +43,7 @@ import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
@@ -65,8 +65,8 @@ public abstract class BaseLinkTest extends MgnlTestCase {
     protected static final String HANDLE_PARENT_SUB = "/parent/sub";
     protected static final String UUID_PATTERN_OLD_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',workspace:'{'default'}',path:'{'{2}'}}}'";
     protected static final String UUID_PATTERN_NEW_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',handle:'{'{2}'}',nodeData:'{'{3}'}',extension:'{'{4}'}}}'";
-    protected static final String UUID_PATTERN_SIMPLE = MessageFormat.format(UUID_PATTERN_NEW_FORMAT, new String[]{"2", ContentRepository.WEBSITE, HANDLE_PARENT_SUB, "", "html"});
-    protected static final String UUID_PATTERN_SIMPLE_OLD_FORMAT = MessageFormat.format(UUID_PATTERN_OLD_FORMAT, new String[]{"2", ContentRepository.WEBSITE, HANDLE_PARENT_SUB});
+    protected static final String UUID_PATTERN_SIMPLE = MessageFormat.format(UUID_PATTERN_NEW_FORMAT, new String[]{"2", RepositoryConstants.WEBSITE, HANDLE_PARENT_SUB, "", "html"});
+    protected static final String UUID_PATTERN_SIMPLE_OLD_FORMAT = MessageFormat.format(UUID_PATTERN_OLD_FORMAT, new String[]{"2", RepositoryConstants.WEBSITE, HANDLE_PARENT_SUB});
 
     protected static final String HREF_ABSOLUTE_LINK = HANDLE_PARENT_SUB + ".html";
 
@@ -85,9 +85,9 @@ public abstract class BaseLinkTest extends MgnlTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        MockHierarchyManager hm = MockUtil.createHierarchyManager(ContentRepository.WEBSITE, website);
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(RepositoryConstants.WEBSITE, website);
         webContext = createMock(WebContext.class);
-        expect(webContext.getHierarchyManager(ContentRepository.WEBSITE)).andReturn(hm).anyTimes();
+        expect(webContext.getHierarchyManager(RepositoryConstants.WEBSITE)).andReturn(hm).anyTimes();
         expect(webContext.getContextPath()).andReturn(SOME_CONTEXT).anyTimes();
 
         // add a binary

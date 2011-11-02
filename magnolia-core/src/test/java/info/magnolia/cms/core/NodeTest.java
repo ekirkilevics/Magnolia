@@ -47,6 +47,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.PropertiesImportExport;
 import info.magnolia.repository.Provider;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 
 import java.io.ByteArrayInputStream;
@@ -207,7 +208,7 @@ public class NodeTest extends RepositoryTestCase {
             "/mycontent.@type=mgnl:content\n" +
             "/mycontent.nd1=hello";
 
-        Session hm = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
+        Session hm = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
         new PropertiesImportExport().createNodes(hm.getRootNode(), IOUtils.toInputStream(contentProperties));
         hm.save();
         Node content = hm.getNode("/mycontent");
@@ -215,7 +216,7 @@ public class NodeTest extends RepositoryTestCase {
     }
 
     //    public void testPermissionCheckedOnDeleteNodeData() throws Exception {
-    //        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+    //        HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
     //        // create the content while we have full permissions
     //        final Content node = hm.createContent("/", "foo", ItemType.CONTENTNODE.getSystemName());
     //        node.createNodeData("bar").setValue("test");
@@ -379,7 +380,7 @@ public class NodeTest extends RepositoryTestCase {
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:mimeType=image/png",
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00"
         ), "\n");
-        final Session hm = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
+        final Session hm = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
         new PropertiesImportExport().createNodes(hm.getRootNode(), IOUtils.toInputStream(contentProperties));
         hm.save();
 
@@ -439,7 +440,7 @@ public class NodeTest extends RepositoryTestCase {
                 "/hello/bin.jcr\\:data=binary:some-data",
                 "/hello/bin.jcr\\:mimeType=image/gif",
         "/hello/bin.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00" };
-        final Session hm = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
+        final Session hm = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
         new PropertiesImportExport().createNodes(hm.getRootNode(), contentProperties);
         hm.save();
 

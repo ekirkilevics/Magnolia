@@ -33,11 +33,11 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -113,7 +113,7 @@ public class ButtonTag extends TagSupport {
                 + "','','','"
                 + dialogName
                 + "','"
-                + ContentRepository.WEBSITE
+                + RepositoryConstants.WEBSITE
                 + "',null, null, null"
                 + (i18nSupport.isEnabled()? ", '" + i18nSupport.getLocale().toString() + "'":"")
                 + ")");

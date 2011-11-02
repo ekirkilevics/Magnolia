@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.text.MessageFormat;
 import java.util.Iterator;
@@ -77,7 +77,7 @@ public class Navigation {
     public Navigation(String path, String jsName) {
         try {
             // get it with system permission
-            this.node = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG).getContent(path);
+            this.node = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.CONFIG).getContent(path);
             this.jsName = jsName;
         }
         catch (Exception e) {
@@ -153,7 +153,7 @@ public class Navigation {
      * @return
      */
     protected boolean isMenuPointRendered(Content mp) {
-        return PermissionUtil.isGranted(ContentRepository.CONFIG, mp.getHandle(), Session.ACTION_READ);
+        return PermissionUtil.isGranted(RepositoryConstants.CONFIG, mp.getHandle(), Session.ACTION_READ);
     }
 
     /**

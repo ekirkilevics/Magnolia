@@ -41,13 +41,13 @@ import javax.jcr.PathNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 /**
  * Factory processing various input into the Link objects and back.
@@ -178,7 +178,7 @@ public class LinkFactory {
      * @throws LinkException
      */
     public static Link createLink(String uuid, String repository, String fallbackHandle, String nodeDataName, String extension, String anchor, String parameters) throws LinkException {
-        final String defaultRepository = StringUtils.defaultIfEmpty(repository, ContentRepository.WEBSITE);
+        final String defaultRepository = StringUtils.defaultIfEmpty(repository, RepositoryConstants.WEBSITE);
         Link link;
         try {
             link = createLink(defaultRepository, uuid);

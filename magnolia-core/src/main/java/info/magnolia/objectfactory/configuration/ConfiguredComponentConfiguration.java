@@ -33,7 +33,7 @@
  */
 package info.magnolia.objectfactory.configuration;
 
-import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.repository.RepositoryConstants;
 
 
 /**
@@ -44,7 +44,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
  */
 public class ConfiguredComponentConfiguration<T> extends ComponentConfiguration<T> {
 
-    private String workspace = ContentRepository.CONFIG;
+    private String workspace = RepositoryConstants.CONFIG;
     private String path;
     private boolean observed = false;
 

@@ -45,9 +45,9 @@ import javax.jcr.observation.EventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
+import info.magnolia.repository.RepositoryConstants;
 
 
 /**
@@ -94,7 +94,7 @@ public abstract class ModuleConfigurationObservingManager {
         }, 1000, 5000);
 
         for (String observedPath : observedPaths) {
-            ObservationUtil.registerChangeListener(ContentRepository.CONFIG, observedPath, new EventListener(){
+            ObservationUtil.registerChangeListener(RepositoryConstants.CONFIG, observedPath, new EventListener(){
 
                 @Override
                 public void onEvent(EventIterator events) {
@@ -152,7 +152,7 @@ public abstract class ModuleConfigurationObservingManager {
     }
 
     protected Session getSession() throws RepositoryException {
-        return MgnlContext.getSystemContext().getJCRSession(ContentRepository.CONFIG);
+        return MgnlContext.getSystemContext().getJCRSession(RepositoryConstants.CONFIG);
     }
 
     protected List<String> getObservedPaths() {

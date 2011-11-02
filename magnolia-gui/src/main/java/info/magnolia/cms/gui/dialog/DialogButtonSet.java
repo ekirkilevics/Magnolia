@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
@@ -43,6 +42,7 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -120,7 +120,7 @@ public class DialogButtonSet extends DialogBox {
             optionsNode = configNode.getContent("options"); //$NON-NLS-1$
         }
         else{
-            String repository = this.getConfigValue("repository", ContentRepository.WEBSITE);
+            String repository = this.getConfigValue("repository", RepositoryConstants.WEBSITE);
             String path = this.getConfigValue("path");
             if(StringUtils.isNotEmpty(path)){
                 optionsNode = ContentUtil.getContent(repository, path);

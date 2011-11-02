@@ -34,7 +34,6 @@
 package info.magnolia.setup;
 
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.SystemProperty;
@@ -44,6 +43,7 @@ import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.model.Version;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -106,7 +106,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
 
@@ -129,7 +129,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
 
@@ -152,7 +152,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
 
@@ -183,7 +183,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
 
@@ -209,7 +209,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
 
@@ -242,7 +242,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
 
@@ -269,7 +269,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
 
@@ -302,7 +302,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
 
@@ -325,7 +325,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     }
 
     private String getMimePropertyValue(String typeName, String propertyName) throws RepositoryException {
-        return MgnlContext.getHierarchyManager(ContentRepository.CONFIG).getContent("/server/MIMEMapping/" + typeName).getNodeData(propertyName).getString();
+        return MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG).getContent("/server/MIMEMapping/" + typeName).getNodeData(propertyName).getString();
     }
 
     /**
@@ -401,7 +401,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/MIMEMapping/mov");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
 
         // other mime types didn't exist before 4.4.5
         setupConfigProperty("/server/MIMEMapping/mp4", "mime-type", "application/octet-stream");
@@ -434,7 +434,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/MIMEMapping/mov");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
 
         // if custom mime types have been set up already, we don't want to overwrite them
         setupConfigProperty("/server/MIMEMapping/m4a", "mime-type", "custom-type-for-m4a");
@@ -478,7 +478,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/MIMEMapping/mov");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
 
         // already changed value differing from original installation
         setupConfigProperty("/server/MIMEMapping/mp4", "mime-type", "application/octet-stream");

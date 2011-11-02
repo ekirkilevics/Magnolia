@@ -37,7 +37,6 @@ import static org.easymock.classextension.EasyMock.*;
 import freemarker.core.Environment;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.Content;
@@ -62,6 +61,7 @@ import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.module.templating.paragraphs.FreemarkerParagraphRenderer;
 import info.magnolia.module.templating.renderers.FreemarkerTemplateRenderer;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
@@ -163,7 +163,7 @@ public abstract class AbstractRenderTestCase extends MgnlTestCase {
         setLocale(Locale.ENGLISH);
         setPublicInstance();
 
-        MockUtil.createAndSetHierarchyManager(ContentRepository.WEBSITE);
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.WEBSITE);
     }
 
     /**
@@ -352,7 +352,7 @@ public abstract class AbstractRenderTestCase extends MgnlTestCase {
     }
 
     protected String render(String website, String path) throws RenderException {
-        return render(ContentUtil.getContent(ContentRepository.WEBSITE, path));
+        return render(ContentUtil.getContent(RepositoryConstants.WEBSITE, path));
     }
 
 }

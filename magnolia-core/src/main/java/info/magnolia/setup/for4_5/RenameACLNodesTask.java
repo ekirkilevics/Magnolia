@@ -33,12 +33,12 @@
  */
 package info.magnolia.setup.for4_5;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractRepositoryTask;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -63,7 +63,7 @@ public class RenameACLNodesTask extends AbstractRepositoryTask {
     @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
 
-        Session session = installContext.getJCRSession(ContentRepository.USER_ROLES);
+        Session session = installContext.getJCRSession(RepositoryConstants.USER_ROLES);
 
         for (Node roleNode : NodeUtil.getNodes(session.getRootNode(), MgnlNodeType.ROLE)) {
 

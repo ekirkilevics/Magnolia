@@ -33,8 +33,8 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.mock.MockUtil;
@@ -59,9 +59,9 @@ public class MgnlUserTest {
         sec.setRoleManager(new MgnlRoleManager());
         ComponentsTestUtil.setInstance(SecuritySupport.class, sec);
         MockUtil.initMockContext();
-        MockUtil.createAndSetHierarchyManager(ContentRepository.USERS, getClass().getResourceAsStream("sample-users.properties"));
-        MockUtil.createAndSetHierarchyManager(ContentRepository.USER_GROUPS, getClass().getResourceAsStream("sample-usergroups.properties"));
-        MockUtil.createAndSetHierarchyManager(ContentRepository.USER_ROLES, getClass().getResourceAsStream("sample-userroles.properties"));
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USERS, getClass().getResourceAsStream("sample-users.properties"));
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USER_GROUPS, getClass().getResourceAsStream("sample-usergroups.properties"));
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USER_ROLES, getClass().getResourceAsStream("sample-userroles.properties"));
         uman = new MgnlUserManager() {
             {
                 // realm name

@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admininterface.dialogs;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
@@ -42,6 +41,7 @@ import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.SaveHandler;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -88,7 +88,7 @@ public class UserEditDialog extends ConfiguredDialog {
     public String getRepository() {
         String repository = super.getRepository();
         if (repository == null) {
-            repository = ContentRepository.USERS;
+            repository = RepositoryConstants.USERS;
         }
         return repository;
     }
@@ -129,16 +129,16 @@ public class UserEditDialog extends ConfiguredDialog {
         // replace UUID with Path for groups and roles
         DialogControlImpl control = dialog.getSub("groups");
         // it is ok to use system context here as long as it is used only to retrieve UUIDs of nodes we are interested in
-        HierarchyManager groupsHM = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
+        HierarchyManager groupsHM = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.USER_GROUPS);
         // replace uuid with path
         replaceUUIDsWithNames(control, groupsHM);
 
         control = dialog.getSub("roles");
         // it is ok to use system context here as long as it is used only to retrieve UUIDs of nodes we are interested in
-        HierarchyManager rolesHM = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
+        HierarchyManager rolesHM = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.USER_ROLES);
         // replace uuid with path
         replaceUUIDsWithNames(control, rolesHM);
-       
+
         return dialog;
     }
 
@@ -177,9 +177,9 @@ public class UserEditDialog extends ConfiguredDialog {
         Content node = this.getStorageNode();
 
         HierarchyManager groupsHM = MgnlContext.getHierarchyManager(
-            ContentRepository.USER_GROUPS);
+            RepositoryConstants.USER_GROUPS);
         HierarchyManager rolesHM = MgnlContext.getHierarchyManager(
-            ContentRepository.USER_ROLES);
+                RepositoryConstants.USER_ROLES);
 
         try {
             this.writeRolesOrGroups(groupsHM, node, "groups");

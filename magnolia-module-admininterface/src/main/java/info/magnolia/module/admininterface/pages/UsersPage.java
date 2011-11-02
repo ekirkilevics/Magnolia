@@ -33,13 +33,14 @@
  */
 package info.magnolia.module.admininterface.pages;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
+import info.magnolia.repository.RepositoryConstants;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -68,7 +69,7 @@ public class UsersPage extends TemplatedMVCHandler {
 
     // TODO - this is not dependent on the structure of the users workspace but will only work when using MgnlUserManagers.
     public Collection getUserNodes() throws RepositoryException {
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.USERS);
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.USERS);
         final Content root = hm.getRoot();
         // needed so collectAllChildren goes through folders
         final List allIncludingFolders = ContentUtil.collectAllChildren(root, new ItemType[]{ItemType.FOLDER, ItemType.USER});

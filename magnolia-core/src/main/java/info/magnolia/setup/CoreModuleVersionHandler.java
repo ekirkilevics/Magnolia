@@ -33,7 +33,6 @@
  */
 package info.magnolia.setup;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.filters.FilterManager;
 import info.magnolia.module.AbstractModuleVersionHandler;
@@ -60,6 +59,7 @@ import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.nodebuilder.task.ErrorHandling;
 import info.magnolia.nodebuilder.task.NodeBuilderTask;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.setup.for3_5.GenericTasks;
 import info.magnolia.setup.for3_6.CheckMagnoliaDevelopProperty;
 import info.magnolia.setup.for3_6.CheckNodeTypesDefinition;
@@ -94,7 +94,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.auditLogging.xml");
     private final BootstrapSingleResource bootstrapFreemarker = new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration", "/mgnl-bootstrap/core/config.server.rendering.freemarker.xml");
     private final CreateNodeTask addFreemarkerSharedVariables = new CreateNodeTask("Freemarker configuration", "Adds sharedVariables node to the Freemarker configuration",
-            ContentRepository.CONFIG, "/server/rendering/freemarker", "sharedVariables", ItemType.CONTENTNODE.getSystemName());
+            RepositoryConstants.CONFIG, "/server/rendering/freemarker", "sharedVariables", ItemType.CONTENTNODE.getSystemName());
     private final BootstrapSingleResource bootstrapWebContainerResources = new BootstrapSingleResource("Web container resources configuration", "Global configuration which resources are not meant to be handled by Magnolia. For instance JSP files.", "/mgnl-bootstrap/core/config.server.webContainerResources.xml");
 
     public CoreModuleVersionHandler() {
@@ -111,7 +111,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         );
 
         final CheckAndModifyPropertyValueTask log4jServletMapping = new CheckAndModifyPropertyValueTask("Mapping for log4j configuration servlet", "Fixes the mapping for the log4j configuration servlet, making it specification compliant.",
-                ContentRepository.CONFIG,
+                RepositoryConstants.CONFIG,
                 "/server/filters/servlets/log4j/mappings/--magnolia-log4j-",
                 "pattern", "/.magnolia/log4j*", "/.magnolia/log4j"
         );
@@ -126,8 +126,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         register(DeltaBuilder.update("3.6.4", "")
                 .addTask(new AddMimeMappingTask("flv", "video/x-flv", "/.resources/file-icons/flv.png"))
                 .addTask(new AddMimeMappingTask("svg", "image/svg+xml", "/.resources/file-icons/svg.png"))
-                .addTask(new CheckAndModifyPropertyValueTask("PNG MIME mapping", "Checks and updates PNG MIME mapping if not correct.", ContentRepository.CONFIG, "/server/MIMEMapping/png", "mime-type", "application/octet-stream", "image/png"))
-                .addTask(new CheckAndModifyPropertyValueTask("SWF MIME mapping", "Checks and updates SWF MIME mapping if not correct.", ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "application/octet-stream", "application/x-shockwave-flash"))
+                .addTask(new CheckAndModifyPropertyValueTask("PNG MIME mapping", "Checks and updates PNG MIME mapping if not correct.", RepositoryConstants.CONFIG, "/server/MIMEMapping/png", "mime-type", "application/octet-stream", "image/png"))
+                .addTask(new CheckAndModifyPropertyValueTask("SWF MIME mapping", "Checks and updates SWF MIME mapping if not correct.", RepositoryConstants.CONFIG, "/server/MIMEMapping/swf", "mime-type", "application/octet-stream", "application/x-shockwave-flash"))
         );
 
         register(DeltaBuilder.update("3.6.7", "")
@@ -138,8 +138,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(fixMimetype("swf", "application/x-shockwave-flash;", "application/x-shockwave-flash"))
         );
 
-        final Task updateLinkResolverClass = new CheckAndModifyPropertyValueTask("Link rendering", "Updates the link rendering implementation class.", ContentRepository.CONFIG, "/server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl", "info.magnolia.link.LinkTransformerManager");
-        final Task renameLinkResolver = new MoveNodeTask("Link management configuration", "Updates the link management configuration.", ContentRepository.CONFIG, "/server/rendering/linkResolver", "/server/rendering/linkManagement", true);
+        final Task updateLinkResolverClass = new CheckAndModifyPropertyValueTask("Link rendering", "Updates the link rendering implementation class.", RepositoryConstants.CONFIG, "/server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl", "info.magnolia.link.LinkTransformerManager");
+        final Task renameLinkResolver = new MoveNodeTask("Link management configuration", "Updates the link management configuration.", RepositoryConstants.CONFIG, "/server/rendering/linkResolver", "/server/rendering/linkManagement", true);
         register(DeltaBuilder.update("4.0", "")
                 .addTask(auditTrailManagerTask)
                 .addTask(bootstrapFreemarker)
@@ -151,7 +151,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         register(DeltaBuilder.update("4.0.2", "")
                 // the two tasks below - updateUsers and CAMPVT(Fix anonymous permissions) are also executed for 3.6.6 set on 3.6 branch. This is due to fact that tasks needed to be applied on 3.6 branch after 4.0 release already. Tasks are safe to be executed multiple times.
                 .addTask(new UpdateUsers())
-                .addTask(new CheckAndModifyPropertyValueTask("Fix for anonymous user permissions", "Fix previously incorrect path for anonymous user permissions.", ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", "/system/anonymous/*"))
+                .addTask(new CheckAndModifyPropertyValueTask("Fix for anonymous user permissions", "Fix previously incorrect path for anonymous user permissions.", RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", "/system/anonymous/*"))
 
                 // warning - if adding update tasks for the 4.0.2 release below this point,
                 // make sure they'd also be applied correctly for the 4.1 branch in the various possible update scenarios
@@ -187,13 +187,13 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         );
 
         register(DeltaBuilder.update("4.3.6", "")
-                .addTask(new NodeExistsDelegateTask("TemplateExceptionHandler", "Checks if templateExceptionHandler node exists", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", new WarnTask("TemplateExceptionHandler", "Unable to set node templateExceptionHandler because it already exists"), new CreateNodeTask("TemplateExceptionHandler", "Creates node templateExceptionHandler", ContentRepository.CONFIG, "/server/rendering/freemarker", "templateExceptionHandler", ItemType.CONTENTNODE.getSystemName())))
-                .addTask(new PropertyExistsDelegateTask("Class", "Checks if class property exists", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", new WarnTask("class", "Unable to set property class because it already exists"), new NewPropertyTask("Class", "Creates property class and sets it to class path", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", "info.magnolia.freemarker.ModeDependentTemplateExceptionHandler"))));
+                .addTask(new NodeExistsDelegateTask("TemplateExceptionHandler", "Checks if templateExceptionHandler node exists", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", new WarnTask("TemplateExceptionHandler", "Unable to set node templateExceptionHandler because it already exists"), new CreateNodeTask("TemplateExceptionHandler", "Creates node templateExceptionHandler", RepositoryConstants.CONFIG, "/server/rendering/freemarker", "templateExceptionHandler", ItemType.CONTENTNODE.getSystemName())))
+                .addTask(new PropertyExistsDelegateTask("Class", "Checks if class property exists", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", new WarnTask("class", "Unable to set property class because it already exists"), new NewPropertyTask("Class", "Creates property class and sets it to class path", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", "info.magnolia.freemarker.ModeDependentTemplateExceptionHandler"))));
 
         register(DeltaBuilder.update("4.4", "")
             .addTask(bootstrapWebContainerResources)
             .addTask(
-                new NodeBuilderTask("Update filter configuration", "Removes the dontDispatchOnForward bypass and adds the dispatching configuration instead", ErrorHandling.strict, ContentRepository.CONFIG,
+                new NodeBuilderTask("Update filter configuration", "Removes the dontDispatchOnForward bypass and adds the dispatching configuration instead", ErrorHandling.strict, RepositoryConstants.CONFIG,
                     getNode("server/filters").then(
                         getNode("bypasses").then(
                             remove("dontDispatchOnForwardAttribute")),
@@ -255,7 +255,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     }
 
     private PropertyValueDelegateTask fixMimetype(String mimeType, final String previouslyWrongValue, final String fixedValue) {
-        final String workspaceName = ContentRepository.CONFIG;
+        final String workspaceName = RepositoryConstants.CONFIG;
         final String nodePath = "/server/MIMEMapping/" + mimeType;
         final CheckAndModifyPropertyValueTask fixTask = new CheckAndModifyPropertyValueTask(null, null, workspaceName, nodePath,
                 "mime-type", previouslyWrongValue, fixedValue);
@@ -266,7 +266,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     }
 
     private PropertyExistsDelegateTask addButDoNotReplaceMimeProperty(String mimeType, final String propertyName, final String propertyValue) {
-        final String workspaceName = ContentRepository.CONFIG;
+        final String workspaceName = RepositoryConstants.CONFIG;
         final String nodePath = "/server/MIMEMapping/" + mimeType;
         final CheckOrCreatePropertyTask createTask = new CheckOrCreatePropertyTask(null, null, workspaceName, nodePath, propertyName, propertyValue);
         return new PropertyExistsDelegateTask("Add "+mimeType.toUpperCase()+" property",

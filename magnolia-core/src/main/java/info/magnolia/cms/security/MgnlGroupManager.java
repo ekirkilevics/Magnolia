@@ -35,11 +35,11 @@ package info.magnolia.cms.security;
 
 import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.iterator.FilteringPropertyIterator;
 import info.magnolia.jcr.predicate.JCRPropertyHidingPredicate;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -183,6 +183,6 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
 
     @Override
     protected String getRepositoryName() {
-        return ContentRepository.USER_GROUPS;
+        return RepositoryConstants.USER_GROUPS;
     }
 }

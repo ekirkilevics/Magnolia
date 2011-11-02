@@ -33,7 +33,6 @@
  */
 package info.magnolia.setup.for3_5;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -43,6 +42,7 @@ import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.LinkedHashMap;
 
@@ -65,7 +65,7 @@ public class CheckAndUpdateSecureURIs extends AllChildrenNodesOperation implemen
     private final ArrayDelegateTask subtasks;
 
     public CheckAndUpdateSecureURIs(String existingSecureURIs) {
-        super("Secure URIs", "Backs up and removes secure ", ContentRepository.CONFIG, existingSecureURIs);
+        super("Secure URIs", "Backs up and removes secure ", RepositoryConstants.CONFIG, existingSecureURIs);
         subtasks = new ArrayDelegateTask("Secure URI transformations");
 
         // setup secureURIs from latest Magnolia 3.0.x installation

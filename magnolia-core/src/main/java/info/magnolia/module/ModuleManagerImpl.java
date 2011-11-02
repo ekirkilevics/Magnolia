@@ -61,6 +61,7 @@ import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.repository.Provider;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -291,7 +292,7 @@ public class ModuleManagerImpl implements ModuleManager {
         // TODO we should keep only one instance of the lifecycle context
         final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
         lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_SYSTEM_STARTUP);
-        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.CONFIG);
         Content modulesParentNode;
         try {
             modulesParentNode = hm.getContent(MODULES_NODE);
@@ -335,7 +336,7 @@ public class ModuleManagerImpl implements ModuleManager {
                     startModule(moduleInstance, moduleDefinition, lifecycleContext);
 
                     // start observation
-                    ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, "/modules/" + moduleName + "/config", new EventListener() {
+                    ObservationUtil.registerDeferredChangeListener(RepositoryConstants.CONFIG, "/modules/" + moduleName + "/config", new EventListener() {
 
                         @Override
                         public void onEvent(EventIterator events) {
@@ -407,7 +408,7 @@ public class ModuleManagerImpl implements ModuleManager {
      */
     protected Map<String, Object> getModuleInstanceProperties(ModuleDefinition moduleDefinition) {
 
-        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.CONFIG);
 
         final String moduleNodePath = "/modules/" + moduleDefinition.getName();
         Content moduleNode = null;

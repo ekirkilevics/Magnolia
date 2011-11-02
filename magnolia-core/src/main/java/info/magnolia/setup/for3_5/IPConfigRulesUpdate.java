@@ -33,11 +33,12 @@
  */
 package info.magnolia.setup.for3_5;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
+
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
@@ -54,7 +55,7 @@ public class IPConfigRulesUpdate extends AllChildrenNodesOperation {
 
     public IPConfigRulesUpdate() {
         super("IPConfig rules changed", "Updates the existing ip access rules to match the new configuration structure.",
-                ContentRepository.CONFIG, "/server/IPConfig");
+                RepositoryConstants.CONFIG, "/server/IPConfig");
     }
 
     /**

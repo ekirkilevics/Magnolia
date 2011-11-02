@@ -33,7 +33,8 @@
  */
 package info.magnolia.objectfactory;
 
-import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.repository.RepositoryConstants;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -57,7 +58,7 @@ public class ComponentConfigurationPath {
             this.repository = StringUtils.substringBefore(value, ":");
             this.path = StringUtils.substringAfter(value, ":");
         } else {
-            this.repository = ContentRepository.CONFIG;
+            this.repository = RepositoryConstants.CONFIG;
             this.path = value;
         }
     }

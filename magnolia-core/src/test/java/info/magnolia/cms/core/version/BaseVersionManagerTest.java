@@ -51,6 +51,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.Provider;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 import info.magnolia.test.mock.MockContext;
 
@@ -72,7 +73,7 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
 
     @Test
     public void testCreateAndRestoreVersion() throws RepositoryException{
-        Session session = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
+        Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
         VersionManager versionMan = VersionManager.getInstance();
         Node node = session.getRootNode().addNode( "page", ItemType.CONTENT.getSystemName());
         node.addNode("paragraph", ItemType.CONTENTNODE.getSystemName());
@@ -100,7 +101,7 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
 
     @Test
     public void testCreateAndRestoreDeletedVersion() throws RepositoryException {
-        Provider repoProvider = ContentRepository.getRepositoryProvider(ContentRepository.WEBSITE);
+        Provider repoProvider = ContentRepository.getRepositoryProvider(RepositoryConstants.WEBSITE);
         String mgnlMixDeleted = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<nodeTypes" + " xmlns:rep=\"internal\""
         + " xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"" + " xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\""
         + " xmlns:mgnl=\"http://www.magnolia.info/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + ItemType.DELETED_NODE_MIXIN
@@ -109,7 +110,7 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
 
         repoProvider.registerNodeTypes(new ByteArrayInputStream(mgnlMixDeleted.getBytes()));
 
-        Session session = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
+        Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
         VersionManager versionMan = VersionManager.getInstance();
         Node node = session.getRootNode().addNode( "page", ItemType.CONTENT.getSystemName());
 

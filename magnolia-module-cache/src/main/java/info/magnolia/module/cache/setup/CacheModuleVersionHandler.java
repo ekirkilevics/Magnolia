@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.cache.setup;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -67,6 +66,7 @@ import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.nodebuilder.task.ErrorHandling;
 import info.magnolia.nodebuilder.task.ModuleNodeBuilderTask;
+import info.magnolia.repository.RepositoryConstants;
 import static info.magnolia.nodebuilder.Ops.*;
 
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         );
 
         final NodeExistsDelegateTask addFilterIfNotExisting = new NodeExistsDelegateTask("Check cache filter", "A bug in previous 3.5 releases made it possible for the cache filter to be removed. This task readds it if necessary.",
-                ContentRepository.CONFIG, "/server/filters/cache", null, new ArrayDelegateTask("",
+                RepositoryConstants.CONFIG, "/server/filters/cache", null, new ArrayDelegateTask("",
                         new BootstrapSingleResource("", "", "/mgnl-bootstrap/cache/config.server.filters.cache.xml"),
                         new FilterOrderingTask("cache", new String[]{"i18n"}),
                         new WarnTask("", "The cache filter was not found, and was just added. If you removed it on purpose, you should consider disabling it instead.")));
@@ -115,8 +115,8 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                     }
                 })
                 .addTask(new ArrayDelegateTask("New cache filter", "Replaces the old cache filter with info.magnolia.module.cache.filter.CacheFilter.",
-                        new CheckAndModifyPropertyValueTask("", "", ContentRepository.CONFIG, "/server/filters/cache", "class", "info.magnolia.cms.cache.CacheFilter", "info.magnolia.module.cache.filter.CacheFilter"),
-                        new NewPropertyTask("", "", ContentRepository.CONFIG, "/server/filters/cache", "cacheConfigurationName", "default")
+                        new CheckAndModifyPropertyValueTask("", "", RepositoryConstants.CONFIG, "/server/filters/cache", "class", "info.magnolia.cms.cache.CacheFilter", "info.magnolia.module.cache.filter.CacheFilter"),
+                        new NewPropertyTask("", "", RepositoryConstants.CONFIG, "/server/filters/cache", "cacheConfigurationName", "default")
                 ))
                 .addTask(new FilterOrderingTask("cache", "The cache filter should now be placed before the i18n filter.", new String[]{"context", "multipartRequest", "activation"}))
                 .addTask(new ArrayDelegateTask("New gzip filter", "Adds the new gzip filter.",
@@ -143,20 +143,20 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("4.1", "New flush policy configuration.").addTask(
                 new ArrayDelegateTask("New flush policy configuration", "Sets up the new flush policy configuration.",
                         // move existing policy to temp
-                        new MoveNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy","/modules/cache/config/configurations/default/tmp", false),
+                        new MoveNodeTask("","", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/flushPolicy","/modules/cache/config/configurations/default/tmp", false),
                         // create new policy configuration
-                        new CreateNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default", "flushPolicy", ItemType.CONTENTNODE.getSystemName()),
-                        new SetPropertyTask(ContentRepository.CONFIG,"/modules/cache/config/configurations/default/flushPolicy", "class", "info.magnolia.module.cache.DelegateFlushPolicy"),
-                        new CreateNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy", "policies", ItemType.CONTENTNODE.getSystemName()),
+                        new CreateNodeTask("","", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default", "flushPolicy", ItemType.CONTENTNODE.getSystemName()),
+                        new SetPropertyTask(RepositoryConstants.CONFIG,"/modules/cache/config/configurations/default/flushPolicy", "class", "info.magnolia.module.cache.DelegateFlushPolicy"),
+                        new CreateNodeTask("","", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/flushPolicy", "policies", ItemType.CONTENTNODE.getSystemName()),
                         // move original config under the new one
-                        new MoveNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/tmp","/modules/cache/config/configurations/default/flushPolicy/policies/flushAll", false)
+                        new MoveNodeTask("","", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/tmp","/modules/cache/config/configurations/default/flushPolicy/policies/flushAll", false)
                 )));
 
         register(DeltaBuilder.update("4.3", "Makes cache aware of different sites and locales used to access the content")
                 .addTask(new NodeExistsDelegateTask("Check cache filter", "Reorder i18n filter prior to cache filter to allow cache access to i18n information.",
-                        ContentRepository.CONFIG, "/server/filters/cache", new FilterOrderingTask("cache", new String[]{"i18n"}),
+                        RepositoryConstants.CONFIG, "/server/filters/cache", new FilterOrderingTask("cache", new String[]{"i18n"}),
                                 new WarnTask("", "The cache filter was not found. If you removed it on purpose, you should consider disabling it instead.")))
-                .addTask(new PropertyExistsDelegateTask("Cache policy re-configuration", "Removes no longer used multihost property from default cache policy.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/cachePolicy", "multiplehosts", new RemovePropertyTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/cachePolicy", "multiplehosts")))
+                .addTask(new PropertyExistsDelegateTask("Cache policy re-configuration", "Removes no longer used multihost property from default cache policy.", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/cachePolicy", "multiplehosts", new RemovePropertyTask("", "", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/cachePolicy", "multiplehosts")))
                 .addTask(new ArrayDelegateTask("Cache Flushing","Adds new commands to flush the cache.",
                         new BootstrapSingleResource("", "", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushAll.xml"),
                         new BootstrapSingleResource("", "", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushByUUID.xml")))
@@ -168,7 +168,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new WarnTask("Warning", "Server side re-caching of requests with no-cache header (shift reload) were disabled. This can be changed at /modules/cache/config/configurations/default/cachePolicy/refreshOnNoCacheRequests"))
                 );
         register(DeltaBuilder.update("4.3.2", "Make waiting for cache entry configurable")
-                .addTask(new NewPropertyTask("Set cache new entry timeout", "Makes sure incoming requests are not waiting for cache entries to be created longer then specified timeout", ContentRepository.CONFIG, "/modules/cache/config/cacheFactory", "blockingTimeout", "4000"))
+                .addTask(new NewPropertyTask("Set cache new entry timeout", "Makes sure incoming requests are not waiting for cache entries to be created longer then specified timeout", RepositoryConstants.CONFIG, "/modules/cache/config/cacheFactory", "blockingTimeout", "4000"))
                 );
         register(DeltaBuilder.update("4.3.7", "Adds cache tools")
                 .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushNamedCache.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))
@@ -177,7 +177,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 );
 
         register(DeltaBuilder.update("4.4", "Centralizes the compression configuration")
-            .addTask(new RemoveNodeTask("Centralized compression configuration", "Removes the contentType bypass of the gzip filter.", ContentRepository.CONFIG, "/server/filters/gzip/bypasses/contentType"))
+            .addTask(new RemoveNodeTask("Centralized compression configuration", "Removes the contentType bypass of the gzip filter.", RepositoryConstants.CONFIG, "/server/filters/gzip/bypasses/contentType"))
             .addTask(new ModuleNodeBuilderTask("Centralized compression configuration", "Update the compression voters. They should vote positive if the compression is desirable.", ErrorHandling.strict,
                 getNode("config/compression/voters").then(
                     getNode("contentType").then(
@@ -187,19 +187,19 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                     addProperty("op", "AND"))
              ))
 
-             .addTask(new SetPropertyTask("Safer default cache configuration.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/cachePolicy/voters/deny/authenticated", "enabled", "false"))
+             .addTask(new SetPropertyTask("Safer default cache configuration.", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/cachePolicy/voters/deny/authenticated", "enabled", "false"))
              .addTask(new PartialBootstrapTask("New browser cache policy", "", "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml", "/default/browserCachePolicy"))
         );
 
         register(DeltaBuilder.update("4.4.2", "Update cache configuration")
-            .addTask(new IsModuleInstalledOrRegistered("FlushByComments", "Checks for unwanted presence of FlushByComments node.", "commenting", null, new NodeExistsDelegateTask("FlushByComments", "Checks if FlushByComments node exists.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments", new RemoveNodeTask("FlushByComments", "Removes FlushByComments node.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments"))))
+            .addTask(new IsModuleInstalledOrRegistered("FlushByComments", "Checks for unwanted presence of FlushByComments node.", "commenting", null, new NodeExistsDelegateTask("FlushByComments", "Checks if FlushByComments node exists.", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments", new RemoveNodeTask("FlushByComments", "Removes FlushByComments node.", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments"))))
         );
 
         register(DeltaBuilder.update("4.4.5", "Update cache configuration")
-            .addTask(new NodeExistsDelegateTask("Bypass executor", "Check for existence of bypass executor and add setExpirationHeader if found.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", new ArrayDelegateTask("", "",
-                    new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "setExpirationHeader", ItemType.CONTENTNODE.getSystemName()),
-                    new CreateNodeTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "bypass", ItemType.CONTENTNODE.getSystemName()),
-                    new NewPropertyTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/bypass/setExpirationHeader", "class", "info.magnolia.module.cache.executor.SetExpirationHeaders"),
+            .addTask(new NodeExistsDelegateTask("Bypass executor", "Check for existence of bypass executor and add setExpirationHeader if found.", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", new ArrayDelegateTask("", "",
+                    new CreateNodeTask("", "", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "setExpirationHeader", ItemType.CONTENTNODE.getSystemName()),
+                    new CreateNodeTask("", "", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/executors/bypass", "bypass", ItemType.CONTENTNODE.getSystemName()),
+                    new NewPropertyTask("", "", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/executors/bypass/setExpirationHeader", "class", "info.magnolia.module.cache.executor.SetExpirationHeaders"),
                     new MoveAndRenamePropertyTask("", "/modules/cache/config/configurations/default/executors/bypass", "class", "/modules/cache/config/configurations/default/executors/bypass/bypass", "class"))))
         );
     }
@@ -216,13 +216,13 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
         // remove previously used compressible content types configuration
         list.add(new DefaultCompressibleContentTypesCondition("Cache cleanup", "Removes obsolete cache compression list in favor of new global configuration.",
-                        new RemoveNodeTask("Remove obsolete compression list configuration.", "Removes cache executor specific compression list configuration in favor of using one global list for both cache and gzip.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/store/cacheContent/compressible"),
+                        new RemoveNodeTask("Remove obsolete compression list configuration.", "Removes cache executor specific compression list configuration in favor of using one global list for both cache and gzip.", RepositoryConstants.CONFIG, "/modules/cache/config/configurations/default/executors/store/cacheContent/compressible"),
                         new WarnTask("Warning", "The compression list configuration have been relocated to /modules/cache/compression/voters/contentType, since you have modified the default configuration, please make sure your customization is applied also to new configuration."),
                         "/modules/cache/config/configurations/default/executors/store/cacheContent/compressible"));
 
         // remove bypass for compressible content types from gzip filter
         list.add(new DefaultCompressibleContentTypesCondition("GZip cleanup", "Removes obsolete gzip bypass in favor of new global configuration.",
-                        new RemoveNodeTask("Remove obsolete bypass.", "Removes content type bypass from gzip filter.", ContentRepository.CONFIG, "/server/filters/gzip/bypasses/contentType"),
+                        new RemoveNodeTask("Remove obsolete bypass.", "Removes content type bypass from gzip filter.", RepositoryConstants.CONFIG, "/server/filters/gzip/bypasses/contentType"),
                         new WarnTask("Warning", "The list of compressible types have been relocated to /modules/cache/compression/voters/contentType, since you have modified the default configuration, please make sure your customization is applied also to new configuration."),
                         "/server/filters/gzip/bypasses/contentType/allowed"));
 
@@ -230,7 +230,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         list.add(new AbstractRepositoryTask("Add bypass", "Adds new bypass for GZip filter using global configuration.") {
             @Override
             protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-                final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
+                final HierarchyManager hm = installContext.getHierarchyManager(RepositoryConstants.CONFIG);
                 Content content = hm.createContent("/server/filters/gzip/bypasses", "deletageBypass", ItemType.CONTENTNODE.getSystemName());
                 content.setNodeData("class","info.magnolia.voting.voters.VoterSet");
                 content.setNodeData("delegatePath","/modules/cache/config/compression/voters");
@@ -241,7 +241,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
             @Override
             protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
                 final String reposPath= "/modules/cache/config/repositories";
-                final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
+                final HierarchyManager hm = installContext.getHierarchyManager(RepositoryConstants.CONFIG);
                 if (!hm.isExist(reposPath)) {
                     return;
                 }

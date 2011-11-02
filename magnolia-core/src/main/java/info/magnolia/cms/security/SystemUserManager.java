@@ -33,9 +33,9 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -80,21 +80,21 @@ public class SystemUserManager extends MgnlUserManager {
 
         final String anonymousUserPath = "/" + Realm.REALM_SYSTEM.getName() + "/" + UserManager.ANONYMOUS_USER;
         ObservationUtil.registerChangeListener(
-                ContentRepository.USERS,
+                RepositoryConstants.USERS,
                 anonymousUserPath,
                 true,
                 "mgnl:user",
                 anonymousListener);
 
         ObservationUtil.registerChangeListener(
-                ContentRepository.USER_GROUPS,
+                RepositoryConstants.USER_GROUPS,
                 "/",
                 true,
                 "mgnl:group",
                 anonymousListener);
 
         ObservationUtil.registerDeferredChangeListener(
-                ContentRepository.USER_ROLES,
+                RepositoryConstants.USER_ROLES,
                 "/",
                 true,
                 "mgnl:role",

@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
@@ -42,6 +41,7 @@ import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.ObservedComponentFactory;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -102,7 +102,7 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
      */
     public static final class InstanceFactory extends ObservedComponentFactory<IPSecurityManager> {
         public InstanceFactory() {
-            super(ContentRepository.CONFIG, "/server/IPConfig", IPSecurityManager.class);
+            super(RepositoryConstants.CONFIG, "/server/IPConfig", IPSecurityManager.class);
         }
 
         @Override

@@ -33,11 +33,11 @@
  */
 package info.magnolia.rendering.template.assignment;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.mock.jcr.MockNode;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -54,7 +54,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         final String templateId = "id";
         MockNode node = new MockNode();
         MockNode metaData = (MockNode) node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.TEMPLATE, templateId);
+        metaData.setProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.TEMPLATE, templateId);
 
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry(null);
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);

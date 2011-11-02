@@ -48,6 +48,7 @@ import info.magnolia.importexport.Bootstrapper;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.RepositoryDefinition;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.RepositoryException;
 
@@ -109,7 +110,7 @@ public class SetupModuleRepositoriesTask extends AbstractTask {
         ActivationManager sManager = ActivationManagerFactory.getActivationManager();
         for (Subscriber subscriber : sManager.getSubscribers()) {
             if (!subscriber.isSubscribed("/", repository)) {
-                Content subscriptionsNode = ContentUtil.getContent(ContentRepository.CONFIG, sManager.getConfigPath()
+                Content subscriptionsNode = ContentUtil.getContent(RepositoryConstants.CONFIG, sManager.getConfigPath()
                         + "/"
                         + subscriber.getName()
                         + "/subscriptions");

@@ -33,11 +33,11 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Collection;
 
@@ -78,7 +78,7 @@ public class QueryTag extends TagSupport {
     /**
      * The repository. Defaults to ContentRepository.WEBSITE
      */
-    private String repository = ContentRepository.WEBSITE;
+    private String repository = RepositoryConstants.WEBSITE;
 
     /**
      * Node type. Defaults to mgnl:content.
@@ -164,7 +164,7 @@ public class QueryTag extends TagSupport {
         this.var = null;
         this.query = null;
         this.type = Query.XPATH;
-        this.repository = ContentRepository.WEBSITE;
+        this.repository = RepositoryConstants.WEBSITE;
         this.nodeType = ItemType.CONTENT.getSystemName();
     }
 }

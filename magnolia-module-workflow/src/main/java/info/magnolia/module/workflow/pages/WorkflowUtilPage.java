@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.workflow.pages;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
 import info.magnolia.module.workflow.WorkflowConstants;
@@ -41,6 +40,7 @@ import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.WorkflowUtil;
 import info.magnolia.module.workflow.flows.FlowDefinitionException;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 
@@ -203,7 +203,7 @@ public class WorkflowUtilPage extends TemplatedMVCHandler {
 
     private String setDate(String pathSelected, String start, String stop) throws Exception {
         // add start date and end date
-        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.WEBSITE);
         Content ct;
         try {
             ct = hm.getContent(pathSelected);

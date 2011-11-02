@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.templating.setup;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
@@ -48,6 +47,7 @@ import info.magnolia.module.delta.Task;
 import info.magnolia.module.templating.setup.for4_0.DeprecateDialogPathAllModules;
 import info.magnolia.module.templating.setup.for4_0.FixTemplatePathTask;
 import info.magnolia.module.templating.setup.for4_0.NestPropertiesAllModulesNodeTask;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,13 +61,13 @@ import java.util.List;
  */
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
 
-    private OrderNodeBeforeTask orderBackwardCompatibilityFilter = new OrderNodeBeforeTask("Move backward compatibility filter", "", ContentRepository.CONFIG, "/server/filters/cms/backwardCompatibility", "rendering");
+    private OrderNodeBeforeTask orderBackwardCompatibilityFilter = new OrderNodeBeforeTask("Move backward compatibility filter", "", RepositoryConstants.CONFIG, "/server/filters/cms/backwardCompatibility", "rendering");
 
     public TemplatingModuleVersionHandler() {
 
         register(DeltaBuilder.update("4.0", "")
                 .addTask(new BootstrapSingleResource("Freemarker Template Renderer", "Adds Freemarker template renderer configuration.", "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"))
-                .addTask(new CheckAndModifyPropertyValueTask("Rendering filter", "The rendering filter is now part of the templating module.", ContentRepository.CONFIG, "/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter", "info.magnolia.module.templating.RenderingFilter"))
+                .addTask(new CheckAndModifyPropertyValueTask("Rendering filter", "The rendering filter is now part of the templating module.", RepositoryConstants.CONFIG, "/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter", "info.magnolia.module.templating.RenderingFilter"))
                 .addTask(new BootstrapSingleResource("Freemarker Model for RenderableDefinition", "Plugs in a specific Freemarker model for RenderableDefinition implementations.", "/mgnl-bootstrap/templating/config.server.rendering.freemarker.modelFactories.renderable.xml"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates", "path", "templatePath"))
                 .addTask(new NestPropertiesAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates",
@@ -119,7 +119,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final ArrayList<Task> tasks = new ArrayList<Task>();
         tasks.add(orderBackwardCompatibilityFilter);
-        tasks.add(new OrderNodeBeforeTask("Order model execution filter", "", ContentRepository.CONFIG, "/server/filters/cms/modelExecution", "backwardCompatibility"));
+        tasks.add(new OrderNodeBeforeTask("Order model execution filter", "", RepositoryConstants.CONFIG, "/server/filters/cms/modelExecution", "backwardCompatibility"));
         // TODO : make sure the RenderingFilter is the last one ?
         return tasks;
     }

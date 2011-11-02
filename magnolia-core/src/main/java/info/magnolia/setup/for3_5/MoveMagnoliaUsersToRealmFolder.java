@@ -33,7 +33,6 @@
  */
 package info.magnolia.setup.for3_5;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -41,6 +40,8 @@ import info.magnolia.cms.security.Realm;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractRepositoryTask;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +65,7 @@ public class MoveMagnoliaUsersToRealmFolder extends AbstractRepositoryTask {
     @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         // move existing users there
-        final HierarchyManager usersHm = installContext.getHierarchyManager(ContentRepository.USERS);
+        final HierarchyManager usersHm = installContext.getHierarchyManager(RepositoryConstants.USERS);
 
         Collection users = usersHm.getRoot().getChildren(ItemType.USER);
 

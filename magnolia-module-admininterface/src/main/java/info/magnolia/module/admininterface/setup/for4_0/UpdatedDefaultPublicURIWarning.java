@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admininterface.setup.for4_0;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -42,6 +41,8 @@ import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractRepositoryTask;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
+
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
@@ -70,7 +71,7 @@ public class UpdatedDefaultPublicURIWarning extends AbstractRepositoryTask {
      * Check if at least one template is visible in the system.
      */
     private boolean templatesExist() {
-        Collection nodeCollection = QueryUtil.query(ContentRepository.CONFIG, "select * from mgnl:content where jcr:path like '/modules/%/templates'");
+        Collection nodeCollection = QueryUtil.query(RepositoryConstants.CONFIG, "select * from mgnl:content where jcr:path like '/modules/%/templates'");
         Iterator nodesCollectionIt = nodeCollection.iterator();
         while (nodesCollectionIt.hasNext()) {
             Content templatesNode = (Content) nodesCollectionIt.next();

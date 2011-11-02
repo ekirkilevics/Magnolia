@@ -33,7 +33,6 @@
  */
 package info.magnolia.setup.for3_5;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -41,6 +40,7 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.RepositoryException;
 
@@ -58,7 +58,7 @@ public class UpdateURI2RepositoryMappings extends info.magnolia.module.delta.All
     private final ArrayDelegateTask subTasks;
 
     public UpdateURI2RepositoryMappings() {
-        super("Update URI2Repository mappings", "The structure of the URI2Repository mappings have changed in 3.5", ContentRepository.CONFIG, SERVER_URI2REPOSITORY_MAPPING);
+        super("Update URI2Repository mappings", "The structure of the URI2Repository mappings have changed in 3.5", RepositoryConstants.CONFIG, SERVER_URI2REPOSITORY_MAPPING);
         subTasks = new ArrayDelegateTask("Move URI2Repository mapping nodes");
     }
 
@@ -85,7 +85,7 @@ public class UpdateURI2RepositoryMappings extends info.magnolia.module.delta.All
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final String oldHandle = node.getHandle();
         final String newHandle = SERVER_URI2REPOSITORY_MAPPING + "/mappings/" + node.getName();
-        subTasks.addTask(new MoveNodeTask("Move " + oldHandle + " to " + newHandle + "", "Moves the " + oldHandle + " node to its new location", ContentRepository.CONFIG, oldHandle, newHandle, true));
+        subTasks.addTask(new MoveNodeTask("Move " + oldHandle + " to " + newHandle + "", "Moves the " + oldHandle + " node to its new location", RepositoryConstants.CONFIG, oldHandle, newHandle, true));
     }
 
 }

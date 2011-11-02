@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.repository.RepositoryConstants;
 
 
 /**
@@ -54,7 +54,7 @@ public class DialogLink extends DialogEditWithButton {
         String label = this.getMessage("dialog.link.internal"); //$NON-NLS-1$
         this.getButton().setLabel(label);
         this.getButton().setSaveInfo(false);
-        String repository = this.getConfigValue("repository", ContentRepository.WEBSITE); //$NON-NLS-1$
+        String repository = this.getConfigValue("repository", RepositoryConstants.WEBSITE); //$NON-NLS-1$
         String tree = this.getConfigValue("tree", repository);
         String buttonOnClick = this.getConfigValue(
             "buttonOnClick",

@@ -36,13 +36,13 @@ package info.magnolia.templating.module.setup;
 import static info.magnolia.nodebuilder.Ops.addNode;
 import static info.magnolia.nodebuilder.Ops.addProperty;
 import static info.magnolia.nodebuilder.Ops.getNode;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.Task;
 import info.magnolia.nodebuilder.task.ErrorHandling;
 import info.magnolia.nodebuilder.task.NodeBuilderTask;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +64,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 "New templating UI components",
                 "Registers new UI components for templating.",
                 ErrorHandling.strict,
-                ContentRepository.CONFIG,
+                RepositoryConstants.CONFIG,
                 "/server/rendering/freemarker",
                 getNode("sharedVariables")
                         .then(addNode("cms", ItemType.CONTENTNODE)

@@ -34,7 +34,6 @@
 package info.magnolia.module.exchangesimple;
 
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.exchange.ActivationManager;
@@ -47,6 +46,7 @@ import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.BootstrapUtil;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
 
@@ -79,7 +79,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
     public void tearDown() throws Exception {
         ActivationManager man = Components.getComponentProvider().newInstance(ActivationManager.class);
         man.setSubscribers(new ArrayList());
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
         hm.getContent("/server/activation").delete();
         hm.save();
         super.tearDown();
@@ -88,7 +88,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
     @Test
     public void testDefaultTimeout() throws Exception {
         BootstrapUtil.bootstrap(new String[]{"/mgnl-bootstrap/exchange-simple/config.server.activation.xml"}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
 
         ActivationManager man = ActivationManagerFactory.getActivationManager();
         man.addSubscribers((Subscriber) Content2BeanUtil.toBean(hm.getContent("/server/activation/subscribers/magnoliaPublic8080"), true));
@@ -102,7 +102,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
     @Test
     public void testCustomTimeout() throws Exception {
         BootstrapUtil.bootstrap(new String[]{"/mgnl-bootstrap/exchange-simple/config.server.activation.xml"}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
         Content subContent = hm.getContent("/server/activation/subscribers/magnoliaPublic8080");
         // make sure settings works no matter what data type users use
         subContent.setNodeData("connectTimeout", 5000);
@@ -120,7 +120,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
     @Test
     public void testTimeoutSet() throws Exception {
         BootstrapUtil.bootstrap(new String[]{"/mgnl-bootstrap/exchange-simple/config.server.activation.xml"}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
 
         ActivationManager man = ActivationManagerFactory.getActivationManager();
         man.addSubscribers((Subscriber) Content2BeanUtil.toBean(hm.getContent("/server/activation/subscribers/magnoliaPublic8080"), true));

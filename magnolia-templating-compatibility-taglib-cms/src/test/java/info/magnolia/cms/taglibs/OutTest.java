@@ -33,11 +33,11 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.link.LinkTransformerManager;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTagTestCase;
 import info.magnolia.test.mock.MockContent;
@@ -74,7 +74,7 @@ public class OutTest extends MgnlTagTestCase {
 
     // UUID - related output tests
     protected Out basicUUID_test_instance(String linkResolvingType) throws RepositoryException {
-        HierarchyManager hm = webContext.getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = webContext.getHierarchyManager(RepositoryConstants.WEBSITE);
         pageContext.setAttribute("actPage", hm.getContentByUUID("1"));
         Out out = new Out();
         //2 is the node of the uuid link stored in the repository
@@ -155,9 +155,9 @@ public class OutTest extends MgnlTagTestCase {
         AggregationState agState = new AggregationState();
         agState.setCharacterEncoding("UTF-8");
         agState.setCurrentURI("http://www.test.org/");
-        agState.setRepository(ContentRepository.WEBSITE);
+        agState.setRepository(RepositoryConstants.WEBSITE);
         agState.setHandle("/main");
-        agState.setMainContent(webContext.getHierarchyManager(ContentRepository.WEBSITE).getContentByUUID("1"));
+        agState.setMainContent(webContext.getHierarchyManager(RepositoryConstants.WEBSITE).getContentByUUID("1"));
         agState.setLocale(Locale.US);
         return agState;
     }

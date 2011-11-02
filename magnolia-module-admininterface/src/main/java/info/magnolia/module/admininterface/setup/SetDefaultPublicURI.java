@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.admininterface.setup;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
 import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
 
 /**
  * Sets the default virtual URI on public instances.
@@ -58,7 +58,7 @@ public class SetDefaultPublicURI extends AbstractTask {
     @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
         final String defaultURI = ctx.getCurrentModuleDefinition().getProperty(moduleDescriptorPropertyName);
-        final SetPropertyTask setPropertyTask = new SetPropertyTask(ContentRepository.CONFIG, DEFAULT_URI_NODEPATH, "toURI", defaultURI);
+        final SetPropertyTask setPropertyTask = new SetPropertyTask(RepositoryConstants.CONFIG, DEFAULT_URI_NODEPATH, "toURI", defaultURI);
         final IsAuthorInstanceDelegateTask task = new IsAuthorInstanceDelegateTask(null, null, null, setPropertyTask);
         task.execute(ctx);
     }

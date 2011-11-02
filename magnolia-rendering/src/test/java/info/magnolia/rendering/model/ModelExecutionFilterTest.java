@@ -36,7 +36,6 @@ package info.magnolia.rendering.model;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
 import info.magnolia.context.MgnlContext;
@@ -55,6 +54,7 @@ import info.magnolia.rendering.template.registry.DefaultTemplateAvailability;
 import info.magnolia.rendering.template.registry.TemplateAvailability;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentProviderBasedMagnoliaTestCase;
 import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
@@ -92,7 +92,7 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
         super.setUp();
 
         MockContext ctx = (MockContext) MgnlContext.getInstance();
-        ctx.addSession(ContentRepository.WEBSITE, SessionTestUtil.createSession(ContentRepository.WEBSITE,
+        ctx.addSession(RepositoryConstants.WEBSITE, SessionTestUtil.createSession(RepositoryConstants.WEBSITE,
                 StringUtils.join(new String[] { "/foo.@uuid=12345",
                         "/foo/MetaData.mgnl\\:template=some-template" }, "\n")
         ));
@@ -224,7 +224,7 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
     private void setupRequestAndAggregationState(MockHttpServletRequest request, MockHttpServletResponse response, String nodeIdentifier) {
         MgnlContext.push(request, response);
         MgnlContext.setAttribute(ModelExecutionFilter.DEFAULT_MODEL_EXECUTION_ATTRIBUTE_NAME, nodeIdentifier);
-        MgnlContext.getAggregationState().setRepository(ContentRepository.WEBSITE);
+        MgnlContext.getAggregationState().setRepository(RepositoryConstants.WEBSITE);
     }
 
     private void setupRendererThatReturnsMockRenderingModel(RenderingModel renderingModel) throws RenderException {

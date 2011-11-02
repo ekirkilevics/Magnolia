@@ -35,8 +35,8 @@ package info.magnolia.cms.security;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.RescueSecuritySupport.RescueUserManager;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 
@@ -55,9 +55,9 @@ public class RescueSecuritySupportTest extends MgnlTestCase{
     public void setUp() throws Exception {
         super.setUp();
         securitySupport = new RescueSecuritySupport();
-        MockUtil.createAndSetHierarchyManager(ContentRepository.USERS, getClass().getResourceAsStream("sample-users.properties"));
-        MockUtil.createAndSetHierarchyManager(ContentRepository.USER_GROUPS, getClass().getResourceAsStream("sample-usergroups.properties"));
-        MockUtil.createAndSetHierarchyManager(ContentRepository.USER_ROLES, getClass().getResourceAsStream("sample-userroles.properties"));
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USERS, getClass().getResourceAsStream("sample-users.properties"));
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USER_GROUPS, getClass().getResourceAsStream("sample-usergroups.properties"));
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USER_ROLES, getClass().getResourceAsStream("sample-userroles.properties"));
     }
 
     @Test

@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -54,6 +53,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -441,7 +441,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @return the default repository
      */
     public String getRepository() {
-        return ContentRepository.WEBSITE;
+        return RepositoryConstants.WEBSITE;
     }
 
     public void removeSessionAttributes() {

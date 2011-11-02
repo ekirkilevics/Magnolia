@@ -41,6 +41,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.repository.Provider;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 import info.magnolia.test.mock.jcr.MockNode;
 
@@ -226,7 +227,7 @@ public class DefaultContentTest extends RepositoryTestCase {
             "/mycontent.@type=mgnl:content\n" +
             "/mycontent.nd1=hello";
 
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
         new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
         hm.save();
         Content content = hm.getContent("/mycontent");
@@ -234,7 +235,7 @@ public class DefaultContentTest extends RepositoryTestCase {
     }
 
     //    public void testPermissionCheckedOnDeleteNodeData() throws Exception {
-    //        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+    //        HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
     //        // create the content while we have full permissions
     //        final Content node = hm.createContent("/", "foo", ItemType.CONTENTNODE.getSystemName());
     //        node.createNodeData("bar").setValue("test");
@@ -398,7 +399,7 @@ public class DefaultContentTest extends RepositoryTestCase {
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:mimeType=image/png",
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00"
         ), "\n");
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
         new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
         hm.save();
 
@@ -450,7 +451,7 @@ public class DefaultContentTest extends RepositoryTestCase {
                 "/hello/bin=binary:some-data",
                 "/hello/bin.jcr\\:mimeType=image/gif",
         "/hello/bin.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00"), "\n");
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
         new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
         hm.save();
 

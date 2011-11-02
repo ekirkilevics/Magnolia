@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
@@ -43,6 +42,7 @@ import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.PropertyUtil;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -458,7 +458,7 @@ public class NodeDataUtil {
      * Uses the default value factory.
      */
     public static Value createValue(String valueStr, int type) throws RepositoryException {
-        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.CONFIG);
         ValueFactory valueFactory = hm.getWorkspace().getSession().getValueFactory();
         return createValue(valueStr, type, valueFactory);
     }

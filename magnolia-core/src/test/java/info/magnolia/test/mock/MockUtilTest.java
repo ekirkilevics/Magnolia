@@ -34,12 +34,12 @@
 package info.magnolia.test.mock;
 
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 
 import java.io.IOException;
@@ -160,7 +160,7 @@ public class MockUtilTest {
     }
 
     protected HierarchyManager initTestData() throws IOException, RepositoryException {
-        return MockUtil.createHierarchyManager(ContentRepository.CONFIG, this.getClass().getResourceAsStream("testcontent.properties"));
+        return MockUtil.createHierarchyManager(RepositoryConstants.CONFIG, this.getClass().getResourceAsStream("testcontent.properties"));
     }
 
 }

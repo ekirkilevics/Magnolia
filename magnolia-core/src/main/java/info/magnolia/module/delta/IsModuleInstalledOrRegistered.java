@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.InstallContext;
+import info.magnolia.repository.RepositoryConstants;
 
 /**
  * A Task which delegates depending on the existence of a module. (whether it was previously
@@ -49,12 +49,12 @@ public class IsModuleInstalledOrRegistered extends NodeExistsDelegateTask {
     private final String moduleName;
 
     public IsModuleInstalledOrRegistered(String taskName, String taskDescription, String moduleName, Task ifTrue) {
-        super(taskName, taskDescription, ContentRepository.CONFIG, MODULES_PATH + "/" + moduleName, ifTrue);
+        super(taskName, taskDescription, RepositoryConstants.CONFIG, MODULES_PATH + "/" + moduleName, ifTrue);
         this.moduleName = moduleName;
     }
 
     public IsModuleInstalledOrRegistered(String taskName, String taskDescription, String moduleName, Task ifTrue, Task ifFalse) {
-        super(taskName, taskDescription, ContentRepository.CONFIG, MODULES_PATH + "/" + moduleName, ifTrue, ifFalse);
+        super(taskName, taskDescription, RepositoryConstants.CONFIG, MODULES_PATH + "/" + moduleName, ifTrue, ifFalse);
         this.moduleName = moduleName;
     }
 

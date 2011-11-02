@@ -33,7 +33,6 @@
  */
 package info.magnolia.templating.functions;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
@@ -48,6 +47,7 @@ import info.magnolia.jcr.util.SessionUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -479,7 +479,7 @@ public class TemplatingFunctions {
      * from the website repository.
      */
     public Node content(String path){
-        return content(ContentRepository.WEBSITE, path);
+        return content(RepositoryConstants.WEBSITE, path);
     }
 
     /**

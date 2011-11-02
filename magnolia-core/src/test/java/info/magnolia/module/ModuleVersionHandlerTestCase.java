@@ -35,7 +35,6 @@ package info.magnolia.module;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -51,6 +50,7 @@ import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.module.model.reader.ModuleDependencyException;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
 
@@ -116,7 +116,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
      * @see #setupProperty(String, String, String, String, ItemType)
      */
     protected void setupConfigProperty(String path, String propertyName, String value) throws RepositoryException {
-        setupProperty(ContentRepository.CONFIG, path, propertyName, value, null);
+        setupProperty(RepositoryConstants.CONFIG, path, propertyName, value, null);
     }
 
     /**
@@ -140,7 +140,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
      * @see #setupProperty(String, String, String, String, ItemType)
      */
     protected void setupConfigNode(String path) throws RepositoryException {
-        setupNode(ContentRepository.CONFIG, path);
+        setupNode(RepositoryConstants.CONFIG, path);
     }
 
     /**
@@ -148,7 +148,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
      * @see #setupProperty(String, String, String, String, ItemType)
      */
     protected void setupConfigNode(String path, ItemType type) throws RepositoryException {
-        setupNode(ContentRepository.CONFIG, path, type);
+        setupNode(RepositoryConstants.CONFIG, path, type);
     }
 
     /**

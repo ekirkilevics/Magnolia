@@ -33,10 +33,10 @@
  */
 package info.magnolia.setup.for4_5;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 
 import javax.jcr.Node;
@@ -59,14 +59,14 @@ public class RenameACLNodesTaskTest extends RepositoryTestCase {
     public void testRenameACLNodesTask() throws Exception {
 
         // Given
-        Session session = MgnlContext.getSystemContext().getJCRSession(ContentRepository.USER_ROLES);
+        Session session = MgnlContext.getSystemContext().getJCRSession(RepositoryConstants.USER_ROLES);
         Node roleNode = session.getRootNode().addNode("superuser", MgnlNodeType.ROLE);
         roleNode.addNode("acl_dms_dms", MgnlNodeType.NT_CONTENTNODE);
         roleNode.addNode("acl_website", MgnlNodeType.NT_CONTENTNODE);
         roleNode.addNode("something_else_completely", MgnlNodeType.NT_CONTENTNODE);
 
         InstallContext installContext = mock(InstallContext.class);
-        when(installContext.getJCRSession(ContentRepository.USER_ROLES)).thenReturn(session);
+        when(installContext.getJCRSession(RepositoryConstants.USER_ROLES)).thenReturn(session);
 
         // When
         RenameACLNodesTask task = new RenameACLNodesTask();

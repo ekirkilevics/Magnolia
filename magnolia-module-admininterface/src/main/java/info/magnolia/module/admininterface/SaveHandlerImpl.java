@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.beans.runtime.MultipartForm;
@@ -77,6 +76,8 @@ import javax.jcr.ValueFactory;
 
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.MgnlInstantiationException;
+import info.magnolia.repository.RepositoryConstants;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -145,7 +146,7 @@ public class SaveHandlerImpl implements SaveHandler {
     /**
      * The name of the repository to store the data. Website is default.
      */
-    private String repository = ContentRepository.WEBSITE;
+    private String repository = RepositoryConstants.WEBSITE;
 
     /**
      * Path to the page
@@ -243,7 +244,7 @@ public class SaveHandlerImpl implements SaveHandler {
 
                 // FIX for MAGNOLIA-1814
                 // mark page as changed also for nested paragraph changes
-                if (this.getRepository().equals(ContentRepository.WEBSITE)) {
+                if (this.getRepository().equals(RepositoryConstants.WEBSITE)) {
                     while (node.getItemType().equals(ItemType.CONTENTNODE)) {
                         node = node.getParent();
                         node.updateMetaData();
@@ -308,7 +309,7 @@ public class SaveHandlerImpl implements SaveHandler {
                 }
                 else {
                     FieldSaveHandler csh = (FieldSaveHandler) Classes.getClassFactory().newInstance(cshClazz);
-                    HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+                    HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.CONFIG);
 
                     String configPath = this.getForm().getParameter(name + "_configNode");
                     Content configNode = null;

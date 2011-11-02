@@ -35,9 +35,9 @@ package info.magnolia.link;
 
 import static org.easymock.classextension.EasyMock.*;
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
@@ -241,7 +241,7 @@ public class LinkUtilTest extends BaseLinkTest {
 
     @Test
     public void testMakeAbsolutePathFromUUID() throws LinkException {
-        String absolutePath = LinkFactory.createLink(ContentRepository.WEBSITE, "2").getHandle();
+        String absolutePath = LinkFactory.createLink(RepositoryConstants.WEBSITE, "2").getHandle();
         assertEquals("/parent/sub", absolutePath);
     }
 

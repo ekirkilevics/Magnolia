@@ -34,7 +34,6 @@
 package info.magnolia.cms.security;
 
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -44,6 +43,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.PropertyUtil;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -356,7 +356,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
      * Return the HierarchyManager for the user workspace (through the system context).
      */
     protected HierarchyManager getHierarchyManager() {
-        return MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USERS);
+        return MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.USERS);
     }
 
     /**
@@ -423,8 +423,8 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         if (privilegedUserNode == null) {
             return null;
         }
-        Set<String> roles = collectUniquePropertyNames(privilegedUserNode, "roles", ContentRepository.USER_ROLES, false);
-        Set<String> groups = collectUniquePropertyNames(privilegedUserNode, "groups", ContentRepository.USER_GROUPS, false);
+        Set<String> roles = collectUniquePropertyNames(privilegedUserNode, "roles", RepositoryConstants.USER_ROLES, false);
+        Set<String> groups = collectUniquePropertyNames(privilegedUserNode, "groups", RepositoryConstants.USER_GROUPS, false);
 
         Map<String, String> properties = new HashMap<String, String>();
         for (PropertyIterator iter = privilegedUserNode.getProperties(); iter.hasNext(); ) {
@@ -447,7 +447,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     @Override
     protected String getRepositoryName() {
-        return ContentRepository.USERS;
+        return RepositoryConstants.USERS;
     }
 
     /**

@@ -34,6 +34,9 @@
 package info.magnolia.jcr.util;
 
 import static org.junit.Assert.assertNotNull;
+
+import javax.jcr.RepositoryException;
+
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.test.mock.jcr.MockNode;
 
@@ -56,5 +59,12 @@ public class MetaDataUtilTest {
         root.addNode(MetaData.DEFAULT_META_NODE);
         MetaData md = MetaDataUtil.getMetaData(root);
         assertNotNull(md);
+    }
+
+    @Test
+    public void testUpdateMetaData() throws RepositoryException{
+        MetaDataUtil.updateMetaData(root);
+
+
     }
 }

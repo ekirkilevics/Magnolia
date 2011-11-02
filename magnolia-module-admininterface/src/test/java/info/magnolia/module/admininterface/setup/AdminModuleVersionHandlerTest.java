@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admininterface.setup;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.DefaultVirtualURIMapping;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -49,6 +48,7 @@ import info.magnolia.module.ModuleRegistryImpl;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.model.Version;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 
 import java.util.Arrays;
@@ -257,7 +257,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
 //    }
 
     private void setupDummyTemplate() throws RepositoryException {
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
         final Content content = ContentUtil.createPath(hm, "/modules/foobar/templates");
         final Content fakeTemplateNode = content.createContent("baz", ItemType.CONTENTNODE);
         NodeDataUtil.getOrCreateAndSet(fakeTemplateNode, "visible", "true");

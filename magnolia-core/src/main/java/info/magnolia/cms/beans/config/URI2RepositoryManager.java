@@ -38,6 +38,7 @@ import info.magnolia.link.Link;
 import info.magnolia.link.LinkFactory;
 import info.magnolia.link.LinkException;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -56,7 +57,7 @@ import org.slf4j.LoggerFactory;
  */
 public class URI2RepositoryManager {
 
-    protected static final URI2RepositoryMapping DEFAULT_MAPPING = new URI2RepositoryMapping("", ContentRepository.WEBSITE,"");
+    protected static final URI2RepositoryMapping DEFAULT_MAPPING = new URI2RepositoryMapping("", RepositoryConstants.WEBSITE,"");
 
     private static Logger log = LoggerFactory.getLogger(URI2RepositoryManager.class);
 

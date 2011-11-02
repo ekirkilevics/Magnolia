@@ -41,6 +41,7 @@ import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.ObservedComponentFactory;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Map;
 
@@ -92,7 +93,7 @@ public class ServerConfiguration {
      */
     public static final class InstanceFactory extends ObservedComponentFactory<ServerConfiguration> {
         public InstanceFactory() {
-            super(ContentRepository.CONFIG, "/server", ServerConfiguration.class);
+            super(RepositoryConstants.CONFIG, "/server", ServerConfiguration.class);
         }
 
         // the false parameter here is the important thing to keep (not recursive)

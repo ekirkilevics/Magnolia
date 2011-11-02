@@ -47,7 +47,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.ContextFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -57,6 +56,7 @@ import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.NoSuchComponentException;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.AbstractMagnoliaTestCase;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
@@ -166,7 +166,7 @@ public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
     @Test
     public void testObserved() {
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-        ConfiguredComponentConfiguration<SingletonObject> observed = new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, ContentRepository.CONFIG, "/foo/bar/singleton", true);
+        ConfiguredComponentConfiguration<SingletonObject> observed = new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, RepositoryConstants.CONFIG, "/foo/bar/singleton", true);
         observed.setScope(ComponentDefinition.SCOPE_SINGLETON);
         configuration.addComponent(observed);
         GuiceComponentProvider p = createComponentProviderWithContent2Bean(configuration, true);
@@ -180,7 +180,7 @@ public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
     public void testObservedInRequestScope() {
 
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-        ConfiguredComponentConfiguration<SingletonObject> observed = new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, ContentRepository.CONFIG, "/foo/bar/singleton", true);
+        ConfiguredComponentConfiguration<SingletonObject> observed = new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, RepositoryConstants.CONFIG, "/foo/bar/singleton", true);
         observed.setScope(ComponentDefinition.SCOPE_REQUEST);
         configuration.addComponent(observed);
 

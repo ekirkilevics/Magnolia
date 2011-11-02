@@ -33,13 +33,13 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -69,7 +69,7 @@ public abstract class BaseContentTag extends TagSupport {
 
     private String path;
 
-    private String repository = ContentRepository.WEBSITE;
+    private String repository = RepositoryConstants.WEBSITE;
 
     private boolean inherit;
 
@@ -250,7 +250,7 @@ public abstract class BaseContentTag extends TagSupport {
         this.actpage = false;
         this.uuid = null;
         this.path = null;
-        this.repository = ContentRepository.WEBSITE;
+        this.repository = RepositoryConstants.WEBSITE;
     }
 
     public boolean isActpage() {

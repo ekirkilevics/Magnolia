@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.mail.setup;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.delta.Condition;
@@ -46,6 +45,7 @@ import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
         );
 
         final CheckAndModifyPropertyValueTask mailServletMapping = new CheckAndModifyPropertyValueTask("Mapping for mail servlet", "Fixes the mapping for the mail servlet, making it specification compliant.",
-                ContentRepository.CONFIG,
+                RepositoryConstants.CONFIG,
                 "/server/filters/servlets/Mail/mappings/--magnolia-mail-",
                 "pattern", "/.magnolia/mail*", "/.magnolia/mail"
         );
@@ -77,17 +77,17 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
         );
 
         final RemoveNodeTask removeMailServletMapping = new RemoveNodeTask("Remove mail servlet", "Removes the mail servlet.",
-                ContentRepository.CONFIG,
+                RepositoryConstants.CONFIG,
                 "/server/filters/servlets/Mail"
         );
 
         final RemoveNodeTask replaceConfigMenuMail = new RemoveNodeTask("Remove tools mail menu", "Removes the tools mail menu.",
-                ContentRepository.CONFIG,
+                RepositoryConstants.CONFIG,
                 "/modules/adminInterface/config/menu/tools/mails"
         );
 
         final ReconfigureMailTemplatesTask moveTemplates = new ReconfigureMailTemplatesTask("Rename templates", "Templates will be renamed to templatesConfiguration.",
-                ContentRepository.CONFIG,
+                RepositoryConstants.CONFIG,
                 "/modules/mail/config/templates",
                 "/modules/mail/config/templatesConfiguration",
                 ItemType.CONTENT,
@@ -101,7 +101,7 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapConditionally("Mail page", "Installs mail page.", "/mgnl-bootstrap/mail/config.modules.mail.pages.xml"))
                 .addTask(new BootstrapConditionally("Mail factory", "Installs mail factories.", "/mgnl-bootstrap/mail/config.modules.mail.config.factory.xml"))
                 .addTask(new BootstrapSingleResource("Mail menu", "Installs mail tools menu.", "/mgnl-bootstrap/mail/config.modules.adminInterface.config.menu.tools.sendMail.xml"))
-                .addTask(new CheckAndModifyPropertyValueTask("Mail command", "", ContentRepository.CONFIG, COMMAND_IN_ADMININTERFACEMODULE_PATH, "class", MAIL_COMMAND_CLASS_PRIOR_TO_4_0, MailCommand.class.getName()))
+                .addTask(new CheckAndModifyPropertyValueTask("Mail command", "", RepositoryConstants.CONFIG, COMMAND_IN_ADMININTERFACEMODULE_PATH, "class", MAIL_COMMAND_CLASS_PRIOR_TO_4_0, MailCommand.class.getName()))
         );
 
         register(DeltaBuilder.update("4.0.3", "")
@@ -125,7 +125,7 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
     }
 
     private PropertyValueDelegateTask fixMailCommand(final String previouslyWrongValue, final String fixedValue) {
-        final String workspaceName = ContentRepository.CONFIG;
+        final String workspaceName = RepositoryConstants.CONFIG;
         final CheckAndModifyPropertyValueTask fixTask = new CheckAndModifyPropertyValueTask(null, null, workspaceName, COMMAND_IN_ADMININTERFACEMODULE_PATH,
                 "class", previouslyWrongValue, fixedValue);
 

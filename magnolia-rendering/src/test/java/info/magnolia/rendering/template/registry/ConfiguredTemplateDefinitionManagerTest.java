@@ -35,13 +35,13 @@ package info.magnolia.rendering.template.registry;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
@@ -72,7 +72,7 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
         super.setUp();
         ComponentsTestUtil.setImplementation(TemplateDefinition.class, ConfiguredTemplateDefinition.class);
 
-        session = SessionTestUtil.createSession(ContentRepository.CONFIG,
+        session = SessionTestUtil.createSession(RepositoryConstants.CONFIG,
                 "/modules/fooModule/templates/a.title=fooTitle",
                 "/modules/barModule/templates/articles.@type=" + MgnlNodeType.NT_CONTENT,
                 "/modules/barModule/templates/articles/b.title=barTitle",

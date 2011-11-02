@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
@@ -45,6 +44,7 @@ import info.magnolia.link.LinkException;
 import info.magnolia.link.LinkFactory;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.link.LinkUtil;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.IOException;
 import java.util.Date;
@@ -164,7 +164,7 @@ public class Out extends BaseContentTag {
 
     private String uuidToLink = LINK_RESOLVING_NONE;
 
-    private String uuidToLinkRepository = ContentRepository.WEBSITE;
+    private String uuidToLinkRepository = RepositoryConstants.WEBSITE;
 
 
     /**

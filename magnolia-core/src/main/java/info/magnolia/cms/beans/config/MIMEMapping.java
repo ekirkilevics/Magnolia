@@ -39,6 +39,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Collection;
 import java.util.Hashtable;
@@ -105,7 +106,7 @@ public class MIMEMapping {
     public static void load() {
         MIMEMapping.cachedContent.clear();
         try {
-            final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+            final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.CONFIG);
 
             Collection<Content> mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE);
             MIMEMapping.cacheContent(mimeList);
@@ -128,7 +129,7 @@ public class MIMEMapping {
     private static void registerEventListener() {
         log.info("Registering event listener for MIMEMapping"); //$NON-NLS-1$
 
-        ObservationUtil.registerChangeListener(ContentRepository.CONFIG, NODEPATH, new EventListener() {
+        ObservationUtil.registerChangeListener(RepositoryConstants.CONFIG, NODEPATH, new EventListener() {
             @Override
             public void onEvent(EventIterator iterator) {
                 // reload everything

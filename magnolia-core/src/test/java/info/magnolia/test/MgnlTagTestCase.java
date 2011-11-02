@@ -35,12 +35,12 @@ package info.magnolia.test;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.mock.MockWebContext;
 
 import java.io.IOException;
@@ -76,7 +76,7 @@ public abstract class MgnlTagTestCase extends MgnlTestCase {
 
         Session session = initWebsiteData();
         webContext = new MockWebContext();
-        webContext.addSession(ContentRepository.WEBSITE, session);
+        webContext.addSession(RepositoryConstants.WEBSITE, session);
 
         MgnlContext.setInstance(webContext);
 

@@ -38,6 +38,7 @@ import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -78,7 +79,7 @@ public abstract class ObservedManager {
             return;
         }
 
-        ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, node.getHandle(), new EventListener() {
+        ObservationUtil.registerDeferredChangeListener(RepositoryConstants.CONFIG, node.getHandle(), new EventListener() {
 
             @Override
             public void onEvent(EventIterator events) {
@@ -104,7 +105,7 @@ public abstract class ObservedManager {
 
         Session session = null;
         try {
-            session = MgnlContext.getSystemContext().getJCRSession(ContentRepository.CONFIG);
+            session = MgnlContext.getSystemContext().getJCRSession(RepositoryConstants.CONFIG);
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
         }

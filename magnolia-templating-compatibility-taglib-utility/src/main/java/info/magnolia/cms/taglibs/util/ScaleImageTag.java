@@ -33,13 +33,13 @@
  */
 package info.magnolia.cms.taglibs.util;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.taglibs.Resource;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -189,7 +189,7 @@ public class ScaleImageTag extends BaseImageTag {
                 parentContentNode = Resource.getLocalContentNode();
             }
             else {
-                HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+                HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
                 // if this name starts with a '/', then assume it is a node handle
                 // otherwise assume that its is a path relative to the local content node
                 if (this.parentContentNodeName.startsWith("/")) {

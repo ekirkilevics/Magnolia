@@ -37,12 +37,12 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.model.ComponentDefinition;
 import info.magnolia.module.model.ComponentsDefinition;
 import info.magnolia.module.model.ConfigurerDefinition;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.TypeMappingDefinition;
+import info.magnolia.repository.RepositoryConstants;
 
 /**
  * Builder for creating {@link ComponentProviderConfiguration}s from component definitions.
@@ -143,7 +143,7 @@ public class ComponentProviderConfigurationBuilder {
     protected ComponentConfiguration getConfigured(ComponentDefinition definition) {
         ConfiguredComponentConfiguration configuration = new ConfiguredComponentConfiguration();
         configuration.setType(classForName(definition.getType()));
-        configuration.setWorkspace(StringUtils.defaultIfEmpty(configuration.getWorkspace(), ContentRepository.CONFIG));
+        configuration.setWorkspace(StringUtils.defaultIfEmpty(configuration.getWorkspace(), RepositoryConstants.CONFIG));
         configuration.setPath(definition.getPath());
         configuration.setObserved(false);
         configuration.setScope(definition.getScope());
@@ -154,7 +154,7 @@ public class ComponentProviderConfigurationBuilder {
     protected ComponentConfiguration getObserved(ComponentDefinition definition) {
         ConfiguredComponentConfiguration configuration = new ConfiguredComponentConfiguration();
         configuration.setType(classForName(definition.getType()));
-        configuration.setWorkspace(StringUtils.defaultIfEmpty(configuration.getWorkspace(), ContentRepository.CONFIG));
+        configuration.setWorkspace(StringUtils.defaultIfEmpty(configuration.getWorkspace(), RepositoryConstants.CONFIG));
         configuration.setPath(definition.getPath());
         configuration.setObserved(true);
         configuration.setScope(definition.getScope());

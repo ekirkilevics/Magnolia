@@ -34,12 +34,12 @@
 package info.magnolia.module.exchangesimple;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 import info.magnolia.test.mock.MockUtil;
 
@@ -81,7 +81,7 @@ public class LockTest extends RepositoryTestCase {
             }
 
             while (true) {
-                HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+                HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
                 try {
                     locked = hm.getContent("/page").isLocked();
                     if (locked) {
@@ -189,7 +189,7 @@ public class LockTest extends RepositoryTestCase {
 
     @Test
     public void testLocks() throws Exception {
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
         Content node = hm.createContent("/", "page", ItemType.CONTENT.getSystemName());
         node.createContent("paragraph", ItemType.CONTENTNODE.getSystemName());
         hm.save();
@@ -212,7 +212,7 @@ public class LockTest extends RepositoryTestCase {
 
     @Test
     public void testLockReceiveFilter() throws Exception {
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
         Content node = hm.createContent("/", "page", ItemType.CONTENT.getSystemName());
         node.createContent("paragraph", ItemType.CONTENTNODE.getSystemName());
         hm.save();
@@ -221,27 +221,27 @@ public class LockTest extends RepositoryTestCase {
         HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         //apply lock
         expect (request.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
-        expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
+        expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(RepositoryConstants.WEBSITE);
         // cleanup
         expect(request.getHeader(BaseSyndicatorImpl.ACTION)).andReturn(BaseSyndicatorImpl.ACTIVATE);
         expect (request.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page");
-        expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
+        expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(RepositoryConstants.WEBSITE);
         expect (request.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
-        expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
+        expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(RepositoryConstants.WEBSITE);
         expect(request.getSession(false)).andReturn(null);
 
         HttpServletRequest request2 = createStrictMock(HttpServletRequest.class);
         // first check retry 1
         expect (request2.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
-        expect (request2.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
+        expect (request2.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(RepositoryConstants.WEBSITE);
 
         //first check retry 2
         expect (request2.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
-        expect (request2.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
+        expect (request2.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(RepositoryConstants.WEBSITE);
 
         //second check retry 1
         expect (request2.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
-        expect (request2.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
+        expect (request2.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(RepositoryConstants.WEBSITE);
 
         Object[] objs = new Object[] {request, request2};
         replay(objs);

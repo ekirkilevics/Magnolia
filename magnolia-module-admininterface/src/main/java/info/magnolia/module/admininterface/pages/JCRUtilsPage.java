@@ -41,6 +41,8 @@ import info.magnolia.cms.util.DumperUtil;
 import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
+import info.magnolia.repository.RepositoryConstants;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,7 +127,7 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
     }
 
     public String[] getLanguages() throws RepositoryException {
-        return MgnlContext.getQueryManager(ContentRepository.WEBSITE).getSupportedQueryLanguages();
+        return MgnlContext.getQueryManager(RepositoryConstants.WEBSITE).getSupportedQueryLanguages();
     }
 
     public int getLevel() {

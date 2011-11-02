@@ -72,6 +72,7 @@ import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguratio
 import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
 import info.magnolia.objectfactory.configuration.InstanceConfiguration;
 import info.magnolia.repository.DefaultRepositoryManager;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.repository.RepositoryManager;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -181,7 +182,7 @@ public abstract class MgnlTestCase {
 
     protected MockHierarchyManager initMockConfigRepository(String properties) throws IOException, RepositoryException, UnsupportedRepositoryOperationException {
 
-        MockHierarchyManager hm = MockUtil.createAndSetHierarchyManager(ContentRepository.CONFIG, properties);
+        MockHierarchyManager hm = MockUtil.createAndSetHierarchyManager(RepositoryConstants.CONFIG, properties);
 
         return hm;
     }

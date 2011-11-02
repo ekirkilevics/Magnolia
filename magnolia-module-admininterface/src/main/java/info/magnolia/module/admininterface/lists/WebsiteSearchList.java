@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admininterface.lists;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBar;
@@ -48,6 +47,7 @@ import info.magnolia.cms.gui.query.SearchQuery;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,7 +62,7 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
 
     @Override
     public ListModel getModel() {
-        return new RepositorySearchListModel(ContentRepository.WEBSITE);
+        return new RepositorySearchListModel(RepositoryConstants.WEBSITE);
     }
 
     @Override

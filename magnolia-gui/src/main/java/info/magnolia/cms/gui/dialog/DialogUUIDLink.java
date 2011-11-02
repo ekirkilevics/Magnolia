@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.repository.RepositoryConstants;
 
 
 /**
@@ -47,7 +47,7 @@ public class DialogUUIDLink extends DialogLink implements UUIDDialogControl {
      */
     @Override
     public String getRepository() {
-        return getConfigValue("repository", ContentRepository.WEBSITE);
+        return getConfigValue("repository", RepositoryConstants.WEBSITE);
     }
 
 }

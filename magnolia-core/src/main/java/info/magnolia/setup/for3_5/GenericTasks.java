@@ -33,7 +33,6 @@
  */
 package info.magnolia.setup.for3_5;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.IPSecurityManagerImpl;
@@ -55,6 +54,7 @@ import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.setup.CoreModuleVersionHandler;
 
 import java.util.Arrays;
@@ -83,12 +83,12 @@ public class GenericTasks {
         final String areWeBootstrappingAuthorInstance = StringUtils.defaultIfEmpty(SystemProperty.getProperty(CoreModuleVersionHandler.BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY), "true");
         return Arrays.asList(
                 // - install server node
-                new NodeExistsDelegateTask("Server node", "Creates the server node in the config repository if needed.", ContentRepository.CONFIG, "/server", null,
-                        new CreateNodeTask(null, null, ContentRepository.CONFIG, "/", "server", ItemType.CONTENT.getSystemName())),
+                new NodeExistsDelegateTask("Server node", "Creates the server node in the config repository if needed.", RepositoryConstants.CONFIG, "/server", null,
+                        new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/", "server", ItemType.CONTENT.getSystemName())),
 
                 // - install or update modules node
-                new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed.", ContentRepository.CONFIG, "/modules", null,
-                        new CreateNodeTask(null, null, ContentRepository.CONFIG, "/", "modules", ItemType.CONTENT.getSystemName())),
+                new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed.", RepositoryConstants.CONFIG, "/modules", null,
+                        new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/", "modules", ItemType.CONTENT.getSystemName())),
 
                 new MigrateFilterConfiguration("/mgnl-bootstrap/core/config.server.filters.xml"),
 
@@ -139,8 +139,8 @@ public class GenericTasks {
                         )),
 
                 // --- user/roles repositories related tasks
-                new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace.", ContentRepository.USERS, "/", Realm.REALM_SYSTEM.getName(), ItemType.NT_FOLDER),
-                new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace.", ContentRepository.USERS, "/", Realm.REALM_ADMIN.getName(), ItemType.NT_FOLDER),
+                new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace.", RepositoryConstants.USERS, "/", Realm.REALM_SYSTEM.getName(), ItemType.NT_FOLDER),
+                new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace.", RepositoryConstants.USERS, "/", Realm.REALM_ADMIN.getName(), ItemType.NT_FOLDER),
 
                 new IsAuthorInstanceDelegateTask("URI permissions", "Introduction of URI-based security. All existing roles will have GET/POST permissions on /*.",
                         new AddURIPermissionsToAllRoles(true),
@@ -153,15 +153,15 @@ public class GenericTasks {
                 new BootstrapConditionally("Superuser role", "Bootstraps the superuser role if needed.", "/mgnl-bootstrap/core/userroles.superuser.xml"),
 
                 new BootstrapConditionally("Anonymous user", "Anonymous user must exist in the system realm: will move the existing one or bootstrap it.",
-                        ContentRepository.USERS, "/anonymous", "/mgnl-bootstrap/core/users.system.anonymous.xml",
+                        RepositoryConstants.USERS, "/anonymous", "/mgnl-bootstrap/core/users.system.anonymous.xml",
                         new ArrayDelegateTask("",
-                                new MoveNodeTask("", "", ContentRepository.USERS, "/anonymous", "/system/anonymous", false),
-                                new NewPropertyTask("Anonymous user", "Anonymous user must have a password.", ContentRepository.USERS, "/system/anonymous", "pswd", new String(Base64.encodeBase64("anonymous".getBytes())))
+                                new MoveNodeTask("", "", RepositoryConstants.USERS, "/anonymous", "/system/anonymous", false),
+                                new NewPropertyTask("Anonymous user", "Anonymous user must have a password.", RepositoryConstants.USERS, "/system/anonymous", "pswd", new String(Base64.encodeBase64("anonymous".getBytes())))
                         )),
 
                 new BootstrapConditionally("Superuser user", "Superuser user must exist in the system realm: will move the existing one or bootstrap it.",
-                        ContentRepository.USERS, "/superuser", "/mgnl-bootstrap/core/users.system.superuser.xml",
-                        new MoveNodeTask("", "", ContentRepository.USERS, "/superuser", "/system/superuser", false)),
+                        RepositoryConstants.USERS, "/superuser", "/mgnl-bootstrap/core/users.system.superuser.xml",
+                        new MoveNodeTask("", "", RepositoryConstants.USERS, "/superuser", "/system/superuser", false)),
 
                 // only relevant if updating, but does not hurt if installing since it checks for mgnl:user nodes
                 new MoveMagnoliaUsersToRealmFolder(),
@@ -171,12 +171,12 @@ public class GenericTasks {
                 new RegisterModuleServletsTask(),
 
                 // --- check and update old security configuration if necessary
-                new NodeExistsDelegateTask("Security configuration", "The unsecureURIList configuration was removed from /servers and will be handled by the uriSecurityFilter in 3.5.", ContentRepository.CONFIG, "/server/unsecureURIList", new ArrayDelegateTask("UnsecureURIList update", new Task[]{
-                        new MoveNodeTask("Unsecure URIs", "Moves the current configuration of unsecure URIs to a backup location", ContentRepository.CONFIG, "/server/unsecureURIList", UNSECURE_URIS_BACKUP_PATH, true),
+                new NodeExistsDelegateTask("Security configuration", "The unsecureURIList configuration was removed from /servers and will be handled by the uriSecurityFilter in 3.5.", RepositoryConstants.CONFIG, "/server/unsecureURIList", new ArrayDelegateTask("UnsecureURIList update", new Task[]{
+                        new MoveNodeTask("Unsecure URIs", "Moves the current configuration of unsecure URIs to a backup location", RepositoryConstants.CONFIG, "/server/unsecureURIList", UNSECURE_URIS_BACKUP_PATH, true),
                         new CheckAndUpdateUnsecureURIs(UNSECURE_URIS_BACKUP_PATH)
                 })),
-                new NodeExistsDelegateTask("Security configuration", "The secureURIList configuration was removed from /servers and will be handled by the URI-based security mechanism in 3.5.", ContentRepository.CONFIG, "/server/secureURIList", new ArrayDelegateTask("SecureURIList update", new Task[]{
-                        new MoveNodeTask("Secure URIs", "Moves the current configuration of secure URIs to a backup location", ContentRepository.CONFIG, "/server/secureURIList", SECURE_URIS_BACKUP_PATH, true),
+                new NodeExistsDelegateTask("Security configuration", "The secureURIList configuration was removed from /servers and will be handled by the URI-based security mechanism in 3.5.", RepositoryConstants.CONFIG, "/server/secureURIList", new ArrayDelegateTask("SecureURIList update", new Task[]{
+                        new MoveNodeTask("Secure URIs", "Moves the current configuration of secure URIs to a backup location", RepositoryConstants.CONFIG, "/server/secureURIList", SECURE_URIS_BACKUP_PATH, true),
                         new CheckAndUpdateSecureURIs(SECURE_URIS_BACKUP_PATH)
                 })),
 

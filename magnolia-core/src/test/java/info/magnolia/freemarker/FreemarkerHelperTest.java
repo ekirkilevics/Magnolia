@@ -35,7 +35,6 @@ package info.magnolia.freemarker;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -47,6 +46,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.link.LinkTransformerManager;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockAggregationState;
 import info.magnolia.test.mock.MockContent;
@@ -526,7 +526,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     }
 
     private void doTestUuidLinksAreTransformed(Context webCtx, String expectedOutput) throws IOException, TemplateException, RepositoryException {
-        MockHierarchyManager cfgHM = MockUtil.createHierarchyManager(ContentRepository.WEBSITE, "fakeemptyrepo");
+        MockHierarchyManager cfgHM = MockUtil.createHierarchyManager(RepositoryConstants.WEBSITE, "fakeemptyrepo");
         MockUtil.mockObservation(cfgHM);
 
         final SystemContext sysMockCtx = createStrictMock(SystemContext.class);

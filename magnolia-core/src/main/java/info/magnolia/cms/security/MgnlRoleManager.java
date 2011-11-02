@@ -39,19 +39,19 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.repository.RepositoryConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * Manages the users stored in the {@link ContentRepository#USER_ROLES} workspace.
+ * Manages the users stored in the {@link info.magnolia.repository.RepositoryConstants#USER_ROLES} workspace.
  * @author philipp
  * @version $Revision$ ($Author$)
  */
@@ -101,13 +101,13 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
     }
 
     protected HierarchyManager getHierarchyManager() {
-        return MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
+        return MgnlContext.getHierarchyManager(RepositoryConstants.USER_ROLES);
     }
 
     @Override
     public void removePermission(Role role, String repository, String path, long permission) {
         try {
-            Session session = MgnlContext.getJCRSession(ContentRepository.USER_ROLES);
+            Session session = MgnlContext.getJCRSession(RepositoryConstants.USER_ROLES);
             Node roleNode = session.getNodeByIdentifier(role.getId());
             Node aclNode = getAclNode(roleNode, repository);
             NodeIterator children = aclNode.getNodes();
@@ -186,7 +186,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
 
     @Override
     protected String getRepositoryName() {
-        return ContentRepository.USER_ROLES;
+        return RepositoryConstants.USER_ROLES;
     }
 
     @Override

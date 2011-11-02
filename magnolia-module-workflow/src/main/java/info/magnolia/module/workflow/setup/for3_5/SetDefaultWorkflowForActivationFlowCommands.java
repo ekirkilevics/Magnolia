@@ -38,7 +38,6 @@ import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.module.InstallContext;
@@ -46,6 +45,7 @@ import info.magnolia.module.delta.AbstractRepositoryTask;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.commands.ActivationFlowCommand;
+import info.magnolia.repository.RepositoryConstants;
 
 /**
  * A {@link info.magnolia.module.delta.Task} which sets the 'workflowName' and 'dialogName' properties on activation flow commands.
@@ -61,7 +61,7 @@ public class SetDefaultWorkflowForActivationFlowCommands extends AbstractReposit
 
     @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-        Collection nodes = QueryUtil.query(ContentRepository.CONFIG, "select * from nt:base where class='" + ActivationFlowCommand.class.getName() + "'");
+        Collection nodes = QueryUtil.query(RepositoryConstants.CONFIG, "select * from nt:base where class='" + ActivationFlowCommand.class.getName() + "'");
         for (Iterator iter = nodes.iterator(); iter.hasNext();) {
             Content node = (Content) iter.next();
             if(!node.hasNodeData("workflowName")){

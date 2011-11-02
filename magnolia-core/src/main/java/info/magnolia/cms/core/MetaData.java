@@ -33,9 +33,9 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -153,8 +153,8 @@ public class MetaData {
      * @return name with namespace prefix
      */
     private String getInternalPropertyName(String name) {
-        if (StringUtils.indexOf(name, ContentRepository.NAMESPACE_PREFIX + ":") != 0) {
-            return ContentRepository.NAMESPACE_PREFIX + ":" + name;
+        if (StringUtils.indexOf(name, RepositoryConstants.NAMESPACE_PREFIX + ":") != 0) {
+            return RepositoryConstants.NAMESPACE_PREFIX + ":" + name;
         }
         return name;
     }

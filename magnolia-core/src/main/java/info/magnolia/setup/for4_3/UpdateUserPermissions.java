@@ -33,7 +33,6 @@
  */
 package info.magnolia.setup.for4_3;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
@@ -45,6 +44,7 @@ import info.magnolia.cms.util.NodeTypeFilter;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -64,7 +64,7 @@ public class UpdateUserPermissions extends AllChildrenNodesOperation {
     private static Logger log = LoggerFactory.getLogger(UpdateUserPermissions.class);
 
     public UpdateUserPermissions() {
-        super("User definition update", "Changes user rights to allow properties updates while preventing user from modifying ACLs unintentionally.", ContentRepository.USERS,  "/", new NodeTypeFilter(ItemType.FOLDER));
+        super("User definition update", "Changes user rights to allow properties updates while preventing user from modifying ACLs unintentionally.", RepositoryConstants.USERS,  "/", new NodeTypeFilter(ItemType.FOLDER));
     }
 
     @Override

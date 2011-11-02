@@ -40,13 +40,13 @@ import static info.magnolia.cms.beans.runtime.FileProperties.PROPERTY_LASTMODIFI
 import static info.magnolia.cms.core.ItemType.CONTENT;
 import static info.magnolia.cms.core.ItemType.CONTENTNODE;
 import static info.magnolia.cms.core.ItemType.NT_RESOURCE;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 import info.magnolia.test.mock.MockContext;
 
@@ -79,7 +79,7 @@ public class ContentVersionTest extends RepositoryTestCase {
 
     @Test
     public void testBasics() throws RepositoryException{
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
 
         Content page = hm.createContent("/", "page", CONTENT.getSystemName());
         Content parargraph = page.createContent("paragraph", CONTENTNODE.getSystemName());
@@ -160,7 +160,7 @@ public class ContentVersionTest extends RepositoryTestCase {
 
     @Test
     public void testRetrievingBinariesFromContentVersion() throws RepositoryException, IOException {
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
 
         // create content with binary
         Content node = hm.createContent("/", "node", CONTENTNODE.getSystemName());
@@ -186,7 +186,7 @@ public class ContentVersionTest extends RepositoryTestCase {
 
     @Test
     public void testRestoringBinariesFromContentVersion() throws RepositoryException, IOException {
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
 
         // create content with binary
         Content node = hm.createContent("/", "node", CONTENTNODE.getSystemName());
@@ -218,7 +218,7 @@ public class ContentVersionTest extends RepositoryTestCase {
 
     @Test
     public void testRetrievingBinariesFromContentVersionsChildNode() throws RepositoryException, IOException {
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
 
         // create content with binary
         Content node = hm.createContent("/", "node", CONTENTNODE.getSystemName());

@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.workflow.flows;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
@@ -42,6 +41,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContextImpl;
 import info.magnolia.module.workflow.WorkflowConstants;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -135,7 +135,7 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
         if (name == null) {
             return null;
         }
-        return ContentUtil.getContent(ContentRepository.CONFIG, WorkflowConstants.ROOT_PATH_FOR_FLOW + "/"+ name);
+        return ContentUtil.getContent(RepositoryConstants.CONFIG, WorkflowConstants.ROOT_PATH_FOR_FLOW + "/"+ name);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
         }
 
         try {
-            HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+            HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.CONFIG);
             Content root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);
 
             // check if the node already exist, and if it does update the value of the the NodeData FLOW_VALUE with the
@@ -183,7 +183,7 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
     public List getDefinitionNames(){
         ArrayList list = new ArrayList();
 
-        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.CONFIG);
         Content root;
         try {
             root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);

@@ -50,6 +50,7 @@ import info.magnolia.module.admininterface.TemplatedMVCHandler;
 import info.magnolia.module.files.BasicFileExtractor;
 import info.magnolia.module.files.FileExtractor;
 import info.magnolia.module.files.ModuleFileExtractorTransformer;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -118,10 +119,10 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         super(name, request, response);
 
         rootdir = StringUtils.defaultIfEmpty(NodeDataUtil.getString(
-            ContentRepository.CONFIG,
+            RepositoryConstants.CONFIG,
             "/modules/adminInterface/config/developmentUtils/exportpath"), "WEB-INF/bootstrap/common");
         module = StringUtils.defaultIfEmpty(NodeDataUtil.getString(
-            ContentRepository.CONFIG,
+            RepositoryConstants.CONFIG,
             "/modules/adminInterface/config/developmentUtils/module"), "templating");
     }
 
@@ -369,34 +370,34 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
     }
 
     public String backup() {
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
         Session session = hm.getWorkspace().getSession();
 
         try {
             Content moduleroot = hm.getContent("/modules/" + module);
             if (templates) {
-                exportChildren(ContentRepository.CONFIG, session, moduleroot, "templates", new ItemType[]{
+                exportChildren(RepositoryConstants.CONFIG, session, moduleroot, "templates", new ItemType[]{
                     ItemType.CONTENT,
                     ItemType.CONTENTNODE}, false);
             }
             if (paragraphs) {
-                exportChildren(ContentRepository.CONFIG, session, moduleroot, "paragraphs", new ItemType[]{
+                exportChildren(RepositoryConstants.CONFIG, session, moduleroot, "paragraphs", new ItemType[]{
                     ItemType.CONTENT,
                     ItemType.CONTENTNODE}, false);
             }
             if (pages) {
-                exportChildren(ContentRepository.CONFIG, session, moduleroot, "pages", new ItemType[]{
+                exportChildren(RepositoryConstants.CONFIG, session, moduleroot, "pages", new ItemType[]{
                     ItemType.CONTENT,
                     ItemType.CONTENTNODE}, false);
             }
             if (dialogs) {
-                exportChildren(ContentRepository.CONFIG, session, moduleroot, "dialogs", new ItemType[]{
+                exportChildren(RepositoryConstants.CONFIG, session, moduleroot, "dialogs", new ItemType[]{
                     ItemType.CONTENT,
                     ItemType.CONTENTNODE}, true);
             }
             if (virtualURIs) {
                 exportChildren(
-                    ContentRepository.CONFIG,
+                    RepositoryConstants.CONFIG,
                     session,
                     moduleroot,
                     "virtualURIMapping",
@@ -412,19 +413,19 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         }
 
         if (website) {
-            extractWorkspaceRoots(ContentRepository.WEBSITE);
+            extractWorkspaceRoots(RepositoryConstants.WEBSITE);
         }
 
         if (users) {
-            backupChildren(ContentRepository.USERS, "/admin");
+            backupChildren(RepositoryConstants.USERS, "/admin");
         }
 
         if (groups) {
-            extractWorkspaceRoots(ContentRepository.USER_GROUPS);
+            extractWorkspaceRoots(RepositoryConstants.USER_GROUPS);
         }
 
         if (roles) {
-            extractWorkspaceRoots(ContentRepository.USER_ROLES);
+            extractWorkspaceRoots(RepositoryConstants.USER_ROLES);
         }
 
         return this.show();

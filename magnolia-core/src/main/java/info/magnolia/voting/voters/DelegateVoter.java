@@ -36,10 +36,10 @@ package info.magnolia.voting.voters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.voting.Voter;
 
 /**
@@ -58,7 +58,7 @@ public class DelegateVoter extends AbstractBoolVoter {
         Content delegate;
         try {
             // can't use normal user context as anonymous needs to be able to read this path as well (e.g. on user logout or when user is not logged in)
-            delegate = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG).getContent(delegatePath);
+            delegate = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.CONFIG).getContent(delegatePath);
             Object bean = Content2BeanUtil.toBean(delegate, true);
             Voter voter = (Voter) bean;
             return voter.vote(value) > 0;

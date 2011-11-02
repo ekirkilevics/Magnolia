@@ -33,13 +33,13 @@
  */
 package info.magnolia.module;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -158,7 +158,7 @@ public class InstallContextImpl implements InstallContext {
 
     @Override
     public HierarchyManager getConfigHierarchyManager() {
-        return getHierarchyManager(ContentRepository.CONFIG);
+        return getHierarchyManager(RepositoryConstants.CONFIG);
     }
 
     @Override
@@ -168,7 +168,7 @@ public class InstallContextImpl implements InstallContext {
 
     @Override
     public Session getConfigJCRSession(String workspaceName) throws RepositoryException {
-        return getJCRSession(ContentRepository.CONFIG);
+        return getJCRSession(RepositoryConstants.CONFIG);
     }
 
     @Override

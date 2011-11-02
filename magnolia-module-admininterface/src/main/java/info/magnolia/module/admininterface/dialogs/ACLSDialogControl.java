@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admininterface.dialogs;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.Edit;
@@ -51,6 +50,7 @@ import info.magnolia.module.admininterface.config.AclTypeConfiguration;
 import info.magnolia.module.admininterface.config.PermissionConfiguration;
 import info.magnolia.module.admininterface.config.RepositoryConfiguration;
 import info.magnolia.module.admininterface.config.SecurityConfiguration;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -294,7 +294,7 @@ public class ACLSDialogControl extends DialogBox {
         repositorySelect.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
         repositorySelect.setEvent("onchange", "aclChangeRepository(this.value)"); //$NON-NLS-1$ //$NON-NLS-2$
         repositorySelect.setSaveInfo(false);
-        repositorySelect.setValue(ContentRepository.WEBSITE);
+        repositorySelect.setValue(RepositoryConstants.WEBSITE);
 
         for (Iterator iter = securityConf.getVisibleRepositories().iterator(); iter.hasNext();) {
             RepositoryConfiguration repoConf = (RepositoryConfiguration) iter.next();

@@ -34,7 +34,6 @@
 package info.magnolia.module.templating;
 
 import freemarker.core.Environment;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
@@ -47,6 +46,7 @@ import info.magnolia.link.LinkUtil;
 import info.magnolia.link.LinkException;
 import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.RepositoryException;
 
@@ -174,7 +174,7 @@ public class MagnoliaTemplatingUtilities {
     }
 
     public Content getContent(String path){
-      return getContent(ContentRepository.WEBSITE, path);
+      return getContent(RepositoryConstants.WEBSITE, path);
     }
 
     public Content getContent(String repository, String path){
@@ -182,7 +182,7 @@ public class MagnoliaTemplatingUtilities {
     }
 
     public Content getContentByUUID(String uuid){
-        return getContentByUUID(ContentRepository.WEBSITE, uuid);
+        return getContentByUUID(RepositoryConstants.WEBSITE, uuid);
     }
 
     public Content getContentByUUID(String repository, String uuid){

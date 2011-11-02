@@ -33,7 +33,6 @@
  */
 package info.magnolia.objectfactory;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.content2bean.Content2BeanProcessor;
 import info.magnolia.content2bean.Content2BeanTransformer;
@@ -42,6 +41,7 @@ import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
 import info.magnolia.content2bean.impl.TypeMappingImpl;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 
@@ -135,7 +135,7 @@ public class DefaultComponentProviderTest {
      */
     @Test
     public void testSingletonDefinedInRepositoryDefaultToConfigWorkspace() throws RepositoryException, IOException {
-        setDefaultImplementationsAndInitMockRepository("/test", ContentRepository.CONFIG,
+        setDefaultImplementationsAndInitMockRepository("/test", RepositoryConstants.CONFIG,
                 "test.class=" + TestImplementation.class.getName()
         );
 

@@ -33,12 +33,12 @@
  */
 package info.magnolia.setup.for3_5;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.RepositoryException;
 
@@ -59,7 +59,7 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
     private static Logger log = LoggerFactory.getLogger(AllChildrenNodesOperation.class);
 
     public AddURIPermissionsToAllRoles(boolean isAuthorInstance) {
-        super("URI permissions", "Introduction of URI-based security. All existing roles will have GET/POST permissions on /*.", ContentRepository.USER_ROLES, "/", new Content.ContentFilter() {
+        super("URI permissions", "Introduction of URI-based security. All existing roles will have GET/POST permissions on /*.", RepositoryConstants.USER_ROLES, "/", new Content.ContentFilter() {
             @Override
             public boolean accept(Content content) {
                 try {

@@ -33,13 +33,13 @@
  */
 package info.magnolia.module.samples.model;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.model.RenderingModelImpl;
 import info.magnolia.rendering.template.RenderableDefinition;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,7 +83,7 @@ public class SampleComponentModel extends RenderingModelImpl<RenderableDefinitio
         String sql = "SELECT * from nt:base WHERE jcr:path like '/%' AND contains(*, '"+query+"') AND (jcr:primaryType = 'mgnl:content' OR jcr:primaryType = 'mgnl:contentNode') order by jcr:path";
 
         //TODO cringele: QueryUtil should return Node and not Content. See SCRUM-293
-        Collection<Content> contentList = QueryUtil.query(ContentRepository.WEBSITE, sql);
+        Collection<Content> contentList = QueryUtil.query(RepositoryConstants.WEBSITE, sql);
         for(Iterator<Content> it=contentList.iterator(); it.hasNext();){
             results.add(new ContentMap(it.next().getJCRNode()));
         }

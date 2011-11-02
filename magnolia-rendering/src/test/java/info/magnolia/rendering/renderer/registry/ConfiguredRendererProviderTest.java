@@ -34,11 +34,11 @@
 package info.magnolia.rendering.renderer.registry;
 
 import static org.junit.Assert.assertEquals;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.renderer.Renderer;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
@@ -75,7 +75,7 @@ public class ConfiguredRendererProviderTest extends MgnlTestCase {
     @Test
     public void testGetDefinition() throws RepositoryException, Content2BeanException, IOException {
         // GIVEN
-        Session session = SessionTestUtil.createSession(ContentRepository.CONFIG,
+        Session session = SessionTestUtil.createSession(RepositoryConstants.CONFIG,
                 "/test.class=" + TestRenderer.class.getName(),
                 "/test.someProperty=foobar123"
         );

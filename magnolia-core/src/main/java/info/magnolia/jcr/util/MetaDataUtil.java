@@ -33,10 +33,10 @@
  */
 package info.magnolia.jcr.util;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Calendar;
 
@@ -71,7 +71,7 @@ public class MetaDataUtil {
      */
     public static Calendar getLastModification(Node node) throws PathNotFoundException, RepositoryException, ValueFormatException {
         Node meta = node.getNode(MetaData.DEFAULT_META_NODE);
-        String lastMod = ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.LAST_MODIFIED;
+        String lastMod = RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.LAST_MODIFIED;
         return (meta.hasProperty(lastMod)) ? meta.getProperty(lastMod).getDate() : null;
     }
 

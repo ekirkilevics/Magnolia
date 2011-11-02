@@ -40,7 +40,6 @@ import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -56,6 +55,7 @@ import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.model.Version;
 import info.magnolia.nodebuilder.NodeBuilder;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 
 import java.util.Arrays;
@@ -137,7 +137,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
     @Test
     public void testDMSVersioningCommandUpdate() throws ModuleManagementException, RepositoryException {
         // prepare nodes that should exist if the dms was really installed ...
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
         Content commands = ContentUtil.createPath(hm, "/modules/dms/commands/dms", ItemType.CONTENTNODE, true);
         final NodeBuilder nodeBuilder = new NodeBuilder(commands,
                 addNode("activate").then(
@@ -162,7 +162,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
      */
     @Test
     public void testDataActivationCommandUpdate() throws ModuleManagementException, RepositoryException {
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
         // workflow configuration
         Content path = ContentUtil.createPath(hm, "modules/data/commands/data/", ItemType.CONTENT);
         path.createContent("activate", ItemType.CONTENTNODE);

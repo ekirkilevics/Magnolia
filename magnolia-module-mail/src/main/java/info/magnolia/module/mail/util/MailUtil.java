@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.mail.util;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
@@ -47,6 +46,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.mail.MailConstants;
 import info.magnolia.module.mail.handlers.LoggingLevel;
 import info.magnolia.module.mail.templates.MailAttachment;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -227,7 +227,7 @@ public class MailUtil {
      * @throws RepositoryException
      */
     protected static Collection<Content> getAllUserNodes() throws RepositoryException {
-        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USERS);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.USERS);
         Collection<Content> users = hm.getContent(Realm.REALM_ADMIN.getName()).getChildren(ItemType.USER);
         users.addAll(hm.getContent(Realm.REALM_SYSTEM.getName()).getChildren(ItemType.USER));
         return users;

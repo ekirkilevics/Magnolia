@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -52,6 +51,7 @@ import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -687,7 +687,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 
         // TODO: remove the second check. It should not be necessary. The only safe way to identify the versioned node is by looking at its type since the type is mandated by spec. and the frozen nodes is what the filter below removes anyway
-        if (content.isNodeType("nt:frozenNode") || workspaceName.equals(ContentRepository.VERSION_STORE)) {
+        if (content.isNodeType("nt:frozenNode") || workspaceName.equals(RepositoryConstants.VERSION_STORE)) {
             XMLReader elementfilter = new FrozenElementFilter(XMLReaderFactory
                     .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
             ((FrozenElementFilter) elementfilter).setNodeName(content.getName());

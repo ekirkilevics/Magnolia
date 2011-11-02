@@ -35,9 +35,9 @@ package info.magnolia.cms.security;
 
 import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -190,13 +190,13 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         try {
             String sessionName;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                sessionName = ContentRepository.USER_ROLES;
+                sessionName = RepositoryConstants.USER_ROLES;
             } else {
-                sessionName = ContentRepository.USER_GROUPS;
+                sessionName = RepositoryConstants.USER_GROUPS;
             }
 
             // TODO: this is an original code. If you ever need to speed it up, turn it around - retrieve group or role by its name and read its ID, then loop through IDs this user has assigned to find out if he has that one or not.
-            final Collection<String> groupsOrRoles = MgnlContext.doInSystemContext(new SilentSessionOp<Collection<String>>(ContentRepository.USERS) {
+            final Collection<String> groupsOrRoles = MgnlContext.doInSystemContext(new SilentSessionOp<Collection<String>>(RepositoryConstants.USERS) {
 
                 @Override
                 public Collection<String> doExec(Session session) throws RepositoryException {

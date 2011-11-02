@@ -33,7 +33,6 @@
  */
 package info.magnolia.setup.for3_6_2;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
@@ -42,6 +41,7 @@ import info.magnolia.cms.util.NodeTypeFilter;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Iterator;
 
@@ -62,7 +62,7 @@ public class UpdateRoles extends AllChildrenNodesOperation {
     private static Logger log = LoggerFactory.getLogger(UpdateRoles.class);
 
     public UpdateRoles() {
-        super("Roles definition update", "Adds right to read their own node to all existing roles.", ContentRepository.USER_ROLES,  "/", new NodeTypeFilter(ItemType.ROLE));
+        super("Roles definition update", "Adds right to read their own node to all existing roles.", RepositoryConstants.USER_ROLES,  "/", new NodeTypeFilter(ItemType.ROLE));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class UpdateRoles extends AllChildrenNodesOperation {
                 }
             }
             if (!hasAccess) {
-                Content acl = acls.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(ContentRepository.USER_ROLES), acls.getHandle(), "0"), ItemType.CONTENTNODE);
+                Content acl = acls.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(RepositoryConstants.USER_ROLES), acls.getHandle(), "0"), ItemType.CONTENTNODE);
                 acl.createNodeData("path", handle);
                 acl.createNodeData("permissions", new Long(Permission.READ));
                 acls.save();
@@ -106,11 +106,11 @@ public class UpdateRoles extends AllChildrenNodesOperation {
                         }
                     }
                     if (!found) {
-                        Content permission = acl.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(ContentRepository.USER_ROLES), acl.getHandle(), "0"), ItemType.CONTENTNODE);
+                        Content permission = acl.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(RepositoryConstants.USER_ROLES), acl.getHandle(), "0"), ItemType.CONTENTNODE);
                         permission.createNodeData("path", "/");
                         permission.createNodeData("permissions", new Long(Permission.READ));
                         acl.save();
-                        permission = acl.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(ContentRepository.USER_ROLES), acl.getHandle(), "0"), ItemType.CONTENTNODE);
+                        permission = acl.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(RepositoryConstants.USER_ROLES), acl.getHandle(), "0"), ItemType.CONTENTNODE);
                         permission.createNodeData("path", "/*");
                         permission.createNodeData("permissions", Long.valueOf(Permission.NONE));
                         acl.save();

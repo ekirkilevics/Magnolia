@@ -33,12 +33,12 @@
  */
 package info.magnolia.cms.taglibs.util;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.text.MessageFormat;
 
@@ -93,7 +93,7 @@ public class SimpleSearchTag extends TagSupport {
     private int startLevel;
     private String query;
     private String var;
-    private String repository = ContentRepository.WEBSITE;
+    private String repository = RepositoryConstants.WEBSITE;
     private String itemType = ItemType.CONTENT.getSystemName();
     private boolean supportSubstringSearch = false;
     private boolean useSimpleJcrQuery = true;

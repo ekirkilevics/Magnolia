@@ -45,7 +45,6 @@ import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.servlets.ClasspathSpool;
@@ -55,6 +54,7 @@ import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.module.ModuleManager;
+import info.magnolia.repository.RepositoryConstants;
 
 
 /**
@@ -179,7 +179,7 @@ public class FilterManagerImpl implements FilterManager {
 
     private MgnlFilter createConfiguredFilters() throws ServletException {
         try {
-            final HierarchyManager hm = systemContext.getHierarchyManager(ContentRepository.CONFIG);
+            final HierarchyManager hm = systemContext.getHierarchyManager(RepositoryConstants.CONFIG);
             final Content node = hm.getContent(SERVER_FILTERS);
             MgnlFilter filter = (MgnlFilter) Content2BeanUtil.toBean(node, true, MgnlFilter.class);
             if (filter == null) {
@@ -227,7 +227,7 @@ public class FilterManagerImpl implements FilterManager {
 
     protected void startObservation() {
         ObservationUtil.registerDeferredChangeListener(
-                ContentRepository.CONFIG,
+                RepositoryConstants.CONFIG,
                 SERVER_FILTERS,
                 filtersEventListener,
                 1000,

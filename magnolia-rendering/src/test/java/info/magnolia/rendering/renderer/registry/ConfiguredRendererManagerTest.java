@@ -35,13 +35,13 @@ package info.magnolia.rendering.renderer.registry;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.renderer.Renderer;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockEvent;
@@ -71,7 +71,7 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        session = SessionTestUtil.createSession(ContentRepository.CONFIG,
+        session = SessionTestUtil.createSession(RepositoryConstants.CONFIG,
                 "/modules/fooModule/renderers/a.class=" + MockTestRenderer.class.getName(),
                 "/modules/fooModule/renderers/a.someProperty=foo",
                 "/modules/barModule/renderers/b.class=" + MockTestRenderer.class.getName(),

@@ -43,6 +43,7 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.repository.Provider;
+import info.magnolia.repository.RepositoryConstants;
 
 /**
  * Task for registration of new mixin - mgnl:deleted.
@@ -57,7 +58,7 @@ public class RegisterMgnlDeletedType extends AbstractTask {
 
     @Override
     public void execute(InstallContext ctx) throws TaskExecutionException {
-        HierarchyManager webHM = ctx.getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager webHM = ctx.getHierarchyManager(RepositoryConstants.WEBSITE);
         final String mixDeleted = "mgnl:deleted";
 
         try {
@@ -69,7 +70,7 @@ public class RegisterMgnlDeletedType extends AbstractTask {
             // API ...
         }
 
-        Provider repoProvider = ContentRepository.getRepositoryProvider(ContentRepository.WEBSITE);
+        Provider repoProvider = ContentRepository.getRepositoryProvider(RepositoryConstants.WEBSITE);
         String mgnlMixDeleted = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<nodeTypes" + " xmlns:rep=\"internal\""
                 + " xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"" + " xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\""
                 + " xmlns:mgnl=\"http://www.magnolia.info/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + mixDeleted

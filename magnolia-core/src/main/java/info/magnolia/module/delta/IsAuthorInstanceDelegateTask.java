@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.repository.RepositoryConstants;
 
 /**
  * A task that depends on the value of the <em>/server/admin</em> config value. Delegates to one of the given tasks
@@ -49,6 +49,6 @@ public class IsAuthorInstanceDelegateTask extends PropertyValueDelegateTask {
     }
 
     public IsAuthorInstanceDelegateTask(String taskName, String taskDescription, Task isAuthor, Task isPublic) {
-        super(taskName, taskDescription, ContentRepository.CONFIG, "/server", "admin", "false", false, isPublic, isAuthor);
+        super(taskName, taskDescription, RepositoryConstants.CONFIG, "/server", "admin", "false", false, isPublic, isAuthor);
     }
 }

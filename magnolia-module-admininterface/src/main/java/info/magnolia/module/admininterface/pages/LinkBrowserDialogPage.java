@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.admininterface.pages;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.SimplePageMVCHandler;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -70,7 +70,7 @@ public class LinkBrowserDialogPage extends SimplePageMVCHandler {
         PrintWriter out = response.getWriter();
         String repository = request.getParameter("repository"); //$NON-NLS-1$
         if (StringUtils.isEmpty(repository)) {
-            repository = ContentRepository.WEBSITE;
+            repository = RepositoryConstants.WEBSITE;
         }
 
         String path = request.getParameter("path"); //$NON-NLS-1$

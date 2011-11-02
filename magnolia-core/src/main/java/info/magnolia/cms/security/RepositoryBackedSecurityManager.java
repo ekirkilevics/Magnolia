@@ -34,7 +34,6 @@
 package info.magnolia.cms.security;
 
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
@@ -42,6 +41,7 @@ import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.MgnlContext.VoidOp;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -79,9 +79,9 @@ public abstract class RepositoryBackedSecurityManager {
         try {
             String sessionName;
             if (StringUtils.equalsIgnoreCase(resourceTypeName, NODE_ROLES)) {
-                sessionName = ContentRepository.USER_ROLES;
+                sessionName = RepositoryConstants.USER_ROLES;
             } else {
-                sessionName = ContentRepository.USER_GROUPS;
+                sessionName = RepositoryConstants.USER_GROUPS;
             }
 
             // this is an original code from old ***Managers.

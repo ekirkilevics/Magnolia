@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.taglibs.util;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -41,6 +40,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.taglibs.Resource;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -212,7 +212,7 @@ public class AHref extends BodyTagSupport {
             Content startPage;
             try {
                 startPage = Resource.getCurrentActivePage().getAncestor(this.level);
-                HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+                HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
                 Content resultPage = hm.getContent(startPage.getHandle());
                 this.writeLink(resultPage.getHandle());
             }
@@ -238,7 +238,7 @@ public class AHref extends BodyTagSupport {
                     out.print(this.preHref);
                 }
                 out.print(path);
-                HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+                HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
                 if (hm.isExist(path) && ItemType.CONTENT.getSystemName().equals(hm.getContent(path).getNodeTypeName())) {
                     out.print("."); //$NON-NLS-1$
                     out.print(ServerConfiguration.getInstance().getDefaultExtension());

@@ -33,12 +33,12 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.IOException;
 
@@ -150,7 +150,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
         }
 
         if (repository == null) {
-            repository = ContentRepository.WEBSITE;
+            repository = RepositoryConstants.WEBSITE;
         }
 
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);

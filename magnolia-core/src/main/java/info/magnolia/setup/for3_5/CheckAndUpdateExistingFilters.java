@@ -33,7 +33,6 @@
  */
 package info.magnolia.setup.for3_5;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
@@ -41,6 +40,7 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.setup.AddFilterBypassTask;
 import info.magnolia.voting.voters.URIStartsWithVoter;
 
@@ -82,7 +82,7 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
     private final ArrayDelegateTask subtasks;
 
     public CheckAndUpdateExistingFilters(String existingFiltersPath) {
-        super("Filters", "Installs or updates the new filter configuration.", ContentRepository.CONFIG,
+        super("Filters", "Installs or updates the new filter configuration.", RepositoryConstants.CONFIG,
                 existingFiltersPath);
         this.subtasks = new ArrayDelegateTask("Filter updates");
         this.existingFiltersPath = existingFiltersPath;

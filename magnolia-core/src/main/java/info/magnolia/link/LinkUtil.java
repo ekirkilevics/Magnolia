@@ -33,12 +33,12 @@
  */
 package info.magnolia.link;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -65,7 +65,7 @@ public class LinkUtil {
 
     public static final String DEFAULT_EXTENSION = "html";
 
-    public static final String DEFAULT_REPOSITORY = ContentRepository.WEBSITE;
+    public static final String DEFAULT_REPOSITORY = RepositoryConstants.WEBSITE;
 
     // is this proxied or not? Tests says no.
     //private static final LinkTransformerManager linkManager = LinkTransformerManager.getInstance();

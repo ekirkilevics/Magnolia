@@ -33,7 +33,6 @@
  */
 package info.magnolia.setup.for3_6_2;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
@@ -42,6 +41,7 @@ import info.magnolia.cms.util.NodeTypeFilter;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Iterator;
 
@@ -62,7 +62,7 @@ public class UpdateGroups extends AllChildrenNodesOperation {
     private static Logger log = LoggerFactory.getLogger(UpdateGroups.class);
 
     public UpdateGroups() {
-        super("Groups definition update", "Adds right to read their own node to all existing groups.", ContentRepository.USER_GROUPS,  "/", new NodeTypeFilter(ItemType.GROUP));
+        super("Groups definition update", "Adds right to read their own node to all existing groups.", RepositoryConstants.USER_GROUPS,  "/", new NodeTypeFilter(ItemType.GROUP));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class UpdateGroups extends AllChildrenNodesOperation {
                 }
             }
             if (!hasAccess) {
-                Content acl = acls.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(ContentRepository.USER_GROUPS), acls.getHandle(), "0"), ItemType.CONTENTNODE);
+                Content acl = acls.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(RepositoryConstants.USER_GROUPS), acls.getHandle(), "0"), ItemType.CONTENTNODE);
                 acl.createNodeData("path", handle);
                 acl.createNodeData("permissions", Long.valueOf(Permission.READ));
                 acls.save();

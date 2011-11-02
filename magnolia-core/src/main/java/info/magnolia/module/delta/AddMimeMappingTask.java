@@ -33,11 +33,11 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.InstallContext;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.RepositoryException;
 
@@ -81,7 +81,7 @@ public class AddMimeMappingTask extends AbstractRepositoryTask {
      */
     @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        HierarchyManager hm = ctx.getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = ctx.getHierarchyManager(RepositoryConstants.CONFIG);
         Content mimeNode = hm.getContent("/server/MIMEMapping");
 
         if (!mimeNode.hasContent(extension)) {

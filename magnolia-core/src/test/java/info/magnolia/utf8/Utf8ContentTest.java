@@ -34,7 +34,6 @@
 package info.magnolia.utf8;
 
 import static org.junit.Assert.*;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -46,6 +45,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.DataTransporter;
 import info.magnolia.importexport.PropertiesImportExport;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 
 import java.io.File;
@@ -75,7 +75,7 @@ public class Utf8ContentTest extends RepositoryTestCase {
 
     @Test
     public void testReadingUtf8AccentedChars() throws Exception {
-        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(RepositoryConstants.WEBSITE);
         bootstrapTextXml(hm);
 
         String text = "citt\u00E0\u00E8\u00EC\u00F2\u00F9\u00E4\u00F6\u00EB\u00E9\u00E8\u00E0\u00EC";
@@ -86,7 +86,7 @@ public class Utf8ContentTest extends RepositoryTestCase {
 
     @Test
     public void testReadingUtf8Greek() throws Exception {
-        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(RepositoryConstants.WEBSITE);
         bootstrapTextXml(hm);
 
         String text = "\u03BA\u1F79\u03C3\u03BC\u03B5";
@@ -97,7 +97,7 @@ public class Utf8ContentTest extends RepositoryTestCase {
 
     @Test
     public void testReadingUtf8Russian() throws Exception {
-        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(RepositoryConstants.WEBSITE);
         bootstrapTextXml(hm);
 
         String text =
@@ -109,7 +109,7 @@ public class Utf8ContentTest extends RepositoryTestCase {
 
     @Test
     public void testReadingUtf8SpecialChars() throws Exception {
-        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(RepositoryConstants.WEBSITE);
         bootstrapTextXml(hm);
 
         String text = "utf8!?#{}$!\u00A3%()=@";
@@ -124,7 +124,7 @@ public class Utf8ContentTest extends RepositoryTestCase {
 
     @Test
     public void testReadingUtf8JapaneseChars() throws Exception {
-        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(RepositoryConstants.WEBSITE);
         bootstrapTextXml(hm);
 
         String text = "\u30E2\u30AF\u30EC\u30F3";
@@ -135,7 +135,7 @@ public class Utf8ContentTest extends RepositoryTestCase {
 
     @Test
     public void testCreateExportImportContentUtf8SpecialChars() {
-        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager(RepositoryConstants.WEBSITE);
         String basePath = "utf8test";
         String baseGreek = "\u03BA\u1F79\u03C3\u03BC\u03B5";
         String text = "utf8!?#{}$!\u00A3%()=@";
@@ -147,7 +147,7 @@ public class Utf8ContentTest extends RepositoryTestCase {
             base = hm.getContent(basePath);
             Content special = base.createContent(text, ItemType.CONTENT);
 
-            File xmlFile = exportNode(ContentRepository.WEBSITE, base.getWorkspace().getSession(), special);
+            File xmlFile = exportNode(RepositoryConstants.WEBSITE, base.getWorkspace().getSession(), special);
 
             Content base2 = root.createContent(baseGreek, ItemType.CONTENT);
 
@@ -222,7 +222,7 @@ public class Utf8ContentTest extends RepositoryTestCase {
     private Content getTestContent() throws IOException, RepositoryException {
         String contentProperties = "/myutf8content.@type=mgnl:content\n" + "/myutf8content.nd1=hello";
 
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
         new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
         hm.save();
         Content content = hm.getContent("/myutf8content");
@@ -231,7 +231,7 @@ public class Utf8ContentTest extends RepositoryTestCase {
 
     private Value createValue(Object valueObj) throws RepositoryException, UnsupportedRepositoryOperationException {
         ValueFactory valueFactory =
-                MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getWorkspace().getSession()
+                MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE).getWorkspace().getSession()
                         .getValueFactory();
         return NodeDataUtil.createValue(valueObj, valueFactory);
     }

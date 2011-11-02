@@ -34,13 +34,14 @@
 package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.taglibs.Resource;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.devlib.schmidt.imageinfo.ImageInfo;
@@ -140,7 +141,7 @@ public abstract class BaseImageTag extends SimpleTagSupport {
         }
         else {
 
-            HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+            HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
             // if this name starts with a '/', then assume it is a node handle
             // otherwise assume that its is a path relative to the current active page
             if (this.parentContentNodeName.startsWith("/")) {

@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admininterface.setup.for4_3;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
@@ -41,6 +40,7 @@ import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractRepositoryTask;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,7 +72,7 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
 
     @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-        final Collection<Content> dialogs = QueryUtil.query(ContentRepository.CONFIG, "modules/*/dialogs", Query.XPATH);
+        final Collection<Content> dialogs = QueryUtil.query(RepositoryConstants.CONFIG, "modules/*/dialogs", Query.XPATH);
         List<Content> dialogNodes = new ArrayList<Content>();
 
         for (Iterator<Content> iterator = dialogs.iterator(); iterator.hasNext();) {

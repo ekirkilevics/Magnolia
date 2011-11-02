@@ -40,6 +40,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.module.admininterface.SaveHandler;
 import info.magnolia.module.admininterface.config.AclTypeConfiguration;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Iterator;
 
@@ -80,7 +81,7 @@ public class RolesEditDialog extends ConfiguredDialog {
     public String getRepository() {
         String repository = super.getRepository();
         if (repository == null) {
-            repository = ContentRepository.USER_ROLES;
+            repository = RepositoryConstants.USER_ROLES;
         }
         return repository;
     }
