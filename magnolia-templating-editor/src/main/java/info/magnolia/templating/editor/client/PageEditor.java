@@ -74,7 +74,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     private boolean pageEditBarAlreadyProcessed = false;
     private String locale;
-    private String url;
     private static Dictionary dictionary;
 
     @Override
@@ -161,8 +160,8 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         GWT.log("Creating [" + itemType + "] in workspace [" + workspace + "] at path [" + parent + "/" + relPath + "]");
 
         final StringBuilder url = new StringBuilder();
-        url.append(LegacyJavascript.getContextPath() + ".magnolia/pageeditor/PageEditorServlet?");
-        url.append("action=create");
+        url.append(LegacyJavascript.getContextPath() + ".magnolia/pageeditor/PageEditorServlet");
+        url.append("?action=create");
         url.append("&workspace=" + workspace);
         url.append("&parent=" + parent);
         url.append("&relPath=" + relPath);
@@ -196,7 +195,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
                     Window.Location.replace(urlBuilder.buildString());
                 } else {
-                    Window.alert("An error occured on the server: response status code is " + status + "\n" + responseText);
+                    Window.alert("An error occurred on the server: response status code is " + status + "\n" + responseText);
                 }
             }
 
@@ -208,7 +207,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         try {
             req.send();
         } catch (RequestException e) {
-            Window.alert("An error occured whilst trying to send a request to the server: " + e.getMessage());
+            Window.alert("An error occurred while trying to send a request to the server: " + e.getMessage());
         }
 
     }

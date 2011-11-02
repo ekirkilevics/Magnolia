@@ -138,7 +138,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
             helper.attribute("label", this.label);
             helper.attribute("inherit", String.valueOf(this.inherit));
             helper.attribute("optional", String.valueOf(this.areaDefinition.isOptional()));
-            if(areaNode != null && this.areaDefinition.isOptional()) {
+            if(isOptionalAreaCreated()) {
                 helper.attribute("created", "true");
             }
             helper.attribute("showAddButton", String.valueOf(shouldShowAddButton()));
@@ -305,6 +305,18 @@ public class AreaElement extends AbstractContentTemplatingElement {
         return areaDefinition != null && areaDefinition.getInheritance() != null && areaDefinition.getInheritance().isEnabled();
     }
 
+    private boolean isOptionalAreaCreated() {
+        return this.areaDefinition.isOptional() && this.areaNode != null;
+    }
+
+    private boolean hasComponents(Node parent) throws RenderException {
+        try {
+            return NodeUtil.getNodes(parent, MgnlNodeType.NT_COMPONENT).iterator().hasNext();
+        } catch (RepositoryException e) {
+           throw new RenderException(e);
+        }
+    }
+
     protected String resolveAvailableComponents() {
         if (StringUtils.isNotEmpty(availableComponents)) {
             return availableComponents;
@@ -324,17 +336,12 @@ public class AreaElement extends AbstractContentTemplatingElement {
     }
 
     private boolean shouldShowAddButton() throws RenderException {
-        if (type.equals(AreaDefinition.TYPE_LIST)) {
-            return true;
+
+        if(areaNode == null || type.equals(AreaDefinition.TYPE_NO_COMPONENT) || (type.equals(AreaDefinition.TYPE_SINGLE) && hasComponents(areaNode))) {
+            return false;
         }
-        if (type.equals(AreaDefinition.TYPE_SINGLE) || type.equals(AreaDefinition.TYPE_NO_COMPONENT)) {
-            try {
-                return !parentNode.hasNode(name);
-            } catch (RepositoryException e) {
-                throw new RenderException(e);
-            }
-        }
-        throw new RenderException("Unknown area type [" + type + "]");
+
+        return true;
     }
 
     public String getName() {

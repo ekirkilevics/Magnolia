@@ -34,6 +34,7 @@
 package info.magnolia.templating.editor.client;
 
 import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.rendering.template.AreaDefinition;
 
 import com.google.gwt.core.client.GWT;
@@ -120,7 +121,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 createButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
-                        pageEditor.createComponent(workspace, path, name, "mgnl:area");
+                        pageEditor.createComponent(workspace, path, name, MgnlNodeType.NT_AREA);
                     }
                 });
                 addButton(createButton, Float.RIGHT);
@@ -158,10 +159,8 @@ public class AreaBarWidget extends AbstractBarWidget {
             addButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    if (AreaDefinition.TYPE_LIST.equals(type)) {
+                    if (!AreaDefinition.TYPE_NO_COMPONENT.equals(type)) {
                         pageEditor.addComponent(workspace, path, name, null, availableComponents);
-                    } else if (AreaDefinition.TYPE_SINGLE.equals(type)) {
-                        pageEditor.addComponent(workspace, path, null, name, availableComponents);
                     }
                 }
             });
