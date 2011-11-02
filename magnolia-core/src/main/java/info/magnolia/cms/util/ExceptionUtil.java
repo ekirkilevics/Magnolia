@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.util;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Util to handle exceptions.
  *
@@ -41,10 +43,10 @@ package info.magnolia.cms.util;
 public class ExceptionUtil {
 
     /**
-     * Given a RuntimeException, this method will - throw its cause exception,
-     * if the cause exception is an instance of the type of the unwrapIf
-     * parameter - throw its cause exception, if the cause exception is a
-     * RuntimeException - throw the given RuntimeException otherwise.
+     * Given a RuntimeException, this method will:
+     * - throw its cause exception, if the cause exception is an instance of the type of the unwrapIf parameter
+     * - throw its cause exception, if the cause exception is a RuntimeException
+     * - throw the given RuntimeException otherwise.
      */
     public static <E extends Throwable> void unwrapIf(RuntimeException e, Class<E> unwrapIf) throws E {
         final Throwable wrapped = e.getCause();
@@ -54,6 +56,72 @@ public class ExceptionUtil {
             throw (RuntimeException) wrapped;
         } else {
             throw e;
+        }
+    }
+
+    /**
+     * This method helps palliating the absence of multi-catch (introduced in Java 7) - catch the lower common
+     * denominator exception and let this method do the rest - <strong>Use with great care!</strong>.
+     * <strong>Warning:</strong> this method can be abused, and would let one throw undeclared exceptions, which would
+     * in turn produce unexpected and undesirable effects on calling code. Just resist the urge to use this outside
+     * "multi-catch" scenarios.
+     */
+    @SuppressWarnings({"unchecked", "varargs"})
+    public static void rethrow(Throwable e, Class<? extends Throwable>... allowedExceptions) {
+        if (RuntimeException.class.isInstance(e)) {
+            throw (RuntimeException) e;
+        }
+        for (Class<? extends Throwable> allowedException : allowedExceptions) {
+            if (allowedException.isInstance(e)) {
+                sneakyThrow(e);
+            }
+        }
+        throw new Error("Caught the following exception, which was not allowed: ", e);
+    }
+
+    /**
+     * Highly inspired by Lombok and the JavaPuzzlers, this method will let you throw a checked exception without declaring it.
+     * Use with GREAT care.
+     */
+    private static void sneakyThrow(Throwable t) {
+        ExceptionUtil.<RuntimeException>sneakyThrow_(t);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void sneakyThrow_(Throwable t) throws T {
+        throw (T) t;
+    }
+
+    /**
+     * Returns true if the given exception or any of the nested cause exceptions is an instance of the <tt>suspectedCause</tt> exception argument, or a subclass thereof.
+     * This is equivalent to ExceptionUtils.indexOfThrowable(e, javax.jcr.AccessDeniedException.class) >= 0, only more readable, and possibly more performant.
+     */
+    public static boolean wasCausedBy(Throwable e, Class<? extends Throwable> suspectedCause) {
+        if (e != null && suspectedCause.isAssignableFrom(e.getClass())) {
+            return true;
+        } else if (e == null) {
+            return false;
+        } else {
+            return wasCausedBy(e.getCause(), suspectedCause);
+        }
+    }
+
+    /**
+     * Translates an exception class name to an english-readable idiom. Example: an instance of AccessDeniedException will be returned as "Access denied".
+     */
+    public static String classNameToWords(Exception e) {
+        return StringUtils.capitalize(StringUtils.removeEnd(e.getClass().getSimpleName(), "Exception").replaceAll("[A-Z]", " $0").toLowerCase().trim());
+    }
+
+    /**
+     * Translates an exception class name to an english-readable idiom, along with the exception's message.
+     * Example: an instance of AccessDeniedException("/foo/bar") will be returned as "Access denied: /foo/bar".
+     */
+    public static String exceptionToWords(Exception e) {
+        if (e.getMessage() != null) {
+            return classNameToWords(e) + ": " + e.getMessage();
+        } else {
+            return classNameToWords(e);
         }
     }
 }

@@ -33,14 +33,22 @@
  */
 package info.magnolia.cms.util;
 
-import static org.junit.Assert.*;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.exception.MgnlException;
+import info.magnolia.test.hamcrest.UtilMatchers;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.junit.Test;
+
+
+import static info.magnolia.cms.util.ExceptionUtil.wasCausedBy;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * @version $Id$
@@ -84,9 +92,10 @@ public class ExceptionUtilTest {
         }
     }
 
+
     @Test
-    public void testUnwrapIfWithCauseBeeingNull() {
-        final RuntimeException runtimeWrapping = new RuntimeException((Throwable)null);
+    public void testUnwrapIfWithCauseBeingNull() {
+        final RuntimeException runtimeWrapping = new RuntimeException((Throwable) null);
 
         try {
             ExceptionUtil.unwrapIf(runtimeWrapping, IOException.class);
@@ -98,7 +107,7 @@ public class ExceptionUtilTest {
     }
 
     @Test
-    public void testUnwrapIfWithUnwrapIfBeeingNull() {
+    public void testUnwrapIfWithUnwrapIfBeingNull() {
         final IOException originalException = new IOException("AIE");
         final RuntimeException runtimeWrapping = new RuntimeException(originalException);
         try {
@@ -107,6 +116,119 @@ public class ExceptionUtilTest {
         } catch (Throwable t) {
             assertSame(runtimeWrapping, t);
             assertSame(originalException, t.getCause());
+        }
+    }
+
+    @Test
+    public void canSneakilyRethrowGivenExceptions() {
+        final IOException e = new IOException("The exception we'll throw without catching explicitly");
+        try {
+            someMethodThatWillCatchThrowableAndSneakilyRethrow(e, IOException.class, Error.class);
+            fail("Should not be here");
+        } catch (Throwable caught) {
+            assertSame(e, caught);
+        }
+    }
+
+    @Test
+    public void willThrowGivenRuntimeEvenIfNotExplicitlyAllowed() {
+        final IndexOutOfBoundsException e = new IndexOutOfBoundsException("The exception we'll throw without catching explicitly");
+        try {
+            someMethodThatWillCatchThrowableAndSneakilyRethrow(e, IOException.class, Error.class);
+            fail("Should not be here");
+        } catch (Throwable caught) {
+            assertSame(e, caught);
+        }
+    }
+
+    @Test
+    public void whatHappensWithACheckedExceptionWeDontExplicitlyAllow() {
+        final ClassNotFoundException e = new ClassNotFoundException("What happens to this exception ?");
+        try {
+            someMethodThatWillCatchThrowableAndSneakilyRethrow(e, IOException.class, Error.class);
+            fail("Should not be here");
+        } catch (Throwable caught) {
+            assertThat(caught, UtilMatchers.isExceptionWithMessage(Error.class, "Caught the following exception, which was not allowed: "));
+            assertSame(e, caught.getCause());
+        }
+    }
+
+    @Test
+    public void exampleOfAbuse() {
+        try {
+        ExceptionUtil.rethrow(new IOException(), IOException.class);
+            fail("should have thrown an undeclared IOException");
+        } catch (Throwable e) {
+            if (e.getClass().equals(IOException.class)) {
+            // well ok then ...
+            } else {
+                fail("should have thrown an undeclared IOException");
+            }
+        }
+    }
+
+    protected void someMethodThatWillCatchThrowableAndSneakilyRethrow(Throwable e, Class<? extends Throwable>... allowedExceptions) {
+        try {
+            throw e;
+        } catch (Throwable t) {
+            ExceptionUtil.rethrow(t, allowedExceptions);
+        }
+    }
+
+    @Test
+    public void translatesSimpleExceptionNameProperly() {
+        assertEquals("Path not found", ExceptionUtil.classNameToWords(new PathNotFoundException()));
+    }
+
+    @Test
+    public void translatesSimpleExceptionWithMessage() {
+        assertEquals("Path not found: /foo/bar", ExceptionUtil.exceptionToWords(new PathNotFoundException("/foo/bar")));
+    }
+
+    @Test
+    public void ignoresExceptionSuffixIfNotPresent() {
+        assertEquals("Dummy problem: lol", ExceptionUtil.exceptionToWords(new DummyProblem("lol")));
+    }
+
+    @Test
+    public void wasCausedByReturnsTrueIfGivenExceptionMatches() {
+        assertTrue(wasCausedBy(new MgnlException(), MgnlException.class));
+    }
+
+    @Test
+    public void wasCausedByReturnsTrueIfCauseExceptionMatches() {
+        assertTrue(wasCausedBy(new RuntimeException(new MgnlException()), MgnlException.class));
+    }
+
+    @Test
+    public void wasCausedByReturnsTrueIfDeeperExceptionMatches() {
+        assertTrue(wasCausedBy(new IOException(new RuntimeException(new UnsupportedOperationException(new MgnlException()))), MgnlException.class));
+    }
+
+    @Test
+    public void wasCausedByReturnsFalseIfNoCauseInGivenException() {
+        assertFalse(wasCausedBy(new IOException("no cause here"), MgnlException.class));
+    }
+
+    @Test
+    public void wasCausedByReturnsFalseIfNoCauseMatches() {
+        assertFalse(wasCausedBy(new IOException(new RuntimeException(new UnsupportedOperationException("no cause here"))), MgnlException.class));
+    }
+
+    @Test
+    public void wasCausedByReturnsTrueIfMatchIsASubClass() {
+        assertTrue("preventive check - if this fails, the test has become invalid", new Content2BeanException() instanceof MgnlException);
+        assertTrue(wasCausedBy(new IOException(new Content2BeanException("this is the cause")), MgnlException.class));
+    }
+
+    @Test
+    public void wasCausedByReturnsFalseIfMatchIsAParentClass() {
+        assertFalse(wasCausedBy(new IOException(new MgnlException("this is the cause")), Content2BeanException.class));
+    }
+
+    private static class DummyProblem extends Exception {
+        public DummyProblem(String message) {
+            super(message);
         }
     }
 }
