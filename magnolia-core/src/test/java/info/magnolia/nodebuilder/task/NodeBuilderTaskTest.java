@@ -65,7 +65,7 @@ public class NodeBuilderTaskTest extends RepositoryTestCase {
             failing.execute(ctx);
             fail("should have failed");
         } catch (TaskExecutionException e) {
-            assertEquals("Could not execute task: hello/boo", e.getMessage());
+            assertEquals("Could not execute task: Path not found: hello/boo", e.getMessage());
         }
     }
 
