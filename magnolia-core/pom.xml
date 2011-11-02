@@ -55,6 +55,10 @@
       <artifactId>commons-collections</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.google.collections</groupId>
+      <artifactId>google-collections</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.openwfe</groupId>
       <artifactId>openwfe-jcr</artifactId>
     </dependency>
@@ -186,6 +190,11 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit-dep</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
