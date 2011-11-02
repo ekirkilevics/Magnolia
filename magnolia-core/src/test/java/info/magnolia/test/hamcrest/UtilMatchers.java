@@ -61,8 +61,8 @@ public class UtilMatchers {
         };
     }
 
-    public static Matcher<Throwable> isExceptionWithMessage(final Class<? extends Throwable> t, final String expectedMessage) {
-        return new TypeSafeMatcher<Throwable>() {
+    public static <T extends Throwable> Matcher<T> isExceptionWithMessage(final Class<? extends Throwable> t, final String expectedMessage) {
+        return new TypeSafeMatcher<T>() {
             @Override
             protected boolean matchesSafely(Throwable item) {
                 return item.getClass().isAssignableFrom(t) && expectedMessage.equals(item.getMessage());
@@ -75,7 +75,7 @@ public class UtilMatchers {
         };
     }
 
-    public static Matcher<Throwable> isExceptionWithMatchingMessage(final Class<? extends Throwable> t, final String expectedMessageRegex) {
+    public static Matcher<? extends Throwable> isExceptionWithMatchingMessage(final Class<? extends Throwable> t, final String expectedMessageRegex) {
         return new TypeSafeMatcher<Throwable>() {
             @Override
             protected boolean matchesSafely(Throwable item) {

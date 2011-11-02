@@ -36,11 +36,13 @@ package info.magnolia.test.hamcrest;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.NodeDataUtil;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 
 import javax.jcr.RepositoryException;
+
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
+import org.hamcrest.TypeSafeMatcher;
 
 /**
  * A minimal set of useful Matchers to test Content.
@@ -114,4 +116,68 @@ public class ContentMatchers {
         };
     }
 
+    /**
+     * ! This does not play well in combination with the not() matcher - use not(hasContent(name)) instead for those cases!
+     */
+    public static Matcher<Content> hasContent(final String childNodeName, final String expectedNodeType) {
+        return new TypeSafeDiagnosingMatcher<Content>() {
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("a child node named '").appendText(childNodeName).appendText("' of type '").appendText(expectedNodeType).appendText("'");
+            }
+
+            @Override
+            protected boolean matchesSafely(Content item, Description mismatchDescription) {
+                if (!hasContent(item, childNodeName)) {
+                    mismatchDescription.appendText(item.toString()).appendText(" does not have a child node named '").appendText(childNodeName).appendText("'");
+                    return false;
+                } else if (!nodeTypeMatches(item, childNodeName, expectedNodeType)) {
+                    mismatchDescription.appendText(item.toString()).appendText(" has a child node named '").appendText(childNodeName).appendText("' but it is not of type ''").appendText(expectedNodeType).appendText("'");
+                    return false;
+                }
+                return true;
+            }
+
+        };
+    }
+
+    public static Matcher<Content> hasContent(final String childNodeName) {
+        return new TypeSafeMatcher<Content>() {
+            @Override
+            protected boolean matchesSafely(Content item) {
+                return hasContent(item, childNodeName);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("a child node named '").appendText(childNodeName).appendText("'");
+            }
+
+            @Override
+            protected void describeMismatchSafely(Content item, Description mismatchDescription) {
+                if (!hasContent(item, childNodeName)) {
+                    mismatchDescription.appendText(item.toString()).appendText(" does not have a child node named '").appendText(childNodeName).appendText("'");
+                }
+            }
+
+        };
+    }
+
+
+    private static boolean hasContent(Content item, String childNodeName) {
+        try {
+            return item.hasContent(childNodeName);
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e); // TODO
+        }
+    }
+
+    private static boolean nodeTypeMatches(Content item, String childNodeName, String expectedNodeType) {
+        try {
+            return item.getContent(childNodeName).getNodeTypeName().equals(expectedNodeType);
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e); // TODO
+        }
+    }
 }
