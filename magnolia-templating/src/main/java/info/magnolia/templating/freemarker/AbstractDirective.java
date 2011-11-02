@@ -33,15 +33,6 @@
  */
 package info.magnolia.templating.freemarker;
 
-import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.jcr.Node;
-
 import freemarker.core.CollectionAndSequence;
 import freemarker.core.Environment;
 import freemarker.template.SimpleHash;
@@ -50,7 +41,6 @@ import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
@@ -65,6 +55,15 @@ import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.templating.elements.AbstractContentTemplatingElement;
 import info.magnolia.templating.elements.TemplatingElement;
+
+import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.Node;
 
 /**
  * A base class for freemarker directives used in Magnolia.
