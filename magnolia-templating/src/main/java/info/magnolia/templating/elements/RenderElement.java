@@ -110,23 +110,28 @@ public class RenderElement extends AbstractContentTemplatingElement {
     }
 
     private void setContextAttributes(WebContext webContext, Map<String, Object> ctx) {
-        for(Entry<String, Object> entry : ctx.entrySet()) {
-            final String key = entry.getKey();
-            if(webContext.containsKey(key)) {
-                //save to tmp map
-                savedCtxAttributes.put(key, webContext.get(key));
+        if(ctx != null){
+            for(Entry<String, Object> entry : ctx.entrySet()) {
+                final String key = entry.getKey();
+                if(webContext.containsKey(key)) {
+                    //save to tmp map
+                    savedCtxAttributes.put(key, webContext.get(key));
+                }
+                webContext.setAttribute(key, entry.getValue(), WebContext.LOCAL_SCOPE);
             }
-            webContext.setAttribute(key, entry.getValue(), WebContext.LOCAL_SCOPE);
+
         }
     }
 
     private void restoreContextAttributes(WebContext webContext, Map<String, Object> ctx) {
-        for(Entry<String, Object> entry : ctx.entrySet()) {
-            final String key = entry.getKey();
-            if(webContext.containsKey(key)) {
-                webContext.setAttribute(key, savedCtxAttributes.get(key), WebContext.LOCAL_SCOPE);
+        if(ctx != null) {
+            for(Entry<String, Object> entry : ctx.entrySet()) {
+                final String key = entry.getKey();
+                if(webContext.containsKey(key)) {
+                    webContext.setAttribute(key, savedCtxAttributes.get(key), WebContext.LOCAL_SCOPE);
+                }
+                webContext.removeAttribute(key, WebContext.LOCAL_SCOPE);
             }
-            webContext.removeAttribute(key, WebContext.LOCAL_SCOPE);
         }
     }
 
