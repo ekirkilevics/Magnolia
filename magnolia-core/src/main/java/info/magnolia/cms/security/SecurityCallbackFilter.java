@@ -131,6 +131,11 @@ public class SecurityCallbackFilter extends OncePerRequestAbstractMgnlFilter {
         return clientCallbacks;
     }
 
+    /**
+     * A simple HttpServletResponseWrapper which keeps track of the current http status code.
+     * Everything else is delegated to the parent response, which means calls to sendError or sendRedirect still mean
+     * the response is committed.
+     */
     public static class StatusSniffingResponseWrapper extends HttpServletResponseWrapper {
         private int status = SC_OK;
 
