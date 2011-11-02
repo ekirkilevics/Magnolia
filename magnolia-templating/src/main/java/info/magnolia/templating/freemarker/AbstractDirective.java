@@ -37,17 +37,20 @@ import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.jcr.Node;
 
 import freemarker.core.CollectionAndSequence;
 import freemarker.core.Environment;
+import freemarker.template.SimpleHash;
 import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
@@ -202,6 +205,19 @@ public abstract class AbstractDirective<C extends TemplatingElement> implements 
     protected Object mandatoryObject(Map<String, TemplateModel> params, String key) throws TemplateModelException {
         final TemplateModel model = _param(params, key, TemplateModel.class, true);
         return DeepUnwrap.unwrap(model);
+    }
+
+    protected Map<String, Object> map(Map<String, TemplateModel> params, String key) throws TemplateModelException {
+        final SimpleHash model = _param(params, key, SimpleHash.class, false);
+        if(model == null) {
+            return Collections.emptyMap();
+        }
+        return model.toMap();
+    }
+
+    protected Map<String, Object> mandatoryMap(Map<String, TemplateModel> params, String key) throws TemplateModelException {
+        final SimpleHash model = _param(params, key, SimpleHash.class, true);
+        return model.toMap();
     }
 
     protected List<String> mandatoryStringList(Map<String, TemplateModel> params, String key) throws TemplateModelException {

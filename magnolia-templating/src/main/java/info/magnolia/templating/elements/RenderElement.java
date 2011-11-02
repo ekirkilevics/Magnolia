@@ -42,6 +42,9 @@ import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.jcr.Node;
 
@@ -54,6 +57,8 @@ public class RenderElement extends AbstractContentTemplatingElement {
 
     private boolean editable;
     private String template;
+    private Map<String, Object> contextAttributes = new HashMap<String, Object>();
+    private Map<String, Object> savedCtxAttributes = new HashMap<String, Object>();
     private final RenderingEngine renderingEngine;
 
     public RenderElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
@@ -69,11 +74,13 @@ public class RenderElement extends AbstractContentTemplatingElement {
 
         WebContext webContext = MgnlContext.getWebContext();
         webContext.push(webContext.getRequest(), webContext.getResponse());
+        setContextAttributes(webContext, contextAttributes);
         try {
             renderingEngine.render(content, new AppendableOnlyOutputProvider(out));
         } finally {
             webContext.pop();
             webContext.setPageContext(null);
+            restoreContextAttributes(webContext, contextAttributes);
         }
     }
 
@@ -92,4 +99,35 @@ public class RenderElement extends AbstractContentTemplatingElement {
     public void setTemplate(String template) {
         this.template = template;
     }
+
+
+    public Map<String, Object> getContextAttributes() {
+        return contextAttributes;
+    }
+
+    public void setContextAttributes(Map<String, Object> contextAttributes) {
+        this.contextAttributes = contextAttributes;
+    }
+
+    private void setContextAttributes(WebContext webContext, Map<String, Object> ctx) {
+        for(Entry<String, Object> entry : ctx.entrySet()) {
+            final String key = entry.getKey();
+            if(webContext.containsKey(key)) {
+                //save to tmp map
+                savedCtxAttributes.put(key, webContext.get(key));
+            }
+            webContext.setAttribute(key, entry.getValue(), WebContext.LOCAL_SCOPE);
+        }
+    }
+
+    private void restoreContextAttributes(WebContext webContext, Map<String, Object> ctx) {
+        for(Entry<String, Object> entry : ctx.entrySet()) {
+            final String key = entry.getKey();
+            if(webContext.containsKey(key)) {
+                webContext.setAttribute(key, savedCtxAttributes.get(key), WebContext.LOCAL_SCOPE);
+            }
+            webContext.removeAttribute(key, WebContext.LOCAL_SCOPE);
+        }
+    }
+
 }
