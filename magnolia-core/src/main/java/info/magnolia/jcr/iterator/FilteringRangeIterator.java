@@ -35,7 +35,6 @@ package info.magnolia.jcr.iterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
 import javax.jcr.RangeIterator;
 
 import org.apache.jackrabbit.commons.predicate.Predicate;
@@ -62,23 +61,24 @@ public class FilteringRangeIterator<T> implements RangeIterator {
 
     @Override
     public boolean hasNext() {
-        if (next == null) {
-            seekNext();
+        while (next == null && iterator.hasNext()) {
+            T n = iterator.next();
+            if (predicate.evaluate(n)) {
+                next = n;
+            }
         }
         return next != null;
     }
 
     @Override
     public T next() {
-        if (next == null) {
-            seekNext();
+        if (!hasNext()) {
+            throw new NoSuchElementException();
         }
-        if (next != null) {
-            T t = next;
-            next = null;
-            return t;
-        }
-        throw new NoSuchElementException();
+        T t = next;
+        next = null;
+        position++;
+        return t;
     }
 
     @Override
@@ -101,16 +101,5 @@ public class FilteringRangeIterator<T> implements RangeIterator {
     public long getSize() {
         // getSize() is optional and we don't support it since that would require walking through the entire iterator
         return -1;
-    }
-
-    protected void seekNext() {
-        while (iterator.hasNext()) {
-            T n = iterator.next();
-            if (predicate.evaluate(n)) {
-                next = n;
-                position++;
-                return;
-            }
-        }
     }
 }
