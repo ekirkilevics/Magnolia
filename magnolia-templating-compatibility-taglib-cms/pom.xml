@@ -11,6 +11,7 @@
   <name>magnolia-templating-compatibility-taglib-cms</name>
   <description>Compatibility tag library for CMS</description>
   <properties>
+    <cloverCoverageThreshold>15</cloverCoverageThreshold>
     <taglib.shortname>cms</taglib.shortname>
     <taglib.uri>cms-taglib</taglib.uri>
   </properties>

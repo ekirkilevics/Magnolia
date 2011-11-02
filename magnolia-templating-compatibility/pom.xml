@@ -9,6 +9,11 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-templating-compatibility</artifactId>
   <name>magnolia-templating-compatibility</name>
+
+  <properties>
+    <cloverCoverageThreshold>30</cloverCoverageThreshold>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
