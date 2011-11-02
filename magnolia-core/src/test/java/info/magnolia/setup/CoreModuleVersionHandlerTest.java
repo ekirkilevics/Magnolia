@@ -102,6 +102,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom35x() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
@@ -124,6 +125,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom35xWithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a 3pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
@@ -146,6 +148,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom364() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
@@ -176,6 +179,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom364WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
@@ -200,6 +204,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom401() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
@@ -232,6 +237,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom401WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
@@ -258,6 +264,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
@@ -290,6 +297,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom410WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
@@ -333,6 +341,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/login", "enable", "true");
         setupConfigProperty("/server/filters/logout", "enable", "true");
         setupConfigProperty("/server/filters/uriSecurity", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/filters/activation", "enable", "true");
         // needed for 4.4.5 - configuration of mov MIME type
@@ -358,6 +367,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("unicodeNormalization", updatedFilters.next().getName());
         assertEquals("login", updatedFilters.next().getName());
         assertEquals("logout", updatedFilters.next().getName());
+        assertEquals("securityCallback", updatedFilters.next().getName());
         assertEquals("uriSecurity", updatedFilters.next().getName());
         assertEquals("activation", updatedFilters.next().getName());
         assertFalse(updatedFilters.hasNext());
@@ -385,6 +395,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testMP4MimeTypesOnUpdateTo445() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigNode("/server/MIMEMapping/mov");
@@ -417,6 +428,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testMP4MimeTypesOnUpdateTo445WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigNode("/server/MIMEMapping/mov");
@@ -460,6 +472,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testDefaultMP4MimeTypeOnUpdateTo445WithUserFixedValue() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigNode("/server/MIMEMapping/mov");

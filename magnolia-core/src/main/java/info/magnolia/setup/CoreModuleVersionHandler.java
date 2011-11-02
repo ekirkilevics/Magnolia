@@ -242,11 +242,11 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new ArrayDelegateTask("New security filter", "Adds the securityCallback filter.",
                         new NodeBuilderTask("New security filter", "Adds the securityCallback filter.", ErrorHandling.strict, "config", FilterManager.SERVER_FILTERS,
                                 addNode("securityCallback", "mgnl:content").then(
-                                        setProperty("class", "info.magnolia.cms.security.SecurityCallbackFilter"),
+                                        addProperty("class", "info.magnolia.cms.security.SecurityCallbackFilter"),
                                         addNode("bypasses", "mgnl:contentNode")
                                 )
                         ),
-                        new OrderNodeBeforeTask("", "Puts the securityCallback just before the uriSecurity filter.", "config", FilterManager.SERVER_FILTERS, "uriSecurity")
+                        new OrderNodeBeforeTask("", "Puts the securityCallback just before the uriSecurity filter.", "config", FilterManager.SERVER_FILTERS + "/securityCallback", "uriSecurity")
                 ))
 
                 .addTask(new UpdateSecurityFilterClientCallbacksConfiguration("uriSecurity", "securityCallback"))
