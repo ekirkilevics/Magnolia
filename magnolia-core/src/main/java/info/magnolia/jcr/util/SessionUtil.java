@@ -56,10 +56,11 @@ public class SessionUtil {
     private final static Logger log = LoggerFactory.getLogger(SessionUtil.class);
 
     public static boolean hasSameUnderlyingSession(Session first, Session second) {
-        Session firstBase = first instanceof DelegateSessionWrapper ? ((DelegateSessionWrapper) first).unwrap() : first;
-        Session secondBase = second instanceof DelegateSessionWrapper ? ((DelegateSessionWrapper) second).unwrap() : second;
+        return unwrap(first).equals(unwrap(second));
+    }
 
-        return firstBase.equals(secondBase);
+    public static Session unwrap(Session session) {
+        return session instanceof DelegateSessionWrapper ? ((DelegateSessionWrapper) session).unwrap() : session;
     }
 
     /**
