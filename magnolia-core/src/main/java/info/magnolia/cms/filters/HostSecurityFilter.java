@@ -120,7 +120,7 @@ public class HostSecurityFilter extends OncePerRequestAbstractMgnlFilter {
             }
         }
         if (isHostValid != null && !isHostValid.booleanValue()) {
-            response.sendError(404);
+            response.setStatus(404);
             return;
         }
 

@@ -33,19 +33,19 @@
  */
 package info.magnolia.cms.security.auth.callback;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * Uses HTTP basic authentication mechanism to tell the client that he has to login.
+ * Sends HTTP basic authentication headers.
+ *
  * $Id$
  */
 public class BasicClientCallback extends AbstractHttpClientCallback {
-
-    private String realmName;
+    private String realmName = "Magnolia";
 
     @Override
-    public void doCallback(HttpServletRequest request, HttpServletResponse response) {
+    public void handle(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("WWW-Authenticate", "BASIC realm=\"" + getRealmName() + "\"");
     }
 

@@ -53,7 +53,11 @@ public class ContentSecurityFilter extends BaseSecurityFilter {
     public boolean isAllowed(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String repositoryName = MgnlContext.getAggregationState().getRepository();
         String handle = MgnlContext.getAggregationState().getHandle();
-        return PermissionUtil.isGranted(repositoryName, handle, Session.ACTION_READ);
+        final boolean granted = PermissionUtil.isGranted(repositoryName, handle, Session.ACTION_READ);
+        if (!granted) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        }
+        return granted;
     }
 
 

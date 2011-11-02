@@ -69,17 +69,21 @@ public class URISecurityFilter extends BaseSecurityFilter {
         // todo MAGNOLIA-1617 move this to separate filter
         final IPSecurityManager ipSecurityManager = IPSecurityManager.Factory.getInstance();
         if (!ipSecurityManager.isAllowed(request)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
 
         if (Lock.isSystemLocked()) {
             // todo - move Lock checks to separate filter
-            response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             return false;
         }
 
-        return isAuthorized(request);
+        final boolean authorized = isAuthorized(request);
+        if (!authorized) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        }
+        return authorized;
     }
 
     /**

@@ -33,17 +33,23 @@
  */
 package info.magnolia.cms.security.auth.callback;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * Use to prompt the user for user name and password.
+ * Implementations are responsible for prompting the user for his credentials. They are also able to determine whether
+ * they should handle the current request or not.
+
  * $Id$
- *
  * @content2bean
  */
 public interface HttpClientCallback {
 
-    public void handle(HttpServletRequest request, HttpServletResponse response);
+    /**
+     * Let the implementation if it wants to handle this request.
+     */
+    boolean accepts(HttpServletRequest request);
+
+    void handle(HttpServletRequest request, HttpServletResponse response);
 
 }

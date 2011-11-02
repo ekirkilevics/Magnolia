@@ -33,11 +33,12 @@
  */
 package info.magnolia.cms.security.auth.callback;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * An HttpClientCallback implementation which redirects to a configured path or URL.
@@ -48,25 +49,10 @@ import java.text.MessageFormat;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class RedirectClientCallback implements HttpClientCallback {
+public class RedirectClientCallback extends AbstractHttpClientCallback {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RedirectClientCallback.class);
 
     private String location = "/.magnolia";
-
-    public String getLocation() {
-        return location;
-    }
-
-    /**
-     * The location field as sent to the browser. If the value starts with a /, it is preceded
-     * by the context path of the current request. The default value is "/.magnolia".
-     * If you need to the current request location in an external login form, you can use the {0} tag:
-     * a value of "http://sso.mycompany.com/login/?backto={0}" will pass the current request url as the "backto"
-     * parameter to the location url.
-     */
-    public void setLocation(String location) {
-        this.location = location;
-    }
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) {
@@ -90,5 +76,22 @@ public class RedirectClientCallback implements HttpClientCallback {
         } catch (IOException e) {
             throw new RuntimeException("Can't redirect to " + target + " : " + e.getMessage(), e);
         }
+    }
+
+    // ------- configuration methods
+
+    /**
+     * The location field as sent to the browser. If the value starts with a /, it is preceded
+     * by the context path of the current request. The default value is "/.magnolia".
+     * If you need to the current request location in an external login form, you can use the {0} tag:
+     * a value of "http://sso.mycompany.com/login/?backto={0}" will pass the current request url as the "backto"
+     * parameter to the location url.
+     */
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    protected String getLocation() {
+        return location;
     }
 }

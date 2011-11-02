@@ -80,7 +80,7 @@ public class AggregatorFilter extends AbstractMgnlFilter{
             // don't throw further, simply return error and break filter chain
             log.debug(e.getMessage(), e);
             if (!response.isCommitted()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             }
             // stop the chain
             return;
@@ -94,7 +94,7 @@ public class AggregatorFilter extends AbstractMgnlFilter{
             log.debug("Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI());
 
             if (!response.isCommitted()) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
             else {
                 log.info("Unable to redirect to 404 page, response is already committed. URI was {}", request.getRequestURI());

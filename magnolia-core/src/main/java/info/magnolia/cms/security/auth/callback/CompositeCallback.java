@@ -43,12 +43,8 @@ import org.apache.commons.lang.ArrayUtils;
 
 
 /**
- * <p>
  * A simple "composite" callback that delegates to other callbacks based on rules (a list of {@link PatternDelegate}).
- * </p>
- * <p>
  * It can be used to configured different callbacks for different urls, see this sample configuration for an example:
- * </p>
  *
  * <pre>
  * + clientCallback
@@ -69,40 +65,44 @@ import org.apache.commons.lang.ArrayUtils;
  *        - url          /*
  *    - class            info.magnolia.cms.security.auth.callback.CompositeCallback
  * </pre>
+ *
  * @author fgiust
  * @version $Id$
+ * @deprecated since 4.5 - not needed anymore. The {@link info.magnolia.cms.security.SecurityCallbackFilter} can
+ *             be configured to accept multiple {@link HttpClientCallback}s, and the callback themselves accept a request or not.
  */
 public class CompositeCallback implements HttpClientCallback {
 
     private PatternDelegate[] patterns = new UrlPatternDelegate[0];
 
+    @Override
+    public boolean accepts(HttpServletRequest request) {
+        for (PatternDelegate pattern : patterns) {
+            if (pattern.match(request)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Delegates the processing to the first matching Callback in patterns.
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
      */
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) {
-        for (int i = 0; i < patterns.length; i++) {
-            PatternDelegate currentPattern = patterns[i];
-            if (currentPattern.match(request)) {
-                ((HttpClientCallback) currentPattern.getDelegate()).handle(request, response);
+        for (PatternDelegate pattern : patterns) {
+            if (pattern.match(request)) {
+                ((HttpClientCallback) pattern.getDelegate()).handle(request, response);
                 break;
             }
         }
     }
 
-    /**
-     * @return array of configured PatternDelegate.
-     */
+    // ----- configuration methods
     public PatternDelegate[] getPatterns() {
         return this.patterns;
     }
 
-    /**
-     * Adds a new PatternDelegate. Used by Content2Bean .
-     * @param pattern PatternDelegate instance
-     */
     public void addPattern(PatternDelegate pattern) {
         this.patterns = (PatternDelegate[]) ArrayUtils.add(this.patterns, pattern);
     }

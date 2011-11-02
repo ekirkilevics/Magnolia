@@ -51,8 +51,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Sends a login form.
- * @author Sameer Charles
+ * Renders a login form using Freemarker and the template configured with {@link #loginForm}.
+ *
  * $Id$
  */
 public class FormClientCallback extends AbstractHttpClientCallback {
@@ -64,7 +64,7 @@ public class FormClientCallback extends AbstractHttpClientCallback {
     private String loginForm;
 
     @Override
-    public void doCallback(HttpServletRequest request, HttpServletResponse response) {
+    public void handle(HttpServletRequest request, HttpServletResponse response) {
         try {
             if (!response.isCommitted()) {
                 response.setContentType("text/html");

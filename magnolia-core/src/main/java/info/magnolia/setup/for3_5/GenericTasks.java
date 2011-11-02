@@ -42,7 +42,6 @@ import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckOrCreatePropertyTask;
-import info.magnolia.module.delta.CopyOrReplaceNodePropertiesTask;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
 import info.magnolia.module.delta.ModuleFilesExtraction;
@@ -57,11 +56,12 @@ import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.setup.CoreModuleVersionHandler;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This class just groups all tasks which are need to update to Magnolia 3.5,
@@ -116,7 +116,14 @@ public class GenericTasks {
                 new CheckOrCreatePropertyTask("defaultExtension property", "Checks that the defaultExtension property exists in config:/server", "config", "/server", "defaultExtension", "html"),
 
                 new CheckOrCreatePropertyTask("admin property", "Checks that the admin property exists in config:/server", "config", "/server", "admin", areWeBootstrappingAuthorInstance),
-                new MoveAndRenamePropertyTask("basicRealm property", "/server", "basicRealm", "magnolia 3.0", "/server/filters/uriSecurity/clientCallback", "realmName", "Magnolia"),
+
+                // The realm property was never necessary when using a FormClientCallback
+                // The callback node from the uriSecurity filter is gone since 4.5 (now in the securityCallback filter)
+                // new MoveAndRenamePropertyTask("basicRealm property", "/server", "basicRealm", "magnolia 3.0", "/server/filters/uriSecurity/clientCallback", "realmName", "Magnolia"),
+
+//                new CopyOrReplaceNodePropertiesTask("clientCallback configuration for content security", "The clientCallback configuration needs to be configuration for each security filter. This is copying the one from the URI security filter to the content security filter.",
+//                        "config", "/server/filters/uriSecurity/clientCallback", "/server/filters/cms/contentSecurity/clientCallback"),
+
                 new ArrayDelegateTask("defaultBaseUrl property",
                         new NewPropertyTask("defaultBaseUrl property", "Adds the new defaultBaseUrl property with a default value.", "config", "/server", "defaultBaseUrl", "http://localhost:8080/magnolia/"),
                         new WarnTask("defaultBaseUrl property", "Please set the config:/server/defaultBaseUrl property to a full URL to be used when generating absolute URLs for external systems.")
@@ -130,9 +137,6 @@ public class GenericTasks {
                                 new MoveAndRenamePropertyTask("unsecuredPath is now handled by the bypass mechanism.", "/server/login", "UnsecuredPath", "/server/filters/uriSecurity/bypasses/login", "pattern"),
                                 new RemoveNodeTask("Login configuration changed", "Removes /server/login as it is not used anymore.", "config", "/server/login")
                         )),
-
-                new CopyOrReplaceNodePropertiesTask("clientCallback configuration for content security", "The clientCallback configuration needs to be configuration for each security filter. This is copying the one from the URI security filter to the content security filter.",
-                        "config", "/server/filters/uriSecurity/clientCallback", "/server/filters/cms/contentSecurity/clientCallback"),
 
                 // --- user/roles repositories related tasks
                 new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace.", ContentRepository.USERS, "/", Realm.REALM_SYSTEM.getName(), ItemType.NT_FOLDER),

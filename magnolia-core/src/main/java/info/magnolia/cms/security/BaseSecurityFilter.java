@@ -34,30 +34,26 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.filters.AbstractMgnlFilter;
-import info.magnolia.cms.security.auth.callback.HttpClientCallback;
+
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
- * Provides basic infrastructure to authenticate request using form or basic realm.
+ * Provides basic infrastructure for filters which check if a request is authorized.
  *
  * @author Sameer Charles
- * $Id$
+ *         $Id$
  */
 public abstract class BaseSecurityFilter extends AbstractMgnlFilter {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BaseSecurityFilter.class);
 
     /**
-     * Used to tell the client that he has to login: serve a login page, set http headers or redirect.
-     */
-    private HttpClientCallback clientCallback;
-
-    /**
-     * Continue with the Magnolia defined filter chain if isAllowed returns true
-     * else send an authentication request to the client as configured.
+     * Continue with the Magnolia defined filter chain if {@link #isAllowed} returns true,
+     * else set an http response code 401.
      */
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -68,11 +64,14 @@ public abstract class BaseSecurityFilter extends AbstractMgnlFilter {
         }
     }
 
+    /**
+     * Implementations need to return false if the request can not be proceeded with, but also need to set an appropriate error code.
+     */
     protected abstract boolean isAllowed(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
     /**
-     * In most cases this will provide a standard login mechanism, override this to support
-     * other login strategies.
+     * TODO : verify we do have a correct http status code?.
+     * @deprecated since 4.5, should not be needed, and does nothing.
      */
     protected void doAuthenticate(HttpServletRequest request, HttpServletResponse response) {
         /*
@@ -81,15 +80,6 @@ public abstract class BaseSecurityFilter extends AbstractMgnlFilter {
             httpsession.invalidate();
         }
         */
-        getClientCallback().handle(request, response);
-    }
-
-    public HttpClientCallback getClientCallback() {
-        return clientCallback;
-    }
-
-    public void setClientCallback(HttpClientCallback clientCallback) {
-        this.clientCallback = clientCallback;
     }
 
 }
