@@ -217,7 +217,7 @@ public class ExceptionUtilTest {
 
     @Test
     public void wasCausedByReturnsTrueIfMatchIsASubClass() {
-        assertTrue("preventive check - if this fails, the test has become invalid", new Content2BeanException() instanceof MgnlException);
+        assertTrue("preventive check - if this fails, the test has become invalid. The rest of this test class relies on the fact that Content2BeanException is a subclass of MgnlException", MgnlException.class.isAssignableFrom(Content2BeanException.class));
         assertTrue(wasCausedBy(new IOException(new Content2BeanException("this is the cause")), MgnlException.class));
     }
 
