@@ -62,7 +62,6 @@ public abstract class JCRSessionOp<R> implements Op<R, RepositoryException> {
     public R exec() throws RepositoryException {
         Session session = null;
         try {
-            // if you need to access repo before all is initialized use OnInitSessionOp instead
             session = MgnlContext.getJCRSession(repository);
         } catch (RepositoryException e) {
             log.error("failed to retrieve repository " + repository + " with " + e.getMessage(), e);

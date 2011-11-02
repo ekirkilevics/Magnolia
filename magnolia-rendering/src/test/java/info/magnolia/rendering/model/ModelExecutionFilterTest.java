@@ -33,18 +33,13 @@
  */
 package info.magnolia.rendering.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.registry.SessionProviderRegistry;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.registry.RegistrationException;
@@ -62,7 +57,7 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.test.ComponentProviderBasedMagnoliaTestCase;
 import info.magnolia.test.mock.MockContext;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.IOException;
 
@@ -88,7 +83,7 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
         components.registerImplementation(TemplateDefinitionRegistry.class);
         components.registerImplementation(ModelExecutionFilter.class);
         components.registerImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
-        components.registerInstance(SessionProviderRegistry.class, new SessionProviderRegistry());
+        components.registerImplementation(TemplateAvailability.class, DefaultTemplateAvailability.class);
         components.registerImplementation(TemplateAvailability.class, DefaultTemplateAvailability.class);
     }
 
@@ -97,7 +92,7 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
         super.setUp();
 
         MockContext ctx = (MockContext) MgnlContext.getInstance();
-        ctx.addHierarchyManager(ContentRepository.WEBSITE, MockUtil.createAndSetHierarchyManager(ContentRepository.WEBSITE,
+        ctx.addSession(ContentRepository.WEBSITE, SessionTestUtil.createSession(ContentRepository.WEBSITE,
                 StringUtils.join(new String[] { "/foo.@uuid=12345",
                         "/foo/MetaData.mgnl\\:template=some-template" }, "\n")
         ));

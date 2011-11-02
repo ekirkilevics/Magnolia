@@ -86,7 +86,7 @@ public class BinaryNodeData extends AbstractNodeData {
 
     protected Node getBinaryNode(boolean createIfNotExisting) {
         if(binaryNode == null){
-            Node parentJCRNode = parent.getJCRNode();
+            Node parentJCRNode = getParent().getJCRNode();
             try {
                 if(parentJCRNode.hasNode(name)){
                     binaryNode = parentJCRNode.getNode(name);

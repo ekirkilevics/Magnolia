@@ -38,13 +38,14 @@ import static org.easymock.classextension.EasyMock.createMock;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.core.BinaryNodeData;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
-import info.magnolia.test.mock.BinaryMockNodeData;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -84,15 +85,17 @@ public abstract class BaseLinkTest extends MgnlTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        MockHierarchyManager hm = MockUtil.createHierarchyManager(website);
-        hm.setName(ContentRepository.WEBSITE);
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(ContentRepository.WEBSITE, website);
         webContext = createMock(WebContext.class);
         expect(webContext.getHierarchyManager(ContentRepository.WEBSITE)).andReturn(hm).anyTimes();
         expect(webContext.getContextPath()).andReturn(SOME_CONTEXT).anyTimes();
 
         // add a binary
         MockContent page = (MockContent) hm.getContent(HANDLE_PARENT_SUB);
-        page.addNodeData(new BinaryMockNodeData("file", null, "test.jpg", "image/jpeg", 5000));
+        BinaryNodeData bmnd = page.addBinaryNodeData("file");
+        bmnd.setAttribute(FileProperties.PROPERTY_FILENAME, "test");
+        bmnd.setAttribute(FileProperties.PROPERTY_EXTENSION, "jpg");
+        bmnd.setAttribute("jcr:mimeType", "image/jpeg");
 
         allMocks = new ArrayList();
         allMocks.add(webContext);

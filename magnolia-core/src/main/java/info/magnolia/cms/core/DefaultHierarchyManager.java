@@ -34,10 +34,10 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.core.search.QueryManagerImpl;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.PermissionUtil;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.SessionUtil;
@@ -135,13 +135,11 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     @Override
     public QueryManager getQueryManager() {
-        QueryManager qm;
         try {
-            qm = WorkspaceAccessUtil.getInstance().createQueryManager(this.jcrSession, this);
+            return new QueryManagerImpl(getJcrSession().getWorkspace().getQueryManager(), this);
         } catch (RepositoryException e) {
-           throw new RuntimeRepositoryException(e);
+            throw new RuntimeRepositoryException(e);
         }
-        return qm;
     }
 
     private Node getRootNode() throws RepositoryException {
@@ -173,10 +171,14 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     @Override
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException,
     RepositoryException, AccessDeniedException {
-        Content content = new DefaultContent(this.getRootNode(), this.getNodePath(path, label), contentType);
+        Content content = wrapAsContent(this.getRootNode(), this.getNodePath(path, label), contentType);
         setMetaData(content.getMetaData());
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, getWorkspaceName(), content.getItemType(), content.getHandle());
         return content;
+    }
+
+    protected Content wrapAsContent(Node rootNode, String path, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        return new DefaultContent(rootNode, path, contentType);
     }
 
     private String getNodePath(String parent, String label) {
@@ -220,13 +222,16 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             return this.getRoot();
         }
         try {
-            return (new DefaultContent(this.getRootNode(), getNodePath(path)));
+            return wrapAsContent(this.getRootNode(), getNodePath(path));
         } catch (ItemNotFoundException e) {
             this.getJcrSession().refresh(true);
-            return (new DefaultContent(this.getRootNode(), getNodePath(path)));
+            return wrapAsContent(this.getRootNode(), getNodePath(path));
         }
     }
 
+    public Content wrapAsContent(Node rootNode, String path) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        return new DefaultContent(rootNode, path);
+    }
     /**
      * Like getContent() but creates the node if not yet existing. Attention save is not called!
      * @param path the path of the node
@@ -418,12 +423,16 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
     AccessDeniedException {
         try {
-            return new DefaultContent(this.getJcrSession().getNodeByIdentifier(uuid));
+            return wrapAsContent(this.getJcrSession().getNodeByIdentifier(uuid));
         } catch (ItemNotFoundException e) {
             // retry in case session was not updated
             this.getJcrSession().refresh(true);
-            return new DefaultContent(this.getJcrSession().getNodeByIdentifier(uuid));
+            return wrapAsContent(this.getJcrSession().getNodeByIdentifier(uuid));
         }
+    }
+
+    protected Content wrapAsContent(Node node) {
+        return new DefaultContent(node);
     }
 
     /**

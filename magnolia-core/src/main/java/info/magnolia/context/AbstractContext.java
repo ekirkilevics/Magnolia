@@ -33,9 +33,8 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
@@ -44,6 +43,8 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
+import info.magnolia.cms.util.HierarchyManagerUtil;
+import info.magnolia.exception.RuntimeRepositoryException;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -140,23 +141,8 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     @Override
-    public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        return getRepositoryStrategy().getHierarchyManager(repositoryId, workspaceId);
-    }
-
-    @Override
-    public QueryManager getQueryManager(String repositoryId, String workspaceId) {
-        return getRepositoryStrategy().getQueryManager(repositoryId, workspaceId);
-    }
-
-    @Override
-    public Session getJCRSession(String repositoryId, String workspaceId) throws LoginException, RepositoryException {
-        return getRepositoryStrategy().getSession(repositoryId, workspaceId);
-    }
-
-    @Override
-    public Session getJCRSession(String repositoryId) throws LoginException, RepositoryException {
-        return getJCRSession(repositoryId, ContentRepository.getDefaultWorkspace(repositoryId));
+    public Session getJCRSession(String workspaceName) throws LoginException, RepositoryException {
+        return getRepositoryStrategy().getSession(workspaceName);
     }
 
     /**
@@ -227,18 +213,17 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     @Override
-    public HierarchyManager getHierarchyManager(String repositoryId) {
-        return this.getHierarchyManager(repositoryId, ContentRepository.getDefaultWorkspace(repositoryId));
+    public HierarchyManager getHierarchyManager(String workspaceName) {
+        try {
+            return HierarchyManagerUtil.asHierarchyManager(getJCRSession(workspaceName));
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     @Override
-    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return getAccessManager(workspaceId);
-    }
-
-    @Override
-    public QueryManager getQueryManager(String repositoryId) {
-        return this.getQueryManager(repositoryId, ContentRepository.getDefaultWorkspace(repositoryId));
+    public QueryManager getQueryManager(String workspaceName) {
+        return this.getHierarchyManager(workspaceName).getQueryManager();
     }
 
     // ------ Map interface methods -------

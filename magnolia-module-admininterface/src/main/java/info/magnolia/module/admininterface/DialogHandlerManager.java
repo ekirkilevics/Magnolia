@@ -64,8 +64,6 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * Manages all the dialog handlers.
- *
- * @author philipp
  */
 @Singleton
 public class DialogHandlerManager extends ObservedManager {

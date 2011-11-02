@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2003-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,50 +31,28 @@
  * intact.
  *
  */
-package info.magnolia.test.mock;
+package info.magnolia.repository;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.query.InvalidQueryException;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryManager;
-import javax.jcr.query.qom.QueryObjectModelFactory;
 
 /**
- * Mock implementation of the JCR Query Manager.
- * @author had
- * @version $Id: $
+ * Constants used in the context of repository.
+ *
+ * @version $Id$
  */
-public class MockQueryManager implements QueryManager {
+public interface RepositoryConstants {
 
-    private final Session session;
-
-    public MockQueryManager(Session session) {
-        this.session = session;
-    }
-
-    @Override
-    public Query createQuery(String statement, String language) throws InvalidQueryException, RepositoryException {
-        return new MockQuery(session, statement, language);
-    }
-
-    @Override
-    public QueryObjectModelFactory getQOMFactory() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Query getQuery(Node node) throws InvalidQueryException, RepositoryException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String[] getSupportedQueryLanguages() throws RepositoryException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
+    /**
+     * default repository ID's.
+     */
+    public static final String WEBSITE = "website";
+    public static final String USERS = "users";
+    public static final String USER_ROLES = "userroles";
+    public static final String USER_GROUPS = "usergroups";
+    public static final String CONFIG = "config";
+    public static final String VERSION_STORE = "mgnlVersion";
+    /**
+     * magnolia namespace.
+     */
+    public static final String NAMESPACE_PREFIX = "mgnl";
+    public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl";
 }

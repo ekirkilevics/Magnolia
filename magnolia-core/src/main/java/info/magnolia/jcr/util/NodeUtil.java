@@ -38,9 +38,13 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.iterator.NodeIterableAdapter;
+
+import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
+import org.apache.jackrabbit.commons.predicate.NodeTypePredicate;
+import org.apache.jackrabbit.commons.predicate.Predicate;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
-import info.magnolia.jcr.iterator.NodeIterableAdapter;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
 import java.util.ArrayList;
@@ -55,9 +59,6 @@ import javax.jcr.Session;
 import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
-import org.apache.jackrabbit.commons.predicate.NodeTypePredicate;
-import org.apache.jackrabbit.commons.predicate.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,12 +107,16 @@ public class NodeUtil {
 
         @Override
         public boolean evaluateTyped(Node node) {
+
             try {
-                return node.getPrimaryNodeType().getName().startsWith(MgnlNodeType.MGNL_PREFIX);
+                String nodeTypeName = node.getPrimaryNodeType().getName();
+                // accept only "magnolia" nodes
+                return nodeTypeName.startsWith(MgnlNodeType.MGNL_PREFIX);
             } catch (RepositoryException e) {
+                // TODO should we really mask this error? shouldn't it be thrown instead?
                 log.error("Unable to read nodetype for node {}", getNodePathIfPossible(node));
-                return false;
             }
+            return false;
         }
     };
 
@@ -119,15 +124,19 @@ public class NodeUtil {
      * Get a Node by identifier.
      */
     public static Node getNodeByIdentifier(String workspace, String identifier) throws RepositoryException {
-        if (workspace == null || identifier == null) {
-            return null;
+        Node target = null;
+        Session jcrSession;
+        if(workspace==null || identifier==null){
+            return target;
         }
-        Session jcrSession = MgnlContext.getJCRSession(workspace);
-        if (jcrSession == null) {
-            return null;
+
+        jcrSession = MgnlContext.getJCRSession(workspace);
+        if(jcrSession!=null){
+            target =  jcrSession.getNodeByIdentifier(identifier);
         }
-        return jcrSession.getNodeByIdentifier(identifier);
+        return target;
     }
+
 
     /**
      * from default content.
@@ -407,6 +416,7 @@ public class NodeUtil {
     }
 
     public static void visit(Node node, NodeVisitor visitor, Predicate predicate) throws RepositoryException {
+        // TODO should it really visit the start node even if it doesn't match the filter?
         visitor.visit(node);
         for (Node child : getNodes(node, predicate)) {
             visit(child, visitor, predicate);
@@ -441,15 +451,13 @@ public class NodeUtil {
     }
 
     /**
-     * This method return the node's name on success, otherwise it handles the {@link RepositoryException} by throwing
-     * {@link RuntimeRepositoryException}.
-     *
-     * @param node Node to get the name from.
+     * This method return the node's name on success, otherwise it handles the {@link RepositoryException} by throwing a {@link RuntimeRepositoryException}.
+     * @param content Node to get the name from.
      * @return the name of the node passed.
      */
-    public static String getName(Node node){
+    public static String getName(Node content){
         try {
-            return node.getName();
+            return content.getName();
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -458,9 +466,9 @@ public class NodeUtil {
     /**
      * Used for building exception messages where we want to avoid handling another exception inside a throws clause.
      */
-    public static String getNodeIdentifierIfPossible(Node node) {
+    public static String getNodeIdentifierIfPossible(Node content) {
         try {
-            return node.getIdentifier();
+            return content.getIdentifier();
         } catch (RepositoryException e) {
             return "<not available>";
         }
@@ -487,7 +495,5 @@ public class NodeUtil {
             return StringUtils.EMPTY;
         }
     }
-
-
 
 }

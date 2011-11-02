@@ -1,0 +1,47 @@
+<!--
+    $Id: repositories.xml 49820 2011-10-06 19:30:43Z had $
+-->
+<!DOCTYPE JCR [
+<!ELEMENT Map (#PCDATA)>
+<!ATTLIST Map
+    name CDATA #REQUIRED
+    repositoryName CDATA #REQUIRED
+    workspaceName CDATA #REQUIRED>
+<!ELEMENT JCR (RepositoryMapping|Repository)*>
+<!ELEMENT param (#PCDATA)>
+<!ATTLIST param
+    name CDATA #REQUIRED
+    value CDATA #REQUIRED>
+<!ELEMENT Repository (param|workspace)*>
+<!ATTLIST Repository
+    loadOnStartup CDATA #REQUIRED
+    name CDATA #REQUIRED
+    provider CDATA #REQUIRED>
+<!ELEMENT workspace (#PCDATA)>
+<!ATTLIST workspace
+    name CDATA #REQUIRED>
+<!ELEMENT RepositoryMapping (Map)*>
+]><JCR>
+
+    <RepositoryMapping>
+        <Map name="website" repositoryName="magnolia" workspaceName="website" />
+        <Map name="data" repositoryName="anotherRepository" workspaceName="physicalName" />
+        <Map name="config" repositoryName="magnolia" workspaceName="config" />
+    </RepositoryMapping>
+
+    <Repository name="magnolia" provider="provider-class" loadOnStartup="true">
+        <param name="parameter1" value="value1" />
+        <param name="parameter2" value="value2" />
+        <workspace name="website" />
+        <workspace name="config" />
+    </Repository>
+
+    <Repository name="anotherRepository" provider="another-provider-class" loadOnStartup="false">
+        <workspace name="physicalName" />
+    </Repository>
+
+  <Repository name="repositoryWithoutWorkspaces" provider="third-provider-class" loadOnStartup="false">
+    <!-- the parser will add a default one -->
+  </Repository>
+
+</JCR>

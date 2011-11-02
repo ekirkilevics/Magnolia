@@ -54,42 +54,43 @@ import org.junit.Test;
 public class MockPropertyTest {
     @Test
     public void testIsMultiple() throws RepositoryException {
-        Property property = new MockProperty("test", "test");
+        Property property = new MockProperty("test", "test", null);
         assertTrue(!property.isMultiple());
     }
     @Test
-    public void testIsNode() {
-        Property property = new MockProperty("test", "test");
+    public void testIsNode() throws RepositoryException {
+        Property property = new MockProperty("test", "test", null);
         assertTrue(!property.isNode());
     }
     @Test
     public void testGetSetValueWithBigDecimal() throws Exception{
-        Property property = new MockProperty("test", "test");
+        MockNode node = new MockNode("parent");
+        Property property = new MockProperty("test", BigDecimal.valueOf(0), node);
         property.setValue(BigDecimal.ONE);
         assertEquals(BigDecimal.ONE, property.getDecimal());
     }
     @Test
     public void testGetString() throws ValueFormatException, RepositoryException {
         String stringValue = "string";
-        Property property = new MockProperty("test", new MockValue(stringValue));
+        Property property = new MockProperty("test", new MockValue(stringValue), null);
         assertEquals(stringValue, property.getString());
     }
     @Test
     public void testGetType() throws RepositoryException {
         String stringValue = "string";
-        Property property = new MockProperty("test", new MockValue(stringValue));
+        Property property = new MockProperty("test", new MockValue(stringValue), null);
         assertEquals(PropertyType.STRING, property.getType());
     }
     @Test
     public void testGetValue() throws ValueFormatException, RepositoryException {
         String stringValue = "string";
         MockValue mockValue = new MockValue(stringValue);
-        Property property = new MockProperty("test", mockValue);
+        Property property = new MockProperty("test", mockValue, null);
         assertEquals(mockValue, property.getValue());
     }
     @Test
     public void testAccept() throws RepositoryException{
-        Property property = new MockProperty("test", "test");
+        Property property = new MockProperty("test", "test", null);
         ItemVisitor visitor = mock(ItemVisitor.class);
         property.accept(visitor);
 

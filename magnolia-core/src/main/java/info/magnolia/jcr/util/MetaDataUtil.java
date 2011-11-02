@@ -36,7 +36,6 @@ package info.magnolia.jcr.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.util.Calendar;
@@ -56,11 +55,7 @@ import javax.jcr.ValueFormatException;
 public class MetaDataUtil {
 
     public static MetaData getMetaData(Node node) {
-        try {
-            return new MetaData(node, node.getSession());
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+        return new MetaData(node);
     }
 
     public static void updateMetaData(Node node) throws RepositoryException {

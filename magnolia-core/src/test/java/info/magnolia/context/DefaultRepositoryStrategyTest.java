@@ -33,27 +33,16 @@
  */
 package info.magnolia.context;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.*;
-import static org.junit.Assert.*;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.auth.ACL;
-import info.magnolia.cms.security.auth.PrincipalCollection;
-import info.magnolia.jcr.registry.SessionProviderRegistry;
-import info.magnolia.test.RepositoryTestCase;
-
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.jcr.Session;
 
 import org.junit.Test;
+
+import info.magnolia.objectfactory.Components;
+import info.magnolia.repository.RepositoryManager;
+import info.magnolia.test.RepositoryTestCase;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @version $Id$
@@ -61,61 +50,37 @@ import org.junit.Test;
 public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
 
     @Test
-    public void testAccessManagers() {
-        UserContext context = createMock(UserContext.class);
-        SessionProviderRegistry registry = createMock(SessionProviderRegistry.class);
-        replay(context, registry);
-        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(registry, context);
-        // Access Manager is no longer used and supported!
-        AccessManager accessManager = strategy.getAccessManager("repo1", "space1");
-        assertNull(accessManager);
-        verify(context, registry);
-    }
-
-    @Test
     public void testRepositorySessions() throws Exception {
         UserContext context = createMock(UserContext.class);
-        SessionProviderRegistry registry = createMock(SessionProviderRegistry.class);
-        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(registry, context);
-        Session session = strategy.getSession("magnolia", "website");
+        RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
+        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(repositoryManager, context);
+        Session session = strategy.getSession("website");
         assertNotNull(session);
         strategy.release();
     }
-
+/*
     @Test
-    public void testQueryManagers() {
-        UserContext context = createMock(UserContext.class);
-        SessionProviderRegistry registry = createMock(SessionProviderRegistry.class);
-
-        User user = createMock(User.class);
-        expect(context.getUser()).andReturn(user).anyTimes();
-        expect(user.getName()).andReturn("admin").anyTimes();
-        replay(context,user, registry);
-        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(registry, context);
-        QueryManager queryManager = strategy.getQueryManager("magnolia", "website");
-        assertNotNull(queryManager);
-        verify(context, registry);
-    }
-
-    @Test
-    public void testHierarchyManagers() {
+    public void testHierarchyManagers() throws Exception {
         UserContext context = createMock(UserContext.class);
         User user = createMock(User.class);
-        SessionProviderRegistry registry = createMock(SessionProviderRegistry.class);
+        RepositoryManager registry = createMock(RepositoryManager.class);
 
-        Set<Principal> principalSet = new HashSet<Principal>();
+        Set principalSet = new HashSet();
         PrincipalCollection principals = createMock(PrincipalCollection.class);
         principalSet.add(principals);
         ACL acl = createMock(ACL.class);
+        Subject subject = new Subject(false, principalSet, new HashSet(), new HashSet());
         expect(context.getUser()).andReturn(user).anyTimes();
         expect(user.getName()).andReturn("admin").anyTimes();
         expect(principals.get("magnolia_website")).andReturn(acl).anyTimes();
-        expect(acl.getList()).andReturn(new ArrayList<Permission>()).anyTimes();
+        expect(acl.getList()).andReturn(new ArrayList()).anyTimes();
+        expect(registry.getSession("website", any(Credentials.class))).andReturn(sessionProvider);
         replay(context, user, registry, principals, acl);
 
         DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(registry, context);
-        HierarchyManager hierarchyManager = strategy.getHierarchyManager("magnolia", "website");
+        HierarchyManager hierarchyManager = HierarchyManagerUtil.asHierarchyManager(strategy.getSession("website"));
         assertNotNull(hierarchyManager);
         verify(context, user, registry, principals, acl);
     }
+*/
 }

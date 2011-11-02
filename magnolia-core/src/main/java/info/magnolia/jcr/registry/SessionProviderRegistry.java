@@ -74,6 +74,7 @@ public class SessionProviderRegistry {
         synchronized (providers) {
             provider = providers.get(id);
             if (provider == null) {
+                // TODO dlipp: weird - why do some action when throwning an Exception anyway?
                 List<String> types = new ArrayList<String>(providers.keySet());
                 Collections.sort(types);
                 throw new RegistrationException("Can't find a registration for logical workspaceName [" + id + "]. Registered workspaces are " + types);

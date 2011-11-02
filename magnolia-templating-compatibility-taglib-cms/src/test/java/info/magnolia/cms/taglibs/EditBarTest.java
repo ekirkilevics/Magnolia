@@ -33,15 +33,11 @@
  */
 package info.magnolia.cms.taglibs;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
@@ -51,7 +47,9 @@ import info.magnolia.test.MgnlTagTestCase;
 import java.io.IOException;
 import java.util.Collections;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -65,7 +63,7 @@ public class EditBarTest extends MgnlTagTestCase {
     private Content currentContent;
 
     @Override
-    protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {
+    protected Session initWebsiteData() throws IOException, RepositoryException {
         return null;
     }
 
@@ -94,6 +92,8 @@ public class EditBarTest extends MgnlTagTestCase {
     public void testDisplaysParagraphNameAsLabel() throws Exception {
         final String paraTitle = "testParaTitleKey";
         final Paragraph paraInfo = new Paragraph();
+        final Node mainNode = createMock(Node.class);
+        final Session session = createMock(Session.class);
         paraInfo.setI18nBasename("test.messages");
         paraInfo.setTitle(paraTitle);
 
@@ -101,8 +101,12 @@ public class EditBarTest extends MgnlTagTestCase {
         expect(mainContent.isGranted(Permission.SET)).andReturn(true).anyTimes();
         expect(currentContent.getName()).andReturn("bar");
         expect(currentContent.getParent()).andReturn(mainContent);
+        expect(mainContent.getJCRNode()).andReturn(mainNode);
+        expect(mainNode.getSession()).andReturn(session);
         expect(mainContent.getHandle()).andReturn("/foo");
-        replay(mainContent, currentContent);
+        expect(mainNode.getPath()).andReturn("/foo");
+        expect(session.hasPermission("/foo", "set_property")).andReturn(true);
+        replay(mainContent, currentContent, mainNode, session);
 
         final EditBar tag = new EditBar();
         tag.setShowParagraphName(true);
@@ -118,7 +122,7 @@ public class EditBarTest extends MgnlTagTestCase {
         assertMatches("Output should contain the paragraph's title in a <td>",
                 output, ".*<td class=\"smothBarLabel\"( style=\"[a-z;: -]+\")?>" + paraTitle + "</td>.*");
 
-        verify(mainContent, currentContent);
+        verify(mainContent, currentContent, mainNode, session);
     }
 
     // TODO : failing :

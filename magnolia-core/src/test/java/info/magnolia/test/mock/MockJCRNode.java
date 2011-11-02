@@ -205,7 +205,7 @@ public class MockJCRNode implements Node {
     @Override
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
         if ("jcr:primaryType".equals(relPath)) {
-            return new MockProperty(relPath, mockContent.getNodeTypeName());
+            return new MockProperty(relPath, mockContent.getNodeTypeName(), null);
         }
         return mockContent.getNodeData(relPath).getJCRProperty();
     }

@@ -39,40 +39,49 @@ import java.util.Calendar;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Binary;
+import javax.jcr.InvalidItemStateException;
 import javax.jcr.Item;
+import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.ItemVisitor;
 import javax.jcr.Node;
 import javax.jcr.Property;
+import javax.jcr.ReferentialIntegrityException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.nodetype.PropertyDefinition;
 import javax.jcr.version.VersionException;
 
+import org.apache.jackrabbit.commons.AbstractProperty;
+
 /**
- * Mock-impl. for javax.jcr.Property - basically wrapping a MockValue.
+ * Mock-impl. for javax.jcr.Property - basically wrapping a MockValue. It's currently overriding all setValue methods
+ * from AbstractProperty. This has the advantage, we don't need a parent (Node) set. Not sure how we could benefit from
+ * delegating the set to the Node.
  *
  * @version $Id$
  */
-public class MockProperty extends MockItem implements Property {
+public class MockProperty extends AbstractProperty {
 
+    private String name;
+    private MockNode parent;
+    private Session session;
     private MockValue value;
 
-    public MockProperty(String name, Object objectValue) {
-        this(name, new MockValue(objectValue));
+    public MockProperty(String name, MockValue value, MockNode parent) {
+        this.name = name;
+        this.parent = parent;
+        this.value = value;
+        setSessionFrom(parent);
     }
 
-    public MockProperty(String name, MockValue value) {
-        super(name);
-        this.value = value;
-    }
-
-    public MockProperty(String name, MockValue value, MockNode node) {
-        super(name, node);
-        this.value = value;
+    public MockProperty(String name, Object objectValue, MockNode parent) {
+        this(name, new MockValue(objectValue), parent);
     }
 
     @Override
@@ -131,18 +140,33 @@ public class MockProperty extends MockItem implements Property {
     }
 
     @Override
-    public Node getNode() {
-        try {
-            return getParent();
-        } catch (ItemNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public Node getNode() throws RepositoryException {
+        return getSession().getNodeByIdentifier(getValue().getString());
+    }
+
+    @Override
+    public Node getParent() {
+        return parent;
     }
 
     @Override
     public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
         // References not implemented
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    }
+
+    @Override
+    public Session getSession() {
+        if (session == null && parent != null) {
+            // fallback - avoid session has to be set on every level
+            return parent.getSession();
+        }
+        return session;
     }
 
     @Override
@@ -161,7 +185,7 @@ public class MockProperty extends MockItem implements Property {
     }
 
     @Override
-    public Value getValue() throws ValueFormatException, RepositoryException {
+    public Value getValue() {
         return value;
     }
 
@@ -171,13 +195,20 @@ public class MockProperty extends MockItem implements Property {
     }
 
     @Override
+    public boolean isModified() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
     public boolean isMultiple() throws RepositoryException {
         // Multiple not supported (yet)
         return false;
     }
 
     @Override
-    public boolean isNode() {
+    public boolean isNew() {
+        // TODO Auto-generated method stub
         return false;
     }
 
@@ -187,54 +218,74 @@ public class MockProperty extends MockItem implements Property {
     }
 
     @Override
-    public void setValue(BigDecimal value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public void refresh(boolean keepChanges) throws InvalidItemStateException, RepositoryException {
+    }
+
+    @Override
+    public void remove() {
+        ((MockNode) getParent()).removeProperty(getName());
+        setParent(null);
+    }
+
+    @Override
+    public void save() throws AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException, ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
+    }
+
+    public void setParent(MockNode parent) {
+        this.parent = parent;
+        setSessionFrom(parent);
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    private void setSessionFrom(MockNode parent) {
+        setSession(parent == null ? null : parent.getSession());
+    }
+
+    @Override
+    public void setValue(BigDecimal value) throws RepositoryException {
         setValueFromObject(value);
     }
 
     @Override
-    public void setValue(Binary value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public void setValue(boolean value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public void setValue(Binary value) throws RepositoryException {
         setValueFromObject(value);
     }
 
     @Override
-    public void setValue(Calendar value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public void setValue(boolean value) throws RepositoryException {
         setValueFromObject(value);
     }
 
     @Override
-    public void setValue(double value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public void setValue(Calendar value) throws RepositoryException {
         setValueFromObject(value);
     }
 
     @Override
-    public void setValue(InputStream value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public void setValue(long value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    public void setValue(double value) throws RepositoryException {
         setValueFromObject(value);
     }
 
     @Override
-    public void setValue(Node value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        // References not implemented
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public void setValue(String value) {
+    public void setValue(InputStream value) throws RepositoryException {
         setValueFromObject(value);
     }
 
     @Override
-    public void setValue(String[] values) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public void setValue(long value) throws RepositoryException {
+        setValueFromObject(value);
+    }
+
+    @Override
+    public void setValue(String value) throws RepositoryException {
+        setValueFromObject(value);
+    }
+
+    private void setValueFromObject(Object value) {
+        setValue(new MockValue(value));
     }
 
     @Override
@@ -242,23 +293,7 @@ public class MockProperty extends MockItem implements Property {
         this.value = (MockValue) value;
     }
 
-    @Override
-    public void setValue(Value[] values) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    protected void setValueFromObject(Object object) {
-        value = new MockValue(object);
-    }
-
-    @Override
-    public String toString() {
-        return "MockProperty [value=" + value + super.toString() + "]";
-    }
-
-    @Override
-    public void remove() {
-        ((MockNode) getNode()).removeProperty(getName());
-        setParent(null);
+    public Object getObjectValue() {
+        return ((MockValue) getValue()).getValue();
     }
 }

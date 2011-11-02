@@ -34,6 +34,7 @@
 package info.magnolia.content2bean;
 
 import static org.junit.Assert.*;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
 import info.magnolia.test.MgnlTestCase;
@@ -305,7 +306,7 @@ public class Content2BeanTest extends MgnlTestCase {
             "/parent/values/sub1.value=one\n" +
             "/parent/values/sub2.value=two";
 
-        Content node = MockUtil.createHierarchyManager(data).getContent("/parent");
+        Content node = MockUtil.createHierarchyManager(ContentRepository.WEBSITE, data).getContent("/parent");
         //System.out.println(Content2BeanUtil.toMap(node.getContent("values"), true));
 
         BeanWithListOfString bean = (BeanWithListOfString) Content2BeanUtil.toBean(node, true);

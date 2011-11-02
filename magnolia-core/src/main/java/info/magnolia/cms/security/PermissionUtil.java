@@ -50,9 +50,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Collection of methods for handling permission related processing.
- * 
+ *
  * @version $Id$
- * 
+ *
  */
 public class PermissionUtil {
 
@@ -60,7 +60,7 @@ public class PermissionUtil {
 
     /**
      * Retrieves permissions for current user.
-     * 
+     *
      * @return
      */
     public static List<Permission> getPermissions(Subject subject, String name) {
@@ -88,7 +88,7 @@ public class PermissionUtil {
 
     /**
      * Convenience call hiding all ugly details of permission conversions.
-     * 
+     *
      */
     public static boolean isGranted(String workspace, String path, String requiredPermissions) {
         AccessManager ami = MgnlContext.getAccessManager(workspace);

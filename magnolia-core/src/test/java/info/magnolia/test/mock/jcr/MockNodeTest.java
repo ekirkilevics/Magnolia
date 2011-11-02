@@ -33,10 +33,8 @@
  */
 package info.magnolia.test.mock.jcr;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -46,6 +44,7 @@ import java.util.UUID;
 
 import javax.jcr.ItemVisitor;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
@@ -64,7 +63,8 @@ public class MockNodeTest {
 
     @Before
     public void init() {
-        root = new MockNode();
+        MockSession session = new MockSession("test");
+        root = (MockNode) session.getRootNode();
     }
     @Test
     public void testConstructionFromNamePropertiesAndChildren() throws Exception {
@@ -108,7 +108,7 @@ public class MockNodeTest {
         final MockNode child = (MockNode) root.addNode("child");
 
         assertEquals(root, child.getParent());
-        assertEquals(root.getChildren().get("child"), child);
+        assertEquals(child, root.getChildren().get("child"));
     }
     @Test
     public void testAddNodeWithParamStringString() throws Exception {
@@ -121,7 +121,7 @@ public class MockNodeTest {
     @Test
     public void testGetNodeWithExistingPath() throws Exception {
         final MockNode child = (MockNode) root.addNode("child");
-        final MockItem childOfChild = (MockItem) child.addNode("childOfChild");
+        final MockNode childOfChild = (MockNode) child.addNode("childOfChild");
 
         assertEquals(child, root.getNode("child"));
         assertEquals(childOfChild, root.getNode("child/childOfChild"));
@@ -148,6 +148,25 @@ public class MockNodeTest {
         assertTrue(root.hasNodes());
         assertTrue(!child.hasNodes());
     }
+
+    @Test
+    public void testGetNodesWithNamePattern() throws Exception {
+        // GIVEN
+        final String childOneName = "test";
+        final String childTwoName = "value";
+        root.addNode(childOneName);
+        root.addNode(childTwoName);
+
+        // WHEN
+        NodeIterator result = root.getNodes("val*");
+
+        // THEN
+        Node current = result.nextNode();
+        assertEquals(childTwoName, current.getName());
+        assertFalse(result.hasNext());
+    }
+
+
     @Test
     public void testHasProperties() throws Exception {
         assertTrue(!root.hasProperties());
@@ -172,6 +191,53 @@ public class MockNodeTest {
 
         assertTrue(!iterator.hasNext());
     }
+
+    @Test
+    public void testGetPropertiesWithNamePattern() throws Exception {
+        // GIVEN
+        final String propertyName = "test";
+        final String propertyValue = "value";
+        root.setProperty(propertyName, propertyValue);
+
+        // WHEN
+        PropertyIterator result = root.getProperties("t*");
+
+        // THEN
+        Property property = result.nextProperty();
+        assertEquals(propertyName, property.getName());
+        assertEquals(propertyValue, property.getString());
+    }
+
+    @Test
+    public void testGetPath() throws Exception {
+        final Node child = root.addNode("child");
+        final Node grandChild = child.addNode("childOfChild");
+
+        assertEquals("/child/childOfChild", grandChild.getPath());
+    }
+
+    @Test
+    public void testGetPathReturnsSlashOnRoot() throws RepositoryException {
+        assertEquals("/", root.getPath());
+    }
+
+    @Test
+    public void testGetPathWorksWithoutRootSet() throws RepositoryException {
+        // GIVEN
+        final MockNode node = new MockNode("test");
+
+        // WHEN
+        final String result = node.getPath();
+
+        // THEN
+        assertEquals("/test", result);
+    }
+
+    @Test
+    public void testGetNameReturnsEmptyStringForRoot() {
+        assertEquals("", root.getName());
+    }
+
     @Test
     public void testSetPropertyWithStringAndBoolean() throws Exception {
         root.setProperty("boolean", false);
@@ -255,5 +321,17 @@ public class MockNodeTest {
 
         // throws IllegalArgumentException if its not a valid uuid
         UUID.fromString(node.getIdentifier());
+    }
+
+    @Test
+    public void testSetReferenceProperty() throws Exception {
+        final String reference2bPropertyName = "reference2b";
+        Node a = root.addNode("a");
+        Node b= root.addNode("b");
+        a.setProperty(reference2bPropertyName, b);
+
+        Node referencedByPropertyB = a.getProperty(reference2bPropertyName).getNode();
+
+        assertEquals(b, referencedByPropertyB);
     }
 }

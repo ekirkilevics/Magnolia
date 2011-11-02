@@ -221,32 +221,26 @@ public class LockTest extends RepositoryTestCase {
         HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         //apply lock
         expect (request.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
-        expect (request.getHeader(BaseSyndicatorImpl.REPOSITORY_NAME)).andReturn("magnolia");
         expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
         // cleanup
         expect(request.getHeader(BaseSyndicatorImpl.ACTION)).andReturn(BaseSyndicatorImpl.ACTIVATE);
         expect (request.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page");
-        expect (request.getHeader(BaseSyndicatorImpl.REPOSITORY_NAME)).andReturn("magnolia");
         expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
         expect (request.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
-        expect (request.getHeader(BaseSyndicatorImpl.REPOSITORY_NAME)).andReturn("magnolia");
         expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
         expect(request.getSession(false)).andReturn(null);
 
         HttpServletRequest request2 = createStrictMock(HttpServletRequest.class);
         // first check retry 1
         expect (request2.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
-        expect (request2.getHeader(BaseSyndicatorImpl.REPOSITORY_NAME)).andReturn("magnolia");
         expect (request2.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
 
         //first check retry 2
         expect (request2.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
-        expect (request2.getHeader(BaseSyndicatorImpl.REPOSITORY_NAME)).andReturn("magnolia");
         expect (request2.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
 
         //second check retry 1
         expect (request2.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
-        expect (request2.getHeader(BaseSyndicatorImpl.REPOSITORY_NAME)).andReturn("magnolia");
         expect (request2.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
 
         Object[] objs = new Object[] {request, request2};

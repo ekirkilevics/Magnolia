@@ -31,22 +31,28 @@
  * intact.
  *
  */
-package info.magnolia.test.mock;
+package info.magnolia.cms.core;
+
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.test.mock.MockContent;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.jcr.RepositoryException;
+
+import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.AccessDeniedException;
-import junit.framework.TestCase;
-
-
-public class BinaryMockNodeDataTest extends TestCase {
+/**
+ *
+ * TODO dlipp - move to package of BinaryNodeData...
+ *
+ */
+public class BinaryNodeDataTest extends TestCase {
 
     private static final byte[] BYTES = {'C', 'O', 'N', 'T', 'E', 'N', 'T'};
 
@@ -56,33 +62,45 @@ public class BinaryMockNodeDataTest extends TestCase {
      */
     public void testThatAttributesAreSetOnTheWrappedNode() throws AccessDeniedException, UnsupportedOperationException, RepositoryException{
         // GIVEN a binary node data which wraps a resource node
-        MockContent resourceNode = new MockContent("file", new ItemType(ItemType.NT_FILE));
-        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData("file", resourceNode);
+        MockContent parent = new MockContent("parent");
+        final String binaryNodeAndAttributeName = "file";
+        BinaryNodeData binaryNodeData = new BinaryNodeData(parent, binaryNodeAndAttributeName);
 
         // WHEN setting an attribute
         binaryNodeData.setAttribute("attribute", "value");
 
+        Content wrappedBinaryNode = parent.getContent(binaryNodeAndAttributeName);
+
         // THEN the value should be stored in the node
-        assertEquals(resourceNode.getNodeData("attribute").getString(), "value");
+        assertEquals(wrappedBinaryNode.getNodeData("attribute").getString(), "value");
     }
 
-    public void testThatTheBinaryContentCanBeReadMultipleTimes() throws IOException{
-        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData("file", new ByteArrayInputStream(BYTES));
+    public void testThatTheBinaryContentCanBeReadMultipleTimes() throws Exception{
+        MockContent parent = new MockContent("parent");
+        BinaryNodeData binaryNodeData = new BinaryNodeData(parent, "file");
+        binaryNodeData.setValue(new ByteArrayInputStream(BYTES));
 
         // THEN we can read the content twice
+        byte[] streamByteArray;
+        InputStream stream;
         for (int i = 0; i < 2; i++) {
-            assertTrue(ArrayUtils.isEquals(BYTES, IOUtils.toByteArray(binaryNodeData.getStream())));
+            stream = binaryNodeData.getStream();
+            streamByteArray = IOUtils.toByteArray(stream);
+            assertTrue(ArrayUtils.isEquals(BYTES, streamByteArray));
         }
     }
 
 
     public void testThatStreamIsSetOnTheWrappedNode() throws AccessDeniedException, UnsupportedOperationException, RepositoryException, IOException{
         // GIVEN a binary node data which wraps a resource node
-        MockContent resourceNode = new MockContent("file", new ItemType(ItemType.NT_FILE));
-        BinaryMockNodeData binaryNodeData = new BinaryMockNodeData("file", resourceNode);
+        MockContent parent = new MockContent("parent");
+        final String binaryNodeAndAttributeName = "file";
+        BinaryNodeData binaryNodeData = new BinaryNodeData(parent, binaryNodeAndAttributeName);
 
         // WHEN setting the stream
         binaryNodeData.setValue(new ByteArrayInputStream(BYTES));
+
+        Content resourceNode = parent.getContent(binaryNodeAndAttributeName);
 
         // THEN the stream can be read directly (following the real node structure)
         assertTrue(ArrayUtils.isEquals(BYTES, IOUtils.toByteArray(resourceNode.getNodeData(ItemType.JCR_DATA).getStream())));

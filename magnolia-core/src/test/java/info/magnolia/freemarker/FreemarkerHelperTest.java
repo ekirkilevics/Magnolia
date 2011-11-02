@@ -33,12 +33,9 @@
  */
 package info.magnolia.freemarker;
 
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -55,7 +52,6 @@ import info.magnolia.test.mock.MockAggregationState;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockMetaData;
-import info.magnolia.test.mock.MockNodeData;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.model.Color;
 import info.magnolia.test.model.Pair;
@@ -108,10 +104,10 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 
         final MockContent c = new MockContent("plop");
         c.setUUID("123");
-        c.addNodeData(new MockNodeData("foo", "bar"));
+        c.addNodeData("foo", "bar");
         final MockContent bli = new MockContent("bli");
         c.addContent(bli);
-        bli.addNodeData(new MockNodeData("bla", "bloup"));
+        bli.addNodeData("bla", "bloup");
 
         assertRendereredContent("The child node's bli'bla property is bloup", c, "test_sub.ftl");
     }
@@ -119,7 +115,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     @Test
     public void testSubSubNode() throws TemplateException, IOException {
         final MockContent baz = new MockContent("baz");
-        baz.addNodeData(new MockNodeData("prop", "wassup"));
+        baz.addNodeData("prop", "wassup");
         final MockContent bar = new MockContent("bar");
         final MockContent foo = new MockContent("foo");
         final MockContent c = new MockContent("root");
@@ -195,9 +191,9 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     @Test
     public void testCanLoopThroughPropertiesUsingTheKeysBuiltIn() throws TemplateException, IOException {
         final MockContent f = new MockContent("flebele");
-        f.addNodeData(new MockNodeData("foo", "bar"));
-        f.addNodeData(new MockNodeData("bar", "baz"));
-        f.addNodeData(new MockNodeData("baz", "gazonk"));
+        f.addNodeData("foo", "bar");
+        f.addNodeData("bar", "baz");
+        f.addNodeData("baz", "gazonk");
         final MockContent c = new MockContent("root");
         c.addContent(f);
         tplLoader.putTemplate("test.ftl", "${flebele?keys?size}:<#list flebele?keys as n> ${n}=${flebele[n]}</#list>");
@@ -208,9 +204,9 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     @Test
     public void testCanLoopThroughPropertiesUsingTheValuesBuiltIn() throws TemplateException, IOException {
         final MockContent f = new MockContent("flebele");
-        f.addNodeData(new MockNodeData("foo", "bar"));
-        f.addNodeData(new MockNodeData("bar", "baz"));
-        f.addNodeData(new MockNodeData("baz", "gazonk"));
+        f.addNodeData("foo", "bar");
+        f.addNodeData("bar", "baz");
+        f.addNodeData("baz", "gazonk");
         final MockContent c = new MockContent("root");
         c.addContent(f);
         tplLoader.putTemplate("test.ftl", "${flebele?values?size}:<#list flebele?values as v> ${v}</#list>");
@@ -261,8 +257,8 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     public void testBooleanPropertiesAreHandledProperly() throws TemplateException, IOException {
         final MockContent c = new MockContent("root");
         final MockContent foo = new MockContent("foo");
-        foo.addNodeData(new MockNodeData("hop", Boolean.TRUE));
-        foo.addNodeData(new MockNodeData("hip", Boolean.FALSE));
+        foo.addNodeData("hop", Boolean.TRUE);
+        foo.addNodeData("hip", Boolean.FALSE);
         c.addContent(foo);
         tplLoader.putTemplate("test.ftl", "${foo['hop']?string(\"yes\", \"no\")}" +
                 " ${foo.hop?string(\"yes\", \"no\")}" +
@@ -276,7 +272,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     public void testDatePropertiesAreHandledProperly() throws TemplateException, IOException {
         final MockContent c = new MockContent("root");
         final MockContent foo = new MockContent("foo");
-        foo.addNodeData(new MockNodeData("date", new GregorianCalendar(2007, 5, 3, 15, 39, 46)));
+        foo.addNodeData("date", new GregorianCalendar(2007, 5, 3, 15, 39, 46));
         c.addContent(foo);
 
         tplLoader.putTemplate("test.ftl", "${foo['date']?string('yyyy-MM-dd HH:mm:ss')}");
@@ -288,8 +284,8 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     public void testNumberProperties() throws TemplateException, IOException {
         final MockContent c = new MockContent("root");
         final MockContent foo = new MockContent("foo");
-        foo.addNodeData(new MockNodeData("aLong", new Long(1234567890123456789l)));
-        foo.addNodeData(new MockNodeData("aDouble", new Double(12345678.901234567890d)));
+        foo.addNodeData("aLong", new Long(1234567890123456789l));
+        foo.addNodeData("aDouble", new Double(12345678.901234567890d));
         c.addContent(foo);
         tplLoader.putTemplate("test.ftl", "${foo['aLong']} , ${foo.aDouble}");
         // ! TODO ! this is locale dependent
@@ -300,8 +296,8 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     public void testReferenceProperties() throws TemplateException, IOException, RepositoryException {
         final MockContent foo = new MockContent("foo");
         final MockContent bar = new MockContent("bar");
-        foo.addNodeData(new MockNodeData("some-ref", bar));
-        bar.addNodeData(new MockNodeData("baz", "gazonk"));
+        foo.addNodeData("some-ref", bar);
+        bar.addNodeData("baz", "gazonk");
         final MockHierarchyManager hm = new MockHierarchyManager();
         hm.getRoot().addContent(foo);
         hm.getRoot().addContent(bar);
@@ -319,7 +315,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 
         final MockContent c = new MockContent("pouet");
         c.setUUID("123");
-        c.addNodeData(new MockNodeData("foo", "bar"));
+        c.addNodeData("foo", "bar");
 
         assertRendereredContent("Ceci est une template belge hein une fois.", new Locale("fr", "BE"), c, "test.ftl");
     }
@@ -331,10 +327,10 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         final Map m = createSingleValueMap("content", c);
         assertRendereredContent("", m, "test.ftl");
 
-        c.addNodeData(new MockNodeData("title", ""));
+        c.addNodeData("title", "");
         assertRendereredContent("", m, "test.ftl");
 
-        c.addNodeData(new MockNodeData("title", "pouet"));
+        c.addNodeData("title", "pouet");
         assertRendereredContent("<h2>pouet</h2>", m, "test.ftl");
     }
 
@@ -430,8 +426,8 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 
         final MockContent c = new MockContent("content");
         c.setUUID("123");
-        c.addNodeData(new MockNodeData("title", "This is my title"));
-        c.addNodeData(new MockNodeData("other", "other-value"));
+        c.addNodeData("title", "This is my title");
+        c.addNodeData("other", "other-value");
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("content", c);
 
@@ -445,8 +441,8 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 
         final MockContent c = new MockContent("content");
         c.setUUID("123");
-        c.addNodeData(new MockNodeData("title", "This is my ${content.other} title"));
-        c.addNodeData(new MockNodeData("other", "other-value"));
+        c.addNodeData("title", "This is my ${content.other} title");
+        c.addNodeData("other", "other-value");
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("content", c);
 
@@ -460,8 +456,8 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 
         final MockContent c = new MockContent("content");
         c.setUUID("123");
-        c.addNodeData(new MockNodeData("title", "This is my ${content.other}"));
-        c.addNodeData(new MockNodeData("other", "other-value"));
+        c.addNodeData("title", "This is my ${content.other}");
+        c.addNodeData("other", "other-value");
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("content", c);
 
@@ -474,8 +470,8 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 
         final MockContent c = new MockContent("content");
         c.setUUID("123");
-        c.addNodeData(new MockNodeData("title", "This is my plain title"));
-        c.addNodeData(new MockNodeData("other", "other-value"));
+        c.addNodeData("title", "This is my plain title");
+        c.addNodeData("other", "other-value");
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("content", c);
 
@@ -530,7 +526,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     }
 
     private void doTestUuidLinksAreTransformed(Context webCtx, String expectedOutput) throws IOException, TemplateException, RepositoryException {
-        MockHierarchyManager cfgHM = MockUtil.createHierarchyManager("fakeemptyrepo");
+        MockHierarchyManager cfgHM = MockUtil.createHierarchyManager(ContentRepository.WEBSITE, "fakeemptyrepo");
         MockUtil.mockObservation(cfgHM);
 
         final SystemContext sysMockCtx = createStrictMock(SystemContext.class);
@@ -551,7 +547,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 
         final String text = "Some text... blah blah... <a href=\"${link:{uuid:{" + SOME_UUID + "},repository:{website},handle:{/foo/bar},nodeData:{},extension:{html}}}\">Bleh</a> !";
         final MockContent c = new MockContent("content");
-        c.addNodeData(new MockNodeData("text", text));
+        c.addNodeData("text", text);
         tplLoader.putTemplate("test", "== ${text} ==");
 
         replay(i18NSupportMock);

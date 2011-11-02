@@ -35,9 +35,7 @@ package info.magnolia.test.mock.jcr;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 import javax.jcr.Credentials;
@@ -56,31 +54,35 @@ import javax.jcr.retention.RetentionManager;
 import javax.jcr.security.AccessControlManager;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.commons.AbstractSession;
 import org.xml.sax.ContentHandler;
 
 /**
  * @version $Id$
  */
-public class MockSession implements Session {
-
-    final private Map<String, MockNode> nodesCache = new LinkedHashMap<String, MockNode>();
+public class MockSession extends AbstractSession {
 
     private MockNode rootNode = null;
     private ValueFactory valueFactory = null;
     private boolean live = true;
 
-    final private Workspace workspace;
+    private Workspace workspace;
 
     public MockSession(MockWorkspace workspace) {
-        this.workspace = workspace;
-        workspace.setSession(this);
+        setWorkspace(workspace);
 
-        rootNode = new MockNode();
-        rootNode.setSession(this);
+        rootNode = new MockNode(this);
     }
 
     public MockSession(String name) {
         this(new MockWorkspace(name));
+    }
+
+    public void setWorkspace(Workspace workspace) {
+        this.workspace = workspace;
+        if (workspace instanceof MockWorkspace) {
+            ((MockWorkspace) workspace).setSession(this);
+        }
     }
 
     @Override
@@ -88,12 +90,8 @@ public class MockSession implements Session {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
-    protected void cacheContent(MockNode node) throws RepositoryException{
-        nodesCache.put(node.getPath(), node);
-    }
-
     @Override
-    public void checkPermission(String absPath, String actions)  {
+    public void checkPermission(String absPath, String actions) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -103,22 +101,22 @@ public class MockSession implements Session {
     }
 
     @Override
-    public void exportDocumentView(String absPath, OutputStream out, boolean skipBinary, boolean noRecurse)  {
+    public void exportDocumentView(String absPath, OutputStream out, boolean skipBinary, boolean noRecurse) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void exportSystemView(String absPath, ContentHandler contentHandler, boolean skipBinary, boolean noRecurse)  {
+    public void exportSystemView(String absPath, ContentHandler contentHandler, boolean skipBinary, boolean noRecurse) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void exportSystemView(String absPath, OutputStream out, boolean skipBinary, boolean noRecurse)  {
+    public void exportSystemView(String absPath, OutputStream out, boolean skipBinary, boolean noRecurse) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public AccessControlManager getAccessControlManager()  {
+    public AccessControlManager getAccessControlManager() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -148,31 +146,11 @@ public class MockSession implements Session {
     }
 
     @Override
-    public String getNamespacePrefix(String uri) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public String[] getNamespacePrefixes()  {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public String getNamespaceURI(String prefix) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
     public Node getNode(String absPath) throws PathNotFoundException, RepositoryException {
-        MockNode c = nodesCache.get(absPath);
-        if (c == null) {
-            if ("/".equals(absPath)) {
-                return rootNode;
-            }
-            c = (MockNode) rootNode.getNode(StringUtils.removeStart(absPath, "/"));
-            cacheContent(c);
+        if ("/".equals(absPath)) {
+            return rootNode;
         }
-        return c;
+        return rootNode.getNode(StringUtils.removeStart(absPath, "/"));
     }
 
     @Override
@@ -186,7 +164,7 @@ public class MockSession implements Session {
                 return node;
             // add children to stack
             NodeIterator iterator = node.getNodes();
-            while(iterator.hasNext())
+            while (iterator.hasNext())
                 queue.add(iterator.nextNode());
 
         }
@@ -199,7 +177,7 @@ public class MockSession implements Session {
     }
 
     @Override
-    public Property getProperty(String absPath) throws PathNotFoundException, RepositoryException {
+    public Property getProperty(String absPath) throws RepositoryException {
         Node node = getNode(StringUtils.substringBeforeLast(absPath, "/"));
         return node.getProperty(StringUtils.substringAfterLast(absPath, "/"));
     }
@@ -210,7 +188,7 @@ public class MockSession implements Session {
     }
 
     @Override
-    public RetentionManager getRetentionManager()  {
+    public RetentionManager getRetentionManager() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -221,11 +199,11 @@ public class MockSession implements Session {
 
     @Override
     public String getUserID() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return "admin";
     }
 
     @Override
-    public ValueFactory getValueFactory()  {
+    public ValueFactory getValueFactory() {
         return valueFactory;
     }
 
@@ -235,7 +213,7 @@ public class MockSession implements Session {
     }
 
     @Override
-    public boolean hasCapability(String methodName, Object target, Object[] arguments)  {
+    public boolean hasCapability(String methodName, Object target, Object[] arguments) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -250,12 +228,12 @@ public class MockSession implements Session {
     }
 
     @Override
-    public Session impersonate(Credentials credentials)  {
+    public Session impersonate(Credentials credentials) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public void importXML(String parentAbsPath, InputStream in, int uuidBehavior){
+    public void importXML(String parentAbsPath, InputStream in, int uuidBehavior) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
@@ -265,44 +243,13 @@ public class MockSession implements Session {
     }
 
     @Override
-    public boolean itemExists(String absPath) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public void logout() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
     public void move(String srcAbsPath, String destAbsPath) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
     @Override
-    public boolean nodeExists(String absPath) throws RepositoryException {
-        Node node = null;
-        try {
-            node = getNode(absPath);
-        } catch (Exception e) {
-            // ignore
-        }
-        return node != null;
-    }
-
-    @Override
-    public boolean propertyExists(String absPath)  {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
     public void refresh(boolean keepChanges) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public void removeItem(String absPath)  {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        // nothing to do
     }
 
     @Override
@@ -312,16 +259,7 @@ public class MockSession implements Session {
 
     @Override
     public void save() {
-        //do nothing
-    }
-
-    @Override
-    public void setNamespacePrefix(String prefix, String uri)  {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    protected void setRootNode(MockNode root) {
-        this.rootNode = root;
+        // nothing to do
     }
 
     public void setValueFactory(ValueFactory valueFactory) {

@@ -107,57 +107,33 @@ public interface Context extends org.apache.commons.chain.Context {
      */
     public Locale getLocale();
 
+    public Session getJCRSession(String workspaceName) throws LoginException, RepositoryException ;
+
     /**
      * Get hierarchy manager initialized for this user.
-     * @param repositoryId
+     * @param workspaceName
      * @return hierarchy manager
      *
      * @deprecated since 4.5 - use {@link #getJCRSession(String)}
      */
-    public HierarchyManager getHierarchyManager(String repositoryId);
+    @Deprecated
+    public HierarchyManager getHierarchyManager(String workspaceName);
 
     /**
-     * Get hierarchy manager initialized for this user.
-     * @param repositoryId
-     * @param workspaceId
-     * @return hierarchy manager
-     *
-     * @deprecated since 4.5 - use {@link #getJCRSession(String, String)}
-     */
-    public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId);
-
-    /**
-     * Get access manager for a resource, usually a workspace.
+     * Get a an {@link info.magnolia.cms.security.AccessManager} for logical entities. The accesses to the repository are handled by the repository itself.
      */
     public AccessManager getAccessManager(String name);
 
     /**
-     * Get access manager for the specified repository on the specified workspace.
-     * @param repositoryId
-     * @param workspaceId
-     * @return access manager
-     */
-    public AccessManager getAccessManager(String repositoryId, String workspaceId);
-
-    /**
      * Get QueryManager created for this user on the specified repository.
-     * @param repositoryId
-     * @return query manager
+     * @deprecated since 4.5 - use {@link #getJCRWorkspace(String)}
      */
-    public QueryManager getQueryManager(String repositoryId);
-
-    /**
-     * Get QueryManager created for this user on the specified repository and workspace.
-     * @param repositoryId
-     * @param workspaceId
-     * @return query manager
-     */
-    public QueryManager getQueryManager(String repositoryId, String workspaceId);
+    @Deprecated
+    public QueryManager getQueryManager(String workspaceName);
 
     /**
      * Set attribute value, scope of the attribute is defined.
      * @param name is used as a key
-     * @param value
      * @param scope , highest level of scope from which this attribute is visible
      */
     public void setAttribute(String name, Object value, int scope);
@@ -215,18 +191,5 @@ public interface Context extends org.apache.commons.chain.Context {
      * Release any resource used by this Context (e.g. jcr sessions).
      */
     public void release();
-
-    /**
-     * @param repository repository to get session for
-     * @return session belonging to provided repository & workspace
-     */
-    public Session getJCRSession(String repository) throws LoginException, RepositoryException ;
-
-    /**
-     * @param repository repository to get session for
-     * @param workspace workspace to get session for
-     * @return session belonging to provided repository & workspace
-     */
-    public Session getJCRSession(String repository, String workspace) throws LoginException, RepositoryException ;
 
 }

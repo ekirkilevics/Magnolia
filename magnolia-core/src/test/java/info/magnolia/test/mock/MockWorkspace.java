@@ -34,6 +34,7 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.test.mock.jcr.MockQueryManager;
 
 import java.io.IOException;
 import java.io.InputStream;

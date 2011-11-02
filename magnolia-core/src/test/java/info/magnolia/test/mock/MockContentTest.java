@@ -34,8 +34,10 @@
 package info.magnolia.test.mock;
 
 import static org.junit.Assert.*;
+import info.magnolia.cms.core.BinaryNodeData;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.test.mock.jcr.MockNode;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -173,7 +175,7 @@ public class MockContentTest {
         assertEquals("bar", IOUtils.toString(st.getStream()));
 
         final NodeData bin = content.getNodeData("bin");
-        assertTrue(bin instanceof BinaryMockNodeData);
+        assertTrue(bin instanceof BinaryNodeData);
         assertEquals(PropertyType.BINARY, bin.getType());
         assertEquals("some-data", IOUtils.toString(bin.getStream()));
         assertEquals("some-data", bin.getString());
@@ -183,7 +185,7 @@ public class MockContentTest {
     public void testOrderBefore() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
- "/node/b\n" +
+            "/node/b\n" +
             "/node/c\n");
         Content node = hm.getContent("/node");
         node.orderBefore("c", "b");
@@ -202,7 +204,7 @@ public class MockContentTest {
     public void testOrderBefore2() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
- "/node/b\n" +
+            "/node/b\n" +
             "/node/c\n");
         Content node = hm.getContent("/node");
         node.orderBefore("a", "c");
@@ -221,7 +223,7 @@ public class MockContentTest {
     public void testOrderBeforeFirstNode() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
- "/node/b\n" +
+            "/node/b\n" +
             "/node/c\n");
         Content node = hm.getContent("/node");
         node.orderBefore("c", "a");
@@ -259,5 +261,75 @@ public class MockContentTest {
         assertEquals(true, node.getNodeData("a").isExist());
         assertEquals(true, node.getNodeData("c").isExist());
         assertEquals(false, node.getNodeData("b").isExist());
+    }
+
+    @Test
+    public void testGetHandle() throws Exception {
+        // GIVEN
+        MockContent content = new MockContent("test");
+
+        // WHEN
+        final String result = content.getHandle();
+
+        // THEN
+        assertEquals("/test", result);
+    }
+
+    @Test
+    public void testGetHandleOnRoot() throws Exception {
+        // GIVE
+        MockContent root = new MockContent(MockNode.ROOT_NODE_NAME);
+
+        // WHEN
+        final String result = root.getHandle();
+
+        // THEN
+        assertEquals("/", result);
+    }
+
+
+    @Test
+    public void testGetName() throws Exception {
+        // GIVEN
+        MockContent content = new MockContent("test");
+
+        // WHEN
+        final String result = content.getHandle();
+
+        // THEN
+        assertEquals("/test", result);
+    }
+
+    @Test
+    public void testGetNameOnRoot() throws Exception {
+        // GIVE
+        MockContent root = new MockContent(MockNode.ROOT_NODE_NAME);
+
+        // WHEN
+        final String result = root.getName();
+
+        // THEN
+        assertEquals("", result);
+    }
+
+    @Test
+    public void testSetNodeDataReferencingOtherContent() throws Exception {
+        // GIVEN
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+                "/node.a=lol\n" +
+                "/node.c=boum\n");
+        final Content node = hm.getContent("/node");
+
+        MockContent a = (MockContent) node.createContent("a");
+        MockContent b = (MockContent) node.createContent("b");
+        b.setUUID("12345-abc");
+        final String referenceToB = "ref2b";
+        a.setNodeData(referenceToB, b);
+
+        // WHEN
+        Object result = a.getNodeData(referenceToB).getReferencedContent();
+
+        // THEN
+        assertEquals(b, result);
     }
 }

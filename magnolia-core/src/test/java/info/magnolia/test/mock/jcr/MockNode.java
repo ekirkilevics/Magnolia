@@ -57,6 +57,7 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.lock.Lock;
 import javax.jcr.nodetype.NodeDefinition;
@@ -65,14 +66,22 @@ import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.commons.AbstractNode;
+import org.apache.jackrabbit.util.ChildrenCollectorFilter;
 
 /**
+ * Mock implementation of a Node. Initially gets a random generated UUID set. It's currently overriding all setValue methods
+ * from {@link AbstractNode} . This has the advantage, we don't need a session and a value-factory.
+ *
  * @version $Id$
  */
-public class MockNode extends MockItem implements Node {
+public class MockNode extends AbstractNode {
 
-    public static final String ROOT_NODE_NAME = "/";
+    public static final String ROOT_NODE_NAME = "jcr:root";
 
+    public static String generateIdentifier() {
+        return UUID.randomUUID().toString();
+    }
     private final LinkedHashMap<String, MockNode> children = new LinkedHashMap<String, MockNode>();
 
     private String identifier = generateIdentifier();
@@ -81,24 +90,38 @@ public class MockNode extends MockItem implements Node {
 
     private final List<String> mixins = new ArrayList<String>();
 
+    private String name;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    private MockNode parent;
+
     private String primaryType;
 
     private final LinkedHashMap<String, Property> properties = new LinkedHashMap<String, Property>();
 
     /**
-     * Creates a root node -> name == ROOT_NODE_NAME.
+     * Normally only set for rootNode - children will retrieve it from there.
+     */
+    private Session session;
+
+    /**
+     * Create a root node (name = ROOT_NODE_NAME) without a session.
      */
     public MockNode() {
         this(ROOT_NODE_NAME);
     }
 
+    /**
+     * Create a root node and attach it to the provided session.
+     */
+    public MockNode(MockSession session) {
+        this();
+        this.session = session;
+    }
     public MockNode(String name) {
         this(name, MgnlNodeType.NT_CONTENTNODE);
-    }
-
-    public MockNode(String name, String primaryType) {
-        super(name);
-        this.primaryType = primaryType;
     }
 
     public MockNode(String name, Map<String, MockValue> properties, Map<String, MockNode> children) {
@@ -114,6 +137,11 @@ public class MockNode extends MockItem implements Node {
             MockNode child = childrenIterator.next();
             addNode(child);
         }
+    }
+
+    public MockNode(String name, String primaryType) {
+        this.name = name;
+        this.primaryType = primaryType;
     }
 
     @Override
@@ -145,16 +173,8 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public Node getParent() throws ItemNotFoundException {
-        if (ROOT_NODE_NAME.equals(getName()) && super.getParent() == null) {
-            throw new ItemNotFoundException("This is the rootNode - it doesn't have a parent!");
-        }
-        return super.getParent();
-    }
-
-    @Override
     public boolean canAddMixin(String mixinName) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return !StringUtils.isEmpty(mixinName);
     }
 
     @Override
@@ -204,7 +224,7 @@ public class MockNode extends MockItem implements Node {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
-    protected Map<String, MockNode> getChildren() {
+    public Map<String, MockNode> getChildren() {
         return this.children;
     }
 
@@ -243,10 +263,15 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public Node getNode(String path) throws PathNotFoundException, RepositoryException {
+    public String getName() {
+        return isRoot() ? "" : name;
+    }
+
+    @Override
+    public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
         Node c;
-        if (path.contains("/")) {
-            String[] names = StringUtils.split(path, "/");
+        if (relPath.contains("/")) {
+            String[] names = StringUtils.split(relPath, "/");
             Node current = this;
             for (String name : names) {
                 if (name.equals("..")) {
@@ -257,9 +282,9 @@ public class MockNode extends MockItem implements Node {
             }
             return current;
         }
-        c = children.get(path);
+        c = children.get(relPath);
         if (c == null) {
-            throw new PathNotFoundException(getPath() + "/" + path);
+            throw new PathNotFoundException(relPath);
         }
         return c;
     }
@@ -270,13 +295,34 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public NodeIterator getNodes(String namePattern) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public NodeIterator getNodes(String namePattern) throws RepositoryException {
+        // Inspired by org.apache.jackrabbit.core.NodeImpl#getNodes(String)
+        return ChildrenCollectorFilter.collectChildNodes(this, namePattern);
     }
 
     @Override
     public NodeIterator getNodes(String[] nameGlobs) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    }
+
+    @Override
+    public Node getParent() throws ItemNotFoundException {
+        if (isRoot()) {
+            throw new ItemNotFoundException("This is the rootNode - it doesn't have a parent!");
+        }
+        return parent;
+    }
+
+    private boolean isRoot() {
+        return ROOT_NODE_NAME.equals(name) && parent == null;
+    }
+
+    @Override
+    public String getPath() throws RepositoryException {
+        if (parent == null) {
+            return ROOT_NODE_NAME.equals(name) ? "/" : "/" + getName();
+        }
+        return parent.getPath() == "/" ?  "/" + getName() : parent.getPath() + "/" + getName();
     }
 
     @Override
@@ -295,8 +341,9 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
-    public PropertyIterator getProperties(String namePattern) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public PropertyIterator getProperties(String namePattern) throws RepositoryException {
+        // Inspired by org.apache.jackrabbit.core.NodeImpl#getProperties(String)
+        return ChildrenCollectorFilter.collectProperties(this, namePattern);
     }
 
     @Override
@@ -307,7 +354,7 @@ public class MockNode extends MockItem implements Node {
     @Override
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
         if ("jcr:primaryType".equals(relPath)) {
-            return new MockProperty(relPath, primaryType);
+            return new MockProperty(relPath, primaryType, this);
         }
         Property prop = properties.get(relPath);
         if (prop == null) {
@@ -324,6 +371,15 @@ public class MockNode extends MockItem implements Node {
     @Override
     public PropertyIterator getReferences(String name) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    }
+
+    @Override
+    public Session getSession() {
+        if (session == null && parent != null) {
+            // fallback - avoid session has to be set on every level
+            return parent.getSession();
+        }
+        return session;
     }
 
     @Override
@@ -423,6 +479,12 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
+    public boolean isSame(Item otherItem) throws RepositoryException {
+        // very strict but better than nothing ;-)
+        return equals(otherItem);
+    }
+
+    @Override
     public Lock lock(boolean isDeep, boolean isSessionScoped) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
@@ -477,7 +539,7 @@ public class MockNode extends MockItem implements Node {
         }
     }
 
-    protected boolean removeFromChildren(Node childNode) {
+    public boolean removeFromChildren(Node childNode) {
         if (children.containsValue(childNode)) {
             Iterator<String> childrenNames = children.keySet().iterator();
             while (childrenNames.hasNext()) {
@@ -494,6 +556,11 @@ public class MockNode extends MockItem implements Node {
     @Override
     public void removeMixin(String mixinName) {
         mixins.remove(mixinName);
+    }
+
+    protected boolean removeProperty(String propertyName) {
+        Property property = properties.remove(propertyName);
+        return property != null;
     }
 
     @Override
@@ -528,7 +595,7 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public void save() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        // do nothing
     }
 
     public void setIdentifier(String identifier) {
@@ -539,38 +606,42 @@ public class MockNode extends MockItem implements Node {
         this.index = index;
     }
 
+    public void setParent(MockNode parent) {
+        this.parent = parent;
+    }
+
     @Override
     public void setPrimaryType(String primaryType) {
         this.primaryType = primaryType;
     }
 
     @Override
-    public Property setProperty(String name, BigDecimal value) {
+    public Property setProperty(String name, BigDecimal value) throws RepositoryException {
         return setProperty(name, new MockValue(value));
     }
 
     @Override
-    public Property setProperty(String name, Binary value) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public Property setProperty(String name, boolean value) {
+    public Property setProperty(String name, Binary value) throws RepositoryException {
         return setProperty(name, new MockValue(value));
     }
 
     @Override
-    public Property setProperty(String name, Calendar value) {
+    public Property setProperty(String name, boolean value) throws RepositoryException {
         return setProperty(name, new MockValue(value));
     }
 
     @Override
-    public Property setProperty(String name, double value) {
+    public Property setProperty(String name, Calendar value) throws RepositoryException {
         return setProperty(name, new MockValue(value));
     }
 
     @Override
-    public Property setProperty(String name, InputStream value) {
+    public Property setProperty(String name, double value) throws RepositoryException {
+        return setProperty(name, new MockValue(value));
+    }
+
+    @Override
+    public Property setProperty(String name, InputStream value) throws RepositoryException {
         return setProperty(name, new MockValue(value));
     }
 
@@ -591,7 +662,7 @@ public class MockNode extends MockItem implements Node {
 
     @Override
     public Property setProperty(String name, String value, int type) {
-        return setProperty(name, new MockValue(value, PropertyType.REFERENCE));
+        return setProperty(name, new MockValue(value, type));
     }
 
     @Override
@@ -632,6 +703,11 @@ public class MockNode extends MockItem implements Node {
     }
 
     @Override
+    public String toString() {
+        return "MockNode [primaryType=" + primaryType + ", name="+ name + "]";
+    }
+
+    @Override
     public void unlock() {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
@@ -639,19 +715,5 @@ public class MockNode extends MockItem implements Node {
     @Override
     public void update(String srcWorkspaceName) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public String toString() {
-        return "MockNode [primaryType=" + primaryType + ", "+ super.toString() + "]";
-    }
-
-    protected boolean removeProperty(String propertyName) {
-        Property property = properties.remove(propertyName);
-        return property != null;
-    }
-
-    public static String generateIdentifier() {
-        return UUID.randomUUID().toString();
     }
 }

@@ -35,7 +35,6 @@ package info.magnolia.templating.elements;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -76,17 +75,15 @@ public class EditElementTest {
 
     @Before
     public void setUp() throws Exception {
-        final MockHierarchyManager hm = MockUtil.createHierarchyManager(
+        final MockHierarchyManager hm = MockUtil.createHierarchyManager("TestMockHierarchyManager",
                 "/foo/bar/baz/paragraphs/01.text=dummy\n" +
                 "/foo/bar/baz/paragraphs/01/MetaData.mgnl\\:template=testParagraph0"
         );
-        hm.setName("TestMockHierarchyManager");
 
         final AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
         aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
         final WebContext ctx = mock(WebContext.class);
-        when(ctx.getHierarchyManager("TestMockHierarchyManager")).thenReturn(hm);
         MgnlContext.setInstance(ctx);
 
         final ServerConfiguration serverCfg = new ServerConfiguration();

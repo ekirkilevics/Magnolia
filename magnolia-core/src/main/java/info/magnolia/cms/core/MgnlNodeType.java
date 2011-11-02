@@ -37,6 +37,8 @@ package info.magnolia.cms.core;
  * Constant for node-types used within Magnolia.
  *
  * @version $Id$
+ *
+ * TODO dlipp - some of the constants are already available on {@link JcrConstants} in Jackrabbit's common-jar. Check whether we want to reuse them.
  */
 public final class MgnlNodeType {
 

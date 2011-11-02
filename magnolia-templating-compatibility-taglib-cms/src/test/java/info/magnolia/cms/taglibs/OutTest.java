@@ -41,14 +41,14 @@ import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTagTestCase;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockNodeData;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Locale;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.servlet.jsp.JspException;
 
 import org.junit.Before;
@@ -133,7 +133,7 @@ public class OutTest extends MgnlTagTestCase {
         final Calendar cal = Calendar.getInstance();
         cal.set(2008, 6, 8, 18, 55, 20);
         final MockContent testNode = new MockContent("test");
-        testNode.addNodeData(new MockNodeData("myDate", cal));
+        testNode.addNodeData("myDate", cal);
 
         final Out out = new Out();
         out.setContentNode(testNode);
@@ -163,7 +163,7 @@ public class OutTest extends MgnlTagTestCase {
     }
 
     @Override
-    protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {
-        return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("outtest.properties"));
+    protected Session initWebsiteData() throws IOException, RepositoryException {
+        return SessionTestUtil.createSession("test", this.getClass().getResourceAsStream("outtest.properties"));
     }
 }

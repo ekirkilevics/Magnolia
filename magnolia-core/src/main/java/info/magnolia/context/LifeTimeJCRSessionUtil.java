@@ -33,9 +33,9 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.util.HierarchyManagerUtil;
 import info.magnolia.objectfactory.Components;
 
 import javax.jcr.RepositoryException;
@@ -68,28 +68,27 @@ public class LifeTimeJCRSessionUtil {
         }
     }
 
-    public static HierarchyManager getHierarchyManager(String repository) {
-        if (useSystemContext) {
-            return MgnlContext.getSystemContext().getHierarchyManager(repository);
+    @Deprecated
+    public static HierarchyManager getHierarchyManager(String workspaceName) {
+        try {
+            return HierarchyManagerUtil.asHierarchyManager(getSession(workspaceName));
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
         }
-        // we handle the session
-        return repositoryStrategy.getHierarchyManager(repository, ContentRepository.getDefaultWorkspace(repository));
+
     }
 
-    public static Session getSession(String workspace) throws RepositoryException {
+    public static Session getSession(String workspaceName) throws RepositoryException {
         if (useSystemContext) {
-            return MgnlContext.getSystemContext().getJCRSession(workspace, workspace);
+            return MgnlContext.getSystemContext().getJCRSession(workspaceName);
         }
         // we handle the session
-        return repositoryStrategy.getSession(workspace, ContentRepository.getDefaultWorkspace(workspace));
+        return repositoryStrategy.getSession(workspaceName);
     }
 
-    public static QueryManager getQueryManager(String repository) {
-        if (useSystemContext) {
-            return MgnlContext.getSystemContext().getQueryManager(repository);
-        }
-        // we handle the session
-        return repositoryStrategy.getQueryManager(repository, ContentRepository.getDefaultWorkspace(repository));
+    @Deprecated
+    public static QueryManager getQueryManager(String workspaceName) {
+        return getHierarchyManager(workspaceName).getQueryManager();
     }
 
     public static void release() {

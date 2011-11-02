@@ -35,7 +35,10 @@ package info.magnolia.test.mock.jcr;
 
 import info.magnolia.jcr.util.PropertyUtil;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
@@ -44,6 +47,8 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * @version $Id$
@@ -58,8 +63,20 @@ public class MockValue implements Value {
     }
 
     public MockValue(Object value, int type) {
-        this.value = value;
         this.type = type;
+        Object valueToSet;
+        try {
+            if (value instanceof InputStream) {
+                valueToSet = new String(IOUtils.toByteArray((InputStream) value));
+            } else if (value instanceof Integer) {
+                valueToSet = (long)((Integer)value).intValue();
+            } else {
+                valueToSet = value;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        this.value = valueToSet;
     }
 
     @Override
@@ -122,19 +139,19 @@ public class MockValue implements Value {
 
     @Override
     public InputStream getStream() throws RepositoryException {
-        if (value instanceof InputStream) {
-            return (InputStream) value;
+        if (value instanceof String) {
+            try {
+                return new ByteArrayInputStream(((String) value).getBytes("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
         }
         throw new ValueFormatException("Value can't be converted to InputStream: " + value);
     }
 
     @Override
     public String getString() throws ValueFormatException, IllegalStateException, RepositoryException {
-        // TODO dlipp: check whether this is the desired behavior...
-        if (value instanceof String) {
-            return (String) value;
-        }
-        throw new ValueFormatException("Value can't be converted to String: " + value);
+        return value == null ? "" : value.toString();
     }
 
     @Override
@@ -145,6 +162,10 @@ public class MockValue implements Value {
     @Override
     public String toString() {
         return "MockValue [type=" + type + ", value=" + value + "]";
+    }
+
+    public Object getValue() {
+        return value;
     }
 
 }

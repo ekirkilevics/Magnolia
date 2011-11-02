@@ -42,10 +42,6 @@
       <implementation>info.magnolia.context.JCRSessionPerThreadSystemContext</implementation>
     </component>
     <component>
-      <type>info.magnolia.cms.util.WorkspaceAccessUtil</type>
-      <implementation>info.magnolia.cms.util.WorkspaceAccessUtil</implementation>
-    </component>
-    <component>
       <type>info.magnolia.cms.beans.config.ConfigLoader</type>
       <implementation>info.magnolia.cms.beans.config.ConfigLoader</implementation>
     </component>
@@ -56,6 +52,10 @@
     <component>
       <type>info.magnolia.cms.filters.FilterManager</type>
       <implementation>info.magnolia.cms.filters.FilterManagerImpl</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.repository.RepositoryManager</type>
+      <implementation>info.magnolia.repository.DefaultRepositoryManager</implementation>
     </component>
     <component>
       <type>info.magnolia.jcr.registry.SessionProviderRegistry</type>
@@ -160,10 +160,6 @@
       <path>/server/auditLogging</path>
       <observed>true</observed>
       <scope>singleton</scope>
-    </component>
-    <component>
-      <type>info.magnolia.cms.core.search.SearchFactory</type>
-      <implementation>info.magnolia.cms.core.search.DefaultSearchFactory</implementation>
     </component>
     <type-mapping>
       <type>info.magnolia.voting.Voting</type>

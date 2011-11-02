@@ -33,8 +33,7 @@
  */
 package info.magnolia.module.mail.setup;
 
-import info.magnolia.cms.core.search.DefaultSearchFactory;
-import info.magnolia.cms.core.search.SearchFactory;
+import static info.magnolia.module.mail.setup.MailModuleVersionHandler.*;
 import info.magnolia.cms.util.UnicodeNormalizer;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.ModuleManagementException;
@@ -54,9 +53,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import static info.magnolia.module.mail.setup.MailModuleVersionHandler.COMMAND_IN_ADMININTERFACEMODULE_PATH;
-import static info.magnolia.module.mail.setup.MailModuleVersionHandler.MAIL_COMMAND_CLASS_PRIOR_TO_4_0;
-
 /**
  * MailModuleVersionHandlerTest.
  * @author gjoseph
@@ -68,7 +64,6 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     protected void initDefaultImplementations() throws IOException, ModuleManagementException {
         ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
         ComponentsTestUtil.setImplementation(UnicodeNormalizer.Normalizer.class, "info.magnolia.cms.util.UnicodeNormalizer$NonNormalizer");
-        ComponentsTestUtil.setInstance(SearchFactory.class, new DefaultSearchFactory());
         super.initDefaultImplementations();
     }
     @Override

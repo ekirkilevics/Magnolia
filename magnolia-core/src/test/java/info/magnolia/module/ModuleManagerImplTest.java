@@ -35,6 +35,8 @@ package info.magnolia.module;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.repository.DefaultRepositoryManager;
+import info.magnolia.repository.RepositoryManager;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -71,6 +73,7 @@ public class ModuleManagerImplTest {
         moduleRegistry = new ModuleRegistryImpl();
         ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
         ComponentsTestUtil.setInstance(SystemContext.class, createStrictMock(SystemContext.class));
+        ComponentsTestUtil.setInstance(RepositoryManager.class, new DefaultRepositoryManager());
 
         // shunt log4j
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);

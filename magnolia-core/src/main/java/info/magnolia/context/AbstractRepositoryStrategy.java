@@ -33,17 +33,9 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
-import info.magnolia.jcr.registry.SessionProviderRegistry;
-import info.magnolia.stats.JCRStats;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.inject.Inject;
-import javax.jcr.Credentials;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -51,9 +43,10 @@ import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 
-import org.apache.commons.lang.UnhandledException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.magnolia.repository.RepositoryManager;
 
 
 /**
@@ -66,83 +59,28 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
     private final Map<String, Session> jcrSessions = new HashMap<String, Session>();
 
-    private final SessionProviderRegistry sessionProviderRegistry;
+    protected final RepositoryManager repositoryManager;
 
     @Inject
-    public AbstractRepositoryStrategy(SessionProviderRegistry sessionProviderRegistry) {
-        this.sessionProviderRegistry = sessionProviderRegistry;
+    protected AbstractRepositoryStrategy(RepositoryManager repositoryManager) {
+        this.repositoryManager = repositoryManager;
     }
-
-    /**
-     * @deprecated since 4.5 - directly operate on JCR-Session instead
-     */
-    @Override
-    public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        log.debug("creating {}:{} HM for {}, using {} strategy", new Object[] {repositoryId, workspaceId, getUserId(), this.getClass().getName()});
-        HierarchyManager hm = null;
-        WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-        try {
-            Session jcrSession = getSession(repositoryId, workspaceId);
-            hm = util.createHierarchyManager(jcrSession);
-        }
-        catch (RepositoryException e) {
-            throw new UnhandledException(e);
-        }
-
-        return hm;
-    }
-
-    /**
-     * @return create a HierarchyManager wrapping the provided jcrSession and return it.
-     */
-    @Override
-    public HierarchyManager getHierarchyManagerFor(Session jcrSession) {
-        try {
-            return WorkspaceAccessUtil.getInstance().createHierarchyManager(jcrSession);
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    abstract protected String getUserId();
-
-    /**
-     * @deprecated since 4.5 - use {@link javax.jcr.query.QueryManager} instead.
-     */
-    @Override
-    public QueryManager getQueryManager(String repositoryId, String workspaceId) {
-        return this.getHierarchyManager(repositoryId, workspaceId).getQueryManager();
-    }
-
-    // TODO dlipp: implement new method as beyond:
-    /*
-    public Session getJCRSession(String logicalWorkspaceName) {
-
-    }
-    */
 
     @Override
-    public Session getSession(String repositoryName, String workspaceName) throws LoginException, RepositoryException {
-        WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-        return getRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
-    }
-
-    protected Session getRepositorySession(Credentials credentials, String repositoryName, String workspaceName) throws LoginException, RepositoryException {
-        final String repoSessAttrName = repositoryName + "_" + workspaceName;
-
-        Session jcrSession = jcrSessions.get(repoSessAttrName);
+    public Session getSession(String workspaceName) throws LoginException, RepositoryException {
+        Session jcrSession = jcrSessions.get(workspaceName);
 
         if (jcrSession == null) {
-            log.debug("creating jcr session {} by thread {}", repositoryName, Thread.currentThread().getName());
+            log.debug("creating jcr session {} by thread {}", workspaceName, Thread.currentThread().getName());
 
-            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-            jcrSession = util.createRepositorySession(credentials, repositoryName, workspaceName);
-            jcrSessions.put(repoSessAttrName, jcrSession);
-            incSessionCount(workspaceName);
+            jcrSession = internalGetSession(workspaceName);
+            jcrSessions.put(workspaceName, jcrSession);
         }
 
         return jcrSession;
     }
+
+    protected abstract Session internalGetSession(String workspaceName) throws RepositoryException;
 
     protected void release(boolean checkObservation) {
         log.debug("releasing jcr sessions");
@@ -162,7 +100,6 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
                     session.logout();
                     log.debug("logged out jcr session: {} by thread {}", session, Thread.currentThread().getName());
 
-                    decSessionCount(workspaceName);
                 } else {
                     log.warn("won't close session because of registered observation listener {}", workspaceName);
                     if (log.isDebugEnabled()) {
@@ -181,19 +118,10 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         }
     }
 
-    protected void incSessionCount(String workspaceName) {
-        JCRStats.getInstance().incSessionCount();
-    }
-
-    protected void decSessionCount(String workspaceName) {
-        JCRStats.getInstance().decSessionCount();
-    }
-
     /**
      * Returns the number of sessions managed by this strategy.
      */
     protected int getLocalSessionCount() {
         return jcrSessions.size();
     }
-
 }

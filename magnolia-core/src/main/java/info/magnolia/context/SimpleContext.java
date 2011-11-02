@@ -78,16 +78,16 @@ public class SimpleContext extends AbstractMapBasedContext {
      * Delegate to the inner context.
      */
     @Override
-    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return this.ctx.getAccessManager(repositoryId, workspaceId);
+    public AccessManager getAccessManager(String workspaceId) {
+        return this.ctx.getAccessManager(workspaceId);
     }
 
     /**
      * Delegate to the inner context.
      */
     @Override
-    public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        return this.ctx.getHierarchyManager(repositoryId, workspaceId);
+    public HierarchyManager getHierarchyManager(String workspaceId) {
+        return this.ctx.getHierarchyManager(workspaceId);
     }
 
     /**
@@ -102,8 +102,8 @@ public class SimpleContext extends AbstractMapBasedContext {
      * Delegate to the inner context.
      */
     @Override
-    public QueryManager getQueryManager(String repositoryId, String workspaceId) {
-        return this.ctx.getQueryManager(repositoryId, workspaceId);
+    public QueryManager getQueryManager(String workspaceId) {
+        return this.ctx.getQueryManager(workspaceId);
     }
 
     @Override

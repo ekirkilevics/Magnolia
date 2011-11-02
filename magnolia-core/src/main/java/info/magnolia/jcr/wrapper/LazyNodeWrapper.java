@@ -72,6 +72,6 @@ public class LazyNodeWrapper extends DelegateNodeWrapper {
     }
 
     protected Session getSessionForWrappedNode(String workspace) throws RepositoryException {
-        return MgnlContext.getSystemContext().getJCRSession(workspace, workspace);
+        return MgnlContext.getSystemContext().getJCRSession(workspace);
     }
 }

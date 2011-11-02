@@ -112,6 +112,9 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
     public static final String NODE_UUID = "mgnlExchangeNodeUUID";
 
+    /**
+     * @deprecated since 4.5 - use logical workspace instead.
+     */
     public static final String REPOSITORY_NAME = "mgnlExchangeRepositoryName";
 
     public static final String WORKSPACE_NAME = "mgnlExchangeWorkspaceName";
@@ -214,6 +217,9 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         }
     }
 
+    /**
+     * @deprecated since 4.5 - should no longer be needed when operating with logical workspace names
+     */
     protected String repositoryName;
 
     protected String workspaceName;
@@ -572,11 +578,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
 
     private HierarchyManager getHierarchyManager() {
-        return MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
+        return MgnlContext.getHierarchyManager(this.workspaceName);
     }
 
     private HierarchyManager getSystemHierarchyManager() {
-        return MgnlContext.getSystemContext().getHierarchyManager(this.repositoryName, this.workspaceName);
+        return MgnlContext.getSystemContext().getHierarchyManager(this.workspaceName);
     }
 
     /**

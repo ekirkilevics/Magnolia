@@ -327,6 +327,12 @@ public class PropertiesImportExport {
         case (PropertyType.DATE): {
             return convertCalendarToExportString(prop.getDate());
         }
+        case (PropertyType.LONG): {
+            return "" + prop.getLong();
+        }
+        case (PropertyType.DOUBLE): {
+            return "" + prop.getDouble();
+        }
         default: {
             return prop.getString();
         }

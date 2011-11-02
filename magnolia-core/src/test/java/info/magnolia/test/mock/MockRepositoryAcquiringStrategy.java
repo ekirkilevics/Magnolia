@@ -33,9 +33,6 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.RepositoryAcquiringStrategy;
 
 import java.util.HashMap;
@@ -59,51 +56,22 @@ public class MockRepositoryAcquiringStrategy implements RepositoryAcquiringStrat
      */
     private static Logger log = LoggerFactory.getLogger(MockRepositoryAcquiringStrategy.class);
 
-    private final Map<String, HierarchyManager> hierarchyManagers = new HashMap<String, HierarchyManager>();
-
     private final Map<String, Session> sessions = new HashMap<String, Session>();
-
-    @Override
-    public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        if(!hierarchyManagers.containsKey(repositoryId)){
-            throw new IllegalArgumentException("repository [" + repositoryId + "] not initialized");
-        }
-        return hierarchyManagers.get(repositoryId);
-    }
-
-    public void addHierarchyManager(String repositoryId, HierarchyManager hm){
-        hierarchyManagers.put(repositoryId, hm);
-    }
-
-    @Override
-    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return null;
-    }
-
-
-    @Override
-    public QueryManager getQueryManager(String repositoryId, String workspaceId) {
-        return null;
-    }
 
     @Override
     public void release() {
     }
 
     @Override
-    public Session getSession(String repositoryId, String workspaceId) {
-        if(!sessions.containsKey(repositoryId)){
-            throw new IllegalArgumentException("session [" + repositoryId + "] not initialized");
+    public Session getSession(String workspaceName) {
+        if(!sessions.containsKey(workspaceName)){
+            throw new IllegalArgumentException("session [" + workspaceName + "] not initialized");
         }
-        return sessions.get(repositoryId);
+        return sessions.get(workspaceName);
     }
 
     public void addSession(String repositoryId, Session session) {
         sessions.put(repositoryId, session);
     }
 
-    @Override
-    public HierarchyManager getHierarchyManagerFor(Session jcrSession) {
-        throw new UnsupportedOperationException("Not Implemented");
-    }
 }

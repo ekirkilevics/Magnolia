@@ -42,6 +42,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.repository.Provider;
 import info.magnolia.test.RepositoryTestCase;
+import info.magnolia.test.mock.jcr.MockNode;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -518,6 +519,47 @@ public class DefaultContentTest extends RepositoryTestCase {
         } catch (RepositoryException e) {
             // no versions exist anymore.
         }
+    }
+
+    @Test
+    public void testEquals() {
+        // GIVEN
+        Node node = new MockNode("test");
+        DefaultContent first = new DefaultContent(node);
+        DefaultContent second = new DefaultContent(node);
+
+        // WHEN
+        boolean result = first.equals(second);
+
+        // THEN
+        assertTrue(result);
+    }
+
+    @Test
+    public void testEqualsWithNull() {
+        // GIVEN
+        Node node = new MockNode("test");
+        DefaultContent first = new DefaultContent(node);
+
+        // WHEN
+        boolean result = first.equals(null);
+
+        // THEN
+        assertFalse(result);
+    }
+
+    @Test
+    public void testEqualsWithWrongType() {
+        // GIVEN
+        Node node = new MockNode("test");
+        DefaultContent first = new DefaultContent(node);
+        Object second = "second";
+
+        // WHEN
+        boolean result = first.equals(second);
+
+        // THEN
+        assertFalse(result);
     }
 
     private Value createValue(Object valueObj) throws RepositoryException, UnsupportedRepositoryOperationException {

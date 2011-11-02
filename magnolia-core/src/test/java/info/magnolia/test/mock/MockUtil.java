@@ -33,15 +33,8 @@
  */
 package info.magnolia.test.mock;
 
-import static org.easymock.EasyMock.anyBoolean;
-import static org.easymock.EasyMock.anyInt;
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.*;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.PrincipalUtil;
 import info.magnolia.cms.security.User;
@@ -49,6 +42,9 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.jcr.MockValue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -76,6 +72,8 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class MockUtil {
+
+    private static final String DEFAULT_TEST_WORKSPACE_NAME = "testSession";
 
     /**
      * Mocks the current and system context.
@@ -112,28 +110,35 @@ public class MockUtil {
     }
 
     /**
-     * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, InputStream)} instead.
+     * @deprecated since 4.5 - use {@link info.magnolia.test.mock.jcr.SessionTestUtil#createSession(String, InputStream)} instead.
      */
     public static MockHierarchyManager createHierarchyManager(InputStream propertiesStream) throws IOException, RepositoryException {
-        return createHierarchyManager(null, propertiesStream);
+        return createHierarchyManager(DEFAULT_TEST_WORKSPACE_NAME, propertiesStream);
     }
 
     /**
-     * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, InputStream)} instead.
+     * @deprecated since 4.5 - use {@link info.magnolia.test.mock.jcr.SessionTestUtil#createSession(String, InputStream)} instead.
      */
-    public static MockHierarchyManager createHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
-        MockHierarchyManager hm = new MockHierarchyManager(repository);
-        Content root = hm.getRoot();
+    public static MockHierarchyManager createHierarchyManager(String workspace, InputStream propertiesStream) throws IOException, RepositoryException {
+        MockSession session = new MockSession(workspace);
+        MockContent root = new MockContent((MockNode) session.getRootNode());
         createContent(root, propertiesStream);
-        return hm;
+        return new MockHierarchyManager(root.getJCRNode().getSession());
+    }
+
+    /**
+     * @deprecated since 4.5 - use {@link info.magnolia.test.mock.jcr.SessionTestUtil#createSession(String, String)} instead.
+     */
+    public static MockHierarchyManager createHierarchyManager(String propertiesStr) throws IOException, RepositoryException {
+        return createHierarchyManager(DEFAULT_TEST_WORKSPACE_NAME, propertiesStr);
     }
 
     /**
      * @deprecated since 4.5 - use {@link SessionTestUtil#createSession(String, String)} instead.
      */
-    public static MockHierarchyManager createHierarchyManager(String propertiesStr) throws IOException, RepositoryException {
+    public static MockHierarchyManager createHierarchyManager(String workspace, String propertiesStr) throws IOException, RepositoryException {
         final ByteArrayInputStream in = new ByteArrayInputStream(propertiesStr.getBytes());
-        return createHierarchyManager(null, in);
+        return createHierarchyManager(workspace, in);
     }
 
     /**
@@ -146,11 +151,9 @@ public class MockUtil {
     public static MockHierarchyManager createAndSetHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
         MockHierarchyManager hm = createHierarchyManager(repository, propertiesStream);
         MockContext ctx = getMockContext(true);
-        ctx.addHierarchyManager(repository, hm);
         ctx.addSession(repository, hm.getJcrSession());
 
         MockContext sysCtx = getSystemMockContext(true);
-        sysCtx.addHierarchyManager(repository, hm);
         sysCtx.addSession(repository, hm.getJcrSession());
         hm.save();
         return hm;
@@ -167,7 +170,6 @@ public class MockUtil {
     public static void setSessionAndHierarchyManager(Session session) {
         String workspaceName = session.getWorkspace().getName();
         MockUtil.getMockContext().addSession(workspaceName, session);
-        MockUtil.getMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager(session, "magnolia"));
     }
 
     /**
@@ -176,7 +178,6 @@ public class MockUtil {
     public static void setSystemContextSessionAndHierarchyManager(Session session) {
         String workspaceName = session.getWorkspace().getName();
         MockUtil.getSystemMockContext().addSession(workspaceName, session);
-        MockUtil.getSystemMockContext().addHierarchyManager(workspaceName, new DefaultHierarchyManager(session, "magnolia"));
     }
 
     public static void createContent(Content root, InputStream propertiesStream) throws IOException, RepositoryException {
@@ -194,14 +195,18 @@ public class MockUtil {
     }
 
     public static Content createContent(final String name, Object[][] data, Content[] children) {
-        OrderedMap nodeDatas = MockUtil.createNodeDatas(data);
-        OrderedMap childrenMap = new ListOrderedMap();
-
+        MockNode node = new MockNode(name);
         for (Content child : children) {
-            childrenMap.put(child.getName(), child);
+            node.addNode((MockNode)child.getJCRNode());
         }
 
-        return new MockContent(name, nodeDatas, childrenMap);
+        for (Object[] aData : data) {
+            String propertyName = (String) aData[0];
+            Object value = aData[1];
+            node.setProperty(propertyName, new MockValue(value));
+        }
+
+        return new MockContent(node);
     }
 
     public static Content createNode(String name, Object[][] data) {
@@ -224,7 +229,7 @@ public class MockUtil {
      * we want to get from this HierarchyManager.
      */
     public static Content createNode(String returnFromPath, String... propertiesFormat) throws RepositoryException, IOException {
-        return createHierarchyManager(propsStr(propertiesFormat)).getContent(returnFromPath);
+        return createHierarchyManager("TEST", propsStr(propertiesFormat)).getContent(returnFromPath);
     }
 
     private static String propsStr(String... s) {

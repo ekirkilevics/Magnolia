@@ -80,8 +80,6 @@ public class MockSessionTest {
         childOfChild.setProperty("property", "propertyValue");
         Property property = childOfChild.getProperty("property");
 
-        mockSession.setRootNode(parent);
-
         assertEquals(property, mockSession.getProperty("/child/childOfChild/property"));
     }
     @Test
@@ -90,8 +88,6 @@ public class MockSessionTest {
         final MockNode parent = (MockNode) mockSession.getRootNode();
         final MockNode child = new MockNode("child");
         parent.addNode(child);
-
-        mockSession.setRootNode(parent);
 
         assertTrue(mockSession.nodeExists("/child"));
         assertTrue(!mockSession.nodeExists("/notThere"));
@@ -107,7 +103,7 @@ public class MockSessionTest {
         final MockSession mockSession = new MockSession("test");
         final MockNode parent = (MockNode) mockSession.getRootNode();
         final MockNode foo = new MockNode("foo");
-        final MockNode bar = new MockNode("bar");
+        final MockNode bar = (MockNode) foo.addNode("bar");
         final MockNode zed = new MockNode("zed");
         final MockNode apple = new MockNode("apple");
         parent.addNode(foo);

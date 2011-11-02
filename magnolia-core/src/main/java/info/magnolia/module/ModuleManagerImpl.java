@@ -61,16 +61,7 @@ import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.repository.Provider;
-import info.magnolia.repository.RepositoryMapping;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.jcr.RepositoryException;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -78,6 +69,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.jcr.RepositoryException;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * TODO : factor out into simpler units.
@@ -577,20 +578,20 @@ public class ModuleManagerImpl implements ModuleManager {
 
         if (workspaces.length > 0) {
             // get the repository name from the mapping, users may want to manually add it here if needed
-            RepositoryMapping repositoryMapping = ContentRepository.getRepositoryMapping(workspaces[0]);
+            info.magnolia.repository.definition.RepositoryDefinition repositoryMapping = ContentRepository.getRepositoryMapping(workspaces[0]);
             if (repositoryMapping != null) {
                 repositoryName = repositoryMapping.getName();
             }
         }
 
-        RepositoryMapping rm = ContentRepository.getRepositoryMapping(repositoryName);
+        info.magnolia.repository.definition.RepositoryDefinition rm = ContentRepository.getRepositoryMapping(repositoryName);
 
         if (rm == null) {
 
-            final RepositoryMapping defaultRepositoryMapping = ContentRepository.getRepositoryMapping(DEFAULT_REPOSITORY_NAME);
+            final info.magnolia.repository.definition.RepositoryDefinition defaultRepositoryMapping = ContentRepository.getRepositoryMapping(DEFAULT_REPOSITORY_NAME);
             final Map<String, String> defaultParameters = defaultRepositoryMapping.getParameters();
 
-            rm = new RepositoryMapping();
+            rm = new info.magnolia.repository.definition.RepositoryDefinition();
             rm.setName(repositoryName);
             rm.setProvider(defaultRepositoryMapping.getProvider());
             rm.setLoadOnStartup(true);

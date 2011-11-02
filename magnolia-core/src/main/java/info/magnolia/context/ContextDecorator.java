@@ -61,8 +61,8 @@ public class ContextDecorator extends AbstractContext {
      * Delegates call to the original context.
      */
     @Override
-    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return this.ctx.getAccessManager(repositoryId, workspaceId);
+    public AccessManager getAccessManager(String name) {
+        return this.ctx.getAccessManager(name);
     }
 
     /**
@@ -85,8 +85,8 @@ public class ContextDecorator extends AbstractContext {
      * Delegates call to the original context.
      */
     @Override
-    public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        return this.ctx.getHierarchyManager(repositoryId, workspaceId);
+    public HierarchyManager getHierarchyManager(String workspaceId) {
+        return this.ctx.getHierarchyManager(workspaceId);
     }
 
     /**
@@ -109,8 +109,8 @@ public class ContextDecorator extends AbstractContext {
      * Delegates call to the original context.
      */
     @Override
-    public QueryManager getQueryManager(String repositoryId, String workspaceId) {
-        return this.ctx.getQueryManager(repositoryId, workspaceId);
+    public QueryManager getQueryManager(String workspaceId) {
+        return this.ctx.getQueryManager(workspaceId);
     }
 
     /**

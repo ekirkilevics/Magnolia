@@ -35,16 +35,23 @@ package info.magnolia.test.mock.jcr;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
+
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventJournal;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @version $Id$
  */
 public class MockObservationManager implements ObservationManager {
+
+    private static Logger log = LoggerFactory.getLogger(MockObservationManager.class);
 
     private static class EventFilter {
 
@@ -86,7 +93,7 @@ public class MockObservationManager implements ObservationManager {
             throw new UnsupportedOperationException("Filtering on uuid is not supported");
         }
         if (nodeTypeName != null) {
-            throw new UnsupportedOperationException("Filtering on nodeTypeName is not supported");
+            log.warn("Filtering on nodeTypeNames is not implemented. NodeTypeName {} is ignored for now.", StringUtils.concatenate(nodeTypeName));
         }
         if (noLocal) {
             throw new UnsupportedOperationException("Excluding events from the same session is not supported");

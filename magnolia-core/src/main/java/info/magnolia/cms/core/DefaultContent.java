@@ -39,6 +39,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.MgnlContext.Op;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.logging.AuditLoggingUtil;
@@ -69,7 +70,6 @@ import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.UnhandledException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,16 +91,6 @@ public class DefaultContent extends AbstractContent {
     protected Node node;
 
     /**
-     * Path for the jcr node.
-     */
-    private String path;
-
-    /**
-     * root node.
-     */
-    private Node rootNode;
-
-    /**
      * node metadata.
      */
     private MetaData metaData;
@@ -120,10 +110,8 @@ public class DefaultContent extends AbstractContent {
      * operation
      * @throws RepositoryException if an error occurs
      */
-    DefaultContent(Node rootNode, String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        this.setPath(path);
-        this.setRootNode(rootNode);
-        this.setNode(this.rootNode.getNode(this.path));
+    protected DefaultContent(Node rootNode, String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        this.setNode(rootNode.getNode(path));
     }
 
     /**
@@ -133,9 +121,12 @@ public class DefaultContent extends AbstractContent {
      * operation
      * @throws RepositoryException if an error occurs
      */
-    public DefaultContent(Node node) throws RepositoryException, AccessDeniedException {
-        this.setNode(node);
-        this.setPath(this.getHandle());
+    public DefaultContent(Node node){
+        try {
+            this.setNode(node);
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     /**
@@ -149,13 +140,11 @@ public class DefaultContent extends AbstractContent {
      * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
      * operation
      */
-    DefaultContent(Node rootNode, String path, String contentType)
+    protected DefaultContent(Node rootNode, String path, String contentType)
     throws PathNotFoundException,
     RepositoryException,
     AccessDeniedException {
-        this.setPath(path);
-        this.setRootNode(rootNode);
-        this.setNode(this.rootNode.addNode(this.path, contentType));
+        this.setNode(rootNode.addNode(path, contentType));
         // add mix:lockable as default for all nodes created using this manager
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
         // MAGNOLIA-1518
@@ -171,29 +160,15 @@ public class DefaultContent extends AbstractContent {
         this.node = NodeUtil.deepUnwrap(node, JCRPropertiesFilteringNodeWrapper.class);
     }
 
-    /**
-     * @param node
-     */
-    protected void setRootNode(Node node) {
-        this.rootNode = node;
-    }
-
-    /**
-     * @param path
-     */
-    protected void setPath(String path) {
-        this.path = path;
-    }
-
     @Override
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new DefaultContent(this.node, name));
+        return wrapAsContent(this.node, name);
     }
 
     @Override
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
     AccessDeniedException {
-        Content content = new DefaultContent(this.node, name, contentType);
+        Content content = wrapAsContent(this.node, name, contentType);
         MetaData metaData = content.getMetaData();
         metaData.setCreationDate();
         return content;
@@ -204,7 +179,7 @@ public class DefaultContent extends AbstractContent {
         if (this.node.hasProperty(name)) {
             return true;
         }
-        if (this.node.hasNode(name) && (this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE) || (this.node.hasProperty("jcr:frozenPrimaryType") && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)))) {
+        if (hasBinaryNode(name)) {
             return true;
         }
         return false;
@@ -223,7 +198,7 @@ public class DefaultContent extends AbstractContent {
         }
 
         if(type == PropertyType.BINARY){
-            return new BinaryNodeData(this, name);
+            return addBinaryNodeData(name);
         }
         return new DefaultNodeData(this, name);
     }
@@ -234,7 +209,7 @@ public class DefaultContent extends AbstractContent {
             if (this.node.hasProperty(name)) {
                 return this.node.getProperty(name).getType();
             }
-            if (this.node.hasNode(name) && (this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE) || (this.node.getNode(name).hasProperty("jcr:frozenPrimaryType") && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)))) {
+            if (hasBinaryNode(name)) {
                 return PropertyType.BINARY;
             }
         }
@@ -248,11 +223,7 @@ public class DefaultContent extends AbstractContent {
     @Override
     public MetaData getMetaData() {
         if (this.metaData == null) {
-            try {
-                this.metaData = new MetaData(this.node, this.node.getSession());
-            } catch (RepositoryException e) {
-                throw new UnhandledException(e);
-            }
+            this.metaData = new MetaData(this.node);
         }
         return this.metaData;
     }
@@ -283,17 +254,9 @@ public class DefaultContent extends AbstractContent {
 
             while (nodeIterator.hasNext()) {
                 Node subNode = (Node) nodeIterator.next();
-                try {
-                    Content content = new DefaultContent(subNode);
-                    if (filter.accept(content)) {
-                        children.add(content);
-                    }
-                }
-                catch (PathNotFoundException e) {
-                    log.error("Exception caught", e);
-                }
-                catch (AccessDeniedException e) {
-                    // ignore, simply wont add content in a list
+                Content content = wrapAsContent(subNode);
+                if (filter.accept(content)) {
+                    children.add(content);
                 }
             }
         }
@@ -306,6 +269,18 @@ public class DefaultContent extends AbstractContent {
             Collections.sort(children, orderCriteria);
         }
         return children;
+    }
+
+    protected Content wrapAsContent(Node node) {
+        return new DefaultContent(node);
+    }
+
+    protected Content wrapAsContent(Node node, String name) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        return new DefaultContent(node, name);
+    }
+
+    protected Content wrapAsContent(Node node, String name, String contentType) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        return new DefaultContent(node, name, contentType);
     }
 
     @Override
@@ -365,7 +340,7 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new DefaultContent(this.node.getParent()));
+        return wrapAsContent(this.node.getParent());
     }
 
     @Override
@@ -373,7 +348,7 @@ public class DefaultContent extends AbstractContent {
         if (level > this.getLevel()) {
             throw new PathNotFoundException();
         }
-        return (new DefaultContent((Node)this.node.getAncestor(level)));
+        return wrapAsContent((Node)this.node.getAncestor(level));
     }
 
     @Override
@@ -481,6 +456,10 @@ public class DefaultContent extends AbstractContent {
     @Override
     public Version addVersion(Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
         return VersionManager.getInstance().addVersion(this.getJCRNode(), rule);
+    }
+
+    public BinaryNodeData addBinaryNodeData(String name) {
+        return new BinaryNodeData(this, name);
     }
 
     /**
@@ -697,7 +676,7 @@ public class DefaultContent extends AbstractContent {
     @Override
     public HierarchyManager getHierarchyManager() {
         try {
-            return new DefaultHierarchyManager(node.getSession());
+            return createHierarchyManager(node.getSession());
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
         }
@@ -707,4 +686,23 @@ public class DefaultContent extends AbstractContent {
     public Workspace getWorkspace() throws RepositoryException {
         return node.getSession().getWorkspace();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof DefaultContent)) {
+            return false;
+        }
+        DefaultContent otherContent = (DefaultContent) obj;
+        return getJCRNode().equals(otherContent.getJCRNode());
+    }
+
+    protected HierarchyManager createHierarchyManager(Session session) {
+        return new DefaultHierarchyManager(session);
+    }
+
+    protected boolean hasBinaryNode(String name) throws RepositoryException {
+        return this.node.hasNode(name) && (this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE) ||
+                (this.node.hasProperty("jcr:frozenPrimaryType") && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)));
+    }
+
 }

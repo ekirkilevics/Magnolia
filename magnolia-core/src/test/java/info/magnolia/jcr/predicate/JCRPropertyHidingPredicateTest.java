@@ -54,8 +54,8 @@ public class JCRPropertyHidingPredicateTest {
     public void testEvaluate() throws Exception {
         JCRPropertyHidingPredicate predicate = new JCRPropertyHidingPredicate();
 
-        assertTrue(predicate.evaluate(new MockProperty("someProperty", "")));
-        assertFalse(predicate.evaluate(new MockProperty("jcr:someProperty", "")));
+        assertTrue(predicate.evaluate(new MockProperty("someProperty", "", null)));
+        assertFalse(predicate.evaluate(new MockProperty("jcr:someProperty", "", null)));
     }
 
     @Test

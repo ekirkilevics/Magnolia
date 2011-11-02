@@ -33,8 +33,11 @@
  */
 package info.magnolia.repository;
 
+import info.magnolia.repository.definition.RepositoryDefinition;
+
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Workspace;
 import java.io.InputStream;
 
@@ -50,10 +53,10 @@ public interface Provider {
     /**
      * Initializes repository, this depends on the underlying repository implementation. Use any available method to get
      * the instance of Repository.
-     * @param repositoryMapping key value pars as define in repository.xml
+     * @param repositoryDefinition key value pars as define in repository.xml
      * @throws RepositoryNotInitializedException
      */
-    void init(RepositoryMapping repositoryMapping) throws RepositoryNotInitializedException;
+    void init(RepositoryDefinition repositoryDefinition) throws RepositoryNotInitializedException;
 
     /**
      * Gets the repository instance initialized on init() call.
@@ -62,7 +65,7 @@ public interface Provider {
     Repository getUnderlyingRepository() throws RepositoryNotInitializedException;
 
     /**
-     * @deprecated typo - use get #getUnderlyingRepository() - since 4.0
+     * @deprecated since 4.0 - typo - use get #getUnderlyingRepository() instead
      */
     Repository getUnderlineRepository() throws RepositoryNotInitializedException;
 
@@ -112,4 +115,6 @@ public interface Provider {
     boolean registerWorkspace(String workspaceName) throws RepositoryException;
 
     void shutdownRepository();
+
+    Session getSystemSession(String workspaceName) throws RepositoryException;
 }

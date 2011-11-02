@@ -33,18 +33,19 @@
  */
 package info.magnolia.cms.taglibs.util;
 
-import info.magnolia.cms.core.HierarchyManager;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.*;
 import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTagTestCase;
-import static org.easymock.classextension.EasyMock.*;
+
+import java.io.IOException;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author gjoseph
@@ -89,7 +90,7 @@ public class PoweredByTagTest extends MgnlTagTestCase {
     }
 
     @Override
-    protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {
+    protected Session initWebsiteData() throws IOException, RepositoryException {
         return null;
     }
 }

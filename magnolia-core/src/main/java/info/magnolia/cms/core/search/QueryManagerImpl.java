@@ -52,7 +52,7 @@ public class QueryManagerImpl implements QueryManager {
 
     protected HierarchyManager hm;
 
-    protected QueryManagerImpl(javax.jcr.query.QueryManager queryManager, HierarchyManager hm) {
+    public QueryManagerImpl(javax.jcr.query.QueryManager queryManager, HierarchyManager hm) {
         this.queryManager = queryManager;
         this.hm = hm;
     }

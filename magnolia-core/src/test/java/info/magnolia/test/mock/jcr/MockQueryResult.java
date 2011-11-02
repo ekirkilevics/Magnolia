@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.test.mock;
+package info.magnolia.test.mock.jcr;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +40,7 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 import javax.jcr.query.RowIterator;
 
@@ -47,8 +48,8 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Mock implementation of JCR Query Result.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
 public class MockQueryResult implements QueryResult {
 
@@ -60,7 +61,7 @@ public class MockQueryResult implements QueryResult {
         this.session = session;
         type = StringUtils.substringBefore(StringUtils.substringAfter(statement.toLowerCase(), " from "), " where ").trim();
 
-        if ("JCR-SQL2".equals(language)) {
+        if (Query.JCR_SQL2.equals(language)) {
             // strip off square brackets required to encapsulate type for sql2 queries
             type = type.substring(1, type.length() -1 );
 
@@ -74,16 +75,15 @@ public class MockQueryResult implements QueryResult {
 
     @Override
     public String[] getColumnNames() throws RepositoryException {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public NodeIterator getNodes() throws RepositoryException {
         List<Node> results = new ArrayList<Node>();
-        // mocking up real search qould be a pain, so for now we just return all ... could be substituted for op that will return expected results
+        // mocking up real search could be a pain, so for now we just return all ... could be substituted for op that will return expected results
         addChildren(session.getRootNode().getNodes(), results);
-        return new MockJCRNodeIterator(results);
+        return new MockNodeIterator(results);
     }
 
     private void addChildren(NodeIterator nodes, List<Node> results) throws RepositoryException {
@@ -100,19 +100,15 @@ public class MockQueryResult implements QueryResult {
             }
             addChildren(node.getNodes(), results);
         }
-
     }
 
     @Override
     public RowIterator getRows() throws RepositoryException {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public String[] getSelectorNames() throws RepositoryException {
-        // TODO Auto-generated method stub
         return null;
     }
-
 }

@@ -33,564 +33,45 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.NonExistingNodeData;
-import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.Rule;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.Session;
+import javax.jcr.Value;
 import javax.jcr.Workspace;
-import javax.jcr.lock.Lock;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.NodeType;
-import javax.jcr.version.Version;
-import javax.jcr.version.VersionException;
-import javax.jcr.version.VersionHistory;
-import javax.jcr.version.VersionIterator;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.map.ListOrderedMap;
-import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.util.ChildrenCollectorFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
- * @author philipp
  * @version $Id$
  */
-public class MockContent extends AbstractContent {
+public class MockContent extends DefaultContent {
 
-    private static Logger log = LoggerFactory.getLogger(MockContent.class);
-
-    private String uuid;
-
-    private int index = 1;
-
-    private Content parent;
-
-    private String name;
-
-    private final Map<String, NodeData> nodeDatas = new ListOrderedMap();
-
-    private final Map<String, MockContent> children = new ListOrderedMap();
-
-    private final List<String> mixins = new ArrayList<String>();
-
-    private String nodeTypeName = ItemType.CONTENTNODE.getSystemName();
-
-    private Node node;
-
-    /**
-     * HM is no longer kept in ContentHandler - for DefaultContent it can be derived via RepositoryStrategy. For simplicity we'll directly keep them for MockContent.
-     */
-    private HierarchyManager hierarchyManager;
-
-    public MockContent(String name) {
-        this.name = name;
-        this.node = new MockJCRNode(this);
-    }
-
-    public MockContent(String name, HierarchyManager hm) {
-        this(name);
-        this.hierarchyManager = hm;
-    }
-
-
-    public MockContent(String name, ItemType contentType) {
-        this(name);
-        this.setNodeTypeName(contentType.getSystemName());
-    }
-
-    public MockContent(String name, OrderedMap nodeDatas, OrderedMap children) {
-        this(name);
-        for (Iterator iter = children.values().iterator(); iter.hasNext();) {
-            MockContent c = (MockContent) iter.next();
-            addContent(c);
-        }
-        for (Iterator iter = nodeDatas.values().iterator(); iter.hasNext();) {
-            MockNodeData nd = (MockNodeData) iter.next();
-            addNodeData(nd);
-        }
-    }
-
-    /**
-     * Set hierarchy manager.
-     * @param hierarchyManager
-     */
-    public void setHierarchyManager(HierarchyManager hm) {
-        this.hierarchyManager = hm;
-    }
-
-    @Override
-    public boolean isNodeType(String type) {
-        try {
-            return this.getNodeTypeName().equals(type);
-        }
-        catch (RepositoryException e) {
-            log.error("can't read node type name", e);
-        }
-        return false;
-    }
-
-    public void addNodeData(MockNodeData nd) {
-        nd.setParent(this);
-        nodeDatas.put(nd.getName(), nd);
-    }
-
-    @Override
-    public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        final MockNodeData nd = new MockNodeData(name, type);
-        addNodeData(nd);
-        return nd;
-    }
-
-    public MockMetaData createMetaData() {
-        addContent(new MockContent("MetaData"));//, ItemType."mgnl:metaData"));
-        return getMetaData();
-    }
-
-    @Override
-    public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        MockContent c = new MockContent(name, new ItemType(contentType));
-        c.setParent(this);
-        c.setHierarchyManager(this.getHierarchyManager());
-        addContent(c);
-
-        if (c.isNodeType(ItemType.NT_RESOURCE)) {
-            final BinaryMockNodeData binND = new BinaryMockNodeData(name, c);
-            addNodeData(binND);
-        }
-
-        return c;
-    }
-
-    public void addContent(MockContent child) {
-        child.setParent(this);
-        children.put(child.getName(), child);
-    }
-
-    @Override
-    public Content getContent(String path) throws RepositoryException {
-        Content c;
-        if (path.contains("/")) {
-            String[] names = StringUtils.split(path, "/");
-            Content current = this;
-            for (String name : names) {
-                if(name.equals("..")){
-                    current = current.getParent();
-                }
-                else{
-                    current = current.getContent(name);
-                }
-            }
-            return current;
-        }
-        c = children.get(path);
-        if (c == null) {
-            throw new PathNotFoundException(path);
-        }
-        return c;
-    }
-
-    @Override
-    public boolean hasContent(String name) throws RepositoryException {
-        try {
-            getContent(name);
-        }
-        catch (PathNotFoundException e) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String getHandle() {
-        if (this.getParent() != null && !this.getParent().getName().equals("jcr:root")) {
-            return getParent().getHandle() + "/" + this.getName();
-        }
-        return "/" + this.getName();
-    }
-
-    @Override
-    public int getLevel() throws PathNotFoundException, RepositoryException {
-        if (this.getParent() == null) {
-            return 0;
-        }
-        return getParent().getLevel() + 1;
-    }
-
-    @Override
-    public Collection<NodeData> getNodeDataCollection(String namePattern) {
-        // FIXME try to find a better solution than filtering now
-        // problem is that getNodeData(name, type) will have to add the node data
-        // as setValue() might be called later on an the node data starts to exist
-        ArrayList<NodeData> onlyExistingNodeDatas = new ArrayList<NodeData>();
-        for (NodeData nodeData : nodeDatas.values()) {
-            if(nodeData.isExist()){
-                if (namePattern == null || matchesNamePattern(nodeData, namePattern)) {
-                    onlyExistingNodeDatas.add(nodeData);
-                }
-            }
-        }
-
-        return onlyExistingNodeDatas;
-    }
-
-    @Override
-    public Collection<Content> getChildren(final ContentFilter filter, final String namePattern, Comparator<Content> orderCriteria) {
-        // copy
-        final List<Content> children = new ArrayList<Content>(this.children.values());
-
-        final Predicate filterPredicate = new Predicate() {
-            @Override
-            public boolean evaluate(Object object) {
-                return filter.accept((Content) object);
-            }
-        };
-
-        CollectionUtils.filter(children, filterPredicate);
-
-        if (namePattern != null) {
-            CollectionUtils.filter(children, new NamePatternFilter(namePattern));
-        }
-
-
-        return children;
-    }
-
-    @Override
-    public void orderBefore(String srcName, String beforeName) throws RepositoryException {
-        MockContent movedNode = children.get(srcName);
-        List<MockContent> newOrder = new ArrayList<MockContent>();
-
-        for (MockContent child : children.values()) {
-            if(child.getName().equals(srcName)){
-                // will be added before the beforeName
-            }
-            else if(child.getName().equals(beforeName)){
-                newOrder.add(movedNode);
-                newOrder.add(child);
-            }
-            else{
-                newOrder.add(child);
-            }
-        }
-
-        children.clear();
-        for (MockContent child : newOrder) {
-            children.put(child.getName(), child);
-        }
-    }
-
-    @Override
-    public void save() throws RepositoryException {
-        // nothing to do
-    }
-
-    public void setJCRNode(Node jcrNode) {
-        this.node = jcrNode;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getNodeTypeName() throws RepositoryException {
-        return this.nodeTypeName;
-    }
-
-    public void setNodeTypeName(String nodeTypeName) {
-        this.nodeTypeName = nodeTypeName;
-    }
-
-    @Override
-    public void delete() throws RepositoryException {
-        final MockContent parent = (MockContent) getParent();
-        final boolean removedFromParent = parent.children.values().remove(this);
-        MockHierarchyManager hm = getHierarchyManager();
-        hm.removedCachedNode(this);
-        if (!removedFromParent) {
-            throw new RepositoryException("MockContent could not delete itself");
-        }
-    }
-
-    @Override
-    public Content getParent() {
-        return this.parent;
-    }
-
-    public void setParent(Content parent) {
-        this.parent = parent;
-    }
-
-    @Override
-    public Content getAncestor(int level) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        if (level > this.getLevel()) {
-            throw new PathNotFoundException();
-        }
-        Content ancestor = this;
-        for (int i=getLevel();i==level;i--){
-            ancestor=ancestor.getParent();
-        }
-        return ancestor;
-    }
-
-    @Override
-    public MockHierarchyManager getHierarchyManager() {
-        if (getParent() != null) {
-            return ((MockContent) getParent()).getHierarchyManager();
-        }
-        return (MockHierarchyManager) hierarchyManager;
-    }
-
-    @Override
-    public String getUUID() {
-        return this.uuid;
-    }
-
-    public void setUUID(String uuid) {
-        this.uuid = uuid;
-    }
-
-    @Override
-    public MockMetaData getMetaData() {
-        try {
-            if(!hasContent(MetaData.DEFAULT_META_NODE)){
-                createContent(MetaData.DEFAULT_META_NODE, ItemType.NT_METADATA);
-            }
-
-            return new MockMetaData((MockContent) getContent(MetaData.DEFAULT_META_NODE));
-        } catch (RepositoryException e) {
-            throw new RuntimeException("Can't create/read the meta data node.", e);
-        }
-    }
-
-    @Override
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    @Override
-    public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
-        if(nodeDatas.containsKey(name)){
-            return nodeDatas.get(name);
-        }
-        else if(!createIfNotExisting){
-            //&& type != PropertyType.BINARY){
-            // binaries might have been created via property format or import, so we currently only have them as MockContent instances in the system
-            // todo - better fix and/or remove them from child nodes ?
-            return new NonExistingNodeData(parent, name);
-        }
-        else{
-            MockNodeData nodeData;
-            // TODO if(type == PropertyType.UNDEFINED){
-            //    if (hasContent(name) && getContent(name).isNodeType(ItemType.NT_RESOURCE)) {
-            //        type = PropertyType.BINARY;
-            //    } - else ?
-
-            if(type == PropertyType.BINARY){
-                Content binaryNode = createContent(name, ItemType.NT_RESOURCE);
-                nodeData = new BinaryMockNodeData(name, (MockContent) binaryNode);
-            }
-            else{
-                nodeData = new MockNodeData(name, type);
-            }
-            addNodeData(nodeData);
-            return nodeData;
-        }
-    }
-
-    @Override
-    public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
-        // would need to implement MockNodeData.delete() instead, ideally.
-        if (nodeDatas.containsKey(name)) {
-            nodeDatas.remove(name);
-        } else {
-            throw new PathNotFoundException(name + " does not exist in " + this);
-        }
-    }
-
-    @Override
-    public Collection<Content> getAncestors() throws PathNotFoundException, RepositoryException {
-        ArrayList<Content> ancestors = new ArrayList<Content>();
-        Content parent = getParent();
-        while(parent != null){
-            ancestors.add(parent);
-            parent = parent.getParent();
-        }
-        return ancestors;
-    }
-
-    @Override
-    public ItemType getItemType() throws RepositoryException {
-        return new ItemType(getNodeTypeName());
-    }
-
-    @Override
-    public Node getJCRNode() {
-        return node;
-    }
-
-    @Override
-    public boolean hasMetaData() {
-        return true;
-    }
-
-    @Override
-    public void addMixin(String type) throws RepositoryException {
-        this.mixins.add(type);
-    }
-
-    @Override
-    public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
-    }
-
-    @Override
-    public Version addVersion(Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
-    }
-
-    @Override
-    public VersionIterator getAllVersions() throws UnsupportedRepositoryOperationException, RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
-    }
-
-    @Override
-    public ContentVersion getBaseVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
-    }
-
-    @Override
-    public Lock getLock() throws LockException, RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
-    }
-
-    @Override
-    public NodeType[] getMixinNodeTypes() throws RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
-    }
-
-    @Override
-    public NodeType getNodeType() throws RepositoryException {
-        return new MockNodeType(getNodeTypeName());
-    }
-
-    @Override
-    public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
-    }
-
-    @Override
-    public ContentVersion getVersionedContent(Version version) throws RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
-    }
-
-    @Override
-    public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
-    }
-
-    @Override
-    public boolean holdsLock() throws RepositoryException {
-        return false;
-    }
-
-    @Override
-    public boolean isLocked() throws RepositoryException {
-        return false;
-    }
-
-    @Override
-    public boolean isModified() {
-        return false;
-    }
-
-    @Override
-    public Lock lock(boolean isDeep, boolean isSessionScoped) throws LockException, RepositoryException {
-        return null;
-    }
-
-    @Override
-    public Lock lock(boolean isDeep, boolean isSessionScoped, long yieldFor) throws LockException, RepositoryException {
-        return null;
-    }
-
-    @Override
-    public void refresh(boolean keepChanges) throws RepositoryException {
-    }
-
-    @Override
-    public void removeMixin(String type) throws RepositoryException {
-    }
-
-    @Override
-    public void removeVersionHistory() throws AccessDeniedException, RepositoryException {
-    }
-
-    @Override
-    public void restore(String versionName, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-    RepositoryException {
-    }
-
-    @Override
-    public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-    RepositoryException {
-    }
-
-    @Override
-    public void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-    RepositoryException {
-    }
-
-    @Override
-    public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-    RepositoryException {
-    }
-
-    @Override
-    public void unlock() throws LockException, RepositoryException {
-    }
-
-    @Override
-    public void updateMetaData() throws RepositoryException, AccessDeniedException {
-    }
-
-    @Override
-    public boolean hasMixin(String mixinName) throws RepositoryException {
-        return mixins.contains(mixinName);
-    }
     /**
      * Filters a name of a NodeData or Content instance according to the same rules applied by Jackrabbit
      * in the Property and Node interfaces.
@@ -608,6 +89,188 @@ public class MockContent extends AbstractContent {
         }
     }
 
+
+    public MockContent(String name) {
+        this(new MockNode(name));
+    }
+
+    public MockContent(String name, ItemType type) {
+        this(new MockNode(name, type.getSystemName()));
+    }
+
+    public MockContent(MockNode node) {
+        super(node);
+    }
+
+    public MockContent(MockNode rootNode, String path) throws PathNotFoundException, RepositoryException, AccessDeniedException{
+        super(rootNode, path);
+    }
+
+    public MockContent(MockNode rootNode, String path, String contentType) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        super(rootNode, path, contentType);
+    }
+
+    public void setUUID(String identifier) {
+        ((MockNode) getJCRNode()).setIdentifier(identifier);
+    }
+
+    @Override
+    public String getHandle() {
+        try {
+            return getJCRNode().getPath();
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+    }
+
+    @Override
+    public MockMetaData getMetaData() {
+        try {
+            if(!hasContent(MetaData.DEFAULT_META_NODE)){
+                createContent(MetaData.DEFAULT_META_NODE, ItemType.NT_METADATA);
+            }
+
+            return new MockMetaData((MockContent) getContent(MetaData.DEFAULT_META_NODE));
+        } catch (RepositoryException e) {
+            throw new RuntimeException("Can't create/read the meta data node.", e);
+        }
+    }
+
+    @Override
+    public Collection<NodeData> getNodeDataCollection(String namePattern) {
+        // FIXME try to find a better solution than filtering now
+        // problem is that getNodeData(name, type) will have to add the node data
+        // as setValue() might be called later on an the node data starts to exist
+        ArrayList<NodeData> onlyExistingNodeDatas = new ArrayList<NodeData>();
+        final String pattern = namePattern == null ? "*" : namePattern;
+        try {
+            PropertyIterator iterator = getJCRNode().getProperties(pattern);
+            while(iterator.hasNext()) {
+                Property property = iterator.nextProperty();
+                MockNodeData nodeData = new MockNodeData(this, property.getName(), property.getType());
+                onlyExistingNodeDatas.add(nodeData);
+            }
+            // now checking for binaryNodes
+            NodeIterator nodeIterator = getJCRNode().getNodes(pattern);
+            Node currentNode;
+            while(nodeIterator.hasNext()) {
+                currentNode = nodeIterator.nextNode();
+                if (MgnlNodeType.NT_RESOURCE.equals(currentNode.getPrimaryNodeType().getName())) {
+                    onlyExistingNodeDatas.add(addBinaryNodeData(currentNode.getName()));
+                }
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+        return onlyExistingNodeDatas;
+    }
+
+
+    @Override
+    public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        Node parentNode = getJCRNode().getParent();
+        return parentNode == null ? null: new MockContent((MockNode) parentNode);
+    }
+
+    @Override
+    public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
+        if(hasNodeData(name)){
+            Property property;
+            try {
+                property = getJCRNode().getProperty(name);
+                Value value = property.getValue();
+                return new MockNodeData(this, name, value.getType());
+            } catch (PathNotFoundException e) {
+                // exception although hasNodeData returned true -> then it's a binary!
+            }
+            return addBinaryNodeData(name);
+        }
+        else if(!createIfNotExisting){
+            //&& type != PropertyType.BINARY){
+            // binaries might have been created via property format or import, so we currently only have them as MockContent instances in the system
+            // todo - better fix and/or remove them from child nodes ?
+            Content parent;
+            try {
+                parent = getParent();
+            } catch (ItemNotFoundException e) {
+                // that's ok - we use null then
+                parent = null;
+            }
+            return new NonExistingNodeData(parent, name);
+        }
+        else{
+            NodeData nd;
+            if(type == PropertyType.BINARY){
+                nd = addBinaryNodeData(name);
+            }
+            else{
+                nd = addNodeData(name, type);
+            }
+            return nd;
+        }
+    }
+
+    public MockNodeData addNodeData(String name, Object value) {
+        return new MockNodeData(this, name, value);
+    }
+
+    public void addContent(MockContent content) {
+        ((MockNode) getJCRNode()).addNode((MockNode) content.getJCRNode());
+    }
+
+    public void setName(String name) {
+        ((MockNode)getJCRNode()).setName(name);
+    }
+
+    public MockMetaData createMetaData() {
+        addContent(new MockContent("MetaData"));
+        return getMetaData();
+    }
+
+    @Override
+    public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        MockContent c = new MockContent(name, new ItemType(contentType));
+        addContent(c);
+
+        if (c.isNodeType(ItemType.NT_RESOURCE)) {
+            // TODO dlipp - to be verified
+            addBinaryNodeData(name);
+        }
+        return c;
+    }
+
+    @Override
+    public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        return (new MockContent((MockNode) node, name));
+    }
+
+    @Override
+    public Collection<Content> getChildren(final ContentFilter filter, final String namePattern, Comparator<Content> orderCriteria) {
+        // copy
+        final Collection<MockNode> children = ((MockNode)node).getChildren().values();
+        final Collection<Content> contentChildren = new ArrayList<Content>();
+        for(MockNode current: children) {
+            contentChildren.add(wrapAsContent(current));
+        }
+
+        final Predicate filterPredicate = new Predicate() {
+            @Override
+            public boolean evaluate(Object object) {
+                return filter.accept((Content) object);
+            }
+        };
+
+        CollectionUtils.filter(contentChildren, filterPredicate);
+
+        if (namePattern != null) {
+            CollectionUtils.filter(contentChildren, new NamePatternFilter(namePattern));
+        }
+
+
+        return contentChildren;
+    }
+
+
     private static boolean matchesNamePattern(Object object, String namePattern) {
         final String name;
         if (object instanceof NodeData) {
@@ -621,9 +284,39 @@ public class MockContent extends AbstractContent {
     }
 
     @Override
+    public void delete() throws RepositoryException {
+        final MockNode parent = (MockNode) getParent().getJCRNode();
+        MockSession session = (MockSession) getJCRNode().getSession();
+        final boolean removedFromParent = parent.removeFromChildren(getJCRNode());
+
+        if (!removedFromParent) {
+            throw new RepositoryException("MockContent could not delete itself");
+        }
+    }
+
+    @Override
+    protected Content wrapAsContent(Node node) {
+        return new MockContent((MockNode)node);
+    }
+
+    @Override
+    protected Content wrapAsContent(Node node, String name) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        return new MockContent((MockNode) node, name);
+    }
+
+    @Override
+    protected Content wrapAsContent(Node node, String name, String contentType) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        return new MockContent((MockNode) node, name, contentType);
+    }
+
+    @Override
+    protected HierarchyManager createHierarchyManager(Session session) {
+        return new MockHierarchyManager(session);
+    }
+
+    @Override
     public Workspace getWorkspace() throws RepositoryException {
-        HierarchyManager hm = getHierarchyManager();
-        return hm == null ? null : hm.getWorkspace();
+        return node.getSession() != null ? node.getSession().getWorkspace() : null;
     }
 
 }

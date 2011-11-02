@@ -127,13 +127,6 @@ public class MgnlContext {
     }
 
     /**
-     * Get hierarchy manager initialized for this user.
-     */
-    public static HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        return getInstance().getHierarchyManager(repositoryId, workspaceId);
-    }
-
-    /**
      * Get access manager for a resource, usually a workspace.
      */
     public static AccessManager getAccessManager(String name) {
@@ -142,26 +135,13 @@ public class MgnlContext {
 
     /**
      * Get access manager for the specified repository on the specified workspace.
-     * 
-     * @deprecated since 4.5 - security is handled by JCR now and non JCR permissions require only workspace name as identifier. USe {@link #getAccessManager(String)} instead.
+     *
+     * @deprecated since 4.5 - security is handled by JCR now and non JCR permissions require only workspace name as identifier.
+     * Use {@link #getAccessManager(String)} instead.
      */
     @Deprecated
-    public static AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return getAccessManager(workspaceId);
-    }
-
-    /**
-     * Get QueryManager created for this user on the specified repository.
-     */
-    public static QueryManager getQueryManager(String repositoryId) {
-        return getInstance().getQueryManager(repositoryId);
-    }
-
-    /**
-     * Get QueryManager created for this user on the specified repository and workspace.
-     */
-    public static QueryManager getQueryManager(String repositoryId, String workspaceId) {
-        return getInstance().getQueryManager(repositoryId, workspaceId);
+    public static QueryManager getQueryManager(String workspaceName) {
+        return getInstance().getQueryManager(workspaceName);
     }
 
     /**
@@ -512,22 +492,11 @@ public class MgnlContext {
     /**
      * Note: this is the way to go, if you no longer want to rely on the Content-API.
      *
-     * @param repository - repository to get session for
+     * @param workspaceName - repository to get session for
      * @return a JCR session to the provided repository
      */
-    public static Session getJCRSession(String repository) throws LoginException, RepositoryException {
-        return getInstance().getJCRSession(repository);
-    }
-
-    /**
-     * Note: this is the way to go, if you no longer want to rely on the Content-API.
-     *
-     * @param repository - repository to get session for
-     * @param workspace - workspace to get session for
-     * @return a JCR session to the provided repository
-     */
-    public static Session getJCRSession(String repository, String workspace) throws LoginException, RepositoryException {
-        return getInstance().getJCRSession(repository, workspace);
+    public static Session getJCRSession(String workspaceName) throws LoginException, RepositoryException {
+        return getInstance().getJCRSession(workspaceName);
     }
 
     public static Subject getSubject() {

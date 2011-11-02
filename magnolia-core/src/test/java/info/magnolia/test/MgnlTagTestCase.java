@@ -37,7 +37,6 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
@@ -48,6 +47,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.servlet.jsp.JspException;
 
 import org.junit.After;
@@ -74,9 +74,9 @@ public abstract class MgnlTagTestCase extends MgnlTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        HierarchyManager hm = initWebsiteData();
+        Session session = initWebsiteData();
         webContext = new MockWebContext();
-        webContext.addHierarchyManager(ContentRepository.WEBSITE, hm);
+        webContext.addSession(ContentRepository.WEBSITE, session);
 
         MgnlContext.setInstance(webContext);
 
@@ -88,7 +88,6 @@ public abstract class MgnlTagTestCase extends MgnlTestCase {
         // set up necessary items not configured in the repository
         ComponentsTestUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-
         setupPageContext();
     }
 
@@ -177,11 +176,11 @@ public abstract class MgnlTagTestCase extends MgnlTestCase {
      *
      * (Obviously, mytagtest is a placeholder name, and in your implementation you would change this)
      *
-     * @return A HierarchyManager initialized with the appropriate data needed to run the tests
+     * @return A Session initialized with the appropriate data needed to run the tests
      * @throws IOException
      * @throws RepositoryException
      */
-    abstract protected HierarchyManager initWebsiteData() throws IOException, RepositoryException;
+    abstract protected Session initWebsiteData() throws IOException, RepositoryException;
     // return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("outtest.properties"));
 
 }

@@ -31,23 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.cms.core.search;
+package info.magnolia.repository;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.objectfactory.Components;
+import org.junit.Ignore;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
- * Factory to create {@link QueryManager} objects.
- * @author Sameer Charles
+ * @version $Id$
  */
+public class WorkspaceMappingTest {
 
-public abstract class SearchFactory {
-
-    public static SearchFactory getInstance() {
-        return Components.getSingleton(SearchFactory.class);
+    @Test
+    @Ignore
+    public void testUnknownRepositoryShouldYieldMeaningfulExceptionMessage() {
+        WorkspaceMapping mapping = new WorkspaceMapping();
+        try {
+            mapping.getRepository("dummy");
+            fail("should have failed, since we haven't set any repository at all");
+        } catch (Throwable t) {
+            assertEquals("Failed to retrieve repository 'dummy' (mapped as 'dummy'). Your Magnolia instance might not have been initialized properly.", t.getMessage());
+        }
     }
-
-    public abstract QueryManager getQueryManager(javax.jcr.query.QueryManager queryManager, HierarchyManager hm);
 
 }

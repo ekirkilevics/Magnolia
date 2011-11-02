@@ -46,6 +46,7 @@ import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
@@ -74,7 +75,7 @@ public class ContentUtilTest extends MgnlTestCase {
     @Override
     @Before
     public void setUp() {
-        rootABC = new MockContent("root", ItemType.CONTENT);
+        rootABC = new MockContent(MockNode.ROOT_NODE_NAME, ItemType.CONTENT);
         new NodeBuilder(rootABC,
                 addNode("a", ItemType.CONTENT).then(
                         addNode("aa", ItemType.CONTENT),
@@ -91,7 +92,7 @@ public class ContentUtilTest extends MgnlTestCase {
     public void testVisitShouldPassFilterAlong() throws Exception {
         final ItemType foo = new ItemType("foo");
         final ItemType bar = new ItemType("bar");
-        final MockContent root = new MockContent("root", foo);
+        final MockContent root = new MockContent(MockNode.ROOT_NODE_NAME, foo);
         final MockContent child1 = new MockContent("child1", foo);
         root.addContent(child1);
         final MockContent child2 = new MockContent("child2", bar);
@@ -578,7 +579,7 @@ public class ContentUtilTest extends MgnlTestCase {
             fail("should have failed");
         } catch (Throwable t) {
             assertTrue(t instanceof RepositoryException);
-            assertEquals("No ancestor of type mgnl:contentNode found for null:/root/a/aa[mgnl:content]", t.getMessage());
+            assertEquals("No ancestor of type mgnl:contentNode found for null:/a/aa[mgnl:content]", t.getMessage());
         }
     }
 

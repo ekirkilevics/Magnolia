@@ -33,18 +33,8 @@
  */
 package info.magnolia.jcr.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.context.MgnlContext;
@@ -52,6 +42,11 @@ import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -217,7 +212,8 @@ public class NodeUtilTest {
         assertEquals(FIRST_CHILD, names.get(0));
         assertEquals(SECOND_CHILD, names.get(1));
         assertEquals(THIRD_CHILD, names.get(2));
-        assertEquals(MockNode.ROOT_NODE_NAME, names.get(3));
+        // root's name is ""
+        assertEquals("", names.get(3));
     }
 
     @Test
@@ -333,7 +329,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testPathIfPossible() throws RepositoryException {
+    public void testGetPathIfPossible() {
         // GIVEN
 
         // WHEN

@@ -33,29 +33,80 @@
  */
 package info.magnolia.context;
 
-import static org.junit.Assert.*;
-import info.magnolia.cms.core.HierarchyManager;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+
+import info.magnolia.repository.DefaultRepositoryManager;
+import info.magnolia.repository.RepositoryManager;
 import info.magnolia.test.RepositoryTestCase;
-
-import javax.jcr.Session;
-
-import org.junit.Test;
+import static org.mockito.Mockito.mock;
 
 /**
  * @version $Id$
  */
+@Ignore
 public class AbstractRepositoryStrategyTest extends RepositoryTestCase {
 
+    private DefaultRepositoryStrategy strategy;
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        UserContext ctx = mock(UserContext.class);
+        RepositoryManager repositoryManager = new DefaultRepositoryManager();
+        strategy = new DefaultRepositoryStrategy(repositoryManager, ctx);
+    }
+/*
     @Test
-    public void testCreatedHMCanAlsoBeRetrievedViaJCRSession() {
+    public void testGetAdminCredentials() {
         // GIVEN
-        HierarchyManager hm = MgnlContext.getInstance().getHierarchyManager("config");
-        Session session = hm.getWorkspace().getSession();
+        // all done in setup already
 
         // WHEN
-        HierarchyManager hm2 =  ((AbstractContext) MgnlContext.getInstance()).getRepositoryStrategy().getHierarchyManagerFor(session);
+        SimpleCredentials credentials = strategy.getAdminUserCredentials();
 
         // THEN
-        assertEquals(hm, hm2);
+        assertEquals("admin", credentials.getUserID());
+        assertEquals("admin", new String(credentials.getPassword()));
+    }
+
+    @Test
+    public void testGetUserCredentialsReturnsAnonymousIfUserIsNotSet() {
+        // GIVEN
+        Context context = mock(Context.class);
+        MgnlContext.setInstance(context);
+
+        // WHEN
+        SimpleCredentials credentials = strategy.getUserCredentials();
+
+        // THEN
+        assertEquals("anonymous", credentials.getUserID());
+        assertEquals("anonymous", new String(credentials.getPassword()));
+    }
+
+    @Test
+    public void testGetUserCredentialsReturnsCredentialsFromContextUserIfSet() {
+        // GIVEN
+        Context context = mock(Context.class);
+        MgnlContext.setInstance(context);
+        User user = mock(User.class);
+        when(context.getUser()).thenReturn(user);
+        when(user.getName()).thenReturn("user");
+        when(user.getPassword()).thenReturn("password");
+
+        // WHEN
+        SimpleCredentials credentials = strategy.getUserCredentials();
+
+        // THEN
+        assertEquals("user", credentials.getUserID());
+        assertEquals("password", new String(credentials.getPassword()));
+    }
+*/
+
+    @After
+    public void teardDown() {
+        MgnlContext.setInstance(null);
     }
 }

@@ -37,10 +37,6 @@ import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
-import java.util.Calendar;
-
-import javax.jcr.PropertyType;
-
 import org.junit.Test;
 
 /**
@@ -50,19 +46,14 @@ public class MockNodeDataTest {
 
     @Test
     public void testSetValueWithParamValue() throws Exception {
-        doTestSetValueWithParamValue("String", "Hello World");
-        doTestSetValueWithParamValue("Long", Long.valueOf(123l));
-        doTestSetValueWithParamValue("Date", Calendar.getInstance());
-        doTestSetValueWithParamValue("Boolean", Boolean.TRUE);
-    }
+        final String testString = "Hello World";
+        MockHierarchyManager hm = MockUtil.createHierarchyManager("/node/sub/sub2.a=lol\n");
+        final Content node = hm.getContent("/node/sub/sub2");
+        final NodeData nd = node.getNodeData("a");
 
-    private void doTestSetValueWithParamValue(String nodeDataName, Object nodeDataValue) throws Exception{
-        final MockNodeData nodeData = new MockNodeData("toTest", PropertyType.BINARY);
-        final MockNodeData jcrValueNodeData = new MockNodeData(nodeDataName, nodeDataValue);
-        MockJCRValue jcrValue = new MockJCRValue(jcrValueNodeData);
-        nodeData.setValue(jcrValue);
+        nd.setValue(testString);
 
-        assertEquals(jcrValueNodeData, jcrValueNodeData);
+        assertEquals(testString, node.getNodeData("a").getString());
     }
 
     @Test

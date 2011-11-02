@@ -60,10 +60,9 @@ public class MockObjectTest {
     private static Logger log = LoggerFactory.getLogger(MockObjectTest.class);
 
     @Test
-    public void testRootNodeOfHierarchyManger() {
+    public void testRootNodeOfHierarchyManger() throws Exception{
         MockHierarchyManager hm = new MockHierarchyManager();
-        Content root = hm.getRoot();
-        assertEquals(root.getName(), "jcr:root");
+        assertNotNull(hm.getRoot());
     }
 
     @Test
@@ -119,7 +118,6 @@ public class MockObjectTest {
     public void testDeletingReallyWorks() throws Exception {
         MockHierarchyManager hm = new MockHierarchyManager();
         Content node = hm.createContent("/test/sub", "test1", ItemType.CONTENTNODE.getSystemName());
-        assertEquals(node, hm.getContent("/test/sub/test1"));
         node.delete();
         try {
             hm.getContent("/test/sub").getContent("test1");

@@ -36,7 +36,6 @@ package info.magnolia.jcr.util;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.DateUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -72,7 +71,7 @@ public class PropertyUtil {
     private static final Logger log = LoggerFactory.getLogger(PropertyUtil.class);
 
     public static void renameProperty(Property property, String newName) throws RepositoryException {
-        Node node = property.getNode();
+        Node node = property.getParent();
         node.setProperty(newName, property.getValue());
         property.remove();
     }
@@ -201,6 +200,9 @@ public class PropertyUtil {
         if (obj instanceof Calendar) {
             return PropertyType.DATE;
         }
+        if (obj instanceof Binary) {
+            return PropertyType.BINARY;
+        }
         if (obj instanceof InputStream) {
             return PropertyType.BINARY;
         }
@@ -286,7 +288,48 @@ public class PropertyUtil {
         }
     }
 
+    /**
+     * Return the String representing the node property value.
+     * If the Node did not contain such a Property,
+     * then return <b>null</b>.
+     */
+    public static String getString(Node node, String name) {
+        return getString(node, name, null);
+    }
 
+    /**
+     * Return the String representing the node property value.
+     * If the Node did not contain such a Property,
+     * then return the default value.
+     */
+    public static String getString(Node node, String name, String defaultValue) {
+        try {
+            if (node.hasProperty(name)) {
+                return node.getProperty(name).getString();
+            }
+            return defaultValue;
+        } catch (RepositoryException e) {
+            log.error("can't read value '" + name + "' of the Node '" + node.toString() + "' will return default value", e);
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Return the boolean representing the node property value.
+     * If the Node did not contain such a Property,
+     * then return the default value.
+     */
+    public static boolean getBoolean(Node node, String name, boolean defaultValue) {
+        try {
+            if (node.hasProperty(name)) {
+                return node.getProperty(name).getBoolean();
+            }
+            return defaultValue;
+        } catch (RepositoryException e) {
+            log.error("can't read value '" + name + "' of the Node '" + node.toString() + "' will return default value", e);
+            return defaultValue;
+        }
+    }
 
     /**
      * Return the Property relative to the Node.
@@ -306,46 +349,4 @@ public class PropertyUtil {
     }
 
 
-    /**
-     * Return the String representing the node property value.
-     * If the Node did not contain such a Property,
-     * then return <b>null</b>.
-     */
-    public static String getString(Node node, String name) {
-        return getString(node, name, null);
-    }
-
-    /**
-     * Return the String representing the node property value.
-     * If the Node did not contain such a Property,
-     * then return the default value.
-     */
-    public static String getString(Node node, String name, String defaultValue) {
-        try {
-            if (node.hasProperty(name) && (node.getProperty(name).getType()==PropertyType.STRING)) {
-                return node.getProperty(name).getString();
-            }
-            return defaultValue;
-        } catch (RepositoryException e) {
-            log.error("can't read value '" + name + "' of the Node '" + node.toString() + "' will return default value", e);
-            throw new RuntimeRepositoryException(e);
-        }
-    }
-
-    /**
-     * Return the boolean representing the node property value.
-     * If the Node did not contain such a Property,
-     * then return the default value.
-     */
-    public static boolean getBoolean(Node node, String name, boolean defaultValue) {
-        try {
-            if (node.hasProperty(name)&& (node.getProperty(name).getType()==PropertyType.BOOLEAN)) {
-                return node.getProperty(name).getBoolean();
-            }
-            return defaultValue;
-        } catch (RepositoryException e) {
-            log.error("can't read value '" + name + "' of the Node '" + node.toString() + "' will return default value", e);
-            throw new RuntimeRepositoryException(e);
-        }
-    }
 }
