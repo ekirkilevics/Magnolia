@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.delta;
 
+import info.magnolia.cms.util.ExceptionUtil;
 import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
@@ -58,7 +59,7 @@ public abstract class AbstractRepositoryTask extends AbstractTask {
         try {
             doExecute(installContext);
         } catch (RepositoryException e) {
-            throw new TaskExecutionException("Could not execute task: " + e.getMessage(), e);
+            throw new TaskExecutionException("Could not execute task: " + ExceptionUtil.exceptionToWords(e), e);
         }
     }
 
