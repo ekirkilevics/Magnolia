@@ -84,7 +84,6 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
         components.registerImplementation(ModelExecutionFilter.class);
         components.registerImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
         components.registerImplementation(TemplateAvailability.class, DefaultTemplateAvailability.class);
-        components.registerImplementation(TemplateAvailability.class, DefaultTemplateAvailability.class);
     }
 
     @Override
