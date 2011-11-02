@@ -37,6 +37,8 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
@@ -59,6 +61,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -91,6 +94,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private String availableComponents;
     private String label;
     private boolean inherit;
+
+    private Map<String, Object> contextAttributes = new HashMap<String, Object>();
+    private Map<String, Object> savedCtxAttributes = new HashMap<String, Object>();
 
 
     public AreaElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
@@ -197,7 +203,18 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 if(areaDefinition.getRenderType() == null && areaDefinition instanceof ConfiguredAreaDefinition){
                     ((ConfiguredAreaDefinition)areaDefinition).setRenderType(this.templateDefinition.getRenderType());
                 }
-                renderingEngine.render(areaNode, areaDefinition, contextObjects, new AppendableOnlyOutputProvider(out));
+
+                WebContext webContext = MgnlContext.getWebContext();
+                webContext.push(webContext.getRequest(), webContext.getResponse());
+                this.setContextAttributes(webContext, contextAttributes);
+                try {
+                    renderingEngine.render(areaNode, areaDefinition, contextObjects, new AppendableOnlyOutputProvider(out));
+                } finally {
+                    webContext.pop();
+                    webContext.setPageContext(null);
+                    restoreContextAttributes(webContext, contextAttributes);
+                }
+
                 // FIXME we shouldn't manipulate the area definition directly
                 // we should use merge with the proxy approach
                 if(areaDefinition.getI18nBasename() == null && areaDefinition instanceof ConfiguredAreaDefinition){
@@ -366,5 +383,39 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     public void setInherit(boolean inherit) {
         this.inherit = inherit;
+    }
+
+    public Map<String, Object> getContextAttributes() {
+        return contextAttributes;
+    }
+
+    public void setContextAttributes(Map<String, Object> contextAttributes) {
+        this.contextAttributes = contextAttributes;
+    }
+
+    private void setContextAttributes(WebContext webContext, Map<String, Object> ctx) {
+        if(ctx != null){
+            for(Entry<String, Object> entry : ctx.entrySet()) {
+                final String key = entry.getKey();
+                if(webContext.containsKey(key)) {
+                    //save to tmp map
+                    savedCtxAttributes.put(key, webContext.get(key));
+                }
+                webContext.setAttribute(key, entry.getValue(), WebContext.LOCAL_SCOPE);
+            }
+
+        }
+    }
+
+    private void restoreContextAttributes(WebContext webContext, Map<String, Object> ctx) {
+        if(ctx != null) {
+            for(Entry<String, Object> entry : ctx.entrySet()) {
+                final String key = entry.getKey();
+                if(webContext.containsKey(key)) {
+                    webContext.setAttribute(key, savedCtxAttributes.get(key), WebContext.LOCAL_SCOPE);
+                }
+                webContext.removeAttribute(key, WebContext.LOCAL_SCOPE);
+            }
+        }
     }
 }
