@@ -120,7 +120,7 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
      */
     protected Node getNodeSafely(String relPath) throws RepositoryException {
         if(getWrappedNode().hasNode(relPath)) {
-            return getWrappedNode().getNode(relPath);
+            return wrapNode(getWrappedNode().getNode(relPath));
         }
 
         String innerPath = resolveInnerPath() + "/" + relPath;
