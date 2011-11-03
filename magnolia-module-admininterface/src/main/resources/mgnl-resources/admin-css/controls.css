@@ -81,6 +81,7 @@ table.mgnlControlBar, table.mgnlControlBarSmall, table.mgnlControlBarSmall_PUSHE
     background-color: transparent !important;
     background-image: url("../admin-images/mgnl-bar.png") !important;
     background-repeat: repeat !important;
+    padding: 0px !important;
     height: 20px; /*TODO set this height else on FF default buttons height screws up layout*/
 }
 
@@ -282,6 +283,7 @@ button.mgnlControlButton_PUSHED {
 }
 /* TODO maybe the properties to avoid long text breaking the layout (float, overflow, width, text-overflow) should be hardcoded into GWT code? */
 .mgnlAreaLabel {
+	background: transparent none !important;
     float: left;
     font-family: Verdana, sans-serif !important;
     font-size: 12px;
@@ -289,6 +291,7 @@ button.mgnlControlButton_PUSHED {
     white-space: nowrap;
     margin-top: 2px !important;
     margin-left: 2px !important;
+    padding: 0px !important;
     overflow: hidden;
     width: 30%;
     text-overflow: ellipsis; /*FF does not support this. Maybe it will in version 7*/
