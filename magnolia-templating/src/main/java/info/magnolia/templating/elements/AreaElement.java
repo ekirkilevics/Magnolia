@@ -207,7 +207,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 // FIXME we shouldn't manipulate the area definition directly
                 // we should use merge with the proxy approach
                 if(areaDefinition.getI18nBasename() == null && areaDefinition instanceof ConfiguredAreaDefinition){
-                	((ConfiguredAreaDefinition)areaDefinition).setI18nBasename(this.templateDefinition.getI18nBasename());
+                    ((ConfiguredAreaDefinition)areaDefinition).setI18nBasename(this.templateDefinition.getI18nBasename());
                 }
 
                 WebContext webContext = MgnlContext.getWebContext();
