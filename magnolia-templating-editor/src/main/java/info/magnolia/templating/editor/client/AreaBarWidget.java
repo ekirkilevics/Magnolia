@@ -152,7 +152,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         }
 
         if (this.showAddButton) {
-            Button addButton = new Button(getDictionary().get("buttons.addcomponent.js"));
+            Button addButton = new Button(getDictionary().get("buttons.new.js"));
             addButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
