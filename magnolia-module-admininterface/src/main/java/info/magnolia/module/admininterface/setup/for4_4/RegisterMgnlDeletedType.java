@@ -73,7 +73,7 @@ public class RegisterMgnlDeletedType extends AbstractTask {
         Provider repoProvider = ContentRepository.getRepositoryProvider(RepositoryConstants.WEBSITE);
         String mgnlMixDeleted = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<nodeTypes" + " xmlns:rep=\"internal\""
                 + " xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"" + " xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\""
-                + " xmlns:mgnl=\"http://www.magnolia.info/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + mixDeleted
+                + " xmlns:mgnl=\"http://www.magnolia-cms.com/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + mixDeleted
                 + "\" isMixin=\"true\" hasOrderableChildNodes=\"true\" primaryItemName=\"\">" + "<supertypes>" + "<supertype>nt:base</supertype>"
                 + "</supertypes>" + "</nodeType>" + "</nodeTypes>";
 
