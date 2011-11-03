@@ -175,9 +175,13 @@ public class DialogHandlerManager extends ObservedManager {
         }
 
         if (name.indexOf(':') == -1) {
-            log.info(
-                    "Using old naming style for dialog [" + name + "]." +
-                    " As of version 4.5 of Magnolia you should use the new form <moduleName>:path to access your dialogs.");
+            try {
+                log.info("Using old naming style for dialog [" + name + "]." +
+                         " As of version 4.5 of Magnolia you should use the new style [" + getDialogName((Content) handlerConfig[1]) + "] to access this dialog.");
+            } catch (RepositoryException e) {
+                log.info("Using old naming style for dialog [" + name + "]." +
+                         " As of version 4.5 of Magnolia you should use the new style <moduleName>:path to access your dialogs");
+            }
         }
 
         return instantiateHandler(name, request, response, handlerConfig);
