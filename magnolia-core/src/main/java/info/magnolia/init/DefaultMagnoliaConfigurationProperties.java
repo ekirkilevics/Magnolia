@@ -40,7 +40,6 @@ import info.magnolia.module.ModuleRegistry;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -84,18 +83,15 @@ public class DefaultMagnoliaConfigurationProperties extends AbstractMagnoliaConf
 
     protected static List<PropertySource> makeSources(MagnoliaInitPaths initPaths, ModuleRegistry moduleRegistry, MagnoliaPropertiesResolver resolver) throws IOException {
         final List<PropertySource> allSources = new ArrayList<PropertySource>();
-        // TODO order ? -- sounds like it should be reversed (or we should iterate the other way around - eh)
-        allSources.add(new InitPathsPropertySource(initPaths));
-        allSources.add(new ModulePropertiesSource(moduleRegistry));
+        // TODO - this is not correct: we only want OVERRIDING properties here, not all.
+        allSources.add(new SystemPropertySource());
         final List<PropertySource> configuredSources = resolver.getSources();
         for (PropertySource source : configuredSources) {
             allSources.add(source);
         }
+        allSources.add(new ModulePropertiesSource(moduleRegistry));
+        allSources.add(new InitPathsPropertySource(initPaths));
 
-        // TODO - this is not correct: we only want OVERRIDING properties here, not all.
-        allSources.add(new SystemPropertySource());
-
-        Collections.reverse(allSources);
         // TODO close streams
         // TODO resolve nested properties - now ?
         return allSources;
