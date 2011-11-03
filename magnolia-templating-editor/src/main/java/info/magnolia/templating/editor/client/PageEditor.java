@@ -242,9 +242,8 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             Node childNode = element.getChild(i);
             if (childNode.getNodeType() == Element.ELEMENT_NODE) {
                 Element child = (Element) childNode;
-                GWT.log("processing element " + child);
-
                 if (child.getTagName().equalsIgnoreCase(MARKER_EDIT)) {
+                    GWT.log("processing element " + child);
                     //We assume the first cms:edit we encounter in DOM is the page edit bar.
                     if (!pageEditBarAlreadyProcessed) {
                         GWT.log("element was detected as page edit bar. Injecting it...");
@@ -264,6 +263,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                         editBarWidget.attach(child);
                     }
                 } else if (child.getTagName().equalsIgnoreCase(MARKER_AREA)) {
+                    GWT.log("processing element " + child);
                     Element edit = findCmsEditMarkerForArea(child, edits);
                     if (edit != null) {
                         GWT.log("element was detected as area edit bar. Injecting it...");
