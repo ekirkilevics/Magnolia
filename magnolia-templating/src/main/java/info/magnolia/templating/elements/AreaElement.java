@@ -40,7 +40,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.predicate.InheritablePredicate;
+import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
@@ -69,6 +69,8 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -254,7 +256,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
             throw new RenderException("Can't access area node [" + name + "] on [" + content + "]", e);
         }
         if(area != null && isInherit()) {
-            area = new InheritanceNodeWrapper(area, new InheritablePredicate());
+            area = new InheritanceNodeWrapper(area, new InheritablePredicate(area));
         }
         return area;
     }
@@ -423,6 +425,39 @@ public class AreaElement extends AbstractContentTemplatingElement {
                     webContext.setAttribute(key, savedCtxAttributes.get(key), WebContext.LOCAL_SCOPE);
                 }
                 webContext.removeAttribute(key, WebContext.LOCAL_SCOPE);
+            }
+        }
+    }
+
+    /**
+     * Controls output based on the existance and value of inheritable property.
+     *
+     * @version $Id$
+     *
+     */
+    private static class InheritablePredicate extends AbstractPredicate<Node> {
+
+        private static final Logger log = LoggerFactory.getLogger(AreaElement.class);
+
+        private Node root;
+
+        public InheritablePredicate(Node root) {
+        	this.root = root;
+    	}
+
+    	@Override
+        public boolean evaluateTyped(Node t) {
+            try {
+            	if(t.getPath().startsWith(root.getPath())){
+            		return true;
+            	}
+            	if(!t.isNodeType(MgnlNodeType.NT_COMPONENT)){
+            		return true;
+            	}
+                return t.hasProperty("inheritable") && t.getProperty("inheritable").getBoolean();
+            } catch (RepositoryException e) {
+                log.warn("Failed to retrieve inheritable property for " + t);
+                return false;
             }
         }
     }
