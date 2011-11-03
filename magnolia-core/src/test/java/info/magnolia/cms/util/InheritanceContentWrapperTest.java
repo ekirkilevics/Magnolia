@@ -33,7 +33,9 @@
  */
 package info.magnolia.cms.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
@@ -168,4 +170,24 @@ public class InheritanceContentWrapperTest {
         InheritanceContentWrapper wrapped = new InheritanceContentWrapper(node);
         return wrapped;
     }
+
+    @Test
+    public void testHasPropertyInheritance() throws Exception {
+        setUpContent("testPropertyInheritance");
+        Content page11 = getWrapped("/page1/page11");
+        Content page12 = getWrapped("/page1/page12");
+        // direct node data
+        assertTrue(page11.hasNodeData("nd"));
+        // inherited from parent
+        assertTrue(page12.hasNodeData("nd"));
+    }
+
+    @Test
+    public void testHasNestedPropertyInheritance() throws Exception {
+        setUpContent("testNestedPropertyInheritance");
+        Content para = getWrapped("/page1/page11/container/para");
+        // inherited from parent
+        assertTrue(para.hasNodeData("nd"));
+    }
+
 }

@@ -33,6 +33,11 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.core.AbstractContent;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,11 +50,6 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import info.magnolia.cms.core.AbstractContent;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
 
 
 /**
@@ -77,7 +77,7 @@ public class InheritanceContentWrapper extends ContentWrapper {
     /**
      * From where the inheritance started.
      */
-    private Content start;
+    private final Content start;
 
     /**
      * Used if in the {@link #wrap(Content)} method.
@@ -225,6 +225,24 @@ public class InheritanceContentWrapper extends ContentWrapper {
         }
         // creates a none existing node data in the standard manner
         return super.getNodeData(name);
+    }
+
+    @Override
+    public boolean hasNodeData(String name) throws RepositoryException {
+        try {
+            if (getWrappedContent().hasNodeData(name)) {
+                return getWrappedContent().hasNodeData(name);
+            }
+            Content inherited = getContentSafely(findNextAnchor(), resolveInnerPath());
+            if (inherited != null) {
+                return inherited.hasNodeData(name);
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeException("Can't inherit nodedata " + name + "  for " + getWrappedContent(), e);
+
+        }
+        // creates a none existing node data in the standard manner
+        return super.hasNodeData(name);
     }
 
     /**
