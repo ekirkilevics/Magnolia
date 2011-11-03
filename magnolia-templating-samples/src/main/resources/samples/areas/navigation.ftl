@@ -1,14 +1,15 @@
-<div id="navigation">
+<div id="${def.name!}">
 
 [#include "/samples/macros/navigation.ftl"]
 
 [#assign maxDepth = def.parameters.navigationMaxDepth!2]
 [#assign rootLevel = def.parameters.navigationRootLevel!0]
-[#if content??]
+
+[#if content?has_content]
   [#if rootLevel == 0]
       [#assign startPage = cmsfn.root(content)!]
   [#else]
-      [#assign startPage = cmsfn.root(content, "mgnl:content")!]
+      [#assign startPage = cmsfn.root(content, "mgnl:page")!]
   [/#if]
   <ul>
    [@renderNavigation startPage maxDepth /]

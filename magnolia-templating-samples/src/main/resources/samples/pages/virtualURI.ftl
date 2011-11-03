@@ -34,7 +34,7 @@
                 <div>
                     <h3>Display Sources</h3><br />
                     <ul>
-                        <li><a href="${ctx.contextPath}/.sources/templates/virtualURI.ftl">VirtualURI Template</a></li>
+                        <li><a href="${ctx.contextPath}/.sources/pages/virtualURI.ftl">VirtualURI Template</a></li>
                     </ul>
                 </div>
                 <br />

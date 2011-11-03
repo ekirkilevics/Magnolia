@@ -1,16 +1,13 @@
 
-[#-- TODO cringele:does not work anymore, cause cmsfn.page(node) return the page now itself if a page-node was passed.
-cmsfn.parent(content, "mgnl:content") will always return a parent page node.
-Like this the script can only work either if included from page's script, but not as a Area's script. Or otherwise around.
-Much less flexible. Needing cmsfn.page back again? --]
+
 [#macro renderNavigation pageNode maxDepth depth=0 ]
 
     [#-- Is top page of the site structure -> rendering the top page on same navigation level as its sub-pages--]
-    [#assign isRootPage = (pageNode.@path==cmsfn.page(content).@path)!false]
+    [#assign isRootPage = (pageNode.@path==cmsfn.root(content, "mgnl:page").@path)!false]
     [#if isRootPage && depth == 0]
-        [#if pageNode.@path != content.@path]
+        [#if pageNode.@path != cmsfn.page(content).@path]
             <li>
-                <a href="${cmsfn.link(pageNode)}.html">${pageNode.title!pageNode.@name}</a>
+                <a href="${cmsfn.link(pageNode)}">${pageNode.title!pageNode.@name}</a>
             </li>
         [#else]
             <li class="selected">
@@ -20,21 +17,20 @@ Much less flexible. Needing cmsfn.page back again? --]
     [/#if]
 
 
-    [#assign childPages = cmsfn.children(pageNode, "mgnl:content")!]
+    [#assign childPages = cmsfn.children(pageNode, "mgnl:page")!]
     [#-- Has child pages AND is not deeper as defined in max allowed depth. --]
     [#if childPages?size!=0 && depth < maxDepth]
         [#list childPages as childPage]
 
-            [#-- will need something again as cmsfn.page(content) [#assign isSelected = (childPage.@path == cmsfn.parent(content, "mgnl:content").@path)!false] --]
             [#assign isSelected = (childPage.@path == cmsfn.page(content).@path)!false]
-            [#assign isSelectedParent = (childPage.@path == cmsfn.parent(content, "mgnl:page").@path)!false]
+            [#assign isSelectedParent = (childPage.@path == cmsfn.parent(cmsfn.page(content)).@path)!false]
 
             [#if isSelected || isSelectedParent]
                 <li class="selected">
                     [#if isSelected]
                         <span>${childPage.title!childPage.@name}</span>
                     [#else]
-                        <a href="${cmsfn.link(childPage)}.html"><span>${childPage.title!childPage.@name}</span></a>
+                        <a href="${cmsfn.link(childPage)}"><span>${childPage.title!childPage.@name}</span></a>
                     [/#if]
                 </li>
                 <ul class="second">
@@ -43,7 +39,7 @@ Much less flexible. Needing cmsfn.page back again? --]
             [#else]
 
                 <li>
-                    <a href="${cmsfn.link(childPage)}.html">${childPage.title!childPage.@name}</a>
+                    <a href="${cmsfn.link(childPage)}">${childPage.title!childPage.@name}</a>
                 </li>
             [/#if]
 
