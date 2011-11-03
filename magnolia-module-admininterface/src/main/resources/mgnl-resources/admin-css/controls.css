@@ -245,7 +245,7 @@ td.smothBarLabel {
 .mgnlAreaControlBar {
     background-color: #6BABFB;
     height: 20px;
-    width: 100%;
+    width: 100% !important;
     clear: both;
 }
 
@@ -293,6 +293,6 @@ button.mgnlControlButton_PUSHED {
     margin-left: 2px !important;
     padding: 0px !important;
     overflow: hidden;
-    width: 30%;
+    width: 30% !important;
     text-overflow: ellipsis; /*FF does not support this. Maybe it will in version 7*/
 }
