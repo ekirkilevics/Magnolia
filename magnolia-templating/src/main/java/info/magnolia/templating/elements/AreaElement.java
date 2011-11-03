@@ -178,25 +178,24 @@ public class AreaElement extends AbstractContentTemplatingElement {
             if (isEnabled()) {
                 Map<String, Object> contextObjects = new HashMap<String, Object>();
 
-                if (areaNode != null) {
-                    List<ContentMap> components = new ArrayList<ContentMap>();
+                List<ContentMap> components = new ArrayList<ContentMap>();
 
+                if (areaNode != null) {
                     for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_COMPONENT)) {
                         components.add(new ContentMap(node));
                     }
-
-                    if(AreaDefinition.TYPE_SINGLE.equals(type)) {
-                        if(components.size() > 1) {
-                            throw new RenderException("Can't render single area [" + areaNode + "]: expected one component node but found more.");
-                        }
-                        if(components.size() == 1) {
-                            contextObjects.put(ATTRIBUTE_COMPONENT, components.get(0));
-                        } else {
-                            contextObjects.put(ATTRIBUTE_COMPONENT, null);
-                        }
-                    } else {
-                        contextObjects.put(ATTRIBUTE_COMPONENTS, components);
+                }
+                if(AreaDefinition.TYPE_SINGLE.equals(type)) {
+                    if(components.size() > 1) {
+                        throw new RenderException("Can't render single area [" + areaNode + "]: expected one component node but found more.");
                     }
+                    if(components.size() == 1) {
+                        contextObjects.put(ATTRIBUTE_COMPONENT, components.get(0));
+                    } else {
+                        contextObjects.put(ATTRIBUTE_COMPONENT, null);
+                    }
+                } else {
+                    contextObjects.put(ATTRIBUTE_COMPONENTS, components);
                 }
                 // FIXME we shouldn't manipulate the area definition directly
                 // we should use merge with the proxy approach
@@ -253,7 +252,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         catch (RepositoryException e) {
             throw new RenderException("Can't access area node [" + name + "] on [" + content + "]", e);
         }
-        if(isInherit()) {
+        if(area != null && isInherit()) {
             area = new InheritanceNodeWrapper(area);
         }
         return area;
