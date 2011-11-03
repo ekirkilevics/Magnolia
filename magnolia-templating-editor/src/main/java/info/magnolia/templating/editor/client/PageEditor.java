@@ -66,12 +66,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     public static final String MARKER_EDIT = "cms:edit";
     public static final String MARKER_AREA = "cms:area";
 
-    public static final String SELECTION_TYPE_PAGE = "PAGE";
-    public static final String SELECTION_TYPE_AREA_LIST = "AREA_LIST";
-    public static final String SELECTION_TYPE_AREA_SINGLE = "AREA_SINGLE";
-    public static final String SELECTION_TYPE_COMPONENT_IN_LIST = "COMPONENT_IN_LIST";
-    public static final String SELECTION_TYPE_COMPONENT_IN_SINGLE = "COMPONENT_IN_SINGLE";
-
     private boolean pageEditBarAlreadyProcessed = false;
     private String locale;
     private static Dictionary dictionary;
