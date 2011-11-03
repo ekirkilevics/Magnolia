@@ -49,7 +49,6 @@ import com.google.gwt.user.client.ui.Label;
  */
 public class AreaBarWidget extends AbstractBarWidget {
 
-    private PageEditor pageEditor;
     private String workspace;
     private String path;
     private String label;
@@ -61,9 +60,8 @@ public class AreaBarWidget extends AbstractBarWidget {
     private boolean optional = false;
     private boolean created = true;
 
-    public AreaBarWidget(AbstractBarWidget parentBar, final PageEditor pageEditor, Element element) {
+    public AreaBarWidget(final AbstractBarWidget parentBar, final PageEditor pageEditor, final Element element) {
         super(parentBar);
-        this.pageEditor = pageEditor;
 
         String content = element.getAttribute("content");
         int i = content.indexOf(':');

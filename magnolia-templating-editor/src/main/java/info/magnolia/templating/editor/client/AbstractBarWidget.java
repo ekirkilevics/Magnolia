@@ -53,7 +53,7 @@ public abstract class AbstractBarWidget extends FlowPanel {
 
     private AbstractBarWidget parentBar;
 
-    public AbstractBarWidget(AbstractBarWidget parentBar) {
+    public AbstractBarWidget(final AbstractBarWidget parentBar) {
         this.parentBar = parentBar;
 
         addDomHandler(new ClickHandler() {

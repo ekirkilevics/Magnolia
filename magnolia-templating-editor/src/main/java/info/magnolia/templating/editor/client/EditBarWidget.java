@@ -33,6 +33,8 @@
  */
 package info.magnolia.templating.editor.client;
 
+import info.magnolia.rendering.template.AreaDefinition;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -52,21 +54,15 @@ import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
  */
 public class EditBarWidget extends AbstractBarWidget {
 
-    private PageEditor pageEditor;
-
     private String workspace;
     private String path;
-
-    private String componentId; // name of the component, needed for drag n drop
     private String dialog;
-    private String format; // bar or button (its likely too late to make a decision here)
     private String id;
     private String parentAreaType;
 
-    public EditBarWidget(final AreaBarWidget parentBar, final PageEditor pageEditor, Element element) {
+    public EditBarWidget(final AreaBarWidget parentBar, final PageEditor pageEditor, final Element element) {
 
         super(parentBar);
-        this.pageEditor = pageEditor;
 
         String content = element.getAttribute("content");
         int i = content.indexOf(':');
@@ -77,9 +73,7 @@ public class EditBarWidget extends AbstractBarWidget {
 
         setId("__"+id);
 
-        this.componentId = element.getAttribute("template");
         this.dialog = element.getAttribute("dialog");
-        this.format = element.getAttribute("format");
         this.parentAreaType = parentBar.getType();
 
         createButtons(pageEditor);
@@ -132,7 +126,7 @@ public class EditBarWidget extends AbstractBarWidget {
         addButton(edit, Float.LEFT);
 
         //single area component obviously cannot be moved
-        if("list".equals(parentAreaType)) {
+        if(AreaDefinition.TYPE_LIST.equals(parentAreaType)) {
             final Button move = new Button(getDictionary().get("buttons.move.js"));
             move.addClickHandler(new ClickHandler() {
                 @Override

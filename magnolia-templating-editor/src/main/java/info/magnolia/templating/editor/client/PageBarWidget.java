@@ -56,7 +56,7 @@ public class PageBarWidget extends AbstractBarWidget {
     private String dialog;
     private boolean previewMode = false;
 
-    public PageBarWidget(final PageEditor pageEditor, Element element) {
+    public PageBarWidget(final PageEditor pageEditor, final Element element) {
         super(null);
         this.pageEditor = pageEditor;
 
