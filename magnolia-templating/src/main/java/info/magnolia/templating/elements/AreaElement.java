@@ -40,6 +40,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.predicate.InheritablePredicate;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
@@ -96,7 +97,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private boolean inherit;
 
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
-    private Map<String, Object> savedCtxAttributes = new HashMap<String, Object>();
+    private final Map<String, Object> savedCtxAttributes = new HashMap<String, Object>();
 
 
     public AreaElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
@@ -253,7 +254,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
             throw new RenderException("Can't access area node [" + name + "] on [" + content + "]", e);
         }
         if(area != null && isInherit()) {
-            area = new InheritanceNodeWrapper(area);
+            area = new InheritanceNodeWrapper(area, new InheritablePredicate());
         }
         return area;
     }

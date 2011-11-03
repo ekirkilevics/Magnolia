@@ -36,6 +36,8 @@ package info.magnolia.jcr.wrapper;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.iterator.ChainedNodeIterator;
+import info.magnolia.jcr.iterator.FilteringNodeIterator;
+import info.magnolia.jcr.predicate.AbstractPredicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,15 +70,33 @@ import org.apache.commons.lang.StringUtils;
  */
 public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
 
-    private Node start;
+    private final Node start;
+    private final AbstractPredicate<Node> filter;
 
     public InheritanceNodeWrapper(Node node) {
         this(node, node);
     }
 
+    public InheritanceNodeWrapper(Node node, AbstractPredicate<Node> filter) {
+        this(node, node, filter);
+    }
+
+    public InheritanceNodeWrapper(Node node, Node start, AbstractPredicate<Node> filter) {
+        super(node);
+        this.start = start;
+        this.filter = filter;
+    }
+
     public InheritanceNodeWrapper(Node node, Node start) {
         super(node);
         this.start = start;
+        this.filter = new AbstractPredicate<Node>() {
+
+            @Override
+            public boolean evaluateTyped(Node t) {
+                return true;
+            }
+        };
     }
 
     /**
@@ -168,7 +188,7 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
     @Override
     public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
         Node inherited = getNodeSafely(relPath);
-        if(inherited == null){
+        if (inherited == null || !filter.evaluateTyped(inherited)) {
             throw new PathNotFoundException("Can't inherit a node [" + relPath + "] on node [" + getWrappedNode().getPath() + "]");
         }
         return wrapNode(inherited);
@@ -191,7 +211,7 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
         // add direct children
         nodes.add(getWrappedNode().getNodes());
 
-        return wrapNodeIterator(new ChainedNodeIterator(nodes));
+        return wrapNodeIterator(new FilteringNodeIterator(new ChainedNodeIterator(nodes), filter));
     }
 
     @Override
@@ -211,7 +231,7 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
         // add direct children
         nodes.add(getWrappedNode().getNodes(namePattern));
 
-        return wrapNodeIterator(new ChainedNodeIterator(nodes));
+        return wrapNodeIterator(new FilteringNodeIterator(new ChainedNodeIterator(nodes), filter));
     }
 
     @Override
@@ -232,6 +252,24 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
         }
     }
 
+    @Override
+    public boolean hasProperty(String name) throws RepositoryException {
+        try {
+            if (getWrappedNode().hasProperty(name)) {
+                return true;
+            }
+            Node inherited = getNodeSafely(findNextAnchor(), resolveInnerPath());
+            if (inherited != null) {
+                return inherited.hasProperty(name);
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeException("Can't inherit nodedata " + name + "  for " + getWrappedNode(), e);
+
+        }
+        // creates a none existing node data in the standard manner
+        return super.hasProperty(name);
+    }
+
     /**
      * True if this is not a sub node of the starting point.
      */
@@ -248,6 +286,6 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
         if(node instanceof InheritanceNodeWrapper) {
             return node;
         }
-        return new InheritanceNodeWrapper(node, start);
+        return new InheritanceNodeWrapper(node, start, filter);
     }
 }
