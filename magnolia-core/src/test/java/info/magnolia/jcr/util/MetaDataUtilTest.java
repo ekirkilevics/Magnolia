@@ -39,12 +39,11 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 
-import javax.jcr.Node;
-import javax.jcr.Property;
+import java.util.Date;
+
 import javax.jcr.RepositoryException;
 
 import org.junit.Before;
@@ -86,16 +85,17 @@ public class MetaDataUtilTest {
         when(ctx.getUser()).thenReturn(user);
         when(user.getName()).thenReturn(testUserName);
 
-        Node metaDataNode = root.addNode(MetaData.DEFAULT_META_NODE);
+        root.addNode(MetaData.DEFAULT_META_NODE);
+        MetaData metaData = MetaDataUtil.getMetaData(root);
 
         // WHEN
         MetaDataUtil.updateMetaData(root);
 
         // THEN
-        Property lastModProperty = metaDataNode.getProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.LAST_MODIFIED);
-        assertTrue(System.currentTimeMillis() - lastModProperty.getDate().getTimeInMillis() < 100);
+        Date lastMod = metaData.getModificationDate().getTime();
+        assertTrue("lastMod hast not been updated in the last 100ms!" , System.currentTimeMillis() - lastMod.getTime() < 100);
 
-        Property authorProperty = metaDataNode.getProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.AUTHOR_ID);
-        assertEquals(testUserName,authorProperty.getString());
+        String authorId = metaData.getAuthorId();
+        assertEquals(testUserName,authorId);
     }
 }
