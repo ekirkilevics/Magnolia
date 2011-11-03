@@ -133,7 +133,7 @@ public class CommandTransformer extends Content2BeanTransformerImpl {
         // support chains
         if(state.getCurrentBean() instanceof Chain){
             Chain chain = (Chain) state.getCurrentBean();
-            for (Iterator iter = values.entrySet().iterator(); iter.hasNext();) {
+            for (Iterator iter = values.values().iterator(); iter.hasNext();) {
                 Object value = iter.next();
                 if (value instanceof Command) {
                     Command command = (Command) value;
