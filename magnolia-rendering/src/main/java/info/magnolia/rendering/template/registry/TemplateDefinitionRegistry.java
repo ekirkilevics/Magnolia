@@ -126,11 +126,25 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
         final ArrayList<TemplateDefinition> availableTemplateDefinitions = new ArrayList<TemplateDefinition>();
         final Collection<TemplateDefinition> templateDefinitions = getTemplateDefinitions();
         for (TemplateDefinition templateDefinition : templateDefinitions) {
-            if (!templateDefinition.getId().equals(DELETED_PAGE_TEMPLATE) && templateAvailability.isAvailable(content, templateDefinition)) {
+            if (isAvailable(templateDefinition, content)) {
                 availableTemplateDefinitions.add(templateDefinition);
             }
         }
         return availableTemplateDefinitions;
+    }
+
+    protected boolean isAvailable(TemplateDefinition templateDefinition, Node content) {
+        if (templateDefinition.getId().equals(DELETED_PAGE_TEMPLATE)) {
+            return false;
+        }
+        // TODO temporary fix for limiting only website to <moduleName>:pages/*
+        try {
+            if (content.getSession().getWorkspace().getName().equals("website") && !StringUtils.substringAfter(templateDefinition.getId(), ":").startsWith("pages/")) {
+                return false;
+            }
+        } catch (RepositoryException e) {
+        }
+        return templateAvailability.isAvailable(content, templateDefinition);
     }
 
     /**
