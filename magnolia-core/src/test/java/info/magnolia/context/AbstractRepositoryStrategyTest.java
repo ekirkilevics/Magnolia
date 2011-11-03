@@ -33,42 +33,77 @@
  */
 package info.magnolia.context;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
-import info.magnolia.jcr.registry.SessionProviderRegistry;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.repository.RepositoryManager;
-import info.magnolia.test.RepositoryTestCase;
-
-import javax.jcr.Session;
-
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.Ignore;
+
+import info.magnolia.repository.DefaultRepositoryManager;
+import info.magnolia.repository.RepositoryManager;
+import info.magnolia.test.RepositoryTestCase;
+import static org.mockito.Mockito.mock;
 
 /**
  * @version $Id$
  */
+@Ignore
 public class AbstractRepositoryStrategyTest extends RepositoryTestCase {
 
-    private AbstractRepositoryStrategy strategy;
+    private DefaultRepositoryStrategy strategy;
 
     @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
         UserContext ctx = mock(UserContext.class);
-        RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
-        SessionProviderRegistry sessionProviderRegistry = new SessionProviderRegistry();
-        strategy = new DefaultRepositoryStrategy(repositoryManager, sessionProviderRegistry, ctx);
+        RepositoryManager repositoryManager = new DefaultRepositoryManager();
+        strategy = new DefaultRepositoryStrategy(repositoryManager, ctx);
+    }
+/*
+    @Test
+    public void testGetAdminCredentials() {
+        // GIVEN
+        // all done in setup already
+
+        // WHEN
+        SimpleCredentials credentials = strategy.getAdminUserCredentials();
+
+        // THEN
+        assertEquals("admin", credentials.getUserID());
+        assertEquals("admin", new String(credentials.getPassword()));
     }
 
     @Test
-    public void testGetSession() throws Exception {
-        Session session = strategy.getSession("website");
-        assertNotNull(session);
-        strategy.release();
+    public void testGetUserCredentialsReturnsAnonymousIfUserIsNotSet() {
+        // GIVEN
+        Context context = mock(Context.class);
+        MgnlContext.setInstance(context);
+
+        // WHEN
+        SimpleCredentials credentials = strategy.getUserCredentials();
+
+        // THEN
+        assertEquals("anonymous", credentials.getUserID());
+        assertEquals("anonymous", new String(credentials.getPassword()));
     }
+
+    @Test
+    public void testGetUserCredentialsReturnsCredentialsFromContextUserIfSet() {
+        // GIVEN
+        Context context = mock(Context.class);
+        MgnlContext.setInstance(context);
+        User user = mock(User.class);
+        when(context.getUser()).thenReturn(user);
+        when(user.getName()).thenReturn("user");
+        when(user.getPassword()).thenReturn("password");
+
+        // WHEN
+        SimpleCredentials credentials = strategy.getUserCredentials();
+
+        // THEN
+        assertEquals("user", credentials.getUserID());
+        assertEquals("password", new String(credentials.getPassword()));
+    }
+*/
 
     @Override
     @After

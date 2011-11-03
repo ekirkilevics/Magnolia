@@ -34,60 +34,53 @@
 package info.magnolia.context;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-import info.magnolia.cms.security.User;
-import info.magnolia.jcr.registry.SessionProviderRegistry;
-import info.magnolia.repository.DefaultRepositoryManager;
+import javax.jcr.Session;
+
+import org.junit.Test;
+
+import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryManager;
 import info.magnolia.test.RepositoryTestCase;
-
-import javax.jcr.SimpleCredentials;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @version $Id$
  */
 public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
 
-    private DefaultRepositoryStrategy strategy;
-
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        UserContext ctx = mock(UserContext.class);
-        RepositoryManager repositoryManager = new DefaultRepositoryManager();
-        SessionProviderRegistry sessionProviderRegistry = new SessionProviderRegistry();
-        strategy = new DefaultRepositoryStrategy(repositoryManager, sessionProviderRegistry, ctx);
-    }
-
     @Test
-    public void testGetUserCredentialsReturnsCredentialsFromContextUserIfSet() {
-        // GIVEN
-        Context context = mock(Context.class);
-        MgnlContext.setInstance(context);
-        User user = mock(User.class);
-        when(context.getUser()).thenReturn(user);
-        when(user.getName()).thenReturn("user");
-        when(user.getPassword()).thenReturn("password");
-
-        // WHEN
-        SimpleCredentials credentials = (SimpleCredentials) strategy.getCredentials();
-
-        // THEN
-        assertEquals("user", credentials.getUserID());
-        assertEquals("password", new String(credentials.getPassword()));
+    public void testRepositorySessions() throws Exception {
+        UserContext context = createMock(UserContext.class);
+        RepositoryManager repositoryManager = Components.getComponent(RepositoryManager.class);
+        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(repositoryManager, context);
+        Session session = strategy.getSession("website");
+        assertNotNull(session);
+        strategy.release();
     }
+/*
+    @Test
+    public void testHierarchyManagers() throws Exception {
+        UserContext context = createMock(UserContext.class);
+        User user = createMock(User.class);
+        RepositoryManager registry = createMock(RepositoryManager.class);
 
-    @Override
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-        MgnlContext.setInstance(null);
+        Set principalSet = new HashSet();
+        PrincipalCollection principals = createMock(PrincipalCollection.class);
+        principalSet.add(principals);
+        ACL acl = createMock(ACL.class);
+        Subject subject = new Subject(false, principalSet, new HashSet(), new HashSet());
+        expect(context.getUser()).andReturn(user).anyTimes();
+        expect(user.getName()).andReturn("admin").anyTimes();
+        expect(principals.get("magnolia_website")).andReturn(acl).anyTimes();
+        expect(acl.getList()).andReturn(new ArrayList()).anyTimes();
+        expect(registry.getSession("website", any(Credentials.class))).andReturn(sessionProvider);
+        replay(context, user, registry, principals, acl);
+
+        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(registry, context);
+        HierarchyManager hierarchyManager = HierarchyManagerUtil.asHierarchyManager(strategy.getSession("website"));
+        assertNotNull(hierarchyManager);
+        verify(context, user, registry, principals, acl);
     }
-
+*/
 }
