@@ -447,18 +447,22 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
         @Override
         public boolean evaluateTyped(Node t) {
-            try {
-                if(t.getPath().startsWith(root.getPath())){
-                    return true;
-                }
-                if(!t.isNodeType(MgnlNodeType.NT_COMPONENT)){
-                    return true;
-                }
-                return t.hasProperty("inheritable") && t.getProperty("inheritable").getBoolean();
-            } catch (RepositoryException e) {
-                log.warn("Failed to retrieve inheritable property for {}", t);
-                return false;
-            }
+            // FIXME not all areas using inheritance want to use the inheritable flag
+            // we need a better configuration or change to an exclution flag
+            return true;
+
+//            try {
+//                if(t.getPath().startsWith(root.getPath())){
+//                    return true;
+//                }
+//                if(!t.isNodeType(MgnlNodeType.NT_COMPONENT)){
+//                    return true;
+//                }
+//                return t.hasProperty("inheritable") && t.getProperty("inheritable").getBoolean();
+//            } catch (RepositoryException e) {
+//                log.warn("Failed to retrieve inheritable property for {}", t);
+//                return false;
+//            }
         }
     }
 }
