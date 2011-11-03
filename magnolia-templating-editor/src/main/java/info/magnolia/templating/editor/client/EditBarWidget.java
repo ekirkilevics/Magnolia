@@ -123,7 +123,7 @@ public class EditBarWidget extends AbstractBarWidget {
 
             }
         });
-        addButton(edit, Float.LEFT);
+        addButton(edit, Float.RIGHT);
 
         //single area component obviously cannot be moved
         if(AreaDefinition.TYPE_LIST.equals(parentAreaType)) {
@@ -134,7 +134,7 @@ public class EditBarWidget extends AbstractBarWidget {
                     pageEditor.moveComponentStart(id);
                 }
             });
-            addButton(move, Float.LEFT);
+            addButton(move, Float.RIGHT);
         }
 
         final Button delete = new Button(getDictionary().get("buttons.delete.js"));
@@ -144,7 +144,7 @@ public class EditBarWidget extends AbstractBarWidget {
                 pageEditor.deleteComponent(path);
             }
         });
-        addButton(delete, Float.RIGHT);
+        addButton(delete, Float.LEFT);
     }
 
     @Override
