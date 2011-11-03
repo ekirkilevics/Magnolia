@@ -70,6 +70,8 @@ public class DialogHandlerManager extends ObservedManager {
 
     private static final String CLASS = "class";
 
+    private static final String ND_NAME = "name";
+
     /**
      * All handlers are registered here.
      */
@@ -88,6 +90,7 @@ public class DialogHandlerManager extends ObservedManager {
             log.error("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
             throw new IllegalStateException("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e));
         }
+
         for (Iterator<Content> iter = dialogNodes.iterator(); iter.hasNext();) {
             Content dialogNode = new ExtendingContentWrapper(new SystemContentWrapper(iter.next()));
             try {
@@ -103,12 +106,17 @@ public class DialogHandlerManager extends ObservedManager {
                         + ExceptionUtils.getMessage(e));
             }
 
-            String dialogName;
+            String newFormatName;
             try {
-                dialogName = getDialogName(dialogNode);
+                newFormatName = getDialogName(dialogNode);
             } catch (RepositoryException e) {
                 log.warn("Can't establish name for dialog [" + dialogNode.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
                 continue;
+            }
+
+            String name = dialogNode.getNodeData(ND_NAME).getString();
+            if (StringUtils.isEmpty(name)) {
+                name = dialogNode.getName();
             }
 
             // dialog class is not mandatory
@@ -118,12 +126,13 @@ public class DialogHandlerManager extends ObservedManager {
                 if (StringUtils.isNotEmpty(className)) {
                     dialogClass = Classes.getClassFactory().forName(className);
                 }
+
+                registerDialogHandler(name, dialogClass, dialogNode);
+                registerDialogHandler(newFormatName, dialogClass, dialogNode);
             }
             catch (ClassNotFoundException e) {
                 log.warn("Can't find dialog handler class " + className, e);
             }
-
-            registerDialogHandler(dialogName, dialogClass, dialogNode);
         }
     }
 
@@ -163,6 +172,12 @@ public class DialogHandlerManager extends ObservedManager {
 
         if (handlerConfig == null) {
             throw new InvalidDialogHandlerException(name, dialogHandlers.keySet().toString());
+        }
+
+        if (name.indexOf(':') == -1) {
+            log.info(
+                    "Using old naming style for dialog [" + name + "]." +
+                    " As of version 4.5 of Magnolia you should use the new form <moduleName>:path to access your dialogs.");
         }
 
         return instantiateHandler(name, request, response, handlerConfig);
