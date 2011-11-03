@@ -54,5 +54,5 @@ public interface RepositoryConstants {
      * magnolia namespace.
      */
     public static final String NAMESPACE_PREFIX = "mgnl";
-    public static final String NAMESPACE_URI = "http://www.magnolia-cms.com/jcr/mgnl";
+    public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl";
 }
