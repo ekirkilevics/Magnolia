@@ -33,12 +33,19 @@
  */
 package info.magnolia.jcr.util;
 
-import static org.junit.Assert.assertNotNull;
-
-import javax.jcr.RepositoryException;
-
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.security.User;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
+
+import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,19 +59,43 @@ public class MetaDataUtilTest {
 
     @Before
     public void setUp() {
-        root = new MockNode("root");
+        MgnlContext.setInstance(null);
+        MockSession session = new MockSession("MetaDataTest");
+        root = (MockNode) session.getRootNode();
     }
     @Test
     public void testGetMetaData() throws Exception {
+        // GIVEN
         root.addNode(MetaData.DEFAULT_META_NODE);
+
+        // WHEN
         MetaData md = MetaDataUtil.getMetaData(root);
+
+        // THEN
         assertNotNull(md);
     }
 
     @Test
     public void testUpdateMetaData() throws RepositoryException{
+        // GIVEN
+        final String testUserName = "test";
+        final Context ctx = mock(Context.class);
+        final User user = mock(User.class);
+        MgnlContext.setInstance(ctx);
+
+        when(ctx.getUser()).thenReturn(user);
+        when(user.getName()).thenReturn(testUserName);
+
+        Node metaDataNode = root.addNode(MetaData.DEFAULT_META_NODE);
+
+        // WHEN
         MetaDataUtil.updateMetaData(root);
 
+        // THEN
+        Property lastModProperty = metaDataNode.getProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.LAST_MODIFIED);
+        assertTrue(System.currentTimeMillis() - lastModProperty.getDate().getTimeInMillis() < 100);
 
+        Property authorProperty = metaDataNode.getProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.AUTHOR_ID);
+        assertEquals(testUserName,authorProperty.getString());
     }
 }
