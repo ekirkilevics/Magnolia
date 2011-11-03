@@ -74,7 +74,10 @@ public class EditBarWidget extends AbstractBarWidget {
         setId("__"+id);
 
         this.dialog = element.getAttribute("dialog");
-        this.parentAreaType = parentBar.getType();
+
+        if(parentBar != null) {
+            this.parentAreaType = parentBar.getType();
+        }
 
         createButtons(pageEditor);
 
