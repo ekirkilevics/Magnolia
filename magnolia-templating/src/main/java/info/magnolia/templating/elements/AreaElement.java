@@ -430,7 +430,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
     }
 
     /**
-     * Controls output based on the existance and value of inheritable property.
+     * Controls output based on the existence and value of inheritable property.
      *
      * @version $Id$
      *
@@ -442,21 +442,21 @@ public class AreaElement extends AbstractContentTemplatingElement {
         private Node root;
 
         public InheritablePredicate(Node root) {
-        	this.root = root;
-    	}
+            this.root = root;
+        }
 
-    	@Override
+        @Override
         public boolean evaluateTyped(Node t) {
             try {
-            	if(t.getPath().startsWith(root.getPath())){
-            		return true;
-            	}
-            	if(!t.isNodeType(MgnlNodeType.NT_COMPONENT)){
-            		return true;
-            	}
+                if(t.getPath().startsWith(root.getPath())){
+                    return true;
+                }
+                if(!t.isNodeType(MgnlNodeType.NT_COMPONENT)){
+                    return true;
+                }
                 return t.hasProperty("inheritable") && t.getProperty("inheritable").getBoolean();
             } catch (RepositoryException e) {
-                log.warn("Failed to retrieve inheritable property for " + t);
+                log.warn("Failed to retrieve inheritable property for {}", t);
                 return false;
             }
         }
