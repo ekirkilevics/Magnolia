@@ -36,6 +36,8 @@ package info.magnolia.module.admininterface.trees;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.TreeColumn;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
@@ -92,7 +94,7 @@ public class TemplateColumn extends TreeColumn {
         catch (RegistrationException e) {
             log.error("Template with id {} doesn't exist.", templateName);
         }
-        return template != null ? template.getTitle() : "Missing: " + StringUtils.defaultString(templateName);
+        return template != null ? getI18nTitle(template) : "Missing: " + StringUtils.defaultString(templateName);
 
     }
 
@@ -103,9 +105,15 @@ public class TemplateColumn extends TreeColumn {
         templateSelect.getOptions().clear();
 
         for (TemplateDefinition templateDefinition : templateDefinitons) {
-            String title = MessagesUtil.javaScriptString(templateDefinition.getTitle());
+            String title = MessagesUtil.javaScriptString(getI18nTitle(templateDefinition));
             templateSelect.setOptions(title, templateDefinition.getId());
         }
         return templateSelect.getHtml();
+    }
+
+    private String getI18nTitle(TemplateDefinition template) {
+        Messages messages = MessagesManager.getMessages(template.getI18nBasename());
+        String title = template.getTitle();
+        return messages.getWithDefault(title, title);
     }
 }
