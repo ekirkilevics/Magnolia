@@ -61,8 +61,9 @@ public class EditBarWidget extends AbstractBarWidget {
     private String dialog;
     private String format; // bar or button (its likely too late to make a decision here)
     private String id;
+    private String parentAreaType;
 
-    public EditBarWidget(AbstractBarWidget parentBar, final PageEditor pageEditor, Element element) {
+    public EditBarWidget(final AreaBarWidget parentBar, final PageEditor pageEditor, Element element) {
 
         super(parentBar);
         this.pageEditor = pageEditor;
@@ -79,12 +80,14 @@ public class EditBarWidget extends AbstractBarWidget {
         this.componentId = element.getAttribute("template");
         this.dialog = element.getAttribute("dialog");
         this.format = element.getAttribute("format");
+        this.parentAreaType = parentBar.getType();
 
         createButtons(pageEditor);
 
         createMouseEventsHandlers(pageEditor);
 
         setClassName("mgnlControlBarSmall");
+
 
     }
 
@@ -128,14 +131,17 @@ public class EditBarWidget extends AbstractBarWidget {
         });
         addButton(edit, Float.LEFT);
 
-        final Button move = new Button(getDictionary().get("buttons.move.js"));
-        move.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                pageEditor.moveComponentStart(id);
-            }
-        });
-        addButton(move, Float.LEFT);
+        //single area component obviously cannot be moved
+        if("list".equals(parentAreaType)) {
+            final Button move = new Button(getDictionary().get("buttons.move.js"));
+            move.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    pageEditor.moveComponentStart(id);
+                }
+            });
+            addButton(move, Float.LEFT);
+        }
 
         final Button delete = new Button(getDictionary().get("buttons.delete.js"));
         delete.addClickHandler(new ClickHandler() {
