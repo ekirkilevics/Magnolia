@@ -114,7 +114,7 @@ public class AreaBarWidget extends AbstractBarWidget {
     private void createButtons(final PageEditor pageEditor, final Element element) {
         if(this.optional) {
             if(!this.created) {
-                Button createButton = new Button(getDictionary().get("buttons.new.js"));
+                Button createButton = new Button(getDictionary().get("buttons.createarea.js"));
                 createButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
@@ -124,14 +124,14 @@ public class AreaBarWidget extends AbstractBarWidget {
                 addButton(createButton, Float.RIGHT);
 
             } else {
-                Button removeButton = new Button(getDictionary().get("buttons.delete.js"));
+                Button removeButton = new Button(getDictionary().get("buttons.removearea.js"));
                 removeButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
                         pageEditor.deleteComponent(path + "/" + name);
                     }
                 });
-                addButton(removeButton, Float.LEFT);
+                addButton(removeButton, Float.RIGHT);
                 createEditAndAddComponentButtons(pageEditor, element);
             }
         } else {
@@ -141,7 +141,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
     private void createEditAndAddComponentButtons(final PageEditor pageEditor, final Element element) {
         if (!AreaDefinition.TYPE_NO_COMPONENT.equals(type) && element.hasAttribute("dialog")) {
-            Button editButton = new Button(getDictionary().get("buttons.edit.js"));
+            Button editButton = new Button(getDictionary().get("buttons.editarea.js"));
             editButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -152,7 +152,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         }
 
         if (this.showAddButton) {
-            Button addButton = new Button(getDictionary().get("buttons.new.js"));
+            Button addButton = new Button(getDictionary().get("buttons.addcomponent.js"));
             addButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
