@@ -45,6 +45,7 @@ import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.context.ContextFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
@@ -115,7 +116,6 @@ public abstract class AbstractDirectiveTestCase {
 
         fmHelper = new FreemarkerHelper(fmConfig);
 
-        ComponentsTestUtil.setInstance(SystemContext.class, new MockContext());
         session =
             MockUtil.createAndSetHierarchyManager("testWorkspace", StringUtils.join(new String[] { "/foo/bar.@type=mgnl:content",
                     "/foo/bar/MetaData.@type=mgnl:metadata", "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
@@ -161,6 +161,11 @@ public abstract class AbstractDirectiveTestCase {
         configuration.registerImplementation(MessagesManager.class, DefaultMessagesManager.class);
         configuration.registerImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
         configuration.registerImplementation(I18nAuthoringSupport.class, DefaultI18nAuthoringSupport.class);
+        configuration.registerImplementation(ContextFactory.class);
+
+        MockContext systemContext = new MockContext();
+        systemContext.addSession("testWorkspace", session.getJcrSession());
+        configuration.registerInstance(SystemContext.class, systemContext);
 
         aggState.setCurrentContent(session.getContent("/foo/bar/paragraphs/1"));
         renderingContext = new AggregationStateBasedRenderingContext(aggState);
