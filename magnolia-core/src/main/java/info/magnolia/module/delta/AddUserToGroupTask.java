@@ -63,7 +63,7 @@ public class AddUserToGroupTask extends AbstractTask {
         } else {
             // TODO this saves at node level, thus breaking the "save once per module install/update" rule :(
             try{
-                user.addGroup(groupname);
+                userManager.addGroup(user, groupname);
             }
             catch (UnsupportedOperationException e) {
                 ctx.warn("Can't add the user \"" + username + "\" to the \"" + groupname + "\" group due to an unsupported operation exception. This is most likely the case if the users are managed externaly.");
