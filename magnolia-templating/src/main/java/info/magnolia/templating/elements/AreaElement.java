@@ -36,10 +36,8 @@ package info.magnolia.templating.elements;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
@@ -65,7 +63,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -150,20 +147,21 @@ public class AreaElement extends AbstractContentTemplatingElement {
     }
     //TODO fgrilli: we should probably place autogeneration code all in one place. Currently autogeneration happens here for areas and in DefaultRenderingEngine
     //for other types. The reason we areas autogeneration is not there too is because of missing info on node type for the node to be created.
-    private Node createNewAreaNode() {
-        Node newAreaNode = null;
-        try {
-            newAreaNode = NodeUtil.createPath(this.parentNode, this.name, MgnlNodeType.NT_AREA);
-            NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
-            newAreaNode.getSession().save();
-        } catch (AccessDeniedException e) {
-            new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
-        } catch (PathNotFoundException e) {
-            new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
-        } catch (RepositoryException e) {
-            new RuntimeRepositoryException("An error occurred while trying to create new area " + this.name, e);
-        }
-        return newAreaNode;
+    private Node createNewAreaNode() throws RepositoryException {
+        final String parentId = this.parentNode.getIdentifier();
+        final String workspaceName = this.parentNode.getSession().getWorkspace().getName();
+
+        MgnlContext.doInSystemContext(new MgnlContext.Op<Void, RepositoryException>() {
+            @Override
+            public Void exec() throws RepositoryException {
+                Node parentNodeInSystemSession = NodeUtil.getNodeByIdentifier(workspaceName, parentId);
+                Node newAreaNode = NodeUtil.createPath(parentNodeInSystemSession, AreaElement.this.name, MgnlNodeType.NT_AREA);
+                NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
+                newAreaNode.getSession().save();
+                return null;
+            }
+        });
+        return this.parentNode.getNode(this.name);
     }
 
     protected void buildAdHocAreaDefinition() {
