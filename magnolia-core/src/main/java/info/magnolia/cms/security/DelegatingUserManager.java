@@ -35,10 +35,10 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.security.auth.ACL;
 
-import javax.security.auth.Subject;
-
 import java.util.Collection;
 import java.util.Map;
+
+import javax.security.auth.Subject;
 
 
 /**
@@ -189,6 +189,16 @@ public class DelegatingUserManager implements UserManager {
             @Override
             public User delegate(UserManager um) {
                 return um.addRole(user, roleName);
+            }
+        });
+    }
+
+    @Override
+    public User addGroup(final User user, final String groupName) {
+        return delegateUntilSupported(new Op<User>() {
+            @Override
+            public User delegate(UserManager um) {
+                return um.addGroup(user, groupName);
             }
         });
     }

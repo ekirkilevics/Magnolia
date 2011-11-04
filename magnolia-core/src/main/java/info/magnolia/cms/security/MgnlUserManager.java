@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.security;
 
+import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -515,5 +516,11 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
                 return null;
             }
         });
+    }
+
+    @Override
+    public User addGroup(User user, String groupName) {
+        super.add(user.getName(), groupName, NODE_GROUPS);
+        return getUser(user.getName());
     }
 }

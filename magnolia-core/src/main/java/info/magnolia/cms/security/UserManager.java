@@ -116,8 +116,17 @@ public interface UserManager {
     public User addRole(User user, String roleName);
 
     /**
+     * Adds user to a group.
+     * 
+     * @return user object with the group already assigned.
+     */
+    public User addGroup(User user, String groupName);
+
+    /**
      * Updates last access timestamp for the user.
-     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
+     * 
+     * @throws UnsupportedOperationException
+     *             if the current implementation doesn't support this operation
      */
     public void updateLastAccessTimestamp(User user) throws UnsupportedOperationException;
 

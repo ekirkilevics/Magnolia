@@ -118,4 +118,9 @@ public class ExternalUserManager implements UserManager {
     public User addRole(User user, String roleName) {
         throw new UnsupportedOperationException("not implemented yet");
     }
+
+    @Override
+    public User addGroup(User user, String groupName) {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
 }
