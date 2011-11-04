@@ -150,10 +150,4 @@ public class EditBarWidget extends AbstractBarWidget {
         addButton(delete, Float.RIGHT);
     }
 
-    @Override
-    public void attach(Element element) {
-        element.appendChild(getElement());
-        onAttach();
-    }
-
 }

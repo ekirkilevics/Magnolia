@@ -130,10 +130,4 @@ public class PageBarWidget extends AbstractBarWidget {
     public final boolean isPreviewMode() {
         return previewMode;
     }
-
-    @Override
-    public void attach(Element element) {
-        element.appendChild(getElement());
-        onAttach();
-    }
 }

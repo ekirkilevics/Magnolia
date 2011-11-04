@@ -35,6 +35,7 @@ package info.magnolia.templating.editor.client;
 
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -114,7 +115,8 @@ public abstract class AbstractBarWidget extends FlowPanel {
     }
 
     public void attach(Element element) {
-        element.appendChild(getElement());
+        final Node parentNode = element.getParentNode();
+        parentNode.insertAfter(getElement(), element);
         onAttach();
     }
 }

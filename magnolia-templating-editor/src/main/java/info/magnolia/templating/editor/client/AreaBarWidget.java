@@ -97,12 +97,6 @@ public class AreaBarWidget extends AbstractBarWidget {
         createButtons(pageEditor, element);
     }
 
-    @Override
-    public void attach(Element element) {
-        element.appendChild(getElement());
-        onAttach();
-    }
-
     public String getAvailableComponents() {
         return availableComponents;
     }
