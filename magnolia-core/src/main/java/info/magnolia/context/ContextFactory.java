@@ -43,16 +43,13 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Default context provider.
  * @author had
- * @version $Id: $
- *
- * @deprecated since 4.5, use IoC.
+ * @version $Id$
  */
 @Singleton
 public class ContextFactory {
 
     /**
      * @return new instance of the web context on every call.
-     * @deprecated since 4.5, use WebContextFactory.
      */
     public WebContext createWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         final WebContextFactory ctxFactory = Components.getComponentProvider().getComponent(WebContextFactory.class);
@@ -61,17 +58,15 @@ public class ContextFactory {
 
     /**
      * @return singleton instance of the <code>SystemContext</code>.
-     * @deprecated since 4.5, use IoC, simply let your component *depend* on SystemContext.
      */
     public SystemContext getSystemContext() {
-        return Components.getSingleton(SystemContext.class);
+        return Components.getComponent(SystemContext.class);
     }
 
     /**
      * @return singleton instance of itself.
-     * @deprecated since 4.5, use IoC, simply let your component *depend* on ContextFactory.
      */
     public static ContextFactory getInstance() {
-        return Components.getSingleton(ContextFactory.class);
+        return Components.getComponent(ContextFactory.class);
     }
 }
