@@ -51,8 +51,9 @@ import java.io.IOException;
  */
 public class InitElement extends AbstractContentTemplatingElement {
 
-    private static final String PAGE_EDITOR_JS_SOURCE =  MgnlContext.getContextPath() + "/.resources/editor/info.magnolia.templating.editor.PageEditor/info.magnolia.templating.editor.PageEditor.nocache.js";
-    private static final String PAGE_EDITOR_CSS =  MgnlContext.getContextPath() + "/.resources/magnolia-templating-editor/css/styles.css";
+    public static final String PAGE_EDITOR_JS_SOURCE =  MgnlContext.getContextPath() + "/.resources/editor/info.magnolia.templating.editor.PageEditor/info.magnolia.templating.editor.PageEditor.nocache.js";
+    public static final String PAGE_EDITOR_CSS =  MgnlContext.getContextPath() + "/.resources/magnolia-templating-editor/css/styles.css";
+
     private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
 
     public InitElement(ServerConfiguration server, RenderingContext renderingContext) {

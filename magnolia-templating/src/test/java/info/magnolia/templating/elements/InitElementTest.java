@@ -125,6 +125,16 @@ public class InitElementTest {
         assertTrue(out.toString().contains("<meta name=\"gwt:property\" content=\"locale=en\"/>"));
     }
 
+    @Test
+    public void testOutputContainsPageEditorStyles() throws Exception {
+        //GIVEN look at setUp method()
+
+        //WHEN
+        element.begin(out);
+        //THEN
+        assertTrue(out.toString().contains(InitElement.PAGE_EDITOR_CSS));
+    }
+
     @After
     public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
