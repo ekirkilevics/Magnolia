@@ -34,8 +34,6 @@
 package info.magnolia.module.exchangesimple;
 
 
-import static org.junit.Assert.*;
-
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.createStrictMock;
@@ -48,6 +46,8 @@ import static org.easymock.EasyMock.isNull;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.startsWith;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
@@ -125,13 +125,6 @@ public class ReceiveFilterTest extends MgnlTestCase {
     @Test
     public void testActivateShouldCreateNewNodeIfItDoesNotExist() throws Exception {
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
-            @Override
-            public void checkPermissions(HierarchyManager hm) {
-                // TODO : really, really, this should just crash
-                //  - and we should actually check permissions and assert the behaviour of ReceiveFilter when the user does not have the appropriate permissions
-                expect(hm.getAccessManager()).andReturn(null);
-
-            }
 
             @Override
             public void checkNode(HierarchyManager hm) throws Exception {
@@ -459,6 +452,8 @@ public class ReceiveFilterTest extends MgnlTestCase {
         // the file name (documents key) is only used here as the key of the map, is unrelated to actual name.
         form.getDocuments().put("blah.xml", new StreamOnlyDocument(xmlStream));
         form.getDocuments().put("node-to-activate.xml.gz", new StreamOnlyDocument(nodeStream));
+
+        expect(session.hasPermission(isA(String.class), eq(Session.ACTION_ADD_NODE))).andReturn(true).anyTimes();
 
         ComponentsTestUtil.setInstance(SystemContext.class, sysCtx);
         MgnlContext.setInstance(ctx);

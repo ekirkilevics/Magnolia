@@ -33,15 +33,15 @@
  */
 package info.magnolia.module.admininterface.commands;
 
-import info.magnolia.commands.MgnlCommand;
-import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionUtil;
+import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -62,7 +62,7 @@ public abstract class BaseRepositoryCommand extends MgnlCommand {
         } else {
             node = hm.getContent(getPath());
         }
-        Access.isGranted(ctx.getAccessManager(getRepository()), node.getHandle(), Permission.READ);
+        PermissionUtil.isGranted(MgnlContext.getJCRSession(getRepository()), node.getHandle(), Session.ACTION_READ);
         return node;
     }
 

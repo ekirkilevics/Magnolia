@@ -34,7 +34,12 @@
 package info.magnolia.module.admininterface.commands;
 
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.exchange.Syndicator;
@@ -43,7 +48,6 @@ import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
@@ -53,6 +57,7 @@ import java.util.ArrayList;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.Session;
 
 import org.junit.After;
 import org.junit.Before;
@@ -97,14 +102,14 @@ public class ActivationCommandTest {
         final Syndicator syndicator = createStrictMock(Syndicator.class);
         command.setSyndicator(syndicator);
         final Messages messages = createNiceMock(Messages.class);
-        final AccessManager accessMan = createStrictMock(AccessManager.class);
+        final Session session = createStrictMock(Session.class);
 
         ComponentsTestUtil.setInstance(SystemContext.class, sysCtx);
         MgnlContext.setInstance(ctx);
         expect(sysCtx.getHierarchyManager("some-repo")).andReturn(hm);
         expect(hm.getContent(PARENT_PATH)).andReturn(state);
-        expect(ctx.getAccessManager("some-repo")).andReturn(accessMan);
-        expect(accessMan.isGranted("/foo/bar", 8)).andReturn(true);
+        expect(ctx.getJCRSession("some-repo")).andReturn(session);
+        expect(session.hasPermission("/foo/bar", Session.ACTION_READ)).andReturn(true);
         expect(state.getHandle()).andReturn(PARENT_PATH);
         expect(state.getHandle()).andReturn(PARENT_PATH);
         expect(state.getName()).andReturn("foo");
@@ -124,7 +129,7 @@ public class ActivationCommandTest {
         //expect(ctx.getAttribute("msg", 1)).andReturn(null);
         //ctx.setMessage("msg", "Can't activate: :", 1);
 
-        Object[] mocks = new Object[] {sysCtx, ctx, accessMan, hm, state, parent, stateJCRNode, parentJCRNode, siblings, messages, syndicator, vhm,versionTmpNode,versionTmp};
+        Object[] mocks = new Object[] { session, sysCtx, ctx, hm, state, parent, stateJCRNode, parentJCRNode, siblings, messages, syndicator, vhm, versionTmpNode, versionTmp };
         replay(mocks);
         command.execute(ctx);
         verify(mocks);

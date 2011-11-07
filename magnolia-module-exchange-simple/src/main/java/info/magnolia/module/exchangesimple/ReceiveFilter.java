@@ -35,7 +35,6 @@ package info.magnolia.module.exchangesimple;
 
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -45,6 +44,7 @@ import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
@@ -64,6 +64,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.lock.LockException;
 import javax.servlet.FilterChain;
@@ -483,7 +484,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
     protected synchronized void importResource(MultipartForm data, Element resourceElement, HierarchyManager hm, String parentPath) throws Exception {
 
         // throws an exception in case you don't have the permission
-        Access.isGranted(hm.getAccessManager(), parentPath, Permission.WRITE);
+        PermissionUtil.isGranted(hm.getWorkspace().getSession(), parentPath, Session.ACTION_ADD_NODE);
 
         final String name = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
         final String fileName = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
