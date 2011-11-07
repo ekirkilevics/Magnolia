@@ -51,7 +51,8 @@ import java.io.IOException;
  */
 public class InitElement extends AbstractContentTemplatingElement {
 
-    public static final String PAGE_EDITOR_JS_SOURCE =  MgnlContext.getContextPath() + "/.resources/editor/info.magnolia.templating.editor.PageEditor/info.magnolia.templating.editor.PageEditor.nocache.js";
+    private static final String PAGE_EDITOR_JS_SOURCE =  MgnlContext.getContextPath() + "/.resources/editor/info.magnolia.templating.editor.PageEditor/info.magnolia.templating.editor.PageEditor.nocache.js";
+    private static final String PAGE_EDITOR_CSS =  MgnlContext.getContextPath() + "/.resources/magnolia-templating-editor/css/styles.css";
     private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
 
     public InitElement(ServerConfiguration server, RenderingContext renderingContext) {
@@ -70,6 +71,7 @@ public class InitElement extends AbstractContentTemplatingElement {
         helper.append("<meta name=\"gwt:property\" content=\"locale=" + i18nSupport.getLocale() +"\"/>\n");
         helper.append(src.getHtmlCss());
         helper.append(src.getHtmlJs());
+        helper.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + PAGE_EDITOR_CSS + "\"></link>\n");
         helper.append("<script type=\"text/javascript\" src=\"" + PAGE_EDITOR_JS_SOURCE + "\"></script>\n");
     }
 

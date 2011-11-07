@@ -42,6 +42,7 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 
 /**
@@ -89,8 +90,11 @@ public class AreaBarWidget extends AbstractBarWidget {
             this.created = Boolean.parseBoolean(element.getAttribute("created"));
         }
 
-        setClassName("mgnlAreaControlBar");
-        Label areaName = new Label(this.label);
+        setClassName("mgnlAreaEditBar");
+        Label areaName = new InlineLabel(this.label);
+        //tooltip. Nice to have when area label is truncated because too long.
+        areaName.setTitle(this.label);
+
         //setStylePrimaryName(..) replaces gwt default css class, in this case gwt-Label
         areaName.setStylePrimaryName("mgnlAreaLabel");
         add(areaName);
