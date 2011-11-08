@@ -126,7 +126,7 @@ public interface Context extends org.apache.commons.chain.Context {
 
     /**
      * Get QueryManager created for this user on the specified repository.
-     * @deprecated since 4.5 - use {@link #getJCRWorkspace(String)}
+     * @deprecated since 4.5 - use {@link #getJCRSession(String)} and acquire the JCR query manager directly from the session.
      */
     @Deprecated
     public QueryManager getQueryManager(String workspaceName);
