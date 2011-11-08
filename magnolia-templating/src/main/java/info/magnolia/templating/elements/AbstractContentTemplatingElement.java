@@ -33,6 +33,10 @@
  */
 package info.magnolia.templating.elements;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -40,6 +44,7 @@ import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 
@@ -56,6 +61,7 @@ public abstract class AbstractContentTemplatingElement extends AbstractTemplatin
     private String workspace;
     private String nodeIdentifier;
     private String path;
+    private Map<String, Object> savedCtxAttributes = new HashMap<String, Object>();
 
     public AbstractContentTemplatingElement(ServerConfiguration server, RenderingContext renderingContext) {
         super(server, renderingContext);
@@ -132,5 +138,50 @@ public abstract class AbstractContentTemplatingElement extends AbstractTemplatin
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    protected void setAttributesInWebContext(final Map<String, Object> attributes, int scope) {
+        if(attributes == null){
+            return;
+        }
+        switch(scope) {
+            case WebContext.APPLICATION_SCOPE:
+            case WebContext.SESSION_SCOPE:
+            case WebContext.LOCAL_SCOPE:
+                break;
+            default:
+                throw new IllegalArgumentException("Scope is not valid. Use one of the scopes defined in info.magnolia.context.WebContext");
+        }
+        final WebContext webContext = MgnlContext.getWebContext();
+        for(Entry<String, Object> entry : attributes.entrySet()) {
+            final String key = entry.getKey();
+            if(webContext.containsKey(key)) {
+                savedCtxAttributes.put(key, webContext.get(key));
+            }
+            webContext.setAttribute(key, entry.getValue(), scope);
+        }
+    }
+
+    protected void restoreAttributesInWebContext(final Map<String, Object> attributes, int scope) {
+        if(attributes == null) {
+            return;
+        }
+        switch(scope) {
+            case WebContext.APPLICATION_SCOPE:
+            case WebContext.SESSION_SCOPE:
+            case WebContext.LOCAL_SCOPE:
+                break;
+            default:
+                throw new IllegalArgumentException("Scope is not valid. Use one of the scopes defined in info.magnolia.context.WebContext");
+        }
+        final WebContext webContext = MgnlContext.getWebContext();
+
+        for(Entry<String, Object> entry : attributes.entrySet()) {
+            final String key = entry.getKey();
+            if(webContext.containsKey(key)) {
+                webContext.setAttribute(key, savedCtxAttributes.get(key), scope);
+            }
+            webContext.removeAttribute(key, scope);
+        }
     }
 }

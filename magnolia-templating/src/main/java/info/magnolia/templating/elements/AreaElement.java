@@ -60,7 +60,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -96,8 +95,6 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private boolean inherit;
 
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
-    private final Map<String, Object> savedCtxAttributes = new HashMap<String, Object>();
-
 
     public AreaElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
         super(server, renderingContext);
@@ -212,13 +209,13 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
                 WebContext webContext = MgnlContext.getWebContext();
                 webContext.push(webContext.getRequest(), webContext.getResponse());
-                this.setContextAttributes(webContext, contextAttributes);
+                setAttributesInWebContext(contextAttributes, WebContext.LOCAL_SCOPE);
                 try {
                     renderingEngine.render(areaNode, areaDefinition, contextObjects, new AppendableOnlyOutputProvider(out));
                 } finally {
                     webContext.pop();
                     webContext.setPageContext(null);
-                    restoreContextAttributes(webContext, contextAttributes);
+                    restoreAttributesInWebContext(contextAttributes, WebContext.LOCAL_SCOPE);
                 }
 
             }
@@ -399,32 +396,6 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     public void setContextAttributes(Map<String, Object> contextAttributes) {
         this.contextAttributes = contextAttributes;
-    }
-
-    private void setContextAttributes(WebContext webContext, Map<String, Object> ctx) {
-        if(ctx != null){
-            for(Entry<String, Object> entry : ctx.entrySet()) {
-                final String key = entry.getKey();
-                if(webContext.containsKey(key)) {
-                    //save to tmp map
-                    savedCtxAttributes.put(key, webContext.get(key));
-                }
-                webContext.setAttribute(key, entry.getValue(), WebContext.LOCAL_SCOPE);
-            }
-
-        }
-    }
-
-    private void restoreContextAttributes(WebContext webContext, Map<String, Object> ctx) {
-        if(ctx != null) {
-            for(Entry<String, Object> entry : ctx.entrySet()) {
-                final String key = entry.getKey();
-                if(webContext.containsKey(key)) {
-                    webContext.setAttribute(key, savedCtxAttributes.get(key), WebContext.LOCAL_SCOPE);
-                }
-                webContext.removeAttribute(key, WebContext.LOCAL_SCOPE);
-            }
-        }
     }
 
     /**
