@@ -35,7 +35,6 @@ package info.magnolia.context;
 
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.security.Security;
 import info.magnolia.objectfactory.Components;
 
 import javax.servlet.ServletContext;
@@ -241,12 +240,12 @@ public abstract class WebContextImpl extends UserContextImpl implements WebConte
     @Override
     public void logout() {
         releaseJCRSessions();
+        super.logout();
 
         HttpSession session = this.request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
-        login(Security.getAnonymousSubject());
     }
 
     /**

@@ -36,6 +36,7 @@ package info.magnolia.context;
 import info.magnolia.cms.security.PrincipalUtil;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.UserManager;
 
 import java.util.Locale;
 
@@ -44,15 +45,16 @@ import javax.security.auth.Subject;
 import org.apache.commons.lang.LocaleUtils;
 
 /**
- * User aware context implementation able to release and discard all kept info upon user logout. Also changes the locale from default one to the one prefered by the logged in user.
- * @author had
- * @version $Id: $
+ * User aware context implementation able to release and discard all kept info upon user logout. Also changes the locale
+ * from default one to the one preferred by the logged in user. Sets the Subject for the logged in user in session for
+ * subsequent requests to pick up. When no user has logged in this class returns the anonymous user.
+ *
+ * @version $Id$
  */
 public class UserContextImpl extends AbstractContext implements UserContext {
 
     private static final long serialVersionUID = 222L;
 
-    private static final String SESSION_USER = UserContextImpl.class.getName() + ".user";
     private static final String SESSION_SUBJECT = Subject.class.getName();
 
     private User user;
@@ -64,59 +66,63 @@ public class UserContextImpl extends AbstractContext implements UserContext {
 
     @Override
     public Locale getLocale() {
-        if(this.locale == null){
+        if (locale == null) {
             setLocaleFor(getUser());
         }
         return locale;
     }
 
-    /**
-     * Create the subject on demand.
-     * @see info.magnolia.context.AbstractContext#getUser()
-     */
     @Override
     public User getUser() {
-        //TODO: is this correct? such a user will stay set even when session attribute expires
-        if (user == null) {
-            user = (User) getAttribute(SESSION_USER, Context.SESSION_SCOPE);
-            if (user == null) {
-                user = PrincipalUtil.findPrincipal(getSubject(), User.class);
-            }
+        if (user != null) {
+            return user;
         }
-        return this.user;
+
+        user = PrincipalUtil.findPrincipal(getSubject(), User.class);
+        if (user == null) {
+            throw new IllegalStateException("Subject must have a info.magnolia.cms.security.User principal.");
+        }
+        return user;
     }
 
     @Override
     public Subject getSubject() {
-        if (subject == null) {
-            subject = (Subject) getAttribute(SESSION_SUBJECT, Context.SESSION_SCOPE);
-            if (subject == null) {
-                subject = Security.getAnonymousSubject();
-            }
+        if (subject != null) {
+            return this.subject;
         }
-        return this.subject;
+
+        // were we logged in by a previous request?
+        subject = (Subject) getAttribute(SESSION_SUBJECT, Context.SESSION_SCOPE);
+        if (subject != null) {
+            return this.subject;
+        }
+
+        // default to anonymous user
+        login(Security.getAnonymousSubject());
+        return subject;
     }
 
     @Override
     public void login(Subject subject) {
         User user = PrincipalUtil.findPrincipal(subject, User.class);
-        setLocaleFor(user);
-        if(!user.getName().equals(Security.getAnonymousUser().getName())){
-            setAttribute(SESSION_SUBJECT, subject, Context.SESSION_SCOPE);
-            setAttribute(SESSION_USER, user, Context.SESSION_SCOPE);
+        if (user == null) {
+            throw new IllegalArgumentException("When logging in the Subject must have a info.magnolia.cms.security.User principal.");
         }
-        this.subject = null;
-        this.user = null;
+        this.subject = subject;
+        this.user = user;
+        setLocaleFor(user);
+        // set the subject in session for subsequent requests
+        if (!user.getName().equals(UserManager.ANONYMOUS_USER)) {
+            setAttribute(SESSION_SUBJECT, subject, Context.SESSION_SCOPE);
+        }
     }
 
     @Override
     public void logout() {
-        removeAttribute(SESSION_SUBJECT, Context.SESSION_SCOPE);
-        removeAttribute(SESSION_USER, Context.SESSION_SCOPE);
         subject = null;
         user = null;
         locale = null;
-        login(Security.getAnonymousSubject());
+        removeAttribute(SESSION_SUBJECT, Context.SESSION_SCOPE);
     }
 
     protected void setLocaleFor(User user) {

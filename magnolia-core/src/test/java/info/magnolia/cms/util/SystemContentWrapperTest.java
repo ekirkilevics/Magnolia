@@ -45,10 +45,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.SecuritySupport;
-import info.magnolia.cms.security.SecuritySupportImpl;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.UserManager;
 import info.magnolia.context.ContextFactory;
 import info.magnolia.context.LifeTimeJCRSessionUtil;
 import info.magnolia.context.MgnlContext;
@@ -78,22 +75,12 @@ public class SystemContentWrapperTest extends RepositoryTestCase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        final UserManager man = createNiceMock(UserManager.class);
-        ComponentsTestUtil.setInstance(SecuritySupport.class, new SecuritySupportImpl() {
-            @Override
-            public UserManager getUserManager(String realmName) {
-                return man;
-            }
-        });
         ComponentsTestUtil.setImplementation(WebContextFactory.class, WebContextFactoryImpl.class);
-        User anonymous = createNiceMock(User.class);
         User dummy = createNiceMock(User.class);
-        expect(man.getAnonymousUser()).andReturn(anonymous);
-        expect(anonymous.getName()).andReturn("anonymous");
         expect(dummy.getName()).andReturn("admin");
         expect(dummy.getPassword()).andReturn("admin");
 
-        mocks = new Object[] { man, anonymous, dummy };
+        mocks = new Object[] { dummy };
         replay(mocks);
         MockHttpSession session = new MockHttpSession();
         MockHttpServletRequest req = new MockHttpServletRequest();

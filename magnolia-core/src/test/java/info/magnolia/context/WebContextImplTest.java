@@ -67,8 +67,6 @@ public class WebContextImplTest
 /* TODO - implementing Serializable for the purpose of this test - see MAGNOLIA-3523 */
 implements Serializable {
 
-    // setting the user attribute on the session is done in UserContextImpl, which is why the following constant uses this class' name.
-    private static final String SESSION_USER = UserContextImpl.class.getName() + ".user";
     private static final String SESSION_SUBJECT = Subject.class.getName();
 
     @Before
@@ -101,32 +99,21 @@ implements Serializable {
         expect(user.getLanguage()).andReturn("en");
         expect(request.getSession(false)).andReturn(session).anyTimes();
         expect(user.getName()).andReturn("toto");
-        expect(securitySupport.getUserManager("system")).andReturn(userManager);
-        expect(userManager.getAnonymousUser()).andReturn(anonymousUser);
-        expect(anonymousUser.getName()).andReturn("anonymous");
-        session.setAttribute(SESSION_USER, user);
         session.setAttribute(SESSION_SUBJECT, subject);
 
-        // assertSame user
-        expect(session.getAttribute(SESSION_USER)).andReturn(user);
-
-        // assertSame subject
-        expect(session.getAttribute(SESSION_SUBJECT)).andReturn(subject);
-
         // logout
+        session.removeAttribute(SESSION_SUBJECT);
         session.invalidate();
+
+        // getUser() after logout
+        expect(session.getAttribute(SESSION_SUBJECT)).andReturn(null);
+
         expect(securitySupport.getUserManager(Realm.REALM_SYSTEM.getName())).andReturn(userManager);
         expect(userManager.getAnonymousUser()).andReturn(anonymousUser);
         expect(securitySupport.getRoleManager()).andReturn(roleManager);
         expect(anonymousUser.getAllRoles()).andReturn(new ArrayList<String>());
         expect(anonymousUser.getLanguage()).andReturn("en");
         expect(anonymousUser.getName()).andReturn("anonymous");
-        expect(securitySupport.getUserManager("system")).andReturn(userManager);
-        expect(userManager.getAnonymousUser()).andReturn(anonymousUser);
-        expect(anonymousUser.getName()).andReturn("anonymous");
-
-        // assertSame user
-        expect(session.getAttribute(SESSION_USER)).andReturn(anonymousUser);
 
         replay(request, response, servletContext, user, session, securitySupport, userManager, anonymousUser);
 
