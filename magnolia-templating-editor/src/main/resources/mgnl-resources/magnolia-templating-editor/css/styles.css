@@ -28,6 +28,9 @@ button.mgnlControlButton {
     border-width: 1px;
     line-height: 10px; /*FF needs it*/
 }
+.mgnlRemoveAreaButton {
+    margin: 0px 20px 0px 0px !important;
+}
 
 button.mgnlControlButton_PUSHED {
     height: 18px;
@@ -38,13 +41,20 @@ button.mgnlControlButton_PUSHED {
     border-width: 1px;
 }
 
-
 /*
 * Area/component edit bar.
 */
 .mgnlAreaEditBar {
     background-color: #6BABFB;
     height: 20px;
+    width: 100% !important;
+    clear: both;
+}
+
+.mgnlAreaBar {
+    background-color: transparent;
+    border-bottom: 5px solid #6BABFB;
+    height: 15px;
     width: 100% !important;
     clear: both;
 }
@@ -65,16 +75,15 @@ button.mgnlControlButton_PUSHED {
     border-width: 1px;
 }
 
-
-/*
-* Area label.
-* TODO maybe the properties to avoid long text breaking the layout (float, overflow, width, text-overflow) should be hardcoded into GWT code?
-*/
 .mgnlAreaLabel {
-    background: transparent none !important;
     float: left;
     font-family: Verdana, sans-serif !important;
     font-size: 12px;
+
+}
+/* TODO maybe the properties to avoid long text breaking the layout (float, overflow, width, text-overflow) should be hardcoded into GWT code? */
+.mgnlAreaEditBar .mgnlAreaLabel {
+    background: transparent none !important;
     color: #F0F2E6 !important;
     white-space: nowrap;
     margin-top: 2px !important;
@@ -83,4 +92,11 @@ button.mgnlControlButton_PUSHED {
     overflow: hidden;
     width: 30% !important;
     text-overflow: ellipsis; /*FF does not support this. Maybe it will in version 7*/
+}
+
+.mgnlAreaBar .mgnlAreaLabel {
+    background-color: #6BABFB !important;
+    color: #FFFFFF;
+    padding: 0px 5px !important;
+    height: 15px;
 }

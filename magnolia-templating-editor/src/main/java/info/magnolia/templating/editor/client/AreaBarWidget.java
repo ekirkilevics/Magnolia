@@ -90,15 +90,20 @@ public class AreaBarWidget extends AbstractBarWidget {
             this.created = Boolean.parseBoolean(element.getAttribute("created"));
         }
 
-        setClassName("mgnlAreaEditBar");
         Label areaName = new InlineLabel(this.label);
         //tooltip. Nice to have when area label is truncated because too long.
         areaName.setTitle(this.label);
-
+        
         //setStylePrimaryName(..) replaces gwt default css class, in this case gwt-Label
         areaName.setStylePrimaryName("mgnlAreaLabel");
         add(areaName);
         createButtons(pageEditor, element);
+        if (hasControls) {
+            setClassName("mgnlAreaEditBar");
+        }
+        else {
+            setClassName("mgnlAreaBar");
+        }
     }
 
     public String getAvailableComponents() {
@@ -122,6 +127,8 @@ public class AreaBarWidget extends AbstractBarWidget {
                 addButton(createButton, Float.RIGHT);
 
             } else {
+                createEditAndAddComponentButtons(pageEditor, element);
+
                 Button removeButton = new Button(getDictionary().get("buttons.removearea.js"));
                 removeButton.addClickHandler(new ClickHandler() {
                     @Override
@@ -129,8 +136,8 @@ public class AreaBarWidget extends AbstractBarWidget {
                         pageEditor.deleteComponent(path + "/" + name);
                     }
                 });
+                removeButton.addStyleName("mgnlRemoveAreaButton");
                 addButton(removeButton, Float.RIGHT);
-                createEditAndAddComponentButtons(pageEditor, element);
             }
         } else {
             createEditAndAddComponentButtons(pageEditor, element);

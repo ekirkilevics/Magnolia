@@ -53,6 +53,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 public abstract class AbstractBarWidget extends FlowPanel {
 
     private AbstractBarWidget parentBar;
+    protected boolean hasControls = false;
 
     public AbstractBarWidget(final AbstractBarWidget parentBar) {
         this.parentBar = parentBar;
@@ -101,6 +102,7 @@ public abstract class AbstractBarWidget extends FlowPanel {
             }
         });
         add(button);
+        hasControls = true;
     }
 
     protected void setClassName(String className) {
