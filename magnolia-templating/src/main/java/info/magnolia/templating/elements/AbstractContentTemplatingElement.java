@@ -178,8 +178,9 @@ public abstract class AbstractContentTemplatingElement extends AbstractTemplatin
 
         for(Entry<String, Object> entry : attributes.entrySet()) {
             final String key = entry.getKey();
-            if(webContext.containsKey(key)) {
+            if(webContext.containsKey(key) && savedCtxAttributes.get(key) != null) {
                 webContext.setAttribute(key, savedCtxAttributes.get(key), scope);
+                continue;
             }
             webContext.removeAttribute(key, scope);
         }

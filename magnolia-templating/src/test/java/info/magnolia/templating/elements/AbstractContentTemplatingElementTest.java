@@ -34,12 +34,18 @@
 package info.magnolia.templating.elements;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.jcr.Node;
 
 import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.test.mock.MockWebContext;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -68,6 +74,68 @@ public class AbstractContentTemplatingElementTest extends AbstractElementTestCas
         } catch (IllegalArgumentException e) {
             assertTrue(true);
         }
+    }
+
+    @Test
+    public void testSetAttributesInWebContext() throws Exception {
+        //GIVEN
+        final RenderingContext aggregationState = mock(RenderingContext.class);
+
+        final WebContext ctx = new MockWebContext();
+        ctx.setAttribute("foo", "foo value", WebContext.LOCAL_SCOPE);
+        ctx.setAttribute("bar", 1, WebContext.LOCAL_SCOPE);
+        ctx.setAttribute("baz", true, WebContext.LOCAL_SCOPE);
+        MgnlContext.setInstance(ctx);
+
+        assertEquals(3, ctx.getAttributes().size());
+
+        final AbstractContentTemplatingElement compo = new DummyComponent(null, aggregationState);
+        Map<String,Object> attributes = new HashMap<String, Object>();
+        attributes.put("foo", "new foo");
+        attributes.put("qux", "blah");
+
+        //WHEN
+        compo.setAttributesInWebContext(attributes, WebContext.LOCAL_SCOPE);
+
+        //THEN
+        assertEquals(4, ctx.getAttributes().size());
+        assertEquals("new foo", ctx.getAttribute("foo"));
+        assertEquals("blah", ctx.getAttribute("qux"));
+
+    }
+
+    @Test
+    public void testRestoreAttributesInWebContext() throws Exception {
+        //GIVEN
+        final RenderingContext aggregationState = mock(RenderingContext.class);
+
+        final WebContext ctx = new MockWebContext();
+        ctx.setAttribute("foo", "foo value", WebContext.LOCAL_SCOPE);
+        ctx.setAttribute("bar", 1, WebContext.LOCAL_SCOPE);
+        ctx.setAttribute("baz", true, WebContext.LOCAL_SCOPE);
+        MgnlContext.setInstance(ctx);
+
+        assertEquals(3, ctx.getAttributes().size());
+
+        final AbstractContentTemplatingElement compo = new DummyComponent(null, aggregationState);
+        Map<String,Object> attributes = new HashMap<String, Object>();
+        attributes.put("foo", "new foo");
+        attributes.put("qux", "blah");
+
+        compo.setAttributesInWebContext(attributes, WebContext.LOCAL_SCOPE);
+
+        assertEquals(4, ctx.getAttributes().size());
+        assertEquals("new foo", ctx.getAttribute("foo"));
+        assertEquals("blah", ctx.getAttribute("qux"));
+
+        //WHEN
+        compo.restoreAttributesInWebContext(attributes, WebContext.LOCAL_SCOPE);
+
+        //THEN
+        assertEquals(3, ctx.getAttributes().size());
+        assertEquals("foo value", ctx.getAttribute("foo"));
+        assertNull(ctx.getAttribute("qux"));
+
     }
 
     private static class DummyComponent extends AbstractContentTemplatingElement {
