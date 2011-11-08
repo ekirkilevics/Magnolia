@@ -34,6 +34,8 @@
 package info.magnolia.test.mock;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -124,6 +126,7 @@ public abstract class AbstractComponentProvider implements ComponentProvider {
 
     private ComponentProvider parent;
     private final Map<Class<?>, ComponentDefinition<?>> definitions = new ConcurrentHashMap<Class<?>, ComponentDefinition<?>>();
+    private final ThreadLocal<List<Class<?>>> creationStack = new ThreadLocal<List<Class<?>>>();
 
     protected AbstractComponentProvider() {
     }
@@ -174,7 +177,20 @@ public abstract class AbstractComponentProvider implements ComponentProvider {
             log.error("type can't be null", new Throwable());
             return null;
         }
+
+        List<Class<?>> stack = creationStack.get();
         try {
+
+            if (stack == null) {
+                stack = new ArrayList<Class<?>>();
+                stack.add(type);
+                creationStack.set(stack);
+            } else if (stack.contains(type)) {
+                throw new CircularDependencyException(type, stack);
+            } else {
+                stack.add(type);
+            }
+
             ComponentDefinition<T> definition = getComponentDefinition(type);
             if (definition == null) {
                 if (parent != null) {
@@ -194,6 +210,11 @@ public abstract class AbstractComponentProvider implements ComponentProvider {
                 throw (MgnlInstantiationException) e;
             }
             throw new MgnlInstantiationException("Can't instantiate an implementation of this class [" + type.getName() + "]: " + ExceptionUtils.getMessage(e), e);
+        } finally {
+            stack.remove(type);
+            if (stack.isEmpty()) {
+                creationStack.remove();
+            }
         }
     }
 

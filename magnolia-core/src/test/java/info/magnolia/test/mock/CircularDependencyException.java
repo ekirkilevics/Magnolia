@@ -33,45 +33,18 @@
  */
 package info.magnolia.test.mock;
 
-import org.junit.Test;
-
-import info.magnolia.objectfactory.MgnlInstantiationException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+import java.util.List;
 
 /**
+ * Exception thrown when AbstractComponentProvider detects a loop while creating dependencies for an object to instantiate.
+ *
  * @version $Id$
  */
-public class MockComponentProviderTest {
+public class CircularDependencyException extends RuntimeException {
 
-    public static class SomeBean {
-        public SomeBean(String string) {
-        }
-    }
-
-    @Test(expected = MgnlInstantiationException.class)
-    public void testThrowsExceptionWhenCreatingAStringInstance() {
-        // GIVEN
-        MockComponentProvider provider = new MockComponentProvider();
-
-        // WHEN
-        provider.newInstance(String.class, new Object[]{});
-    }
-
-    @Test
-    public void testThrowsExceptionWhenEncounteringConstructorTakingStringArgument() {
-        // GIVEN
-        MockComponentProvider provider = new MockComponentProvider();
-
-        // WHEN
-        try {
-            provider.newInstance(SomeBean.class, new Object[]{});
-            fail();
-
-            // THEN
-        } catch (MgnlInstantiationException e) {
-            assertEquals("Can't instantiate an implementation of this class [java.lang.String]: CircularDependencyException: Circular dependency encountered when creating [class java.lang.String] sequence leading here is [[class info.magnolia.test.mock.MockComponentProviderTest$SomeBean, class java.lang.String]]", e.getMessage());
-        }
+    public CircularDependencyException(Class<?> type, List<Class<?>> stack) {
+        super("Circular dependency encountered when creating [" +
+                type + "] sequence leading here is [" +
+                stack + "]");
     }
 }

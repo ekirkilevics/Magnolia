@@ -38,6 +38,8 @@ import info.magnolia.cms.beans.config.MIMEMapping;
 import java.io.File;
 import java.net.URL;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 
 
@@ -64,6 +66,7 @@ public class MailAttachment {
 
     private URL url;
 
+    @Inject
     public MailAttachment() {
 
     }
