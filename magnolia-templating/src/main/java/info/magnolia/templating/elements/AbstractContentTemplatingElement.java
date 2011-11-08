@@ -140,6 +140,13 @@ public abstract class AbstractContentTemplatingElement extends AbstractTemplatin
         this.path = path;
     }
 
+    /**
+     * Sets attributes in web context under the specified scope. If an attribute already exists its value will be overwritten
+     * with the new one and the old value saved for subsequent restore.
+     * @param scope one of {@link info.magnolia.context.Context#APPLICATION_SCOPE}
+     *  {@link info.magnolia.context.Context#SESSION_SCOPE}
+     *  {@link info.magnolia.context.Context#LOCAL_SCOPE}.
+     */
     protected void setAttributesInWebContext(final Map<String, Object> attributes, int scope) {
         if(attributes == null){
             return;
@@ -162,6 +169,12 @@ public abstract class AbstractContentTemplatingElement extends AbstractTemplatin
         }
     }
 
+   /**
+    * Restores the original values of attributes in web context under the specified scope.
+    * @param scope one of {@link info.magnolia.context.Context#APPLICATION_SCOPE}
+    *  {@link info.magnolia.context.Context#SESSION_SCOPE}
+    *  {@link info.magnolia.context.Context#LOCAL_SCOPE}.
+    */
     protected void restoreAttributesInWebContext(final Map<String, Object> attributes, int scope) {
         if(attributes == null) {
             return;
