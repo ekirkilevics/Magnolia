@@ -44,7 +44,6 @@ import info.magnolia.rendering.engine.RenderingEngine;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.jcr.Node;
 
