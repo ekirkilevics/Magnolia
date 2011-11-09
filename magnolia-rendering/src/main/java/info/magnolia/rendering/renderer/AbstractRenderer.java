@@ -222,7 +222,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     protected void setupContext(final Map<String, Object> ctx, Node content, RenderableDefinition definition, RenderingModel<?> model, Object actionResult){
         final Node mainContent = getMainContentSafely(content);
 
-        setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(mainContent, mainContent));
+        setContextAttribute(ctx, getPageAttributeName(), mainContent != null ? new ContentMap(wrapNodeForTemplate(mainContent, mainContent)) : null);
         setContextAttribute(ctx, "content", content != null ? new ContentMap(wrapNodeForTemplate(content, mainContent)) : null);
         setContextAttribute(ctx, "def", definition);
         setContextAttribute(ctx, "state", getAggregationStateSafely());

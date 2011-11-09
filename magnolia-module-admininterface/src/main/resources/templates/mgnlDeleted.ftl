@@ -14,12 +14,12 @@
     <p id="mgnlPageDeletedOptions">${i18n["templates.mgnlDeleted.options"]}</p>
     [#if hasLastVersion]
     <div id="mgnlPageDeletedOptions" class="mgnlTreeMenuEmbedded">
-      <a id="mgnlPageDeletedOptions_showPrevious" class="mgnlTreeMenuItemEmbedded" href="${mgnl.createLink(page)}?mgnlVersion=${lastVersion}" target="_blank">
+      <a id="mgnlPageDeletedOptions_showPrevious" class="mgnlTreeMenuItemEmbedded" href="${cmsfn.link(page)}?mgnlVersion=${lastVersion}" target="_blank">
         <img class="mgnlTreeMenuItemIcon" src="${ctx.contextPath}/.resources/admin-images/showPreviousVersion.gif"/>
         <div class="mgnlTreeMenuItemCommand">${i18n["templates.mgnlDeleted.showLastVersion"]}</div>
       </a>
       <a id="mgnlPageDeletedOptions_undelete" class="mgnlTreeMenuItemEmbedded"
-           href="${ctx.contextPath}/.magnolia/pages/websiteVersionsList.html?command=restore&repository=website&path=${page.@handle}&versionLabel=${lastVersion}&jsExecutedAfterSaving=opener.document.location.href=opener.document.location.href;MgnlAdminCentral.showTree('website','${page.@handle}');window.close();" target="_blank">
+           href="${ctx.contextPath}/.magnolia/pages/websiteVersionsList.html?command=restore&repository=website&path=${page.@path}&versionLabel=${lastVersion}&jsExecutedAfterSaving=opener.document.location.href=opener.document.location.href;MgnlAdminCentral.showTree('website','${page.@handle}');window.close();" target="_blank">
         <img class="mgnlTreeMenuItemIcon" src="${ctx.contextPath}/.resources/admin-images/restorePreviousVersion.gif"/>
         <div class="mgnlTreeMenuItemCommand">${i18n["templates.mgnlDeleted.restoreLastVersion"]}</div>
       </a>
