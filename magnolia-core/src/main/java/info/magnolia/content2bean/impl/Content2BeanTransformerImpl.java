@@ -139,7 +139,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
             if (parentTypeDscr.isMap() || parentTypeDscr.isCollection()) {
                 if (state.getLevel() > 2) {
-                    // this is not necesserely the parent node of the current
+                    // this is not necessarily the parent node of the current
                     String mapProperyName = state.peekContent(1).getName();
                     propDscr = state.peekType(1).getPropertyTypeDescriptor(mapProperyName, typeMapping);
                     if (propDscr != null) {
@@ -247,7 +247,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
             return;
         }
 
-        log.debug("try to set {}.{} with value {}", new Object[] {bean, propertyName, value});
+        log.info("try to set {}.{} with value {}", new Object[] {bean, propertyName, value});
 
         // if the parent bean is a map, we can't guess the types.
         if (!(bean instanceof Map)) {
