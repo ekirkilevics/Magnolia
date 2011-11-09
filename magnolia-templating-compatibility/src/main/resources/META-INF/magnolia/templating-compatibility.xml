@@ -3,8 +3,7 @@
 <module>
   <name>templating-compatibility</name>
   <displayName>Magnolia Templating Compatibility</displayName>
-  <!--<class>info.magnolia.module.templating.TemplatingModule</class>-->
-  <!--<versionHandler>info.magnolia.module.templating.setup.TemplatingModuleVersionHandler</versionHandler>-->
+  <class>info.magnolia.module.templating.TemplatingModule</class>
   <version>${project.version}</version>
   <properties>
     <property>

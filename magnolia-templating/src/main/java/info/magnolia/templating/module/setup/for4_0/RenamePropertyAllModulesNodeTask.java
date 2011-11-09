@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.setup.for4_0;
+package info.magnolia.templating.module.setup.for4_0;
 
 /**
  * Renames a property found in a given subnode of all modules; typically, renames "path" to "templatePath" for all nodes

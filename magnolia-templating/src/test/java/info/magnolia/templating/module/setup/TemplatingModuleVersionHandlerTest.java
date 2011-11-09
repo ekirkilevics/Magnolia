@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.setup;
+package info.magnolia.templating.module.setup;
 
 import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;

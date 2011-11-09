@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.setup;
+package info.magnolia.templating.module.setup;
 
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
@@ -44,14 +44,20 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.delta.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.delta.Task;
-import info.magnolia.module.templating.setup.for4_0.DeprecateDialogPathAllModules;
-import info.magnolia.module.templating.setup.for4_0.FixTemplatePathTask;
-import info.magnolia.module.templating.setup.for4_0.NestPropertiesAllModulesNodeTask;
+import info.magnolia.templating.module.setup.for4_0.DeprecateDialogPathAllModules;
+import info.magnolia.templating.module.setup.for4_0.FixTemplatePathTask;
+import info.magnolia.templating.module.setup.for4_0.NestPropertiesAllModulesNodeTask;
+import info.magnolia.nodebuilder.task.ErrorHandling;
+import info.magnolia.nodebuilder.task.NodeBuilderTask;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static info.magnolia.nodebuilder.Ops.addNode;
+import static info.magnolia.nodebuilder.Ops.addProperty;
+import static info.magnolia.nodebuilder.Ops.getNode;
 
 
 /**
@@ -112,6 +118,21 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "templatePath is now templateScript.", "paragraphs", "templatePath", "templateScript"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "type is now renderType.", "templates", "type", "renderType"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "type is now renderType.", "paragraphs", "type", "renderType"))
+                .addTask(new NodeBuilderTask(
+                        "New templating UI components",
+                        "Registers new UI components for templating.",
+                        ErrorHandling.strict,
+                        RepositoryConstants.CONFIG,
+                        "/server/rendering/freemarker",
+                        getNode("sharedVariables")
+                                .then(addNode("cms", ItemType.CONTENTNODE)
+                                        .then(addProperty("class",
+                                                info.magnolia.templating.freemarker.Directives.class.getName())),
+                                        addNode("cmsfn", ItemType.CONTENTNODE)
+                                                .then(addProperty(
+                                                        "class",
+                                                        info.magnolia.templating.functions.TemplatingFunctions.class
+                                                                .getName())))))
         );
     }
 

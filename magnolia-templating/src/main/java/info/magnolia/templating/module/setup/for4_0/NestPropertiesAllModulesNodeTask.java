@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.setup.for4_0;
+package info.magnolia.templating.module.setup.for4_0;
 
 import java.util.Collection;
 import java.util.Iterator;

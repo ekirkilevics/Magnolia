@@ -31,56 +31,63 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.setup.for4_0;
+package info.magnolia.templating.module.setup.for4_0;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllModulesNodeOperation;
 import info.magnolia.module.delta.TaskExecutionException;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
- * Renames dialogPath to dialog and sets the property to the dialog name, in all modules in all paragraphs nodes.
+ * since 4.0 the templatePath property was moved to parameters content node, this class fixes it by
+ * moving it back.
  * @author tmiyar
  *
  */
-public class DeprecateDialogPathAllModules extends AllModulesNodeOperation {
+public class FixTemplatePathTask extends AllModulesNodeOperation {
 
-    private static Logger log = LoggerFactory.getLogger(DeprecateDialogPathAllModules.class);
-
-    public DeprecateDialogPathAllModules(String name, String description) {
+    public FixTemplatePathTask(String name, String description) {
         super(name, description);
     }
-
 
     @Override
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
             throws RepositoryException, TaskExecutionException {
+        final String moveFromNodeName = "parameters";
+        final String baseNodeName = "templates";
+        final String propertyToMoveName = "templatePath";
+
         try {
-            //find in paragraphs definitions property name dialogPath and rename it to dialog
-            if(node.hasContent("paragraphs")){
-                Content paragraphsNode = node.getContent("paragraphs");
-                ContentUtil.visit(paragraphsNode, new ContentUtil.Visitor(){
-                   @Override
-                public void visit(Content paragraphDefNode) throws Exception {
-                       if(paragraphDefNode.hasNodeData("dialogPath")){
-                           String dialogPath = paragraphDefNode.getNodeData("dialogPath").getString();
-                           paragraphDefNode.deleteNodeData("dialogPath");
-                           NodeData dialogNameNodeData = NodeDataUtil.getOrCreate(paragraphDefNode, "dialog");
-                           dialogNameNodeData.setValue(StringUtils.substring(dialogPath, StringUtils.lastIndexOf(dialogPath, "/") + 1));
-                       }
-                   }
-                });
+            if(node.hasContent(baseNodeName)){
+                Content baseNode = node.getContent(baseNodeName);
+                if(baseNode.hasChildren(ItemType.CONTENTNODE.getSystemName())) {
+                    final Collection children = baseNode.getChildren(ItemType.CONTENTNODE.getSystemName());
+                    final Iterator it = children.iterator();
+                    Content baseNodeChild;
+                    while(it.hasNext()) {
+                        baseNodeChild = (Content) it.next();
+                        Content parametersNode;
+                        if (!baseNodeChild.hasNodeData(propertyToMoveName) && baseNodeChild.hasContent(moveFromNodeName)) {
+                            parametersNode = baseNodeChild.getContent(moveFromNodeName);
+
+                            if(parametersNode.hasNodeData(propertyToMoveName)) {
+                                NodeData templatePath = parametersNode.getNodeData(propertyToMoveName);
+                                baseNodeChild.createNodeData(templatePath.getName(), templatePath.getValue());
+                                parametersNode.deleteNodeData(templatePath.getName());
+                            }
+                        }
+                    }
+
+                }
             }
         }
         catch(RepositoryException e){
