@@ -3,6 +3,7 @@
 <module>
   <name>templating</name>
   <displayName>Magnolia Templating Module</displayName>
+  <versionHandler>info.magnolia.templating.module.setup.TemplatingModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
   <dependencies>
     <dependency>

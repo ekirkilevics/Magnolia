@@ -42,6 +42,7 @@ import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
+import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.templating.module.setup.for4_0.DeprecateDialogPathAllModules;
@@ -66,8 +67,6 @@ import static info.magnolia.nodebuilder.Ops.getNode;
  * @version $Revision: $ ($Author: $)
  */
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
-
-    private OrderNodeBeforeTask orderBackwardCompatibilityFilter = new OrderNodeBeforeTask("Move backward compatibility filter", "", RepositoryConstants.CONFIG, "/server/filters/cms/backwardCompatibility", "rendering");
 
     public TemplatingModuleVersionHandler() {
 
@@ -114,34 +113,36 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
         );
 
         register(DeltaBuilder.update("4.5", "")
+                .addTask(new RemoveNodeTask("Remove backwards compatibility filter", "", RepositoryConstants.CONFIG, "/server/filters/cms/backwardCompatibility"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "templatePath is now templateScript.", "templates", "templatePath", "templateScript"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "templatePath is now templateScript.", "paragraphs", "templatePath", "templateScript"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "type is now renderType.", "templates", "type", "renderType"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "type is now renderType.", "paragraphs", "type", "renderType"))
-                .addTask(new NodeBuilderTask(
-                        "New templating UI components",
-                        "Registers new UI components for templating.",
-                        ErrorHandling.strict,
-                        RepositoryConstants.CONFIG,
-                        "/server/rendering/freemarker",
-                        getNode("sharedVariables")
-                                .then(addNode("cms", ItemType.CONTENTNODE)
-                                        .then(addProperty("class",
-                                                info.magnolia.templating.freemarker.Directives.class.getName())),
-                                        addNode("cmsfn", ItemType.CONTENTNODE)
-                                                .then(addProperty(
-                                                        "class",
-                                                        info.magnolia.templating.functions.TemplatingFunctions.class
-                                                                .getName())))))
         );
     }
 
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final ArrayList<Task> tasks = new ArrayList<Task>();
-        tasks.add(orderBackwardCompatibilityFilter);
-        tasks.add(new OrderNodeBeforeTask("Order model execution filter", "", RepositoryConstants.CONFIG, "/server/filters/cms/modelExecution", "backwardCompatibility"));
+        tasks.add(new OrderNodeBeforeTask("Order model execution filter", "", RepositoryConstants.CONFIG, "/server/filters/cms/modelExecution", "rendering"));
         // TODO : make sure the RenderingFilter is the last one ?
+
+        tasks.add(new NodeBuilderTask(
+                "New templating UI components",
+                "Registers new UI components for templating.",
+                ErrorHandling.strict,
+                RepositoryConstants.CONFIG,
+                "/server/rendering/freemarker",
+                getNode("sharedVariables")
+                        .then(addNode("cms", ItemType.CONTENTNODE)
+                                .then(addProperty("class",
+                                        info.magnolia.templating.freemarker.Directives.class.getName())),
+                                addNode("cmsfn", ItemType.CONTENTNODE)
+                                        .then(addProperty(
+                                                "class",
+                                                info.magnolia.templating.functions.TemplatingFunctions.class
+                                                        .getName())))));
+
         return tasks;
     }
 }
