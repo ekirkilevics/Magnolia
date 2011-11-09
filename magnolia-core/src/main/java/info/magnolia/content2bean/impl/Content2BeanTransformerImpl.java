@@ -247,7 +247,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
             return;
         }
 
-        log.info("try to set {}.{} with value {}", new Object[] {bean, propertyName, value});
+        log.debug("try to set {}.{} with value {}", new Object[] {bean, propertyName, value});
 
         // if the parent bean is a map, we can't guess the types.
         if (!(bean instanceof Map)) {
