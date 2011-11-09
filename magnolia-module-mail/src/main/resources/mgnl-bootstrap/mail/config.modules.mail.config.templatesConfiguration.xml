@@ -201,7 +201,7 @@
         <sv:value>2008-11-19T12:53:12.085+01:00</sv:value>
       </sv:property>
     </sv:node>
-    <sv:node sv:name="attachment">
+    <sv:node sv:name="attachments">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
