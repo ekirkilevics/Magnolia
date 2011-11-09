@@ -334,4 +334,9 @@ public class MockNodeTest {
 
         assertEquals(b, referencedByPropertyB);
     }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testConstructionFailsWhenNameContainsSlash() {
+        new MockNode("/we/don/not/support/names/with/slashes/as/people/could/expect/this/creates/a/whole/node/structure");
+    }
 }

@@ -122,6 +122,9 @@ public class MockNode extends AbstractNode {
     }
     public MockNode(String name) {
         this(name, MgnlNodeType.NT_CONTENTNODE);
+        if (name.indexOf("/") >= 0) {
+            throw new IllegalArgumentException("Name of a node must not contain a '/': " + name);
+        }
     }
 
     public MockNode(String name, Map<String, MockValue> properties, Map<String, MockNode> children) {
