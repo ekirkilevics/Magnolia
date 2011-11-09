@@ -38,7 +38,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.test.MgnlTestCase;
-import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
@@ -371,7 +370,11 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
     @Test
     public void testGetHandle() throws IOException, RepositoryException {
         // GIVEN
-        Content plainContent = new MockContent("/impl/node");
+        HierarchyManager hm = MockUtil.createHierarchyManager(
+                "/base/node/nodeData1=org1\n" +
+                "/impl/node/extends=../../base/node\n" +
+        "/impl/node/nodeData2=org2");
+        Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
 
         // WHEN
