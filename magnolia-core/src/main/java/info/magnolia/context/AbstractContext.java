@@ -89,7 +89,7 @@ public abstract class AbstractContext implements Context, Serializable {
 
     private AttributeStrategy attributeStrategy;
 
-    private RepositoryAcquiringStrategy repositoryStrategy;
+    private JCRSessionStrategy repositoryStrategy;
 
     public AttributeStrategy getAttributeStrategy() {
         return attributeStrategy;
@@ -99,11 +99,11 @@ public abstract class AbstractContext implements Context, Serializable {
         this.attributeStrategy = strategy;
     }
 
-    public RepositoryAcquiringStrategy getRepositoryStrategy() {
+    public JCRSessionStrategy getRepositoryStrategy() {
         return repositoryStrategy;
     }
 
-    public void setRepositoryStrategy(RepositoryAcquiringStrategy strategy) {
+    public void setRepositoryStrategy(JCRSessionStrategy strategy) {
         this.repositoryStrategy = strategy;
     }
 

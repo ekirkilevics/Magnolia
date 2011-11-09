@@ -33,7 +33,7 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.context.RepositoryAcquiringStrategy;
+import info.magnolia.context.JCRSessionStrategy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  *
  */
-public class MockRepositoryAcquiringStrategy implements RepositoryAcquiringStrategy {
+public class MockRepositoryAcquiringStrategy implements JCRSessionStrategy {
 
     /**
      * Logger.

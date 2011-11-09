@@ -47,7 +47,7 @@ import javax.inject.Singleton;
 public class JCRSessionPerThreadSystemContext extends AbstractSystemContext implements ThreadDependentSystemContext {
 
     @Override
-    public RepositoryAcquiringStrategy getRepositoryStrategy() {
+    public JCRSessionStrategy getRepositoryStrategy() {
         if (repositoryStrategyThreadLocal.get() == null) {
             repositoryStrategyThreadLocal.set(Components.newInstance(SystemRepositoryStrategy.class));
         }

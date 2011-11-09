@@ -42,7 +42,7 @@ import javax.jcr.Session;
  *
  * @version $Id$
  */
-public interface RepositoryAcquiringStrategy {
+public interface JCRSessionStrategy {
 
     Session getSession(String workspaceName) throws LoginException, RepositoryException;
 

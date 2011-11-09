@@ -54,7 +54,7 @@ import info.magnolia.repository.RepositoryManager;
  *
  * @version $Id$
  */
-public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringStrategy {
+public abstract class AbstractRepositoryStrategy implements JCRSessionStrategy {
     private static final Logger log = LoggerFactory.getLogger(AbstractRepositoryStrategy.class);
 
     private final Map<String, Session> jcrSessions = new HashMap<String, Session>();

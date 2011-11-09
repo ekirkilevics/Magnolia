@@ -55,7 +55,7 @@ public abstract class AbstractSystemContext extends AbstractContext implements S
      */
     private static final long serialVersionUID = 222L;
 
-    protected static ThreadLocal<RepositoryAcquiringStrategy> repositoryStrategyThreadLocal = new ThreadLocal<RepositoryAcquiringStrategy>();
+    protected static ThreadLocal<JCRSessionStrategy> repositoryStrategyThreadLocal = new ThreadLocal<JCRSessionStrategy>();
 
     /**
      * DON'T CREATE AN OBJECT. The SystemContext is set by magnolia system itself. Init the scopes
