@@ -39,6 +39,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
@@ -122,5 +124,44 @@ public class MockSessionTest {
             fail();
         } catch (ItemNotFoundException expected) {
         }
+    }
+
+    @Test
+    public void testGetItem() throws Exception {
+        MockSession session = new MockSession("test");
+        Node rootNode = session.getRootNode();
+
+        Node level1 = rootNode.addNode("level1");
+
+        Node level2 = level1.addNode("level2");
+        Property value2 = level2.setProperty("prop2", "value2");
+
+        Node level3 = level2.addNode("level3");
+        Property value3 = level3.setProperty("prop3", "value3");
+
+        assertSame(rootNode, session.getItem("/"));
+        assertSame(level1, session.getItem("/level1"));
+        assertSame(level2, session.getItem("/level1/level2"));
+        assertSame(level3, session.getItem("/level1/level2/level3"));
+        assertSame(value2, session.getItem("/level1/level2/prop2"));
+        assertSame(value3, session.getItem("/level1/level2/level3/prop3"));
+    }
+
+    @Test(expected = PathNotFoundException.class)
+    public void testGetItemOnNonAbsolutePathFails() throws Exception {
+        MockSession session = new MockSession("test");
+        Node level1 = session.getRootNode().addNode("level1");
+        assertSame(level1, session.getItem("/level1"));
+        session.getItem("level1");
+    }
+
+    @Test(expected = PathNotFoundException.class)
+    public void testGetItemOnNonExistingPathFails() throws Exception {
+        MockSession session = new MockSession("test");
+        Node level1 = session.getRootNode().addNode("level1");
+        assertSame(level1, session.getItem("/level1"));
+
+        // this fails
+        session.getItem("/level1/doesNotExist");
     }
 }

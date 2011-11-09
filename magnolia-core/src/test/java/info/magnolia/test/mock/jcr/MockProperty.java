@@ -156,8 +156,11 @@ public class MockProperty extends AbstractProperty {
 
     @Override
     public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
-        // References not implemented
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        String path = getValue().getString();
+        if (!path.startsWith("/")) {
+            throw new UnsupportedOperationException("Only absolute path references supported yet. This is a fake class.");
+        }
+        return (Property) getSession().getItem(path);
     }
 
     @Override

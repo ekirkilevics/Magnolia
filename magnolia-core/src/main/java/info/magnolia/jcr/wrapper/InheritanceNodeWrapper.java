@@ -49,6 +49,8 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+
+
 /**
  * This wrapper inherits nodes from the parent hierarchy. The method {@link #isAnchor()} defines
  * the anchor to which the inheritance is performed relative to. By default the anchor is of type
@@ -66,7 +68,6 @@ import org.apache.commons.lang.StringUtils;
  * inherited children to the iterator and then the direct children.
  *
  * @version $Id$
- *
  */
 public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
 

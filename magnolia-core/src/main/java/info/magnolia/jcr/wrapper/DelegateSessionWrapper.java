@@ -68,7 +68,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * Wrapper executing all calls on the delegated instance of Session.
+ * Wrapper for JCR Session.
  *
  * @version $Id$
  */
@@ -79,6 +79,25 @@ public abstract class DelegateSessionWrapper implements Session {
     protected DelegateSessionWrapper(Session wrapped) {
         this.wrapped = wrapped;
     }
+
+    public Session getWrappedSession() {
+        return wrapped;
+    }
+
+    public void setWrappedSession(Session session) {
+        this.wrapped = session;
+    }
+
+    @Override
+    public String toString() {
+        return wrapped != null ? wrapped.toString() : "";
+    }
+
+    /////////////
+    //
+    //  Delegating method stubs
+    //
+    /////////////
 
     @Override
     public void addLockToken(String lt) {
@@ -283,10 +302,6 @@ public abstract class DelegateSessionWrapper implements Session {
     @Override
     public void setNamespacePrefix(String prefix, String uri) throws NamespaceException, RepositoryException {
         getWrappedSession().setNamespacePrefix(prefix, uri);
-    }
-
-    public Session getWrappedSession() {
-        return wrapped;
     }
 
     /**

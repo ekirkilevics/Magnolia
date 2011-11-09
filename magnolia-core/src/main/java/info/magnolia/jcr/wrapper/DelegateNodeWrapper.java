@@ -87,6 +87,25 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
         this.wrapped = wrapped;
     }
 
+    public Node getWrappedNode() throws RepositoryException {
+        return this.wrapped;
+    }
+
+    public void setWrappedNode(Node node) {
+        this.wrapped = node;
+    }
+
+    @Override
+    public String toString() {
+        return wrapped != null ? wrapped.toString() : "";
+    }
+
+    /////////////
+    //
+    //  Delegating method stubs
+    //
+    /////////////
+
     @Override
     public void addMixin(String mixinName) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
         getWrappedNode().addMixin(mixinName);
@@ -527,10 +546,6 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
         getWrappedNode().save();
     }
 
-    public Node getWrappedNode() throws RepositoryException {
-        return this.wrapped;
-    }
-
     /**
      * Removes a wrapper by type. The wrapper can be deep in a chain of wrappers in which case wrappers before it will
      * be cloned creating a new chain that leads to the same real node.
@@ -562,11 +577,6 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Failed to unwrap " + this.getClass().getName() + " due to " + e.getMessage(), e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return wrapped != null ? wrapped.toString() : "";
     }
 
     @Override
