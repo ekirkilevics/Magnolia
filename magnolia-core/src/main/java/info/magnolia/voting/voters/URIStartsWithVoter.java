@@ -43,7 +43,7 @@ import org.apache.commons.lang.StringUtils;
  * <ul>
  * <li>pattern: a string
  * </ul>
- * @author philipp
+ *
  * @version $Id$
  */
 public class URIStartsWithVoter extends BasePatternVoter {
@@ -51,7 +51,6 @@ public class URIStartsWithVoter extends BasePatternVoter {
     @Override
     protected boolean boolVote(Object value) {
         String uri = resolveURIFromValue(value);
-        ;
         if (StringUtils.isEmpty(uri)) {
             return false;
         }
