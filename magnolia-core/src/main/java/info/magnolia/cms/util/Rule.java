@@ -33,7 +33,10 @@
  */
 package info.magnolia.cms.util;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -143,4 +146,17 @@ public class Rule implements Serializable {
         this.reverse = true;
     }
 
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        final ObjectInputStream.GetField field = ois.readFields();
+        final Object o = field.get("allowedTypes", null);
+        if (o instanceof String[]){
+            Set<String> typesCol = new HashSet<String>();
+            typesCol.addAll(Arrays.asList((String[]) o));
+            this.allowedTypes = typesCol;
+        }
+        if(o instanceof HashSet){
+            this.allowedTypes = (Set<String>) o;
+        }
+        this.reverse = field.get("reverse", false);
+    }
 }
