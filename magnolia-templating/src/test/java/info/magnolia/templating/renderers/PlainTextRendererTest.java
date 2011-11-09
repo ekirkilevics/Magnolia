@@ -61,8 +61,10 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Locale;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -149,19 +151,23 @@ public class PlainTextRendererTest {
                 + "<table class=\"mgnlControlBar\"><tr><td class=\"mgnlBtnsLeft\"><span onmousedown=\"mgnlShiftPushButtonDown(this);\" "
                 + "onmouseout=\"mgnlShiftPushButtonOut(this);\" onclick=\"mgnlShiftPushButtonClick(this);mgnlPreview(true);\" class=\"mgnlControlButton\" "
                 + "style=\"background:transparent;\">???buttons.preview???</span><span onmousedown=\"mgnlShiftPushButtonDown(this);\" "
-                + "onmouseout=\"mgnlShiftPushButtonOut(this);\" onclick=\"mgnlShiftPushButtonClick(this);MgnlAdminCentral.showTree('null','//foo/bar/MyPage');\" "
+                + "onmouseout=\"mgnlShiftPushButtonOut(this);\" onclick=\"mgnlShiftPushButtonClick(this);MgnlAdminCentral.showTree('null','/foo/bar/MyPage');\" "
                 + "class=\"mgnlControlButton\" style=\"background:transparent;\">???buttons.admincentral???</span></td></tr></table>\n"
                 + "</div>\n"
-                + "<h2 style=\"padding-top: 30px;\">//foo/bar/MyPage : mgnl:contentNode</h2><pre>\n"
+                + "<h2 style=\"padding-top: 30px;\">/foo/bar/MyPage : mgnl:contentNode</h2><pre>\n"
                 + "In a crooked little town, they were lost and never found</pre>\n"
                 + "</body>\n"
                 + "</html>\n", out.toString());
     }
 
-    private Content getNode(String configNode, String path) throws RepositoryException {
+    private Content getNode(String configNode, String absolutePath) throws RepositoryException {
         MockSession session = new MockSession("website");
-        MockContent content = new MockContent(path);
-        ((MockNode)content.getJCRNode()).setParent((MockNode) session.getRootNode());
+        String[] paths = StringUtils.split(absolutePath, '/');
+        Node node = session.getRootNode();
+        for (String relPath: paths) {
+            node = node.addNode(relPath);
+        }
+        MockContent content = new MockContent((MockNode) node);
         content.setNodeData("text", configNode);
         content.setNodeData("contentType", "mgnl:contentNode");
 

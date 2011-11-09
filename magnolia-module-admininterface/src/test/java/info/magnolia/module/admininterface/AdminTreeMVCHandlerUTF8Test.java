@@ -179,7 +179,7 @@ public class AdminTreeMVCHandlerUTF8Test{
     @Test
     public void testSaveValueCommandContext() throws Exception
     {
-        String parentHandle = "/foo";
+        String parentHandle = "foo";
         String nodeName = "untitled";
         handler.pathSelected = "column0";
         handler.path = parentHandle + "/" + nodeName;
@@ -223,7 +223,7 @@ public class AdminTreeMVCHandlerUTF8Test{
     @Test
     public void testSaveUTF8ValueCommandContext() throws Exception
     {
-        String parentHandle = "/foo";
+        String parentHandle = "foo";
         String nodeName = "untitled";
         String saveValue = TEXT_SPECIAL + TEXT_ACCENTED + TEXT_GREEK + TEXT_RUSSIAN + TEXT_NOT_ALLOWED;
         String expectedValue = TEXT_SPECIAL_VALIDATED
