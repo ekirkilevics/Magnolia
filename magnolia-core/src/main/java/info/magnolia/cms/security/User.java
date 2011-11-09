@@ -54,7 +54,7 @@ public interface User extends Principal, Serializable {
 
     /**
      * Remove a role. Implementation is optional
-     * @deprecated use manager instead
+     * @deprecated since 4.5 - use {@link UserManager#removeRole(User, String)} instead.
      */
     @Deprecated
     void removeRole(String roleName) throws UnsupportedOperationException;
@@ -62,7 +62,7 @@ public interface User extends Principal, Serializable {
     /**
      * Adds a role to this user. Implementation is optional
      * @param roleName the name of the role
-     * @deprecated use manager instead
+     * @deprecated since 4.5 - use {@link UserManager#addRole(User, String)} instead.
      */
     @Deprecated
     void addRole(String roleName) throws UnsupportedOperationException;
@@ -75,14 +75,14 @@ public interface User extends Principal, Serializable {
 
     /**
      * Remove a group. Implementation is optional
-     * @deprecated use manager instead
+     * @deprecated since 4.5 - use {@link UserManager#removeGroup(User, String)} instead.
      */
     @Deprecated
     void removeGroup(String groupName) throws UnsupportedOperationException;
 
     /**
      * Adds this user to a group. Implementation is optional
-     * @deprecated use manager instead
+     * @deprecated since 4.5 - use {@link UserManager#addGroup(User, String)} instead.
      */
     @Deprecated
     void addGroup(String groupName) throws UnsupportedOperationException;
