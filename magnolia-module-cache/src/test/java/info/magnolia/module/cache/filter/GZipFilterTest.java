@@ -33,13 +33,31 @@
  */
 package info.magnolia.module.cache.filter;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
+import info.magnolia.module.cache.util.GZipUtil;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * Basic tests for gzip filter.
@@ -56,14 +74,9 @@ public class GZipFilterTest extends MgnlTestCase {
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
     }
 
-    // FIXME: MAGNOLIA-3413, this method was added to avoid junit warnings so that we can comment out the failing tests
-    @Test
-    public void testDummy(){
-    }
-
     // FIXME: MAGNOLIA-3413, commented out the failing tests
-
-    /*
+    @Ignore
+    @Test
     public void testBufferIsFlushedProperlyWhenUsingWriterFurtherDownTheChainOfFilters() throws Exception {
         final int iterations = 5000;
 
@@ -72,9 +85,11 @@ public class GZipFilterTest extends MgnlTestCase {
         expect(mockRequest.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
         expect(mockRequest.getHeaders("Accept-Encoding")).andReturn(new Enumeration() {
             private boolean has = true;
+            @Override
             public boolean hasMoreElements() {
                 return has;
             }
+            @Override
             public Object nextElement() {
                 has = false;
                 return "gzip";
@@ -97,6 +112,7 @@ public class GZipFilterTest extends MgnlTestCase {
         final SimpleServletOutputStream servletOutput = new SimpleServletOutputStream(finalOutput);
         final HttpServletResponse testReponse = new HttpServletResponseWrapper(mockResponse) {
             // and we know GZipFilter will only call getOutputStream() on it.
+            @Override
             public ServletOutputStream getOutputStream() throws IOException {
                 return servletOutput;
             }
@@ -105,6 +121,7 @@ public class GZipFilterTest extends MgnlTestCase {
         chain.doFilter(same(mockRequest), isA(CacheResponseWrapper.class));
         // fake some chained filter:
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 final ServletResponse responseFutherDownTheChain = ((ServletResponse) args[1]);
@@ -130,6 +147,8 @@ public class GZipFilterTest extends MgnlTestCase {
         assertEquals(expectedLength, uncompressed.length);
     }
 
+    @Ignore
+    @Test
     public void testBufferIsFlushedAndGZipNotSetOnError() throws Exception {
 
         final FilterChain chain = createStrictMock(FilterChain.class);
@@ -147,6 +166,7 @@ public class GZipFilterTest extends MgnlTestCase {
         final SimpleServletOutputStream servletOutput = new SimpleServletOutputStream(finalOutput);
         final HttpServletResponse testReponse = new HttpServletResponseWrapper(mockResponse) {
             // and we know GZipFilter will only call getOutputStream() on it.
+            @Override
             public ServletOutputStream getOutputStream() throws IOException {
                 return servletOutput;
             }
@@ -155,6 +175,7 @@ public class GZipFilterTest extends MgnlTestCase {
         chain.doFilter(same(mockRequest), isA(CacheResponseWrapper.class));
         // fake some chained filter:
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 final ServletResponse responseFutherDownTheChain = ((ServletResponse) args[1]);
@@ -179,5 +200,4 @@ public class GZipFilterTest extends MgnlTestCase {
         final int expectedLength = SOME_10CHARSLONG_CHAIN.length() + System.getProperty("line.separator").length(); // n chars + newline
         assertEquals(expectedLength, uncompressed.length);
     }
-    */
 }
