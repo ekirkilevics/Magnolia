@@ -33,14 +33,20 @@
  */
 package info.magnolia.cms.core;
 
+
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.mock.jcr.MockNode;
 
 import java.util.Calendar;
 
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -48,26 +54,113 @@ import org.junit.Test;
  */
 public class MetaDataTest {
 
+    private static final String PROPERTY_NAME = "testProperty";
+    private Node root;
+
+    @Before
+    public void setUp() throws Exception {
+        root = new MockNode();
+        root.addNode(MetaData.DEFAULT_META_NODE);
+    }
+
     @Test
     public void testSetPropertyWithString() throws RepositoryException{
         // GIVEN
-        final MockNode root = new MockNode();
-        root.addNode(MetaData.DEFAULT_META_NODE);
         final MetaData md = MetaDataUtil.getMetaData(root);
-        final String name = "name";
         final String value = "value";
 
         // WHEN
-        md.setProperty(name, value);
+        md.setProperty(PROPERTY_NAME, value);
 
         // THEN
-        assertEquals(value, md.getStringProperty(name));
+        assertEquals(value, md.getStringProperty(PROPERTY_NAME));
+    }
+
+    @Test
+    public void testSetPropertyWithDouble() throws RepositoryException{
+        // GIVEN
+        final MetaData md = MetaDataUtil.getMetaData(root);
+        final double value = 12d;
+
+        // WHEN
+        md.setProperty(PROPERTY_NAME, value);
+
+        // THEN
+        assertEquals(value, md.getDoubleProperty(PROPERTY_NAME), 0d);
+    }
+
+    @Test
+    public void testSetPropertyWithLong() throws RepositoryException{
+        // GIVEN
+        final MetaData md = MetaDataUtil.getMetaData(root);
+        final long value = 12l;
+
+        // WHEN
+        md.setProperty(PROPERTY_NAME, value);
+
+        // THEN
+        assertEquals(value, md.getLongProperty(PROPERTY_NAME));
+    }
+
+    @Test
+    public void testSetPropertyWithBoolean() throws RepositoryException{
+        // GIVEN
+        final MetaData md = MetaDataUtil.getMetaData(root);
+        final boolean value = false;
+
+        // WHEN
+        md.setProperty(PROPERTY_NAME, value);
+
+        // THEN
+        assertEquals(value, md.getBooleanProperty(PROPERTY_NAME));
+    }
+
+    @Test
+    public void testSetPropertyWithDate() throws RepositoryException{
+        // GIVEN
+        final MetaData md = MetaDataUtil.getMetaData(root);
+        final Calendar value = Calendar.getInstance();
+
+        // WHEN
+        md.setProperty(PROPERTY_NAME, value);
+
+        // THEN
+        assertEquals(value, md.getDateProperty(PROPERTY_NAME));
+    }
+
+    @Test
+    public void testGetStringProperty() throws RepositoryException{
+        // GIVEN
+        final String value = "value";
+        final MetaData md = MetaDataUtil.getMetaData(root);
+        final Node mdNode = root.getNode(MetaData.DEFAULT_META_NODE);
+        mdNode.setProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + PROPERTY_NAME, value);
+
+        // WHEN
+        final String result = md.getStringProperty(PROPERTY_NAME);
+
+        // THEN
+        assertEquals(value, result);
+    }
+
+    @Test
+    public void testGetStringPropertyThrowingPathNotFoundException() throws RepositoryException{
+        // GIVEN
+        Node metaDataNode = mock(Node.class);
+        final MetaData md = MetaDataUtil.getMetaData(metaDataNode);
+
+        when(metaDataNode.getProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + PROPERTY_NAME)).thenThrow(new PathNotFoundException("TEST"));
+
+        // WHEN
+        final String result = md.getStringProperty(PROPERTY_NAME);
+
+        // THEN
+        assertEquals("", result);
     }
 
     @Test
     public void testSetPropertyWithStringWhenAlreadyExisting() throws RepositoryException{
         // GIVEN
-        final MockNode root = new MockNode();
         root.addNode(MetaData.DEFAULT_META_NODE);
         final MetaData md = MetaDataUtil.getMetaData(root);
         final String name = "name";
@@ -82,69 +175,4 @@ public class MetaDataTest {
         // THEN
         assertEquals(newValue, md.getStringProperty(name));
     }
-
-    @Test
-    public void testSetPropertyWithDouble() throws RepositoryException{
-        // GIVEN
-        final MockNode root = new MockNode();
-        root.addNode(MetaData.DEFAULT_META_NODE);
-        final MetaData md = MetaDataUtil.getMetaData(root);
-        final String name = "name";
-        final double value = 12d;
-
-        // WHEN
-        md.setProperty(name, value);
-
-        // THEN
-        assertEquals(value, md.getDoubleProperty(name), 0d);
-    }
-
-    @Test
-    public void testSetPropertyWithLong() throws RepositoryException{
-        // GIVEN
-        final MockNode root = new MockNode();
-        root.addNode(MetaData.DEFAULT_META_NODE);
-        final MetaData md = MetaDataUtil.getMetaData(root);
-        final String name = "name";
-        final long value = 12l;
-
-        // WHEN
-        md.setProperty(name, value);
-
-        // THEN
-        assertEquals(value, md.getLongProperty(name));
-    }
-
-    @Test
-    public void testSetPropertyWithBoolean() throws RepositoryException{
-        // GIVEN
-        final MockNode root = new MockNode();
-        root.addNode(MetaData.DEFAULT_META_NODE);
-        final MetaData md = MetaDataUtil.getMetaData(root);
-        final String name = "name";
-        final boolean value = false;
-
-        // WHEN
-        md.setProperty(name, value);
-
-        // THEN
-        assertEquals(value, md.getBooleanProperty(name));
-    }
-
-    @Test
-    public void testSetPropertyWithDate() throws RepositoryException{
-        // GIVEN
-        final MockNode root = new MockNode();
-        root.addNode(MetaData.DEFAULT_META_NODE);
-        final MetaData md = MetaDataUtil.getMetaData(root);
-        final String name = "name";
-        final Calendar value = Calendar.getInstance();
-
-        // WHEN
-        md.setProperty(name, value);
-
-        // THEN
-        assertEquals(value, md.getDateProperty(name));
-    }
-
 }
