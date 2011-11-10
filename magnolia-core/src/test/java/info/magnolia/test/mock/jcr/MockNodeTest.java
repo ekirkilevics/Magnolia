@@ -42,6 +42,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.jcr.Item;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.ItemVisitor;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -310,6 +312,38 @@ public class MockNodeTest {
         assertEquals(session, child.getSession());
         assertEquals(session, property.getSession());
     }
+
+    @Test
+    public void testGetAncestor() throws Exception {
+        // GIVEN
+        final Node sub1 = root.addNode("sub1");
+        final Node sub2 = sub1.addNode("sub2");
+
+        // WHEN
+        Item result = sub2.getAncestor(1);
+
+        // THEN
+        assertEquals(sub1, result);
+    }
+
+    @Test(expected=ItemNotFoundException.class)
+    public void testGetAncestorWithNegativeDepth() throws Exception {
+        // GIVEN
+        final Node sub1 = root.addNode("sub1");
+
+        // WHEN
+        sub1.getAncestor(-1);
+    }
+
+    @Test(expected=ItemNotFoundException.class)
+    public void testGetAncestorWithToBigDepth() throws Exception {
+        // GIVEN
+        final Node sub1 = root.addNode("sub1");
+
+        // WHEN
+        sub1.getAncestor(3);
+    }
+
     @Test
     public void testGetMixingNodeTypes() throws Exception {
         root.addMixin("mixin1");
