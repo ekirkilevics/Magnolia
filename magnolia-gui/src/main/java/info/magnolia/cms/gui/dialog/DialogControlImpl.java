@@ -528,7 +528,7 @@ public abstract class DialogControlImpl implements DialogControl {
                 if (!name.startsWith("options")) { //$NON-NLS-1$
                     log.debug("Missing control type for configNode " + name); //$NON-NLS-1$
                 }
-                return;
+                continue;
             }
 
             if (log.isDebugEnabled()) {
