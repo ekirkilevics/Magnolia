@@ -33,8 +33,9 @@
  */
 package info.magnolia.module.cache.filter;
 
+import static info.magnolia.test.TestUtil.enumeration;
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.filters.WebContainerResources;
@@ -55,6 +56,7 @@ import info.magnolia.module.cache.executor.Bypass;
 import info.magnolia.module.cache.executor.Store;
 import info.magnolia.module.cache.executor.UseCache;
 import info.magnolia.module.cache.mbean.CacheMonitor;
+import info.magnolia.module.cache.util.GZipUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
@@ -67,6 +69,10 @@ import info.magnolia.voting.voters.VoterSet;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -76,9 +82,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.map.MultiValueMap;
 import org.easymock.IAnswer;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -89,6 +97,8 @@ import org.junit.Test;
 // FIXME: MAGNOLIA-3413, commented out the failing tests
 
 public class CacheFilterTest {
+    private static final String originalURL = "/original";
+
     private AggregationState aggregationState;
     private CacheFactory cacheFactory;
     private CachePolicy cachePolicy;
@@ -141,7 +151,8 @@ public class CacheFilterTest {
     }
 
     // FIXME: MAGNOLIA-3413, commented out the failing tests
-    /*
+    @Ignore
+    @Test
     public void testStoresInCacheAndRenders() throws Exception {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.store, "/test-page", null));
 
@@ -149,6 +160,7 @@ public class CacheFilterTest {
 
         filterChain.doFilter(same(request), isA(CacheResponseWrapper.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 ((CacheResponseWrapper) args[1]).getWriter().print("hello");
@@ -169,6 +181,7 @@ public class CacheFilterTest {
 
         cache.put(eq("/test-page"), isA(ContentCachedEntry.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 final InMemoryCachedEntry cachedEntry = ((InMemoryCachedEntry) args[1]);
@@ -185,6 +198,8 @@ public class CacheFilterTest {
         executeCacheFilterAndVerify();
     }
 
+    @Ignore
+    @Test
     public void testStoresCompressedInCacheAndRenders() throws Exception {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.store, "/test-page", null));
 
@@ -192,6 +207,7 @@ public class CacheFilterTest {
 
         filterChain.doFilter(same(request), isA(CacheResponseWrapper.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 ((CacheResponseWrapper) args[1]).getWriter().print("hello");
@@ -212,6 +228,7 @@ public class CacheFilterTest {
 
         cache.put(eq("/test-page"), isA(ContentCachedEntry.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 final InMemoryCachedEntry cachedEntry = ((InMemoryCachedEntry) args[1]);
@@ -227,6 +244,8 @@ public class CacheFilterTest {
         executeCacheFilterAndVerify();
     }
 
+    @Ignore
+    @Test
     public void testBlindlyObeysCachePolicyAndGetsStuffOutOfCacheWhenAskedToDoSo() throws Exception {
         final String dummyContent = "hello i'm a page that was cached";
 
@@ -235,7 +254,7 @@ public class CacheFilterTest {
         headers.put("Dummy", "dummy");
         headers.put("Dummy", "dummy2");
 
-        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis(), originalURL);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
         expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 7.0; Windows NT 5.1)").anyTimes();
@@ -267,6 +286,8 @@ public class CacheFilterTest {
         assertTrue(Arrays.equals(GZipUtil.gzip(dummyContent.getBytes()), fakedOut.toByteArray()));
     }
 
+    @Ignore
+    @Test
     public void testIgnoreEncodingAndServeContentFlatWhenUserAgentIsIE6() throws Exception {
         final String dummyContent = "hello i'm a page that was cached";
 
@@ -275,7 +296,7 @@ public class CacheFilterTest {
         headers.put("Dummy", "dummy");
         headers.put("Dummy", "dummy2");
 
-        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis(), originalURL);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
         expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 6.0; Windows NT 5.1)").anyTimes();
@@ -299,14 +320,17 @@ public class CacheFilterTest {
         assertTrue(Arrays.equals(dummyContent.getBytes(), fakedOut.toByteArray()));
     }
 
+    @Ignore
+    @Test
     public void testServesUnzippedContentAndRemovesGzipHeadersIfClientDoesNotAcceptGZipEncoding() throws Exception {
         final String dummyContent = "hello i'm a page that was cached";
+
         final byte[] gzipped = GZipUtil.gzip(dummyContent.getBytes());
         final MultiValueMap headers = new MultiValueMap();
         headers.put("Content-Encoding", "gzip");
         headers.put("Vary", "Accept-Encoding");
         headers.put("Dummy", "Some Value");
-        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis(), originalURL);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
 
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
@@ -328,9 +352,11 @@ public class CacheFilterTest {
         assertEquals(dummyContent, fakedOut.toString());
     }
 
+    @Ignore
+    @Test
     public void testServesGZippedContentIfClientAcceptsGZipEncoding() throws Exception {
         final String dummyContent = "hello i'm a page that was cached";
-        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, new MultiValueMap(), System.currentTimeMillis());
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, new MultiValueMap(), System.currentTimeMillis(), originalURL);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
         expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 7.0; Windows NT 5.1)").anyTimes();
@@ -356,6 +382,8 @@ public class CacheFilterTest {
         assertTrue(Arrays.equals(gzipped, fakedOut.toByteArray()));
     }
 
+    @Ignore
+    @Test
     public void testDoesNothingIfCachePolicyCommandsToBypass() throws Exception {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.bypass, "/test-page", null));
         filterChain.doFilter(same(request), same(response));
@@ -363,10 +391,12 @@ public class CacheFilterTest {
         executeNoCacheFilterAndVerify();
     }
 
+    @Ignore
+    @Test
     public void testJustSends304WithNoBodyIfRequestHeadersAskForIt() throws Exception {
         long timeStampInSeconds = System.currentTimeMillis() / 1000 * 1000;
 
-        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds, originalURL);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
         expect(request.getHeader("If-None-Match")).andReturn(null);
@@ -378,31 +408,31 @@ public class CacheFilterTest {
         executeNoCacheFilterAndVerify();
     }
 
+    @Ignore
+    @Test
     public void testJustSends304WithNoBodyIfRequestHeadersAskForItEvenOnCommitedResponse() throws Exception {
-        fail("commented out to make it compile");
+        long timeStampInSeconds = System.currentTimeMillis() / 1000 * 1000;
 
+        final byte[] gzipped = GZipUtil.gzip("dummy".getBytes());
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds, originalURL);
+        expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
+        expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
+        expect(request.getHeader("If-None-Match")).andReturn(null);
+        // the main diff to the test above - response is already committed here and status (304) was set by another executed as indicated in preCacheStatusCode of the ContentCachedEntry
+        expect(response.isCommitted()).andReturn(true);
 
-//        long timeStampInSeconds = System.currentTimeMillis() / 1000 * 1000;
-//
-//        final byte[] gzipped = GZipUtil.gzip("dummy".getBytes());
-//        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
-//        cachedPage.setPreCacheStatusCode(304);
-//        expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
-//        expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
-//        expect(request.getHeader("If-None-Match")).andReturn(null);
-//        // the main diff to the test above - response is already committed here and status (304) was set by another executed as indicated in preCacheStatusCode of the ContentCachedEntry
-//        expect(response.isCommitted()).andReturn(true);
-//
-//        response.setStatus(304);
-//        // since the status is correct we don't expect response.getOuputStream(), we actually assert nothing is written to the body
-//
-//        executeNoCacheFilterAndVerify();
+        response.setStatus(304);
+        // since the status is correct we don't expect response.getOuputStream(), we actually assert nothing is written to the body
+
+        executeNoCacheFilterAndVerify();
     }
 
+    @Ignore
+    @Test
     public void testDontJustSends304WithNoBodyIfRequestHeadersAskForItButResponseIsCommitted() throws Exception {
         long timeStampInSeconds = System.currentTimeMillis() / 1000 * 1000;
 
-        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds, originalURL);
         final byte[] gzipped = GZipUtil.gzip("dummy".getBytes());
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
@@ -430,10 +460,12 @@ public class CacheFilterTest {
         executeNoCacheFilterAndVerify();
     }
 
+    @Ignore
+    @Test
     public void testPageShouldBeServedIfIfNoneMatchHeaderWasPassed() throws Exception {
         final String dummyContent = "i'm a dummy page that was cached earlier on";
         final byte[] gzipped = GZipUtil.gzip(dummyContent.getBytes());
-        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), System.currentTimeMillis());
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), System.currentTimeMillis(), originalURL);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(System.currentTimeMillis() + 1000); // use some date in the future, so we're ahead of what cachedPage will say
         expect(request.getHeader("If-None-Match")).andReturn("Some value");
@@ -460,6 +492,8 @@ public class CacheFilterTest {
         assertTrue(Arrays.equals(gzipped, fakedOut.toByteArray()));
     }
 
+    @Ignore
+    @Test
     public void testRedirectsAreCached() throws Exception {
         final String redirectLocation = "/some-target-location";
 
@@ -467,6 +501,7 @@ public class CacheFilterTest {
 
         filterChain.doFilter(same(request), isA(CacheResponseWrapper.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 ((CacheResponseWrapper) args[1]).sendRedirect(redirectLocation);
@@ -483,6 +518,7 @@ public class CacheFilterTest {
 
         cache.put(eq("/some-redirect"), isA(CachedRedirect.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 final CachedRedirect cachedEntry = ((CachedRedirect) args[1]);
@@ -496,20 +532,25 @@ public class CacheFilterTest {
         assertEquals("nothing should have been written to the output", 0, fakedOut.size());
     }
 
+    @Ignore
+    @Test
     public void testCachedRedirectsAreServed() throws Exception {
         final String redirectLocation = "/some-target-location";
-        final CachedRedirect cachedRedirect = new CachedRedirect(333, redirectLocation);
+        final CachedRedirect cachedRedirect = new CachedRedirect(333, redirectLocation, originalURL);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/some-redirect", cachedRedirect));
         expect(response.isCommitted()).andReturn(false);
         response.sendRedirect(redirectLocation);
         executeNoCacheFilterAndVerify();
     }
 
+    @Ignore
+    @Test
     public void testErrorsAreCached() throws Exception {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.store, "/non-existing", null));
 
         filterChain.doFilter(same(request), isA(CacheResponseWrapper.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 ((CacheResponseWrapper) args[1]).sendError(404);
@@ -526,6 +567,7 @@ public class CacheFilterTest {
 
         cache.put(eq("/non-existing"), isA(CachedError.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 final CachedError cachedEntry = ((CachedError) args[1]);
@@ -538,14 +580,18 @@ public class CacheFilterTest {
         assertEquals("nothing should have been written to the output", 0, fakedOut.size());
     }
 
+    @Ignore
+    @Test
     public void testCachedErrorsAreServed() throws Exception {
-        final CachedError cachedError = new CachedError(404);
+        final CachedError cachedError = new CachedError(404, originalURL);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/non-existing", cachedError));
         expect(response.isCommitted()).andReturn(false);
         response.sendError(404);
         executeNoCacheFilterAndVerify();
     }
 
+    @Ignore
+    @Test
     public void testLastModifiedHeaderCanBeOverriddenByFurtherFiltersAndIsProperlyStoredAndReturned() throws Exception {
         final Calendar cal = Calendar.getInstance();
         cal.set(2008, 7, 8, 18, 0, 0);
@@ -563,6 +609,7 @@ public class CacheFilterTest {
 
         // some filter or servlet down the chain sets Last-Modified
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 ((CacheResponseWrapper) args[1]).setDateHeader("Last-Modified", expectedLastModified.getTime());
@@ -574,9 +621,11 @@ public class CacheFilterTest {
 
         expect(request.getHeaders("Accept-Encoding")).andReturn(new Enumeration() {
             private boolean has = true;
+            @Override
             public boolean hasMoreElements() {
                 return has;
             }
+            @Override
             public Object nextElement() {
                 has = false;
                 return "gzip";
@@ -598,6 +647,7 @@ public class CacheFilterTest {
         cache.put(eq("/dummy"), isA(ContentCachedEntry.class));
 
         expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 final ContentCachedEntry cachedEntry = ((ContentCachedEntry) args[1]);
@@ -608,7 +658,6 @@ public class CacheFilterTest {
 
         executeCacheFilterAndVerify();
     }
-    */
 
     @Test
     public void test304IsNotCached() throws Exception {

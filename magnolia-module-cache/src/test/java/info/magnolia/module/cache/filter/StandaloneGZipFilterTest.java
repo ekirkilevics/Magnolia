@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.cache.filter;
 
+import static info.magnolia.test.TestUtil.enumeration;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.filters.WebContainerResources;
@@ -48,6 +49,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -58,27 +60,26 @@ import org.junit.Test;
 public class StandaloneGZipFilterTest extends MgnlTestCase {
     private HttpServletRequest request;
 
-    // FIXME: MAGNOLIA-3413, this method was added to avoid junit warnings so that we can comment out the failing tests
-    @Test
-    public void testDummy(){
-    }
-
     // FIXME: MAGNOLIA-3413, commented out the failing tests
-    /*
+    @Ignore
+    @Test
     public void testBypassesAsDictatedByVoters() {
         doTest(true, true);
     }
 
+    @Ignore
+    @Test
     public void testBypassesIfClientDoesNotAcceptGZip() {
         expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration());
         doTest(false, true);
     }
 
+    @Ignore
+    @Test
     public void testDoesNotByPassIfClientAcceptsGZip() {
         expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration("foo", "gzip", "bar"));
         doTest(false, false);
     }
-    */
 
     private void doTest(boolean voterReturns, boolean expectedBypass) {
         final TrueVoter voter = new TrueVoter();

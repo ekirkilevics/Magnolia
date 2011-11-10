@@ -33,6 +33,12 @@
  */
 package info.magnolia.module.cache.filter;
 
+import static org.junit.Assert.assertEquals;
+import info.magnolia.module.cache.util.GZipUtil;
+
+import java.io.IOException;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -42,25 +48,21 @@ import org.junit.Test;
  */
 public class InMemoryCachedPageTest {
 
-    // FIXME: MAGNOLIA-3413, this method was added to avoid junit warnings so that we can comment out the failing tests
-    @Test
-    public void testDummy(){
-    }
-
     // FIXME: MAGNOLIA-3413, commented out the failing tests
-    /*
+    @Ignore
+    @Test
     public void testUnGZipIfContentIsGZipped() throws IOException {
         final String s = "hello";
         final byte[] gzipped = GZipUtil.gzip(s.getBytes());
-        final InMemoryCachedEntry p = new InMemoryCachedEntry(gzipped, "text/plain", "cha", 1, null, System.currentTimeMillis());
+        final InMemoryCachedEntry p = new InMemoryCachedEntry(gzipped, "text/plain", "cha", 1, null, System.currentTimeMillis(), "originalUrl");
         assertEquals(gzipped, p.getGzippedContent());
         assertEquals("hello", new String(p.getPlainContent()));
     }
 
+    @Test
     public void testGZipIfContentIsNotGZipped() throws IOException {
-        final InMemoryCachedEntry p = new InMemoryCachedEntry("hello".getBytes(), "foo/bar", "cha", 1, null, System.currentTimeMillis());
+        final InMemoryCachedEntry p = new InMemoryCachedEntry("hello".getBytes(), "foo/bar", "cha", 1, null, System.currentTimeMillis(), "originalUrl");
         assertEquals("hello", new String(GZipUtil.ungzip(p.getGzippedContent())));
         assertEquals("hello", new String(p.getPlainContent()));
     }
-    */
 }
