@@ -52,7 +52,6 @@ import javax.inject.Singleton;
 
 /**
  * Extracts license information from the info/magnolia/cms/license/license.xml file.
- * @author Sameer Charles
  *
  * @version $Id$
  */
@@ -87,20 +86,20 @@ public class LicenseFileExtractor {
 
     private static final String OS_NAME = "OSName";
 
-    private Map values;
+    private Map<String, String> values = new HashMap<String, String> ();
 
     public static LicenseFileExtractor getInstance() {
-        return Components.getSingleton(LicenseFileExtractor.class);
+        return Components.getComponent(LicenseFileExtractor.class);
     }
 
     public String get(String id) {
         if (values.containsKey(id)) {
-            return (String) values.get(id);
+            return values.get(id);
         }
         return NOT_DEFINED;
     }
 
-    public Map getEntries() {
+    public Map<String, String> getEntries() {
         return values;
     }
 
@@ -145,15 +144,16 @@ public class LicenseFileExtractor {
     /**
      * Load meta element.
      */
+    @SuppressWarnings("unchecked")
     private void load(Document document) {
         Element metaElement = document.getRootElement().getChild(ELEMENT_META);
 
-        List elements = metaElement.getChildren();
+        List<Element> elements = metaElement.getChildren();
 
-        values = new HashMap(10);
-        Iterator iterator = elements.iterator();
+        values = new HashMap<String,String>(10);
+        Iterator<Element> iterator = elements.iterator();
         while (iterator.hasNext()) {
-            Element element = (Element) iterator.next();
+            Element element = iterator.next();
             values.put(element.getName(), element.getText());
         }
 
