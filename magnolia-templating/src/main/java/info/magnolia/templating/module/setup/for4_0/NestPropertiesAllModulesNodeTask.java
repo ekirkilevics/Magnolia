@@ -52,9 +52,10 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Moves property nodes to new nodetype inside like <code>templates/x</code> will be <code>templates/newnode/x</code>.
- * @author tmiyar
+ * Finds all properties on nodes contained under a sub node <code>baseNodeName</code>of every module and moves them into
+ * a sub node. For instance all properties on /modules/<code>baseNodeName</code>/* to /modules/<code>baseNodeName</code>/./parameters
  *
+ * @version $Id$
  */
 public class NestPropertiesAllModulesNodeTask extends AllModulesNodeOperation {
 

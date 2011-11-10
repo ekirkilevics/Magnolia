@@ -13,7 +13,7 @@
   <properties>
     <taglib.shortname>ui</taglib.shortname>
     <taglib.uri>http://magnolia-cms.com/taglib/templating-components</taglib.uri>
-    <cloverCoverageThreshold>60</cloverCoverageThreshold>
+    <cloverCoverageThreshold>64</cloverCoverageThreshold>
   </properties>
 
   <build>

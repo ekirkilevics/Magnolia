@@ -51,8 +51,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Renames dialogPath to dialog and sets the property to the dialog name, in all modules in all paragraphs nodes.
- * @author tmiyar
  *
+ * @version $Id$
  */
 public class DeprecateDialogPathAllModules extends AllModulesNodeOperation {
 
@@ -61,7 +61,6 @@ public class DeprecateDialogPathAllModules extends AllModulesNodeOperation {
     public DeprecateDialogPathAllModules(String name, String description) {
         super(name, description);
     }
-
 
     @Override
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
