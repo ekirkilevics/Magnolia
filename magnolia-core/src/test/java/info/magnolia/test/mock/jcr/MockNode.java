@@ -169,9 +169,19 @@ public class MockNode extends AbstractNode {
 
     @Override
     public Node addNode(String relPath, String primaryNodeTypeName) throws RepositoryException {
-        final MockNode newChild = new MockNode(relPath);
+
+        String nodeName = relPath;
+        MockNode nodesParent = this;
+        int lastSlashsPosition = relPath.lastIndexOf("/");
+        if (lastSlashsPosition >= 0) {
+            final String relPathToNode = relPath.substring(0, lastSlashsPosition);
+            nodesParent = (MockNode) getNode(relPathToNode);
+            nodeName = relPath.substring(lastSlashsPosition + 1, relPath.length());
+        }
+
+        final MockNode newChild = new MockNode(nodeName);
         newChild.setPrimaryType(primaryNodeTypeName);
-        addNode(newChild);
+        nodesParent.addNode(newChild);
         return newChild;
     }
 
@@ -359,11 +369,24 @@ public class MockNode extends AbstractNode {
         if ("jcr:primaryType".equals(relPath)) {
             return new MockProperty(relPath, primaryType, this);
         }
-        Property prop = properties.get(relPath);
-        if (prop == null) {
+
+        Property property = null;
+        int lastSlashsPosition = relPath.lastIndexOf("/");
+
+        if (lastSlashsPosition < 0) {
+            // it's not a path but just a name
+            property = properties.get(relPath);
+        } else {
+            final String relPathToNode = relPath.substring(0, lastSlashsPosition);
+            final Node nodeHostingProperty = getNode(relPathToNode);
+            final String propertyName = relPath.substring(lastSlashsPosition + 1, relPath.length());
+            property = nodeHostingProperty.getProperty(propertyName);
+        }
+
+        if (property == null) {
             throw new PathNotFoundException(relPath);
         }
-        return prop;
+        return property;
     }
 
     @Override

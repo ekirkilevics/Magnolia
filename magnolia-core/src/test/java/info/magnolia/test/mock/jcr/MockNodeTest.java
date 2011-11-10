@@ -127,6 +127,27 @@ public class MockNodeTest {
         assertEquals(childOfChild, root.getNode("child/childOfChild"));
     }
 
+    @Test
+    public void testAddNodeWithRelPath() throws Exception {
+        // GIVEN
+        root.addNode("sub1");
+
+        // WHEN
+        final Node sub2 = root.addNode("/sub1/sub2");
+
+        // THEN
+        assertEquals(sub2, root.getNode("/sub1/sub2"));
+    }
+
+    @Test(expected=PathNotFoundException.class)
+    public void testAddNodeThrowsPathNotFoundExWhenIntermediaryNodeIsNotExisting() throws RepositoryException{
+        // GIVEN
+        root.addNode("sub1");
+
+        // WHEN
+        root.addNode("/sub1/doesntExist/sub3");
+    }
+
     @Test(expected = PathNotFoundException.class)
     public void testGetNodeWithFalsePath() throws Exception {
         root.getNode("does/not/exist");
@@ -166,7 +187,6 @@ public class MockNodeTest {
         assertFalse(result.hasNext());
     }
 
-
     @Test
     public void testHasProperties() throws Exception {
         assertTrue(!root.hasProperties());
@@ -174,6 +194,35 @@ public class MockNodeTest {
         root.setProperty("property", "string");
         assertTrue(root.hasProperties());
     }
+
+    @Test
+    public void testGetPropertyWithRelPath() throws Exception{
+        // GIVEN
+        final String propertyValue = "value";
+        final Node sub1 = root.addNode("sub1");
+        MockNode sub2 = (MockNode) sub1.addNode("sub2");
+        sub2.setProperty("property", propertyValue);
+
+        // WHEN
+        Property result = root.getProperty("/sub1/sub2/property");
+
+        // THEN
+        assertEquals(propertyValue, result.getString());
+    }
+
+    @Test
+    public void testGetPropertyWithRelPathBeeingAName() throws Exception{
+        // GIVEN
+        final String propertyValue = "value";
+        root.setProperty("property", propertyValue);
+
+        // WHEN
+        Property result = root.getProperty("property");
+
+        // THEN
+        assertEquals(propertyValue, result.getString());
+    }
+
     @Test
     public void testGetProperties() throws Exception {
         root.setProperty("property1", "string");

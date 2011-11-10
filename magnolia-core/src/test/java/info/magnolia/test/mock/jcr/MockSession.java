@@ -39,7 +39,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import javax.jcr.Credentials;
-import javax.jcr.Item;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -133,35 +132,6 @@ public class MockSession extends AbstractSession {
     @Override
     public ContentHandler getImportContentHandler(String parentAbsPath, int uuidBehavior) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
-    }
-
-    @Override
-    public Item getItem(final String absPath) throws RepositoryException {
-
-        if (!absPath.startsWith("/"))
-            throw new PathNotFoundException("Path must be absolute " + absPath);
-
-        Node current = getRootNode();
-        String remainingPath = absPath.substring(1);
-        while (remainingPath.length() > 0) {
-            int i = remainingPath.indexOf('/');
-            String nextSegment;
-            if (i == -1) {
-                nextSegment = remainingPath;
-                remainingPath = "";
-            } else {
-                nextSegment = remainingPath.substring(0, i);
-                remainingPath = remainingPath.substring(i + 1);
-            }
-
-            if (current.hasNode(nextSegment))
-                current = current.getNode(nextSegment);
-            else if (current.hasProperty(nextSegment) && remainingPath.length() == 0)
-                return current.getProperty(nextSegment);
-            else
-                throw new PathNotFoundException(absPath + " This is a fake class.");
-        }
-        return current;
     }
 
     @Override
