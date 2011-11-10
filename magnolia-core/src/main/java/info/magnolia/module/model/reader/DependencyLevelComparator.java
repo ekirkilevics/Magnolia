@@ -106,6 +106,9 @@ class DependencyLevelComparator implements Comparator<ModuleDefinition> {
                 throw new RuntimeException("Missing definition for module:" + dep.getName());
             } else if (depDef != null) {
                 dependencyLevels.add(Integer.valueOf(calcDependencyDepth(depDef)));
+            } else {
+                // optional dependency not present (will return 0 if no other dependencies add higher level)
+                dependencyLevels.add(-1);
             }
         }
         return (Collections.max(dependencyLevels)).intValue() + 1;

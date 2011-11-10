@@ -128,4 +128,29 @@ public class DependencyLevelComparatorTest {
         assertEquals(1, reg.calcDependencyDepth(modDefB));
         assertEquals(2, reg.calcDependencyDepth(modDefC));
     }
+
+    /**
+     * All dependencies are optional, and none are present.
+     */
+    public void testCanHandleOnlyOptionalAndMissingDependencies() {
+        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
+        final DependencyDefinition optDepOnX = new DependencyDefinition();
+        optDepOnX.setName("mod-x");
+        optDepOnX.setVersion("1");
+        optDepOnX.setOptional(true);
+        final DependencyDefinition optDepOnY = new DependencyDefinition();
+        optDepOnY.setName("mod-y");
+        optDepOnY.setVersion("1");
+        optDepOnY.setOptional(true);
+
+        modDefA.addDependency(optDepOnX);
+        modDefA.addDependency(optDepOnY);
+
+        final Map<String, ModuleDefinition> map = new HashMap<String, ModuleDefinition>();
+        map.put(modDefA.getName(), modDefA);
+
+        final DependencyLevelComparator reg = new DependencyLevelComparator(map);
+
+        assertEquals(0, reg.calcDependencyDepth(modDefA));
+    }
 }
