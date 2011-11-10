@@ -85,10 +85,4 @@ public class JspRenderer extends AbstractRenderer {
         return MgnlContext.getWebContext("JspRenderer can only be used with a WebContext");
     }
 
-    @Override
-    protected String getPageAttributeName() {
-        return "actpage";
-    }
-
-
 }

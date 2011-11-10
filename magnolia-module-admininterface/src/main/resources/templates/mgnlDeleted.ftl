@@ -14,18 +14,18 @@
     <p id="mgnlPageDeletedOptions">${i18n["templates.mgnlDeleted.options"]}</p>
     [#if hasLastVersion]
     <div id="mgnlPageDeletedOptions" class="mgnlTreeMenuEmbedded">
-      <a id="mgnlPageDeletedOptions_showPrevious" class="mgnlTreeMenuItemEmbedded" href="${cmsfn.link(page)}?mgnlVersion=${lastVersion}" target="_blank">
+      <a id="mgnlPageDeletedOptions_showPrevious" class="mgnlTreeMenuItemEmbedded" href="${cmsfn.link(content)}?mgnlVersion=${lastVersion}" target="_blank">
         <img class="mgnlTreeMenuItemIcon" src="${ctx.contextPath}/.resources/admin-images/showPreviousVersion.gif"/>
         <div class="mgnlTreeMenuItemCommand">${i18n["templates.mgnlDeleted.showLastVersion"]}</div>
       </a>
       <a id="mgnlPageDeletedOptions_undelete" class="mgnlTreeMenuItemEmbedded"
-           href="${ctx.contextPath}/.magnolia/pages/websiteVersionsList.html?command=restore&repository=website&path=${page.@path}&versionLabel=${lastVersion}&jsExecutedAfterSaving=opener.document.location.href=opener.document.location.href;MgnlAdminCentral.showTree('website','${page.@handle}');window.close();" target="_blank">
+           href="${ctx.contextPath}/.magnolia/pages/websiteVersionsList.html?command=restore&repository=website&path=${content.@path}&versionLabel=${lastVersion}&jsExecutedAfterSaving=opener.document.location.href=opener.document.location.href;MgnlAdminCentral.showTree('website','${content.@path}');window.close();" target="_blank">
         <img class="mgnlTreeMenuItemIcon" src="${ctx.contextPath}/.resources/admin-images/restorePreviousVersion.gif"/>
         <div class="mgnlTreeMenuItemCommand">${i18n["templates.mgnlDeleted.restoreLastVersion"]}</div>
       </a>
       [#if model.hasChildren()]
         <a id="mgnlPageDeletedOptions_undeleteAll" class="mgnlTreeMenuItemEmbedded"
-           href="${ctx.contextPath}/.magnolia/pages/websiteVersionsList.html?command=restoreRecursive&repository=website&path=${page.@handle}&versionLabel=${lastVersion}&jsExecutedAfterSaving=opener.document.location.href=opener.document.location.href;MgnlAdminCentral.showTree('website','${page.@handle}');window.close();" target="_blank">
+           href="${ctx.contextPath}/.magnolia/pages/websiteVersionsList.html?command=restoreRecursive&repository=website&path=${content.@path}&versionLabel=${lastVersion}&jsExecutedAfterSaving=opener.document.location.href=opener.document.location.href;MgnlAdminCentral.showTree('website','${content.@path}');window.close();" target="_blank">
           <img class="mgnlTreeMenuItemIcon" src="${ctx.contextPath}/.resources/admin-images/restorePreviousVersionAll.gif"/>
           <div class="mgnlTreeMenuItemCommand">${i18n["templates.mgnlDeleted.restoreLastVersionRecursively"]}</div>
         </a>
@@ -33,7 +33,7 @@
       [#else]
           <div class="mgnlTreeMenuItemCommand">${i18n["templates.mgnlDeleted.versioningNotSupported"]}</div>
       [/#if]
-      <a id="mgnlPageDeletedOptions_gotoCentral" class="mgnlTreeMenuItemEmbedded" href="javascript:MgnlAdminCentral.showTree('website','${page.@handle}'); window.close();">
+      <a id="mgnlPageDeletedOptions_gotoCentral" class="mgnlTreeMenuItemEmbedded" href="javascript:MgnlAdminCentral.showTree('website','${content.@path}'); window.close();">
         <div id="mgnlPageDeletedOptions_gotoCentralCommand" class="mgnlTreeMenuItemCommand">${i18n["templates.mgnlDeleted.toAdminCentral"]}</div>
       </a>
     </div>

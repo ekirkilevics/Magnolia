@@ -205,7 +205,6 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         saveAttribute(ctx, state, "model");
         saveAttribute(ctx, state, "actionResult");
 
-        saveAttribute(ctx, state, getPageAttributeName());
         return state;
     }
 
@@ -222,7 +221,6 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     protected void setupContext(final Map<String, Object> ctx, Node content, RenderableDefinition definition, RenderingModel<?> model, Object actionResult){
         final Node mainContent = getMainContentSafely(content);
 
-        setContextAttribute(ctx, getPageAttributeName(), mainContent != null ? new ContentMap(wrapNodeForTemplate(mainContent, mainContent)) : null);
         setContextAttribute(ctx, "content", content != null ? new ContentMap(wrapNodeForTemplate(content, mainContent)) : null);
         setContextAttribute(ctx, "def", definition);
         setContextAttribute(ctx, "state", getAggregationStateSafely());
@@ -277,20 +275,12 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     }
 
     /**
-     * Used to give JSP implementations to give the chance to use on other name than page which is a reserved name in JSPs.
-     */
-    protected String getPageAttributeName() {
-        return "page";
-    }
-
-    /**
      * Create a new context object which is a map.
      */
     protected abstract Map<String, Object> newContext();
 
     /**
      * Finally execute the rendering.
-     * @param content TODO
      */
     protected abstract void onRender(Node content, RenderableDefinition definition, RenderingContext renderingCtx, Map<String, Object> ctx, String templateScript) throws RenderException;
 
