@@ -33,8 +33,6 @@
  */
 package info.magnolia.templating.module.setup;
 
-import static info.magnolia.nodebuilder.Ops.*;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
@@ -47,12 +45,11 @@ import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.delta.Task;
-import info.magnolia.nodebuilder.task.ErrorHandling;
-import info.magnolia.nodebuilder.task.NodeBuilderTask;
-import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.templating.module.setup.for4_0.DeprecateDialogPathAllModules;
 import info.magnolia.templating.module.setup.for4_0.FixTemplatePathTask;
 import info.magnolia.templating.module.setup.for4_0.NestPropertiesAllModulesNodeTask;
+import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.templating.module.setup.for4_5.AddSharedVariablesTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,8 +58,8 @@ import java.util.List;
 
 /**
  * Module's version handler.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ *
+ * @version Id$
  */
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
 
@@ -74,7 +71,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(new BootstrapSingleResource("Freemarker Model for RenderableDefinition", "Plugs in a specific Freemarker model for RenderableDefinition implementations.", "/mgnl-bootstrap/templating/config.server.rendering.freemarker.modelFactories.renderable.xml"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates", "path", "templatePath"))
                 .addTask(new NestPropertiesAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates",
-                        Arrays.asList(new String[]{"name", "type", "templatePath", "title", "description", "i18nBasename", "visible", "class"}), "parameters", ItemType.CONTENTNODE.getSystemName()))
+                        Arrays.asList("name", "type", "templatePath", "title", "description", "i18nBasename", "visible", "class"), "parameters", MgnlNodeType.NT_CONTENTNODE))
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "Property templateType is now type.", "paragraphs", "templateType", "type"))
                 .addTask(new DeprecateDialogPathAllModules("Paragraphs configuration", "Property dialogPath changed to dialog."))
         );
@@ -104,10 +101,10 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
 
         register(DeltaBuilder.update("4.4", "")
             .addTask(new BootstrapSingleResourceAndOrderBefore(
-                        "Model Execution Filter",
-                        "Add Model Execution Filter",
-                        "/mgnl-bootstrap/rendering/config.server.filters.cms.modelExecution.xml",
-                        "backwardCompatibility"))
+                    "Model Execution Filter",
+                    "Add Model Execution Filter",
+                    "/mgnl-bootstrap/rendering/config.server.filters.cms.modelExecution.xml",
+                    "backwardCompatibility"))
         );
 
         register(DeltaBuilder.update("4.5", "")
@@ -116,6 +113,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "templatePath is now templateScript.", "paragraphs", "templatePath", "templateScript"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "type is now renderType.", "templates", "type", "renderType"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "type is now renderType.", "paragraphs", "type", "renderType"))
+                .addTask(new AddSharedVariablesTask())
         );
     }
 
@@ -123,24 +121,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final ArrayList<Task> tasks = new ArrayList<Task>();
         tasks.add(new OrderNodeBeforeTask("Order model execution filter", "", RepositoryConstants.CONFIG, "/server/filters/cms/modelExecution", "rendering"));
-        // TODO : make sure the RenderingFilter is the last one ?
-
-        tasks.add(new NodeBuilderTask(
-                "New templating UI components",
-                "Registers new UI components for templating.",
-                ErrorHandling.strict,
-                RepositoryConstants.CONFIG,
-                "/server/rendering/freemarker",
-                getNode("sharedVariables")
-                        .then(addNode("cms", MgnlNodeType.NT_CONTENTNODE)
-                                .then(addProperty("class",
-                                        info.magnolia.templating.freemarker.Directives.class.getName())),
-                                addNode("cmsfn", MgnlNodeType.NT_CONTENTNODE)
-                                        .then(addProperty(
-                                                "class",
-                                                info.magnolia.templating.functions.TemplatingFunctions.class
-                                                        .getName())))));
-
+        tasks.add(new AddSharedVariablesTask());
         return tasks;
     }
 }
