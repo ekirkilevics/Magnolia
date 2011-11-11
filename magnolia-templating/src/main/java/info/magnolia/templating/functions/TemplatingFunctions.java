@@ -40,10 +40,12 @@ import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.util.SessionUtil;
+import info.magnolia.jcr.wrapper.HTMLEscapingNodeWrapper;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.objectfactory.Components;
@@ -549,5 +551,34 @@ public class TemplatingFunctions {
     private boolean isRoot(Node content) throws RepositoryException {
         return content.getDepth() == 0;
     }
+
+    /**
+     * Removes escaping of HTML on properties.
+     */
+    public ContentMap decode(ContentMap content){
+        return asContentMap(decode(content.getJCRNode()));
+    }
+
+    /**
+     * Removes escaping of HTML on properties.
+     */
+    public Node decode(Node content){
+        if (content instanceof HTMLEscapingNodeWrapper) {
+            try {
+                return ((HTMLEscapingNodeWrapper) content).getWrappedNode();
+            } catch (RepositoryException e) {
+                throw new RuntimeRepositoryException(e);
+            }
+        }
+        return content;
+    }
+
+    /**
+     * Adds escaping of HTML on properties as well as changing line breaks into &lt;br/&gt; tags.
+     */
+    public Node encode(Node content){
+        return content != null ? new HTMLEscapingNodeWrapper(content, true) : null;
+    }
+
 
 }
