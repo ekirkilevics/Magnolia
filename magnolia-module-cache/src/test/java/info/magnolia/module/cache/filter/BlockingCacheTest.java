@@ -262,6 +262,7 @@ public class BlockingCacheTest{
 
         expect(request.getServerName()).andStubReturn("serverName");
         expect(request.getRequestURL()).andStubReturn(new StringBuffer("/theURL"));
+        expect(request.isSecure()).andStubReturn(false);
         expect(request.getDateHeader("If-Modified-Since")).andStubReturn(Long.valueOf(-1));
         expect(request.getHeaders("Accept-Encoding")).andStubReturn(IteratorUtils.asEnumeration(IteratorUtils.EMPTY_ITERATOR));
 

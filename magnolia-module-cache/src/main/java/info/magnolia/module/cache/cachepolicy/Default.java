@@ -141,12 +141,15 @@ public class Default implements CachePolicy {
         // get serverName and request params and from WebContext
         final String serverName;
         final Map<String, String> params;
+        final boolean isSecure;
         if (MgnlContext.isWebContext()) {
             serverName = MgnlContext.getWebContext().getRequest().getServerName();
             params = MgnlContext.getWebContext().getParameters();
+            isSecure = MgnlContext.getWebContext().getRequest().isSecure();
         } else {
             serverName = null;
             params = null;
+            isSecure = false;
         }
 
         // get locale
@@ -159,7 +162,7 @@ public class Default implements CachePolicy {
          }
 
         // create composite key so we can easily check each part of it later
-        return new DefaultCacheKey(uri, serverName, localeStr, params);
+        return new DefaultCacheKey(uri, serverName, localeStr, params, isSecure);
     }
 
     @Override

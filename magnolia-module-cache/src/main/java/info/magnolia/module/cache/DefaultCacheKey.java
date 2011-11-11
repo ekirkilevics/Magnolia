@@ -53,12 +53,26 @@ public class DefaultCacheKey implements Serializable {
     private String serverName;
     private String locale;
     private Map<String, String> params;
+    private Boolean isSecure;
 
+    /**
+     * @deprecated since 4.4.6 use info.magnolia.module.cache.DefaultCacheKey.DefaultCacheKey(String, String, String, Map<String, String>, Boolean)
+     */
+    @Deprecated
     public DefaultCacheKey(String uri, String serverName, String locale, Map<String, String> params) {
         this.uri = uri;
         this.serverName = serverName;
         this.locale = locale;
         this.params = params == null ? null : Collections.unmodifiableMap(params);
+        this.isSecure = false;
+    }
+    
+    public DefaultCacheKey(String uri, String serverName, String locale, Map<String, String> params, Boolean isSecure){
+        this.uri = uri;
+        this.serverName = serverName;
+        this.locale = locale;
+        this.params = params == null ? null : Collections.unmodifiableMap(params);
+        this.isSecure = isSecure;
     }
 
     @Override
@@ -66,7 +80,8 @@ public class DefaultCacheKey implements Serializable {
         return (uri == null ? 13 : uri.hashCode())
             + (serverName == null ? 17 : serverName.hashCode())
             + (locale == null ? 23 : locale.hashCode())
-            + (params == null ? 27 :  params.hashCode());
+            + (params == null ? 27 :  params.hashCode())
+            + (isSecure == null ? 33 : isSecure.hashCode());
     }
 
     @Override
@@ -81,7 +96,8 @@ public class DefaultCacheKey implements Serializable {
         return (this.uri == null) ? that.uri == null : this.uri.equals(that.uri)
             && (this.serverName == null ? that.serverName == null : this.serverName.equals(that.serverName))
             && (this.locale == null ? that.locale == null : this.locale.equals(that.locale))
-            && (this.params == null ? that.params == null : this.params.equals(that.params));
+            && (this.params == null ? that.params == null : this.params.equals(that.params))
+            && (this.isSecure == null ? that.isSecure == null : this.isSecure.equals(that.isSecure));
     }
 
     public String getUri() {
@@ -96,8 +112,16 @@ public class DefaultCacheKey implements Serializable {
         return this.locale;
     }
     
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
     public Map<String, String> getParams() {
         return params;
+    }
+    
+    public Boolean getIsSecured(){
+        return this.isSecure;
     }
 
     // generated toString() method
@@ -107,7 +131,8 @@ public class DefaultCacheKey implements Serializable {
                 "uri='" + uri + '\'' +
                 ", serverName='" + serverName + '\'' +
                 ", locale='" + locale + '\'' +
-                ", params=" + params +
+                ", params=" + params + '\'' +
+                ", secure='" + isSecure + "'" +
                 '}';
     }
 
