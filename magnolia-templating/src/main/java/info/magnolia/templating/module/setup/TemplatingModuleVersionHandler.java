@@ -33,7 +33,9 @@
  */
 package info.magnolia.templating.module.setup;
 
+import static info.magnolia.nodebuilder.Ops.*;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.BootstrapSingleModuleResource;
@@ -45,20 +47,16 @@ import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.delta.Task;
-import info.magnolia.templating.module.setup.for4_0.DeprecateDialogPathAllModules;
-import info.magnolia.templating.module.setup.for4_0.FixTemplatePathTask;
-import info.magnolia.templating.module.setup.for4_0.NestPropertiesAllModulesNodeTask;
 import info.magnolia.nodebuilder.task.ErrorHandling;
 import info.magnolia.nodebuilder.task.NodeBuilderTask;
 import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.templating.module.setup.for4_0.DeprecateDialogPathAllModules;
+import info.magnolia.templating.module.setup.for4_0.FixTemplatePathTask;
+import info.magnolia.templating.module.setup.for4_0.NestPropertiesAllModulesNodeTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static info.magnolia.nodebuilder.Ops.addNode;
-import static info.magnolia.nodebuilder.Ops.addProperty;
-import static info.magnolia.nodebuilder.Ops.getNode;
 
 
 /**
@@ -134,10 +132,10 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 RepositoryConstants.CONFIG,
                 "/server/rendering/freemarker",
                 getNode("sharedVariables")
-                        .then(addNode("cms", ItemType.CONTENTNODE)
+                        .then(addNode("cms", MgnlNodeType.NT_CONTENTNODE)
                                 .then(addProperty("class",
                                         info.magnolia.templating.freemarker.Directives.class.getName())),
-                                addNode("cmsfn", ItemType.CONTENTNODE)
+                                addNode("cmsfn", MgnlNodeType.NT_CONTENTNODE)
                                         .then(addProperty(
                                                 "class",
                                                 info.magnolia.templating.functions.TemplatingFunctions.class
