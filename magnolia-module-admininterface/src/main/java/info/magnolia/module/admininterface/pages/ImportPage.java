@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.text.MessageFormat;
 
 
@@ -155,9 +156,9 @@ public class ImportPage extends ExportPage {
         if (StringUtils.isEmpty(mgnlPath)) {
             mgnlPath = "/"; //$NON-NLS-1$
         }
-
+        
         if (!checkPermissions(request, mgnlRepository, mgnlPath, Permission.WRITE)) {
-
+        	
             AlertUtil.setMessage("Write permission needed for export. User not allowed to WRITE path [" + mgnlPath + "]");
 
             throw new ServletException(new AccessDeniedException(
@@ -176,6 +177,8 @@ public class ImportPage extends ExportPage {
             true);
 
         log.info("Import done"); //$NON-NLS-1$
+        
+        mgnlFileImport.getFile().delete();
 
         if (StringUtils.isNotBlank(mgnlRedirect)) {
             if (log.isInfoEnabled()) {
