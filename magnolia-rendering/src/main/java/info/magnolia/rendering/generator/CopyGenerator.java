@@ -130,11 +130,11 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
                 }
                 newNode.getSession().save();
             } catch (AccessDeniedException e) {
-                new RuntimeRepositoryException("An error occurred while trying to create new node " + name, e);
+                throw new RuntimeRepositoryException("An error occurred while trying to create new node " + name, e);
             } catch (PathNotFoundException e) {
-                new RuntimeRepositoryException("An error occurred while trying to create new node " + name, e);
+                throw new RuntimeRepositoryException("An error occurred while trying to create new node " + name, e);
             } catch (RepositoryException e) {
-                new RuntimeRepositoryException("An error occurred while trying to create new node " + name, e);
+                throw new RuntimeRepositoryException("An error occurred while trying to create new node " + name, e);
             }
         }
     }
