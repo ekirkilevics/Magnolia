@@ -49,11 +49,10 @@ import javax.servlet.http.HttpServletResponse;
  *         $Id$
  */
 public abstract class BaseSecurityFilter extends AbstractMgnlFilter {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BaseSecurityFilter.class);
 
     /**
-     * Continue with the Magnolia defined filter chain if {@link #isAllowed} returns true,
-     * else set an http response code 401.
+     * Continue with the Magnolia defined filter chain if {@link #isAllowed} returns true. Else subclasses
+     * should set the appropriate http response code 401 (or 403).
      */
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
