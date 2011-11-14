@@ -144,10 +144,10 @@ public class LicenseFileExtractor {
     /**
      * Load meta element.
      */
-    @SuppressWarnings("unchecked")
     private void load(Document document) {
         Element metaElement = document.getRootElement().getChild(ELEMENT_META);
 
+        @SuppressWarnings("unchecked")
         List<Element> elements = metaElement.getChildren();
 
         values = new HashMap<String,String>(10);
