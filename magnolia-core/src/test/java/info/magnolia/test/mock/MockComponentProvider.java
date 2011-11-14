@@ -41,6 +41,7 @@ import info.magnolia.objectfactory.LazyObservedComponentFactory;
 import info.magnolia.objectfactory.ObjectManufacturer;
 import info.magnolia.objectfactory.ParameterResolver;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -128,6 +129,7 @@ public class MockComponentProvider extends PropertiesComponentProvider {
 
     @Override
     public <T> T newInstanceWithParameterResolvers(Class<T> type, ParameterResolver... parameterResolvers) {
+        parameterResolvers = concat(parameterResolvers, new MockParameterResolver(this));
         ObjectManufacturer manufacturer = new ObjectManufacturer();
         Class<? extends T> implementation;
         try {
@@ -138,5 +140,11 @@ public class MockComponentProvider extends PropertiesComponentProvider {
 
         T instance = (T) manufacturer.newInstance(implementation, parameterResolvers);
         return instance;
+    }
+
+    private ParameterResolver[] concat(ParameterResolver[] array, ParameterResolver extra) {
+        ParameterResolver[] newArray = Arrays.copyOf(array, array.length + 1);
+        newArray[array.length] = extra;
+        return newArray;
     }
 }

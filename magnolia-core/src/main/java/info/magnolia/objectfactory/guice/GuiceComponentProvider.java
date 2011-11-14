@@ -114,7 +114,7 @@ public class GuiceComponentProvider implements ComponentProvider {
         return instance;
     }
 
-    private ParameterResolver[] concat(ParameterResolver[] array, GuiceParameterResolver extra) {
+    private ParameterResolver[] concat(ParameterResolver[] array, ParameterResolver extra) {
         ParameterResolver[] newArray = Arrays.copyOf(array, array.length + 1);
         newArray[array.length] = extra;
         return newArray;
