@@ -94,7 +94,7 @@ public class AggregatorFilter extends AbstractMgnlFilter{
             log.debug("Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI());
 
             if (!response.isCommitted()) {
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
             else {
                 log.info("Unable to redirect to 404 page, response is already committed. URI was {}", request.getRequestURI());
