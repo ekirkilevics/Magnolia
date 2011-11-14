@@ -80,11 +80,6 @@ public class SecurityCallbackFilter extends OncePerRequestAbstractMgnlFilter {
     }
 
     @Override
-    public boolean bypasses(HttpServletRequest request) {
-        return super.bypasses(request);
-    }
-
-    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse originalResponse, FilterChain chain) throws IOException, ServletException {
         final StatusSniffingResponseWrapper response = new StatusSniffingResponseWrapper(originalResponse);
         try {
@@ -135,6 +130,8 @@ public class SecurityCallbackFilter extends OncePerRequestAbstractMgnlFilter {
      * A simple HttpServletResponseWrapper which keeps track of the current http status code.
      * Everything else is delegated to the parent response, which means calls to sendError or sendRedirect still mean
      * the response is committed.
+     *
+     * Note: Will become obsolete with Servlet API 3.0 as it defines a publicly available HttpServletResponse#getStatus()
      */
     public static class StatusSniffingResponseWrapper extends HttpServletResponseWrapper {
         private int status = SC_OK;
