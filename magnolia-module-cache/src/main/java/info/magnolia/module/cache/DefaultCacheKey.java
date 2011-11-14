@@ -80,8 +80,8 @@ public class DefaultCacheKey implements Serializable {
         return (uri == null ? 13 : uri.hashCode())
             + (serverName == null ? 17 : serverName.hashCode())
             + (locale == null ? 23 : locale.hashCode())
-            + (params == null ? 27 :  params.hashCode())
-            + (isSecure == null ? 33 : isSecure.hashCode());
+            + (params == null ? 29 :  params.hashCode())
+            + (isSecure == null ? 31 : isSecure.hashCode());
     }
 
     @Override
@@ -112,10 +112,6 @@ public class DefaultCacheKey implements Serializable {
         return this.locale;
     }
     
-    public void setLocale(String locale) {
-        this.locale = locale;
-    }
-
     public Map<String, String> getParams() {
         return params;
     }
