@@ -59,23 +59,13 @@ public class EditDirectiveTest extends AbstractDirectiveTestCase {
     @Test
     public void testRenderSimpleBar() throws Exception {
         String result = renderForTest("[@cms.edit /]", renderableDef);
-        assertEquals("<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + "\r\n"
-                + "<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
-                + "\r\n"
-                + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + "\r\n", result);
+        assertEquals("<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>\r\n", result);
     }
 
     @Test
     public void testRenderWithDialog() throws Exception {
         final String result = renderForTest("[@cms.edit dialog='testDialog' /]", renderableDef);
-        assertEquals("<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + "\r\n"
-                        + "<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>"
-                + "\r\n"
-                + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->"
-                + "\r\n", result);
+        assertEquals("<cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"testDialog\" template=\"testParagraph1\"></cms:edit>\r\n", result);
     }
 
     @Test

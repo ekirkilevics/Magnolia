@@ -58,12 +58,11 @@ public class MarkupHelper implements Appendable {
     private static final String XML_BEGIN_COMMENT = "<!-- ";
     private static final String XML_END_COMMENT = " -->";
 
-    private static final String CMS_BEGIN_CONTENT = "cms:begin cms:content";
-    private static final String CMS_END_CONTENT = "cms:end cms:content";
+    private static final String CMS_BEGIN_TAG = "cms:begin";
+    private static final String CMS_END_TAG = "cms:end";
 
-    private static final String CMS_BEGIN_CONTENT_COMMENT = XML_BEGIN_COMMENT + CMS_BEGIN_CONTENT + EQUALS + QUOTE;
-
-    private static final String CMS_END_CONTENT_COMMENT = XML_BEGIN_COMMENT + CMS_END_CONTENT + EQUALS + QUOTE;
+    private static final String CONTENT_ATTRIBUTE = "cms:content";
+    private static final String TYPE_ATTRIBUTE = "cms:type";
 
     private final Appendable appendable;
 
@@ -80,12 +79,19 @@ public class MarkupHelper implements Appendable {
     }
 
     public MarkupHelper startContent(Node node) throws IOException, RenderException {
-        appendable.append(CMS_BEGIN_CONTENT_COMMENT).append(node != null ?  getNodePath(node) : "").append(QUOTE).append(XML_END_COMMENT).append(LINE_BREAK);
+        appendable.append(XML_BEGIN_COMMENT);
+        append(CMS_BEGIN_TAG);
+        attribute(CONTENT_ATTRIBUTE, getNodeId(node));
+        attribute(TYPE_ATTRIBUTE, getNodeType(node));
+        appendable.append(XML_END_COMMENT).append(LINE_BREAK);
         return this;
     }
 
     public MarkupHelper endContent(Node node) throws IOException, RenderException {
-        appendable.append(CMS_END_CONTENT_COMMENT).append(node != null ?  getNodePath(node) : "").append(QUOTE).append(XML_END_COMMENT).append(LINE_BREAK);
+        appendable.append(XML_BEGIN_COMMENT);
+        append(CMS_END_TAG);
+        attribute(CONTENT_ATTRIBUTE, getNodeId(node));
+        appendable.append(XML_END_COMMENT).append(LINE_BREAK);
         return this;
     }
 
@@ -99,12 +105,26 @@ public class MarkupHelper implements Appendable {
         return this;
     }
 
-    protected String getNodePath(Node node) throws RenderException {
+    protected String getNodeId(Node node) throws RenderException {
+        if(node == null){
+            return "";
+        }
         try {
             return node.getSession().getWorkspace().getName() + ":" + node.getPath();
         } catch (RepositoryException e) {
             throw new RenderException("Can't construct node path for node " + node);
         }
+    }
+
+    protected String getNodeType(Node node) throws RenderException {
+        if(node == null){
+            return "";
+        }
+        try {
+            return node.getPrimaryNodeType().getName();
+        }
+        catch (RepositoryException e) {
+            throw new RenderException("Can't read node type for node " + node);        }
     }
 
     @Override

@@ -116,14 +116,18 @@ public abstract class AbstractDirectiveTestCase {
 
         fmHelper = new FreemarkerHelper(fmConfig);
 
-        session =
-            MockUtil.createAndSetHierarchyManager("testWorkspace", StringUtils.join(new String[] { "/foo/bar.@type=mgnl:content",
-                    "/foo/bar/MetaData.@type=mgnl:metadata", "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
-                    "/foo/bar/paragraphs.@type=mgnl:contentNode", "/foo/bar/paragraphs/0.@type=mgnl:contentNode",
-                    "/foo/bar/paragraphs/0.@uuid=100", "/foo/bar/paragraphs/1.@type=mgnl:contentNode",
-                    "/foo/bar/paragraphs/1.@uuid=101", "/foo/bar/paragraphs/1.text=hello 1",
-                    "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
-            "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1" }, "\n"));
+        session = MockUtil.createAndSetHierarchyManager("testWorkspace", StringUtils.join(new String[] {
+                "/foo/bar.@type=mgnl:page",
+                "/foo/bar/MetaData.@type=mgnl:metadata",
+                "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
+                "/foo/bar/paragraphs.@type=mgnl:areae",
+                "/foo/bar/paragraphs/0.@type=mgnl:component",
+                "/foo/bar/paragraphs/0.@uuid=100",
+                "/foo/bar/paragraphs/1.@type=mgnl:component",
+                "/foo/bar/paragraphs/1.@uuid=101",
+                "/foo/bar/paragraphs/1.text=hello 1",
+                "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
+                "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1" }, "\n"));
 
         aggState = new AggregationState();
         // let's make sure we render stuff on an author instance

@@ -58,6 +58,7 @@ public class RenderElement extends AbstractContentTemplatingElement {
     private String template;
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
     private final RenderingEngine renderingEngine;
+    private Node content;
 
     public RenderElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
         super(server, renderingContext);
@@ -66,7 +67,11 @@ public class RenderElement extends AbstractContentTemplatingElement {
 
     @Override
     public void begin(Appendable out) throws IOException, RenderException {
-        Node content = getTargetContent();
+        content = getTargetContent();
+
+        if(getEditable()){
+            new MarkupHelper(out).startContent(content);
+        }
 
         // TODO not sure how to pass editable
 
@@ -79,6 +84,13 @@ public class RenderElement extends AbstractContentTemplatingElement {
             webContext.pop();
             webContext.setPageContext(null);
             restoreAttributesInWebContext(contextAttributes, WebContext.LOCAL_SCOPE);
+        }
+    }
+
+    @Override
+    public void end(Appendable out) throws IOException, RenderException {
+        if(getEditable()){
+            new MarkupHelper(out).endContent(content);
         }
     }
 

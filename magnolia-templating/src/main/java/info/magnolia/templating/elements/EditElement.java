@@ -74,7 +74,6 @@ public class EditElement extends AbstractContentTemplatingElement {
         TemplateDefinition templateDefinition = getRequiredTemplateDefinition();
 
         MarkupHelper helper = new MarkupHelper(out);
-        helper.startContent(content);
         helper.openTag(CMS_EDIT);
 
         if(content != null) {
@@ -109,18 +108,6 @@ public class EditElement extends AbstractContentTemplatingElement {
             return dialog;
         }
         return null;
-    }
-
-    @Override
-    public void end(Appendable out) throws IOException, RenderException {
-        if (!isAdmin()) {
-            return;
-        }
-        Node content = getTargetContent();
-        if (content != null) {
-            MarkupHelper helper = new MarkupHelper(out);
-            helper.endContent(content);
-        }
     }
 
     public String getDialog() {
