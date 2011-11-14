@@ -178,12 +178,12 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         register(DeltaBuilder.update("4.3", "")
                 .addTask(addFreemarkerSharedVariables)
                 .addTask(
-                new ArrayDelegateTask("New unicode normalization filter", "Add the new unicode normalization filter.",
-                        new BootstrapSingleResource("Unicode Normalization filter ", "Add new Unicode Normalization filter.", "/mgnl-bootstrap/core/config.server.filters.unicodeNormalization.xml"),
-                        new FilterOrderingTask("multipartRequest", "New filter ordering : context, contentType, multipart, unicodeNormalization, login.", new String[]{"contentType"}),
-                        new FilterOrderingTask("unicodeNormalization", "New filter ordering : context, contentType, multipart, unicodeNormalization, login.", new String[]{"multipartRequest"})
-                ))
-                .addTask(new UpdateUserPermissions())
+                        new ArrayDelegateTask("New unicode normalization filter", "Add the new unicode normalization filter.",
+                                new BootstrapSingleResource("Unicode Normalization filter ", "Add new Unicode Normalization filter.", "/mgnl-bootstrap/core/config.server.filters.unicodeNormalization.xml"),
+                                new FilterOrderingTask("multipartRequest", "New filter ordering : context, contentType, multipart, unicodeNormalization, login.", new String[]{"contentType"}),
+                                new FilterOrderingTask("unicodeNormalization", "New filter ordering : context, contentType, multipart, unicodeNormalization, login.", new String[]{"multipartRequest"})
+                        ))
+                        .addTask(new UpdateUserPermissions())
         );
 
         register(DeltaBuilder.update("4.3.6", "")
@@ -234,7 +234,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
         register(DeltaBuilder.update("4.4.6", "")
                 .addTask(new BootstrapConditionally("Security", "Bootstraps security-base role.", "/mgnl-bootstrap/core/userroles.security-base.xml"))
-        );
+                .addTask(new BootstrapConditionally("Bootstrap range support filter", "Bootstrap filter that adds Magnolia capability to serve ranged (partial) requests", "/info/magnolia/setup/update/range/config.server.filters.range.xml"))
+                .addTask(new FilterOrderingTask("range", new String[] { "gzip", "activation", "uriSecurity" })));
 
         register(DeltaBuilder.update("4.5", "")
                 .addCondition(new SystemTmpDirCondition())

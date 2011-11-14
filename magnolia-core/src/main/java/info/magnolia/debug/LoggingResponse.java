@@ -47,11 +47,13 @@ import javax.servlet.http.HttpServletResponseWrapper;
  */
 class LoggingResponse extends HttpServletResponseWrapper {
 
-    private Map headers = new HashMap();
+    private final Map headers = new HashMap();
 
     private int length;
 
     private int status = HttpServletResponse.SC_OK;
+
+    private String type;
 
     LoggingResponse(HttpServletResponse response) {
         super(response);
@@ -71,6 +73,9 @@ class LoggingResponse extends HttpServletResponseWrapper {
         return this.status;
     }
 
+    public String getType() {
+        return this.type;
+    }
 
     @Override
     public void setDateHeader(String name, long date) {
@@ -88,6 +93,12 @@ class LoggingResponse extends HttpServletResponseWrapper {
     public void setContentLength(int len) {
         this.length = len;
         super.setContentLength(len);
+    }
+
+    @Override
+    public void setContentType(String type) {
+        this.type = type;
+        super.setContentType(type);
     }
 
     @Override

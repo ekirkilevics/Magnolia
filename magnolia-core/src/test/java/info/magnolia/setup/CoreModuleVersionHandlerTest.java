@@ -370,6 +370,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("securityCallback", updatedFilters.next().getName());
         assertEquals("uriSecurity", updatedFilters.next().getName());
         assertEquals("activation", updatedFilters.next().getName());
+        assertEquals("range", updatedFilters.next().getName());
         assertFalse(updatedFilters.hasNext());
     }
 

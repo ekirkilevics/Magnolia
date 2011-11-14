@@ -260,7 +260,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final List<Task> tasks = new ArrayList<Task>();
         tasks.add(new FilterOrderingTask("gzip", new String[]{"context", "multipartRequest", "activation"}));
-        tasks.add(new FilterOrderingTask("cache", new String[]{"gzip", "i18n"}));
+        tasks.add(new FilterOrderingTask("cache", new String[] { "gzip", "range", "i18n" }));
         return tasks;
     }
 
@@ -297,6 +297,6 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
         return tasks;
     }
-    */
+     */
 
 }

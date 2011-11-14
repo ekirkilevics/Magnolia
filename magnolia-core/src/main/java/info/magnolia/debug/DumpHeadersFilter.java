@@ -74,6 +74,7 @@ public class DumpHeadersFilter extends AbstractMgnlFilter {
             }
         }
         log.info("{} parameters: {}", Long.toString(nr),  params);
+        log.info("{} method: {}", Long.toString(nr), request.getMethod());
         for (Enumeration en = request.getHeaderNames(); en.hasMoreElements();) {
             String name = (String) en.nextElement();
             log.info("{} header: {}={}", new String[]{String.valueOf(nr), name, request.getHeader(name)});
@@ -81,13 +82,14 @@ public class DumpHeadersFilter extends AbstractMgnlFilter {
         chain.doFilter(request, wrappedResponse);
         log.info("{} response status: {}", Long.toString(nr),Integer.toString(wrappedResponse.getStatus()));
         log.info("{} response length: {}", Long.toString(nr),Long.toString(wrappedResponse.getLength()));
+        log.info("{} response mime type: {}", Long.toString(nr), wrappedResponse.getContentType());
         for (Iterator iter = wrappedResponse.getHeaders().keySet().iterator(); iter.hasNext();) {
             String name = (String) iter.next();
             log.info(request.getRequestURI()
-                + " response: "
-                + name
-                + " = "
-                + wrappedResponse.getHeaders().get(name));
+                    + " response: "
+                    + name
+                    + " = "
+                    + wrappedResponse.getHeaders().get(name));
         }
     }
 }
