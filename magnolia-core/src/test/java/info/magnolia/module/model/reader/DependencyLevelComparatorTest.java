@@ -153,4 +153,18 @@ public class DependencyLevelComparatorTest {
 
         assertEquals(0, reg.calcDependencyDepth(modDefA));
     }
+    
+    /**
+     * No dependencies.
+     */
+    public void testCalcDepencyLevelWithNonDependencies() {
+        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
+
+        final Map<String, ModuleDefinition> map = new HashMap<String, ModuleDefinition>();
+        map.put(modDefA.getName(), modDefA);
+
+        final DependencyLevelComparator reg = new DependencyLevelComparator(map);
+
+        assertEquals(0, reg.calcDependencyDepth(modDefA));
+    } 
 }
