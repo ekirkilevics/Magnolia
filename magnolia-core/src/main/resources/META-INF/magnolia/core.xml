@@ -161,6 +161,11 @@
       <observed>true</observed>
       <scope>singleton</scope>
     </component>
+    <component>
+      <type>info.magnolia.beanmerger.BeanMerger</type>
+      <implementation>info.magnolia.beanmerger.ProxyBasedBeanMerger</implementation>
+      <scope>singleton</scope>
+    </component>
     <type-mapping>
       <type>info.magnolia.voting.Voting</type>
       <implementation>info.magnolia.voting.DefaultVoting</implementation>
