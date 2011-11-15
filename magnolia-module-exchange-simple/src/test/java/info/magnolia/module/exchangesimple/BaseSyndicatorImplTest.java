@@ -33,41 +33,154 @@
  */
 package info.magnolia.module.exchangesimple;
 
+import static org.easymock.EasyMock.*;
+
+import java.util.Calendar;
+
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.util.Rule;
+import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 
 /**
- * Basic tests for BaseSyndicatorImpl.
- * 
- * @author had
- * 
+ * @version $Id$
  */
 public class BaseSyndicatorImplTest extends TestCase {
 
+    private final class DummySyndicator extends BaseSyndicatorImpl {
+        @Override
+        public void activate(ActivationContent activationContent, String nodePath) throws ExchangeException {
+        }
+
+        @Override
+        public void doDeactivate(String nodeUUID, String nodePath) throws ExchangeException {
+        }
+
+        @Override
+        public String doDeactivate(Subscriber subscriber, String nodeUUID, String nodePath) throws ExchangeException {
+            return null;
+        }
+    }
+
+    public void testUpdateMetaDataWhenActivating() throws Exception {
+        // GIVEN
+        BaseSyndicatorImpl bsi = new DummySyndicator();
+
+        User user = createNiceMock(User.class);
+        final String activator = "batman";
+        expect(user.getName()).andReturn(activator).anyTimes();
+        replay(user);
+
+        Rule rule = new Rule(new String[] {ItemType.CONTENT.getSystemName()});
+
+        bsi.init(user, "repo", "workspace", rule);
+        Content content = new MockContent("test");
+        Content child = content.createContent("childOfTest");
+
+        MetaData md = content.getMetaData();
+        md.setLastActivationActionDate();
+
+        MetaData childsMetaData = child.getMetaData();
+        childsMetaData.setLastActivationActionDate();
+
+        // make sure there's a time difference in between the initial setting of the MetaData's and the implicit ones from call to updateMetaData
+        Thread.sleep(10);
+
+        assertFalse(md.getIsActivated());
+        Calendar lastAction = md.getLastActionDate();
+
+        // WHEN
+        bsi.updateMetaData(content, BaseSyndicatorImpl.ACTIVATE);
+
+        // THEN - verify metaData got updated
+        verify(user);
+        md = content.getMetaData();
+        assertTrue(md.getIsActivated());
+        assertEquals(activator, md.getActivatorId());
+        assertTrue(md.getLastActionDate().getTimeInMillis() > lastAction.getTimeInMillis());
+
+        // ...and know the kid's metadata
+        childsMetaData = child.getMetaData();
+        assertTrue(childsMetaData.getIsActivated());
+        assertEquals(activator, childsMetaData.getActivatorId());
+        assertTrue(childsMetaData.getLastActionDate().getTimeInMillis() > lastAction.getTimeInMillis());
+    }
+
+    public void testUpdateMetaDataWhenDeactivating() throws Exception {
+        // GIVEN
+        BaseSyndicatorImpl bsi = new DummySyndicator();
+
+        User user = createNiceMock(User.class);
+        final String activator = "batman";
+        expect(user.getName()).andReturn(activator).anyTimes();
+        replay(user);
+
+        Rule rule = new Rule(new String[] {ItemType.CONTENT.getSystemName()});
+
+        bsi.init(user, "repo", "workspace", rule);
+        Content content = new MockContent("test");
+        Content child = content.createContent("childOfTest");
+
+        MetaData md = content.getMetaData();
+        md.setUnActivated();
+        md.setLastActivationActionDate();
+
+        MetaData childsMetaData = child.getMetaData();
+        childsMetaData.setUnActivated();
+        childsMetaData.setLastActivationActionDate();
+        // make sure there's a time difference in between the initial setting of the MetaData's and the implicit ones from call to updateMetaData
+        Thread.sleep(1);
+
+        Calendar lastAction = md.getLastActionDate();
+
+        // WHEN
+        bsi.updateMetaData(content, BaseSyndicatorImpl.DEACTIVATE);
+
+        // THEN - verify metaData got updated
+        verify(user);
+        md = content.getMetaData();
+        assertFalse(md.getIsActivated());
+        assertEquals(activator, md.getActivatorId());
+        assertTrue(md.getLastActionDate().getTimeInMillis() > lastAction.getTimeInMillis());
+
+        // ...and know the kid's metadata
+        childsMetaData = child.getMetaData();
+        assertFalse(childsMetaData.getIsActivated());
+        assertEquals(activator, childsMetaData.getActivatorId());
+        assertTrue(childsMetaData.getLastActionDate().getTimeInMillis() > lastAction.getTimeInMillis());
+    }
+
     public void testStripPassword() throws Exception {
-        BaseSyndicatorImpl bsi = new BaseSyndicatorImpl() {
-
-            @Override
-            public void activate(ActivationContent activationContent, String nodePath) throws ExchangeException {
-            }
-
-            @Override
-            public void doDeactivate(String nodeUUID, String nodePath) throws ExchangeException {
-            }
-
-            @Override
-            public String doDeactivate(Subscriber subscriber, String nodeUUID, String nodePath) throws ExchangeException {
-                return null;
-            }
-        };
+        // GIVEM
+        BaseSyndicatorImpl bsi = new DummySyndicator();
 
         String testURL = "http://server.com:1234/bla/activation/?something=xxx&mgnlUserID=joey&mgnlUserPSWD=isTheBest";
         String strippedOfURL = "http://server.com:1234/bla/activation/?something=xxx&mgnlUserID=joey";
-        assertEquals(strippedOfURL, bsi.stripPasswordFromUrl(testURL));
 
-        testURL = "http://server.com:1234/bla/activation/?something=xxx&mgnlUserID=joey&mgnlUserPSWD=isTheBest&someOther=bla";
-        strippedOfURL = "http://server.com:1234/bla/activation/?something=xxx&mgnlUserID=joey&someOther=bla";
-        assertEquals(strippedOfURL, bsi.stripPasswordFromUrl(testURL));
+        // WHEN
+        String result = BaseSyndicatorImpl.stripPasswordFromUrl(testURL);
+
+        // THEN
+        assertEquals(strippedOfURL, result);
     }
+
+    public void testStripPasswordWithAdditionalParam() throws Exception {
+        // GIVEM
+        BaseSyndicatorImpl bsi = new DummySyndicator();
+
+        String testURL =
+                "http://server.com:1234/bla/activation/?something=xxx&mgnlUserID=joey&mgnlUserPSWD=isTheBest&someOther=bla";
+        String strippedOfURL = "http://server.com:1234/bla/activation/?something=xxx&mgnlUserID=joey&someOther=bla";
+        // WHEN
+        String result = BaseSyndicatorImpl.stripPasswordFromUrl(testURL);
+
+        // THEN
+        assertEquals(strippedOfURL, result);
+    }
+
 }

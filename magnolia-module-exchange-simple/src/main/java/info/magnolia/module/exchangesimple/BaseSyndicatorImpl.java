@@ -64,6 +64,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
@@ -233,6 +234,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     protected User user;
 
     protected String basicCredentials;
+    
+    private Calendar contentVersionDate;
 
     /**
      * @param user
@@ -309,6 +312,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     public void activate(Subscriber subscriber, String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException {
         this.parent = parent;
         String path = content.getHandle();
+        
+        if (content instanceof ContentVersion) {
+            contentVersionDate = ((ContentVersion)content).getCreated();
+        }
+        
         ActivationContent activationContent = null;
         try {
             activationContent = this.collect(content, orderBefore);
@@ -600,6 +608,17 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         }
         md.setActivatorId(this.user.getName());
         md.setLastActivationActionDate();
+        
+        if(type.equals(ACTIVATE)){
+            if(md.getModificationDate() != null && md.getModificationDate().after(contentVersionDate)){
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                md.setModificationDate();
+            }
+        }
 
         Iterator<Content> children;
         if (type.equals(ACTIVATE)) {
