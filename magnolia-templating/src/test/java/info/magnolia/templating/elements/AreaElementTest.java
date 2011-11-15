@@ -160,11 +160,11 @@ public class AreaElementTest {
         //
         //        assertEquals(outString,
         //                "<!-- cms:begin cms:content=\"test:/foo/bar/baz/singleArea\" -->" +
-        //                "\r\n" +
+        //                "\n" +
         //                "<cms:area content=\"test:/foo/bar/baz\" name=\"singleArea\" availableComponents=\"\" type=\"single\" showAddButton=\"false\"></cms:area>" +
-        //                "\r\n" +
+        //                "\n" +
         //                "<!-- cms:end cms:content=\"test:/foo/bar/baz/singleArea\" -->"
-        //                + "\r\n", outString);
+        //                + "\n", outString);
     }
 
     private TemplateDefinition createTemplateDefinition(String areaType) {
@@ -226,11 +226,11 @@ public class AreaElementTest {
 
         assertEquals(outString,
             "<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->" +
-            "\r\n" +
+            "\n" +
             "<cms:area content=\"test:/foo/bar/baz/listArea\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>" +
-            "\r\n" +
+            "\n" +
             "<!-- cms:end cms:content=\"test:/foo/bar/baz/listArea\" -->"
-            + "\r\n", outString);
+            + "\n", outString);
     }
 
     @Test
@@ -266,11 +266,11 @@ public class AreaElementTest {
 
         assertEquals(outString,
             "<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->" +
-            "\r\n" +
+            "\n" +
             "<cms:area content=\"test:/foo/bar/baz/listArea\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>" +
-            "\r\n"+
+            "\n"+
             "<!-- cms:end cms:content=\"test:/foo/bar/baz/listArea\" -->"
-            + "\r\n", outString);
+            + "\n", outString);
     }
 
     @Test
@@ -287,9 +287,9 @@ public class AreaElementTest {
         areaElement.begin(out);
 
         assertEquals("<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\r\n"
+                + "\n"
                 + "<cms:area content=\"test:/foo/bar/baz/listArea\" name=\"listArea\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                + "\r\n", out.toString());
+                + "\n", out.toString());
 
         // with paragraph set
         out = new StringWriter();
@@ -297,9 +297,9 @@ public class AreaElementTest {
         areaElement.begin(out);
 
         assertEquals("<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\r\n"
+                + "\n"
                 + "<cms:area content=\"test:/foo/bar/baz/listArea\" name=\"listArea\" availableComponents=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                + "\r\n", out.toString());
+                + "\n", out.toString());
 
         // as collection == false (= singleton)
         out = new StringWriter();
@@ -308,9 +308,9 @@ public class AreaElementTest {
 
         assertEquals(
                 "<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\r\n"
+                + "\n"
                 + "<cms:area content=\"test:/foo/bar/baz/listArea\" name=\"listArea\" availableComponents=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
-                + "\r\n", out.toString());
+                + "\n", out.toString());
     }
 
     @Test
@@ -325,7 +325,7 @@ public class AreaElementTest {
         String outString = out.toString();
 
         assertEquals(outString, "<!-- cms:end cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\r\n", outString);
+                + "\n", outString);
     }
 
     @Test
@@ -438,9 +438,9 @@ public class AreaElementTest {
         assertEquals("baz", defaultArea.getName());
         assertEquals("list", defaultArea.getType());
         assertEquals("<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\r\n"
+                + "\n"
                 + "<cms:area content=\"test:/foo/bar/baz/listArea\" name=\"baz\" availableComponents=\"\" type=\"list\" dialog=\"boo\" showAddButton=\"true\"></cms:area>"
-                + "\r\n", out.toString());
+                + "\n", out.toString());
     }
 
     @Test
@@ -453,9 +453,9 @@ public class AreaElementTest {
         areaElement.begin(out);
 
         assertEquals("<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\r\n"
+                + "\n"
                 + "<cms:area content=\"test:/foo/bar/baz/listArea\" name=\"boo\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                + "\r\n", out.toString());
+                + "\n", out.toString());
     }
      */
 

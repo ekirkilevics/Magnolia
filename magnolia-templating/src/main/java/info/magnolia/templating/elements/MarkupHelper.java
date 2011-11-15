@@ -50,7 +50,7 @@ public class MarkupHelper implements Appendable {
     private static final String SPACE = " ";
     private static final String QUOTE = "\"";
 
-    private static final String LINE_BREAK = "\r\n";
+    private static final String LINE_BREAK = "\n";
     private static final String GREATER_THAN = ">";
     private static final String LESS_THAN = "<";
     private static final String SLASH = "/";

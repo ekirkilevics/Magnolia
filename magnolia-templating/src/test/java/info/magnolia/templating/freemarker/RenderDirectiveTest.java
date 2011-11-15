@@ -46,6 +46,10 @@ public class RenderDirectiveTest extends AbstractDirectiveTestCase {
     @Test
     public void testRenderSimpleBar() throws Exception {
         final String result = renderForTest("[@cms.render /]", null);
-        assertEquals("", result);
+
+        assertEquals(
+            "<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" cms:type=\"mgnl:component\" -->\n" +
+            "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->\n"
+            , result);
     }
 }

@@ -42,7 +42,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.gui.i18n.DefaultI18nAuthoringSupport;
 import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
-import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
@@ -64,7 +63,6 @@ import info.magnolia.test.mock.MockUtil;
 import java.io.StringWriter;
 
 import javax.inject.Provider;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.junit.After;
@@ -78,8 +76,10 @@ import org.junit.Test;
 public class RenderElementTest {
 
     @Test
-    public void testDoRender() throws Exception {
-        final MockHierarchyManager session = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
+    public void test() throws Exception {
+        final MockHierarchyManager session = MockUtil.createHierarchyManager(
+            "/foo/bar/baz/paragraphs/01@type=mgnl:component\n" +
+            "/foo/bar/baz/paragraphs/01.text=dummy");
 
         final AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(session.getContent("/foo/bar/baz"));
@@ -117,60 +117,14 @@ public class RenderElementTest {
             }
         });
         final RenderElement renderElement = new RenderElement(serverCfg, context, engine);
-        final StringWriter out = new StringWriter();
+
+        StringWriter out = new StringWriter();
         renderElement.begin(out);
+        assertEquals("<!-- cms:begin cms:content=\"testSession:/foo/bar/baz/paragraphs/01\" cms:type=\"mgnl:component\" -->\n", out.toString());
 
-        String outString = out.toString();
-
-        // TODO - fit in proper asserts as implementation advances...
-        assertEquals("", outString);
-    }
-
-    @Test
-    public void testPostRender() throws Exception {
-        final MockHierarchyManager session = MockUtil.createHierarchyManager(
-                "/foo/bar/baz/paragraphs/01.text=dummy\n" +
-        "/foo/bar/baz/paragraphs/01.@uuid=100");
-
-        final AggregationState aggregationState = new AggregationState();
-        aggregationState.setMainContent(session.getContent("/foo/bar/baz"));
-        aggregationState.setCurrentContent(session.getContent("/foo/bar/baz/paragraphs/01"));
-
-        HttpServletRequest req = mock(HttpServletRequest.class);
-        req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
-
-        HttpServletResponse res = mock(HttpServletResponse.class);
-        when(res.getWriter()).thenReturn(null);
-
-        final WebContext ctx = mock(WebContext.class);
-        //when(ctx.getHierarchyManager(session.getName())).thenReturn(session);
-        MgnlContext.setInstance(ctx);
-        when(ctx.getResponse()).thenReturn(res);
-        when(ctx.getRequest()).thenReturn(req);
-
-
-        final ServerConfiguration serverCfg = new ServerConfiguration();
-        serverCfg.setAdmin(true);
-        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
-        // register some default components used internally
-        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
-        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
-
-        RenderingEngine renderingEngine = mock(RenderingEngine.class);
-        ComponentsTestUtil.setInstance(RenderingEngine.class, renderingEngine);
-
-        final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
-        DefaultRenderingEngine engine = new DefaultRenderingEngine(new RendererRegistry(), templateDefinitionAssignment, null);
-        final RenderElement marker = new RenderElement(serverCfg, new AggregationStateBasedRenderingContext(aggregationState), engine);
-
-        final StringWriter out = new StringWriter();
-        marker.end(out);
-
-        String outString = out.toString();
-
-        // TODO - fit in proper asserts as implementation advances...
-        assertEquals("", outString);
+        out = new StringWriter();
+        renderElement.end(out);
+        assertEquals("<!-- cms:end cms:content=\"testSession:/foo/bar/baz/paragraphs/01\" -->\n", out.toString());
     }
 
     @After

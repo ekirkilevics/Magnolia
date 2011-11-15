@@ -51,9 +51,9 @@ public class AreaDirectiveTest extends AbstractDirectiveTestCase {
     public void testRenderSimpleBarWithoutAreaNode() throws Exception {
         final String result = renderForTest("[@cms.area name=\"stage\" /]", renderableDef);
         assertEquals(
-                "<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" cms:type=\"mgnl:area\" -->\r\n" +
+                "<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" cms:type=\"mgnl:area\" -->\n" +
                 "<cms:area content=\"testWorkspace:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\"></cms:area>"
-                        + "\r\n<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" -->\r\n", result);
+                        + "\n<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" -->\n", result);
     }
 
     @Test
@@ -65,9 +65,9 @@ public class AreaDirectiveTest extends AbstractDirectiveTestCase {
         final String result = renderForTest("[@cms.area name=\"stage\" /]", renderableDef);
         assertEquals(
                 "<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" cms:type=\"mgnl:area\" -->"
-                        + "\r\n"
+                        + "\n"
                         + "<cms:area content=\"testWorkspace:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\"></cms:area>"
-                        + "\r\n" + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" -->"
-                        + "\r\n", result);
+                        + "\n" + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" -->"
+                        + "\n", result);
     }
 }
