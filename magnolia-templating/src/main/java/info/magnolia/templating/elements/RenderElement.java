@@ -69,7 +69,7 @@ public class RenderElement extends AbstractContentTemplatingElement {
     public void begin(Appendable out) throws IOException, RenderException {
         content = getTargetContent();
 
-        if(getEditable()){
+        if(isAdmin()){
             new MarkupHelper(out).startContent(content);
         }
 
@@ -89,7 +89,7 @@ public class RenderElement extends AbstractContentTemplatingElement {
 
     @Override
     public void end(Appendable out) throws IOException, RenderException {
-        if(getEditable()){
+        if(isAdmin()){
             new MarkupHelper(out).endContent(content);
         }
     }
