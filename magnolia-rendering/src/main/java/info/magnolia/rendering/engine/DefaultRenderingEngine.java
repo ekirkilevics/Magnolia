@@ -39,6 +39,7 @@ import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
+import info.magnolia.rendering.template.variation.RenderableVariationResolver;
 
 import java.util.Collections;
 import java.util.Map;
@@ -58,6 +59,7 @@ public class DefaultRenderingEngine implements RenderingEngine {
     private RendererRegistry rendererRegistry;
     private TemplateDefinitionAssignment templateDefinitionAssignment;
     private Provider<RenderingContext> renderingContextProvider;
+    private RenderableVariationResolver variationResolver;
 
     /**
      * Used to create an observed proxy object.
@@ -65,9 +67,10 @@ public class DefaultRenderingEngine implements RenderingEngine {
     protected DefaultRenderingEngine() {
     }
 
-    public DefaultRenderingEngine(RendererRegistry rendererRegistry, TemplateDefinitionAssignment templateDefinitionAssignment, Provider<RenderingContext> renderingContextProvider) {
+    public DefaultRenderingEngine(RendererRegistry rendererRegistry, TemplateDefinitionAssignment templateDefinitionAssignment, RenderableVariationResolver variationResolver, Provider<RenderingContext> renderingContextProvider) {
         this.rendererRegistry = rendererRegistry;
         this.templateDefinitionAssignment = templateDefinitionAssignment;
+        this.variationResolver = variationResolver;
         this.renderingContextProvider = renderingContextProvider;
     }
 
@@ -86,6 +89,8 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
         final Renderer renderer = getRendererFor(definition);
         final RenderingContext renderingContext = getRenderingContext();
+
+        definition = variationResolver.resolveVariation(definition);
 
         renderingContext.push(content, definition, out);
         try {

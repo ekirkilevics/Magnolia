@@ -46,6 +46,7 @@ import info.magnolia.rendering.renderer.registry.RendererProvider;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
+import info.magnolia.rendering.template.variation.NoopVariationResolver;
 import info.magnolia.rendering.util.AppendableWriter;
 import info.magnolia.test.mock.jcr.MockNode;
 
@@ -187,6 +188,6 @@ public class DefaultRenderingEngineTest {
                 }
             };
         }
-        return new DefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, renderingContextProvider);
+        return new DefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, new NoopVariationResolver(), renderingContextProvider);
     }
 }

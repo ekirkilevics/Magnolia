@@ -59,6 +59,7 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
     //TODO: use generics again once we get rid of templating-compatibility module
     private Class modelClass;
     private AutoGenerationConfiguration autoGeneration = new ConfiguredAutoGeneration();
+    private Map<String, RenderableDefinition> variations = new HashMap<String, RenderableDefinition>();
 
     protected Map<String, Object> parameters = new HashMap<String, Object>();
 
@@ -134,6 +135,19 @@ public class ConfiguredRenderableDefinition implements RenderableDefinition {
 
     public void setModelClass(Class modelClass) {
         this.modelClass = modelClass;
+    }
+
+    @Override
+    public Map<String, RenderableDefinition> getVariations() {
+        return variations;
+    }
+
+    public void setVariations(Map<String, RenderableDefinition> variations) {
+        this.variations = variations;
+    }
+
+    public void addVariation(String name, RenderableDefinition variation) {
+        variations.put(name, variation);
     }
 
     @Override

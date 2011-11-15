@@ -31,45 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template;
+package info.magnolia.rendering.template.variation;
 
-import java.util.Map;
-
+import info.magnolia.beanmerger.BeanMergerUtil;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.rendering.template.RenderableDefinition;
 
 /**
- * Base interface for all renderables. Defines for instance the template's title, template script and render type.
+ * Variation resolver that will use a variation with the same name as the extension.
  *
  * @version $Id$
  */
-public interface RenderableDefinition {
+public class ExtensionVariationResolver implements RenderableVariationResolver {
 
-    String getId();
+    @Override
+    public RenderableDefinition resolveVariation(RenderableDefinition renderableDefinition) {
 
-    void setId(String id);
+        AggregationState aggregationState = getAggregationStateSafely();
+        if (aggregationState == null) {
+            return renderableDefinition;
+        }
 
-    String getName();
+        String extension = aggregationState.getExtension();
+        RenderableDefinition variation = renderableDefinition.getVariations().get(extension);
+        if (variation == null) {
+            return renderableDefinition;
+        }
 
-    String getRenderType();
-
-    String getTitle();
-
-    String getDescription();
-
-    String getI18nBasename();
-
-    String getTemplateScript();
-
-    Map<String, RenderableDefinition> getVariations();
+        return BeanMergerUtil.merge(variation, renderableDefinition);
+    }
 
     /**
-     * An arbitrary list of parameters. Used to omit subclass with getters and setters for each
-     * extra parameter.
+     * This gets the aggregation state without throwing an exception if the current context is not a WebContext.
      */
-    Map<String, Object> getParameters();
-
-    //TODO: use generics again once we get rid of templating-compatibility module
-    Class getModelClass();
-
-    AutoGenerationConfiguration getAutoGeneration();
-
+    protected AggregationState getAggregationStateSafely() {
+        if(MgnlContext.isWebContext()){
+            return MgnlContext.getAggregationState();
+        }
+        return null;
+    }
 }

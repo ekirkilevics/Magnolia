@@ -56,6 +56,7 @@ import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
+import info.magnolia.rendering.template.variation.NoopVariationResolver;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -110,7 +111,7 @@ public class RenderElementTest {
         Renderer renderer = mock(Renderer.class);
         when(registry.get("blah")).thenReturn(renderer);
         final AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
-        DefaultRenderingEngine engine = new DefaultRenderingEngine(registry, templateDefinitionAssignment, new Provider<RenderingContext>() {
+        DefaultRenderingEngine engine = new DefaultRenderingEngine(registry, templateDefinitionAssignment, new NoopVariationResolver(), new Provider<RenderingContext>() {
             @Override
             public RenderingContext get() {
                 return context;
