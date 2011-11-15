@@ -51,7 +51,7 @@ import org.junit.Test;
 public class DependencyLevelComparatorTest {
 
     @Test
-    public void testCalcDepencyLevelWithNonOptionalDependencies() {
+    public void testCalcDependencyLevelWithNonOptionalDependencies() {
         final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
         final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);
         final ModuleDefinition modDefC = new ModuleDefinition("mod-c", Version.parseVersion("1"), "fake.Module", null);
@@ -77,7 +77,7 @@ public class DependencyLevelComparatorTest {
     }
 
     @Test
-    public void testCalcDepencyLevelIgnoresUnregisteredOptionalDependencies() {
+    public void testCalcDependencyLevelIgnoresUnregisteredOptionalDependencies() {
         final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);
         final ModuleDefinition modDefC = new ModuleDefinition("mod-c", Version.parseVersion("1"), "fake.Module", null);
         final DependencyDefinition depOnA = new DependencyDefinition();
@@ -102,7 +102,7 @@ public class DependencyLevelComparatorTest {
     }
 
     @Test
-    public void testCalcDepencyLevelDoesNotIgnoreRegisteredOptionalDependencies() {
+    public void testCalcDependencyLevelDoesNotIgnoreRegisteredOptionalDependencies() {
         final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
         final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);
         final ModuleDefinition modDefC = new ModuleDefinition("mod-c", Version.parseVersion("1"), "fake.Module", null);
@@ -132,6 +132,7 @@ public class DependencyLevelComparatorTest {
     /**
      * All dependencies are optional, and none are present.
      */
+    @Test
     public void testCanHandleOnlyOptionalAndMissingDependencies() {
         final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
         final DependencyDefinition optDepOnX = new DependencyDefinition();
@@ -157,7 +158,8 @@ public class DependencyLevelComparatorTest {
     /**
      * No dependencies.
      */
-    public void testCalcDepencyLevelWithNonDependencies() {
+    @Test
+    public void testCalcDependencyLevelWithNoDependencies() {
         final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
 
         final Map<String, ModuleDefinition> map = new HashMap<String, ModuleDefinition>();
