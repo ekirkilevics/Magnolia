@@ -46,7 +46,7 @@ import java.util.Set;
  * @version $Revision: $ ($Author: $)
  */
 public abstract class AbstractMagnoliaConfigurationProperties implements MagnoliaConfigurationProperties {
-    protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DefaultMagnoliaConfigurationProperties.class);
+    protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractMagnoliaConfigurationProperties.class);
 
     protected List<PropertySource> sources;
 
@@ -95,9 +95,9 @@ public abstract class AbstractMagnoliaConfigurationProperties implements Magnoli
     @Override
     public String describe() {
         final StringBuilder s = new StringBuilder()
-                .append("[")
-                .append(getClass().getSimpleName())
-                .append(" with sources: ");
+        .append("[")
+        .append(getClass().getSimpleName())
+        .append(" with sources: ");
         for (PropertySource source : sources) {
             s.append(source.describe());
         }
