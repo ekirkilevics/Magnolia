@@ -726,14 +726,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
                     if (newOrigin.startsWith("//")) {
                         newOrigin = StringUtils.removeStart(newOrigin, "/");
                     }
-                    Content newNode;
-                    if (move) {
-                        getHierarchyManager().moveTo(pathOrigin, newOrigin);
-                        newNode = getHierarchyManager().getContent(newOrigin);
-                    }
-                    else {
-                        newNode = this.copyMoveNode(pathOrigin, newOrigin, move);
-                    }
+                    Content newNode = this.copyMoveNode(pathOrigin, newOrigin, move);
 
                     if (pasteType == Tree.PASTETYPE_ABOVE) {
                         newNode.getParent().orderBefore(newNode.getName(), nameSelected);
