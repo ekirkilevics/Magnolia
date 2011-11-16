@@ -571,9 +571,9 @@ public interface Content extends Cloneable {
     /**
      * Checks for the allowed access rights.
      * @param permissions as defined in javax.jcr.Permission
-     * @return true is the current user has specified access on this node.
+     * @return <code>true</code> if the current user has specified access on this node.
      * @deprecated since 4.5. Use {@link PermissionUtil#isGranted(String, String, String)} or {@link PermissionUtil#isGranted(javax.jcr.Session, String, String)} instead.
-     * To convert old style permissions to the new style please see {@link PermissionUtil#convertPermissions(long)}.
+     * To convert old style permissions to the new ones, please see {@link PermissionUtil#convertPermissions(long)}.
      */
     boolean isGranted(long permissions);
 
