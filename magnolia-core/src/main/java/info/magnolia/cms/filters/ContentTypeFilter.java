@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.util.ServletUtils;
 import info.magnolia.context.MgnlContext;
@@ -109,6 +110,7 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
     protected String setupContentTypeAndCharacterEncoding(String extension, HttpServletRequest request, HttpServletResponse response) {
         final String mimeType = MIMEMapping.getMIMETypeOrDefault(extension);
         final String characterEncoding = MIMEMapping.getContentEncodingOrDefault(mimeType);
+        final String defaultExtension = ServerConfiguration.getInstance().getDefaultExtension();
 
         try {
             // let's not override the request encoding if set by the servlet container or the requesting browser
@@ -119,8 +121,14 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
             log.error("Can't set character encoding for the request (extension=" + extension + ",mimetype=" + mimeType + ")", e);
         }
 
-        response.setContentType(mimeType);
         response.setCharacterEncoding(characterEncoding);
+
+        // do not send empty ContentType
+        if (StringUtils.isEmpty(defaultExtension)) {
+            response.setContentType("text/html");
+        } else {
+            response.setContentType(mimeType);
+        }
 
         return characterEncoding;
     }
