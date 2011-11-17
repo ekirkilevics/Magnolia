@@ -34,18 +34,25 @@
 package info.magnolia.templating.editor.client;
 
 
+import info.magnolia.templating.editor.client.dom.CMSBoundary;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * Base class for horizontal bars with buttons.
@@ -53,24 +60,51 @@ import com.google.gwt.user.client.ui.FlowPanel;
 public abstract class AbstractBarWidget extends FlowPanel {
 
     private AbstractBarWidget parentBar;
+    private CMSBoundary boundary;
     protected boolean hasControls = false;
+    private String label;
 
-    public AbstractBarWidget(final AbstractBarWidget parentBar) {
+    public AbstractBarWidget(final AbstractBarWidget parentBar, CMSBoundary boundary, String label) {
         this.parentBar = parentBar;
+        this.setBoundary(boundary);
+        this.label = label;
 
-        addDomHandler(new ClickHandler() {
+        if (this.label != null && !this.label.isEmpty()) {
+            Label areaName = new InlineLabel(this.label);
+            //tooltip. Nice to have when area label is truncated because too long.
+            areaName.setTitle(this.label);
+
+            //setStylePrimaryName(..) replaces gwt default css class, in this case gwt-Label
+            areaName.setStylePrimaryName("mgnlAreaLabel");
+            add(areaName);
+        }
+        addDomHandler(new MouseOverHandler() {
             @Override
-            public void onClick(ClickEvent event) {
-                onSelect();
+            public void onMouseOver(MouseOverEvent event) {
+                select();
             }
-        }, ClickEvent.getType());
+        }, MouseOverEvent.getType());
 
+        addDomHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                deSelect();
+            }
+        }, MouseOutEvent.getType());
     }
 
     /**
      * Called when this bar widget is selected/clicked. Default implementation does nothing.
      */
-    protected void onSelect() {
+    protected void select() {
+
+        this.addStyleName("selected");
+    }
+
+    protected void deSelect() {
+
+        this.removeStyleName("selected");
+
     }
 
     protected void setId(String id){
@@ -120,5 +154,13 @@ public abstract class AbstractBarWidget extends FlowPanel {
         final Node parentNode = element.getParentNode();
         parentNode.insertAfter(getElement(), element);
         onAttach();
+    }
+
+    public void setBoundary(CMSBoundary boundary) {
+        this.boundary = boundary;
+    }
+
+    public CMSBoundary getBoundary() {
+        return boundary;
     }
 }

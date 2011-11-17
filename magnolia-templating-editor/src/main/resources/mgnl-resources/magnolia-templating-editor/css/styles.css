@@ -6,15 +6,20 @@ div.mgnlEditBar, div.mgnlEditBar_PUSHED, div.mgnlEditBar_MOUSEOVER {
     border-left: 1px solid #ADC97B !important;
     border-bottom: 1px solid #396101 !important;
     border-right: 1px solid #396101 !important;
-    background-color: transparent !important;
-    background-image: url("../img/mgnl-bar.png") !important;
-    background-repeat: repeat !important;
+    background-color: #86AC41 !important;
+    opacity: 0.4;
+/*    background-image: url("../img/mgnl-bar.png") !important;
+    background-repeat: repeat !important;*/
     padding: 0px !important;
     width: 100% !important;
     height: 20px !important; /*TODO set this height else on FF default buttons height screws up layout*/
     margin: 0px !important;
 }
+div.mgnlEditBar.selected {
+    background-color: #86AC41 !important;
+        opacity: 1;
 
+}
 /*
 * Paragraph/component buttons.
 */
@@ -28,7 +33,7 @@ button.mgnlControlButton {
     border-width: 1px;
     line-height: 10px; /*FF needs it*/
 }
-.mgnlRemoveAreaButton {
+.mgnlRemoveButton {
     margin: 0px 20px 0px 0px !important;
 }
 
@@ -44,20 +49,28 @@ button.mgnlControlButton_PUSHED {
 /*
 * Area/component edit bar.
 */
-.mgnlAreaEditBar {
-    background-color: #6BABFB;
+.mgnlAreaEditBar, .mgnlAreaBar {
+    background-color: #9A3332;
+    opacity: 0.4;
+    border-radius: 15px 15px 0 0;
     height: 20px;
     width: 100% !important;
     clear: both;
 }
+.mgnlAreaEditBar.selected, .mgnlAreaBar.selected {
+    background-color: #9A3332 !important;
+    opacity: 1;
 
+}
+/*
 .mgnlAreaBar {
     background-color: transparent;
-    border-bottom: 5px solid #6BABFB;
+    border-bottom: 5px solid #9A3332;
     height: 15px;
     width: 100% !important;
     clear: both;
 }
+*/
 
 /*
 * Paragraph/area buttons.
@@ -79,24 +92,29 @@ button.mgnlControlButton_PUSHED {
     float: left;
     font-family: Verdana, sans-serif !important;
     font-size: 12px;
+    padding-right: 15px;
+    width: 30%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
 }
 /* TODO maybe the properties to avoid long text breaking the layout (float, overflow, width, text-overflow) should be hardcoded into GWT code? */
-.mgnlAreaEditBar .mgnlAreaLabel {
+.mgnlAreaEditBar .mgnlAreaLabel, .mgnlAreaBar .mgnlAreaLabel {
     background: transparent none !important;
     color: #F0F2E6 !important;
     white-space: nowrap;
     margin-top: 2px !important;
     margin-left: 2px !important;
-    padding: 0px !important;
+    padding: 0 0 0 5px !important;
     overflow: hidden;
     width: 30% !important;
     text-overflow: ellipsis; /*FF does not support this. Maybe it will in version 7*/
 }
-
+/*
 .mgnlAreaBar .mgnlAreaLabel {
-    background-color: #6BABFB !important;
+    background-color: #9A3332 !important;
     color: #FFFFFF;
     padding: 0px 5px !important;
     height: 15px;
 }
+*/

@@ -34,6 +34,7 @@
 package info.magnolia.templating.elements;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.TemplateDefinition;
@@ -78,12 +79,19 @@ public class EditElement extends AbstractContentTemplatingElement {
 
         if(content != null) {
             helper.attribute("content", getNodePath(content));
+
+            if(content instanceof InheritanceNodeWrapper) {
+                if (((InheritanceNodeWrapper) content).isInherited()) {
+                    helper.attribute("inherited", "true");;
+                }
+            }
         } else {
             //null content probably means that the area is optional and hasn't been created yet. Still we need to generate
             //the cms:edit tag in order to render the area bar
             helper.attribute("name", templateDefinition.getName());
             helper.attribute("optional", "true");
         }
+        helper.attribute("label", templateDefinition.getTitle());
 
         helper.attribute("format", format);
         String dialog = resolveDialog(templateDefinition);

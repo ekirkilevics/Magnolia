@@ -34,6 +34,7 @@
 package info.magnolia.templating.editor.client;
 
 import info.magnolia.rendering.template.AreaDefinition;
+import info.magnolia.templating.editor.client.dom.CMSBoundary;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
@@ -59,11 +60,11 @@ public class EditBarWidget extends AbstractBarWidget {
     private String dialog;
     private String id;
     private String parentAreaType;
+    private boolean isInherited;
 
-    public EditBarWidget(final AreaBarWidget parentBar, final PageEditor pageEditor, final Element element) {
+    public EditBarWidget(final AreaBarWidget parentBar, final CMSBoundary boundary, final PageEditor pageEditor, final Element element) {
 
-        super(parentBar);
-
+        super(parentBar, boundary, element.getAttribute("label"));
         String content = element.getAttribute("content");
         int i = content.indexOf(':');
         this.workspace = content.substring(0, i);
@@ -79,11 +80,16 @@ public class EditBarWidget extends AbstractBarWidget {
             this.parentAreaType = parentBar.getType();
         }
 
+        this.isInherited = Boolean.parseBoolean(element.getAttribute("inherited"));
+
         createButtons(pageEditor);
 
         createMouseEventsHandlers(pageEditor);
 
         setClassName("mgnlEditBar");
+        if (this.isInherited) {
+            addStyleName("mgnlInherited");
+        }
 
     }
 
@@ -117,15 +123,18 @@ public class EditBarWidget extends AbstractBarWidget {
     }
 
     private void createButtons(final PageEditor pageEditor) {
-        final Button edit = new Button(getDictionary().get("buttons.edit.js"));
-        edit.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                pageEditor.openDialog(dialog, workspace, path, null, null);
 
-            }
-        });
-        addButton(edit, Float.RIGHT);
+        if (!this.isInherited) {
+            final Button edit = new Button(getDictionary().get("buttons.edit.js"));
+            edit.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    pageEditor.openDialog(dialog, workspace, path, null, null);
+
+                }
+            });
+            addButton(edit, Float.RIGHT);
+        }
 
         //single area component obviously cannot be moved
         if(AreaDefinition.TYPE_LIST.equals(parentAreaType)) {
@@ -139,14 +148,17 @@ public class EditBarWidget extends AbstractBarWidget {
             addButton(move, Float.RIGHT);
         }
 
-        final Button delete = new Button(getDictionary().get("buttons.delete.js"));
-        delete.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                pageEditor.deleteComponent(path);
-            }
-        });
-        addButton(delete, Float.LEFT);
+        if (!this.isInherited) {
+            final Button removeButton = new Button(getDictionary().get("buttons.delete.js"));
+            removeButton.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    pageEditor.deleteComponent(path);
+                }
+            });
+            removeButton.addStyleName("mgnlRemoveButton");
+            addButton(removeButton, Float.RIGHT);
+        }
     }
 
 }

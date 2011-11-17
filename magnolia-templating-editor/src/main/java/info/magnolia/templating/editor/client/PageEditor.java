@@ -34,6 +34,12 @@
 package info.magnolia.templating.editor.client;
 
 
+
+
+import info.magnolia.templating.editor.client.dom.CMSBoundary;
+import info.magnolia.templating.editor.client.dom.CMSComment;
+import info.magnolia.templating.editor.client.dom.Comment;
+import info.magnolia.templating.editor.client.dom.exception.IllegalCMSCommentException;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -65,6 +71,8 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     public static final String MARKER_EDIT = "cms:edit";
     public static final String MARKER_AREA = "cms:area";
+    private static final String CMS_BEGIN = "cms:begin";
+    private static final String CMS_END = "cms:end";
 
     private boolean pageEditBarAlreadyProcessed = false;
     private String locale;
@@ -85,7 +93,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         LegacyJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
         dictionary = Dictionary.getDictionary("mgnlGwtMessages");
 
-        processCmsTags(documentElement, null, edits, areas);
+        processCmsTags(documentElement, null, null, edits, areas);
 
     }
 
@@ -231,18 +239,43 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         return locale;
     }
 
-    private void processCmsTags(Element element, AreaBarWidget parentBar, NodeList<Element> edits, NodeList<Element> areas) {
-        for (int i = 0; i < element.getChildCount(); i++) {
-            Node childNode = element.getChild(i);
-            if (childNode.getNodeType() == Element.ELEMENT_NODE) {
-                Element child = (Element) childNode;
-                if (child.getTagName().equalsIgnoreCase(MARKER_EDIT)) {
-                    GWT.log("processing element " + child);
+    private void processCmsTags(Node node, AreaBarWidget parentBar, CMSBoundary boundary, NodeList<Element> edits, NodeList<Element> areas) {
+        for (int i = 0; i < node.getChildCount(); i++) {
+            Node childNode = node.getChild(i);
+            if (childNode.getNodeType() == Comment.COMMENT_NODE) {
+                try {
+
+                    CMSComment comment = new CMSComment(((Comment)childNode.cast()).getData());
+
+                    if (comment.getTagName().equals(CMS_BEGIN)) {
+                        boundary = new CMSBoundary(comment, boundary);
+                        if( boundary.getParentBoundary() != null)
+                            boundary.getParentBoundary().getChildBoundaries().add(boundary);
+                    }
+                    else if (comment.getTagName().equals(CMS_END)) {
+                        if (boundary != null) {
+                            boundary = boundary.getParentBoundary();
+                        }
+                        else {
+                            GWT.log("ERROR: Page structure is a mess: Either a mssing " + CMS_BEGIN + " or structure is not in right order.");
+                        }
+                    }
+                }
+                catch (IllegalCMSCommentException e) {
+                    continue;
+                }
+
+
+            }
+            else if (childNode.getNodeType() == Element.ELEMENT_NODE) {
+                Element element = (Element) childNode;
+                if (element.getTagName().equalsIgnoreCase(MARKER_EDIT)) {
+                    GWT.log("processing element " + element);
                     //We assume the first cms:edit we encounter in DOM is the page edit bar.
                     if (!pageEditBarAlreadyProcessed) {
                         GWT.log("element was detected as page edit bar. Injecting it...");
-                        PageBarWidget pageBarWidget = new PageBarWidget(this, child);
-                        pageBarWidget.attach(child);
+                        PageBarWidget pageBarWidget = new PageBarWidget(this, element);
+                        pageBarWidget.attach(element);
                         pageEditBarAlreadyProcessed = true;
 
                         if (pageBarWidget.isPreviewMode()) {
@@ -251,23 +284,28 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                             break;
                         }
                         //avoid processing cms:edit marker twice if this is an area
-                    } else if (!isAreaEditBar(child, areas)) {
+                    } else if (!isAreaEditBar(element, areas)) {
                         GWT.log("element is a plain edit bar. Injecting it...");
-                        EditBarWidget editBarWidget = new EditBarWidget(parentBar, this, child);
-                        editBarWidget.attach(child);
+                        EditBarWidget editBarWidget = new EditBarWidget(parentBar, boundary, this, element);
+                        if (boundary != null)
+                            boundary.addComponentWidget(editBarWidget);
+                        editBarWidget.attach(element);
                     }
-                } else if (child.getTagName().equalsIgnoreCase(MARKER_AREA)) {
-                    GWT.log("processing element " + child);
-                    Element edit = findCmsEditMarkerForArea(child, edits);
+                } else if (element.getTagName().equalsIgnoreCase(MARKER_AREA)) {
+                    GWT.log("processing element " + element);
+                    Element edit = findCmsEditMarkerForArea(element, edits);
                     if (edit != null) {
                         GWT.log("element was detected as area edit bar. Injecting it...");
-                        AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, this, child);
+                        AreaBarWidget areaBarWidget = new AreaBarWidget(parentBar, boundary, this, element);
+                        if (boundary != null)
+                            boundary.addAreaWidget(areaBarWidget);
                         areaBarWidget.attach(edit);
                         parentBar = areaBarWidget;
                     }
                 }
-                processCmsTags(child, parentBar, edits, areas);
             }
+            processCmsTags(childNode, parentBar, boundary, edits, areas);
+
         }
     }
 

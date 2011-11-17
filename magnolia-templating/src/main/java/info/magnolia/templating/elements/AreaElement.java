@@ -295,7 +295,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
     }
 
     private String resolveLabel() {
-        return label != null ? label : (areaDefinition != null && StringUtils.isNotBlank(areaDefinition.getTitle()) ? areaDefinition.getTitle() : name);
+        return label != null ? label : (areaDefinition != null && StringUtils.isNotBlank(areaDefinition.getTitle()) ? areaDefinition.getTitle() : StringUtils.capitalize(name));
     }
 
     private boolean isInheritanceEnabled() {

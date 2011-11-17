@@ -57,7 +57,7 @@ public class PageBarWidget extends AbstractBarWidget {
     private boolean previewMode = false;
 
     public PageBarWidget(final PageEditor pageEditor, final Element element) {
-        super(null);
+        super(null, null, "");
         this.pageEditor = pageEditor;
 
         String content = element.getAttribute("content");

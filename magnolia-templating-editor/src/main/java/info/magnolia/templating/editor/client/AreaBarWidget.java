@@ -34,7 +34,9 @@
 package info.magnolia.templating.editor.client;
 
 import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
+
 import info.magnolia.rendering.template.AreaDefinition;
+import info.magnolia.templating.editor.client.dom.CMSBoundary;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -42,8 +44,7 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.Label;
+
 
 /**
  * Area bar.
@@ -52,7 +53,6 @@ public class AreaBarWidget extends AbstractBarWidget {
 
     private String workspace;
     private String path;
-    private String label;
     private String name;
     private String availableComponents;
     private String type;
@@ -61,8 +61,8 @@ public class AreaBarWidget extends AbstractBarWidget {
     private boolean optional = false;
     private boolean created = true;
 
-    public AreaBarWidget(final AbstractBarWidget parentBar, final PageEditor pageEditor, final Element element) {
-        super(parentBar);
+    public AreaBarWidget(final AbstractBarWidget parentBar, CMSBoundary boundary, final PageEditor pageEditor, final Element element) {
+        super(parentBar, boundary, element.getAttribute("label"));
 
         String content = element.getAttribute("content");
         int i = content.indexOf(':');
@@ -81,7 +81,6 @@ public class AreaBarWidget extends AbstractBarWidget {
         }
 
         this.dialog = element.getAttribute("dialog");
-        this.label = element.getAttribute("label");
         if (element.hasAttribute("showAddButton")) {
             this.showAddButton = Boolean.parseBoolean(element.getAttribute("showAddButton"));
         }
@@ -90,13 +89,7 @@ public class AreaBarWidget extends AbstractBarWidget {
             this.created = Boolean.parseBoolean(element.getAttribute("created"));
         }
 
-        Label areaName = new InlineLabel(this.label);
-        //tooltip. Nice to have when area label is truncated because too long.
-        areaName.setTitle(this.label);
-        
-        //setStylePrimaryName(..) replaces gwt default css class, in this case gwt-Label
-        areaName.setStylePrimaryName("mgnlAreaLabel");
-        add(areaName);
+
         createButtons(pageEditor, element);
         if (hasControls) {
             setClassName("mgnlAreaEditBar");
@@ -105,7 +98,39 @@ public class AreaBarWidget extends AbstractBarWidget {
             setClassName("mgnlAreaBar");
         }
     }
+    @Override
+    protected void select() {
 
+        if (getBoundary() != null) {
+
+            for (CMSBoundary boundary : getBoundary().getDescendants()) {
+                for (AbstractBarWidget widget : boundary.getAreaWidgets()) {
+                    widget.addStyleName("selected");
+                }
+                for (AbstractBarWidget widget : boundary.getComponentWidgets()) {
+                    widget.addStyleName("selected");
+                }
+            }
+        }
+       super.select();
+
+    }
+
+    @Override
+    protected void deSelect() {
+        if (this.getBoundary() != null) {
+
+            for (CMSBoundary boundary : getBoundary().getDescendants()) {
+                for (AbstractBarWidget widget : boundary.getAreaWidgets()) {
+                    widget.removeStyleName("selected");
+                }
+                for (AbstractBarWidget widget : boundary.getComponentWidgets()) {
+                    widget.removeStyleName("selected");
+                }
+            }
+        }
+        super.deSelect();
+    }
     public String getAvailableComponents() {
         return availableComponents;
     }
@@ -136,7 +161,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                         pageEditor.deleteComponent(path + "/" + name);
                     }
                 });
-                removeButton.addStyleName("mgnlRemoveAreaButton");
+                removeButton.addStyleName("mgnlRemoveButton");
                 addButton(removeButton, Float.RIGHT);
             }
         } else {
