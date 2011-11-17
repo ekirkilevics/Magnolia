@@ -50,6 +50,7 @@ import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -346,7 +347,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testcollectAllChildren_DefaultPredicate_Simple() throws RepositoryException {
+    public void testCollectAllChildren_DefaultPredicate_Simple() throws RepositoryException {
         // GIVEN
 
         // WHEN
@@ -358,7 +359,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testcollectAllChildren_DefaultPredicate_FilterType() throws RepositoryException {
+    public void testCollectAllChildren_DefaultPredicate_FilterType() throws RepositoryException {
         // GIVEN
         second.setPrimaryType("toto:data");
 
@@ -371,7 +372,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testcollectAllChildren_DefaultPredicate_FilterType_ThreeLevel() throws RepositoryException {
+    public void testCollectAllChildren_DefaultPredicate_FilterType_ThreeLevel() throws RepositoryException {
         // GIVEN
         Node secondL11 = second.addNode("L11");
         Node secondL12 = second.addNode("L12");
@@ -391,7 +392,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testcollectAllChildren_SpecificPredicate_FilterType_ThreeLevel() throws RepositoryException {
+    public void testCollectAllChildren_SpecificPredicate_FilterType_ThreeLevel() throws RepositoryException {
         // GIVEN
         Node secondL11 = second.addNode("L11");
         Node secondL12 = second.addNode("L12");
@@ -421,5 +422,31 @@ public class NodeUtilTest {
         // THEN
         List<Node> resAsList = NodeUtil.asList(res);
         assertEquals("Should have 3 nodes  ", 3 , resAsList.size());
+    }
+
+
+    @Test
+    public void testGetAncestors_Level0() throws RepositoryException {
+        // GIVEN
+
+        // WHEN
+        Collection<Node> res = NodeUtil.getAncestors(root);
+
+        // THEN
+        List<Node> resAsList = NodeUtil.asList(res);
+        assertEquals("Should have no nodes  ", 0 , resAsList.size());
+    }
+
+    @Test
+    public void testGetAncestors_Level3() throws RepositoryException {
+        // GIVEN
+        Node subFirst = first.addNode("subFirst");
+
+        // WHEN
+        Collection<Node> res = NodeUtil.getAncestors(subFirst);
+
+        // THEN
+        List<Node> resAsList = NodeUtil.asList(res);
+        assertEquals("Should have 2 nodes  ",2  , resAsList.size());
     }
 }

@@ -70,7 +70,7 @@ public class SessionUtil {
         Node res = null;
         Session session;
         if (StringUtils.isBlank(repository) || StringUtils.isBlank(path)) {
-            log.debug("getNode return null why even nodePath: '" + path + "' or repository: '" + repository
+            log.debug("getNode returns null because either nodePath: '" + path + "' or repository: '" + repository
                     + "' is empty");
             return res;
         }

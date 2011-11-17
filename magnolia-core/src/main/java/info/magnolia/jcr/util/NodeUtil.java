@@ -44,6 +44,7 @@ import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -410,7 +411,7 @@ public class NodeUtil {
             } else {
                 final Node newNode = root.addNode(name, primaryNodeTypeName);
                 if (save) {
-                    root.save();
+                    root.getSession().save();
                 }
                 root = newNode;
             }
@@ -523,6 +524,26 @@ public class NodeUtil {
         }
 
         return nodes;
+    }
+
+    /**
+     * Get all Ancestors until level 1.
+     *
+     * @param node
+     * @return
+     * @throws RepositoryException
+     */
+    public static Collection<Node> getAncestors(Node node) throws RepositoryException {
+        List<Node> allAncestors = new ArrayList<Node>();
+        int level = node.getDepth();
+        while (level != 0) {
+            try {
+                allAncestors.add((Node) node.getAncestor(--level));
+            } catch (AccessDeniedException e) {
+                log.debug("Node " + node.getIdentifier() + " didn't allow access to Ancestor's ");
+            }
+        }
+        return allAncestors;
     }
 
     /**
