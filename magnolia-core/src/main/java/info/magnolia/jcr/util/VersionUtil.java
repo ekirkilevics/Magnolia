@@ -33,7 +33,7 @@
  */
 package info.magnolia.jcr.util;
 
-import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
 import javax.jcr.Node;
@@ -53,9 +53,9 @@ public class VersionUtil {
     public static String getNodeTypeName(Node node) throws RepositoryException {
         node = NodeUtil.deepUnwrap(node, JCRPropertiesFilteringNodeWrapper.class);
 
-        if (node.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
-            return node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString();
+        if (node.hasProperty(MgnlNodeType.JCR_FROZEN_PRIMARY_TYPE)) {
+            return node.getProperty(MgnlNodeType.JCR_FROZEN_PRIMARY_TYPE).getString();
         }
-        return node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
+        return node.getProperty(MgnlNodeType.JCR_PRIMARY_TYPE).getString();
     }
 }

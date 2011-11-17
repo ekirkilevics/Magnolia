@@ -39,15 +39,12 @@ import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
-
-import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
-import org.apache.jackrabbit.commons.predicate.NodeTypePredicate;
-import org.apache.jackrabbit.commons.predicate.Predicate;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -59,6 +56,9 @@ import javax.jcr.Session;
 import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
+import org.apache.jackrabbit.commons.predicate.NodeTypePredicate;
+import org.apache.jackrabbit.commons.predicate.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +93,8 @@ public class NodeUtil {
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX) && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
+                return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX)
+                        && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
             } catch (RepositoryException e) {
                 return false;
             }
@@ -126,17 +127,16 @@ public class NodeUtil {
     public static Node getNodeByIdentifier(String workspace, String identifier) throws RepositoryException {
         Node target = null;
         Session jcrSession;
-        if(workspace==null || identifier==null){
+        if (workspace == null || identifier == null) {
             return target;
         }
 
         jcrSession = MgnlContext.getJCRSession(workspace);
-        if(jcrSession!=null){
-            target =  jcrSession.getNodeByIdentifier(identifier);
+        if (jcrSession != null) {
+            target = jcrSession.getNodeByIdentifier(identifier);
         }
         return target;
     }
-
 
     /**
      * from default content.
@@ -154,8 +154,8 @@ public class NodeUtil {
     }
 
     /**
-     * TODO dlipp: better name? Clear javadoc! Move to MetaDataUtil, do not assign method-param!
-     * TODO cringele : shouldn't @param nodeType be aligned to JCR API? There it is nodeTypeName, nodeType is used for NodeType object
+     * TODO dlipp: better name? Clear javadoc! Move to MetaDataUtil, do not assign method-param! TODO cringele :
+     * shouldn't @param nodeType be aligned to JCR API? There it is nodeTypeName, nodeType is used for NodeType object
      */
     public static boolean isNodeType(Node node, String type) throws RepositoryException {
         node = NodeUtil.deepUnwrap(node, JCRPropertiesFilteringNodeWrapper.class);
@@ -186,7 +186,7 @@ public class NodeUtil {
      */
     public static Node deepUnwrap(Node node, Class<? extends DelegateNodeWrapper> wrapper) throws RepositoryException {
         if (node instanceof DelegateNodeWrapper)
-            return ((DelegateNodeWrapper)node).deepUnwrap(wrapper);
+            return ((DelegateNodeWrapper) node).deepUnwrap(wrapper);
         return node;
     }
 
@@ -200,8 +200,10 @@ public class NodeUtil {
     /**
      * Orders the node directly after a given sibling. If no sibling is specified the node is placed first.
      *
-     * @param node        the node to order
-     * @param siblingName the name of the sibling which the name should be after or null if the node should be first
+     * @param node
+     *            the node to order
+     * @param siblingName
+     *            the name of the sibling which the name should be after or null if the node should be first
      * @throws RepositoryException
      */
     public static void orderAfter(Node node, String siblingName) throws RepositoryException {
@@ -227,7 +229,8 @@ public class NodeUtil {
     /**
      * Orders the node first among its siblings.
      *
-     * @param node the node to order
+     * @param node
+     *            the node to order
      * @throws RepositoryException
      */
     public static void orderFirst(Node node) throws RepositoryException {
@@ -242,7 +245,8 @@ public class NodeUtil {
     /**
      * Orders the node last among its siblings.
      *
-     * @param node the node to order
+     * @param node
+     *            the node to order
      * @throws RepositoryException
      */
     public static void orderLast(Node node) throws RepositoryException {
@@ -253,7 +257,8 @@ public class NodeUtil {
      * Orders the node up one step among its siblings. If the node is the only sibling or the first sibling this method
      * has no effect.
      *
-     * @param node the node to order
+     * @param node
+     *            the node to order
      * @throws RepositoryException
      */
     public static void orderNodeUp(Node node) throws RepositoryException {
@@ -267,7 +272,8 @@ public class NodeUtil {
      * Orders the node down one step among its siblings. If the node is the only sibling or the last sibling this method
      * has no effect.
      *
-     * @param node the node to order
+     * @param node
+     *            the node to order
      * @throws RepositoryException
      */
     public static void orderNodeDown(Node node) throws RepositoryException {
@@ -346,11 +352,13 @@ public class NodeUtil {
 
     /**
      * @return Whether the provided node as the provided permission or not.
-     * @throws RuntimeException in case of RepositoryException.
+     * @throws RuntimeException
+     *             in case of RepositoryException.
      */
     public static boolean isGranted(Node node, long permissions) {
         try {
-            return PermissionUtil.isGranted(node.getSession(), node.getPath(), PermissionUtil.convertPermissions(permissions));
+            return PermissionUtil.isGranted(node.getSession(), node.getPath(),
+                    PermissionUtil.convertPermissions(permissions));
         } catch (RepositoryException e) {
             // TODO dlipp - apply consistent ExceptionHandling
             throw new RuntimeException(e);
@@ -373,14 +381,16 @@ public class NodeUtil {
     }
 
     /**
-     * Creates a node under the specified parent and relative path, then returns it. Should the node already exist, the method will simply return it.
+     * Creates a node under the specified parent and relative path, then returns it. Should the node already exist, the
+     * method will simply return it.
      */
     public static Node createPath(Node parent, String relPath, String primaryNodeTypeName) throws RepositoryException, PathNotFoundException, AccessDeniedException {
         return createPath(parent, relPath, primaryNodeTypeName, false);
     }
 
     /**
-     * Creates a node under the specified parent and relative path, then returns it. Should the node already exist, the method will simply return it.
+     * Creates a node under the specified parent and relative path, then returns it. Should the node already exist, the
+     * method will simply return it.
      */
     public static Node createPath(Node parent, String relPath, String primaryNodeTypeName, boolean save) throws RepositoryException, PathNotFoundException, AccessDeniedException {
         // remove leading /
@@ -451,16 +461,68 @@ public class NodeUtil {
     }
 
     /**
-     * This method return the node's name on success, otherwise it handles the {@link RepositoryException} by throwing a {@link RuntimeRepositoryException}.
-     * @param content Node to get the name from.
+     * This method return the node's name on success, otherwise it handles the {@link RepositoryException} by throwing a
+     * {@link RuntimeRepositoryException}.
+     *
+     * @param content
+     *            Node to get the name from.
      * @return the name of the node passed.
      */
-    public static String getName(Node content){
+    public static String getName(Node content) {
         try {
             return content.getName();
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
+    }
+
+    /**
+     * Get all children (by recursion) using MAGNOLIA_FILTER (filter accepting all nodes of a type with namespace mgnl).
+     *
+     * @param node
+     * @return
+     * @throws RepositoryException
+     */
+    public static Iterable<Node> collectAllChildren(Node node) throws RepositoryException {
+        List<Node> nodes = new ArrayList<Node>();
+        return collectAllChildren(nodes, node, MAGNOLIA_FILTER);
+    }
+
+    /**
+     * Get all children (by recursion) using a Predicate.
+     *
+     * @param node
+     * @param predicate
+     * @return
+     * @throws RepositoryException
+     */
+    public static Iterable<Node> collectAllChildren(Node node, Predicate predicate) throws RepositoryException {
+        List<Node> nodes = new ArrayList<Node>();
+        return collectAllChildren(nodes, node, predicate);
+    }
+
+    /**
+     * Get all children (by recursion) using a Predicate.
+     *
+     * @param nodes
+     * @param node
+     * @param predicate
+     * @return
+     * @throws RepositoryException
+     */
+    public static Iterable<Node> collectAllChildren(List<Node> nodes, Node parent, Predicate predicate) throws RepositoryException {
+        // get filtered sub nodes first
+        nodes.addAll(asList(getNodes(parent, predicate)));
+
+        // get all children to find recursively
+        Iterator<Node> allChildren = getNodes(parent, EXCLUDE_META_DATA_FILTER).iterator();
+
+        // recursion
+        while (allChildren.hasNext()) {
+            collectAllChildren(nodes, allChildren.next(), predicate);
+        }
+
+        return nodes;
     }
 
     /**

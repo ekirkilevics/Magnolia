@@ -33,12 +33,18 @@
  */
 package info.magnolia.jcr.util;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
@@ -337,5 +343,83 @@ public class NodeUtilTest {
 
         // THEN
         assertEquals("Should be /testNode  ", "/" + FIRST_CHILD, res);
+    }
+
+    @Test
+    public void testcollectAllChildren_DefaultPredicate_Simple() throws RepositoryException {
+        // GIVEN
+
+        // WHEN
+        Iterable<Node> res = NodeUtil.collectAllChildren(root);
+
+        // THEN
+        List<Node> resAsList = NodeUtil.asList(res);
+        assertEquals("Should have 3 nodes  ", 3 , resAsList.size());
+    }
+
+    @Test
+    public void testcollectAllChildren_DefaultPredicate_FilterType() throws RepositoryException {
+        // GIVEN
+        second.setPrimaryType("toto:data");
+
+        // WHEN
+        Iterable<Node> res = NodeUtil.collectAllChildren(root);
+
+        // THEN
+        List<Node> resAsList = NodeUtil.asList(res);
+        assertEquals("Should have 2 nodes  ", 2 , resAsList.size());
+    }
+
+    @Test
+    public void testcollectAllChildren_DefaultPredicate_FilterType_ThreeLevel() throws RepositoryException {
+        // GIVEN
+        Node secondL11 = second.addNode("L11");
+        Node secondL12 = second.addNode("L12");
+        secondL11.addNode("L111");
+        Node secondL112 = secondL11.addNode("L112");
+        secondL12.addNode("L121");
+
+        second.setPrimaryType("toto:data");
+        secondL12.setPrimaryType("toto:data");
+        secondL112.setPrimaryType("toto:data");
+        // WHEN
+        Iterable<Node> res = NodeUtil.collectAllChildren(root);
+
+        // THEN
+        List<Node> resAsList = NodeUtil.asList(res);
+        assertEquals("Should have 5 nodes  ", 5 , resAsList.size());
+    }
+
+    @Test
+    public void testcollectAllChildren_SpecificPredicate_FilterType_ThreeLevel() throws RepositoryException {
+        // GIVEN
+        Node secondL11 = second.addNode("L11");
+        Node secondL12 = second.addNode("L12");
+        secondL11.addNode("L111");
+        Node secondL112 = secondL11.addNode("L112");
+        secondL12.addNode("L121");
+
+        second.setPrimaryType("toto:data");
+        secondL12.setPrimaryType("toto:data");
+        secondL112.setPrimaryType("toto:data");
+
+        AbstractPredicate<Node> predicate =new AbstractPredicate<Node>() {
+            @Override
+            public boolean evaluateTyped(Node node) {
+                try {
+                    return node.getPrimaryNodeType().getName().equals("toto:data");
+                } catch (RepositoryException e) {
+                    return false;
+                }
+            }
+        };
+
+
+        // WHEN
+        Iterable<Node> res = NodeUtil.collectAllChildren(root,predicate);
+
+        // THEN
+        List<Node> resAsList = NodeUtil.asList(res);
+        assertEquals("Should have 3 nodes  ", 3 , resAsList.size());
     }
 }
