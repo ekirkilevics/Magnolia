@@ -52,7 +52,7 @@ public class AreaDirectiveTest extends AbstractDirectiveTestCase {
         final String result = renderForTest("[@cms.area name=\"stage\" /]", renderableDef);
         assertEquals(
                 "<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" cms:type=\"mgnl:area\" -->\n" +
-                "<cms:area content=\"testWorkspace:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\"></cms:area>"
+                "<cms:area content=\"testWorkspace:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"Stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\"></cms:area>"
                         + "\n<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" -->\n", result);
     }
 
@@ -66,7 +66,7 @@ public class AreaDirectiveTest extends AbstractDirectiveTestCase {
         assertEquals(
                 "<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" cms:type=\"mgnl:area\" -->"
                         + "\n"
-                        + "<cms:area content=\"testWorkspace:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\"></cms:area>"
+                        + "<cms:area content=\"testWorkspace:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"Stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\"></cms:area>"
                         + "\n" + "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" -->"
                         + "\n", result);
     }
