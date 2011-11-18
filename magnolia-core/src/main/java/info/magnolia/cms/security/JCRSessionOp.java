@@ -50,7 +50,7 @@ import info.magnolia.context.MgnlContext.Op;
  */
 public abstract class JCRSessionOp<R> implements Op<R, RepositoryException> {
 
-    protected static final Logger log = LoggerFactory.getLogger(JCRSessionOp.class);
+    private static final Logger log = LoggerFactory.getLogger(JCRSessionOp.class);
 
     private final String repository;
 
