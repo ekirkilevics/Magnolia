@@ -200,12 +200,6 @@ public class NodeUtil {
 
     /**
      * Orders the node directly after a given sibling. If no sibling is specified the node is placed first.
-     *
-     * @param node
-     *            the node to order
-     * @param siblingName
-     *            the name of the sibling which the name should be after or null if the node should be first
-     * @throws RepositoryException
      */
     public static void orderAfter(Node node, String siblingName) throws RepositoryException {
 
@@ -229,10 +223,6 @@ public class NodeUtil {
 
     /**
      * Orders the node first among its siblings.
-     *
-     * @param node
-     *            the node to order
-     * @throws RepositoryException
      */
     public static void orderFirst(Node node) throws RepositoryException {
         Node parent = node.getParent();
@@ -245,10 +235,6 @@ public class NodeUtil {
 
     /**
      * Orders the node last among its siblings.
-     *
-     * @param node
-     *            the node to order
-     * @throws RepositoryException
      */
     public static void orderLast(Node node) throws RepositoryException {
         node.getParent().orderBefore(node.getName(), null);
@@ -257,10 +243,6 @@ public class NodeUtil {
     /**
      * Orders the node up one step among its siblings. If the node is the only sibling or the first sibling this method
      * has no effect.
-     *
-     * @param node
-     *            the node to order
-     * @throws RepositoryException
      */
     public static void orderNodeUp(Node node) throws RepositoryException {
         Node siblingBefore = getSiblingBefore(node);
@@ -272,10 +254,6 @@ public class NodeUtil {
     /**
      * Orders the node down one step among its siblings. If the node is the only sibling or the last sibling this method
      * has no effect.
-     *
-     * @param node
-     *            the node to order
-     * @throws RepositoryException
      */
     public static void orderNodeDown(Node node) throws RepositoryException {
         Node siblingAfter = getSiblingAfter(node);
@@ -464,10 +442,6 @@ public class NodeUtil {
     /**
      * This method return the node's name on success, otherwise it handles the {@link RepositoryException} by throwing a
      * {@link RuntimeRepositoryException}.
-     *
-     * @param content
-     *            Node to get the name from.
-     * @return the name of the node passed.
      */
     public static String getName(Node content) {
         try {
@@ -479,10 +453,6 @@ public class NodeUtil {
 
     /**
      * Get all children (by recursion) using MAGNOLIA_FILTER (filter accepting all nodes of a type with namespace mgnl).
-     *
-     * @param node
-     * @return
-     * @throws RepositoryException
      */
     public static Iterable<Node> collectAllChildren(Node node) throws RepositoryException {
         List<Node> nodes = new ArrayList<Node>();
@@ -491,11 +461,6 @@ public class NodeUtil {
 
     /**
      * Get all children (by recursion) using a Predicate.
-     *
-     * @param node
-     * @param predicate
-     * @return
-     * @throws RepositoryException
      */
     public static Iterable<Node> collectAllChildren(Node node, Predicate predicate) throws RepositoryException {
         List<Node> nodes = new ArrayList<Node>();
@@ -504,12 +469,7 @@ public class NodeUtil {
 
     /**
      * Get all children (by recursion) using a Predicate.
-     *
-     * @param nodes
-     * @param node
-     * @param predicate
-     * @return
-     * @throws RepositoryException
+     * // TODO this method should really be private or renamed
      */
     public static Iterable<Node> collectAllChildren(List<Node> nodes, Node parent, Predicate predicate) throws RepositoryException {
         // get filtered sub nodes first
@@ -528,10 +488,6 @@ public class NodeUtil {
 
     /**
      * Get all Ancestors until level 1.
-     *
-     * @param node
-     * @return
-     * @throws RepositoryException
      */
     public static Collection<Node> getAncestors(Node node) throws RepositoryException {
         List<Node> allAncestors = new ArrayList<Node>();
