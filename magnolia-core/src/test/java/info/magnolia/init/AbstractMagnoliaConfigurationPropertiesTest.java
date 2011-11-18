@@ -103,4 +103,11 @@ public class AbstractMagnoliaConfigurationPropertiesTest {
         // TODO : i get the feeling this passes by accident, and would not pass if .nested was iterated on first
         assertEquals("bar foo", p.getProperty("test.whitespaces.nested"));
     }
+
+    @Test
+    public void describeAndToStringAreNotRepeatingThemselves() throws Exception {
+        final TestMagnoliaConfigurationProperties p = new TestMagnoliaConfigurationProperties("foo", "bar");
+        assertEquals("[TestMagnoliaConfigurationProperties with sources: [TestPropertySource][ClasspathPropertySource from /test-magnolia.properties][InitPathsPropertySource]]", p.describe());
+        assertTrue(p.toString().startsWith(p.describe() + " with properties: "));
+    }
 }

@@ -71,13 +71,11 @@ public class TestMagnoliaConfigurationProperties extends AbstractMagnoliaConfigu
     }
 
     public TestMagnoliaConfigurationProperties(Properties p) throws IOException {
-        this(new AbstractPropertySource(p) {
-        });
+        this(new TestPropertySource(p));
     }
 
     public TestMagnoliaConfigurationProperties(InputStream in) throws IOException {
-        this(new AbstractStreamBasedPropertySource(in, "test") {
-        });
+        this(new TestStreamBasedPropertySource(in));
     }
 
     public TestMagnoliaConfigurationProperties(PropertySource... sauces) {
@@ -90,5 +88,17 @@ public class TestMagnoliaConfigurationProperties extends AbstractMagnoliaConfigu
                 new ClasspathPropertySource("/test-magnolia.properties"),
                 new InitPathsPropertySource(new TestMagnoliaInitPaths())
         ));
+    }
+
+    private static class TestPropertySource extends AbstractPropertySource {
+        public TestPropertySource(Properties p) {
+            super(p);
+        }
+    }
+
+    private static class TestStreamBasedPropertySource extends AbstractStreamBasedPropertySource {
+        public TestStreamBasedPropertySource(InputStream in) throws IOException {
+            super(in, "test");
+        }
     }
 }

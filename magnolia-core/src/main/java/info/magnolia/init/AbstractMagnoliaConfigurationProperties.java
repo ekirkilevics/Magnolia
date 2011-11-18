@@ -107,7 +107,7 @@ public abstract class AbstractMagnoliaConfigurationProperties implements Magnoli
 
     @Override
     public String toString() {
-        return describe() + " with sources: " + sources;
+        return describe() + " with properties: " + sources;
     }
 
     /**

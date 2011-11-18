@@ -180,6 +180,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             // Initialize MagnoliaConfigurationProperties
             MagnoliaConfigurationProperties configurationProperties = platform.getComponent(MagnoliaConfigurationProperties.class);
             configurationProperties.init();
+            log.info("Property sources loaded: {}", configurationProperties.describe());
 
             // Connect legacy properties to the MagnoliaConfigurationProperties object
             SystemProperty.setMagnoliaConfigurationProperties(configurationProperties);
