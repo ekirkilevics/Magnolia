@@ -63,6 +63,7 @@ public class DefaultTest extends TestCase{
     private WebContext webCtx;
     private HttpServletRequest request;
     
+    @Override
     public void setUp(){
         webCtx = createMock(WebContext.class);
         request = createMock(HttpServletRequest.class);
@@ -97,6 +98,7 @@ public class DefaultTest extends TestCase{
         verify(mocks);
     }
     
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         super.tearDown();
