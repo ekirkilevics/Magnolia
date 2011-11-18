@@ -153,8 +153,10 @@ public final class DefaultRepositoryManager implements RepositoryManager {
     }
 
     private void loadRepositories() throws Exception {
-
-        String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_REPOSITORIES_CONFIG);
+        final String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_REPOSITORIES_CONFIG);
+        if (path == null) {
+            throw new RepositoryNotInitializedException("No value found for property " + SystemProperty.MAGNOLIA_REPOSITORIES_CONFIG + ": can not start repository.");
+        }
         final String tokenizedConfig = ConfigUtil.getTokenizedConfigFile(path);
         InputStream stream = IOUtils.toInputStream(tokenizedConfig);
 
