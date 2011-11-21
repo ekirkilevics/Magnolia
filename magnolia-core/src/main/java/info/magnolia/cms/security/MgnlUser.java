@@ -72,7 +72,6 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
 
     private static final long serialVersionUID = 222L;
 
-    private static final boolean logAdmin = false;
     private static final Logger log = LoggerFactory.getLogger(MgnlUser.class);
 
     private final Map<String, String> properties;
@@ -109,9 +108,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
      */
     @Override
     public boolean inGroup(String groupName) {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("inGroup({})", groupName);
-        }
+        log.debug("inGroup({})", groupName);
         return this.hasAny(groupName, NODE_GROUPS);
     }
 
@@ -121,9 +118,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
      */
     @Override
     public void removeGroup(String groupName) throws UnsupportedOperationException {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("removeGroup({})", groupName);
-        }
+        log.debug("removeGroup({})", groupName);
         throw new UnsupportedOperationException("use manager to remove groups!");
     }
 
@@ -133,17 +128,13 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
      */
     @Override
     public void addGroup(String groupName) throws UnsupportedOperationException {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("addGroup({})", groupName);
-        }
+        log.debug("addGroup({})", groupName);
         throw new UnsupportedOperationException("use manager to add groups!");
     }
 
     @Override
     public boolean isEnabled() {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("isEnabled()");
-        }
+        log.debug("isEnabled()");
         return enabled ;
     }
 
@@ -152,9 +143,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
      */
     @Override
     public void setEnabled(boolean enabled) {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("setEnabled({})", enabled);
-        }
+        log.debug("setEnabled({})", enabled);
         this.enabled = enabled;
     }
 
@@ -170,17 +159,13 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
 
     @Override
     public void removeRole(String roleName) throws UnsupportedOperationException {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("removeRole({})", roleName);
-        }
+        log.debug("removeRole({})", roleName);
         throw new UnsupportedOperationException("use manager to remove roles!");
     }
 
     @Override
     public void addRole(String roleName) throws UnsupportedOperationException {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("addRole({})", roleName);
-        }
+        log.debug("addRole({})", roleName);
         throw new UnsupportedOperationException("use manager to add roles!");
     }
 
@@ -245,9 +230,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
 
     @Override
     public String getName() {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("getName()=>{}", name);
-        }
+        log.debug("getName()=>{}", name);
         return name;
     }
 
@@ -263,25 +246,19 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
 
     @Override
     public String getLanguage() {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("getLang()=>{}", language);
-        }
+        log.debug("getLang()=>{}", language);
         return this.language;
     }
 
     @Override
     public String getProperty(String propertyName) {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("getProperty({})", propertyName);
-        }
+        log.debug("getProperty({})", propertyName);
         return properties.get(propertyName);
     }
 
     @Override
     public Collection<String> getGroups() {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("getGroups()");
-        }
+        log.debug("getGroups()");
         return groups;
     }
 
@@ -289,9 +266,8 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
     public Collection<String> getAllGroups() {
         // TODO: if the user is just a simple bean, then this method doesn't belong here anymore!!!!
         // should be moved to user manager or to group manager???
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("get groups for {}", getName());
-        }
+        log.debug("get groups for {}", getName());
+
         final Set<String> allGroups = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         final Collection<String> groups = getGroups();
 
@@ -309,18 +285,15 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
 
     @Override
     public Collection<String> getRoles() {
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("getRoles()");
-        }
+        log.debug("getRoles()");
         return roles;
     }
 
     @Override
     public Collection<String> getAllRoles() {
         // TODO: if the user is just a simple bean, then this method doesn't belong here anymore!!!!
-        if (logAdmin || !"admin".equals(name)) {
-            log.debug("get roles for {}", getName());
-        }
+        log.debug("get roles for {}", getName());
+
         final Set<String> allRoles = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         final Collection<String> roles = getRoles();
 
