@@ -46,7 +46,7 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.MockWebContext;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertNull;
 
 /**
  * Test case for {@link ExtensionVariationResolver}.
@@ -103,7 +103,7 @@ public class ExtensionVariationResolverTest extends AbstractMagnoliaTestCase {
         ExtensionVariationResolver resolver = new ExtensionVariationResolver();
         RenderableDefinition result = resolver.resolveVariation(templateDefinition);
 
-        assertSame(result, templateDefinition);
+        assertNull(result);
     }
 
     @Test
@@ -112,6 +112,6 @@ public class ExtensionVariationResolverTest extends AbstractMagnoliaTestCase {
         ExtensionVariationResolver resolver = new ExtensionVariationResolver();
         RenderableDefinition result = resolver.resolveVariation(templateDefinition);
 
-        assertSame(result, templateDefinition);
+        assertNull(result);
     }
 }

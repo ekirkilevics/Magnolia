@@ -91,6 +91,7 @@ public class RenderElementTest {
         when(ctx.getResponse()).thenReturn(response);
         MgnlContext.setInstance(ctx);
         when(ctx.getHierarchyManager("TestMockHierarchyManager")).thenReturn(session);
+        when(ctx.getAggregationState()).thenReturn(new AggregationState());
 
         final ServerConfiguration serverCfg = new ServerConfiguration();
         serverCfg.setAdmin(true);

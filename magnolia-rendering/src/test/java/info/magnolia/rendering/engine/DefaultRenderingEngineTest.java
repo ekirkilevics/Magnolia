@@ -48,20 +48,38 @@ import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.variation.NoopVariationResolver;
 import info.magnolia.rendering.util.AppendableWriter;
+import info.magnolia.test.AbstractMagnoliaTestCase;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockNode;
 
 import javax.inject.Provider;
 import javax.jcr.Node;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @version $Id$
  */
 
-public class DefaultRenderingEngineTest {
+public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
 
     private static final String FREEMARKER_RENDERER_TYPE = "freemarker";
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        MockUtil.initMockContext();
+    }
+
+    @Override
+    @After
+    public void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+    }
 
     @Test(expected = RenderException.class)
     public void testGetRendererForThrowsExceptionWhenNoneIsRegistered() throws RenderException {
