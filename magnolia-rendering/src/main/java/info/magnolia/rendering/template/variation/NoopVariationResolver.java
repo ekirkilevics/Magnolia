@@ -44,6 +44,6 @@ public class NoopVariationResolver implements RenderableVariationResolver {
 
     @Override
     public RenderableDefinition resolveVariation(RenderableDefinition renderableDefinition) {
-        return renderableDefinition;
+        return null;
     }
 }

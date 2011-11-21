@@ -42,5 +42,8 @@ import info.magnolia.rendering.template.RenderableDefinition;
  */
 public interface RenderableVariationResolver {
 
+    /**
+     * Returns the variation to use or null.
+     */
     RenderableDefinition resolveVariation(RenderableDefinition renderableDefinition);
 }

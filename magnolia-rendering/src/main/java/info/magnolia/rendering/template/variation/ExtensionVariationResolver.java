@@ -50,13 +50,13 @@ public class ExtensionVariationResolver implements RenderableVariationResolver {
 
         AggregationState aggregationState = getAggregationStateSafely();
         if (aggregationState == null) {
-            return renderableDefinition;
+            return null;
         }
 
         String extension = aggregationState.getExtension();
         RenderableDefinition variation = renderableDefinition.getVariations().get(extension);
         if (variation == null) {
-            return renderableDefinition;
+            return null;
         }
 
         return BeanMergerUtil.merge(variation, renderableDefinition);

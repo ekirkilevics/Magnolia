@@ -33,6 +33,8 @@
  */
 package info.magnolia.rendering.engine;
 
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.renderer.Renderer;
@@ -90,13 +92,18 @@ public class DefaultRenderingEngine implements RenderingEngine {
         final Renderer renderer = getRendererFor(definition);
         final RenderingContext renderingContext = getRenderingContext();
 
-        definition = variationResolver.resolveVariation(definition);
+        RenderableDefinition variation = variationResolver.resolveVariation(definition);
 
-        renderingContext.push(content, definition, out);
+        AggregationState aggregationState = MgnlContext.getAggregationState();
+
+        String previousTemplateVariation = aggregationState.getRenderableVariation();
+        renderingContext.push(content, variation != null ? variation : definition, out);
         try {
+            aggregationState.setRenderableVariation(variation != null ? variation.getName() : null);
             renderer.render(renderingContext, contextObjects);
         } finally {
             renderingContext.pop();
+            aggregationState.setRenderableVariation(previousTemplateVariation);
         }
     }
 

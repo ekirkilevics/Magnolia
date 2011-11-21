@@ -65,6 +65,7 @@ public class AggregationState {
     private String templateName;
     private Locale locale;
     private boolean isPreviewMode;
+    private String renderableVariation;
 
     public void setOriginalURI(String originalURI) {
         final String strippedURI = stripContextPathIfExists(originalURI);
@@ -236,6 +237,20 @@ public class AggregationState {
 
     public void setPreviewMode(boolean previewMode) {
         isPreviewMode = previewMode;
+    }
+
+    /**
+     * Gets the name of the renderable variation in use.
+     */
+    public String getRenderableVariation() {
+        return renderableVariation;
+    }
+
+    /**
+     * Sets the name of the renderable variation in use.
+     */
+    public void setRenderableVariation(String renderableVariation) {
+        this.renderableVariation = renderableVariation;
     }
 
     /**
