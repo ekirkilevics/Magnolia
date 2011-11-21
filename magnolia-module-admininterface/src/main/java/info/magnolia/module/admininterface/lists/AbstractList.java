@@ -147,7 +147,7 @@ public abstract class AbstractList extends TemplatedMVCHandler {
 
     public ContextMenu getContextMenu() {
         if (this.contextMenu == null) {
-            this.contextMenu = new ContextMenu("contextMenu");
+            this.contextMenu = new ContextMenu("mgnlContextMenu");
             configureContextMenu(this.contextMenu);
         }
         return this.contextMenu;
