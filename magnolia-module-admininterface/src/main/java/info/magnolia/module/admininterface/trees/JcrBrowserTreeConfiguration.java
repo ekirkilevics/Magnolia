@@ -67,7 +67,7 @@ public class JcrBrowserTreeConfiguration extends ConfigTreeConfiguration {
         final Messages msgs = getMessages();
 
         ContextMenuItem menuNewPage = new ContextMenuItem("newPage");
-        menuNewPage.setLabel(msgs.get("!!New page"));
+        menuNewPage.setLabel(msgs.get("tree.config.menu.newPage"));
         menuNewPage.setIcon(request.getContextPath() + "/.resources/icons/16/folder_cubes.gif");
         menuNewPage.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.PAGE.getSystemName() + "');");
         menuNewPage.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
@@ -78,7 +78,7 @@ public class JcrBrowserTreeConfiguration extends ConfigTreeConfiguration {
                 + ")");
 
         ContextMenuItem menuNewArea = new ContextMenuItem("newArea");
-        menuNewArea.setLabel(msgs.get("!!New area"));
+        menuNewArea.setLabel(msgs.get("tree.config.menu.newArea"));
         menuNewArea.setIcon(request.getContextPath() + "/.resources/icons/16/cubes.gif");
         menuNewArea.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.AREA.getSystemName() + "');");
         menuNewArea.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
@@ -86,7 +86,7 @@ public class JcrBrowserTreeConfiguration extends ConfigTreeConfiguration {
                 + ")");
 
         ContextMenuItem menuNewComponent = new ContextMenuItem("newComponent");
-        menuNewComponent.setLabel(msgs.get("!!New component"));
+        menuNewComponent.setLabel(msgs.get("tree.config.menu.newComponent"));
         menuNewComponent.setIcon(request.getContextPath() + "/.resources/icons/16/cubes.gif");
         menuNewComponent.setOnclick(tree.getJavascriptTree() + ".createNode('" + ItemType.COMPONENT.getSystemName() + "');");
         menuNewComponent.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
