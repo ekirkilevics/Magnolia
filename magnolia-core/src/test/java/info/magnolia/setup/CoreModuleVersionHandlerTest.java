@@ -33,7 +33,8 @@
  */
 package info.magnolia.setup;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.SystemProperty;
@@ -109,6 +110,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         // prior to 3.6.4, the mime types for png and swf were incorrect
@@ -132,6 +135,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         // prior to 3.6.4, the mime types for png and swf were incorrect - but values have been customized on this instance
@@ -155,6 +160,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -186,6 +193,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -212,6 +221,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -245,6 +256,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -272,6 +285,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -305,6 +320,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -346,6 +363,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/activation", "enable", "true");
         // needed for 4.4.5 - configuration of mov MIME type
         setupConfigNode("/server/MIMEMapping/mov");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
         // let's make sure we've set up this test with filters in their pre-4.3 order
         final Iterator<Content> filters = MgnlContext.getHierarchyManager("config").getContent("/server/filters/").getChildren().iterator();
         assertEquals("context", filters.next().getName());
@@ -356,6 +375,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("multipartRequest", filters.next().getName());
         assertEquals("activation", filters.next().getName());
         assertFalse(filters.hasNext());
+
 
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1"));
@@ -406,6 +426,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
         // other mime types didn't exist before 4.4.5
         setupConfigProperty("/server/MIMEMapping/mp4", "mime-type", "application/octet-stream");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.4"));
 
@@ -451,6 +473,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // same if mov extension and icon have been set manually
         setupConfigProperty("/server/MIMEMapping/mov", "extension", "custom-extension-for-mov");
         setupConfigProperty("/server/MIMEMapping/mov", "icon", "custom-icon-for-mov");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.4"));
 
@@ -483,6 +507,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
         // already changed value differing from original installation
         setupConfigProperty("/server/MIMEMapping/mp4", "mime-type", "application/octet-stream");
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.4"));
 
