@@ -66,6 +66,7 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
 import javax.jcr.query.Query;
 import javax.security.auth.Subject;
@@ -95,10 +96,59 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     private String realmName;
 
+    private int maxFailedLoginAttempts;
+
+    private int lockTimePeriod;
+
     /**
      * There should be no need to instantiate this class except maybe for testing. Manual instantiation might cause manager not to be initialized properly.
      */
     public MgnlUserManager() {
+    }
+
+    @Override
+    public void setMaxFailedLoginAttempts(int maxFailedLoginAttempts){
+        this.maxFailedLoginAttempts = maxFailedLoginAttempts;
+    }
+
+    @Override
+    public int getMaxFailedLoginAttempts(){
+        return maxFailedLoginAttempts;
+    }
+
+    @Override
+    public int getLockTimePeriod() {
+        return lockTimePeriod;
+    }
+
+    @Override
+    public void setLockTimePeriod(int lockTimePeriod) {
+        this.lockTimePeriod = lockTimePeriod;
+    }
+
+    @Override
+    public User setProperty(final User user, final String propertyName, final Value propertyValue) {
+        MgnlContext.doInSystemContext(new SilentSessionOp<Void>(getRepositoryName()) {
+
+            @Override
+            public Void doExec(Session session) throws RepositoryException {
+                String path = ((MgnlUser) user).getPath();
+                try {
+                    Node userNode = session.getNode(path);
+                    if(propertyValue == null && PropertyUtil.getProperty(userNode, propertyName) != null){
+                        userNode.getProperty(propertyName).remove();
+                    }else if(propertyValue != null){
+                        userNode.setProperty(propertyName, propertyValue);
+                    }
+                    session.save();
+                }
+                catch (RepositoryException e) {
+                    session.refresh(false);
+                }
+                return null;
+            }
+        });
+        return user;
     }
 
     /**
@@ -523,4 +573,5 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         super.add(user.getName(), groupName, NODE_GROUPS);
         return getUser(user.getName());
     }
+
 }

@@ -38,6 +38,7 @@ import info.magnolia.cms.security.auth.ACL;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.jcr.Value;
 import javax.security.auth.Subject;
 
 
@@ -199,6 +200,58 @@ public class DelegatingUserManager implements UserManager {
             @Override
             public User delegate(UserManager um) {
                 return um.addGroup(user, groupName);
+            }
+        });
+    }
+
+    @Override
+    public int getLockTimePeriod() throws UnsupportedOperationException {
+        return delegateUntilSupported(new Op<Integer>() {
+            @Override
+            public Integer delegate(UserManager userManager) {
+                return userManager.getLockTimePeriod();
+            }
+        });
+    }
+
+    @Override
+    public int getMaxFailedLoginAttempts() throws UnsupportedOperationException {
+        return delegateUntilSupported(new Op<Integer>() {
+            @Override
+            public Integer delegate(UserManager userManager) {
+                return userManager.getMaxFailedLoginAttempts();
+            }
+        });
+    }
+
+    @Override
+    public void setLockTimePeriod(final int lockTimePeriod) throws UnsupportedOperationException {
+        delegateUntilSupported(new Op<Void>() {
+            @Override
+            public Void delegate(UserManager userManager) {
+                userManager.setLockTimePeriod(lockTimePeriod);
+                return null;
+            }
+        });
+    }
+
+    @Override
+    public void setMaxFailedLoginAttempts(final int maxFailedLoginAttempts) throws UnsupportedOperationException {
+        delegateUntilSupported(new Op<Void>() {
+            @Override
+            public Void delegate(UserManager userManager) {
+                userManager.setMaxFailedLoginAttempts(maxFailedLoginAttempts);
+                return null;
+            }
+        });
+    }
+
+    @Override
+    public User setProperty(final User user, final String propertyName, final Value propertyValue) throws UnsupportedOperationException {
+        return delegateUntilSupported(new Op<User>() {
+            @Override
+            public User delegate(UserManager userManager) {
+                return userManager.setProperty(user, propertyName, propertyValue);
             }
         });
     }

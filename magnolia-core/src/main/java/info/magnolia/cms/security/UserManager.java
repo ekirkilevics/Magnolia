@@ -38,6 +38,7 @@ import info.magnolia.cms.security.auth.ACL;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.jcr.Value;
 import javax.security.auth.Subject;
 
 
@@ -108,6 +109,45 @@ public interface UserManager {
      * @throws UnsupportedOperationException if the current implementation doesn't support this operation
      */
     public User changePassword(User user, String newPassword) throws UnsupportedOperationException;
+
+    /**
+     * Sets given property for the user and returns updated user object with new value of the property.
+     * 
+     * @param user
+     *            User to be updated. If property doesn't exist yet, it will be created. If the value is null, property will be removed if existing.
+     * @param propertyName
+     *            Name of the property.
+     * @param propertyValue
+     *            Value of the property. Use org.apache.jackrabbit.value.ValueFactoryImpl to convert type to Value.
+     * @return
+     */
+    public User setProperty(User user, String propertyName, Value propertyValue);
+
+    /* ---------- User Manager configuration ----------- */
+
+    /**
+     * Sets a time period for account lock.
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
+     */
+    public void setLockTimePeriod(int lockTimePeriod) throws UnsupportedOperationException;
+
+    /**
+     * Gets a time period for account lock.
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
+     */
+    public int getLockTimePeriod() throws UnsupportedOperationException;
+
+    /**
+     * Sets a number of failed attempts before locking account.
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
+     */
+    public void setMaxFailedLoginAttempts(int maxFailedLoginAttempts) throws UnsupportedOperationException;
+
+    /**
+     * Gets a number of failed attempts before locking account.
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
+     */
+    public int getMaxFailedLoginAttempts() throws UnsupportedOperationException;
 
     /**
      * Grants user role.

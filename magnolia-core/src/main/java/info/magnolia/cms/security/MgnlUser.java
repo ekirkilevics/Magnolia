@@ -41,6 +41,7 @@ import info.magnolia.repository.RepositoryConstants;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -226,6 +227,32 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
             log.debug("checked {} for {} in {}ms.", new Object[] {name, nodeName, (System.currentTimeMillis() - start)});
         }
         return false;
+    }
+
+    public int getFailedLoginAttempts(){
+        return MgnlContext.doInSystemContext(new SilentSessionOp<Integer>(RepositoryConstants.USERS) {
+            @Override
+            public Integer doExec(Session session) throws RepositoryException {
+                Node userNode = session.getNode("/" + getRealm() + "/" + getName());
+                if (!userNode.hasProperty("failedLoginAttempts")){
+                    userNode.setProperty("failedLoginAttempts", 0);
+                    session.save();
+                }
+                return (int)userNode.getProperty("failedLoginAttempts").getLong();
+            }});
+    }
+
+    public Calendar getReleaseTime(){
+        return MgnlContext.doInSystemContext(new SilentSessionOp<Calendar>(RepositoryConstants.USERS) {
+            @Override
+            public Calendar doExec(Session session) throws RepositoryException {
+                Node userNode = session.getNode("/" + getRealm() + "/" + getName());
+                if (!userNode.hasProperty("releaseTime")){
+                    userNode.setProperty("releaseTime", 0);
+                    session.save();
+                }
+                return userNode.getProperty("releaseTime").getDate();
+            }});
     }
 
     @Override

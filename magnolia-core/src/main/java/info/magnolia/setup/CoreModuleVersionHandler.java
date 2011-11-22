@@ -33,6 +33,10 @@
  */
 package info.magnolia.setup;
 
+import static info.magnolia.nodebuilder.Ops.addNode;
+import static info.magnolia.nodebuilder.Ops.addProperty;
+import static info.magnolia.nodebuilder.Ops.getNode;
+import static info.magnolia.nodebuilder.Ops.remove;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.filters.FilterManager;
 import info.magnolia.module.AbstractModuleVersionHandler;
@@ -70,12 +74,10 @@ import info.magnolia.setup.for3_6_2.UpdateUsers;
 import info.magnolia.setup.for4_3.UpdateUserPermissions;
 import info.magnolia.setup.for4_5.RenameACLNodesTask;
 import info.magnolia.setup.for4_5.UpdateSecurityFilterClientCallbacksConfiguration;
+import info.magnolia.setup.for4_5.UpdateUserManagers;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
-import static info.magnolia.nodebuilder.Ops.*;
 
 /**
  * 3.5 being the first version of core as a module, it is always "installed",
@@ -191,26 +193,26 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new PropertyExistsDelegateTask("Class", "Checks if class property exists", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", new WarnTask("class", "Unable to set property class because it already exists"), new NewPropertyTask("Class", "Creates property class and sets it to class path", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", "info.magnolia.freemarker.ModeDependentTemplateExceptionHandler"))));
 
         register(DeltaBuilder.update("4.4", "")
-            .addTask(bootstrapWebContainerResources)
-            .addTask(
-                new NodeBuilderTask("Update filter configuration", "Removes the dontDispatchOnForward bypass and adds the dispatching configuration instead", ErrorHandling.strict, RepositoryConstants.CONFIG,
-                    getNode("server/filters").then(
-                        getNode("bypasses").then(
-                            remove("dontDispatchOnForwardAttribute")),
-                        addNode("dispatching", ItemType.CONTENTNODE).then(
-                            addNode("request").then(
-                                addProperty("toMagnoliaResources", Boolean.TRUE),
-                                addProperty("toWebContainerResources", Boolean.TRUE)),
-                            addNode("error").then(
-                                addProperty("toMagnoliaResources", Boolean.TRUE),
-                                addProperty("toWebContainerResources", Boolean.FALSE)),
-                            addNode("forward").then(
-                                addProperty("toMagnoliaResources", Boolean.TRUE),
-                                addProperty("toWebContainerResources", Boolean.FALSE)),
-                            addNode("include").then(
-                                addProperty("toMagnoliaResources", Boolean.FALSE),
-                                addProperty("toWebContainerResources", Boolean.FALSE))
-                                )))));
+                .addTask(bootstrapWebContainerResources)
+                .addTask(
+                        new NodeBuilderTask("Update filter configuration", "Removes the dontDispatchOnForward bypass and adds the dispatching configuration instead", ErrorHandling.strict, RepositoryConstants.CONFIG,
+                                getNode("server/filters").then(
+                                        getNode("bypasses").then(
+                                                remove("dontDispatchOnForwardAttribute")),
+                                                addNode("dispatching", ItemType.CONTENTNODE).then(
+                                                        addNode("request").then(
+                                                                addProperty("toMagnoliaResources", Boolean.TRUE),
+                                                                addProperty("toWebContainerResources", Boolean.TRUE)),
+                                                                addNode("error").then(
+                                                                        addProperty("toMagnoliaResources", Boolean.TRUE),
+                                                                        addProperty("toWebContainerResources", Boolean.FALSE)),
+                                                                        addNode("forward").then(
+                                                                                addProperty("toMagnoliaResources", Boolean.TRUE),
+                                                                                addProperty("toWebContainerResources", Boolean.FALSE)),
+                                                                                addNode("include").then(
+                                                                                        addProperty("toMagnoliaResources", Boolean.FALSE),
+                                                                                        addProperty("toWebContainerResources", Boolean.FALSE))
+                                                )))));
 
         final ArrayList<Condition> conditions = new ArrayList<Condition>();
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
@@ -251,6 +253,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 ))
 
                 .addTask(new UpdateSecurityFilterClientCallbacksConfiguration("uriSecurity", "securityCallback"))
+                .addTask(new UpdateUserManagers())
                 // TODO addTask( move/backup the callbacks in the contentSecurity filter )
         );
     }

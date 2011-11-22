@@ -39,6 +39,7 @@ import info.magnolia.context.MgnlContext;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.jcr.Value;
 import javax.security.auth.Subject;
 
 /**
@@ -122,5 +123,30 @@ public class ExternalUserManager implements UserManager {
     @Override
     public User addGroup(User user, String groupName) {
         throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    @Override
+    public int getLockTimePeriod() {
+        throw new UnsupportedOperationException("Not supported by this user manager.");
+    }
+
+    @Override
+    public int getMaxFailedLoginAttempts() {
+        throw new UnsupportedOperationException("Not supported by this user manager.");
+    }
+
+    @Override
+    public void setLockTimePeriod(int lockTimePeriod){
+        throw new UnsupportedOperationException("Not supported by this user manager.");
+    }
+
+    @Override
+    public void setMaxFailedLoginAttempts(int maxFailedLoginAttempts){
+        throw new UnsupportedOperationException("Not supported by this user manager.");
+    }
+
+    @Override
+    public User setProperty(User user, String propertyName, Value propertyValue) {
+        throw new UnsupportedOperationException("Not supported by this user manager.");
     }
 }
