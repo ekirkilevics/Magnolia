@@ -59,15 +59,21 @@ import com.google.gwt.user.client.ui.Label;
  */
 public abstract class AbstractBarWidget extends FlowPanel {
 
-    private AbstractBarWidget parentBar;
     private CMSBoundary boundary;
     protected boolean hasControls = false;
-    private String label;
+    private String label = "";
 
-    public AbstractBarWidget(final AbstractBarWidget parentBar, CMSBoundary boundary, String label) {
-        this.parentBar = parentBar;
+    public AbstractBarWidget(CMSBoundary boundary) {
+
         this.setBoundary(boundary);
-        this.label = label;
+        if (boundary != null) {
+            this.label = boundary.getComment().getAttribute("label");
+            if (label == null || label.isEmpty()) {
+                if (boundary.getParentArea() != null) {
+                    this.label = boundary.getParentArea().getComment().getAttribute("label");
+                }
+            }
+        }
 
         if (this.label != null && !this.label.isEmpty()) {
             Label areaName = new InlineLabel(this.label);
@@ -99,6 +105,10 @@ public abstract class AbstractBarWidget extends FlowPanel {
     protected void select() {
 
         this.addStyleName("selected");
+/*        Document.get().getElementById("mgnlBoundary").getStyle().setTop(boundary.getMinCoordinate().getTop(), Style.Unit.PX);
+        Document.get().getElementById("mgnlBoundary").getStyle().setLeft(boundary.getMinCoordinate().getLeft(), Style.Unit.PX);
+        Document.get().getElementById("mgnlBoundary").getStyle().setHeight(boundary.getMaxCoordinate().getTop()-boundary.getMinCoordinate().getTop(), Style.Unit.PX);
+        Document.get().getElementById("mgnlBoundary").getStyle().setHeight(boundary.getMaxCoordinate().getLeft()-boundary.getMinCoordinate().getLeft(), Style.Unit.PX);*/
     }
 
     protected void deSelect() {
@@ -109,10 +119,6 @@ public abstract class AbstractBarWidget extends FlowPanel {
 
     protected void setId(String id){
         getElement().setId(id);
-    }
-
-    public AbstractBarWidget getParentBar() {
-        return parentBar;
     }
 
     protected void addButton(final Button button, final Float cssFloat) {
@@ -155,7 +161,11 @@ public abstract class AbstractBarWidget extends FlowPanel {
         parentNode.insertAfter(getElement(), element);
         onAttach();
     }
-
+    public void attach(Node node) {
+        final Node parentNode = node.getParentNode();
+        parentNode.insertAfter(getElement(), node);
+        onAttach();
+    }
     public void setBoundary(CMSBoundary boundary) {
         this.boundary = boundary;
     }

@@ -70,7 +70,7 @@ public class RenderElement extends AbstractContentTemplatingElement {
         content = getTargetContent();
 
         if(isAdmin()){
-            new MarkupHelper(out).startContent(content);
+            new MarkupHelper(out).openComment("cms:component").append(" -->\n");
         }
 
         // TODO not sure how to pass editable
@@ -90,7 +90,7 @@ public class RenderElement extends AbstractContentTemplatingElement {
     @Override
     public void end(Appendable out) throws IOException, RenderException {
         if(isAdmin()){
-            new MarkupHelper(out).endContent(content);
+            new MarkupHelper(out).closeComment("cms:component");
         }
     }
 

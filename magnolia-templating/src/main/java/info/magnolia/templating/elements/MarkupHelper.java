@@ -105,6 +105,16 @@ public class MarkupHelper implements Appendable {
         return this;
     }
 
+    public MarkupHelper openComment(String tagName) throws IOException {
+        appendable.append(XML_BEGIN_COMMENT).append(tagName);
+        return this;
+    }
+
+    public MarkupHelper closeComment(String tagName) throws IOException {
+        appendable.append(XML_BEGIN_COMMENT).append(SLASH).append(tagName).append(XML_END_COMMENT).append(LINE_BREAK);
+        return this;
+    }
+
     protected String getNodeId(Node node) throws RenderException {
         if(node == null){
             return "";

@@ -127,7 +127,7 @@ public class EditElementTest {
 
         marker.begin(out);
 
-        assertEquals("<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" format=\"bar\" dialog=\"testDialog\" template=\"testParagraph0\"></cms:edit>\n", out.toString());
+        assertEquals("<!-- cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" format=\"bar\" dialog=\"testDialog\" template=\"testParagraph0\" -->\n", out.toString());
 
         // now with format & dialog
         marker.setFormat("testFormat");
@@ -136,7 +136,7 @@ public class EditElementTest {
         out = new StringWriter();
         marker.begin(out);
 
-        assertEquals("<cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" format=\"testFormat\" dialog=\"testDialog\" template=\"testParagraph0\"></cms:edit>\n", out.toString());
+        assertEquals("<!-- cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" format=\"testFormat\" dialog=\"testDialog\" template=\"testParagraph0\" -->\n", out.toString());
 
     }
 
@@ -156,7 +156,7 @@ public class EditElementTest {
     @Test
     public void testPostRender() throws Exception {
         marker.end(out);
-        assertEquals("", out.toString());
+        assertEquals("<!-- /cms:edit -->\n", out.toString());
     }
 
     @After

@@ -122,11 +122,11 @@ public class RenderElementTest {
 
         StringWriter out = new StringWriter();
         renderElement.begin(out);
-        assertEquals("<!-- cms:begin cms:content=\"testSession:/foo/bar/baz/paragraphs/01\" cms:type=\"mgnl:component\" -->\n", out.toString());
+        assertEquals("<!-- cms:component -->\n", out.toString());
 
         out = new StringWriter();
         renderElement.end(out);
-        assertEquals("<!-- cms:end cms:content=\"testSession:/foo/bar/baz/paragraphs/01\" -->\n", out.toString());
+        assertEquals("<!-- /cms:component -->\n", out.toString());
     }
 
     @After

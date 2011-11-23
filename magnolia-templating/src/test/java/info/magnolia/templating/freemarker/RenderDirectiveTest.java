@@ -48,8 +48,8 @@ public class RenderDirectiveTest extends AbstractDirectiveTestCase {
         final String result = renderForTest("[@cms.render /]", null);
 
         assertEquals(
-            "<!-- cms:begin cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" cms:type=\"mgnl:component\" -->\n" +
-            "<!-- cms:end cms:content=\"testWorkspace:/foo/bar/paragraphs/1\" -->\n"
-            , result);
+                "<!-- cms:component -->\n"
+                + "<!-- /cms:component -->\n"
+                , result);
     }
 }

@@ -34,37 +34,63 @@
 package info.magnolia.templating.editor.client.dom;
 
 import info.magnolia.templating.editor.client.AbstractBarWidget;
-import info.magnolia.templating.editor.client.AreaBarWidget;
-import info.magnolia.templating.editor.client.EditBarWidget;
 
 import java.util.LinkedList;
 
+import com.google.gwt.dom.client.Element;
+
 /**
- * CMSBoundaryTag.
- */
+* CMSBoundary Constructor.
+*
+* @throws IllegalArgumentException if comments tagname is not a defined marker.
+*/
 public class CMSBoundary {
 
-    private LinkedList<AbstractBarWidget> areaWidgets = new LinkedList<AbstractBarWidget>();
-    private LinkedList<AbstractBarWidget> componentWidgets = new LinkedList<AbstractBarWidget>();
+    private AbstractBarWidget widget;
     private CMSComment comment;
     private CMSBoundary parentBoundary;
-    private LinkedList<CMSBoundary> childBoundaries = new LinkedList<CMSBoundary>();
+    private boolean isArea = false;
+    private boolean isComponent = false;
 
-    public CMSBoundary(CMSComment comment, CMSBoundary parentBoundary) {
-        this.comment = comment;
+    private Coordinate maxCoordinate = new Coordinate();
+    private Coordinate minCoordinate = new Coordinate();
+
+    private Element firstElement;
+    public Element getFirstElement() {
+        return firstElement;
+    }
+
+    public void setFirstElement(Element firstElement) {
+        this.firstElement = firstElement;
+    }
+
+    public Coordinate getMaxCoordinate() {
+        return maxCoordinate;
+    }
+
+    public Coordinate getMinCoordinate() {
+        return minCoordinate;
+    }
+
+    private LinkedList<CMSBoundary> childBoundaries = new LinkedList<CMSBoundary>();
+    private boolean isEdit;
+
+    public static final String MARKER_AREA = "cms:area";
+    public static final String MARKER_COMPONENT = "cms:component";
+    public static final String MARKER_EDIT = "cms:edit";
+
+    public CMSBoundary(CMSComment comment, CMSBoundary parentBoundary) throws IllegalArgumentException {
+
+        if (!isCmsBoundary(comment.getTagName())) {
+            throw new IllegalArgumentException("The tagname must be one of the defined marker Strings.");
+        }
+
+        this.setComment(comment);
         this.setParentBoundary(parentBoundary);
     }
 
-    public void addAreaWidget(AreaBarWidget widget) {
-        areaWidgets.add(widget);
-    }
-
-    public void addComponentWidget(EditBarWidget widget) {
-        componentWidgets.add(widget);
-    }
-
     public String getContent() {
-        return this.comment.getAttribute("cms:content");
+        return this.getComment().getAttribute("cms:content");
     }
 
     public void setParentBoundary(CMSBoundary parentBoundary) {
@@ -108,19 +134,81 @@ public class CMSBoundary {
         return ascendants;
     }
 
-    public LinkedList<CMSBoundary> getSiblings() {
-        LinkedList<CMSBoundary> siblings = new LinkedList<CMSBoundary>();
-        if (this.parentBoundary != null) {
-            siblings.addAll(this.parentBoundary.getChildBoundaries());
+    public CMSBoundary getParentArea() {
+
+        if (isArea()) {
+            return this;
         }
-        return siblings;
+        else if (getParentBoundary() != null) {
+            return getParentBoundary().getParentArea();
+        }
+
+        return getParentBoundary().getParentArea();
+
+
     }
 
-    public LinkedList<AbstractBarWidget> getAreaWidgets() {
-        return areaWidgets;
+    public boolean isCmsBoundary(String tagName) {
+        if (tagName.equals(MARKER_AREA)) {
+            this.isArea = true;
+            return true;
+        }
+        else if (tagName.equals(MARKER_COMPONENT)) {
+            this.isComponent = true;
+            return true;
+        }
+        else if (tagName.equals(MARKER_EDIT)) {
+            this.isEdit = true;
+            return true;
+        }
+
+        return false;
+    }
+    public boolean isArea() {
+        return isArea;
+    }
+    public boolean isEdit() {
+        return isEdit;
     }
 
-    public LinkedList<AbstractBarWidget> getComponentWidgets() {
-        return componentWidgets;
+    public boolean isComponent() {
+        return isComponent;
+    }
+    public void setComment(CMSComment comment) {
+        this.comment = comment;
+    }
+
+    public CMSComment getComment() {
+        return comment;
+    }
+
+    public void setWidget(AbstractBarWidget widget) {
+        this.widget = widget;
+    }
+
+    public AbstractBarWidget getWidget() {
+        return widget;
+    }
+
+    /**
+     * Coordinate.
+     */
+    public class Coordinate {
+        private int left = 0;
+        private int top = 0;
+
+        public void setLeft(int left) {
+            this.left = left;
+        }
+        public int getLeft() {
+            return left;
+        }
+        public void setTop(int top) {
+            this.top = top;
+        }
+        public int getTop() {
+            return top;
+        }
+
     }
 }

@@ -37,12 +37,13 @@ import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
 
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.dom.CMSBoundary;
+import info.magnolia.templating.editor.client.dom.CMSComment;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Button;
 
 
@@ -61,36 +62,37 @@ public class AreaBarWidget extends AbstractBarWidget {
     private boolean optional = false;
     private boolean created = true;
 
-    public AreaBarWidget(final AbstractBarWidget parentBar, CMSBoundary boundary, final PageEditor pageEditor, final Element element) {
-        super(parentBar, boundary, element.getAttribute("label"));
+    public AreaBarWidget(CMSBoundary boundary, final PageEditor pageEditor) {
+        super(boundary);
 
-        String content = element.getAttribute("content");
+        CMSBoundary parentArea = boundary.getParentArea();
+        String content = boundary.getComment().getAttribute("content");
         int i = content.indexOf(':');
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
 
-        this.name = element.getAttribute("name");
-        this.type = element.getAttribute("type");
+        this.name = parentArea.getComment().getAttribute("name");
+        this.type = parentArea.getComment().getAttribute("type");
 
         GWT.log("Area ["+this.name+"] is of type " + this.type);
 
         if(AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
             this.availableComponents = "";
         } else {
-            this.availableComponents = element.getAttribute("availableComponents");
+            this.availableComponents = parentArea.getComment().getAttribute("availableComponents");
         }
 
-        this.dialog = element.getAttribute("dialog");
-        if (element.hasAttribute("showAddButton")) {
-            this.showAddButton = Boolean.parseBoolean(element.getAttribute("showAddButton"));
+        this.dialog = boundary.getComment().getAttribute("dialog");
+        if (parentArea.getComment().hasAttribute("showAddButton")) {
+            this.showAddButton = Boolean.parseBoolean(parentArea.getComment().getAttribute("showAddButton"));
         }
-        if (element.hasAttribute("optional")) {
-            this.optional = Boolean.parseBoolean(element.getAttribute("optional"));
-            this.created = Boolean.parseBoolean(element.getAttribute("created"));
+        if (parentArea.getComment().hasAttribute("optional")) {
+            this.optional = Boolean.parseBoolean(parentArea.getComment().getAttribute("optional"));
+            this.created = Boolean.parseBoolean(parentArea.getComment().getAttribute("created"));
         }
 
 
-        createButtons(pageEditor, element);
+        createButtons(pageEditor, boundary.getComment());
         if (hasControls) {
             setClassName("mgnlAreaEditBar");
         }
@@ -103,12 +105,18 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         if (getBoundary() != null) {
 
-            for (CMSBoundary boundary : getBoundary().getDescendants()) {
-                for (AbstractBarWidget widget : boundary.getAreaWidgets()) {
-                    widget.addStyleName("selected");
+            CMSBoundary parentBoundary = getBoundary().getParentBoundary();
+            if (parentBoundary != null) {
+                for (CMSBoundary boundary : parentBoundary.getDescendants()) {
+                    if (boundary.getWidget() != null) {
+                        boundary.getWidget().addStyleName("selected");
+                    }
                 }
-                for (AbstractBarWidget widget : boundary.getComponentWidgets()) {
-                    widget.addStyleName("selected");
+            }
+            if (getBoundary().getParentArea() != null) {
+                Element element = getBoundary().getParentArea().getFirstElement();
+                if (element != null) {
+                    element.addClassName("mgnlSelected");
                 }
             }
         }
@@ -118,16 +126,23 @@ public class AreaBarWidget extends AbstractBarWidget {
 
     @Override
     protected void deSelect() {
-        if (this.getBoundary() != null) {
+        if (getBoundary() != null) {
 
-            for (CMSBoundary boundary : getBoundary().getDescendants()) {
-                for (AbstractBarWidget widget : boundary.getAreaWidgets()) {
-                    widget.removeStyleName("selected");
-                }
-                for (AbstractBarWidget widget : boundary.getComponentWidgets()) {
-                    widget.removeStyleName("selected");
+            CMSBoundary parentBoundary = getBoundary().getParentBoundary();
+            if (parentBoundary != null) {
+                for (CMSBoundary boundary : parentBoundary.getDescendants()) {
+                    if (boundary.getWidget() != null) {
+                        boundary.getWidget().removeStyleName("selected");
+                    }
                 }
             }
+            if (getBoundary().getParentArea() != null) {
+                Element element = getBoundary().getParentArea().getFirstElement();
+                if (element != null) {
+                    element.removeClassName("mgnlSelected");
+                }
+            }
+
         }
         super.deSelect();
     }
@@ -139,7 +154,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         return type;
     }
 
-    private void createButtons(final PageEditor pageEditor, final Element element) {
+    private void createButtons(final PageEditor pageEditor, final CMSComment comment) {
         if(this.optional) {
             if(!this.created) {
                 Button createButton = new Button(getDictionary().get("buttons.createarea.js"));
@@ -152,7 +167,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 addButton(createButton, Float.RIGHT);
 
             } else {
-                createEditAndAddComponentButtons(pageEditor, element);
+                createEditAndAddComponentButtons(pageEditor, comment);
 
                 Button removeButton = new Button(getDictionary().get("buttons.removearea.js"));
                 removeButton.addClickHandler(new ClickHandler() {
@@ -165,12 +180,12 @@ public class AreaBarWidget extends AbstractBarWidget {
                 addButton(removeButton, Float.RIGHT);
             }
         } else {
-            createEditAndAddComponentButtons(pageEditor, element);
+            createEditAndAddComponentButtons(pageEditor, comment);
         }
     }
 
-    private void createEditAndAddComponentButtons(final PageEditor pageEditor, final Element element) {
-        if (!AreaDefinition.TYPE_NO_COMPONENT.equals(type) && element.hasAttribute("dialog")) {
+    private void createEditAndAddComponentButtons(final PageEditor pageEditor, final CMSComment comment) {
+        if (comment.hasAttribute("dialog")) {
             Button editButton = new Button(getDictionary().get("buttons.editarea.js"));
             editButton.addClickHandler(new ClickHandler() {
                 @Override

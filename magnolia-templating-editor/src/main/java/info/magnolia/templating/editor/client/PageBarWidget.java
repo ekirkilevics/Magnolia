@@ -35,9 +35,9 @@ package info.magnolia.templating.editor.client;
 
 
 import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
+import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -56,15 +56,15 @@ public class PageBarWidget extends AbstractBarWidget {
     private String dialog;
     private boolean previewMode = false;
 
-    public PageBarWidget(final PageEditor pageEditor, final Element element) {
-        super(null, null, "");
+    public PageBarWidget(final PageEditor pageEditor, final CMSComment comment) {
+        super(null);
         this.pageEditor = pageEditor;
 
-        String content = element.getAttribute("content");
+        String content = comment.getAttribute("content");
         int i = content.indexOf(':');
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
-        this.dialog = element.getAttribute("dialog");
+        this.dialog = comment.getAttribute("dialog");
 
         if(LegacyJavascript.isPreviewMode()){
             createPreviewModeBar();

@@ -75,7 +75,7 @@ public class EditElement extends AbstractContentTemplatingElement {
         TemplateDefinition templateDefinition = getRequiredTemplateDefinition();
 
         MarkupHelper helper = new MarkupHelper(out);
-        helper.openTag(CMS_EDIT);
+        helper.openComment(CMS_EDIT);
 
         if(content != null) {
             helper.attribute("content", getNodePath(content));
@@ -99,12 +99,20 @@ public class EditElement extends AbstractContentTemplatingElement {
 
         helper.attribute("template", templateDefinition.getId());
 
-        helper.closeTag(CMS_EDIT);
+        helper.append(" -->\n");
 
     }
 
     private TemplateDefinition getRequiredTemplateDefinition() {
         return (TemplateDefinition) getRenderingContext().getRenderableDefinition();
+    }
+
+    @Override
+    public void end(Appendable out) throws IOException, RenderException {
+        if(isAdmin()) {
+            MarkupHelper helper = new MarkupHelper(out);
+            helper.closeComment(CMS_EDIT);
+        }
     }
 
     private String resolveDialog(TemplateDefinition component) {
