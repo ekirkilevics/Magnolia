@@ -70,21 +70,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Magnolia specific ACL provider. This code depends on JR specific API rather then on JCR API
- * @author had
- * @version $Id: $
- * @deprecated this class will change package as part of removal direct JR dependencies.
+ * Magnolia specific ACL provider. This code depends on JR specific API rather then on JCR API. That's why it'll be moved out from core (SCRUM-636).
+ *
+ * @version $Id$
  */
 // TODO: should extend just abstract control provider!!!
-@Deprecated
 public class MagnoliaAccessProvider extends CombinedProvider {
 
     /**
      * Permission based on user ACL for given workspace. Caches the result of resolving paths from ids, the caching
      * implementation based {@link org.apache.jackrabbit.core.security.authorization.principalbased.ACLProvider.CompiledPermissionImpl}.
      *
-     * @author had
-     * @version $Id: $
+     * @version $Id$
      */
     public class ACLBasedPermissions extends AbstractCompiledPermissions {
 
