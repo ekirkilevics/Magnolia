@@ -325,7 +325,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
             @Override
             public MgnlUser doExec(Session session) throws RepositoryException {
-                Node userNode = session.getNode("/").addNode(name,ItemType.USER.getSystemName());
+                Node userNode = session.getNode("/" + getRealmName()).addNode(name,ItemType.USER.getSystemName());
                 userNode.setProperty("name", name);
                 setPasswordProperty(userNode, pw);
                 userNode.setProperty("language", "en");
@@ -361,7 +361,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
             @Override
             public User doExec(Session session) throws RepositoryException {
-                Node userNode = session.getNode("/" + realmName + "/" + user.getName());
+                Node userNode = session.getNode("/" + getRealmName() + "/" + user.getName());
                 setPasswordProperty(userNode, newPassword);
 
                 session.save();
@@ -573,5 +573,4 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         super.add(user.getName(), groupName, NODE_GROUPS);
         return getUser(user.getName());
     }
-
 }
