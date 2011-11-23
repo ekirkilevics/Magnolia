@@ -110,7 +110,6 @@ public class PathMappedFlowCommand extends FlowCommand {
     @Override
     public void release() {
         super.release();
-        mappings = new ArrayList<Mapping>();
         repository = null;
         path = null;
     }
