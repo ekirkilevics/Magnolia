@@ -70,4 +70,9 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
     public TemplateDefinition getDefinition() throws RegistrationException {
         return templateDefinition;
     }
+
+    @Override
+    public String toString() {
+        return "ConfiguredTemplateDefinitionProvider [id=" + id + ", templateDefinition=" + templateDefinition + "]";
+    }
 }

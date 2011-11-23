@@ -91,19 +91,25 @@ public class TemplateDefinitionRegistry extends AbstractRegistry<TemplateDefinit
         return templateDefinition;
     }
 
+    /**
+     * @return all TemplateDefinitions - in case of errors it'll just deliver the ones that are properly registerd and logs error's for the others.
+     */
     public Collection<TemplateDefinition> getTemplateDefinitions() {
-        Collection<TemplateDefinition> templateDefinitions = new ArrayList<TemplateDefinition>();
-        Map<String, TemplateDefinitionProvider> providers = getProviders();
+        final Collection<TemplateDefinition> templateDefinitions = new ArrayList<TemplateDefinition>();
+        final Map<String, TemplateDefinitionProvider> providers = getProviders();
         synchronized (providers) {
             for (Map.Entry<String, TemplateDefinitionProvider> entry : providers.entrySet()) {
-                String id = entry.getKey();
-                TemplateDefinitionProvider provider = entry.getValue();
+                final String id = entry.getKey();
+                final TemplateDefinitionProvider provider = entry.getValue();
                 try {
-                    TemplateDefinition templateDefinition = provider.getDefinition();
-                    templateDefinition.setId(id);
-                    templateDefinitions.add(templateDefinition);
+                    final TemplateDefinition templateDefinition = provider.getDefinition();
+                    if (templateDefinition == null) {
+                        log.error("Provider's TemplateDefinition is null: " + provider);
+                    } else {
+                        templateDefinition.setId(id);
+                        templateDefinitions.add(templateDefinition);
+                    }
                 } catch (RegistrationException e) {
-                    // one failing provider is no reason to not show any templates
                     log.error("Failed to read template definition from " + provider + ".", e);
                 }
             }

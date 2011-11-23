@@ -73,6 +73,10 @@ public class TemplateDefinitionRegistryTest {
         public TemplateDefinition getDefinition() throws RegistrationException {
             return templateDefinition;
         }
+        @Override
+        public String toString() {
+            return "SimpleTemplateDefinitionProvider [id=" + id + ", templateDefinition=" + templateDefinition + "]";
+        }
     }
 
     @Test
@@ -89,6 +93,20 @@ public class TemplateDefinitionRegistryTest {
         assertSame(definition, registry.getTemplateDefinition("foobar"));
         assertEquals(1, registry.getTemplateDefinitions().size());
         assertSame(definition, registry.getTemplateDefinitions().iterator().next());
+    }
+
+    @Test
+    public void testGetTemplateDefinitionsWithProviderReturningNullDefinition() {
+        // GIVEN
+        final TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry(null);
+        registry.register(new SimpleTemplateDefinitionProvider("returnsNullTemplateDefinition", null));
+
+        // WHEN
+        final Collection<TemplateDefinition> definitions = registry.getTemplateDefinitions();
+
+        // THEN
+        // make sure getTemplateDefinitions doesn't throw an exception but delivers all "valid" TemplateDefinitions - none in that case
+        assertTrue(definitions.isEmpty());
     }
 
     @Test(expected = RegistrationException.class)
