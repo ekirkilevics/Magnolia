@@ -34,11 +34,14 @@
 package info.magnolia.context;
 
 import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
 
 import java.util.Map;
+
+import javax.jcr.LoginException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 
 /**
@@ -81,12 +84,9 @@ public class ContextDecorator extends AbstractContext {
         return this.ctx.getAttributes(scope);
     }
 
-    /**
-     * Delegates call to the original context.
-     */
     @Override
-    public HierarchyManager getHierarchyManager(String workspaceId) {
-        return this.ctx.getHierarchyManager(workspaceId);
+    public Session getJCRSession(String workspaceName) throws LoginException, RepositoryException {
+        return this.ctx.getJCRSession(workspaceName);
     }
 
     /**
