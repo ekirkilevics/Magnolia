@@ -34,7 +34,7 @@ button.mgnlControlButton {
     line-height: 10px; /*FF needs it*/
 }
 .mgnlRemoveButton {
-    margin: 0px 20px 0px 0px !important;
+    margin: 1px 20px 0px 1px !important;
 }
 
 button.mgnlControlButton_PUSHED {
