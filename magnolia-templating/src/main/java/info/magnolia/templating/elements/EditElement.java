@@ -34,6 +34,8 @@
 package info.magnolia.templating.elements;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
@@ -91,7 +93,11 @@ public class EditElement extends AbstractContentTemplatingElement {
             helper.attribute("name", templateDefinition.getName());
             helper.attribute("optional", "true");
         }
-        helper.attribute("label", templateDefinition.getTitle());
+        Messages messages = MessagesManager.getMessages(templateDefinition.getI18nBasename());
+        String label = templateDefinition.getTitle();
+
+        if (label != null && !label.isEmpty())
+            helper.attribute("label", messages.get(label));
 
         helper.attribute("format", format);
         String dialog = resolveDialog(templateDefinition);

@@ -54,6 +54,10 @@ public class AreaBarWidget extends AbstractBarWidget {
 
     private String workspace;
     private String path;
+
+    private String areaWorkspace;
+    private String areaPath;
+
     private String name;
     private String availableComponents;
     private String type;
@@ -65,30 +69,35 @@ public class AreaBarWidget extends AbstractBarWidget {
     public AreaBarWidget(CMSBoundary boundary, final PageEditor pageEditor) {
         super(boundary);
 
-        CMSBoundary parentArea = boundary.getParentArea();
         String content = boundary.getComment().getAttribute("content");
         int i = content.indexOf(':');
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
 
-        this.name = parentArea.getComment().getAttribute("name");
-        this.type = parentArea.getComment().getAttribute("type");
+        CMSBoundary area = boundary.getParentArea();
+        String areaContent = area.getComment().getAttribute("content");
+        i = areaContent.indexOf(':');
+        this.areaWorkspace = areaContent.substring(0, i);
+        this.areaPath = areaContent.substring(i + 1);
+
+        this.name = area.getComment().getAttribute("name");
+        this.type = area.getComment().getAttribute("type");
 
         GWT.log("Area ["+this.name+"] is of type " + this.type);
 
         if(AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
             this.availableComponents = "";
         } else {
-            this.availableComponents = parentArea.getComment().getAttribute("availableComponents");
+            this.availableComponents = area.getComment().getAttribute("availableComponents");
         }
 
         this.dialog = boundary.getComment().getAttribute("dialog");
-        if (parentArea.getComment().hasAttribute("showAddButton")) {
-            this.showAddButton = Boolean.parseBoolean(parentArea.getComment().getAttribute("showAddButton"));
+        if (area.getComment().hasAttribute("showAddButton")) {
+            this.showAddButton = Boolean.parseBoolean(area.getComment().getAttribute("showAddButton"));
         }
-        if (parentArea.getComment().hasAttribute("optional")) {
-            this.optional = Boolean.parseBoolean(parentArea.getComment().getAttribute("optional"));
-            this.created = Boolean.parseBoolean(parentArea.getComment().getAttribute("created"));
+        if (area.getComment().hasAttribute("optional")) {
+            this.optional = Boolean.parseBoolean(area.getComment().getAttribute("optional"));
+            this.created = Boolean.parseBoolean(area.getComment().getAttribute("created"));
         }
 
 
@@ -190,7 +199,7 @@ public class AreaBarWidget extends AbstractBarWidget {
             editButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    pageEditor.openDialog(dialog, workspace, path, null, name);
+                    pageEditor.openDialog(dialog, workspace, path, null, null);
                 }
             });
             addButton(editButton, Float.RIGHT);
@@ -202,7 +211,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 @Override
                 public void onClick(ClickEvent event) {
                     if (!AreaDefinition.TYPE_NO_COMPONENT.equals(type)) {
-                        pageEditor.addComponent(workspace, path, name, null, availableComponents);
+                        pageEditor.addComponent(areaWorkspace, areaPath, name, null, availableComponents);
                     }
                 }
             });
