@@ -34,7 +34,7 @@
 package info.magnolia.templating.elements;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -58,6 +58,7 @@ import info.magnolia.test.mock.MockUtil;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.util.Locale;
 
 import org.junit.After;
 import org.junit.Before;
@@ -84,6 +85,7 @@ public class EditElementTest {
         aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
         aggregationState.setCurrentContent(hm.getContent("/foo/bar/baz/paragraphs/01"));
         final WebContext ctx = mock(WebContext.class);
+        when(ctx.getLocale()).thenReturn(Locale.US);
         MgnlContext.setInstance(ctx);
 
         final ServerConfiguration serverCfg = new ServerConfiguration();
@@ -127,7 +129,7 @@ public class EditElementTest {
 
         marker.begin(out);
 
-        assertEquals("<!-- cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" format=\"bar\" dialog=\"testDialog\" template=\"testParagraph0\" -->\n", out.toString());
+        assertEquals("<!-- cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"???Test Paragraph 0???\" format=\"bar\" dialog=\"testDialog\" template=\"testParagraph0\" -->\n", out.toString());
 
         // now with format & dialog
         marker.setFormat("testFormat");
@@ -136,7 +138,7 @@ public class EditElementTest {
         out = new StringWriter();
         marker.begin(out);
 
-        assertEquals("<!-- cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"Test Paragraph 0\" format=\"testFormat\" dialog=\"testDialog\" template=\"testParagraph0\" -->\n", out.toString());
+        assertEquals("<!-- cms:edit content=\"TestMockHierarchyManager:/foo/bar/baz/paragraphs/01\" label=\"???Test Paragraph 0???\" format=\"testFormat\" dialog=\"testDialog\" template=\"testParagraph0\" -->\n", out.toString());
 
     }
 
