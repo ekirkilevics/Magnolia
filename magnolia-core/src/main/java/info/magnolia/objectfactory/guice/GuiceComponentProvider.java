@@ -38,7 +38,11 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Injector;
+import com.google.inject.ProvisionException;
 import com.mycila.inject.jsr250.Jsr250Injector;
 import info.magnolia.objectfactory.CandidateParameterResolver;
 import info.magnolia.objectfactory.ComponentFactory;
@@ -56,6 +60,8 @@ import info.magnolia.objectfactory.ParameterResolver;
  * @see GuiceComponentProviderBuilder
  */
 public class GuiceComponentProvider implements ComponentProvider {
+
+    private static Logger logger = LoggerFactory.getLogger(GuiceComponentProvider.class);
 
     @Inject
     private Jsr250Injector injector;
@@ -136,7 +142,11 @@ public class GuiceComponentProvider implements ComponentProvider {
     }
 
     public void destroy() {
-        injector.destroy();
+        try {
+            injector.destroy();
+        } catch (ProvisionException e) {
+            logger.error("Error destroying component provider: [" + e.getMessage() + "] ", e);
+        }
     }
 
     @Override

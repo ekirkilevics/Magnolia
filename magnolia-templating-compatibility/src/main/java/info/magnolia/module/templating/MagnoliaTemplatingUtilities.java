@@ -48,6 +48,7 @@ import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryConstants;
 
+import javax.inject.Inject;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -69,7 +70,12 @@ public class MagnoliaTemplatingUtilities {
 
     private static final Logger log = LoggerFactory.getLogger(MagnoliaTemplatingUtilities.class);
 
-    protected RenderingEngine renderingEngine = Components.getSingleton(RenderingEngine.class);
+    protected RenderingEngine renderingEngine;
+
+    @Inject
+    public MagnoliaTemplatingUtilities(RenderingEngine renderingEngine) {
+        this.renderingEngine = renderingEngine;
+    }
 
     public static MagnoliaTemplatingUtilities getInstance(){
         return Components.getSingleton(MagnoliaTemplatingUtilities.class);
