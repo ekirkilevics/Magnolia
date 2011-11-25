@@ -45,6 +45,8 @@ import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.proxy.Invoker;
 import org.apache.commons.proxy.factory.cglib.CglibProxyFactory;
 
+import net.sf.cglib.proxy.Enhancer;
+
 
 /**
  * Proxy-based bean merger.
@@ -55,13 +57,21 @@ public class ProxyBasedBeanMerger extends BeanMergerBase {
 
     @Override
     protected Object mergeBean(List sources) {
-        Set<Class< ? >> types = new HashSet<Class< ? >>();
+        Set<Class> types = new HashSet<Class>();
         Class< ? > mostSpecificAssignableClass = sources.get(0).getClass();
 
         for (Object source : sources) {
-            Collections.addAll(types, source.getClass().getInterfaces());
-            if (mostSpecificAssignableClass.isAssignableFrom(source.getClass())) {
-                mostSpecificAssignableClass = source.getClass();
+
+            // Skip up the class hierarchy to avoid proxying cglib proxy classes
+            Class clazz = source.getClass();
+            while (Enhancer.isEnhanced(clazz)) {
+                clazz = clazz.getSuperclass();
+            }
+
+            Collections.addAll(types, clazz.getInterfaces());
+
+            if (mostSpecificAssignableClass.isAssignableFrom(clazz)) {
+                mostSpecificAssignableClass = clazz;
             }
         }
         types.add(mostSpecificAssignableClass);
