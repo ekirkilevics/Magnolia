@@ -61,7 +61,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class TemplateColumn extends TreeColumn {
-	private static final Logger log = LoggerFactory.getLogger(TemplateColumn.class);
+    private static final Logger log = LoggerFactory.getLogger(TemplateColumn.class);
 
     private final TemplateDefinitionRegistry templateManager;
     Select templateSelect;
