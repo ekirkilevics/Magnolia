@@ -96,7 +96,7 @@ public interface InstallContext {
 
     Session getJCRSession(String workspaceName) throws RepositoryException;
 
-    Session getConfigJCRSession(String workspaceName) throws RepositoryException;
+    Session getConfigJCRSession() throws RepositoryException;
 
     /**
      * Log messages kept in the InstallContext.

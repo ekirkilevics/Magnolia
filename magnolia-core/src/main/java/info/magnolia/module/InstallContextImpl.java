@@ -167,7 +167,7 @@ public class InstallContextImpl implements InstallContext {
     }
 
     @Override
-    public Session getConfigJCRSession(String workspaceName) throws RepositoryException {
+    public Session getConfigJCRSession() throws RepositoryException {
         return getJCRSession(RepositoryConstants.CONFIG);
     }
 
