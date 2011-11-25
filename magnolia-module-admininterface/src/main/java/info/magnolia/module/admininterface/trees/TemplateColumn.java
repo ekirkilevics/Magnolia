@@ -34,11 +34,13 @@
 package info.magnolia.module.admininterface.trees;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
@@ -46,6 +48,7 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import java.util.Collection;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -86,7 +89,15 @@ public class TemplateColumn extends TreeColumn {
     @Override
     public String getHtml() {
         Content content = this.getWebsiteNode();
+        try {
+            if(MgnlNodeType.NT_FOLDER.equals(content.getNodeTypeName())) {
+                return "";
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException("Could not retrieve node type name for content " + content, e);
+        }
         String templateName = content.getMetaData().getTemplate();
+
         TemplateDefinition template = null;
         try {
             template = templateManager.get(templateName);
