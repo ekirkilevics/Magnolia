@@ -33,20 +33,25 @@
  */
 package info.magnolia.module.delta;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.cms.filters.FilterManager;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.InstallContext;
 
 /**
- * Orders a filter <strong>before</strong> a given set of other filters that must be <strong>after</strong> it. The
- * filter is placed directly before the first of the required filters. Does not take nested filter into account.
+ * Orders a filter <strong>before</strong> a given set of other filters. The filter is placed directly before the first
+ * of the other filters. The other filters can be required or optional, if a required filter isn't present this task
+ * will do nothing and report a warning. If all other filters are optional and none are present this task does nothing.
+ * Does not take nested filter into account.
  *
  * @version $Id$
  * @see FilterOrderingTask
@@ -54,45 +59,72 @@ import info.magnolia.module.InstallContext;
 public class OrderFilterBeforeTask extends AbstractRepositoryTask {
 
     private final String filterToBeOrderedName;
-    private final String[] requiredFiltersAfter;
+    private final List<String> requiredFilters;
+    private final List<String> optionalFilters;
 
-    public OrderFilterBeforeTask(String filterName, String[] requiredFiltersAfter) {
-        this(filterName, "Sets the new " + filterName + " in the proper place.", requiredFiltersAfter);
+    public OrderFilterBeforeTask(String filterName, String[] filtersAfter) {
+        this(filterName, filtersAfter, new String[] {});
+    }
+
+    public OrderFilterBeforeTask(String filterName, String[] filtersAfter, String[] optionalFiltersAfter) {
+        this(filterName, "Orders the " + filterName + " filter in the filter chain.", filtersAfter, optionalFiltersAfter);
     }
 
     public OrderFilterBeforeTask(String filterName, String description, String[] requiredFiltersAfter) {
+        this(filterName, description, requiredFiltersAfter, new String[] {});
+    }
+
+    public OrderFilterBeforeTask(String filterName, String description, String[] requiredFiltersAfter, String[] optionalFiltersAfter) {
         super("Setup " + filterName + " filter", description);
         this.filterToBeOrderedName = filterName;
-        this.requiredFiltersAfter = requiredFiltersAfter;
+        this.requiredFilters = new ArrayList<String>(Arrays.asList(requiredFiltersAfter));
+        this.optionalFilters = new ArrayList<String>(Arrays.asList(optionalFiltersAfter));
     }
 
     @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        final Node filtersNode = ctx.getConfigJCRSession().getNode(FilterManager.SERVER_FILTERS);
+        final Node filtersParent = ctx.getConfigJCRSession().getNode(FilterManager.SERVER_FILTERS);
 
-        if (!filtersNode.hasNode(filterToBeOrderedName)) {
+        if (!filtersParent.hasNode(filterToBeOrderedName)) {
             throw new TaskExecutionException("Filter with name " + filterToBeOrderedName + " can't be found.");
         }
 
-        Node firstRequiredFilter = findFirstChildNode(filtersNode, requiredFiltersAfter);
-
-        if (firstRequiredFilter == null) {
-            ctx.warn("Could not sort filter " + filterToBeOrderedName + ". It should be positioned before " + StringUtils.join(requiredFiltersAfter, ", "));
+        if (!requiredFilters.isEmpty() && !hasNodes(filtersParent, requiredFilters)) {
+            ctx.warn("Could not sort filter " + filterToBeOrderedName + ". It should be positioned before " + requiredFilters);
             return;
         }
 
-        NodeUtil.orderBefore(filtersNode.getNode(filterToBeOrderedName), firstRequiredFilter.getName());
+        Set<String> combinedFilterNames = new HashSet<String>();
+        combinedFilterNames.addAll(requiredFilters);
+        combinedFilterNames.addAll(optionalFilters);
+
+        orderBeforeSiblings(filtersParent.getNode(filterToBeOrderedName), combinedFilterNames);
     }
 
-    private Node findFirstChildNode(Node parentNode, String[] childNodeNames) throws RepositoryException {
+    private void orderBeforeSiblings(Node node, Set<String> siblingNames) throws RepositoryException {
+        Node firstMatch = getFirstChild(node.getParent(), siblingNames);
+        if (firstMatch != null) {
+            NodeUtil.orderBefore(node, firstMatch.getName());
+        }
+    }
 
+    private Node getFirstChild(Node parentNode, Collection<String> childNames) throws RepositoryException {
         NodeIterator nodes = parentNode.getNodes();
         while (nodes.hasNext()) {
             Node child = nodes.nextNode();
-            if (ArrayUtils.contains(childNodeNames, child.getName())) {
+            if (childNames.contains(child.getName())) {
                 return child;
             }
         }
         return null;
+    }
+
+    private boolean hasNodes(Node node, Collection<String> childNames) throws RepositoryException {
+        for (String childName : childNames) {
+            if (!node.hasNode(childName)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

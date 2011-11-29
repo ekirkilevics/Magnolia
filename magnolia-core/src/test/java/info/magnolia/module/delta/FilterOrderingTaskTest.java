@@ -36,23 +36,23 @@ package info.magnolia.module.delta;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import info.magnolia.module.InstallContext;
-import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Test case for {@link OrderFilterBeforeTask}.
+ * Test case for {@link FilterOrderingTask}.
  */
-public class OrderFilterBeforeTaskTest {
+public class FilterOrderingTaskTest {
 
-    private MockSession session;
+    private Session session;
     private InstallContext installContext;
 
     @Before
@@ -70,20 +70,27 @@ public class OrderFilterBeforeTaskTest {
 
     @Test(expected = TaskExecutionException.class)
     public void testFailWhenFilterDoesntExist() throws Exception {
-        OrderFilterBeforeTask task = new OrderFilterBeforeTask("nonExistingFilter", new String[]{"gzip"});
+        FilterOrderingTask task = new FilterOrderingTask("nonExistingFilter", new String[]{"gzip", ""});
         task.execute(installContext);
     }
 
     @Test
-    public void testOrderFilterBefore() throws Exception {
-        OrderFilterBeforeTask task = new OrderFilterBeforeTask("test", new String[]{"gzip"});
+    public void testOrderFilterAfter() throws Exception {
+        FilterOrderingTask task = new FilterOrderingTask("test", new String[]{"gzip"});
         task.execute(installContext);
-        assertNodeOrder(session.getNode("/server/filters"), new String[]{"context", "contentType", "test", "gzip", "cache"});
+        assertNodeOrder(session.getNode("/server/filters"), new String[]{"context", "contentType", "gzip", "test", "cache"});
     }
 
     @Test
-    public void testDoesNothingWhenRequiredFilterMissing() throws Exception {
-        OrderFilterBeforeTask task = new OrderFilterBeforeTask("test", new String[]{"missing"});
+    public void testOrderFilterAfterLast() throws Exception {
+        FilterOrderingTask task = new FilterOrderingTask("cache", new String[]{"test"});
+        task.execute(installContext);
+        assertNodeOrder(session.getNode("/server/filters"), new String[]{"context", "contentType", "gzip", "test", "cache"});
+    }
+
+    @Test
+    public void testDoesNothingIfRequiredFilterMissing() throws Exception {
+        FilterOrderingTask task = new FilterOrderingTask("gzip", new String[]{"cache", "missing"});
         task.execute(installContext);
         assertNodeOrder(session.getNode("/server/filters"), new String[]{"context", "contentType", "gzip", "cache", "test"});
     }
