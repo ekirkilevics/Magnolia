@@ -35,6 +35,10 @@ package info.magnolia.templating.editor.client.dom;
 
 import java.util.HashMap;
 
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
+
+
 /**
 * CMSComment Constructor.
 *
@@ -71,13 +75,12 @@ public class CMSComment {
 
 
         if (this.tagName.startsWith("cms:")) {
-
+            String[] keyValue;
             this.attributes = new HashMap<String, String>();
-            for (String attribute : attributeString.split(" ")) {
-                if (attribute.contains("=")) {
-                    String[] keyValue = attribute.split("=");
-                    this.attributes.put(keyValue[0], keyValue[1].replace("\"", ""));
-                }
+            RegExp regExp = RegExp.compile("(\\S+=[\"'][^\"]*[\"'])", "g");
+            for (MatchResult matcher = regExp.exec(attributeString); matcher != null; matcher = regExp.exec(attributeString)) {
+                keyValue = matcher.getGroup(0).split("=");
+                this.attributes.put(keyValue[0], keyValue[1].replace("\"", ""));
             }
         }
         else {
