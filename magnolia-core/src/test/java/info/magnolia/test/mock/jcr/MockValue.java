@@ -161,7 +161,7 @@ public class MockValue implements Value {
 
     @Override
     public String toString() {
-        return "MockValue [type=" + type + ", value=" + value + "]";
+        return "MockValue [type=" + PropertyType.nameFromValue(type) + ", value=" + value + "]";
     }
 
     public Object getValue() {
