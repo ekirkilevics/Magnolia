@@ -307,11 +307,10 @@ public class PropertyUtil {
             if (node.hasProperty(name)) {
                 return node.getProperty(name).getDate();
             }
-            return defaultValue;
         } catch (RepositoryException e) {
             log.error("can't read value '" + name + "' of the Node '" + node.toString() + "' will return default value", e);
-            return defaultValue;
         }
+        return defaultValue;
     }
 
     /**
@@ -333,11 +332,10 @@ public class PropertyUtil {
             if (node.hasProperty(name)) {
                 return node.getProperty(name).getString();
             }
-            return defaultValue;
         } catch (RepositoryException e) {
             log.error("can't read value '" + name + "' of the Node '" + node.toString() + "' will return default value", e);
-            return defaultValue;
         }
+        return defaultValue;
     }
 
     /**
