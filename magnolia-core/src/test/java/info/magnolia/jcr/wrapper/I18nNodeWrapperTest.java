@@ -130,11 +130,9 @@ public class I18nNodeWrapperTest extends MgnlTestCase {
         //GIVEN
         final Node root = new MockNode();
         root.addNode("bar");
-        assertFalse(root.getNode("bar") instanceof I18nNodeWrapper);
 
         //WHEN
         final I18nNodeWrapper wrappedRoot = new I18nNodeWrapper(root);
-        wrappedRoot.wrapNode(wrappedRoot.getNode("bar"));
 
         //THEN
         assertTrue(wrappedRoot.getNode("bar") instanceof I18nNodeWrapper);

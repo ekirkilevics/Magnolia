@@ -43,8 +43,7 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 /**
- * A NodeWrapper implementation which knows about I18nContentSupport.
- * @see I18nContentSupport
+ * A NodeWrapper implementation which knows about i18n support.
  *
  * @version $Id$
  *
