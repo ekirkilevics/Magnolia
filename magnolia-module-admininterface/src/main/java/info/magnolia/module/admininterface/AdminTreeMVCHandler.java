@@ -60,6 +60,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,7 +72,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * this class wrapes the tree control. The AdminInterfaceServlet instantiates a subclass. To build your own tree you
+ * This class wraps the tree control. The AdminInterfaceServlet instantiates a subclass. To build your own tree you
  * have to override the prepareTree() method
  * @author philipp
  * @author Fabrizio Giustina
@@ -565,7 +566,26 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
             Content parentPage = getHierarchyManager().getContent(parentPath);
             NodeData newNodeData = parentPage.createNodeData(newLabel);
             NodeData existingNodeData = getHierarchyManager().getNodeData(this.getPath());
-            newNodeData.setValue(existingNodeData.getString());
+
+            final int type = existingNodeData.getType();
+            switch(type) {
+                case PropertyType.STRING:
+                    newNodeData.setValue(existingNodeData.getString());
+                    break;
+                case PropertyType.BOOLEAN:
+                    newNodeData.setValue(existingNodeData.getBoolean());
+                    break;
+                case PropertyType.LONG:
+                    newNodeData.setValue(existingNodeData.getLong());
+                    break;
+                case PropertyType.DOUBLE:
+                    newNodeData.setValue(existingNodeData.getDouble());
+                    break;
+                default:
+                     log.warn("node type {} is not handled. Falling back to String type.", PropertyType.nameFromValue(type));
+                     newNodeData.setValue(existingNodeData.getString());
+            }
+
             existingNodeData.delete();
             dest = parentPath;
         }
@@ -635,7 +655,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
         return VIEW_VALUE;
     }
-    
+
     public String encodeHTML(String value){
         value = value.replace("<", "&lt;");
         value = value.replace(">", "&gt;");
