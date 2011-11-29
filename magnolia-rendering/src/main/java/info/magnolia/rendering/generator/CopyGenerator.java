@@ -37,7 +37,6 @@ import static info.magnolia.rendering.template.AutoGenerationConfiguration.NODE_
 import static info.magnolia.rendering.template.AutoGenerationConfiguration.TEMPLATE_ID;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
@@ -130,11 +129,11 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
                 }
                 newNode.getSession().save();
             } catch (AccessDeniedException e) {
-                throw new RuntimeRepositoryException("An error occurred while trying to create new node " + name, e);
+                throw new RenderException("An error occurred while trying to create new node " + name, e);
             } catch (PathNotFoundException e) {
-                throw new RuntimeRepositoryException("An error occurred while trying to create new node " + name, e);
+                throw new RenderException("An error occurred while trying to create new node " + name, e);
             } catch (RepositoryException e) {
-                throw new RuntimeRepositoryException("An error occurred while trying to create new node " + name, e);
+                throw new RenderException("An error occurred while trying to create new node " + name, e);
             }
         }
     }
