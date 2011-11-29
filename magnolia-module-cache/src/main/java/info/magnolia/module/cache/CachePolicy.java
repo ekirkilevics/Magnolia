@@ -39,7 +39,7 @@ import info.magnolia.cms.core.AggregationState;
  * The CachePolicy determines is a requested page should be cached,
  * retrieved from the cache or not cached at all.
  * It is called for every request and should thus also take care of
- * any expiration policy - i.e if the page should be recached.
+ * any expiration policy - i.e if the page should be re-cached.
  *
  * The CacheFilter (or any other client component) can determine its
  * behaviour based on the return CachePolicyResult, which holds both
@@ -77,7 +77,7 @@ public interface CachePolicy {
     Object[] retrieveCacheKeys(final String uuid, final String repository);
 
     /**
-     * Presists mapping between uuid and cache key in case the given cache policy implementation cares about such details.
+     * Persists mapping between uuid and cache key in case the given cache policy implementation cares about such details.
      */
     void persistCacheKey(String repo, String uuid, Object key);
 

@@ -59,7 +59,7 @@ public class DelegatingBlobCachedEntry extends ContentCachedEntry {
     private static Logger log = LoggerFactory.getLogger(DelegatingBlobCachedEntry.class);
 
 
-    private static final String CONTENT_FILE_ATTIBUTE = DelegatingBlobCachedEntry.class.getName() + ".contentFile";
+    private static final String CONTENT_FILE_ATTRIBUTE = DelegatingBlobCachedEntry.class.getName() + ".contentFile";
 
     private long contentLength;
 
@@ -103,11 +103,11 @@ public class DelegatingBlobCachedEntry extends ContentCachedEntry {
     }
 
     private File getContentFileBoundToTheRequest(HttpServletRequest request) {
-        return (File) request.getAttribute(CONTENT_FILE_ATTIBUTE);
+        return (File) request.getAttribute(CONTENT_FILE_ATTRIBUTE);
     }
 
     public void bindContentFileToCurrentRequest(HttpServletRequest request, File contentFile){
-        request.setAttribute(DelegatingBlobCachedEntry.CONTENT_FILE_ATTIBUTE, contentFile);
+        request.setAttribute(DelegatingBlobCachedEntry.CONTENT_FILE_ATTRIBUTE, contentFile);
     }
 
 }

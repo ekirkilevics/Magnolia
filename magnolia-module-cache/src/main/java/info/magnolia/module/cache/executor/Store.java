@@ -74,7 +74,7 @@ public class Store extends AbstractExecutor {
 
         final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, CacheResponseWrapper.DEFAULT_THRESHOLD, false);
 
-        // setting Last-Modified to when this resource was stored in the cache. This value might get overriden by further filters or servlets.
+        // setting Last-Modified to when this resource was stored in the cache. This value might get overridden by further filters or servlets.
         final long cacheStorageDate = System.currentTimeMillis();
         responseWrapper.setDateHeader("Last-Modified", cacheStorageDate);
         chain.doFilter(request, responseWrapper);

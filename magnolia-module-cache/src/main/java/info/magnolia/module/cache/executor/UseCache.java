@@ -69,7 +69,7 @@ public class UseCache extends AbstractExecutor {
             if (!ifModifiedSince(request, page.getLastModificationTime())) {
                 if (response.isCommitted()) {
                     // this should not happen ... if it does, log it and _serve_the_data_ otherwise we will confuse client
-                    log.warn("Unable to change status on already commited response {}.", response.getClass().getName());
+                    log.warn("Unable to change status on already committed response {}.", response.getClass().getName());
                 } else {
                     response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                     return;
