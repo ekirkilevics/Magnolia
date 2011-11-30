@@ -33,7 +33,8 @@
  */
 package info.magnolia.cms.core;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 
@@ -57,12 +58,24 @@ public class PathTest {
     /**
      * Test method for {@link info.magnolia.cms.core.Path#isAbsolute(java.lang.String)}.
      */
-@Test
+    @Test
     public void testIsAbsolute() {
         assertTrue(Path.isAbsolute("/test"));
         assertTrue(Path.isAbsolute("d:/test"));
         assertTrue(Path.isAbsolute(File.separator + "test"));
         assertFalse(Path.isAbsolute("test"));
+    }
+
+    @Test
+    public void testIsCharValid() throws Exception{
+        assertTrue(Path.isCharValid('.', null));
+        assertFalse(Path.isCharValid(32, null)); // whitespace
+        assertFalse(Path.isCharValid('[', null));
+        assertFalse(Path.isCharValid(']', null));
+        assertFalse(Path.isCharValid('*', null));
+        assertFalse(Path.isCharValid('"', null));
+        assertFalse(Path.isCharValid('\'', null));
+        assertFalse(Path.isCharValid(':', null));
     }
 
 }

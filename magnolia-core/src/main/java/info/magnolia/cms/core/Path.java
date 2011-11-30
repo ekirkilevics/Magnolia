@@ -261,6 +261,10 @@ public final class Path {
      */
     public static boolean isCharValid(int charCode, String charset)
     {
+        //TODO fgrilli: for the time being we allow dots (.) in JR local names but the rules have actually changed in JR 2.0 and other chars could be allowed
+        //(see http://www.day.com/specs/jcr/2.0/3_Repository_Model.html paragraph 2.2 and org.apache.jackrabbit.util.XMLChar.isValid()) so this method should be refactored accordingly.
+        //Also, now that we're on java 6 and JR 2.0 should the check for the charset be dropped?
+
         // http://www.ietf.org/rfc/rfc1738.txt
         // safe = "$" | "-" | "_" | "." | "+"
         // extra = "!" | "*" | "'" | "(" | ")" | ","
@@ -277,7 +281,6 @@ public final class Path {
                 && charCode != ']'
                 && charCode != '*'
                 && charCode != '"'
-                && charCode != '.'
                 && charCode != ':'
                 && charCode != 92
                 && charCode != 39
@@ -302,6 +305,7 @@ public final class Path {
                     || ((charCode >= 65) && (charCode <= 90))
                     || ((charCode >= 97) && (charCode <= 122))
                     || charCode == 45
+                    || charCode == 46
                     || charCode == 95)
             {
                 return true;
