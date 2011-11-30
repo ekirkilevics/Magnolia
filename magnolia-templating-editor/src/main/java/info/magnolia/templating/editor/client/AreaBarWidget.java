@@ -70,13 +70,17 @@ public class AreaBarWidget extends AbstractBarWidget {
         super(boundary);
 
         String content = boundary.getComment().getAttribute("content");
-        int i = content.indexOf(':');
-        this.workspace = content.substring(0, i);
-        this.path = content.substring(i + 1);
+        if (content != null) {
+            int i = content.indexOf(':');
+
+            this.workspace = content.substring(0, i);
+            this.path = content.substring(i + 1);
+           }
+
 
         CMSBoundary area = boundary.getParentArea();
         String areaContent = area.getComment().getAttribute("content");
-        i = areaContent.indexOf(':');
+        int i = areaContent.indexOf(':');
         this.areaWorkspace = areaContent.substring(0, i);
         this.areaPath = areaContent.substring(i + 1);
 
@@ -106,8 +110,9 @@ public class AreaBarWidget extends AbstractBarWidget {
             setClassName("mgnlAreaEditBar");
         }
         else {
-            setClassName("mgnlAreaBar");
+            this.setVisible(false);
         }
+
     }
     @Override
     protected void select() {
@@ -166,11 +171,11 @@ public class AreaBarWidget extends AbstractBarWidget {
     private void createButtons(final PageEditor pageEditor, final CMSComment comment) {
         if(this.optional) {
             if(!this.created) {
-                Button createButton = new Button(getDictionary().get("buttons.createarea.js"));
+                Button createButton = new Button(getDictionary().get("buttons.create.js"));
                 createButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
-                        pageEditor.createComponent(workspace, path, name, "mgnl:area");
+                        pageEditor.createComponent(areaWorkspace, areaPath, name, "mgnl:area");
                     }
                 });
                 addButton(createButton, Float.RIGHT);
@@ -178,11 +183,11 @@ public class AreaBarWidget extends AbstractBarWidget {
             } else {
                 createEditAndAddComponentButtons(pageEditor, comment);
 
-                Button removeButton = new Button(getDictionary().get("buttons.removearea.js"));
+                Button removeButton = new Button(getDictionary().get("buttons.remove.js"));
                 removeButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
-                        pageEditor.deleteComponent(path + "/" + name);
+                        pageEditor.deleteComponent(path);
                     }
                 });
                 removeButton.addStyleName("mgnlRemoveButton");
@@ -195,7 +200,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
     private void createEditAndAddComponentButtons(final PageEditor pageEditor, final CMSComment comment) {
         if (comment.hasAttribute("dialog")) {
-            Button editButton = new Button(getDictionary().get("buttons.editarea.js"));
+            Button editButton = new Button(getDictionary().get("buttons.edit.js"));
             editButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -206,7 +211,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         }
 
         if (this.showAddButton) {
-            Button addButton = new Button(getDictionary().get("buttons.new.js"));
+            Button addButton = new Button(getDictionary().get("buttons.add.js"));
             addButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
