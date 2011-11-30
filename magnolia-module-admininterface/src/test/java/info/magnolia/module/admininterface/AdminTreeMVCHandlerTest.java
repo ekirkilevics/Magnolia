@@ -44,8 +44,7 @@ import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.admininterface.commands.BaseActivationCommand;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockMetaData;
+import info.magnolia.test.mock.jcr.MockNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +143,7 @@ public class AdminTreeMVCHandlerTest {
     @Test
     public void testCopy() throws Exception {
         final boolean unactivated[] = new boolean[1];
-        MetaData meta = new MockMetaData(new MockContent("blah")) {
+        MetaData meta = new MetaData(new MockNode("blah")) {
             @Override
             public void setUnActivated() throws AccessDeniedException {
                 unactivated[0] = true;
@@ -172,14 +171,14 @@ public class AdminTreeMVCHandlerTest {
     @Test
     public void testDeepCopy() throws Exception {
         final boolean unactivated[] = new boolean[1];
-        MetaData meta = new MockMetaData(new MockContent("blah")) {
+        MetaData meta = new MetaData(new MockNode("blah")) {
             @Override
             public void setUnActivated() throws AccessDeniedException {
                 unactivated[0] = true;
             }
         };
         Content child = createStrictMock(Content.class);
-        MetaData childMeta = new MockMetaData(new MockContent("blah")) {
+        MetaData childMeta = new MetaData(new MockNode("blah")) {
             @Override
             public void setUnActivated() throws AccessDeniedException {
                 unactivated[0] = true;
