@@ -124,13 +124,13 @@ public class MockContent extends DefaultContent {
     }
 
     @Override
-    public MockMetaData getMetaData() {
+    public MetaData getMetaData() {
         try {
             if(!hasContent(MetaData.DEFAULT_META_NODE)){
                 createContent(MetaData.DEFAULT_META_NODE, ItemType.NT_METADATA);
             }
 
-            return new MockMetaData((MockContent) getContent(MetaData.DEFAULT_META_NODE));
+            return new MetaData(getJCRNode());
         } catch (RepositoryException e) {
             throw new RuntimeException("Can't create/read the meta data node.", e);
         }
@@ -222,7 +222,7 @@ public class MockContent extends DefaultContent {
         ((MockNode)getJCRNode()).setName(name);
     }
 
-    public MockMetaData createMetaData() {
+    public MetaData createMetaData() {
         addContent(new MockContent("MetaData"));
         return getMetaData();
     }

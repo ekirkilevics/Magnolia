@@ -38,6 +38,7 @@ import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.User;
@@ -51,7 +52,6 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockAggregationState;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockMetaData;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.model.Color;
 import info.magnolia.test.model.Pair;
@@ -226,7 +226,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     @Test
     public void testCanRenderMetaData() throws TemplateException, IOException, AccessDeniedException {
         final MockContent f = new MockContent("foo");
-        final MockMetaData md = f.createMetaData();
+        final MetaData md = f.createMetaData();
         md.setAuthorId("greg");
         md.setActivated();
         md.setTitle("my test page");
@@ -242,7 +242,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     @Test
     public void testMetaDataIsOneOfTheChildrenRetrievedByTheChildrenBuiltIn() throws TemplateException, IOException, AccessDeniedException {
         final MockContent f = new MockContent("foo");
-        final MockMetaData md = f.createMetaData();
+        final MetaData md = f.createMetaData();
         md.setAuthorId("greg");
         md.setActivated();
         md.setTitle("my test page");
