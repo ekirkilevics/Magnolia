@@ -34,7 +34,7 @@
 package info.magnolia.cms.core;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 
@@ -75,6 +75,46 @@ public class PathTest {
         assertFalse(Path.isCharValid('"', null));
         assertFalse(Path.isCharValid('\'', null));
         assertFalse(Path.isCharValid(':', null));
+    }
+
+    @Test
+    public void testGetValidatedLabel() throws Exception {
+        //plain chars tests
+        assertEquals("f",Path.getValidatedLabel("f", null));
+        assertEquals("fo",Path.getValidatedLabel("fo", null));
+        assertEquals("foo",Path.getValidatedLabel("foo", null));
+
+        //dot tests
+        assertEquals("foo.bar",Path.getValidatedLabel("foo.bar", null));
+        //local names beginning with dot are not allowed
+        assertEquals("-foo",Path.getValidatedLabel(".foo", null));
+
+        //invalid chars tests
+        assertEquals("f-oo",Path.getValidatedLabel("f$oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f-oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f*oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f[oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f]oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f;oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f:oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f\"oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f'oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f#oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f!oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f+oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f?oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f/oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f%oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f oo", null));
+
+        //(alpha)numeric chars tests
+        assertEquals("0",Path.getValidatedLabel("0", null));
+        assertEquals("0foo",Path.getValidatedLabel("0foo", null));
+        assertEquals("123",Path.getValidatedLabel("123", null));
+        assertEquals("foo0",Path.getValidatedLabel("foo0", null));
+
+        //uppercase test
+        assertEquals("FOO",Path.getValidatedLabel("FOO", null));
     }
 
 }

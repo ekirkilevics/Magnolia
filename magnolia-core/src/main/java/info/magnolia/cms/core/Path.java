@@ -222,18 +222,30 @@ public final class Path {
 
     /**
      * If charset eq to UTF-8 replaces these characters:
-     * jackrabbit not allowed 32: [ ] 91: [[] 93: []] 42: [*] 34: ["] 46: [.] 58 [:] 92: [\] 39 :[']
+     * jackrabbit not allowed 32: [ ] 91: [[] 93: []] 42: [*] 34: ["] 58 [:] 92: [\] 39 :[']
      * url not valid 59: [;] 47: [/] 63: [?] 43: [+] 37: [%] 33: [!] 35:[#] 94: [^]
      *
      * else replace illegal characters except [_] [0-9], [A-Z], [a-z], [-], [_].
      * @param label label to validate
      * @return validated label
      */
+    //TODO fgrilli: use regex?
     public static String getValidatedLabel(String label, String charset)
     {
+        if(StringUtils.isBlank(label)) {
+            throw new IllegalArgumentException("label cannot be null or empty");
+        }
         StringBuilder newLabel = new StringBuilder(label.length());
 
-        for (int i = 0; i < label.length(); i++)
+        //label cannot begin with . (dot)
+        int ch = label.charAt(0);
+        if(!isCharValid(ch, charset) ||  ch == 46) {
+            newLabel.append("-");
+        } else {
+            newLabel.append(label.charAt(0));
+        }
+
+        for (int i = 1; i < label.length(); i++)
         {
             int charCode = label.charAt(i);
             if (isCharValid(charCode, charset))

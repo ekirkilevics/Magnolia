@@ -40,6 +40,7 @@ import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +60,13 @@ import org.slf4j.LoggerFactory;
 public class RepositoryMappingFilter extends AbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(RepositoryMappingFilter.class);
 
+    private URI2RepositoryManager uri2RepositoryManager;
+
+    @Inject
+    public RepositoryMappingFilter(URI2RepositoryManager uri2RepositoryManager) {
+        this.uri2RepositoryManager = uri2RepositoryManager;
+    }
+
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String uri = MgnlContext.getAggregationState().getCurrentURI();
@@ -77,7 +85,7 @@ public class RepositoryMappingFilter extends AbstractMgnlFilter {
             selector = "";
         }
 
-        URI2RepositoryMapping mapping = URI2RepositoryManager.getInstance().getMapping(uri);
+        URI2RepositoryMapping mapping = uri2RepositoryManager.getMapping(uri);
 
         // remove prefix if any
         path = mapping.getHandle(path);
