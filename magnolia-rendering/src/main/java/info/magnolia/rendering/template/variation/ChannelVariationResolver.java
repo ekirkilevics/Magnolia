@@ -39,11 +39,11 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.rendering.template.RenderableDefinition;
 
 /**
- * Variation resolver that will use a variation in case there's one set in the AggregationState.
+ * Resolver that will use the channel set in the AggregationState.
  *
  * @version $Id$
  */
-public class TemplateVariationResolver implements RenderableVariationResolver {
+public class ChannelVariationResolver implements RenderableVariationResolver {
 
     @Override
     public RenderableDefinition resolveVariation(RenderableDefinition renderableDefinition) {
@@ -54,12 +54,12 @@ public class TemplateVariationResolver implements RenderableVariationResolver {
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
 
-        final String variationName = aggregationState.getRenderableVariation();
-        RenderableDefinition variation = renderableDefinition.getVariations().get(variationName);
-        if (variation == null) {
+        final String variationName = aggregationState.getChannel();
+        RenderableDefinition channel = renderableDefinition.getVariations().get(variationName);
+        if (channel == null) {
             return null;
         }
 
-        return BeanMergerUtil.merge(variation, renderableDefinition);
+        return BeanMergerUtil.merge(channel, renderableDefinition);
     }
 }

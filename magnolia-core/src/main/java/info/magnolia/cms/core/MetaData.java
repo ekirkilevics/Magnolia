@@ -164,7 +164,7 @@ public class MetaData {
      * @return String value of the requested metadata
      */
     public String getTitle() {
-        return getStringProperty(this.getInternalPropertyName(TITLE));
+        return getStringProperty(TITLE);
     }
 
     /**
@@ -172,7 +172,7 @@ public class MetaData {
      * @param value
      */
     public void setTitle(String value) throws AccessDeniedException {
-        setProperty(this.getInternalPropertyName(TITLE), value);
+        setProperty(TITLE, value);
     }
 
     /**
@@ -180,7 +180,7 @@ public class MetaData {
      */
     public void setCreationDate() throws AccessDeniedException {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
-        setProperty(this.getInternalPropertyName(CREATION_DATE), value);
+        setProperty(CREATION_DATE, value);
     }
 
     /**
@@ -188,21 +188,21 @@ public class MetaData {
      * @return Calendar
      */
     public Calendar getCreationDate() {
-        return this.getDateProperty(this.getInternalPropertyName(CREATION_DATE));
+        return this.getDateProperty(CREATION_DATE);
     }
 
     /**
      * Part of metadata, adds activated status of the current node.
      */
     public void setActivated() throws AccessDeniedException {
-        setProperty(this.getInternalPropertyName(ACTIVATED), true);
+        setProperty(ACTIVATED, true);
     }
 
     /**
      * Part of metadata, adds activated status of the current node.
      */
     public void setUnActivated() throws AccessDeniedException {
-        setProperty(this.getInternalPropertyName(ACTIVATED), false);
+        setProperty(ACTIVATED, false);
     }
 
     /**
@@ -210,7 +210,7 @@ public class MetaData {
      * @return Calendar
      */
     public boolean getIsActivated() {
-        return getBooleanProperty(this.getInternalPropertyName(ACTIVATED));
+        return getBooleanProperty(ACTIVATED);
     }
 
     /**
@@ -234,7 +234,7 @@ public class MetaData {
      */
     public void setLastActivationActionDate() throws AccessDeniedException {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
-        setProperty(this.getInternalPropertyName(LAST_ACTION), value);
+        setProperty(LAST_ACTION, value);
     }
 
     /**
@@ -242,7 +242,7 @@ public class MetaData {
      * @return Calendar
      */
     public Calendar getLastActionDate() {
-        return getDateProperty(this.getInternalPropertyName(LAST_ACTION));
+        return getDateProperty(LAST_ACTION);
     }
 
     /**
@@ -250,7 +250,7 @@ public class MetaData {
      */
     public void setModificationDate() throws AccessDeniedException {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
-        setProperty(this.getInternalPropertyName(LAST_MODIFIED), value);
+        setProperty(LAST_MODIFIED, value);
     }
 
     /**
@@ -258,7 +258,7 @@ public class MetaData {
      * @return Calendar when last modification date can't be found.
      */
     public Calendar getModificationDate() {
-        Calendar modDate = getDateProperty(this.getInternalPropertyName(LAST_MODIFIED));
+        Calendar modDate = getDateProperty(LAST_MODIFIED);
         if (modDate == null) {
             modDate = getCreationDate();
         }
@@ -270,15 +270,15 @@ public class MetaData {
      * @return String value of the requested metadata
      */
     public String getAuthorId() {
-        return getStringProperty(this.getInternalPropertyName(AUTHOR_ID));
+        return getStringProperty(AUTHOR_ID);
     }
 
     /**
      * Part of metadata, current logged-in author who did some action on this page.
      * @param value
      */
-    public void setAuthorId(String value) throws AccessDeniedException {
-        setProperty(this.getInternalPropertyName(AUTHOR_ID), value);
+    public void setAuthorId(String value) {
+        setProperty(AUTHOR_ID, value);
     }
 
     /**
@@ -286,15 +286,15 @@ public class MetaData {
      * @return String value of the requested metadata
      */
     public String getActivatorId() {
-        return getStringProperty(this.getInternalPropertyName(ACTIVATOR_ID));
+        return getStringProperty(ACTIVATOR_ID);
     }
 
     /**
      * Part of metadata, current logged-in author who last activated this page.
      * @param value
      */
-    public void setActivatorId(String value) throws AccessDeniedException {
-        setProperty(this.getInternalPropertyName(ACTIVATOR_ID), value);
+    public void setActivatorId(String value) {
+        setProperty(ACTIVATOR_ID, value);
     }
 
     /**
@@ -302,15 +302,15 @@ public class MetaData {
      * @return String value of the requested metadata
      */
     public String getTemplate() {
-        return getStringProperty(this.getInternalPropertyName(TEMPLATE));
+        return getStringProperty(TEMPLATE);
     }
 
     /**
      * Part of metadata, template which will be used to render content of this node.
      * @param value
      */
-    public void setTemplate(String value) throws AccessDeniedException {
-        setProperty(this.getInternalPropertyName(TEMPLATE), value);
+    public void setTemplate(String value) {
+        setProperty(TEMPLATE, value);
     }
 
     /**
@@ -319,28 +319,20 @@ public class MetaData {
      * @deprecated since 4.0 - not used - template type is determined by template definition
      */
     @Deprecated
-    public void setTemplateType(String value) throws AccessDeniedException {
-        setProperty(this.getInternalPropertyName(TEMPLATE_TYPE), value);
+    public void setTemplateType(String value) {
+        setProperty(TEMPLATE_TYPE, value);
     }
 
-    public void setProperty(String name, String value) throws AccessDeniedException {
-        name = this.getInternalPropertyName(name);
+    public void setProperty(String name, String value) {
+        final String propName = this.getInternalPropertyName(name);
         try {
-            this.node.getProperty(name).setValue(value);
-        }
-        catch (PathNotFoundException e) {
-            try {
-                this.node.setProperty(name, value);
-            }
-            catch (RepositoryException re) {
-                log.error(re.getMessage(), re);
-            }
+            this.node.setProperty(propName, value);
         }
         catch (RepositoryException re) {
-            throw new AccessDeniedException(re.getMessage(), re);
+            log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", propName);
         }
     }
 
@@ -522,19 +514,19 @@ public class MetaData {
      * @return the property value, never null
      */
     public String getStringProperty(String name) {
-        name = this.getInternalPropertyName(name);
+        final String propName = this.getInternalPropertyName(name);
         try {
-            final Property property = this.node.getProperty(name);
+            final Property property = this.node.getProperty(propName);
             return property.getString();
         }
         catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node);
+            log.debug("PathNotFoundException for property [{}] in node {}", propName, this.node);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot get property {}", name);
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot get property {}", propName);
         }
         return StringUtils.EMPTY;
     }

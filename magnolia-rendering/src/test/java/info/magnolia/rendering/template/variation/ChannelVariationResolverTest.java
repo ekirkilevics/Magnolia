@@ -49,11 +49,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
- * Test case for {@link ExtensionVariationResolver}.
- *
  * @version $Id$
  */
-public class TemplateVariationResolverTest extends AbstractMagnoliaTestCase {
+public class ChannelVariationResolverTest extends AbstractMagnoliaTestCase {
 
     private static final String TEST_TEMPLATE_VARIATION_NAME = "testTemplate";
 
@@ -87,8 +85,8 @@ public class TemplateVariationResolverTest extends AbstractMagnoliaTestCase {
     public void testChoosesTemplateVariationIfProperlySet() throws Exception {
         // GIVEN
         final MockWebContext mockContext = (MockWebContext) MockUtil.initMockContext();
-        mockContext.getAggregationState().setRenderableVariation(TEST_TEMPLATE_VARIATION_NAME);
-        final TemplateVariationResolver resolver = new TemplateVariationResolver();
+        mockContext.getAggregationState().setChannel(TEST_TEMPLATE_VARIATION_NAME);
+        final ChannelVariationResolver resolver = new ChannelVariationResolver();
 
         // WHEN
         RenderableDefinition result = resolver.resolveVariation(templateDefinition);
@@ -103,9 +101,9 @@ public class TemplateVariationResolverTest extends AbstractMagnoliaTestCase {
     public void testDoesNothingWhenVariationDoesntExist() throws Exception {
 
         MockWebContext mockContext = (MockWebContext) MockUtil.initMockContext();
-        mockContext.getAggregationState().setRenderableVariation("doesNotExist");
+        mockContext.getAggregationState().setChannel("doesNotExist");
 
-        final TemplateVariationResolver resolver = new TemplateVariationResolver();
+        final ChannelVariationResolver resolver = new ChannelVariationResolver();
         RenderableDefinition result = resolver.resolveVariation(templateDefinition);
 
         assertNull(result);
@@ -114,7 +112,7 @@ public class TemplateVariationResolverTest extends AbstractMagnoliaTestCase {
     @Test
     public void testDoesNothingWhenAggregationStateNotAvailable() throws Exception {
         // GIVEN
-        final TemplateVariationResolver resolver = new TemplateVariationResolver();
+        final ChannelVariationResolver resolver = new ChannelVariationResolver();
 
         // WHEN
         final RenderableDefinition result = resolver.resolveVariation(templateDefinition);

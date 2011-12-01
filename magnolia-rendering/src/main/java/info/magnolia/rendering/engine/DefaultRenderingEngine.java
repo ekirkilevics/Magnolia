@@ -96,14 +96,14 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
         AggregationState aggregationState = MgnlContext.getAggregationState();
 
-        String previousTemplateVariation = aggregationState.getRenderableVariation();
+        String previousTemplateVariation = aggregationState.getChannel();
         renderingContext.push(content, variation != null ? variation : definition, out);
         try {
-            aggregationState.setRenderableVariation(variation != null ? variation.getName() : null);
+            aggregationState.setChannel(variation != null ? variation.getName() : null);
             renderer.render(renderingContext, contextObjects);
         } finally {
             renderingContext.pop();
-            aggregationState.setRenderableVariation(previousTemplateVariation);
+            aggregationState.setChannel(previousTemplateVariation);
         }
     }
 

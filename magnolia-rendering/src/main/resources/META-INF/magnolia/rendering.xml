@@ -45,7 +45,7 @@
     </component>
     <component>
       <type>info.magnolia.rendering.template.variation.RenderableVariationResolver</type>
-      <implementation>info.magnolia.rendering.template.variation.TemplateVariationResolver</implementation>
+      <implementation>info.magnolia.rendering.template.variation.ChannelVariationResolver</implementation>
       <scope>singleton</scope>
     </component>
     <type-mapping>

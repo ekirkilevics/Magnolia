@@ -242,14 +242,14 @@ public class AggregationState {
     /**
      * Gets the name of the renderable variation in use.
      */
-    public String getRenderableVariation() {
+    public String getChannel() {
         return renderableVariation;
     }
 
     /**
      * Sets the name of the renderable variation in use.
      */
-    public void setRenderableVariation(String renderableVariation) {
+    public void setChannel(String renderableVariation) {
         this.renderableVariation = renderableVariation;
     }
 

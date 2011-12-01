@@ -64,7 +64,7 @@ public class MetaDataTest {
     }
 
     @Test
-    public void testSetPropertyWithString() throws RepositoryException{
+    public void testSetPropertyWithString() {
         // GIVEN
         final MetaData md = MetaDataUtil.getMetaData(root);
         final String value = "value";
