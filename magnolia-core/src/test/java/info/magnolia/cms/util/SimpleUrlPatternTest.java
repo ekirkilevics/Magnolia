@@ -204,5 +204,16 @@ public class SimpleUrlPatternTest {
         assertTrue(new SimpleUrlPattern("/*").match("/£"));
 
     }
+    /**
+     * Since 4.5 we allow dots in local names, except as the first char (for instance <code>foo.bar</code> is allowed, <code>.foo</code> is not)
+     */
+    @Test
+    public void testWildcardsWithUrlContainingDots() throws Exception {
+        SimpleUrlPattern sup = new SimpleUrlPattern("/*");
+        assertTrue(sup.match("/test/url.foo.html"));
+        assertTrue(sup.match("/test.foo/url.html"));
+
+        assertTrue(new SimpleUrlPattern("/**/*.html").match("/test.foo/dir.bar/dir.baz/url.html"));
+    }
 
 }
