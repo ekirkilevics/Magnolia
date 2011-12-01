@@ -34,18 +34,16 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Util to handler selectors. A selector is the part between the first dot and the extension of an URI.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class SelectorUtil {
     /**
      * <p>
      * get selector as requested from the URI. The selector is the part between the handle and the extension.
-     * selector("http://server/a.x.1.f.4.html") = "x.1.f.4"
+     * selector("http://server/a~x~1~f~4~html") = "~x~1~f~4~"
      * </p>
      * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      *
@@ -62,7 +60,7 @@ public class SelectorUtil {
      * @return the selector value
      */
     public static String getSelector(int index) {
-        String[] selectors = StringUtils.split(getSelector(), ".");
+        String[] selectors = MgnlContext.getAggregationState().getSelectors();
         if (selectors.length > index) {
             return selectors[index];
         }

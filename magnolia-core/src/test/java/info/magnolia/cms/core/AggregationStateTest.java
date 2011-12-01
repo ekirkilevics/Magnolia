@@ -56,7 +56,7 @@ public class AggregationStateTest {
         aggState.setCharacterEncoding("UTF-8");
 
         webCtx = createMock(WebContext.class);
-        expect(webCtx.getContextPath()).andReturn("/foo");
+        expect(webCtx.getContextPath()).andReturn("/foo").anyTimes();
         MgnlContext.setInstance(webCtx);
         replay(webCtx);
     }
@@ -77,6 +77,32 @@ public class AggregationStateTest {
     @Test
     public void testUriDecodingShouldReturnPassedURIDoesntContainCtxPath() {
         assertEquals("/pouet", aggState.stripContextPathIfExists("/pouet"));
+    }
+
+    @Test
+    public void testGetSelectors() throws Exception {
+        aggState.setSelector("");
+        assertEquals("", aggState.getSelector());
+        String[]selectors = aggState.getSelectors();
+        assertTrue(selectors.length == 0);
+
+        aggState.setSelector("~~");
+        assertEquals("~~", aggState.getSelector());
+        selectors = aggState.getSelectors();
+        assertTrue(selectors.length == 0);
+
+        aggState.setSelector("foo.baz");
+        assertEquals("foo.baz", aggState.getSelector());
+        selectors = aggState.getSelectors();
+        assertTrue(selectors.length == 1);
+        assertEquals("foo.baz", selectors[0]);
+
+        aggState.setSelector("foo~bar.baz");
+        assertEquals("foo~bar.baz", aggState.getSelector());
+        selectors = aggState.getSelectors();
+        assertTrue(selectors.length == 2);
+        assertEquals("foo", selectors[0]);
+        assertEquals("bar.baz", selectors[1]);
     }
 
 }

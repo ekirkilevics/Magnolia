@@ -53,6 +53,8 @@ public final class Path {
      */
     private static final String DEFAULT_UNTITLED_NODE_NAME = "untitled";
 
+    public static final String SELECTOR_DELIMITER = "~";
+
     /**
      * Utility class, don't instantiate.
      */

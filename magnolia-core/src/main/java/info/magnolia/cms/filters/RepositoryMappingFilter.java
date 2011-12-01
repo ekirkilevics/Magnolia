@@ -36,6 +36,7 @@ package info.magnolia.cms.filters;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.URI2RepositoryMapping;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -70,14 +71,14 @@ public class RepositoryMappingFilter extends AbstractMgnlFilter {
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String uri = MgnlContext.getAggregationState().getCurrentURI();
-        int firstTildePos = StringUtils.indexOf(uri, '~', StringUtils.lastIndexOf(uri, '/'));
+        int firstSelectorDelimiterPos = StringUtils.indexOf(uri, Path.SELECTOR_DELIMITER, StringUtils.lastIndexOf(uri, '/'));
         String path;
         // TODO Warning - this might change in the future - see MAGNOLIA-2343 for details.
         String selector;
-        if (firstTildePos > -1) {
-            int lastTildePos = StringUtils.lastIndexOf(uri, '~');
-            path = StringUtils.substring(uri, 0, firstTildePos);
-            selector = StringUtils.substring(uri, firstTildePos + 1, lastTildePos);
+        if (firstSelectorDelimiterPos > -1) {
+            int lastSelectorDelimiterPos = StringUtils.lastIndexOf(uri, Path.SELECTOR_DELIMITER);
+            path = StringUtils.substring(uri, 0, firstSelectorDelimiterPos);
+            selector = StringUtils.substring(uri, firstSelectorDelimiterPos + 1, lastSelectorDelimiterPos);
         }
         else {
             // no tilde (and no extension)

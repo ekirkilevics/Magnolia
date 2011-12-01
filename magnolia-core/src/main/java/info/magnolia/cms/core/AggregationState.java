@@ -62,6 +62,7 @@ public class AggregationState {
     private Content currentContent;
     private String repository;
     private String selector;
+    private String[] selectors = new String[0];
     private String templateName;
     private Locale locale;
     private boolean isPreviewMode;
@@ -202,6 +203,10 @@ public class AggregationState {
         catch (UnsupportedEncodingException e) {
             this.selector = selector;
         }
+
+        if(StringUtils.isNotEmpty(selector)) {
+            selectors = this.selector.split(Path.SELECTOR_DELIMITER);
+        }
     }
 
     public String getTemplateName() {
@@ -276,5 +281,15 @@ public class AggregationState {
         this.originalBrowserURI = null;
         this.originalBrowserURL = null;
         this.currentURI = null;
+    }
+    /**
+     * @return an array containing the selectors found in the URI. The array is empty if no selector is in the current aggregation state.
+     * Given a URL like this {@code http://www.magnolia-cms.com/node~value1~value2~.html?someparam=booo}, the entire selector is {@code ~value1~value2~}, whereas the
+     * single selectors are <code>value1</code> and <code>value2</code>. Selectors are delimited by {@link Path#SELECTOR_DELIMITER}.
+     * <p>
+     * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
+     */
+    public String[] getSelectors() {
+        return selectors;
     }
 }
