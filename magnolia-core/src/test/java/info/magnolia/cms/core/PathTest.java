@@ -89,9 +89,8 @@ public class PathTest {
         //local names beginning with dot are not allowed
         assertEquals("-foo",Path.getValidatedLabel(".foo", null));
 
-        //invalid chars tests
+        //invalid or special chars tests
         assertEquals("f-oo",Path.getValidatedLabel("f$oo", null));
-        assertEquals("f-oo",Path.getValidatedLabel("f-oo", null));
         assertEquals("f-oo",Path.getValidatedLabel("f*oo", null));
         assertEquals("f-oo",Path.getValidatedLabel("f[oo", null));
         assertEquals("f-oo",Path.getValidatedLabel("f]oo", null));
@@ -106,6 +105,8 @@ public class PathTest {
         assertEquals("f-oo",Path.getValidatedLabel("f/oo", null));
         assertEquals("f-oo",Path.getValidatedLabel("f%oo", null));
         assertEquals("f-oo",Path.getValidatedLabel("f oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f-oo", null));
+        assertEquals("f_oo",Path.getValidatedLabel("f_oo", null));
 
         //(alpha)numeric chars tests
         assertEquals("0",Path.getValidatedLabel("0", null));
