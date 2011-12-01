@@ -106,7 +106,7 @@ public class PathTest {
         assertEquals("f-oo",Path.getValidatedLabel("f?oo", null));
         assertEquals("f-oo",Path.getValidatedLabel("f/oo", null));
         assertEquals("f-oo",Path.getValidatedLabel("f%oo", null));
-        assertEquals("f-oo",Path.getValidatedLabel("f oo", null));
+        assertEquals("f-oo",Path.getValidatedLabel("f oo", null)); //if you can't see it, that's a space (ascii code 32)
         assertEquals("f-oo",Path.getValidatedLabel("f-oo", null));
         assertEquals("f_oo",Path.getValidatedLabel("f_oo", null));
 
