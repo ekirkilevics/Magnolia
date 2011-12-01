@@ -282,6 +282,7 @@ public final class Path {
                 && charCode != '*'
                 && charCode != '"'
                 && charCode != ':'
+                && charCode != '.'
                 && charCode != 92
                 && charCode != 39
                 && charCode != ';'
@@ -305,7 +306,6 @@ public final class Path {
                     || ((charCode >= 65) && (charCode <= 90))
                     || ((charCode >= 97) && (charCode <= 122))
                     || charCode == 45
-                    || charCode == 46
                     || charCode == 95)
             {
                 return true;
