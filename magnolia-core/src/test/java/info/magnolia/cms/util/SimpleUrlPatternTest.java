@@ -205,7 +205,7 @@ public class SimpleUrlPatternTest {
 
     }
     /**
-     * Since 4.5 we allow dots in local names, except as the first char (for instance <code>foo.bar</code> is allowed, <code>.foo</code> is not)
+     * Since 4.5 we allow dots in local names, except as the first char (for instance <code>foo.bar</code> is allowed, <code>.foo</code> is not).
      */
     @Test
     public void testWildcardsWithUrlContainingDots() throws Exception {
