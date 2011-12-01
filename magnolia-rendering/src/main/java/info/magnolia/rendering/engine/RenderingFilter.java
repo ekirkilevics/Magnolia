@@ -166,7 +166,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
             InputStream is = null;
             try {
                 Session session = MgnlContext.getJCRSession(aggregationState.getRepository());
-                is = getNodedataAstream(resourceHandle, session, response);
+                is = getNodedataAsStream(resourceHandle, session, response);
                 if (null != is) {
                     // don't reset any existing status code, see MAGNOLIA-2005
                     // response.setStatus(HttpServletResponse.SC_OK);
@@ -217,7 +217,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
         IOUtils.closeQuietly(os);
     }
 
-    private InputStream getNodedataAstream(String path, Session session, HttpServletResponse res) {
+    private InputStream getNodedataAsStream(String path, Session session, HttpServletResponse res) {
 
         log.debug("getNodedataAstream for path \"{}\"", path);
 
