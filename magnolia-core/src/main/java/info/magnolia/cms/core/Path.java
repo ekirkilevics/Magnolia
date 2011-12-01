@@ -45,7 +45,6 @@ import org.safehaus.uuid.UUIDGenerator;
 
 /**
  * Utility class to retrieve files or directory used by Magnolia. Examples: cache directory, tmp files, ..
- * @author Sameer Charles
  * @version 2.0 $Id$
  */
 public final class Path {
@@ -232,15 +231,14 @@ public final class Path {
      */
     public static String getValidatedLabel(String label, String charset)
     {
-        StringBuffer s = new StringBuffer(label);
-        StringBuffer newLabel = new StringBuffer();
+        StringBuilder newLabel = new StringBuilder(label.length());
 
-        for (int i = 0; i < s.length(); i++)
+        for (int i = 0; i < label.length(); i++)
         {
-            int charCode = s.charAt(i);
+            int charCode = label.charAt(i);
             if (isCharValid(charCode, charset))
             {
-                newLabel.append(s.charAt(i));
+                newLabel.append(label.charAt(i));
             }
             else
             {
@@ -261,7 +259,7 @@ public final class Path {
      */
     public static boolean isCharValid(int charCode, String charset)
     {
-        //TODO fgrilli: for the time being we allow dots (.) in JR local names but the rules have actually changed in JR 2.0 and other chars could be allowed
+        //TODO fgrilli: for the time being we allow dots (.) in JR local names but actually in JR 2.0 other chars could be allowed as well
         //(see http://www.day.com/specs/jcr/2.0/3_Repository_Model.html paragraph 2.2 and org.apache.jackrabbit.util.XMLChar.isValid()) so this method should be refactored accordingly.
         //Also, now that we're on java 6 and JR 2.0 should the check for the charset be dropped?
 
@@ -282,7 +280,6 @@ public final class Path {
                 && charCode != '*'
                 && charCode != '"'
                 && charCode != ':'
-                && charCode != '.'
                 && charCode != 92
                 && charCode != 39
                 && charCode != ';'
@@ -306,6 +303,7 @@ public final class Path {
                     || ((charCode >= 65) && (charCode <= 90))
                     || ((charCode >= 97) && (charCode <= 122))
                     || charCode == 45
+                    || charCode == 46
                     || charCode == 95)
             {
                 return true;

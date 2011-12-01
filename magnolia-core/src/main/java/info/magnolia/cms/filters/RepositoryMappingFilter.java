@@ -62,12 +62,12 @@ public class RepositoryMappingFilter extends AbstractMgnlFilter {
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String uri = MgnlContext.getAggregationState().getCurrentURI();
-        int firstTildePos = StringUtils.indexOf(uri, '.', StringUtils.lastIndexOf(uri, '/'));
+        int firstTildePos = StringUtils.indexOf(uri, '~', StringUtils.lastIndexOf(uri, '/'));
         String path;
         // TODO Warning - this might change in the future - see MAGNOLIA-2343 for details.
         String selector;
         if (firstTildePos > -1) {
-            int lastTildePos = StringUtils.lastIndexOf(uri, '.');
+            int lastTildePos = StringUtils.lastIndexOf(uri, '~');
             path = StringUtils.substring(uri, 0, firstTildePos);
             selector = StringUtils.substring(uri, firstTildePos + 1, lastTildePos);
         }
