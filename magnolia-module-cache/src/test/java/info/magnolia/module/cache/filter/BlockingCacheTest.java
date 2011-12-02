@@ -96,7 +96,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @version $Id$
+ * Blocking cache test.
+ *
  */
 public class BlockingCacheTest{
 
@@ -302,6 +303,10 @@ public class BlockingCacheTest{
         return CachePolicyResult.getCurrent();
     }
 
+    /**
+     * Producer interface.
+     *
+     */
     interface Producer{
         void produce(ServletRequest request, ServletResponse response) throws IOException;
     }

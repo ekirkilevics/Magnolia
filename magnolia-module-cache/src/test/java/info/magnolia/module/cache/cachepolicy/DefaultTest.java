@@ -51,7 +51,7 @@ import info.magnolia.module.cache.CachePolicy;
 import junit.framework.TestCase;
 
 /**
- * Test Default cache policy
+ * Test Default cache policy.
  * @author ochytil
  * @version $Id:$
  */
