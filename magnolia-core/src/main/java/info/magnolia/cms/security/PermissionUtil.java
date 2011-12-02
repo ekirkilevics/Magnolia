@@ -60,8 +60,6 @@ public class PermissionUtil {
 
     /**
      * Retrieves permissions for current user.
-     *
-     * @return
      */
     public static List<Permission> getPermissions(Subject subject, String name) {
         if (subject == null) {
@@ -177,7 +175,7 @@ public class PermissionUtil {
                 throw new AccessDeniedException("Not allowed to access " + path + " with permission " + action);
             }
         } catch (RepositoryException e) {
-            throw new AccessDeniedException("Exception occured while checking permissions for " + path + " with permission " + action, e);
+            throw new AccessDeniedException("Exception occurred while checking permissions for " + path + " with permission " + action, e);
         }
     }
 
