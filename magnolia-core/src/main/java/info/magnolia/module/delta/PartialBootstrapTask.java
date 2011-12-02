@@ -136,6 +136,7 @@ public class PartialBootstrapTask extends AbstractTask {
         String name = StringUtils.removeEnd(resourceName, ".xml");
 
         String repository = StringUtils.substringBefore(name, ".");
+        //TODO fgrilli: MAGNOLIA-2580 use info.magnolia.importexport.DataTransporter.reverseExportPath(String)
         String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), "."); //$NON-NLS-1$
         String nodeName = StringUtils.substringAfterLast(name, ".");
         String fullPath;

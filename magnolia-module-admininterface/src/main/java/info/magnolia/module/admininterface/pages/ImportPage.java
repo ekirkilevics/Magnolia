@@ -147,24 +147,24 @@ public class ImportPage extends ExportPage {
     public String importxml() throws Exception {
 
         if (log.isDebugEnabled()) {
-            log.debug("Import request received."); //$NON-NLS-1$
+            log.debug("Import request received.");
         }
 
         if (StringUtils.isEmpty(mgnlRepository)) {
             mgnlRepository = RepositoryConstants.WEBSITE;
         }
         if (StringUtils.isEmpty(mgnlPath)) {
-            mgnlPath = "/"; //$NON-NLS-1$
+            mgnlPath = "/";
         }
-        
+
         if (!checkPermissions(request, mgnlRepository, mgnlPath, Permission.WRITE)) {
-        	
+
             AlertUtil.setMessage("Write permission needed for export. User not allowed to WRITE path [" + mgnlPath + "]");
 
             throw new ServletException(new AccessDeniedException(
-                "Write permission needed for import. User not allowed to WRITE path [" //$NON-NLS-1$
+                "Write permission needed for import. User not allowed to WRITE path ["
                     + mgnlPath
-                    + "]")); //$NON-NLS-1$
+                    + "]"));
         }
 
         DataTransporter.importDocument(
@@ -176,13 +176,13 @@ public class ImportPage extends ExportPage {
             true,
             true);
 
-        log.info("Import done"); //$NON-NLS-1$
-        
+        log.info("Import done");
+
         mgnlFileImport.getFile().delete();
 
         if (StringUtils.isNotBlank(mgnlRedirect)) {
             if (log.isInfoEnabled()) {
-                log.info(MessageFormat.format("Redirecting to [{0}]", //$NON-NLS-1$
+                log.info(MessageFormat.format("Redirecting to [{0}]",
                     new Object[]{mgnlRedirect}));
             }
             response.sendRedirect(mgnlRedirect);

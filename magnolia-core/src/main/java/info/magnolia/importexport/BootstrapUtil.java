@@ -80,6 +80,7 @@ public class BootstrapUtil {
             String name = StringUtils.removeEnd(StringUtils.substringAfterLast(resourceName, "/"), ".xml");
 
             String repository = StringUtils.substringBefore(name, ".");
+            //TODO fgrilli: MAGNOLIA-2580 use info.magnolia.importexport.DataTransporter.reverseExportPath(String)
             String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), ".");
             String nodeName = StringUtils.substringAfterLast(name, ".");
             String fullPath;
@@ -133,7 +134,7 @@ public class BootstrapUtil {
     }
 
     public static void export(Content content, File directory) throws IOException, RepositoryException{
-        String fileName = content.getWorkspace().getName() + content.getHandle().replace("/", ".") + ".xml";
+        String fileName = content.getWorkspace().getName() + DataTransporter.createExportPath(content.getHandle()) + ".xml";
         File file = new File(directory, fileName);
         FileOutputStream out = new FileOutputStream(file);
         try{

@@ -41,6 +41,7 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.importexport.filters.ImportXmlRootFilter;
 import info.magnolia.importexport.filters.MagnoliaV2Filter;
 import info.magnolia.importexport.filters.MetadataUuidFilter;
@@ -60,6 +61,8 @@ import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -98,6 +101,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @version $Id$
  */
 public class DataTransporter {
+
+    private static final Pattern DOT_NAME_PATTERN = Pattern.compile("[\\w\\-]*\\.*[\\w\\-]*");
 
     private static final int INDENT_VALUE = 2;
 
@@ -546,20 +551,13 @@ public class DataTransporter {
             {
                 return URLEncoder.encode(path, enc);
             }
-            String[] tokens = StringUtils.split(path, separator);
-            for (int j = 0; j < tokens.length; j++)
-            {
-                if (j == 0 && StringUtils.startsWith(path, separator))
-                {
-                    pathEncoded.append(separator);
+            for(int i=0; i < path.length(); i++) {
+                String ch = String.valueOf(path.charAt(i));
+                if(separator.equals(ch)) {
+                    pathEncoded.append(ch);
+                } else {
+                    pathEncoded.append(URLEncoder.encode(ch, enc));
                 }
-                pathEncoded.append(URLEncoder.encode(tokens[j], enc));
-
-                if ((j == tokens.length - 1 && StringUtils.endsWith(path, separator)) || j < tokens.length - 1)
-                {
-                    pathEncoded.append(separator);
-                }
-
             }
         }
         catch (UnsupportedEncodingException e)
@@ -589,5 +587,49 @@ public class DataTransporter {
         return pathEncoded;
     }
 
+    /**
+     * Prior to 4.5 Magnolia used to produce export xml filenames where the / (slash) separating sub nodes was replaced by a dot.
+     * Since 4.5 Magnolia enables dots in path names, therefore dots which are part of the node name have to be escaped by doubling them.
+     * I.e. given a path like this <code>/foo/bar.baz/test../dir/baz..bar</code>, this method will produce
+     * <code>.foo.bar..baz.test.....dir.baz....bar</code>.
+     */
+    public static String createExportPath(String path) {
+        //TODO if someone is smarter than me (not an impossible thing) and can do this with one single elegant regex, please do it.
+        String newPath = path.replace(".", "..");
+        newPath = newPath.replace("/", ".");
+        return newPath;
+    }
+    /**
+     * The opposite of {@link #createExportPath(String)}.
+     * I.e. given a path like this <code>.foo.bar..baz.test.....dir.baz....bar</code>, this method will produce <code>/foo/bar.baz/test../dir/baz..bar</code>.
+     */
+    public static String reverseExportPath(String exportPath) {
+        if(".".equals(exportPath)) {
+            return "/";
+        }
+
+        //TODO I have a feeling there's a simpler way to achieve our goal.
+        Matcher matcher = DOT_NAME_PATTERN.matcher(exportPath);
+
+        StringBuilder reversed = new StringBuilder(exportPath.length());
+
+        while(matcher.find()){
+            String group = matcher.group();
+            int dotsNumber = StringUtils.countMatches(group, ".");
+            if(dotsNumber == 1) {
+                reversed.append(group.replaceFirst(".", "/"));
+            } else {
+                 String dots = StringUtils.substringBeforeLast(group, ".").replace("..", ".");
+                 String name = StringUtils.substringAfterLast(group, ".");
+                 reversed.append(dots);
+                 //if number is odd, the last dot has to be replaced with a slash
+                 if(dotsNumber % 2 != 0) {
+                     reversed.append("/");
+                 }
+                 reversed.append(name);
+            }
+        }
+        return reversed.toString();
+    }
 
 }

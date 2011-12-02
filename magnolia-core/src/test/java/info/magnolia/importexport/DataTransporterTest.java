@@ -137,5 +137,37 @@ public class DataTransporterTest extends XMLTestCase {
         String pathName = "www.testme.ch/test/me&now";
         String encodedPath = DataTransporter.encodePath(pathName, DataTransporter.DOT, DataTransporter.UTF8);
         assertEquals("www.testme.ch%2Ftest%2Fme%26now", encodedPath);
+
+        //test with dots in node names
+        pathName = "www.testme.ch/test.baz/foo..bar/me&now";
+        encodedPath = DataTransporter.encodePath(pathName, DataTransporter.DOT, DataTransporter.UTF8);
+        assertEquals("www.testme.ch%2Ftest.baz%2Ffoo..bar%2Fme%26now", encodedPath);
+    }
+
+    @Test
+    public void testCreateExportPath() throws Exception {
+         String path = DataTransporter.createExportPath("/foo/bar.baz/test../dir/baz..bar");
+         assertEquals(".foo.bar..baz.test.....dir.baz....bar", path);
+
+         path = DataTransporter.createExportPath("/");
+         assertEquals(".", path);
+    }
+
+    @Test
+    public void testReverseExportPath() throws Exception {
+        String reversedPath = DataTransporter.reverseExportPath(".foo.bar..baz.test.....dir.baz....bar");
+        assertEquals("/foo/bar.baz/test../dir/baz..bar", reversedPath);
+
+        reversedPath = DataTransporter.reverseExportPath(".foo-bar..baz.test");
+        assertEquals("/foo-bar.baz/test", reversedPath);
+
+        reversedPath = DataTransporter.reverseExportPath(".123..baz.test");
+        assertEquals("/123.baz/test", reversedPath);
+
+        reversedPath = DataTransporter.reverseExportPath("baz");
+        assertEquals("baz", reversedPath);
+
+        reversedPath = DataTransporter.reverseExportPath(".");
+        assertEquals("/", reversedPath);
     }
 }

@@ -232,7 +232,7 @@ public class ExportPage extends TemplatedMVCHandler {
             mgnlRepository = RepositoryConstants.WEBSITE;
         }
         if (StringUtils.isEmpty(mgnlPath)) {
-            mgnlPath = "/"; //$NON-NLS-1$
+            mgnlPath = "/";
         }
         if (StringUtils.isEmpty(ext)) {
             ext = DataTransporter.XML;
@@ -243,9 +243,9 @@ public class ExportPage extends TemplatedMVCHandler {
             AlertUtil.setMessage("Write permission needed for export. User not allowed to WRITE path [" + mgnlPath + "]");
 
             throw new ServletException(new AccessDeniedException(
-                "Write permission needed for export. User not allowed to WRITE path [" //$NON-NLS-1$
+                "Write permission needed for export. User not allowed to WRITE path ["
                     + mgnlPath
-                    + "]")); //$NON-NLS-1$
+                    + "]"));
 
         }
         HierarchyManager hr = MgnlContext.getHierarchyManager(mgnlRepository);
@@ -260,17 +260,17 @@ public class ExportPage extends TemplatedMVCHandler {
         }
         else {
             response.setContentType(MIME_TEXT_XML);
-            response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
+            response.setCharacterEncoding("UTF-8");
         }
 
-        String pathName = StringUtils.replace(mgnlPath, DataTransporter.SLASH, DataTransporter.DOT); //$NON-NLS-1$ //$NON-NLS-2$
+        String pathName = DataTransporter.createExportPath(mgnlPath);
         pathName = DataTransporter.encodePath(pathName, DataTransporter.DOT, DataTransporter.UTF8);
-        if (DataTransporter.DOT.equals(pathName)) { //$NON-NLS-1$
+        if (DataTransporter.DOT.equals(pathName)) {
             // root node
             pathName = StringUtils.EMPTY;
         }
 
-        response.setHeader("content-disposition", "attachment; filename=" + mgnlRepository + pathName + ext); //$NON-NLS-1$ //$NON-NLS-2$
+        response.setHeader("content-disposition", "attachment; filename=" + mgnlRepository + pathName + ext);
         OutputStream baseOutputStream = response.getOutputStream();
 
         try {
@@ -285,7 +285,7 @@ public class ExportPage extends TemplatedMVCHandler {
         }
         catch (RuntimeException e) {
             response.setContentType("text/html; charset=UTF-8");
-            response.setHeader("content-disposition", "inline"); //$NON-NLS-1$ //$NON-NLS-2$
+            response.setHeader("content-disposition", "inline");
             throw e;
         }
 
