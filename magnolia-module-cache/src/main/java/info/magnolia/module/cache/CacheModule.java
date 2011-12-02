@@ -152,7 +152,6 @@ public class CacheModule implements ModuleLifecycle {
     @Override
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
         cacheMonitor.stop();
-        listeners.clear();
         for (CacheConfiguration cfg : configurations.values()) {
             final String name = cfg.getName();
             Cache cache = null;
