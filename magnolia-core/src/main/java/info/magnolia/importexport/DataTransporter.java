@@ -41,7 +41,6 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.importexport.filters.ImportXmlRootFilter;
 import info.magnolia.importexport.filters.MagnoliaV2Filter;
 import info.magnolia.importexport.filters.MetadataUuidFilter;
