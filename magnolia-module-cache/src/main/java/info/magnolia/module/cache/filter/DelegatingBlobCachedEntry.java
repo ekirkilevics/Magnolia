@@ -90,10 +90,13 @@ public class DelegatingBlobCachedEntry extends ContentCachedEntry {
         File contentFile = getContentFileBoundToTheRequest(request);
         if(contentFile != null){
             FileInputStream contentStream = FileUtils.openInputStream(contentFile);
-            IOUtils.copy(contentStream,response.getOutputStream());
-            IOUtils.closeQuietly(contentStream);
-            if(!contentFile.delete()){
-                log.error("Can't delete file: " + contentFile);
+            try{
+                IOUtils.copy(contentStream,response.getOutputStream());
+            }finally{
+                IOUtils.closeQuietly(contentStream);
+                if(!contentFile.delete()){
+                    log.error("Can't delete file: " + contentFile);
+                }
             }
         }
         else{

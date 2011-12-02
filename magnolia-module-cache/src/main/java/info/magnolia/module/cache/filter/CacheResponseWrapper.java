@@ -117,6 +117,10 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     public ServletOutputStream getOutputStream() throws IOException {
         return wrappedStream;
     }
+    
+    public ThresholdingOutputStream getThresholdingOutputStream() throws IOException {
+        return thresholdingOutputStream;
+    }
 
     @Override
     public PrintWriter getWriter() throws IOException {
@@ -351,12 +355,6 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         }
     }
 
-    public void release(){
-        if(isThresholdExceeded()){
-            getContentFile().delete();
-        }
-    }
-
     private final class ThresholdingCacheOutputStream extends ThresholdingOutputStream {
         OutputStream out = inMemoryBuffer;
 
@@ -377,6 +375,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
             }
             else{
                 contentFile = File.createTempFile("cacheStream", null, Path.getTempDirectory());
+                contentFile.deleteOnExit();
                 out = new FileOutputStream(contentFile);
             }
             out.write(getBufferedContent());

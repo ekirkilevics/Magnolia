@@ -147,6 +147,7 @@ public class Store extends AbstractExecutor {
             // TODO remove this once we use a blob store
             // the file will be deleted once served in this request
             ((DelegatingBlobCachedEntry)cacheEntry).bindContentFileToCurrentRequest(request, cachedResponse.getContentFile());
+            cachedResponse.getThresholdingOutputStream().close();
         }
 
         return cacheEntry;
