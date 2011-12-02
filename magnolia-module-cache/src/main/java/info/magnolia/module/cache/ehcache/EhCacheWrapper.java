@@ -109,6 +109,13 @@ public class EhCacheWrapper implements info.magnolia.module.cache.BlockingCache 
     }
 
     @Override
+    public void put(Object key, Object value, int timeToLiveInSeconds) {
+        final Element element = new Element(key, value);
+        element.setTimeToLive(timeToLiveInSeconds);
+        ehcache.put(element);
+    }
+
+    @Override
     public void remove(Object key) {
         ehcache.remove(key);
     }

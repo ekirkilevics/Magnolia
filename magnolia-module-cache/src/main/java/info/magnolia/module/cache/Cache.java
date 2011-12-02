@@ -45,6 +45,8 @@ public interface Cache {
 
     void put(Object key, Object value);
 
+    void put(Object key, Object value, int timeToLiveInSeconds);
+
     Object get(Object key);
 
     void remove(Object key);
