@@ -58,8 +58,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 import javax.jcr.RepositoryException;
 
@@ -174,11 +174,10 @@ public class MailUtil {
             else if (token.startsWith(MailConstants.PREFIX_ROLE)) {
                 final String roleName = StringUtils.removeStart(token, MailConstants.PREFIX_ROLE);
                 try {
-                    Collection users = getAllUserNodes();
-                    Iterator iter = users.iterator();
+                    Collection<User> users = getAllUserNodes(manager);
+                    Iterator<User> iter = users.iterator();
                     while(iter.hasNext()){
-                        Content userNode = ((Content) iter.next());
-                        User user = manager.getUser(userNode.getName());
+                        User user = iter.next();
                         if (user.getRoles().contains(roleName)){
                             ret.append(getUserMail(user));
                             ret.append("\n");
@@ -200,11 +199,10 @@ public class MailUtil {
     protected static void getGroupMembersMails(final UserManager manager, StringBuffer ret, final String groupName) {
         log.debug("group = {}", groupName);
         try {
-            Collection users = getAllUserNodes();
-            Iterator iter = users.iterator();
+            Collection<User> users = getAllUserNodes(manager);
+            Iterator<User> iter = users.iterator();
             while(iter.hasNext()){
-                Content userNode = ((Content) iter.next());
-                User user = manager.getUser(userNode.getName());
+                User user = iter.next();
                 if (user.getAllGroups().contains(groupName)) {
                     String mail = getUserMail(user);
                     log.debug("user {} will be notified using mail address {}.", user.getName(), mail);
@@ -222,15 +220,23 @@ public class MailUtil {
     }
 
     /**
-     * TODO use UserManager. Will be fixed with MAGNOLIA-1947 / MAGNOLIA-1948
-     * @return
+     * @deprecated use getAllUserNodes(UserManager manager) instead
      * @throws RepositoryException
      */
+    @Deprecated
     protected static Collection<Content> getAllUserNodes() throws RepositoryException {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.USERS);
         Collection<Content> users = hm.getContent(Realm.REALM_ADMIN.getName()).getChildren(ItemType.USER);
         users.addAll(hm.getContent(Realm.REALM_SYSTEM.getName()).getChildren(ItemType.USER));
         return users;
+    }
+
+    /**
+     * @return Collection<User>
+     * @throws RepositoryException
+     */
+    protected static Collection<User> getAllUserNodes(UserManager manager) throws RepositoryException{
+        return manager.getAllUsers();
     }
 
     protected static  String getUserMail(User user) {

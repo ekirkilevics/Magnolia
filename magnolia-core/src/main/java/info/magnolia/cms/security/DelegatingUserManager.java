@@ -35,6 +35,7 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.security.auth.ACL;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -114,16 +115,17 @@ public class DelegatingUserManager implements UserManager {
         });
     }
 
-    // TODO : this should maybe aggregate results, but ExternalUserManager throws an UnsupportedOperationException
-    // TODO : also not that this is seemingly never used (or maybe through reflection or other ide-search unfriendly mechanisms)
-    @Override
-    public Collection<User> getAllUsers() throws UnsupportedOperationException {
-        return delegateUntilSupported(new Op<Collection<User>>() {
-            @Override
-            public Collection<User> delegate(UserManager um) {
-                return um.getAllUsers();
+    public Collection<User> getAllUsers() throws UnsupportedOperationException{
+        Collection<User> users = new ArrayList<User>();
+        for (String realmName : delegates.keySet()) {
+            try{
+                UserManager userManager = delegates.get(realmName);
+                users.addAll(userManager.getAllUsers());
+            }catch (UnsupportedOperationException e){
+                // Skip to next user manager if current is not supporting getAllUsers() method
             }
-        });
+        }
+        return users;
     }
 
     @Override

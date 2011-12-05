@@ -51,6 +51,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -221,7 +222,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     /**
      * Helper method to find a user in a certain realm. Uses JCR Query.
-     * @deprecated since 4.5 use findUserNode(java.lang.String, java.lang.String, javax.jcr.Session) instead
+     * @deprecated since 4.5 use findPrincipalNode(java.lang.String, javax.jcr.Session) instead
      */
     @Deprecated
     protected Content findUserNode(String realm, String name) throws RepositoryException {
@@ -300,13 +301,8 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
             @Override
             public Collection<User> doExec(Session session) throws RepositoryException {
                 List<User> users = new ArrayList<User>();
-                for (NodeIterator iter = session.getNode("/" + realmName).getNodes(); iter.hasNext();) {
-                    Node node = iter.nextNode();
-                    if (!node.isNodeType(ItemType.USER.getSystemName())) {
-                        continue;
-                    }
-                    users.add(newUserInstance(node));
-                }
+                Node node = session.getNode("/" + realmName);
+                updateUserListWithAllChildren(node, users);
                 return users;
             }
 
@@ -316,6 +312,36 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
             }
 
         });
+    }
+
+    /**
+     * Updates collection with all users located under provided node.
+     * @throws RepositoryException
+     */
+    public void updateUserListWithAllChildren(Node node, Collection<User> users) throws RepositoryException{
+        NodeIterator nodesIter = node.getNodes();
+        Collection<Node> nodes = new HashSet<Node>();
+        Collection<Node> folders = new HashSet<Node>();
+        while(nodesIter.hasNext()){
+            Node newNode = (Node) nodesIter.next();
+            if(newNode.isNodeType(MgnlNodeType.USER)){
+                nodes.add(newNode);
+            }else if(newNode.isNodeType(MgnlNodeType.NT_FOLDER)){
+                folders.add(newNode);
+            }
+        }
+
+        if(!nodes.isEmpty()){
+            for (Node userNode : nodes) {
+                users.add(newUserInstance(userNode));
+            }
+        }
+        if(!folders.isEmpty()){
+            Iterator<Node> it = folders.iterator();
+            while(it.hasNext()){
+                updateUserListWithAllChildren(it.next(), users);
+            }
+        }
     }
 
     @Override

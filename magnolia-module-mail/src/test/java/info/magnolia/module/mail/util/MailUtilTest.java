@@ -33,79 +33,62 @@
  */
 package info.magnolia.module.mail.util;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.Group;
-import info.magnolia.cms.security.GroupManager;
+import info.magnolia.cms.security.MgnlGroupManager;
+import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.SecuritySupportImpl;
-import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.UserManager;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.MockUtil;
 
-import java.util.Arrays;
-import java.util.Collections;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
-import org.junit.Test;
+import junit.framework.TestCase;
 
 /**
  * Test for mail utils.
- *
- * @author had
- *
+ * 
+ * @author ochytil
+ * 
  */
-public class MailUtilTest {
+public class MailUtilTest extends TestCase {
 
-    @Test
-    public void testGetGroupMembersMails() throws Exception {
+    private MgnlUserManager userManager;
+    private StringBuffer mailList;
 
-        UserManager manager = createMock(UserManager.class);
-        StringBuffer ret = new StringBuffer();
-        MockContent peteNode = new MockContent("pete");
-        peteNode.createContent("groups").setNodeData("0", "no-mail-group-uuid");
-        peteNode.setNodeData("email", "test@pete.com");
-        SystemContext ctx = createMock(SystemContext.class);
-        MgnlContext.setInstance(ctx);
-        ComponentsTestUtil.setInstance(SystemContext.class, ctx);
-        HierarchyManager usersHM = createMock(HierarchyManager.class);
-        Content admin = createMock(Content.class);
-        Content system = createMock(Content.class);
-        User pete = createMock(User.class);
-        expect(pete.getAllGroups()).andReturn(Arrays.asList(new String[] { "noMailGroup", "test" }));
-        HierarchyManager groupsHM = createMock(HierarchyManager.class);
-        MockContent noMailContent = new MockContent("noMailGroup");
-        noMailContent.createContent("groups").setNodeData("0", "test-group-uuid");
-        MockContent testContent = new MockContent("test");
-        GroupManager groupMan = createMock(GroupManager.class);
-        ComponentsTestUtil.setInstance(GroupManager.class, groupMan);
-        Group noMailGroup = createMock(Group.class);
-        Group testGroup = createMock(Group.class);
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        final SecuritySupportImpl sec = new SecuritySupportImpl();
+        sec.setGroupManager(new MgnlGroupManager());
+        ComponentsTestUtil.setInstance(SecuritySupport.class, sec);
+        mailList = new StringBuffer();
+        MockUtil.initMockContext();
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USERS, getClass().getResourceAsStream("/sample-users.properties"));
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USER_GROUPS, getClass().getResourceAsStream("/sample-usergroups.properties"));
+        userManager = new MgnlUserManager() {
+            {
+                setRealmName("test");
+            }
 
-        ComponentsTestUtil.setImplementation(SecuritySupport.class, SecuritySupportImpl.class);
-        ((SecuritySupportImpl) SecuritySupport.Factory.getInstance()).setGroupManager(groupMan);
-
-        expect(ctx.getHierarchyManager("users")).andReturn(usersHM);
-        expect(usersHM.getContent("admin")).andReturn(admin);
-        expect(admin.getChildren(ItemType.USER)).andReturn(Arrays.asList(new Content[] { peteNode }));
-        expect(usersHM.getContent("system")).andReturn(system);
-        expect(system.getChildren(ItemType.USER)).andReturn(Collections.EMPTY_LIST);
-
-        expect(manager.getUser("pete")).andReturn(pete);
-
-        expect(pete.getProperty("email")).andReturn("test@pete.com");
-        expect(pete.getName()).andReturn("pete");
-
-        Object[] mocks = new Object[] { manager, ctx, usersHM, admin, system, pete, groupsHM, groupMan, noMailGroup, testGroup };
-        replay(mocks);
-        MailUtil.getGroupMembersMails(manager, ret, "test");
-        assertEquals("test@pete.com\n", ret.toString());
-        verify(mocks);
+            protected Node findPrincipalNode(String name, Session session) throws RepositoryException {
+                return session.getNode("/" + getRealmName() + "/" + name);
+            }
+        };
     }
 
+    public void testGetGroupMembersMails(){
+        MailUtil.getGroupMembersMails(userManager, mailList, "groupA");
+        assertEquals("kvido@test.info\npupak@test.info\n", mailList.toString());
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        ComponentsTestUtil.clear();
+        super.tearDown();
+    }
 }
