@@ -108,26 +108,26 @@ public class ResponseExpirationCalculatorTest {
     public void testDetectsExpiresAsLong() throws Exception {
 
         ResponseExpirationCalculator negotiator = new ResponseExpirationCalculator();
-        negotiator.addHeader("Expires", System.currentTimeMillis() + 1000L);
-        assertTrue(negotiator.getMaxAgeInSeconds() > 100);
+        negotiator.addHeader("Expires", System.currentTimeMillis() + 10000L);
+        assertTrue(negotiator.getMaxAgeInSeconds() > 1);
     }
 
     @Test
     public void testDetectsExpiresAsInt() throws Exception {
 
         ResponseExpirationCalculator negotiator = new ResponseExpirationCalculator();
-        negotiator.addHeader("Expires", (int) (System.currentTimeMillis() + 1000));
-        assertTrue(negotiator.getMaxAgeInSeconds() > 100);
+        negotiator.addHeader("Expires", (int) (System.currentTimeMillis()/1000) + 10);
+        assertTrue(negotiator.getMaxAgeInSeconds() > 1);
     }
 
     @Test
     public void testDetectsExpiresAsString() throws Exception {
 
-        String expiresString = DateUtil.formatDate(new Date(System.currentTimeMillis() + 1000), DateUtil.PATTERN_RFC1123);
+        String expiresString = DateUtil.formatDate(new Date(System.currentTimeMillis() + 10000), DateUtil.PATTERN_RFC1123);
 
         ResponseExpirationCalculator negotiator = new ResponseExpirationCalculator();
         negotiator.addHeader("Expires", expiresString);
-        assertTrue(negotiator.getMaxAgeInSeconds() > 100);
+        assertTrue(negotiator.getMaxAgeInSeconds() > 1);
     }
 
     @Test

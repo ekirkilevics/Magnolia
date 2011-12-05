@@ -206,12 +206,16 @@ public class ResponseExpirationCalculator {
                 Object value = header.getValue();
 
                 if (value instanceof Integer) {
-                    long l = (Integer) value - System.currentTimeMillis();
-                    return (int) l;
+                    int n = (int) ((Integer) value - System.currentTimeMillis());
+                    if (maxAge == -1 || n < maxAge) {
+                        maxAge = n;
+                    }
                 }
                 if (value instanceof Long) {
-                    long l = (Long) value - System.currentTimeMillis();
-                    return (int) l;
+                    int n = (int) (((Long) value - System.currentTimeMillis()) / 1000L);
+                    if (maxAge == -1 || n < maxAge) {
+                        maxAge = n;
+                    }
                 }
                 if (value instanceof String) {
                     String s = (String) value;
