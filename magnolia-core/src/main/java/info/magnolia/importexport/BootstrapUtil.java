@@ -174,7 +174,7 @@ public class BootstrapUtil {
 
     /**
      * I.e. given a resource path like <code>/mgnl-bootstrap/foo/config.server.i18n.xml</code> and <code>.xml</code> extension it will return <code>config.server.i18n</code> (no trailing dot).
-     * If extension is <code>null</code>, it defaults to code>.xml</code>.
+     * If extension is <code>null</code>, it defaults to <code>.xml</code>.
      */
     public static String getFilenameFromResource(String resourcePath, String extension) {
         String ext = StringUtils.defaultIfEmpty(extension, ".xml");
