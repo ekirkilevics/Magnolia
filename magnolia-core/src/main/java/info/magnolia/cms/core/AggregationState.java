@@ -66,7 +66,7 @@ public class AggregationState {
     private String templateName;
     private Locale locale;
     private boolean isPreviewMode;
-    private String renderableVariation;
+    private String channel;
 
     public void setOriginalURI(String originalURI) {
         final String strippedURI = stripContextPathIfExists(originalURI);
@@ -89,7 +89,7 @@ public class AggregationState {
     }
 
     /**
-     * Returns the URI of the current request, decoded and without the context path.
+     * @return the URI of the current request, decoded and without the context path.
      * This URI might have been modified by various filters.
      */
     public String getCurrentURI() {
@@ -244,18 +244,12 @@ public class AggregationState {
         isPreviewMode = previewMode;
     }
 
-    /**
-     * Gets the name of the renderable variation in use.
-     */
     public String getChannel() {
-        return renderableVariation;
+        return channel;
     }
 
-    /**
-     * Sets the name of the renderable variation in use.
-     */
-    public void setChannel(String renderableVariation) {
-        this.renderableVariation = renderableVariation;
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
     /**
