@@ -185,5 +185,18 @@ public interface UserManager {
      */
     public Map<String, ACL> getACLs(User user);
 
+    /**
+     * Removes user from a group.
+     * 
+     * @return user object with the group assignment removed.
+     */
+    public User removeGroup(User user, String groupName);
+
+    /**
+     * Removes role from a user.
+     * 
+     * @return user object without removed role.
+     */
+    public User removeRole(User user, String roleName);
 
 }

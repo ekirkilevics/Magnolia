@@ -599,4 +599,16 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         super.add(user.getName(), groupName, NODE_GROUPS);
         return getUser(user.getName());
     }
+
+    @Override
+    public User removeGroup(User user, String groupName) {
+        super.remove(user.getName(), groupName, NODE_GROUPS);
+        return getUser(user.getName());
+    }
+
+    @Override
+    public User removeRole(User user, String roleName) {
+        super.remove(user.getName(), roleName, NODE_ROLES);
+        return getUser(user.getName());
+    }
 }

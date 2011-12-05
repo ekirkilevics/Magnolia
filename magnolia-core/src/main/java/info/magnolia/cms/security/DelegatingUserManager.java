@@ -39,9 +39,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import javax.jcr.Value;
 import javax.security.auth.Subject;
-
+import javax.jcr.Value;
 
 /**
  * A {@link UserManager} delegating to a set of user managers. The first user manager which does not
@@ -50,6 +49,7 @@ import javax.security.auth.Subject;
  * @version $Revision: $ ($Author: $)
  */
 public class DelegatingUserManager implements UserManager {
+
     private final Map<String, UserManager> delegates;
 
     /**
@@ -254,6 +254,26 @@ public class DelegatingUserManager implements UserManager {
             @Override
             public User delegate(UserManager userManager) {
                 return userManager.setProperty(user, propertyName, propertyValue);
+            }
+        });
+    }
+
+    @Override
+    public User removeGroup(final User user, final String groupName) {
+        return delegateUntilSupported(new Op<User>() {
+            @Override
+            public User delegate(UserManager um) {
+                return um.removeGroup(user, groupName);
+            }
+        });
+    }
+
+    @Override
+    public User removeRole(final User user, final String roleName) {
+        return delegateUntilSupported(new Op<User>() {
+            @Override
+            public User delegate(UserManager um) {
+                return um.removeRole(user, roleName);
             }
         });
     }

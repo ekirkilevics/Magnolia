@@ -149,4 +149,14 @@ public class ExternalUserManager implements UserManager {
     public User setProperty(User user, String propertyName, Value propertyValue) {
         throw new UnsupportedOperationException("Not supported by this user manager.");
     }
+
+    @Override
+    public User removeGroup(User user, String groupName) {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    @Override
+    public User removeRole(User user, String roleName) {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
 }
