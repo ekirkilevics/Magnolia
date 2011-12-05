@@ -174,5 +174,9 @@ public abstract class AbstractMagnoliaConfigurationProperties implements Magnoli
     protected static final String PLACEHOLDER_PREFIX = "${";
     protected static final String PLACEHOLDER_SUFFIX = "}";
 
+    @Override
+    public boolean getBooleanProperty(String property) {
+        return Boolean.parseBoolean(getProperty(property));
+    }
 
 }
