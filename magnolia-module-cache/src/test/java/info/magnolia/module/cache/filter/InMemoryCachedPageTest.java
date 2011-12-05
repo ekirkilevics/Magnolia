@@ -54,14 +54,14 @@ public class InMemoryCachedPageTest {
     public void testUnGZipIfContentIsGZipped() throws IOException {
         final String s = "hello";
         final byte[] gzipped = GZipUtil.gzip(s.getBytes());
-        final InMemoryCachedEntry p = new InMemoryCachedEntry(gzipped, "text/plain", "cha", 1, null, System.currentTimeMillis(), "originalUrl");
+        final InMemoryCachedEntry p = new InMemoryCachedEntry(gzipped, "text/plain", "cha", 1, null, System.currentTimeMillis(), "originalUrl", -1);
         assertEquals(gzipped, p.getGzippedContent());
         assertEquals("hello", new String(p.getPlainContent()));
     }
 
     @Test
     public void testGZipIfContentIsNotGZipped() throws IOException {
-        final InMemoryCachedEntry p = new InMemoryCachedEntry("hello".getBytes(), "foo/bar", "cha", 1, null, System.currentTimeMillis(), "originalUrl");
+        final InMemoryCachedEntry p = new InMemoryCachedEntry("hello".getBytes(), "foo/bar", "cha", 1, null, System.currentTimeMillis(), "originalUrl", -1);
         assertEquals("hello", new String(GZipUtil.ungzip(p.getGzippedContent())));
         assertEquals("hello", new String(p.getPlainContent()));
     }

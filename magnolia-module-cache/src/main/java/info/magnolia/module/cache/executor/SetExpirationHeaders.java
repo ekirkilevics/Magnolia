@@ -37,6 +37,7 @@ import info.magnolia.module.cache.BrowserCachePolicy;
 import info.magnolia.module.cache.BrowserCachePolicyResult;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicyResult;
+import info.magnolia.module.cache.filter.CachedEntry;
 
 import java.io.IOException;
 
@@ -62,15 +63,25 @@ public class SetExpirationHeaders extends AbstractExecutor {
         BrowserCachePolicyResult clientCacheResult = browserCachePolicy.canCacheOnClient(cachePolicyResult);
 
         if(clientCacheResult !=null){
-            if (clientCacheResult == BrowserCachePolicyResult.NO_CACHE) {
+            if (clientCacheResult.getExpirationDate() == BrowserCachePolicyResult.NO_CACHE.getExpirationDate()) {
                 response.setHeader("Pragma", "no-cache");
                 response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
                 response.setDateHeader("Expires", 0L);
             } else {
-                final long maxAgeSeconds = (clientCacheResult.getExpirationDate() - System.currentTimeMillis()) / 1000L;
+                long maxAgeSeconds = (clientCacheResult.getExpirationDate() - System.currentTimeMillis()) / 1000L;
+
+                // browser cache policy cannot set expires longer than what we cached the response for
+                Object cachedEntry = cachePolicyResult != null ? cachePolicyResult.getCachedEntry() : null;
+                if (cachedEntry != null && (cachedEntry instanceof CachedEntry)) {
+                    CachedEntry e = (CachedEntry) cachedEntry;
+                    int maxAgeFromCachedContent = e.getTimeToLiveInSeconds();
+                    if (maxAgeFromCachedContent != -1 && maxAgeFromCachedContent < maxAgeSeconds)
+                        maxAgeSeconds = maxAgeFromCachedContent;
+                }
+
                 response.setHeader("Pragma", "");
                 response.setHeader("Cache-Control", "max-age=" + maxAgeSeconds + ", public");
-                response.setDateHeader("Expires", clientCacheResult.getExpirationDate());
+                response.setDateHeader("Expires", System.currentTimeMillis() + maxAgeSeconds * 1000);
             }
         }
     }

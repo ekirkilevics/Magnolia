@@ -62,5 +62,7 @@ public interface CachedEntry extends Serializable {
      * Produce last modification date of the cache entry. If no other time can be discerned, the time of entry creation should be returned.
      * @return time when cached entry was last modified. This time should reflect real modification time of the cached content.
      */
-    public long getLastModificationTime();
+    long getLastModificationTime();
+
+    int getTimeToLiveInSeconds();
 }

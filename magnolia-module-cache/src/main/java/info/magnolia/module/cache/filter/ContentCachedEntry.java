@@ -82,24 +82,26 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
     private Map serializableHeadersBackingList;
     private final long lastModificationTime;
     private String originalUrl;
+    private int timeToLiveInSeconds = -1;
 
     /**
-     * @param out Cached content.
+     *
      * @param contentType MIME type of the cached content.
      * @param characterEncoding Character encoding of the cached content.
      * @param statusCode HTTP response status code (E.g. 200 - OK);
      * @param headers Additional HTTP headers to be sent when serving this cached content.
      * @param modificationDate Content modification date to set in the response.
-     * @param shouldCompress Flag marking this content as desirable to be sent in compressed form (should the client support such compression). Setting this to true means cache entry will contain both, compressed and flat version of the content. Compression is applied here only if content is not gzipped already.
+     * @param timeToLiveInSeconds
      * @throws IOException when failing to compress the content.
      */
-    public ContentCachedEntry(String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate, String originalUrl) throws IOException {
+    public ContentCachedEntry(String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate, String originalUrl, int timeToLiveInSeconds) throws IOException {
         this.contentType = contentType;
         this.characterEncoding = characterEncoding;
         this.statusCode = statusCode;
         this.headers = headers;
         this.lastModificationTime = modificationDate;
         this.originalUrl = originalUrl;
+        this.timeToLiveInSeconds = timeToLiveInSeconds;
     }
 
     @Override
@@ -133,6 +135,11 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
     @Override
     public long getLastModificationTime() {
         return lastModificationTime;
+    }
+
+    @Override
+    public int getTimeToLiveInSeconds() {
+        return timeToLiveInSeconds;
     }
 
     @Override

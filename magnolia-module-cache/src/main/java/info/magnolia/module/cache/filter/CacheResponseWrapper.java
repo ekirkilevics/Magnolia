@@ -45,12 +45,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -58,6 +54,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.httpclient.util.DateParseException;
+import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ThresholdingOutputStream;
@@ -85,6 +83,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     private ByteArrayOutputStream inMemoryBuffer;
     private File contentFile;
     private long contentLength = -1;
+    private ResponseExpirationCalculator responseExpirationCalculator = new ResponseExpirationCalculator();
 
     private ThresholdingOutputStream thresholdingOutputStream;
     private boolean serveIfThresholdReached;
@@ -204,12 +203,18 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
     private long parseStringDate(String value) {
         try {
-            final SimpleDateFormat f = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
-            final Date date = f.parse(value);
-            return date.getTime();
-        } catch (ParseException e) {
+            return DateUtil.parseDate(value).getTime();
+        } catch (DateParseException e) {
             throw new IllegalStateException("Could not parse Last-Modified header with value " + value + " : " + e.getMessage());
         }
+    }
+
+    /**
+     * Returns the number of seconds the response can be cached, where 0 means that it must not be cached and -1 means
+     * that it there is no indication on how long it can be cached for.
+     */
+    public int getTimeToLiveInSeconds() {
+        return responseExpirationCalculator.getMaxAgeInSeconds();
     }
 
     public String getRedirectionLocation() {
@@ -252,12 +257,16 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     private void replaceHeader(String name, Object value) {
-        headers.remove(name);
-        headers.put(name, value);
+        if (!responseExpirationCalculator.addHeader(name, value)) {
+            headers.remove(name);
+            headers.put(name, value);
+        }
     }
 
     private void appendHeader(String name, Object value) {
-        headers.put(name, value);
+        if (!responseExpirationCalculator.addHeader(name, value)) {
+            headers.put(name, value);
+        }
     }
 
     @Override

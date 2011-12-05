@@ -47,16 +47,19 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: $ ($Author: $)
  */
 public class CachedRedirect implements CachedEntry, Serializable {
+
     private final int statusCode;
     private final String location;
     private long timestamp;
     private String originalUrl;
+    private int timeToLiveInSeconds = -1;
 
-    public CachedRedirect(int statusCode, String location, String originalUrl) {
+    public CachedRedirect(int statusCode, String location, String originalUrl, int timeToLiveInSeconds) {
         this.statusCode = statusCode;
         this.location = location;
         this.originalUrl = originalUrl;
         this.timestamp = System.currentTimeMillis();
+        this.timeToLiveInSeconds = timeToLiveInSeconds;
     }
 
     public int getStatusCode() {
@@ -84,5 +87,10 @@ public class CachedRedirect implements CachedEntry, Serializable {
     @Override
     public long getLastModificationTime() {
         return timestamp;
+    }
+
+    @Override
+    public int getTimeToLiveInSeconds() {
+        return timeToLiveInSeconds;
     }
 }

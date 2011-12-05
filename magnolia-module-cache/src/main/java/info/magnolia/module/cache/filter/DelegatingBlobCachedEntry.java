@@ -63,8 +63,8 @@ public class DelegatingBlobCachedEntry extends ContentCachedEntry {
 
     private long contentLength;
 
-    public DelegatingBlobCachedEntry(long contentLength, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate, String originalUrl) throws IOException {
-        super(contentType, characterEncoding, statusCode, headers, modificationDate, originalUrl);
+    public DelegatingBlobCachedEntry(long contentLength, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate, String originalUrl, int timeToLiveInSeconds) throws IOException {
+        super(contentType, characterEncoding, statusCode, headers, modificationDate, originalUrl, timeToLiveInSeconds);
         this.contentLength = contentLength;
     }
 

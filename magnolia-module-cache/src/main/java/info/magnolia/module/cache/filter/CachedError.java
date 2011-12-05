@@ -50,18 +50,19 @@ import org.slf4j.LoggerFactory;
  * @version $Revision: $ ($Author: $)
  */
 public class CachedError implements CachedEntry, Serializable {
+
     private static Logger log = LoggerFactory.getLogger(CachedError.class);
 
     private final int statusCode;
-
     private String originalUrl;
-
     private long timestamp;
+    private int timeToLiveInSeconds = -1;
 
-    public CachedError(int statusCode, String originalUrl) {
+    public CachedError(int statusCode, String originalUrl, int timeToLiveInSeconds) {
         this.statusCode = statusCode;
         this.originalUrl = originalUrl;
         this.timestamp = System.currentTimeMillis();
+        this.timeToLiveInSeconds = timeToLiveInSeconds;
     }
 
     public int getStatusCode() {
@@ -87,5 +88,10 @@ public class CachedError implements CachedEntry, Serializable {
     @Override
     public long getLastModificationTime() {
         return timestamp;
+    }
+
+    @Override
+    public int getTimeToLiveInSeconds() {
+        return timeToLiveInSeconds;
     }
 }

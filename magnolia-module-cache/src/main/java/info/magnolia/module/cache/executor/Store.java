@@ -82,30 +82,49 @@ public class Store extends AbstractExecutor {
         if (responseWrapper.getStatus() == HttpServletResponse.SC_NOT_MODIFIED) {
             response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
         }
-        else{
+        else {
             responseWrapper.flushBuffer();
             cachedEntry = makeCachedEntry(request, responseWrapper);
         }
 
-        // also put null to unblock the cache
-        cache.put(key, cachedEntry);
+        if (cachedEntry == null) {
+            // put null to unblock the cache
+            cache.put(key, null);
+            return;
+        }
 
-        if(cachedEntry != null){
-            cachePolicyResult.setCachedEntry(cachedEntry);
-            // let policy know the uuid in case it wants to do something with it
-            final Content currentContent = MgnlContext.getAggregationState().getCurrentContent();
-            final Node content = currentContent != null ? currentContent.getJCRNode() : null;
-            try {
-                if (content != null && NodeUtil.isNodeType(content, "mix:referenceable")) {
-                    final String uuid = content.getIdentifier();
-                    String repo = content.getSession().getWorkspace().getName();
-                    getCachePolicy(cache).persistCacheKey(repo, uuid, key);
-                }
-            } catch (RepositoryException e) {
-                // TODO dlipp: apply consistent ExceptionHandling
-                throw new RuntimeException(e);
+        cachePolicyResult.setCachedEntry(cachedEntry);
+
+        int timeToLiveInSeconds = cachedEntry.getTimeToLiveInSeconds();
+        if (timeToLiveInSeconds == 0) {
+            // put null to unblock the cache
+            cache.put(key, null);
+
+            // stream the response directly
+            cachedEntry.replay(request, response, chain);
+            response.flushBuffer();
+
+            return;
+        }
+
+        if (timeToLiveInSeconds == -1) {
+            cache.put(key, cachedEntry);
+        } else {
+            cache.put(key, cachedEntry, timeToLiveInSeconds);
+        }
+
+        // let policy know the uuid in case it wants to do something with it
+        final Content currentContent = MgnlContext.getAggregationState().getCurrentContent();
+        final Node content = currentContent != null ? currentContent.getJCRNode() : null;
+        try {
+            if (content != null && NodeUtil.isNodeType(content, "mix:referenceable")) {
+                final String uuid = content.getIdentifier();
+                String repo = content.getSession().getWorkspace().getName();
+                getCachePolicy(cache).persistCacheKey(repo, uuid, key);
             }
-
+        } catch (RepositoryException e) {
+            // TODO dlipp: apply consistent ExceptionHandling
+            throw new RuntimeException(e);
         }
     }
 
@@ -113,13 +132,15 @@ public class Store extends AbstractExecutor {
         // query params are handled by the cache key
         final String originalUrl = request.getRequestURL().toString();
         int status = cachedResponse.getStatus();
+        int timeToLiveInSeconds = cachedResponse.getTimeToLiveInSeconds();
+
         // TODO : handle more of the 30x codes - although CacheResponseWrapper currently only sets the 302 or 304.
         if (cachedResponse.getRedirectionLocation() != null) {
-            return new CachedRedirect(cachedResponse.getStatus(), cachedResponse.getRedirectionLocation(), originalUrl);
+            return new CachedRedirect(cachedResponse.getStatus(), cachedResponse.getRedirectionLocation(), originalUrl, timeToLiveInSeconds);
         }
 
         if (cachedResponse.isError()) {
-            return new CachedError(cachedResponse.getStatus(), originalUrl);
+            return new CachedError(cachedResponse.getStatus(), originalUrl, timeToLiveInSeconds);
         }
 
         final long modificationDate = cachedResponse.getLastModified();
@@ -133,7 +154,8 @@ public class Store extends AbstractExecutor {
                     status,
                     cachedResponse.getHeaders(),
                     modificationDate,
-                    originalUrl);
+                    originalUrl,
+                    timeToLiveInSeconds);
         }
         else{
             cacheEntry = new DelegatingBlobCachedEntry(cachedResponse.getContentLength(),
@@ -142,7 +164,8 @@ public class Store extends AbstractExecutor {
                     status,
                     cachedResponse.getHeaders(),
                     modificationDate,
-                    originalUrl);
+                    originalUrl,
+                    timeToLiveInSeconds);
 
             // TODO remove this once we use a blob store
             // the file will be deleted once served in this request
