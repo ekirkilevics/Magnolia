@@ -616,7 +616,7 @@ public class DataTransporter {
             String group = matcher.group();
             int dotsNumber = StringUtils.countMatches(group, ".");
             if(dotsNumber == 1) {
-                reversed.append(group.replaceFirst(".", "/"));
+                reversed.append(group.replaceFirst("\\.", "/"));
             } else {
                  String dots = StringUtils.substringBeforeLast(group, ".").replace("..", ".");
                  String name = StringUtils.substringAfterLast(group, ".");

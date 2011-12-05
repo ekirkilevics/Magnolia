@@ -170,6 +170,9 @@ public class DataTransporterTest extends XMLTestCase {
         reversedPath = DataTransporter.revertExportPath("baz");
         assertEquals("baz", reversedPath);
 
+        reversedPath = DataTransporter.revertExportPath("config.server.name");
+        assertEquals("config/server/name", reversedPath);
+
         reversedPath = DataTransporter.revertExportPath(".");
         assertEquals("/", reversedPath);
     }

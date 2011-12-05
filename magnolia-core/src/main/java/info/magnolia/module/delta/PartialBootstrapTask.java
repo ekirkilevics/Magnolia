@@ -35,6 +35,7 @@ package info.magnolia.module.delta;
 
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.importexport.BootstrapUtil;
 import info.magnolia.importexport.DataTransporter;
 import info.magnolia.module.InstallContext;
 
@@ -133,21 +134,11 @@ public class PartialBootstrapTask extends AbstractTask {
 
     protected void bootstrap(String resourceName, String itemName, int importUUIDBehavior, InputStream stream) throws IOException, RepositoryException {
         //TODO: Code partially copied from BootstrapUtil class, need to refactor the core class to accept Inputstreams
-        String name = StringUtils.removeEnd(resourceName, ".xml");
 
-        String repository = StringUtils.substringBefore(name, ".");
-        //TODO fgrilli: MAGNOLIA-2580 use info.magnolia.importexport.DataTransporter.reverseExportPath(String)
-        String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), "."); //$NON-NLS-1$
-        String nodeName = StringUtils.substringAfterLast(name, ".");
-        String fullPath;
-        if (StringUtils.isEmpty(pathName)) {
-            pathName = "/";
-            fullPath = "/" + nodeName;
-        }
-        else {
-            pathName = "/" + StringUtils.replace(pathName, ".", "/");
-            fullPath = pathName + "/" + nodeName;
-        }
+        String name = BootstrapUtil.getFilenameFromResource(resourceName, ".xml");
+        String repository = BootstrapUtil.getWorkspaceNameFromResource(resourceName);
+        String pathName = BootstrapUtil.getPathnameFromResource(resourceName);
+        String fullPath = BootstrapUtil.getFullpathFromResource(resourceName);
 
         log.debug("Will bootstrap {}", resourceName);
         if (stream == null) {
