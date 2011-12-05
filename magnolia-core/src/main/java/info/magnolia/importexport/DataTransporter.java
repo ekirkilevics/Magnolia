@@ -588,7 +588,7 @@ public class DataTransporter {
 
     /**
      * Prior to 4.5 Magnolia used to produce export xml filenames where the / (slash) separating sub nodes was replaced by a dot.
-     * Since 4.5 Magnolia enables dots in path names, therefore dots which are part of the node name have to be escaped by doubling them.
+     * Since 4.5, Magnolia enables dots in path names, therefore dots which are part of the node name have to be escaped by doubling them.
      * I.e. given a path like this <code>/foo/bar.baz/test../dir/baz..bar</code>, this method will produce
      * <code>.foo.bar..baz.test.....dir.baz....bar</code>.
      */
@@ -602,7 +602,7 @@ public class DataTransporter {
      * The opposite of {@link #createExportPath(String)}.
      * I.e. given a path like this <code>.foo.bar..baz.test.....dir.baz....bar</code>, this method will produce <code>/foo/bar.baz/test../dir/baz..bar</code>.
      */
-    public static String reverseExportPath(String exportPath) {
+    public static String revertExportPath(String exportPath) {
         if(".".equals(exportPath)) {
             return "/";
         }

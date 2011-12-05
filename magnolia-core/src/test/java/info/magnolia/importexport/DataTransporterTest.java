@@ -155,19 +155,22 @@ public class DataTransporterTest extends XMLTestCase {
 
     @Test
     public void testReverseExportPath() throws Exception {
-        String reversedPath = DataTransporter.reverseExportPath(".foo.bar..baz.test.....dir.baz....bar");
+        String reversedPath = DataTransporter.revertExportPath(".foo.bar..baz.test.....dir.baz....bar");
         assertEquals("/foo/bar.baz/test../dir/baz..bar", reversedPath);
 
-        reversedPath = DataTransporter.reverseExportPath(".foo-bar..baz.test");
+        reversedPath = DataTransporter.revertExportPath(".foo-bar..baz.test");
         assertEquals("/foo-bar.baz/test", reversedPath);
 
-        reversedPath = DataTransporter.reverseExportPath(".123..baz.test");
+        reversedPath = DataTransporter.revertExportPath(".123..baz.test");
         assertEquals("/123.baz/test", reversedPath);
 
-        reversedPath = DataTransporter.reverseExportPath("baz");
+        reversedPath = DataTransporter.revertExportPath(".-123..baz_test._dir");
+        assertEquals("/-123.baz_test/_dir", reversedPath);
+
+        reversedPath = DataTransporter.revertExportPath("baz");
         assertEquals("baz", reversedPath);
 
-        reversedPath = DataTransporter.reverseExportPath(".");
+        reversedPath = DataTransporter.revertExportPath(".");
         assertEquals("/", reversedPath);
     }
 }
