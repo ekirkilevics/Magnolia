@@ -40,8 +40,8 @@ import info.magnolia.cms.security.JCRSessionOp;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.cms.util.RuleBasedNodePredicate;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.predicate.RuleBasedNodePredicate;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.VersionUtil;
 

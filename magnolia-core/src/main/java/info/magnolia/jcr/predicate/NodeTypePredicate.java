@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,51 +31,38 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
-
-import info.magnolia.jcr.util.VersionUtil;
+package info.magnolia.jcr.predicate;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.jackrabbit.commons.predicate.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * A {@link ContentFilter} using a {@link Rule}.
- * @version $Revision: 41135 $ ($Author: gjoseph $)
+ * Predicate filtering based on the primary type of the node.
+ * 
+ * @version $Id$
  */
-public class RuleBasedNodePredicate implements Predicate {
+public class NodeTypePredicate extends AbstractPredicate<Node> {
 
-    private static Logger log = LoggerFactory.getLogger(RuleBasedNodePredicate.class);
+    private static final Logger log = LoggerFactory.getLogger(NodeTypePredicate.class);
+    private final String primaryNodeType;
 
-    /**
-     * Rule on which this filter works.
-     */
-    private final Rule rule;
-
-    public RuleBasedNodePredicate(Rule rule) {
-        this.rule = rule;
+    public NodeTypePredicate(String primaryNodeType) {
+        if (primaryNodeType == null) {
+            throw new NullPointerException("Type must have a value.");
+        }
+        this.primaryNodeType = primaryNodeType;
     }
 
     @Override
-    public boolean evaluate(Object object) {
-        if (!(object instanceof Node)) {
+    public boolean evaluateTyped(Node t) {
+        try {
+            return primaryNodeType.equals(t.getPrimaryNodeType().getName());
+        } catch (RepositoryException e) {
+            log.error("Failed to read type of node {}", t);
             return false;
         }
-        Node content = (Node) object;
-        String nodeType = "";
-        try {
-            nodeType = VersionUtil.getNodeTypeName(content);
-        }
-        catch (RepositoryException re) {
-            if (log.isDebugEnabled()) {
-                log.debug("failed to retrieve node type : " + re.getMessage(), re);
-            }
-        }
-        return this.rule.isAllowed(nodeType);
     }
-
 }

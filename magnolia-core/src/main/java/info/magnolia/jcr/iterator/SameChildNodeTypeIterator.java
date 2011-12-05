@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,51 +31,22 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.jcr.iterator;
 
-import info.magnolia.cms.core.Content;
+import info.magnolia.jcr.predicate.NodeTypePredicate;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * A {@link ContentFilter} using a {@link Rule}.
+ * Creates iterator looping over all children of provided node that are of same node type.
  * 
- * @version $Revision$ ($Author$)
- * @deprecated since 4.5 use {@link info.magnolia.jcr.predicate.RuleBasedNodePredicate} instead
+ * @version $Id$
+ * 
  */
-@Deprecated
-public class RuleBasedContentFilter implements Content.ContentFilter {
+public class SameChildNodeTypeIterator extends FilteringNodeIterator {
 
-    private static Logger log = LoggerFactory.getLogger(RuleBasedContentFilter.class);
-
-    /**
-     * Rule on which this filter works.
-     */
-    private final Rule rule;
-
-    public RuleBasedContentFilter(Rule rule) {
-        this.rule = rule;
+    public SameChildNodeTypeIterator(Node parent) throws RepositoryException {
+        super(parent.getNodes(), new NodeTypePredicate(parent.getPrimaryNodeType().getName()));
     }
-
-    /**
-     * Test if this content should be included in a resultant collection.
-     * @return if true this will be a part of collection
-     */
-    @Override
-    public boolean accept(Content content) {
-        String nodeType = "";
-        try {
-            nodeType = content.getNodeTypeName();
-        }
-        catch (RepositoryException re) {
-            if (log.isDebugEnabled()) {
-                log.debug("failed to retrieve node type : " + re.getMessage(), re);
-            }
-        }
-        return this.rule.isAllowed(nodeType);
-    }
-
 }
