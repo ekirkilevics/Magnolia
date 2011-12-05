@@ -82,7 +82,11 @@ public class MailUtilTest extends TestCase {
 
     public void testGetGroupMembersMails(){
         MailUtil.getGroupMembersMails(userManager, mailList, "groupA");
-        assertEquals("kvido@test.info\npupak@test.info\n", mailList.toString());
+        boolean check = false;
+        if (mailList.toString().equals("kvido@test.info\npupak@test.info\n") || mailList.toString().equals("pupak@test.info\nkvido@test.info\n")){
+            check = true;
+        }
+        assertTrue(check);
     }
 
     @Override
