@@ -224,7 +224,7 @@ public final class Path {
 
         //label cannot begin with . (dot)
         int ch = label.charAt(0);
-        if(!isCharValid(ch, charset) ||  ch == 46) {
+        if(ch == 46 || !isCharValid(ch, charset)) {
             newLabel.append("-");
         } else {
             newLabel.append(label.charAt(0));
