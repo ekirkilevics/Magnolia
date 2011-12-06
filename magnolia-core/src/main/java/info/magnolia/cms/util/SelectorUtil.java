@@ -36,7 +36,7 @@ package info.magnolia.cms.util;
 import info.magnolia.context.MgnlContext;
 
 /**
- * Util to handler selectors. A selector is the part between the first dot and the extension of an URI.
+ * Util class to handle selectors. A selector is the part between the first {@link info.magnolia.cms.core.Path#SELECTOR_DELIMITER} and the extension of an URI.
  * @version $Id$
  */
 public class SelectorUtil {
