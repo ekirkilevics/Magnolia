@@ -155,25 +155,25 @@ public class DataTransporterTest extends XMLTestCase {
 
     @Test
     public void testRevertExportPath() throws Exception {
-        String reversedPath = DataTransporter.revertExportPath(".foo.bar..baz.test.....dir.baz....bar");
-        assertEquals("/foo/bar.baz/test../dir/baz..bar", reversedPath);
+        String revertedPath = DataTransporter.revertExportPath(".foo.bar..baz.test.....dir.baz....bar");
+        assertEquals("/foo/bar.baz/test../dir/baz..bar", revertedPath);
 
-        reversedPath = DataTransporter.revertExportPath(".foo-bar..baz.test");
-        assertEquals("/foo-bar.baz/test", reversedPath);
+        revertedPath = DataTransporter.revertExportPath(".foo-bar..baz.test");
+        assertEquals("/foo-bar.baz/test", revertedPath);
 
-        reversedPath = DataTransporter.revertExportPath(".123..baz.test");
-        assertEquals("/123.baz/test", reversedPath);
+        revertedPath = DataTransporter.revertExportPath(".123..baz.test");
+        assertEquals("/123.baz/test", revertedPath);
 
-        reversedPath = DataTransporter.revertExportPath(".-123..baz_test._dir");
-        assertEquals("/-123.baz_test/_dir", reversedPath);
+        revertedPath = DataTransporter.revertExportPath(".-123..baz_test._dir");
+        assertEquals("/-123.baz_test/_dir", revertedPath);
 
-        reversedPath = DataTransporter.revertExportPath("baz");
-        assertEquals("baz", reversedPath);
+        revertedPath = DataTransporter.revertExportPath("baz");
+        assertEquals("baz", revertedPath);
 
-        reversedPath = DataTransporter.revertExportPath("config.server.name");
-        assertEquals("config/server/name", reversedPath);
+        revertedPath = DataTransporter.revertExportPath("config.server.name");
+        assertEquals("config/server/name", revertedPath);
 
-        reversedPath = DataTransporter.revertExportPath(".");
-        assertEquals("/", reversedPath);
+        revertedPath = DataTransporter.revertExportPath(".");
+        assertEquals("/", revertedPath);
     }
 }
