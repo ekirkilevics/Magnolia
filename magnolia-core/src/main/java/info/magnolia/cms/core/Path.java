@@ -34,7 +34,6 @@
 package info.magnolia.cms.core;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -126,25 +125,6 @@ public final class Path {
         return new File(SystemProperty.getProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR));
     }
 
-    // TODO : this should probably be in getAppRootDir()
-    private void checkAppRootDir() throws IOException {
-        String root = null;
-        // Try to get root
-        try {
-            File f = getAppRootDir();
-            if (f.isDirectory()) {
-                root = f.getAbsolutePath();
-            }
-        }
-        catch (Exception e) {
-            // nothing
-        }
-
-        if (root == null) {
-            throw new IOException("Invalid magnolia " + SystemProperty.MAGNOLIA_APP_ROOTDIR + " path");
-        }
-    }
-
     /**
      * Gets absolute filesystem path, adds application root if path is not absolute.
      */
@@ -223,15 +203,16 @@ public final class Path {
     }
 
     /**
-     * If charset eq to UTF-8 replaces these characters:
-     * jackrabbit not allowed 32: [ ] 91: [[] 93: []] 42: [*] 34: ["] 58 [:] 92: [\] 39 :[']
-     * url not valid 59: [;] 47: [/] 63: [?] 43: [+] 37: [%] 33: [!] 35:[#] 94: [^]
+     * If charset equals <code>UTF-8</code>, replaces the following characters:
+     * <p>
+     * Jackrabbit not allowed {@code 32: [ ] 91: [[] 93: []] 42: [*] 34: ["] 58 [:] 92: [\] 39 :[']}
+     * <p>
+     * URL not valid {@code 59: [;] 47: [/] 63: [?] 43: [+] 37: [%] 33: [!] 35:[#] 94: [^]}.
+     * <p>
+     * else replaces illegal characters with a dash <code>-</code> except for {@code [_] [0-9], [A-Z], [a-z], [-], [_], [.]}.
      *
-     * else replace illegal characters except [_] [0-9], [A-Z], [a-z], [-], [_].
-     * @param label label to validate
-     * @return validated label
+     * @return a validated label for a node.
      */
-    //TODO fgrilli: use regex?
     public static String getValidatedLabel(String label, String charset)
     {
         if(StringUtils.isBlank(label)) {
@@ -273,8 +254,8 @@ public final class Path {
      */
     public static boolean isCharValid(int charCode, String charset)
     {
-        //TODO fgrilli: for the time being we allow dots (.) in JR local names but actually in JR 2.0 other chars could be allowed as well
-        //(see http://www.day.com/specs/jcr/2.0/3_Repository_Model.html paragraph 2.2 and org.apache.jackrabbit.util.XMLChar.isValid()) so this method should be refactored accordingly.
+        //TODO fgrilli: we now allow dots (.) in JR local names but actually in JR 2.0 other chars could be allowed as well
+        //(see http://www.day.com/specs/jcr/2.0/3_Repository_Model.html paragraph 2.2 and org.apache.jackrabbit.util.XMLChar.isValid()).
         //Also, now that we're on java 6 and JR 2.0 should the check for the charset be dropped?
 
         // http://www.ietf.org/rfc/rfc1738.txt
