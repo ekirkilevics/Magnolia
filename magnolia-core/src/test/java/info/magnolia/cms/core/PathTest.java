@@ -118,6 +118,11 @@ public class PathTest {
 
         //uppercase test
         assertEquals("FOO",Path.getValidatedLabel("FOO", null));
+
+        //empty or blank labels
+        assertEquals("untitled",Path.getValidatedLabel(null, null));
+        assertEquals("untitled",Path.getValidatedLabel("", null));
+        assertEquals("untitled",Path.getValidatedLabel("    ", null));
     }
 
 }

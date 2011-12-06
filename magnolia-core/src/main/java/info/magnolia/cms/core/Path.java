@@ -218,7 +218,7 @@ public final class Path {
     public static String getValidatedLabel(String label, String charset)
     {
         if(StringUtils.isBlank(label)) {
-            throw new IllegalArgumentException("label cannot be null or empty");
+            return DEFAULT_UNTITLED_NODE_NAME;
         }
         StringBuilder newLabel = new StringBuilder(label.length());
 
