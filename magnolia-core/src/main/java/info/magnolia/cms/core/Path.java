@@ -203,13 +203,15 @@ public final class Path {
     }
 
     /**
-     * If charset equals <code>UTF-8</code>, replaces the following characters:
+     * If charset equals <code>UTF-8</code>, replaces the following characters with a dash <code>-</code> :
      * <p>
      * Jackrabbit not allowed {@code 32: [ ] 91: [[] 93: []] 42: [*] 34: ["] 58 [:] 92: [\] 39 :[']}
      * <p>
      * URL not valid {@code 59: [;] 47: [/] 63: [?] 43: [+] 37: [%] 33: [!] 35:[#] 94: [^]}.
      * <p>
-     * else replaces illegal characters with a dash <code>-</code> except for {@code [_] [0-9], [A-Z], [a-z], [-], [_], [.]}.
+     * Otherwise, replaces illegal characters with a dash <code>-</code> except for {@code [_] [0-9], [A-Z], [a-z], [-], [_], [.]}.
+     * <p>
+     * Please notice that a valid label can not begin with dot or period <code>[.]</code>.
      *
      * @return a validated label for a node.
      */
