@@ -8,7 +8,7 @@
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>b66f20db-9ed7-40a7-afc6-083fbec8155e</sv:value>
+    <sv:value>835a5482-5f8d-43f5-ab7e-1643dd1771e0</sv:value>
   </sv:property>
   <sv:property sv:name="i18nBasename" sv:type="String">
     <sv:value>info.magnolia.module.templating.messages</sv:value>

@@ -8,7 +8,7 @@
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>23a9a39b-ec9c-4ed8-9d30-0cb3256f20c7</sv:value>
+    <sv:value>f37b67ae-6434-43b7-b1e6-e3d83568a0c3</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
     <sv:value>info.magnolia.module.templating.paragraphs.JspParagraphRenderer</sv:value>
