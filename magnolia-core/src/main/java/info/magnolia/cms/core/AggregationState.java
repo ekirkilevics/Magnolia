@@ -34,7 +34,6 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.beans.runtime.File;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
 import java.io.UnsupportedEncodingException;
@@ -189,7 +188,7 @@ public class AggregationState {
      * A selector is the part between the first {@link info.magnolia.cms.core.Path#SELECTOR_DELIMITER} and the extension of an URI.
      * I.e. given a URI like {@code http://myserver/mypage~x~foo=bar~.html} the entire selector is {@code ~x~foo=bar~}. A selector can be split in turn into several
      * selectors separated from each other by the {@link info.magnolia.cms.core.Path#SELECTOR_DELIMITER}. In the above example, single selectors are x and foo=bar.
-     * The latter is {@code name=value} selector which is set in the MgnlContext as an attribute with scope {@code Context.LOCAL_SCOPE}. You can retrieve its value via {@code MgnlContext.getAttribute("foo")}.
+     * The latter is a {@code name=value} selector which is set in the MgnlContext as an attribute with scope {@code Context.LOCAL_SCOPE}. You can retrieve its value via {@code MgnlContext.getAttribute("foo")}.
      * <p>You can get and iterate over a full selector with the {@link #getSelectors()} method.<p>
      * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      */
@@ -216,7 +215,7 @@ public class AggregationState {
             for(String sel : selectors) {
                 final String[] splitSelector = sel.split("=");
                 if(splitSelector.length == 2) {
-                    MgnlContext.setAttribute(splitSelector[0], splitSelector[1], Context.LOCAL_SCOPE);
+                    MgnlContext.setAttribute(splitSelector[0], splitSelector[1]);
                 }
             }
         }
