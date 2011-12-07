@@ -54,12 +54,12 @@ public class ChannelVariationResolver implements RenderableVariationResolver {
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
 
-        final String variationName = aggregationState.getChannel();
-        RenderableDefinition channel = renderableDefinition.getVariations().get(variationName);
-        if (channel == null) {
+        final String channelName = aggregationState.getChannel();
+        RenderableDefinition defVariation = renderableDefinition.getVariations().get(channelName);
+        if (defVariation == null) {
             return null;
         }
 
-        return BeanMergerUtil.merge(channel, renderableDefinition);
+        return BeanMergerUtil.merge(defVariation, renderableDefinition);
     }
 }
