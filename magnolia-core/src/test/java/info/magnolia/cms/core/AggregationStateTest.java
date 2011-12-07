@@ -33,21 +33,21 @@
  */
 package info.magnolia.cms.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockWebContext;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.easymock.EasyMock.*;
 
 /**
- * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class AggregationStateTest {
-    private WebContext webCtx;
+    private MockWebContext webCtx;
     private AggregationState aggState;
 
     @Before
@@ -55,15 +55,13 @@ public class AggregationStateTest {
         aggState = new AggregationState();
         aggState.setCharacterEncoding("UTF-8");
 
-        webCtx = createMock(WebContext.class);
-        expect(webCtx.getContextPath()).andReturn("/foo").anyTimes();
+        webCtx = new MockWebContext();
+        webCtx.setContextPath("/foo");
         MgnlContext.setInstance(webCtx);
-        replay(webCtx);
     }
 
     @After
     public void tearDown() throws Exception {
-        verify(webCtx);
 
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
@@ -103,6 +101,17 @@ public class AggregationStateTest {
         assertTrue(selectors.length == 2);
         assertEquals("foo", selectors[0]);
         assertEquals("bar.baz", selectors[1]);
+
+        //selector with name=value pair
+        aggState.setSelector("foo~bar.baz=qux~meh");
+        assertEquals("foo~bar.baz=qux~meh", aggState.getSelector());
+        selectors = aggState.getSelectors();
+        assertTrue(selectors.length == 3);
+        assertEquals("foo", selectors[0]);
+        assertEquals("bar.baz=qux", selectors[1]);
+        assertEquals("meh", selectors[2]);
+        //attribute should be in LOCAL scope only
+        assertEquals("qux", MgnlContext.getAttribute("bar.baz"));
     }
 
 }

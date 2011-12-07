@@ -43,7 +43,7 @@ public class SelectorUtil {
     /**
      * <p>
      * get selector as requested from the URI. The selector is the part between the handle and the extension.
-     * selector("http://server/a~x~1~f~4~html") = "~x~1~f~4~"
+     * selector("http://server/mypage~x~1~f~4~.html") = "~x~1~f~4~"
      * </p>
      * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      *
