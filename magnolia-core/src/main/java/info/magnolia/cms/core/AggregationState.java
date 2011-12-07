@@ -211,12 +211,10 @@ public class AggregationState {
         if(StringUtils.isNotEmpty(selector)) {
             selectors = this.selector.split(Path.SELECTOR_DELIMITER);
         }
-        if(selectors.length > 0) {
-            for(String sel : selectors) {
-                final String[] splitSelector = sel.split("=");
-                if(splitSelector.length == 2) {
-                    MgnlContext.setAttribute(splitSelector[0], splitSelector[1]);
-                }
+        for(String sel : selectors) {
+            final String[] splitSelector = sel.split("=");
+            if(splitSelector.length == 2) {
+                MgnlContext.setAttribute(splitSelector[0], splitSelector[1]);
             }
         }
     }
