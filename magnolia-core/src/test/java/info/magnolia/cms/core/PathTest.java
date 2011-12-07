@@ -122,7 +122,7 @@ public class PathTest {
         //empty or blank labels
         assertEquals("untitled",Path.getValidatedLabel(null, null));
         assertEquals("untitled",Path.getValidatedLabel("", null));
-        assertEquals("untitled",Path.getValidatedLabel("    ", null));
+        assertEquals("----",Path.getValidatedLabel("    ", null));
     }
 
 }

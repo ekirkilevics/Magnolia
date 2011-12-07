@@ -217,10 +217,10 @@ public final class Path {
      */
     public static String getValidatedLabel(String label, String charset)
     {
-        if(StringUtils.isBlank(label)) {
+        if(StringUtils.isEmpty(label)) {
             return DEFAULT_UNTITLED_NODE_NAME;
         }
-        StringBuilder newLabel = new StringBuilder(label.length());
+        final StringBuilder newLabel = new StringBuilder(label.length());
 
         //label cannot begin with . (dot)
         int ch = label.charAt(0);
