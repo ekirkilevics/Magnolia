@@ -115,6 +115,7 @@ public class DelegatingUserManager implements UserManager {
         });
     }
 
+    @Override
     public Collection<User> getAllUsers() throws UnsupportedOperationException{
         Collection<User> users = new ArrayList<User>();
         for (String realmName : delegates.keySet()) {
