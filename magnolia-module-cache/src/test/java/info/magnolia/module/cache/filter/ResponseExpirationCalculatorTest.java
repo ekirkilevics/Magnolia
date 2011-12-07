@@ -116,7 +116,7 @@ public class ResponseExpirationCalculatorTest {
     public void testDetectsExpiresAsInt() throws Exception {
 
         ResponseExpirationCalculator negotiator = new ResponseExpirationCalculator();
-        negotiator.addHeader("Expires", (int) (System.currentTimeMillis()/1000) + 10);
+        negotiator.addHeader("Expires", (int) (System.currentTimeMillis() / 1000) + 10);
         assertTrue(negotiator.getMaxAgeInSeconds() > 1);
     }
 
@@ -154,5 +154,29 @@ public class ResponseExpirationCalculatorTest {
         negotiator.addHeader("Cache-Control", "max-age=5");
         negotiator.addHeader("Expires", "0");
         assertEquals(5, negotiator.getMaxAgeInSeconds());
+    }
+
+    @Test
+    public void testChoosesMostRestrictiveSharedCache() throws Exception {
+        ResponseExpirationCalculator negotiator = new ResponseExpirationCalculator();
+        negotiator.addHeader("Cache-Control", "s-maxage=5");
+        negotiator.addHeader("Cache-Control", "s-maxage=15");
+        assertEquals(5, negotiator.getMaxAgeInSeconds());
+    }
+
+    @Test
+    public void testChoosesMostRestrictiveCacheControlMaxAge() throws Exception {
+        ResponseExpirationCalculator negotiator = new ResponseExpirationCalculator();
+        negotiator.addHeader("Cache-Control", "max-age=5");
+        negotiator.addHeader("Cache-Control", "max-age=15");
+        assertEquals(5, negotiator.getMaxAgeInSeconds());
+    }
+
+    @Test
+    public void testChoosesMostRestrictiveExpires() throws Exception {
+        ResponseExpirationCalculator negotiator = new ResponseExpirationCalculator();
+        negotiator.addHeader("Expires", System.currentTimeMillis() + 1000 * 10);
+        negotiator.addHeader("Expires", System.currentTimeMillis() + 1000 * 20);
+        assertTrue(negotiator.getMaxAgeInSeconds() <= 10);
     }
 }
