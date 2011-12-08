@@ -98,10 +98,16 @@ public class ButtonTag extends TagSupport {
     @Override
     public int doEndTag() throws JspException {
 
+        if (!MgnlContext.hasInstance()) {
+            return EVAL_PAGE; // just don't break if context is not set, only skip rendering
+        }
+        
         BarTag bartag = (BarTag) findAncestorWithClass(this, BarTag.class);
         if (bartag == null) {
             throw new JspException("button tag should be enclosed in a mainbar or newbar tag");
         }
+
+        String repository = MgnlContext.getAggregationState().getRepository();
 
         Button button = new Button();
         button.setLabel(label);
@@ -113,7 +119,7 @@ public class ButtonTag extends TagSupport {
                 + "','','','"
                 + dialogName
                 + "','"
-                + RepositoryConstants.WEBSITE
+                + repository
                 + "',null, null, null"
                 + (i18nSupport.isEnabled()? ", '" + i18nSupport.getLocale().toString() + "'":"")
                 + ")");
