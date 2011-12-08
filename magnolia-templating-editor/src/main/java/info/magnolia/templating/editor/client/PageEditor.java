@@ -33,6 +33,7 @@
  */
 package info.magnolia.templating.editor.client;
 
+
 import info.magnolia.templating.editor.client.dom.CMSBoundary;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.dom.Comment;
@@ -45,6 +46,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -242,8 +244,54 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                     CMSComment comment = new CMSComment(((Comment)childNode.cast()).getData());
 
                     if (comment.isClosing()) {
+
                         if (boundary != null) {
+
+                            if (!boundary.isEdit()) {
+                                Element editBar = null;
+                                for (CMSBoundary child : boundary.getChildBoundaries()) {
+                                     if (child.isEdit() && child.getWidget() != null){
+                                        editBar = child.getWidget().getElement();
+                                        break;
+                                     }
+                                }
+                                if (editBar != null) {
+                                    int top = editBar.getAbsoluteBottom();
+                                    int left = editBar.getAbsoluteLeft();
+                                    int width = editBar.getAbsoluteRight() - editBar.getAbsoluteLeft();
+                                    int height = 0;
+
+                                    for (Node sibling = childNode.getPreviousSibling(); sibling != null; sibling = sibling.getPreviousSibling()) {
+                                        if (sibling.getNodeType() == Node.ELEMENT_NODE) {
+
+                                            Element element = sibling.cast();
+
+                                            if (element.getClassName().equals("mgnlAreaEditBar") || element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString()) == 0) {
+                                                continue;
+                                            }
+                                            height = element.getAbsoluteBottom() - top;
+                                            break;
+                                        }
+                                    }
+                                    AbstractOverlayWidget overlayWidget;
+                                    if (boundary.isArea()) {
+                                        overlayWidget = new AreaOverlayWidget(boundary);
+                                    }
+                                    else {
+                                        overlayWidget = new ComponentOverlayWidget(boundary);
+
+                                    }
+                                    overlayWidget.setTop(top);
+                                    overlayWidget.setLeft(left);
+                                    overlayWidget.setWidth(width);
+                                    overlayWidget.setHeight(height);
+
+                                    overlayWidget.attach();
+                                    boundary.setOverlayWidget(overlayWidget);
+                                }
+                            }
                             boundary = boundary.getParentBoundary();
+
                         }
                         continue;
                     }
@@ -252,19 +300,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
                         if( boundary.getParentBoundary() != null)
                             boundary.getParentBoundary().getChildBoundaries().add(boundary);
-/*
-                        if (boundary.isArea()) {
-
-                            Node sibling = childNode.getNextSibling();
-                            while (sibling != null) {
-                                if (sibling.getNodeType() == Node.ELEMENT_NODE && boundary.getFirstElement() == null) {
-                                    boundary.setFirstElement((Element)sibling);
-                                    break;
-                                }
-                                sibling = sibling.getNextSibling();
-                            }
-
-                        }*/
 
                         if (boundary.isEdit()) {
                             GWT.log("processing comment " + comment);
@@ -296,11 +331,14 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                             else if (boundary.getParentBoundary().isArea()) {
                                 GWT.log("element was detected as area edit bar. Injecting it...");
                                 AreaBarWidget areaBarWidget = new AreaBarWidget(boundary, this);
-                                areaBarWidget.attach(childNode);
+                                if (areaBarWidget.hasControls) {
+                                    areaBarWidget.attach(childNode);
+                                    boundary.setWidget(areaBarWidget);
+                                }
 
-                                boundary.setWidget(areaBarWidget);
                             }
                         }
+
                     }
                     catch (IllegalArgumentException e) {
                         GWT.log("Not CMSBoundary element, skipping: " + e.toString());

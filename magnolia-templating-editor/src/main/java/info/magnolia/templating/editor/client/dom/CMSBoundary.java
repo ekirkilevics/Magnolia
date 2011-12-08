@@ -34,8 +34,10 @@
 package info.magnolia.templating.editor.client.dom;
 
 import info.magnolia.templating.editor.client.AbstractBarWidget;
+import info.magnolia.templating.editor.client.AbstractOverlayWidget;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import com.google.gwt.dom.client.Element;
 
@@ -52,8 +54,7 @@ public class CMSBoundary {
     private boolean isArea = false;
     private boolean isComponent = false;
 
-    private Coordinate maxCoordinate = new Coordinate();
-    private Coordinate minCoordinate = new Coordinate();
+    private AbstractOverlayWidget overlayWidget;
 
     private Element firstElement;
     public Element getFirstElement() {
@@ -62,14 +63,6 @@ public class CMSBoundary {
 
     public void setFirstElement(Element firstElement) {
         this.firstElement = firstElement;
-    }
-
-    public Coordinate getMaxCoordinate() {
-        return maxCoordinate;
-    }
-
-    public Coordinate getMinCoordinate() {
-        return minCoordinate;
     }
 
     private LinkedList<CMSBoundary> childBoundaries = new LinkedList<CMSBoundary>();
@@ -84,7 +77,6 @@ public class CMSBoundary {
         if (!isCmsBoundary(comment.getTagName())) {
             throw new IllegalArgumentException("The tagname must be one of the defined marker Strings.");
         }
-
         this.setComment(comment);
         this.setParentBoundary(parentBoundary);
     }
@@ -113,9 +105,9 @@ public class CMSBoundary {
         return (getChildBoundaries().size() > 0);
     }
 
-    public LinkedList<CMSBoundary> getDescendants() {
+    public List<CMSBoundary> getDescendants() {
 
-        LinkedList<CMSBoundary> descendants = new LinkedList<CMSBoundary>();
+        List<CMSBoundary> descendants = new LinkedList<CMSBoundary>();
 
         for (CMSBoundary boundary : getChildBoundaries()) {
             descendants.add(boundary);
@@ -124,8 +116,8 @@ public class CMSBoundary {
         return descendants;
     }
 
-    public LinkedList<CMSBoundary> getAscendants() {
-        LinkedList<CMSBoundary> ascendants = new LinkedList<CMSBoundary>();
+    public List<CMSBoundary> getAscendants() {
+        List<CMSBoundary> ascendants = new LinkedList<CMSBoundary>();
         CMSBoundary parent = this.parentBoundary;
         while (parent != null) {
             ascendants.add(parent);
@@ -136,16 +128,11 @@ public class CMSBoundary {
 
     public CMSBoundary getParentArea() {
 
-        if (isArea()) {
-            return this;
-        }
-        else if (getParentBoundary() != null) {
+        if (getParentBoundary() == null) return null;
+        else if (getParentBoundary().isArea())
+            return getParentBoundary();
+        else
             return getParentBoundary().getParentArea();
-        }
-
-        return getParentBoundary().getParentArea();
-
-
     }
 
     public boolean isCmsBoundary(String tagName) {
@@ -190,25 +177,56 @@ public class CMSBoundary {
         return widget;
     }
 
-    /**
-     * Coordinate.
-     */
-    public class Coordinate {
-        private int left = 0;
-        private int top = 0;
+    public void setOverlayWidget(AbstractOverlayWidget overlayWidget) {
+        this.overlayWidget = overlayWidget;
+    }
 
-        public void setLeft(int left) {
-            this.left = left;
-        }
-        public int getLeft() {
-            return left;
-        }
-        public void setTop(int top) {
-            this.top = top;
-        }
-        public int getTop() {
-            return top;
-        }
+    public AbstractOverlayWidget getOverlayWidget() {
+        return overlayWidget;
+    }
 
+    public List<CMSBoundary> getComponents() {
+        List<CMSBoundary> components = new LinkedList<CMSBoundary>();
+        for (CMSBoundary boundary : getChildBoundaries()) {
+            if (boundary.isComponent()) {
+                components.add(boundary);
+            }
+        }
+        return components;
+    }
+    public List<CMSBoundary> getAreas() {
+        List<CMSBoundary> areas = new LinkedList<CMSBoundary>();
+        for (CMSBoundary boundary : getChildBoundaries()) {
+            if (boundary.isArea()) {
+                areas.add(boundary);
+            }
+        }
+        return areas;
+    }
+    public CMSBoundary getEdit() {
+        CMSBoundary edit = null;
+        for (CMSBoundary boundary : getChildBoundaries()) {
+            if (boundary.isEdit()) {
+                edit = boundary;
+            }
+        }
+        return edit;
+    }
+    public CMSBoundary getRoot() {
+        CMSBoundary root = null;
+        for (CMSBoundary parent = this; parent != null; parent = parent.getParentBoundary()) {
+            if (parent.getEdit() != null && parent.getEdit().getWidget() != null) {
+                root = parent;
+            }
+        }
+        return root;
+    }
+
+    public boolean isRelated(CMSBoundary relative) {
+
+        if (relative != null && this.getRoot() == relative.getRoot()) {
+                return true;
+        }
+        return false;
     }
 }

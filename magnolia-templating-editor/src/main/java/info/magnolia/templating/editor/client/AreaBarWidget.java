@@ -40,10 +40,14 @@ import info.magnolia.templating.editor.client.dom.CMSBoundary;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.Button;
 
 
@@ -79,6 +83,24 @@ public class AreaBarWidget extends AbstractBarWidget {
 
 
         CMSBoundary area = boundary.getParentArea();
+        boolean showBar = true;
+
+        for (CMSBoundary parentArea = boundary.getParentArea(); parentArea != null; parentArea = parentArea.getParentArea()) {
+            for (CMSBoundary child : parentArea.getChildBoundaries()) {
+                if (child.getWidget() != null) {
+                    showBar = false;
+                    break;
+                }
+            }
+            if (showBar == false) {
+                break;
+            }
+        }
+
+        if (!showBar) {
+
+            getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+        }
         String areaContent = area.getComment().getAttribute("content");
         int i = areaContent.indexOf(':');
         this.areaWorkspace = areaContent.substring(0, i);
@@ -106,60 +128,25 @@ public class AreaBarWidget extends AbstractBarWidget {
 
 
         createButtons(pageEditor, boundary.getComment());
-        if (hasControls) {
-            setClassName("mgnlAreaEditBar");
-        }
-        else {
-            this.setVisible(false);
-        }
+        setClassName("mgnlAreaEditBar");
 
-    }
-    @Override
-    protected void select() {
 
-        if (getBoundary() != null) {
-
-            CMSBoundary parentBoundary = getBoundary().getParentBoundary();
-            if (parentBoundary != null) {
-                for (CMSBoundary boundary : parentBoundary.getDescendants()) {
-                    if (boundary.getWidget() != null) {
-                        boundary.getWidget().addStyleName("selected");
-                    }
-                }
+        addDomHandler(new MouseDownHandler() {
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                //select();
             }
-            if (getBoundary().getParentArea() != null) {
-                Element element = getBoundary().getParentArea().getFirstElement();
-                if (element != null) {
-                    element.addClassName("mgnlSelected");
-                }
+        }, MouseDownEvent.getType());
+
+        addDomHandler(new MouseUpHandler() {
+            @Override
+            public void onMouseUp(MouseUpEvent event) {
+                VisibilityHelper.getInstance().toggleVisibility(getBoundary().getParentArea());
             }
-        }
-       super.select();
+        }, MouseUpEvent.getType());
 
     }
 
-    @Override
-    protected void deSelect() {
-        if (getBoundary() != null) {
-
-            CMSBoundary parentBoundary = getBoundary().getParentBoundary();
-            if (parentBoundary != null) {
-                for (CMSBoundary boundary : parentBoundary.getDescendants()) {
-                    if (boundary.getWidget() != null) {
-                        boundary.getWidget().removeStyleName("selected");
-                    }
-                }
-            }
-            if (getBoundary().getParentArea() != null) {
-                Element element = getBoundary().getParentArea().getFirstElement();
-                if (element != null) {
-                    element.removeClassName("mgnlSelected");
-                }
-            }
-
-        }
-        super.deSelect();
-    }
     public String getAvailableComponents() {
         return availableComponents;
     }

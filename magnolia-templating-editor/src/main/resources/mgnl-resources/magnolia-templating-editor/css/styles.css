@@ -126,3 +126,15 @@ button.mgnlControlButton_PUSHED {
 .mgnlSelected {
     outline: black solid thin;
 }
+
+.mgnlOverlay {
+    position: absolute;
+/*    background-color: yellow;
+    opacity: 0.2;*/
+    z-index: 2;
+    }
+
+.mgnlOverlay.component {
+/*    background-color: red; */
+    }
+

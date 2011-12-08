@@ -41,14 +41,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
+
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -62,6 +55,7 @@ public abstract class AbstractBarWidget extends FlowPanel {
     private CMSBoundary boundary;
     protected boolean hasControls = false;
     private String label = "";
+    private boolean toggleSelection = false;
 
     public AbstractBarWidget(CMSBoundary boundary) {
 
@@ -84,19 +78,7 @@ public abstract class AbstractBarWidget extends FlowPanel {
             areaName.setStylePrimaryName("mgnlAreaLabel");
             add(areaName);
         }
-        addDomHandler(new MouseOverHandler() {
-            @Override
-            public void onMouseOver(MouseOverEvent event) {
-                select();
-            }
-        }, MouseOverEvent.getType());
 
-        addDomHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                deSelect();
-            }
-        }, MouseOutEvent.getType());
     }
 
     /**
@@ -125,7 +107,7 @@ public abstract class AbstractBarWidget extends FlowPanel {
         button.setStylePrimaryName("mgnlControlButton");
         button.getElement().getStyle().setFloat(cssFloat);
 
-        button.addMouseDownHandler(new MouseDownHandler() {
+/*        button.addMouseDownHandler(new MouseDownHandler() {
 
             @Override
             public void onMouseDown(MouseDownEvent event) {
@@ -140,7 +122,7 @@ public abstract class AbstractBarWidget extends FlowPanel {
                 //remove push button style
                 button.setStyleName("mgnlControlButton_PUSHED", false);
             }
-        });
+        });*/
         add(button);
         hasControls = true;
     }
@@ -156,11 +138,18 @@ public abstract class AbstractBarWidget extends FlowPanel {
         return getElement().getStyle();
     }
 
+    /**
+     *  TODO: we should not have to call onAttach ourself?
+     */
     public void attach(Element element) {
         final Node parentNode = element.getParentNode();
         parentNode.insertAfter(getElement(), element);
         onAttach();
     }
+
+    /**
+     *  TODO: we should not have to call onAttach ourself?
+     */
     public void attach(Node node) {
         final Node parentNode = node.getParentNode();
         parentNode.insertAfter(getElement(), node);
