@@ -63,9 +63,6 @@ import EDU.oswego.cs.dl.util.concurrent.Sync;
 public class SimpleSyndicator extends BaseSyndicatorImpl {
     private static final Logger log = LoggerFactory.getLogger(SimpleSyndicator.class);
 
-    public SimpleSyndicator() {
-    }
-
     @Override
     public void activate(final ActivationContent activationContent, String nodePath) throws ExchangeException {
         String nodeUUID = activationContent.getproperty(NODE_UUID);
@@ -200,8 +197,20 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             try {
                 URLConnection urlConnection = prepareConnection(subscriber, urlString);
 
-                this.addDeactivationHeaders(urlConnection, nodeUUID);
+                this.addDeactivationHeaders(urlConnection, nodeUUID, null);
                 String status = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_STATUS);
+
+                if (StringUtils.equals(status, ACTIVATION_HANDSHAKE)) {
+                    String handshakeKey = urlConnection.getHeaderField(ACTIVATION_AUTH);
+                    // receive all pending data
+                    urlConnection.getContent();
+
+                    // transport the data again
+                    urlConnection = prepareConnection(subscriber, getActivationURL(subscriber));
+                    // and get the version & status again
+                    this.addDeactivationHeaders(urlConnection, nodeUUID, handshakeKey);
+                    status = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_STATUS);
+                }
 
                 // check if the activation failed
                 if (StringUtils.equals(status, ACTIVATION_FAILED)) {

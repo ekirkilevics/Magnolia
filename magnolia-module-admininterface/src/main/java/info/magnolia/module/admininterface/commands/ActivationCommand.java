@@ -46,9 +46,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.RepositoryException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -153,7 +153,7 @@ public class ActivationCommand extends BaseActivationCommand {
      * @throws RepositoryException
      */
     protected void activateRecursive(String parentPath, Content node, Context ctx)
-            throws ExchangeException, RepositoryException {
+    throws ExchangeException, RepositoryException {
 
         getSyndicator().activate(parentPath, node, getOrderingInfo(node));
 
@@ -184,7 +184,7 @@ public class ActivationCommand extends BaseActivationCommand {
      * @param versionMap
      * */
     protected void activateRecursive(Context ctx, List versionMap)
-            throws ExchangeException, RepositoryException {
+    throws ExchangeException, RepositoryException {
         // activate all uuid's present in versionMap
         Map<String, Object>[] versions = (Map<String, Object>[]) versionMap.toArray(new Map[0]);
         // add path and order info into the entries

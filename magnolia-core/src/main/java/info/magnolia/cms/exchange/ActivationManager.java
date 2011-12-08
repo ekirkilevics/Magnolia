@@ -45,8 +45,16 @@ public interface ActivationManager {
 
     public Collection<Subscriber> getSubscribers();
 
+    /**
+     * @deprecated means of setting the subscribers are implementation detail and should not be exposed
+     */
+    @Deprecated
     public void setSubscribers(Collection<Subscriber> subscribers);
 
+    /**
+     * @deprecated means of setting the subscribers are implementation detail and should not be exposed
+     */
+    @Deprecated
     public void addSubscribers(Subscriber subscriber);
 
     /**
@@ -58,5 +66,10 @@ public interface ActivationManager {
     public String getConfigPath();
 
     public boolean hasAnyActiveSubscriber();
+
+    /**
+     * Returns public key used by target instance to authenticate incoming activations.
+     */
+    public String getPublicKey();
 
 }

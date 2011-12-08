@@ -32,8 +32,13 @@
  *
  */
 package info.magnolia.module.exchangesimple;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -41,7 +46,9 @@ import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
+import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.MockWebContext;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.lock.LockException;
@@ -133,16 +140,17 @@ public class LockTest extends RepositoryTestCase {
 
         @Override
         public void run() {
-            MockUtil.initMockContext();
+            final MockContext ctx = new MockWebContext();
+            MgnlContext.setInstance(ctx);
             try {
                 //LockTest.this.initDefaultImplementations();
-                LockTest.this.modifyContextesToUseRealRepository();
+                // LockTest.this.modifyContextesToUseRealRepository();
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
 
-            ReceiveFilter rf = new ReceiveFilter();
+            ReceiveFilter rf = new ReceiveFilter(null);
             rf.setRetryWait(0);
             rf.setUnlockRetries(1);
 
@@ -217,13 +225,13 @@ public class LockTest extends RepositoryTestCase {
         node.createContent("paragraph", ItemType.CONTENTNODE.getSystemName());
         hm.save();
 
-        ReceiveFilter rf = new ReceiveFilter();
+        ReceiveFilter receiveFilter = new ReceiveFilter(null);
         HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         //apply lock
         expect (request.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
         expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(RepositoryConstants.WEBSITE);
         // cleanup
-        expect(request.getHeader(BaseSyndicatorImpl.ACTION)).andReturn(BaseSyndicatorImpl.ACTIVATE);
+        expect(request.getHeader(BaseSyndicatorImpl.ACTION)).andReturn(BaseSyndicatorImpl.ACTIVATE).anyTimes();
         expect (request.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page");
         expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(RepositoryConstants.WEBSITE);
         expect (request.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
@@ -246,32 +254,31 @@ public class LockTest extends RepositoryTestCase {
         Object[] objs = new Object[] {request, request2};
         replay(objs);
 
-        rf.applyLock(request);
+        receiveFilter.applyLock(request);
         assertTrue(hm.getContent("/page").isLocked());
         log.debug("locked in session1!");
 
 
-        ReceiveFilterLockCheck check = new ReceiveFilterLockCheck();
-        check.setRequest(request2);
-        Thread t2 = new Thread(check);
+        ReceiveFilterLockCheck threadSimulatingSecondRequestComingIn = new ReceiveFilterLockCheck();
+        threadSimulatingSecondRequestComingIn.setRequest(request2);
+        Thread t2 = new Thread(threadSimulatingSecondRequestComingIn);
 
         t2.start();
-        check.setRetry(true);
+        threadSimulatingSecondRequestComingIn.setRetry(true);
         // give it time to run through the loop
         Thread.sleep(1000);
-        assertTrue(check.isLocked());
+        assertTrue(threadSimulatingSecondRequestComingIn.isLocked());
         log.debug("lock in session2!");
-        rf.cleanUp(request);
+        receiveFilter.cleanUp(request);
         log.debug("unlocked in session1!");
         assertFalse(hm.getContent("/page").isLocked());
         log.debug("verified unlocked in session1!");
-        check.setRetry(true);
+        threadSimulatingSecondRequestComingIn.setRetry(true);
         Thread.sleep(1000);
-        assertFalse(check.isLocked());
+        assertFalse(threadSimulatingSecondRequestComingIn.isLocked());
         log.debug("locked by session2!");
 
         verify(objs);
         t2.interrupt();
     }
-
 }

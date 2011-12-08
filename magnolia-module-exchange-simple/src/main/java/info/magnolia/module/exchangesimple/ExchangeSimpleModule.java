@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,44 +31,51 @@
  * intact.
  *
  */
-package info.magnolia.cms.exchange;
+package info.magnolia.module.exchangesimple;
 
-import java.util.Collection;
+import info.magnolia.cms.security.MgnlKeyPair;
 
 /**
- * Subscriber is a java bean holding all configuration details of the subscription at runtime.
- * @author Sameer Charles
- * @version $Id$
+ * Module class of the basic activation module.
  */
-public interface Subscriber {
+public class ExchangeSimpleModule {
 
-    public String getName();
+    private long activationDelayTolerance = 30000;
+    private int activationKeyLength = 1024;
+    private MgnlKeyPair tempKeys;
 
-    public void setName(String name);
+    public void setActivationDelayTolerance(long activationDelayTolerance) {
+        this.activationDelayTolerance = activationDelayTolerance;
+    }
 
-    public String getURL();
+    /**
+     * Default tolerance if not set is 5000 (i.e. 5 seconds).
+     * 
+     * @return tolerance in miliseconds.
+     */
+    public long getActivationDelayTolerance() {
+        return activationDelayTolerance;
+    }
 
-    public void setURL(String url);
+    /**
+     * Default key length if not set is 512 bits.
+     * 
+     * @return key length in bits.
+     */
+    public int getActivationKeyLength() {
+        return activationKeyLength;
+    }
 
-    public boolean isActive();
+    public void setActivationKeyLength(int activationKeyLength) {
+        this.activationKeyLength = activationKeyLength;
+    }
 
-    public void setActive(boolean active);
+    public void setTempKeys(MgnlKeyPair tempKeys) {
+        this.tempKeys = tempKeys;
+    }
 
-    public void setSubscriptions(Collection<Subscription> subscriptions);
+    public MgnlKeyPair getTempKeys() {
+        return tempKeys;
+    }
 
-    public Collection<Subscription> getSubscriptions();
-
-    public void addSubscriptions(Subscription subscription);
-
-    public Subscription getMatchedSubscription(String path, String repositoryId);
-
-    public boolean isSubscribed(String path, String repositoryId);
-
-    public int getConnectTimeout();
-
-    public void setConnectTimeout(int timeoutMillis);
-
-    public int getReadTimeout();
-
-    public void setReadTimeout(int timeoutMillis);
 }

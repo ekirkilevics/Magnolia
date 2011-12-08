@@ -36,8 +36,8 @@ package info.magnolia.module.exchangesimple;
 import info.magnolia.cms.exchange.ActivationManager;
 import info.magnolia.cms.exchange.Subscriber;
 
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -48,6 +48,7 @@ import java.util.Iterator;
 public class DefaultActivationManager implements ActivationManager {
 
     private final Collection<Subscriber> subscribers = new ArrayList<Subscriber>();
+    private String activationKey;
 
     @Override
     public synchronized Collection<Subscriber> getSubscribers() {
@@ -80,6 +81,15 @@ public class DefaultActivationManager implements ActivationManager {
             }
         }
         return false;
+    }
+
+    @Override
+    public String getPublicKey() {
+        return this.activationKey;
+    }
+
+    public void setPublicKey(String activationKey) {
+        this.activationKey = activationKey;
     }
 
 }

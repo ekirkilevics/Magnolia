@@ -37,7 +37,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.exchange.ExchangeException;
@@ -45,49 +44,39 @@ import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.logging.AuditLoggingUtil;
-import info.magnolia.repository.RepositoryConstants;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.zip.GZIPOutputStream;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import EDU.oswego.cs.dl.util.concurrent.Sync;
+
+import com.google.inject.Inject;
 
 /**
  * Default implementation of {@link Syndicator}. Activates all the content to a subscriber configured on the server.
@@ -97,10 +86,12 @@ import EDU.oswego.cs.dl.util.concurrent.Sync;
 public abstract class BaseSyndicatorImpl implements Syndicator {
     private static final Logger log = LoggerFactory.getLogger(BaseSyndicatorImpl.class);
 
+    private final MessageDigest md;
+
     /**
      * URI used for activation.
      */
-    public static final String DEFAULT_HANDLER = ".magnolia/activation"; //$NON-NLS-1$
+    public static final String DEFAULT_HANDLER = ".magnolia/activation";
 
     public static final String PARENT_PATH = "mgnlExchangeParentPath";
 
@@ -116,6 +107,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     /**
      * @deprecated since 4.5 - use logical workspace instead.
      */
+    @Deprecated
     public static final String REPOSITORY_NAME = "mgnlExchangeRepositoryName";
 
     public static final String WORKSPACE_NAME = "mgnlExchangeWorkspaceName";
@@ -148,36 +140,44 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
     public static final String RESOURCE_MAPPING_ID_ATTRIBUTE = "resourceId";
 
+    public static final String RESOURCE_MAPPING_MD_ATTRIBUTE = "resourceMD";
+
     public static final String RESOURCE_MAPPING_ROOT_ELEMENT = "Resources";
 
     public static final String ACTION = "mgnlExchangeAction";
 
-    public static final String ACTIVATE = "activate"; //$NON-NLS-1$
+    public static final String ACTIVATE = "activate";
 
-    public static final String DEACTIVATE = "deactivate"; //$NON-NLS-1$
+    public static final String DEACTIVATE = "deactivate";
 
     public static final String COMMIT = "commit";
 
     public static final String ROLLBACK = "rollback";
 
-    public static final String AUTHORIZATION = "Authorization";
-
-    public static final String AUTH_CREDENTIALS= "mgnlUserPSWD";
-
-    public static final String AUTH_USER = "mgnlUserId";
-
     public static final String CONTENT_FILTER_RULE = "mgnlExchangeFilterRule";
 
-    public static final String ACTIVATION_SUCCESSFUL = "sa_success"; //$NON-NLS-1$
+    public static final String ACTIVATION_SUCCESSFUL = "sa_success";
 
-    public static final String ACTIVATION_FAILED = "sa_failed"; //$NON-NLS-1$
+    public static final String ACTIVATION_HANDSHAKE = "sa_handshake";
 
-    public static final String ACTIVATION_ATTRIBUTE_STATUS = "sa_attribute_status"; //$NON-NLS-1$
+    public static final String ACTIVATION_FAILED = "sa_failed";
 
-    public static final String ACTIVATION_ATTRIBUTE_MESSAGE = "sa_attribute_message"; //$NON-NLS-1$
+    public static final String ACTIVATION_ATTRIBUTE_STATUS = "sa_attribute_status";
 
-    public static final String ACTIVATION_ATTRIBUTE_VERSION = "sa_attribute_version"; //$NON-NLS-1$
+    public static final String ACTIVATION_ATTRIBUTE_MESSAGE = "sa_attribute_message";
 
+    public static final String ACTIVATION_ATTRIBUTE_VERSION = "sa_attribute_version";
+
+    public static final String ACTIVATION_AUTH = "X-magnolia-act-auth";
+    public static final String ACTIVATION_AUTH_KEY = "X-magnolia-act-auth-init";
+
+    public BaseSyndicatorImpl() {
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new SecurityException("In order to proceed with activation please run Magnolia CMS using Java version with MD5 support.", e);
+        }
+    }
     /**
      * Runs a given job in the thread pool.
      *
@@ -221,21 +221,22 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     /**
      * @deprecated since 4.5 - should no longer be needed when operating with logical workspace names
      */
+    @Deprecated
     protected String repositoryName;
 
     protected String workspaceName;
 
     protected String parent;
 
-    protected Content.ContentFilter contentFilter;
-
     protected Rule contentFilterRule;
 
     protected User user;
 
-    protected String basicCredentials;
-    
     private Calendar contentVersionDate;
+
+    private MagnoliaConfigurationProperties properties;
+
+    private ResourceCollector resourceCollector;
 
     /**
      * @param user
@@ -248,9 +249,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     @Override
     public void init(User user, String repositoryName, String workspaceName, Rule rule) {
         this.user = user;
-        this.basicCredentials = "Basic "
-            + new String(Base64.encodeBase64((this.user.getName() + ":" + this.user.getPassword()).getBytes()));
-        this.contentFilter = new RuleBasedContentFilter(rule);
         this.contentFilterRule = rule;
         this.repositoryName = repositoryName;
         this.workspaceName = workspaceName;
@@ -312,14 +310,14 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     public void activate(Subscriber subscriber, String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException {
         this.parent = parent;
         String path = content.getHandle();
-        
+
         if (content instanceof ContentVersion) {
             contentVersionDate = ((ContentVersion)content).getCreated();
         }
-        
+
         ActivationContent activationContent = null;
         try {
-            activationContent = this.collect(content, orderBefore);
+            activationContent = resourceCollector.collect(content, orderBefore, parent, workspaceName, repositoryName, contentFilterRule);
             if (null == subscriber) {
                 this.activate(activationContent, path);
             } else {
@@ -398,12 +396,21 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         String versionName = null;
         try {
             urlConnection = prepareConnection(subscriber, getActivationURL(subscriber));
-            this.addActivationHeaders(urlConnection, activationContent);
-
-            Transporter.transport((HttpURLConnection) urlConnection, activationContent);
+            versionName = transportActivatedData(activationContent, urlConnection, null);
 
             String status = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_STATUS);
-            versionName = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_VERSION);
+
+            if (StringUtils.equals(status, ACTIVATION_HANDSHAKE)) {
+                String handshakeKey = urlConnection.getHeaderField(ACTIVATION_AUTH);
+                // receive all pending data
+                urlConnection.getContent();
+
+                // transport the data again
+                urlConnection = prepareConnection(subscriber, getActivationURL(subscriber));
+                // and get the version & status again
+                versionName = transportActivatedData(activationContent, urlConnection, handshakeKey);
+                status = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_STATUS);
+            }
 
             // check if the activation failed
             if (StringUtils.equals(status, ACTIVATION_FAILED)) {
@@ -426,6 +433,16 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         catch (Exception e) {
             throw new ExchangeException(e);
         }
+        return versionName;
+    }
+
+    private String transportActivatedData(ActivationContent activationContent, URLConnection urlConnection, String handshakeKey) throws ExchangeException {
+        String versionName;
+        this.addActivationHeaders(urlConnection, activationContent, handshakeKey);
+
+        Transporter.transport((HttpURLConnection) urlConnection, activationContent);
+
+        versionName = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_VERSION);
         return versionName;
     }
 
@@ -520,15 +537,35 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
     /**
      * Adds header fields describing deactivation request.
+     * 
      * @param connection
+     * @param handshakeKey
+     *            optional key to encrypt public key before sending it over
      */
-    protected void addDeactivationHeaders(URLConnection connection, String nodeUUID) {
+    protected void addDeactivationHeaders(URLConnection connection, String nodeUUID, String handshakeKey) {
         connection.addRequestProperty(REPOSITORY_NAME, this.repositoryName);
         connection.addRequestProperty(WORKSPACE_NAME, this.workspaceName);
+        // TODO: how can this ever be null?? We don't send path along anywhere, so there's no way to delete anything w/o uuid, which means we pbly do not support deactivation of content w/o UUID!!!
+        String md5 = "";
         if (nodeUUID != null) {
             connection.addRequestProperty(NODE_UUID, nodeUUID);
+            // send md5 of uuid ... it would be silly to send clear text along the encrypted message
+            md5 = SecurityUtil.byteArrayToHex(md.digest(nodeUUID.getBytes()));
         }
+        // send md5 of uuid ... it would be silly to send clear text along the encrypted message
+        String pass = System.currentTimeMillis() + ";" + this.user.getName() + ";" + md5;
+
+        // optional
+        addHandshakeInfo(connection, handshakeKey);
+
+        connection.setRequestProperty(ACTIVATION_AUTH, SecurityUtil.encrypt(pass));
         connection.addRequestProperty(ACTION, DEACTIVATE);
+    }
+
+    protected void addHandshakeInfo(URLConnection connection, String handshakeKey) {
+        if (handshakeKey != null) {
+            connection.setRequestProperty(ACTIVATION_AUTH_KEY, SecurityUtil.encrypt(SecurityUtil.getPublicKey(), handshakeKey));
+        }
     }
 
     /**
@@ -544,8 +581,15 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
     /**
      * Adds headers fields describing activation request.
+     * 
+     * @param handshakeKey
+     *            Optional key previously received from subscriber, used to encrypt activation public key for delivery to said subscriber. Or null when such key is not known or present.
      */
-    protected void addActivationHeaders(URLConnection connection, ActivationContent activationContent) {
+    protected void addActivationHeaders(URLConnection connection, ActivationContent activationContent, String handshakeKey) {
+
+        String md5 = activationContent.removeProperty(RESOURCE_MAPPING_MD_ATTRIBUTE);
+        String pass = System.currentTimeMillis() + ";" + this.user + ";" + md5;
+        activationContent.setProperty(ACTIVATION_AUTH, SecurityUtil.encrypt(pass));
         Iterator<String> headerKeys = activationContent.getProperties().keySet().iterator();
         while (headerKeys.hasNext()) {
             String key = headerKeys.next();
@@ -560,6 +604,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
             }
             connection.setRequestProperty(key, value);
         }
+        addHandshakeInfo(connection, handshakeKey);
     }
 
     /**
@@ -608,7 +653,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         }
         md.setActivatorId(this.user.getName());
         md.setLastActivationActionDate();
-        
+
         if(type.equals(ACTIVATE)){
             if(md.getModificationDate() != null && md.getModificationDate().after(contentVersionDate)){
                 try {
@@ -623,7 +668,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         Iterator<Content> children;
         if (type.equals(ACTIVATE)) {
             // use syndicator rule based filter
-            children = node.getChildren(this.contentFilter).iterator();
+            children = node.getChildren(new RuleBasedContentFilter(contentFilterRule)).iterator();
         }
         else {
             // all children
@@ -637,140 +682,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
 
     }
-
-    /**
-     * Collects all information about activated content and its children (those that are set to be activated with the parent by filter rules).
-     * @throws Exception
-     */
-    protected ActivationContent collect(Content node, List<String> orderBefore) throws Exception {
-        // make sure resource file is unique
-        File resourceFile = File.createTempFile("resources", ".xml", Path.getTempDirectory());
-
-        ActivationContent activationContent = new ActivationContent();
-        // add global properties true for this path/hierarchy
-        activationContent.addProperty(PARENT_PATH, this.parent);
-        activationContent.addProperty(WORKSPACE_NAME, this.workspaceName);
-        activationContent.addProperty(REPOSITORY_NAME, this.repositoryName);
-        activationContent.addProperty(RESOURCE_MAPPING_FILE, resourceFile.getName());//"resources.xml");
-        activationContent.addProperty(ACTION, ACTIVATE);
-        activationContent.addProperty(CONTENT_FILTER_RULE, this.contentFilterRule.toString());
-        activationContent.addProperty(NODE_UUID, node.getUUID());
-        activationContent.addProperty(UTF8_STATUS, SystemProperty.getProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED));
-
-
-        Document document = new Document();
-        Element root = new Element(RESOURCE_MAPPING_ROOT_ELEMENT);
-        document.setRootElement(root);
-        // collect exact order of this node within its same nodeType siblings
-        addOrderingInfo(root, orderBefore);
-
-        this.addResources(root, node.getWorkspace().getSession(), node, this.contentFilter, activationContent);
-        XMLOutputter outputter = new XMLOutputter();
-        outputter.output(document, new FileOutputStream(resourceFile));
-        // add resource file to the list
-        activationContent.addFile(resourceFile.getName(), resourceFile);
-
-        // add deletion info
-        activationContent.addProperty(ItemType.DELETED_NODE_MIXIN, "" + node.hasMixin(ItemType.DELETED_NODE_MIXIN));
-
-        return activationContent;
-    }
-
-    /**
-     * Adds ordering information to the resource mapping file.
-     * @param root element of the resource file under which ordering info must be added
-     * @param orderBefore
-     */
-    protected void addOrderingInfo(Element root, List<String> orderBefore) {
-        //do not use magnolia Content class since these objects are only meant for a single use to read UUID
-        Element siblingRoot = new Element(SIBLINGS_ROOT_ELEMENT);
-        root.addContent(siblingRoot);
-        if (orderBefore == null) {
-            return;
-        }
-        Iterator<String> siblings = orderBefore.iterator();
-        while (siblings.hasNext()) {
-            String uuid = siblings.next();
-            Element e = new Element(SIBLINGS_ELEMENT);
-            e.setAttribute(SIBLING_UUID, uuid);
-            siblingRoot.addContent(e);
-        }
-    }
-
-    protected void addResources(Element resourceElement, Session session, final Content content, Content.ContentFilter filter, ActivationContent activationContent) throws IOException, RepositoryException, SAXException, Exception {
-        final String workspaceName = content.getWorkspace().getName();
-        log.debug("Preparing content {}:{} for publishing.", new String[] {workspaceName, content.getHandle()});
-        final String uuid = content.getUUID();
-
-        File file = File.createTempFile("exchange_" + uuid, ".xml.gz", Path.getTempDirectory());
-        GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
-
-        // TODO: remove the second check. It should not be necessary. The only safe way to identify the versioned node is by looking at its type since the type is mandated by spec. and the frozen nodes is what the filter below removes anyway
-        if (content.isNodeType("nt:frozenNode") || workspaceName.equals(RepositoryConstants.VERSION_STORE)) {
-            XMLReader elementfilter = new FrozenElementFilter(XMLReaderFactory
-                    .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
-            ((FrozenElementFilter) elementfilter).setNodeName(content.getName());
-            /**
-             * nt:file node type has mandatory sub nodes
-             */
-            boolean noRecurse = !content.isNodeType(ItemType.NT_FILE);
-            exportAndParse(session, content, elementfilter, gzipOutputStream, noRecurse);
-        } else {
-            /**
-             * nt:file node type has mandatory sub nodes
-             */
-            if (content.isNodeType(ItemType.NT_FILE)) {
-                session.exportSystemView(content.getJCRNode().getPath(), gzipOutputStream, false, false);
-            } else {
-                session.exportSystemView(content.getJCRNode().getPath(), gzipOutputStream, false, true);
-            }
-        }
-
-        IOUtils.closeQuietly(gzipOutputStream);
-        // add file entry in mapping.xml
-        Element element = new Element(RESOURCE_MAPPING_FILE_ELEMENT);
-        element.setAttribute(RESOURCE_MAPPING_NAME_ATTRIBUTE, content.getName());
-        element.setAttribute(RESOURCE_MAPPING_UUID_ATTRIBUTE, uuid);
-        element.setAttribute(RESOURCE_MAPPING_ID_ATTRIBUTE, file.getName());
-        resourceElement.addContent(element);
-        // add this file element as resource in activation content
-        activationContent.addFile(file.getName(), file);
-
-        Iterator<Content> children = content.getChildren(filter).iterator();
-        while (children.hasNext()) {
-            Content child = children.next();
-            this.addResources(element, session, child, filter, activationContent);
-        }
-    }
-
-    protected void exportAndParse(Session session, Content content, XMLReader elementfilter, OutputStream os, boolean noRecurse) throws Exception {
-        File tempFile = File.createTempFile("Frozen_"+content.getName(), ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
-        OutputStream tmpFileOutStream = null;
-        FileInputStream tmpFileInStream = null;
-        try {
-            tmpFileOutStream = new FileOutputStream(tempFile);
-            // has to get path via JCR node since if "content" is of type ContentVersion, getHandle() call would have returned path to the base
-            session.exportSystemView(content.getJCRNode().getPath(), tmpFileOutStream, false, noRecurse);
-            tmpFileOutStream.flush();
-            tmpFileOutStream.close();
-
-            OutputFormat outputFormat = new OutputFormat();
-            outputFormat.setPreserveSpace(false);
-
-            tmpFileInStream = new FileInputStream(tempFile);
-            elementfilter.setContentHandler(new XMLSerializer(os, outputFormat));
-            elementfilter.parse(new InputSource(tmpFileInStream));
-            tmpFileInStream.close();
-        } catch (Throwable t) {
-            log.error("Failed to parse XML using FrozenElementFilter",t);
-            throw new Exception(t);
-        } finally {
-            IOUtils.closeQuietly(tmpFileInStream);
-            IOUtils.closeQuietly(tmpFileOutStream);
-            tempFile.delete();
-        }
-    }
-
     /**
      * Gets target path to which the current path is mapped in given subscription. Provided path should be without trailing slash.
      */
@@ -795,22 +706,10 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         //String handle = getActivationURL(subscriber);
 
         try {
-            String authMethod = subscriber.getAuthenticationMethod();
-            // authentication headers
-            if (authMethod != null && "form".equalsIgnoreCase(authMethod)) {
-                urlString += (urlString.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
-                urlString += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
-            }
             URL url = new URL(urlString);
             URLConnection urlConnection = url.openConnection();
             urlConnection.setConnectTimeout(subscriber.getConnectTimeout());
             urlConnection.setReadTimeout(subscriber.getReadTimeout());
-            // authentication headers
-            if (authMethod == null || "basic".equalsIgnoreCase(authMethod)) {
-                urlConnection.setRequestProperty(AUTHORIZATION, this.basicCredentials);
-            } else if (!"form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-                log.info("Unknown Authentication method for deactivation: " + subscriber.getAuthenticationMethod());
-            }
 
             return urlConnection;
         } catch (MalformedURLException e) {
@@ -822,5 +721,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         }
     }
 
-
+    @Inject
+    public void setResouceCollector(ResourceCollector resourceCollector) {
+        this.resourceCollector = resourceCollector;
+    }
 }

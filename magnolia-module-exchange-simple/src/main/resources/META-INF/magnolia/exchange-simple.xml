@@ -4,6 +4,7 @@
   <name>exchange-simple</name>
   <displayName>Magnolia Simple Exchange Module</displayName>
   <description>Provides the default activation implementation</description>
+  <class>info.magnolia.module.exchangesimple.ExchangeSimpleModule</class>
   <versionHandler>info.magnolia.module.exchangesimple.setup.ExchangeSimpleModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
 
@@ -17,11 +18,19 @@
       <type>info.magnolia.cms.exchange.Subscription</type>
       <implementation>info.magnolia.module.exchangesimple.DefaultSubscription</implementation>
     </type-mapping>
+    <type-mapping>
+      <type>info.magnolia.module.exchangesimple.ResourceCollector</type>
+      <implementation>info.magnolia.module.exchangesimple.ResourceCollector</implementation>
+    </type-mapping>
   </components>
 
   <dependencies>
     <dependency>
       <name>core</name>
+      <version>4.5/*</version>
+    </dependency>
+    <dependency>
+      <name>adminInterface</name>
       <version>4.5/*</version>
     </dependency>
   </dependencies>

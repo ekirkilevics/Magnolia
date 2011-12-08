@@ -35,8 +35,10 @@ package info.magnolia.module.exchangesimple.setup;
 
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.ConditionalDelegateTask;
@@ -46,9 +48,11 @@ import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
 import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.exchangesimple.setup.for3_5.UpdateActivationConfigTask;
 import info.magnolia.repository.RepositoryConstants;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,12 +71,12 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
             new CreateNodeTask("Activation configuration", "Creates empty activation configuration", RepositoryConstants.CONFIG, "/server", "activation", ItemType.CONTENT.getSystemName()),
             new SetPropertyTask(RepositoryConstants.CONFIG, "/server/activation", "class", info.magnolia.module.exchangesimple.DefaultActivationManager.class.getName()),
             new CreateNodeTask("Activation configuration", "Creates empty subscribers node", RepositoryConstants.CONFIG, "/server/activation", "subscribers", ItemType.CONTENT.getSystemName())
-        });
+    });
 
     private final Task updateConfigFrom30OrBootstrap = new ConditionalDelegateTask("Activation configuration", "The activation configuration changed. This either updates your existing configuration or bootstraps a new one",
             new UpdateActivationConfigTask(),
             new IsAuthorInstanceDelegateTask("", "", new BootstrapSingleResource("Bootstrap new activation configuration", "Bootstrap new activation configuration",
-                    "/mgnl-bootstrap/exchange-simple/config.server.activation.xml"), createEmptyActivationConfig)) {
+            "/mgnl-bootstrap/exchange-simple/config.server.activation.xml"), createEmptyActivationConfig)) {
 
         @Override
         protected boolean condition(InstallContext ctx) {
@@ -81,8 +85,8 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
         }
     };
 
-    private BootstrapSingleResource bootstrapVirtualURIMapping = new BootstrapSingleResource("Bootstrap new virtual uri mapping", "Bootstrap new virtual uri mapping",
-            "/mgnl-bootstrap/exchange-simple/config.modules.exchange-simple.virtualURIMapping.3_0_to_3_5.xml");
+    private final BootstrapSingleResource bootstrapVirtualURIMapping = new BootstrapSingleResource("Bootstrap new virtual uri mapping", "Bootstrap new virtual uri mapping",
+    "/mgnl-bootstrap/exchange-simple/config.modules.exchange-simple.virtualURIMapping.3_0_to_3_5.xml");
 
     public ExchangeSimpleModuleVersionHandler() {
         super();
@@ -91,19 +95,49 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
         deltaTo354.addTask(bootstrapVirtualURIMapping);
         deltaTo354.addTask(new SetPropertyTask(RepositoryConstants.CONFIG, "/server/filters/activation/bypasses/allButActivationHandler","pattern", "/.magnolia/activation"));
         this.register(deltaTo354);
+
+        register(DeltaBuilder.update("4.5", "URL of activation filter is no longer password protected but uses encryption instead.")
+                .addTask(new BootstrapSingleResource("", "", "/mgnl-bootstrap/exchange-simple/config.modules.exchange-simple.pages.activationPage.xml"))
+                .addTask(new BootstrapSingleResource("", "", "/mgnl-bootstrap/exchange-simple/config.modules.adminInterface.config.menu.tools.activationPage.xml"))
+                .addTask(new IsAuthorInstanceDelegateTask("", "", new AbstractTask("", "") {
+
+                    @Override
+                    public void execute(InstallContext installContext) throws TaskExecutionException {
+                        try {
+                            SecurityUtil.updateKeys(SecurityUtil.generateKeyPair(1024));
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new TaskExecutionException(e.getMessage(), e);
+                        }
+                    }
+                }))
+                .addTask(new FilterOrderingTask("activation", new String[] { "context", "login", "multipartRequest" })));
+
     }
 
     @Override
     protected List getBasicInstallTasks(InstallContext installContext) {
-        // 3.5.0 is the first version of this module. install tasks take care of updating existing config
-
-        final List installTasks = new ArrayList();
-        installTasks.add(updateConfigFrom30OrBootstrap);
-        installTasks.add(new BootstrapSingleResource("Bootstrap new filter", "Bootstrap new filter",
-                "/mgnl-bootstrap/exchange-simple/config.server.filters.activation.xml"));
-        installTasks.add(bootstrapVirtualURIMapping);
-        installTasks.add(new FilterOrderingTask("activation", new String[]{"context", "login", "uriSecurity", "multipartRequest"}));
+        final List installTasks = new ArrayList(super.getBasicInstallTasks(installContext));
+        installTasks.add(new FilterOrderingTask("activation", new String[] { "context", "login", "multipartRequest" }));
         return installTasks;
+    }
+
+    @Override
+    protected List<Task> getExtraInstallTasks(InstallContext installContext) {
+        List<Task> tasks = new ArrayList<Task>();
+        tasks.addAll(super.getExtraInstallTasks(installContext));
+        tasks.add(new IsAuthorInstanceDelegateTask("Activation Keys", "Generate new Activation Key Pair.", new AbstractTask("", "") {
+
+            @Override
+            public void execute(InstallContext installContext) throws TaskExecutionException {
+                try {
+                    SecurityUtil.updateKeys(SecurityUtil.generateKeyPair(1024));
+                } catch (NoSuchAlgorithmException e) {
+                    throw new TaskExecutionException(e.getMessage(), e);
+                }
+            }
+        }));
+
+        return tasks;
     }
 
 

@@ -43,16 +43,22 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.MgnlKeyPair;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionUtil;
+import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.DigestInputStream;
 import java.security.InvalidParameterException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -73,7 +79,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
@@ -82,6 +87,8 @@ import org.jdom.input.SAXBuilder;
 import org.safehaus.uuid.UUIDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
 
 /**
  * This filter receives activation requests from another instance and applies them.
@@ -93,15 +100,23 @@ public class ReceiveFilter extends AbstractMgnlFilter {
 
     private static final Logger log = LoggerFactory.getLogger(ReceiveFilter.class);
 
-    /**
-     * @deprecated since 3.5. This is the attribute name that was used in 3.0, so we keep to be able to activate from 3.0.
-     */
-    @Deprecated
-    private static final String SIBLING_UUID_3_0 = "UUID";
-
     private int unlockRetries = 10;
 
     private int retryWait = 2;
+
+    private final ExchangeSimpleModule module;
+    private final MessageDigest md;
+
+
+    @Inject
+    public ReceiveFilter(ExchangeSimpleModule module) {
+        this.module = module;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new SecurityException("In order to proceed with activation please run Magnolia CMS using Java version with MD5 support.", e);
+        }
+    }
 
     public int getUnlockRetries() {
         return unlockRetries;
@@ -135,17 +150,23 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                 throw new InvalidParameterException("Activation action must be set for each activation request.");
             }
 
-            applyLock(request);
-            result = receive(request);
-            status = BaseSyndicatorImpl.ACTIVATION_SUCCESSFUL;
+            // verify the author ... if not trusted yet, but no exception thrown, then we attempt to establish trust
+            if (!isAuthorAuthenticated(request, response)) {
+                status = BaseSyndicatorImpl.ACTIVATION_HANDSHAKE;
+            } else {
+                // we do not lock the content on handshake requests
+                applyLock(request);
+                result = receive(request);
+                status = BaseSyndicatorImpl.ACTIVATION_SUCCESSFUL;
+            }
         }
         catch (OutOfMemoryError e) {
             Runtime rt = Runtime.getRuntime();
-            log.error("---------\nOutOfMemoryError caught during activation. Total memory = " //$NON-NLS-1$
+            log.error("---------\nOutOfMemoryError caught during activation. Total memory = "
                     + rt.totalMemory()
-                    + ", free memory = " //$NON-NLS-1$
+                    + ", free memory = "
                     + rt.freeMemory()
-                    + "\n---------"); //$NON-NLS-1$
+                    + "\n---------");
             statusMessage = e.getMessage();
             status = BaseSyndicatorImpl.ACTIVATION_FAILED;
         }
@@ -170,6 +191,37 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         }
     }
 
+    protected boolean isAuthorAuthenticated(HttpServletRequest request, HttpServletResponse response) throws NoSuchAlgorithmException, ExchangeException {
+        if (SecurityUtil.getPublicKey() == null) {
+            if (module.getTempKeys() == null) {
+                // no temp keys set or module reset wiped them out
+                MgnlKeyPair tempKeys = SecurityUtil.generateKeyPair(module.getActivationKeyLength());
+                // we use a temp key to encrypt authors public key for transport ... intercepting this key will not anyone allow to decrypt public key sent by the author
+                response.addHeader(BaseSyndicatorImpl.ACTIVATION_AUTH, tempKeys.getPublicKey());
+                module.setTempKeys(tempKeys);
+                return false;
+            } else {
+                // we have temp keys so we expect that this time around we are getting the public key to store
+                String authorsPublicKeyEncryptedByTempPublicKey = request.getHeader(BaseSyndicatorImpl.ACTIVATION_AUTH_KEY);
+                // use our private key to decrypt
+                String publicKey = SecurityUtil.decrypt(authorsPublicKeyEncryptedByTempPublicKey, module.getTempKeys().getPrivateKey());
+                if (StringUtils.isNotBlank(publicKey)) {
+                    String authString = SecurityUtil.decrypt(request.getHeader(BaseSyndicatorImpl.ACTIVATION_AUTH), publicKey);
+                    String[] auth = authString.split(";");
+                    checkTimestamp(auth);
+                    // no private key for public
+                    // TODO: what about chain of instances? should we not store 2 sets - one generated by the instance (and possibly passed on) and one (public key only) received by the instance?
+                    SecurityUtil.updateKeys(new MgnlKeyPair(null, publicKey));
+                }
+                // maybe some other thread received this already in the mean time ...
+                if (SecurityUtil.getPublicKey() == null) {
+                    throw new ExchangeException("Failed to negotiate encryption key between author and public instance. Please try again later or contact admin if error persists.");
+                }
+            }
+        }
+        return true;
+    }
+
     protected void setResponseHeaders(HttpServletResponse response, String statusMessage, String status, String result) {
         response.setHeader(BaseSyndicatorImpl.ACTIVATION_ATTRIBUTE_STATUS, status);
         response.setHeader(BaseSyndicatorImpl.ACTIVATION_ATTRIBUTE_MESSAGE, statusMessage);
@@ -183,19 +235,25 @@ public class ReceiveFilter extends AbstractMgnlFilter {
     protected synchronized String receive(HttpServletRequest request) throws Exception {
         String action = request.getHeader(BaseSyndicatorImpl.ACTION);
         log.debug("action: " + action);
-        String authorization = getUser(request);
+
+        String[] auth = checkAuthenticated(request);
+
+        String user = auth[1];
+
+        String resourcesmd5 = auth[2];
+
         // TODO : this variable is used in log messages to identify the instance - but its content is really the folder name into which Magnolia was deployed, which is irrelevant.
         String webapp = getWebappName();
 
         if (action.equalsIgnoreCase(BaseSyndicatorImpl.ACTIVATE)) {
-            String name = update(request);
+            String name = update(request, resourcesmd5);
             // Everything went well
-            log.info("User {} successfuly activated {} on {}.", new Object[]{authorization, name, webapp});
+            log.info("User {} successfuly activated {} on {}.", new Object[] { user, name, webapp });
         }
         else if (action.equalsIgnoreCase(BaseSyndicatorImpl.DEACTIVATE)) {
-            String name = remove(request);
+            String name = remove(request, resourcesmd5);
             // Everything went well
-            log.info("User {} succeessfuly deactivated {} on {}.", new Object[] {authorization, name, webapp});
+            log.info("User {} succeessfuly deactivated {} on {}.", new Object[] { user, name, webapp });
         }
         else {
             throw new UnsupportedOperationException("Method not supported : " + action);
@@ -203,34 +261,71 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         return null;
     }
 
+    protected String[] checkAuthenticated(HttpServletRequest request) throws ExchangeException {
+        String encrypted = request.getHeader(BaseSyndicatorImpl.ACTIVATION_AUTH);
+        if (StringUtils.isBlank(encrypted)) {
+            log.debug("Attempt to access activation URL w/o proper information in request. Ignoring silently.");
+            throw new ExchangeException();
+        }
+
+        String decrypted = SecurityUtil.decrypt(encrypted);
+        if (StringUtils.isBlank(decrypted)) {
+            throw new SecurityException("Handshake information for activation was incorrect. Someone attempted to impersonate author instance. Incoming request was from " + request.getRemoteAddr());
+        }
+
+        String[] auth = decrypted.split(";");
+
+        // timestamp;user;resourcemd;optional_encrypted_public_key
+        if (auth.length != 3) {
+            throw new SecurityException("Handshake information for activation was incorrect. Someone attempted to impersonate author instance. Incoming request was from " + request.getRemoteAddr());
+        }
+        // first part is a timestamp
+        checkTimestamp(auth);
+        return auth;
+    }
+
+    private void checkTimestamp(String[] auth) {
+        long timestamp = System.currentTimeMillis();
+        long authorTimestamp = 0;
+        try {
+            authorTimestamp = Long.parseLong(auth[0]);
+        } catch (NumberFormatException e) {
+            throw new SecurityException("Handshake information for activation was incorrect. This might be an attempt to replay earlier activation request.");
+        }
+        if (Math.abs(timestamp - authorTimestamp) > module.getActivationDelayTolerance()) {
+            throw new SecurityException("Activation refused due to request arriving too late or time not synched between author and public instance. Please contact your administrator to ensure server times are synced or the tolerance is set high enough to counter the differences.");
+        }
+    }
+
     protected String getWebappName() {
         return SystemProperty.getProperty(SystemProperty.MAGNOLIA_WEBAPP);
     }
 
+    /**
+     * @deprecated since 4.5. This method is not used anymore and there is no replacement. Authentication of activation is now handled by exchange of info encrypted by PPKey.
+     */
+    @Deprecated
     protected String getUser(HttpServletRequest request) {
-        // get the user who authorized this request.
-        String user = request.getHeader(BaseSyndicatorImpl.AUTHORIZATION);
-        if (StringUtils.isEmpty(user)) {
-            user = request.getParameter(BaseSyndicatorImpl.AUTH_USER);
-        } else {
-            user = new String(Base64.decodeBase64(user.substring(6).getBytes())); //Basic uname:pwd
-            user = user.substring(0, user.indexOf(":"));
-        }
-        return user;
+        return null;
     }
 
     /**
      * handle update (activate) request.
+     * 
      * @param request
-     * @throws Exception if fails to update
+     *            incoming reuqest
+     * @param resourcesmd5
+     *            signature confirming validity of resource file
+     * @throws Exception
+     *             if fails to update
      */
-    protected synchronized String update(HttpServletRequest request) throws Exception {
+    protected synchronized String update(HttpServletRequest request, String resourcesmd5) throws Exception {
         MultipartForm data = MgnlContext.getPostedForm();
         if (null != data) {
             String newParentPath = this.getParentPath(request);
             String resourceFileName = request.getHeader(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE);
             HierarchyManager hm = getHierarchyManager(request);
-            Element rootElement = getImportedContentRoot(data, resourceFileName);
+            Element rootElement = getImportedContentRoot(data, resourceFileName, resourcesmd5);
             Element topContentElement = rootElement.getChild(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT);
             Content content = null;
             try {
@@ -251,12 +346,17 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         return null;
     }
 
-    protected Element getImportedContentRoot(MultipartForm data, String resourceFileName) throws JDOMException, IOException {
+    protected Element getImportedContentRoot(MultipartForm data, String resourceFileName, String resourcesmd5) throws JDOMException, IOException {
         Document resourceDocument = data.getDocument(resourceFileName);
         SAXBuilder builder = new SAXBuilder();
-        InputStream documentInputStream = resourceDocument.getStream();
+        InputStream documentInputStream = new DigestInputStream(resourceDocument.getStream(), md);
         org.jdom.Document jdomDocument = builder.build(documentInputStream);
         IOUtils.closeQuietly(documentInputStream);
+        String sign = SecurityUtil.byteArrayToHex(md.digest());
+        if (!resourcesmd5.equals(sign)) {
+            throw new SecurityException("Signature of received resource (" + sign + ") doesn't match expected signature (" + resourcesmd5 + "). This might mean that the activation operation have been intercepted by a third party and content have been modified during transfer.");
+        }
+
         return jdomDocument.getRootElement();
     }
 
@@ -268,9 +368,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         this.removeChildren(content, filter);
     }
 
-    protected String handleMovedContent(String newParentPath,
-            HierarchyManager hm, Element topContentElement, Content content)
-    throws RepositoryException {
+    protected String handleMovedContent(String newParentPath, HierarchyManager hm, Element topContentElement, Content content) throws RepositoryException {
         String currentParentPath = content.getHandle();
         currentParentPath = currentParentPath.substring(0, currentParentPath.lastIndexOf('/'));
         String newName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
@@ -299,11 +397,6 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             // check for existence and order
             try {
                 String siblingUUID = sibling.getAttributeValue(BaseSyndicatorImpl.SIBLING_UUID);
-                // be compatible with 3.0 (MAGNOLIA-2016)
-                if (StringUtils.isEmpty(siblingUUID)) {
-                    log.debug("Activating from a Magnolia 3.0 instance");
-                    siblingUUID = sibling.getAttributeValue(SIBLING_UUID_3_0);
-                }
                 Content beforeContent = hm.getContentByUUID(siblingUUID);
                 log.debug("Ordering {} before {}", name, beforeContent.getName());
                 order(parent, name, beforeContent.getName());
@@ -311,8 +404,11 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             } catch (ItemNotFoundException e) {
                 // ignore
             } catch (RepositoryException re) {
-                log.warn("Failed to order node");
-                log.debug("Failed to order node", re);
+                if (log.isDebugEnabled()) {
+                    log.debug("Failed to order node", re);
+                } else {
+                    log.warn("Failed to order node");
+                }
             }
         }
 
@@ -363,7 +459,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                     destinationNode.setProperty(nodeData.getName(), property.getValues());
                 }
                 else {
-                    throw new AccessDeniedException("User not allowed to " + Permission.PERMISSION_NAME_WRITE + " at [" + nodeData.getHandle() + "]"); //$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
+                    throw new AccessDeniedException("User not allowed to " + Permission.PERMISSION_NAME_WRITE + " at [" + nodeData.getHandle() + "]");
                 }
             }
             else {
@@ -453,10 +549,15 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             final String transientStoreHandle = transientNode.getHandle();
             // import properties into transientStore
             final String fileName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
-            final GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
+            final String md5 = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_MD_ATTRIBUTE);
+            final InputStream inputStream = new DigestInputStream(new GZIPInputStream(data.getDocument(fileName).getStream()), md);
             // need to import in system context
             systemHM.getWorkspace().getSession().importXML(transientStoreHandle, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
             IOUtils.closeQuietly(inputStream);
+            final String calculatedMD5 = SecurityUtil.byteArrayToHex(md.digest());
+            if (!calculatedMD5.equals(md5)) {
+                throw new SecurityException(fileName + " signature is not valid. Resource might have been modified in transit.");
+            }
             // copy properties from transient store to existing content
             Content tmpContent = transientNode.getContent(topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE));
             copyProperties(tmpContent, existingContent);
@@ -488,11 +589,16 @@ public class ReceiveFilter extends AbstractMgnlFilter {
 
         final String name = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
         final String fileName = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
+        final String md5 = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_MD_ATTRIBUTE);
         // do actual import
-        final GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
+        final InputStream inputStream = new DigestInputStream(new GZIPInputStream(data.getDocument(fileName).getStream()), md);
         log.debug("Importing {} into parent path {}", new Object[] {name, parentPath});
         hm.getWorkspace().getSession().importXML(parentPath, inputStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         IOUtils.closeQuietly(inputStream);
+        final String calculatedMD5 = SecurityUtil.byteArrayToHex(md.digest());
+        if (!calculatedMD5.equals(md5)) {
+            throw new SecurityException(fileName + " signature is not valid. Resource might have been modified in transit. Expected signature:" + md5 + ", actual signature found: " + calculatedMD5);
+        }
         Iterator fileListIterator = resourceElement.getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
         // parent path
         try {
@@ -513,7 +619,11 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      * @param request
      * @throws Exception if fails to update
      */
-    protected synchronized String remove(HttpServletRequest request) throws Exception {
+    protected synchronized String remove(HttpServletRequest request, String md5) throws Exception {
+
+        if (!md5.equals(SecurityUtil.byteArrayToHex(md.digest(request.getHeader(BaseSyndicatorImpl.NODE_UUID).getBytes())))) {
+            throw new SecurityException("Signature of resource doesn't match. This seems like malicious attempt to delete content. Request was issued from " + request.getRemoteAddr());
+        }
         HierarchyManager hm = getHierarchyManager(request);
         String handle = null;
         try {
@@ -538,8 +648,8 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         if (StringUtils.isEmpty(workspaceName)) {
             throw new ExchangeException("Repository or workspace name not sent, unable to activate. Workspace: " + workspaceName) ;
         }
-
-        return MgnlContext.getHierarchyManager(workspaceName);
+        SystemContext sysCtx = MgnlContext.getSystemContext();
+        return sysCtx.getHierarchyManager(workspaceName);
     }
 
     /**
@@ -566,7 +676,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                 }
             } catch (LockException le) {
                 // either repository does not support locking OR this node never locked
-                log.debug(le.getMessage());
+                log.debug(le.getMessage(), le);
             } catch (RepositoryException re) {
                 // should never come here
                 log.warn("Exception caught", re);
@@ -636,11 +746,8 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         } else if (!StringUtils.isEmpty(getUUID(request))){
             log.debug("node uuid:" + request.getHeader(BaseSyndicatorImpl.NODE_UUID));
             return this.getHierarchyManager(request).getContentByUUID(request.getHeader(BaseSyndicatorImpl.NODE_UUID));
-        }
-        // 3.0 protocol
-        else {
-            log.debug("path: {}", request.getHeader(BaseSyndicatorImpl.PATH));
-            return this.getHierarchyManager(request).getContent(request.getHeader(BaseSyndicatorImpl.PATH));
+        } else {
+            throw new ExchangeException("Request is missing mandatory content identifier.");
         }
     }
 

@@ -46,15 +46,26 @@ import static org.easymock.EasyMock.isNull;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.startsWith;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.exchange.ActivationManager;
+import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
+import info.magnolia.cms.security.MgnlKeyPair;
+import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
@@ -70,9 +81,14 @@ import java.util.zip.GZIPInputStream;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
+import javax.jcr.observation.ObservationManager;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,9 +96,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+import org.jdom.Element;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 
 /**
  * Basic test for receiving end of the activation.
@@ -90,6 +108,9 @@ import org.junit.Test;
  */
 public class ReceiveFilterTest extends MgnlTestCase {
     private static final String PARENT_PATH = "/foo/bar";
+
+    private static final String PRIVATE_KEY = "30820154020100300D06092A864886F70D01010105000482013E3082013A020100024100BC47ED74F1097AE7F8B55196E1874258A05B5A04AD26BA774E3EF62BE778CFA60E86B33DA31989EC5E58B261EE266DF9FF37E11D3A7C0E648198B2B06A94C58B02030100010240355BB90AF42878A1771583BADBCD665B118EF212F3334F92F224DBC51383646D31ADE8D59D04653669B2802B8FE9A7808BC97FCEFB792D63686AAB4648357DC9022100DCC291095A9142DCF80F59C5DEBE711DDFBC61C6553351D98D8A6D19436CBDBD022100DA5617DF8B736B88A75F868902A3C64D5D229988FE9DAC0932DA2220553CD0E702203DC56B93F475A501F39F47FD68005DE2801254418CE1994B88A16D399E7634F902207FF3EA63B86EB8BB4A13425DB2ED55BE6AF166F710F84824CFE7640E7CC57A4B022100C4C5FCAE8D0AAC5D876CAED92A34E19C5B12A965EA7DFB3A7854D6652A16B2F2";
+    private static final String PUBLIC_KEY = "305C300D06092A864886F70D0101010500034B003048024100BC47ED74F1097AE7F8B55196E1874258A05B5A04AD26BA774E3EF62BE778CFA60E86B33DA31989EC5E58B261EE266DF9FF37E11D3A7C0E648198B2B06A94C58B0203010001";
 
     private static interface TestCallBack {
 
@@ -113,12 +134,18 @@ public class ReceiveFilterTest extends MgnlTestCase {
     public void setUp() throws Exception {
         super.setUp();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+        // public key retrieval
+        ActivationManager actMan = mock(ActivationManager.class);
+        ComponentsTestUtil.setInstance(ActivationManager.class, actMan);
+        when(actMan.getPublicKey()).thenReturn(PUBLIC_KEY);
+
     }
 
     @Override
     @After
     public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
+        ComponentsTestUtil.clear();
         super.tearDown();
     }
 
@@ -194,6 +221,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
             @Override
             public void createTemp(SystemContext ctx, HierarchyManager hm) throws Exception {
                 expect(ctx.getHierarchyManager("mgnlSystem")).andReturn(hm).anyTimes();
+                expect(ctx.getHierarchyManager("some-workspace")).andReturn(hm).anyTimes();
                 expect(hm.getRoot()).andReturn(root);
             }
 
@@ -444,6 +472,17 @@ public class ReceiveFilterTest extends MgnlTestCase {
         final Workspace workspace = createStrictMock(Workspace.class);
         final Session session = createStrictMock(Session.class);
 
+        Node keyNode = mock(Node.class);
+        PropertyIterator propIter = mock(PropertyIterator.class);
+        NodeIterator nodeIter = mock(NodeIterator.class);
+        Property keyProp = mock(Property.class);
+        when(keyNode.getProperties()).thenReturn(propIter);
+        when(propIter.hasNext()).thenReturn(true).thenReturn(false);
+        when(propIter.next()).thenReturn(keyProp);
+        when(keyProp.getName()).thenReturn("publicKey");
+        when(keyNode.getNodes()).thenReturn(nodeIter);
+        ObservationManager obsMan = mock(ObservationManager.class);
+
         final InputStream xmlStream = getClass().getResourceAsStream("/resources4189.xml");
         final InputStream nodeStream = getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz");
         assertNotNull(xmlStream);
@@ -457,6 +496,12 @@ public class ReceiveFilterTest extends MgnlTestCase {
 
         ComponentsTestUtil.setInstance(SystemContext.class, sysCtx);
         MgnlContext.setInstance(ctx);
+
+        // we verify timestamp is not too old so we need to have fresh one for test as well
+        String message = SecurityUtil.encrypt(System.currentTimeMillis() + ";johndoe;14D600CAB64A608D5D2780E00A4A6CA2", PRIVATE_KEY);
+        // RF will fail silently on empty message since it might be just random hit to given uri.
+        assertFalse(message.isEmpty());
+        expect(request.getHeader("X-magnolia-act-auth")).andReturn(message).anyTimes();
 
         // checking headers
         expect(request.getHeader("mgnlUTF8Status")).andReturn("true").anyTimes();
@@ -476,6 +521,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         testCallBack.checkParent(hm);
 
         expect(ctx.getHierarchyManager("some-workspace")).andReturn(hm).anyTimes();
+        expect(sysCtx.getHierarchyManager("some-workspace")).andReturn(hm).anyTimes();
         expect(ctx.getPostedForm()).andReturn(form).anyTimes();
 
         // copying temp node
@@ -499,7 +545,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         expect(hm.isExist("/foo/bar")).andReturn(true);
         expect(request.getSession(false)).andReturn(null);
 
-        final ReceiveFilter filter = new ReceiveFilter();
+        final ReceiveFilter filter = new ReceiveFilter(new ExchangeSimpleModule());
         filter.setUnlockRetries(1);
         Object[] mocks = new Object[] {request, response, filterChain, sysCtx, ctx, hm, workspace, session, testCallBack.getParentNode()};
         replay(mocks);
@@ -600,5 +646,273 @@ public class ReceiveFilterTest extends MgnlTestCase {
         public void createTemp(SystemContext arg0, HierarchyManager arg1) throws Exception {
             // nothing by default
         }
+    }
+
+    /**
+     * Tests the decryption, time check and parsing of the encrypted message
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testReceive() throws Exception {
+        ExchangeSimpleModule module = mock(ExchangeSimpleModule.class);
+        // one sec delay tolerance on receive
+        when(module.getActivationDelayTolerance()).thenReturn(1000L);
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        final String md5 = "C750AFBA94E355BF5544434E227708C3";
+        ReceiveFilter filter = new ReceiveFilter(module) {
+
+            @Override
+            public synchronized String receive(HttpServletRequest request) throws Exception {
+                // widen visibility for testing purposes
+                return super.receive(request);
+            }
+
+            @Override
+            protected synchronized String update(HttpServletRequest request, String resourcesmd5) throws Exception {
+                // do nothing in test
+                assertEquals(md5, resourcesmd5);
+                return "/bla";
+            }
+        };
+        String message = SecurityUtil.encrypt(System.currentTimeMillis() + ";johndoe;" + md5, PRIVATE_KEY);
+        // RF will fail silently on empty message since it might be just random hit to given uri.
+        assertFalse(message.isEmpty());
+        when(req.getHeader("X-magnolia-act-auth")).thenReturn(message);
+        when(req.getHeader(BaseSyndicatorImpl.ACTION)).thenReturn(BaseSyndicatorImpl.ACTIVATE);
+        filter.receive(req);
+
+        // and again, but too late (5sec)
+        message = SecurityUtil.encrypt((System.currentTimeMillis() - 5000) + ";johndoe;" + md5, PRIVATE_KEY);
+        // RF will fail silently on empty message since it might be just random hit to given uri.
+        assertFalse(message.isEmpty());
+        when(req.getHeader("X-magnolia-act-auth")).thenReturn(message);
+        when(req.getHeader(BaseSyndicatorImpl.ACTION)).thenReturn(BaseSyndicatorImpl.ACTIVATE);
+        try {
+            filter.receive(req);
+            fail("Replay of old act messages should not be tolerated.");
+        } catch (SecurityException e) {
+            assertEquals("Activation refused due to request arriving too late or time not synched between author and public instance. Please contact your administrator to ensure server times are synced or the tolerance is set high enough to counter the differences.", e.getMessage());
+        }
+
+        // we attempt to log where bogus messages come from
+        when(req.getRemoteAddr()).thenReturn("evilMan");
+        // and again with fake message
+        message = "AAAF065B07FD670CFAB87D9BDA49F937C82270B8F7D6191D30EC4141434AB4B041EEECC699BFDEDFE2A4448880E2D140D1BF51697CE2699DFCCC749B3317BE78";
+        // RF will fail silently on empty message since it might be just random hit to given uri.
+        assertFalse(message.isEmpty());
+        when(req.getHeader("X-magnolia-act-auth")).thenReturn(message);
+        when(req.getHeader(BaseSyndicatorImpl.ACTION)).thenReturn(BaseSyndicatorImpl.ACTIVATE);
+        try {
+            filter.receive(req);
+            fail("Fake signature should not be tolerated.");
+        } catch (SecurityException e) {
+            assertEquals("Handshake information for activation was incorrect. Someone attempted to impersonate author instance. Incoming request was from evilMan", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        ExchangeSimpleModule module = mock(ExchangeSimpleModule.class);
+        // one sec delay tolerance on receive
+        when(module.getActivationDelayTolerance()).thenReturn(1000L);
+        HttpServletRequest req = mock(HttpServletRequest.class);
+
+        final HierarchyManager hierarchyManager = mock(HierarchyManager.class);
+        ReceiveFilter filter = new ReceiveFilter(module) {
+
+            @Override
+            public synchronized String update(HttpServletRequest request, String resourcesmd5) throws Exception {
+                // widen visibility for testing
+                return super.update(request, resourcesmd5);
+            }
+
+            @Override
+            protected String getParentPath(HttpServletRequest request) {
+                return "/pooh";
+            }
+
+            @Override
+            protected HierarchyManager getHierarchyManager(HttpServletRequest request) throws ExchangeException {
+                return hierarchyManager;
+            }
+
+            @Override
+            protected synchronized void importOnExisting(Element topContentElement, MultipartForm data, HierarchyManager hierarchyManager, Content existingContent) throws ExchangeException, RepositoryException {
+                // not testing import yet
+            }
+        };
+
+        WebContext ctx = mock(WebContext.class);
+        MgnlContext.setInstance(ctx);
+        MultipartForm form = mock(MultipartForm.class);
+        when(ctx.getPostedForm()).thenReturn(form);
+        InputStream xmlStream = getClass().getResourceAsStream("/resources4189.xml");
+        assertNotNull(xmlStream);
+        when(form.getDocument("aResourceDoc.xml")).thenReturn(new StreamOnlyDocument(xmlStream));
+        when(req.getHeader(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE)).thenReturn("aResourceDoc.xml");
+
+        // fake md5 => fail with ex
+        String md5 = "db99f7630853825dabbc17f093d2236e";
+        try {
+            filter.update(req, md5);
+            fail("Incorrect MD5 should not be tolerated.");
+        } catch (SecurityException e) {
+            assertEquals("Signature of received resource (14D600CAB64A608D5D2780E00A4A6CA2) doesn't match expected signature (db99f7630853825dabbc17f093d2236e). This might mean that the activation operation have been intercepted by a third party and content have been modified during transfer.", e.getMessage());
+        }
+
+        // ensure we close used resources
+        try {
+            xmlStream.read();
+            fail("Stream should be closed at this point");
+        } catch (IOException e) {
+            // stream is closed
+        }
+
+        // correctmd5
+        md5 = "14D600CAB64A608D5D2780E00A4A6CA2";
+        // stream is closed after import so to run again we have to recreate it
+        xmlStream = getClass().getResourceAsStream("/resources4189.xml");
+        assertNotNull(xmlStream);
+        when(form.getDocument("aResourceDoc.xml")).thenReturn(new StreamOnlyDocument(xmlStream));
+
+        Content poohBarContent = mock(Content.class);
+        when(hierarchyManager.getContentByUUID("DUMMY-UUID")).thenReturn(poohBarContent);
+        when(poohBarContent.getHandle()).thenReturn("/pooh/bar");
+        when(poohBarContent.getName()).thenReturn("bar");
+        when(req.getHeader(BaseSyndicatorImpl.CONTENT_FILTER_RULE)).thenReturn("mgnl:content,mgnl:resource");
+
+        Content poohContent = mock(Content.class);
+        when(hierarchyManager.getContent("/pooh/")).thenReturn(poohContent);
+
+        filter.update(req, md5);
+
+    }
+
+    @Test
+    public void testRemove() throws Exception {
+        ExchangeSimpleModule module = mock(ExchangeSimpleModule.class);
+        // one sec delay tolerance on receive
+        when(module.getActivationDelayTolerance()).thenReturn(1000L);
+        HttpServletRequest req = mock(HttpServletRequest.class);
+
+        final HierarchyManager hierarchyManager = mock(HierarchyManager.class);
+        ReceiveFilter filter = new ReceiveFilter(module) {
+
+            @Override
+            public synchronized String remove(HttpServletRequest request, String md5) throws Exception {
+                // widening visibility for tests
+                return super.remove(request, md5);
+            }
+
+            @Override
+            protected HierarchyManager getHierarchyManager(HttpServletRequest request) throws ExchangeException {
+                return hierarchyManager;
+            }
+
+        };
+
+        WebContext ctx = mock(WebContext.class);
+        MgnlContext.setInstance(ctx);
+        // String message = SecurityUtil.encrypt(System.currentTimeMillis() + ";johndoe;61055CD40D31760E317789A3159E548D", PRIVATE_KEY);
+        // when(req.getHeader(BaseSyndicatorImpl.ACTIVATION_AUTH)).thenReturn(message);
+        when(req.getHeader(BaseSyndicatorImpl.NODE_UUID)).thenReturn("SOME-FAKE-UUID");
+        Content someContent = mock(Content.class);
+        when(hierarchyManager.getContentByUUID("SOME-FAKE-UUID")).thenReturn(someContent);
+        when(someContent.getHandle()).thenReturn("/bla/boo");
+        filter.remove(req, "61055CD40D31760E317789A3159E548D");
+        verify(hierarchyManager).delete("/bla/boo");
+
+        // try to fake the sig ... and fail
+        // message = SecurityUtil.encrypt(System.currentTimeMillis() + ";johndoe;C750AFBA94E355BF5544434E227708C3", PRIVATE_KEY);
+        // when(req.getHeader(BaseSyndicatorImpl.ACTIVATION_AUTH)).thenReturn(message);
+        when(req.getRemoteAddr()).thenReturn("evilMan");
+        try {
+            filter.remove(req, "C750AFBA94E355BF5544434E227708C3");
+            fail("Attempt to delete content with invalid signature should fail.");
+        } catch (SecurityException e) {
+            assertEquals("Signature of resource doesn't match. This seems like malicious attempt to delete content. Request was issued from evilMan", e.getMessage());
+
+        }
+    }
+
+    @Test
+    public void testEstablishTrustOnDeactivate() throws Exception {
+        ExchangeSimpleModule module = mock(ExchangeSimpleModule.class);
+        // one sec delay tolerance on receive
+        when(module.getActivationDelayTolerance()).thenReturn(100000L);
+        when(module.getActivationKeyLength()).thenReturn(512);
+        HttpServletRequest req = mock(HttpServletRequest.class);
+
+        // - emulate no public key yet
+        ActivationManager actMan = mock(ActivationManager.class);
+        ComponentsTestUtil.setInstance(ActivationManager.class, actMan);
+        when(actMan.getPublicKey()).thenReturn(null);
+
+        final HierarchyManager hierarchyManager = mock(HierarchyManager.class);
+        ReceiveFilter filter = new ReceiveFilter(module) {
+
+            @Override
+            protected HierarchyManager getHierarchyManager(HttpServletRequest request) throws ExchangeException {
+                return hierarchyManager;
+            }
+
+            @Override
+            protected void applyLock(HttpServletRequest request) throws ExchangeException {
+                // ignore locking in this test
+            }
+
+            @Override
+            protected synchronized String remove(HttpServletRequest request, String md5) throws Exception {
+                // ignore removal itself as well (tested in testRemove() )
+                return "/some/path";
+            }
+        };
+
+        WebContext ctx = mock(WebContext.class);
+        MgnlContext.setInstance(ctx);
+        when(req.getHeader(BaseSyndicatorImpl.NODE_UUID)).thenReturn("SOME-FAKE-UUID");
+        when(req.getHeader(BaseSyndicatorImpl.ACTION)).thenReturn(BaseSyndicatorImpl.DEACTIVATE);
+
+        HttpServletResponse res = mock(HttpServletResponse.class);
+        FilterChain chain = mock(FilterChain.class);
+        filter.doFilter(req, res, chain);
+        // get handshake on first attempt
+        verify(res).setHeader(BaseSyndicatorImpl.ACTIVATION_ATTRIBUTE_STATUS, BaseSyndicatorImpl.ACTIVATION_HANDSHAKE);
+
+        // bit of mockito voodoo ... we just need to learn what temp keys are, not really match them against anything
+        final String[] tempKeys = new String[2];
+        verify(module).setTempKeys((MgnlKeyPair) argThat(new ArgumentMatcher() {
+
+            @Override
+            public boolean matches(Object argument) {
+                MgnlKeyPair keys = (MgnlKeyPair) argument;
+                tempKeys[0] = keys.getPrivateKey();
+                tempKeys[1] = keys.getPublicKey();
+                return true;
+            }
+        }));
+
+        // String message = SecurityUtil.encrypt(System.currentTimeMillis() + ";johndoe;61055CD40D31760E317789A3159E548D", PRIVATE_KEY);
+        assertNotNull(tempKeys[0]);
+        when(req.getHeader(BaseSyndicatorImpl.ACTIVATION_AUTH_KEY)).thenReturn(SecurityUtil.encrypt(PUBLIC_KEY, tempKeys[1]));
+        String message = SecurityUtil.encrypt(System.currentTimeMillis() + ";johndoe;61055CD40D31760E317789A3159E548D", PRIVATE_KEY);
+        when(req.getHeader(BaseSyndicatorImpl.ACTIVATION_AUTH)).thenReturn(message);
+        when(module.getTempKeys()).thenReturn(new MgnlKeyPair(tempKeys[0], tempKeys[1]));
+        // store public key
+        SystemContext sysctx = mock(SystemContext.class);
+        ComponentsTestUtil.setInstance(SystemContext.class, sysctx);
+        Session sysSession = mock(Session.class);
+        when(sysctx.getJCRSession("config")).thenReturn(sysSession);
+        Node actNode = mock(Node.class);
+        when(sysSession.getNode("/server/activation")).thenReturn(actNode);
+        // we operate on mocks so we assume here update was correct and verify that session.save() was called after update
+        // ... the below says to mockito to return null on first call to the method and public key on all calls thereafter
+        when(actMan.getPublicKey()).thenReturn(null).thenReturn(PUBLIC_KEY);
+        filter.doFilter(req, res, chain);
+        // get success after handshake
+        verify(sysSession).save();
+        verify(res).setHeader(BaseSyndicatorImpl.ACTIVATION_ATTRIBUTE_STATUS, BaseSyndicatorImpl.ACTIVATION_SUCCESSFUL);
+
     }
 }

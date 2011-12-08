@@ -36,8 +36,8 @@ package info.magnolia.module.exchangesimple;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
 
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -65,7 +65,7 @@ public class DefaultSubscriber implements Subscriber {
 
     Collection subscriptions = new ArrayList();
 
-    private String authMethod = "Basic";
+    private final String authMethod = "Basic";
 
     @Override
     public String getName() {
@@ -156,16 +156,6 @@ public class DefaultSubscriber implements Subscriber {
             subscribedPath = subscription.getFromURI();
         }
         return subscribedPath;
-    }
-
-    @Override
-    public String getAuthenticationMethod() {
-        return this.authMethod;
-    }
-
-    @Override
-    public void setAuthenticationMethod(String method) {
-        this.authMethod  = method;
     }
 
     @Override

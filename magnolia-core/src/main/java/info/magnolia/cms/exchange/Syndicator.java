@@ -37,8 +37,9 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
 
-import javax.jcr.RepositoryException;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
 
 
 /**
@@ -51,19 +52,27 @@ public interface Syndicator {
 
     /**
      * Sets up the syndicator.
-     *
-     * @param user the user to use for the connection to the subscriber
-     * @param repositoryName the repository to transmit
-     * @param workspaceName the workspace to transmit
-     * @param rule the rules defining which nodes to transmit (node types)
+     * 
+     * @param user
+     *            the user to use for the connection to the subscriber
+     * @param repositoryName
+     *            the repository to transmit
+     * @param workspaceName
+     *            the workspace to transmit
+     * @param rule
+     *            the rules defining which nodes to transmit (node types)
+     * @deprecated since 4.5 use ioc instead
      */
+    @Deprecated
     public void init(User user, String repositoryName, String workspaceName, Rule rule);
 
     /**
      * This will activate the specified node to all configured subscribers.
-     *
-     * @param parent parent under which this page will be activated
-     * @param content to be activated
+     * 
+     * @param parent
+     *            parent under which this page will be activated
+     * @param content
+     *            to be activated
      * @throws RepositoryException
      * @throws ExchangeException
      */

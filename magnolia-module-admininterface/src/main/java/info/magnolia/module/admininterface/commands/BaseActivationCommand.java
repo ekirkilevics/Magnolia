@@ -58,10 +58,10 @@ public abstract class BaseActivationCommand extends RuleBasedCommand {
         if (syndicator == null && isClone()) {
             syndicator = Components.getComponentProvider().newInstance(Syndicator.class);
             syndicator.init(
-                MgnlContext.getUser(),
-                this.getRepository(),
-                ContentRepository.getDefaultWorkspace(this.getRepository()),
-                getRule());
+                    MgnlContext.getUser(),
+                    this.getRepository(),
+                    ContentRepository.getDefaultWorkspace(this.getRepository()),
+                    getRule());
         }
         return syndicator;
     }

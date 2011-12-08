@@ -34,8 +34,8 @@
 package info.magnolia.module.exchangesimple;
 
 import java.io.File;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,8 +107,8 @@ public class ActivationContent implements Cloneable {
         return this.properties.get(key);
     }
 
-    public void removeProperty(String key) {
-        this.properties.remove(key);
+    public String removeProperty(String key) {
+        return this.properties.remove(key);
     }
 
     /**

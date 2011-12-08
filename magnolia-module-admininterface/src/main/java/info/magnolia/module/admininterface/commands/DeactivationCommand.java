@@ -34,11 +34,11 @@
 package info.magnolia.module.admininterface.commands;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.cms.core.Content;
 import info.magnolia.context.Context;
 import info.magnolia.objectfactory.Components;
 

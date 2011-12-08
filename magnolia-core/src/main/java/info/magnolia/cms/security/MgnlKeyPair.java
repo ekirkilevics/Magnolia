@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,44 +31,30 @@
  * intact.
  *
  */
-package info.magnolia.cms.exchange;
-
-import java.util.Collection;
+package info.magnolia.cms.security;
 
 /**
- * Subscriber is a java bean holding all configuration details of the subscription at runtime.
- * @author Sameer Charles
+ * Private and public key holder.
+ * 
  * @version $Id$
+ * 
  */
-public interface Subscriber {
+public class MgnlKeyPair {
 
-    public String getName();
+    private final String privateKey;
+    private final String publicKey;
 
-    public void setName(String name);
+    public MgnlKeyPair(String privateKey, String publicKey) {
+        this.privateKey = privateKey;
+        this.publicKey = publicKey;
 
-    public String getURL();
+    }
 
-    public void setURL(String url);
+    public String getPrivateKey() {
+        return privateKey;
+    }
 
-    public boolean isActive();
-
-    public void setActive(boolean active);
-
-    public void setSubscriptions(Collection<Subscription> subscriptions);
-
-    public Collection<Subscription> getSubscriptions();
-
-    public void addSubscriptions(Subscription subscription);
-
-    public Subscription getMatchedSubscription(String path, String repositoryId);
-
-    public boolean isSubscribed(String path, String repositoryId);
-
-    public int getConnectTimeout();
-
-    public void setConnectTimeout(int timeoutMillis);
-
-    public int getReadTimeout();
-
-    public void setReadTimeout(int timeoutMillis);
+    public String getPublicKey() {
+        return publicKey;
+    }
 }

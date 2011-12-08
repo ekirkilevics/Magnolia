@@ -33,7 +33,14 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.makeThreadSafe;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.Content.ContentFilter;
@@ -52,11 +59,11 @@ import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
 
+import java.security.DigestOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.zip.GZIPOutputStream;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
@@ -86,7 +93,7 @@ public class SimpleSyndicatorTest {
     private List<Object> allMocks;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         actMan = createStrictMock(ActivationManager.class);
         ComponentsTestUtil.setInstance(ActivationManager.class, actMan);
         ctx = createStrictMock(WebContext.class);
@@ -94,6 +101,8 @@ public class SimpleSyndicatorTest {
         sysctx = createStrictMock(SystemContext.class);
         ComponentsTestUtil.setInstance(SystemContext.class, sysctx);
         syndicator = new SimpleSyndicator();
+        // since we create the instance manually, we need to inject manually as well
+        syndicator.setResouceCollector(new ResourceCollector());
         user = createStrictMock(User.class);
         syndicator.user = user;
         content = createStrictMock(Content.class);
@@ -211,7 +220,7 @@ public class SimpleSyndicatorTest {
         Node jcr = createStrictMock(Node.class);
         expect(content.getJCRNode()).andReturn(jcr);
         expect(jcr.getPath()).andReturn(path);
-        session.exportSystemView(eq(path), isA(GZIPOutputStream.class), eq(false), eq(!isFile));
+        session.exportSystemView(eq(path), isA(DigestOutputStream.class), eq(false), eq(!isFile));
         expect(content.getName()).andReturn(path.substring(1));
 
         expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
@@ -223,7 +232,6 @@ public class SimpleSyndicatorTest {
         expect(subscription.getFromURI()).andReturn("/");
         expect(subscriber.getName()).andReturn("aSubscriber");
         expect(subscriber.getURL()).andReturn("prot://dummyURL");
-        expect(subscriber.getAuthenticationMethod()).andReturn("basic");
         expect(subscriber.getName()).andReturn("aSubscriber");
         // and don't update the status ...
 
@@ -235,6 +243,7 @@ public class SimpleSyndicatorTest {
         try {
             syndicator.activate("/", content);
         } catch (ExchangeException e) {
+            e.printStackTrace();
             // and fail because the activation target doesn't exist.
             assertEquals("info.magnolia.cms.exchange.ExchangeException: 1 error detected: \nIncorrect URL for subscriber EasyMock for interface info.magnolia.cms.exchange.Subscriber[prot://dummyURL/.magnolia/activation] on aSubscriber", e.getMessage());
         }
