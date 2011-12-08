@@ -178,7 +178,14 @@ public abstract class RepositoryBackedSecurityManager {
     private String getLinkedResourceId(final String resourceName, final String resourceTypeName) throws AccessDeniedException {
         final String nodeID;
         if (StringUtils.equalsIgnoreCase(resourceTypeName, NODE_ROLES)) {
-            nodeID = SecuritySupport.Factory.getInstance().getRoleManager().getRole(resourceName).getId();
+            Role role = SecuritySupport.Factory.getInstance().getRoleManager().getRole(resourceName);
+            if (role == null) {
+                log.warn("Invalid role requested: {}", resourceName);
+                nodeID = null;
+            }
+            else {
+                nodeID = role.getId();
+            }
         }
         else {
             nodeID = SecuritySupport.Factory.getInstance().getGroupManager().getGroup(resourceName).getId();
