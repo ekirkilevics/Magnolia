@@ -37,7 +37,6 @@ import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.repository.RepositoryConstants;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
