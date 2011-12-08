@@ -65,7 +65,7 @@ public class AddGroupToGroupTask extends AbstractRepositoryTask {
         } else {
             // TODO this saves at node level, thus breaking the "save once per module install/update" rule :(
             try{
-                group.addGroup(nestedGroupName);
+                groupManager.addGroup(group, nestedGroupName);
             }
             catch (UnsupportedOperationException e) {
                 ctx.warn("Can't add the group \"" + nestedGroupName + "\" to the \"" + parentGroupName+ "\" group due to an unsupported operation exception. This is most likely the case if the groups are managed externally.");

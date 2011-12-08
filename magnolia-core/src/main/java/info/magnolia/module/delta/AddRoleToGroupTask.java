@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.delta;
 
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.security.Group;
 import info.magnolia.cms.security.GroupManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.module.InstallContext;
+
+import javax.jcr.RepositoryException;
 
 /**
  * A task to add a role to a group, using {@link info.magnolia.cms.security.GroupManager}.
@@ -58,14 +58,15 @@ public class AddRoleToGroupTask extends AbstractRepositoryTask {
 
     @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        GroupManager groupManager = SecuritySupport.Factory.getInstance().getGroupManager();
-        Group group = groupManager.getGroup(groupName);
+        final GroupManager groupManager = SecuritySupport.Factory.getInstance().getGroupManager();
+        final Group group = groupManager.getGroup(groupName);
+
         if (group == null) {
             ctx.warn("Group \"" + groupName + "\" not found, can't add the \"" + roleName + "\" role.");
         } else {
             // TODO this saves at node level, thus breaking the "save once per module install/update" rule :(
             try{
-                group.addRole(roleName);
+                groupManager.addRole(group, roleName);
             }
             catch (UnsupportedOperationException e) {
                 ctx.warn("Can't add the role \"" + roleName + "\" to the \"" + groupName + "\" group due to an unsupported operation exception. This is most likely the case if the groups are managed externally.");

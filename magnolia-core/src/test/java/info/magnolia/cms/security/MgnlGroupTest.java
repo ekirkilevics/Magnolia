@@ -108,4 +108,28 @@ public class MgnlGroupTest {
         assertTrue(groupsB.contains("groupA"));
         assertTrue(groupsB.contains("groupC"));
     }
+
+    @Test
+    public void testAddGroupToGroup() throws AccessDeniedException {
+        // GIVEN
+        Group groupA = gman.getGroup("groupA");
+
+        // WHEN
+        gman.addGroup(groupA, "groupB");
+
+        // THEN
+        assertTrue(gman.getGroup("groupA").getGroups().contains("groupB"));
+    }
+
+    @Test
+    public void testAddRoleToGroup() throws AccessDeniedException {
+        // GIVEN
+        Group groupA = gman.getGroup("groupA");
+
+        // WHEN
+        gman.addRole(groupA, "roleW");
+
+        // THEN
+        assertTrue(gman.getGroup("groupA").getRoles().contains("roleW"));
+    }
 }

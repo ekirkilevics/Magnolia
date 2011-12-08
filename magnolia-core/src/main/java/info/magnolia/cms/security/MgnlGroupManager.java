@@ -185,4 +185,26 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
     protected String getRepositoryName() {
         return RepositoryConstants.USER_GROUPS;
     }
+
+    @Override
+    public Group addRole(Group group, String roleName) throws AccessDeniedException {
+        try {
+            add(group.getName(), roleName, NODE_ROLES);
+        } catch (PrincipalNotFoundException e) {
+            // group doesn't exist in this GM
+            return null;
+        }
+        return getGroup(group.getName());
+    }
+
+    @Override
+    public Group addGroup(Group group, String groupName) throws AccessDeniedException {
+        try {
+            add(group.getName(), groupName, NODE_GROUPS);
+        } catch (PrincipalNotFoundException e) {
+            // group doesn't exist in this GM
+            return null;
+        }
+        return getGroup(groupName);
+    }
 }

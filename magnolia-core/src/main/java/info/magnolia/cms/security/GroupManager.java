@@ -61,4 +61,16 @@ public interface GroupManager {
 
     public Map<String, ACL> getACLs(String group);
 
+    /**
+    * Grants to the group a role.
+    * @return Group object with the role already granted.
+    */
+    public Group addRole(Group group, String roleName) throws AccessDeniedException;
+
+    /**
+     * Adds to the group to a group.
+     * @return group object with the group already assigned.
+     */
+    public Group addGroup(Group group, String groupName) throws AccessDeniedException;
+
 }
