@@ -540,7 +540,12 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     @Override
     public User addRole(User user, String roleName) {
-        super.add(user.getName(), roleName, NODE_ROLES);
+        try {
+            super.add(user.getName(), roleName, NODE_ROLES);
+        } catch (PrincipalNotFoundException e) {
+            // user doesn't exist in this UM
+            return null;
+        }
         return getUser(user.getName());
     }
 
@@ -596,7 +601,12 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     @Override
     public User addGroup(User user, String groupName) {
-        super.add(user.getName(), groupName, NODE_GROUPS);
+        try {
+            super.add(user.getName(), groupName, NODE_GROUPS);
+        } catch (PrincipalNotFoundException e) {
+            // user doesn't exist in this UM
+            return null;
+        }
         return getUser(user.getName());
     }
 

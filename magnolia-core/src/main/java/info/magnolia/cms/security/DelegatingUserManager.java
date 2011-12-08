@@ -189,7 +189,7 @@ public class DelegatingUserManager implements UserManager {
 
     @Override
     public User addRole(final User user, final String roleName) {
-        return delegateUntilSupported(new Op<User>() {
+        return delegateUntilNotNull(new Op<User>() {
             @Override
             public User delegate(UserManager um) {
                 return um.addRole(user, roleName);
@@ -199,7 +199,7 @@ public class DelegatingUserManager implements UserManager {
 
     @Override
     public User addGroup(final User user, final String groupName) {
-        return delegateUntilSupported(new Op<User>() {
+        return delegateUntilNotNull(new Op<User>() {
             @Override
             public User delegate(UserManager um) {
                 return um.addGroup(user, groupName);

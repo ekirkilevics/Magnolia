@@ -90,9 +90,14 @@ public abstract class RepositoryBackedSecurityManager {
 
                 @Override
                 public Collection<String> exec(Session session) throws RepositoryException {
-                    Node principal = findPrincipalNode(principalName, session);
-                    Node groupsOrRoles = principal.getNode(resourceTypeName);
                     List<String> list = new ArrayList<String>();
+                    Node principal = findPrincipalNode(principalName, session);
+                    if(principal == null) {
+                        log.debug("No User '"+principalName+"' found in repository");
+                        return list;
+                    }
+                    Node groupsOrRoles = principal.getNode(resourceTypeName);
+
                     for (PropertyIterator props = groupsOrRoles.getProperties(); props.hasNext();) {
                         Property property = props.nextProperty();
                         try {
@@ -138,17 +143,22 @@ public abstract class RepositoryBackedSecurityManager {
 
     /**
      * Adds link to a resource (group or role) to the principal (user or group).
+     * This call is lenient and will not throw exception in case principal doesn't exist! Instead it will simply return without making any change.
      * @param principalName name of the user or group to be updated
      * @param resourceName name of the group or role to be added
      * @param resourceTypeName type of the added resource (group or role) {@link #NODE_ROLES}, {@link #NODE_GROUPS}
+     * @throws PrincipalNotFoundException
      */
-    protected void add(final String principalName, final String resourceName, final String resourceTypeName) {
+    protected void add(final String principalName, final String resourceName, final String resourceTypeName) throws PrincipalNotFoundException {
         try {
             final String nodeID = getLinkedResourceId(resourceName, resourceTypeName);
 
             if (!hasAny(principalName, resourceName, resourceTypeName)) {
                 Session session = MgnlContext.getJCRSession(getRepositoryName());
                 Node principalNode = findPrincipalNode(principalName, session);
+                if (principalNode == null) {
+                    throw new PrincipalNotFoundException("Principal " + principalName + " of type " + resourceTypeName + " was not found.");
+                }
                 if (!principalNode.hasNode(resourceTypeName)) {
                     principalNode.addNode(resourceTypeName, ItemType.CONTENTNODE.getSystemName());
                 }
