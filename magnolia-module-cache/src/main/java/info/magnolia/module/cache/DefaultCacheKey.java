@@ -51,6 +51,7 @@ public class DefaultCacheKey implements Serializable {
 
     private String uri;
     private String serverName;
+    private String channel;
     private String locale;
     private Map<String, String> params;
     private Boolean isSecure;
@@ -66,10 +67,11 @@ public class DefaultCacheKey implements Serializable {
         this.params = params == null ? null : Collections.unmodifiableMap(params);
         this.isSecure = false;
     }
-    
-    public DefaultCacheKey(String uri, String serverName, String locale, Map<String, String> params, Boolean isSecure){
+
+    public DefaultCacheKey(String uri, String serverName, String locale, String channel, Map<String, String> params, Boolean isSecure){
         this.uri = uri;
         this.serverName = serverName;
+        this.channel = channel;
         this.locale = locale;
         this.params = params == null ? null : Collections.unmodifiableMap(params);
         this.isSecure = isSecure;
@@ -80,6 +82,7 @@ public class DefaultCacheKey implements Serializable {
         return (uri == null ? 13 : uri.hashCode())
             + (serverName == null ? 17 : serverName.hashCode())
             + (locale == null ? 23 : locale.hashCode())
+            + (channel == null ? 25 : channel.hashCode())
             + (params == null ? 29 :  params.hashCode())
             + (isSecure == null ? 31 : isSecure.hashCode());
     }
@@ -96,26 +99,31 @@ public class DefaultCacheKey implements Serializable {
         return (this.uri == null) ? that.uri == null : this.uri.equals(that.uri)
             && (this.serverName == null ? that.serverName == null : this.serverName.equals(that.serverName))
             && (this.locale == null ? that.locale == null : this.locale.equals(that.locale))
+            && (this.channel == null ? that.channel == null : this.channel.equals(that.channel))
             && (this.params == null ? that.params == null : this.params.equals(that.params))
             && (this.isSecure == null ? that.isSecure == null : this.isSecure.equals(that.isSecure));
     }
 
     public String getUri() {
-        return this.uri;
+        return uri;
     }
 
     public String getDomain() {
-        return this.serverName;
+        return serverName;
     }
-    
+
     public String getLocale() {
-        return this.locale;
+        return locale;
     }
-    
+
+    public String getChannel() {
+        return channel;
+    }
+
     public Map<String, String> getParams() {
         return params;
     }
-    
+
     public Boolean getIsSecured(){
         return this.isSecure;
     }
@@ -127,6 +135,7 @@ public class DefaultCacheKey implements Serializable {
                 "uri='" + uri + '\'' +
                 ", serverName='" + serverName + '\'' +
                 ", locale='" + locale + '\'' +
+                ", channel='" + channel + '\'' +
                 ", params=" + params + '\'' +
                 ", secure='" + isSecure + "'" +
                 '}';

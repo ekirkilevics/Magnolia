@@ -99,9 +99,8 @@ public class Default implements CachePolicy {
 
        if (cachedEntry != null) {
             return new CachePolicyResult(CachePolicyResult.useCache, key, cachedEntry);
-        } else {
-            return new CachePolicyResult(CachePolicyResult.store, key, null);
         }
+        return new CachePolicyResult(CachePolicyResult.store, key, null);
     }
 
     /**
@@ -153,16 +152,11 @@ public class Default implements CachePolicy {
         }
 
         // get locale
-        final String localeStr;
         final Locale locale = aggregationState.getLocale();
-        if(locale != null){
-            localeStr = locale.toString();
-         } else {
-            localeStr = null;
-         }
+        final String localeStr = (locale == null) ? null: locale.toString();
 
         // create composite key so we can easily check each part of it later
-        return new DefaultCacheKey(uri, serverName, localeStr, params, isSecure);
+        return new DefaultCacheKey(uri, serverName, localeStr, aggregationState.getChannel(), params, isSecure);
     }
 
     @Override

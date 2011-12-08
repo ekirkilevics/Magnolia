@@ -62,14 +62,14 @@ public class DefaultTest extends TestCase{
     private Locale locale;
     private WebContext webCtx;
     private HttpServletRequest request;
-    
+
     @Override
     public void setUp(){
         webCtx = createMock(WebContext.class);
         request = createMock(HttpServletRequest.class);
         aggregationState = new AggregationState();
     }
-    
+
     public void testRetrieveDefaultCacheKey(){
         policy = new Default();
         String serverName = "test";
@@ -77,7 +77,7 @@ public class DefaultTest extends TestCase{
         params.put("testkey", "testvalue");
         Boolean isSecure = false;
         String uri = "localhost";
-        
+
         MgnlContext.setInstance(webCtx);
 
         expect(MgnlContext.getContextPath()).andReturn(uri);
@@ -90,14 +90,15 @@ public class DefaultTest extends TestCase{
         Object[] mocks = new Object[] { request, webCtx };
         replay(mocks);
         aggregationState.setCharacterEncoding("UTF-8");
-        aggregationState.setLocale(locale.ENGLISH);
+        aggregationState.setLocale(Locale.ENGLISH);
+        aggregationState.setChannel("mobile");
         aggregationState.setOriginalURI(uri);
 
-        assertEquals(policy.retrieveCacheKey(aggregationState).toString(), "DefaultCacheKey{uri='localhost', serverName='test', locale='en', params={testkey=testvalue}', secure='false'}");
+        assertEquals(policy.retrieveCacheKey(aggregationState).toString(), "DefaultCacheKey{uri='localhost', serverName='test', locale='en', channel='mobile', params={testkey=testvalue}', secure='false'}");
 
         verify(mocks);
     }
-    
+
     @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
