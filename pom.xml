@@ -245,6 +245,21 @@ for Java Content Repositories (JCR).
           </exclusion>
         </exclusions>
       </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk16</artifactId>
+        <version>1.46</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-ext-jdk16</artifactId>
+        <version>1.46</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcpg-jdk16</artifactId>
+        <version>1.46</version>
+      </dependency>
       <!-- gwt jars only needed at build time, which is why they are in scope:provided -->
       <dependency>
         <groupId>com.google.gwt</groupId>
