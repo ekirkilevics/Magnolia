@@ -176,7 +176,7 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
             }
         }
         if (iter.hasNext()) {
-            log.error("More than one group found with name [{}] in realm [{}]");
+            log.error("More than one group found with name \"{}\"", principalName);
         }
         return group;
     }
