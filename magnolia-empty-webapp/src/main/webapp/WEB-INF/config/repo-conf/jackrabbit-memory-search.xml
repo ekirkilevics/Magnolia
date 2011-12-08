@@ -11,16 +11,14 @@
     <AccessManager class="org.apache.jackrabbit.core.security.DefaultAccessManager">
     </AccessManager>
     <!-- login module defined here is used by the repo to authenticate every request. not by the webapp to authenticate user against the webapp context (this one has to be passed before thing here gets invoked -->
-    <LoginModule class="info.magnolia.jaas.sp.jcr.JCRAuthenticationModule">
+    <LoginModule class="info.magnolia.jaas.sp.jcr.JackrabbitAuthenticationModule">
     </LoginModule>
   </Security>
   <Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="default" />
   <Workspace name="default">
     <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem" />
-    <PersistenceManager class="org.apache.jackrabbit.core.state.mem.InMemPersistenceManager">
-      <param name="initialCapacity" value="100000" />
-      <param name="loadFactor" value="0.3" />
-      <param name="persistent" value="false" />
+    <PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.BundleFsPersistenceManager">
+      <param name="blobFSBlockSize" value="1" /><!-- store in memory -->
     </PersistenceManager>
     <SearchIndex class="org.apache.jackrabbit.core.query.lucene.SearchIndex">
       <param name="path" value="${wsp.home}/index" />
@@ -48,10 +46,8 @@
   </Workspace>
   <Versioning rootPath="${rep.home}/version">
     <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem" />
-    <PersistenceManager class="org.apache.jackrabbit.core.state.mem.InMemPersistenceManager">
-      <param name="initialCapacity" value="100000" />
-      <param name="loadFactor" value="0.3" />
-      <param name="persistent" value="false" />
+    <PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.BundleFsPersistenceManager">
+      <param name="blobFSBlockSize" value="1" /><!-- store in memory -->
     </PersistenceManager>
   </Versioning>
 </Repository>
