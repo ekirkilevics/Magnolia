@@ -31,41 +31,32 @@
  * intact.
  *
  */
-package info.magnolia.jcr.wrapper;
+package info.magnolia.jcr.decoration;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.Property;
-import javax.jcr.RepositoryException;
-import javax.jcr.ValueFormatException;
+import javax.jcr.PropertyIterator;
+import javax.jcr.Session;
 
 /**
- * Wrapper for a JCR Property that will wrap nodes and properties acquired via references.
+ * Applies custom behaviour of a graph of JCR objects. Allows expressing the logig in a single place.
  *
  * @version $Id$
- * @see javax.jcr.Property#getNode()
- * @see javax.jcr.Property#getProperty()
  */
-public class WrappingPropertyWrapper extends DelegatePropertyWrapper {
+public interface ContentDecorator {
 
-    private NodeWrapperFactory nodeWrapperFactory;
-    private PropertyWrapperFactory propertyWrapperFactory;
+    Session wrapSession(Session session);
 
-    public WrappingPropertyWrapper(Property wrapped, NodeWrapperFactory nodeWrapperFactory, PropertyWrapperFactory propertyWrapperFactory) {
-        super(wrapped);
-        this.nodeWrapperFactory = nodeWrapperFactory;
-        this.propertyWrapperFactory = propertyWrapperFactory;
-    }
+    Node wrapNode(Node node);
 
-    @Override
-    public Node getNode() throws ItemNotFoundException, ValueFormatException, RepositoryException {
-        Node node = super.getNode();
-        return nodeWrapperFactory != null ? nodeWrapperFactory.wrapNode(node) : node;
-    }
+    NodeIterator wrapNodeIterator(NodeIterator nodeIterator);
 
-    @Override
-    public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
-        Property property = super.getProperty();
-        return propertyWrapperFactory != null ? propertyWrapperFactory.wrapProperty(property) : property;
-    }
+    boolean evaluateNode(Node node);
+
+    Property wrapProperty(Property property);
+
+    PropertyIterator wrapPropertyIterator(PropertyIterator propertyIterator);
+
+    boolean evaluateProperty(Property property);
 }

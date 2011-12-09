@@ -33,24 +33,49 @@
  */
 package info.magnolia.jcr.iterator;
 
-import info.magnolia.jcr.predicate.AbstractPredicate;
-
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 
+import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.wrapper.PropertyWrapperFactory;
+
 /**
- * PropertyIterator hiding all properties that do not pass the predicate.
+ * PropertyIterator hiding all properties that do not pass the predicate, returned properties can also be wrapped.
  *
  * @version $Id$
  */
 public class FilteringPropertyIterator extends FilteringRangeIterator<Property> implements PropertyIterator {
 
-    public FilteringPropertyIterator(PropertyIterator iterator, AbstractPredicate<Property> predicate) {
-        super(iterator, predicate);
+    private PropertyWrapperFactory wrapperFactory;
+    private AbstractPredicate<Property> predicate;
+
+    public FilteringPropertyIterator(PropertyIterator propertyIterator, AbstractPredicate<Property> predicate) {
+        super(propertyIterator);
+        this.predicate = predicate;
+    }
+
+    public FilteringPropertyIterator(PropertyIterator propertyIterator, AbstractPredicate predicate, PropertyWrapperFactory wrapperFactory) {
+        super(propertyIterator);
+        this.wrapperFactory = wrapperFactory;
+        this.predicate = predicate;
+    }
+
+    @Override
+    public Property next() {
+        return wrapProperty(super.next());
     }
 
     @Override
     public Property nextProperty() {
-        return next();
+        return wrapProperty(super.next());
+    }
+
+    protected Property wrapProperty(Property property) {
+        return wrapperFactory != null ? wrapperFactory.wrapProperty(property) : property;
+    }
+
+    @Override
+    protected boolean evaluate(Property property) {
+        return predicate == null || predicate.evaluate(property);
     }
 }

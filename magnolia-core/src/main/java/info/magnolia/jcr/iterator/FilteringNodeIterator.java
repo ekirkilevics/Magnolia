@@ -40,7 +40,7 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
 /**
- * NodeIterator hiding all nodes that do not pass the predicate, returned nodes can also we wrapped effectively
+ * NodeIterator hiding all nodes that do not pass the predicate, returned nodes can also be wrapped effectively
  * extending the condition to the whole hierarchy.
  *
  * @version $Id$
@@ -48,14 +48,17 @@ import javax.jcr.NodeIterator;
 public class FilteringNodeIterator extends FilteringRangeIterator<Node> implements NodeIterator {
 
     private NodeWrapperFactory wrapperFactory;
+    private AbstractPredicate<Node> predicate;
 
     public FilteringNodeIterator(NodeIterator nodeIterator, AbstractPredicate<Node> predicate) {
-        super(nodeIterator, predicate);
+        super(nodeIterator);
+        this.predicate = predicate;
     }
 
     public FilteringNodeIterator(NodeIterator nodeIterator, AbstractPredicate<Node> predicate, NodeWrapperFactory wrapperFactory) {
-        super(nodeIterator, predicate);
+        super(nodeIterator);
         this.wrapperFactory = wrapperFactory;
+        this.predicate = predicate;
     }
 
     @Override
@@ -70,5 +73,10 @@ public class FilteringNodeIterator extends FilteringRangeIterator<Node> implemen
 
     protected Node wrapNode(Node node) {
         return wrapperFactory != null ? wrapperFactory.wrapNode(node) : node;
+    }
+
+    @Override
+    protected boolean evaluate(Node node) {
+        return predicate == null || predicate.evaluate(node);
     }
 }

@@ -31,41 +31,69 @@
  * intact.
  *
  */
-package info.magnolia.jcr.wrapper;
+package info.magnolia.jcr.decoration;
 
+import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.ValueFormatException;
 
+import info.magnolia.jcr.wrapper.DelegatePropertyWrapper;
+
 /**
- * Wrapper for a JCR Property that will wrap nodes and properties acquired via references.
+ * Property wrapper that applies wrappers and filtering by delegating to a {@link ContentDecorator}.
  *
  * @version $Id$
- * @see javax.jcr.Property#getNode()
- * @see javax.jcr.Property#getProperty()
  */
-public class WrappingPropertyWrapper extends DelegatePropertyWrapper {
+public class ContentDecoratorPropertyWrapper extends DelegatePropertyWrapper {
 
-    private NodeWrapperFactory nodeWrapperFactory;
-    private PropertyWrapperFactory propertyWrapperFactory;
+    private final ContentDecorator contentDecorator;
 
-    public WrappingPropertyWrapper(Property wrapped, NodeWrapperFactory nodeWrapperFactory, PropertyWrapperFactory propertyWrapperFactory) {
-        super(wrapped);
-        this.nodeWrapperFactory = nodeWrapperFactory;
-        this.propertyWrapperFactory = propertyWrapperFactory;
+    public ContentDecoratorPropertyWrapper(Property property, ContentDecorator contentDecorator) {
+        super(property);
+        this.contentDecorator = contentDecorator;
+    }
+
+    @Override
+    public Session getSession() throws RepositoryException {
+        return wrapSession(super.getSession());
+    }
+
+    @Override
+    public Node getParent() throws ItemNotFoundException, AccessDeniedException, RepositoryException {
+        return wrapNode(super.getParent());
     }
 
     @Override
     public Node getNode() throws ItemNotFoundException, ValueFormatException, RepositoryException {
         Node node = super.getNode();
-        return nodeWrapperFactory != null ? nodeWrapperFactory.wrapNode(node) : node;
+        if (!contentDecorator.evaluateNode(node)) {
+            throw new ItemNotFoundException();
+        }
+        return wrapNode(node);
     }
 
     @Override
     public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
         Property property = super.getProperty();
-        return propertyWrapperFactory != null ? propertyWrapperFactory.wrapProperty(property) : property;
+        if (!contentDecorator.evaluateProperty(property)) {
+            throw new ItemNotFoundException();
+        }
+        return wrapProperty(property);
+    }
+
+    protected Session wrapSession(Session session) {
+        return contentDecorator.wrapSession(session);
+    }
+
+    protected Node wrapNode(Node node) {
+        return contentDecorator.wrapNode(node);
+    }
+
+    protected Property wrapProperty(Property property) {
+        return contentDecorator.wrapProperty(property);
     }
 }

@@ -31,41 +31,53 @@
  * intact.
  *
  */
-package info.magnolia.jcr.wrapper;
+package info.magnolia.jcr.decoration;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.Property;
-import javax.jcr.RepositoryException;
-import javax.jcr.ValueFormatException;
+import javax.jcr.PropertyIterator;
+import javax.jcr.Session;
 
 /**
- * Wrapper for a JCR Property that will wrap nodes and properties acquired via references.
+ * Abstract implementation of {@link ContentDecorator} that filters out nothing but still applies itself to all objects.
  *
  * @version $Id$
- * @see javax.jcr.Property#getNode()
- * @see javax.jcr.Property#getProperty()
  */
-public class WrappingPropertyWrapper extends DelegatePropertyWrapper {
+public abstract class AbstractContentDecorator implements ContentDecorator {
 
-    private NodeWrapperFactory nodeWrapperFactory;
-    private PropertyWrapperFactory propertyWrapperFactory;
-
-    public WrappingPropertyWrapper(Property wrapped, NodeWrapperFactory nodeWrapperFactory, PropertyWrapperFactory propertyWrapperFactory) {
-        super(wrapped);
-        this.nodeWrapperFactory = nodeWrapperFactory;
-        this.propertyWrapperFactory = propertyWrapperFactory;
+    @Override
+    public Session wrapSession(Session session) {
+        return new ContentDecoratorSessionWrapper(session, this);
     }
 
     @Override
-    public Node getNode() throws ItemNotFoundException, ValueFormatException, RepositoryException {
-        Node node = super.getNode();
-        return nodeWrapperFactory != null ? nodeWrapperFactory.wrapNode(node) : node;
+    public Node wrapNode(Node node) {
+        return new ContentDecoratorNodeWrapper(node, this);
     }
 
     @Override
-    public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
-        Property property = super.getProperty();
-        return propertyWrapperFactory != null ? propertyWrapperFactory.wrapProperty(property) : property;
+    public NodeIterator wrapNodeIterator(NodeIterator nodeIterator) {
+        return new ContentDecoratorNodeIterator(nodeIterator, this);
+    }
+
+    @Override
+    public boolean evaluateNode(Node node) {
+        return true;
+    }
+
+    @Override
+    public Property wrapProperty(Property property) {
+        return new ContentDecoratorPropertyWrapper(property, this);
+    }
+
+    @Override
+    public PropertyIterator wrapPropertyIterator(PropertyIterator propertyIterator) {
+        return new ContentDecoratorPropertyIterator(propertyIterator, this);
+    }
+
+    @Override
+    public boolean evaluateProperty(Property property) {
+        return true;
     }
 }

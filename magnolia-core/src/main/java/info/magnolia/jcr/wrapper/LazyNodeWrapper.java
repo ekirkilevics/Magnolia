@@ -38,6 +38,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
 
 
 /**
@@ -47,8 +48,8 @@ import info.magnolia.context.MgnlContext;
  */
 public class LazyNodeWrapper extends DelegateNodeWrapper {
 
-    private final String workspace;
-    private final String nodeIdentifier;
+    private String workspace;
+    private String nodeIdentifier;
     private transient Node node;
 
     public LazyNodeWrapper(String workspace, String nodeIdentifier) {
@@ -69,6 +70,17 @@ public class LazyNodeWrapper extends DelegateNodeWrapper {
             node = session.getNodeByIdentifier(this.nodeIdentifier);
         }
         return node;
+    }
+
+    @Override
+    public void setWrappedNode(Node node) {
+        try {
+            this.workspace = node.getSession().getWorkspace().getName();
+            this.nodeIdentifier = node.getIdentifier();
+            this.node = node;
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     protected Session getSessionForWrappedNode(String workspace) throws RepositoryException {

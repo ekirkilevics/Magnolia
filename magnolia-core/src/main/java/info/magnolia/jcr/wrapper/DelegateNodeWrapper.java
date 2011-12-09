@@ -83,8 +83,8 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
     protected DelegateNodeWrapper() {
     }
 
-    protected DelegateNodeWrapper(Node wrapped) {
-        this.wrapped = wrapped;
+    protected DelegateNodeWrapper(Node node) {
+        setWrappedNode(node);
     }
 
     public Node getWrappedNode() throws RepositoryException {
@@ -572,7 +572,7 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
 
         try {
             DelegateNodeWrapper clone = ((DelegateNodeWrapper) this.clone());
-            clone.wrapped = deepUnwrappedNext;
+            clone.setWrappedNode(deepUnwrappedNext);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Failed to unwrap " + this.getClass().getName() + " due to " + e.getMessage(), e);

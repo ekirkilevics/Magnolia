@@ -31,41 +31,50 @@
  * intact.
  *
  */
-package info.magnolia.jcr.wrapper;
+package info.magnolia.jcr.decoration;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
-import javax.jcr.ValueFormatException;
+
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.predicate.AbstractPredicate;
 
 /**
- * Wrapper for a JCR Property that will wrap nodes and properties acquired via references.
+ * {@link ContentDecorator} that applies a predicate to all nodes in a JCR object graph. The predicate is checked
+ * against all parent nodes and
  *
  * @version $Id$
- * @see javax.jcr.Property#getNode()
- * @see javax.jcr.Property#getProperty()
  */
-public class WrappingPropertyWrapper extends DelegatePropertyWrapper {
+public class NodePredicateContentDecorator extends AbstractContentDecorator {
 
-    private NodeWrapperFactory nodeWrapperFactory;
-    private PropertyWrapperFactory propertyWrapperFactory;
+    private final AbstractPredicate<Node> nodePredicate;
 
-    public WrappingPropertyWrapper(Property wrapped, NodeWrapperFactory nodeWrapperFactory, PropertyWrapperFactory propertyWrapperFactory) {
-        super(wrapped);
-        this.nodeWrapperFactory = nodeWrapperFactory;
-        this.propertyWrapperFactory = propertyWrapperFactory;
+    public NodePredicateContentDecorator(AbstractPredicate<Node> nodePredicate) {
+        this.nodePredicate = nodePredicate;
     }
 
     @Override
-    public Node getNode() throws ItemNotFoundException, ValueFormatException, RepositoryException {
-        Node node = super.getNode();
-        return nodeWrapperFactory != null ? nodeWrapperFactory.wrapNode(node) : node;
+    public boolean evaluateNode(Node node) {
+        try {
+            do {
+                if (!nodePredicate.evaluate(node)) {
+                    return false;
+                }
+                node = node.getParent();
+            } while (node.getDepth() != 0);
+            return true;
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     @Override
-    public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
-        Property property = super.getProperty();
-        return propertyWrapperFactory != null ? propertyWrapperFactory.wrapProperty(property) : property;
+    public boolean evaluateProperty(Property property) {
+        try {
+            return evaluateNode(property.getParent());
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 }

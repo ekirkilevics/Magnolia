@@ -37,8 +37,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import javax.jcr.RangeIterator;
 
-import org.apache.jackrabbit.commons.predicate.Predicate;
-
 
 /**
  * Base class for implementing filtering JCR iterators. Does not support getSize() since that would require iterating
@@ -47,23 +45,21 @@ import org.apache.jackrabbit.commons.predicate.Predicate;
  * @param <T>
  * @version $Id$
  */
-public class FilteringRangeIterator<T> implements RangeIterator {
+public abstract class FilteringRangeIterator<T> implements RangeIterator {
 
     private final Iterator<T> iterator;
-    private final Predicate predicate;
     private long position;
     private T next;
 
-    public FilteringRangeIterator(Iterator<T> iterator, Predicate predicate) {
+    public FilteringRangeIterator(Iterator<T> iterator) {
         this.iterator = iterator;
-        this.predicate = predicate;
     }
 
     @Override
     public boolean hasNext() {
         while (next == null && iterator.hasNext()) {
             T n = iterator.next();
-            if (predicate.evaluate(n)) {
+            if (evaluate(n)) {
                 next = n;
             }
         }
@@ -102,4 +98,6 @@ public class FilteringRangeIterator<T> implements RangeIterator {
         // getSize() is optional and we don't support it since that would require walking through the entire iterator
         return -1;
     }
+
+    protected abstract boolean evaluate(T t);
 }

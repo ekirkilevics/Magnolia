@@ -31,41 +31,43 @@
  * intact.
  *
  */
-package info.magnolia.jcr.wrapper;
+package info.magnolia.jcr.decoration;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
-import javax.jcr.ValueFormatException;
+import javax.jcr.NodeIterator;
+
+import info.magnolia.jcr.iterator.FilteringRangeIterator;
 
 /**
- * Wrapper for a JCR Property that will wrap nodes and properties acquired via references.
+ * NodeIterator that applies wrappers and filtering by delegating to a {@link ContentDecorator}.
  *
  * @version $Id$
- * @see javax.jcr.Property#getNode()
- * @see javax.jcr.Property#getProperty()
  */
-public class WrappingPropertyWrapper extends DelegatePropertyWrapper {
+public class ContentDecoratorNodeIterator extends FilteringRangeIterator<Node> implements NodeIterator {
 
-    private NodeWrapperFactory nodeWrapperFactory;
-    private PropertyWrapperFactory propertyWrapperFactory;
+    private final ContentDecorator contentDecorator;
 
-    public WrappingPropertyWrapper(Property wrapped, NodeWrapperFactory nodeWrapperFactory, PropertyWrapperFactory propertyWrapperFactory) {
-        super(wrapped);
-        this.nodeWrapperFactory = nodeWrapperFactory;
-        this.propertyWrapperFactory = propertyWrapperFactory;
+    public ContentDecoratorNodeIterator(NodeIterator nodeIterator, ContentDecorator contentDecorator) {
+        super(nodeIterator);
+        this.contentDecorator = contentDecorator;
     }
 
     @Override
-    public Node getNode() throws ItemNotFoundException, ValueFormatException, RepositoryException {
-        Node node = super.getNode();
-        return nodeWrapperFactory != null ? nodeWrapperFactory.wrapNode(node) : node;
+    public Node next() {
+        return wrapNode(super.next());
     }
 
     @Override
-    public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
-        Property property = super.getProperty();
-        return propertyWrapperFactory != null ? propertyWrapperFactory.wrapProperty(property) : property;
+    public Node nextNode() {
+        return wrapNode(super.next());
+    }
+
+    @Override
+    protected boolean evaluate(Node node) {
+        return contentDecorator.evaluateNode(node);
+    }
+
+    protected Node wrapNode(Node node) {
+        return contentDecorator.wrapNode(node);
     }
 }
