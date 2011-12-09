@@ -41,6 +41,8 @@ import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
@@ -58,7 +60,6 @@ import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
@@ -86,11 +87,14 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         LegacyJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
         dictionary = Dictionary.getDictionary("mgnlGwtMessages");
 
-        processCmsComments(documentElement, null);
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                processCmsComments(Document.get().getDocumentElement(), null);
 
-        AbsolutePanel boundaryOverlay = new AbsolutePanel();
-        boundaryOverlay.getElement().setId("mgnlBoundary");
-        documentElement.getElementsByTagName("body").getItem(0).appendChild(boundaryOverlay.getElement());
+            }
+        });
+
     }
 
     @Override
