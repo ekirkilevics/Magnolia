@@ -41,7 +41,7 @@
     ${tree.javascriptTree}.menu = ${menu.name};
 
     <#if message?exists>
-        MgnlDHTMLUtil.addOnLoad(function(){alert('${message}')});
+        MgnlDHTMLUtil.addOnLoad(function(){alert('${message?js_string}')});
     </#if>
 
     MgnlDHTMLUtil.addOnResize(function(){${tree.javascriptTree}.resize()});

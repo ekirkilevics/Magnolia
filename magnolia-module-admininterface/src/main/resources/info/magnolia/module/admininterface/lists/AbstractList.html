@@ -74,7 +74,7 @@
             [/#if]
 
             [#if message?exists]
-                <script type="text/javascript">MgnlDHTMLUtil.addOnLoad(function(){alert("${message}")});</script>
+                <script type="text/javascript">MgnlDHTMLUtil.addOnLoad(function(){alert("${message?js_string}")});</script>
             [/#if]
         </form>
 
