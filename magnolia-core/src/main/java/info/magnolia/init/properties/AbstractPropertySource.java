@@ -48,7 +48,7 @@ import java.util.Set;
  */
 public abstract class AbstractPropertySource implements PropertySource {
     // can't use a Map<String, String>, as java.util.Properties is a Map<Object, Object>.
-    protected final Properties properties;
+    private final Properties properties;
 
     public AbstractPropertySource(Properties properties) {
         this.properties = properties;
@@ -70,6 +70,11 @@ public abstract class AbstractPropertySource implements PropertySource {
     }
 
     @Override
+    public boolean getBooleanProperty(String property) {
+        return Boolean.parseBoolean(getProperty(property));
+    }
+
+    @Override
     public boolean hasProperty(String key) {
         return properties.containsKey(key);
     }
@@ -82,5 +87,9 @@ public abstract class AbstractPropertySource implements PropertySource {
     @Override
     public String toString() {
         return describe() + " with properties: " + properties.toString();
+    }
+
+    protected Properties getProperties() {
+        return properties;
     }
 }

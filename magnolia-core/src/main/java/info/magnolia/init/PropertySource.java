@@ -53,6 +53,8 @@ public interface PropertySource {
      */
     String getProperty(String key);
 
+    boolean getBooleanProperty(String key);
+
     boolean hasProperty(String key);
 
     /**

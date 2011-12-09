@@ -49,6 +49,4 @@ public interface MagnoliaConfigurationProperties extends PropertySource {
     PropertySource getPropertySource(String key);
 
     void init() throws Exception;
-
-    boolean getBooleanProperty(String magnoliaUtf8Enabled);
 }
