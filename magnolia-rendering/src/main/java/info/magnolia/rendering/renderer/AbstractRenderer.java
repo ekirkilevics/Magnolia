@@ -35,7 +35,9 @@ package info.magnolia.rendering.renderer;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.decoration.ContentDecoratorNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.wrapper.ChannelVisibilityContentDecorator;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.objectfactory.ParameterInfo;
@@ -57,6 +59,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 
@@ -229,7 +232,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     }
 
     /**
-     * Gets the current main contain and treats the situation where the context is not a web context nicely by using the current content instead.
+     * Gets the current main content or returns null if aggregation state is not set.
      */
     protected Node getMainContentSafely(Node content) {
         AggregationState state = getAggregationStateSafely();
@@ -252,8 +255,9 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
      */
     protected Node wrapNodeForModel(Node content, Node mainContent) {
+
+        return wrapWithChannelVisibilityWrapper(content);
         //      FIXME
-        return content;
         //        return new I18nContentWrapper(content);
     }
 
@@ -265,9 +269,22 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * TODO : return an Object instance instead - more flexibility for the template engine ?
      */
     protected Node wrapNodeForTemplate(Node content, Node mainContent) {
+
+        return wrapWithChannelVisibilityWrapper(content);
         //        FIXME
-        return content;
         //        return new I18nContentWrapper(content);
+    }
+
+    private Node wrapWithChannelVisibilityWrapper(Node content) {
+        AggregationState aggregationState = getAggregationStateSafely();
+        if (aggregationState == null) {
+            return content;
+        }
+        String channel = aggregationState.getChannel();
+        if (StringUtils.isEmpty(channel) || channel.equalsIgnoreCase("all")) {
+            return content;
+        }
+        return new ContentDecoratorNodeWrapper(content, new ChannelVisibilityContentDecorator(channel));
     }
 
     protected Object setContextAttribute(final Map<String, Object> ctx, final String name, Object value) {
