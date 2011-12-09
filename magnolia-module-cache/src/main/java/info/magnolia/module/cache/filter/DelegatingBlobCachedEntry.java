@@ -49,10 +49,16 @@ import java.io.IOException;
 
 
 /**
- * Used for big files. The content will be served from the repository rather than by storing in the cache entry.
- * @author pbaerfuss
- * @version $Id$
+ * Used for large responses. Typically we don't want to cache big responses as they are so costly to keep in memory and
+ * tend to evict so much from the cache where they're put in that net performance drops. This cache entry does not keep
+ * the response in memory, instead it serves it from a file on disk or if there's no file it proceeds with rendering.
+ * When it has used the file once it deletes it. The entry still remains in cache and serves as a token to prevent
+ * caching in the future.
  *
+ * The file is created by {@link CacheResponseWrapper} when it reaches its set threshold.
+ *
+ * @version $Id$
+ * @see CacheResponseWrapper
  */
 public class DelegatingBlobCachedEntry extends ContentCachedEntry {
 
