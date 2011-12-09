@@ -66,6 +66,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void setUp() throws Exception {
         super.setUp();
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "./src/test/resources");
+        SystemProperty.setProperty("magnolia.author.key.location", "/path/to/the/key");
     }
 
     @Override
@@ -515,5 +516,4 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // don't overwrite user settings
         assertEquals("video/mp4", getMimeTypePropertyValue("mp4"));
     }
-
 }

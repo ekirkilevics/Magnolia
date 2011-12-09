@@ -254,6 +254,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
                 .addTask(new UpdateSecurityFilterClientCallbacksConfiguration("uriSecurity", "securityCallback"))
                 .addTask(new UpdateUserManagers())
+                .addCondition(new CheckKeyProperty())
                 // TODO addTask( move/backup the callbacks in the contentSecurity filter )
         );
     }
@@ -312,6 +313,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
         conditions.add(new CheckNodeTypesDefinition());
         conditions.add(new SystemTmpDirCondition());
+        conditions.add(new CheckKeyProperty());
 
         return conditions;
     }
