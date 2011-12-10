@@ -45,6 +45,7 @@ import java.io.Serializable;
 
 import javax.security.auth.Subject;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,11 +159,12 @@ public class ExternalUser extends AbstractUser implements Serializable {
 
     @Override
     public String getProperty(String propertyName) {
-        throw new UnsupportedOperationException("not implemented for this ExternalUser");
+        return ObjectUtils.toString(this.userDetails.getProperty(propertyName), null);
     }
 
     @Override
     public void setProperty(String propertyName, String value) {
+        // can't set properties in userDetails
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
 
