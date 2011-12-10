@@ -135,6 +135,30 @@ for Java Content Repositories (JCR).
     <url>http://svn.magnolia-cms.com/view/community/magnolia/trunk</url>
   </scm>
   <build>
+    <resources>
+      <resource>
+        <filtering>false</filtering>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>META-INF/magnolia/*</include>
+          <include>**/license.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <filtering>false</filtering>
+        <directory>${project.build.directory}/generated-resources/taglibs</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -185,7 +209,8 @@ for Java Content Repositories (JCR).
                           <uri>${taglib.uri}</uri>
                           <displayname>${project.name}</displayname>
                           <description>${project.description}</description>
-                          <!--<destdir>let's use the default, so that addToResources works as expected </destdir>-->
+                          <!--<destdir>please don't revert to the default, since it breaks mvn eclipse:eclipse - see MAGNOLIA-3070</destdir>-->
+                          <destdir>${project.build.directory}/generated-resources/taglibs</destdir>
                         </params>
                       </component>
                     </components>
