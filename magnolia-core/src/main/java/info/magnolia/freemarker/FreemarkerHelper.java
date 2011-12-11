@@ -239,7 +239,7 @@ public class FreemarkerHelper {
 
     protected TaglibFactory checkTaglibFactory(ServletContext servletContext) {
         if (taglibFactory == null) {
-            taglibFactory = new TaglibFactory(servletContext);
+            taglibFactory = new TaglibFactory(new FreemarkerServletContextWrapper(servletContext));
         }
         return taglibFactory;
     }
