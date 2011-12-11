@@ -36,7 +36,6 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
@@ -99,7 +98,14 @@ public class LoadPage extends BodyTagSupport {
 
     @Override
     public int doEndTag() {
+
+        if (!MgnlContext.hasInstance()) {
+            return EVAL_PAGE; // just don't break if context is not set, only skip rendering
+        }
+
         Content newActpage = Resource.getCurrentActivePage();
+        
+        String repository = MgnlContext.getAggregationState().getRepository();
 
         String actPageHandle = "[unset]";
         if (newActpage != null) {
@@ -110,7 +116,7 @@ public class LoadPage extends BodyTagSupport {
             Content startPage;
             try {
                 startPage = Resource.getCurrentActivePage().getAncestor(this.level);
-                HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
+                HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
                 newActpage = hm.getContent(startPage.getHandle());
             }
             catch (RepositoryException e) {
@@ -120,7 +126,7 @@ public class LoadPage extends BodyTagSupport {
         }
         else if (StringUtils.isNotEmpty(this.path)) {
             try {
-                newActpage = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE).getContent(this.path);
+                newActpage = MgnlContext.getHierarchyManager(repository).getContent(this.path);
             }
             catch (RepositoryException e) {
                 log.error(e.getClass().getName() + " caught while loading path " + this.path + " from " + actPageHandle + ": " + e.getMessage(), e);
