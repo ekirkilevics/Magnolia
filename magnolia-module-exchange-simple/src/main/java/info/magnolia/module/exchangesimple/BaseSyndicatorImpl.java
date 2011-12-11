@@ -587,12 +587,16 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      */
     protected void addActivationHeaders(URLConnection connection, ActivationContent activationContent, String handshakeKey) {
 
-        String md5 = activationContent.removeProperty(RESOURCE_MAPPING_MD_ATTRIBUTE);
+        String md5 = activationContent.getproperty(RESOURCE_MAPPING_MD_ATTRIBUTE);
         String pass = System.currentTimeMillis() + ";" + this.user + ";" + md5;
         activationContent.setProperty(ACTIVATION_AUTH, SecurityUtil.encrypt(pass));
         Iterator<String> headerKeys = activationContent.getProperties().keySet().iterator();
         while (headerKeys.hasNext()) {
             String key = headerKeys.next();
+            if (RESOURCE_MAPPING_MD_ATTRIBUTE.equals(key)) {
+                // do not send md5 in plain string
+                continue;
+            }
             String value = activationContent.getproperty(key);
             if(SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
                 try {

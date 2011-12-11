@@ -135,6 +135,9 @@ public class SecurityUtil {
 
             // decrypt
             String[] chunks = StringUtils.split(message, ";");
+            if (chunks == null) {
+                throw new SecurityException("The encrypted information is corrupted or incomplete. Please make sure someone is not trying to intercept or modify encrypted message.");
+            }
             StringBuilder clearText = new StringBuilder();
             for (String chunk : chunks) {
                 byte[] byteChunk = hexToByteArray(chunk);
