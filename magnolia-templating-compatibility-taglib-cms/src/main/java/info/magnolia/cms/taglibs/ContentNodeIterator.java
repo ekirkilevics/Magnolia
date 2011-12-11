@@ -322,7 +322,7 @@ public class ContentNodeIterator extends BaseContentTag {
     private boolean doIteration() {
         if (this.contentNodeIterator.hasNext()) {
 
-            if (this.end != null && this.count > this.end.intValue()) {
+            if (this.end != null && this.count > this.end.intValue() - this.begin) {
                 return false;
             }
 

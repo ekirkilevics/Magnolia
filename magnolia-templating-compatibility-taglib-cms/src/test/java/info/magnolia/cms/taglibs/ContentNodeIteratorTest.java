@@ -250,4 +250,26 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         assertNotNull(Resource.getLocalContentNode());
         assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
     }
+
+    public void testEndAttributeWithoutBegin() {
+        cni.setEnd(2);
+        assertEquals(Tag.EVAL_BODY_INCLUDE, cni.doStartTag());
+        assertEquals(items.get(0), Resource.getLocalContentNode());
+        assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
+        assertEquals(items.get(1), Resource.getLocalContentNode());
+        assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
+        assertEquals(items.get(2), Resource.getLocalContentNode());
+        assertEquals(Tag.SKIP_BODY, cni.doAfterBody());
+    }
+
+    public void testEndAttributeWithBegin() {
+        cni.setBegin(1);
+        cni.setEnd(2);
+        assertEquals(Tag.EVAL_BODY_INCLUDE, cni.doStartTag());
+        assertEquals(items.get(1), Resource.getLocalContentNode());
+        assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
+        assertEquals(items.get(2), Resource.getLocalContentNode());
+        assertEquals(Tag.SKIP_BODY, cni.doAfterBody());
+    }
+
 }
