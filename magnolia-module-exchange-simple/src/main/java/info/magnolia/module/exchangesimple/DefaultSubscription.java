@@ -49,6 +49,8 @@ public class DefaultSubscription implements Subscription {
 
     private String repository;
 
+    private boolean enabled = true;
+
     @Override
     public String getName() {
         return name;
@@ -96,6 +98,10 @@ public class DefaultSubscription implements Subscription {
      * */
     @Override
     public int vote(Object value) {
+        if (value == null || getFromURI() == null) {
+            // vote false, but do not throw exception (NPE)
+            return -1;
+        }
         String path = String.valueOf(value);
         String subscribedPath = getFromURI();
         if (path.equals(subscribedPath)) {
@@ -113,7 +119,10 @@ public class DefaultSubscription implements Subscription {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }
