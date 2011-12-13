@@ -42,11 +42,10 @@ import info.magnolia.cms.exchange.Subscription;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -55,9 +54,9 @@ import org.slf4j.LoggerFactory;
 import EDU.oswego.cs.dl.util.concurrent.CountDown;
 import EDU.oswego.cs.dl.util.concurrent.Sync;
 
-
 /**
  * Implementation of syndicator that simply sends all activated content over http connection specified in the subscriber.
+ * 
  * @author Sameer Charles $Id$
  */
 public class SimpleSyndicator extends BaseSyndicatorImpl {
@@ -66,64 +65,41 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     @Override
     public void activate(final ActivationContent activationContent, String nodePath) throws ExchangeException {
         String nodeUUID = activationContent.getproperty(NODE_UUID);
-        Collection<Subscriber> subscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
-        Iterator<Subscriber> subscriberIterator = subscribers.iterator();
-        final Sync done = new CountDown(subscribers.size());
-        final Map<Subscriber, Exception> errors = new ConcurrentHashMap<Subscriber, Exception>(subscribers.size());
-        while (subscriberIterator.hasNext()) {
-            final Subscriber subscriber = subscriberIterator.next();
-            if (subscriber.isActive()) {
-                // Create runnable task for each subscriber execute
-                if (Boolean.parseBoolean(activationContent.getproperty(ItemType.DELETED_NODE_MIXIN))) {
-                    executeInPool(getDeactivateTask(done, errors, subscriber, nodeUUID, nodePath));
-                } else {
-                    executeInPool(getActivateTask(activationContent, done, errors, subscriber, nodePath));
-                }
-            } else {
-                // count down directly
-                done.release();
-            }
-        } //end of subscriber loop
-
-        // wait until all tasks are executed before returning back to user to make sure errors can be propagated back to the user.
-        acquireIgnoringInterruption(done);
-
-        // collect all the errors and send them back.
-        if (!errors.isEmpty()) {
-            Exception e = null;
-            StringBuffer msg = new StringBuffer(errors.size() + " error").append(errors.size() > 1 ? "s" : "").append(" detected: ");
-            Iterator<Map.Entry<Subscriber, Exception>> iter = errors.entrySet().iterator();
-            while (iter.hasNext()) {
-                Entry<Subscriber, Exception> entry = iter.next();
-                e = entry.getValue();
-                Subscriber subscriber = entry.getKey();
-                msg.append("\n").append(e.getMessage()).append(" on ").append(subscriber.getName());
-                log.error(e.getMessage(), e);
-            }
-
-            throw new ExchangeException(msg.toString(), e);
+        final ExchangeTask task;
+        // Create runnable task for subscriber execute
+        if (Boolean.parseBoolean(activationContent.getproperty(ItemType.DELETED_NODE_MIXIN))) {
+            task = getDeactivateTask(nodeUUID, nodePath);
+        } else {
+            task = getActivateTask(activationContent, nodePath);
         }
+        List<Exception> errors = executeExchangeTask(task);
 
+        // clean storage BEFORE re-throwing exception
         executeInPool(new Runnable() {
             @Override
             public void run() {
                 cleanTemporaryStore(activationContent);
             }
         });
+
+        handleErrors(errors);
+
     }
 
-    private Runnable getActivateTask(final ActivationContent activationContent, final Sync done, final Map<Subscriber, Exception> errors, final Subscriber subscriber, final String nodePath) {
-        Runnable r = new Runnable() {
+    protected void handleErrors(List<Exception> errors) throws ExchangeException {
+        // collect all the errors and send them back.
+        if (!errors.isEmpty()) {
+            Exception e = errors.get(0);
+            log.error(e.getMessage(), e);
+            throw new ExchangeException("1 error detected: \n" + e.getMessage(), e);
+        }
+    }
+
+    private ExchangeTask getActivateTask(final ActivationContent activationContent, final String nodePath) {
+        ExchangeTask r = new ExchangeTask() {
             @Override
-            public void run() {
-                try {
-                    activate(subscriber, activationContent, nodePath);
-                } catch (Exception e) {
-                    log.error("Failed to activate content.", e);
-                    errors.put(subscriber,e);
-                } finally {
-                    done.release();
-                }
+            public void runTask(Subscriber subscriber) throws ExchangeException {
+                activate(subscriber, activationContent, nodePath);
             }
         };
         return r;
@@ -131,54 +107,41 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
 
     @Override
     public void doDeactivate(String nodeUUID, String nodePath) throws ExchangeException {
-        Collection<Subscriber> subscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
-        Iterator<Subscriber> subscriberIterator = subscribers.iterator();
-        final Sync done = new CountDown(subscribers.size());
-        final Map<Subscriber, Exception> errors = new ConcurrentHashMap<Subscriber, Exception>();
+        List<Exception> errors = executeExchangeTask(getDeactivateTask(nodeUUID, nodePath));
+        handleErrors(errors);
+    }
+
+    private List<Exception> executeExchangeTask(ExchangeTask runnable) throws ExchangeException {
+        Collection<Subscriber> allSubscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
+        Iterator<Subscriber> subscriberIterator = allSubscribers.iterator();
+        final Sync done = new CountDown(allSubscribers.size());
+        final List<Exception> errors = new ArrayList<Exception>();
         while (subscriberIterator.hasNext()) {
             final Subscriber subscriber = subscriberIterator.next();
             if (subscriber.isActive()) {
+                // TODO: Inject?
+                runnable.setErrors(errors);
+                runnable.setSubscriber(subscriber);
+                runnable.setSync(done);
                 // Create runnable task for each subscriber.
-                executeInPool(getDeactivateTask(done, errors, subscriber, nodeUUID, nodePath));
+                executeInPool(runnable);
+                break;
             } else {
-                // count down directly
                 done.release();
             }
-        } //end of subscriber loop
+        } // end of subscriber loop
 
         // wait until all tasks are executed before returning back to user to make sure errors can be propagated back to the user.
         acquireIgnoringInterruption(done);
 
-        // collect all the errors and send them back.
-        if (!errors.isEmpty()) {
-            Exception e = null;
-            StringBuffer msg = new StringBuffer(errors.size() + " error").append(
-                    errors.size() > 1 ? "s" : "").append(" detected: ");
-            Iterator<Entry<Subscriber, Exception>> iter = errors.entrySet().iterator();
-            while (iter.hasNext()) {
-                Entry<Subscriber, Exception> entry = iter.next();
-                e = entry.getValue();
-                Subscriber subscriber = entry.getKey();
-                msg.append("\n").append(e.getMessage()).append(" on ").append(subscriber.getName());
-                log.error(e.getMessage(), e);
-            }
-
-            throw new ExchangeException(msg.toString(), e);
-        }
+        return errors;
     }
 
-    private Runnable getDeactivateTask(final Sync done, final Map<Subscriber, Exception> errors, final Subscriber subscriber, final String nodeUUID, final String nodePath) {
-        Runnable r = new Runnable() {
+    private ExchangeTask getDeactivateTask(final String nodeUUID, final String nodePath) {
+        ExchangeTask r = new ExchangeTask() {
             @Override
-            public void run() {
-                try {
-                    doDeactivate(subscriber, nodeUUID, nodePath);
-                } catch (Exception e) {
-                    log.error("Failed to deactivate content.", e);
-                    errors.put(subscriber,e);
-                } finally {
-                    done.release();
-                }
+            public void runTask(Subscriber subscriber) throws ExchangeException {
+                doDeactivate(subscriber, nodeUUID, nodePath);
             }
         };
         return r;
@@ -186,6 +149,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
 
     /**
      * Deactivate from a specified subscriber.
+     * 
      * @param subscriber
      * @throws ExchangeException
      */
@@ -220,14 +184,11 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
 
                 urlConnection.getContent();
 
-            }
-            catch (MalformedURLException e) {
+            } catch (MalformedURLException e) {
                 throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + stripPasswordFromUrl(urlString) + "]");
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 throw new ExchangeException("Not able to send the deactivation request [" + stripPasswordFromUrl(urlString) + "]: " + e.getMessage());
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new ExchangeException(e);
             }
         }

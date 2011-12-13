@@ -232,7 +232,6 @@ public class SimpleSyndicatorTest {
         expect(subscription.getFromURI()).andReturn("/");
         expect(subscriber.getName()).andReturn("aSubscriber");
         expect(subscriber.getURL()).andReturn("prot://dummyURL");
-        expect(subscriber.getName()).andReturn("aSubscriber");
         // and don't update the status ...
 
         expect(user.getName()).andReturn("Dummy");
@@ -245,7 +244,7 @@ public class SimpleSyndicatorTest {
         } catch (ExchangeException e) {
             e.printStackTrace();
             // and fail because the activation target doesn't exist.
-            assertEquals("info.magnolia.cms.exchange.ExchangeException: 1 error detected: \nIncorrect URL for subscriber EasyMock for interface info.magnolia.cms.exchange.Subscriber[prot://dummyURL/.magnolia/activation] on aSubscriber", e.getMessage());
+            assertEquals("info.magnolia.cms.exchange.ExchangeException: 1 error detected: \nIncorrect URL for subscriber EasyMock for interface info.magnolia.cms.exchange.Subscriber[prot://dummyURL/.magnolia/activation]", e.getMessage());
         }
         verify(allMocks.toArray());
     }
