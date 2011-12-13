@@ -33,49 +33,50 @@
  */
 package info.magnolia.module.exchangesimple;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import info.magnolia.cms.security.MgnlKeyPair;
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
- * Module class of the basic activation module.
+ * Module class test.
+ * 
+ * @version $Id$
+ * 
  */
-public class ExchangeSimpleModule {
+public class ExchangeSimpleModuleTest {
 
-    private long activationDelayTolerance = 30000;
-    private int activationKeyLength = 1024;
-    private MgnlKeyPair tempKeys;
+    private ExchangeSimpleModule module;
 
-    public void setActivationDelayTolerance(long activationDelayTolerance) {
-        this.activationDelayTolerance = activationDelayTolerance;
+    @Before
+    public void setup() {
+        module = new ExchangeSimpleModule();
+    }
+    @Test
+    public void testGetActivationDelayTolerance() {
+        // default value
+        assertEquals(30000, module.getActivationDelayTolerance());
+        module.setActivationDelayTolerance(5000);
+        assertEquals(5000, module.getActivationDelayTolerance());
     }
 
-    /**
-     * Default tolerance if not set is 30000 (i.e. 30 seconds).
-     * 
-     * @return tolerance in miliseconds.
-     */
-    public long getActivationDelayTolerance() {
-        return activationDelayTolerance;
+    @Test
+    public void testGetActivationKeyLength() {
+        // default value
+        assertEquals(1024, module.getActivationKeyLength());
+        module.setActivationKeyLength(2048);
+        assertEquals(2048, module.getActivationKeyLength());
     }
 
-    /**
-     * Default key length if not set is 1024 bits.
-     * 
-     * @return key length in bits.
-     */
-    public int getActivationKeyLength() {
-        return activationKeyLength;
-    }
-
-    public void setActivationKeyLength(int activationKeyLength) {
-        this.activationKeyLength = activationKeyLength;
-    }
-
-    public void setTempKeys(MgnlKeyPair tempKeys) {
-        this.tempKeys = tempKeys;
-    }
-
-    public MgnlKeyPair getTempKeys() {
-        return tempKeys;
+    @Test
+    public void testGetTempKeys() {
+        //default value
+        assertNull( module.getTempKeys());
+        module.setTempKeys(new MgnlKeyPair(null, null));
+        assertNotNull(module.getTempKeys());
     }
 
 }
