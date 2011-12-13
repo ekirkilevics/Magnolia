@@ -37,19 +37,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Virtual uri mapping implementation that uses regular expressions in fromURI/toURI. When using regular expression in
+ * Query aware virtual uri mapping implementation that uses regular expressions in fromURI/toURI. When using regular expression in
  * <code>fromURI</code>, <code>toURI</code> can contain references to the regexp matches. For example:
  *
  * <pre>
- * fromURI=/products/([0-9A-Z]+)\.html
- * toURI=/product/detail.html?productId=$1
+ * fromURI=/products/([0-9A-Z]+)\.html\?available(true|false)
+ * toURI=/product/detail.html?productId=$1&available=$2
  * </pre>
  *
  * @author Fabrizio Giustina
  * @author philipp
  * @version $Id: DefaultVirtualURIMapping.java 10295 2007-08-02 21:33:58Z fgiust $
  */
-public class RegexpVirtualURIMapping implements VirtualURIMapping {
+public class RegexpVirtualURIMapping implements QueryAwareVirtualURIMapping {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RegexpVirtualURIMapping.class);
 
     private String fromURI;
@@ -58,9 +58,19 @@ public class RegexpVirtualURIMapping implements VirtualURIMapping {
 
     @Override
     public MappingResult mapURI(final String uri) {
+        return mapURI(uri, null);
+    }
+
+    public MappingResult mapURI(final String uri, String queryString) {
 
         if (regexp != null) {
-            final Matcher matcher = regexp.matcher(uri);
+            final Matcher matcher;
+            if(queryString != null){
+                matcher = regexp.matcher(uri + "?" + queryString);
+            }else{
+                matcher = regexp.matcher(uri);
+            }
+
             if (matcher.find()) {
                 final MappingResult r = new MappingResult();
                 final int matcherCount = matcher.groupCount();

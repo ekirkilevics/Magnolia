@@ -82,16 +82,35 @@ public final class VirtualURIManager extends ObservedManager {
     /**
      * checks for the requested URI mapping in Server config : Servlet Specification 2.3 Section 10 "Mapping Requests to
      * Servlets".
+     * 
+     * @param uri the URI of the current request, decoded and without the context path
      * @return URI string mapping
      */
     public String getURIMapping(String uri) {
+        return getURIMapping(uri, null);
+    }
+    
+    /**
+     * checks for the requested URI mapping in Server config : Servlet Specification 2.3 Section 10 "Mapping Requests to
+     * Servlets".
+     * 
+     * @param uri the URI of the current request, decoded and without the context path
+     * @param queryString the Query String of the current request
+     * @return URI string mapping
+     */
+    public String getURIMapping(String uri, String queryString) {
         Iterator<VirtualURIMapping> e = cachedURImapping.iterator();
         String mappedURI = StringUtils.EMPTY;
         int lastMatchedLevel = 0;
         while (e.hasNext()) {
             try{
                 VirtualURIMapping vm = e.next();
-                VirtualURIMapping.MappingResult result = vm.mapURI(uri);
+                final VirtualURIMapping.MappingResult result;
+                if (queryString != null && vm instanceof QueryAwareVirtualURIMapping){
+                    result = ((QueryAwareVirtualURIMapping)vm).mapURI(uri, queryString);
+                } else {
+                    result = vm.mapURI(uri);
+                }
                 if (result != null && lastMatchedLevel < result.getLevel()) {
                     lastMatchedLevel = result.getLevel();
                     mappedURI = result.getToURI();

@@ -54,6 +54,7 @@ public class AggregationState {
     private String originalBrowserURI;
     private String originalBrowserURL;
     private String currentURI;
+    private String queryString;
     private String extension;
     private File file;
     private String handle;
@@ -85,6 +86,17 @@ public class AggregationState {
 
     public void setCurrentURI(String currentURI) {
         this.currentURI = stripContextPathIfExists(currentURI);
+    }
+
+    public void setQueryString(String queryString) {
+        this.queryString = queryString;
+    }
+
+    /**
+     * Returns the original request query string.
+     */
+    public String getQueryString() {
+        return queryString;
     }
 
     /**

@@ -98,6 +98,7 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
         aggregationState.setOriginalBrowserURL(originalUrl);
         aggregationState.setCurrentURI(URLDecoder.decode(ServletUtils.getRequestUri(request), characterEncoding));
         aggregationState.setExtension(extension);
+        aggregationState.setQueryString(request.getQueryString());
 
         chain.doFilter(request, response);
     }

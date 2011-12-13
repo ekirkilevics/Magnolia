@@ -130,4 +130,58 @@ public class RegexpVirtualURIMappingTest {
         assertEquals(null, res);
     }
 
+    @Test
+    public void testQueryStringIsBeingPassedThroughExample(){
+        final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
+        mapping.setFromURI("/news/(.*)");
+        mapping.setToURI("http://noviny.cz/$1");
+        
+        final String inputUri = "/news/news.html";
+        final String inputQueryString = "local=true&history=false&sport=true";
+        final VirtualURIMapping.MappingResult res = mapping.mapURI(inputUri, inputQueryString);
+        
+        assertEquals("http://noviny.cz/news.html?local=true&history=false&sport=true", res.getToURI());
+        assertEquals(2, res.getLevel());
+    }
+    
+    @Test
+    public void testQueryStringIsBeingPassedThroughExample2(){
+        final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
+        mapping.setFromURI("/products/([0-9a-z]+)\\.html\\?visible=(true|false)$");
+        mapping.setToURI("forward:/shop/$1?dostupna=$2");
+        
+        final String inputUri = "/products/book.html";
+        final String inputQueryString = "visible=false";
+        final VirtualURIMapping.MappingResult res = mapping.mapURI(inputUri, inputQueryString);
+        
+        assertEquals("forward:/shop/book?dostupna=false", res.getToURI());
+        assertEquals(3, res.getLevel());
+    }
+    
+    @Test
+    public void testQueryStringIsBeingPassedThroughExample3(){
+        final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
+        mapping.setFromURI("/products/([a-z]+)/pet/(.*)\\?((([0-9a-z]+)=([0-9]+)&)+)(paid)=(true|false)$");
+        mapping.setToURI("http://petshop.com/$1/$7.html?$3yes=$8");
+        
+        final String inputUri = "/products/homeanimal/pet/checkout.htm";
+        final String inputQueryString = "?dog=5&cat=10&skunk=50&paid=true";
+        final VirtualURIMapping.MappingResult res = mapping.mapURI(inputUri, inputQueryString);
+        
+        assertEquals("http://petshop.com/homeanimal/paid.html?dog=5&cat=10&skunk=50&yes=true", res.getToURI());
+        assertEquals(9, res.getLevel());
+    }
+    
+    @Test
+    public void testQueryStringMappingFailedOnWrongQueryString(){
+        final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
+        mapping.setFromURI("/failed/string.html\\?([0-9a-z]+)=([0-9]+)");
+        mapping.setToURI("http://bookshop.com/$1.html?piece=$2");
+        
+        final String inputUri = "/failed/string.html";
+        final String inputQueryString = "godfather=true";
+        final VirtualURIMapping.MappingResult res = mapping.mapURI(inputUri, inputQueryString);
+        
+        assertEquals(null, res);
+    }
 }

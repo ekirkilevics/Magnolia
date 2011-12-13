@@ -64,7 +64,7 @@ public class VirtualUriFilter extends AbstractMgnlFilter {
             throws IOException, ServletException {
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        String targetUri = getURIMapping(aggregationState.getCurrentURI());
+        String targetUri = getURIMapping(aggregationState.getCurrentURI(), aggregationState.getQueryString());
 
         if (StringUtils.isEmpty(targetUri)) {
             chain.doFilter(request, response);
@@ -93,5 +93,12 @@ public class VirtualUriFilter extends AbstractMgnlFilter {
      */
     protected String getURIMapping(String currentURI) {
         return VirtualURIManager.getInstance().getURIMapping(currentURI);
+    }
+
+    /**
+     * @return URI mapping as in ServerInfo
+     */
+    protected String getURIMapping(String currentURI, String queryString) {
+        return VirtualURIManager.getInstance().getURIMapping(currentURI, queryString);
     }
 }
