@@ -588,7 +588,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     protected void addActivationHeaders(URLConnection connection, ActivationContent activationContent, String handshakeKey) {
 
         String md5 = activationContent.getproperty(RESOURCE_MAPPING_MD_ATTRIBUTE);
-        String pass = System.currentTimeMillis() + ";" + this.user + ";" + md5;
+        String pass = System.currentTimeMillis() + ";" + this.user.getName() + ";" + md5;
         activationContent.setProperty(ACTIVATION_AUTH, SecurityUtil.encrypt(pass));
         Iterator<String> headerKeys = activationContent.getProperties().keySet().iterator();
         while (headerKeys.hasNext()) {
