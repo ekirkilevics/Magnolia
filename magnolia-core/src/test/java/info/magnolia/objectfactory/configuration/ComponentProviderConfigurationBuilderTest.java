@@ -54,6 +54,7 @@ import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.guice.GuiceComponentProvider;
 import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
 import info.magnolia.test.AbstractMagnoliaTestCase;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.MockUtil;
@@ -130,6 +131,7 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
     public void tearDown() throws Exception {
         super.tearDown();
         events.clear();
+        ComponentsTestUtil.clear();
     }
 
     @Test
