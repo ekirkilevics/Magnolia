@@ -116,7 +116,9 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         Iterator<Subscriber> subscriberIterator = allSubscribers.iterator();
         final Sync done = new CountDown(allSubscribers.size());
         final List<Exception> errors = new ArrayList<Exception>();
+        int count = 0;
         while (subscriberIterator.hasNext()) {
+            count++;
             final Subscriber subscriber = subscriberIterator.next();
             if (subscriber.isActive()) {
                 // TODO: Inject?
@@ -130,6 +132,11 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                 done.release();
             }
         } // end of subscriber loop
+
+        // release unused barriers
+        for (; count < allSubscribers.size(); count++) {
+            done.release();
+        }
 
         // wait until all tasks are executed before returning back to user to make sure errors can be propagated back to the user.
         acquireIgnoringInterruption(done);
