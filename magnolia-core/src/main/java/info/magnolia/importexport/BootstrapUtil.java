@@ -135,7 +135,7 @@ public class BootstrapUtil {
     /**
      * I.e. given a resource path like <code>/mgnl-bootstrap/foo/config.server.i18n.xml</code> it will return <code>config</code>.
      */
-    public static String getWorkspaceNameFromResource(String resourcePath) {
+    public static String getWorkspaceNameFromResource(final String resourcePath) {
         String resourceName = StringUtils.replace(resourcePath, "\\", "/");
 
         String name = getFilenameFromResource(resourceName, ".xml");
@@ -146,7 +146,7 @@ public class BootstrapUtil {
     /**
      * I.e. given a resource path like <code>/mgnl-bootstrap/foo/config.server.i18n.xml</code> it will return <code>/server/i18n</code>.
      */
-    public static String getFullpathFromResource(String resourcePath) {
+    public static String getFullpathFromResource(final String resourcePath) {
         String resourceName = StringUtils.replace(resourcePath, "\\", "/");
 
         String name = getFilenameFromResource(resourceName, ".xml");
@@ -159,7 +159,7 @@ public class BootstrapUtil {
     /**
      * I.e. given a resource path like <code>/mgnl-bootstrap/foo/config.server.i18n.xml</code> it will return <code>/server</code>.
      */
-    public static String getPathnameFromResource(String resourcePath) {
+    public static String getPathnameFromResource(final String resourcePath) {
         String resourceName = StringUtils.replace(resourcePath, "\\", "/");
 
         String name = getFilenameFromResource(resourceName, ".xml");
@@ -176,9 +176,13 @@ public class BootstrapUtil {
      * I.e. given a resource path like <code>/mgnl-bootstrap/foo/config.server.i18n.xml</code> and <code>.xml</code> extension it will return <code>config.server.i18n</code> (no trailing dot).
      * If extension is <code>null</code>, it defaults to <code>.xml</code>.
      */
-    public static String getFilenameFromResource(String resourcePath, String extension) {
+    public static String getFilenameFromResource(final String resourcePath, final String extension) {
         String ext = StringUtils.defaultIfEmpty(extension, ".xml");
-        return StringUtils.removeEnd(StringUtils.substringAfterLast(resourcePath, "/"), ext.startsWith(".") ? ext : "." + ext);
+        String tmpResourcePath = resourcePath;
+        if(resourcePath.contains("/")) {
+            tmpResourcePath = StringUtils.substringAfterLast(resourcePath, "/");
+        }
+        return StringUtils.removeEnd(tmpResourcePath, ext.startsWith(".") ? ext : "." + ext);
     }
 
 }

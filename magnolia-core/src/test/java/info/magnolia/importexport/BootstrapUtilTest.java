@@ -44,6 +44,7 @@ public class BootstrapUtilTest {
 
     protected static final String MGNL_BOOTSTRAP_FILE = "/mgnl-bootstrap/foo/config.server.i18n.xml";
     protected static final String MGNL_BOOTSTRAP_FILE_NEW_STYLE = "/mgnl-bootstrap/foo/config.server.foo..i18n.xml";
+    protected static final String MGNL_BOOTSTRAP_FILE_NEW_STYLE_NO_SLASHES = "config.server.foo..i18n.xml";
 
     @Test
     public void testGetWorkspaceNameFromResource() throws Exception {
@@ -61,6 +62,9 @@ public class BootstrapUtilTest {
 
         pathname = BootstrapUtil.getPathnameFromResource(MGNL_BOOTSTRAP_FILE_NEW_STYLE);
         assertEquals("/server", pathname);
+
+        pathname = BootstrapUtil.getPathnameFromResource(MGNL_BOOTSTRAP_FILE_NEW_STYLE_NO_SLASHES);
+        assertEquals("/server", pathname);
     }
 
     @Test
@@ -69,6 +73,9 @@ public class BootstrapUtilTest {
         assertEquals("/server/i18n", fullpath);
 
         fullpath = BootstrapUtil.getFullpathFromResource(MGNL_BOOTSTRAP_FILE_NEW_STYLE);
+        assertEquals("/server/foo.i18n", fullpath);
+
+        fullpath = BootstrapUtil.getFullpathFromResource(MGNL_BOOTSTRAP_FILE_NEW_STYLE_NO_SLASHES);
         assertEquals("/server/foo.i18n", fullpath);
     }
 
@@ -87,5 +94,9 @@ public class BootstrapUtilTest {
         //a fancy extension
         fileName = BootstrapUtil.getFilenameFromResource("/mgnl-bootstrap/foo/bar..baz.qux", ".qux");
         assertEquals("bar..baz", fileName);
+
+        //a test with no slashes (/) in the resource name
+        fileName = BootstrapUtil.getFilenameFromResource(MGNL_BOOTSTRAP_FILE_NEW_STYLE_NO_SLASHES, ".xml");
+        assertEquals("config.server.foo..i18n", fileName);
     }
 }

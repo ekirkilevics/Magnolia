@@ -39,10 +39,11 @@ import info.magnolia.importexport.BootstrapUtil;
 import info.magnolia.importexport.DataTransporter;
 import info.magnolia.module.InstallContext;
 
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -94,7 +95,7 @@ public class PartialBootstrapTask extends AbstractTask {
 
         this.importUUIDBehavior = importUUIDBehavior;
         this.resource = resource;
-        this.itemPath = StringUtils.chomp(itemPath, "/");
+        this.itemPath = StringUtils.chomp(itemPath, "/").replace(".", "..");
         this.itemName = StringUtils.substringAfterLast(itemPath , "/");
     }
 
@@ -102,19 +103,7 @@ public class PartialBootstrapTask extends AbstractTask {
     public void execute(InstallContext ctx) throws TaskExecutionException {
 
         try {
-
-            // get name as config.modules.xxx
-            String inputResourceName = StringUtils.removeEnd(StringUtils.substringAfterLast(resource, "/"), ".xml");
-            //replacing all "/" with "."; getting string after first node
-            String tmpitemPath = itemPath.replace("/", ".");
-
-            tmpitemPath = StringUtils.removeStart(tmpitemPath, ".");
-            tmpitemPath = StringUtils.substringAfter(tmpitemPath, ".");
-            String outputResourceName = inputResourceName + "." + tmpitemPath;
-            if(StringUtils.isNotEmpty(targetResource)) {
-                outputResourceName = targetResource;
-            }
-
+            String outputResourceName = getOutputResourceName(resource, itemPath);
             //bootstrap
             bootstrap(outputResourceName, itemName, importUUIDBehavior, getNodeStream(resource, itemPath));
 
@@ -159,6 +148,32 @@ public class PartialBootstrapTask extends AbstractTask {
         }
 
         DataTransporter.importXmlStream(stream, repository, pathName, name, false, importUUIDBehavior, false, true);
+    }
+
+    protected String getOutputResourceName(final String resource, final String itemPath) {
+        // get name as config.modules.xxx
+        String inputResourceName = BootstrapUtil.getFilenameFromResource(resource, ".xml");
+        //replacing all "/" with "."; getting string after first node
+        String tmpitemPath = itemPath.replace("/", ".");
+
+        tmpitemPath = StringUtils.removeStart(tmpitemPath, ".");
+        tmpitemPath = StringUtils.substringAfter(tmpitemPath, ".");
+        String outputResourceName = inputResourceName + "." + tmpitemPath;
+        if(StringUtils.isNotEmpty(targetResource)) {
+            outputResourceName = targetResource;
+        }
+        return outputResourceName;
+    }
+
+    protected String getResource() {
+        return resource;
+    }
+    protected String getItemName() {
+        return itemName;
+    }
+
+    protected String getItemPath() {
+        return itemPath;
     }
 
 }
