@@ -60,7 +60,6 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -566,26 +565,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
             Content parentPage = getHierarchyManager().getContent(parentPath);
             NodeData newNodeData = parentPage.createNodeData(newLabel);
             NodeData existingNodeData = getHierarchyManager().getNodeData(this.getPath());
-
-            final int type = existingNodeData.getType();
-            switch(type) {
-                case PropertyType.STRING:
-                    newNodeData.setValue(existingNodeData.getString());
-                    break;
-                case PropertyType.BOOLEAN:
-                    newNodeData.setValue(existingNodeData.getBoolean());
-                    break;
-                case PropertyType.LONG:
-                    newNodeData.setValue(existingNodeData.getLong());
-                    break;
-                case PropertyType.DOUBLE:
-                    newNodeData.setValue(existingNodeData.getDouble());
-                    break;
-                default:
-                     log.warn("node type {} is not handled. Falling back to String type.", PropertyType.nameFromValue(type));
-                     newNodeData.setValue(existingNodeData.getString());
-            }
-
+            newNodeData.setValue(existingNodeData.getValue());
             existingNodeData.delete();
             dest = parentPath;
         }

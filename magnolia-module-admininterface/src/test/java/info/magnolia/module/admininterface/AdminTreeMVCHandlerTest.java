@@ -38,17 +38,24 @@ import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.admininterface.commands.BaseActivationCommand;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.MockNodeData;
 import info.magnolia.test.mock.jcr.MockNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -207,6 +214,37 @@ public class AdminTreeMVCHandlerTest {
         handler.copyNode("/test/foo", "/bar/foo");
         verify(objs);
         assertTrue(unactivated[0]);
+    }
+
+    @Test
+    public void testRenameNode() throws Exception {
+        // GIVEN
+        handler.path = "/some/selected/path/someprop";
+        expect(ctx.getHierarchyManager("repo-name")).andReturn(hm).anyTimes();
+        expect(hm.isExist("/some/selected/path/newprop")).andReturn(false);
+        expect(hm.isNodeData(handler.path)).andReturn(true);
+        MockContent content = new MockContent("path") {
+            @Override
+            public void updateMetaData() {
+                // no action required
+            }
+        };
+        NodeData oldNodeData = content.setNodeData("someprop", true);
+        expect(hm.getContent("/some/selected/path")).andReturn(content).anyTimes();
+        expect(hm.getNodeData("/some/selected/path/someprop")).andReturn(oldNodeData);
+
+        expect(hm.getContent("/some/selected/path")).andReturn(content);
+        objs = new Object[] {req, res, ctx, hm, cnt};
+        replay(objs);
+
+        // WHEN
+        handler.renameNode("newprop");
+        verify(objs);
+
+        // THEN
+        assertFalse(content.getNodeData("someprop").isExist());
+        NodeData newNodeData = content.getNodeData("newprop");
+        assertEquals(PropertyType.BOOLEAN, newNodeData.getType());
     }
 
     @After
