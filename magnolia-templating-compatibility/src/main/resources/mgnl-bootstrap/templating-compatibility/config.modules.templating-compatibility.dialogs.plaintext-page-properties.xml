@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="plaintext-page-properties" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
-  xmlns:rep="internal" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fn="http://www.w3.org/2005/xpath-functions"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
-  xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
+<sv:node sv:name="plaintext-page-properties" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
@@ -47,7 +43,7 @@
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>edd5ffbd-30a6-4049-ab28-88f60f8b8aaf</sv:value>
+      <sv:value>6b340b40-0f9c-4916-9282-748d6931fe1f</sv:value>
     </sv:property>
     <sv:property sv:name="controlType" sv:type="String">
       <sv:value>tab</sv:value>
@@ -86,7 +82,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>91b03bb3-29f0-448d-a877-a9e61c4294e7</sv:value>
+        <sv:value>b1f1db26-2f7b-40f3-8878-c3112d36f892</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>edit</sv:value>
@@ -138,7 +134,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>236111d8-97d2-4bf1-a3c7-0d85ade27842</sv:value>
+        <sv:value>7d2b86fc-2919-4a38-ac84-390879cda3ff</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>edit</sv:value>
@@ -187,7 +183,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>13d435ab-0cc1-4c61-89ca-7503ee4d145f</sv:value>
+        <sv:value>4f0b9a45-e718-432c-bcca-9eaf4601d45a</sv:value>
       </sv:property>
       <sv:property sv:name="buttonLabel" sv:type="String">
         <sv:value>dialog.pageProperties.tabGeneral.hideInNav.buttonLabel</sv:value>
