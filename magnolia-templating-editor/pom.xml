@@ -11,6 +11,19 @@
   <artifactId>magnolia-templating-editor</artifactId>
   <name>magnolia-templating-editor</name>
 
+  <properties>
+    <gwt.persistentunitcache>false</gwt.persistentunitcache>
+  </properties>
+  
+  <profiles>
+    <profile>
+      <id>gwt-dev</id>
+      <properties>
+        <gwt.persistentunitcache>true</gwt.persistentunitcache>
+      </properties>
+    </profile>
+  </profiles>
+
   <build>
     <plugins>
       <!-- Compile custom GWT components or widget dependencies with the GWT
@@ -34,6 +47,9 @@
           <!-- <draftCompile>true</draftCompile> -->
           <!-- <style>PRETTY</style> -->
           <!-- <runTarget>.magnolia/admin-central</runTarget> -->
+
+          <!-- persistent unit cache is only needed in dev mode. Disabling it reduces this artifact's size from 7mb to 500kb -->
+          <extraJvmArgs>-Xmx512m -Dgwt.persistentunitcache=${gwt.persistentunitcache}</extraJvmArgs>
         </configuration>
         <executions>
           <execution>
