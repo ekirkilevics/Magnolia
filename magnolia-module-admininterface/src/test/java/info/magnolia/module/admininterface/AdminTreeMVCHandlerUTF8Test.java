@@ -40,7 +40,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
@@ -288,7 +287,7 @@ public class AdminTreeMVCHandlerUTF8Test{
         {
 
             @Override
-            public void setUnActivated() throws AccessDeniedException
+            public void setUnActivated()
             {
                 unactivated[0] = true;
             }
@@ -320,7 +319,7 @@ public class AdminTreeMVCHandlerUTF8Test{
         {
 
             @Override
-            public void setUnActivated() throws AccessDeniedException
+            public void setUnActivated()
             {
                 unactivated[0] = true;
             }
@@ -330,7 +329,7 @@ public class AdminTreeMVCHandlerUTF8Test{
         {
 
             @Override
-            public void setUnActivated() throws AccessDeniedException
+            public void setUnActivated()
             {
                 unactivated[0] = true;
             }

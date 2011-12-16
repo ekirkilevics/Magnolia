@@ -38,24 +38,19 @@ import static org.junit.Assert.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.admininterface.commands.BaseActivationCommand;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockNodeData;
 import info.magnolia.test.mock.jcr.MockNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.Property;
 import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -152,7 +147,7 @@ public class AdminTreeMVCHandlerTest {
         final boolean unactivated[] = new boolean[1];
         MetaData meta = new MetaData(new MockNode("blah")) {
             @Override
-            public void setUnActivated() throws AccessDeniedException {
+            public void setUnActivated() {
                 unactivated[0] = true;
             }
         };
@@ -180,14 +175,14 @@ public class AdminTreeMVCHandlerTest {
         final boolean unactivated[] = new boolean[1];
         MetaData meta = new MetaData(new MockNode("blah")) {
             @Override
-            public void setUnActivated() throws AccessDeniedException {
+            public void setUnActivated() {
                 unactivated[0] = true;
             }
         };
         Content child = createStrictMock(Content.class);
         MetaData childMeta = new MetaData(new MockNode("blah")) {
             @Override
-            public void setUnActivated() throws AccessDeniedException {
+            public void setUnActivated() {
                 unactivated[0] = true;
             }
         };

@@ -77,7 +77,7 @@ public class MetaDataTest {
     }
 
     @Test
-    public void testSetPropertyWithDouble() throws RepositoryException{
+    public void testSetPropertyWithDouble() {
         // GIVEN
         final MetaData md = MetaDataUtil.getMetaData(root);
         final double value = 12d;
@@ -90,7 +90,7 @@ public class MetaDataTest {
     }
 
     @Test
-    public void testSetPropertyWithLong() throws RepositoryException{
+    public void testSetPropertyWithLong() {
         // GIVEN
         final MetaData md = MetaDataUtil.getMetaData(root);
         final long value = 12l;
@@ -103,7 +103,7 @@ public class MetaDataTest {
     }
 
     @Test
-    public void testSetPropertyWithBoolean() throws RepositoryException{
+    public void testSetPropertyWithBoolean() {
         // GIVEN
         final MetaData md = MetaDataUtil.getMetaData(root);
         final boolean value = false;
@@ -116,7 +116,7 @@ public class MetaDataTest {
     }
 
     @Test
-    public void testSetPropertyWithDate() throws RepositoryException{
+    public void testSetPropertyWithDate() {
         // GIVEN
         final MetaData md = MetaDataUtil.getMetaData(root);
         final Calendar value = Calendar.getInstance();

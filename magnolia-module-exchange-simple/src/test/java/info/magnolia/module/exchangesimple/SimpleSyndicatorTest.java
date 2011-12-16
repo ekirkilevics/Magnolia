@@ -33,14 +33,7 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.makeThreadSafe;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.Content.ContentFilter;
@@ -58,6 +51,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.jcr.MockNode;
 
 import java.security.DigestOutputStream;
 import java.util.ArrayList;
@@ -107,7 +101,9 @@ public class SimpleSyndicatorTest {
         syndicator.user = user;
         content = createStrictMock(Content.class);
         hm = createStrictMock(HierarchyManager.class);
-        meta = new MetaData() {};
+        MockNode workingNode = new MockNode("working");
+        workingNode.addNode(MetaData.DEFAULT_META_NODE);
+        meta = new MetaData(workingNode);
         subscribers = new ArrayList<Subscriber>();
         allMocks = new ArrayList<Object>();
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");
