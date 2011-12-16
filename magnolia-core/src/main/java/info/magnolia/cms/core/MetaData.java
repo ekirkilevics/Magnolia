@@ -53,6 +53,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Meta data of a content like creation date, modification date, assigned template, ...
+ *
+ * @version $Id$
  */
 public class MetaData {
     private static final Logger log = LoggerFactory.getLogger(MetaData.class);
@@ -103,7 +105,6 @@ public class MetaData {
      *
      * @deprecated since 4.5 use MetaData(Node) instead.
      */
-    @Deprecated
     protected MetaData(Node workingNode, AccessManager ignoredAccessManager) {
         this(workingNode);
     }
@@ -328,15 +329,6 @@ public class MetaData {
      */
     public void setTemplate(String value) {
         setProperty(TEMPLATE, value);
-    }
-
-    /**
-     * Part of metadata, template type : JSP - Servlet - _xxx_.
-     *
-     * @deprecated since 4.0 - not used - template type is determined by template definition
-     */
-    public void setTemplateType(String value) {
-        setProperty(TEMPLATE_TYPE, value);
     }
 
     public void setProperty(String name, String value) {
