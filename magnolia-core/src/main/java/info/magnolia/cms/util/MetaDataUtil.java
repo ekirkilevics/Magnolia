@@ -46,9 +46,11 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Util to work with {@link MetaData}.
- * @author Sameer Charles
+ * Util to work with {@link info.magnolia.cms.core.MetaData}.
+ *
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated since 4.5 as it operates on deprecated Content - use {@link info.magnolia.jcr.util.MetaDataUtil} instead.
  */
 public class MetaDataUtil {
     private static final Logger log = LoggerFactory.getLogger(MetaDataUtil.class);
