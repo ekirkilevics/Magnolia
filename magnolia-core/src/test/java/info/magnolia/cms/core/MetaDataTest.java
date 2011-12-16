@@ -34,8 +34,8 @@
 package info.magnolia.cms.core;
 
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.assertEquals;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -46,6 +46,7 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -142,6 +143,73 @@ public class MetaDataTest {
         // THEN
         assertEquals(value, result);
     }
+
+
+    @Test
+    public void testGetBooleanPropertyWithMissingNode() {
+        // GIVEN
+        final Node nodeWithoutMetaData = new MockNode();
+        final MetaData md = new MetaData(nodeWithoutMetaData);
+
+        // WHEN
+        final boolean result = md.getBooleanProperty(PROPERTY_NAME);
+
+        // THEN
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void testGetDoublePropertyWithMissingNode() {
+        // GIVEN
+        final Node nodeWithoutMetaData = new MockNode();
+        final MetaData md = new MetaData(nodeWithoutMetaData);
+
+        // WHEN
+        final double result = md.getDoubleProperty(PROPERTY_NAME);
+
+        // THEN
+        assertEquals(0d, result, 0d);
+    }
+
+    @Test
+    public void testGetLongPropertyWithMissingNode() {
+        // GIVEN
+        final Node nodeWithoutMetaData = new MockNode();
+        final MetaData md = new MetaData(nodeWithoutMetaData);
+
+        // WHEN
+        final long result = md.getLongProperty(PROPERTY_NAME);
+
+        // THEN
+        assertEquals(0l, result);
+    }
+
+    @Test
+    public void testGetStringPropertyWithMissingNode() {
+        // GIVEN
+        final Node nodeWithoutMetaData = new MockNode();
+        final MetaData md = new MetaData(nodeWithoutMetaData);
+
+        // WHEN
+        final String result = md.getStringProperty(PROPERTY_NAME);
+
+        // THEN
+        assertEquals(StringUtils.EMPTY, result);
+    }
+
+    @Test
+    public void testGetCalendarPropertyWithMissingNode() {
+        // GIVEN
+        final Node nodeWithoutMetaData = new MockNode();
+        final MetaData md = new MetaData(nodeWithoutMetaData);
+
+        // WHEN
+        final Calendar result = md.getDateProperty(PROPERTY_NAME);
+
+        // THEN
+        assertNull(result);
+    }
+
 
     @Test
     public void testGetStringPropertyThrowingPathNotFoundException() throws RepositoryException{

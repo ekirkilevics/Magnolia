@@ -34,6 +34,7 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Calendar;
@@ -42,6 +43,7 @@ import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -87,9 +89,6 @@ public class MetaData {
     public static final int ACTIVATION_STATUS_MODIFIED = 1;
 
     public static final int ACTIVATION_STATUS_ACTIVATED = 2;
-
-    public static final String META_DATA_NOT_EXISTING_MESSAGE =
-            "MetaData has not been created or this node does not support MetaData. Cannot set property {}";
 
     /**
      * meta data node.
@@ -138,14 +137,16 @@ public class MetaData {
      * @return String value of the requested metadata
      */
     public String getLabel() {
-        try {
-            return this.node.getName();
-        } catch (NullPointerException e) {
+        if (node == null) {
             if (log.isDebugEnabled()) {
                 log.debug("MetaData has not been created or this node does not support MetaData");
             }
-        } catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
+        } else {
+            try {
+                return this.node.getName();
+            } catch (RepositoryException e) {
+                log.error(e.getMessage(), e);
+            }
         }
         return StringUtils.EMPTY;
     }
@@ -153,7 +154,6 @@ public class MetaData {
     /**
      * get property name with the prefix.
      *
-     * @param name
      * @return name with namespace prefix
      */
     private String getInternalPropertyName(String name) {
@@ -333,149 +333,105 @@ public class MetaData {
     /**
      * Part of metadata, template type : JSP - Servlet - _xxx_.
      *
-     * @param value
      * @deprecated since 4.0 - not used - template type is determined by template definition
      */
-    @Deprecated
     public void setTemplateType(String value) {
         setProperty(TEMPLATE_TYPE, value);
     }
 
     public void setProperty(String name, String value) {
-        final String propName = this.getInternalPropertyName(name);
-        try {
-            this.node.setProperty(propName, value);
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        } catch (NullPointerException e) {
-            log.debug(META_DATA_NOT_EXISTING_MESSAGE, propName);
-        }
+        setJCRProperty(name, value);
     }
 
     public void setProperty(String name, long value) {
-        final String propName = this.getInternalPropertyName(name);
-        try {
-            this.node.setProperty(propName, value);
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        } catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug(META_DATA_NOT_EXISTING_MESSAGE, propName);
-            }
-        }
+        setJCRProperty(name, value);
     }
 
     public void setProperty(String name, double value) {
-        final String propName = this.getInternalPropertyName(name);
-        try {
-            this.node.setProperty(propName, value);
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        } catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug(META_DATA_NOT_EXISTING_MESSAGE, propName);
-            }
-        }
+        setJCRProperty(name, value);
     }
 
     public void setProperty(String name, boolean value) {
+        setJCRProperty(name, value);
+    }
+
+    public void setProperty(String name, Calendar value) {
+        setJCRProperty(name, value);
+    }
+
+    private void setJCRProperty(String name, Object value) {
         final String propName = this.getInternalPropertyName(name);
-        try {
-            this.node.setProperty(propName, value);
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        } catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug(META_DATA_NOT_EXISTING_MESSAGE + propName);
+        if (node == null) {
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}",
+                    propName);
+        } else {
+            try {
+                PropertyUtil.setProperty(node, propName, value);
+            } catch (RepositoryException re) {
+                log.error(re.getMessage(), re);
             }
         }
     }
 
-    public void setProperty(String name, Calendar value) {
-        final String propName = this.getInternalPropertyName(name);
-        try {
-            this.node.setProperty(propName, value);
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        } catch (NullPointerException e) {
-            log.debug(META_DATA_NOT_EXISTING_MESSAGE, propName);
-        }
-    }
-
-    /**
-     * Gets date property or null if such property doesn't exist. Do not use this method for checking existence of the
-     * property.
-     */
-    public Calendar getDateProperty(String name) {
-        final String propName = this.getInternalPropertyName(name);
-        try {
-            return node.getProperty(propName).getDate();
-        } catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", propName, node);
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        } catch (NullPointerException e) {
-            log.debug(META_DATA_NOT_EXISTING_MESSAGE, propName);
-        }
-        return null;
-    }
-
     public boolean getBooleanProperty(String name) {
-        final String propName = this.getInternalPropertyName(name);
         try {
-            return node.getProperty(propName).getBoolean();
-        } catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", propName, node);
+            final Property property = getJCRProperty(name);
+            if (property != null) {
+                return property.getBoolean();
+            }
         } catch (RepositoryException re) {
             log.error(re.getMessage(), re);
-        } catch (NullPointerException e) {
-            log.debug(META_DATA_NOT_EXISTING_MESSAGE, propName);
         }
         return false;
     }
 
     public double getDoubleProperty(String name) {
-        final String propName = this.getInternalPropertyName(name);
         try {
-            return node.getProperty(propName).getDouble();
-        } catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", propName, node);
+            final Property property = getJCRProperty(name);
+            if (property != null) {
+                return property.getDouble();
+            }
         } catch (RepositoryException re) {
             log.error(re.getMessage(), re);
-        } catch (NullPointerException e) {
-            log.debug(META_DATA_NOT_EXISTING_MESSAGE, propName);
         }
         return 0d;
     }
 
     public long getLongProperty(String name) {
-        final String propName = this.getInternalPropertyName(name);
         try {
-            return node.getProperty(propName).getLong();
-        } catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", propName, node);
+            final Property property = getJCRProperty(name);
+            if (property != null) {
+                return property.getLong();
+            }
         } catch (RepositoryException re) {
             log.error(re.getMessage(), re);
-        } catch (NullPointerException e) {
-            log.debug(META_DATA_NOT_EXISTING_MESSAGE, propName);
         }
         return 0L;
     }
 
     public String getStringProperty(String name) {
-        final String propName = this.getInternalPropertyName(name);
         try {
-            return node.getProperty(propName).getString();
-        } catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", propName, node);
+            final Property property = getJCRProperty(name);
+            if (property != null) {
+                return property.getString();
+            }
         } catch (RepositoryException re) {
             log.error(re.getMessage(), re);
-        } catch (NullPointerException e) {
-            log.debug(META_DATA_NOT_EXISTING_MESSAGE, propName);
         }
         return StringUtils.EMPTY;
     }
 
+    public Calendar getDateProperty(String name) {
+        try {
+            final Property property = getJCRProperty(name);
+            if (property != null) {
+                return property.getDate();
+            }
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        }
+        return null;
+    }
 
     /**
      * remove specified property.
@@ -489,6 +445,21 @@ public class MetaData {
      */
     public void removeProperty(String name) throws PathNotFoundException, RepositoryException {
         this.node.getProperty(this.getInternalPropertyName(name)).remove();
+    }
+
+    private Property getJCRProperty(String name) throws RepositoryException {
+        final String propName = this.getInternalPropertyName(name);
+        if (node == null) {
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}",
+                    propName);
+        } else {
+            try {
+                return node.getProperty(propName);
+            } catch (PathNotFoundException re) {
+                log.debug("PathNotFoundException for property [{}] in node {}", propName, node);
+            }
+        }
+        return null;
     }
 
     /**
@@ -511,15 +482,10 @@ public class MetaData {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("title", this.getTitle())
-        .append("template", this.getTemplate())
-        .append("authorId", this.getAuthorId())
-        .append("label", this.getLabel())
-        .append("activatorId", this.getActivatorId())
-        .append("isActivated", this.getIsActivated())
-        .append("creationDate", this.getCreationDate())
-        .append("lastActionDate", this.getLastActionDate())
-        .append("modificationDate", this.getModificationDate())
-        .toString();
+        return new ToStringBuilder(this).append("title", this.getTitle()).append("template", this.getTemplate())
+                .append("authorId", this.getAuthorId()).append("label", this.getLabel())
+                .append("activatorId", this.getActivatorId()).append("isActivated", this.getIsActivated())
+                .append("creationDate", this.getCreationDate()).append("lastActionDate", this.getLastActionDate())
+                .append("modificationDate", this.getModificationDate()).toString();
     }
 }
