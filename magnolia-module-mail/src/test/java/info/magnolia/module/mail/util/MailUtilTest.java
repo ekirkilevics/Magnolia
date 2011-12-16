@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.mail.util;
 
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.security.MgnlGroupManager;
 import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.cms.security.SecuritySupport;
@@ -46,53 +47,51 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * Test for mail utils.
- * 
- * @author ochytil
- * 
+ * @version $Id$
  */
-public class MailUtilTest extends TestCase {
+public class MailUtilTest {
 
     private MgnlUserManager userManager;
     private StringBuffer mailList;
 
-    @Override
+    @Before
     protected void setUp() throws Exception {
-        super.setUp();
         final SecuritySupportImpl sec = new SecuritySupportImpl();
         sec.setGroupManager(new MgnlGroupManager());
         ComponentsTestUtil.setInstance(SecuritySupport.class, sec);
         mailList = new StringBuffer();
         MockUtil.initMockContext();
-        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USERS, getClass().getResourceAsStream("/sample-users.properties"));
-        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USER_GROUPS, getClass().getResourceAsStream("/sample-usergroups.properties"));
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USERS,
+                getClass().getResourceAsStream("/sample-users.properties"));
+        MockUtil.createAndSetHierarchyManager(RepositoryConstants.USER_GROUPS,
+                getClass().getResourceAsStream("/sample-usergroups.properties"));
         userManager = new MgnlUserManager() {
             {
                 setRealmName("test");
             }
 
+            @Override
             protected Node findPrincipalNode(String name, Session session) throws RepositoryException {
                 return session.getNode("/" + getRealmName() + "/" + name);
             }
         };
     }
 
-    public void testGetGroupMembersMails(){
+    @Test
+    public void testGetGroupMembersMails() {
         MailUtil.getGroupMembersMails(userManager, mailList, "groupA");
-        boolean check = false;
-        if (mailList.toString().equals("kvido@test.info\npupak@test.info\n") || mailList.toString().equals("pupak@test.info\nkvido@test.info\n")){
-            check = true;
-        }
-        assertTrue(check);
+        assertTrue(mailList.toString().equals("kvido@test.info\npupak@test.info\n")
+                || mailList.toString().equals("pupak@test.info\nkvido@test.info\n"));
     }
 
-    @Override
+    @After
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        super.tearDown();
     }
 }
