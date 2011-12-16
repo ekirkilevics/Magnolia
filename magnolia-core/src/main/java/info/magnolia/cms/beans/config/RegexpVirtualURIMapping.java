@@ -61,8 +61,8 @@ public class RegexpVirtualURIMapping implements QueryAwareVirtualURIMapping {
         return mapURI(uri, null);
     }
 
+    @Override
     public MappingResult mapURI(final String uri, String queryString) {
-
         if (regexp != null) {
             final Matcher matcher;
             if(queryString != null){
