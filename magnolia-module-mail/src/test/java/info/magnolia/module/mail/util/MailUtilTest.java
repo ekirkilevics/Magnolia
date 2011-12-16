@@ -60,7 +60,7 @@ public class MailUtilTest {
     private StringBuffer mailList;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         final SecuritySupportImpl sec = new SecuritySupportImpl();
         sec.setGroupManager(new MgnlGroupManager());
         ComponentsTestUtil.setInstance(SecuritySupport.class, sec);
@@ -90,7 +90,7 @@ public class MailUtilTest {
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
     }
