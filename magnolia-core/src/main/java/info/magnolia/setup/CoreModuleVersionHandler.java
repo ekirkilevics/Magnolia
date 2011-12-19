@@ -289,6 +289,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         l.add(bootstrapFreemarker);
         l.add(addFreemarkerSharedVariables);
         l.add(bootstrapWebContainerResources);
+        l.add(new BootstrapConditionally("Security", "Bootstraps security-base role.", "/mgnl-bootstrap/core/userroles.security-base.xml"));
         return l;
     }
 
