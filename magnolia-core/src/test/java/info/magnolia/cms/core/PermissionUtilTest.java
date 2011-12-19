@@ -34,6 +34,7 @@
 package info.magnolia.cms.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionUtil;
 
@@ -58,6 +59,16 @@ public class PermissionUtilTest {
         // and custom permissions in combo with basic ones (128 => random custom permission which set bit above all (63))
         assertEquals(Session.ACTION_READ, PermissionUtil.convertPermissions(Permission.READ + 128));
 
+    }
+
+    @Test
+    public void testFailsOnCustomPermissions() {
+        try {
+            final String result = PermissionUtil.convertPermissions(64);
+            fail("Should have failed - but returned ["+result+"] instead.");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Unknown permission bits [0x40]", e.getMessage());
+        }
     }
 
     @Test

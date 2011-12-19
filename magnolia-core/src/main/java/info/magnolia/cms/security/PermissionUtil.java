@@ -132,6 +132,9 @@ public class PermissionUtil {
      * Return String-representation of permissions convert from provided long-permission (old).
      */
     public static String convertPermissions(long oldPermissions) {
+        if (oldPermissions > Permission.ALL) {
+            throw new IllegalArgumentException(String.format("Unknown permission bits [0x%x]", oldPermissions & ~Permission.ALL));
+        }
         StringBuilder permissions = new StringBuilder();
         if ((oldPermissions & Permission.ALL) == Permission.ALL) {
             permissions.append(Session.ACTION_ADD_NODE).append(",").append(Session.ACTION_READ).append(",").append(Session.ACTION_REMOVE + ",").append(Session.ACTION_SET_PROPERTY);
