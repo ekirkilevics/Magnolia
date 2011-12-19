@@ -206,12 +206,14 @@ public class ResponseExpirationCalculator {
                 Object value = header.getValue();
 
                 if (value instanceof Integer) {
-                    int n = (int) ((Integer) value - System.currentTimeMillis());
+                    // the set value is in seconds since the epoch
+                    int n = (int) ((Integer) value - (System.currentTimeMillis() / 1000L));
                     if (maxAge == -1 || n < maxAge) {
                         maxAge = n;
                     }
                 }
                 if (value instanceof Long) {
+                    // the set value is in milliseconds since the epoch
                     int n = (int) (((Long) value - System.currentTimeMillis()) / 1000L);
                     if (maxAge == -1 || n < maxAge) {
                         maxAge = n;
