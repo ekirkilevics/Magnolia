@@ -247,7 +247,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         boolean passed = this.getDialog().validate();
 
         SaveHandler saveHandler = this.getSaveHandler();
-        if (saveHandler instanceof ValidatingSaveHandler) {
+        if ((passed) && (saveHandler instanceof ValidatingSaveHandler)) {
             passed = ((ValidatingSaveHandler) saveHandler).validate();
         }
 
