@@ -56,9 +56,6 @@ public class PermissionUtilTest {
         assertEquals("add_node,read,remove,set_property", PermissionUtil.convertPermissions(Permission.ALL));
         // and any combo of the above
         assertEquals("read,set_property", PermissionUtil.convertPermissions(Permission.READ + Permission.SET));
-        // and custom permissions in combo with basic ones (128 => random custom permission which set bit above all (63))
-        assertEquals(Session.ACTION_READ, PermissionUtil.convertPermissions(Permission.READ + 128));
-
     }
 
     @Test
