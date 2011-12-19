@@ -51,6 +51,7 @@ import static org.junit.Assert.fail;
 public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
 
     private Session session;
+    private Session sessionWrapper;
 
     @Override
     @Before
@@ -71,12 +72,12 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
         excluded.addNode("childOfExcluded");
 
         session.getRootNode().addNode("unspecified");
+
+        sessionWrapper = new ChannelVisibilityContentDecorator("mobile").wrapSession(session);
     }
 
     @Test
     public void testNodeExists() throws Exception {
-
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
 
         assertTrue(sessionWrapper.nodeExists("/included"));
         assertFalse(sessionWrapper.nodeExists("/excluded"));
@@ -86,8 +87,6 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
 
     @Test
     public void testItemExists() throws Exception {
-
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
 
         assertTrue(sessionWrapper.itemExists("/included"));
         assertTrue(sessionWrapper.itemExists("/included/channels"));
@@ -100,16 +99,12 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
     @Test
     public void testPropertyExists() throws Exception {
 
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
-
         assertTrue(sessionWrapper.propertyExists("/included/channels"));
         assertFalse(sessionWrapper.propertyExists("/excluded/channels"));
     }
 
     @Test
     public void testGetNode() throws Exception {
-
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
 
         sessionWrapper.getNode("/included");
         sessionWrapper.getNode("/unspecified");
@@ -129,8 +124,6 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
 
     @Test
     public void testGetItem() throws Exception {
-
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
 
         sessionWrapper.getItem("/included");
         sessionWrapper.getItem("/included/channels");
@@ -152,8 +145,6 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
     @Test
     public void testGetProperty() throws Exception {
 
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
-
         sessionWrapper.getProperty("/included/channels");
 
         try {
@@ -165,7 +156,6 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
 
     @Test
     public void testCanRemoveVisibleItem() throws Exception {
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
         sessionWrapper.removeItem("/unspecified");
         sessionWrapper.removeItem("/included/channels");
         sessionWrapper.removeItem("/included");
@@ -173,7 +163,6 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
 
     @Test
     public void testFailsToRemoveHiddenItem() throws Exception {
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
         try {
             sessionWrapper.removeItem("/excluded/childOfExcluded");
             fail();
@@ -193,13 +182,11 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
 
     @Test
     public void testMoveWorksOnVisibleNode() throws Exception {
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
         sessionWrapper.move("/unspecified", "/foobar");
     }
 
     @Test
     public void testFailsToMoveHiddenNode() throws Exception {
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
         try {
             sessionWrapper.move("/excluded", "/foobar");
             fail();
@@ -209,7 +196,6 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
 
     @Test
     public void testRootNodeHidesExcludedNode() throws Exception {
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
         NodeIterator iterator = sessionWrapper.getRootNode().getNodes();
         while (iterator.hasNext()) {
             Node node = iterator.nextNode();
@@ -221,7 +207,6 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
 
     @Test
     public void testNavigatingWithNodeParentStillHidesExcludedNode() throws Exception {
-        ChannelVisibilitySessionWrapper sessionWrapper = new ChannelVisibilitySessionWrapper(session, "mobile");
 
         Node unspecified = sessionWrapper.getRootNode().getNode("unspecified");
         Node root = unspecified.getParent();
