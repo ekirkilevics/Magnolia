@@ -34,12 +34,12 @@
 package info.magnolia.templating.functions;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.SiblingsHelper;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
@@ -55,6 +55,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
@@ -69,6 +71,15 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class TemplatingFunctions {
+
+    private Provider<AggregationState> aggregationStateProvider;
+
+    //TODO: To review with Philipp. Should not use Provider, but has deep impact on CategorizationSupportImpl PageSyndicator CategorySyndicator....
+    @Inject
+    public TemplatingFunctions(Provider<AggregationState> aggregationState) {
+        this.aggregationStateProvider = aggregationState;
+    }
+
 
     public Node asJCRNode(ContentMap contentMap) {
         return contentMap == null ? null : contentMap.getJCRNode();
@@ -442,7 +453,7 @@ public class TemplatingFunctions {
     }
 
     public boolean isPreviewMode() {
-        return MgnlContext.getAggregationState().isPreviewMode();
+        return this.aggregationStateProvider.get().isPreviewMode();
     }
 
     public boolean isAuthorInstance() {

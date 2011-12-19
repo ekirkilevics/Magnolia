@@ -45,10 +45,10 @@ import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.templating.module.setup.for4_0.DeprecateDialogPathAllModules;
 import info.magnolia.templating.module.setup.for4_0.FixTemplatePathTask;
 import info.magnolia.templating.module.setup.for4_0.NestPropertiesAllModulesNodeTask;
-import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.templating.module.setup.for4_5.AddSharedVariablesTask;
 
 import java.util.ArrayList;
