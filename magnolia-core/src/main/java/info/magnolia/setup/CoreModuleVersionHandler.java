@@ -256,6 +256,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new UpdateUserManagers())
                 .addCondition(new CheckKeyProperty())
                 // TODO addTask( move/backup the callbacks in the contentSecurity filter )
+                .addTask(new HashUsersPasswords())
         );
     }
 
@@ -290,6 +291,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         l.add(addFreemarkerSharedVariables);
         l.add(bootstrapWebContainerResources);
         l.add(new BootstrapConditionally("Security", "Bootstraps security-base role.", "/mgnl-bootstrap/core/userroles.security-base.xml"));
+        // always hash passwords. Task will not re-hash so it is safe to run this op at any time, multiple times.
+        l.add(new HashUsersPasswords());
         return l;
     }
 

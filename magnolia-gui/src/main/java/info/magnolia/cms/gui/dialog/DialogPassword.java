@@ -40,10 +40,7 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -52,7 +49,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DialogPassword extends DialogBox {
 
-    private static final Logger log = LoggerFactory.getLogger(DialogPassword.class);
+    private boolean useBcrypt;
 
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
@@ -60,33 +57,28 @@ public class DialogPassword extends DialogBox {
     @Override
     public void drawHtml(Writer out) throws IOException {
         Password control = new Password(this.getName(), this.getValue());
-        if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
+        if (this.getConfigValue("saveInfo").equals("false")) {
             control.setSaveInfo(false);
         }
         control.setCssClass(CssConstants.CSSCLASS_EDIT);
-        control.setCssStyles("width", this.getConfigValue("width", "100%")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        control.setEncoding(ControlImpl.ENCODING_BASE64);
-        if (this.getConfigValue("onchange", null) != null) { //$NON-NLS-1$
-            control.setEvent("onchange", this.getConfigValue("onchange")); //$NON-NLS-1$ //$NON-NLS-2$
+        control.setCssStyles("width", this.getConfigValue("width", "100%"));
+        if (useBcrypt) {
+            control.setEncoding(ControlImpl.ENCRYPTION_HASH_BCRYPT);
+        } else {
+            control.setEncoding(ControlImpl.ENCRYPTION_NO_ENCODING_BASE64);
+        }
+        if (this.getConfigValue("onchange", null) != null) {
+            control.setEvent("onchange", this.getConfigValue("onchange"));
         }
         this.drawHtmlPre(out);
         out.write(control.getHtml());
-        if (this.getConfigValue("verification", "true").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            Password control2 = new Password(this.getName() + "_verification", StringUtils.EMPTY); //$NON-NLS-1$
-//            Password control2=new Password(this.getName()+"_verification",control.getValue());
-//            control2.setEncoding(control.getEncoding());
+        if (this.getConfigValue("verification", "true").equals("true")) {
+            Password control2 = new Password(this.getName() + "_verification", StringUtils.EMPTY);
             control2.setSaveInfo(false);
             control2.setCssClass(CssConstants.CSSCLASS_EDIT);
-            control2.setCssStyles("width", //$NON-NLS-1$
-                this.getConfigValue("width", "100%")); //$NON-NLS-1$ //$NON-NLS-2$
-            control2.setEvent("onchange", //$NON-NLS-1$
-                "mgnlDialogPasswordVerify('" + this.getName() + "')"); //$NON-NLS-1$ //$NON-NLS-2$
-            // todo: verification on submit; think about
-            out.write("<div class=\"" //$NON-NLS-1$
-                + CssConstants.CSSCLASS_DESCRIPTION
-                + "\">" //$NON-NLS-1$
-                + getMessage("dialog.password.verify") //$NON-NLS-1$
-                + "</div>"); //$NON-NLS-1$
+            control2.setCssStyles("width", this.getConfigValue("width", "100%"));
+            control2.setEvent("onchange", "mgnlDialogPasswordVerify('" + this.getName() + "')");
+            out.write("<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + getMessage("dialog.password.verify") + "</div>");
             out.write(control2.getHtml());
         }
         this.drawHtmlPost(out);
@@ -97,11 +89,7 @@ public class DialogPassword extends DialogBox {
         if (super.getConfigValue("verification", "true").equals("true")) {
             String newP = super.getRequest().getParameter(getName());
             String verP = super.getRequest().getParameter(getName() + "_verification");
-            String oriP = this.getStorageNode().getNodeData(getName()).getString();
-            if (Base64.isArrayByteBase64(oriP.getBytes())) {
-                oriP = new String(Base64.decodeBase64(oriP.getBytes()));
-            }
-            // we do not set passwords back and forth, we just send empty string of the same length of the original password. So in this case trimmed newP has to be 0 as well as verP
+            // we do not set passwords back and forth, we just send empty string of the same length of the original password (in case of base 64 or no encryption). So in this case trimmed newP has to be 0 as well as verP
             // in all other cases they have to match exactly.
             if (!(newP.trim().length() == 0 && verP.length() == 0) && !newP.equals(verP)) {
                 setValidationMessage(getMessage("dialog.password.failed.js"));
@@ -111,5 +99,12 @@ public class DialogPassword extends DialogBox {
         return super.validate();
     }
 
+    public boolean isBcrypt() {
+        return useBcrypt;
+    }
+
+    public void setBcrypt(boolean useBcrypt) {
+        this.useBcrypt = useBcrypt;
+    }
 
 }

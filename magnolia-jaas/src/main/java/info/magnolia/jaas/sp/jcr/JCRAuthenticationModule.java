@@ -33,6 +33,7 @@
  */
 package info.magnolia.jaas.sp.jcr;
 
+import info.magnolia.cms.security.Digester;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.cms.security.SecuritySupport;
@@ -51,6 +52,7 @@ import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.value.ValueFactoryImpl;
 import org.slf4j.Logger;
@@ -127,8 +129,6 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
         return SecuritySupport.Factory.getInstance().getUserManager(realm.getName());
     }
 
-
-
     protected void initUser() throws LoginException {
         log.debug("initializing user {}", name);
 
@@ -154,10 +154,16 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
         String serverPassword = user.getPassword();
 
         if (StringUtils.isEmpty(serverPassword)) {
-            throw new FailedLoginException("we do not allow users with no password");
+            throw new FailedLoginException("Magnolia CMS does not allow login to users with no password.");
         }
 
-        if (!StringUtils.equals(serverPassword, new String(this.pswd))) {
+        boolean match = false;
+        if (Base64.isArrayByteBase64(serverPassword.getBytes())) {
+            match = Base64.decodeBase64(serverPassword).equals(new String(this.pswd));
+        } else {
+            match = Digester.matchBCrypted(new String(this.pswd), serverPassword);
+        }
+        if (!match) {
             if (getMaxAttempts() > 0 && !UserManager.ANONYMOUS_USER.equals(user.getName())){
                 //Only MgnlUser is able to use lockout i.e. has maxAttempts higher than 0.
                 UserManager userManager = getUserManager();

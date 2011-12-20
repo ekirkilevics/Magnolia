@@ -39,13 +39,13 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.io.Writer;
-import java.io.IOException;
 
 import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
@@ -79,11 +79,19 @@ public class ControlImpl implements Control {
 
     public static final int VALUETYPE_MULTIPLE = 1;
 
-    public static final int ENCODING_NO = 0;
+    public static final int ENCRYPTION_NO = 0;
 
-    public static final int ENCODING_BASE64 = 1;
+    /**
+     * @deprecated since 4.5. Use {@link #ENCRYPTION_NO} instead.
+     */
+    @Deprecated
+    public static final int ENCODING_NO = ENCRYPTION_NO;
 
-    public static final int ENCODING_UNIX = 2;
+    public static final int ENCRYPTION_NO_ENCODING_BASE64 = 1;
+
+    public static final int ENCRYPTION_HASH_SHA = 2;
+
+    public static final int ENCRYPTION_HASH_BCRYPT = 3;
 
     public static final int RICHEDIT_NONE = 0;
 
@@ -101,7 +109,7 @@ public class ControlImpl implements Control {
 
     private int valueType = VALUETYPE_SINGLE;
 
-    private int encoding = ENCODING_NO;
+    private int encoding = ENCRYPTION_NO;
 
     private int isRichEditValue = RICHEDIT_NONE;
 

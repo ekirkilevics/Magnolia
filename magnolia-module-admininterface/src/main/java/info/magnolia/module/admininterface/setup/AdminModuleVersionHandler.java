@@ -153,6 +153,11 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("4.4","")
                 .addTask(new BootstrapSingleResource("Messages bundles for js", "Bundles here will be used to generate i18n messages available in javascript.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.messages.bundles.xml"))
                 .addTask(new ContentDeletionTasks()));
+        register(DeltaBuilder.update("4.5", "")
+                .addTask(new BootstrapSingleResource("Security", "Bootstraps password hashing control.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.controls.passwordHash.xml"))
+                .addTask(new CheckAndModifyPropertyValueTask("Security", "Update user dialog to hash passwords.", "config", "/modules/adminInterface/dialogs/useredit/tabUser/pswd", "controlType", "password", "passwordHash"))
+                .addTask(new CheckAndModifyPropertyValueTask("Security", "Update user properties dialog to hash passwords.", "config", "/modules/adminInterface/dialogs/userpreferences/tabUser/pswd", "controlType", "password", "passwordHash")));
+
     }
 
     @Override

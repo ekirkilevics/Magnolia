@@ -266,8 +266,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
 
     @Override
     public String getPassword() {
-        // TODO: should we really decode pwd here? Encoding is UM implementation specific
-        return decodePassword(encodedPassword);
+        return encodedPassword;
     }
 
     protected String decodePassword(String encodedPassword) {

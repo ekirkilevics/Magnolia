@@ -171,7 +171,7 @@
         <sv:value>1a2f0405-c382-4344-b214-dd726159fd99</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>password</sv:value>
+        <sv:value>passwordHash</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>

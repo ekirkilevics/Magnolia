@@ -61,18 +61,16 @@ public class Password extends ControlImpl {
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         String value = StringUtils.EMPTY;
-        if (this.getEncoding() == ENCODING_BASE64) {
+        if (this.getEncoding() == ControlImpl.ENCRYPTION_NO_ENCODING_BASE64) {
             // show number of characters (using spaces)
             String valueDecoded = new String(Base64.decodeBase64(this.getValue().getBytes()));
 
             for (int i = 0; i < valueDecoded.length(); i++) {
                 value += " "; //$NON-NLS-1$
             }
-        }
-        else if (this.getEncoding() == ENCODING_UNIX) {
+        } else if (this.getEncoding() == ControlImpl.ENCRYPTION_HASH_SHA || this.getEncoding() == ControlImpl.ENCRYPTION_HASH_BCRYPT) {
             value = StringUtils.EMPTY;
-        }
-        else {
+        } else {
             value = this.getValue();
         }
         value = StringUtils.strip(value);

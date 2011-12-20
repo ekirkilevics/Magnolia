@@ -57,6 +57,7 @@ import java.util.Set;
 
 import javax.jcr.Session;
 
+import org.junit.After;
 import org.junit.Test;
 
 /**
@@ -217,6 +218,7 @@ public class SecurityUtilTest {
         printSet("Signatures", signatures);
     }
 
+    @After
     public void tearDown() {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);

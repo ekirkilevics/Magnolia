@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.security;
 
+import  org.mindrot.jbcrypt.BCrypt;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -146,5 +147,18 @@ public final class Digester {
             hexValue.append(digits[byteValue & 0x0f]);
         }
         return hexValue.toString();
+    }
+
+    public static String getBCrypt(String text) {
+        // gensalt's log_rounds parameter determines the complexity
+        // the work factor is 2^log_rounds, and the default is 10
+        String hashed = BCrypt.hashpw(text, BCrypt.gensalt(12));
+        return hashed;
+    }
+
+    public static boolean matchBCrypted(String candidate, String hash) {
+        // Check that an unencrypted password matches one that has
+        // previously been hashed
+        return BCrypt.checkpw(candidate, hash);
     }
 }
