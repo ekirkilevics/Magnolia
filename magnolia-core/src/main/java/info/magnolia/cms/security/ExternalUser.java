@@ -157,9 +157,17 @@ public class ExternalUser extends AbstractUser implements Serializable {
         return (String) this.userDetails.getProperty(Entity.PASSWORD);
     }
 
+    public String getEmail() {
+        return (String) this.userDetails.getProperty(Entity.EMAIL);
+    }
+
     @Override
     public String getProperty(String propertyName) {
-        return ObjectUtils.toString(this.userDetails.getProperty(propertyName), null);
+        String property = (String) this.userDetails.getProperty(propertyName);
+        if(null == property){
+            log.error("Unable to retrieve property " + propertyName + " for user " + getName());
+        }
+        return property;
     }
 
     @Override
