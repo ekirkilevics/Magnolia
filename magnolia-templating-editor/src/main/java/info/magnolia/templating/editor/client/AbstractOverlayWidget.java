@@ -49,7 +49,7 @@ public class AbstractOverlayWidget extends FlowPanel {
     protected String label;
     protected int level = 1;
     protected CMSBoundary boundary;
-
+    private double top;
     public AbstractOverlayWidget(CMSBoundary boundary) {
 
         this.boundary = boundary;
@@ -78,9 +78,12 @@ public class AbstractOverlayWidget extends FlowPanel {
     }
 
     public void setTop(double top) {
+        this.top = top;
         this.getElement().getStyle().setTop(top, Style.Unit.PX);
     }
-
+    public double getTop() {
+        return top;
+    }
     public void setLeft(double left) {
         this.getElement().getStyle().setLeft(left, Style.Unit.PX);
     }

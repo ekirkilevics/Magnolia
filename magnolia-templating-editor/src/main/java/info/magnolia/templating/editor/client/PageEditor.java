@@ -49,6 +49,8 @@ import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -61,6 +63,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the {@code <html>} element).
@@ -87,11 +90,24 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         LegacyJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
         dictionary = Dictionary.getDictionary("mgnlGwtMessages");
 
+
+
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
                 processCmsComments(Document.get().getDocumentElement(), null);
+                VisibilityHelper.getInstance().showRoot();
+                VisibilityHelper.getInstance().computeOverlay();
 
+
+                RootPanel.get().addDomHandler(new MouseUpHandler() {
+                    @Override
+                    public void onMouseUp(MouseUpEvent event) {
+                        VisibilityHelper.getInstance().deSelect();
+                        VisibilityHelper.getInstance().showRoot();
+                        VisibilityHelper.getInstance().computeOverlay();
+                    }
+                }, MouseUpEvent.getType());
             }
         });
 
@@ -260,38 +276,32 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                                      }
                                 }
                                 if (editBar != null) {
-                                    int top = editBar.getAbsoluteBottom();
-                                    int left = editBar.getAbsoluteLeft();
-                                    int width = editBar.getAbsoluteRight() - editBar.getAbsoluteLeft();
-                                    int height = 0;
 
-                                    for (Node sibling = childNode.getPreviousSibling(); sibling != null; sibling = sibling.getPreviousSibling()) {
-                                        if (sibling.getNodeType() == Node.ELEMENT_NODE) {
 
-                                            Element element = sibling.cast();
+                                    if (boundary.isArea() && boundary.getOverlayWidget() != null) {
+                                        double height = 0;
 
-                                            if (element.getClassName().equals("mgnlAreaEditBar") || element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString()) == 0) {
-                                                continue;
+                                        for (Node sibling = childNode.getPreviousSibling(); sibling != null; sibling = sibling.getPreviousSibling()) {
+                                            if (sibling.getNodeType() == Node.ELEMENT_NODE) {
+
+                                                Element element = sibling.cast();
+                                                String cn = element.getClassName();
+                                                int df = element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString());
+                                                int y = element.getOffsetHeight();
+                                                if (element.getClassName().equals("mgnlAreaEditBar") || element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString()) == 0 || element.getOffsetHeight() == 0) {
+                                                    continue;
+                                                }
+                                                height = element.getAbsoluteBottom() - boundary.getOverlayWidget().getTop();
+
+                                                boundary.setLastElement(element);
+
+                                                break;
                                             }
-                                            height = element.getAbsoluteBottom() - top;
-                                            break;
                                         }
-                                    }
-                                    AbstractOverlayWidget overlayWidget;
-                                    if (boundary.isArea()) {
-                                        overlayWidget = new AreaOverlayWidget(boundary);
-                                    }
-                                    else {
-                                        overlayWidget = new ComponentOverlayWidget(boundary);
+                                        boundary.getOverlayWidget().setHeight(height);
 
+                                        boundary.getOverlayWidget().attach();
                                     }
-                                    overlayWidget.setTop(top);
-                                    overlayWidget.setLeft(left);
-                                    overlayWidget.setWidth(width);
-                                    overlayWidget.setHeight(height);
-
-                                    overlayWidget.attach();
-                                    boundary.setOverlayWidget(overlayWidget);
                                 }
                             }
                             boundary = boundary.getParentBoundary();
@@ -334,13 +344,48 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                             }
                             else if (boundary.getParentBoundary().isArea()) {
                                 GWT.log("element was detected as area edit bar. Injecting it...");
+
+
                                 AreaBarWidget areaBarWidget = new AreaBarWidget(boundary, this);
                                 if (areaBarWidget.hasControls) {
                                     areaBarWidget.attach(childNode);
                                     boundary.setWidget(areaBarWidget);
+
                                 }
 
                             }
+                        }
+                        else if(boundary.isArea()) {
+
+                            int top = 0;
+                            int left = 0;
+                            int width = 0;
+
+                            AbstractOverlayWidget overlayWidget = new AreaOverlayWidget(boundary);
+
+                            for (Node sibling = childNode.getNextSibling(); sibling != null; sibling = sibling.getNextSibling()) {
+                                if (sibling.getNodeType() == Node.ELEMENT_NODE) {
+
+                                    Element element = sibling.cast();
+                                    String cn = element.getClassName();
+                                    int df = element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString());
+                                    int y = element.getOffsetHeight();
+                                    if (element.getClassName().equals("mgnlAreaEditBar") || element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString()) == 0 || element.getOffsetHeight() == 0) {
+                                        continue;
+                                    }
+                                    top = element.getAbsoluteTop();
+                                    left = element.getAbsoluteLeft();
+                                    width = element.getAbsoluteRight() - element.getAbsoluteLeft();
+
+                                    boundary.setFirstElement(element);
+                                    break;
+                                }
+                            }
+                            overlayWidget.setTop(top);
+                            overlayWidget.setLeft(left);
+                            overlayWidget.setWidth(width);
+
+                            boundary.setOverlayWidget(overlayWidget);
                         }
 
                     }

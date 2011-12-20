@@ -33,6 +33,11 @@
  */
 package info.magnolia.templating.editor.client;
 
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+
 import info.magnolia.templating.editor.client.dom.CMSBoundary;
 
 
@@ -44,5 +49,20 @@ public class AreaOverlayWidget extends AbstractOverlayWidget {
     public AreaOverlayWidget(CMSBoundary boundary) {
         super(boundary);
         this.addStyleName("area");
+
+        addDomHandler(new MouseDownHandler() {
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                //select();
+            }
+        }, MouseDownEvent.getType());
+
+        addDomHandler(new MouseUpHandler() {
+            @Override
+            public void onMouseUp(MouseUpEvent event) {
+                VisibilityHelper.getInstance().toggleVisibility(getBoundary());
+                event.stopPropagation();
+            }
+        }, MouseUpEvent.getType());
     }
 }

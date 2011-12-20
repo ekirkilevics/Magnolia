@@ -33,8 +33,11 @@
  */
 package info.magnolia.templating.editor.client;
 
-import com.google.gwt.dom.client.Style;
+import java.util.LinkedList;
+import java.util.List;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import info.magnolia.templating.editor.client.dom.CMSBoundary;
 
 /**
@@ -45,6 +48,7 @@ public class VisibilityHelper {
     private static VisibilityHelper helper;
     private CMSBoundary boundary;
     private AbstractBarWidget widget;
+    private List<CMSBoundary> rootBoundaries = new LinkedList<CMSBoundary>();
 
     public static VisibilityHelper getInstance() {
         if (helper == null) {
@@ -71,10 +75,12 @@ public class VisibilityHelper {
 
     public void toggleVisibility (CMSBoundary boundary) {
 
-        if (getBoundary() != null && !boundary.isRelated(getBoundary())) {
-            deSelect(getBoundary().getRoot());
+        hideRoot();
+        if (getBoundary() != null) {
+            deSelect(getBoundary());
         }
         select(boundary);
+
         setBoundary(boundary);
     }
 
@@ -83,31 +89,42 @@ public class VisibilityHelper {
         if (boundary != null) {
 
                 if (boundary.getOverlayWidget() != null) {
-                    boundary.getOverlayWidget().getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+                    //boundary.getOverlayWidget().getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+                    boundary.getOverlayWidget().setVisible(false);
+                }
+                if (boundary.getEdit() != null) {
+                    if (boundary.getEdit().getWidget() != null) {
+                        //boundary.getEdit().getWidget().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                        boundary.getEdit().getWidget().setVisible(true);
+                    }
                 }
 
-                for (CMSBoundary area : boundary.getAreas()) {
+/*                for (CMSBoundary area : boundary.getAreas()) {
                     if (area.getEdit() != null) {
                         area.getEdit().getWidget().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
                     }
-                    if (area.getOverlayWidget() != null)
-                        area.getOverlayWidget().getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-                }
+                }*/
 
                 for (CMSBoundary component : boundary.getComponents()) {
                     if (component.getEdit() != null) {
-                        component.getEdit().getWidget().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                        //component.getEdit().getWidget().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                        component.getEdit().getWidget().setVisible(true);
                     }
-                    if (component.getOverlayWidget() != null)
-                        component.getOverlayWidget().getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+                    if (component.getOverlayWidget() != null) {
+                        //component.getOverlayWidget().getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+                        component.getOverlayWidget().setVisible(false);
+                    }
 
+                    /*
                     for (CMSBoundary area : component.getAreas()) {
                         if (area.getEdit() != null) {
-                            area.getEdit().getWidget().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                            //area.getEdit().getWidget().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                            area.getEdit().getWidget().setVisible(true);
                         }
                         if (area.getOverlayWidget() != null)
                             area.getOverlayWidget().getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
                     }
+*/
                 }
                 /*
                 for (CMSBoundary child : boundary.getChildBoundaries()) {
@@ -126,29 +143,100 @@ public class VisibilityHelper {
                         }
                     }
                 }*/
+                for (CMSBoundary parentArea = boundary.getParentArea(); parentArea != null; parentArea= parentArea.getParentArea()) {
+                    if (parentArea.getOverlayWidget() != null) {
+                        parentArea.getOverlayWidget().setVisible(false);
 
+                    }
+                }
+                computeOverlay();
 
-        }
+           }
+
 
     }
 
-    protected void deSelect(CMSBoundary boundary) {
-        if (boundary!= null) {
+    public void deSelect() {
+        if (getBoundary() != null) {
+            deSelect(getBoundary());
+        }
+    }
+
+    public void deSelect(CMSBoundary boundary) {
+        boundary = boundary.getRoot();
+        if (boundary != null) {
 
             if (boundary.getOverlayWidget() != null) {
-                boundary.getOverlayWidget().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                //boundary.getOverlayWidget().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                boundary.getOverlayWidget().setVisible(true);
+
             }
             for (CMSBoundary descendant : boundary.getDescendants()) {
                 if (descendant.getOverlayWidget() != null) {
-                    descendant.getOverlayWidget().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                    //descendant.getOverlayWidget().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                    descendant.getOverlayWidget().setVisible(true);
+
                 }
                 if (descendant.getWidget() != null) {
-                    if (!descendant.getParentBoundary().equals(boundary))
-                        descendant.getWidget().getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+                    if (!descendant.getParentBoundary().equals(boundary)) {
+                        //descendant.getWidget().getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+                        descendant.getWidget().setVisible(false);
+                    }
+
                 }
 
             }
+            computeOverlay();
 
+        }
+    }
+
+    public void showRoot() {
+        for (CMSBoundary root : rootBoundaries) {
+            if (root.getEdit() != null && root.getEdit().getWidget() != null) {
+                //root.getEdit().getWidget().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                root.getEdit().getWidget().setVisible(true);
+
+            }
+        }
+    }
+    public void hideRoot() {
+        for (CMSBoundary root : rootBoundaries) {
+            if (root.getEdit() != null && root.getEdit().getWidget() != null) {
+                //root.getEdit().getWidget().getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+                root.getEdit().getWidget().setVisible(false);
+
+            }
+        }
+    }
+
+    public void addRoot(CMSBoundary boundary) {
+        this.rootBoundaries.add(boundary);
+    }
+
+    public void computeOverlay () {
+        for (CMSBoundary root : rootBoundaries) {
+            List<CMSBoundary> boundaries = root.getDescendants();
+            boundaries.add(root);
+            for (CMSBoundary boundary : boundaries) {
+
+                if (boundary.getOverlayWidget() == null) {
+                    continue;
+                }
+
+                Element firstElement = boundary.getFirstElement();
+                if (firstElement == null) {
+                    continue;
+                }
+                boundary.getOverlayWidget().getElement().getStyle().setTop(firstElement.getAbsoluteTop(), Unit.PX);
+                boundary.getOverlayWidget().getElement().getStyle().setLeft(firstElement.getAbsoluteLeft(), Unit.PX);
+                boundary.getOverlayWidget().getElement().getStyle().setWidth(firstElement.getAbsoluteRight() - firstElement.getAbsoluteLeft(), Unit.PX);
+
+                Element lastElement = boundary.getLastElement();
+                if (lastElement != null) {
+                    boundary.getOverlayWidget().getElement().getStyle().setHeight(lastElement.getAbsoluteBottom() - boundary.getOverlayWidget().getTop(), Unit.PX);
+                }
+            }
         }
     }
 }

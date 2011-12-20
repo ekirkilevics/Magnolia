@@ -42,6 +42,8 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.Button;
 
 /**
@@ -71,6 +73,13 @@ public class PageBarWidget extends AbstractBarWidget {
         } else {
             createAuthoringModeBar();
         }
+
+        addDomHandler(new MouseUpHandler() {
+            @Override
+            public void onMouseUp(MouseUpEvent event) {
+                VisibilityHelper.getInstance().showRoot();
+            }
+        }, MouseUpEvent.getType());
     }
 
     private void createAuthoringModeBar() {

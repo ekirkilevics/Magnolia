@@ -36,7 +36,6 @@ package info.magnolia.templating.editor.client;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.dom.CMSBoundary;
 
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -90,7 +89,8 @@ public class EditBarWidget extends AbstractBarWidget {
         if (this.isInherited) {
             addStyleName("mgnlInherited");
         }
-        getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+//        getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+        setVisible(false);
     }
 
     private void createMouseEventsHandlers(final PageEditor pageEditor) {

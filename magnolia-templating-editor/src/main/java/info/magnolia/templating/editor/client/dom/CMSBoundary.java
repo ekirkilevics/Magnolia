@@ -64,6 +64,14 @@ public class CMSBoundary {
     public void setFirstElement(Element firstElement) {
         this.firstElement = firstElement;
     }
+    private Element lastElement;
+    public Element getLastElement() {
+        return lastElement;
+    }
+
+    public void setLastElement(Element lastElement) {
+        this.lastElement = lastElement;
+    }
 
     private LinkedList<CMSBoundary> childBoundaries = new LinkedList<CMSBoundary>();
     private boolean isEdit;
@@ -208,6 +216,7 @@ public class CMSBoundary {
         for (CMSBoundary boundary : getChildBoundaries()) {
             if (boundary.isEdit()) {
                 edit = boundary;
+                break;
             }
         }
         return edit;

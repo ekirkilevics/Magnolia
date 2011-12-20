@@ -1,4 +1,11 @@
 /*
+* remove this from control.css in admininterface!
+*/
+.mgnlMainbar {
+    position: static;
+    z-index: 900;
+}
+/*
 * Paragraph/component edit bar.
 */
 div.mgnlEditBar, div.mgnlEditBar_PUSHED, div.mgnlEditBar_MOUSEOVER {

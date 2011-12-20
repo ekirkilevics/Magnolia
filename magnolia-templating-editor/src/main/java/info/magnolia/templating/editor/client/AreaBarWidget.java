@@ -40,7 +40,6 @@ import info.magnolia.templating.editor.client.dom.CMSBoundary;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -97,10 +96,13 @@ public class AreaBarWidget extends AbstractBarWidget {
             }
         }
 
-        if (!showBar) {
+        if (showBar) {
+            VisibilityHelper.getInstance().addRoot(area);
 
-            getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
         }
+        //getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+        setVisible(false);
+
         String areaContent = area.getComment().getAttribute("content");
         int i = areaContent.indexOf(':');
         this.areaWorkspace = areaContent.substring(0, i);
@@ -135,6 +137,8 @@ public class AreaBarWidget extends AbstractBarWidget {
             @Override
             public void onMouseDown(MouseDownEvent event) {
                 //select();
+                event.stopPropagation();
+
             }
         }, MouseDownEvent.getType());
 
@@ -142,6 +146,7 @@ public class AreaBarWidget extends AbstractBarWidget {
             @Override
             public void onMouseUp(MouseUpEvent event) {
                 VisibilityHelper.getInstance().toggleVisibility(getBoundary().getParentArea());
+                event.stopPropagation();
             }
         }, MouseUpEvent.getType());
 
