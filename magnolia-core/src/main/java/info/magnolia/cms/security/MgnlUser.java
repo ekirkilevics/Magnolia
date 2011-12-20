@@ -88,14 +88,13 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
 
     private final String realm;
 
-    public MgnlUser(String name, String realm, Collection<String> groups, Collection<String> roles, Map<String, String> properties, String path, String uuid) {
+
+    public MgnlUser(String name, String realm, Collection<String> groups, Collection<String> roles, Map<String, String> properties) {
         this.name = name;
         this.roles = Collections.unmodifiableCollection(roles);
         this.groups = Collections.unmodifiableCollection(groups);
         this.properties = Collections.unmodifiableMap(properties);
         this.realm = realm;
-        this.path = path;
-        this.uuid = uuid;
 
         //shortcut some often accessed props so we don't have to search hashmap for them.
         language = properties.get(MgnlUserManager.PROPERTY_LANGUAGE);
@@ -103,6 +102,12 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         // all accounts are enabled by default and prop doesn't exist if the account was not disabled before
         enabled = enbld == null ? true : Boolean.parseBoolean(properties.get(MgnlUserManager.PROPERTY_ENABLED));
         encodedPassword = properties.get(MgnlUserManager.PROPERTY_PASSWORD);
+    }
+
+    public MgnlUser(String name, String realm, Collection<String> groups, Collection<String> roles, Map<String, String> properties, String path, String uuid) {
+        this(name,realm,groups,roles,properties);
+        this.path = path;
+        this.uuid = uuid;
     }
 
     /**
