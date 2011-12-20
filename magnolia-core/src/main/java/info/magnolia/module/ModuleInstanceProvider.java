@@ -33,6 +33,8 @@
  */
 package info.magnolia.module;
 
+import com.google.inject.ProvisionException;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -55,6 +57,12 @@ public class ModuleInstanceProvider<T> implements Provider<T> {
     @Override
     @SuppressWarnings("unchecked")
     public synchronized T get() {
-        return (T) moduleRegistry.getModuleInstance(moduleName);
+        T moduleInstance = (T) moduleRegistry.getModuleInstance(moduleName);
+        if (moduleInstance == null) {
+            throw new ProvisionException(
+                    "Module instance for module [" + moduleName + "] not available, most likely because the module has not yet been started. " +
+                    "Inject a Provider<> instead to get access to the module instance when it's available.");
+        }
+        return moduleInstance;
     }
 }
