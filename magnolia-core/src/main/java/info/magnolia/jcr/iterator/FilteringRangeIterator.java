@@ -33,14 +33,17 @@
  */
 package info.magnolia.jcr.iterator;
 
+import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 import javax.jcr.RangeIterator;
 
 
 /**
- * Base class for implementing filtering JCR iterators. Does not support getSize() since that would require iterating
- * through the entire target iterator to count the number of nodes that match the predicate.
+ * Base class for implementing filtering JCR iterators. Does not support the remove method because doing so would make
+ * it impossible to implement the getSize method. Should not be a problem since Jackrabbit anyway does not support the
+ * remove method on its iterators.
  *
  * @param <T>
  * @version $Id$
@@ -49,7 +52,8 @@ public abstract class FilteringRangeIterator<T> implements RangeIterator {
 
     private final Iterator<T> iterator;
     private long position;
-    private T next;
+    private long size = 0;
+    private final Queue<T> queue = new ArrayDeque<T>();
 
     public FilteringRangeIterator(Iterator<T> iterator) {
         this.iterator = iterator;
@@ -57,13 +61,10 @@ public abstract class FilteringRangeIterator<T> implements RangeIterator {
 
     @Override
     public boolean hasNext() {
-        while (next == null && iterator.hasNext()) {
-            T n = iterator.next();
-            if (evaluate(n)) {
-                next = n;
-            }
+        while (queue.isEmpty() && iterator.hasNext()) {
+            queueNext();
         }
-        return next != null;
+        return !queue.isEmpty();
     }
 
     @Override
@@ -71,15 +72,14 @@ public abstract class FilteringRangeIterator<T> implements RangeIterator {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        T t = next;
-        next = null;
+        T t = queue.poll();
         position++;
         return t;
     }
 
     @Override
     public void remove() {
-        iterator.remove();
+        throw new UnsupportedOperationException("remove");
     }
 
     @Override
@@ -95,8 +95,18 @@ public abstract class FilteringRangeIterator<T> implements RangeIterator {
 
     @Override
     public long getSize() {
-        // getSize() is optional and we don't support it since that would require walking through the entire iterator
-        return -1;
+        while (iterator.hasNext()) {
+            queueNext();
+        }
+        return size;
+    }
+
+    private void queueNext() {
+        T n = iterator.next();
+        if (evaluate(n)) {
+            queue.add(n);
+            size++;
+        }
     }
 
     protected abstract boolean evaluate(T t);
