@@ -133,7 +133,7 @@ public class PermissionUtil {
      */
     public static String convertPermissions(long oldPermissions) {
         if (oldPermissions > Permission.ALL) {
-            throw new IllegalArgumentException(String.format("Unknown permission bits [0x%x]", oldPermissions & ~Permission.ALL));
+            throw new IllegalArgumentException("Unknown permissions: " + oldPermissions + ", highest used permission value is " + ((Permission.ALL + 1) >> 1));
         }
         StringBuilder permissions = new StringBuilder();
         if ((oldPermissions & Permission.ALL) == Permission.ALL) {

@@ -64,7 +64,7 @@ public class PermissionUtilTest {
             final String result = PermissionUtil.convertPermissions(64);
             fail("Should have failed - but returned ["+result+"] instead.");
         } catch (IllegalArgumentException e) {
-            assertEquals("Unknown permission bits [0x40]", e.getMessage());
+            assertEquals("Unknown permissions: 64, highest used permission value is 32", e.getMessage());
         }
     }
 
