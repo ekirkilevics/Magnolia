@@ -40,22 +40,32 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
 import org.apache.commons.collections.iterators.IteratorChain;
+
+
 /**
  * An implementation of {@link NodeIterator} which will chain several iterators making them behave like one.
  *
  * @version $Id$
- *
  */
 public class ChainedNodeIterator implements NodeIterator {
 
-    private IteratorChain iterators = new IteratorChain();
+    private final IteratorChain iterators = new IteratorChain();
     private long position = 0;
     private long size = 0;
 
     public ChainedNodeIterator(List<NodeIterator> iterators) {
         for(NodeIterator it : iterators) {
             this.iterators.addIterator(it);
-            size += it.getSize();
+
+            // If any of the iterators returns -1 the we must also return -1
+            long s = it.getSize();
+            if (size != -1) {
+                if (s == -1) {
+                    size = -1;
+                } else {
+                    size += s;
+                }
+            }
         }
     }
 
