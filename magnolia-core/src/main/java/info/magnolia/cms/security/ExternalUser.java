@@ -38,14 +38,13 @@ import info.magnolia.cms.security.auth.GroupList;
 import info.magnolia.cms.security.auth.RoleList;
 import info.magnolia.context.MgnlContext;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import java.io.Serializable;
 
 import javax.security.auth.Subject;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
