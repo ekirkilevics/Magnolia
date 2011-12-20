@@ -43,6 +43,7 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.repository.RepositoryConstants;
 
@@ -247,7 +248,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
             //            + " or [jcr:path] like '/" + realm + "/%/" + name + "'";
         }
 
-        final String statement = "select * from [" + ItemType.USER + "] " + where;
+        final String statement = "select * from [" + MgnlNodeType.USER + "] " + where;
 
         Query query = session.getWorkspace().getQueryManager().createQuery(statement, Query.JCR_SQL2);
         NodeIterator iter = query.execute().getNodes();
@@ -371,7 +372,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
                 // and of course the meta data
                 addWrite(handle, MetaData.DEFAULT_META_NODE, acls);
                 session.save();
-                return new MgnlUser(userNode.getName(), getRealmName(), Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_MAP);
+                return new MgnlUser(userNode.getName(), getRealmName(), Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_MAP,  NodeUtil.getPathIfPossible(userNode), NodeUtil.getNodeIdentifierIfPossible(userNode));
             }
 
             @Override
@@ -514,11 +515,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
             properties.put(prop.getName(), prop.getString());
         }
 
-        MgnlUser user = new MgnlUser(privilegedUserNode.getName(), getRealmName(), groups, roles, properties);
-        // keep just a token to user, not the whole node
-        // TODO: would it be better to keep around UUID?
-        user.setPath(privilegedUserNode.getPath());
-
+        MgnlUser user = new MgnlUser(privilegedUserNode.getName(), getRealmName(), groups, roles, properties, NodeUtil.getPathIfPossible(privilegedUserNode), NodeUtil.getNodeIdentifierIfPossible(privilegedUserNode));
         return user;
     }
 

@@ -74,7 +74,7 @@ public class ContentVersionTest extends RepositoryTestCase {
         super.setUp();
         // context is then cleared automatically on teardown by RepoTestCase(MgnlTestCase)
         MockContext ctx = (MockContext) MgnlContext.getSystemContext();
-        ctx.setUser(new MgnlUser("toto","admin",Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_MAP));
+        ctx.setUser(new MgnlUser("toto","admin",Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_MAP, null, null));
     }
 
     @Test
