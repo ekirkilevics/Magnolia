@@ -44,7 +44,6 @@ import info.magnolia.cms.core.NonExistingNodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.test.mock.jcr.MockNode;
-import info.magnolia.test.mock.jcr.MockSession;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -286,7 +285,6 @@ public class MockContent extends DefaultContent {
     @Override
     public void delete() throws RepositoryException {
         final MockNode parent = (MockNode) getParent().getJCRNode();
-        MockSession session = (MockSession) getJCRNode().getSession();
         final boolean removedFromParent = parent.removeFromChildren(getJCRNode());
 
         if (!removedFromParent) {
