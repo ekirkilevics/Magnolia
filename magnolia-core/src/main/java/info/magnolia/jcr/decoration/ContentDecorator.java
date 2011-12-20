@@ -40,7 +40,7 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.Session;
 
 /**
- * Applies custom behaviour of a graph of JCR objects. Allows expressing the logig in a single place.
+ * Applies custom behaviour of a graph of JCR objects. Allows expressing the logic in a single place.
  *
  * @version $Id$
  */
