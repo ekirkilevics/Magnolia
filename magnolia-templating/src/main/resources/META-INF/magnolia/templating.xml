@@ -11,6 +11,11 @@
       <type>info.magnolia.templating.functions.TemplatingFunctions</type>
       <implementation>info.magnolia.templating.functions.TemplatingFunctions</implementation>
     </component>
+    <component>
+      <type>info.magnolia.templating.freemarker.Directives</type>
+      <implementation>info.magnolia.templating.freemarker.Directives</implementation>
+    </component>
+
   </components>
   <dependencies>
     <dependency>

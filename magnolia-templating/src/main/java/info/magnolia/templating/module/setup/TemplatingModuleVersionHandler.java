@@ -49,7 +49,6 @@ import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.templating.module.setup.for4_0.DeprecateDialogPathAllModules;
 import info.magnolia.templating.module.setup.for4_0.FixTemplatePathTask;
 import info.magnolia.templating.module.setup.for4_0.NestPropertiesAllModulesNodeTask;
-import info.magnolia.templating.module.setup.for4_5.AddSharedVariablesTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,7 +112,10 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "templatePath is now templateScript.", "paragraphs", "templatePath", "templateScript"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "type is now renderType.", "templates", "type", "renderType"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "type is now renderType.", "paragraphs", "type", "renderType"))
-                .addTask(new AddSharedVariablesTask())
+                .addTask(new BootstrapSingleResource(
+                    "Register Context Attribute",
+                    "Add cms and cmsfn context Attribute",
+                    "/mgnl-bootstrap/templating/config.modules.templating.renderers.plaintext.contextAttributes.xml"))
         );
     }
 
@@ -121,7 +123,6 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final ArrayList<Task> tasks = new ArrayList<Task>();
         tasks.add(new OrderNodeBeforeTask("Order model execution filter", "", RepositoryConstants.CONFIG, "/server/filters/cms/modelExecution", "rendering"));
-        tasks.add(new AddSharedVariablesTask());
         return tasks;
     }
 }
