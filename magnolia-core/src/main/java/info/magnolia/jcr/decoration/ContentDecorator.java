@@ -40,9 +40,11 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.Session;
 
 /**
- * Applies custom behaviour of a graph of JCR objects. Allows expressing the logic in a single place.
+ * Applies custom behavior in a graph of JCR objects by wrapping objects. Allows for expressing the logic in a single
+ * place.
  *
  * @version $Id$
+ * @see AbstractContentDecorator
  */
 public interface ContentDecorator {
 
@@ -52,11 +54,23 @@ public interface ContentDecorator {
 
     NodeIterator wrapNodeIterator(NodeIterator nodeIterator);
 
+    /**
+     * Evaluates if a node should be hidden by wrappers.
+     *
+     * @param node the node to evaluate
+     * @return true if the node should be visible or false to hide it
+     */
     boolean evaluateNode(Node node);
 
     Property wrapProperty(Property property);
 
     PropertyIterator wrapPropertyIterator(PropertyIterator propertyIterator);
 
+    /**
+     * Evaluates if a property should be hidden by wrappers.
+     *
+     * @param property the property to evaluate.
+     * @return true if the property should be visible or false to hide it
+     */
     boolean evaluateProperty(Property property);
 }

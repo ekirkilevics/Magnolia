@@ -42,7 +42,7 @@ import info.magnolia.jcr.predicate.AbstractPredicate;
 
 /**
  * {@link ContentDecorator} that applies a predicate to all nodes in a JCR object graph. The predicate is checked
- * against all parent nodes and for properties its tested on their nodes and all the parents. This effectively hides the
+ * against all parent nodes and for properties its tested on their node and all its parents. This effectively hides the
  * entire sub-tree below a node that doesn't match the predicate.
  *
  * @version $Id$

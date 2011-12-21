@@ -40,7 +40,8 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.Session;
 
 /**
- * Abstract implementation of {@link ContentDecorator} that filters out nothing but still applies itself to all objects.
+ * Abstract implementation of {@link ContentDecorator} that filters out nothing and wraps everything to carry the
+ * decoration to the entire graph.
  *
  * @version $Id$
  */
