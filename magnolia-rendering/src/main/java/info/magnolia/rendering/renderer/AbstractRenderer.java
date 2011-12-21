@@ -74,6 +74,10 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
 
     protected static final String MODEL_ATTRIBUTE = RenderingModel.class.getName();
 
+    private Map<String, ContextAttributeConfiguration> contextAttributes = new HashMap<String, ContextAttributeConfiguration>();
+
+
+
     @Override
     public void render(RenderingContext renderingCtx, Map<String, Object> contextObjects) throws RenderException {
 
@@ -229,6 +233,11 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         setContextAttribute(ctx, "state", getAggregationStateSafely());
         setContextAttribute(ctx, "model", model);
         setContextAttribute(ctx, "actionResult", actionResult);
+
+        for (Entry<String, ContextAttributeConfiguration> entry : contextAttributes.entrySet()) {
+            setContextAttribute(ctx, entry.getKey(), Components.getComponent(entry.getValue().getComponentClass()));
+        }
+
     }
 
     /**
@@ -289,6 +298,22 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
 
     protected Object setContextAttribute(final Map<String, Object> ctx, final String name, Object value) {
         return ctx.put(name, value);
+    }
+
+    public Map<String, ContextAttributeConfiguration> getContextAttributes() {
+        return contextAttributes;
+    }
+
+    public void setContextAttributes(Map<String, ContextAttributeConfiguration> contextAttributes) {
+        if(this.contextAttributes!=null) {
+            this.contextAttributes.putAll(contextAttributes);
+        } else {
+            this.contextAttributes = contextAttributes;
+        }
+    }
+
+    public void addContextAttribute(String name, ContextAttributeConfiguration contextAttributeConfiguration){
+        this.contextAttributes.put(name, contextAttributeConfiguration);
     }
 
     /**

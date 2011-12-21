@@ -4,7 +4,7 @@
   <name>rendering</name>
   <displayName>Magnolia Rendering Module</displayName>
   <class>info.magnolia.rendering.module.RenderingModule</class>
-  <!--<versionHandler>info.magnolia.rendering.module.setup.TemplatingModuleVersionHandler</versionHandler>-->
+  <versionHandler>info.magnolia.rendering.module.setup.RenderingModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
   <components>
     <id>main</id>
