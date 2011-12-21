@@ -1,0 +1,22 @@
+
+# Tests inheritance of components, both pages have a component 0, the result is two nodes in page2 with the same name 0
+
+[Input]
+/page1.@type = mgnl:page
+/page1/main.@type = mgnl:area
+/page1/main/0.@type = mgnl:component
+
+/page1/page2.@type = mgnl:page
+/page1/page2/main.@type = mgnl:area
+/page1/page2/main/0.@type = mgnl:component
+
+
+[Expected]
+/page1.@type = mgnl:page
+/page1/main.@type = mgnl:area
+/page1/main/0.@type = mgnl:component
+
+/page1/page2.@type = mgnl:page
+/page1/page2/main.@type = mgnl:area
+/page1/page2/main/0.@type = mgnl:component
+/page1/page2/main/0.@type = mgnl:component

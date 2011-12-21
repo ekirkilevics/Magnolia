@@ -458,7 +458,25 @@ public class MockNode extends AbstractNode {
 
     @Override
     public boolean hasProperty(String relPath) {
-        return (this.properties.get(relPath) != null);
+
+        Property property = null;
+        int lastSlashsPosition = relPath.lastIndexOf("/");
+
+        if (lastSlashsPosition < 0) {
+            // it's not a path but just a name
+            property = properties.get(relPath);
+        } else {
+            try {
+                final String relPathToNode = relPath.substring(0, lastSlashsPosition);
+                final Node nodeHostingProperty = getNode(relPathToNode);
+                final String propertyName = relPath.substring(lastSlashsPosition + 1, relPath.length());
+                property = nodeHostingProperty.getProperty(propertyName);
+            } catch (RepositoryException e) {
+                return false;
+            }
+        }
+
+        return property != null;
     }
 
     @Override

@@ -45,9 +45,10 @@ import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.PropertyUtil;
-import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
+import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContext;
@@ -944,7 +945,7 @@ public class TemplatingFunctionsTest {
     public void testNodeIsInherited() throws RepositoryException {
         // GIVEN
                 // WHEN
-        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(childPage);
+        InheritanceNodeWrapper inheritedNode = wrapNodeForInheritance(childPageSubPage);
 
         // THEN
         assertTrue(functions.isInherited(inheritedNode.getNode("comp-L2-1")));
@@ -956,7 +957,7 @@ public class TemplatingFunctionsTest {
     public void testNodeIsFromCurrentPage() throws RepositoryException {
         // GIVEN
                 // WHEN
-        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(childPage);
+        InheritanceNodeWrapper inheritedNode = wrapNodeForInheritance(childPage);
 
         // THEN
         assertTrue(functions.isFromCurrentPage(inheritedNode.getNode("comp-L3-1")));
@@ -966,7 +967,7 @@ public class TemplatingFunctionsTest {
     public void testContentMapIsInherited() throws RepositoryException {
         // GIVEN
                 // WHEN
-        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(childPage);
+        InheritanceNodeWrapper inheritedNode = wrapNodeForInheritance(childPageSubPage);
 
         // THEN
         assertTrue(functions.isInherited(new ContentMap(inheritedNode.getNode("comp-L2-1"))));
@@ -978,7 +979,7 @@ public class TemplatingFunctionsTest {
     public void testContentMapIsFromCurrentPage() throws RepositoryException {
         // GIVEN
                 // WHEN
-        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(childPage);
+        InheritanceNodeWrapper inheritedNode = wrapNodeForInheritance(childPage);
 
         // THEN
         assertTrue(functions.isFromCurrentPage(new ContentMap(inheritedNode.getNode("comp-L3-1"))));
@@ -1013,7 +1014,6 @@ public class TemplatingFunctionsTest {
         Node node = functions.inherit(childPage);
 
         // THEN
-        assertEquals(node.getParent(), childPage.getParent());
         assertEquals(node.getPath(), childPage.getPath());
         assertEquals(node.getIdentifier(), childPage.getIdentifier());
     }
@@ -1687,4 +1687,7 @@ public class TemplatingFunctionsTest {
         return childNodeNames.length == 0 ? null : (MockNode) parent.getNode(childNodeNames[0]);
     }
 
+    private InheritanceNodeWrapper wrapNodeForInheritance(Node destination) throws RepositoryException {
+        return (InheritanceNodeWrapper) new DefaultInheritanceContentDecorator(destination).wrapNode(destination);
+    }
 }

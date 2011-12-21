@@ -1,0 +1,27 @@
+
+# both page1 and page2 have a property width, only the nearest one is inherited to page3
+
+[Input]
+/page1.@type = mgnl:page
+/page1/main.@type = mgnl:area
+/page1/main.width = 123
+
+/page1/page2.@type = mgnl:page
+/page1/page2/main.@type = mgnl:area
+/page1/page2/main.width = 456
+
+/page1/page2/page3.@type = mgnl:page
+/page1/page2/page3/main.@type = mgnl:area
+
+[Expected]
+/page1.@type = mgnl:page
+/page1/main.@type = mgnl:area
+/page1/main.width = 123
+
+/page1/page2.@type = mgnl:page
+/page1/page2/main.@type = mgnl:area
+/page1/page2/main.width = 456
+
+/page1/page2/page3.@type = mgnl:page
+/page1/page2/page3/main.@type = mgnl:area
+/page1/page2/page3/main.width = 456

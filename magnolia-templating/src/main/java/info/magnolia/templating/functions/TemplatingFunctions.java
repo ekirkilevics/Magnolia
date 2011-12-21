@@ -41,12 +41,13 @@ import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
+import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.util.SessionUtil;
 import info.magnolia.jcr.wrapper.HTMLEscapingNodeWrapper;
-import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryConstants;
@@ -237,7 +238,7 @@ public class TemplatingFunctions {
         if (content == null) {
             return null;
         }
-        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
+        Node inheritedNode = new DefaultInheritanceContentDecorator(content).wrapNode(content);
 
         if (StringUtils.isBlank(relPath)) {
             return inheritedNode;
@@ -272,7 +273,7 @@ public class TemplatingFunctions {
         if (StringUtils.isBlank(relPath)) {
             throw new IllegalArgumentException("relative path cannot be null or empty");
         }
-        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
+        Node inheritedNode = new DefaultInheritanceContentDecorator(content).wrapNode(content);
         try {
             return inheritedNode.getProperty(relPath);
 
@@ -299,7 +300,7 @@ public class TemplatingFunctions {
         if (StringUtils.isBlank(relPath)) {
             throw new IllegalArgumentException("relative path cannot be null or empty");
         }
-        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(content);
+        Node inheritedNode = new DefaultInheritanceContentDecorator(content).wrapNode(content);
         Node subNode = inheritedNode.getNode(relPath);
         return children(subNode);
     }
@@ -311,10 +312,10 @@ public class TemplatingFunctions {
         if (StringUtils.isBlank(relPath)) {
             throw new IllegalArgumentException("relative path cannot be null or empty");
         }
-        InheritanceNodeWrapper inheritedNode = new InheritanceNodeWrapper(asJCRNode(content));
+        Node node = asJCRNode(content);
+        Node inheritedNode = new DefaultInheritanceContentDecorator(node).wrapNode(node);
         Node subNode = inheritedNode.getNode(relPath);
         return children(new ContentMap(subNode));
-
     }
 
     public boolean isInherited(Node content) {

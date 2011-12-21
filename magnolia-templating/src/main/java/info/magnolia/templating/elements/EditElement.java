@@ -36,7 +36,7 @@ package info.magnolia.templating.elements;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
+import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.TemplateDefinition;

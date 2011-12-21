@@ -1,0 +1,17 @@
+
+# Tests that /page1/page2/main gets the property width from /page1/main
+
+[Input]
+/page1.@type = mgnl:page
+/page1/main.@type = mgnl:area
+/page1/main.width = 123
+/page1/page2.@type = mgnl:page
+/page1/page2/main.@type = mgnl:area
+
+[Expected]
+/page1.@type = mgnl:page
+/page1/main.@type = mgnl:area
+/page1/main.width = 123
+/page1/page2.@type = mgnl:page
+/page1/page2/main.@type = mgnl:area
+/page1/page2/main.width = 123

@@ -1,0 +1,12 @@
+
+# Tests that applying the wrappers on a top level page has no effect
+
+[Input]
+/page1.@type = mgnl:page
+/page1/main.@type = mgnl:area
+/page1/main.width = 123
+
+[Expected]
+/page1.@type = mgnl:page
+/page1/main.@type = mgnl:area
+/page1/main.width = 123

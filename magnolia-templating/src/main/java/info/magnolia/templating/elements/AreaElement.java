@@ -38,10 +38,10 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.jcr.wrapper.InheritanceNodeWrapper;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.AppendableOnlyOutputProvider;
@@ -65,8 +65,6 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -254,7 +252,11 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 Components.newInstance(autoGeneration.getGeneratorClass(), area).generate(autoGeneration);
             }
             if(isInherit()) {
-                area = new InheritanceNodeWrapper(area, new InheritablePredicate(area));
+                try {
+                    area = new DefaultInheritanceContentDecorator(area).wrapNode(area);
+                } catch (RepositoryException e) {
+                    throw new RuntimeRepositoryException(e);
+                }
             }
         }
         return area;
@@ -400,42 +402,5 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     public void setContextAttributes(Map<String, Object> contextAttributes) {
         this.contextAttributes = contextAttributes;
-    }
-
-    /**
-     * Controls output based on the existence and value of inheritable property.
-     *
-     * @version $Id$
-     *
-     */
-    private static class InheritablePredicate extends AbstractPredicate<Node> {
-
-        private static final Logger log = LoggerFactory.getLogger(AreaElement.class);
-
-        private Node root;
-
-        public InheritablePredicate(Node root) {
-            this.root = root;
-        }
-
-        @Override
-        public boolean evaluateTyped(Node t) {
-            // FIXME not all areas using inheritance want to use the inheritable flag
-            // we need a better configuration or change to an exclution flag
-            return true;
-
-//            try {
-//                if(t.getPath().startsWith(root.getPath())){
-//                    return true;
-//                }
-//                if(!t.isNodeType(MgnlNodeType.NT_COMPONENT)){
-//                    return true;
-//                }
-//                return t.hasProperty("inheritable") && t.getProperty("inheritable").getBoolean();
-//            } catch (RepositoryException e) {
-//                log.warn("Failed to retrieve inheritable property for {}", t);
-//                return false;
-//            }
-        }
     }
 }

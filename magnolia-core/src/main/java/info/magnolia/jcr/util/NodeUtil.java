@@ -348,7 +348,7 @@ public class NodeUtil {
      * Returns true if both arguments represents the same node. In case the nodes are wrapped the comparison is done one
      * the actual nodes behind the wrappers.
      */
-    private static boolean isSame(Node lhs, Node rhs) throws RepositoryException {
+    public static boolean isSame(Node lhs, Node rhs) throws RepositoryException {
         return unwrap(lhs).isSame(unwrap(rhs));
     }
 
