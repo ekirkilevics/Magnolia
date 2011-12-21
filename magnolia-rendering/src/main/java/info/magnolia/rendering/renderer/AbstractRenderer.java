@@ -35,7 +35,6 @@ package info.magnolia.rendering.renderer;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.decoration.ContentDecoratorNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.wrapper.ChannelVisibilityContentDecorator;
 import info.magnolia.objectfactory.Components;
@@ -293,7 +292,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         if (StringUtils.isEmpty(channel) || channel.equalsIgnoreCase("all")) {
             return content;
         }
-        return new ContentDecoratorNodeWrapper(content, new ChannelVisibilityContentDecorator(channel));
+        return new ChannelVisibilityContentDecorator(channel).wrapNode(content);
     }
 
     protected Object setContextAttribute(final Map<String, Object> ctx, final String name, Object value) {
