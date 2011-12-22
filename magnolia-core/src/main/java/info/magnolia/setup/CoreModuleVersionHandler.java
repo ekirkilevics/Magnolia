@@ -237,6 +237,15 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         register(DeltaBuilder.update("4.4.6", "")
                 .addTask(new BootstrapConditionally("Security", "Bootstraps security-base role.", "/mgnl-bootstrap/core/userroles.security-base.xml"))
                 .addTask(new BootstrapConditionally("Bootstrap range support filter", "Bootstrap filter that adds Magnolia capability to serve ranged (partial) requests", "/info/magnolia/setup/update/range/config.server.filters.range.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap eot MIME mapping", "Bootstraps MIME mapping for eot in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.eot.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap oga MIME mapping", "Bootstraps MIME mapping for oga in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.oga.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap ogg MIME mapping", "Bootstraps MIME mapping for ogg in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.ogg.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap ogv MIME mapping", "Bootstraps MIME mapping for ogv in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.ogv.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap otf MIME mapping", "Bootstraps MIME mapping for otf in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.otf.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap ttf MIME mapping", "Bootstraps MIME mapping for ttf in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.ttf.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap weba MIME mapping", "Bootstraps MIME mapping for weba in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.weba.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap webm MIME mapping", "Bootstraps MIME mapping for webm in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.webm.xml"))
+                .addTask(new BootstrapConditionally("Bootstrap woff MIME mapping", "Bootstraps MIME mapping for woff in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.woff.xml"))
                 .addTask(new FilterOrderingTask("range", new String[] { "gzip", "activation", "uriSecurity" })));
 
         register(DeltaBuilder.update("4.5", "")

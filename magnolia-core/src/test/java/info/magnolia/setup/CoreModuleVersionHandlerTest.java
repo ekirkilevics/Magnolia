@@ -516,4 +516,90 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // don't overwrite user settings
         assertEquals("video/mp4", getMimeTypePropertyValue("mp4"));
     }
+    
+    @Test
+    public void test446MimeTypesOnInstall() throws ModuleManagementException, RepositoryException {
+        // new Mime types: Eot, Ogg, Otf, Ttf, Webm, Woff
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
+
+        // new types
+        assertEquals("application/vnd.ms-fontobject", getMimeTypePropertyValue("eot"));
+        assertEquals("audio/ogg", getMimeTypePropertyValue("oga"));
+        assertEquals("video/ogg", getMimeTypePropertyValue("ogg"));
+        assertEquals("video/ogg", getMimeTypePropertyValue("ogv"));
+        assertEquals("application/x-font-otf", getMimeTypePropertyValue("otf"));
+        assertEquals("application/x-font-ttf", getMimeTypePropertyValue("ttf"));
+        assertEquals("audio/webm", getMimeTypePropertyValue("weba"));
+        assertEquals("video/webm", getMimeTypePropertyValue("webm"));
+        assertEquals("application/x-font-woff", getMimeTypePropertyValue("woff"));
+    }
+    
+    @Test
+    public void test446MimeTypesOnUpdateTo446() throws ModuleManagementException, RepositoryException {
+        // new Mime types: Eot, Ogg, Otf, Ttf, Webm, Woff
+        // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
+        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
+        setupConfigNode("/server/MIMEMapping/mov");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+        
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
+
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.5"));
+
+        assertEquals("application/vnd.ms-fontobject", getMimeTypePropertyValue("eot"));
+        assertEquals("audio/ogg", getMimeTypePropertyValue("oga"));
+        assertEquals("video/ogg", getMimeTypePropertyValue("ogg"));
+        assertEquals("video/ogg", getMimeTypePropertyValue("ogv"));
+        assertEquals("application/x-font-otf", getMimeTypePropertyValue("otf"));
+        assertEquals("application/x-font-ttf", getMimeTypePropertyValue("ttf"));
+        assertEquals("audio/webm", getMimeTypePropertyValue("weba"));
+        assertEquals("video/webm", getMimeTypePropertyValue("webm"));
+        assertEquals("application/x-font-woff", getMimeTypePropertyValue("woff"));
+    }
+    
+    @Test
+    public void test446MimeTypesOnUpdateTo446WithUserFixedValues() throws ModuleManagementException, RepositoryException {
+        // new Mime types: Eot, Ogg, Otf, Ttf, Webm, Woff
+        // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity/clientCallback", "foo", "bar");
+        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
+        setupConfigNode("/server/MIMEMapping/mov");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
+        setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+
+        // if custom mime types have been set up already, we don't want to overwrite them
+        setupConfigProperty("/server/MIMEMapping/eot", "mime-type", "custom-type-for-eot");
+        setupConfigProperty("/server/MIMEMapping/oga", "mime-type", "custom-type-for-oga");
+        setupConfigProperty("/server/MIMEMapping/ogg", "mime-type", "custom-type-for-ogg");
+        setupConfigProperty("/server/MIMEMapping/ogv", "mime-type", "custom-type-for-ogv");
+        setupConfigProperty("/server/MIMEMapping/otf", "mime-type", "custom-type-for-otf");
+        setupConfigProperty("/server/MIMEMapping/ttf", "mime-type", "custom-type-for-ttf");
+        setupConfigProperty("/server/MIMEMapping/weba", "mime-type", "custom-type-for-weba");
+        setupConfigProperty("/server/MIMEMapping/webm", "mime-type", "custom-type-for-webm");
+        setupConfigProperty("/server/MIMEMapping/woff", "mime-type", "custom-type-for-woff");
+        
+        // needed for 4.5 - UpdateUserManagers task
+        setupConfigNode("/server/security/userManagers");
+
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.5"));
+
+        assertEquals("custom-type-for-eot", getMimeTypePropertyValue("eot"));
+        assertEquals("custom-type-for-oga", getMimeTypePropertyValue("oga"));
+        assertEquals("custom-type-for-ogg", getMimeTypePropertyValue("ogg"));
+        assertEquals("custom-type-for-ogv", getMimeTypePropertyValue("ogv"));
+        assertEquals("custom-type-for-otf", getMimeTypePropertyValue("otf"));
+        assertEquals("custom-type-for-ttf", getMimeTypePropertyValue("ttf"));
+        assertEquals("custom-type-for-weba", getMimeTypePropertyValue("weba"));
+        assertEquals("custom-type-for-webm", getMimeTypePropertyValue("webm"));
+        assertEquals("custom-type-for-woff", getMimeTypePropertyValue("woff"));
+    }
 }
