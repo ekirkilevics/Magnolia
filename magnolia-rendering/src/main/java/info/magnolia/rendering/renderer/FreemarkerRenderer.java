@@ -49,6 +49,8 @@ import java.util.Map;
 import javax.jcr.Node;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -57,6 +59,8 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * @version $Id$
  */
 public class FreemarkerRenderer extends AbstractRenderer {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final FreemarkerHelper fmHelper;
 
@@ -88,7 +92,7 @@ public class FreemarkerRenderer extends AbstractRenderer {
                 // FIXME we don't throw exceptions to not block the rendering
                 // the 'normal' exception handler should actually not throw exceptions so that we can re-throw them
                 // throw new RenderException("Can't render template " + templateScript + ": " + ExceptionUtils.getRootCauseMessage(e), e);
-                out.append("ERROR: ").append(ExceptionUtils.getRootCauseMessage(e)).append("<br/>");
+                log.error("Failed to render freemarker template: " + ExceptionUtils.getRootCauseMessage(e), e);
             }
         } catch (IOException e) {
             throw new RenderException(e);
