@@ -29,6 +29,12 @@
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-core</artifactId>
+      <exclusions>
+      	<exclusion>
+      		<artifactId>bcprov-jdk15</artifactId>
+      		<groupId>org.bouncycastle</groupId>
+      	</exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.mindrot</groupId>
