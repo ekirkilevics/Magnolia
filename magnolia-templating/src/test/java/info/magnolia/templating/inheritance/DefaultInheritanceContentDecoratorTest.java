@@ -46,6 +46,8 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import info.magnolia.rendering.template.InheritanceConfiguration;
+import info.magnolia.rendering.template.configured.ConfiguredInheritance;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
@@ -75,16 +77,14 @@ public class DefaultInheritanceContentDecoratorTest {
     public void testDoesNothingOnTopLevelPage() throws RepositoryException, IOException {
 
         Map<String, String> sections = loadSessionConfigs("testDoesNothingOnTopLevelPage");
-        Session session = createInputSession(sections);
-        session = new DefaultInheritanceContentDecorator(session.getNode("/page1/main")).wrapSession(session);
+        Session session = wrapSessionForInheritance(sections, "/page1/main");
         assertEquals(sections.get("Expected"), sessionToString(session));
     }
 
     @Test
     public void testPropertyInheritance() throws RepositoryException, IOException {
         Map<String, String> sections = loadSessionConfigs("testPropertyInheritance");
-        Session session = createInputSession(sections);
-        session = new DefaultInheritanceContentDecorator(session.getNode("/page1/page2/main")).wrapSession(session);
+        Session session = wrapSessionForInheritance(sections, "/page1/page2/main");
         assertEquals(sections.get("Expected"), sessionToString(session));
     }
 
@@ -92,62 +92,63 @@ public class DefaultInheritanceContentDecoratorTest {
     public void testMultiLevelPropertyInheritance() throws Exception {
 
         Map<String, String> sections = loadSessionConfigs("testMultiLevelPropertyInheritance");
-        Session session = createInputSession(sections);
-        session = new DefaultInheritanceContentDecorator(session.getNode("/page1/page2/page3/main")).wrapSession(session);
+        Session session = wrapSessionForInheritance(sections, "/page1/page2/page3/main");
         assertEquals(sections.get("Expected"), sessionToString(session));
     }
 
     @Test
     public void testMultiLevelPropertyInheritanceCollision() throws Exception {
         Map<String, String> sections = loadSessionConfigs("testMultiLevelPropertyInheritanceCollision");
-        Session session = createInputSession(sections);
-        session = new DefaultInheritanceContentDecorator(session.getNode("/page1/page2/page3/main")).wrapSession(session);
+        Session session = wrapSessionForInheritance(sections, "/page1/page2/page3/main");
         assertEquals(sections.get("Expected"), sessionToString(session));
     }
 
     @Test
     public void testComponentInheritance() throws Exception {
         Map<String, String> sections = loadSessionConfigs("testComponentInheritance");
-        Session session = createInputSession(sections);
-        session = new DefaultInheritanceContentDecorator(session.getNode("/page1/page2/main")).wrapSession(session);
+        Session session = wrapSessionForInheritance(sections, "/page1/page2/main");
         assertEquals(sections.get("Expected"), sessionToString(session));
     }
 
     @Test
-    public void testSelectiveComponentInheritance() throws Exception {
-        Map<String, String> sections = loadSessionConfigs("testSelectiveComponentInheritance");
-        Session session = createInputSession(sections);
-        session = new DefaultInheritanceContentDecorator(session.getNode("/page1/page2/main")).wrapSession(session);
-        assertEquals(sections.get("Expected"), sessionToString(session));
-    }
-
-    @Test
-    public void testSelectivePropertyInheritance() throws Exception {
-        Map<String, String> sections = loadSessionConfigs("testSelectivePropertyInheritance");
-        Session session = createInputSession(sections);
-        session = new DefaultInheritanceContentDecorator(session.getNode("/page1/page2/page3/main")).wrapSession(session);
+    public void testDisabledPropertyInheritance() throws Exception {
+        Map<String, String> sections = loadSessionConfigs("testDisabledPropertyInheritance");
+        ConfiguredInheritance inheritanceConfiguration = new ConfiguredInheritance();
+        inheritanceConfiguration.setProperties(ConfiguredInheritance.PROPERTIES_NONE);
+        Session session = wrapSessionForInheritance(sections, "/page1/page2/page3/main", inheritanceConfiguration);
         assertEquals(sections.get("Expected"), sessionToString(session));
     }
 
     @Test
     public void testPropertyInheritanceWithInheritanceDisabled() throws Exception {
         Map<String, String> sections = loadSessionConfigs("testPropertyInheritanceWithInheritanceDisabled");
-        Session session = createInputSession(sections);
-        session = new DefaultInheritanceContentDecorator(session.getNode("/page1/page2/page3/main")).wrapSession(session);
+        ConfiguredInheritance inheritanceConfiguration = new ConfiguredInheritance();
+        inheritanceConfiguration.setEnabled(false);
+        Session session = wrapSessionForInheritance(sections, "/page1/page2/page3/main", inheritanceConfiguration);
         assertEquals(sections.get("Expected"), sessionToString(session));
     }
 
     @Test
     public void testDestinationIsAlsoAnchorInheritance() throws Exception {
         Map<String, String> sections = loadSessionConfigs("testDestinationIsAlsoAnchorInheritance");
-        Session session = createInputSession(sections);
-        session = new DefaultInheritanceContentDecorator(session.getNode("/page1/page2")).wrapSession(session);
+        Session session = wrapSessionForInheritance(sections, "/page1/page2");
 
         Node page = session.getNode("/page1/page2");
 
         assertNotNull(page.getProperty("width"));
         assertNotNull(page.getNode("links"));
         assertNotNull(page.getProperty("links/border"));
+    }
+
+    private Session wrapSessionForInheritance(Map<String, String> sections, String inheritanceNode) throws RepositoryException, IOException {
+        InheritanceConfiguration inheritanceConfiguration = new ConfiguredInheritance();
+        return wrapSessionForInheritance(sections, inheritanceNode, inheritanceConfiguration);
+    }
+
+    private Session wrapSessionForInheritance(Map<String, String> sections, String inheritanceNode, InheritanceConfiguration inheritanceConfiguration) throws IOException, RepositoryException {
+        Session session = createInputSession(sections);
+        Node destination = session.getNode(inheritanceNode);
+        return new DefaultInheritanceContentDecorator(destination, inheritanceConfiguration).wrapSession(session);
     }
 
     private Map<String, String> loadSessionConfigs(String resourceSuffix) throws IOException {

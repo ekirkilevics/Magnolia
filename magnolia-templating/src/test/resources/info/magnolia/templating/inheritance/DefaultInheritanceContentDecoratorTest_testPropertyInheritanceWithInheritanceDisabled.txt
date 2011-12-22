@@ -1,5 +1,5 @@
 
-# Tests that page2 prevents inclusion of width from its parent
+# Tests that page3 doesn't inherit properties when inheritance is disabled
 
 [Input]
 /page1.@type = mgnl:page
@@ -8,8 +8,6 @@
 
 /page1/page2.@type = mgnl:page
 /page1/page2/main.@type = mgnl:area
-/page1/page2/main/inheritance.@type = mgnl:contentNode
-/page1/page2/main/inheritance.enabled = false
 /page1/page2/main.border = 456
 
 /page1/page2/page3.@type = mgnl:page
@@ -24,11 +22,6 @@
 /page1/page2.@type = mgnl:page
 /page1/page2/main.@type = mgnl:area
 /page1/page2/main.border = 456
-/page1/page2/main/inheritance.@type = mgnl:contentNode
-/page1/page2/main/inheritance.enabled = false
 
 /page1/page2/page3.@type = mgnl:page
 /page1/page2/page3/main.@type = mgnl:area
-/page1/page2/page3/main.border = 456
-/page1/page2/page3/main/inheritance.@type = mgnl:contentNode
-/page1/page2/page3/main/inheritance.enabled = false

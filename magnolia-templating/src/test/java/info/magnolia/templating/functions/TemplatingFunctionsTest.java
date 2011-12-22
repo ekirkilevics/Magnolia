@@ -48,6 +48,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.PropertyUtil;
+import info.magnolia.rendering.template.configured.ConfiguredInheritance;
 import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.test.ComponentsTestUtil;
@@ -1688,6 +1689,8 @@ public class TemplatingFunctionsTest {
     }
 
     private InheritanceNodeWrapper wrapNodeForInheritance(Node destination) throws RepositoryException {
-        return (InheritanceNodeWrapper) new DefaultInheritanceContentDecorator(destination).wrapNode(destination);
+        ConfiguredInheritance configuration = new ConfiguredInheritance();
+        configuration.setComponents(ConfiguredInheritance.COMPONENTS_ALL);
+        return (InheritanceNodeWrapper) new DefaultInheritanceContentDecorator(destination, configuration).wrapNode(destination);
     }
 }

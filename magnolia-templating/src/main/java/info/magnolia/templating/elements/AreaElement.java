@@ -253,7 +253,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
             }
             if(isInherit()) {
                 try {
-                    area = new DefaultInheritanceContentDecorator(area).wrapNode(area);
+                    area = new DefaultInheritanceContentDecorator(area, areaDefinition.getInheritance()).wrapNode(area);
                 } catch (RepositoryException e) {
                     throw new RuntimeRepositoryException(e);
                 }

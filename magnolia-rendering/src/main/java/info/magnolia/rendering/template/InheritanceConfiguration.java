@@ -33,11 +33,26 @@
  */
 package info.magnolia.rendering.template;
 
+import info.magnolia.jcr.predicate.AbstractPredicate;
+
+import javax.jcr.Node;
+import java.util.Comparator;
+
 /**
- * Holds information about component inheritance.
- * @version $Id$
+ * Configuration for inheritance, allows for configuring inheritance for properties separately from inheritance of
+ * components. Can also control if specific components are included or not and their final order.
  *
+ * @version $Id$
  */
 public interface InheritanceConfiguration {
+
     boolean isEnabled();
+
+    boolean isInheritsProperties();
+
+    boolean isInheritsComponents();
+
+    AbstractPredicate<Node> getComponentPredicate();
+
+    Comparator<Node> getComponentComparator();
 }

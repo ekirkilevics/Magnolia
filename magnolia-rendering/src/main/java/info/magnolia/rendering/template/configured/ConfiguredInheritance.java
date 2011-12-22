@@ -33,14 +33,35 @@
  */
 package info.magnolia.rendering.template.configured;
 
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.template.InheritanceConfiguration;
+import org.apache.commons.lang.StringUtils;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import java.util.Comparator;
 
 /**
- * An holder for inheritance properties defined in the configuration.
+ * Defines behavior for inheritance. Allows for enabling
+ *
  * @version $Id$
  */
 public class ConfiguredInheritance implements InheritanceConfiguration {
-    private boolean enabled;
+
+    public static final String COMPONENTS_ALL = "all";
+    public static final String COMPONENTS_NONE = "none";
+    public static final String COMPONENTS_FILTERED = "filtered";
+
+    public static final String PROPERTIES_ALL = "all";
+    public static final String PROPERTIES_NONE = "none";
+
+    private boolean enabled = true;
+    private String components = COMPONENTS_FILTERED;
+    private String properties = PROPERTIES_ALL;
+    private Class<? extends AbstractPredicate<Node>> predicateClass;
+    private Class<? extends Comparator<Node>> nodeComparatorClass;
 
     @Override
     public boolean isEnabled() {
@@ -51,4 +72,108 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
         this.enabled = enabled;
     }
 
+    public void setComponents(String components) {
+        this.components = components;
+    }
+
+    public void setProperties(String properties) {
+        this.properties = properties;
+    }
+
+    @Override
+    public boolean isInheritsProperties() {
+        return isEnabled() && StringUtils.equalsIgnoreCase(StringUtils.trim(properties), PROPERTIES_ALL);
+    }
+
+    @Override
+    public boolean isInheritsComponents() {
+        return isEnabled() && (StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_ALL) || StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_FILTERED));
+    }
+
+    @Override
+    public AbstractPredicate<Node> getComponentPredicate() {
+        if (!isEnabled()) {
+            return new InheritNothingInheritancePredicate();
+        }
+        if (predicateClass != null) {
+            return Components.newInstance(predicateClass);
+        }
+        if (StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_ALL)) {
+            return new InheritEverythingInheritancePredicate();
+        }
+        if (StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_FILTERED)) {
+            return new FilteredChildInheritancePredicate();
+        }
+        return new InheritNothingInheritancePredicate();
+    }
+
+    public void setPredicateClass(Class<? extends AbstractPredicate<Node>> predicateClass) {
+        this.predicateClass = predicateClass;
+    }
+
+    @Override
+    public Comparator<Node> getComponentComparator() {
+        if (nodeComparatorClass != null) {
+            return Components.newInstance(nodeComparatorClass);
+        }
+        return new NodeDepthComparator();
+    }
+
+    public void setNodeComparatorClass(Class<? extends Comparator<Node>> nodeComparatorClass) {
+        this.nodeComparatorClass = nodeComparatorClass;
+    }
+
+    /**
+     * Predicate for component inheritance that includes only nodes with a a property named 'inheritable' that needs to
+     * be present and set to 'true'.
+     */
+    public static class FilteredChildInheritancePredicate extends AbstractPredicate<Node> {
+
+        public static final String INHERITED_PROPERTY_NAME = "inheritable";
+
+        @Override
+        public boolean evaluateTyped(Node node) {
+            try {
+                return node.hasProperty(INHERITED_PROPERTY_NAME) && Boolean.parseBoolean(node.getProperty(INHERITED_PROPERTY_NAME).getString());
+            } catch (RepositoryException e) {
+                throw new RuntimeRepositoryException(e);
+            }
+        }
+    }
+
+    /**
+     * Predicate for component inheritance that includes all components.
+     */
+    public static class InheritEverythingInheritancePredicate extends AbstractPredicate<Node> {
+
+        @Override
+        public boolean evaluateTyped(Node node) {
+            return true;
+        }
+    }
+
+    /**
+     * Predicate for component inheritance that includes no components.
+     */
+    public static class InheritNothingInheritancePredicate extends AbstractPredicate<Node> {
+
+        @Override
+        public boolean evaluateTyped(Node node) {
+            return true;
+        }
+    }
+
+    /**
+     * Comparator for ordering nodes by depth placing inherited nodes first.
+     */
+    public static class NodeDepthComparator implements Comparator<Node> {
+        @Override
+        public int compare(Node lhs, Node rhs) {
+            try {
+                return rhs.getDepth() - lhs.getDepth();
+            } catch (RepositoryException e) {
+                throw new RuntimeRepositoryException(e);
+            }
+        }
+    }
 }

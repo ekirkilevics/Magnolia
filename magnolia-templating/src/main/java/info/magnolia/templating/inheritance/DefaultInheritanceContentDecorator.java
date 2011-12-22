@@ -35,18 +35,27 @@ package info.magnolia.templating.inheritance;
 
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.inheritance.InheritanceContentDecorator;
+import info.magnolia.jcr.iterator.RangeIteratorImpl;
+import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.rendering.template.InheritanceConfiguration;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Provides an inheritance model that can be customized with configuration on the nodes. Inheritance can be completely
  * turned off or inheritance of nodes or properties can be turned off separately.
- *
+ * <p/>
  * The inheritance sources are found by looking at the node hierarchy, each node that qualifies as an anchor (node type
  * is mgnl:content) and has a node that with the same sub-path as the destination node has to its nearest parent is used.
- *
+ * <p/>
  * That is, for a destination node /page1/page2/main, the nearest anchor node is /page1/page2, therefor if there is a
  * node /page1/main then that is used as a source.
  *
@@ -54,10 +63,19 @@ import javax.jcr.RepositoryException;
  */
 public class DefaultInheritanceContentDecorator extends InheritanceContentDecorator {
 
-    public DefaultInheritanceContentDecorator(Node destination) throws RepositoryException {
-        super(destination);
+    private final InheritanceConfiguration configuration;
+    private AbstractPredicate<Node> componentPredicate;
+    private Comparator<Node> componentComparator;
 
-        if (isInheritanceEnabled(destination)) {
+    public DefaultInheritanceContentDecorator(Node destination, InheritanceConfiguration configuration) throws RepositoryException {
+        super(destination);
+        this.configuration = configuration;
+
+        componentPredicate = configuration.getComponentPredicate();
+
+        componentComparator = configuration.getComponentComparator();
+
+        if (configuration.isEnabled()) {
 
             Node firstAnchor = findFirstAnchor();
 
@@ -82,11 +100,6 @@ public class DefaultInheritanceContentDecorator extends InheritanceContentDecora
 
                         if (source != null) {
                             addSource(source);
-
-                            // if inheritance ends here we dont need to search for more sources
-                            if (!isInheritanceEnabled(source)) {
-                                break;
-                            }
                         }
                     }
 
@@ -121,27 +134,58 @@ public class DefaultInheritanceContentDecorator extends InheritanceContentDecora
 
     /**
      * True if this node is an anchor. By default true if this node is of type {@link info.magnolia.cms.core.MgnlNodeType#NT_CONTENT}.
+     *
+     * @param node the node to evaluate
+     * @return true if the node is an anchor
+     * @throws javax.jcr.RepositoryException if a problem occurs accessing the node
      */
     protected boolean isAnchor(Node node) throws RepositoryException {
         return node.isNodeType(MgnlNodeType.NT_CONTENT);
     }
 
-    protected boolean isInheritanceEnabled(Node node) throws RepositoryException {
-        return !node.hasProperty("inheritance/enabled") || Boolean.parseBoolean(node.getProperty("inheritance/enabled").getString());
-    }
-
     @Override
     protected boolean inheritsNodes(Node node) throws RepositoryException {
-        return !node.hasProperty("inheritance/nodes") || Boolean.parseBoolean(node.getProperty("inheritance/nodes").getString());
+        return configuration.isInheritsComponents();
     }
 
     @Override
     protected boolean inheritsProperties(Node node) throws RepositoryException {
-        return !node.hasProperty("inheritance/properties") || Boolean.parseBoolean(node.getProperty("inheritance/properties").getString());
+        return configuration.isInheritsProperties();
     }
 
     @Override
     protected boolean isSourceChildInherited(Node node) throws RepositoryException {
-        return !node.hasProperty("inherited") || Boolean.parseBoolean(node.getProperty("inherited").getString());
+        return componentPredicate.evaluateTyped(node);
+    }
+
+    @Override
+    protected NodeIterator sortInheritedNodes(NodeIterator destinationChildren, List<NodeIterator> sourceChildren) throws RepositoryException {
+        ArrayList<Node> nodes = new ArrayList<Node>();
+        while (destinationChildren.hasNext()) {
+            Node node = destinationChildren.nextNode();
+            nodes.add(node);
+        }
+        for (NodeIterator nodeIterator : sourceChildren) {
+            while (nodeIterator.hasNext()) {
+                Node node = nodeIterator.nextNode();
+                if (isSourceChildInherited(node)) {
+                    nodes.add(node);
+                }
+            }
+        }
+        Collections.sort(nodes, componentComparator);
+        return super.wrapNodeIterator(new NodeIteratorImpl(nodes));
+    }
+
+    private static class NodeIteratorImpl extends RangeIteratorImpl<Node> implements NodeIterator {
+
+        private NodeIteratorImpl(Collection<Node> nodes) {
+            super(nodes);
+        }
+
+        @Override
+        public Node nextNode() {
+            return super.next();
+        }
     }
 }

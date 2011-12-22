@@ -112,7 +112,7 @@ public class InheritanceContentDecorator extends AbstractContentDecorator {
     /**
      * Returns a predicate that delegates to {@link #isSourceChildInherited(Node)}.
      */
-    public AbstractPredicate<Node> getChildInheritancePredicate() {
+    private AbstractPredicate<Node> getChildInheritancePredicate() {
 
         if (childInheritancePredicate != null) {
             return childInheritancePredicate;

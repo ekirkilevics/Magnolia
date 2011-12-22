@@ -5,6 +5,7 @@
 /page1.@type = mgnl:page
 /page1/main.@type = mgnl:area
 /page1/main/0.@type = mgnl:component
+/page1/main/0.inheritable = true
 
 /page1/page2.@type = mgnl:page
 /page1/page2/main.@type = mgnl:area
@@ -15,8 +16,10 @@
 /page1.@type = mgnl:page
 /page1/main.@type = mgnl:area
 /page1/main/0.@type = mgnl:component
+/page1/main/0.inheritable = true
 
 /page1/page2.@type = mgnl:page
 /page1/page2/main.@type = mgnl:area
 /page1/page2/main/0.@type = mgnl:component
 /page1/page2/main/0.@type = mgnl:component
+/page1/page2/main/0.inheritable = true

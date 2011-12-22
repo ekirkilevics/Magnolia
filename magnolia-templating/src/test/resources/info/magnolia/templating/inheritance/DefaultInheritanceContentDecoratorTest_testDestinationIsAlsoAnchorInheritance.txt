@@ -4,6 +4,7 @@
 /page1.width = 123
 /page1/links.@type = mgnl:contentNode
 /page1/links.border = 456
+/page1/links.inheritable = true
 
 /page1/page2.@type = mgnl:page
 
