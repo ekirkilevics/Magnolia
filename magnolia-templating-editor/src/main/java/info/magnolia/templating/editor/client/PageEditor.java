@@ -49,8 +49,6 @@ import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -63,7 +61,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the {@code <html>} element).
@@ -99,15 +96,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 VisibilityHelper.getInstance().showRoot();
                 VisibilityHelper.getInstance().computeOverlay();
 
-
-                RootPanel.get().addDomHandler(new MouseUpHandler() {
-                    @Override
-                    public void onMouseUp(MouseUpEvent event) {
-                        VisibilityHelper.getInstance().deSelect();
-                        VisibilityHelper.getInstance().showRoot();
-                        VisibilityHelper.getInstance().computeOverlay();
-                    }
-                }, MouseUpEvent.getType());
             }
         });
 
