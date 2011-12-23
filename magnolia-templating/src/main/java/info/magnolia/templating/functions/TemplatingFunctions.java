@@ -595,6 +595,7 @@ public class TemplatingFunctions {
 
     private Node wrapForInheritance(Node destination) throws RepositoryException {
         ConfiguredInheritance inheritanceConfiguration = new ConfiguredInheritance();
+        inheritanceConfiguration.setEnabled(true);
         return new DefaultInheritanceContentDecorator(destination, inheritanceConfiguration).wrapNode(destination);
     }
 }

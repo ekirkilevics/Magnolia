@@ -1690,6 +1690,8 @@ public class TemplatingFunctionsTest {
 
     private InheritanceNodeWrapper wrapNodeForInheritance(Node destination) throws RepositoryException {
         ConfiguredInheritance configuration = new ConfiguredInheritance();
+        configuration.setEnabled(true);
+        configuration.setProperties(ConfiguredInheritance.PROPERTIES_ALL);
         configuration.setComponents(ConfiguredInheritance.COMPONENTS_ALL);
         return (InheritanceNodeWrapper) new DefaultInheritanceContentDecorator(destination, configuration).wrapNode(destination);
     }

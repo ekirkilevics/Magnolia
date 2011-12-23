@@ -58,7 +58,6 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Test case for {@link DefaultInheritanceContentDecorator}.
@@ -114,6 +113,7 @@ public class DefaultInheritanceContentDecoratorTest {
     public void testDisabledPropertyInheritance() throws Exception {
         Map<String, String> sections = loadSessionConfigs("testDisabledPropertyInheritance");
         ConfiguredInheritance inheritanceConfiguration = new ConfiguredInheritance();
+        inheritanceConfiguration.setEnabled(true);
         inheritanceConfiguration.setProperties(ConfiguredInheritance.PROPERTIES_NONE);
         Session session = wrapSessionForInheritance(sections, "/page1/page2/page3/main", inheritanceConfiguration);
         assertEquals(sections.get("Expected"), sessionToString(session));
@@ -128,20 +128,9 @@ public class DefaultInheritanceContentDecoratorTest {
         assertEquals(sections.get("Expected"), sessionToString(session));
     }
 
-    @Test
-    public void testDestinationIsAlsoAnchorInheritance() throws Exception {
-        Map<String, String> sections = loadSessionConfigs("testDestinationIsAlsoAnchorInheritance");
-        Session session = wrapSessionForInheritance(sections, "/page1/page2");
-
-        Node page = session.getNode("/page1/page2");
-
-        assertNotNull(page.getProperty("width"));
-        assertNotNull(page.getNode("links"));
-        assertNotNull(page.getProperty("links/border"));
-    }
-
     private Session wrapSessionForInheritance(Map<String, String> sections, String inheritanceNode) throws RepositoryException, IOException {
-        InheritanceConfiguration inheritanceConfiguration = new ConfiguredInheritance();
+        ConfiguredInheritance inheritanceConfiguration = new ConfiguredInheritance();
+        inheritanceConfiguration.setEnabled(true);
         return wrapSessionForInheritance(sections, inheritanceNode, inheritanceConfiguration);
     }
 

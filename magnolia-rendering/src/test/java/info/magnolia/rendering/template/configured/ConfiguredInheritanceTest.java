@@ -33,6 +33,7 @@
  */
 package info.magnolia.rendering.template.configured;
 
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.mock.MockComponentProvider;
@@ -61,6 +62,7 @@ public class ConfiguredInheritanceTest {
     @Test
     public void testInheritsPropertiesWhenSetToAll() throws Exception {
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setProperties(ConfiguredInheritance.PROPERTIES_ALL);
         assertTrue(inheritance.isInheritsProperties());
     }
@@ -68,6 +70,7 @@ public class ConfiguredInheritanceTest {
     @Test
     public void testDoesNotInheritPropertiesWhenSetToNone() throws Exception {
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setProperties(ConfiguredInheritance.PROPERTIES_NONE);
         assertFalse(inheritance.isInheritsProperties());
     }
@@ -75,6 +78,7 @@ public class ConfiguredInheritanceTest {
     @Test
     public void testDoesNotInheritPropertiesWhenSetToBlank() throws Exception {
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setProperties("");
         assertFalse(inheritance.isInheritsProperties());
     }
@@ -82,6 +86,7 @@ public class ConfiguredInheritanceTest {
     @Test
     public void testDoesNotInheritPropertiesWhenSetToUnknownValue() throws Exception {
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setProperties("unknown-value");
         assertFalse(inheritance.isInheritsProperties());
     }
@@ -97,6 +102,7 @@ public class ConfiguredInheritanceTest {
     @Test
     public void testInheritsComponentsWhenSetToAll() throws Exception {
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setComponents(ConfiguredInheritance.COMPONENTS_ALL);
         assertTrue(inheritance.isInheritsComponents());
     }
@@ -104,6 +110,7 @@ public class ConfiguredInheritanceTest {
     @Test
     public void testInheritsComponentsWhenSetToFiltered() throws Exception {
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setComponents(ConfiguredInheritance.COMPONENTS_FILTERED);
         assertTrue(inheritance.isInheritsComponents());
     }
@@ -111,6 +118,7 @@ public class ConfiguredInheritanceTest {
     @Test
     public void testDoesNotInheritComponentsWhenSetToNone() throws Exception {
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setComponents(ConfiguredInheritance.COMPONENTS_NONE);
         assertFalse(inheritance.isInheritsComponents());
     }
@@ -118,6 +126,7 @@ public class ConfiguredInheritanceTest {
     @Test
     public void testDoesNotInheritComponentsWhenSetToBlank() throws Exception {
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setComponents("");
         assertFalse(inheritance.isInheritsComponents());
     }
@@ -125,6 +134,7 @@ public class ConfiguredInheritanceTest {
     @Test
     public void testDoesNotInheritComponentsWhenSetToUnknownValue() throws Exception {
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setComponents("unknown-value");
         assertFalse(inheritance.isInheritsComponents());
     }
@@ -146,6 +156,7 @@ public class ConfiguredInheritanceTest {
         Components.setComponentProvider(new MockComponentProvider());
 
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setNodeComparatorClass(TestNodeComparator.class);
         assertTrue(inheritance.getComponentComparator() instanceof TestNodeComparator);
     }
@@ -155,6 +166,7 @@ public class ConfiguredInheritanceTest {
         Components.setComponentProvider(new MockComponentProvider());
 
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         assertTrue(inheritance.getComponentComparator() instanceof ConfiguredInheritance.NodeDepthComparator);
     }
 
@@ -163,17 +175,19 @@ public class ConfiguredInheritanceTest {
         Components.setComponentProvider(new MockComponentProvider());
 
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setPredicateClass(TestNodePredicate.class);
         assertTrue(inheritance.getComponentPredicate() instanceof TestNodePredicate);
     }
 
     @Test
-    public void testReturnsFilteringComponentPredicate() throws Exception {
+    public void testReturnsFilteredComponentInheritancePredicate() throws Exception {
         Components.setComponentProvider(new MockComponentProvider());
 
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setComponents(ConfiguredInheritance.COMPONENTS_FILTERED);
-        assertTrue(inheritance.getComponentPredicate() instanceof ConfiguredInheritance.FilteredChildInheritancePredicate);
+        assertTrue(inheritance.getComponentPredicate() instanceof ConfiguredInheritance.FilteredComponentInheritancePredicate);
     }
 
     @Test
@@ -181,8 +195,9 @@ public class ConfiguredInheritanceTest {
         Components.setComponentProvider(new MockComponentProvider());
 
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setComponents(ConfiguredInheritance.COMPONENTS_ALL);
-        assertTrue(inheritance.getComponentPredicate() instanceof ConfiguredInheritance.InheritEverythingInheritancePredicate);
+        assertTrue(inheritance.getComponentPredicate() instanceof ConfiguredInheritance.AllComponentsInheritancePredicate);
     }
 
     @Test
@@ -190,6 +205,7 @@ public class ConfiguredInheritanceTest {
         Components.setComponentProvider(new MockComponentProvider());
 
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setComponents(ConfiguredInheritance.COMPONENTS_NONE);
         assertTrue(inheritance.getComponentPredicate() instanceof ConfiguredInheritance.InheritNothingInheritancePredicate);
     }
@@ -199,6 +215,7 @@ public class ConfiguredInheritanceTest {
         Components.setComponentProvider(new MockComponentProvider());
 
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setComponents("");
         assertTrue(inheritance.getComponentPredicate() instanceof ConfiguredInheritance.InheritNothingInheritancePredicate);
     }
@@ -208,27 +225,29 @@ public class ConfiguredInheritanceTest {
         Components.setComponentProvider(new MockComponentProvider());
 
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
+        inheritance.setEnabled(true);
         inheritance.setComponents("unknown-value");
         assertTrue(inheritance.getComponentPredicate() instanceof ConfiguredInheritance.InheritNothingInheritancePredicate);
     }
 
     @Test
-    public void testFilteredChildInheritancePredicate() throws Exception {
-        ConfiguredInheritance.FilteredChildInheritancePredicate predicate = new ConfiguredInheritance.FilteredChildInheritancePredicate();
+    public void testFilteredComponentInheritancePredicate() throws Exception {
+        ConfiguredInheritance.FilteredComponentInheritancePredicate predicate = new ConfiguredInheritance.FilteredComponentInheritancePredicate();
         MockNode node = new MockNode();
+        node.setPrimaryType(MgnlNodeType.NT_COMPONENT);
 
         assertFalse(predicate.evaluateTyped(node));
 
-        node.setProperty(ConfiguredInheritance.FilteredChildInheritancePredicate.INHERITED_PROPERTY_NAME, "true");
+        node.setProperty(ConfiguredInheritance.FilteredComponentInheritancePredicate.INHERITED_PROPERTY_NAME, "true");
         assertTrue(predicate.evaluateTyped(node));
 
-        node.setProperty(ConfiguredInheritance.FilteredChildInheritancePredicate.INHERITED_PROPERTY_NAME, "true");
+        node.setProperty(ConfiguredInheritance.FilteredComponentInheritancePredicate.INHERITED_PROPERTY_NAME, "true");
         assertTrue(predicate.evaluateTyped(node));
 
-        node.setProperty(ConfiguredInheritance.FilteredChildInheritancePredicate.INHERITED_PROPERTY_NAME, "false");
+        node.setProperty(ConfiguredInheritance.FilteredComponentInheritancePredicate.INHERITED_PROPERTY_NAME, "false");
         assertFalse(predicate.evaluateTyped(node));
 
-        node.setProperty(ConfiguredInheritance.FilteredChildInheritancePredicate.INHERITED_PROPERTY_NAME, "");
+        node.setProperty(ConfiguredInheritance.FilteredComponentInheritancePredicate.INHERITED_PROPERTY_NAME, "");
         assertFalse(predicate.evaluateTyped(node));
     }
 

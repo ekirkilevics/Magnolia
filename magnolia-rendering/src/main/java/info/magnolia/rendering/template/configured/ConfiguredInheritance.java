@@ -33,8 +33,10 @@
  */
 package info.magnolia.rendering.template.configured;
 
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.template.InheritanceConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -57,7 +59,7 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
     public static final String PROPERTIES_ALL = "all";
     public static final String PROPERTIES_NONE = "none";
 
-    private boolean enabled = true;
+    private boolean enabled = false;
     private String components = COMPONENTS_FILTERED;
     private String properties = PROPERTIES_ALL;
     private Class<? extends AbstractPredicate<Node>> predicateClass;
@@ -99,10 +101,10 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
             return Components.newInstance(predicateClass);
         }
         if (StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_ALL)) {
-            return new InheritEverythingInheritancePredicate();
+            return new AllComponentsInheritancePredicate();
         }
         if (StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_FILTERED)) {
-            return new FilteredChildInheritancePredicate();
+            return new FilteredComponentInheritancePredicate();
         }
         return new InheritNothingInheritancePredicate();
     }
@@ -127,14 +129,14 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
      * Predicate for component inheritance that includes only nodes with a a property named 'inheritable' that needs to
      * be present and set to 'true'.
      */
-    public static class FilteredChildInheritancePredicate extends AbstractPredicate<Node> {
+    public static class FilteredComponentInheritancePredicate extends AbstractPredicate<Node> {
 
         public static final String INHERITED_PROPERTY_NAME = "inheritable";
 
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return node.hasProperty(INHERITED_PROPERTY_NAME) && Boolean.parseBoolean(node.getProperty(INHERITED_PROPERTY_NAME).getString());
+                return NodeUtil.isNodeType(node, MgnlNodeType.NT_COMPONENT) && (node.hasProperty(INHERITED_PROPERTY_NAME) && Boolean.parseBoolean(node.getProperty(INHERITED_PROPERTY_NAME).getString()));
             } catch (RepositoryException e) {
                 throw new RuntimeRepositoryException(e);
             }
@@ -144,11 +146,15 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
     /**
      * Predicate for component inheritance that includes all components.
      */
-    public static class InheritEverythingInheritancePredicate extends AbstractPredicate<Node> {
+    public static class AllComponentsInheritancePredicate extends AbstractPredicate<Node> {
 
         @Override
         public boolean evaluateTyped(Node node) {
-            return true;
+            try {
+                return NodeUtil.isNodeType(node, MgnlNodeType.NT_COMPONENT);
+            } catch (RepositoryException e) {
+                throw new RuntimeRepositoryException(e);
+            }
         }
     }
 
@@ -159,7 +165,7 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
 
         @Override
         public boolean evaluateTyped(Node node) {
-            return true;
+            return false;
         }
     }
 
