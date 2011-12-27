@@ -82,6 +82,9 @@ public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
             }
             //MgnlContext.initAsAnonymousContext(request, response, servletContext);
 
+            if(request.getSession(false) != null){
+                request.getSession().invalidate();
+            }
             if (chain instanceof MgnlFilterChain) {
                 ((MgnlFilterChain) chain).reset();
             }
