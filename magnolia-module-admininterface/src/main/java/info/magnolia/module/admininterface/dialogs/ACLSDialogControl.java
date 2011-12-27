@@ -45,7 +45,6 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.module.admininterface.AdminInterfaceModule;
 import info.magnolia.module.admininterface.config.AclTypeConfiguration;
 import info.magnolia.module.admininterface.config.PermissionConfiguration;
 import info.magnolia.module.admininterface.config.RepositoryConfiguration;
@@ -57,6 +56,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Iterator;
 
+import javax.inject.Inject;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,14 +66,19 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * @author Fabrizio Giustina
+ * Builds a dialog control for ACLs.
  * @version $Id:RolesACLPage.java 2516 2006-03-31 13:08:03Z philipp $
  */
 public class ACLSDialogControl extends DialogBox {
 
-    private static final String CSS_ACL_DIV = "aclDynamicTable"; //$NON-NLS-1$
+    private static final String CSS_ACL_DIV = "aclDynamicTable";
 
-    private SecurityConfiguration securityConf = AdminInterfaceModule.getInstance().getSecurityConfiguration();
+    @Inject
+    private SecurityConfiguration securityConf;
+
+    public ACLSDialogControl(SecurityConfiguration securityConf) {
+        this.securityConf = securityConf;
+    }
 
     private static String getHtmlRowInner(String dynamicTable, RepositoryConfiguration repoConf) {
         boolean small = true;
@@ -81,74 +86,74 @@ public class ACLSDialogControl extends DialogBox {
 
         Select accessRight = new Select();
         accessRight.setSaveInfo(false);
-        accessRight.setName("'+prefix+'AccessRight"); //$NON-NLS-1$
-        accessRight.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
+        accessRight.setName("'+prefix+'AccessRight");
+        accessRight.setCssClass("mgnlDialogControlSelect");
 
-        for (Iterator iter = repoConf.getPermissions().iterator(); iter.hasNext();) {
-            PermissionConfiguration permission = (PermissionConfiguration) iter.next();
-            accessRight.setOptions(escapeJs(permission.getI18nLabel()), Long.toString(permission.getValue())); //$NON-NLS-1$
+        for (Iterator<PermissionConfiguration> iter = repoConf.getPermissions().iterator(); iter.hasNext();) {
+            PermissionConfiguration permission = iter.next();
+            accessRight.setOptions(escapeJs(permission.getI18nLabel()), Long.toString(permission.getValue()));
         }
 
-        accessRight.setValue("' + object.accessRight + '"); //$NON-NLS-1$
+        accessRight.setValue("' + object.accessRight + '");
 
         Select accessType = new Select();
         accessType.setSaveInfo(false);
-        accessType.setName("'+prefix+'AccessType"); //$NON-NLS-1$
-        accessType.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
+        accessType.setName("'+prefix+'AccessType");
+        accessType.setCssClass("mgnlDialogControlSelect");
 
-        for (Iterator iter = repoConf.getAclTypes().iterator(); iter.hasNext();) {
-            AclTypeConfiguration patternType = (AclTypeConfiguration) iter.next();
-            accessType.setOptions(escapeJs(patternType.getI18nLabel()), String.valueOf(patternType.getType())); //$NON-NLS-1$
+        for (Iterator<AclTypeConfiguration> iter = repoConf.getAclTypes().iterator(); iter.hasNext();) {
+            AclTypeConfiguration patternType = iter.next();
+            accessType.setOptions(escapeJs(patternType.getI18nLabel()), String.valueOf(patternType.getType()));
         }
 
-        accessType.setValue("' + object.accessType + '"); //$NON-NLS-1$
+        accessType.setValue("' + object.accessType + '");
 
         Edit path = new Edit();
         path.setSaveInfo(false);
-        path.setName("'+prefix+'Path"); //$NON-NLS-1$
-        path.setValue("'+object.path+'"); //$NON-NLS-1$
+        path.setName("'+prefix+'Path");
+        path.setValue("'+object.path+'");
         path.setCssClass(CssConstants.CSSCLASS_EDIT);
-        path.setCssStyles("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
+        path.setCssStyles("width", "100%");
 
         Button choose = null;
         if(repoConf.isChooseButton()){
             choose = new Button();
-            choose.setLabel(escapeJs(msgs.get("buttons.choose"))); //$NON-NLS-1$
-            choose.setOnclick("aclChoose(\\''+prefix+'\\',\\'" + repoConf.getName() + "\\');"); //$NON-NLS-1$ //$NON-NLS-2$
+            choose.setLabel(escapeJs(msgs.get("buttons.choose")));
+            choose.setOnclick("aclChoose(\\''+prefix+'\\',\\'" + repoConf.getName() + "\\');");
             choose.setSmall(small);
         }
 
         Button delete = new Button();
-        delete.setLabel(escapeJs(msgs.get("buttons.delete"))); //$NON-NLS-1$
-        delete.setOnclick(dynamicTable + ".del('+index+');"); //$NON-NLS-1$
+        delete.setLabel(escapeJs(msgs.get("buttons.delete")));
+        delete.setOnclick(dynamicTable + ".del('+index+');");
         delete.setSmall(small);
 
-        StringBuffer html = new StringBuffer();
+        StringBuilder html = new StringBuilder();
         // set as table since ie/win does not support setting of innerHTML of a
         // tr
-        html.append("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>"); //$NON-NLS-1$
-        html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(accessRight.getHtml()).append("</td>"); //$NON-NLS-1$
-        html.append("<td width=\"1\" class=\"mgnlDialogBoxInput\"></td>"); //$NON-NLS-1$
+        html.append("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>");
+        html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(accessRight.getHtml()).append("</td>");
+        html.append("<td width=\"1\" class=\"mgnlDialogBoxInput\"></td>");
 
         // do we add the type selection dropdown?
         if(!repoConf.getAclTypes().isEmpty()){
-            html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(accessType.getHtml()).append("</td>"); //$NON-NLS-1$
-            html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
+            html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(accessType.getHtml()).append("</td>");
+            html.append("<td width=\"1\"></td>");
         }
         else {
-            html.append("<input type=\"hidden\" id=\"' + prefix + 'AccessType\" name=\"' + prefix + 'AccessType\" value=\"sub\"/>"); //$NON-NLS-1$
+            html.append("<input type=\"hidden\" id=\"' + prefix + 'AccessType\" name=\"' + prefix + 'AccessType\" value=\"sub\"/>");
         }
 
-        html.append("<td width=\"100%\"class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(path.getHtml()).append("</td>"); //$NON-NLS-1$
-        html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
+        html.append("<td width=\"100%\"class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(path.getHtml()).append("</td>");
+        html.append("<td width=\"1\"></td>");
 
         if (choose != null) {
-            html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(choose.getHtml()).append("</td>"); //$NON-NLS-1$
-            html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
+            html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(choose.getHtml()).append("</td>");
+            html.append("<td width=\"1\"></td>");
         }
 
-        html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(delete.getHtml()).append("</td>"); //$NON-NLS-1$
-        html.append("</tr></table>"); //$NON-NLS-1$
+        html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(delete.getHtml()).append("</td>");
+        html.append("</tr></table>");
 
         return html.toString();
     }
@@ -172,11 +177,11 @@ public class ACLSDialogControl extends DialogBox {
         Select repositorySelect = getRepositorySelect();
 
         out.print(repositorySelect.getHtml());
-        out.print("<p><p/>"); //$NON-NLS-1$
+        out.print("<p><p/>");
 
         // process with the real existing repositories
-        for (Iterator iter = securityConf.getVisibleRepositories().iterator(); iter.hasNext();) {
-            RepositoryConfiguration repositoryConf = (RepositoryConfiguration) iter.next();
+        for (Iterator<RepositoryConfiguration> iter = securityConf.getVisibleRepositories().iterator(); iter.hasNext();) {
+            RepositoryConfiguration repositoryConf = iter.next();
             try {
                 writeRepositoryTable(request, response, msgs, out, role, repositoryConf);
             }
@@ -186,7 +191,7 @@ public class ACLSDialogControl extends DialogBox {
         }
 
         // out.print("<p>&nbsp;<p>&nbsp;<p>&nbsp;<input type=\"button\" onclick=\"aclChangeRepository('website')\">");
-        out.println("<script type=\"text/javascript\">aclChangeRepository('website');</script>"); //$NON-NLS-1$
+        out.println("<script type=\"text/javascript\">aclChangeRepository('website');</script>");
     }
 
     /**
@@ -198,59 +203,59 @@ public class ACLSDialogControl extends DialogBox {
      */
     protected void writeRepositoryTable(HttpServletRequest request,  HttpServletResponse response, Messages msgs,
         PrintWriter out, Content role, RepositoryConfiguration repoConf) throws RepositoryException, IOException {
-        String tableName = "acl" + repoConf.getName() + "Table"; //$NON-NLS-1$ //$NON-NLS-2$
-        String dynamicTableName = "acl" + repoConf.getName() + "DynamicTable"; //$NON-NLS-1$ //$NON-NLS-2$
-        String hiddenFieldName = "acl" + repoConf.getName() + "List"; //$NON-NLS-1$ //$NON-NLS-2$
+        String tableName = "acl" + repoConf.getName() + "Table";
+        String dynamicTableName = "acl" + repoConf.getName() + "DynamicTable";
+        String hiddenFieldName = "acl" + repoConf.getName() + "List";
 
-        out.println("<div id=\"acl" + repoConf.getName() + "Div\" class=\"" + CSS_ACL_DIV + "\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        out.println("<div id=\"acl" + repoConf.getName() + "Div\" class=\"" + CSS_ACL_DIV + "\">"); //$NON-NLS-3$
         out.println(new Hidden(hiddenFieldName, StringUtils.EMPTY, false).getHtml());
 
         // the table
-        out.println("<table id=\"" //$NON-NLS-1$
+        out.println("<table id=\""
             + tableName
-            + "\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr><td></td></tr></table>"); //$NON-NLS-1$
+            + "\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr><td></td></tr></table>");
 
         // add button
-        out.println("<table width=\"100%\">"); //$NON-NLS-1$
+        out.println("<table width=\"100%\">");
         DialogButton add = DialogFactory.getDialogButtonInstance(request, response, null, null);
         add.setBoxType(DialogBox.BOXTYPE_1COL);
-        add.setConfig("buttonLabel", msgs.get("buttons.add")); //$NON-NLS-1$ //$NON-NLS-2$
-        add.setConfig("onclick", dynamicTableName + ".addNew();"); //$NON-NLS-1$ //$NON-NLS-2$
+        add.setConfig("buttonLabel", msgs.get("buttons.add"));
+        add.setConfig("onclick", dynamicTableName + ".addNew();");
         add.drawHtml(out);
-        out.println("</table>"); //$NON-NLS-1$
+        out.println("</table>");
 
-        out.println("</div>"); //$NON-NLS-1$
+        out.println("</div>");
 
-        out.println("<script type=\"text/javascript\">"); //$NON-NLS-1$
+        out.println("<script type=\"text/javascript\">");
         // register the repository
-        out.println("aclRepositories[aclRepositories.length]= '" + repoConf.getName() + "';"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.println("aclRepositories[aclRepositories.length]= '" + repoConf.getName() + "';");
 
         // make renderer function
-        out.println("function acl" + repoConf.getName() + "RenderFunction(cell, prefix, index, object)"); //$NON-NLS-1$ //$NON-NLS-2$
-        out.println("{"); //$NON-NLS-1$
+        out.println("function acl" + repoConf.getName() + "RenderFunction(cell, prefix, index, object)");
+        out.println("{");
 
         // get some debug informations
         out.println("mgnlDebug('acl" + repoConf.getName() + "RenderFunction: prefix = ' + prefix, 'acl', object)");
-        out.println("cell.innerHTML= '" + getHtmlRowInner(dynamicTableName, repoConf) + "';\n"); //$NON-NLS-1$ //$NON-NLS-2$
-        out.println("document.getElementById(prefix + 'AccessType').value = object.accessType;\n"); //$NON-NLS-1$
-        out.println("document.getElementById(prefix + 'AccessRight').value = object.accessRight;\n"); //$NON-NLS-1$
+        out.println("cell.innerHTML= '" + getHtmlRowInner(dynamicTableName, repoConf) + "';\n");
+        out.println("document.getElementById(prefix + 'AccessType').value = object.accessType;\n");
+        out.println("document.getElementById(prefix + 'AccessRight').value = object.accessRight;\n");
 
-        out.println("}"); //$NON-NLS-1$
+        out.println("}");
 
         // create the dynamicTable
-        out.println(dynamicTableName + " = new MgnlDynamicTable('" //$NON-NLS-1$
+        out.println(dynamicTableName + " = new MgnlDynamicTable('"
             + tableName
-            + "',document.getElementById('mgnlFormMain')." //$NON-NLS-1$
+            + "',document.getElementById('mgnlFormMain')."
             + hiddenFieldName
-            + ", aclGetNewPermissionObject, aclGetPermissionObject, acl" //$NON-NLS-1$
+            + ", aclGetNewPermissionObject, aclGetPermissionObject, acl"
             + repoConf.getName()
-            + "RenderFunction, null);"); //$NON-NLS-1$
+            + "RenderFunction, null);");
 
         // add existing acls to table (by js, so the same mechanism as at
         // adding rows can be used)
         addExistingAclToTable(out, role, dynamicTableName, repoConf);
 
-        out.println("</script>"); //$NON-NLS-1$
+        out.println("</script>");
     }
 
     /**
@@ -262,42 +267,42 @@ public class ACLSDialogControl extends DialogBox {
         // keeps acls per path
         ACLS acls = new ACLS();
 
-        Content aclsNode = ContentUtil.getContent(role, "acl_" + repoConf.getName()); //$NON-NLS-1$
+        Content aclsNode = ContentUtil.getContent(role, "acl_" + repoConf.getName());
         if (aclsNode == null || aclsNode.getChildren().size() == 0) {
-            out.println(dynamicTableName + ".addNew();"); //$NON-NLS-1$
+            out.println(dynamicTableName + ".addNew();");
             return;
         }
 
         Iterator it = aclsNode.getChildren().iterator();
         while (it.hasNext()) {
             Content c = (Content) it.next();
-            String path = c.getNodeData("path").getString(); //$NON-NLS-1$
-            String accessRight = c.getNodeData("permissions").getString(); //$NON-NLS-1$
+            String path = c.getNodeData("path").getString();
+            String accessRight = c.getNodeData("permissions").getString();
             acls.register(path, Integer.valueOf(accessRight).intValue(), repoConf);
         }
 
-        for (Iterator iter = acls.values().iterator(); iter.hasNext();) {
-            ACL acl = (ACL) iter.next();
-            out.println(dynamicTableName + ".add({accessRight:" //$NON-NLS-1$
+        for (Iterator<ACL> iter = acls.values().iterator(); iter.hasNext();) {
+            ACL acl = iter.next();
+            out.println(dynamicTableName + ".add({accessRight:"
                 + acl.accessRight
-                + ",accessType:'" //$NON-NLS-1$
+                + ",accessType:'"
                 + acl.type
-                + "',path:'" //$NON-NLS-1$
+                + "',path:'"
                 + acl.path
-                + "'});"); //$NON-NLS-1$
+                + "'});");
         }
     }
 
     private Select getRepositorySelect() {
         Select repositorySelect = new Select();
-        repositorySelect.setName("aclRepository"); //$NON-NLS-1$
-        repositorySelect.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
-        repositorySelect.setEvent("onchange", "aclChangeRepository(this.value)"); //$NON-NLS-1$ //$NON-NLS-2$
+        repositorySelect.setName("aclRepository");
+        repositorySelect.setCssClass("mgnlDialogControlSelect");
+        repositorySelect.setEvent("onchange", "aclChangeRepository(this.value)");
         repositorySelect.setSaveInfo(false);
         repositorySelect.setValue(RepositoryConstants.WEBSITE);
 
-        for (Iterator iter = securityConf.getVisibleRepositories().iterator(); iter.hasNext();) {
-            RepositoryConfiguration repoConf = (RepositoryConfiguration) iter.next();
+        for (Iterator<RepositoryConfiguration> iter = securityConf.getVisibleRepositories().iterator(); iter.hasNext();) {
+            RepositoryConfiguration repoConf = iter.next();
             repositorySelect.setOptions(repoConf.getI18nLabel(), repoConf.getName());
         }
         return repositorySelect;
@@ -321,7 +326,7 @@ public class ACLSDialogControl extends DialogBox {
         int accessRight;
 
         void registerEntry(String path) {
-            if (path.equals("/*")) {
+            if ("/*".equals(path)) {
                 type = AclTypeConfiguration.TYPE_ALL;
             }
             else if (path.endsWith("/*")) {
@@ -335,7 +340,6 @@ public class ACLSDialogControl extends DialogBox {
 
     /**
      * Used to create the gui values out of the entries in the repository
-     * @author Philipp Bracher
      * @version $Revision$ ($Author$)
      */
     protected class ACLS extends ListOrderedMap {
