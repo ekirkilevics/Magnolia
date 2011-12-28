@@ -21,7 +21,7 @@
     </div><!-- end search-results -->
 [/#if]
 
-
+<h4>New Search</h4>
 [#include "/samples/includes/searchForm.ftl" ]
 
 

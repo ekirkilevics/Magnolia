@@ -33,9 +33,11 @@
  */
 package info.magnolia.module.samples.model;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.util.SessionUtil;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.model.RenderingModelImpl;
@@ -80,18 +82,20 @@ public class InternalLinkModel extends RenderingModelImpl<RenderableDefinition> 
         public LinkItem(Node componentNode, String propertyName) throws ValueFormatException, PathNotFoundException, RepositoryException{
             if(componentNode.hasProperty(propertyName)){
                 String targetValue = componentNode.getProperty(propertyName).getString();
-                Session session = MgnlContext.getJCRSession("website");
+                Session session = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
 
                 //Link by path
                 if(targetValue.startsWith("/")){
-                    targetNode = session.getNode(targetValue);
+                    targetNode = SessionUtil.getNode(ContentRepository.WEBSITE, targetValue);
                 }
                 else {
                     //Link by identifier
                     targetNode = session.getNodeByIdentifier(targetValue);
                 }
-                targetContentMap = new ContentMap(targetNode);
-                targetLink = LinkUtil.createLink(new DefaultContent(targetNode));
+                if(targetNode != null) {
+                    targetContentMap = new ContentMap(targetNode);
+                    targetLink = LinkUtil.createLink(new DefaultContent(targetNode));
+                }
             }
 
         }

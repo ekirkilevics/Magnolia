@@ -42,24 +42,23 @@ h4 {
 }
 
 #navigation {
-    width: 100%;
+    width: 80%;
     background: #999;
-    height: 70px;
+    min-height: 40px;
     position: relative;
+}
+
+#header #search {
+    float: right;
+    margin: 0 0 0 20;
 }
 
 #navigation ul {
     list-style: none;
+    position: absolute;
     padding: 5px;
     margin-left: 2px;
 }
-
-#navigation ul.second {
-    list-style: none;
-    position: absolute;
-    top: 30px;
-}
-
 
 #navigation ul li {
     float: left;
@@ -88,7 +87,7 @@ h4 {
 }
 
 #stage {
-    width: 1000px;
+    width: 90%;
     height: 100%;
     margin: 4px auto;
     background: #DADBD4;

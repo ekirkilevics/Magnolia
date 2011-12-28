@@ -22,6 +22,10 @@
       <version>1.5/*</version>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <name>templating</name>
+      <version>4.5/*</version>
+    </dependency>
   </dependencies>
   <servlets>
     <servlet>

@@ -23,7 +23,7 @@ Text: ${content.text!("No text defined yet")}
 </p>
 
 
-
+<h4>New Search</h4>
 [#include "/samples/includes/searchForm.ftl" ]
 
 

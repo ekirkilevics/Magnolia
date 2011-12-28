@@ -1,10 +1,12 @@
-<div id="${def.name!}">
 
-[@cms.edit /]
 
-[#list components as component ]
-    [@cms.render content=component /]
-[/#list]
+<div id="${def.parameters.divId!}">
 
-</div><!-- end  ${def.name!} -->
+    [@cms.edit /]
+
+    [#list components as component ]
+        [@cms.render content=component /]
+    [/#list]
+
+</div><!-- end  ${def.parameters.divId!} -->
 

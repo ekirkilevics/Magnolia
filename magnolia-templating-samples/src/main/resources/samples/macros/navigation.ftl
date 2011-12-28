@@ -1,49 +1,24 @@
 
 
-[#macro renderNavigation pageNode maxDepth depth=0 ]
+[#macro renderNavigation pageNode maxDepth=2 ]
 
-    [#-- Is top page of the site structure -> rendering the top page on same navigation level as its sub-pages--]
-    [#assign isRootPage = (pageNode.@path==cmsfn.root(content, "mgnl:page").@path)!false]
-    [#if isRootPage && depth == 0]
-        [#if pageNode.@path != cmsfn.page(content).@path]
-            <li>
-                <a href="${cmsfn.link(pageNode)}">${pageNode.title!pageNode.@name}</a>
-            </li>
-        [#else]
-            <li class="selected">
-                <span>${pageNode.title!pageNode.@name}</span>
-            </li>
-        [/#if]
+    [#assign currentPage = cmsfn.page(content)]
+    [#assign isSelected = (pageNode.@path == currentPage.@path)!false]
+
+    [#if isSelected ]
+        <li class="selected">
+            <span>${pageNode.title!pageNode.@name}</span>
+        </li>
+    [#else]
+        <li>
+            <a href="${cmsfn.link(pageNode)}"><span>${pageNode.title!pageNode.@name}</span></a>
+        </li>
     [/#if]
 
-
-    [#assign childPages = cmsfn.children(pageNode, "mgnl:page")!]
-    [#-- Has child pages AND is not deeper as defined in max allowed depth. --]
-    [#if childPages?size!=0 && depth < maxDepth]
-        [#list childPages as childPage]
-
-            [#assign isSelected = (childPage.@path == cmsfn.page(content).@path)!false]
-            [#assign isSelectedParent = (childPage.@path == cmsfn.parent(cmsfn.page(content)).@path)!false]
-
-            [#if isSelected || isSelectedParent]
-                <li class="selected">
-                    [#if isSelected]
-                        <span>${childPage.title!childPage.@name}</span>
-                    [#else]
-                        <a href="${cmsfn.link(childPage)}"><span>${childPage.title!childPage.@name}</span></a>
-                    [/#if]
-                </li>
-                <ul class="second">
-                    [@renderNavigation childPage maxDepth depth+1 /]
-                </ul>
-            [#else]
-
-                <li>
-                    <a href="${cmsfn.link(childPage)}">${childPage.title!childPage.@name}</a>
-                </li>
-            [/#if]
-
+    [#if pageNode.@depth <  maxDepth]
+        [#list cmsfn.children(pageNode, "mgnl:page") as childPage]
+            [@renderNavigation childPage /]
         [/#list]
     [/#if]
-
+    
 [/#macro]

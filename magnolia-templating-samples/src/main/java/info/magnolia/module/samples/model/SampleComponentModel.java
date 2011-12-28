@@ -34,19 +34,23 @@
 package info.magnolia.module.samples.model;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.model.RenderingModelImpl;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.templating.functions.TemplatingFunctions;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * This model class is defined in the component definition in the configuration
@@ -62,9 +66,13 @@ public class SampleComponentModel extends RenderingModelImpl<RenderableDefinitio
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SampleComponentModel.class);
 
     private String query;
+    final private TemplatingFunctions functions;
 
-    public SampleComponentModel(Node content, RenderableDefinition definition, RenderingModel<?> parent) {
+
+    @Inject
+    public SampleComponentModel(Node content, RenderableDefinition definition, RenderingModel<?> parent, TemplatingFunctions functions) {
         super(content, definition, parent);
+        this.functions = functions;
         log.info("Running sample component model");
 
     }
@@ -77,10 +85,13 @@ public class SampleComponentModel extends RenderingModelImpl<RenderableDefinitio
         this.query = query;
     }
 
-    public List<ContentMap> getSearchResult(){
+    public List<ContentMap> getSearchResult() throws RepositoryException{
+
+        String rootPagePath = functions.root(content, MgnlNodeType.NT_PAGE).getPath();
+
         List<ContentMap> results = new ArrayList<ContentMap>();
 
-        String sql = "SELECT * from nt:base WHERE jcr:path like '/%' AND contains(*, '"+query+"') AND (jcr:primaryType = 'mgnl:content' OR jcr:primaryType = 'mgnl:contentNode') order by jcr:path";
+        String sql = "SELECT * from nt:base WHERE jcr:path like '"+rootPagePath+"/%' AND contains(*, '"+query+"') AND (jcr:primaryType = 'mgnl:page' OR jcr:primaryType = 'mgnl:area' OR jcr:primaryType = 'mgnl:component') order by jcr:path";
 
         //TODO cringele: QueryUtil should return Node and not Content. See SCRUM-293
         Collection<Content> contentList = QueryUtil.query(RepositoryConstants.WEBSITE, sql);

@@ -1,9 +1,11 @@
 
-<div id="${def.name!}">
 
-[@cms.edit/]
-[#if component??]
-    [@cms.render content=component /]
-[/#if]
+<div id="${def.parameters.divId!}">
 
-</div><!-- end  ${def.name!} -->
+    [@cms.edit/]
+
+    [#if component?exists]
+        [@cms.render content=component /]
+    [/#if]
+
+</div><!-- end  ${def.parameters.divId!} -->

@@ -10,13 +10,15 @@
     </head>
 
     <body>
+        [#-- ****** main page bar ****** --]
+        [@cms.edit/]
+
         <div id="wrapper">
-            [#-- ****** main page bar ****** --]
-            [@cms.edit/]
+
+
             <div id="header">
-                <div id="navigation">
-                    [#include "/samples/areas/navigation.ftl" ]
-                </div><!-- end navigation -->
+                [#-- ****** navigation area ****** --]
+                [@cms.area name="navigation" /]
             </div><!-- end navigation -->
 
 
@@ -29,7 +31,7 @@
                     <a href="${ctx.contextPath}${content.@path}/product2">Product 2</a>
                     <a href="${ctx.contextPath}${content.@path}/product3">Product 3</a>
                 </p>
-                <p>You selected: ${ctx.parameters.product!"none yet"}</p>
+                <p>You selected: <b>${ctx.parameters.product!"none yet"}</b></p>
                 <br />
                 <div>
                     <h3>Display Sources</h3><br />
@@ -40,6 +42,9 @@
                 <br />
 
             </div><!-- end main -->
+
+            [#-- ****** footer area ****** --]
+            [@cms.area name="footer" /]
 
         </div><!-- end wrapper -->
     </body>
