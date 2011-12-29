@@ -45,15 +45,15 @@ function getMousePos(evt)
     {
     if (!evt) { evt = window.event; }
     if (!document || !evt || !document.body || !document.documentElement) { return; }
-    
+
     var x = evt.pageX || (evt.clientX +
     (document.documentElement.scrollLeft || document.body.scrollLeft || 0) -
     (document.documentElement.clientLeft || 0));
-    
+
     var y = evt.pageY || (evt.clientY +
     (document.documentElement.scrollTop || document.body.scrollTop || 0) -
     (document.documentElement.clientTop || 0));
-    
+
     xMousePos = x;
     yMousePos = y;
 
@@ -378,6 +378,7 @@ function mgnlConfirm(text,title)
 function eventHandlerOnResize(e)
     {
     //resize tabs before resize of trees (in case there are any trees on a tab)
+    //console.log('inside eventHandlerOnResize()...')
     mgnlDialogResizeTabs();
     mgnlDialogLinkBrowserResize();
     mgnlTreeResize();
@@ -385,14 +386,14 @@ function eventHandlerOnResize(e)
 
 function mgnlEncodeURL(url)
     {
-	// encode only url parameters 
-	var urlParts = url.split('?');
-	if (urlParts.length > 1)
-	{
-		return urlParts[0] + "?" + encodeURI(urlParts[1]);
-	}
-	else
+  // encode only url parameters
+  var urlParts = url.split('?');
+  if (urlParts.length > 1)
+  {
+    return urlParts[0] + "?" + encodeURI(urlParts[1]);
+  }
+  else
     {
-		return url;
+    return url;
     }
-	}
+  }

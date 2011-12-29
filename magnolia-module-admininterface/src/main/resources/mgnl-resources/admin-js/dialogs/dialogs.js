@@ -89,12 +89,16 @@ function mgnlDialogResizeTabs()
         {
         if (mgnlControlSets[setElem].resize==true)
             {
+
             var hTab=sizeObj.h-mgnlTabTop-mgnlTabBottom;
             for (var tabElem in mgnlControlSets[setElem].items)
                 {
                 var tab=document.getElementById(mgnlControlSets[setElem].items[tabElem]+"_div");
+
                 if (tab)
                     {
+                    //console.log("height  " + sizeObj.h);
+                    //console.log("width  " + sizeObj.w);
                     tab.style.width=(sizeObj.w-2*mgnlTabLeft-2) + 'px'; // -2: border
                     tab.style.height=hTab + 'px';
                     }

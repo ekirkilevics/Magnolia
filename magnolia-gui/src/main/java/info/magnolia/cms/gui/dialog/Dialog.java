@@ -56,20 +56,20 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * @author Vinzenz Wyser
+ * Creates a dialog.
  * @version 2.0
  */
 public class Dialog extends DialogControlImpl {
 
-    public static final String DIALOGSIZE_NORMAL_WIDTH = "800"; //$NON-NLS-1$
+    public static final String DIALOGSIZE_NORMAL_WIDTH = "800";
 
-    public static final String DIALOGSIZE_NORMAL_HEIGHT = "650"; //$NON-NLS-1$
+    public static final String DIALOGSIZE_NORMAL_HEIGHT = "650";
 
-    public static final String DIALOGSIZE_SLIM_WIDTH = "500"; //$NON-NLS-1$
+    public static final String DIALOGSIZE_SLIM_WIDTH = "500";
 
-    public static final String DIALOGSIZE_SLIM_HEIGHT = "600"; //$NON-NLS-1$
+    public static final String DIALOGSIZE_SLIM_HEIGHT = "600";
 
-    private String callbackJavascript = "opener.document.location.reload();window.close();"; //$NON-NLS-1$
+    private String callbackJavascript = "opener.document.location.reload();window.close();";
 
     private List javascriptSources = new ArrayList();
 
@@ -108,7 +108,7 @@ public class Dialog extends DialogControlImpl {
     public void drawJavascriptSources(Writer out) throws IOException {
         Iterator it = this.getJavascriptSources().iterator();
         while (it.hasNext()) {
-            out.write("<script type=\"text/javascript\" src=\"" + it.next() + "\"></script>"); //$NON-NLS-1$ //$NON-NLS-2$
+            out.write("<script type=\"text/javascript\" src=\"" + it.next() + "\"></script>");
         }
     }
 
@@ -123,7 +123,7 @@ public class Dialog extends DialogControlImpl {
     public void drawCssSources(Writer out) throws IOException {
         Iterator it = this.getCssSources().iterator();
         while (it.hasNext()) {
-            out.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + it.next() + "\"/>"); //$NON-NLS-1$ //$NON-NLS-2$
+            out.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + it.next() + "\"/>");
         }
     }
 
@@ -154,8 +154,8 @@ public class Dialog extends DialogControlImpl {
         out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" ");
         out.write(" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
 
-        out.write("<html>"); //$NON-NLS-1$
-        out.write("<head>"); //$NON-NLS-1$
+        out.write("<html>");
+        out.write("<head>");
         this.drawHtmlPreSubsHead(out);
         // alert if a message was set
         if (AlertUtil.isMessageSet()) {
@@ -165,49 +165,58 @@ public class Dialog extends DialogControlImpl {
         }
         out.write("<script type=\"text/javascript\">mgnl.util.DHTMLUtil.addOnLoad(mgnlDialogInit);</script>");
 
-        out.write("</head>\n"); //$NON-NLS-1$
-        out.write("<body class=\"mgnlDialogBody\">\n"); //$NON-NLS-1$
+        out.write("</head>\n");
+        out.write("<body class=\"mgnlDialogBody\">\n");
         this.drawHtmlPreSubsForm(out);
         this.drawHtmlPreSubsTabSet(out);
     }
 
     protected void drawHtmlPreSubsHead(Writer out) throws IOException {
         out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"); // kupu
-        // //$NON-NLS-1$
-        out.write("<title>" //$NON-NLS-1$
-            + this.getMessage(this.getConfigValue("label", MessagesManager.get("dialog.editTitle"))) //$NON-NLS-1$ //$NON-NLS-2$
-            + "</title>\n"); //$NON-NLS-1$
+        //
+        out.write("<title>"
+            + this.getMessage(this.getConfigValue("label", MessagesManager.get("dialog.editTitle")))
+            + "</title>\n");
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlJs());
         out.write(new Sources(this.getRequest().getContextPath()).getHtmlCss());
-        out.write("<script type=\"text/javascript\">\n"); //$NON-NLS-1$
 
-        out.write("window.onresize = eventHandlerOnResize;\n"); //$NON-NLS-1$
-        out.write("window.resizeTo(" //$NON-NLS-1$
-            + this.getConfigValue("width", DIALOGSIZE_NORMAL_WIDTH) //$NON-NLS-1$
-            + "," //$NON-NLS-1$
-            + this.getConfigValue("height", DIALOGSIZE_NORMAL_HEIGHT) //$NON-NLS-1$
-            + ");\n"); //$NON-NLS-1$
-        out.write("</script>\n"); //$NON-NLS-1$
+        //using jQuery.ready() function to call dialog resizing functions only when DOM is ready. See MAGNOLIA-3846.
+        out.write("<script type=\"text/javascript\" src=\"");
+        out.write(this.getRequest().getContextPath());
+        out.write("/.resources/js/jquery/jquery-latest.min.js\"></script>\n");
+        out.write("<script type=\"text/javascript\">\n");
+        out.write("jQuery.noConflict();\n");
+        out.write("jQuery(document).ready(function($) {\n");
+        out.write("  window.onresize = eventHandlerOnResize;\n");
+        out.write("  window.resizeTo("
+                + this.getConfigValue("width", DIALOGSIZE_NORMAL_WIDTH)
+                + ","
+                + this.getConfigValue("height", DIALOGSIZE_NORMAL_HEIGHT)
+                + ");\n");
+        out.write("  mgnlDialogResizeTabs();\n");
+        out.write("  mgnlDialogShiftTab('" + this.getId() + "',false,0)\n");
+        out.write("});\n");
+        out.write("</script>\n");
 
         this.drawJavascriptSources(out);
         this.drawCssSources(out);
     }
 
     protected void drawHtmlPreSubsForm(Writer out) throws IOException {
-        out.write("<form action=\"" //$NON-NLS-1$
+        out.write("<form action=\""
             + this.getAction()
-            + "\" id=\"mgnlFormMain\" method=\"post\" enctype=\"multipart/form-data\"><div>\n"); //$NON-NLS-1$
-        out.write(new Hidden("mgnlDialog", this.getConfigValue("dialog"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write(new Hidden("mgnlRepository", this.getConfigValue("repository"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write(new Hidden("mgnlPath", this.getConfigValue("path"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write(new Hidden("mgnlNodeCollection", this.getConfigValue("nodeCollection"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write(new Hidden("mgnlNode", this.getConfigValue("node"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write(new Hidden("mgnlLocale", this.getConfigValue("locale"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write(new Hidden("mgnlJsCallback", this.getCallbackJavascript(), false).getHtml()); //$NON-NLS-1$
-        out.write(new Hidden("mgnlRichE", this.getConfigValue("richE"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write(new Hidden("mgnlRichEPaste", this.getConfigValue("richEPaste"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
-        if (this.getConfigValue("paragraph").indexOf(",") == -1) { //$NON-NLS-1$ //$NON-NLS-2$
-            out.write(new Hidden("mgnlParagraph", this.getConfigValue("paragraph"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
+            + "\" id=\"mgnlFormMain\" method=\"post\" enctype=\"multipart/form-data\"><div>\n");
+        out.write(new Hidden("mgnlDialog", this.getConfigValue("dialog"), false).getHtml());
+        out.write(new Hidden("mgnlRepository", this.getConfigValue("repository"), false).getHtml());
+        out.write(new Hidden("mgnlPath", this.getConfigValue("path"), false).getHtml());
+        out.write(new Hidden("mgnlNodeCollection", this.getConfigValue("nodeCollection"), false).getHtml());
+        out.write(new Hidden("mgnlNode", this.getConfigValue("node"), false).getHtml());
+        out.write(new Hidden("mgnlLocale", this.getConfigValue("locale"), false).getHtml());
+        out.write(new Hidden("mgnlJsCallback", this.getCallbackJavascript(), false).getHtml());
+        out.write(new Hidden("mgnlRichE", this.getConfigValue("richE"), false).getHtml());
+        out.write(new Hidden("mgnlRichEPaste", this.getConfigValue("richEPaste"), false).getHtml());
+        if (this.getConfigValue("paragraph").indexOf(",") == -1) {
+            out.write(new Hidden("mgnlParagraph", this.getConfigValue("paragraph"), false).getHtml());
         } // else multiple paragraph selection -> radios for selection
         if (StringUtils.isNotEmpty(this.getConfigValue("collectionNodeCreationItemType"))) {
             out.write(new Hidden("mgnlCollectionNodeCreationItemType", this.getConfigValue("collectionNodeCreationItemType"), false).getHtml());
@@ -219,28 +228,32 @@ public class Dialog extends DialogControlImpl {
 
     protected void drawHtmlPreSubsTabSet(Writer out) throws IOException {
         String id = this.getId();
-        out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
-        out.write("mgnlControlSets['" + id + "']=new Object();"); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write("mgnlControlSets['" + id + "'].items=new Array();"); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write("mgnlControlSets['" + id + "'].resize=true;"); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write("</script>\n"); //$NON-NLS-1$
+        out.write("<script type=\"text/javascript\">");
+        out.write("mgnlControlSets['" + id + "']=new Object();");
+        out.write("mgnlControlSets['" + id + "'].items=new Array();");
+        out.write("mgnlControlSets['" + id + "'].resize=true;");
+        out.write("</script>\n");
     }
 
     @Override
     public void drawHtmlPostSubs(Writer out) throws IOException {
         this.drawHtmlPostSubsTabSet(out);
         this.drawHtmlPostSubsButtons(out);
-
-        out.write("</div></form></body></html>"); //$NON-NLS-1$
+        out.write("</div></form></body></html>");
+        //out.write("\n<script type=\"text/javascript\">\n");
+        //calling mgnlDialogResizeTabs() as late as possible. See MAGNOLIA-3846.
+        //out.write("mgnlDialogResizeTabs();");
+        //out.write("</script>\n");
+        //out.write("</body></html>");
     }
 
     protected void drawHtmlPostSubsTabSet(Writer out) throws IOException {
         // TabSet stuff
         String id = this.getId();
-        out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETBUTTONBAR + "\">\n"); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr><td  class=\"" //$NON-NLS-1$
+        out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETBUTTONBAR + "\">\n");
+        out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr><td  class=\""
             + CssConstants.CSSCLASS_TABSETBUTTONBAR
-            + "\">"); //$NON-NLS-1$
+            + "\">");
         if (this.getOptions().size() != 0) {
             ButtonSet control = new ButtonSet();
             ((Button) this.getOptions().get(0)).setState(ControlImpl.BUTTONSTATE_PUSHED);
@@ -250,18 +263,17 @@ public class Dialog extends DialogControlImpl {
             control.setButtonType(ControlImpl.BUTTONTYPE_PUSHBUTTON);
             out.write(control.getHtml());
         }
-        out.write("</td></tr></table>\n</div>\n"); //$NON-NLS-1$
-        out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
-        out.write("mgnlDialogResizeTabs('" + id + "');"); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write("mgnlDialogShiftTab('" + id + "',false,0)"); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write("</script>\n"); //$NON-NLS-1$
+        out.write("</td></tr></table>\n</div>\n");
+        //out.write("<script type=\"text/javascript\">");
+        //out.write("mgnlDialogShiftTab('" + id + "',false,0)");
+        //out.write("</script>\n");
         // end TabSet stuff
     }
 
     protected void drawHtmlPostSubsButtons(Writer out) throws IOException {
         Messages msgs = MessagesManager.getMessages();
 
-        out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETSAVEBAR + "\">\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write("<div class=\"" + CssConstants.CSSCLASS_TABSETSAVEBAR + "\">\n");
 
         Button save = new Button();
         String saveOnclick = this.getConfigValue("saveOnclick", "mgnlDialogFormSubmit();");
@@ -274,10 +286,10 @@ public class Dialog extends DialogControlImpl {
         }
         Button cancel = new Button();
         cancel.setId("mgnlCancelButton");
-        cancel.setOnclick(this.getConfigValue("cancelOnclick", "window.close();")); //$NON-NLS-1$ //$NON-NLS-2$
-        cancel.setLabel(this.getConfigValue("cancelLabel", msgs.get("buttons.cancel"))); //$NON-NLS-1$ //$NON-NLS-2$
+        cancel.setOnclick(this.getConfigValue("cancelOnclick", "window.close();"));
+        cancel.setLabel(this.getConfigValue("cancelLabel", msgs.get("buttons.cancel")));
         out.write(cancel.getHtml());
 
-        out.write("</div>\n"); //$NON-NLS-1$
+        out.write("</div>\n");
     }
 }
