@@ -38,7 +38,7 @@ import info.magnolia.cms.core.search.QueryManagerImpl;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.PermissionUtil;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.SessionUtil;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;

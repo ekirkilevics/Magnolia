@@ -38,7 +38,7 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;

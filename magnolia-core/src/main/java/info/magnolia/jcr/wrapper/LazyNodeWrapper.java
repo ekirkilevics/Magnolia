@@ -38,7 +38,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 
 
 /**

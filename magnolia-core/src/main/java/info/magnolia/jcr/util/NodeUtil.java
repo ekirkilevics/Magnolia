@@ -37,7 +37,7 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.wrapper.DelegateNodeWrapper;

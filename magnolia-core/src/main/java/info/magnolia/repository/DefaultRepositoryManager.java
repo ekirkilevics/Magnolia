@@ -43,6 +43,7 @@ import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import info.magnolia.jcr.RuntimeRepositoryException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,6 @@ import info.magnolia.cms.core.version.MgnlVersioningSession;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Classes;

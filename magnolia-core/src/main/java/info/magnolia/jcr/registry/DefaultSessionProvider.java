@@ -34,7 +34,7 @@
 package info.magnolia.jcr.registry;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 
 import javax.jcr.Credentials;
 import javax.jcr.Repository;

@@ -35,7 +35,7 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.DefaultNodeData;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 
 import javax.jcr.RepositoryException;
 

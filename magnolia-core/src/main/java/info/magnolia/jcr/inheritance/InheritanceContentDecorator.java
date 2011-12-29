@@ -33,7 +33,7 @@
  */
 package info.magnolia.jcr.inheritance;
 
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.decoration.AbstractContentDecorator;
 import info.magnolia.jcr.decoration.ContentDecoratorNodeWrapper;
 import info.magnolia.jcr.iterator.ChainedNodeIterator;

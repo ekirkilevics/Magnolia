@@ -42,7 +42,7 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.NonExistingNodeData;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.test.mock.jcr.MockNode;
 
 import java.util.ArrayList;

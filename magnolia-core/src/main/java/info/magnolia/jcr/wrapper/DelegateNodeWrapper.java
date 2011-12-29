@@ -33,7 +33,7 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 
 import java.io.InputStream;
 import java.math.BigDecimal;

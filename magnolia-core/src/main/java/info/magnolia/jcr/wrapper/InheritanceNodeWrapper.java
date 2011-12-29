@@ -34,7 +34,7 @@
 package info.magnolia.jcr.wrapper;
 
 import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.iterator.ChainedNodeIterator;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.predicate.AbstractPredicate;

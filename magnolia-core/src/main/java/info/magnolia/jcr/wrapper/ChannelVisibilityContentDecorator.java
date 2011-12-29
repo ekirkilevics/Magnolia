@@ -38,7 +38,7 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.decoration.NodePredicateContentDecorator;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.exception;
+package info.magnolia.jcr;
 
 import javax.jcr.RepositoryException;
 
@@ -41,7 +41,7 @@ import javax.jcr.RepositoryException;
  * where it is necessary to unpack the cause to display an appropriate error message or rethrow it as a checked
  * exception.
  *
- * @author tmattson
+ * @version $Id$
  */
 public class RuntimeRepositoryException extends RuntimeException {
 

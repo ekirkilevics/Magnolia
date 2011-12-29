@@ -40,7 +40,7 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.SiblingsHelper;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.rendering.template.configured.ConfiguredInheritance;
 import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;

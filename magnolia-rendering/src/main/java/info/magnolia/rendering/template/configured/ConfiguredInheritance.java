@@ -34,7 +34,7 @@
 package info.magnolia.rendering.template.configured;
 
 import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Components;

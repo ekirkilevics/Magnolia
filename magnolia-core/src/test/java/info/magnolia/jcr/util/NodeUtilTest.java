@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -434,7 +434,7 @@ public class NodeUtilTest {
 
         // THEN
         List<Node> resAsList = NodeUtil.asList(res);
-        assertEquals("Should have no nodes  ", 0 , resAsList.size());
+        assertEquals("Should have no nodes  ", 0, resAsList.size());
     }
 
     @Test
@@ -447,6 +447,6 @@ public class NodeUtilTest {
 
         // THEN
         List<Node> resAsList = NodeUtil.asList(res);
-        assertEquals("Should have 2 nodes  ",2  , resAsList.size());
+        assertEquals("Should have 2 nodes  ", 2, resAsList.size());
     }
 }
