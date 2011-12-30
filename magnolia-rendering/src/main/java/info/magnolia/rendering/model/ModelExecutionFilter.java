@@ -204,7 +204,7 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
 
         TemplateDefinition templateDefinition;
         try {
-            templateDefinition = templateDefinitionRegistry.get(metaData.getTemplate());
+            templateDefinition = templateDefinitionRegistry.getTemplateDefinition(metaData.getTemplate());
         } catch (RegistrationException e) {
             throw new ServletException(e);
         }
@@ -221,7 +221,7 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
 
         Renderer renderer;
         try {
-            renderer = rendererRegistry.get(renderableDefinition.getRenderType());
+            renderer = rendererRegistry.getRenderer(renderableDefinition.getRenderType());
         } catch (RegistrationException e) {
             throw new ServletException(e);
         }

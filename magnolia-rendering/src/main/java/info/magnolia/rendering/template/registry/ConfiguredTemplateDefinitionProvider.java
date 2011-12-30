@@ -49,8 +49,8 @@ import javax.jcr.Node;
  */
 public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionProvider {
 
-    private String id;
-    private TemplateDefinition templateDefinition;
+    private final String id;
+    private final TemplateDefinition templateDefinition;
 
     public ConfiguredTemplateDefinitionProvider(String id, Node configNode) throws Content2BeanException {
         this.id = id;
@@ -67,7 +67,7 @@ public class ConfiguredTemplateDefinitionProvider implements TemplateDefinitionP
     }
 
     @Override
-    public TemplateDefinition getDefinition() throws RegistrationException {
+    public TemplateDefinition getTemplateDefinition() throws RegistrationException {
         return templateDefinition;
     }
 

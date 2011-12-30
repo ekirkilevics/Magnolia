@@ -110,7 +110,7 @@ public class RenderElementTest {
 
         RendererRegistry registry = mock(RendererRegistry.class);
         Renderer renderer = mock(Renderer.class);
-        when(registry.get("blah")).thenReturn(renderer);
+        when(registry.getRenderer("blah")).thenReturn(renderer);
         final AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
         DefaultRenderingEngine engine = new DefaultRenderingEngine(registry, templateDefinitionAssignment, new NoopVariationResolver(), new Provider<RenderingContext>() {
             @Override

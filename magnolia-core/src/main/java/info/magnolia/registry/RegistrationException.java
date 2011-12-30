@@ -35,13 +35,18 @@ package info.magnolia.registry;
 
 
 /**
- * Thrown in case a renderer can't be found or if the registration fails.
+ * Thrown by a registry when it doesn't hold an entity that is asked for or when it fails to create the entity.
  *
  * @version $Id$
+ * @see RegistryMap
  */
 public class RegistrationException extends Exception {
 
     public RegistrationException(String message) {
         super(message);
+    }
+
+    public RegistrationException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

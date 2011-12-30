@@ -124,10 +124,10 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
         manager.start();
 
         // THEN
-        assertNotNull(rendererRegistry.get("a"));
-        assertEquals("foo", ((MockTestRenderer) rendererRegistry.get("a")).getSomeProperty());
-        assertNotNull(rendererRegistry.get("b"));
-        assertEquals("bar", ((MockTestRenderer) rendererRegistry.get("b")).getSomeProperty());
+        assertNotNull(rendererRegistry.getRenderer("a"));
+        assertEquals("foo", ((MockTestRenderer) rendererRegistry.getRenderer("a")).getSomeProperty());
+        assertNotNull(rendererRegistry.getRenderer("b"));
+        assertEquals("bar", ((MockTestRenderer) rendererRegistry.getRenderer("b")).getSomeProperty());
     }
 
     @Test
@@ -140,8 +140,8 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
         manager.start();
 
         // THEN, make sure that it found renderer 'a'
-        assertNotNull(rendererRegistry.get("a"));
-        assertEquals("foo", ((MockTestRenderer) rendererRegistry.get("a")).getSomeProperty());
+        assertNotNull(rendererRegistry.getRenderer("a"));
+        assertEquals("foo", ((MockTestRenderer) rendererRegistry.getRenderer("a")).getSomeProperty());
 
         // WHEN we remove the node for renderer 'a' and add a new one 'c' in zedModule
         session.getNode("/modules/fooModule/renderers/a").remove();
@@ -157,13 +157,13 @@ public class ConfiguredRendererManagerTest extends MgnlTestCase {
 
         // THEN 'a' must be gone and the 'z' must have been found
         try {
-            rendererRegistry.get("a");
+            rendererRegistry.getRenderer("a");
             fail();
         } catch (RegistrationException expected) {
         }
-        assertNotNull(rendererRegistry.get("b"));
-        assertEquals("bar", ((MockTestRenderer) rendererRegistry.get("b")).getSomeProperty());
-        assertNotNull(rendererRegistry.get("c"));
-        assertEquals("zed", ((MockTestRenderer) rendererRegistry.get("c")).getSomeProperty());
+        assertNotNull(rendererRegistry.getRenderer("b"));
+        assertEquals("bar", ((MockTestRenderer) rendererRegistry.getRenderer("b")).getSomeProperty());
+        assertNotNull(rendererRegistry.getRenderer("c"));
+        assertEquals("zed", ((MockTestRenderer) rendererRegistry.getRenderer("c")).getSomeProperty());
     }
 }

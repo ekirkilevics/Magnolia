@@ -46,6 +46,7 @@ import info.magnolia.context.WebContext;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
@@ -152,11 +153,12 @@ public class RenderingFilterTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testDoFilterFailesOnNonRendererExceptions() throws Exception {
+    public void testDoFilterFailsOnNonRendererExceptions() throws Exception {
         // GIVEN
         MockWebContext context = new MockWebContext();
         AggregationState aggState = new AggregationState();
         aggState.setTemplateName(TEMPLATE_NAME);
+        aggState.setMainContent(new MockContent("mockContent"));
         context.setAggregationState(aggState);
         MgnlContext.setInstance(context);
 

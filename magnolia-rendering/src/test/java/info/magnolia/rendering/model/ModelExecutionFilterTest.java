@@ -104,7 +104,7 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
             }
 
             @Override
-            public TemplateDefinition getDefinition() throws RegistrationException {
+            public TemplateDefinition getTemplateDefinition() throws RegistrationException {
                 ConfiguredTemplateDefinition definition = new ConfiguredTemplateDefinition();
                 definition.setRenderType("test-renderer");
                 return definition;
@@ -233,12 +233,12 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
         RendererRegistry rendererRegistry = Components.getComponent(RendererRegistry.class);
         rendererRegistry.register(new RendererProvider() {
             @Override
-            public String getId() {
+            public String getType() {
                 return "test-renderer";
             }
 
             @Override
-            public Renderer getDefinition() throws RegistrationException {
+            public Renderer getRenderer() throws RegistrationException {
                 return renderer;
             }
         });

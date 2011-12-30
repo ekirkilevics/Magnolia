@@ -33,10 +33,44 @@
  */
 package info.magnolia.registry;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
- * @version $Id$
+ * Test case for {@link RegistryMap}.
  */
-public class DummyRegistry extends AbstractRegistry<String, DummyProvider>{
+public class RegistryMapTest {
 
+    @Test
+    public void testReturnsAddedValues() throws Exception {
+        RegistryMap<String, String> map = new RegistryMap<String, String>();
+        map.put("key", "value");
+        assertEquals("value", map.get("key"));
+    }
+
+    @Test
+    public void testReturnsNullWhenValueMissing() throws Exception {
+        RegistryMap<String, String> map = new RegistryMap<String, String>();
+        assertNull(map.get("key"));
+    }
+
+    @Test(expected = RegistrationException.class)
+    public void testThrowsExceptionWhenRequiredAndMissing() throws Exception {
+        RegistryMap<String, String> map = new RegistryMap<String, String>();
+        assertEquals("value", map.getRequired("key"));
+    }
+
+    @Test
+    public void testUsesKeyFromValueWhenAdding() throws Exception {
+        RegistryMap<String, String> map = new RegistryMap<String, String>() {
+            @Override
+            protected String keyFromValue(String value) {
+                return value.toUpperCase();
+            }
+        };
+        map.put("value");
+        assertEquals("value", map.get("VALUE"));
+    }
 }

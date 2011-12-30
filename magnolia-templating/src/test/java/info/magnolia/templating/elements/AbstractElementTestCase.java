@@ -106,9 +106,9 @@ public abstract class AbstractElementTestCase {
         final TemplateDefinitionProvider p0provider = mock(TemplateDefinitionProvider.class);
         final TemplateDefinitionProvider p1provider = mock(TemplateDefinitionProvider.class);
 
-        when(p0provider.getDefinition()).thenReturn(p0);
+        when(p0provider.getTemplateDefinition()).thenReturn(p0);
         when(p0provider.getId()).thenReturn(p0.getName());
-        when(p1provider.getDefinition()).thenReturn(p1);
+        when(p1provider.getTemplateDefinition()).thenReturn(p1);
         when(p1provider.getId()).thenReturn(p1.getName());
 
         final TemplateDefinitionRegistry pman = new TemplateDefinitionRegistry(null);
@@ -126,9 +126,9 @@ public abstract class AbstractElementTestCase {
         final TemplateDefinitionProvider t0provider = mock(TemplateDefinitionProvider.class);
         final TemplateDefinitionProvider t1provider = mock(TemplateDefinitionProvider.class);
 
-        when(t0provider.getDefinition()).thenReturn(t0);
+        when(t0provider.getTemplateDefinition()).thenReturn(t0);
         when(t0provider.getId()).thenReturn(t0.getName());
-        when(t1provider.getDefinition()).thenReturn(t1);
+        when(t1provider.getTemplateDefinition()).thenReturn(t1);
         when(t1provider.getId()).thenReturn(t1.getName());
 
         pman.register(t0provider);

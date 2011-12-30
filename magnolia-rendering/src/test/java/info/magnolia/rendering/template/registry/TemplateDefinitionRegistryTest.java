@@ -70,7 +70,7 @@ public class TemplateDefinitionRegistryTest {
         }
 
         @Override
-        public TemplateDefinition getDefinition() throws RegistrationException {
+        public TemplateDefinition getTemplateDefinition() throws RegistrationException {
             return templateDefinition;
         }
         @Override
@@ -133,7 +133,7 @@ public class TemplateDefinitionRegistryTest {
             }
 
             @Override
-            public TemplateDefinition getDefinition() throws RegistrationException {
+            public TemplateDefinition getTemplateDefinition() throws RegistrationException {
                 throw new RegistrationException("failing provider");
             }
         });

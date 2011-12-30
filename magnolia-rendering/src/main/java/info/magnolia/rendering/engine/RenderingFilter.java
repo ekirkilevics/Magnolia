@@ -139,7 +139,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
 
         TemplateDefinition templateDefinition;
         try {
-            templateDefinition = templateDefinitionRegistry.get(templateName);
+            templateDefinition = templateDefinitionRegistry.getTemplateDefinition(templateName);
         }
         catch (RegistrationException e) {
             throw new RenderException(e);

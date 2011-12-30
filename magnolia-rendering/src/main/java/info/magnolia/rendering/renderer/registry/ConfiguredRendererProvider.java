@@ -37,6 +37,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.renderer.Renderer;
 
 import javax.jcr.Node;
@@ -48,22 +49,27 @@ import javax.jcr.Node;
  */
 public class ConfiguredRendererProvider implements RendererProvider {
 
-    private String id;
-    private Renderer renderer;
+    private final String type;
+    private final Renderer renderer;
 
-    public ConfiguredRendererProvider(String id, Node configNode) throws Content2BeanException {
-        this.id = id;
+    public ConfiguredRendererProvider(String type, Node configNode) throws Content2BeanException {
+        this.type = type;
         Content content = ContentUtil.asContent(configNode);
         this.renderer = (Renderer) Content2BeanUtil.toBean(content, true, Renderer.class);
     }
 
     @Override
-    public String getId() {
-        return id;
+    public String getType() {
+        return type;
     }
 
     @Override
-    public Renderer getDefinition() {
+    public Renderer getRenderer() throws RegistrationException {
         return renderer;
+    }
+
+    @Override
+    public String toString() {
+        return "ConfiguredRendererProvider [type=" + type + ", renderer=" + renderer + "]";
     }
 }

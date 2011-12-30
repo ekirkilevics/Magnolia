@@ -123,7 +123,7 @@ public class AbstractTemplateElementTest extends AbstractElementTestCase {
 
         TemplateDefinitionRegistry registry = Components.getComponent(TemplateDefinitionRegistry.class);
         String template = info.magnolia.jcr.util.MetaDataUtil.getMetaData(content).getTemplate();
-        TemplateDefinition definition = registry.get(template);
+        TemplateDefinition definition = registry.getTemplateDefinition(template);
 
         assertEquals(expected, compo.getDefinitionMessage(definition, key));
     }

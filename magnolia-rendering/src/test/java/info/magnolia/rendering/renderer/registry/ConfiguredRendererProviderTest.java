@@ -35,6 +35,7 @@ package info.magnolia.rendering.renderer.registry;
 
 import static org.junit.Assert.assertEquals;
 import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.renderer.Renderer;
@@ -73,7 +74,7 @@ public class ConfiguredRendererProviderTest extends MgnlTestCase {
     }
 
     @Test
-    public void testGetDefinition() throws RepositoryException, Content2BeanException, IOException {
+    public void testGetDefinition() throws RepositoryException, Content2BeanException, IOException, RegistrationException {
         // GIVEN
         Session session = SessionTestUtil.createSession(RepositoryConstants.CONFIG,
                 "/test.class=" + TestRenderer.class.getName(),
@@ -83,7 +84,7 @@ public class ConfiguredRendererProviderTest extends MgnlTestCase {
 
         // WHEN
         ConfiguredRendererProvider provider = new ConfiguredRendererProvider("test", session.getNode("/test"));
-        TestRenderer renderer = (TestRenderer) provider.getDefinition();
+        TestRenderer renderer = (TestRenderer) provider.getRenderer();
 
         // THEN
         assertEquals("foobar123", renderer.getSomeProperty());

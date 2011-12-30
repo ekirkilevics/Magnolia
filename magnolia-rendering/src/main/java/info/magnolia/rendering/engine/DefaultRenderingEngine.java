@@ -114,7 +114,7 @@ public class DefaultRenderingEngine implements RenderingEngine {
             throw new RenderException("No renderType defined for definition [" + definition + "]");
         }
         try {
-            return rendererRegistry.get(renderType);
+            return rendererRegistry.getRenderer(renderType);
         } catch (RegistrationException e) {
             throw new RenderException("Can't find renderer [" + renderType + "]", e);
         }

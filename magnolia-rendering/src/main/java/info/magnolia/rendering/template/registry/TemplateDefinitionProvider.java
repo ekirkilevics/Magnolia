@@ -33,7 +33,7 @@
  */
 package info.magnolia.rendering.template.registry;
 
-import info.magnolia.registry.Provider;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
 
 /**
@@ -41,5 +41,9 @@ import info.magnolia.rendering.template.TemplateDefinition;
  *
  * @version $Id$
  */
-public interface TemplateDefinitionProvider extends Provider<TemplateDefinition>{
+public interface TemplateDefinitionProvider {
+
+    String getId();
+
+    TemplateDefinition getTemplateDefinition() throws RegistrationException;
 }

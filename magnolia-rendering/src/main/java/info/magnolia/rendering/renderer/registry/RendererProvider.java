@@ -33,7 +33,7 @@
  */
 package info.magnolia.rendering.renderer.registry;
 
-import info.magnolia.registry.Provider;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.renderer.Renderer;
 
 
@@ -42,6 +42,9 @@ import info.magnolia.rendering.renderer.Renderer;
  *
  * @version $Id$
  */
-public interface RendererProvider extends Provider<Renderer>{
+public interface RendererProvider {
 
+    String getType();
+
+    Renderer getRenderer() throws RegistrationException;
 }

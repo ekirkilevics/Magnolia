@@ -150,11 +150,11 @@ public abstract class AbstractDirectiveTestCase {
         final TemplateDefinitionProvider p1provider = mock(TemplateDefinitionProvider.class);
         final TemplateDefinitionProvider p2provider = mock(TemplateDefinitionProvider.class);
 
-        when(p0provider.getDefinition()).thenReturn(testParagraph0);
+        when(p0provider.getTemplateDefinition()).thenReturn(testParagraph0);
         when(p0provider.getId()).thenReturn(testParagraph0.getName());
-        when(p1provider.getDefinition()).thenReturn(testParagraph1);
+        when(p1provider.getTemplateDefinition()).thenReturn(testParagraph1);
         when(p1provider.getId()).thenReturn(testParagraph1.getName());
-        when(p2provider.getDefinition()).thenReturn(testParagraph2);
+        when(p2provider.getTemplateDefinition()).thenReturn(testParagraph2);
         when(p2provider.getId()).thenReturn(testParagraph2.getName());
 
         // TODO dlipp: next lines should be switched back to ComponentTestUtils as soon as SCRUM-201 is solved.

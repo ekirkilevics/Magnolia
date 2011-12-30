@@ -100,7 +100,7 @@ public class TemplateColumn extends TreeColumn {
 
         TemplateDefinition template = null;
         try {
-            template = templateManager.get(templateName);
+            template = templateManager.getTemplateDefinition(templateName);
         }
         catch (RegistrationException e) {
             log.error("Template with id {} doesn't exist.", templateName);

@@ -63,7 +63,7 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
         String templateName = content.getMetaData().getTemplate();
         TemplateDefinition template;
         try {
-            template = templateManager.get(templateName);
+            template = templateManager.getTemplateDefinition(templateName);
         }
         catch (RegistrationException e) {
             throw new UnhandledException(e);

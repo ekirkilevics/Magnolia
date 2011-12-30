@@ -284,7 +284,7 @@ public class EditBar extends TagSupport {
                 bar.placeDefaultButtons();
 
                 if (isShowParagraphName() && this.dialog == null) {
-                    final TemplateDefinition paragraphInfo = Components.getComponent(TemplateDefinitionRegistry.class).get(paragraphToUse);
+                    final TemplateDefinition paragraphInfo = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(paragraphToUse);
                     final Messages msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
                     final String label = msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle());
                     bar.setLabel(label);

@@ -217,7 +217,7 @@ public class EditButton extends TagSupport {
             String templateName = localContainer.getNodeData("dialog").getString();
             // TODO - use IoC for TemplateDefinitionRegistry?
             try {
-                return Components.getComponent(TemplateDefinitionRegistry.class).get(templateName).getTemplateScript();
+                return Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(templateName).getTemplateScript();
             } catch (RegistrationException e) {
                 // TODO dlipp: implement proper, consisitent ExceptionHandling!
                 throw new RuntimeException(e);

@@ -33,10 +33,13 @@
  */
 package info.magnolia.rendering.renderer.registry;
 
-import info.magnolia.registry.AbstractRegistry;
+import info.magnolia.registry.RegistryMap;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.renderer.Renderer;
 
 import javax.inject.Singleton;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Central registry of all renderers.
@@ -44,6 +47,37 @@ import javax.inject.Singleton;
  * @version $Id$
  */
 @Singleton
-public class RendererRegistry extends AbstractRegistry<Renderer, RendererProvider>{
+public class RendererRegistry {
 
+    private final RegistryMap<String, RendererProvider> registry = new RegistryMap<String, RendererProvider>() {
+
+        @Override
+        protected String keyFromValue(RendererProvider provider) {
+            return provider.getType();
+        }
+    };
+
+    public Renderer getRenderer(String type) throws RegistrationException {
+
+        RendererProvider provider;
+        try {
+            provider = registry.getRequired(type);
+        } catch (RegistrationException e) {
+            throw new RegistrationException("No renderer registered for type: " + type, e);
+        }
+
+        return provider.getRenderer();
+    }
+
+    public void register(RendererProvider rendererProvider) {
+        registry.put(rendererProvider.getType(), rendererProvider);
+    }
+
+    public void unregister(String type) {
+        registry.remove(type);
+    }
+
+    public Set<String> unregisterAndRegister(Set<String> registeredTypes, List<RendererProvider> providers) {
+        return registry.removeAndPutAll(registeredTypes, providers);
+    }
 }

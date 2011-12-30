@@ -60,7 +60,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
         TemplateDefinitionProvider provider = mock(TemplateDefinitionProvider.class);
         when(provider.getId()).thenReturn(templateId);
-        when(provider.getDefinition()).thenReturn(templateDefinition);
+        when(provider.getTemplateDefinition()).thenReturn(templateDefinition);
 
         registry.register(provider);
         MetaDataBasedTemplateDefinitionAssignment assignment = new MetaDataBasedTemplateDefinitionAssignment(registry);

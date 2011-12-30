@@ -108,12 +108,12 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
         manager.start();
 
         // THEN
-        TemplateDefinition a = templateDefinitionRegistry.get("fooModule:a");
+        TemplateDefinition a = templateDefinitionRegistry.getTemplateDefinition("fooModule:a");
         assertNotNull(a);
         assertEquals("fooModule:a", a.getId());
         assertEquals("fooTitle", a.getTitle());
 
-        TemplateDefinition b = templateDefinitionRegistry.get("barModule:articles/b");
+        TemplateDefinition b = templateDefinitionRegistry.getTemplateDefinition("barModule:articles/b");
         assertNotNull(b);
         assertEquals("barModule:articles/b", b.getId());
         assertEquals("barTitle", b.getTitle());
@@ -129,7 +129,7 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
         manager.start();
 
         // THEN, make sure that it found template 'a'
-        TemplateDefinition a = templateDefinitionRegistry.get("fooModule:a");
+        TemplateDefinition a = templateDefinitionRegistry.getTemplateDefinition("fooModule:a");
         assertNotNull(a);
         assertEquals("fooModule:a", a.getId());
 
@@ -146,17 +146,17 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
 
         // THEN 'a' must be gone and the 'z' must have been found
         try {
-            templateDefinitionRegistry.get("a");
+            templateDefinitionRegistry.getTemplateDefinition("a");
             fail();
         } catch (RegistrationException expected) {
         }
 
-        TemplateDefinition b = templateDefinitionRegistry.get("barModule:articles/b");
+        TemplateDefinition b = templateDefinitionRegistry.getTemplateDefinition("barModule:articles/b");
         assertNotNull(b);
         assertEquals("barModule:articles/b", b.getId());
         assertEquals("barTitle", b.getTitle());
 
-        TemplateDefinition c = templateDefinitionRegistry.get("zedModule:c");
+        TemplateDefinition c = templateDefinitionRegistry.getTemplateDefinition("zedModule:c");
         assertNotNull(c);
         assertEquals("zedModule:c", c.getId());
         assertEquals("zedTitle", c.getTitle());

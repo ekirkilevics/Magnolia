@@ -120,8 +120,8 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
 
         Renderer freemarkerRenderer = mock(Renderer.class);
         RendererProvider freemarkerRendererProvider = mock(RendererProvider.class);
-        when(freemarkerRendererProvider.getId()).thenReturn(FREEMARKER_RENDERER_TYPE);
-        when(freemarkerRendererProvider.getDefinition()).thenReturn(freemarkerRenderer);
+        when(freemarkerRendererProvider.getType()).thenReturn(FREEMARKER_RENDERER_TYPE);
+        when(freemarkerRendererProvider.getRenderer()).thenReturn(freemarkerRenderer);
         rendererRegistry.register(freemarkerRendererProvider);
 
         final StringBuilder builder = new StringBuilder();
@@ -152,8 +152,8 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
 
         Renderer freemarkerRenderer = mock(Renderer.class);
         RendererProvider freemarkerRendererProvider = mock(RendererProvider.class);
-        when(freemarkerRendererProvider.getId()).thenReturn(FREEMARKER_RENDERER_TYPE);
-        when(freemarkerRendererProvider.getDefinition()).thenReturn(freemarkerRenderer);
+        when(freemarkerRendererProvider.getType()).thenReturn(FREEMARKER_RENDERER_TYPE);
+        when(freemarkerRendererProvider.getRenderer()).thenReturn(freemarkerRenderer);
         rendererRegistry.register(freemarkerRendererProvider);
 
         final StringBuilder builder = new StringBuilder();
