@@ -72,10 +72,6 @@ import org.apache.commons.lang.StringUtils;
  *
  * @version $Id$
  */
-/**
- * @version $Id$
- *
- */
 public class AreaElement extends AbstractContentTemplatingElement {
 
     public static final String CMS_AREA = "cms:area";
