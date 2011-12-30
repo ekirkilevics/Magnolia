@@ -72,6 +72,10 @@ import org.apache.commons.lang.StringUtils;
  *
  * @version $Id$
  */
+/**
+ * @version $Id$
+ *
+ */
 public class AreaElement extends AbstractContentTemplatingElement {
 
     public static final String CMS_AREA = "cms:area";
@@ -171,8 +175,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     @Override
     public void end(Appendable out) throws RenderException {
+
         try {
-            if (isEnabled()) {
+            if (canRenderAreaScript()) {
                 Map<String, Object> contextObjects = new HashMap<String, Object>();
 
                 List<ContentMap> components = new ArrayList<ContentMap>();
@@ -205,7 +210,6 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 if(areaDefinition.getI18nBasename() == null && areaDefinition instanceof ConfiguredAreaDefinition){
                     ((ConfiguredAreaDefinition)areaDefinition).setI18nBasename(this.templateDefinition.getI18nBasename());
                 }
-
                 WebContext webContext = MgnlContext.getWebContext();
                 webContext.push(webContext.getRequest(), webContext.getResponse());
                 setAttributesInWebContext(contextAttributes, WebContext.LOCAL_SCOPE);
@@ -285,8 +289,26 @@ public class AreaElement extends AbstractContentTemplatingElement {
         throw new RenderException("Current RenderableDefinition [" + renderableDefinition + "] is not of type TemplateDefinition. Areas cannot be supported");
     }
 
-    private boolean isEnabled() {
-        return areaDefinition != null && areaDefinition.isEnabled();
+    /*
+     * An area script can be rendered when
+     * area is enabled
+     *
+     * AND
+     *
+     * If an area is optional:
+     *
+     * if not yet created the area bar has a create button and the script is
+     * - executed in the edit mode but the content object is null (otherwise we can't place the bar)
+     * - not executed otherwise (no place holder divs)
+     *
+     * If created, the bar has a remove button (other areas cannot be removed nor created)
+     *
+     * If an area is required:
+     *
+     * the area node gets created (always) the script is always executed.
+     */
+    private boolean canRenderAreaScript() {
+        return (areaDefinition != null && areaDefinition.isEnabled()) && (areaNode !=null || (areaNode == null && areaDefinition.isOptional() && !MgnlContext.getAggregationState().isPreviewMode()));
     }
 
     private String resolveDialog() {
