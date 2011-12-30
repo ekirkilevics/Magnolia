@@ -66,7 +66,7 @@ public class AggregationState {
     private String templateName;
     private Locale locale;
     private boolean isPreviewMode;
-    private Channel channel;
+    private Channel channel = new Channel();
 
     public void setOriginalURI(String originalURI) {
         final String strippedURI = stripContextPathIfExists(originalURI);

@@ -39,7 +39,10 @@ package info.magnolia.cms.core;
  * @version $Id$
  */
 public class Channel {
-    private String name;
+    /**
+     * Name of the channel - defaults to empty string.
+     */
+    private String name = "";
 
     public String getName() {
         return name;
