@@ -572,11 +572,15 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
 
         try {
             DelegateNodeWrapper clone = ((DelegateNodeWrapper) this.clone());
-            clone.setWrappedNode(deepUnwrappedNext);
+            clone.initClone(deepUnwrappedNext);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Failed to unwrap " + this.getClass().getName() + " due to " + e.getMessage(), e);
         }
+    }
+
+    protected void initClone(Node newNode) {
+        setWrappedNode(newNode);
     }
 
     @Override
