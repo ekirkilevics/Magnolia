@@ -156,7 +156,7 @@ public class Default implements CachePolicy {
         final String localeStr = (locale == null) ? null: locale.toString();
 
         // create composite key so we can easily check each part of it later
-        return new DefaultCacheKey(uri, serverName, localeStr, aggregationState.getChannel(), params, isSecure);
+        return new DefaultCacheKey(uri, serverName, localeStr, aggregationState.getChannel().getName(), params, isSecure);
     }
 
     @Override

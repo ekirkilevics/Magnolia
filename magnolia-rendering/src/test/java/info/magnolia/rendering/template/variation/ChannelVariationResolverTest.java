@@ -39,6 +39,7 @@ import org.junit.Test;
 
 import info.magnolia.beanmerger.BeanMerger;
 import info.magnolia.beanmerger.ProxyBasedBeanMerger;
+import info.magnolia.cms.core.Channel;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.AbstractMagnoliaTestCase;
@@ -85,7 +86,9 @@ public class ChannelVariationResolverTest extends AbstractMagnoliaTestCase {
     public void testChoosesTemplateVariationIfProperlySet() throws Exception {
         // GIVEN
         final MockWebContext mockContext = (MockWebContext) MockUtil.initMockContext();
-        mockContext.getAggregationState().setChannel(TEST_TEMPLATE_VARIATION_NAME);
+        final Channel channel = new Channel();
+        channel.setName(TEST_TEMPLATE_VARIATION_NAME);
+        mockContext.getAggregationState().setChannel(channel);
         final ChannelVariationResolver resolver = new ChannelVariationResolver();
 
         // WHEN
@@ -101,7 +104,9 @@ public class ChannelVariationResolverTest extends AbstractMagnoliaTestCase {
     public void testDoesNothingWhenVariationDoesntExist() throws Exception {
 
         MockWebContext mockContext = (MockWebContext) MockUtil.initMockContext();
-        mockContext.getAggregationState().setChannel("doesNotExist");
+        final Channel channel = new Channel();
+        channel.setName("doesNotExist");
+        mockContext.getAggregationState().setChannel(channel);
 
         final ChannelVariationResolver resolver = new ChannelVariationResolver();
         RenderableDefinition result = resolver.resolveVariation(templateDefinition);

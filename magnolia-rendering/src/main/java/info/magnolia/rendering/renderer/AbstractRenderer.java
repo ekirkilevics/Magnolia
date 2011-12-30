@@ -288,7 +288,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         if (aggregationState == null) {
             return content;
         }
-        String channel = aggregationState.getChannel();
+        String channel = aggregationState.getChannel().getName();
         if (StringUtils.isEmpty(channel) || channel.equalsIgnoreCase("all")) {
             return content;
         }

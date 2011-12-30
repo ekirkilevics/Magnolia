@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2003-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,35 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template.variation;
-
-import info.magnolia.beanmerger.BeanMergerUtil;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.rendering.template.RenderableDefinition;
+package info.magnolia.cms.core;
 
 /**
- * Resolver that will use the channel set in the AggregationState.
+ * POJO keeping all information about a channel.
  *
  * @version $Id$
  */
-public class ChannelVariationResolver implements RenderableVariationResolver {
+public class Channel {
+    private String name;
 
-    @Override
-    public RenderableDefinition resolveVariation(RenderableDefinition renderableDefinition) {
+    public String getName() {
+        return name;
+    }
 
-        if(!MgnlContext.isWebContext()){
-            return null;
-        }
-
-        final AggregationState aggregationState = MgnlContext.getAggregationState();
-
-        final String channelName = aggregationState.getChannel().getName();
-        RenderableDefinition defVariation = renderableDefinition.getVariations().get(channelName);
-        if (defVariation == null) {
-            return null;
-        }
-
-        return BeanMergerUtil.merge(defVariation, renderableDefinition);
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -45,6 +45,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Channel;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.cache.CachePolicy;
@@ -91,7 +92,10 @@ public class DefaultTest extends TestCase{
         replay(mocks);
         aggregationState.setCharacterEncoding("UTF-8");
         aggregationState.setLocale(Locale.ENGLISH);
-        aggregationState.setChannel("mobile");
+
+        final Channel channel = new Channel();
+        channel.setName("mobile");
+        aggregationState.setChannel(channel);
         aggregationState.setOriginalURI(uri);
 
         assertEquals(policy.retrieveCacheKey(aggregationState).toString(), "DefaultCacheKey{uri='localhost', serverName='test', locale='en', channel='mobile', params={testkey=testvalue}', secure='false'}");
