@@ -39,6 +39,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.inject.Provider;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Channel;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -73,6 +74,12 @@ public class GuiceContextAndScopesConfigurer extends AbstractGuiceComponentConfi
             @Override
             public AggregationState get() {
                 return MgnlContext.getAggregationState();
+            }
+        }).in(RequestScoped.class);
+        bind(Channel.class).toProvider(new Provider<Channel>() {
+            @Override
+            public Channel get() {
+                return MgnlContext.getAggregationState().getChannel();
             }
         }).in(RequestScoped.class);
         bind(HttpSession.class).toProvider(new Provider<HttpSession>() {
