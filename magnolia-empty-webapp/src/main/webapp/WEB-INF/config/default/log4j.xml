@@ -142,10 +142,6 @@ Number of occurrences: %o%n
     <priority value="INFO" />
     <appender-ref ref="log-activation" />
   </category>
-  <category name="info.magnolia.module.exchangetransactional" additivity="true">
-    <priority value="INFO" />
-    <appender-ref ref="log-activation" />
-  </category>
 
   <!-- bootstrapping -->
   <category name="info.magnolia.importexport.Bootstrapper" additivity="true">
