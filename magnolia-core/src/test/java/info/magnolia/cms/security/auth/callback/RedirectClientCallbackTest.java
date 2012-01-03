@@ -34,7 +34,13 @@
 package info.magnolia.cms.security.auth.callback;
 
 import static org.easymock.EasyMock.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContextImpl;
 import info.magnolia.test.ComponentsTestUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -113,5 +119,48 @@ public class RedirectClientCallbackTest {
         expect(request.getRequestURL()).andReturn(new StringBuffer("http://localhost/foo/some/path"));
 
         response.sendRedirect("http://sso.mycompany.com/login/?backto=http%3A%2F%2Flocalhost%2Ffoo%2Fsome%2Fpath");
+    }
+
+    @Test
+    public void testRedirectWithParameters() throws Exception {
+        final TestWebContext ctx = new TestWebContext();
+        ctx.addParameter("parameter1", "value1");
+        ctx.addParameter("parameter2", "value2");
+        MgnlContext.setInstance(ctx);
+
+        callback.setLocation("http://sso.mycompany.com/login");
+        expect(request.getRequestURI()).andReturn("/foo/some/path");
+        expect(request.getRequestURL()).andReturn(new StringBuffer("http://localhost/foo/some/path"));
+
+        response.sendRedirect("http://sso.mycompany.com/login?parameter2=value2&parameter1=value1");
+    }
+
+    private class TestWebContext extends WebContextImpl{
+
+        private static final long serialVersionUID = 5982180356157623760L;
+
+        private Map<String, String> parameters = new HashMap<String, String>();
+
+        public void addParameter(String key, String value){
+            parameters.put(key, value);
+        }
+
+        @Override
+        public Map<String, String> getParameters() {
+            return parameters;
+        }
+
+        @Override
+        public String[] getParameterValues(String key){
+            String [] field = new String[1];
+            field[0] = parameters.get(key).toString();
+            return field;
+        }
+
+        @Override
+        protected AggregationState newAggregationState() {
+            // TODO Auto-generated method stub
+            return null;
+        }
     }
 }

@@ -33,12 +33,17 @@
  */
 package info.magnolia.cms.security.auth.callback;
 
+import info.magnolia.context.MgnlContext;
+
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * An HttpClientCallback implementation which redirects to a configured path or URL.
@@ -56,7 +61,7 @@ public class RedirectClientCallback extends AbstractHttpClientCallback {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) {
-        final String target;
+        String target;
         if (location.startsWith("/")) {
             target = request.getContextPath() + location;
         } else {
@@ -70,7 +75,31 @@ public class RedirectClientCallback extends AbstractHttpClientCallback {
 
         try {
             // formats the target location with the request url, to allow passing it has a parameter, for instance.
-            final String encodedUrl = URLEncoder.encode(request.getRequestURL().toString(), "UTF-8");
+            String url = request.getRequestURL().toString();
+            if (MgnlContext.getParameters() != null && !MgnlContext.getParameters().isEmpty()) {
+                Set<String> keys = MgnlContext.getParameters().keySet();
+                String parameterString = "";
+                String[] values;
+                for (String key : keys) {
+                    // we don't want to pass along the mgnlLogut parameter on a
+                    // login action
+                    if (!key.equals("mgnlLogout")) {
+                        values = MgnlContext.getParameterValues(key);
+                        for (int i = 0; i < values.length; i++) {
+                            parameterString += key + "=" + values[i] + "&";
+                        }
+                    }
+                }
+                if (StringUtils.isNotBlank(parameterString)) {
+                    // cut off trailing "&"
+                    url += "?" + StringUtils.substringBeforeLast(parameterString, "&");
+                    target  += "?" + StringUtils.substringBeforeLast(parameterString, "&");
+                }
+            }
+            final String encodedUrl = URLEncoder.encode(url, "UTF-8");
+            
+
+
             final String formattedTarget = MessageFormat.format(target, encodedUrl);
             response.sendRedirect(formattedTarget);
         } catch (IOException e) {
