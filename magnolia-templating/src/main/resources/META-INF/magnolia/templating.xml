@@ -10,6 +10,7 @@
     <component>
       <type>info.magnolia.templating.functions.TemplatingFunctions</type>
       <implementation>info.magnolia.templating.functions.TemplatingFunctions</implementation>
+      <scope>singleton</scope>
     </component>
     <component>
       <type>info.magnolia.templating.freemarker.Directives</type>

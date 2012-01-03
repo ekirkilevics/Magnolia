@@ -42,8 +42,6 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
-import info.magnolia.rendering.template.configured.ConfiguredInheritance;
-import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
@@ -51,7 +49,9 @@ import info.magnolia.jcr.util.SessionUtil;
 import info.magnolia.jcr.wrapper.HTMLEscapingNodeWrapper;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.rendering.template.configured.ConfiguredInheritance;
 import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,8 +78,8 @@ public class TemplatingFunctions {
 
     //TODO: To review with Philipp. Should not use Provider, but has deep impact on CategorizationSupportImpl PageSyndicator CategorySyndicator....
     @Inject
-    public TemplatingFunctions(Provider<AggregationState> aggregationState) {
-        this.aggregationStateProvider = aggregationState;
+    public TemplatingFunctions(Provider<AggregationState> aggregationStateProvider) {
+        this.aggregationStateProvider = aggregationStateProvider;
     }
 
 
