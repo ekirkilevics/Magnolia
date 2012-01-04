@@ -33,8 +33,9 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.init.MagnoliaInitPaths;
+import info.magnolia.objectfactory.Components;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -177,7 +178,11 @@ public class ClasspathResourcesUtil {
     }
 
     protected static void collectFromFileSystem(Filter filter, Collection<String> resources) {
-        File dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/lib")); //$NON-NLS-1$
+        //We need to have access to the MAGNOLIA_APP_ROOTDIR. Unfortunately, this is not yet initialised.
+        String rootDire = Components.getComponent(MagnoliaInitPaths.class).getRootPath();
+        String libString = new File(new File(rootDire), "WEB-INF/lib").getAbsolutePath();
+
+        File dir = new File(libString); //$NON-NLS-1$
         if (dir.exists()) {
             File[] files = dir.listFiles(new FilenameFilter() {
                 @Override
@@ -192,7 +197,9 @@ public class ClasspathResourcesUtil {
         }
 
         // read files in WEB-INF/classes
-        File classFileDir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/classes"));
+        String classString = new File(new File(rootDire), "WEB-INF/classes").getAbsolutePath();
+        File classFileDir = new File(classString);
+
         if (classFileDir.exists()) {
             collectFiles(resources, classFileDir, filter);
         }
