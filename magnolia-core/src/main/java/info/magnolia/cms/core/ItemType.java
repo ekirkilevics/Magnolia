@@ -36,7 +36,7 @@ package info.magnolia.cms.core;
 import java.io.Serializable;
 
 /**
- * The Magnolia equivalent to {@link NodeType}.
+ * The Magnolia equivalent to {@link javax.jcr.nodetype.NodeType}.
  *
  * @version $Id$
  *
@@ -47,37 +47,37 @@ public final class ItemType implements Serializable {
     /**
      * Node type: base.
      */
-    public static final String NT_BASE = "nt:base";
+    public static final String NT_BASE = MgnlNodeType.NT_BASE;
 
     /**
      * Node type: unstructured.
      */
-    public static final String NT_UNSTRUCTURED = "nt:unstructured";
+    public static final String NT_UNSTRUCTURED = MgnlNodeType.NT_UNSTRUCTURED;
 
     /**
      * Node type: hierarchyNode.
      */
-    public static final String NT_HIERARCHY = "nt:hierarchyNode";
+    public static final String NT_HIERARCHY = MgnlNodeType.NT_HIERARCHY;
 
     /**
      * Node type: folder.
      */
-    public static final String NT_FOLDER = "mgnl:folder";
+    public static final String NT_FOLDER = MgnlNodeType.NT_FOLDER;
 
     /**
      * Node type: base.
      */
-    public static final String NT_FILE = "nt:file";
+    public static final String NT_FILE = MgnlNodeType.NT_FILE;
 
     /**
      * Node type: resource.
      */
-    public static final String NT_RESOURCE = "mgnl:resource";
+    public static final String NT_RESOURCE = MgnlNodeType.NT_RESOURCE;
 
     /**
      * Node type: metadata.
      */
-    public static final String NT_METADATA = "mgnl:metaData";
+    public static final String NT_METADATA = MgnlNodeType.NT_METADATA;
 
     /**
      * "wfe:workItem".
@@ -92,61 +92,60 @@ public final class ItemType implements Serializable {
     /**
      * Mixin: node has access control.
      */
-    public static final String MIX_ACCESSCONTROLLABLE = "mix:accessControllable";
+    public static final String MIX_ACCESSCONTROLLABLE = MgnlNodeType.MIX_ACCESSCONTROLLABLE;
 
     /**
      * Mixin: node can be referenced.
      */
-    public static final String MIX_REFERENCEABLE = "mix:referenceable";
+    public static final String MIX_REFERENCEABLE = MgnlNodeType.MIX_REFERENCEABLE;
 
     /**
      * Mixin: node can be versioned.
      */
-    public static final String MIX_VERSIONABLE = "mix:versionable";
+    public static final String MIX_VERSIONABLE = MgnlNodeType.MIX_VERSIONABLE;
 
-    public static final String MIX_LOCKABLE = "mix:lockable";
+    public static final String MIX_LOCKABLE = MgnlNodeType.MIX_LOCKABLE;
 
-    public static final String DELETED_NODE_MIXIN = "mgnl:deleted";
+    public static final String DELETED_NODE_MIXIN = MgnlNodeType.MIX_DELETED;
 
     /**
      * Magnolia content.
      * @deprecated use ItemType.CONTENT
      */
-    @Deprecated
     public static final String NT_CONTENT = "mgnl:content";
 
-    public static final String MGNL_NODE_DATA = "mgnl:nodeData";
+    public static final String MGNL_NODE_DATA = MgnlNodeType.MGNL_NODE_DATA;
 
-    public static final String NT_FROZENNODE = "nt:frozenNode";
+    public static final String NT_FROZENNODE = MgnlNodeType.NT_FROZENNODE;
 
-    public static final String JCR_FROZENNODE = "jcr:frozenNode";
+    public static final String JCR_FROZENNODE = MgnlNodeType.JCR_FROZENNODE;
 
-    public static final String JCR_FROZEN_PRIMARY_TYPE = "jcr:frozenPrimaryType";
+    public static final String JCR_FROZEN_PRIMARY_TYPE = MgnlNodeType.JCR_FROZEN_PRIMARY_TYPE;
 
-    public static final String JCR_PRIMARY_TYPE = "jcr:primaryType";
+    public static final String JCR_PRIMARY_TYPE = MgnlNodeType.JCR_PRIMARY_TYPE;
 
-    public static final String JCR_DATA = "jcr:data";
+    public static final String JCR_DATA = MgnlNodeType.JCR_DATA;
 
     /**
      * Magnolia content node.
      * @deprecated use ItemType.CONTENTNODE
      */
     @Deprecated
-    public static final String NT_CONTENTNODE = "mgnl:contentNode";
+    public static final String NT_CONTENTNODE = MgnlNodeType.NT_CONTENTNODE;
 
-    public static final ItemType CONTENT = new ItemType("mgnl:content");
+    public static final ItemType CONTENT = new ItemType(MgnlNodeType.NT_CONTENT);
 
-    public static final ItemType CONTENTNODE = new ItemType("mgnl:contentNode");
+    public static final ItemType CONTENTNODE = new ItemType(MgnlNodeType.NT_CONTENTNODE);
 
-    public static final ItemType USER = new ItemType("mgnl:user");
+    public static final ItemType USER = new ItemType(MgnlNodeType.USER);
 
-    public static final ItemType ROLE = new ItemType("mgnl:role");
+    public static final ItemType ROLE = new ItemType(MgnlNodeType.ROLE);
 
-    public static final ItemType GROUP = new ItemType("mgnl:group");
+    public static final ItemType GROUP = new ItemType(MgnlNodeType.GROUP);
 
-    public static final ItemType SYSTEM = new ItemType("mgnl:reserve");
+    public static final ItemType SYSTEM = new ItemType(MgnlNodeType.SYSTEM);
 
-    public static final ItemType JCR_CONTENT = new ItemType("jcr:content");
+    public static final ItemType JCR_CONTENT = new ItemType(MgnlNodeType.JCR_CONTENT);
 
     public static final ItemType FOLDER = new ItemType(NT_FOLDER);
 

@@ -33,12 +33,13 @@
  */
 package info.magnolia.cms.core;
 
+
 /**
- * Constant for node-types used within Magnolia.
+ * Constant for node-types used within Magnolia. Does not use {@link org.apache.jackrabbit.JcrConstants} from Jackrabbit's common-jar as these
+ * are not composed out of prefix and suffix so it would not be conveniently possible to query e.g. if a NodeType starts with
+ * MgnlNodeType.JCR_PREFIX.
  *
  * @version $Id$
- *
- * TODO dlipp - some of the constants are already available on {@link JcrConstants} in Jackrabbit's common-jar. Check whether we want to reuse them.
  */
 public final class MgnlNodeType {
 
@@ -80,7 +81,7 @@ public final class MgnlNodeType {
     /**
      * Node type: folder.
      * <p/>
-     * TODO dlipp: why not NodeType.NT_FOLDER - why prefixed with mgnl???
+     * TODO dlipp: shouldn't it be called MGNL_FOLDER???
      */
     public static final String NT_FOLDER = MGNL_PREFIX + "folder";
 
@@ -147,6 +148,7 @@ public final class MgnlNodeType {
 
     public static final String MIX_LOCKABLE = MIX_PREFIX + "lockable";
 
+    // TODO dlipp: shouldn't that constant be called MGNL_DELETED???
     public static final String MIX_DELETED = MGNL_PREFIX + "deleted";
 
     // JCR properties.
