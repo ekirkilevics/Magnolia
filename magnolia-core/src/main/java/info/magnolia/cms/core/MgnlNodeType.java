@@ -105,7 +105,7 @@ public final class MgnlNodeType {
     public static final String NT_CONTENT = MGNL_PREFIX + "content";
 
     /**
-     * Node tye: content node.
+     * Node type: content node.
      */
     public static final String NT_CONTENTNODE = MGNL_PREFIX + "contentNode";
 
