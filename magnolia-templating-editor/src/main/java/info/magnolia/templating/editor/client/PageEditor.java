@@ -346,7 +346,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 if (element.hasTagName("A")) {
                     disableLink(element);
                 }
-                if (element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString()) != 0 || element.getOffsetHeight() != 0) {
+                if (!element.getClassName().equals("mgnlAreaEditBar") && !element.getClassName().equals("mgnlEditBar") && element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString()) != 0 && element.getOffsetHeight() != 0) {
                     storage.addElement(mgnlElement, element);
 
                     MgnlElement area = mgnlElement;
@@ -357,7 +357,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                         if (area.getFirstElement() == null) {
                             area.setFirstElement(element);
                         }
-                        if (!storage.getElements(mgnlElement).contains(element.getParentElement())) {
+                        if (area.getLastElement() == null || !area.getLastElement().isOrHasChild(element)) {
                             area.setLastElement(element);
                         }
                     }
