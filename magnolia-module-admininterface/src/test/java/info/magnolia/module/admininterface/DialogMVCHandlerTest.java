@@ -48,9 +48,7 @@ import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
@@ -64,21 +62,17 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Id:$
+ * @version $Id$
  */
 public class DialogMVCHandlerTest extends TestCase{
-    
+
     private final class CustomValidatingSaveHandler implements ValidatingSaveHandler{
 
         private String repository;
 
         @Override
         public boolean validate() {
-            if(repository.equals("website")){
-                return true;
-            }else{
-                return false;
-            }
+            return "website".equals(repository);
         }
 
         @Override
@@ -110,45 +104,45 @@ public class DialogMVCHandlerTest extends TestCase{
         public String getRepository() {
             return null;
         }
-        
+
         @Override
-        public void init(MultipartForm form) {    
+        public void init(MultipartForm form) {
         }
-        
+
         @Override
         public boolean isCreate() {
             return false;
         }
-        
+
         @Override
         public boolean save() {
             return false;
         }
 
         @Override
-        public void setCreate(boolean create) {     
+        public void setCreate(boolean create) {
         }
 
         @Override
         public void setCreationItemType(ItemType creationItemType) {
         }
-        
+
         @Override
-        public void setNodeCollectionName(String nodeCollectionName) {   
+        public void setNodeCollectionName(String nodeCollectionName) {
         }
-        
+
         @Override
-        public void setNodeName(String nodeName) { 
+        public void setNodeName(String nodeName) {
         }
-        
+
         @Override
-        public void setParagraph(String paragraph) { 
+        public void setParagraph(String paragraph) {
         }
-        
+
         @Override
-        public void setPath(String path) {  
+        public void setPath(String path) {
         }
-        
+
         @Override
         public void setRepository(String repository) {
             this.repository = repository;
@@ -164,32 +158,32 @@ public class DialogMVCHandlerTest extends TestCase{
         public void setCollectionNodeCreationItemType(
                 ItemType collectionNodeCreationItemType) {
             // TODO Auto-generated method stub
-            
-        }  
+
+        }
     }
-    
+
     private final class DummyDialogMVCHandler extends DialogMVCHandler {
-        
+
         private CustomValidatingSaveHandler validSH = new CustomValidatingSaveHandler();
-        
+
         public DummyDialogMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
             super(name, request, response);
         }
-        
+
         @Override
         protected SaveHandler getSaveHandler(){
             return validSH;
         }
-        
+
     }
-    
+
     private final class DummyDialog extends Dialog {
-        
+
         @Override
-        protected void setValidationMessage(String msg) {  
-        }  
+        protected void setValidationMessage(String msg) {
+        }
     }
-    
+
     private HttpServletRequest request;
     private HttpServletResponse response;
     private WebContext context;
@@ -197,16 +191,16 @@ public class DialogMVCHandlerTest extends TestCase{
     private MultipartForm form;
     private Dialog dialog;
     private Object[] obj;
-    
+
     private DialogMVCHandler handler;
-           
+
     @Override
     public void setUp(){
         request = createNiceMock(HttpServletRequest.class);
         response = createNiceMock(HttpServletResponse.class);
         context = createNiceMock(WebContext.class);
         hm = createStrictMock(HierarchyManager.class);
-        
+
         form = new MultipartForm();
         form.addParameter("mgnlPath", "/test-project");
         form.addParameter("mgnlNodeCollection", "");
@@ -218,58 +212,58 @@ public class DialogMVCHandlerTest extends TestCase{
         form.addParameter("mgnlParagraph", "");
         form.addParameter("mgnlCollectionNodeCreationItemType", "");
         form.addParameter("mgnlCreationItemType", "");
-        
+
         ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
         MgnlContext.setInstance(context);
-        
+
         expect(context.getPostedForm()).andReturn(form);
         expect(context.getHierarchyManager("website")).andReturn(hm);
         obj = new Object[]{request, response, context, hm};
         replay(obj);
-        
-        handler = new DummyDialogMVCHandler("test", request, response); 
+
+        handler = new DummyDialogMVCHandler("test", request, response);
     }
-    
+
     //Dialog, CustomValidatingSaveHandler - both pass validation
     @Test
     public void testCustomValidatingSaveHandlerValid(){
-        
-        dialog = new DummyDialog();        
+
+        dialog = new DummyDialog();
         handler.setDialog(dialog);
         handler.getSaveHandler().setRepository("website");
-               
+
         assertTrue(handler.validate());
-        verify(obj); 
+        verify(obj);
     }
-  
+
     //Dialog pass validation, but CustomValidatingSaveHandler didn't pass validation
     @Test
     public void testCustomValidatingSaveHandlerInvalid(){
-        
-        dialog = new DummyDialog();        
+
+        dialog = new DummyDialog();
         handler.setDialog(dialog);
         handler.getSaveHandler().setRepository("dms");
-               
+
         assertFalse(handler.validate());
-        verify(obj); 
+        verify(obj);
     }
-    
+
     //Dialog didn't pass validation
     @Test
     public void testCustomValidatingSaveHandlerInvalid2(){
-        
+
         dialog = new DummyDialog();
         dialog.setRequired(true);
         dialog.setValue("");
         handler.setDialog(dialog);
         handler.getSaveHandler().setRepository("website");
-        
+
         assertFalse(handler.validate());
-        verify(obj); 
+        verify(obj);
     }
-    
+
     @Override
     public void tearDown(){
         ComponentsTestUtil.clear();
