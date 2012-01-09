@@ -64,6 +64,7 @@ public class FilterOrderingTask extends AbstractRepositoryTask {
     private final List<String> optionalFilters;
 
     /**
+     * @param filterName name of filter to be placed after the required filters.
      * @param requiredFiltersBefore an array of filter names that must appear <strong>before</strong> the filter specified as filterName.
      */
     public FilterOrderingTask(String filterName, String[] requiredFiltersBefore) {
