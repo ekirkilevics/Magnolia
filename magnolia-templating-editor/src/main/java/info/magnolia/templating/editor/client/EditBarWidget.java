@@ -34,7 +34,8 @@
 package info.magnolia.templating.editor.client;
 
 import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.templating.editor.client.dom.CMSBoundary;
+import info.magnolia.templating.editor.client.dom.CMSComment;
+import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -61,10 +62,10 @@ public class EditBarWidget extends AbstractBarWidget {
     private String parentAreaType;
     private boolean isInherited;
 
-    public EditBarWidget(final CMSBoundary boundary, final PageEditor pageEditor) {
+    public EditBarWidget(MgnlElement mgnlElement, CMSComment comment, final PageEditor pageEditor) {
 
-        super(boundary);
-        String content = boundary.getComment().getAttribute("content");
+        super(mgnlElement, comment);
+        String content = comment.getAttribute("content");
         int i = content.indexOf(':');
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
@@ -73,13 +74,13 @@ public class EditBarWidget extends AbstractBarWidget {
 
         setId("__"+id);
 
-        this.dialog = boundary.getComment().getAttribute("dialog");
+        this.dialog = comment.getAttribute("dialog");
 
-        if(boundary.getParentArea() != null) {
-            this.parentAreaType = boundary.getParentArea().getComment().getAttribute("type");
+        if(mgnlElement.getParentArea() != null) {
+            this.parentAreaType = mgnlElement.getParentArea().getComment().getAttribute("type");
         }
 
-        this.isInherited = Boolean.parseBoolean(boundary.getComment().getAttribute("inherited"));
+        this.isInherited = Boolean.parseBoolean(comment.getAttribute("inherited"));
 
         createButtons(pageEditor);
 

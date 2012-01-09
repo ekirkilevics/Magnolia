@@ -33,7 +33,8 @@
  */
 package info.magnolia.templating.editor.client;
 
-import info.magnolia.templating.editor.client.dom.CMSBoundary;
+
+import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -48,21 +49,15 @@ public class AbstractOverlayWidget extends FlowPanel {
 
     protected String label;
     protected int level = 1;
-    protected CMSBoundary boundary;
     private double top;
-    public AbstractOverlayWidget(CMSBoundary boundary) {
+    public AbstractOverlayWidget(MgnlElement element) {
 
-        this.boundary = boundary;
-        this.label = boundary.getComment().getAttribute("label");
+        this.label = element.getComment().getAttribute("label");
 
-        for (CMSBoundary parent = boundary.getParentBoundary(); parent != null; parent = parent.getParentBoundary()) {
+        for (MgnlElement parent = element.getParent(); parent != null; parent = parent.getParent()) {
             this.level++;
         }
 
-/*        Label overlayName = new InlineLabel(label);
-        overlayName.getElement().getStyle().setFontSize(15, Style.Unit.PX);
-        overlayName.getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
-        this.add(overlayName);*/
 
         this.setStyleName("mgnlOverlay");
 
@@ -94,10 +89,6 @@ public class AbstractOverlayWidget extends FlowPanel {
 
     public void setHeight(double height) {
         this.getElement().getStyle().setHeight(height, Style.Unit.PX);
-    }
-
-    public CMSBoundary getBoundary() {
-        return boundary;
     }
 
 

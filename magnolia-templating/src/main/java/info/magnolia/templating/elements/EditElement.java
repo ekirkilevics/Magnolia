@@ -96,8 +96,15 @@ public class EditElement extends AbstractContentTemplatingElement {
         Messages messages = MessagesManager.getMessages(templateDefinition.getI18nBasename());
         String label = templateDefinition.getTitle();
 
-        if (label != null && !label.isEmpty())
-            helper.attribute("label", messages.get(label));
+        if (StringUtils.isNotBlank(label)) {
+            helper.attribute("label", messages.getWithDefault(label, label));
+        }
+
+        String description = templateDefinition.getDescription();
+
+        if (StringUtils.isNotBlank(description)) {
+            helper.attribute("description", messages.getWithDefault(description, description));
+        }
 
         helper.attribute("format", format);
         String dialog = resolveDialog(templateDefinition);

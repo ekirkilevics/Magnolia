@@ -31,40 +31,22 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.model.focus;
 
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.dom.client.Element;
 
 import info.magnolia.templating.editor.client.dom.MgnlElement;
-import info.magnolia.templating.editor.client.model.ModelStorage;
 
 
 /**
- * Class for Area Overlay Widget.
+ * Interface for Focus Model.
  */
-public class AreaOverlayWidget extends AbstractOverlayWidget {
+public interface FocusModel {
 
-    public AreaOverlayWidget(final MgnlElement element) {
-        super(element);
-        this.addStyleName("area");
-        getElement().getStyle().setProperty("pointerEvents", "none");
+    public void reset();
 
-        addDomHandler(new MouseDownHandler() {
-            @Override
-            public void onMouseDown(MouseDownEvent event) {
-                //select();
-            }
-        }, MouseDownEvent.getType());
+    public void handleClick(MgnlElement mgnlElement);
 
-        addDomHandler(new MouseUpHandler() {
-            @Override
-            public void onMouseUp(MouseUpEvent event) {
-                ModelStorage.getInstance().getFocusModel().handleClick(element);
-                 event.stopPropagation();
-            }
-        }, MouseUpEvent.getType());
-    }
+    void handleClick(Element element);
+
 }

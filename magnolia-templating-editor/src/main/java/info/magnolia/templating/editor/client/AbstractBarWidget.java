@@ -34,7 +34,8 @@
 package info.magnolia.templating.editor.client;
 
 
-import info.magnolia.templating.editor.client.dom.CMSBoundary;
+import info.magnolia.templating.editor.client.dom.CMSComment;
+import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
@@ -52,21 +53,16 @@ import com.google.gwt.user.client.ui.Label;
  */
 public abstract class AbstractBarWidget extends FlowPanel {
 
-    private CMSBoundary boundary;
+    private MgnlElement boundary;
     protected boolean hasControls = false;
     private String label = "";
     private boolean toggleSelection = false;
 
-    public AbstractBarWidget(CMSBoundary boundary) {
+    public AbstractBarWidget(MgnlElement boundary, CMSComment comment) {
 
         this.setBoundary(boundary);
-        if (boundary != null) {
-            this.label = boundary.getComment().getAttribute("label");
-            if (label == null || label.isEmpty()) {
-                if (boundary.getParentArea() != null) {
-                    this.label = boundary.getParentArea().getComment().getAttribute("label");
-                }
-            }
+        if (comment != null) {
+            this.label = comment.getAttribute("label");
         }
 
         if (this.label != null && !this.label.isEmpty()) {
@@ -155,11 +151,11 @@ public abstract class AbstractBarWidget extends FlowPanel {
         parentNode.insertAfter(getElement(), node);
         onAttach();
     }
-    public void setBoundary(CMSBoundary boundary) {
+    public void setBoundary(MgnlElement boundary) {
         this.boundary = boundary;
     }
 
-    public CMSBoundary getBoundary() {
+    public MgnlElement getBoundary() {
         return boundary;
     }
 }

@@ -36,8 +36,9 @@ package info.magnolia.templating.editor.client;
 import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
 
 import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.templating.editor.client.dom.CMSBoundary;
 import info.magnolia.templating.editor.client.dom.CMSComment;
+import info.magnolia.templating.editor.client.dom.MgnlElement;
+import info.magnolia.templating.editor.client.model.ModelStorage;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Float;
@@ -69,10 +70,10 @@ public class AreaBarWidget extends AbstractBarWidget {
     private boolean optional = false;
     private boolean created = true;
 
-    public AreaBarWidget(CMSBoundary boundary, final PageEditor pageEditor) {
-        super(boundary);
+    public AreaBarWidget(MgnlElement mgnlElement, CMSComment comment, final PageEditor pageEditor) {
+        super(mgnlElement, comment);
 
-        String content = boundary.getComment().getAttribute("content");
+        String content = mgnlElement.getComment().getAttribute("content");
         if (content != null) {
             int i = content.indexOf(':');
 
@@ -80,56 +81,35 @@ public class AreaBarWidget extends AbstractBarWidget {
             this.path = content.substring(i + 1);
            }
 
-
-        CMSBoundary area = boundary.getParentArea();
-        boolean showBar = true;
-
-        for (CMSBoundary parentArea = boundary.getParentArea(); parentArea != null; parentArea = parentArea.getParentArea()) {
-            for (CMSBoundary child : parentArea.getChildBoundaries()) {
-                if (child.getWidget() != null) {
-                    showBar = false;
-                    break;
-                }
-            }
-            if (showBar == false) {
-                break;
-            }
-        }
-
-        if (showBar) {
-            VisibilityHelper.getInstance().addRoot(area);
-
-        }
-        //getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
         setVisible(false);
 
-        String areaContent = area.getComment().getAttribute("content");
+        String areaContent = mgnlElement.getComment().getAttribute("content");
         int i = areaContent.indexOf(':');
         this.areaWorkspace = areaContent.substring(0, i);
         this.areaPath = areaContent.substring(i + 1);
 
-        this.name = area.getComment().getAttribute("name");
-        this.type = area.getComment().getAttribute("type");
+        this.name = mgnlElement.getComment().getAttribute("name");
+        this.type = mgnlElement.getComment().getAttribute("type");
 
         GWT.log("Area ["+this.name+"] is of type " + this.type);
 
         if(AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
             this.availableComponents = "";
         } else {
-            this.availableComponents = area.getComment().getAttribute("availableComponents");
+            this.availableComponents = mgnlElement.getComment().getAttribute("availableComponents");
         }
 
-        this.dialog = boundary.getComment().getAttribute("dialog");
-        if (area.getComment().hasAttribute("showAddButton")) {
-            this.showAddButton = Boolean.parseBoolean(area.getComment().getAttribute("showAddButton"));
+        this.dialog = comment.getAttribute("dialog");
+        if (mgnlElement.getComment().hasAttribute("showAddButton")) {
+            this.showAddButton = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("showAddButton"));
         }
-        if (area.getComment().hasAttribute("optional")) {
-            this.optional = Boolean.parseBoolean(area.getComment().getAttribute("optional"));
-            this.created = Boolean.parseBoolean(area.getComment().getAttribute("created"));
+        if (comment.hasAttribute("optional")) {
+            this.optional = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("optional"));
+            this.created = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("created"));
         }
 
 
-        createButtons(pageEditor, boundary.getComment());
+        createButtons(pageEditor, mgnlElement.getComment());
         setClassName("mgnlAreaEditBar");
 
 
@@ -145,7 +125,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         addDomHandler(new MouseUpHandler() {
             @Override
             public void onMouseUp(MouseUpEvent event) {
-                VisibilityHelper.getInstance().toggleVisibility(getBoundary().getParentArea());
+                ModelStorage.getInstance().getFocusModel().handleClick(getBoundary().getParentArea());
                 event.stopPropagation();
             }
         }, MouseUpEvent.getType());

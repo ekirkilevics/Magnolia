@@ -37,6 +37,7 @@ package info.magnolia.templating.editor.client;
 import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
+import info.magnolia.templating.editor.client.model.ModelStorage;
 
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
@@ -59,7 +60,7 @@ public class PageBarWidget extends AbstractBarWidget {
     private boolean previewMode = false;
 
     public PageBarWidget(final PageEditor pageEditor, final CMSComment comment) {
-        super(null);
+        super(null, null);
         this.pageEditor = pageEditor;
 
         String content = comment.getAttribute("content");
@@ -77,7 +78,7 @@ public class PageBarWidget extends AbstractBarWidget {
         addDomHandler(new MouseUpHandler() {
             @Override
             public void onMouseUp(MouseUpEvent event) {
-                VisibilityHelper.getInstance().showRoot();
+                ModelStorage.getInstance().getFocusModel().reset();
             }
         }, MouseUpEvent.getType());
     }
