@@ -51,6 +51,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import net.sf.ehcache.constructs.blocking.LockTimeoutException;
@@ -153,16 +154,29 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
             final long end = System.currentTimeMillis();
 
             if(blockingTimeout != -1 && (end-start) >= blockingTimeout){
-                log.warn("The following URL took longer than {} seconds ({} ms) to render. This might cause timeout exceptions on other requests to the same URI. [url={}], [key={}]", new Object[]{blockingTimeout/1000, (end-start), request.getRequestURL(), cachePolicyResult.getCacheKey()});
+                log.warn("The following URL took longer than {} seconds ({} ms) to render. This might cause timeout exceptions on other requests to the same URI. [url={}], [key={}]", new Object[]{blockingTimeout/1000, (end-start), request.getRequestURL(), stripPasswordFromCacheLog(cachePolicyResult.getCacheKey().toString())});
             }
         }
         catch (Throwable th) {
             if(cachePolicyResult.getBehaviour() == CachePolicyResult.store && cache instanceof BlockingCache){
-                log.error("A request started to cache but failed with an exception ({}). [url={}], [key={}]", new Object[]{ExceptionUtils.getRootCauseMessage(th), request.getRequestURL(), cachePolicyResult.getCacheKey()});
+                log.error("A request started to cache but failed with an exception ({}). [url={}], [key={}]", new Object[]{ExceptionUtils.getRootCauseMessage(th), request.getRequestURL(), stripPasswordFromCacheLog(cachePolicyResult.getCacheKey().toString())});
                 ((BlockingCache) cache).unlock(cachePolicyResult.getCacheKey());
             }
             throw new RuntimeException(th);
         }
     }
 
+    private String stripPasswordFromCacheLog(String log){
+        String value = null;
+        if(log != null){
+            value = StringUtils.substringBefore(log, "mgnlUserPSWD");
+            String afterString = StringUtils.substringAfter(log, "mgnlUserPSWD");
+            if(afterString.indexOf(" ") < afterString.indexOf("}")){
+                value = value + StringUtils.substringAfter(afterString, " ");
+            }else{
+                value = value + "}" + StringUtils.substringAfter(afterString, "}");
+            }
+        }
+        return value;
+    }
 }
