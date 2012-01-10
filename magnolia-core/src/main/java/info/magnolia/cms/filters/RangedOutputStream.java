@@ -39,6 +39,9 @@ import java.io.IOException;
 
 import javax.servlet.ServletOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Range limited output stream. Will output only bytes in given range, ignoring the rest.
  * 
@@ -47,6 +50,8 @@ import javax.servlet.ServletOutputStream;
  */
 public class RangedOutputStream extends ServletOutputStream {
 
+    private static final Logger log = LoggerFactory.getLogger(RangedOutputStream.class);
+
     private final ServletOutputStream out;
 
     private long writtenCount = 0;
@@ -54,6 +59,7 @@ public class RangedOutputStream extends ServletOutputStream {
     private final RangeInfo range;
 
     public RangedOutputStream(ServletOutputStream stream, RangeInfo range) {
+        log.debug("Using ranged stream");
         out = stream;
         this.range = range;
     }
@@ -66,4 +72,11 @@ public class RangedOutputStream extends ServletOutputStream {
         writtenCount++;
     }
 
+    @Override
+    public void close() throws IOException {
+        int rangeLen = range.end - range.start;
+        int written = (int) Math.min(rangeLen, writtenCount);
+        log.debug("Closing ranged stream after writing {} bytes into range {} bytes of total {} received bytes", new Object[] { written, rangeLen, writtenCount });
+        super.close();
+    }
 }

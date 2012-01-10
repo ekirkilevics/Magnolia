@@ -701,29 +701,34 @@
     <sv:property sv:name="wrapWriter" sv:type="Boolean">
       <sv:value>true</sv:value>
     </sv:property>
-    <sv:node sv:name="MetaData">
+    <sv:node sv:name="bypasses">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
+        <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
-      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-        <sv:value>false</sv:value>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>15815666-356f-455e-89e9-e67748a6466b</sv:value>
       </sv:property>
-      <sv:property sv:name="mgnl:activatorid" sv:type="String">
-        <sv:value>superuser</sv:value>
+      <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
       </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-07-28T23:39:30.812+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-        <sv:value>2007-05-31T13:53:07.930+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2011-11-14T09:21:01.265+01:00</sv:value>
-      </sv:property>
+      <sv:node sv:name="docroot">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>d0963717-ea60-4930-8e98-e14769e19d7e</sv:value>
+        </sv:property>
+        <sv:property sv:name="class" sv:type="String">
+          <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
+        </sv:property>
+        <sv:property sv:name="pattern" sv:type="String">
+          <sv:value>/docroot</sv:value>
+        </sv:property>
     </sv:node>
+  </sv:node>
   </sv:node>
   <sv:node sv:name="i18n">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

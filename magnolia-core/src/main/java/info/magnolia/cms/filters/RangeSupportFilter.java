@@ -128,18 +128,41 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
             }
 
             @Override
+            public void setDateHeader(String name, long date) {
+                super.setDateHeader(name, date);
+                this.headers.put(name, date);
+                if ("Last-Modified".equalsIgnoreCase(name)) {
+                    lastModTime = date;
+                }
+            }
+
+            @Override
             public void addHeader(String name, String value) {
-                // FIXME: only for rejected types (aka dms)
-                if ("Content-Disposition".equalsIgnoreCase(name)) {
-                    log.error("content disposition enforced by underlying filter/servlet");
+                if ("Content-Disposition".equalsIgnoreCase(name) && log.isDebugEnabled()) {
+                    log.warn("content disposition enforced by underlying filter/servlet");
                 }
                 super.addHeader(name, value);
                 this.headers.put(name, value);
             }
 
             @Override
+            public void setHeader(String name, String value) {
+                if ("Content-Disposition".equalsIgnoreCase(name) && log.isDebugEnabled()) {
+                    log.warn("content disposition enforced by underlying filter/servlet");
+                }
+                super.setHeader(name, value);
+                this.headers.put(name, value);
+            }
+
+            @Override
             public void addIntHeader(String name, int value) {
                 super.addIntHeader(name, value);
+                this.headers.put(name, value);
+            }
+
+            @Override
+            public void setIntHeader(String name, int value) {
+                super.setIntHeader(name, value);
                 this.headers.put(name, value);
             }
 
@@ -157,7 +180,7 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
                     // wrap the response to filter out everything except desired range
                     this.stream = addRangeSupportWrapper(request, response, stream);
 
-                    if (!isServeContent) {
+                    if (!isServeContent || this.stream == null) {
                         // swallow output on head requests
                         this.stream = new ServletOutputStream() {
 
@@ -174,9 +197,14 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
             private ServletOutputStream addRangeSupportWrapper(final HttpServletRequest request, final HttpServletResponse response, ServletOutputStream stream) throws IOException {
                 if (!processContent(request, response)) {
                     // we might have to return null stream instead as the previous method already called res.sendError();
-                    return stream;
+                    return null;
                 }
 
+                if (headers.containsKey("Content-Range")) {
+                    // doesn't work for tomcat as it accesses underlying stream under our hands!!!
+                    log.debug("Range request was handled by underlying filter/servlet.");
+                    return stream;
+                }
                 if (ranges == null || ranges.isEmpty()) {
                     // no op, serve all as usual
                     log.debug("Didn't find any range to speak of. Serving all content as usual.");
@@ -188,6 +216,8 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
                     RangeInfo range = ranges.get(0);
                     log.debug("Serving range [{}].", range);
                     response.setContentLength(range.lengthOfRange);
+                    // setting 206 header is essential for some clients. The would abort if response is set to 200
+                    response.setStatus(SC_PARTIAL_CONTENT);
                     stream = new RangedOutputStream(stream, range);
                 } else {
                     log.error("Requested multiple ranges [{}].", ranges.size());
@@ -213,7 +243,7 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
             private boolean processContent(HttpServletRequest request, HttpServletResponse response) throws IOException {
                 log.debug("Serving binary on uri {} was last modified at {}", new Object[] { request.getRequestURI(), lastModTime });
                 if (!isRequestValid(request, response)) {
-                    log.debug("Skipping request {} as invalid", new Object[] { request.getRequestURI() });
+                    log.debug("Skipping request {} since it doesn't require body", new Object[] { request.getRequestURI() });
                     return false;
                 }
                 if (!processRange(request)) {
@@ -318,6 +348,8 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
                 long ifModifiedSince = request.getDateHeader("If-Modified-Since");
                 if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModTime) {
                     response.setHeader("ETag", eTag); // Required in 304.
+                    // 304 response should contain Date header unless running on timeless server (see 304 response docu)
+                    response.addDateHeader("Date", lastModTime);
                     log.debug("Returning {} on header If-Modified-Since", HttpServletResponse.SC_NOT_MODIFIED);
                     response.sendError(HttpServletResponse.SC_NOT_MODIFIED);
                     return false;
