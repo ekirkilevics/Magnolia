@@ -166,7 +166,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
         }
     }
 
-    private String stripPasswordFromCacheLog(String log){
+    public String stripPasswordFromCacheLog(String log){
         String value = null;
         if(log != null){
             value = StringUtils.substringBefore(log, "mgnlUserPSWD");
