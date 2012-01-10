@@ -67,6 +67,9 @@ public class FocusModelImpl3 implements FocusModel {
             reset();
             return;
         }
+        if (mgnlElement == storage.getSelectedMgnlElement()) {
+            return;
+        }
 
         hideRoot();
         if (storage.getSelectedMgnlElement() != null) {

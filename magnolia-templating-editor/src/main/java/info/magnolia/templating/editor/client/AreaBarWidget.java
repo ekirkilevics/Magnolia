@@ -38,16 +38,12 @@ import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
-import info.magnolia.templating.editor.client.model.ModelStorage;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
+
 import com.google.gwt.user.client.ui.Button;
 
 
@@ -111,25 +107,6 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         createButtons(pageEditor, mgnlElement.getComment());
         setClassName("mgnlAreaEditBar");
-
-
-        addDomHandler(new MouseDownHandler() {
-            @Override
-            public void onMouseDown(MouseDownEvent event) {
-                //select();
-                event.stopPropagation();
-
-            }
-        }, MouseDownEvent.getType());
-
-        addDomHandler(new MouseUpHandler() {
-            @Override
-            public void onMouseUp(MouseUpEvent event) {
-                ModelStorage.getInstance().getFocusModel().handleClick(getBoundary().getParentArea());
-                event.stopPropagation();
-            }
-        }, MouseUpEvent.getType());
-
     }
 
     public String getAvailableComponents() {
