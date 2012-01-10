@@ -9,7 +9,7 @@
     <AccessManager class="org.apache.jackrabbit.core.security.DefaultAccessManager">
     </AccessManager>
     <!-- login module defined here is used by the repo to authenticate every request. not by the webapp to authenticate user against the webapp context (this one has to be passed before thing here gets invoked -->
-    <LoginModule class="info.magnolia.jaas.sp.jcr.JCRAuthenticationModule">
+    <LoginModule class="info.magnolia.jaas.sp.jcr.JackrabbitAuthenticationModule">
     </LoginModule>
   </Security>
   <DataStore class="org.apache.jackrabbit.core.data.FileDataStore">
