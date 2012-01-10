@@ -45,6 +45,7 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.module.admininterface.AdminInterfaceModule;
 import info.magnolia.module.admininterface.config.AclTypeConfiguration;
 import info.magnolia.module.admininterface.config.PermissionConfiguration;
 import info.magnolia.module.admininterface.config.RepositoryConfiguration;
@@ -56,7 +57,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Iterator;
 
-import javax.inject.Inject;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -73,12 +73,7 @@ public class ACLSDialogControl extends DialogBox {
 
     private static final String CSS_ACL_DIV = "aclDynamicTable";
 
-    @Inject
-    private SecurityConfiguration securityConf;
-
-    public ACLSDialogControl(SecurityConfiguration securityConf) {
-        this.securityConf = securityConf;
-    }
+    private SecurityConfiguration securityConf = AdminInterfaceModule.getInstance().getSecurityConfiguration();
 
     private static String getHtmlRowInner(String dynamicTable, RepositoryConfiguration repoConf) {
         boolean small = true;
