@@ -44,6 +44,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.jcr.iterator.SameChildNodeTypeIterator;
 import info.magnolia.repository.RepositoryConstants;
 
 import org.slf4j.Logger;
@@ -110,7 +111,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
             Session session = MgnlContext.getJCRSession(RepositoryConstants.USER_ROLES);
             Node roleNode = session.getNodeByIdentifier(role.getId());
             Node aclNode = getAclNode(roleNode, repository);
-            NodeIterator children = aclNode.getNodes();
+            NodeIterator children = new SameChildNodeTypeIterator(aclNode);
             while(children.hasNext()) {
                 Node child = children.nextNode();
                 if (child.getProperty("path").getString().equals(path)) {
