@@ -115,8 +115,8 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
         final Collection<Content> nodes;
         try {
             nodes = QueryUtil.exceptionThrowingQuery(repository, statement, language, this.itemType);
-        } catch (RepositoryException e) {
-            this.result = e.getMessage();
+        } catch (Throwable e) {
+            this.result = e.getMessage() != null ? e.getMessage() : e.toString();
             log.error("Error in JCR query:", e);
             return VIEW_SHOW;
         }
