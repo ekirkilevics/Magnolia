@@ -125,7 +125,7 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
         response.setCharacterEncoding(characterEncoding);
 
         // do not send empty ContentType
-        if (StringUtils.isEmpty(defaultExtension)) {
+        if (StringUtils.isEmpty(defaultExtension) && StringUtils.isEmpty(extension)) {
             response.setContentType("text/html");
         } else {
             response.setContentType(mimeType);
