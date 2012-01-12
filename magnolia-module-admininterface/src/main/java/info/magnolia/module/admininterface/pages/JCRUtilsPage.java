@@ -43,23 +43,24 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
 import info.magnolia.repository.RepositoryConstants;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collection;
-import java.util.Iterator;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class JCRUtilsPage extends TemplatedMVCHandler {
     private static final Logger log = LoggerFactory.getLogger(JCRUtilsPage.class);
-
-    public JCRUtilsPage(String name, HttpServletRequest request, HttpServletResponse response) {
-        super(name, request, response);
-    }
 
     private String repository = "";
 
@@ -73,7 +74,30 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
 
     private String language = Query.SQL;
 
+    private String[] supportedLanguages = new String[]{};
+
     private String itemType = "nt:base";
+
+    private List<String> repositories = new ArrayList<String>();
+
+    public JCRUtilsPage(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
+        try {
+            supportedLanguages = MgnlContext.getQueryManager(RepositoryConstants.WEBSITE).getSupportedQueryLanguages();
+            supportedLanguages = (String[]) ArrayUtils.removeElement(supportedLanguages, javax.jcr.query.Query.JCR_JQOM) ;
+
+            final Iterator<String> iter = ContentRepository.getAllRepositoryNames();
+            while(iter.hasNext()) {
+                repositories.add(iter.next());
+            }
+            Collections.sort(repositories, String.CASE_INSENSITIVE_ORDER);
+
+        } catch (RepositoryException e) {
+            this.result = e.getMessage();
+            log.error("An error occurred while retrieving supported query languages.", e);
+        }
+    }
+
 
     public String dump() {
         if (StringUtils.isNotEmpty(repository) && StringUtils.isNotEmpty(path)) {
@@ -88,7 +112,7 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
 
     public String query() {
         final long start = System.currentTimeMillis();
-        final Collection nodes;
+        final Collection<Content> nodes;
         try {
             nodes = QueryUtil.exceptionThrowingQuery(repository, statement, language, this.itemType);
         } catch (RepositoryException e) {
@@ -96,14 +120,14 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
             log.error("Error in JCR query:", e);
             return VIEW_SHOW;
         }
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
         sb.append(nodes.size());
         sb.append(" nodes returned in ");
         sb.append(System.currentTimeMillis() - start);
         sb.append("ms\n");
 
-        for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-            Content node = (Content) iter.next();
+        for (Iterator<Content> iter = nodes.iterator(); iter.hasNext();) {
+            Content node = iter.next();
             sb.append(node.getHandle());
             sb.append("\n");
         }
@@ -123,17 +147,16 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
     }
 
     public Iterator getRepositories() {
-        return ContentRepository.getAllRepositoryNames();
+        return repositories.iterator();
     }
 
     public String[] getLanguages() throws RepositoryException {
-        return MgnlContext.getQueryManager(RepositoryConstants.WEBSITE).getSupportedQueryLanguages();
+        return supportedLanguages;
     }
 
     public int getLevel() {
         return level;
     }
-
 
     public void setLevel(int level) {
         this.level = level;
