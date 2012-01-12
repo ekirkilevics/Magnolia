@@ -723,14 +723,6 @@ public class CacheFilterTest {
         verify(cache, cacheFactory, cachePolicy, webContext, request, response, filterChain);
     }
 
-    @Test
-    public void testPasswordRemovingMethod(){
-        //filter = new CacheFilter();
-        String log = "The following URL took longer than 10 seconds (18) to render. This might cause timout exceptions on other requests to the same URI. [url=http://localhost:8080/magnoliaPublic/.magnolia/trees/website.html], [key=DefaultCacheKey{uri='/.magnolia/trees/website.html', serverName='localhost', locale='en', params={pathSelected=/demo-features, path=/demo-features, browseMode=false, mgnlUserId=superuser, mgnlUserPSWD=superuser, treeMode=snippet, mgnlCK=1326122203385}', secure='false'}]";
-        String correctLog = filter.stripPasswordFromCacheLog(log);
-        assertEquals(correctLog, "The following URL took longer than 10 seconds (18) to render. This might cause timout exceptions on other requests to the same URI. [url=http://localhost:8080/magnoliaPublic/.magnolia/trees/website.html], [key=DefaultCacheKey{uri='/.magnolia/trees/website.html', serverName='localhost', locale='en', params={pathSelected=/demo-features, path=/demo-features, browseMode=false, mgnlUserId=superuser, treeMode=snippet, mgnlCK=1326122203385}', secure='false'}]");
-    }
-
     @After
     public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
