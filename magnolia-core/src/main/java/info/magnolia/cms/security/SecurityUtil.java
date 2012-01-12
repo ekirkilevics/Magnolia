@@ -317,4 +317,38 @@ public class SecurityUtil {
         KeyPair key = kgen.genKeyPair();
         return new MgnlKeyPair(byteArrayToHex(key.getPrivate().getEncoded()), byteArrayToHex(key.getPublic().getEncoded()));
     }
+
+    /**
+     * Used for removing password parameter from cache key.
+     * @param cacheKey.toString()
+     * @return
+     */
+    public static String stripPasswordFromCacheLog(String log){
+        String value = null;
+        if(log != null){
+            value = StringUtils.substringBefore(log, "mgnlUserPSWD");
+            String afterString = StringUtils.substringAfter(log, "mgnlUserPSWD");
+            if(afterString.indexOf(" ") < afterString.indexOf("}")){
+                value = value + StringUtils.substringAfter(afterString, " ");
+            }else{
+                value = value + "}" + StringUtils.substringAfter(afterString, "}");
+            }
+        }
+        return value;
+    }
+    
+    public static String stripPasswordFromUrl(String escapedUrl) {
+        if (escapedUrl != null) {
+            int idx = escapedUrl.indexOf("mgnlUserPSWD");
+            if (idx > 0) {
+                int endIdx = escapedUrl.indexOf("&", idx);
+                if (endIdx > 0) {
+                    escapedUrl = escapedUrl.substring(0, idx) + escapedUrl.substring(endIdx + 1);
+                } else {
+                    escapedUrl = escapedUrl.substring(0, idx - 1);
+                }
+            }
+        }
+        return escapedUrl;
+    }
 }

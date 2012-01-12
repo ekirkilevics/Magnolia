@@ -218,6 +218,18 @@ public class SecurityUtilTest {
         printSet("Signatures", signatures);
     }
 
+    @Test
+    public void testPasswordRemovingMethodFromCache(){
+        String log = "The following URL took longer than 10 seconds (18) to render. This might cause timout exceptions on other requests to the same URI. [url=http://localhost:8080/magnoliaPublic/.magnolia/trees/website.html], [key=DefaultCacheKey{uri='/.magnolia/trees/website.html', serverName='localhost', locale='en', params={pathSelected=/demo-features, path=/demo-features, browseMode=false, mgnlUserId=superuser, mgnlUserPSWD=superuser, treeMode=snippet, mgnlCK=1326122203385}', secure='false'}]";
+        assertEquals(SecurityUtil.stripPasswordFromCacheLog(log), "The following URL took longer than 10 seconds (18) to render. This might cause timout exceptions on other requests to the same URI. [url=http://localhost:8080/magnoliaPublic/.magnolia/trees/website.html], [key=DefaultCacheKey{uri='/.magnolia/trees/website.html', serverName='localhost', locale='en', params={pathSelected=/demo-features, path=/demo-features, browseMode=false, mgnlUserId=superuser, treeMode=snippet, mgnlCK=1326122203385}', secure='false'}]");
+    }
+
+    @Test
+    public void testPasswordRemovingMethodFromURL(){
+        String url = "http://something.com/path.html?parameter1=bla?mgnlUserId=superuser&mgnlUserPSWD=superuser&parameter2=blabla";
+        assertEquals(SecurityUtil.stripPasswordFromUrl(url), "http://something.com/path.html?parameter1=bla?mgnlUserId=superuser&parameter2=blabla");
+    }
+
     @After
     public void tearDown() {
         ComponentsTestUtil.clear();

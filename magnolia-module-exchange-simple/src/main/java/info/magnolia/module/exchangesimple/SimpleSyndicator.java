@@ -38,6 +38,7 @@ import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
+import info.magnolia.cms.security.SecurityUtil;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -192,9 +193,9 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                 urlConnection.getContent();
 
             } catch (MalformedURLException e) {
-                throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + stripPasswordFromUrl(urlString) + "]");
+                throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + SecurityUtil.stripPasswordFromUrl(urlString) + "]");
             } catch (IOException e) {
-                throw new ExchangeException("Not able to send the deactivation request [" + stripPasswordFromUrl(urlString) + "]: " + e.getMessage());
+                throw new ExchangeException("Not able to send the deactivation request [" + SecurityUtil.stripPasswordFromUrl(urlString) + "]: " + e.getMessage());
             } catch (Exception e) {
                 throw new ExchangeException(e);
             }

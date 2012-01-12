@@ -42,6 +42,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
+import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.test.mock.MockContent;
@@ -163,7 +164,7 @@ public class BaseSyndicatorImplTest extends TestCase {
         String strippedOfURL = "http://server.com:1234/bla/activation/?something=xxx&mgnlUserID=joey";
 
         // WHEN
-        String result = BaseSyndicatorImpl.stripPasswordFromUrl(testURL);
+        String result = SecurityUtil.stripPasswordFromUrl(testURL);
 
         // THEN
         assertEquals(strippedOfURL, result);
@@ -177,7 +178,7 @@ public class BaseSyndicatorImplTest extends TestCase {
                 "http://server.com:1234/bla/activation/?something=xxx&mgnlUserID=joey&mgnlUserPSWD=isTheBest&someOther=bla";
         String strippedOfURL = "http://server.com:1234/bla/activation/?something=xxx&mgnlUserID=joey&someOther=bla";
         // WHEN
-        String result = BaseSyndicatorImpl.stripPasswordFromUrl(testURL);
+        String result = SecurityUtil.stripPasswordFromUrl(testURL);
 
         // THEN
         assertEquals(strippedOfURL, result);

@@ -35,6 +35,7 @@ package info.magnolia.module.cache.filter;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
+import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.cache.BlockingCache;
 import info.magnolia.module.cache.Cache;
@@ -154,29 +155,15 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
             final long end = System.currentTimeMillis();
 
             if(blockingTimeout != -1 && (end-start) >= blockingTimeout){
-                log.warn("The following URL took longer than {} seconds ({} ms) to render. This might cause timeout exceptions on other requests to the same URI. [url={}], [key={}]", new Object[]{blockingTimeout/1000, (end-start), request.getRequestURL(), stripPasswordFromCacheLog(cachePolicyResult.getCacheKey().toString())});
+                log.warn("The following URL took longer than {} seconds ({} ms) to render. This might cause timeout exceptions on other requests to the same URI. [url={}], [key={}]", new Object[]{blockingTimeout/1000, (end-start), request.getRequestURL(), SecurityUtil.stripPasswordFromCacheLog(cachePolicyResult.getCacheKey().toString())});
             }
         }
         catch (Throwable th) {
             if(cachePolicyResult.getBehaviour() == CachePolicyResult.store && cache instanceof BlockingCache){
-                log.error("A request started to cache but failed with an exception ({}). [url={}], [key={}]", new Object[]{ExceptionUtils.getRootCauseMessage(th), request.getRequestURL(), stripPasswordFromCacheLog(cachePolicyResult.getCacheKey().toString())});
+                log.error("A request started to cache but failed with an exception ({}). [url={}], [key={}]", new Object[]{ExceptionUtils.getRootCauseMessage(th), request.getRequestURL(), SecurityUtil.stripPasswordFromCacheLog(cachePolicyResult.getCacheKey().toString())});
                 ((BlockingCache) cache).unlock(cachePolicyResult.getCacheKey());
             }
             throw new RuntimeException(th);
         }
-    }
-
-    public String stripPasswordFromCacheLog(String log){
-        String value = null;
-        if(log != null){
-            value = StringUtils.substringBefore(log, "mgnlUserPSWD");
-            String afterString = StringUtils.substringAfter(log, "mgnlUserPSWD");
-            if(afterString.indexOf(" ") < afterString.indexOf("}")){
-                value = value + StringUtils.substringAfter(afterString, " ");
-            }else{
-                value = value + "}" + StringUtils.substringAfter(afterString, "}");
-            }
-        }
-        return value;
     }
 }

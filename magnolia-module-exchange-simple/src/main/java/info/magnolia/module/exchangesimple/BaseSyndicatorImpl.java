@@ -426,7 +426,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         catch (IOException e) {
             log.debug("Failed to transport following activated content {" + StringUtils.join(activationContent.getProperties().keySet().iterator(), ',') + "} due to " + e.getMessage(), e);
             String url = (urlConnection == null ? null : urlConnection.getURL().toString());
-            url = stripPasswordFromUrl(url);
+            url = SecurityUtil.stripPasswordFromUrl(url);
             // hide pwd if present
             throw new ExchangeException("Not able to send the activation request [" + url + "]: " + e.getMessage(), e);
         }
@@ -445,22 +445,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         versionName = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_VERSION);
         return versionName;
     }
-
-    public static String stripPasswordFromUrl(String escapedUrl) {
-        if (escapedUrl != null) {
-            int idx = escapedUrl.indexOf("mgnlUserPSWD");
-            if (idx > 0) {
-                int endIdx = escapedUrl.indexOf("&", idx);
-                if (endIdx > 0) {
-                    escapedUrl = escapedUrl.substring(0, idx) + escapedUrl.substring(endIdx + 1);
-                } else {
-                    escapedUrl = escapedUrl.substring(0, idx - 1);
-                }
-            }
-        }
-        return escapedUrl;
-    }
-
 
     /**
      * Cleans up temporary file store after activation.
@@ -717,9 +701,9 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
             return urlConnection;
         } catch (MalformedURLException e) {
-            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + stripPasswordFromUrl(urlString) + "]");
+            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + SecurityUtil.stripPasswordFromUrl(urlString) + "]");
         } catch (IOException e) {
-            throw new ExchangeException("Not able to send the activation request [" + stripPasswordFromUrl(urlString) + "]: " + e.getMessage());
+            throw new ExchangeException("Not able to send the activation request [" + SecurityUtil.stripPasswordFromUrl(urlString) + "]: " + e.getMessage());
         } catch (Exception e) {
             throw new ExchangeException(e);
         }
