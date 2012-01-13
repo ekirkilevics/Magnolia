@@ -324,25 +324,27 @@ public class SecurityUtil {
      * @return
      */
     public static String stripPasswordFromCacheLog(String log){
+        if(StringUtils.isBlank(log)){
+            return null;
+        }
         String value = null;
-        if(log != null){
-            value = StringUtils.substringBefore(log, "mgnlUserPSWD");
-            String afterString = StringUtils.substringAfter(log, "mgnlUserPSWD");
-            if(StringUtils.indexOf(afterString, " ") < StringUtils.indexOf(afterString, "}")){
-                value = value + StringUtils.substringAfter(afterString, " ");
-            }else{
-                value = value + "}" + StringUtils.substringAfter(afterString, "}");
-            }
+        value = StringUtils.substringBefore(log, "mgnlUserPSWD");
+        String afterString = StringUtils.substringAfter(log, "mgnlUserPSWD");
+        if(StringUtils.indexOf(afterString, " ") < StringUtils.indexOf(afterString, "}")){
+            value = value + StringUtils.substringAfter(afterString, " ");
+        }else{
+            value = value + "}" + StringUtils.substringAfter(afterString, "}");
         }
         return value;
     }
-    
+
     public static String stripPasswordFromUrl(String url){
-        String value = null;
-        if(url != null){
-            value = StringUtils.substringBefore(url, "mgnlUserPSWD");
-            value = value + StringUtils.substringAfter(StringUtils.substringAfter(url, "mgnlUserPSWD"), "&");
+        if(StringUtils.isBlank(url)){
+            return null;
         }
+        String value = null;
+        value = StringUtils.substringBefore(url, "mgnlUserPSWD");
+        value = value + StringUtils.substringAfter(StringUtils.substringAfter(url, "mgnlUserPSWD"), "&");
         return StringUtils.removeEnd(value, "&");
     }
 }
