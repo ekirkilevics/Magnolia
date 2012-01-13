@@ -328,7 +328,7 @@ public class SecurityUtil {
         if(log != null){
             value = StringUtils.substringBefore(log, "mgnlUserPSWD");
             String afterString = StringUtils.substringAfter(log, "mgnlUserPSWD");
-            if(afterString.indexOf(" ") < afterString.indexOf("}")){
+            if(StringUtils.indexOf(afterString, " ") < StringUtils.indexOf(afterString, "}")){
                 value = value + StringUtils.substringAfter(afterString, " ");
             }else{
                 value = value + "}" + StringUtils.substringAfter(afterString, "}");
@@ -339,13 +339,13 @@ public class SecurityUtil {
     
     public static String stripPasswordFromUrl(String escapedUrl) {
         if (escapedUrl != null) {
-            int idx = escapedUrl.indexOf("mgnlUserPSWD");
+            int idx = StringUtils.indexOf(escapedUrl, "mgnlUserPSWD");
             if (idx > 0) {
-                int endIdx = escapedUrl.indexOf("&", idx);
+                int endIdx = StringUtils.indexOf(escapedUrl, "&", idx);
                 if (endIdx > 0) {
-                    escapedUrl = escapedUrl.substring(0, idx) + escapedUrl.substring(endIdx + 1);
+                    escapedUrl = StringUtils.substring(escapedUrl, 0, idx) + StringUtils.substring(escapedUrl, endIdx + 1);
                 } else {
-                    escapedUrl = escapedUrl.substring(0, idx - 1);
+                    escapedUrl = StringUtils.substring(escapedUrl, 0, idx - 1);
                 }
             }
         }
