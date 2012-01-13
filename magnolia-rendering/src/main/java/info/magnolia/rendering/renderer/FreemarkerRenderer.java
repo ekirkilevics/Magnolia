@@ -35,6 +35,7 @@ package info.magnolia.rendering.renderer;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.RenderableDefinition;
@@ -69,7 +70,7 @@ public class FreemarkerRenderer extends AbstractRenderer {
      * instance of FreemarkerHelper.
      */
     public FreemarkerRenderer() {
-        this(FreemarkerHelper.getInstance());
+        this(Components.getComponent(FreemarkerHelper.class));
     }
 
     FreemarkerRenderer(FreemarkerHelper fmRenderer) {
