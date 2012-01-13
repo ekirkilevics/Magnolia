@@ -337,18 +337,12 @@ public class SecurityUtil {
         return value;
     }
     
-    public static String stripPasswordFromUrl(String escapedUrl) {
-        if (escapedUrl != null) {
-            int idx = StringUtils.indexOf(escapedUrl, "mgnlUserPSWD");
-            if (idx > 0) {
-                int endIdx = StringUtils.indexOf(escapedUrl, "&", idx);
-                if (endIdx > 0) {
-                    escapedUrl = StringUtils.substring(escapedUrl, 0, idx) + StringUtils.substring(escapedUrl, endIdx + 1);
-                } else {
-                    escapedUrl = StringUtils.substring(escapedUrl, 0, idx - 1);
-                }
-            }
+    public static String stripPasswordFromUrl(String url){
+        String value = null;
+        if(url != null){
+            value = StringUtils.substringBefore(url, "mgnlUserPSWD");
+            value = value + StringUtils.substringAfter(StringUtils.substringAfter(url, "mgnlUserPSWD"), "&");
         }
-        return escapedUrl;
+        return StringUtils.removeEnd(value, "&");
     }
 }

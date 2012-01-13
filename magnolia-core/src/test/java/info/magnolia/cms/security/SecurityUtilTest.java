@@ -227,7 +227,9 @@ public class SecurityUtilTest {
     @Test
     public void testPasswordRemovingMethodFromURL(){
         String url = "http://something.com/path.html?parameter1=bla?mgnlUserId=superuser&mgnlUserPSWD=superuser&parameter2=blabla";
+        String url2 = "http://something.com/path.html?parameter1=bla?mgnlUserId=superuser&mgnlUserPSWD=superuser";
         assertEquals(SecurityUtil.stripPasswordFromUrl(url), "http://something.com/path.html?parameter1=bla?mgnlUserId=superuser&parameter2=blabla");
+        assertEquals(SecurityUtil.stripPasswordFromUrl(url2), "http://something.com/path.html?parameter1=bla?mgnlUserId=superuser");
     }
 
     @After
