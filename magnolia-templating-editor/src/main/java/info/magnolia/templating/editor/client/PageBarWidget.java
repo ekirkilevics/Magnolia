@@ -49,14 +49,14 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
- * Page bar. The HTML output by this widget contains an empty <code>span</code> element with an id called <code>mgnlMainbarPlaceholder</code> as a convenience which can be used by other modules to inject
+ * Page bar. The HTML output by this widget contains an empty <code>span</code> element with an id called <code>mgnlEditorMainbarPlaceholder</code> as a convenience which can be used by other modules to inject
  * their own DOM elements into the main bar, <strong>once the page editor is loaded</strong>.
  * <p>I.e., assuming usage of jQuery, a module's own javascript could do something like this
  * <p>
  * {@code
- *  jQuery('#mgnlMainbarPlaceholder').append('<p>Blah</p>')
+ *  jQuery('#mgnlEditorMainbarPlaceholder').append('<p>Blah</p>')
  * }
- * <p>The placeholder is styled to be automatically centered in the main bar. See this module's styles.css file (id selector #mgnlMainbarPlaceholder).
+ * <p>The placeholder is styled to be automatically centered in the main bar. See this module's editor.css file (id selector #mgnlMainbarPlaceholder).
  */
 public class PageBarWidget extends AbstractBarWidget {
 
