@@ -56,7 +56,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
  * {@code
  *  jQuery('#mgnlEditorMainbarPlaceholder').append('<p>Blah</p>')
  * }
- * <p>The placeholder is styled to be automatically centered in the main bar. See this module's editor.css file (id selector #mgnlMainbarPlaceholder).
+ * <p>The placeholder is styled to be automatically centered in the main bar. See this module's editor.css file (id selector #mgnlEditorMainbarPlaceholder).
  */
 public class PageBarWidget extends AbstractBarWidget {
 
