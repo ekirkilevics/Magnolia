@@ -145,3 +145,9 @@ button.mgnlControlButton_PUSHED {
 /*    background-color: red; */
     }
 
+#mgnlMainbarPlaceholder {
+  margin-left: 50%;
+  margin-right: 50%;
+  margin-top: 2px;
+  position: absolute;
+}

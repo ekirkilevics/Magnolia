@@ -46,9 +46,17 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
- * Page bar.
+ * Page bar. The HTML output by this widget contains an empty <code>span</code> element with an id called <code>mgnlMainbarPlaceholder</code> as a convenience which can be used by other modules to inject
+ * their own DOM elements into the main bar, <strong>once the page editor is loaded</strong>.
+ * <p>I.e., assuming usage of jQuery, a module's own javascript could do something like this
+ * <p>
+ * {@code
+ *  jQuery('#mgnlMainbarPlaceholder').append('<p>Blah</p>')
+ * }
+ * <p>The placeholder is styled to be automatically centered in the main bar. See this module's styles.css file (id selector #mgnlMainbarPlaceholder).
  */
 public class PageBarWidget extends AbstractBarWidget {
 
@@ -84,6 +92,11 @@ public class PageBarWidget extends AbstractBarWidget {
     }
 
     private void createAuthoringModeBar() {
+        //the placeholder span must be added to the DOM bar BEFORE the other elements so that the style (named after its id) applied to it centers it correctly.
+        InlineLabel mainbarPlaceholder = new InlineLabel();
+        mainbarPlaceholder.getElement().setId("mgnlMainbarPlaceholder");
+        mainbarPlaceholder.setStylePrimaryName("mgnlMainbarPlaceholder");
+        add(mainbarPlaceholder);
 
         Button properties = new Button(getDictionary().get("buttons.properties.js"));
         properties.addClickHandler(new ClickHandler() {
