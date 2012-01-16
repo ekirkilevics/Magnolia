@@ -54,12 +54,12 @@ public class FocusModelImpl3 implements FocusModel {
     }
 
     @Override
-    public void handleClick(MgnlElement mgnlElement) {
+    public void onMouseUp(MgnlElement mgnlElement) {
 
     }
 
     @Override
-    public void handleClick(Element element) {
+    public void onMouseUp(Element element) {
 
         MgnlElement mgnlElement = storage.getMgnlElement(element);
 
@@ -67,19 +67,30 @@ public class FocusModelImpl3 implements FocusModel {
             reset();
             return;
         }
+
         if (mgnlElement == storage.getSelectedMgnlElement()) {
             return;
         }
 
-        hideRoot();
-        if (storage.getSelectedMgnlElement() != null) {
-            deSelect(storage.getSelectedMgnlElement());
+        MgnlElement area = mgnlElement.getParentArea();
+
+        if (area != null) {
+            deSelect();
+            hideRoot();
+            boolean selected = select(area);
+            if (!selected) {
+                reset();
+                return;
+            }
         }
-
-        select(mgnlElement);
-
+        computeOverlay();
         storage.setSelectedMgnlElement(mgnlElement);
+
     }
+
+
+    @Override
+    public void onMouseDown(Element element) {}
 
     @Override
     public void reset() {
@@ -88,48 +99,43 @@ public class FocusModelImpl3 implements FocusModel {
         computeOverlay();
     }
 
-    protected void select(MgnlElement mgnlElement) {
+    protected boolean select(MgnlElement mgnlElement) {
 
-        if (mgnlElement != null) {
-            MgnlElement parentArea = mgnlElement.getParentArea();
+        boolean selected = false;
 
-            if (parentArea != null) {
-
-                if (storage.getEditBar(parentArea) != null) {
-                    storage.getEditBar(parentArea).setVisible(true);
-                }
-
-                for (MgnlElement component : parentArea.getComponents()) {
-
-                    if (storage.getEditBar(component) != null) {
-                        storage.getEditBar(component).setVisible(true);
-                    }
-
-                }
-                computeOverlay();
-             }
+        if (storage.getEditBar(mgnlElement) != null) {
+            storage.getEditBar(mgnlElement).setVisible(true);
+            selected = true;
         }
+
+        for (MgnlElement component : mgnlElement.getComponents()) {
+
+            if (storage.getEditBar(component) != null) {
+                storage.getEditBar(component).setVisible(true);
+                selected = true;
+            }
+        }
+
+        return selected;
     }
 
     public void deSelect() {
-        if (storage.getSelectedMgnlElement() != null) {
-            deSelect(storage.getSelectedMgnlElement());
+        if (storage.getSelectedMgnlElement() != null && storage.getSelectedMgnlElement().getParentArea() != null) {
+            deSelect(storage.getSelectedMgnlElement().getParentArea());
         }
     }
 
     public void deSelect(MgnlElement mgnlElement) {
-        mgnlElement = mgnlElement.getRoot();
-        if (mgnlElement != null) {
 
-            for (MgnlElement descendant : mgnlElement.getDescendants()) {
+        if (storage.getEditBar(mgnlElement) != null) {
+            storage.getEditBar(mgnlElement).setVisible(false);
+        }
 
-                if (storage.getEditBar(descendant) != null) {
-                        storage.getEditBar(descendant).setVisible(false);
-                }
+        for (MgnlElement component : mgnlElement.getComponents()) {
 
+            if (storage.getEditBar(component) != null) {
+                storage.getEditBar(component).setVisible(false);
             }
-            computeOverlay();
-
         }
     }
 
@@ -172,31 +178,6 @@ public class FocusModelImpl3 implements FocusModel {
                     storage.getOverlay(mgnlElement).getElement().getStyle().setHeight(lastElement.getAbsoluteBottom() - storage.getOverlay(mgnlElement).getElement().getAbsoluteTop(), Unit.PX);
                 }
             }
-
-/*            for (MgnlElement mgnlElement : mgnlElements) {
-
-                if (storage.getOverlay(mgnlElement) == null) {
-                    continue;
-                }
-
-                double top = Double.MAX_VALUE;
-                double bottom = 0;
-                double left = Double.MAX_VALUE;
-                double right = 0;
-
-                for (Element element : storage.getElements(mgnlElement)) {
-                    if (top > element.getAbsoluteTop()) top = element.getAbsoluteTop();
-                    if (bottom < element.getAbsoluteBottom()) bottom = element.getAbsoluteBottom();
-                    if (left > element.getAbsoluteLeft()) left = element.getAbsoluteLeft();
-                    if (right < element.getAbsoluteRight()) right = element.getAbsoluteRight();
-                }
-
-                storage.getOverlay(mgnlElement).getElement().getStyle().setTop(top, Unit.PX);
-                storage.getOverlay(mgnlElement).getElement().getStyle().setLeft(left, Unit.PX);
-                storage.getOverlay(mgnlElement).getElement().getStyle().setWidth(right - left, Unit.PX);
-                storage.getOverlay(mgnlElement).getElement().getStyle().setHeight(bottom - top, Unit.PX);
-
-            }*/
         }
     }
 

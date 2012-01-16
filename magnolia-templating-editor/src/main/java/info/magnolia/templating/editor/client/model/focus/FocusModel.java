@@ -33,9 +33,10 @@
  */
 package info.magnolia.templating.editor.client.model.focus;
 
+import info.magnolia.templating.editor.client.dom.MgnlElement;
+
 import com.google.gwt.dom.client.Element;
 
-import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 
 /**
@@ -45,8 +46,9 @@ public interface FocusModel {
 
     public void reset();
 
-    public void handleClick(MgnlElement mgnlElement);
+    public void onMouseUp(Element element);
 
-    void handleClick(Element element);
+    public void onMouseDown(Element element);
 
+    public void onMouseUp(MgnlElement mgnlElement);
 }

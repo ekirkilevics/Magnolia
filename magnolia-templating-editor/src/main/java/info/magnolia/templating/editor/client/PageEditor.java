@@ -53,6 +53,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.http.client.Request;
@@ -111,11 +114,19 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             @Override
             public void onMouseUp(MouseUpEvent event) {
 
-                storage.getFocusModel().handleClick((Element)event.getNativeEvent().getEventTarget().cast());
+                storage.getFocusModel().onMouseUp((Element)event.getNativeEvent().getEventTarget().cast());
                 event.stopPropagation();
             }
         }, MouseUpEvent.getType());
 
+        RootPanel.get().addDomHandler(new MouseDownHandler() {
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+
+                storage.getFocusModel().onMouseDown((Element)event.getNativeEvent().getEventTarget().cast());
+                event.stopPropagation();
+            }
+        }, MouseDownEvent.getType());
     }
 
     @Override
@@ -266,6 +277,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             if (childNode.getNodeType() == Comment.COMMENT_NODE) {
 
                 try {
+
                     CMSComment comment = new CMSComment(((Comment)childNode.cast()).getData());
 
                     // this should be refactored after cms:edit tag is gone
@@ -336,6 +348,10 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                     GWT.log("Not CMSComment element, skipping: " + e.toString());
 
                 }
+                catch (Exception e) {
+                    GWT.log("Caught undefined exception: " + e.toString());
+
+                }
             }
             else if (childNode.getNodeType() == Element.ELEMENT_NODE && mgnlElement != null) {
 
@@ -343,22 +359,22 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 if (element.hasTagName("A")) {
                     disableLink(element);
                 }
-                    storage.addElement(mgnlElement, element);
+                storage.addElement(mgnlElement, element);
 
-                    if (!element.getClassName().equals("mgnlAreaEditBar") && !element.getClassName().equals("mgnlEditBar")) {
-                        MgnlElement area = mgnlElement;
-                        if (mgnlElement.isComponent()) {
-                            area = mgnlElement.getParentArea();
+                if (!element.getClassName().equals("mgnlAreaEditBar") && !element.getClassName().equals("mgnlEditBar") && element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString()) != 0 && element.getOffsetHeight() != 0) {
+                    MgnlElement area = mgnlElement;
+                    if (mgnlElement.isComponent()) {
+                        area = mgnlElement.getParentArea();
+                    }
+                    if (area != null) {
+                        if (area.getFirstElement() == null) {
+                            area.setFirstElement(element);
                         }
-                        if (area != null) {
-                            if (area.getFirstElement() == null) {
-                                area.setFirstElement(element);
-                            }
-                            if (area.getLastElement() == null || !area.getLastElement().isOrHasChild(element)) {
-                                area.setLastElement(element);
-                            }
+                        if (area.getLastElement() == null || !area.getLastElement().isOrHasChild(element)) {
+                            area.setLastElement(element);
                         }
                     }
+                }
 
             }
 

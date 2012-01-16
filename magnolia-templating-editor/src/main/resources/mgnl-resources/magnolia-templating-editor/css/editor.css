@@ -1,0 +1,94 @@
+/*
+* remove this from control.css in admininterface!
+*/
+.mgnlEditorMainbar {
+  position: static;
+  z-index: 900;
+}
+
+#mgnlEditorMainbarPlaceholder {
+  margin-left: 50%;
+  margin-right: 50%;
+  margin-top: 2px;
+  position: absolute;
+}
+
+/*
+* Paragraph/component edit bar.
+*/
+div.mgnlEditorBar {
+  background-color: #396101 !important;
+  color: #FFFFFF !important;
+  padding: 0 !important;
+  width: 100% !important;
+  height: 20px !important; /*TODO set this height else on FF default buttons height screws up layout*/
+  margin: 0px !important;
+}
+
+/*
+* Area edit bar.
+*/
+.mgnlEditorBar.area {
+  border-radius: 5px 5px 0 0;
+  clear: both;
+}
+
+/*
+* Component edit bar.
+*/
+.mgnlEditorBar.component {
+  background-color: #86AC41 !important;
+}
+
+/*
+* area/component buttons.
+*/
+button.mgnlEditorButton {
+  height: 18px;
+  padding: 2px!important;
+  margin: 1px 1px 0px 1px;
+  color: #FFFFFF !important;
+  background-color: transparent;
+  border-color: #FFF;
+  border-style: solid;
+  border-width: 1px;
+  line-height: 10px; /*FF needs it*/
+}
+.mgnlEditorRemoveButton {
+  margin: 1px 20px 0px 1px !important;
+}
+
+/*
+* fix for footer css
+*/
+.mgnlEditorBarButtons {
+  float: right !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding-right: 5px !important;
+}
+
+/*
+* Mainbar Buttons
+*/
+.mgnlEditorBarButtons {
+  float: none !important;
+}
+
+.mgnlEditorBarLabel {
+  float: none !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: Verdana, sans-serif !important;
+  font-size: 11px;
+  height: 15px !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 2px 0 0 5px !important;
+}
+
+.mgnlEditorOverlay {
+  position: absolute;
+}
+
+

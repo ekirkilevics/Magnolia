@@ -59,7 +59,7 @@ public class AbstractOverlayWidget extends FlowPanel {
         }
 
 
-        this.setStyleName("mgnlOverlay");
+        this.setStyleName("mgnlEditorOverlay");
 
         this.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
         this.getElement().getStyle().setZIndex(level);

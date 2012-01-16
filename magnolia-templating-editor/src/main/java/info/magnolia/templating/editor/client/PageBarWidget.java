@@ -94,7 +94,7 @@ public class PageBarWidget extends AbstractBarWidget {
     private void createAuthoringModeBar() {
         //the placeholder span must be added to the DOM bar BEFORE the other elements so that the style (named after its id) applied to it centers it correctly.
         InlineLabel mainbarPlaceholder = new InlineLabel();
-        mainbarPlaceholder.getElement().setId("mgnlMainbarPlaceholder");
+        mainbarPlaceholder.getElement().setId("mgnlEditorMainbarPlaceholder");
         mainbarPlaceholder.setStylePrimaryName("mgnlMainbarPlaceholder");
         add(mainbarPlaceholder);
 
@@ -125,7 +125,7 @@ public class PageBarWidget extends AbstractBarWidget {
         });
         addButton(adminCentral, Float.LEFT);
 
-        setClassName("mgnlMainbar mgnlControlBar");
+        setClassName("mgnlEditorMainbar mgnlEditorBar");
 
         previewMode = false;
     }

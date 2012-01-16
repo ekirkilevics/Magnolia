@@ -45,7 +45,6 @@ import com.google.gwt.dom.client.Style.Float;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 
 /**
@@ -56,7 +55,7 @@ public abstract class AbstractBarWidget extends FlowPanel {
     private MgnlElement boundary;
     protected boolean hasControls = false;
     private String label = "";
-    private boolean toggleSelection = false;
+    private FlowPanel buttonWrapper;
 
     public AbstractBarWidget(MgnlElement boundary, CMSComment comment) {
 
@@ -65,33 +64,21 @@ public abstract class AbstractBarWidget extends FlowPanel {
             this.label = comment.getAttribute("label");
         }
 
+        buttonWrapper = new FlowPanel();
+        buttonWrapper.setStylePrimaryName("mgnlEditorBarButtons");
+
+        add(buttonWrapper);
+
         if (this.label != null && !this.label.isEmpty()) {
-            Label areaName = new InlineLabel(this.label);
+            Label areaName = new Label(this.label);
             //tooltip. Nice to have when area label is truncated because too long.
             areaName.setTitle(this.label);
+            areaName.setStylePrimaryName("mgnlEditorBarLabel");
 
             //setStylePrimaryName(..) replaces gwt default css class, in this case gwt-Label
-            areaName.setStylePrimaryName("mgnlAreaLabel");
             add(areaName);
         }
-
-    }
-
-    /**
-     * Called when this bar widget is selected/clicked. Default implementation does nothing.
-     */
-    protected void select() {
-
-        this.addStyleName("selected");
-/*        Document.get().getElementById("mgnlBoundary").getStyle().setTop(boundary.getMinCoordinate().getTop(), Style.Unit.PX);
-        Document.get().getElementById("mgnlBoundary").getStyle().setLeft(boundary.getMinCoordinate().getLeft(), Style.Unit.PX);
-        Document.get().getElementById("mgnlBoundary").getStyle().setHeight(boundary.getMaxCoordinate().getTop()-boundary.getMinCoordinate().getTop(), Style.Unit.PX);
-        Document.get().getElementById("mgnlBoundary").getStyle().setHeight(boundary.getMaxCoordinate().getLeft()-boundary.getMinCoordinate().getLeft(), Style.Unit.PX);*/
-    }
-
-    protected void deSelect() {
-
-        this.removeStyleName("selected");
+        setClassName("mgnlEditorBar");
 
     }
 
@@ -100,26 +87,10 @@ public abstract class AbstractBarWidget extends FlowPanel {
     }
 
     protected void addButton(final Button button, final Float cssFloat) {
-        button.setStylePrimaryName("mgnlControlButton");
+        button.setStylePrimaryName("mgnlEditorButton");
         button.getElement().getStyle().setFloat(cssFloat);
 
-/*        button.addMouseDownHandler(new MouseDownHandler() {
-
-            @Override
-            public void onMouseDown(MouseDownEvent event) {
-                //add push button style
-                button.setStyleName("mgnlControlButton_PUSHED", true);
-            }
-        });
-        button.addMouseUpHandler(new MouseUpHandler() {
-
-            @Override
-            public void onMouseUp(MouseUpEvent event) {
-                //remove push button style
-                button.setStyleName("mgnlControlButton_PUSHED", false);
-            }
-        });*/
-        add(button);
+        buttonWrapper.add(button);
         hasControls = true;
     }
 

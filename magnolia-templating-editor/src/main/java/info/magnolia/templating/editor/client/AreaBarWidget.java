@@ -106,7 +106,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
 
         createButtons(pageEditor, mgnlElement.getComment());
-        setClassName("mgnlAreaEditBar");
+        this.addStyleName("area");
     }
 
     public String getAvailableComponents() {

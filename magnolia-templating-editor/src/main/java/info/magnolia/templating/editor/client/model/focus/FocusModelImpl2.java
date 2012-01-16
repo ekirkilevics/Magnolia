@@ -54,12 +54,12 @@ public class FocusModelImpl2 implements FocusModel {
     }
 
     @Override
-    public void handleClick(Element element) {
+    public void onMouseUp(Element element) {
 
     }
 
     @Override
-    public void handleClick (MgnlElement mgnlElement) {
+    public void onMouseUp(MgnlElement mgnlElement) {
 
         hideRoot();
         if (storage.getSelectedMgnlElement() != null) {
@@ -68,6 +68,13 @@ public class FocusModelImpl2 implements FocusModel {
         select(mgnlElement);
 
         storage.setSelectedMgnlElement(mgnlElement);
+    }
+
+
+    @Override
+    public void onMouseDown(Element element) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override

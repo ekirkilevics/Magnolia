@@ -86,7 +86,7 @@ public class EditBarWidget extends AbstractBarWidget {
 
         createMouseEventsHandlers(pageEditor);
 
-        setClassName("mgnlEditBar");
+        addStyleName("component");
         if (this.isInherited) {
             addStyleName("mgnlInherited");
         }
