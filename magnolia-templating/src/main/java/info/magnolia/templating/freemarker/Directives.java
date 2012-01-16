@@ -47,7 +47,6 @@ public class Directives extends HashMap<String, TemplateDirectiveModel> {
     public Directives() {
         super();
         put("edit", new EditDirective());
-        put("context", new ContextDirective());
         put("render", new RenderDirective());
         put("area", new AreaDirective());
         put("init", new InitDirective());
