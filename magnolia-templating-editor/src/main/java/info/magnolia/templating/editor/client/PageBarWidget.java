@@ -95,7 +95,7 @@ public class PageBarWidget extends AbstractBarWidget {
         InlineLabel mainbarPlaceholder = new InlineLabel();
         mainbarPlaceholder.getElement().setId("mgnlEditorMainbarPlaceholder");
         mainbarPlaceholder.setStylePrimaryName("mgnlMainbarPlaceholder");
-        //the placeholder span must be added to the DOM bar BEFORE the other elements so that the style (named after its id) applied to it centers it correctly.
+        //the placeholder must be added as the first child of the bar element (before the buttons wrapper) so that the style applied to it centers it correctly.
         getElement().insertFirst(mainbarPlaceholder.getElement());
 
         Button properties = new Button(getDictionary().get("buttons.properties.js"));
