@@ -7,10 +7,10 @@
 }
 
 #mgnlEditorMainbarPlaceholder {
-  margin-left: 50%;
-  margin-right: 50%;
-  margin-top: 2px;
-  position: absolute;
+  margin-left: 50% !important;
+  margin-right: 50% !important;
+  margin-top: 2px !important;
+  position: absolute !important;
 }
 
 /*
