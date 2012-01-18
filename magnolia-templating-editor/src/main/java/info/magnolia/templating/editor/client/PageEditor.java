@@ -34,20 +34,18 @@
 package info.magnolia.templating.editor.client;
 
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.dom.Comment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
@@ -74,16 +72,23 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the {@code <html>} element).
- *
+ * The page editor will fire a custom {@link #PAGE_EDITOR_READY_EVENT} event at the end of the onModuleLoad() execution. External javascripts
+ * can register to it to ensure that their operations are performed after the page editor DOM handling is actually done (i.e. all edit bars are created).
+ * <p>Assuming usage of jQuery, an external javascript could do something like this:
+ * <pre>
+ * jQuery(document).bind('pageEditorReady', function() {
+      //do something with edit bars here
+    });
+    </pre>
  * @version $Id$
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
 
+    public static final String PAGE_EDITOR_READY_EVENT = "pageEditorReady";
     private boolean pageEditBarAlreadyProcessed = false;
     private String locale;
     private static Dictionary dictionary;
     private static ModelStorage storage = ModelStorage.getInstance();
-
     private LinkedList<MgnlElement> mgnlElements = new LinkedList<MgnlElement>();
 
     @Override
@@ -95,20 +100,11 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         LegacyJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
         dictionary = Dictionary.getDictionary("mgnlGwtMessages");
 
-
-
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                long stime = System.currentTimeMillis();
-                processCmsComments(Document.get().getDocumentElement(), null);
-                long etime= System.currentTimeMillis();
-                GWT.log("Time: " + String.valueOf(etime -stime));
-                cleanRootElements();
-                storage.getFocusModel().reset();
-
-            }
-        });
+        long startTime = System.currentTimeMillis();
+        processCmsComments(Document.get().getDocumentElement(), null);
+        GWT.log("Time spent to process cms comments: " + (System.currentTimeMillis() - startTime) + "ms");
+        cleanRootElements();
+        storage.getFocusModel().reset();
 
         RootPanel.get().addDomHandler(new MouseUpHandler() {
             @Override
@@ -127,6 +123,9 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 event.stopPropagation();
             }
         }, MouseDownEvent.getType());
+
+        GWT.log("Firing "+ PAGE_EDITOR_READY_EVENT +" custom event...");
+        createAndDispatchCustomPageEditorReadyEvent(PAGE_EDITOR_READY_EVENT);
     }
 
     @Override
@@ -393,7 +392,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     private void cleanRootElements() {
 
-
         List<MgnlElement> newRoots = new LinkedList<MgnlElement>();
         GWT.log(String.valueOf(storage.rootElements.size()));
         Iterator<MgnlElement> it = storage.rootElements.iterator();
@@ -413,5 +411,17 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         GWT.log(String.valueOf(storage.rootElements.size()));
 
     }
+    //FIXME does not work for IE. We need to find a workaround: a possible solution is here http://dean.edwards.name/weblog/2009/03/callbacks-vs-events/
+    //even if I have to figure out a way to get hold of the handler associated to the event i.e. via jQuery(document).bind('pageEditorReady') { myHandler }
+    private native void createAndDispatchCustomPageEditorReadyEvent(String pageEditorReadyEvent) /*-{
+    if( document.createEvent ) {
+       $wnd.mgnlPageEditorReadyEvt = document.createEvent("Event");
+       $wnd.mgnlPageEditorReadyEvt.initEvent(pageEditorReadyEvent,true,true);
+       $wnd.document.dispatchEvent($wnd.mgnlPageEditorReadyEvt);
+    } else if( document.createEventObject ) { //IE
+       $wnd.mgnlPageEditorReadyEvt = document.createEventObject();
+       $wnd.document.fireEvent( 'on' + pageEditorReadyEvent, $wnd.mgnlPageEditorReadyEvt );
+    }
+  }-*/;
 
 }

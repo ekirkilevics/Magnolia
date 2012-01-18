@@ -7,9 +7,8 @@
 }
 
 #mgnlEditorMainbarPlaceholder {
-  margin-left: 50% !important;
-  margin-right: 50% !important;
-  margin-top: 2px !important;
+  margin-left: 45% !important;
+  line-height: 18px;
   position: absolute !important;
 }
 
