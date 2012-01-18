@@ -37,7 +37,7 @@ import static info.magnolia.nodebuilder.Ops.addNode;
 import static info.magnolia.nodebuilder.Ops.addProperty;
 import static info.magnolia.nodebuilder.Ops.getNode;
 import static info.magnolia.nodebuilder.Ops.remove;
-import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.filters.FilterManager;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
@@ -97,7 +97,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.auditLogging.xml");
     private final BootstrapSingleResource bootstrapFreemarker = new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration", "/mgnl-bootstrap/core/config.server.rendering.freemarker.xml");
     private final CreateNodeTask addFreemarkerSharedVariables = new CreateNodeTask("Freemarker configuration", "Adds sharedVariables node to the Freemarker configuration",
-            RepositoryConstants.CONFIG, "/server/rendering/freemarker", "sharedVariables", ItemType.CONTENTNODE.getSystemName());
+            RepositoryConstants.CONFIG, "/server/rendering/freemarker", "sharedVariables", MgnlNodeType.NT_CONTENTNODE);
     private final BootstrapSingleResource bootstrapWebContainerResources = new BootstrapSingleResource("Web container resources configuration", "Global configuration which resources are not meant to be handled by Magnolia. For instance JSP files.", "/mgnl-bootstrap/core/config.server.webContainerResources.xml");
     private final BootstrapSingleModuleResource bootstrapChannelManagement = new BootstrapSingleModuleResource("ChannelManagement configuration", "", "config.server.rendering.channelManagement.xml");
 
@@ -191,7 +191,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         );
 
         register(DeltaBuilder.update("4.3.6", "")
-                .addTask(new NodeExistsDelegateTask("TemplateExceptionHandler", "Checks if templateExceptionHandler node exists", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", new WarnTask("TemplateExceptionHandler", "Unable to set node templateExceptionHandler because it already exists"), new CreateNodeTask("TemplateExceptionHandler", "Creates node templateExceptionHandler", RepositoryConstants.CONFIG, "/server/rendering/freemarker", "templateExceptionHandler", ItemType.CONTENTNODE.getSystemName())))
+                .addTask(new NodeExistsDelegateTask("TemplateExceptionHandler", "Checks if templateExceptionHandler node exists", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", new WarnTask("TemplateExceptionHandler", "Unable to set node templateExceptionHandler because it already exists"), new CreateNodeTask("TemplateExceptionHandler", "Creates node templateExceptionHandler", RepositoryConstants.CONFIG, "/server/rendering/freemarker", "templateExceptionHandler", MgnlNodeType.NT_CONTENTNODE)))
                 .addTask(new PropertyExistsDelegateTask("Class", "Checks if class property exists", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", new WarnTask("class", "Unable to set property class because it already exists"), new NewPropertyTask("Class", "Creates property class and sets it to class path", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", "info.magnolia.freemarker.ModeDependentTemplateExceptionHandler"))));
 
         register(DeltaBuilder.update("4.4", "")
@@ -201,7 +201,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                                 getNode("server/filters").then(
                                         getNode("bypasses").then(
                                                 remove("dontDispatchOnForwardAttribute")),
-                                                addNode("dispatching", ItemType.CONTENTNODE).then(
+                                                addNode("dispatching", MgnlNodeType.NT_CONTENTNODE).then(
                                                         addNode("request").then(
                                                                 addProperty("toMagnoliaResources", Boolean.TRUE),
                                                                 addProperty("toWebContainerResources", Boolean.TRUE)),
@@ -255,9 +255,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new RenameACLNodesTask())
                 .addTask(new ArrayDelegateTask("New security filter", "Adds the securityCallback filter.",
                         new NodeBuilderTask("New security filter", "Adds the securityCallback filter.", ErrorHandling.strict, "config", FilterManager.SERVER_FILTERS,
-                                addNode("securityCallback", "mgnl:content").then(
+                                addNode("securityCallback", MgnlNodeType.NT_CONTENT).then(
                                         addProperty("class", "info.magnolia.cms.security.SecurityCallbackFilter"),
-                                        addNode("bypasses", "mgnl:contentNode")
+                                        addNode("bypasses", MgnlNodeType.NT_CONTENTNODE)
                                 )
                         ),
                         new OrderNodeBeforeTask("", "Puts the securityCallback just before the uriSecurity filter.", "config", FilterManager.SERVER_FILTERS + "/securityCallback", "uriSecurity")
