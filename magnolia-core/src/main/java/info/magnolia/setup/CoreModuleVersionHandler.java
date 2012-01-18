@@ -44,6 +44,7 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AddMimeMappingTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
+import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.CheckOrCreatePropertyTask;
@@ -98,6 +99,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final CreateNodeTask addFreemarkerSharedVariables = new CreateNodeTask("Freemarker configuration", "Adds sharedVariables node to the Freemarker configuration",
             RepositoryConstants.CONFIG, "/server/rendering/freemarker", "sharedVariables", ItemType.CONTENTNODE.getSystemName());
     private final BootstrapSingleResource bootstrapWebContainerResources = new BootstrapSingleResource("Web container resources configuration", "Global configuration which resources are not meant to be handled by Magnolia. For instance JSP files.", "/mgnl-bootstrap/core/config.server.webContainerResources.xml");
+    private final BootstrapSingleModuleResource bootstrapChannelManagement = new BootstrapSingleModuleResource("ChannelManagement configuration", "", "config.server.rendering.channelManagement.xml");
 
     public CoreModuleVersionHandler() {
         super();
@@ -266,6 +268,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addCondition(new CheckKeyProperty())
                 // TODO addTask( move/backup the callbacks in the contentSecurity filter )
                 .addTask(new HashUsersPasswords())
+                .addTask(bootstrapChannelManagement)
         );
     }
 
@@ -302,6 +305,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         l.add(new BootstrapConditionally("Security", "Bootstraps security-base role.", "/mgnl-bootstrap/core/userroles.security-base.xml"));
         // always hash passwords. Task will not re-hash so it is safe to run this op at any time, multiple times.
         l.add(new HashUsersPasswords());
+        l.add(bootstrapChannelManagement);
         return l;
     }
 

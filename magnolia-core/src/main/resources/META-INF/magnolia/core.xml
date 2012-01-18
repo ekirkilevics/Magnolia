@@ -137,6 +137,14 @@
       <scope>singleton</scope>
     </component>
     <component>
+      <type>info.magnolia.channel.ChannelManager</type>
+      <implementation>info.magnolia.channel.ChannelManagerImpl</implementation>
+      <workspace>config</workspace>
+      <path>/server/rendering/channelManagement</path>
+      <observed>true</observed>
+      <scope>singleton</scope>
+    </component>
+    <component>
       <type>info.magnolia.cms.exchange.ActivationManager</type>
       <workspace>config</workspace>
       <path>/server/activation</path>
