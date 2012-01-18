@@ -41,12 +41,17 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public class ChannelManagerImpl {
+public class ChannelManagerImpl implements ChannelManager{
 
-    Map<String, ChannelConfiguration> channelConfigs = new HashMap<String, ChannelConfiguration>();
+    Map<String, ChannelConfiguration> channels = new HashMap<String, ChannelConfiguration>();
 
-    public ChannelConfiguration getChannelConfiguration(String name) {
-        return channelConfigs.get(name);
+    @Override
+    public void addChannel(String name, ChannelConfiguration configuration) {
+        channels.put(name, configuration);
     }
 
+    @Override
+    public ChannelConfiguration getChannel(String name) {
+        return channels.get(name);
+    }
 }

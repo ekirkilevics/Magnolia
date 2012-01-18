@@ -40,5 +40,7 @@ package info.magnolia.channel;
  */
 public interface ChannelManager {
 
-    ChannelConfiguration getChannelConfiguration();
+    void addChannel(String name, ChannelConfiguration configuration);
+
+    ChannelConfiguration getChannel(String name);
 }
