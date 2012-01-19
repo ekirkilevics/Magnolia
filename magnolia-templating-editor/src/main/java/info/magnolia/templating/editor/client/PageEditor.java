@@ -72,14 +72,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the {@code <html>} element).
- * The page editor will fire a custom {@link #PAGE_EDITOR_READY_EVENT} event at the end of the onModuleLoad() execution. External javascripts
- * can register to it to ensure that their operations are performed after the page editor DOM handling is actually done (i.e. all edit bars are created).
- * <p>Assuming usage of jQuery, an external javascript could do something like this:
- * <pre>
- * jQuery(document).bind('pageEditorReady', function() {
-      //do something with edit bars here
-    });
-    </pre>
+ *
  * @version $Id$
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
@@ -124,8 +117,8 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             }
         }, MouseDownEvent.getType());
 
-        GWT.log("Firing "+ PAGE_EDITOR_READY_EVENT +" custom event...");
-        createAndDispatchCustomPageEditorReadyEvent(PAGE_EDITOR_READY_EVENT);
+        GWT.log("Trying to run window.onPageEditorReady...");
+        onPageEditorReady();
     }
 
     @Override
@@ -411,17 +404,12 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         GWT.log(String.valueOf(storage.rootElements.size()));
 
     }
-    //FIXME does not work for IE. We need to find a workaround: a possible solution is here http://dean.edwards.name/weblog/2009/03/callbacks-vs-events/
-    //even if I have to figure out a way to get hold of the handler associated to the event i.e. via jQuery(document).bind('pageEditorReady') { myHandler }
-    private native void createAndDispatchCustomPageEditorReadyEvent(String pageEditorReadyEvent) /*-{
-    if( document.createEvent ) {
-       $wnd.mgnlPageEditorReadyEvt = document.createEvent("Event");
-       $wnd.mgnlPageEditorReadyEvt.initEvent(pageEditorReadyEvent,true,true);
-       $wnd.document.dispatchEvent($wnd.mgnlPageEditorReadyEvt);
-    } else if( document.createEventObject ) { //IE
-       $wnd.mgnlPageEditorReadyEvt = document.createEventObject();
-       $wnd.document.fireEvent( 'on' + pageEditorReadyEvent, $wnd.mgnlPageEditorReadyEvt );
-    }
-  }-*/;
+    //TODO this is likely to be a temporary solution. Does not allow to run more than one function when page editor is ready.
+    private native void onPageEditorReady() /*-{
+        var obj = $wnd.onPageEditorReady
+        if( typeof obj != 'undefined' && !!(obj && obj.constructor && obj.call && obj.apply)) {
+             obj.apply()
+         }
+    }-*/;
 
 }
