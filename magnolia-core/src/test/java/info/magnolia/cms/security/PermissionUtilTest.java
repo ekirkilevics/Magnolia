@@ -53,7 +53,7 @@ public class PermissionUtilTest {
         assertEquals(Session.ACTION_SET_PROPERTY, PermissionUtil.convertPermissions(Permission.SET));
         assertEquals("add_node,read,remove,set_property", PermissionUtil.convertPermissions(Permission.ALL));
         // and any combo of the above
-        assertEquals("read,set_property", PermissionUtil.convertPermissions(Permission.READ + Permission.SET));
+        assertEquals("read,set_property", PermissionUtil.convertPermissions(Permission.READ | Permission.SET));
     }
 
     @Test
@@ -62,8 +62,14 @@ public class PermissionUtilTest {
             final String result = PermissionUtil.convertPermissions(64);
             fail("Should have failed - but returned ["+result+"] instead.");
         } catch (IllegalArgumentException e) {
-            assertEquals("Unknown permissions: 64, highest used permission value is 32", e.getMessage());
+            assertEquals("Unknown permissions: 64", e.getMessage());
         }
+    }
+
+    @Test
+    public void testSuccessOnCustomPermissionAndNormalPermission() {
+        final String result = PermissionUtil.convertPermissions(64 | Permission.READ);
+        assertEquals("read", result);
     }
 
     @Test(expected = IllegalArgumentException.class)

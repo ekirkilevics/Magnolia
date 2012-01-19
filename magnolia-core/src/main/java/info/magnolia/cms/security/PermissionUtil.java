@@ -180,40 +180,41 @@ public class PermissionUtil {
      * Return String-representation of permissions convert from provided long-permission (old).
      */
     static String convertPermissions(long oldPermissions) {
-        if (oldPermissions > Permission.ALL) {
-            throw new IllegalArgumentException("Unknown permissions: " + oldPermissions + ", highest used permission value is " + ((Permission.ALL + 1) >> 1));
-        }
         StringBuilder permissions = new StringBuilder();
         if ((oldPermissions & Permission.ALL) == Permission.ALL) {
             permissions.append(Session.ACTION_ADD_NODE).append(",").append(Session.ACTION_READ).append(",").append(Session.ACTION_REMOVE + ",").append(Session.ACTION_SET_PROPERTY);
             // skip the rest to be sure we don't introduce duplicates.
-            return permissions.toString();
-        }
-        if ((oldPermissions & Permission.WRITE) == Permission.WRITE) {
-            if (permissions.length() > 0) {
-                permissions.append(",");
+        } else {
+            if ((oldPermissions & Permission.WRITE) == Permission.WRITE) {
+                if (permissions.length() > 0) {
+                    permissions.append(",");
+                }
+                permissions.append(Session.ACTION_ADD_NODE);
             }
-            permissions.append(Session.ACTION_ADD_NODE);
-        }
-        if ((oldPermissions & Permission.READ) == Permission.READ) {
-            if (permissions.length() > 0) {
-                permissions.append(",");
+            if ((oldPermissions & Permission.READ) == Permission.READ) {
+                if (permissions.length() > 0) {
+                    permissions.append(",");
+                }
+                permissions.append(Session.ACTION_READ);
             }
-            permissions.append(Session.ACTION_READ);
-        }
-        if ((oldPermissions & Permission.REMOVE) == Permission.REMOVE) {
-            if (permissions.length() > 0) {
-                permissions.append(",");
+            if ((oldPermissions & Permission.REMOVE) == Permission.REMOVE) {
+                if (permissions.length() > 0) {
+                    permissions.append(",");
+                }
+                permissions.append(Session.ACTION_REMOVE);
             }
-            permissions.append(Session.ACTION_REMOVE);
-        }
-        if ((oldPermissions & Permission.SET) == Permission.SET) {
-            if (permissions.length() > 0) {
-                permissions.append(",");
+            if ((oldPermissions & Permission.SET) == Permission.SET) {
+                if (permissions.length() > 0) {
+                    permissions.append(",");
+                }
+                permissions.append(Session.ACTION_SET_PROPERTY);
             }
-            permissions.append(Session.ACTION_SET_PROPERTY);
         }
-        return permissions.toString();
+        final String result = permissions.toString();
+        if (StringUtils.isEmpty(result)) {
+            throw new IllegalArgumentException("Unknown permissions: " + oldPermissions);
+        }
+        return result;
     }
 
     /**
