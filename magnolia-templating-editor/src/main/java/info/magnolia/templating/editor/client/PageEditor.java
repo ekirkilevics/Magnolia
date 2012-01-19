@@ -118,7 +118,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 event.stopPropagation();
             }
         }, MouseDownEvent.getType());
-        GWT.log("Trying to run window.onPageEditorReady...");
+        GWT.log("Trying to run onPageEditorReady callbacks...");
         onPageEditorReady();
     }
 
