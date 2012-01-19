@@ -73,7 +73,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the {@code <html>} element).
- * TODO fgrilli: write javadoc about usage of mgnl.Runtime.onPageEditorReady()
+ * TODO fgrilli: write javadoc about usage of MgnlRuntime.onPageEditorReady()
  *
  * @version $Id$
  */
