@@ -31,12 +31,10 @@
  * intact.
  *
  */
-package info.magnolia.cms.core;
+package info.magnolia.cms.security;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionUtil;
 
 import javax.jcr.Session;
 
@@ -68,9 +66,9 @@ public class PermissionUtilTest {
         }
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testIsGrantedForEmptyPermissionString() {
-        assertEquals("Empty-string must not be granted.", false, PermissionUtil.isGranted((Session) null, "ignored", ""));
+        PermissionUtil.isGranted((Session) null, "ignored", "");
         // TODO: reenable this test once we can support mock subject for anonymous user access
         // assertEquals("Empty-string must not be granted.", false, PermissionUtil.isGranted("config", "ignored", ""));
     }

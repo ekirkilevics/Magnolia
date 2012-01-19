@@ -386,7 +386,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     @Override
     public boolean isGranted(String path, long oldPermissions) {
-        return (PermissionUtil.isGranted(jcrSession, path, PermissionUtil.convertPermissions(oldPermissions)));
+        return PermissionUtil.isGranted(jcrSession, path, oldPermissions);
     }
 
     /**

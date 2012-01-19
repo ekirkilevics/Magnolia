@@ -38,6 +38,11 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.Rule;
 
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Comparator;
+
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -52,11 +57,6 @@ import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
-import java.io.InputStream;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Comparator;
-
 
 /**
  * Represents a piece of content (node) which has nodedatas (properties) containing the values and
@@ -65,6 +65,7 @@ import java.util.Comparator;
  *
  * @deprecated since 4.5 - use jcr.Node instead.
  */
+@Deprecated
 public interface Content extends Cloneable {
 
     /**
@@ -149,6 +150,7 @@ public interface Content extends Cloneable {
      * @deprecated since 4.3, as JCR only supports set or remove operations for properties we
      * recommend to use {@link #setNodeData(String, Object)} instead.
      */
+    @Deprecated
     NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
@@ -164,6 +166,7 @@ public interface Content extends Cloneable {
      * @deprecated since 4.3, as JCR only supports set or remove operations for properties we
      * recommend to use {@link #setNodeData(String, Object)} instead.
      */
+    @Deprecated
     NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
@@ -173,6 +176,7 @@ public interface Content extends Cloneable {
      * @deprecated since 4.3, as JCR only supports set or remove operations for properties we
      * recommend to use {@link #setNodeData(String, Value)} instead.
      */
+    @Deprecated
     NodeData createNodeData(String name, Value value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
@@ -182,6 +186,7 @@ public interface Content extends Cloneable {
      * @deprecated since 4.3, as JCR only supports set or remove operations for properties we
      * recommend to use {@link #setNodeData(String, Value[])} instead.
      */
+    @Deprecated
     NodeData createNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
@@ -191,6 +196,7 @@ public interface Content extends Cloneable {
      * @deprecated since 4.3, as JCR only supports set or remove operations for properties we
      * recommend to use {@link #setNodeData(String, Object)} instead.
      */
+    @Deprecated
     NodeData createNodeData(String name, Object obj) throws RepositoryException;
 
     /**
@@ -321,6 +327,7 @@ public interface Content extends Cloneable {
      * @return first found node with the given name or <code>null</code> if not found
      * @deprecated since 4.3, either use {@link #getContent(String)} or {@link #getChildren(String)}
      */
+    @Deprecated
     Content getChildByName(String namePattern);
 
     /**
@@ -570,11 +577,13 @@ public interface Content extends Cloneable {
 
     /**
      * Checks for the allowed access rights.
-     * @param permissions as defined in javax.jcr.Permission
+     * 
+     * @param permissions
+     *            as defined in javax.jcr.Permission
      * @return <code>true</code> if the current user has specified access on this node.
-     * @deprecated since 4.5. Use {@link PermissionUtil#isGranted(String, String, String)} or {@link PermissionUtil#isGranted(javax.jcr.Session, String, String)} instead.
-     * To convert old style permissions to the new ones, please see {@link PermissionUtil#convertPermissions(long)}.
+     * @deprecated since 4.5. Use {@link PermissionUtil#isGranted(String, String, long)} or {@link PermissionUtil#isGranted(javax.jcr.Session, String, String)} instead. To convert old style permissions to the new ones, please see {@link PermissionUtil#convertPermissions(long)}.
      */
+    @Deprecated
     boolean isGranted(long permissions);
 
     /**
@@ -712,6 +721,7 @@ public interface Content extends Cloneable {
      * @return the underlying AccessManager
      * @deprecated since 4.0 - use getHierarchyManager instead
      */
+    @Deprecated
     AccessManager getAccessManager();
 
     HierarchyManager getHierarchyManager();
@@ -732,6 +742,7 @@ public interface Content extends Cloneable {
      *
      * @deprecated since 4.5 - use {@link org.apache.jackrabbit.commons.predicate.Predicate} instead.
      */
+    @Deprecated
     public interface ContentFilter {
 
         /**

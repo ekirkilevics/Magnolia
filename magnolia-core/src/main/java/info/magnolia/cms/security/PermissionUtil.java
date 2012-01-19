@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.security.auth.Subject;
@@ -59,9 +60,23 @@ public class PermissionUtil {
     private static final Logger log = LoggerFactory.getLogger(PermissionUtil.class);
 
     /**
+     * Creates instance of AccessManager configured with subject principal permissions for requested workspace/repository. This method will likely move the AccessManagerProvider in the future version, and while public should not be considered part of the public API.
+     */
+    public static AccessManager getAccessManager(String workspace, Subject subject) {
+        List<Permission> availablePermissions = PermissionUtil.getPermissions(subject, workspace);
+        if (availablePermissions == null) {
+            log.warn("no permissions found for " + subject.getPrincipals(User.class));
+        }
+        // TODO: use provider instead of fixed impl
+        AccessManagerImpl ami = new AccessManagerImpl();
+        ami.setPermissionList(availablePermissions);
+        return ami;
+    }
+
+    /**
      * Retrieves permissions for current user.
      */
-    public static List<Permission> getPermissions(Subject subject, String name) {
+    static List<Permission> getPermissions(Subject subject, String name) {
         if (subject == null) {
             // FIXME: this needs to be cached if we really run anonymous w/o session
             log.warn("no session == running as anonymous");
@@ -86,7 +101,20 @@ public class PermissionUtil {
 
     /**
      * Convenience call hiding all ugly details of permission conversions.
-     *
+     * 
+     * @throws RepositoryException
+     *             in case node or its parent session is invalid.
+     * 
+     */
+    public static boolean isGranted(Node node, long requiredPermissions) throws RepositoryException {
+        AccessManager ami = MgnlContext.getAccessManager(node.getSession().getWorkspace().getName());
+        return ami.isGranted(node.getPath(), requiredPermissions);
+    }
+
+    // isGranted(Node, long) ... NodeUtil, ForumTree ...
+    /**
+     * Convenience call hiding all ugly details of permission conversions.
+     * 
      */
     public static boolean isGranted(String workspace, String path, String requiredPermissions) {
         AccessManager ami = MgnlContext.getAccessManager(workspace);
@@ -96,10 +124,30 @@ public class PermissionUtil {
     /**
      * Return whether given session has requested permission on provided path.
      */
-    public static boolean isGranted(Session jcrSession, String path, String action) {
-        // FIXME: treat custom permission that don't exist on Session.
-        if (StringUtils.isBlank(action)) {
+    public static boolean isGranted(Session jcrSession, String path, long oldPermissions) {
+        String action = null;
+        try {
+            action = convertPermissions(oldPermissions);
+        } catch (IllegalArgumentException e) {
+            AccessManager ami = MgnlContext.getAccessManager(jcrSession.getWorkspace().getName());
+            ami.isGranted(path, oldPermissions);
+        }
+        try {
+            return jcrSession.hasPermission(path, action);
+        } catch (RepositoryException e) {
             return false;
+        }
+    }
+
+    /**
+     * Return whether given session has requested permission on provided path.
+     * 
+     * @throws IllegalArgumentException
+     *             when provided action is empty.
+     */
+    public static boolean isGranted(Session jcrSession, String path, String action) {
+        if (StringUtils.isBlank(action)) {
+            throw new IllegalArgumentException("Empty action value is not valid for permission check. Please make sure you don't check against empty permissions or contact administrator.");
         }
         try {
             return jcrSession.hasPermission( path, action);
@@ -111,7 +159,7 @@ public class PermissionUtil {
     /**
      * Return String-representation of permissions convert from provided long-permission (old).
      */
-    public static long convertPermissions(String newPermissions) {
+    static long convertPermissions(String newPermissions) {
         String[] perms = newPermissions.split(", ");
         long oldPerms = 0;
         for (String perm : perms) {
@@ -131,7 +179,7 @@ public class PermissionUtil {
     /**
      * Return String-representation of permissions convert from provided long-permission (old).
      */
-    public static String convertPermissions(long oldPermissions) {
+    static String convertPermissions(long oldPermissions) {
         if (oldPermissions > Permission.ALL) {
             throw new IllegalArgumentException("Unknown permissions: " + oldPermissions + ", highest used permission value is " + ((Permission.ALL + 1) >> 1));
         }

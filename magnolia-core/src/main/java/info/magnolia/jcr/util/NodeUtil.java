@@ -95,7 +95,7 @@ public class NodeUtil {
         public boolean evaluateTyped(Node node) {
             try {
                 return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX)
-                        && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
+                && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
             } catch (RepositoryException e) {
                 return false;
             }
@@ -186,8 +186,9 @@ public class NodeUtil {
      * be cloned creating a new chain that leads to the same real node.
      */
     public static Node deepUnwrap(Node node, Class<? extends DelegateNodeWrapper> wrapper) throws RepositoryException {
-        if (node instanceof DelegateNodeWrapper)
+        if (node instanceof DelegateNodeWrapper) {
             return ((DelegateNodeWrapper) node).deepUnwrap(wrapper);
+        }
         return node;
     }
 
@@ -336,8 +337,7 @@ public class NodeUtil {
      */
     public static boolean isGranted(Node node, long permissions) {
         try {
-            return PermissionUtil.isGranted(node.getSession(), node.getPath(),
-                    PermissionUtil.convertPermissions(permissions));
+            return PermissionUtil.isGranted(node, permissions);
         } catch (RepositoryException e) {
             // TODO dlipp - apply consistent ExceptionHandling
             throw new RuntimeException(e);

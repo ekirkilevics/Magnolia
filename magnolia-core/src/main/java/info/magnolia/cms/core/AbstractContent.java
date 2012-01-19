@@ -385,11 +385,12 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     @Override
     public boolean isGranted(long permissions) {
-        final String action = PermissionUtil.convertPermissions(permissions);
+        // In case getHandle() was manipulated by the subclass (e.g. ContentVersion we need to make sure permissions are checked on the said path)
+        final String handle = getHandle();
         try {
-            return PermissionUtil.isGranted(this.getJCRNode().getSession(), getHandle(), action);
+            return PermissionUtil.isGranted(this.getJCRNode().getSession(), handle, permissions);
         } catch (RepositoryException e) {
-            log.error("An error occurred while trying to access path {} with action {}", new Object[]{getHandle(), action}, e);
+            log.error("An error occurred while trying to access path " + handle + " with permissions " + permissions, e);
             return false;
         }
     }
