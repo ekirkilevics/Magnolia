@@ -49,14 +49,12 @@ public class ChannelManagerImpl implements ChannelManager {
         super();
     }
 
-    @Override
     public void addChannel(String name, ChannelConfiguration configuration) {
         channels.put(name, configuration);
     }
 
-    @Override
-    public ChannelConfiguration getChannel(String name) {
-        return channels.get(name);
+    public void setChannels(Map<String, ChannelConfiguration> channels) {
+        this.channels = channels;
     }
 
     @Override
