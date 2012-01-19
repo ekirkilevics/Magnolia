@@ -33,6 +33,8 @@
  */
 package info.magnolia.channel;
 
+import java.util.Map;
+
 /**
  * Defines a manager for channel configurations.
  *
@@ -43,4 +45,6 @@ public interface ChannelManager {
     void addChannel(String name, ChannelConfiguration configuration);
 
     ChannelConfiguration getChannel(String name);
+
+    Map<String, ChannelConfiguration> getChannels();
 }
