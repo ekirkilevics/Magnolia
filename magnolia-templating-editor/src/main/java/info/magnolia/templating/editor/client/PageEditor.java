@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -72,6 +73,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the {@code <html>} element).
+ * TODO fgrilli: write javadoc about usage of mgnl.Runtime.onPageEditorReady()
  *
  * @version $Id$
  */
@@ -116,7 +118,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 event.stopPropagation();
             }
         }, MouseDownEvent.getType());
-
         GWT.log("Trying to run window.onPageEditorReady...");
         onPageEditorReady();
     }
@@ -404,11 +405,13 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         GWT.log(String.valueOf(storage.rootElements.size()));
 
     }
-    //TODO this is likely to be a temporary solution. Does not allow to run more than one function when page editor is ready.
+
     private native void onPageEditorReady() /*-{
-        var obj = $wnd.onPageEditorReady
-        if( typeof obj != 'undefined' && !!(obj && obj.constructor && obj.call && obj.apply)) {
-             obj.apply()
+        var callbacks = $wnd.mgnl.Runtime.onPageEditorReadyCallbacks
+        if( typeof callbacks != 'undefined') {
+             for(i=0; i < callbacks.length; i++) {
+                callbacks[i].apply()
+             }
          }
     }-*/;
 
