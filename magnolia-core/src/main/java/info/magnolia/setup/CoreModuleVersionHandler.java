@@ -81,13 +81,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Special VersionHandler for the core module. As it does not extend {@link info.magnolia.module.DefaultModuleVersionHandler} it has a special getBasicInstallTasks(InstallContext) that
+ * e.g. will not automatically bootstrap xml-files placed in mgnl-bootstrap/core.
+ *
+ * TODO dlipp: cleanup outdated javadoc below:
  * 3.5 being the first version of core as a module, it is always "installed",
  * but we need it to behave differently if magnolia was installed previously
  * (ie. updating from 3.0), which is why there are so many "conditional
  * tasks". Once 3.5 is out the door, this will need to be revised
  * completely.
  *
- * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
