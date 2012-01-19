@@ -208,11 +208,10 @@ public class BarEdit extends Bar {
      */
     public void drawHtml(Writer out) throws IOException {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final String stringPermissions = PermissionUtil.convertPermissions(Permission.SET);
         final Node mainContent = aggregationState.getMainContent().getJCRNode();
         boolean isGranted;
         try {
-            isGranted = PermissionUtil.isGranted(mainContent.getSession(), mainContent.getPath(), stringPermissions);
+            isGranted = PermissionUtil.isGranted(mainContent.getSession(), mainContent.getPath(), Permission.SET);
         } catch (RepositoryException e) {
             // TODO dlipp - apply consistent ExceptionHandling
             throw new RuntimeException(e);

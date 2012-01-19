@@ -162,11 +162,10 @@ public class ButtonEdit extends Button {
     public void drawHtml(Writer out) throws IOException {
         if (this.getRequest() != null) {
             final AggregationState aggregationState = MgnlContext.getAggregationState();
-            final String permission = PermissionUtil.convertPermissions(Permission.SET);
             final Node mainContent = aggregationState.getMainContent().getJCRNode();
             boolean isGranted;
             try {
-                isGranted = PermissionUtil.isGranted(mainContent.getSession(), mainContent.getPath(), permission);
+                isGranted = PermissionUtil.isGranted(mainContent.getSession(), mainContent.getPath(), Permission.SET);
             } catch (RepositoryException e) {
                 // TODO dlipp - apply consistent ExceptionHandling
                 throw new RuntimeException(e);
