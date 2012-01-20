@@ -50,7 +50,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
  * Page bar. The HTML output by this widget contains an empty <code>span</code> element with an id called <code>mgnlEditorMainbarPlaceholder</code> as a convenience which can be used by other modules to inject
- * their own DOM elements into the main bar, <strong>once the page editor is loaded</strong>.
+ * their own DOM elements into the main bar, <strong>once the page editor is loaded see {@link PageEditor} and <code>mgnl.PageEditor.onReady(..)</code></strong>.
  * <p>I.e., assuming usage of jQuery, a module's own javascript could do something like this
  * <p>
  * {@code
@@ -140,7 +140,7 @@ public class PageBarWidget extends AbstractBarWidget {
         });
         preview.getElement().getStyle().setTop(4.0, Unit.PX);
         preview.getElement().getStyle().setLeft(4.0, Unit.PX);
-        preview.getElement().getStyle().setBackgroundColor("#9DB517");
+        preview.getElement().getStyle().setBackgroundColor("#396101");
         addButton(preview, Float.LEFT);
         //bar has to show up on the left hand side
         getStyle().setTop(0.0, Unit.PX);
