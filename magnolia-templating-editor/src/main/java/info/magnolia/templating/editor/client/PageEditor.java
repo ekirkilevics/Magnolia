@@ -83,7 +83,7 @@ import com.google.gwt.user.client.ui.RootPanel;
  *    alert('hello, page editor is ready.')
  * });
  * </pre>
- *
+ * Modules can register multiple callbacks this way: the order in which they are fired is the same in which they were registered.
  * @version $Id$
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
