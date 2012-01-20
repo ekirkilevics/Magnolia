@@ -75,7 +75,8 @@ import com.google.gwt.user.client.ui.RootPanel;
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the {@code <html>} element).
  * Since the DOM manipulations performed by the PageEditor (i.e. dynamic creation of edit bars) happen when all other javascripts have already been loaded
  * (see <a href=http://code.google.com/webtoolkit/doc/latest/DevGuideOrganizingProjects.html#DevGuideBootstrap>GWT bootstrap FAQ</a>),
- * in order to make sure that your handler function is executed when the PageEditor is actually done, you need to use the utility javascript method <code>mgnl.PageEditor.onReady(callback)</code> .
+ * if you have some custom javascript which needs to operate on elements added by the PageEditor, you need to use the utility javascript method <code>mgnl.PageEditor.onReady(callback)</code>.
+ * This will ensure that your handler functions are executed when the PageEditor is actually done.
  * <p>For example:
  * <pre>
  * mgnl.PageEditor.onReady( function() {
