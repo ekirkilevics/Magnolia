@@ -84,6 +84,7 @@ import com.google.gwt.user.client.ui.RootPanel;
  * });
  * </pre>
  * Modules can register multiple callbacks this way: the order in which they are fired is the same in which they were registered.
+ *<p>
  * @version $Id$
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
