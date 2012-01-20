@@ -50,7 +50,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
  * Page bar. The HTML output by this widget contains an empty <code>span</code> element with an id called <code>mgnlEditorMainbarPlaceholder</code> as a convenience which can be used by other modules to inject
- * their own DOM elements into the main bar, <strong>once the page editor is loaded see {@link PageEditor} and <code>mgnl.PageEditor.onReady(..)</code></strong>.
+ * their own DOM elements into the main bar, <strong>once the page editor is loaded (see {@link PageEditor} and <code>mgnl.PageEditor.onReady(..)</code>)</strong>.
  * <p>I.e., assuming usage of jQuery, a module's own javascript could do something like this
  * <p>
  * {@code
