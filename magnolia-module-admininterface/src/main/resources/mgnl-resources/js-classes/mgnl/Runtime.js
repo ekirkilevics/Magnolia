@@ -323,23 +323,7 @@ MgnlRuntime = mgnl.Runtime = {
         else{
             this.notYetDebugged.push({msg: msg, o:o, level:level});
         }
-    },
-
-    onPageEditorReadyCallbacks : new Array(),
-
-    /**
-    * return true if the object passed in is a function
-    */
-    isFunction : function(obj) {
-      return !!(obj && obj.constructor && obj.call && obj.apply)
-    },
-
-    onPageEditorReady : function (callback) {
-      if(this.isFunction(callback)) {
-        this.onPageEditorReadyCallbacks.push(callback)
-      }
     }
-
 
 };
 

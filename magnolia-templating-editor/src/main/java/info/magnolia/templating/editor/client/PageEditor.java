@@ -73,13 +73,20 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Client side implementation of the page editor. Outputs ui widgets inside document element (typically the {@code <html>} element).
- * TODO fgrilli: write javadoc about usage of MgnlRuntime.onPageEditorReady()
+ * Since the DOM manipulations performed by the PageEditor (i.e. dynamic creation of edit bars) happen when all other javascripts have already been loaded
+ * (see <a href=http://code.google.com/webtoolkit/doc/latest/DevGuideOrganizingProjects.html#DevGuideBootstrap>GWT bootstrap FAQ</a>),
+ * in order to make sure that your handler function is executed when the PageEditor is actually done, you need to use the utility javascript method <code>mgnl.PageEditor.onReady(callback)</code> .
+ * <p>For example:
+ * <pre>
+ * mgnl.PageEditor.onReady( function() {
+ *    alert('hello, page editor is ready.')
+ * });
+ * </pre>
  *
  * @version $Id$
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
 
-    public static final String PAGE_EDITOR_READY_EVENT = "pageEditorReady";
     private boolean pageEditBarAlreadyProcessed = false;
     private String locale;
     private static Dictionary dictionary;
@@ -118,6 +125,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 event.stopPropagation();
             }
         }, MouseDownEvent.getType());
+
         GWT.log("Trying to run onPageEditorReady callbacks...");
         onPageEditorReady();
     }
@@ -407,7 +415,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     }
 
     private native void onPageEditorReady() /*-{
-        var callbacks = $wnd.mgnl.Runtime.onPageEditorReadyCallbacks
+        var callbacks = $wnd.mgnl.PageEditor.onPageEditorReadyCallbacks
         if( typeof callbacks != 'undefined') {
              for(i=0; i < callbacks.length; i++) {
                 callbacks[i].apply()
