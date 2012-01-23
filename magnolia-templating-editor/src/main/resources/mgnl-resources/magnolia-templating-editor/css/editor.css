@@ -94,6 +94,7 @@ button.mgnlEditorButton {
   color: #F0F2E6;
   background-color: #487000;
 }
+
 .mgnlRemoveButton {
   margin-right: 10px !important;
 }
@@ -122,12 +123,32 @@ button.mgnlEditorButton {
   margin: 0 !important;
 }
 
-/*
- * Buttons of page edit bar.
- */
+/* Buttons of page edit bar. */
 .mgnlEditorMainbar .mgnlEditorBarButtons {
   float: none !important;
 }
+
+/*
+ * Visual feedback when interacting with bar buttons.
+ */
+button.mgnlEditorButton:hover {
+  cursor: pointer;
+}
+
+button.mgnlEditorButton:active {
+  border-top: 1px solid #305000;
+  border-left: 1px solid #305000;
+  border-bottom: 1px solid #81a312;
+  border-right: 1px solid #81a312;
+}
+
+.mgnlEditorBar.component button.mgnlEditorButton:active {
+  border-top: 1px solid #719302;
+  border-left: 1px solid #719302;
+  border-bottom: 1px solid #c1ea56;
+  border-right: 1px solid #c1ea56;
+}
+
 
 /*
  * Label on bars showing name of component or area.
