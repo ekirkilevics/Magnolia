@@ -14,8 +14,10 @@
 div.mgnlEditorBar {
   width: 100 !important;	/* Setting width like this (without using %) ensures the bar doesn't overlap its element. */
   height: 20px;				/* Set height else on FF default buttons height screws up layout. */
-  line-height: 18px;	    /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
-                            /* vertical paddings. Only works with single line labels. */
+  line-height: 17px;	    /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
+                            /* vertical paddings -1. "-1" to make sure that FF properly align labels in all cases; for other */
+                            /* browsers, this has no effect. */
+                            /* Only works with single-line labels. */
 
   padding: 2px 3px 0 3px;
   margin: 0px;
