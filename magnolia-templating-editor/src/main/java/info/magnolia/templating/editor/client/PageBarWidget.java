@@ -140,7 +140,6 @@ public class PageBarWidget extends AbstractBarWidget {
         });
         preview.getElement().getStyle().setTop(4.0, Unit.PX);
         preview.getElement().getStyle().setLeft(4.0, Unit.PX);
-        preview.getElement().getStyle().setBackgroundColor("#396101");
         addButton(preview, Float.LEFT);
         //bar has to show up on the left hand side
         getStyle().setTop(0.0, Unit.PX);
