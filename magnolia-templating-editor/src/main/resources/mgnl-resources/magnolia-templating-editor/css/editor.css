@@ -12,8 +12,10 @@
  *   with overlaid gradient: #305000, transparency shifting from 100% to 0%
  */
 div.mgnlEditorBar {
-  width: 100 !important;  /* Setting width like this (without using %) ensures the bar doesn't overlap its element. */
-  height: 20px; 		  /* Set height else on FF default buttons height screws up layout. */
+  width: 100 !important;	/* Setting width like this (without using %) ensures the bar doesn't overlap its element. */
+  height: 20px;				/* Set height else on FF default buttons height screws up layout. */
+  line-height: 13px;	    /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
+                            /* vertical paddings. Only works with single line labels. */
 
   padding: 2px 3px 0 3px;
   margin: 0px;
