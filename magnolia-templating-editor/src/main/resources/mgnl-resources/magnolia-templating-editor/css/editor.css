@@ -79,6 +79,25 @@ div.mgnlEditorBar {
 }
 
 /*
+ * Page edit bar in preview mode.
+ */
+.mgnlEditorMainbarPreview {
+  position: absolute;
+  z-index: 900;
+
+  top: 0pt;
+  left: 0pt;
+  margin: 0pt;
+
+  padding: 2px 3px 0 3px;
+  margin: 0px;
+
+  height: 20px;
+
+  background-color: transparent;
+}
+
+/*
  * Buttons on component and area edit bars.
  */
 button.mgnlEditorButton {
@@ -106,6 +125,10 @@ button.mgnlEditorButton {
   padding: 1px 10px;
 }
 
+.mgnlEditorMainbarPreview button.mgnlEditorButton {
+  padding: 1px 10px;
+}
+
 /* Buttons on component edit bar. */
 .mgnlEditorBar.component button.mgnlEditorButton {
   border-top: 1px solid #c1ea56;
@@ -123,6 +146,10 @@ button.mgnlEditorButton {
   float: right !important;
   width: auto !important;	/* Ensure that labels and buttons share the available space on the bar in all circumstances. */
   margin: 0 !important;
+}
+
+.mgnlEditorMainbarPreview .mgnlEditorBarButtons {
+  float: left !important;
 }
 
 /* Buttons of page edit bar. */
