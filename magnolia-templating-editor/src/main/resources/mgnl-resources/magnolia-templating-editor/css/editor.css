@@ -9,7 +9,7 @@
  * General appearance of edit bar.
  *
  * 	 base color: #487000
- *   with overlaid gradient: #305000 running from 100% to 0% covering
+ *   with overlaid gradient: #305000, transparency shifting from 100% to 0%
  */
 div.mgnlEditorBar {
   width: 100% !important;
@@ -55,8 +55,8 @@ div.mgnlEditorBar {
 /*
  * Component edit bar.
  *
- * 	 base color: #90a000
- *   with overlaid gradient: #708000 running from 100% to 0% covering
+ * 	 base color: #A1C332
+ *   with overlaid gradient: #81a312, transparency shifting from 100% to 0%
  */
 .mgnlEditorBar.component {
   background-color: transparent;
