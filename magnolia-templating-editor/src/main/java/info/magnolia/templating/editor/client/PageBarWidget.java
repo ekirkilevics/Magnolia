@@ -40,7 +40,6 @@ import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 
 import com.google.gwt.dom.client.Style.Float;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -138,13 +137,8 @@ public class PageBarWidget extends AbstractBarWidget {
                 pageEditor.preview(false);
             }
         });
-        preview.getElement().getStyle().setTop(4.0, Unit.PX);
-        preview.getElement().getStyle().setLeft(4.0, Unit.PX);
         addButton(preview, Float.LEFT);
-        //bar has to show up on the left hand side
-        getStyle().setTop(0.0, Unit.PX);
-        getStyle().setLeft(0.0, Unit.PX);
-        setClassName("mgnlMainbarPreview");
+        setClassName("mgnlEditorMainbarPreview");
 
         previewMode = true;
     }
