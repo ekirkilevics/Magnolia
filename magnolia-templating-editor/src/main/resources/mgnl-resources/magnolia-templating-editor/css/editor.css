@@ -12,10 +12,10 @@
  *   with overlaid gradient: #305000, transparency shifting from 100% to 0%
  */
 div.mgnlEditorBar {
-  width: 100%;
-  height: 20px; /* TODO set this height else on FF default buttons height screws up layout. */
+  width: 100 !important;  /* Setting width like this (without using %) ensures the bar doesn't overlap its element. */
+  height: 20px; 		  /* Set height else on FF default buttons height screws up layout. */
 
-  padding: 0;
+  padding: 2px 3px 0 3px;
   margin: 0px;
 
   border-top: 1px solid #81a312;
@@ -81,18 +81,19 @@ button.mgnlEditorButton {
   height: 18px;
   line-height: 11px;
 
-  margin: 0 0 0 2px;
+  margin: 0;
   padding: 0 3px 0 3px;
 
-  border-color: #FFF;
-  border-style: solid;
-  border-width: 1px;
+  border-top: 1px solid #81a312;
+  border-left: 1px solid #81a312;
+  border-bottom: 1px solid #305000;
+  border-right: 1px solid #305000;
 
-  color: #FFFFFF;
+  color: #F0F2E6;
   background-color: #487000;
 }
-.mgnlEditorRemoveButton {
-  margin: 1px 20px 0px 1px;
+.mgnlRemoveButton {
+  margin-right: 10px !important;
 }
 
 /* Buttons on page edit bar. */
@@ -100,20 +101,30 @@ button.mgnlEditorButton {
   padding: 1px 10px;
 }
 
-/* Div containing all buttons on bars. */
-.mgnlEditorBarButtons {
-  float: right;
-  width: auto;
+/* Buttons on component edit bar. */
+.mgnlEditorBar.component button.mgnlEditorButton {
+  border-top: 1px solid #c1ea56;
+  border-left: 1px solid #c1ea56;
+  border-bottom: 1px solid #719302;
+  border-right: 1px solid #719302;
 
-  margin: 1px;
-  padding: 0 3px 0 3px;
+  color: #004000;
+  background-color: #91ba26;
+}
+
+/* Some definitions for div containing bar buttons
+   required to make it work in the footer. */
+.mgnlEditorBarButtons {
+  float: right !important;
+  width: auto;
+  margin: 0 !important;
 }
 
 /*
  * Buttons of page edit bar.
  */
-.mgnlEditorBarButtons {
-  float: none;
+.mgnlEditorMainbar .mgnlEditorBarButtons {
+  float: none !important;
 }
 
 .mgnlEditorBarLabel {
