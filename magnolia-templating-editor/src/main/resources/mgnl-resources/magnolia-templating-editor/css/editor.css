@@ -26,6 +26,8 @@ div.mgnlEditorBar {
   background-color: transparent;
   background-image: url("../img/mgnl-bar.png") !important;
   background-repeat: repeat !important;
+
+  color: #F0F2E6 !important;
 }
 
 /*
@@ -68,6 +70,8 @@ div.mgnlEditorBar {
   background-color: transparent;
   background-image: url("../img/mgnl-bar.component.png") !important;
   background-repeat: repeat !important;
+
+  color: #004000 !important;
 }
 
 /*
