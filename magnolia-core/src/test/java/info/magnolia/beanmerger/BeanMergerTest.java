@@ -33,6 +33,7 @@
  */
 package info.magnolia.beanmerger;
 
+import static org.junit.Assert.*;
 import info.magnolia.test.ComponentsTestUtil;
 
 import java.util.Collection;
@@ -40,18 +41,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 
 /**
- * @author pbracher
  * @version $Id$
- *
  */
-public class BeanMergerTest extends TestCase {
+public class BeanMergerTest {
 
     public interface InterfaceA {
 
@@ -150,13 +148,17 @@ public class BeanMergerTest extends TestCase {
 
     }
 
-    @Override
     @Before
-    protected void setUp() throws Exception {
-        super.setUp();
+    public void setUp() throws Exception {
         ComponentsTestUtil.setImplementation(BeanMerger.class, ProxyBasedBeanMerger.class);
     }
 
+    @After
+    public void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+    }
+
+    @Test
     public void testMergeOfInterfaces() {
         Object result = BeanMergerUtil.merge(new BeanA("a"), new BeanB("b"));
         // both interfaces are implemented
@@ -167,6 +169,7 @@ public class BeanMergerTest extends TestCase {
         assertFalse(result instanceof BeanB);
     }
 
+    @Test
     public void testMergeUsesSubClassIfAssignable() {
         Object result = BeanMergerUtil.merge(new BeanA("a"), new BeanB("b"), new BeanAB("a", "b"));
         // both interfaces are implemented
