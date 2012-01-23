@@ -18,10 +18,10 @@ div.mgnlEditorBar {
   padding: 0 !important;
   margin: 0px !important;
 
-  border-top: 1px solid #86AC41 !important;
-  border-left: 1px solid #86AC41 !important;
-  border-bottom: 1px solid #396101 !important;
-  border-right: 1px solid #396101 !important;
+  border-top: 1px solid #81a312 !important;
+  border-left: 1px solid #81a312 !important;
+  border-bottom: 1px solid #305000 !important;
+  border-right: 1px solid #305000 !important;
 
   background-color: transparent;
   background-image: url("../img/mgnl-bar.png") !important;
@@ -55,10 +55,16 @@ div.mgnlEditorBar {
 /*
  * Component edit bar.
  *
- * 	 base color: #A1C332
+ * 	 base color: #91ba26
  *   with overlaid gradient: #81a312, transparency shifting from 100% to 0%
  */
 .mgnlEditorBar.component {
+
+  border-top: 1px solid #c1ea56 !important;
+  border-left: 1px solid #c1ea56 !important;
+  border-bottom: 1px solid #719302 !important;
+  border-right: 1px solid #719302 !important;
+
   background-color: transparent;
   background-image: url("../img/mgnl-bar.component.png") !important;
   background-repeat: repeat !important;
