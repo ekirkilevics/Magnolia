@@ -14,7 +14,7 @@
 div.mgnlEditorBar {
   width: 100 !important;	/* Setting width like this (without using %) ensures the bar doesn't overlap its element. */
   height: 20px;				/* Set height else on FF default buttons height screws up layout. */
-  line-height: 13px;	    /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
+  line-height: 18px;	    /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
                             /* vertical paddings. Only works with single line labels. */
 
   padding: 2px 3px 0 3px;
@@ -118,7 +118,7 @@ button.mgnlEditorButton {
    required to make it work in the footer. */
 .mgnlEditorBarButtons {
   float: right !important;
-  width: auto;
+  width: auto !important;	/* Ensure that labels and buttons share the available space on the bar in all circumstances. */
   margin: 0 !important;
 }
 
@@ -129,16 +129,21 @@ button.mgnlEditorButton {
   float: none !important;
 }
 
+/*
+ * Label on bars showing name of component or area.
+ */
 .mgnlEditorBarLabel {
-  float: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  width: auto !important; /* Ensure that labels and buttons share the available space on the bar in all circumstances. */
+
+  margin: 0 0 0 2px !important;	/* Move label a tad further in than buttons on the right, */
+                                /* but ensure that all other margins defined for labels are not applied. */
+
   font-family: Verdana, sans-serif;
   font-size: 11px;
-  height: 15px;
-  width: auto;
-  margin: 0;
-  padding: 2px 0 0 5px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .mgnlEditorOverlay {
