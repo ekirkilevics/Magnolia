@@ -46,7 +46,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @version $id$
  *
  */
@@ -56,6 +56,7 @@ public class ContentTypeFilterTest extends TestCase{
     private HttpServletRequest request;
     private HttpServletResponse response;
 
+    @Override
     @Before
     public void setUp() throws Exception{
         super.setUp();
