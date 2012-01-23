@@ -40,6 +40,7 @@ import org.junit.Test;
 import info.magnolia.beanmerger.BeanMerger;
 import info.magnolia.beanmerger.ProxyBasedBeanMerger;
 import info.magnolia.cms.core.Channel;
+import info.magnolia.context.Context;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.AbstractMagnoliaTestCase;
@@ -123,6 +124,42 @@ public class ChannelVariationResolverTest extends AbstractMagnoliaTestCase {
         final RenderableDefinition result = resolver.resolveVariation(templateDefinition);
 
         // THEN
+        assertNull(result);
+    }
+
+    @Test
+    public void testResolveChannelVariationWhenInPreviewModeAndEnforceChannelParameterIsInRequest() throws Exception {
+        //GIVEN
+        MockWebContext mockContext = (MockWebContext) MockUtil.initMockContext();
+        mockContext.setAttribute(ChannelVariationResolver.ENFORCE_CHANNEL_PARAMETER, TEST_TEMPLATE_VARIATION_NAME, Context.LOCAL_SCOPE);
+        final Channel channel = new Channel();
+        channel.setName("doesNotExist");
+        mockContext.getAggregationState().setChannel(channel);
+        mockContext.getAggregationState().setPreviewMode(true);
+
+        //WHEN
+        final ChannelVariationResolver resolver = new ChannelVariationResolver();
+        RenderableDefinition result = resolver.resolveVariation(templateDefinition);
+
+        //THEN
+        assertEquals(TEST_TEMPLATE_VARIATION_NAME, result.getName());
+    }
+
+    @Test
+    public void testIgnoreEnforceChannelParameterIfNotInPreviewMode() throws Exception {
+        //GIVEN
+        MockWebContext mockContext = (MockWebContext) MockUtil.initMockContext();
+        mockContext.setAttribute(ChannelVariationResolver.ENFORCE_CHANNEL_PARAMETER, TEST_TEMPLATE_VARIATION_NAME, Context.LOCAL_SCOPE);
+        final Channel channel = new Channel();
+        channel.setName("doesNotExist");
+        mockContext.getAggregationState().setChannel(channel);
+        mockContext.getAggregationState().setPreviewMode(false);
+
+        //WHEN
+        final ChannelVariationResolver resolver = new ChannelVariationResolver();
+        RenderableDefinition result = resolver.resolveVariation(templateDefinition);
+
+        //THEN
         assertNull(result);
     }
 }

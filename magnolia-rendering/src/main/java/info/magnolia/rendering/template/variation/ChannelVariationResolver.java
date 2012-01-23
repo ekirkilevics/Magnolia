@@ -45,6 +45,8 @@ import info.magnolia.rendering.template.RenderableDefinition;
  */
 public class ChannelVariationResolver implements RenderableVariationResolver {
 
+    public static final String ENFORCE_CHANNEL_PARAMETER = "channel";
+
     @Override
     public RenderableDefinition resolveVariation(RenderableDefinition renderableDefinition) {
 
@@ -56,7 +58,12 @@ public class ChannelVariationResolver implements RenderableVariationResolver {
 
         final String channelName = aggregationState.getChannel().getName();
         RenderableDefinition defVariation = renderableDefinition.getVariations().get(channelName);
-        if (defVariation == null) {
+
+        if(defVariation == null && aggregationState.isPreviewMode()) {
+            final String channel = MgnlContext.getAttribute(ENFORCE_CHANNEL_PARAMETER);
+            defVariation = renderableDefinition.getVariations().get(channel);
+        }
+        if(defVariation == null) {
             return null;
         }
 
