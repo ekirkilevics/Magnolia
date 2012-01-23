@@ -79,25 +79,34 @@ div.mgnlEditorBar {
  */
 button.mgnlEditorButton {
   height: 18px;
-  padding: 2px!important;
-  margin: 1px 1px 0px 1px;
-  color: #FFFFFF;
-  background-color: transparent;
+  line-height: 11px;
+
+  margin: 0 0 0 2px;
+  padding: 0 3px 0 3px;
+
   border-color: #FFF;
   border-style: solid;
   border-width: 1px;
-  line-height: 10px; /*FF needs it*/
+
+  color: #FFFFFF;
+  background-color: #487000;
 }
 .mgnlEditorRemoveButton {
   margin: 1px 20px 0px 1px;
 }
 
-/* Fix for footer css. */
+/* Buttons on page edit bar. */
+.mgnlEditorMainbar button.mgnlEditorButton {
+  padding: 1px 10px;
+}
+
+/* Div containing all buttons on bars. */
 .mgnlEditorBarButtons {
   float: right;
   width: auto;
-  margin: 0;
-  padding-right: 5px;
+
+  margin: 1px;
+  padding: 0 3px 0 3px;
 }
 
 /*
