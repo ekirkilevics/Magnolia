@@ -418,8 +418,8 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     private native void onPageEditorReady() /*-{
         var callbacks = $wnd.mgnl.PageEditor.onPageEditorReadyCallbacks
-        if( typeof callbacks != 'undefined') {
-             for(i=0; i < callbacks.length; i++) {
+        if(typeof callbacks != 'undefined') {
+             for(var i=0; i < callbacks.length; i++) {
                 callbacks[i].apply()
              }
          }
