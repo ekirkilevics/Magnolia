@@ -7,14 +7,25 @@
 
 /*
  * General appearance of edit bar.
+ *
+ * 	 base color: #487000
+ *   with overlaid gradient: #305000 running from 100% to 0% covering
  */
 div.mgnlEditorBar {
-  background-color: #396101 !important;
-  color: #FFFFFF !important;
-  padding: 0 !important;
   width: 100% !important;
-  height: 20px !important; /*TODO set this height else on FF default buttons height screws up layout*/
+  height: 20px !important; /* TODO set this height else on FF default buttons height screws up layout. */
+
+  padding: 0 !important;
   margin: 0px !important;
+
+  border-top: 1px solid #86AC41 !important;
+  border-left: 1px solid #86AC41 !important;
+  border-bottom: 1px solid #396101 !important;
+  border-right: 1px solid #396101 !important;
+
+  background-color: transparent;
+  background-image: url("../img/mgnl-bar.png") !important;
+  background-repeat: repeat !important;
 }
 
 /*
@@ -23,6 +34,8 @@ div.mgnlEditorBar {
 .mgnlEditorMainbar {
   position: static;
   z-index: 900;
+
+  margin: 0pt;
 }
 
 #mgnlEditorMainbarPlaceholder {
@@ -41,9 +54,14 @@ div.mgnlEditorBar {
 
 /*
  * Component edit bar.
+ *
+ * 	 base color: #90a000
+ *   with overlaid gradient: #708000 running from 100% to 0% covering
  */
 .mgnlEditorBar.component {
-  background-color: #86AC41 !important;
+  background-color: transparent;
+  background-image: url("../img/mgnl-bar.component.png") !important;
+  background-repeat: repeat !important;
 }
 
 /*
@@ -91,8 +109,8 @@ button.mgnlEditorButton {
   padding: 2px 0 0 5px !important;
 }
 
-/* --- End of edit bars definitions --- */
-
 .mgnlEditorOverlay {
   position: absolute;
 }
+
+/* --- End of edit bars definitions --- */
