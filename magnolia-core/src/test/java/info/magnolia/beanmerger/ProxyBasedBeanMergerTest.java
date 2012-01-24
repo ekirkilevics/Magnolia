@@ -34,22 +34,21 @@
 package info.magnolia.beanmerger;
 
 import static org.junit.Assert.*;
-import info.magnolia.test.ComponentsTestUtil;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
+import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
 
 
 /**
  * @version $Id$
  */
-public class BeanMergerTest {
+public class ProxyBasedBeanMergerTest {
 
     public interface InterfaceA {
 
@@ -133,7 +132,7 @@ public class BeanMergerTest {
 
     public static class BeanWithMap {
 
-        private Map<String, BeanAB> beans = new HashMap<String, BeanMergerTest.BeanAB>();
+        private Map<String, BeanAB> beans = new HashMap<String, ProxyBasedBeanMergerTest.BeanAB>();
 
         public BeanWithMap() {
         }
@@ -148,19 +147,17 @@ public class BeanMergerTest {
 
     }
 
-    @Before
-    public void setUp() throws Exception {
-        ComponentsTestUtil.setImplementation(BeanMerger.class, ProxyBasedBeanMerger.class);
-    }
+    private ProxyBasedBeanMerger proxyBasedBeanMerger = new ProxyBasedBeanMerger();
 
-    @After
-    public void tearDown() throws Exception {
-        ComponentsTestUtil.clear();
+    public <T> T merge(Object... sources) {
+        final ArrayList<Object> list = new ArrayList<Object>();
+        CollectionUtils.addAll(list, sources);
+        return (T) proxyBasedBeanMerger.merge(list);
     }
 
     @Test
     public void testMergeOfInterfaces() {
-        Object result = BeanMergerUtil.merge(new BeanA("a"), new BeanB("b"));
+        Object result = merge(new BeanA("a"), new BeanB("b"));
         // both interfaces are implemented
         assertTrue(result instanceof InterfaceA);
         assertTrue(result instanceof InterfaceB);
@@ -171,7 +168,7 @@ public class BeanMergerTest {
 
     @Test
     public void testMergeUsesSubClassIfAssignable() {
-        Object result = BeanMergerUtil.merge(new BeanA("a"), new BeanB("b"), new BeanAB("a", "b"));
+        Object result = merge(new BeanA("a"), new BeanB("b"), new BeanAB("a", "b"));
         // both interfaces are implemented
         assertTrue(result instanceof InterfaceA);
         assertTrue(result instanceof InterfaceB);
@@ -186,7 +183,7 @@ public class BeanMergerTest {
         Object current = new BeanWithSubBean(null, "currentB", new BeanAB("currentSubA", null));
         Object fallback = new BeanWithSubBean("fallbackA", "fallbackB", new BeanAB("subFallbackA", "subFallbackB"));
 
-        BeanWithSubBean result = BeanMergerUtil.merge(current, fallback);
+        BeanWithSubBean result = merge(current, fallback);
 
         assertEquals("fallbackA", result.getPropA());
         assertEquals("currentB", result.getPropB());
@@ -205,7 +202,7 @@ public class BeanMergerTest {
         BeanWithMap three = new BeanWithMap();
         three.addBean("entry2", new BeanAB(null, "2B"));
         three.addBean("entry3", new BeanAB("3A", "3B"));
-        BeanWithMap result = BeanMergerUtil.merge(one, two, three);
+        BeanWithMap result = merge(one, two, three);
 
         Map<String, BeanAB> beans = result.getBeans();
         assertEquals(3, beans.size());
