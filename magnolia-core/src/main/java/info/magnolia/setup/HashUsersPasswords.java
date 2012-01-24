@@ -54,7 +54,7 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  * 
  */
-final class HashUsersPasswords extends AllChildrenNodesOperation {
+public final class HashUsersPasswords extends AllChildrenNodesOperation {
     private static final Content.ContentFilter filter = new Content.ContentFilter() {
 
         @Override
