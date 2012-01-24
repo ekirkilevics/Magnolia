@@ -347,10 +347,10 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     }
 
     /**
-     * test unicode normalization filter and the new filter ordering (update version to 4.3).
+     * Test unicode normalization filter and the new filter ordering (update version to latest).
      */
     @Test
-    public void testUnicodeNormalizerAndFilterOrderOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
+    public void testFilterOrderOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
         setupConfigNode("/server/filters/");
         setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute", ItemType.CONTENTNODE);
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
