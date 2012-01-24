@@ -212,7 +212,7 @@ button.mgnlEditorButton:active {
 
 .mobile {
   padding: 10px;
-  background: gray;
+  background: #808080;
   width: 80%;
   height: 80%;
   z-index: 901;
