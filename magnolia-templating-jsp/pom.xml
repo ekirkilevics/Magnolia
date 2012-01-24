@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>magnolia-project</artifactId>
+		<groupId>info.magnolia</groupId>
+		<version>4.5-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>magnolia-templating-jsp</artifactId>
+	<name>magnolia-templating-jsp</name>
+  	<properties>
+    	<cloverCoverageThreshold>75</cloverCoverageThreshold>
+  	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>info.magnolia</groupId>
+			<artifactId>magnolia-core</artifactId>
+			<version>4.5-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>info.magnolia</groupId>
+			<artifactId>magnolia-templating</artifactId>
+			<version>4.5-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- TLDGEN -->
+		<dependency>
+			<groupId>com.google.code.tldgen</groupId>
+			<artifactId>tldgen</artifactId>
+			<version>1.2</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- TEST -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit-dep</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>info.magnolia</groupId>
+			<artifactId>magnolia-core</artifactId>
+			<type>test-jar</type>
+			<version>4.5-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.openutils</groupId>
+			<artifactId>openutils-testing4web</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Overrid the CheckStyle in order to exclude the package-info.java -->
+			<plugin>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.8</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<excludes>**/package-info.java</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- TLDGEN PlugIn -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.6.1</version>
+				<configuration>
+					<includes>
+						<include>**</include>
+					</includes>
+					<doclet>org.tldgen.TldDoclet</doclet>
+					<docletArtifacts>
+						<docletArtifact>
+							<groupId>com.google.code.tldgen</groupId>
+							<artifactId>tldgen</artifactId>
+							<version>1.2</version>
+						</docletArtifact>
+						<docletArtifact>
+							<groupId>com.google.code.tldgen</groupId>
+							<artifactId>tldgen-tools</artifactId>
+							<version>1.2</version>
+						</docletArtifact>
+
+						<!-- TLDGen's Dependencies -->
+						<docletArtifact>
+							<groupId>commons-io</groupId>
+							<artifactId>commons-io</artifactId>
+							<version>1.4</version>
+						</docletArtifact>
+						<docletArtifact>
+							<groupId>commons-lang</groupId>
+							<artifactId>commons-lang</artifactId>
+							<version>2.4</version>
+						</docletArtifact>
+						<docletArtifact>
+							<groupId>commons-logging</groupId>
+							<artifactId>commons-logging</artifactId>
+							<version>1.1.1</version>
+						</docletArtifact>
+						<docletArtifact>
+							<groupId>org.apache.geronimo.specs</groupId>
+							<artifactId>geronimo-jsp_2.1_spec</artifactId>
+							<version>1.0.1</version>
+						</docletArtifact>
+						<docletArtifact>
+							<groupId>log4j</groupId>
+							<artifactId>log4j</artifactId>
+							<version>1.2.14</version>
+						</docletArtifact>
+						<docletArtifact>
+							<groupId>net.sourceforge.saxon</groupId>
+							<artifactId>saxon</artifactId>
+							<version>9.1.0.8</version>
+						</docletArtifact>
+					</docletArtifacts>
+					<show>private</show>
+					<additionalparam>
+						-htmlFolder ${project.build.directory}/docs
+						-tldFolder
+						${project.build.directory}/generated-resources/taglibs/META-INF
+						-license NONE
+        			</additionalparam>
+					<useStandardDocletOptions>true</useStandardDocletOptions>
+					<author>false</author>
+					<encoding>utf-8</encoding>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>javadoc</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<testResources>
+			<testResource>
+				<!-- we keep .jsp in test/java for convenience -->
+				<directory>src/test/java</directory>
+			</testResource>
+			<testResource>
+				<!-- redefine default resources location -->
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+	</build>
+
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>net.sourceforge.maven-taglib</groupId>
+				<artifactId>maven-taglib-plugin</artifactId>
+				<configuration>
+					<srcDir>${project.build.directory}/classes/META-INF/</srcDir>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+
+</project>
