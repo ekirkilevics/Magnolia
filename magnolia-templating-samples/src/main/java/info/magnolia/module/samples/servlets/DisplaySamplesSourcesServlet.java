@@ -47,7 +47,7 @@ import java.io.InputStream;
 /**
  * This servlet is used to download the sources of the files used for the samples module,
  * classes and templates.
- * @author tmiyar
+ * @version $Id$
  */
 public class DisplaySamplesSourcesServlet extends HttpServlet {
 

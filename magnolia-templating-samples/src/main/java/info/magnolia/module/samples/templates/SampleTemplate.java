@@ -43,7 +43,7 @@ import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
  * <code>(modules/samples/templates/pages/mysamplePage/parameters)</code> which you will be able to access it from
  * the template definition like <code>def.parameters.nameOfParam</code>.
  *
- * @author tmiyar
+ * @version $Id$
  */
 public class SampleTemplate extends ConfiguredTemplateDefinition {
 

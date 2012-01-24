@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  * <code>name</code> will be taken from the name of the node<br/>
  * <code>active</code> can be set by user is a boolean defined as boolean in the configuration.<br/>
  * The parameter map gets loaded from the values set in the configuration (modules/samples/config/sampleList/sampleClass/parameters)
- * @author tmiyar
+ * @version $Id$
  *
  */
 public class Dummy {

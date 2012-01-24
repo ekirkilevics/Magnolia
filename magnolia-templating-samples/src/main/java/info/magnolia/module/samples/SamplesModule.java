@@ -56,7 +56,7 @@ import info.magnolia.module.ModuleLifecycleContext;
  * sample the list of dummy clases we have created: modules/samples/config/sampleList/ each item is an instance
  * of Dummy class)
  *
- * @author tmiyar
+ * @version $Id$
  *
  */
 public class SamplesModule implements ModuleLifecycle {

@@ -58,7 +58,7 @@ import javax.jcr.RepositoryException;
  * To be accessed in the template file by <code>def.method-name</code>.
  *
  * Component models can also be defined in the component definitions.
- * @author tmiyar
+ * @version $Id$
  *
  */
 public class SampleComponentModel extends RenderingModelImpl<RenderableDefinition> {
