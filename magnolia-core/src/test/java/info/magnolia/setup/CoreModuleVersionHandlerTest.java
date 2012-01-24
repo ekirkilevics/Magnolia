@@ -377,8 +377,6 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("activation", filters.next().getName());
         assertFalse(filters.hasNext());
 
-
-
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1"));
 
         final Iterator<Content> updatedFilters = MgnlContext.getHierarchyManager("config").getContent("/server/filters/").getChildren().iterator();
@@ -387,6 +385,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("multipartRequest", updatedFilters.next().getName());
         assertEquals("unicodeNormalization", updatedFilters.next().getName());
         assertEquals("login", updatedFilters.next().getName());
+        // needed for 4.5 - channel gets added right before logout
+        assertEquals("channel", updatedFilters.next().getName());
         assertEquals("logout", updatedFilters.next().getName());
         assertEquals("securityCallback", updatedFilters.next().getName());
         assertEquals("uriSecurity", updatedFilters.next().getName());
@@ -516,7 +516,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // don't overwrite user settings
         assertEquals("video/mp4", getMimeTypePropertyValue("mp4"));
     }
-    
+
     @Test
     public void test446MimeTypesOnInstall() throws ModuleManagementException, RepositoryException {
         // new Mime types: Eot, Ogg, Otf, Ttf, Webm, Woff
@@ -533,7 +533,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("video/webm", getMimeTypePropertyValue("webm"));
         assertEquals("application/x-font-woff", getMimeTypePropertyValue("woff"));
     }
-    
+
     @Test
     public void test446MimeTypesOnUpdateTo446() throws ModuleManagementException, RepositoryException {
         // new Mime types: Eot, Ogg, Otf, Ttf, Webm, Woff
@@ -546,7 +546,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
-        
+
         // needed for 4.5 - UpdateUserManagers task
         setupConfigNode("/server/security/userManagers");
 
@@ -562,7 +562,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("video/webm", getMimeTypePropertyValue("webm"));
         assertEquals("application/x-font-woff", getMimeTypePropertyValue("woff"));
     }
-    
+
     @Test
     public void test446MimeTypesOnUpdateTo446WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // new Mime types: Eot, Ogg, Otf, Ttf, Webm, Woff
@@ -586,7 +586,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/MIMEMapping/weba", "mime-type", "custom-type-for-weba");
         setupConfigProperty("/server/MIMEMapping/webm", "mime-type", "custom-type-for-webm");
         setupConfigProperty("/server/MIMEMapping/woff", "mime-type", "custom-type-for-woff");
-        
+
         // needed for 4.5 - UpdateUserManagers task
         setupConfigNode("/server/security/userManagers");
 

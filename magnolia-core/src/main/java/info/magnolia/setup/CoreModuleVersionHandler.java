@@ -55,6 +55,7 @@ import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
+import info.magnolia.module.delta.OrderFilterBeforeTask;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.delta.PropertyExistsDelegateTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
@@ -103,6 +104,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             RepositoryConstants.CONFIG, "/server/rendering/freemarker", "sharedVariables", MgnlNodeType.NT_CONTENTNODE);
     private final BootstrapSingleResource bootstrapWebContainerResources = new BootstrapSingleResource("Web container resources configuration", "Global configuration which resources are not meant to be handled by Magnolia. For instance JSP files.", "/mgnl-bootstrap/core/config.server.webContainerResources.xml");
     private final BootstrapSingleModuleResource bootstrapChannelManagement = new BootstrapSingleModuleResource("ChannelManagement configuration", "", "config.server.rendering.channelManagement.xml");
+
+    private final BootstrapSingleModuleResource bootstrapChannelFilter = new BootstrapSingleModuleResource("ChannelFilter configuration", "", "config.server.filters.channel.xml");
+    private final Task placeChannelBeforeLogout = new OrderFilterBeforeTask("channel", new String[] {"logout"});
 
     public CoreModuleVersionHandler() {
         super();
@@ -272,6 +276,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 // TODO addTask( move/backup the callbacks in the contentSecurity filter )
                 .addTask(new HashUsersPasswords())
                 .addTask(bootstrapChannelManagement)
+                .addTask(bootstrapChannelFilter)
+                .addTask(placeChannelBeforeLogout)
         );
     }
 
@@ -297,19 +303,22 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
     @Override
     protected List<Task> getBasicInstallTasks(InstallContext ctx) {
-        final List<Task> l = new ArrayList<Task>();
-        l.addAll(GenericTasks.genericTasksFor35());
-        l.add(new CheckMagnoliaDevelopProperty());
-        l.add(new CheckNodesForMixVersionable());
-        l.add(auditTrailManagerTask);
-        l.add(bootstrapFreemarker);
-        l.add(addFreemarkerSharedVariables);
-        l.add(bootstrapWebContainerResources);
-        l.add(new BootstrapConditionally("Security", "Bootstraps security-base role.", "/mgnl-bootstrap/core/userroles.security-base.xml"));
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.addAll(GenericTasks.genericTasksFor35());
+        tasks.add(new CheckMagnoliaDevelopProperty());
+        tasks.add(new CheckNodesForMixVersionable());
+        tasks.add(auditTrailManagerTask);
+        tasks.add(bootstrapFreemarker);
+        tasks.add(addFreemarkerSharedVariables);
+        tasks.add(bootstrapWebContainerResources);
+        tasks.add(new BootstrapConditionally("Security", "Bootstraps security-base role.", "/mgnl-bootstrap/core/userroles.security-base.xml"));
         // always hash passwords. Task will not re-hash so it is safe to run this op at any time, multiple times.
-        l.add(new HashUsersPasswords());
-        l.add(bootstrapChannelManagement);
-        return l;
+        tasks.add(new HashUsersPasswords());
+        tasks.add(bootstrapChannelManagement);
+        tasks.add(bootstrapChannelFilter);
+        tasks.add(placeChannelBeforeLogout);
+
+        return tasks;
     }
 
     @Override
