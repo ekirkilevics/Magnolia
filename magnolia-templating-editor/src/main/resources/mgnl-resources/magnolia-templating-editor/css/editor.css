@@ -201,3 +201,20 @@ button.mgnlEditorButton:active {
 }
 
 /* --- End of edit bars definitions --- */
+
+/* XXX experimenting with mobile preview*/
+.mgnlEditorPreviewBackground {
+  background-color: #000;
+  opacity: 0.3;
+  filter: alpha(opacity=30);
+  z-index:900;
+}
+
+.mobile {
+  padding: 10px;
+  background: gray;
+  width: 80%;
+  height: 80%;
+  z-index: 901;
+  border-radius: 7px 7px 7px 7px;
+}

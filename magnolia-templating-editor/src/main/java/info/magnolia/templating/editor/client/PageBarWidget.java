@@ -115,6 +115,15 @@ public class PageBarWidget extends AbstractBarWidget {
         });
         addButton(preview, Float.LEFT);
 
+        Button mobile = new Button(getDictionary().get("buttons.preview.mobile.js"));
+        mobile.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                pageEditor.createPreviewForChannel("mobile");
+            }
+        });
+        addButton(mobile, Float.LEFT);
+
         Button adminCentral = new Button(getDictionary().get("buttons.admincentral.js"));
         adminCentral.addClickHandler(new ClickHandler() {
             @Override

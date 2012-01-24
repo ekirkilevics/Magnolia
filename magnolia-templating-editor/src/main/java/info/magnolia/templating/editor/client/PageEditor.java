@@ -249,6 +249,15 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     }
 
+    //TODO we will get the channel type and consequently the style to be passed to PreviewWidget via UI (dropdown/split button?)
+    public void createPreviewForChannel(final String channelType) {
+        GWT.log("Creating preview for channel type [" + channelType + "] ");
+        final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
+        urlBuilder.setParameter("channel", channelType);
+        urlBuilder.setParameter("mgnlPreview", "true");
+        new PreviewWidget(urlBuilder.buildString(), "mobile", true);
+    }
+
     /**
      * Provides dynamic string lookup of key/value string pairs defined in a module's host HTML page.
      */
