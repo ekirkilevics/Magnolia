@@ -76,6 +76,7 @@ public class PreviewWidget extends PopupPanel {
 
             }
         });
+        //FIXME does not work in FF
         iframe.setHeight("100%");
         iframe.setWidth("100%");
         add(iframe);
