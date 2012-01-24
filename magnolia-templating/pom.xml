@@ -19,19 +19,15 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.xdoclet</groupId>
-        <artifactId>maven2-xdoclet2-plugin</artifactId>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
       </plugin>
     </plugins>
     <testResources>
       <testResource>
-        <!-- we keep .jsp in test/java for convenience -->
+        <!-- we keep .ftl in test/java for convenience -->
         <directory>src/test/java</directory>
-      </testResource>
+      </testResource>   
       <testResource>
         <!-- redefine default resources location -->
         <directory>src/test/resources</directory>
@@ -114,15 +110,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>net.sourceforge.maven-taglib</groupId>
-        <artifactId>maven-taglib-plugin</artifactId>
-        <configuration>
-          <srcDir>${project.build.directory}/classes/META-INF/</srcDir>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
 </project>
