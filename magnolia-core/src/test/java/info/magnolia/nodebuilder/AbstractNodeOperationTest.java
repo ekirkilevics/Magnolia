@@ -33,21 +33,21 @@
  */
 package info.magnolia.nodebuilder;
 
+import static org.easymock.EasyMock.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.test.mock.MockContent;
 
 import javax.jcr.RepositoryException;
 
-import static org.easymock.EasyMock.*;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 
-public class AbstractNodeOperationTest extends TestCase {
+public class AbstractNodeOperationTest {
 
     /**
      * MAGNOLIA-3773
      */
+    @Test
     public void testThatSubsequentCallsToTheThenMethodAdd() {
         MockContent node = new MockContent("test");
         StrictErrorHandler errorHandler = new StrictErrorHandler();

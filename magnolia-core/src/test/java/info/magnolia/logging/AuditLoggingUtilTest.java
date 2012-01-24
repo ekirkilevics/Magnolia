@@ -33,10 +33,8 @@
  */
 package info.magnolia.logging;
 
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.login.LoginResult;
@@ -51,32 +49,31 @@ import java.util.List;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- *
- * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class AuditLoggingUtilTest extends TestCase {
+public class AuditLoggingUtilTest {
 
     private RecordingAuditLoggingManager audit;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         audit = new RecordingAuditLoggingManager();
         ComponentsTestUtil.setInstance(AuditLoggingManager.class, audit);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         SystemProperty.getProperties().clear();
         MgnlContext.setInstance(null);
-        super.tearDown();
     }
 
+    @Test
     public void testLogsLoginSuccesses() {
         final User user = createStrictMock(User.class);
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
@@ -97,6 +94,7 @@ public class AuditLoggingUtilTest extends TestCase {
         verify(user,request);
     }
 
+    @Test
     public void testLogsLoginFailures() {
         final User user = createStrictMock(User.class);
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);

@@ -33,6 +33,13 @@
  */
 package info.magnolia.nodebuilder;
 
+import static org.junit.Assert.*;
+import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.test.mock.MockContent;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,16 +47,10 @@ import java.io.InputStream;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.io.IOUtils;
-
-import info.magnolia.cms.beans.runtime.FileProperties;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.test.mock.MockContent;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 
-public class ContentOpsTest extends TestCase {
+public class ContentOpsTest {
 
     private static final String NODEDATA_VALUE = "value";
 
@@ -65,9 +66,9 @@ public class ContentOpsTest extends TestCase {
 
     /**
      * Test method for
-     * {@link info.magnolia.nodebuilder.ContentOps#createContent(java.lang.String, info.magnolia.cms.core.ItemType)}
-     * .
+     * {@link info.magnolia.nodebuilder.ContentOps#createContent(java.lang.String, info.magnolia.cms.core.ItemType)}.
      */
+    @Test
     public void testCreateContent() throws RepositoryException {
         MockContent root = new MockContent(ROOT_NAME);
         ContentOps.createContent(NEW_CONTENT_NAME, ItemType.CONTENTNODE).exec(root, ERROR_HANDLER);
@@ -79,6 +80,7 @@ public class ContentOpsTest extends TestCase {
      * Test method for
      * {@link info.magnolia.nodebuilder.ContentOps#createPage(java.lang.String, java.lang.String)}.
      */
+    @Test
     public void testCreatePage() throws RepositoryException {
         MockContent root = new MockContent(ROOT_NAME);
         ContentOps.createPage(NEW_CONTENT_NAME, TEMPLATE_NAME).exec(root, ERROR_HANDLER);
@@ -92,8 +94,8 @@ public class ContentOpsTest extends TestCase {
     /**
      * Test method for
      * {@link info.magnolia.nodebuilder.ContentOps#createCollectionNode(java.lang.String)}.
-     * @throws RepositoryException
      */
+    @Test
     public void testCreateCollectionNode() throws RepositoryException {
         MockContent root = new MockContent(ROOT_NAME);
         ContentOps.createCollectionNode(NEW_CONTENT_NAME).exec(root, ERROR_HANDLER);
@@ -107,6 +109,7 @@ public class ContentOpsTest extends TestCase {
      * {@link info.magnolia.nodebuilder.ContentOps#createParagraph(java.lang.String, java.lang.String)}
      * .
      */
+    @Test
     public void testCreateParagraph() throws RepositoryException {
         MockContent root = new MockContent(ROOT_NAME);
         ContentOps.createParagraph(NEW_CONTENT_NAME, TEMPLATE_NAME).exec(root, ERROR_HANDLER);
@@ -133,6 +136,7 @@ public class ContentOpsTest extends TestCase {
      * {@link info.magnolia.nodebuilder.ContentOps#setBinaryNodeData(java.lang.String, java.lang.String, long, java.io.InputStream)}
      * .
      */
+    @Test
     public void testSetBinaryNodeData() throws IOException {
         MockContent content = new MockContent(NEW_CONTENT_NAME);
         byte[] bytes = {'C', 'O', 'N', 'T', 'E', 'N', 'T'};
@@ -151,11 +155,11 @@ public class ContentOpsTest extends TestCase {
     /**
      * Test method for {@link info.magnolia.nodebuilder.ContentOps#setTemplate(java.lang.String)}.
      */
+    @Test
     public void testSetTemplate() {
         MockContent content = new MockContent(NEW_CONTENT_NAME);
         ContentOps.setTemplate(TEMPLATE_NAME).exec(content, ERROR_HANDLER);
 
         assertEquals(TEMPLATE_NAME, content.getTemplate());
     }
-
 }

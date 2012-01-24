@@ -41,7 +41,6 @@ import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * An abstract task to perform operations on nodes returned by a given query.
@@ -50,7 +49,6 @@ import java.util.Iterator;
  * modified a property, the query might still return the node as if it had
  * the previous value.
  *
- * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public abstract class QueryTask extends AbstractRepositoryTask {
@@ -66,7 +64,6 @@ public abstract class QueryTask extends AbstractRepositoryTask {
     @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         final Collection<Content> nodes = QueryUtil.exceptionThrowingQuery(repositoryName, query, Query.SQL, ItemType.NT_BASE);
-        final Iterator<Content> it = nodes.iterator();
         for (Content paragraphNode : nodes) {
             operateOnNode(installContext, paragraphNode);
         }

@@ -118,7 +118,7 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         node.addMixin(ItemType.DELETED_NODE_MIXIN);
 
         session.save();
-        Version version = versionMan.addVersion(node);
+        versionMan.addVersion(node);
 
         Node nodeInVersionWS = versionMan.getVersionedNode(node);
         assertTrue("Node in mgnlVersion workspace must have mixin", nodeInVersionWS.isNodeType(ItemType.DELETED_NODE_MIXIN));

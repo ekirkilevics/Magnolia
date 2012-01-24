@@ -33,33 +33,26 @@
  */
 package info.magnolia.cms.filters;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import info.magnolia.test.ComponentsTestUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- *
  * @version $id$
- *
  */
-public class ContentTypeFilterTest extends TestCase{
+public class ContentTypeFilterTest {
 
     private ContentTypeFilter filter;
     private HttpServletRequest request;
     private HttpServletResponse response;
 
-    @Override
     @Before
-    public void setUp() throws Exception{
-        super.setUp();
+    public void setUp() throws Exception {
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
 
         filter = new ContentTypeFilterForTest();
@@ -68,11 +61,11 @@ public class ContentTypeFilterTest extends TestCase{
     }
 
     @Test
-    public void testFilterWithEmptyDefaultExtension(){
+    public void testFilterWithEmptyDefaultExtension() {
         filter.setupContentTypeAndCharacterEncoding("", request, response);
         verify(response).setContentType("text/html");
     }
 
-    private class ContentTypeFilterForTest extends ContentTypeFilter{
+    private class ContentTypeFilterForTest extends ContentTypeFilter {
     }
 }

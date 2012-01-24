@@ -34,7 +34,6 @@
 package info.magnolia.setup.for3_5;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.ArrayDelegateTask;
@@ -47,9 +46,8 @@ import javax.jcr.RepositoryException;
 
 /**
  * Updates format of URI2Repository mappings to format used since 3.5.
- * @author vsteller
- * @version $Id$
  *
+ * @version $Id$
  */
 public class UpdateURI2RepositoryMappings extends info.magnolia.module.delta.AllChildrenNodesOperation {
 
@@ -67,7 +65,6 @@ public class UpdateURI2RepositoryMappings extends info.magnolia.module.delta.All
      */
     @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        final HierarchyManager configHM = ctx.getConfigHierarchyManager();
         final Content parentNode = getParentNode(ctx);
 
         super.doExecute(ctx);

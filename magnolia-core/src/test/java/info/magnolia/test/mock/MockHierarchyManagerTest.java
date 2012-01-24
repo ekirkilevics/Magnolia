@@ -33,14 +33,20 @@
  */
 package info.magnolia.test.mock;
 
+import static org.junit.Assert.fail;
 import info.magnolia.cms.security.Permission;
-import junit.framework.TestCase;
 
-public class MockHierarchyManagerTest extends TestCase {
+import org.junit.Test;
 
-    public void testThatIsGrantedMethodDoesntProduceNullPointer(){
+public class MockHierarchyManagerTest {
+
+    @Test
+    public void testThatIsGrantedMethodDoesntProduceNullPointer() {
         MockHierarchyManager hm = new MockHierarchyManager();
-        hm.isGranted("/anypath", Permission.ALL);
+        try {
+            hm.isGranted("/anypath", Permission.ALL);
+        } catch (NullPointerException e) {
+            fail("Must not get a NPE here!");
+        }
     }
-
 }

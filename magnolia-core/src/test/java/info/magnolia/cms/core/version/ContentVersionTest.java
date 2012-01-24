@@ -173,8 +173,7 @@ public class ContentVersionTest extends RepositoryTestCase {
         assertNotNull(binaryNodeData.getValue());
 
         // add version
-        @SuppressWarnings("unused")
-        final Version version = node.addVersion();
+        node.addVersion();
 
         // get binary from version
         final ContentVersion versionedContent = node.getVersionedContent("1.0");
@@ -236,8 +235,7 @@ public class ContentVersionTest extends RepositoryTestCase {
         rule.addAllowType(NT_RESOURCE);
 
         // add version
-        @SuppressWarnings("unused")
-        final Version version = node.addVersion(rule);
+        node.addVersion(rule);
 
         // get binary from version
         final ContentVersion versionedContent = node.getVersionedContent("1.0");

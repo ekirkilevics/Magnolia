@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.core;
 
+import static org.junit.Assert.*;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.test.mock.MockContent;
 
@@ -42,24 +43,21 @@ import java.io.InputStream;
 
 import javax.jcr.RepositoryException;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.junit.Test;
 
 /**
- *
- * TODO dlipp - move to package of BinaryNodeData...
- *
+ * @version $Id$
  */
-public class BinaryNodeDataTest extends TestCase {
+public class BinaryNodeDataTest {
 
     private static final byte[] BYTES = {'C', 'O', 'N', 'T', 'E', 'N', 'T'};
-
 
     /**
      * MAGNOLIA-3777: mock content: write binary attributes to the underlying binary node if existing
      */
+    @Test
     public void testThatAttributesAreSetOnTheWrappedNode() throws AccessDeniedException, UnsupportedOperationException, RepositoryException{
         // GIVEN a binary node data which wraps a resource node
         MockContent parent = new MockContent("parent");
@@ -75,6 +73,7 @@ public class BinaryNodeDataTest extends TestCase {
         assertEquals(wrappedBinaryNode.getNodeData("attribute").getString(), "value");
     }
 
+    @Test
     public void testThatTheBinaryContentCanBeReadMultipleTimes() throws Exception{
         MockContent parent = new MockContent("parent");
         BinaryNodeData binaryNodeData = new BinaryNodeData(parent, "file");
@@ -90,7 +89,7 @@ public class BinaryNodeDataTest extends TestCase {
         }
     }
 
-
+    @Test
     public void testThatStreamIsSetOnTheWrappedNode() throws AccessDeniedException, UnsupportedOperationException, RepositoryException, IOException{
         // GIVEN a binary node data which wraps a resource node
         MockContent parent = new MockContent("parent");
@@ -106,8 +105,5 @@ public class BinaryNodeDataTest extends TestCase {
         assertTrue(ArrayUtils.isEquals(BYTES, IOUtils.toByteArray(resourceNode.getNodeData(ItemType.JCR_DATA).getStream())));
         // or via the node data
         assertTrue(ArrayUtils.isEquals(BYTES, IOUtils.toByteArray(binaryNodeData.getStream())));
-
     }
-
-
 }

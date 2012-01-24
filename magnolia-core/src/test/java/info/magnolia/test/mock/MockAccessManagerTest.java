@@ -33,17 +33,19 @@
  */
 package info.magnolia.test.mock;
 
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.security.Permission;
-import junit.framework.TestCase;
 
-public class MockAccessManagerTest extends TestCase {
+import org.junit.Test;
+
+public class MockAccessManagerTest {
 
     /**
      * MAGNOLIA-3806
      */
+    @Test
     public void testThatWeHaveAllPermissions() {
         final MockHierarchyManager hm = new MockHierarchyManager();
         assertTrue(hm.isGranted("/anypath", Permission.WRITE));
     }
-
 }
