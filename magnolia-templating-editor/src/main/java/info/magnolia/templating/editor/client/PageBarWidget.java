@@ -35,6 +35,7 @@ package info.magnolia.templating.editor.client;
 
 
 import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
+import info.magnolia.templating.editor.client.PreviewChannelWidget.ORIENTATION;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 import info.magnolia.templating.editor.client.model.ModelStorage;
@@ -121,7 +122,7 @@ public class PageBarWidget extends AbstractBarWidget {
             @Override
             public void onClick(ClickEvent event) {
                 //FIXME do not hardcode these values
-                pageEditor.createChannelPreview("mobile", "tablet");
+                pageEditor.createChannelPreview("mobile", "tablet", ORIENTATION.LANDSCAPE);
             }
         });
         addButton(mobileIpad, Float.LEFT);
@@ -131,7 +132,7 @@ public class PageBarWidget extends AbstractBarWidget {
             @Override
             public void onClick(ClickEvent event) {
               //FIXME do not hardcode these values
-                pageEditor.createChannelPreview("mobile", "smartphone");
+                pageEditor.createChannelPreview("mobile", "smartphone", ORIENTATION.PORTRAIT);
             }
         });
         addButton(mobileIphone, Float.LEFT);

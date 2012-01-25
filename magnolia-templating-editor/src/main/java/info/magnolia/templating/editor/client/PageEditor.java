@@ -87,8 +87,12 @@ import com.google.gwt.user.client.ui.RootPanel;
  * Modules can register multiple callbacks this way. The order in which callbacks are fired is the same in which they were registered.
  *<p>
  * @version $Id$
+ *
+ * TODO clean up/refactoring: this class is getting messy.
  */
 public class PageEditor extends HTML implements EventListener, EntryPoint {
+
+    public static final String SKIP_PAGE_EDITOR_DOM_PROCESSING = "skipPageEditorDOMProcessing";
 
     private boolean pageEditBarAlreadyProcessed = false;
     private String locale;
@@ -98,6 +102,10 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     @Override
     public void onModuleLoad() {
+        if(Window.Location.getParameter(SKIP_PAGE_EDITOR_DOM_PROCESSING) != null) {
+            GWT.log("Found " + SKIP_PAGE_EDITOR_DOM_PROCESSING + " in request, skipping DOM processing...");
+            return;
+        }
         Element documentElement = Document.get().getDocumentElement();
 
         locale = detectCurrentLocale(documentElement);
@@ -252,12 +260,12 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     //TODO we will get the channel type and consequently the style to be passed to PreviewWidget via UI (dropdown/split button?)
     //What we ideally would need is a split/menu button like these http://www.sencha.com/examples/pages/button/buttons.html
-    public void createChannelPreview(final String channelType, final String deviceType) {
+    public void createChannelPreview(final String channelType, final String deviceType, final ORIENTATION orientation) {
         GWT.log("Creating preview for channel type [" + channelType + "] ");
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
-        urlBuilder.setParameter("channel", channelType);
-        urlBuilder.setParameter("mgnlPreview", "true");
-        new PreviewChannelWidget(urlBuilder.buildString(), ORIENTATION.LANDSCAPE, deviceType);
+        urlBuilder.setParameter("mgnlChannel", channelType);
+        urlBuilder.setParameter(SKIP_PAGE_EDITOR_DOM_PROCESSING, "true");
+        new PreviewChannelWidget(urlBuilder.buildString(), orientation, deviceType);
     }
 
     /**
