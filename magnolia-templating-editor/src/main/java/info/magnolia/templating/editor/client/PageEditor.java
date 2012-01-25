@@ -252,12 +252,12 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     //TODO we will get the channel type and consequently the style to be passed to PreviewWidget via UI (dropdown/split button?)
     //What we ideally would need is a split/menu button like these http://www.sencha.com/examples/pages/button/buttons.html
-    public void createChannelPreview(final String channelType) {
+    public void createChannelPreview(final String channelType, final String deviceType) {
         GWT.log("Creating preview for channel type [" + channelType + "] ");
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
         urlBuilder.setParameter("channel", channelType);
         urlBuilder.setParameter("mgnlPreview", "true");
-        new PreviewChannelWidget(urlBuilder.buildString(), ORIENTATION.LANDSCAPE);
+        new PreviewChannelWidget(urlBuilder.buildString(), ORIENTATION.LANDSCAPE, deviceType);
     }
 
     /**

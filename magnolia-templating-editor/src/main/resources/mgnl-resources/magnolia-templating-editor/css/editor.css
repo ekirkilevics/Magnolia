@@ -220,7 +220,7 @@ button.mgnlEditorButton:active {
 }
 
 .mobilePreview.tabletLandscape {
-  background: url(../img/preview/mobile/landscape.png) no-repeat;
+  background: url(../img/preview/mobile/tablet/landscape.png) no-repeat;
   width: 1108px;
   height: 852px;
 }
@@ -233,7 +233,7 @@ button.mgnlEditorButton:active {
   height: 690px;
 }
 .mobilePreview.tabletPortrait {
-  background: url(../img/preview/mobile/portrait.png) no-repeat;
+  background: url(../img/preview/mobile/tablet/portrait.png) no-repeat;
   width: 852px;
   height: 1108px;
 }
@@ -244,6 +244,32 @@ button.mgnlEditorButton:active {
   left: 42px;
   height: 946px;
   width: 768px;
+}
+.mobilePreview.smartphoneLandscape {
+  background: url(../img/preview/mobile/smartphone/landscape.png) no-repeat;
+  width: 752px;
+  height: 461px;
+}
+
+.mobilePreview.smartphoneLandscape .popupContent {
+  position: absolute;
+  top: 111px;
+  left: 137px;
+  width: 480px;
+  height: 210px;
+}
+.mobilePreview.smartphonePortrait {
+  background: url(../img/preview/mobile/smartphone/portrait.png) no-repeat;
+  width: 461px;
+  height: 752px;
+}
+
+.mobilePreview.smartphonePortrait .popupContent {
+  position: absolute;
+  top: 214px;
+  left: 38px;
+  width: 320px;
+  height: 420px;
 }
 .mobilePreviewIframe {
   border: none;
