@@ -46,12 +46,13 @@ import com.google.gwt.user.client.ui.PopupPanel;
 
 /**
  * PreviewChannelWidget.
+ * TODO javadoc bien sure!
  * TODO extract base class with common functionality. Make this a MobilePreviewChannelWidget extending an AbstractPreviewChannelWidget.
  * TODO find a way to keep special params (e.g. mgnlChannel and skipPageEditorDOMProcessing) in request when navigating the preview else the author mode is displayed.
  */
 public class PreviewChannelWidget extends PopupPanel implements ClickHandler, HasClickHandlers {
-    private String landscapeCssStyle = "Landscape";
-    private String portraitCssStyle = "Portrait";
+    private String landscapeCssStyleSuffix = "Landscape";
+    private String portraitCssStyleSuffix = "Portrait";
     private String deviceType = "smartphone";
 
     /**
@@ -68,7 +69,7 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
         setStylePrimaryName("mobilePreview");
         currentOrientation = orientation;
         //TODO have a look at GWT add dependent style mechanism instead of doing it yourself.
-        addStyleName(orientation == ORIENTATION.LANDSCAPE ? deviceType+landscapeCssStyle : deviceType+portraitCssStyle);
+        addStyleName(orientation == ORIENTATION.LANDSCAPE ? deviceType + landscapeCssStyleSuffix : deviceType + portraitCssStyleSuffix);
         setGlassStyleName("mgnlEditorPreviewBackground");
         setAnimationEnabled(true);
         setAutoHideEnabled(true);
@@ -93,12 +94,20 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
         center();
     }
 
-    protected ORIENTATION getOrientation() {
+    public ORIENTATION getOrientation() {
         return currentOrientation;
     }
 
-    protected String getDeviceType() {
+    public String getDeviceType() {
         return deviceType;
+    }
+
+    public String getLandscapeCssStyleSuffix() {
+        return landscapeCssStyleSuffix;
+    }
+
+    public String getPortraitCssStyleSuffix() {
+        return portraitCssStyleSuffix;
     }
 
     @Override
@@ -108,12 +117,12 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
 
         if(currentOrientation == ORIENTATION.LANDSCAPE) {
             currentOrientation = ORIENTATION.PORTRAIT;
-            removeStyleName(getDeviceType() + landscapeCssStyle);
-            addStyleName(getDeviceType() + portraitCssStyle);
+            removeStyleName(getDeviceType() + landscapeCssStyleSuffix);
+            addStyleName(getDeviceType() + portraitCssStyleSuffix);
         } else {
             currentOrientation = ORIENTATION.LANDSCAPE;
-            removeStyleName(getDeviceType() + portraitCssStyle);
-            addStyleName(getDeviceType() + landscapeCssStyle);
+            removeStyleName(getDeviceType() + portraitCssStyleSuffix);
+            addStyleName(getDeviceType() + landscapeCssStyleSuffix);
         }
         center();
     }
