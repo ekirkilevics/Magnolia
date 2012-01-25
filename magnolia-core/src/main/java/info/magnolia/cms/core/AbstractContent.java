@@ -264,7 +264,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     /**
      * {@inheritDoc}
-     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator).
+     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator)}.
      */
     @Override
     public Collection<Content> getChildren(ContentFilter filter) {
@@ -273,7 +273,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     /**
      * {@inheritDoc}
-     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator).
+     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator)}.
      */
     @Override
     public Collection<Content> getChildren(ItemType itemType) {
@@ -282,7 +282,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     /**
      * {@inheritDoc}
-     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator).
+     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator)}.
      */
     @Override
     public Collection<Content> getChildren(String contentType) {
