@@ -422,4 +422,9 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
     public String getUuid() {
         return uuid;
     }
+
+    @Override
+    public String toString() {
+        return "MgnlUser - " + name + " [" + uuid + "]";
+    }
 }
