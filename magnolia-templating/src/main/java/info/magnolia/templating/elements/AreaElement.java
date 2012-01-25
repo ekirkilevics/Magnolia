@@ -304,7 +304,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
      * the area node gets created (always) the script is always executed.
      */
     private boolean canRenderAreaScript() {
-        return (areaDefinition != null && areaDefinition.isEnabled() != null && areaDefinition.isEnabled()) && (areaNode != null || (areaNode == null && areaDefinition.isOptional() && !MgnlContext.getAggregationState().isPreviewMode()));
+        // FYI: areaDefinition == null when it is not set explicitly and can't be merged with the parent. In such case we will render it as if it was enabled
+        final boolean isAreaDefinitionEnabled = areaDefinition != null && (areaDefinition.isEnabled() == null || areaDefinition.isEnabled());
+        return isAreaDefinitionEnabled && (areaNode != null || (areaNode == null && areaDefinition.isOptional() && !MgnlContext.getAggregationState().isPreviewMode()));
     }
 
     private String resolveDialog() {
